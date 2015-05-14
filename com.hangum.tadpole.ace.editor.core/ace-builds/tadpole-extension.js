@@ -1,7 +1,15 @@
 /**
- * tadpole ace editor extension.
+ * 	tadpole ace editor extension.
  *  ace example at https://github.com/ajaxorg/ace/wiki/Embedding-API
- *  Default keyboard shortcuts : https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts 
+ *  
+ *  Default keyboard shortcuts : 
+ *  	https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts
+ *  
+ *  Dynamically update syntax highlighting mode rules for the Ace Editor:
+ *  	http://stackoverflow.com/questions/22166784/dynamically-update-syntax-highlighting-mode-rules-for-the-ace-editor
+ *  
+ *  @date 2015.05.
+ *  @author hangum, hangum@gmail.com
  */
 var editorService = {
 	/** initialize editor */
@@ -16,7 +24,6 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
-//	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -82,8 +89,8 @@ var completions = [];
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
 	    enableSnippets: true
-//	    ,
-//	    enableLiveAutocompletion: true
+	    
+	    ,enableLiveAutocompletion: true
 	});
 	
 //	var completer = {
@@ -104,7 +111,7 @@ var completions = [];
 
 /** 
  * 에디터를 초기화 합니다. 
- * @param varMode mode
+ * @param varMode sql type(ex: sqlite, pgsql), EditorDefine#EXT_SQLite
  * @param varTableList table list
  * @param varType editorType (sql or procedure )
  * @param varInitText
@@ -113,14 +120,14 @@ var completions = [];
 editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
 	varEditorType = varType;
 	
-	try {
-		var tables = varTableList.split("|");
-		for(var i=0; i<tables.length; i++) {
-			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
-		}
-	} catch(e) {
-		console.log(e);
-	}
+//	try {
+//		var tables = varTableList.split("|");
+//		for(var i=0; i<tables.length; i++) {
+//			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
+//		}
+//	} catch(e) {
+//		console.log(e);
+//	 }
 	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
@@ -128,6 +135,7 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 
 		var doc = new EditSession(varInitText);
 		doc.setUndoManager(new UndoManager());
+		
 		doc.setMode(varMode);
 		doc.on('change', function() {
 			if(!isEdited) {
@@ -140,6 +148,10 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 			}
 		});
 		
+//		doc.$mode.$highlightRules.setKeywords({"keyword": "foo|bar|baz"})
+//		// force rehighlight whole document
+//		doc.bgTokenizer.start(0)
+			
 		editor.setSession(doc);
 		editor.focus();
 	} catch(e) {
@@ -155,10 +167,6 @@ editorService.saveData = function() {
 editorService.setFocus = function() {
 	editor.focus();
 };
-//editorService.executeFlag = function() {
-////	console.log('\t end java program....');
-//	isJavaRunning = false;
-//};
 
 ///** user autocomplete */
 //editor.commands.on("afterExec", function(e){

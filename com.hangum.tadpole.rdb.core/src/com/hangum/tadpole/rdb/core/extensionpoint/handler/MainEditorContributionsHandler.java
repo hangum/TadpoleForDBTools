@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 
@@ -38,33 +39,44 @@ public class MainEditorContributionsHandler {
 	 * @return
 	 */
 	public IMainEditorExtension[] evaluateCreateWidgetContribs(final UserDBDAO userDB) {
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MAIN_EDITOR_ID);
-		final LinkedList list = new LinkedList();
-		try {
-			for (IConfigurationElement e : config) {
-				final Object mainEditorExtension = e.createExecutableExtension("class");
-				if (mainEditorExtension instanceof IMainEditorExtension) {
-					ISafeRunnable runnable = new ISafeRunnable() {
-
-						@Override
-						public void handleException(Throwable exception) {
-							logger.error("Exception create widget", exception);
-						}
-
-						@Override
-						public void run() throws Exception {
-							IMainEditorExtension compositeExt = (IMainEditorExtension) mainEditorExtension;
-							compositeExt.initExtension(userDB);
-							if(compositeExt.isEnableExtension()) list.add(compositeExt);
-						}
-					};
-					SafeRunner.run(runnable);
+		final LinkedList listReturn = new LinkedList();
+		
+		final DBDefine selectDBDefine = userDB.getDBDefine();
+		if(selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
+				selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
+				selectDBDefine == DBDefine.TAJO_DEFAULT 	
+		) {
+			logger.info("Tadpole extension not support this db type ==> " +selectDBDefine.getDBToString());
+		} else {
+			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(MAIN_EDITOR_ID);
+			
+			try {
+				for (IConfigurationElement e : config) {
+					final Object mainEditorExtension = e.createExecutableExtension("class");
+					if (mainEditorExtension instanceof IMainEditorExtension) {
+						ISafeRunnable runnable = new ISafeRunnable() {
+	
+							@Override
+							public void handleException(Throwable exception) {
+								logger.error("Exception create widget", exception);
+							}
+	
+							@Override
+							public void run() throws Exception {
+								IMainEditorExtension compositeExt = (IMainEditorExtension) mainEditorExtension;
+								compositeExt.initExtension(userDB);
+								if(compositeExt.isEnableExtension()) listReturn.add(compositeExt);
+							}
+						};
+						SafeRunner.run(runnable);
+					}
 				}
+			} catch (CoreException ex) {
+				logger.error("create main editor", ex);
 			}
-		} catch (CoreException ex) {
-			logger.error("create main editor", ex);
 		}
-		return (IMainEditorExtension[]) list.toArray(new IMainEditorExtension[list.size()]);
+		
+		return (IMainEditorExtension[]) listReturn.toArray(new IMainEditorExtension[listReturn.size()]);
 	}
 
 //	/**

@@ -6,15 +6,9 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var SqlHighlightRules = function() {
 
-	var keywords = (
+    var keywords = (
         "select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
-        "when|else|end|type|left|right|join|on|outer|desc|asc|union" +
-        
-        "|references|primary|key|foreign|autoincrement|no|action" +
-        "|default|not|null" +
-        "|create|drop|alter|into|values|set|view|index|trigger|before|for|each|row|begin|replace|procedure|in|out|with|unique|returns"+
-        "|table|integer|int|char|varchar|varchar2|number|datetime|date|text|timestamp" +
-        "|commit|rollback"
+        "when|else|end|type|left|right|join|on|outer|desc|asc|union"
     );
 
     var builtinConstants = (
@@ -81,12 +75,13 @@ var TextMode = require("./text").Mode;
 var SqlHighlightRules = require("./sql_highlight_rules").SqlHighlightRules;
 var Range = require("../range").Range;
 //add filding 
-var CStyleFoldMode = require("./folding/cstyle").FoldMode;
+var SQLFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = SqlHighlightRules;
-    this.foldingRules = new CStyleFoldMode();
+    this.foldingRules = new SQLFoldMode();
 };
+
 oop.inherits(Mode, TextMode);
 
 (function() {
@@ -122,10 +117,6 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 	oop.inherits(FoldMode, BaseFoldMode);
 
 	(function() {
-
-//	    this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
-//	    this.foldingStopMarker  = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
-		
 		this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)|^(\s)*(select|insert|update|delete|create|alter|drop)( .*$| ?[\r\n]?)+/i;
 
 	    this.getFoldWidgetRange = function(session, foldStyle, row, forceMultiline) {
@@ -155,16 +146,6 @@ ace.define('ace/mode/folding/cstyle', ['require', 'exports', 'module' , 'ace/lib
 
 	        if (foldStyle === "markbegin")
 	            return;
-
-//	        var match = line.match(this.foldingStopMarker);
-//	        if (match) {
-//	            var i = match.index + match[0].length;
-//
-//	            if (match[1])
-//	                return this.closingBracketBlock(session, match[1], row, i);
-//
-//	            return session.getCommentFoldRange(row, i, -1);
-//	        }
 	    };
 	    
 	    this.getSectionRange = function(session, row) {

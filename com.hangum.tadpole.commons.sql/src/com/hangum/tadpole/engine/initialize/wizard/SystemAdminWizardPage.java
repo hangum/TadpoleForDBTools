@@ -116,7 +116,7 @@ public class SystemAdminWizardPage extends WizardPage {
 		
 		Group grpSystemSmtp = new Group(container, SWT.NONE);
 		grpSystemSmtp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpSystemSmtp.setText("System SMTP");
+		grpSystemSmtp.setText("System SMTP(Only Google Account)");
 		grpSystemSmtp.setLayout(new GridLayout(2, false));
 		
 		Label lblSmtpServer = new Label(grpSystemSmtp, SWT.NONE);

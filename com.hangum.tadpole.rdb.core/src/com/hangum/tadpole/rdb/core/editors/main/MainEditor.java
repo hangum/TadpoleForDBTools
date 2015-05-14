@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -70,6 +71,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
@@ -473,10 +475,7 @@ public class MainEditor extends EditorExtension {
 			@Override
 			public void completed( ProgressEvent event ) {
 				try {
-					/*
-					 * getAssistTableList()
-					 */
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), "", getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), getAssistTableList(), getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -499,8 +498,9 @@ public class MainEditor extends EditorExtension {
 			ext = EditorDefine.EXT_PGSQL;
 		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
 			ext = EditorDefine.EXT_SQLite;
+		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_MSSQL;
 		}
-		
 		return ext;
 	}
 	
@@ -528,28 +528,28 @@ public class MainEditor extends EditorExtension {
 //		return strColumnlist;
 //	}
 //	
-//	/**
-//	 * List of assist table name 
-//	 * 
-//	 * @return
-//	 */
-//	private String getAssistTableList() {
-//		String strTablelist = ""; //$NON-NLS-1$
-//		
-//		try {
-//			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
-//			for (TableDAO tableDao : showTables) {
-//				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
-//				mapTableList.put(tableDao.getSysName(), tableDao);
-//			}
-//			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
-//			
-//		} catch(Exception e) {
-//			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
-//		}
-//		
-//		return strTablelist;
-//	}
+	/**
+	 * List of assist table name 
+	 * 
+	 * @return
+	 */
+	private String getAssistTableList() {
+		String strTablelist = ""; //$NON-NLS-1$
+		
+		try {
+			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
+			for (TableDAO tableDao : showTables) {
+				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+				mapTableList.put(tableDao.getSysName(), tableDao);
+			}
+			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
+			
+		} catch(Exception e) {
+			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
+		}
+		
+		return strTablelist;
+	}
 
 	/**
 	 * initialize editor

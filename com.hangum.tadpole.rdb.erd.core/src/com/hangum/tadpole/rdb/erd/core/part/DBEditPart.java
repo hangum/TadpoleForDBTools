@@ -35,6 +35,7 @@ import com.hangum.tadpole.rdb.erd.core.figures.DBFigure;
 import com.hangum.tadpole.rdb.erd.core.policies.TableXYLayoutPolicy;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.Table;
+import com.swtdesigner.SWTResourceManager;
 
 public class DBEditPart extends AbstractGraphicalEditPart implements LayerConstants  {
 	private static final Logger logger = Logger.getLogger(DBEditPart.class);
@@ -87,7 +88,7 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		
 		// connection router 조절
 		ConnectionLayer cLayer = (ConnectionLayer)getLayer(CONNECTION_LAYER);
-		cLayer.setForegroundColor(ColorConstants.lightBlue());
+		cLayer.setForegroundColor(SWTResourceManager.getColor(255, 102, 102));//ColorConstants.red());//lightBlue());
 		cLayer.setConnectionRouter(new ShortestPathConnectionRouter(getFigure()));
 	}
 

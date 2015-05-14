@@ -14,6 +14,12 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,8 +34,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -47,6 +56,7 @@ public class SendMessageDialog extends Dialog {
 	private Combo comboType;
 	private Text textMessage;
 	private Text textTitle;
+	private Text textSengingHistory;
 	
 
 	/**
@@ -107,6 +117,18 @@ public class SendMessageDialog extends Dialog {
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		textMessage.setText("<pre>\n\n</pre>");
 		
+		Composite composite = new Composite(container, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		GridData gd_composite = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_composite.heightHint = 100;
+		composite.setLayoutData(gd_composite);
+		
+		Label lblSeingHistory = new Label(composite, SWT.NONE);
+		lblSeingHistory.setText("Seing history");
+		
+		textSengingHistory = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textSengingHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 
@@ -128,30 +150,93 @@ public class SendMessageDialog extends Dialog {
 		}
 		
 		// 모든 사용자에게 이메일을 보냅니다.
-		try {
-			List<UserDAO> listUser = TadpoleSystem_UserQuery.getAllUser();
-			SendEmails email = new SendEmails(GetAdminPreference.getSMTPINFO());
-			for (UserDAO userDAO : listUser) {
-				logger.info("admin user sender " + userDAO.getEmail());
+		final Shell shell = getShell();
+		final String strTitle = textTitle.getText();
+		final String strMessage = textMessage.getText();
+		
+		Job job = new Job("AdminSendingmail") {
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
 				
 				try {
-					EmailDTO emailDto = new EmailDTO();
-					emailDto.setSubject(textTitle.getText());
-					emailDto.setContent(textMessage.getText());
-					emailDto.setTo(userDAO.getEmail());
+					List<UserDAO> listUser = TadpoleSystem_UserQuery.getAllUser();
+					SendEmails email = new SendEmails(GetAdminPreference.getSMTPINFO());
 					
-					email.sendMail(emailDto);
+					monitor.beginTask("Seing mail total is %d", listUser.size());
+					
+					for (int i=0; i<listUser.size(); i++) {
+						UserDAO userDAO = listUser.get(i);
+						
+						monitor.setTaskName(String.format("%d/%d, user %s ", i, listUser.size(), userDAO.getEmail()));
+						logger.info("admin user sender " + userDAO.getEmail());
+						try {
+							EmailDTO emailDto = new EmailDTO();
+							emailDto.setSubject(strTitle);
+							emailDto.setContent(strMessage);
+							emailDto.setTo(userDAO.getEmail());
+							
+							email.sendMail(emailDto);
+							resultMessage(userDAO.getEmail() + " senging.");
+						} catch(Exception e) {
+							logger.error("user sender", e);
+							resultMessage(userDAO.getEmail() + " is fail. " + e.getMessage());
+						} 
+						
+						if(monitor.isCanceled()) {
+							logger.info("user cancle action");
+							break;
+						}
+					}
 				} catch(Exception e) {
-					logger.error("user sender", e);
+					logger.error("get user data", e);
+					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
+				} finally {
+					resultMessage("done.");
+					monitor.done();
 				}
+				
+				/////////////////////////////////////////////////////////////////////////////////////////
+				return Status.OK_STATUS;
 			}
 			
-			MessageDialog.openInformation(null, "Confirm", "email send has completed.");
-		} catch (Exception e) {
-			logger.error("get user data", e);
-		}
+			private void resultMessage(final String msg) {
+				shell.getDisplay().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						String strFullMsg = "".equals(textSengingHistory.getText())?msg:textSengingHistory.getText() + PublicTadpoleDefine.LINE_SEPARATOR + msg;
+						textSengingHistory.setText(strFullMsg);
+						
+					}
+				});
+			}
+		};
 		
-		super.okPressed();
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
+			
+			public void done(IJobChangeEvent event) {
+				final IJobChangeEvent jobEvent = event; 
+				
+				shell.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if(jobEvent.getResult().isOK()) {
+							MessageDialog.openInformation(shell, "Confirm", "email send has completed.");
+						} else {
+							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(shell, "Error", "Admin mail", errStatus); //$NON-NLS-1$
+						}
+					}
+				});	// end display.asyncExec
+			}	// end done
+			
+		});	// end job
+		
+		job.setName("Admin mail");
+		job.setUser(true);
+		job.schedule();
+		
+//		super.okPressed();
 	}
 
 	/**

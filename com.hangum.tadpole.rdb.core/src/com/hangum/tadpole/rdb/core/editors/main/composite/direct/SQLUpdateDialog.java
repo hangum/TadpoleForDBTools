@@ -29,6 +29,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * SQL update dialog
@@ -76,7 +77,10 @@ public class SQLUpdateDialog extends Dialog {
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
 		
-		textSQL = new Text(container, SWT.BORDER | SWT.MULTI);
+		Label lblPleaseCheckYour = new Label(container, SWT.NONE);
+		lblPleaseCheckYour.setText("Please check your statement.");
+		
+		textSQL = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		textSQL.setText(strSQL);
 
@@ -123,7 +127,7 @@ public class SQLUpdateDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(650, 500);
 	}
 
 }

@@ -25,7 +25,7 @@
          point="org.eclipse.rap.ui.branding">
       <branding
             body="html/body.html"
-            favicon="icons/old_TadpoleDBHub.ico"
+            favicon="icons/TadpoleDBHub.ico"
             id="com.hangum.tadpole.browser.rap.branding"
             themeId="org.eclipse.rap.design.example.business.theme"
             title="Tadpole DB Hub - v1.6.1(Edge)-R0">
