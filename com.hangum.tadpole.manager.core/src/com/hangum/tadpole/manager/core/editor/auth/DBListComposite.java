@@ -627,14 +627,15 @@ class AdminCompFilter extends ViewerFilter {
 			return true;
 		}
 		
-		UserDBDAO userDB = (UserDBDAO)element;
-		if(userDB.getGroup_name().toLowerCase().matches(searchString)) return true;
-		if(userDB.getDbms_type().toLowerCase().matches(searchString)) return true;
-		if(userDB.getDisplay_name().toLowerCase().matches(searchString)) return true;
-		if(userDB.getUrl().toLowerCase().matches(searchString)) return true;
-		if(userDB.getHost() != null) if(userDB.getHost().toLowerCase().matches(searchString)) return true;
-		if(userDB.getPort() != null)  if(userDB.getPort().toLowerCase().matches(searchString)) return true;
-		if((""+userDB.getCreate_time()).toLowerCase().matches(searchString)) return true;
+		if(element instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)element;
+			if(userDB.getDbms_type().toLowerCase().matches(searchString)) return true;
+			if(userDB.getDisplay_name().toLowerCase().matches(searchString)) return true;
+			if(userDB.getUrl().toLowerCase().matches(searchString)) return true;
+		// tree type will be always show.
+		} else if(element instanceof ManagerListDTO) {
+			return true;
+		}
 		
 		return false;
 	}
