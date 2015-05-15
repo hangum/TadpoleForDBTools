@@ -109,6 +109,46 @@ var completions = [];
 //	langTools.addCompleter(completer); 
 };
 
+
+/**
+ * 동적으로 키워드르 추가할 수 있는 모드
+ */
+ace.define("DynHighlightRules", [], function(require, exports, module) {
+"use strict";
+
+var oop = require("ace/lib/oop");
+var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+
+var DynHighlightRules = function() {
+   this.setKeywords = function(kwMap) {     
+       this.keywordRule.onMatch = this.createKeywordMapper(kwMap, "identifier")
+   }
+   this.keywordRule = {
+       regex : "\\w+",
+       onMatch : function() {return "text"}
+   }
+     
+   this.$rules = {
+        "start" : [ 
+            {
+                token: "string",
+                start: '"', 
+                end: '"',
+                next: [{ token : "constant.language.escape.lsl", regex : /\\[tn"\\]/}]
+            },
+            this.keywordRule
+        ]
+   };
+   this.normalizeRules()
+};
+
+oop.inherits(DynHighlightRules, TextHighlightRules);
+
+exports.DynHighlightRules = DynHighlightRules;
+
+});
+  
+
 /** 
  * 에디터를 초기화 합니다. 
  * @param varMode sql type(ex: sqlite, pgsql), EditorDefine#EXT_SQLite
@@ -119,15 +159,6 @@ var completions = [];
  */
 editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
 	varEditorType = varType;
-	
-//	try {
-//		var tables = varTableList.split("|");
-//		for(var i=0; i<tables.length; i++) {
-//			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
-//		}
-//	} catch(e) {
-//		console.log(e);
-//	 }
 	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
@@ -147,12 +178,21 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 				isEdited = true;
 			}
 		});
-		
-//		doc.$mode.$highlightRules.setKeywords({"keyword": "foo|bar|baz"})
-//		// force rehighlight whole document
-//		doc.bgTokenizer.start(0)
-			
+
 		editor.setSession(doc);
+
+		// 동적으로 테이블 명을 추가할 수 있는 모드 추가 적용
+		var TextMode = ace.require("ace/mode/text").Mode;
+	    var mode = new TextMode();
+		mode.HighlightRules = ace.require("DynHighlightRules").DynHighlightRules;
+
+	    editor.session.setMode(mode);
+	    mode.$highlightRules.setKeywords({
+	    	    "keywords": varTableList
+	    });
+		editor.session.bgTokenizer.start(0);
+
+		
 		editor.focus();
 	} catch(e) {
 		console.log(e);
