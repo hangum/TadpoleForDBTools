@@ -10,9 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.application;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -33,8 +36,13 @@ public class Application implements EntryPoint {
 	private static final Logger logger = Logger.getLogger(Application.class);
 
 	public int createUI() {
-		Display display = PlatformUI.createDisplay();//new TadpoleDisplay();
+		Display display = PlatformUI.createDisplay();
 		
+//		parameter 설정. 
+		final Map<String, String[]> params = RWT.getRequest().getParameterMap();
+	    System.out.println( "####################### parameter size is " + params.size() );
+//	    System.out.println( "param1: " + params.get( "param1" )[ 0 ] );
+	    
 		systemInitialize();
 		
 		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
