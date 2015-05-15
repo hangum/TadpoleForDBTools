@@ -166,8 +166,7 @@
 <select id="groupManager" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.Integer">
 	select a.* from tadpole_user a,  user_role b
 	where 
-	<!-- b.group_seq = #group_seq#
-	and --> b.role_type = 'MANAGER'
+	 b.role_type = 'MANAGER'
 	and a.seq = b.user_seq;
 </select>
 
@@ -193,71 +192,14 @@
 	WHERE seq = #seq#
 </select>
 
-
-<!-- 
-	권한별 유저 리스트
- -->
- <select id="userListPermissions" resultClass="com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO">
- SELECT
-    a.name user_group_name
-    ,b.seq user_seq
-    ,a.seq group_seq
-    ,email
-    ,passwd
-    ,b.name
-    ,c.role_type role_type
-    ,b.delYn
-    ,b.create_time
-    ,b.approval_yn
-  FROM
-    user_group a
-    ,tadpole_user b
-    ,user_role c
-  WHERE
-    a.seq = c.group_seq
-    AND c.user_seq = b.seq
-  ORDER BY
-    user_group_name
-    ,email
- </select>
- 
- <!-- 
- 	사용자 그룹별 유저 리스트 
-  -->
- <select id="userListGroup" resultClass="com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.String">
- SELECT
-    a.name user_group_name
-    ,b.seq user_seq
-    ,a.seq group_seq
-    ,email
-    ,passwd
-    ,b.name
-    ,c.role_type role_type
-    ,b.delYn
-    ,b.create_time
-    ,b.approval_yn
-  FROM
-    user_group a
-    ,tadpole_user b
-    ,user_role c
-  WHERE
- 	   a.seq = c.group_seq
-    AND c.user_seq = b.seq
-    AND c.group_seq in ($group_seq$) 
-    AND c.delYn = 'NO'
-  ORDER BY
-    user_group_name, email
- </select>
-
 <!-- 
 	유저의 권한 데이터를 수정합니다.
  -->
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user SET
-		<!-- security_question = #security_question#,
-		security_answer = #security_answer#, -->
 		delYn = #delYn#,
-		approval_yn = #approval_yn#
+		approval_yn = #approval_yn#,
+		is_email_certification = #is_email_certification#
 	WHERE seq = #seq#
 </update>
 

@@ -101,10 +101,10 @@ public class PreferenceDefine {
 		public static final String SMTP_PORT_VALUE 		= "465";
 		
 		public static final String SMTP_EMAIL 			= "SMTP_EMAIL";
-		public static final String SMTP_EMAIL_VALUE 	= "tadpole.sender@gmail.com";
+		public static final String SMTP_EMAIL_VALUE 	= "";//tadpole.sender@gmail.com";
 		
 		public static final String SMTP_PASSWD 			= "SMTP_PASSWD";
-		public static final String SMTP_PASSWD_VALUE 	= "tadpoleadmin";
+		public static final String SMTP_PASSWD_VALUE 	= "";//tadpoleadmin";
 		
 	/** ORACLE PLAN TABLE */
 	public static final String ORACLE_PLAN_TABLE = "ORACLE_PLAN_TABLE";

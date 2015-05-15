@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 
 /**
 * 유저 정보 레이블 
@@ -23,14 +23,14 @@ public class UserLabelProvider extends LabelProvider implements ITableLabelProvi
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		UserGroupAUserDAO user = (UserGroupAUserDAO)element;
+		UserDAO user = (UserDAO)element;
 
 		switch(columnIndex) {
-		case 0: return user.getUser_group_name();
-		case 1: return user.getEmail();
-		case 2: return user.getName();
-		case 3: return user.getRole_type();
-		case 4: return user.getApproval_yn();
+		case 0: return user.getEmail();
+		case 1: return user.getName();
+		case 2: return user.getEmail_key();
+		case 3: return user.getApproval_yn();
+		case 4: return user.getIs_email_certification();
 		case 5: return user.getDelYn();
 		case 6: return user.getCreate_time();
 		}
