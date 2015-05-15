@@ -3,6 +3,8 @@ package com.hangum.tadpole.manager.core.editor.auth.provider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+
 /**
 * User composite filter
 * 
@@ -22,12 +24,10 @@ public class UserCompFilter extends ViewerFilter {
 			return true;
 		}
 			
-//		UserGroupAUserDAO user = (UserGroupAUserDAO)element;
-//		if(user.getUser_group_name().toLowerCase().matches(searchString)) return true;
-//		if(user.getEmail().toLowerCase().matches(searchString)) return true;
-//		if(user.getName().toLowerCase().matches(searchString)) return true;
-//		if(user.getRole_type().toLowerCase().matches(searchString)) return true;
-//		if(user.getApproval_yn().toLowerCase().matches(searchString)) return true;
+		UserDAO user = (UserDAO)element;
+		if(user.getEmail().toLowerCase().matches(searchString)) return true;
+		if(user.getName().toLowerCase().matches(searchString)) return true;
+		if(user.getEmail_key().toLowerCase().matches(searchString)) return true;
 		
 		return false;
 	}

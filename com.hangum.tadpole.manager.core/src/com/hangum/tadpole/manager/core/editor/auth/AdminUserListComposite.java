@@ -135,17 +135,6 @@ public class AdminUserListComposite extends Composite {
 		});
 		tltmModify.setToolTipText("Modify");
 		
-//		tltmQuery = new ToolItem(toolBar, SWT.NONE);
-//		tltmQuery.setImage(ToobalImageUtils.getQueryHistory());
-//		tltmQuery.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				viewQueryHistory();
-//			}
-//		});
-//		tltmQuery.setEnabled(false);
-//		tltmQuery.setToolTipText("SQL Audit");
-		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSearch.setText("Search");
