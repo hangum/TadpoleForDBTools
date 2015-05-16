@@ -91,23 +91,48 @@ var completions = [];
 	    enableSnippets: true
 	    
 	    ,enableLiveAutocompletion: true
-	});
-	
-//	var completer = {
-//	        getCompletions: function(editor, session, pos, prefix, callback) {
-//	        	var text = editor.getValue(); 
-//	        	
-//	        	if (prefix.length === 0) { 
-//	        		callback(null, []); 
-//	        		return 
-//	        	} 
-//	        	 
-////	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
-//	        	callback(null, completions); 
-//	        } 
-//	} 
-//	langTools.addCompleter(completer); 
+	}); 
 };
+
+
+/**
+ * 동적으로 키워드르 추가할 수 있는 모드
+ */
+ace.define("DynHighlightRules", [], function(require, exports, module) {
+"use strict";
+
+var oop = require("ace/lib/oop");
+var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+
+var DynHighlightRules = function() {
+   this.setKeywords = function(kwMap) {     
+       this.keywordRule.onMatch = this.createKeywordMapper(kwMap, "identifier");
+   }
+   this.keywordRule = {
+       regex : "\\w+",
+       onMatch : function() {return "text";}
+   }
+     
+   this.$rules = {
+        "start" : [ 
+            {
+                token: "string",
+                start: '"', 
+                end: '"',
+                next: [{ token : "constant.language.escape.lsl", regex : /\\[tn"\\]/}]
+            },
+            this.keywordRule
+        ]
+   };
+   this.normalizeRules();
+};
+
+oop.inherits(DynHighlightRules, TextHighlightRules);
+
+exports.DynHighlightRules = DynHighlightRules;
+
+});
+  
 
 /** 
  * 에디터를 초기화 합니다. 
@@ -120,24 +145,15 @@ var completions = [];
 editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
 	varEditorType = varType;
 	
-//	try {
-//		var tables = varTableList.split("|");
-//		for(var i=0; i<tables.length; i++) {
-//			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
-//		}
-//	} catch(e) {
-//		console.log(e);
-//	 }
-	
 	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
 		var UndoManager = ace.require("./undomanager").UndoManager;
 
-		var doc = new EditSession(varInitText);
-		doc.setUndoManager(new UndoManager());
+		var session = new EditSession(varInitText);
+		session.setUndoManager(new UndoManager());
 		
-		doc.setMode(varMode);
-		doc.on('change', function() {
+		session.setMode(varMode);
+		session.on('change', function() {
 			if(!isEdited) {
 				try {
 					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
@@ -147,12 +163,13 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 				isEdited = true;
 			}
 		});
+
+		// Add table list to Editor's keywordList
+		var keywordList = session.$mode.$highlightRules.$keywordList;
+		session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
 		
-//		doc.$mode.$highlightRules.setKeywords({"keyword": "foo|bar|baz"})
-//		// force rehighlight whole document
-//		doc.bgTokenizer.start(0)
-			
-		editor.setSession(doc);
+		editor.setSession(session);
+
 		editor.focus();
 	} catch(e) {
 		console.log(e);
@@ -167,37 +184,6 @@ editorService.saveData = function() {
 editorService.setFocus = function() {
 	editor.focus();
 };
-
-///** user autocomplete */
-//editor.commands.on("afterExec", function(e){
-////	console.log("--> command --> " + e.command.name);
-//	
-//	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
-//		var all = editor.completers;
-//		editor.completers = completions;
-//    	editor.execCommand("startAutocomplete");
-//    	editor.completers = all;
-//    	
-////    } else if(e.command.name == "startAutocomplete") {
-////    	var all = e.editor.completers;
-////    	
-////		var completer = {
-////		        getCompletions: function(editor, session, pos, prefix, callback) {
-////		        	var text = editor.getValue(); 
-////		        	
-////		        	if (prefix.length === 0) { 
-////		        		callback(null, []); 
-////		        		return 
-////		        	} 
-////		        	 
-////	//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
-////		        	callback(null, completions); 
-////		        } 
-////		} 
-////		langTools.addCompleter(completer);
-//	}
-//})
-
 
 //==[ Define short key ]======================================================================================================================
 var shortcutErrMsg = 'Opps, an execution error has occured!\nEither click the "SQL" button of the tool bar, or open a new editor window.';
@@ -550,9 +536,4 @@ editorService.helpDialog = function() {
 	} catch(e) {
 		console.log(e);
 	}
-
-//	ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
-//        module.init(editor);
-//        editor.showKeyboardShortcuts()
-//    })
 };
