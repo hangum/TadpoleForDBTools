@@ -121,11 +121,11 @@ var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightR
 
 var DynHighlightRules = function() {
    this.setKeywords = function(kwMap) {     
-       this.keywordRule.onMatch = this.createKeywordMapper(kwMap, "identifier")
+       this.keywordRule.onMatch = this.createKeywordMapper(kwMap, "identifier");
    }
    this.keywordRule = {
        regex : "\\w+",
-       onMatch : function() {return "text"}
+       onMatch : function() {return "text";}
    }
      
    this.$rules = {
@@ -139,7 +139,7 @@ var DynHighlightRules = function() {
             this.keywordRule
         ]
    };
-   this.normalizeRules()
+   this.normalizeRules();
 };
 
 oop.inherits(DynHighlightRules, TextHighlightRules);
@@ -164,11 +164,11 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 		var EditSession = ace.require("ace/edit_session").EditSession;
 		var UndoManager = ace.require("./undomanager").UndoManager;
 
-		var doc = new EditSession(varInitText);
-		doc.setUndoManager(new UndoManager());
+		var session = new EditSession(varInitText);
+		session.setUndoManager(new UndoManager());
 		
-		doc.setMode(varMode);
-		doc.on('change', function() {
+		session.setMode(varMode);
+		session.on('change', function() {
 			if(!isEdited) {
 				try {
 					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
@@ -179,20 +179,12 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 			}
 		});
 
-		editor.setSession(doc);
-
-		// 동적으로 테이블 명을 추가할 수 있는 모드 추가 적용
-		var TextMode = ace.require("ace/mode/text").Mode;
-	    var mode = new TextMode();
-		mode.HighlightRules = ace.require("DynHighlightRules").DynHighlightRules;
-
-	    editor.session.setMode(mode);
-	    mode.$highlightRules.setKeywords({
-	    	    "keywords": varTableList
-	    });
-		editor.session.bgTokenizer.start(0);
-
+		// Add table list to Editor's keywordList
+		var keywordList = session.$mode.$highlightRules.$keywordList;
+		session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
 		
+		editor.setSession(session);
+
 		editor.focus();
 	} catch(e) {
 		console.log(e);
