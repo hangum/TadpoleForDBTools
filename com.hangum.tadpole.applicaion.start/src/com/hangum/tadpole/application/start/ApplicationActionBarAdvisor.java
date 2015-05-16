@@ -174,11 +174,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	        toolbar.add(sendMessageAction);
 	        toolbar.add(new Separator());
         }
+        
+        toolbar.add(transactionConnectionAction);
+        toolbar.add(new Separator());
+    
+        toolbar.add(resourceManageAction);
+        toolbar.add(new Separator());
 
-//        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-        	toolbar.add(userPermissionAction);
-        	toolbar.add(new Separator());
-//        }
+    	toolbar.add(userPermissionAction);
+    	toolbar.add(new Separator());
         
     	toolbar.add(executedSQLAction);
         toolbar.add(new Separator());
@@ -189,14 +193,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());
             
-//        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-            toolbar.add(transactionConnectionAction);
-            toolbar.add(new Separator());
-//        }
-        
-        toolbar.add(resourceManageAction);
-        toolbar.add(new Separator());
-        
 //        toolbar.add(monitoringRealTimeAction);
 //        toolbar.add(new Separator());
         

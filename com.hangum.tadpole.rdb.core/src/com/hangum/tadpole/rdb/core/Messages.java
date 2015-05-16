@@ -393,6 +393,7 @@ public class Messages extends NLS {
 	public static String MongoDBLoginComposite_lblReplicaSet_text;
 	public static String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
 	public static String MainEditor_btnClear_text;
+	public static String MessageComposite_1;
 	public static String MySQLLoginComposite_lblOperationType_text;
 //	public static String IntroEditor_label_text;
 	public static String IntroEditor_label_1_text;
@@ -443,6 +444,7 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_btnCreationDb_text;
 	public static String TableDirectEditorComposite_tltmRefersh_text;
 	public static String ResultSetComposite_0;
+	public static String ResultSetComposite_2;
 	public static String ResultSetComposite_7;
 	public static String ResultSetComposite_8;
 	public static String ResultSetComposite_btnDmlGenerator_text;

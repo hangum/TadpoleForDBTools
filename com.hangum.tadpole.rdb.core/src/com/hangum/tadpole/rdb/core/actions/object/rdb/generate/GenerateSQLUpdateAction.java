@@ -73,10 +73,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 					cnt++;
 				}				
 			}
-			sbSQL.append(" ; "); //$NON-NLS-1$
-			
-			//
-//			QueryEditorAction qea = new QueryEditorAction();
+
 			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), actionType);
 		} catch(Exception e) {
 			logger.error("Generate SQL Statement Error", e); //$NON-NLS-1$

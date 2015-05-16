@@ -88,9 +88,8 @@ var completions = [];
 	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
-	    enableSnippets: true
-	    
-	    ,enableLiveAutocompletion: true
+	    enableSnippets: true,
+	    enableLiveAutocompletion: true
 	}); 
 };
 

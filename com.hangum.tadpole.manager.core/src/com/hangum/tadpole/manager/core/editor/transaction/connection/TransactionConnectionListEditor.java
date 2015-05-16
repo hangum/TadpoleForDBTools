@@ -45,6 +45,7 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * Transaction Connection List
@@ -54,7 +55,7 @@ import com.hangum.tadpole.manager.core.Activator;
  */
 public class TransactionConnectionListEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(TransactionConnectionListEditor.class);
-	public static final String ID = "com.hangum.tadpole.manager.core.editor.transaction.connection.db";
+	public static final String ID = "com.hangum.tadpole.manager.core.editor.transaction.connection.db"; //$NON-NLS-1$
 
 	private TableViewer tableViewer;
 	private TransactioonTableComparator tableComparator;
@@ -98,7 +99,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		
 		// transaction CTabItem widget create
 		CTabItem tbtmTransactionConnection = new CTabItem(tabFolder, SWT.NONE);
-		tbtmTransactionConnection.setText("Transaction");
+		tbtmTransactionConnection.setText(Messages.TransactionConnectionListEditor_1);
 		
 		Composite compositeTransactionConnection = new Composite(tabFolder, SWT.NONE);
 		tbtmTransactionConnection.setControl(compositeTransactionConnection);
@@ -138,7 +139,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		ToolItem tltmCRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmCRefresh.setText("Refresh");
+		tltmCRefresh.setText(Messages.TransactionConnectionListEditor_2);
 		
 		TableViewer tableViewerCon = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
 		tableCon = tableViewerCon.getTable();
@@ -173,35 +174,35 @@ public class TransactionConnectionListEditor extends EditorPart {
 				initTransactionUI();
 			}
 		});
-		tltmRefresh.setToolTipText("Refresh");
+		tltmRefresh.setToolTipText(Messages.TransactionConnectionListEditor_2);
 		
 		tltmCommit = new ToolItem(toolBar, SWT.NONE);
 		tltmCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tableViewer.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, "Confirm", "Do you want DB Commit?")) return;
+					if(!MessageDialog.openConfirm(null, Messages.TransactionConnectionListEditor_4, Messages.TransactionConnectionListEditor_5)) return;
 					
 					executTransaction(true);
 				}
 			}
 		});
 		tltmCommit.setEnabled(false);
-		tltmCommit.setText("Commit");
+		tltmCommit.setText(Messages.TransactionConnectionListEditor_6);
 		
 		tltmRollback = new ToolItem(toolBar, SWT.NONE);
 		tltmRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tableViewer.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, "Confirm", "Do you want DB Rollback?")) return;
+					if(!MessageDialog.openConfirm(null, Messages.TransactionConnectionListEditor_4, Messages.TransactionConnectionListEditor_8)) return;
 					
 					executTransaction(false);
 				}
 			}
 		});
 		tltmRollback.setEnabled(false);
-		tltmRollback.setText("Rollback");
+		tltmRollback.setText(Messages.TransactionConnectionListEditor_9);
 		
 		Composite compositeBody = new Composite(compositeTransactionConnection, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -251,10 +252,10 @@ public class TransactionConnectionListEditor extends EditorPart {
 			
 			initTransactionUI();
 		} catch (Exception e1) {
-			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1);
+			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Transaction fail", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TransactionConnectionListEditor_12, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -280,7 +281,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * create columns
 	 */
 	private void createColumns() {
-		String[] names = {"DB Type", "Display Name", "User", "Start Connectin"};
+		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14, Messages.TransactionConnectionListEditor_15, Messages.TransactionConnectionListEditor_16};
 		int[] sizes = {80, 200, 200, 200};
 				
 		for(int i=0; i<names.length; i++) {

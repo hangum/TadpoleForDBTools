@@ -14,18 +14,18 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.SWTResourceManager;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Result Message Composite
@@ -58,10 +58,10 @@ public class MessageComposite extends Composite {
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				textMessage.setText("");
+				textMessage.setText(""); //$NON-NLS-1$
 			}
 		});
-		btnClear.setText("Clear");
+		btnClear.setText(Messages.MessageComposite_1);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class MessageComposite extends Composite {
 	 * @param tadpoleMessageDAO
 	 */
 	public void addAfterRefresh(TadpoleMessageDAO tadpoleMessageDAO) {
-		String strNewMessage = String.format("==[ %s ]============\n", tadpoleMessageDAO.getDateExecute().toString());
+		String strNewMessage = String.format("==[ %s ]============\n", tadpoleMessageDAO.getDateExecute().toString()); //$NON-NLS-1$
 		
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if(throwable == null) {
@@ -80,7 +80,7 @@ public class MessageComposite extends Composite {
 				SQLException sqlException = (SQLException)throwable;
 				StringBuffer sbMsg = new StringBuffer();
 				
-				sbMsg.append(String.format("[SQL State : %s, Error Code: %s]", sqlException.getSQLState(), sqlException.getErrorCode()));
+				sbMsg.append(String.format("[SQL State : %s, Error Code: %s]", sqlException.getSQLState(), sqlException.getErrorCode())); //$NON-NLS-1$
 				sbMsg.append(sqlException.getMessage());
 				
 				strNewMessage += sbMsg.toString();
