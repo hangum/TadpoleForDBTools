@@ -154,7 +154,8 @@ public class TransactionConnectionListEditor extends EditorPart {
 				initGeneral();
 			}
 		});
-		tltmCRefresh.setText(Messages.TransactionConnectionListEditor_2);
+		tltmCRefresh.setImage(ToobalImageUtils.getRefresh());
+		tltmCRefresh.setToolTipText(Messages.TransactionConnectionListEditor_2);
 		
 		tvGeneral = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableCon = tvGeneral.getTable();
