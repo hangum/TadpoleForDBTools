@@ -12,9 +12,14 @@ package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+
+import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
@@ -193,6 +198,41 @@ public class TadpoleSQLManager {
 	}
 	
 	/**
+	 * dbcp pool info
+	 * 
+	 * @return
+	 */
+	public static List<DBCPInfoDAO> getDBCPInfo() {
+		List<DBCPInfoDAO> listDbcpInfo = new ArrayList<DBCPInfoDAO>();
+		
+		Set<String> setKeys = getDbManager().keySet();
+		for (String stKey : setKeys) {
+			
+			SqlMapClient sqlMap = dbManager.get(stKey);
+			DataSource ds = sqlMap.getDataSource();
+			BasicDataSource bds = (BasicDataSource)ds;
+			
+			String[] strArryKey = StringUtils.splitByWholeSeparator(stKey, PublicTadpoleDefine.DELIMITER);
+			if(!DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString().equals(strArryKey[1])) {
+				
+				DBCPInfoDAO dao = new DBCPInfoDAO();
+				dao.setDbSeq(Integer.parseInt(strArryKey[0]));
+				dao.setDbType(strArryKey[1]);
+				dao.setDisplayName(strArryKey[2]);
+				
+				dao.setNumberActive(bds.getNumActive());
+				dao.setMaxActive(bds.getMaxActive());
+				dao.setNumberIdle(bds.getNumIdle());
+				dao.setMaxWait(bds.getMaxWait());
+				
+				listDbcpInfo.add(dao);
+			}
+		}
+		
+		return listDbcpInfo;
+	}
+	
+	/**
 	 * DBMetadata
 	 * @return
 	 */
@@ -221,8 +261,8 @@ public class TadpoleSQLManager {
 	public static String getKey(UserDBDAO dbInfo) {
 		return dbInfo.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
 				dbInfo.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
+				dbInfo.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
 				dbInfo.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getUsers()  		+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getPasswd()  	+ PublicTadpoleDefine.DELIMITER;
+				dbInfo.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
 	}
 }

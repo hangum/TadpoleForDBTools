@@ -38,10 +38,9 @@ public class Application implements EntryPoint {
 	public int createUI() {
 		Display display = PlatformUI.createDisplay();
 		
-//		parameter 설정. 
+		// api call을 하기 위한 초기 진입점.  
 		final Map<String, String[]> params = RWT.getRequest().getParameterMap();
-	    System.out.println( "####################### parameter size is " + params.size() );
-//	    System.out.println( "param1: " + params.get( "param1" )[ 0 ] );
+	    if(logger.isDebugEnabled()) logger.debug( "####################### parameter size is " + params.size() );
 	    
 		systemInitialize();
 		

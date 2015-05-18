@@ -77,6 +77,8 @@ public class Messages extends NLS {
 	public static String NewUserDialog_lblQrcodeUrl_text;
 	public static String NewUserDialog_lblOtpCdoe_text;
 
+	public static String TransactionConnectionListEditor_0;
+
 	public static String TransactionConnectionListEditor_1;
 
 	public static String TransactionConnectionListEditor_12;

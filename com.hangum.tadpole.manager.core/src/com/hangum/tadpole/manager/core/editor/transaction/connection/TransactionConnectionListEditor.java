@@ -10,6 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.transaction.connection;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -40,12 +46,15 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.engine.manager.DBCPInfoDAO;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Transaction Connection List
@@ -57,12 +66,12 @@ public class TransactionConnectionListEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(TransactionConnectionListEditor.class);
 	public static final String ID = "com.hangum.tadpole.manager.core.editor.transaction.connection.db"; //$NON-NLS-1$
 
-	private TableViewer tableViewer;
+	private TableViewer tvTransaction;
 	private TransactioonTableComparator tableComparator;
 	
 	private ToolItem tltmCommit;
 	private ToolItem tltmRollback;
-	private Table tableCon;
+	private TableViewer tvGeneral;
 
 	public TransactionConnectionListEditor() {
 		super();
@@ -83,19 +92,19 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 
 		// connection pool list
-//		CTabItem tbtmConnectionPool = new CTabItem(tabFolder, SWT.NONE);
-//		tbtmConnectionPool.setText("Connection Pool");
-//		
-//		Composite compositeConnectionPool = new Composite(tabFolder, SWT.NONE);
-//		tbtmConnectionPool.setControl(compositeConnectionPool);
-//		GridLayout gl_compositeConnectionPool = new GridLayout(1, false);
-//		gl_compositeConnectionPool.verticalSpacing = 1;
-//		gl_compositeConnectionPool.horizontalSpacing = 1;
-//		gl_compositeConnectionPool.marginHeight = 1;
-//		gl_compositeConnectionPool.marginWidth = 1;
-//		compositeConnectionPool.setLayout(gl_compositeConnectionPool);
-//		
-//		createConnectionPoolComposite(compositeConnectionPool);
+		CTabItem tbtmConnectionPool = new CTabItem(tabFolder, SWT.NONE);
+		tbtmConnectionPool.setText(Messages.TransactionConnectionListEditor_0);
+		
+		Composite compositeConnectionPool = new Composite(tabFolder, SWT.NONE);
+		tbtmConnectionPool.setControl(compositeConnectionPool);
+		GridLayout gl_compositeConnectionPool = new GridLayout(1, false);
+		gl_compositeConnectionPool.verticalSpacing = 1;
+		gl_compositeConnectionPool.horizontalSpacing = 1;
+		gl_compositeConnectionPool.marginHeight = 1;
+		gl_compositeConnectionPool.marginWidth = 1;
+		compositeConnectionPool.setLayout(gl_compositeConnectionPool);
+		
+		createConnectionPoolComposite(compositeConnectionPool);
 		
 		// transaction CTabItem widget create
 		CTabItem tbtmTransactionConnection = new CTabItem(tabFolder, SWT.NONE);
@@ -139,13 +148,54 @@ public class TransactionConnectionListEditor extends EditorPart {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		ToolItem tltmCRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmCRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initGeneral();
+			}
+		});
 		tltmCRefresh.setText(Messages.TransactionConnectionListEditor_2);
 		
-		TableViewer tableViewerCon = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
-		tableCon = tableViewerCon.getTable();
+		tvGeneral = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
+		Table tableCon = tvGeneral.getTable();
 		tableCon.setLinesVisible(true);
 		tableCon.setHeaderVisible(true);
 		tableCon.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		createGeneralColumns();
+		
+		tvGeneral.setContentProvider(new ArrayContentProvider());
+		tvGeneral.setLabelProvider(new GeneralConnecionPoolLabelprovider());
+		
+		initGeneral();
+	}
+	
+	/**
+	 * 
+	 */
+	private void initGeneral() {
+		List<DBCPInfoDAO> listDbcp = TadpoleSQLManager.getDBCPInfo();
+		tvGeneral.setInput(listDbcp);
+	}
+	
+	/**
+	 * general table create columns
+	 */
+	private void createGeneralColumns() {
+		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14, "Active Connections", "Max Active Count", "Idle Count", "Max wait"};
+		int[] sizes = {80, 200, 100, 100, 100, 100};
+				
+		for(int i=0; i<names.length; i++) {
+			String name = names[i];
+			int size = sizes[i];
+			
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvGeneral, SWT.NONE);
+			TableColumn tblclmnEngine = tableViewerColumn.getColumn();
+			tblclmnEngine.setWidth(size);
+			tblclmnEngine.setText(name);
+			
+			tblclmnEngine.addSelectionListener(getSelectionAdapter(tblclmnEngine, i));
+		}
 	}
 	
 	/**
@@ -180,7 +230,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tltmCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!tableViewer.getSelection().isEmpty()) {
+				if(!tvTransaction.getSelection().isEmpty()) {
 					if(!MessageDialog.openConfirm(null, Messages.TransactionConnectionListEditor_4, Messages.TransactionConnectionListEditor_5)) return;
 					
 					executTransaction(true);
@@ -194,7 +244,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tltmRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!tableViewer.getSelection().isEmpty()) {
+				if(!tvTransaction.getSelection().isEmpty()) {
 					if(!MessageDialog.openConfirm(null, Messages.TransactionConnectionListEditor_4, Messages.TransactionConnectionListEditor_8)) return;
 					
 					executTransaction(false);
@@ -213,26 +263,26 @@ public class TransactionConnectionListEditor extends EditorPart {
 		gl_compositeBody.marginWidth = 1;
 		compositeBody.setLayout(gl_compositeBody);
 		
-		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
-		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		tvTransaction = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tvTransaction.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				transactionBtnInit(true);
 			}
 		});
-		Table table = tableViewer.getTable();
+		Table table = tvTransaction.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		// sorter
 		tableComparator = new TransactioonTableComparator();
-		tableViewer.setSorter(tableComparator);
+		tvTransaction.setSorter(tableComparator);
 		tableComparator.setColumn(0);
 		
-		createColumns();
+		createTransactionColumns();
 		
-		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setLabelProvider(new TransactionConnectionListLabelProvider());
+		tvTransaction.setContentProvider(new ArrayContentProvider());
+		tvTransaction.setLabelProvider(new TransactionConnectionListLabelProvider());
 		
 		initTransactionUI();
 	}
@@ -243,7 +293,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * @param isCommit
 	 */
 	private void executTransaction(boolean isCommit) {
-		IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
+		IStructuredSelection iss = (IStructuredSelection)tvTransaction.getSelection();
 		TransactionDAO tdao = (TransactionDAO)iss.getFirstElement();
 		
 		try {
@@ -274,13 +324,13 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 */
 	private void initTransactionUI() {
 		transactionBtnInit(false);
-		tableViewer.setInput(TadpoleSQLTransactionManager.getDbManager().values());
+		tvTransaction.setInput(TadpoleSQLTransactionManager.getDbManager().values());
 	}
 	
 	/**
-	 * create columns
+	 * transaction table create columns
 	 */
-	private void createColumns() {
+	private void createTransactionColumns() {
 		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14, Messages.TransactionConnectionListEditor_15, Messages.TransactionConnectionListEditor_16};
 		int[] sizes = {80, 200, 200, 200};
 				
@@ -288,7 +338,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			String name = names[i];
 			int size = sizes[i];
 			
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvTransaction, SWT.NONE);
 			TableColumn tblclmnEngine = tableViewerColumn.getColumn();
 			tblclmnEngine.setWidth(size);
 			tblclmnEngine.setText(name);
@@ -311,9 +361,9 @@ public class TransactionConnectionListEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableComparator.setColumn(index);
-				tableViewer.getTable().setSortDirection(tableComparator.getDirection());
-				tableViewer.getTable().setSortColumn(column);
-				tableViewer.refresh();
+				tvTransaction.getTable().setSortDirection(tableComparator.getDirection());
+				tvTransaction.getTable().setSortColumn(column);
+				tvTransaction.refresh();
 			}
 		};
 		

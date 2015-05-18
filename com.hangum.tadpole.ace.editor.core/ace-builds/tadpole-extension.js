@@ -67,7 +67,7 @@ var isEdited = false;
 var varEditorType = 'TABLES';
 
 // enable live auto completion
-var completions = [];
+//var completions = [];
 
 /** initialize editor */
 {
@@ -82,10 +82,6 @@ var completions = [];
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
-	/*
-	 *  autocomplete
-	 *  http://stackoverflow.com/questions/13545433/autocompletion-in-ace-editor 
-	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
 	    enableSnippets: true,
@@ -98,38 +94,36 @@ var completions = [];
  * 동적으로 키워드르 추가할 수 있는 모드
  */
 ace.define("DynHighlightRules", [], function(require, exports, module) {
-"use strict";
-
-var oop = require("ace/lib/oop");
-var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
-
-var DynHighlightRules = function() {
-   this.setKeywords = function(kwMap) {     
-       this.keywordRule.onMatch = this.createKeywordMapper(kwMap, "identifier");
-   }
-   this.keywordRule = {
-       regex : "\\w+",
-       onMatch : function() {return "text";}
-   }
-     
-   this.$rules = {
-        "start" : [ 
-            {
-                token: "string",
-                start: '"', 
-                end: '"',
-                next: [{ token : "constant.language.escape.lsl", regex : /\\[tn"\\]/}]
-            },
-            this.keywordRule
-        ]
-   };
-   this.normalizeRules();
-};
-
-oop.inherits(DynHighlightRules, TextHighlightRules);
-
-exports.DynHighlightRules = DynHighlightRules;
-
+//	"use strict";
+	var oop = require("ace/lib/oop");
+	var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+	
+	var DynHighlightRules = function() {
+	   this.setKeywords = function(kwMap) {     
+	       this.keywordRule.onMatch = this.createKeywordMapper(kwMap, "identifier");
+	   }
+	   this.keywordRule = {
+	       regex : "\\w+",
+	       onMatch : function() {return "text";}
+	   }
+	     
+	   this.$rules = {
+	        "start" : [ 
+	            {
+	                token: "string",
+	                start: '"', 
+	                end: '"',
+	                next: [{ token : "constant.language.escape.lsl", regex : /\\[tn"\\]/}]
+	            },
+	            this.keywordRule
+	        ]
+	   };
+	   this.normalizeRules();
+	};
+	
+	oop.inherits(DynHighlightRules, TextHighlightRules);
+	
+	exports.DynHighlightRules = DynHighlightRules;
 });
   
 
