@@ -10,12 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.application;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -38,14 +35,20 @@ public class Application implements EntryPoint {
 	public int createUI() {
 		Display display = PlatformUI.createDisplay();
 		
-		// api call을 하기 위한 초기 진입점.  
-		final Map<String, String[]> params = RWT.getRequest().getParameterMap();
-	    if(logger.isDebugEnabled()) logger.debug( "####################### parameter size is " + params.size() );
-	    
-		systemInitialize();
-		
-		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
-		return PlatformUI.createAndRunWorkbench( display, advisor );
+//		// api call을 하기 위한 초기 진입점.  
+//		StartupParameters service = RWT.getClient().getService(StartupParameters.class );
+//		String serviceID = service.getParameter("serviceID");
+//		systemInitialize();
+//		
+//		if(null == serviceID) {
+			WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
+			return PlatformUI.createAndRunWorkbench( display, advisor );
+//		} else {
+//			if(logger.isDebugEnabled()) logger.debug( "####################### serviceid is " + serviceID );
+//			Collection<String> collString = service.getParameterNames();
+//			
+//			return PlatformUI.RETURN_RESTART;
+//		}
 	}
 	
 	/**

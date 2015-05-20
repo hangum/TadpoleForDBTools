@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +18,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
+import org.eclipse.rap.rwt.client.service.StartupParameters;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.rap.rwt.service.UISessionEvent;
 import org.eclipse.rap.rwt.service.UISessionListener;
@@ -34,12 +32,13 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.application.start.api.APIServiceDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -205,63 +204,75 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * login 
      */
     private void login() {
-    	// If you already login?
-    	if(0 == SessionManager.getUserSeq()) {
-    	
-	    	// Open login dialog    
-	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
+		// api call을 하기 위한 초기 진입점.  
+		StartupParameters serviceParameter = RWT.getClient().getService(StartupParameters.class );
+		String serviceID = serviceParameter.getParameter(PublicTadpoleDefine.SERVICE_KEY_NAME);
+		if(null != serviceID) {
+			if(logger.isDebugEnabled()) logger.debug( "####################### serviceid is " + serviceID );
+			
+			APIServiceDialog apiDialog = new APIServiceDialog(Display.getCurrent().getActiveShell(), serviceParameter);
+			apiDialog.open();
+
+		} else {
+				
+	    	// If you already login?
+	    	if(0 == SessionManager.getUserSeq()) {
 	    	
-	    	// When login cancel button, i use in manager authority.
-	    	if(Dialog.OK != loginDialog.open()) {
-	    		//not flow this logic
-//	    		
-//	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
-//				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
-//		    	try {
-//					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
-//					initSession();
-//				} catch (Exception e) {
-//					logger.error("demo mode user login", e); //$NON-NLS-1$
-//					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
-//					return;
-//				}	
-	    	} else {
-	    		try {
-		    		// Stored user session.
-					List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
-					Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
-					for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-						mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
-					}
-					SessionManager.setUserAllPreferenceData(mapUserInfoData);
-					
-					if ("".equals(SessionManager.getPerspective())) {
-					
-//						// user 사용자는 default perspective를 사용합니다.
-//						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
-//							SessionManager.setPerspective(Perspective.DEFAULT);
-//						} else {
-							String persp;
-							SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
-							
-							if (Dialog.OK == dialog.open()) {
-								persp = dialog.getResult();
-							} else {
-								persp = Perspective.DEFAULT;
-							}
-							SessionManager.setPerspective(persp);
-//						}
-					}
-					
-					initSession();
-					
-	    		} catch(Exception e) {
-	    			
-	    			logger.error("session set", e); //$NON-NLS-1$
-	    		}
-	    		
+		    	// Open login dialog    
+		    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
+		    	
+		    	// When login cancel button, i use in manager authority.
+		    	if(Dialog.OK != loginDialog.open()) {
+		    		//not flow this logic
+	//	    		
+	//	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
+	//				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
+	//		    	try {
+	//					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
+	//					initSession();
+	//				} catch (Exception e) {
+	//					logger.error("demo mode user login", e); //$NON-NLS-1$
+	//					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
+	//					return;
+	//				}	
+		    	} else {
+		    		try {
+			    		// Stored user session.
+						List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
+						Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
+						for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
+							mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
+						}
+						SessionManager.setUserAllPreferenceData(mapUserInfoData);
+						
+						if ("".equals(SessionManager.getPerspective())) {
+						
+	//						// user 사용자는 default perspective를 사용합니다.
+	//						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+	//							SessionManager.setPerspective(Perspective.DEFAULT);
+	//						} else {
+								String persp;
+								SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
+								
+								if (Dialog.OK == dialog.open()) {
+									persp = dialog.getResult();
+								} else {
+									persp = Perspective.DEFAULT;
+								}
+								SessionManager.setPerspective(persp);
+	//						}
+						}
+						
+						initSession();
+						
+		    		} catch(Exception e) {
+		    			
+		    			logger.error("session set", e); //$NON-NLS-1$
+		    		}
+		    		
+		    	}
 	    	}
-    	} 
+		}
     }
     
     /**

@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
  *
  */
 public class PublicTadpoleDefine {
+	public static final String SERVICE_KEY_NAME = "serviceID";
 	/**
 	 * PLAN Statement ID
 	 */

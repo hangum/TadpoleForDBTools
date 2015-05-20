@@ -543,9 +543,17 @@
 	user db resource
 	============================================================================================================================
  -->
+<select id="findAPIKey" parameterClass="java.lang.String" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource 
+	WHERE 
+			restapi_key = #restapi_key#
+		AND restapi_yesno = 'YES'
+</select>
+ 
+ 
 <insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
-	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, name, shared_type, description)
-	VALUES(#resource_types#, #user_seq#, #db_seq#, #name#, #shared_type#, #description#)
+	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, name, shared_type, description, restapi_yesno, restapi_key)
+	VALUES(#resource_types#, #user_seq#, #db_seq#, #name#, #shared_type#, #description#, #restapi_yesno#, #restapi_key#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 		SELECT * 
@@ -579,6 +587,8 @@ SELECT
 	, m.description as description
 	, m.create_time as create_time
 	, m.delyn as delyn
+	, m.restapi_yesno as restapi_yesno
+	, m.restapi_key as restapi_key
   FROM user_db_resource m
   	inner join tadpole_user u on m.user_seq = u.seq
   where 1=1
@@ -594,6 +604,8 @@ SELECT
 	set shared_type = #shared_type#
 	   ,name = #res_title#
 	   ,description = #description#
+	   ,restapi_yesno = #restapi_yesno#
+	   ,restapi_key = #restapi_key#
 	WHERE
 		resource_seq = #resource_seq#
 </update>

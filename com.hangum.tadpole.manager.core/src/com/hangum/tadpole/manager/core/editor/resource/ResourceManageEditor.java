@@ -17,6 +17,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -54,8 +56,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -101,6 +105,8 @@ public class ResourceManageEditor extends EditorPart {
 	List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
 	private TreeViewer treeViewer;
 	private Text textDescription;
+	private Combo comboSupportAPI;
+	private Text textAPIKey;
 
 	public ResourceManageEditor() {
 		super();
@@ -229,7 +235,6 @@ public class ResourceManageEditor extends EditorPart {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Label lblNewLabel = new Label(composite, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText("Share");
 
 		comboViewer = new ComboViewer(composite, SWT.NONE);
@@ -238,13 +243,13 @@ public class ResourceManageEditor extends EditorPart {
 		comboShare.setItems(new String[] { "PUBLIC", "PRIVATE" });
 
 		Label lblNewLabel_1 = new Label(composite, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setText("Title");
 
 		textTitle = new Text(composite, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Button btnSave = new Button(composite, SWT.NONE);
+		btnSave.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -261,51 +266,97 @@ public class ResourceManageEditor extends EditorPart {
 					dao.setShared_type(share_type);
 					dao.setRes_title(textTitle.getText());
 					dao.setDescription(textDescription.getText());
+					dao.setRestapi_yesno(comboSupportAPI.getText());
+					dao.setRestapi_key(textAPIKey.getText());
+					
 					TadpoleSystem_UserDBResource.updateResourceHeader(dao);
 					//reLoadResource();
-					addUserResouceData();
+					addUserResouceData(dao);
+					
+					MessageDialog.openInformation(getSite().getShell(), "Confirm", "Save resource data.");
 				} catch (Exception e1) {
 					logger.error("save resource", e1);
+					MessageDialog.openError(getSite().getShell(), "Error", "Rise exception.\n"+ e1.getMessage());
 				}
 			}
 		});
 		btnSave.setText("Save");
 
-		Button btnDelete = new Button(composite, SWT.NONE);
-		btnDelete.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// TODO : DELYN SET TO 'YES'
-				if (tableViewer.getSelection().isEmpty())
-					return;
-
-				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
-				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
-
-				// 기존에 사용하던 좌측 트리(디비목록)에 리소스를 표시하지 않을 경우에는 dao를 통일해서 하나만 쓰게 수정이
-				// 필요함.
-				UserDBResourceDAO userDBResource = new UserDBResourceDAO();
-				userDBResource.setResource_seq((int) dao.getResource_seq());
-				userDBResource.setName(dao.getRes_title());
-				userDBResource.setParent(userDB);
-
-				try {
-					TadpoleSystem_UserDBResource.delete(userDBResource);
-				} catch (Exception e1) {
-					logger.error("Resource delete " + dao.toString(), e1);
-				}
-			}
-		});
-		btnDelete.setText("Delete");
+//		Button btnDelete = new Button(composite, SWT.NONE);
+//		btnDelete.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				if (tableViewer.getSelection().isEmpty()) return;
+//
+//				if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you wont to delete?")) return;
+//				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+//				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
+//
+//				// 기존에 사용하던 좌측 트리(디비목록)에 리소스를 표시하지 않을 경우에는 dao를 통일해서 하나만 쓰게 수정이
+//				// 필요함.
+//				UserDBResourceDAO userDBResource = new UserDBResourceDAO();
+//				userDBResource.setResource_seq((int) dao.getResource_seq());
+//				userDBResource.setName(dao.getRes_title());
+//				userDBResource.setParent(userDB);
+//
+//				try {
+//					TadpoleSystem_UserDBResource.delete(userDBResource);
+//					addUserResouceData(null);
+//				} catch (Exception e1) {
+//					logger.error("Resource delete " + dao.toString(), e1);
+//				}
+//			}
+//		});
+//		btnDelete.setText("Delete");
 
 		Label lblDescription = new Label(composite, SWT.NONE);
-		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDescription.setText("Description");
 
 		textDescription = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1);
 		gd_textDescription.heightHint = 44;
 		textDescription.setLayoutData(gd_textDescription);
+		
+		Label lblSupportApi = new Label(composite, SWT.NONE);
+		lblSupportApi.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSupportApi.setText("Support API");
+		
+		comboSupportAPI = new Combo(composite, SWT.READ_ONLY);
+		comboSupportAPI.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if("YES".equals(comboSupportAPI.getText())) {
+					if("".equals(textAPIKey.getText())) {
+						textAPIKey.setText(Utils.getUniqueID());
+					}
+				}
+			}
+		});
+		comboSupportAPI.add("YES");
+		comboSupportAPI.add("NO");
+		comboSupportAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblApiKey = new Label(composite, SWT.NONE);
+		lblApiKey.setText("API KEY");
+		
+		textAPIKey = new Text(composite, SWT.BORDER | SWT.READ_ONLY);
+		textAPIKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		Button btnShowUrl = new Button(composite, SWT.NONE);
+		btnShowUrl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				String strURL = String.format("%s?%s=%s&1=FirstParameter&2=SecondParameter", 
+						"http://yoururl.com", 
+						PublicTadpoleDefine.SERVICE_KEY_NAME, textAPIKey.getText());
+
+				TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URI", strURL);
+				dialog.open();
+			}
+		});
+		btnShowUrl.setText("Show URL");
+		new Label(composite, SWT.NONE);
 
 		textQuery = new Text(composite, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 6, 1));
@@ -334,6 +385,8 @@ public class ResourceManageEditor extends EditorPart {
 				, new TableViewColumnDefine("USER_NAME", "User", 90, SWT.CENTER) //
 				, new TableViewColumnDefine("RES_TITLE", "Subject", 150, SWT.LEFT) //
 				, new TableViewColumnDefine("SHARED_TYPE", "Share", 70, SWT.CENTER) //
+				, new TableViewColumnDefine("RESTAPI_YESNO", "Enable API", 100, SWT.CENTER) //
+				, new TableViewColumnDefine("RESTAPI_KEY", "API Key", 200, SWT.CENTER) //
 				, new TableViewColumnDefine("CREATE_TIME", "Create", 100, SWT.CENTER) //
 				, new TableViewColumnDefine("DESCRIPTION", "Description", 250, SWT.LEFT) //
 		};
@@ -358,7 +411,7 @@ public class ResourceManageEditor extends EditorPart {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (is.getFirstElement() instanceof UserDBDAO) {
 					userDB = (UserDBDAO) is.getFirstElement();
-					addUserResouceData();
+					addUserResouceData(null);
 				}
 
 				//
@@ -388,6 +441,8 @@ public class ResourceManageEditor extends EditorPart {
 					comboShare.select("PUBLIC".equals(dao.getShared_type()) ? 0 : 1);
 					textTitle.setText(dao.getRes_title());
 					textDescription.setText(dao.getDescription());
+					comboSupportAPI.setText(dao.getRestapi_yesno());
+					textAPIKey.setText(dao.getRestapi_key()==null?"":dao.getRestapi_key());
 					textQuery.setText("");
 					for (String data : result) {
 						textQuery.append(data);
@@ -472,18 +527,20 @@ public class ResourceManageEditor extends EditorPart {
 	 * 
 	 * @param userDB
 	 */
-	public void addUserResouceData() {
+	public void addUserResouceData(ResourceManagerDAO dao) {
 
 		try {
-			comboViewer.getCombo().clearSelection();
-			textTitle.setText("");
-			textDescription.setText("");
-			textQuery.setText("");
+//			comboViewer.getCombo().clearSelection();
+//			textTitle.setText("");
+//			textDescription.setText("");
+//			textQuery.setText("");
+//			comboSupportAPI.select(0);
+//			textAPIKey.setText("");
 
 			List<ResourceManagerDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbResource(userDB);
 
 			tableViewer.setInput(listUserDBResources);
-			tableViewer.refresh();
+			tableViewer.refresh(dao, true);
 
 		} catch (Exception e) {
 			logger.error("user_db_erd list", e); //$NON-NLS-1$

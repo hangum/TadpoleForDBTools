@@ -34,6 +34,19 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_UserDBResource {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBResource.class);
+	
+	/**
+	 * find api 
+	 * @param strAPIKey
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDBResourceDAO findAPIKey(String strAPIKey) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserDBResourceDAO userResource = (UserDBResourceDAO)sqlClient.queryForObject("findAPIKey", strAPIKey);
+		
+		return userResource;
+	}
 		
 	/**
 	 * 저장 
@@ -144,6 +157,7 @@ public class TadpoleSystem_UserDBResource {
 		dbResourceDAO.setResource_types(type.toString());
 		dbResourceDAO.setDb_seq(db_seq);
 		dbResourceDAO.setName(filename);
+//		dbResourceDAO.setRestapi_yesno(restapi_yesno);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).size()  == 0; //$NON-NLS-1$

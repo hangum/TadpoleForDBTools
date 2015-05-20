@@ -51,11 +51,11 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 		boolean cellMerge = (Boolean) tableViewer.getTable().getColumn(columnIndex).getData("merge");
 		String preValue = (String) tableViewer.getTable().getColumn(columnIndex).getData("preValue");
 
-		// RDBInfomationforColumnDAO dao = (RDBInfomationforColumnDAO) element;
 		dao = (AbstractDAO) element;
 
 		if (cellMerge) {
 			String tableName = dao.getvalue(columnName);
+			
 			if (!preValue.equals(tableName)) {
 				tableViewer.getTable().getColumn(columnIndex).setData("preValue", tableName);
 				return tableName;
@@ -68,8 +68,6 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 		} else {
 			return dao.getvalue(columnName);
 		}
-
-		// return infoDao.getColumnValuebyName(columnName);
 	}
 
 }

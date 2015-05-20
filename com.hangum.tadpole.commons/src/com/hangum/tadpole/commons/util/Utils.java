@@ -10,14 +10,18 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 
@@ -31,7 +35,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  *
  */
 public class Utils {
-
+	
 	/**
 	 * convert line to html
 	 * @param str
@@ -82,5 +86,6 @@ public class Utils {
 	public static String dateToStr(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);
-	}
+ 	}
+	
 }

@@ -97,6 +97,9 @@ public class Messages extends NLS {
 	public static String TadpoleSystem_UserQuery_5;
 	public static String TadpoleSystem_UserQuery_6;
 	public static String SystemAdminWizardPage_btnLocalUse_text;
+	public static String ResourceSaveDialog_lblApiName_text;
+	public static String ResourceSaveDialog_text_text;
+	public static String ResourceSaveDialog_lblUseApi_text;
 
 	static {
 		// initialize resource bundle

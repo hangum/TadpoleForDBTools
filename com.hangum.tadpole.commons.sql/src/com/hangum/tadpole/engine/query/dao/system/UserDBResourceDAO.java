@@ -32,8 +32,8 @@ public class UserDBResourceDAO {
 	String description = "";
 	
 	// 공유자원 rest-api 지원 여부.
-//	String restapi_yesno = PublicTadpoleDefine.YES_NO.NO.name();
-//	String restapi_key = "";
+	String restapi_yesno = PublicTadpoleDefine.YES_NO.NO.name();
+	String restapi_key = "";
 	
 	// 기타 부가 정보. 
 	Date create_time;
@@ -173,4 +173,33 @@ public class UserDBResourceDAO {
 		this.delYn = delYn;
 	}
 
+	/**
+	 * @return the restapi_yesno
+	 */
+	public String getRestapi_yesno() {
+		return restapi_yesno;
+	}
+
+	/**
+	 * @param restapi_yesno the restapi_yesno to set
+	 */
+	public void setRestapi_yesno(String restapi_yesno) {
+		this.restapi_yesno = restapi_yesno;
+	}
+
+	/**
+	 * @return the restapi_key
+	 */
+	public String getRestapi_key() {
+		return restapi_key;
+	}
+
+	/**
+	 * @param restapi_key the restapi_key to set
+	 */
+	public void setRestapi_key(String restapi_key) {
+		this.restapi_key = restapi_key;
+	}
+
+	
 }
