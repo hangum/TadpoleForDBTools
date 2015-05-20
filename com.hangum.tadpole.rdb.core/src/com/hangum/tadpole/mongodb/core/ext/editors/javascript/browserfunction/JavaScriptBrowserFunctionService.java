@@ -64,7 +64,7 @@ public class JavaScriptBrowserFunctionService extends EditorFunctionService {
 
 	@Override
 	protected void doExecuteQuery(Object[] arguments) {
-		logger.debug("======= doExecuteQuery*** === ***");
+		if(logger.isDebugEnabled()) logger.debug("======= doExecuteQuery*** === ***");
 	}
 
 	@Override
@@ -75,5 +75,21 @@ public class JavaScriptBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected String doExecuteFormat(Object[] arguments) {
 		return "";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService#f4DMLOpen(java.lang.Object[])
+	 */
+	@Override
+	protected void f4DMLOpen(Object[] argument) {
+		if(logger.isDebugEnabled()) logger.debug("======= f4DMLOpen*** === ***");
+	}
+
+	/* (non-Javadoc)
+	 * @see com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService#generateSelect(java.lang.Object[])
+	 */
+	@Override
+	protected void generateSelect(Object[] argument) {
+		if(logger.isDebugEnabled()) logger.debug("======= generateSelect*** === ***");
 	}
 }

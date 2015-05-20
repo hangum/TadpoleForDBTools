@@ -56,6 +56,12 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 			case EXECUTE_FORMAT:
 				return doExecuteFormat(arguments);
 				
+			case F4_DML_OPEN:
+				f4DMLOpen(arguments);
+				break;
+			case GENERATE_SELECT:
+				generateSelect(arguments);
+				break;
 			case HELP_POPUP:
 				helpPopup();
 				break;
@@ -104,6 +110,12 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 	 * @return
 	 */
 	protected abstract String doExecuteFormat(Object[] arguments);
+	
+	/** table, view 이름일 경우 generate_dml 창을 오픈합니다 */
+	protected abstract void f4DMLOpen(Object[] argument);
+	
+	/** object 이름이 존재할 경우 자동으로 select 문을 실행합니다 */
+	protected abstract void generateSelect(Object[] argument);
 	
 	/**
 	 * help popup

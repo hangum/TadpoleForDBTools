@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.function;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -19,8 +22,12 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
@@ -102,5 +109,40 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		
 		editor.setFocus();
 	}
+
+	/* (non-Javadoc)
+	 * @see com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService#f4DMLOpen(java.lang.Object[])
+	 */
+	@Override
+	protected void f4DMLOpen(Object[] argument) {
+		String strObject = (String) argument[1];
+		if(logger.isDebugEnabled()) logger.debug("select editor content is " + strObject);
+		
+		try {
+			TableDAO tableDao = TadpoleTableComposite.getTable(editor.getUserDB(), StringUtils.trim(strObject));
+			if(tableDao != null) {
+				GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, 
+									editor.getUserDB(), tableDao);
+				dialog.open();
+			}
+			
+		} catch (Exception e) {
+			logger.error("f4 function", e);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService#generateSelect(java.lang.Object[])
+	 */
+	@Override
+	protected void generateSelect(Object[] arguments) {
+		String strSQL = "select * from " + (String) arguments[1];
+		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
+		exeType = EXECUTE_TYPE.BLOCK;
+		
+		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
+		editor.executeCommand(rq);
+	}
+	
 
 }

@@ -132,7 +132,9 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	 * 단축키 데이터
 	 */
 	private void initData() {
-		super.initShortList();
+		listShortcut.add(new ShortcutHelpDAO("Show Table Information", 	"F4")); //$NON-NLS-2$
+		listShortcut.add(new ShortcutHelpDAO("Select table name", 	prefixCtrlShortcut +"+ I")); //$NON-NLS-2$
+		
 		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_4, 			prefixCtrlShortcut + "+ S") 		);
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
 			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		);
@@ -143,6 +145,8 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$
 		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$
 		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
+
+		super.initShortList();
 		
 		tableViewer.refresh(listShortcut);		
 	}

@@ -55,7 +55,10 @@ var editorService = {
 	EXECUTE_QUERY 		: "25",
 	EXECUTE_ALL_QUERY 	: "26",
 	EXECUTE_PLAN  		: "30",
-	EXECUTE_FORMAT		: "35"
+	EXECUTE_FORMAT		: "35",
+	
+	F4_DML_OPEN			: "40",
+	GENERATE_SELECT		: "45"
 };
 
 var editor;
@@ -215,6 +218,38 @@ editor.commands.addCommand({
     	} catch(e) {
     		console.log(e);
     		alert(shortcutErrMsg);
+    	}
+    },
+    readOnly: false
+});
+editor.commands.addCommand({
+    name: 'executeObjectViewer',
+    bindKey: {win: 'F4',  mac: 'F4'},
+    exec: function(editor) {
+    	try {
+    		var varSelectionContent = editor.getSelectedText();
+    		if(varSelectionContent != "") {
+    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, varSelectionContent);
+    		} else {
+    			
+    		}
+    	} catch(e) {
+    		console.log(e);
+    	}
+    },
+    readOnly: false
+});
+editor.commands.addCommand({
+    name: 'executeTableSelect',
+    bindKey: {win: 'Ctrl-I',  mac: 'Command-I'},
+    exec: function(editor) {
+    	try {
+    		var varSelectionContent = editor.getSelectedText();
+    		if(varSelectionContent != "") {
+    			AceEditorBrowserHandler(editorService.GENERATE_SELECT, varSelectionContent);
+    		}
+    	} catch(e) {
+    		console.log(e);
     	}
     },
     readOnly: false

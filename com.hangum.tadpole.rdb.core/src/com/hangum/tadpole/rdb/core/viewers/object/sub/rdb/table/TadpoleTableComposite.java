@@ -11,7 +11,9 @@
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -663,6 +665,45 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	/**
+	 * @param userDB
+	 * @param strObject
+	 * @return
+	 */
+	public static TableDAO getTable(UserDBDAO userDB, String strObject) throws Exception {
+		TableDAO tableDao = null;
+		List<TableDAO> showTables = null;
+		
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			showTables = new TajoConnectionManager().tableList(userDB);
+
+			// sql keyword를 설정합니다.
+			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
+				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getKeyworkd(userDB));
+			}
+			
+		} else {
+			Map<String, Object> mapParam = new HashMap<String, Object>();
+			mapParam.put("db", 	userDB.getDb());
+			mapParam.put("name", 	strObject);
+			
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$			
+		}
+		
+		/** filter 정보가 있으면 처리합니다. */
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
+		
+		if(!showTables.isEmpty()) { 
+			tableDao = showTables.get(0);
+			tableDao.setSysName(SQLUtil.makeIdentifierName(userDB, tableDao.getName()));
+			return tableDao;
+		} else {
+			return null;
+		}
+	}
+
+	
+	/**
 	 * 디비 등록시 설정한 filter 정보를 적용한다.
 	 * 
 	 * @param userDB
@@ -797,5 +838,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		viewDDLAction.dispose();
 		tableDataEditorAction.dispose();
 	}
+
 	
 }

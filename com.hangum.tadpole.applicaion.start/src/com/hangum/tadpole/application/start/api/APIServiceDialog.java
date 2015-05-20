@@ -124,9 +124,9 @@ public class APIServiceDialog extends Dialog {
 		comboResultType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				boolean isEnable = true;
-				if(QueryUtils.RESULT_TYPE.JSON.name().equals(comboResultType.getText())) {
-					isEnable = false;
+				boolean isEnable = false;
+				if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
+					isEnable = true;
 				}
 				
 				btnAddHeader.setEnabled(isEnable);
@@ -223,15 +223,17 @@ public class APIServiceDialog extends Dialog {
 	 * @throws Exception
 	 */
 	private String getSelect(final UserDBDAO userDB, String strSQL, List<Object> listParam) throws Exception {
-		String strResultType = "";
+		String strResult = "";
 		if(QueryUtils.RESULT_TYPE.JSON.name().equals(comboResultType.getText())) {
 			JsonArray jsonArry = QueryUtils.selectToJson(userDB, strSQL, listParam);
-			strResultType = JSONUtil.getPretty(jsonArry.toString());
+			strResult = JSONUtil.getPretty(jsonArry.toString());
+		} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
+			strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
 		} else {
-			strResultType = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+			strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
 		}
 		
-		return strResultType;
+		return strResult;
 	}
 	
 	/**
