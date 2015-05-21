@@ -344,9 +344,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 			resultSQL.append("/* Tadpole SQL Generator */");
 		}
 		resultSQL.append("SELECT ");
-		
 		int cnt = 0;
-
+		
 		StringBuffer sbColumn = new StringBuffer();
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if (allDao.isCheck()) {
@@ -355,7 +354,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				if ("*".equals(allDao.getField())) {
 					sbColumn.append(allDao.getSysName());
 				} else {
-					sbColumn.append(allDao.getSysName()).append(" as ").append(allDao.getColumnAlias());
+					String strTableAlias = !"".equals(textTableAlias.getText().trim())?
+							textTableAlias.getText().trim() + "." + allDao.getSysName() + " as " + allDao.getColumnAlias() :
+								allDao.getSysName() + " as " + allDao.getColumnAlias();
+					
+					sbColumn.append(strTableAlias);
 				}
 				cnt++;
 			}
@@ -565,8 +568,13 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		if(isEditorAdd) createButton(parent, IDialogConstants.OK_ID, "OK", false);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		if(isEditorAdd) {
+			createButton(parent, IDialogConstants.OK_ID, "OK", false);
+			createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		} else {
+			createButton(parent, IDialogConstants.CANCEL_ID, "OK", false);	
+		}
+		
 	}
 
 	/**
