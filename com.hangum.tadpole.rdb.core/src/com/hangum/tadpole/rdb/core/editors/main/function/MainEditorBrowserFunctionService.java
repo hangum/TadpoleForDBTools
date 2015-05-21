@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.function;
 
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -23,7 +21,6 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -116,7 +113,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void f4DMLOpen(Object[] argument) {
 		String strObject = (String) argument[1];
-		if(logger.isDebugEnabled()) logger.debug("select editor content is " + strObject);
+		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
 		
 		try {
 			TableDAO tableDao = TadpoleTableComposite.getTable(editor.getUserDB(), StringUtils.trim(strObject));

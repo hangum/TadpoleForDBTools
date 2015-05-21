@@ -231,7 +231,24 @@ editor.commands.addCommand({
     		if(varSelectionContent != "") {
     			AceEditorBrowserHandler(editorService.F4_DML_OPEN, varSelectionContent);
     		} else {
-    			
+    			// 현재 행의 텍스트.
+    			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+    			if(startQueryLine != "") {
+	
+	    			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
+	    			var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
+	    			var strArryBeforeTxt = strBeforeTxt.split(' ');
+	
+	    			// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
+	    			var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
+	    			var strArryAfterTxt = strAfterTxt.split(' ');
+	    			var strTableName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
+	    			
+	    			// 마지막 문자가 ; 라면 제거해준다.
+	    			strTableName = strTableName.replace(";", "");
+	    			
+	    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, strTableName);
+    			}
     		}
     	} catch(e) {
     		console.log(e);
@@ -247,6 +264,25 @@ editor.commands.addCommand({
     		var varSelectionContent = editor.getSelectedText();
     		if(varSelectionContent != "") {
     			AceEditorBrowserHandler(editorService.GENERATE_SELECT, varSelectionContent);
+    		} else {
+    			// 현재 행의 텍스트.
+    			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+    			if(startQueryLine != "") {
+	
+	    			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
+	    			var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
+	    			var strArryBeforeTxt = strBeforeTxt.split(' ');
+	
+	    			// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
+	    			var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
+	    			var strArryAfterTxt = strAfterTxt.split(' ');
+
+	    			var strTableName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
+	    			// 마지막 문자가 ; 라면 제거해준다.
+	    			strTableName = strTableName.replace(";", "");
+	    			
+	    			AceEditorBrowserHandler(editorService.GENERATE_SELECT, strTableName);
+    			}
     		}
     	} catch(e) {
     		console.log(e);
@@ -387,7 +423,6 @@ editorService.getSelectedText = function(varDelimiter) {
 					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
 //				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
 				
-				//
 				// 자신보다 한 행위의 쿼리를 읽어 들입니다.
 				//
 //				console.log("========== 선택된 행에 종료 문자가 있다면===");

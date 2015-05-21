@@ -267,6 +267,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
+		
+		textTableAlias.setFocus();
 
 		return container;
 	}
