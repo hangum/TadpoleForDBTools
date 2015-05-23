@@ -295,6 +295,11 @@ public class TadpoleSystem_UserInfoData {
 		/* dbms종속적인 환경설정도 있을 수 있으므로.. */
 		//userInfoData.setDb_seq(1);
 		
+		// editor and connection sysn status
+		userInfoData.setName(PreferenceDefine.SYNC_EIDOTR_STATS);
+		userInfoData.setValue0(""+PreferenceDefine.SYNC_EIDOTR_STATS_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		
 		// export delimiter
 		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
 		userInfoData.setValue0(""+PreferenceDefine.EXPORT_DILIMITER_VALUE);

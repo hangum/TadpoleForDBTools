@@ -17,6 +17,9 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.State;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
@@ -42,6 +45,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -56,12 +61,14 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
+import com.hangum.tadpole.rdb.core.actions.global.SynchronizedEditorHandler;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
@@ -194,6 +201,20 @@ public class ManagerViewer extends ViewPart {
 	 * 트리 데이터 초기화
 	 */
 	public void init() {
+		// toolbar button 초기화.
+		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);  
+	    Command command = commandService.getCommand(SynchronizedEditorHandler.ID);
+	    State state = command.getState(SynchronizedEditorHandler.STATE_ID);
+	    
+	    if (GetPreferenceGeneral.getSyncEditorStat()) state.setValue(Boolean.TRUE);
+	    else state.setValue(Boolean.FALSE);
+	    
+		try {
+			HandlerUtil.toggleCommandState(command);
+		} catch (ExecutionException e1) {
+			logger.error("Synchronized editor and connection view", e1);
+		}
+		
 		treeList.clear();
 		
 		try {
@@ -462,5 +483,11 @@ public class ManagerViewer extends ViewPart {
 		}
 	}
 	
+	/**
+	 * @return the managerTV
+	 */
+	public TreeViewer getManagerTV() {
+		return managerTV;
+	}
 }
 

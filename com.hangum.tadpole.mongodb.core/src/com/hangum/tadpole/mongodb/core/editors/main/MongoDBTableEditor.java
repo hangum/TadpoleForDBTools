@@ -339,4 +339,11 @@ public class MongoDBTableEditor extends EditorPart {
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
+	
+	/**
+	 * @return the userDB
+	 */
+	public UserDBDAO getUserDB() {
+		return userDB;
+	}
 }

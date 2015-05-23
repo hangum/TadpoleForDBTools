@@ -23,6 +23,10 @@ public class PreferenceDefine {
 	/**시스템이 초기화 되었는지 정의 */
 	public static final String IS_TADPOLE_INITIALIZE = "IS_TADPOLE_INITIALIZE";
 	
+	/** 에디터와 커넥션 뷰를 싱크를 맞출것인지. */
+	public static final String SYNC_EIDOTR_STATS = "SYNC_EIDOTR_STATS";
+	public static final String SYNC_EIDOTR_STATS_VALUE = "true";
+	
 	/** export시 데이터 분리자. */
 	public static final String EXPORT_DILIMITER = "EXPORT_DILIMITER";
 	public static final String EXPORT_DILIMITER_VALUE = ",";

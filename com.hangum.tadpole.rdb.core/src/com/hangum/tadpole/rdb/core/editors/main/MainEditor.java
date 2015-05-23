@@ -71,6 +71,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
+import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
@@ -129,7 +130,7 @@ public class MainEditor extends EditorExtension {
 		if(dBResource == null) setPartName(qei.getName());
 		else  setPartName(dBResource.getName());
 
-		strRoleType = userDB.getRole_id();//SessionManager.getRoleType(userDB);
+		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
 	}
 	
@@ -425,8 +426,50 @@ public class MainEditor extends EditorExtension {
 				} // end if(event.getProperty()
 			} //
 		}); // end property change
-	}
 	
+//		getSite().getPage().addPartListener(partListener);
+	}
+
+//	/**
+//	 * partListener
+//	 */
+//	protected IPartListener2 partListener = new IPartListener2() { 
+//		@Override
+//		public void partActivated(IWorkbenchPartReference partRef) {
+//			if(partRef.getPartName().equals(getUserDB().getDisplay_name())) {
+//				EditorUtils.selectConnectionManager(getUserDB());	
+//			}
+//		}
+//
+//		@Override
+//		public void partBroughtToTop(IWorkbenchPartReference partRef) {
+//		}
+//
+//		@Override
+//		public void partClosed(IWorkbenchPartReference partRef) {
+//		}
+//
+//		@Override
+//		public void partDeactivated(IWorkbenchPartReference partRef) {
+//		}
+//
+//		@Override
+//		public void partOpened(IWorkbenchPartReference partRef) {
+//		}
+//
+//		@Override
+//		public void partHidden(IWorkbenchPartReference partRef) {
+//		}
+//
+//		@Override
+//		public void partVisible(IWorkbenchPartReference partRef) {
+//		}
+//
+//		@Override
+//		public void partInputChanged(IWorkbenchPartReference partRef) {
+//		}
+//	}; 
+
 	public Browser getBrowserQueryEditor() {
 		return browserQueryEditor;
 	}
@@ -639,6 +682,7 @@ public class MainEditor extends EditorExtension {
 	@Override
 	public void setFocus() {
 		setOrionTextFocus();
+		EditorUtils.selectConnectionManager(getUserDB());
 	}
 	
 	/**
@@ -780,6 +824,7 @@ public class MainEditor extends EditorExtension {
 	
 	@Override
 	public void dispose() {
+//		getSite().getPage().removePartListener(partListener);
 		super.dispose();
 	}
 	

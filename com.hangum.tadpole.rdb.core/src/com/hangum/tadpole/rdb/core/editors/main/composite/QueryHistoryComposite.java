@@ -76,7 +76,7 @@ public class QueryHistoryComposite extends Composite {
 		gridSQLHistory.addMouseListener(new MouseAdapter() {
 			public void mouseDoubleClick(MouseEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
-				if(gridItems != null) {
+				if(gridItems != null && gridItems.length != 0) {
 					String strTmpSQL = gridItems[0].getText(2);
 					if(logger.isDebugEnabled()) logger.debug(strTmpSQL);
 					appendText(Utils.convHtmlToLine(strTmpSQL));

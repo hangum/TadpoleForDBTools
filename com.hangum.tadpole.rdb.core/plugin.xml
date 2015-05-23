@@ -725,5 +725,30 @@
             name="Connection Wizard">
       </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:com.hangum.tadpole.rdb.core.view.connection.manager">
+         <command
+               commandId="com.hangum.tadpole.rdb.core.command.synceditor"
+               icon="resources/icons/synced.gif"
+               style="toggle"
+               tooltip="Synchronized editor">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="com.hangum.tadpole.rdb.core.actions.global.SynchronizedEditorHandler"
+            id="com.hangum.tadpole.rdb.core.command.synceditor"
+            name="Synchronized Editor">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+   </extension>
 
 </plugin>

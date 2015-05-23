@@ -486,6 +486,13 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 	public UserDBResourceDAO getUserDBErd() {
 		return userDBErd;
 	}
+	
+	/**
+	 * @return the userDB
+	 */
+	public UserDBDAO getUserDB() {
+		return userDB;
+	}
 
 //	/**
 //	 * outline page
