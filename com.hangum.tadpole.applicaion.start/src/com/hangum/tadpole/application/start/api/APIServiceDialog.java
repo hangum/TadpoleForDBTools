@@ -11,6 +11,7 @@
 package com.hangum.tadpole.application.start.api;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.StartupParameters;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -42,9 +44,11 @@ import org.eclipse.swt.widgets.Text;
 import com.google.gson.JsonArray;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
@@ -189,27 +193,68 @@ public class APIServiceDialog extends Dialog {
 	 * initialize ui
 	 */
 	private void initData() {
-		 
+		
+		Timestamp timstampStart = new Timestamp(System.currentTimeMillis());
+		UserDBDAO userDB = null;
+		
 		try {
 			UserDBResourceDAO userDBResourceDao = TadpoleSystem_UserDBResource.findAPIKey(textAPIName.getText());
 			if(userDBResourceDao == null) {
 				MessageDialog.openInformation(getShell(), "Confirm", "Not found apikey. please check out.");
 			} else {
+				
 				String strSQL = TadpoleSystem_UserDBResource.getResourceData(userDBResourceDao);
 				if(logger.isDebugEnabled()) logger.debug(userDBResourceDao.getName() + ", " + strSQL);
 				
 				// find db
-				UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(userDBResourceDao.getDb_seq());
+				userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(userDBResourceDao.getDb_seq());
 				List<Object> listParam = makeListParameter();
 				
 				String strResultType = getSelect(userDB, strSQL, listParam);
 				textResult.setText(strResultType);
+				
+				// save called history
+				saveHistoryData(userDB, timstampStart, textAPIName.getText(), textArgument.getText(), PublicTadpoleDefine.SUCCESS_FAIL.S.name(), "");
+				
 			}
 			
 		} catch (Exception e) {
 			logger.error("find api", e);
 			
-			MessageDialog.openError(getShell(), "Error", "Rise exception. please contact administor.\n" + e.getMessage());
+			saveHistoryData(userDB, timstampStart, textAPIName.getText(), textArgument.getText(), PublicTadpoleDefine.SUCCESS_FAIL.F.name(), e.getMessage());
+			
+			MessageDialog.openError(getShell(), "Error", "Rise exception. please check you argument and others.\n");
+		}
+	}
+	
+	/**
+	 * save api history
+	 * 
+	 * @param userDB
+	 * @param timstampStart
+	 * @param strApiname
+	 * @param strApiArgument
+	 * @param strResult
+	 * @param strErrorMsg
+	 */
+	private void saveHistoryData(final UserDBDAO userDB, Timestamp timstampStart, String strApiname, String strApiArgument, String strResult, String strErrorMsg) {
+		SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
+		sqlHistoryDAO.setDbSeq(userDB.getSeq());
+		sqlHistoryDAO.setStartDateExecute(timstampStart);
+		sqlHistoryDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
+		sqlHistoryDAO.setResult(strResult);
+		sqlHistoryDAO.setMesssage(strErrorMsg);
+		sqlHistoryDAO.setStrSQLText(strApiname + "&" + strApiArgument);
+		
+		sqlHistoryDAO.setIpAddress(RWT.getRequest().getRemoteAddr());
+		
+		try {
+			TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(-1, 
+					userDB, 
+					PublicTadpoleDefine.EXECUTE_SQL_TYPE.API, 
+					sqlHistoryDAO);
+		} catch(Exception e) {
+			logger.error("save history", e);
 		}
 	}
 	

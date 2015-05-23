@@ -725,6 +725,7 @@
             name="Connection Wizard">
       </wizard>
    </extension>
+   <!--
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -750,5 +751,5 @@
          </state>
       </command>
    </extension>
-
+-->
 </plugin>

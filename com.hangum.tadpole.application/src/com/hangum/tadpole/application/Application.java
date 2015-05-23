@@ -35,20 +35,10 @@ public class Application implements EntryPoint {
 	public int createUI() {
 		Display display = PlatformUI.createDisplay();
 		
-//		// api call을 하기 위한 초기 진입점.  
-//		StartupParameters service = RWT.getClient().getService(StartupParameters.class );
-//		String serviceID = service.getParameter("serviceID");
-//		systemInitialize();
-//		
-//		if(null == serviceID) {
-			WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
-			return PlatformUI.createAndRunWorkbench( display, advisor );
-//		} else {
-//			if(logger.isDebugEnabled()) logger.debug( "####################### serviceid is " + serviceID );
-//			Collection<String> collString = service.getParameterNames();
-//			
-//			return PlatformUI.RETURN_RESTART;
-//		}
+		systemInitialize();
+	
+		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
+		return PlatformUI.createAndRunWorkbench( display, advisor );
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 insert into tadpole_system(name, major_version, sub_version, information)
-values ('tadpole db hub', '1.6.1', 'initialize', 'none'); 
+values ('Tadpole DB HUB', '1.6.1', 'b06', 'none'); 
 	
 insert into tadpole_role(role_id, role_name) values ('system_admin','system admin');
 insert into tadpole_role(role_id, role_name) values ('admin','admin');

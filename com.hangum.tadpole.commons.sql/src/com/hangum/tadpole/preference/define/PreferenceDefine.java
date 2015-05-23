@@ -11,6 +11,7 @@
 package com.hangum.tadpole.preference.define;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.Utils;
 
 /**
  * Preference name define
@@ -151,7 +152,7 @@ public class PreferenceDefine {
 	
 	/** RDB의 결과 화면에서 컬럼에서 보여지는 캐릭터 숫자. */
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN = "RDB_CHARACTER_SHOW_IN_THE_COLUMN";
-	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "30";
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "100";
 	
 	/** define Amazon key */ 
 	public static final String AMAZON_ACCESS_NAME = "AMAZON_ACCESS_NAME";
@@ -159,4 +160,14 @@ public class PreferenceDefine {
 	
 	public static final String AMAZON_SECRET_NAME = "AMAZON_SECRET_NAME";
 	public static final String AMAZON_SECRET_VALUE = "";
+	
+	/** api server information */
+		public static final String SECURITY_CREDENTIAL_USE				= "SECURITY_CREDENTIAL_USE";
+		public static final String SECURITY_CREDENTIAL_USE_VALUE		= PublicTadpoleDefine.YES_NO.NO.name();
+		
+		public static final String SECURITY_CREDENTIAL_ACCESS_KEY 		= "SECURITY_CREDENTIAL_ACCESS_KEY";
+		public static final String SECURITY_CREDENTIAL_ACCESS_KEY_VALUE = Utils.getUniqueID();
+		
+		public static final String SECURITY_CREDENTIAL_SECRET_KEY 		= "SECURITY_CREDENTIAL_SECRET_KEY";
+		public static final String SECURITY_CREDENTIAL_SECRET_KEY_VALUE = Utils.getUniqueID();
 }

@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -79,6 +78,7 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumn
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
@@ -530,14 +530,19 @@ public class ResourceManageEditor extends EditorPart {
 	public void addUserResouceData(ResourceManagerDAO dao) {
 
 		try {
-//			comboViewer.getCombo().clearSelection();
-//			textTitle.setText("");
-//			textDescription.setText("");
-//			textQuery.setText("");
-//			comboSupportAPI.select(0);
-//			textAPIKey.setText("");
-
-			List<ResourceManagerDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbResource(userDB);
+			List<ResourceManagerDAO> listUserDBResources = new ArrayList<ResourceManagerDAO>();
+			List<ResourceManagerDAO> tmpListUserDBResources = TadpoleSystem_UserDBResource.userDbResource(userDB);
+			for (ResourceManagerDAO userDBResourceDAO : tmpListUserDBResources) {
+				if(PublicTadpoleDefine.SHARED_TYPE.PUBLIC.toString().equals(userDBResourceDAO.getShared_type())) {
+					listUserDBResources.add(userDBResourceDAO);
+				} else {
+					
+					// 리소스 중에서 개인 리소스만 넣도록 합니다.
+					if(SessionManager.getUserSeq() == userDBResourceDAO.getUser_seq()) {
+						listUserDBResources.add(userDBResourceDAO);
+					}
+				}
+			}
 
 			tableViewer.setInput(listUserDBResources);
 			tableViewer.refresh(dao, true);

@@ -160,10 +160,12 @@ public class ManagerLabelProvider extends LabelProvider {
 			return getDBText((UserDBDAO)element);
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
+			
+			String strSharedType = "[" + StringUtils.substring(dao.getShared_type(), 0, 3) + "]";
 			String strSupportAPI = PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())?"[API]":"";
 			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";
 			
-			return "[" + StringUtils.substring(dao.getShared_type(), 0, 3) + "]" + strSupportAPI + dao.getName() + strComment;
+			return strSharedType + strSupportAPI + dao.getName() + strComment;
 		}
 		
 		return "## not set ##"; //$NON-NLS-1$

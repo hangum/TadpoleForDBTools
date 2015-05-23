@@ -595,7 +595,6 @@ SELECT
   and m.resource_types in ( 'SQL' , 'ERD' )
   and m.delyn = 'NO'
   and m.db_seq = #seq# 
-  and (m.user_seq = #user_seq# or m.shared_type = 'PUBLIC')
   order by m.resource_types, m.resource_seq
 </select>
 
@@ -790,9 +789,52 @@ SELECT
 	쿼리의 실행 히스토리를 얻습니다.
 	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
  -->
+<select id="getExecuteQueryHistoryAPIDetail" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+ 	SELECT 
+ 			b.executed_sql_resource_seq, 
+ 			a.types,
+ 			a.startdateexecute, 
+ 			a.enddateexecute,
+ 			a.message, 
+ 			b.datas, 
+ 			a.row, 
+ 			a.result,
+ 		   	db.display_name, 
+ 		   	a.ipaddress, 
+ 		   	db.seq as dbseq
+	 FROM 
+		 executed_sql_resource a,
+		 executed_sql_resource_data b,
+		 tadpole_db db
+	where 1=1 AND
+	 <!-- <isNotNull property="user_seq">
+	  a.user_seq = #user_seq# AND
+	 </isNotNull> -->
+	 <isNotNull property="db_seq">
+	  a.db_seq in ($db_seq$) AND 
+	 </isNotNull>
+ <![CDATA[
+	  a.delyn = 'NO' AND
+	  a.seq = b.executed_sql_resource_seq AND
+	  a.startdateexecute >= #startTime# AND  
+      a.enddateexecute <= #endTime# AND
+      a.duration >= #duration# AND
+      b.datas like #strSearch# AND 
+      a.db_seq = db.seq
+	order by a.create_time desc
+	limit #count#
+]]>	
+</select>
+
+
+<!-- 
+	쿼리의 실행 히스토리를 얻습니다.
+	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
+ -->
 <select id="getExecuteQueryHistoryDetail" resultClass="java.util.HashMap" parameterClass="java.util.Map">
  	SELECT 
  			b.executed_sql_resource_seq, 
+ 			a.types,
  			a.startdateexecute, 
  			a.enddateexecute,
  			a.message, 

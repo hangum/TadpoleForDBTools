@@ -71,7 +71,6 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
-import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
@@ -641,7 +640,7 @@ public class MainEditor extends EditorExtension {
 	@Override
 	public void setFocus() {
 		setOrionTextFocus();
-		EditorUtils.selectConnectionManager(getUserDB());
+//		EditorUtils.selectConnectionManager(getUserDB());
 	}
 	
 	/**

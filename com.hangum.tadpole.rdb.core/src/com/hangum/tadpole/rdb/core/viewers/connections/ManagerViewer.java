@@ -17,9 +17,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.State;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
@@ -45,8 +42,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
@@ -61,14 +56,12 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
-import com.hangum.tadpole.rdb.core.actions.global.SynchronizedEditorHandler;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
@@ -121,7 +114,7 @@ public class ManagerViewer extends ViewPart {
 					// Rice lock icode change event
 					managerTV.refresh(userDB, true);
 					
-					addUserResouceData(userDB);
+					addUserResouceData(userDB, false);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
 				}
 				
@@ -202,18 +195,18 @@ public class ManagerViewer extends ViewPart {
 	 */
 	public void init() {
 		// toolbar button 초기화.
-		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);  
-	    Command command = commandService.getCommand(SynchronizedEditorHandler.ID);
-	    State state = command.getState(SynchronizedEditorHandler.STATE_ID);
-	    
-	    if (GetPreferenceGeneral.getSyncEditorStat()) state.setValue(Boolean.TRUE);
-	    else state.setValue(Boolean.FALSE);
-	    
-		try {
-			HandlerUtil.toggleCommandState(command);
-		} catch (ExecutionException e1) {
-			logger.error("Synchronized editor and connection view", e1);
-		}
+//		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);  
+//	    Command command = commandService.getCommand(SynchronizedEditorHandler.ID);
+//	    State state = command.getState(SynchronizedEditorHandler.STATE_ID);
+//	    
+//	    if (GetPreferenceGeneral.getSyncEditorStat()) state.setValue(Boolean.TRUE);
+//	    else state.setValue(Boolean.FALSE);
+//	    
+//		try {
+//			HandlerUtil.toggleCommandState(command);
+//		} catch (ExecutionException e1) {
+//			logger.error("Synchronized editor and connection view", e1);
+//		}
 		
 		treeList.clear();
 		
@@ -316,8 +309,8 @@ public class ManagerViewer extends ViewPart {
 	 * 
 	 * @param userDB
 	 */ 
-	public void addUserResouceData(UserDBDAO userDB) {
-		if(userDB.getListUserDBErd().isEmpty()) {
+	public void addUserResouceData(UserDBDAO userDB, boolean isReload) {
+		if(userDB.getListUserDBErd().isEmpty() || isReload) {
 			// user_resource_data 목록을 추가해 줍니다.
 			try {
 				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
@@ -339,6 +332,7 @@ public class ManagerViewer extends ViewPart {
 					}
 					
 					userDB.setListUserDBErd(listRealResource);
+					managerTV.refresh(userDB);
 					managerTV.expandToLevel(userDB, 3);
 				}
 				
@@ -363,22 +357,9 @@ public class ManagerViewer extends ViewPart {
 				if(userDB.getSeq() == dbSeq) {
 					List<UserDBResourceDAO> listResources = userDB.getListUserDBErd();
 					listResources.clear();
+					userDB.setListUserDBErd(listResources);
 					
-					try {
-						listResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
-						for (UserDBResourceDAO userDBResouceDAO : listResources) {
-							userDBResouceDAO.setParent(userDB);
-						}
-							userDB.setListUserDBErd(listResources);
-					} catch (Exception e) {
-						logger.error("erd list", e); //$NON-NLS-1$
-						
-						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_8, errStatus); //$NON-NLS-1$
-					}
-					
-					managerTV.refresh(userDB);					
-					managerTV.expandToLevel(userDB, 3);
+					addUserResouceData(userDB, true);
 					
 					return;
 				}	// if(userDB.getSeq() == dbSeq) {
