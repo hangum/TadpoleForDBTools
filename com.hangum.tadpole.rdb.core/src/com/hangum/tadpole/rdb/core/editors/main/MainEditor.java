@@ -427,49 +427,8 @@ public class MainEditor extends EditorExtension {
 			} //
 		}); // end property change
 	
-//		getSite().getPage().addPartListener(partListener);
 	}
-
-//	/**
-//	 * partListener
-//	 */
-//	protected IPartListener2 partListener = new IPartListener2() { 
-//		@Override
-//		public void partActivated(IWorkbenchPartReference partRef) {
-//			if(partRef.getPartName().equals(getUserDB().getDisplay_name())) {
-//				EditorUtils.selectConnectionManager(getUserDB());	
-//			}
-//		}
-//
-//		@Override
-//		public void partBroughtToTop(IWorkbenchPartReference partRef) {
-//		}
-//
-//		@Override
-//		public void partClosed(IWorkbenchPartReference partRef) {
-//		}
-//
-//		@Override
-//		public void partDeactivated(IWorkbenchPartReference partRef) {
-//		}
-//
-//		@Override
-//		public void partOpened(IWorkbenchPartReference partRef) {
-//		}
-//
-//		@Override
-//		public void partHidden(IWorkbenchPartReference partRef) {
-//		}
-//
-//		@Override
-//		public void partVisible(IWorkbenchPartReference partRef) {
-//		}
-//
-//		@Override
-//		public void partInputChanged(IWorkbenchPartReference partRef) {
-//		}
-//	}; 
-
+	
 	public Browser getBrowserQueryEditor() {
 		return browserQueryEditor;
 	}

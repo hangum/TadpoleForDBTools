@@ -89,7 +89,7 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static void updateResource(UserDBResourceDAO userDBResource, String contents) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.delete("userDbResourceDataDelete", userDBResource.getResource_seq()); //$NON-NLS-1$
+		sqlClient.update("userDbResourceDataDelete", userDBResource.getResource_seq()); //$NON-NLS-1$
 		
 		insertResourceData(userDBResource, contents);
 	}
@@ -107,6 +107,8 @@ public class TadpoleSystem_UserDBResource {
 		// content data를 저장합니다.
 		UserDBResourceDataDAO dataDao = new UserDBResourceDataDAO();
 		dataDao.setUser_db_resource_seq(userDBResource.getResource_seq());
+		dataDao.setGroup_seq(System.currentTimeMillis());
+		
 		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
 		for (String content : arrayContent) {
 			dataDao.setDatas(content);		

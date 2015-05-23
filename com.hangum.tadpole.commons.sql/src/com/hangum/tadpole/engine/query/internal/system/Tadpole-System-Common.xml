@@ -613,7 +613,8 @@ SELECT
 <select id="userDbResourceData" resultClass="java.lang.String" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
 	SELECT datas FROM user_db_resource_data
 	WHERE
-		user_db_resource_seq = #resource_seq#
+			user_db_resource_seq = #resource_seq#
+		AND delyn = 'NO'
 	order by seq
 </select>
 
@@ -647,7 +648,8 @@ SELECT
 <select id="userDBResourceData" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource_data
 	WHERE
-		user_db_resource_seq = #resource_seq#
+			user_db_resource_seq = #resource_seq#
+		AND delyn = 'NO'
 	ORDER BY seq
 </select>
 
@@ -655,18 +657,19 @@ SELECT
 	resource data를 저장합니다.
  -->
 <insert id="userDbResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO">
-	INSERT INTO user_db_resource_data(user_db_resource_seq, datas)
-	VALUES(#user_db_resource_seq#, #datas#)
+	INSERT INTO user_db_resource_data(group_seq, user_db_resource_seq, datas)
+	VALUES(#group_seq#, #user_db_resource_seq#, #datas#)
 </insert>
 
 <!-- 
 	resource data를 삭제합니다.
  -->
-<delete id="userDbResourceDataDelete" parameterClass="java.lang.Integer">
-	DELETE FROM user_db_resource_data
+<update id="userDbResourceDataDelete" parameterClass="java.lang.Integer">
+	UPDATE user_db_resource_data
+	SET delyn = 'YES'
 	WHERE
 		user_db_resource_seq = #seq#
-</delete>
+</update>
 
 <!-- 
 	=========================================================================================================
