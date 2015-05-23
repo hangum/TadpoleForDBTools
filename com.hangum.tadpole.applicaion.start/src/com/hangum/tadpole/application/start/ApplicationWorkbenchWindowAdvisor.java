@@ -52,7 +52,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	
 	// UI callback
 	final ServerPushSession pushSession = new ServerPushSession();
-	private boolean isUIThreadRunning = true;
+//	private boolean isUIThreadRunning = true;
 
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -288,12 +288,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			iss.setMaxInactiveInterval(sessionTimeOut * 60);
 		}
 		
-		// user logout
-		RWT.getUISession().addUISessionListener( new UISessionListener() {
-			public void beforeDestroy( UISessionEvent event ) {
-				logger.info(String.format("User has logout. session id is %s", event.getUISession().getId()));
-			}
-		});
+//		// user logout
+//		RWT.getUISession().addUISessionListener( new UISessionListener() {
+//			public void beforeDestroy( UISessionEvent event ) {
+//				logger.info(String.format("User has logout. session id is %s", event.getUISession().getId()));
+//			}
+//		});
 	}
     
     @Override

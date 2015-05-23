@@ -98,10 +98,6 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 		table.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent event) {
-				//
-				// orionhub editor가 포커스를 받으면 이벤트가 발생하지 않는다. 끙...
-				//
-				//System.out.println("====== focus out =========================");
 			}
 		});
 		table.setHeaderVisible(true);
