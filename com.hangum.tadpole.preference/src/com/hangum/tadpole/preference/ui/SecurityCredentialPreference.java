@@ -127,7 +127,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			updateEncriptInfo(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, txtSecretKey);
 			
 		} catch(Exception e) {
-			logger.error("GeneralPreference saveing", e);
+			logger.error("api security credential saveing", e);
 			
 			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;

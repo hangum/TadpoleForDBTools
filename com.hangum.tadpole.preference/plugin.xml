@@ -41,7 +41,7 @@
       <page
             class="com.hangum.tadpole.preference.ui.SecurityCredentialPreference"
             id="com.hangum.tadpole.preference.page.securityCredentials"
-            name="API Security Dredentials">
+            name="API Security Credentials">
       </page>
    </extension>
 </plugin>
