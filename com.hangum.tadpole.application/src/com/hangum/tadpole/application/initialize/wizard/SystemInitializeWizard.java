@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.initialize.wizard;
+package com.hangum.tadpole.application.initialize.wizard;
 
 import org.eclipse.jface.wizard.Wizard;
 

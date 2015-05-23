@@ -19,13 +19,10 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.wizard.WizardDialog;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -127,18 +124,7 @@ public class TadpoleSystemInitializer {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List listUserTable = sqlClient.queryForList("getSystemAdmin"); //$NON-NLS-1$
-		boolean isInitialize = listUserTable.size() == 0?false:true;
-		
-		if(!isInitialize) {
-			logger.info("Initialize System default setting.");
-			
-			WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
-			if(Dialog.OK != dialog.open()) {
-				throw new Exception("User does not define administrator.\nPlease setting admin user.\n");
-			}
-		}
-				
-		return true;
+		return listUserTable.size() == 0?false:true;
 	}
 
 	/**
