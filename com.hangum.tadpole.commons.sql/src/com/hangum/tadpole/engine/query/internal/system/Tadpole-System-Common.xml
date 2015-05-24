@@ -807,9 +807,6 @@ SELECT
 		 executed_sql_resource_data b,
 		 tadpole_db db
 	where 1=1 AND
-	 <!-- <isNotNull property="user_seq">
-	  a.user_seq = #user_seq# AND
-	 </isNotNull> -->
 	 <isNotNull property="db_seq">
 	  a.db_seq in ($db_seq$) AND 
 	 </isNotNull>
@@ -820,7 +817,8 @@ SELECT
       a.enddateexecute <= #endTime# AND
       a.duration >= #duration# AND
       b.datas like #strSearch# AND 
-      a.db_seq = db.seq
+      a.db_seq = db.seq AND
+      a.types = #type#
 	order by a.create_time desc
 	limit #count#
 ]]>	
@@ -851,9 +849,6 @@ SELECT
 		 tadpole_user u,
 		 tadpole_db db
 	where 1=1 AND
-	 <!-- <isNotNull property="user_seq">
-	  a.user_seq = #user_seq# AND
-	 </isNotNull> -->
 	 <isNotNull property="db_seq">
 	  a.db_seq in ($db_seq$) AND 
 	 </isNotNull>
@@ -865,7 +860,8 @@ SELECT
       a.duration >= #duration# AND
       a.user_seq = u.seq AND
       b.datas like #strSearch# AND 
-      a.db_seq = db.seq
+      a.db_seq = db.seq AND
+      a.types = #type#
 	order by a.create_time desc
 	limit #count#
 ]]>	

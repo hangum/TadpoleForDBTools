@@ -323,7 +323,7 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "CALL API", true);
+		createButton(parent, IDialogConstants.OK_ID, "RUN", true);
 	}
 
 	/**
