@@ -22,7 +22,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
-import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -48,11 +47,8 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		
 		setId(ID);
 		setText(Messages.ExitAction_0);
-		if(ApplicationArgumentUtils.isStandaloneMode()) { 
-			setToolTipText(Messages.ExitAction_1);		
-		} else {
-			setToolTipText("Log out");
-		}
+		setToolTipText("Log out");
+
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png"));
 	}
 

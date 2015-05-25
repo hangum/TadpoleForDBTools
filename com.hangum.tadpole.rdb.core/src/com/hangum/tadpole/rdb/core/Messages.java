@@ -162,7 +162,6 @@ public class Messages extends NLS {
 	public static String ERDDeleteAction_3;
 	public static String ERDDeleteAction_4;
 	public static String ExitAction_0;
-	public static String ExitAction_1;
 	public static String ExitAction_2;
 	public static String ExitAction_3;
 	public static String ExplorerViewer_0;
