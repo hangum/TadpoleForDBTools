@@ -52,7 +52,6 @@
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
       <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
       <plugin id="com.hangum.tadpole.mongodb.model"/>
-      <plugin id="com.hangum.tadpole.monitoring.core"/>
       <plugin id="com.hangum.tadpole.preference"/>
       <plugin id="com.hangum.tadpole.rdb.core"/>
       <plugin id="com.hangum.tadpole.rdb.core.ext"/>
@@ -157,7 +156,6 @@
       <plugin id="com.hangum.tadpole.mongodb.core.test" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.monitoring.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.rdb.core.ext" autoStart="true" startLevel="0" />

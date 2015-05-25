@@ -10,9 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -105,9 +103,6 @@ public class MainEditor extends EditorExtension {
 	/** save mode */
 	private boolean isDirty = false;
 	
-	/** db table list */
-	private Map<String, TableDAO> mapTableList = new HashMap<String, TableDAO>();
-
 	private SashForm sashFormExtension;
 	private IMainEditorExtension[] compMainExtions;
 	
@@ -499,8 +494,9 @@ public class MainEditor extends EditorExtension {
 			ext = EditorDefine.EXT_PGSQL;
 		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
 			ext = EditorDefine.EXT_SQLite;
-		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_MSSQL;
+//		테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
+//		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+//			ext = EditorDefine.EXT_MSSQL;
 		}
 		return ext;
 	}
@@ -541,8 +537,8 @@ public class MainEditor extends EditorExtension {
 			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
 			for (TableDAO tableDao : showTables) {
 				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
-				mapTableList.put(tableDao.getSysName(), tableDao);
 			}
+			
 			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
 			
 		} catch(Exception e) {
