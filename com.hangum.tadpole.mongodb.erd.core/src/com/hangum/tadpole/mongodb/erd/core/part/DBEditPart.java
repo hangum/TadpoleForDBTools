@@ -35,6 +35,7 @@ import com.hangum.tadpole.mongodb.erd.core.figures.DBFigure;
 import com.hangum.tadpole.mongodb.erd.core.policies.TableXYLayoutPolicy;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.Table;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * DB edit part
@@ -93,7 +94,7 @@ public class DBEditPart extends AbstractGraphicalEditPart implements LayerConsta
 		
 		// connection router 조절
 		ConnectionLayer cLayer = (ConnectionLayer)getLayer(CONNECTION_LAYER);
-		cLayer.setForegroundColor(ColorConstants.lightBlue());
+		cLayer.setForegroundColor(SWTResourceManager.getColor(255, 102, 102));//ColorConstants.red());//lightBlue());
 		cLayer.setConnectionRouter(new ShortestPathConnectionRouter(getFigure()));
 	}
 

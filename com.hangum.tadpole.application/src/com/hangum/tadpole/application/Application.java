@@ -13,11 +13,14 @@ package com.hangum.tadpole.application;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
+import com.hangum.tadpole.application.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
@@ -33,10 +36,10 @@ public class Application implements EntryPoint {
 	private static final Logger logger = Logger.getLogger(Application.class);
 
 	public int createUI() {
-		Display display = PlatformUI.createDisplay();//new TadpoleDisplay();
+		Display display = PlatformUI.createDisplay();
 		
 		systemInitialize();
-		
+	
 		WorkbenchAdvisor advisor = new ApplicationWorkbenchAdvisor();		
 		return PlatformUI.createAndRunWorkbench( display, advisor );
 	}
@@ -50,9 +53,19 @@ public class Application implements EntryPoint {
 		boolean isTadpoleInitialize = PlatformUI.getPreferenceStore().getBoolean(PreferenceDefine.IS_TADPOLE_INITIALIZE);
 		if(!isTadpoleInitialize || ApplicationArgumentUtils.isForceSystemInitialize()) {
 			try {
-				if(!TadpoleSystemInitializer.initSystem()) {
-					throw new Exception("System initialize fail");
+				boolean isInitialize = TadpoleSystemInitializer.initSystem();
+				if(!isInitialize) {
+					logger.info("Initialize System default setting.");
+					
+					WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
+					if(Dialog.OK != dialog.open()) {
+						throw new Exception("User does not define administrator.\nPlease setting admin user.\n");
+					}
 				}
+						
+//				
+//					throw new Exception("System initialize fail");
+//				}
 				PlatformUI.getPreferenceStore().setValue(PreferenceDefine.IS_TADPOLE_INITIALIZE, true);
 			} catch(Exception e) {
 				logger.error("System initialize error", e); //$NON-NLS-1$

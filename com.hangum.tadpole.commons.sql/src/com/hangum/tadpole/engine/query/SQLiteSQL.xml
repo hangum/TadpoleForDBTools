@@ -39,6 +39,17 @@ SELECT name FROM sqlite_master where 1 = 0
 </select>
 
 <!-- 
+	table 이름
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+	SELECT name, sql as comment
+	FROM sqlite_master
+	WHERE type = 'table'
+		AND name = #name#
+	ORDER BY name
+</select>
+
+<!-- 
 	table, view의 컬럼 정보
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">

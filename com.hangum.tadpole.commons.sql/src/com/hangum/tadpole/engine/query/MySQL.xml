@@ -41,7 +41,20 @@ SELECT TABLE_NAME name	FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	SELECT TABLE_NAME name, TABLE_COMMENT comment
 	FROM INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = #db# AND TABLE_TYPE = 'BASE TABLE'
+	WHERE TABLE_SCHEMA = #db# 
+		AND TABLE_TYPE = 'BASE TABLE'
+	ORDER BY name
+</select>
+
+<!-- 
+	table 이름
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.Map">
+	SELECT TABLE_NAME name, TABLE_COMMENT comment
+	FROM INFORMATION_SCHEMA.TABLES
+	WHERE TABLE_SCHEMA = #db# 
+		AND TABLE_TYPE = 'BASE TABLE'
+		AND TABLE_NAME = #name#
 	ORDER BY name
 </select>
 

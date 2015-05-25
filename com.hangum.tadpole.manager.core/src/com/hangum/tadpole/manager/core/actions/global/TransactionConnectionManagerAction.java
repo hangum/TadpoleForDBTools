@@ -47,8 +47,8 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 		this.window = window;
 		
 		setId(ID);
-		setText("Connections Manager");
-		setToolTipText("Connections Manager");
+		setText("Connection Manager");
+		setToolTipText("Connection Manager");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/transaction_db_status.png"));
 		setEnabled(true);
 	}

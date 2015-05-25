@@ -293,8 +293,12 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws Exception
 	 */
 	public static List<UserDBDAO> getUserDB() throws Exception {
+		Map<String, Object> mapParam = new HashMap<String, Object>();
+		mapParam.put("user_seq", SessionManager.getUserSeq());
+		mapParam.put("thisTime", System.currentTimeMillis());
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", SessionManager.getUserSeq());
+		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
 
 		// set db access control
 		for (UserDBDAO userDBDAO : listUserDB) {

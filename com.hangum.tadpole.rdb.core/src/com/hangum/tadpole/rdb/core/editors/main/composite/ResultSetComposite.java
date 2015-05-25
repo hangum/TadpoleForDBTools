@@ -131,7 +131,7 @@ public class ResultSetComposite extends Composite {
 	/**
 	 * 현재 사용자의 데이터의 궈한타입.
 	 */
-	private String dbUserRoleType = "";
+	private String dbUserRoleType = ""; //$NON-NLS-1$
 	
 	/** execute job */
 	private Job jobQueryManager = null;
@@ -285,7 +285,7 @@ public class ResultSetComposite extends Composite {
 				selectColumnToEditor();
 			}
 		});
-		btnResultToEditor.setText("Result to Editor");
+		btnResultToEditor.setText(Messages.ResultSetComposite_2);
 		
 		btnDetailView = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnDetailView = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -393,10 +393,10 @@ public class ResultSetComposite extends Composite {
 							logger.error("Clob column echeck", e); //$NON-NLS-1$
 						}
 					}else{
-						String strText = "";
+						String strText = ""; //$NON-NLS-1$
 						
 						// if select value is null can 
-						if(columnObject == null) strText = "null";
+						if(columnObject == null) strText = "null"; //$NON-NLS-1$
 						else {
 							strText = columnObject.toString();
 							strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -435,15 +435,15 @@ public class ResultSetComposite extends Composite {
 			strArrys = new String[mapColumns.size()-1];
 			for(int j=1; j<mapColumns.size(); j++) {
 //				if(RDBTypeToJavaTypeUtils.isNumberType(columnType.get(j))) {
-				strArrys[j-1] = ""+mapColumns.get(j);
+				strArrys[j-1] = ""+mapColumns.get(j); //$NON-NLS-1$
 			}
 			listCsvData.add(strArrys);
 		}
 		
-		String filename = PublicTadpoleDefine.TEMP_DIR + getUserDB().getDisplay_name() + "_SQLResultExport.csv";
+		String filename = PublicTadpoleDefine.TEMP_DIR + getUserDB().getDisplay_name() + "_SQLResultExport.csv"; //$NON-NLS-1$
 		try {
 			FileOutputStream fos = new FileOutputStream(filename);
-			OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8");
+			OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8"); //$NON-NLS-1$
 			
 			CSVWriter writer = new CSVWriter(bw);
 			writer.writeAll(listCsvData);
@@ -453,7 +453,7 @@ public class ResultSetComposite extends Composite {
 			
 			downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
 		} catch(Exception ee) {
-			logger.error("csv type export error", ee);
+			logger.error("csv type export error", ee); //$NON-NLS-1$
 		} finally {
 			FileUtils.deleteQuietly(new File(filename));
 		}
@@ -547,7 +547,7 @@ public class ResultSetComposite extends Composite {
 		// 쿼리를 이미 실행 중이라면 무시합니다.
 		if(jobQueryManager != null) {
 			if(Job.RUNNING == jobQueryManager.getState()) {
-				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job ");
+				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -563,9 +563,13 @@ public class ResultSetComposite extends Composite {
 		final Shell runShell = textFilter.getShell();
 		
 		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
-			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+			
+			final DBDefine selectDBDefine = getUserDB().getDBDefine();
+			if(!(selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
+					selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
+					selectDBDefine == DBDefine.TAJO_DEFAULT 	||
+					// not support this java.sql.ParameterMetaData 
+					selectDBDefine == DBDefine.CUBRID_DEFAULT)
 			) {
 				try {
 					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
@@ -727,7 +731,7 @@ public class ResultSetComposite extends Composite {
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
 			if(!strCostumSQL.equals(reqQuery.getSql())) {
-				logger.info("** extension costume sql is : " + strCostumSQL);
+				logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
 				reqQuery.setSql(strCostumSQL);
 			}
 		}
@@ -935,7 +939,7 @@ public class ResultSetComposite extends Composite {
 			sqlSorter = new SQLResultSorter(-999);
 			
 			boolean isEditable = true;
-			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false;
+			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
 			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter, isEditable);
 			
 			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
@@ -977,9 +981,9 @@ public class ResultSetComposite extends Composite {
 			try {
 //				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
 				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
-						"EDITOR",
+						"EDITOR", //$NON-NLS-1$
 						reqQuery.getQueryType().name(),
-						"",
+						"", //$NON-NLS-1$
 						reqQuery.getSql());
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$

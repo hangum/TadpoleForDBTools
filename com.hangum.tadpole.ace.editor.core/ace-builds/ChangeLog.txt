@@ -1,3 +1,23 @@
+2015.04.03 Version 1.1.9
+
+2014.11.08 Version 1.1.8
+
+* API Changes
+  - `editor.commands.commandKeyBinding` now contains direct map from keys to commands instead of grouping them by hashid
+  
+* New Features
+  - Improved autoindent for html and php modes (Adam Jimenez)
+  - Find All from searchbox (Colton Voege)
+  
+* new language modes
+  - Elixir, Elm
+ 
+2014.09.21 Version 1.1.7
+
+* Bugfixes
+  - fix several bugs in autocompletion
+  - workaround for inaccurate getBoundingClientRect on chrome 37
+
 2014.08.17 Version 1.1.6
 
 * Bugfixes

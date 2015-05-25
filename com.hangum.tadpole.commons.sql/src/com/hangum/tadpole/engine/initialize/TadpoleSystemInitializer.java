@@ -12,23 +12,17 @@ package com.hangum.tadpole.engine.initialize;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.wizard.WizardDialog;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
-import com.hangum.tadpole.engine.TadpoleEngineActivator;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -110,27 +104,27 @@ public class TadpoleSystemInitializer {
 		
 		// Is SQLite?
 		if (!ApplicationArgumentUtils.isDBServer()) {
-			if(new File(DEFAULT_DB_FILE_LOCATION + DB_NAME).canRead()) {
-				logger.info("Engine DB createion. Type is SQLite.");
-				URL urlFile = TadpoleEngineActivator.getDefault().getBundle().getResource("com/hangum/tadpole/engine/initialize/TadpoleEngineDB.sqlite");
-				Files.copy(Paths.get(urlFile.getFile()), Paths.get(DEFAULT_DB_FILE_LOCATION + DB_NAME));
+			if(!new File(DEFAULT_DB_FILE_LOCATION + DB_NAME).exists()) {
+				logger.info("Createion Engine DB. Type is SQLite.");
+				ClassLoader classLoader = TadpoleSystemInitializer.class.getClassLoader();
+				InputStream is = classLoader.getResourceAsStream("com/hangum/tadpole/engine/initialize/TadpoleEngineDBEngine.sqlite");
+				
+				int size = is.available();
+				byte[] dataByte = new byte[size];
+				is.read(dataByte, 0, size);
+				is.close();
+				
+				FileOutputStream fos = new FileOutputStream(DEFAULT_DB_FILE_LOCATION + DB_NAME);
+				fos.write(dataByte);
+				fos.flush();
+				
+				is.close();
 			}
 		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List listUserTable = sqlClient.queryForList("getSystemAdmin"); //$NON-NLS-1$
-		boolean isInitialize = listUserTable.size() == 0?false:true;
-		
-		if(!isInitialize) {
-			logger.info("Initialize System default setting.");
-			
-			WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
-			if(Dialog.OK != dialog.open()) {
-				throw new Exception("User does not define administrator.\nPlease setting admin user.\n");
-			}
-		}
-				
-		return true;
+		return listUserTable.size() == 0?false:true;
 	}
 
 	/**

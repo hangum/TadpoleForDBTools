@@ -45,6 +45,19 @@ SELECT getdate()
 </select>
 
 <!-- 
+	table 이름
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+	select o.name, c.value as comment 
+	from sysobjects o
+	    left join sysproperties c on o.id = c.id	     
+    	and c.type = '3' and c.name = 'MS_Description'	
+	where o.xtype = 'U' 
+		AND o.name = #name#
+	order by o.name
+</select>
+
+<!-- 
 	table, view의 컬럼 정보
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">

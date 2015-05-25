@@ -166,8 +166,7 @@
 <select id="groupManager" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.Integer">
 	select a.* from tadpole_user a,  user_role b
 	where 
-	<!-- b.group_seq = #group_seq#
-	and --> b.role_type = 'MANAGER'
+	 b.role_type = 'MANAGER'
 	and a.seq = b.user_seq;
 </select>
 
@@ -193,71 +192,14 @@
 	WHERE seq = #seq#
 </select>
 
-
-<!-- 
-	권한별 유저 리스트
- -->
- <select id="userListPermissions" resultClass="com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO">
- SELECT
-    a.name user_group_name
-    ,b.seq user_seq
-    ,a.seq group_seq
-    ,email
-    ,passwd
-    ,b.name
-    ,c.role_type role_type
-    ,b.delYn
-    ,b.create_time
-    ,b.approval_yn
-  FROM
-    user_group a
-    ,tadpole_user b
-    ,user_role c
-  WHERE
-    a.seq = c.group_seq
-    AND c.user_seq = b.seq
-  ORDER BY
-    user_group_name
-    ,email
- </select>
- 
- <!-- 
- 	사용자 그룹별 유저 리스트 
-  -->
- <select id="userListGroup" resultClass="com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO" parameterClass="java.lang.String">
- SELECT
-    a.name user_group_name
-    ,b.seq user_seq
-    ,a.seq group_seq
-    ,email
-    ,passwd
-    ,b.name
-    ,c.role_type role_type
-    ,b.delYn
-    ,b.create_time
-    ,b.approval_yn
-  FROM
-    user_group a
-    ,tadpole_user b
-    ,user_role c
-  WHERE
- 	   a.seq = c.group_seq
-    AND c.user_seq = b.seq
-    AND c.group_seq in ($group_seq$) 
-    AND c.delYn = 'NO'
-  ORDER BY
-    user_group_name, email
- </select>
-
 <!-- 
 	유저의 권한 데이터를 수정합니다.
  -->
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user SET
-		<!-- security_question = #security_question#,
-		security_answer = #security_answer#, -->
 		delYn = #delYn#,
-		approval_yn = #approval_yn#
+		approval_yn = #approval_yn#,
+		is_email_certification = #is_email_certification#
 	WHERE seq = #seq#
 </update>
 
@@ -329,7 +271,7 @@
  registered database
   -->
  <select id="getRegisteredDB" resultClass="java.util.HashMap">
- 	SELECT dbms_type, count(*) tot
+ 	SELECT dbms_type as dbms_type, count(*) tot
 	FROM tadpole_db a,
 		tadpole_user b
 	WHERE 
@@ -410,23 +352,9 @@
 	ORDER BY group_name
 </select>
 
-<!--  UserDB의 리스트 -->
-<select id="userDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
-<![CDATA[
-	select a.*, b.seq role_seq, b.ROLE_ID role_id, c.*
-	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
-	where a.seq = b.db_seq
-		and a.seq = c.seq
-		and b.user_seq = #user_seq#
-	    and a.delyn = 'NO'
-	    and b.delyn = 'NO'
-	    AND a.is_visible = 'YES'
-	    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
-]]>	
-</select>
-
 <select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
-	select a.*, b.ROLE_ID role_id, c.*
+	select a.*, b.ROLE_ID role_id, 
+			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
 	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 	where a.seq = b.db_seq
 		and a.seq = c.seq
@@ -566,7 +494,7 @@
 	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #terms_of_use_starttime#, #terms_of_use_endtime#);
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
-		SELECT *, b.email, b.name
+		SELECT a.*, b.email, b.name
 		FROM tadpole_user_db_role  a,
 			tadpole_user b 
 		WHERE a.user_seq 	= #user_seq#  
@@ -615,9 +543,17 @@
 	user db resource
 	============================================================================================================================
  -->
+<select id="findAPIKey" parameterClass="java.lang.String" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource 
+	WHERE 
+			restapi_key = #restapi_key#
+		AND restapi_yesno = 'YES'
+</select>
+ 
+ 
 <insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
-	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, name, shared_type, description)
-	VALUES(#resource_types#, #user_seq#, #db_seq#, #name#, #shared_type#, #description#)
+	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, name, shared_type, description, restapi_yesno, restapi_key)
+	VALUES(#resource_types#, #user_seq#, #db_seq#, #name#, #shared_type#, #description#, #restapi_yesno#, #restapi_key#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 		SELECT * 
@@ -651,13 +587,14 @@ SELECT
 	, m.description as description
 	, m.create_time as create_time
 	, m.delyn as delyn
+	, m.restapi_yesno as restapi_yesno
+	, m.restapi_key as restapi_key
   FROM user_db_resource m
   	inner join tadpole_user u on m.user_seq = u.seq
   where 1=1
   and m.resource_types in ( 'SQL' , 'ERD' )
   and m.delyn = 'NO'
   and m.db_seq = #seq# 
-  and (m.user_seq = #user_seq# or m.shared_type = 'PUBLIC')
   order by m.resource_types, m.resource_seq
 </select>
 
@@ -666,6 +603,8 @@ SELECT
 	set shared_type = #shared_type#
 	   ,name = #res_title#
 	   ,description = #description#
+	   ,restapi_yesno = #restapi_yesno#
+	   ,restapi_key = #restapi_key#
 	WHERE
 		resource_seq = #resource_seq#
 </update>
@@ -673,7 +612,8 @@ SELECT
 <select id="userDbResourceData" resultClass="java.lang.String" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
 	SELECT datas FROM user_db_resource_data
 	WHERE
-		user_db_resource_seq = #resource_seq#
+			user_db_resource_seq = #resource_seq#
+		AND delyn = 'NO'
 	order by seq
 </select>
 
@@ -707,7 +647,8 @@ SELECT
 <select id="userDBResourceData" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource_data
 	WHERE
-		user_db_resource_seq = #resource_seq#
+			user_db_resource_seq = #resource_seq#
+		AND delyn = 'NO'
 	ORDER BY seq
 </select>
 
@@ -715,18 +656,19 @@ SELECT
 	resource data를 저장합니다.
  -->
 <insert id="userDbResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO">
-	INSERT INTO user_db_resource_data(user_db_resource_seq, datas)
-	VALUES(#user_db_resource_seq#, #datas#)
+	INSERT INTO user_db_resource_data(group_seq, user_db_resource_seq, datas)
+	VALUES(#group_seq#, #user_db_resource_seq#, #datas#)
 </insert>
 
 <!-- 
 	resource data를 삭제합니다.
  -->
-<delete id="userDbResourceDataDelete" parameterClass="java.lang.Integer">
-	DELETE FROM user_db_resource_data
+<update id="userDbResourceDataDelete" parameterClass="java.lang.Integer">
+	UPDATE user_db_resource_data
+	SET delyn = 'YES'
 	WHERE
 		user_db_resource_seq = #seq#
-</delete>
+</update>
 
 <!-- 
 	=========================================================================================================
@@ -847,9 +789,50 @@ SELECT
 	쿼리의 실행 히스토리를 얻습니다.
 	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
  -->
+<select id="getExecuteQueryHistoryAPIDetail" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+ 	SELECT 
+ 			b.executed_sql_resource_seq, 
+ 			a.types,
+ 			a.startdateexecute, 
+ 			a.enddateexecute,
+ 			a.message, 
+ 			b.datas, 
+ 			a.row, 
+ 			a.result,
+ 		   	db.display_name, 
+ 		   	a.ipaddress, 
+ 		   	db.seq as dbseq
+	 FROM 
+		 executed_sql_resource a,
+		 executed_sql_resource_data b,
+		 tadpole_db db
+	where 1=1 AND
+	 <isNotNull property="db_seq">
+	  a.db_seq in ($db_seq$) AND 
+	 </isNotNull>
+ <![CDATA[
+	  a.delyn = 'NO' AND
+	  a.seq = b.executed_sql_resource_seq AND
+	  a.startdateexecute >= #startTime# AND  
+      a.enddateexecute <= #endTime# AND
+      a.duration >= #duration# AND
+      b.datas like #strSearch# AND 
+      a.db_seq = db.seq AND
+      a.types = #type#
+	order by a.create_time desc
+	limit #count#
+]]>	
+</select>
+
+
+<!-- 
+	쿼리의 실행 히스토리를 얻습니다.
+	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
+ -->
 <select id="getExecuteQueryHistoryDetail" resultClass="java.util.HashMap" parameterClass="java.util.Map">
  	SELECT 
  			b.executed_sql_resource_seq, 
+ 			a.types,
  			a.startdateexecute, 
  			a.enddateexecute,
  			a.message, 
@@ -866,9 +849,6 @@ SELECT
 		 tadpole_user u,
 		 tadpole_db db
 	where 1=1 AND
-	 <!-- <isNotNull property="user_seq">
-	  a.user_seq = #user_seq# AND
-	 </isNotNull> -->
 	 <isNotNull property="db_seq">
 	  a.db_seq in ($db_seq$) AND 
 	 </isNotNull>
@@ -880,7 +860,8 @@ SELECT
       a.duration >= #duration# AND
       a.user_seq = u.seq AND
       b.datas like #strSearch# AND 
-      a.db_seq = db.seq
+      a.db_seq = db.seq AND
+      a.types = #type#
 	order by a.create_time desc
 	limit #count#
 ]]>	

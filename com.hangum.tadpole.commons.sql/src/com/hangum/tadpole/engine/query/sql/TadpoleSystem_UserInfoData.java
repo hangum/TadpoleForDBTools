@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -185,7 +186,11 @@ public class TadpoleSystem_UserInfoData {
 	 * @param resultSelect
 	 * @param sqlFormatIn
 	 */
-	public static void updateSQLFormatterInfoData(String tabSize, String sqlFormatDecode, String sqlFormatIn) throws Exception {
+	public static void updateSQLFormatterInfoData(String tabSize, String sqlFormatDecode, String sqlFormatIn,
+			String txtNewLineBefeoreAndOr, String txtNewLineBefeoreComma, String  txtRemoveEmptyLine,
+			String txtWordbreak, String strTextWidth
+			
+			) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB()); 
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -200,6 +205,26 @@ public class TadpoleSystem_UserInfoData {
 		
 		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
 		userInfoData.setValue0(sqlFormatIn);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE);
+		userInfoData.setValue0(txtNewLineBefeoreAndOr);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE);
+		userInfoData.setValue0(txtNewLineBefeoreComma);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE);
+		userInfoData.setValue0(txtRemoveEmptyLine);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE);
+		userInfoData.setValue0(txtWordbreak);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
+		userInfoData.setValue0(strTextWidth);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 	}
 	
@@ -270,6 +295,11 @@ public class TadpoleSystem_UserInfoData {
 		/* 사용자별 dbms의 종류에 따른 환경설정 정보 - 초기등록시 작업이 아니라 커넥션 최초 등록시 작업하는게 맞음. */
 		/* dbms종속적인 환경설정도 있을 수 있으므로.. */
 		//userInfoData.setDb_seq(1);
+		
+		// editor and connection sysn status
+		userInfoData.setName(PreferenceDefine.SYNC_EIDOTR_STATS);
+		userInfoData.setValue0(""+PreferenceDefine.SYNC_EIDOTR_STATS_VALUE);
+		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 		
 		// export delimiter
 		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
@@ -384,6 +414,19 @@ public class TadpoleSystem_UserInfoData {
 				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
 				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE);
 				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+				
+		// api server 
+//		userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_USE);
+//		userInfoData.setValue0(PreferenceDefine.SECURITY_CREDENTIAL_USE_VALUE);
+//		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+//		
+//		userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY);
+//		userInfoData.setValue0(Utils.getUniqueID());
+//		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+//		
+//		userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY);
+//		userInfoData.setValue0(Utils.getUniqueID());
+//		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 	}
 	
 	/**

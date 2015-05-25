@@ -11,6 +11,7 @@
 package com.hangum.tadpole.preference.define;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.Utils;
 
 /**
  * Preference name define
@@ -22,6 +23,10 @@ public class PreferenceDefine {
 	
 	/**시스템이 초기화 되었는지 정의 */
 	public static final String IS_TADPOLE_INITIALIZE = "IS_TADPOLE_INITIALIZE";
+	
+	/** 에디터와 커넥션 뷰를 싱크를 맞출것인지. */
+	public static final String SYNC_EIDOTR_STATS = "SYNC_EIDOTR_STATS";
+	public static final String SYNC_EIDOTR_STATS_VALUE = "true";
 	
 	/** export시 데이터 분리자. */
 	public static final String EXPORT_DILIMITER = "EXPORT_DILIMITER";
@@ -67,7 +72,7 @@ public class PreferenceDefine {
 		public static final String SQL_FORMATTER_IN_PREFERENCE_VALUE = "false";
 		
 		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE 	= "SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE";
-		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE_VALUE = "false";
+		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE_VALUE = "true";
 		
 		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE 	= "SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE";
 		public static final String SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE_VALUE = "true";
@@ -101,10 +106,10 @@ public class PreferenceDefine {
 		public static final String SMTP_PORT_VALUE 		= "465";
 		
 		public static final String SMTP_EMAIL 			= "SMTP_EMAIL";
-		public static final String SMTP_EMAIL_VALUE 	= "tadpole.sender@gmail.com";
+		public static final String SMTP_EMAIL_VALUE 	= "";//tadpole.sender@gmail.com";
 		
 		public static final String SMTP_PASSWD 			= "SMTP_PASSWD";
-		public static final String SMTP_PASSWD_VALUE 	= "tadpoleadmin";
+		public static final String SMTP_PASSWD_VALUE 	= "";//tadpoleadmin";
 		
 	/** ORACLE PLAN TABLE */
 	public static final String ORACLE_PLAN_TABLE = "ORACLE_PLAN_TABLE";
@@ -147,7 +152,7 @@ public class PreferenceDefine {
 	
 	/** RDB의 결과 화면에서 컬럼에서 보여지는 캐릭터 숫자. */
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN = "RDB_CHARACTER_SHOW_IN_THE_COLUMN";
-	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "30";
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "100";
 	
 	/** define Amazon key */ 
 	public static final String AMAZON_ACCESS_NAME = "AMAZON_ACCESS_NAME";
@@ -155,4 +160,14 @@ public class PreferenceDefine {
 	
 	public static final String AMAZON_SECRET_NAME = "AMAZON_SECRET_NAME";
 	public static final String AMAZON_SECRET_VALUE = "";
+	
+	/** api server information */
+		public static final String SECURITY_CREDENTIAL_USE				= "SECURITY_CREDENTIAL_USE";
+		public static final String SECURITY_CREDENTIAL_USE_VALUE		= PublicTadpoleDefine.YES_NO.NO.name();
+		
+		public static final String SECURITY_CREDENTIAL_ACCESS_KEY 		= "SECURITY_CREDENTIAL_ACCESS_KEY";
+		public static final String SECURITY_CREDENTIAL_ACCESS_KEY_VALUE = Utils.getUniqueID();
+		
+		public static final String SECURITY_CREDENTIAL_SECRET_KEY 		= "SECURITY_CREDENTIAL_SECRET_KEY";
+		public static final String SECURITY_CREDENTIAL_SECRET_KEY_VALUE = Utils.getUniqueID();
 }

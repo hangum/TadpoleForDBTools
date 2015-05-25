@@ -11,6 +11,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao;
 
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.FieldNameAnnotationClass;
 
@@ -38,12 +39,15 @@ public class ResourceManagerDAO extends AbstractDAO {
 	String description;
 	String create_time;
 	String delyn;
+	
+	String restapi_yesno = PublicTadpoleDefine.YES_NO.NO.name();
+	String restapi_key = "";
 
 	public ResourceManagerDAO() {
 	}
 
 	public ResourceManagerDAO(long resource_seq, String resource_types, long user_seq, String user_name, long db_seq, long group_seq, String res_title,
-			String shared_type, String description, String create_time, String delyn) {
+			String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_key) {
 		this.resource_seq = resource_seq;
 		this.resource_types = resource_types;
 		this.user_seq = user_seq;
@@ -56,6 +60,8 @@ public class ResourceManagerDAO extends AbstractDAO {
 		this.create_time = create_time;
 		this.delyn = delyn;
 
+		this.restapi_yesno = restapi_yesno;
+		this.restapi_key = restapi_key;
 	}
 
 	/**
@@ -144,6 +150,36 @@ public class ResourceManagerDAO extends AbstractDAO {
 	@FieldNameAnnotationClass(fieldKey = "delyn")
 	public String getDelyn() {
 		return delyn;
+	}
+
+	/**
+	 * @return the restapi_yesno
+	 */
+	@FieldNameAnnotationClass(fieldKey = "restapi_yesno")
+	public String getRestapi_yesno() {
+		return restapi_yesno;
+	}
+
+	/**
+	 * @param restapi_yesno the restapi_yesno to set
+	 */
+	public void setRestapi_yesno(String restapi_yesno) {
+		this.restapi_yesno = restapi_yesno;
+	}
+
+	/**
+	 * @return the restapi_key
+	 */
+	@FieldNameAnnotationClass(fieldKey = "restapi_key")
+	public String getRestapi_key() {
+		return restapi_key;
+	}
+
+	/**
+	 * @param restapi_key the restapi_key to set
+	 */
+	public void setRestapi_key(String restapi_key) {
+		this.restapi_key = restapi_key;
 	}
 
 	/**

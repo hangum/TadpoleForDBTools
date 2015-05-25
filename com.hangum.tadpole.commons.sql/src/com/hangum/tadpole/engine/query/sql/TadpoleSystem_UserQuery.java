@@ -22,7 +22,6 @@ import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
-import com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -277,35 +276,11 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
-	 * 사용자 전체를 리턴한다.
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<UserGroupAUserDAO> getUserListPermission() throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("userListPermissions"); //$NON-NLS-1$
-	}
-	
-	/**
-	 * group의 사용자를 리턴한다.
-	 * @param groupSeq
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<UserGroupAUserDAO> getUserListPermission(String groupSeq) throws Exception {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("userListGroup", groupSeq); //$NON-NLS-1$
-	}
-	
-	/**
 	 * 유저 데이터를 수정
 	 * @param user
 	 * @throws Exception
 	 */
 	public static void updateUserData(UserDAO user) throws Exception {
-//		user.setSecurity_question(CipherManager.getInstance().encryption(user.getSecurity_question()));
-//		user.setSecurity_answer(CipherManager.getInstance().encryption(user.getSecurity_answer()));
-		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPermission", user); //$NON-NLS-1$
 	}

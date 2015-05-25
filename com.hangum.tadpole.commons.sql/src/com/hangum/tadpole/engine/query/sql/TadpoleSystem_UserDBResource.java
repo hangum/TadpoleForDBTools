@@ -24,7 +24,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -35,6 +34,19 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_UserDBResource {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBResource.class);
+	
+	/**
+	 * find api 
+	 * @param strAPIKey
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDBResourceDAO findAPIKey(String strAPIKey) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserDBResourceDAO userResource = (UserDBResourceDAO)sqlClient.queryForObject("findAPIKey", strAPIKey);
+		
+		return userResource;
+	}
 		
 	/**
 	 * 저장 
@@ -77,7 +89,7 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static void updateResource(UserDBResourceDAO userDBResource, String contents) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.delete("userDbResourceDataDelete", userDBResource.getResource_seq()); //$NON-NLS-1$
+		sqlClient.update("userDbResourceDataDelete", userDBResource.getResource_seq()); //$NON-NLS-1$
 		
 		insertResourceData(userDBResource, contents);
 	}
@@ -95,6 +107,8 @@ public class TadpoleSystem_UserDBResource {
 		// content data를 저장합니다.
 		UserDBResourceDataDAO dataDao = new UserDBResourceDataDAO();
 		dataDao.setUser_db_resource_seq(userDBResource.getResource_seq());
+		dataDao.setGroup_seq(System.currentTimeMillis());
+		
 		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
 		for (String content : arrayContent) {
 			dataDao.setDatas(content);		
@@ -145,6 +159,7 @@ public class TadpoleSystem_UserDBResource {
 		dbResourceDAO.setResource_types(type.toString());
 		dbResourceDAO.setDb_seq(db_seq);
 		dbResourceDAO.setName(filename);
+//		dbResourceDAO.setRestapi_yesno(restapi_yesno);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).size()  == 0; //$NON-NLS-1$

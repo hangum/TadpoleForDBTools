@@ -91,10 +91,11 @@ Mode.prototype.supportsFile = function(filename) {
 };
 var supportedModes = {
     ABAP:        ["abap"],
+    ABC:         ["abc"],
     ActionScript:["as"],
     ADA:         ["ada|adb"],
     Apache_Conf: ["^htaccess|^htgroups|^htpasswd|^conf|htaccess|htgroups|htpasswd"],
-    AsciiDoc:    ["asciidoc"],
+    AsciiDoc:    ["asciidoc|adoc"],
     Assembly_x86:["asm"],
     AutoHotKey:  ["ahk"],
     BatchFile:   ["bat|cmd"],
@@ -113,9 +114,13 @@ var supportedModes = {
     Diff:        ["diff|patch"],
     Dockerfile:  ["^Dockerfile"],
     Dot:         ["dot"],
+    Dummy:       ["dummy"],
+    DummySyntax: ["dummy"],
     Eiffel:      ["e"],
-    Erlang:      ["erl|hrl"],
     EJS:         ["ejs"],
+    Elixir:      ["ex|exs"],
+    Elm:         ["elm"],
+    Erlang:      ["erl|hrl"],
     Forth:       ["frt|fs|ldr"],
     FTL:         ["ftl"],
     Gcode:       ["gcode"],
@@ -131,6 +136,7 @@ var supportedModes = {
     HTML:        ["html|htm|xhtml"],
     HTML_Ruby:   ["erb|rhtml|html.erb"],
     INI:         ["ini|conf|cfg|prefs"],
+    Io:          ["io"],
     Jack:        ["jack"],
     Jade:        ["jade"],
     Java:        ["java"],
@@ -141,6 +147,7 @@ var supportedModes = {
     JSX:         ["jsx"],
     Julia:       ["jl"],
     LaTeX:       ["tex|latex|ltx|bib"],
+    Lean:        ["lean|hlean"],
     LESS:        ["less"],
     Liquid:      ["liquid"],
     Lisp:        ["lisp"],
@@ -151,11 +158,12 @@ var supportedModes = {
     LuaPage:     ["lp"],
     Lucene:      ["lucene"],
     Makefile:    ["^Makefile|^GNUmakefile|^makefile|^OCamlMakefile|make"],
-    MATLAB:      ["matlab"],
     Markdown:    ["md|markdown"],
+    Mask:        ["mask"],
+    MATLAB:      ["matlab"],
     MEL:         ["mel"],
-    MySQL:       ["mysql"],
     MUSHCode:    ["mc|mush"],
+    MySQL:       ["mysql"],
     Nix:         ["nix"],
     ObjectiveC:  ["m|mm"],
     OCaml:       ["ml|mli"],
@@ -177,14 +185,14 @@ var supportedModes = {
     SASS:        ["sass"],
     SCAD:        ["scad"],
     Scala:       ["scala"],
-    Smarty:      ["smarty|tpl"],
     Scheme:      ["scm|rkt"],
     SCSS:        ["scss"],
     SH:          ["sh|bash|^.bashrc"],
     SJS:         ["sjs"],
-    Space:       ["space"],
+    Smarty:      ["smarty|tpl"],
     snippets:    ["snippets"],
     Soy_Template:["soy"],
+    Space:       ["space"],
     SQL:         ["sql"],
     Stylus:      ["styl|stylus"],
     SVG:         ["svg"],
@@ -199,9 +207,11 @@ var supportedModes = {
     VBScript:    ["vbs|vb"],
     Velocity:    ["vm"],
     Verilog:     ["v|vh|sv|svh"],
-    XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
+    VHDL:        ["vhd|vhdl"],
+    XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
     XQuery:      ["xq"],
-    YAML:        ["yaml|yml"]
+    YAML:        ["yaml|yml"],
+    Django:      ["html"]
 };
 
 var nameOverrides = {
@@ -402,6 +412,12 @@ module.exports.generateSettingsMenu = function generateSettingsMenu (editor) {
         elements.forEach(function(element) {
             topmenu.appendChild(element);
         });
+        
+        var el = topmenu.appendChild(document.createElement('div'));
+        var version = "1.1.9";
+        el.style.padding = "1em";
+        el.textContent = "Ace version " + version;
+        
         return topmenu;
     }
     function createNewEntry(obj, clss, item, val) {
@@ -618,7 +634,6 @@ module.exports.init = function(editor) {
     };
 };
 });
-;
                 (function() {
                     ace.require(["ace/ext/settings_menu"], function() {});
                 })();

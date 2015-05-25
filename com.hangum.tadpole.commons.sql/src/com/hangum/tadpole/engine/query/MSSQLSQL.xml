@@ -38,8 +38,6 @@ SELECT getdate()
 
 <!-- 
 	table 이름
-	
-	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
@@ -55,6 +53,28 @@ SELECT
         AND p.minor_id = 0
         AND p.class = 1
         AND p.name = 'MS_Description'
+  ORDER BY s.name, tbl.name 
+</select>
+
+<!-- 
+	table 이름
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+SELECT
+    s.name + '.' + tbl.name AS name
+    ,p.value AS comment
+    , s.name as schema_name
+    , tbl.name as table_name
+  FROM
+    sys.tables AS tbl
+    inner join sys.schemas as s on s.schema_id = tbl.schema_id
+      LEFT JOIN sys.extended_properties AS p
+        ON p.major_id = tbl.object_id
+        AND p.minor_id = 0
+        AND p.class = 1
+        AND p.name = 'MS_Description'
+  WHERE
+  	tbl.name = #name#
   ORDER BY s.name, tbl.name 
 </select>
 

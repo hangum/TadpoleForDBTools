@@ -59,6 +59,7 @@ import com.swtdesigner.ResourceManager;
  */
 public class GenerateStatmentDMLDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(GenerateStatmentDMLDialog.class);
+	private boolean isEditorAdd = false;
 	
 	/** generation SQL string */
 	private String genSQL = "";
@@ -82,10 +83,12 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 * 
 	 * @param parentShell
 	 */
-	public GenerateStatmentDMLDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
+	public GenerateStatmentDMLDialog(Shell parentShell, boolean isEditorAdd, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
+		setBlockOnOpen(isEditorAdd);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 
+		this.isEditorAdd = isEditorAdd;
 		this.userDB = userDB;
 		this.tableDAO = tableDAO;
 	}
@@ -93,7 +96,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("DML Generator"); //$NON-NLS-1$
+		newShell.setText(tableDAO.getName() + " Information"); //$NON-NLS-1$
 	}
 
 	/**
@@ -110,58 +113,28 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 2;
 
-		Composite composite = new Composite(container, SWT.NONE);
-		composite.setLayout(new GridLayout(5, false));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Composite compositeBody = new Composite(container, SWT.NONE);
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Label lblDml = new Label(composite, SWT.NONE);
-		lblDml.setText("DML");
+		Composite compositeTable = new Composite(compositeBody, SWT.NONE);
+		compositeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		compositeTable.setLayout(new GridLayout(3, false));
 
-		rdoSelect = new Button(composite, SWT.RADIO);
-		rdoSelect.setSelection(true);
-		rdoSelect.setText("SELECT");
-
-		rdoUpdate = new Button(composite, SWT.RADIO);
-		rdoUpdate.setText("UPDATE");
-
-		rdoInsert = new Button(composite, SWT.RADIO);
-		rdoInsert.setText("INSERT");
-
-		rdoDelete = new Button(composite, SWT.RADIO);
-		rdoDelete.setText("DELETE");
-
-		assignSelectionAdapter(rdoSelect);
-		assignSelectionAdapter(rdoUpdate);
-		assignSelectionAdapter(rdoInsert);
-		assignSelectionAdapter(rdoDelete);
-
-		Composite composite_1 = new Composite(container, SWT.NONE);
-		GridLayout gl_composite_1 = new GridLayout(1, false);
-		gl_composite_1.verticalSpacing = 2;
-		gl_composite_1.horizontalSpacing = 2;
-		gl_composite_1.marginHeight = 2;
-		gl_composite_1.marginWidth = 2;
-		composite_1.setLayout(gl_composite_1);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		Composite composite_2 = new Composite(composite_1, SWT.NONE);
-		GridData gd_composite_2 = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		gd_composite_2.heightHint = 28;
-		composite_2.setLayoutData(gd_composite_2);
-		composite_2.setLayout(new GridLayout(4, false));
-
-		Label lblTable = new Label(composite_2, SWT.NONE);
-		lblTable.setText("Table");
-
-		lblTableName = new Label(composite_2, SWT.NONE);
+		lblTableName = new Label(compositeTable, SWT.NONE);
 		lblTableName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTableName.setText("table name");
+		lblTableName.setText(tableDAO.getName());
 
-		Label lblAs = new Label(composite_2, SWT.NONE);
+		Label lblAs = new Label(compositeTable, SWT.NONE);
 		lblAs.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblAs.setText(" as ");
 
-		textTableAlias = new Text(composite_2, SWT.BORDER);
+		textTableAlias = new Text(compositeTable, SWT.BORDER);
 		textTableAlias.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				if (tableViewer.getInput() != null) {
@@ -175,16 +148,41 @@ public class GenerateStatmentDMLDialog extends Dialog {
 			}
 		});
 		textTableAlias.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(composite_2, SWT.NONE);
-		new Label(composite_2, SWT.NONE);
-		new Label(composite_2, SWT.NONE);
-		new Label(composite_2, SWT.NONE);
-		new Label(composite_2, SWT.NONE);
-		new Label(composite_2, SWT.NONE);
-		new Label(composite_2, SWT.NONE);
-		new Label(composite_2, SWT.NONE);
+		new Label(compositeTable, SWT.NONE);
+		new Label(compositeTable, SWT.NONE);
+		
+		Text textTBNameCmt = new Text(compositeTable, SWT.BORDER | SWT.WRAP | SWT.MULTI);
+		GridData gd_textTBNameCmt = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textTBNameCmt.heightHint = 33;
+		textTBNameCmt.setLayoutData(gd_textTBNameCmt);
+		textTBNameCmt.setText(tableDAO.getComment());
+		
+		Composite compositeDML = new Composite(compositeBody, SWT.NONE);
+		compositeDML.setLayout(new GridLayout(5, false));
+		compositeDML.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		tableViewer = new TableViewer(composite_1, SWT.BORDER | SWT.FULL_SELECTION);
+		Label lblDml = new Label(compositeDML, SWT.NONE);
+		lblDml.setText("DML");
+
+		rdoSelect = new Button(compositeDML, SWT.RADIO);
+		rdoSelect.setSelection(true);
+		rdoSelect.setText("SELECT");
+
+		rdoUpdate = new Button(compositeDML, SWT.RADIO);
+		rdoUpdate.setText("UPDATE");
+
+		rdoInsert = new Button(compositeDML, SWT.RADIO);
+		rdoInsert.setText("INSERT");
+
+		rdoDelete = new Button(compositeDML, SWT.RADIO);
+		rdoDelete.setText("DELETE");
+
+		assignSelectionAdapter(rdoSelect);
+		assignSelectionAdapter(rdoUpdate);
+		assignSelectionAdapter(rdoInsert);
+		assignSelectionAdapter(rdoDelete);
+		
+		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		table.setLinesVisible(true);
@@ -192,13 +190,13 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		TableViewerColumn tvColumnName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcColumnName = tvColumnName.getColumn();
-		tcColumnName.setWidth(150);
+		tcColumnName.setWidth(130);
 		tcColumnName.setText("Column Name");
 		tvColumnName.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 0, this));
 
 		TableViewerColumn tvColumnDataType = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcDataType = tvColumnDataType.getColumn();
-		tcDataType.setWidth(120);
+		tcDataType.setWidth(85);
 		tcDataType.setText("Data Type");
 
 		TableViewerColumn tvColumnKey = new TableViewerColumn(tableViewer, SWT.CENTER);
@@ -211,8 +209,13 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		tcAlias.setWidth(100);
 		tcAlias.setText("Alias");
 		tvColumnAlias.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 3, this));
+		
+		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
+		TableColumn tcCmt =  tvColumnCmt.getColumn();
+		tcCmt.setWidth(300);
+		tcCmt.setText("Comment");
 
-		Composite composite_3 = new Composite(composite_1, SWT.NONE);
+		Composite composite_3 = new Composite(compositeBody, SWT.NONE);
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_composite_3 = new GridLayout(2, false);
 		gl_composite_3.verticalSpacing = 2;
@@ -242,7 +245,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		chkComment.setText("Include Comment");
 		assignSelectionAdapter(chkComment);
 		
-		Composite previewComposite = new Composite(composite_1, SWT.BORDER);
+		Composite previewComposite = new Composite(compositeBody, SWT.BORDER);
 		previewComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_previewComposite = new GridLayout(1, false);
 		gl_previewComposite.verticalSpacing = 2;
@@ -264,6 +267,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
+		
+		textTableAlias.setFocus();
 
 		return container;
 	}
@@ -316,6 +321,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				String strSysName = SQLUtil.makeIdentifierName(userDB, tableColumnDAO.getField());
 				newTableDAO = new ExtendTableColumnDAO(tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), textTableAlias.getText().trim());
 				newTableDAO.setSysName(strSysName);
+				newTableDAO.setComment(tableColumnDAO.getComment());
 				
 				newTableColumns.add(newTableDAO);
 			}
@@ -340,9 +346,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 			resultSQL.append("/* Tadpole SQL Generator */");
 		}
 		resultSQL.append("SELECT ");
-		
 		int cnt = 0;
-
+		
 		StringBuffer sbColumn = new StringBuffer();
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if (allDao.isCheck()) {
@@ -351,7 +356,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				if ("*".equals(allDao.getField())) {
 					sbColumn.append(allDao.getSysName());
 				} else {
-					sbColumn.append(allDao.getSysName()).append(" as ").append(allDao.getColumnAlias());
+					String strTableAlias = !"".equals(textTableAlias.getText().trim())?
+							textTableAlias.getText().trim() + "." + allDao.getSysName() + " as " + allDao.getColumnAlias() :
+								allDao.getSysName() + " as " + allDao.getColumnAlias();
+					
+					sbColumn.append(strTableAlias);
 				}
 				cnt++;
 			}
@@ -561,8 +570,13 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", false);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		if(isEditorAdd) {
+			createButton(parent, IDialogConstants.OK_ID, "OK", false);
+			createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		} else {
+			createButton(parent, IDialogConstants.CANCEL_ID, "OK", false);	
+		}
+		
 	}
 
 	/**
@@ -570,7 +584,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 550);
+		return new Point(500, 600);
 	}
 }
 
@@ -598,15 +612,12 @@ class GenerateLabelProvider extends LabelProvider implements ITableLabelProvider
 		ExtendTableColumnDAO dao = (ExtendTableColumnDAO) element;
 
 		switch (columnIndex) {
-		case 0:
-			return dao.getColumnNamebyTableAlias();
-		case 1:
-			return dao.getType();
-		case 2:
-			return dao.getKey();
-		case 3:
-			return dao.getSysName();
-		}
+		case 0: return dao.getColumnNamebyTableAlias();
+		case 1: return dao.getType();
+		case 2: return dao.getKey();
+		case 3: return dao.getSysName();
+		case 4: return dao.getComment();
+		} 
 
 		return "*** not set column value ***";
 	}

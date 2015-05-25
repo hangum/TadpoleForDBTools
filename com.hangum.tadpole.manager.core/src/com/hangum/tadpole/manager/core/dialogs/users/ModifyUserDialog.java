@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
-import com.hangum.tadpole.engine.query.dao.system.ext.UserGroupAUserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
@@ -48,25 +47,21 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	private static final Logger logger = Logger.getLogger(ModifyUserDialog.class);
 	
-	private UserGroupAUserDAO userDAO;
+	private UserDAO userDAO;
 	
-	private Text textGroupName;
-	private Text textGroupType;
 	private Text textEmail;
 	private Text textName;
 	private Text textCreateDate;
 	
 	private Combo comboApproval;
+	private Combo comboUserConfirm;
 	private Combo comboDel;
 
-	private Text textQuestion;
-	private Text textAnswer;
-	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public ModifyUserDialog(Shell parentShell, UserGroupAUserDAO userDAO) {
+	public ModifyUserDialog(Shell parentShell, UserDAO userDAO) {
 		super(parentShell);
 		
 		this.userDAO = userDAO;
@@ -87,30 +82,11 @@ public class ModifyUserDialog extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		container.setLayout(new GridLayout(2, false));
 		
-		Label lblGroupName = new Label(container, SWT.NONE);
-		lblGroupName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblGroupName.setText("Group Name"); //$NON-NLS-1$
-		
-		textGroupName = new Text(container, SWT.BORDER);
-		textGroupName.setEnabled(false);
-		textGroupName.setEditable(false);
-		textGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblType = new Label(container, SWT.NONE);
-		lblType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblType.setText("Role"); //$NON-NLS-1$
-		
-		textGroupType = new Text(container, SWT.BORDER);
-		textGroupType.setEnabled(false);
-		textGroupType.setEditable(false);
-		textGroupType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblEmail.setText("email"); //$NON-NLS-1$
 		
 		textEmail = new Text(container, SWT.BORDER);
-		textEmail.setEnabled(false);
 		textEmail.setEditable(false);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -119,7 +95,6 @@ public class ModifyUserDialog extends Dialog {
 		lblName.setText("Name"); //$NON-NLS-1$
 		
 		textName = new Text(container, SWT.BORDER);
-		textName.setEnabled(false);
 		textName.setEditable(false);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -131,6 +106,15 @@ public class ModifyUserDialog extends Dialog {
 		comboApproval.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboApproval.add("YES"); //$NON-NLS-1$
 		comboApproval.add("NO"); //$NON-NLS-1$
+		
+		Label lblUserConfirm = new Label(container, SWT.NONE);
+		lblUserConfirm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblUserConfirm.setText("User Confirm"); //$NON-NLS-1$
+		
+		comboUserConfirm = new Combo(container, SWT.READ_ONLY);
+		comboUserConfirm.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboUserConfirm.add("YES"); //$NON-NLS-1$
+		comboUserConfirm.add("NO"); //$NON-NLS-1$
 		
 		Label lblDelete = new Label(container, SWT.NONE);
 		lblDelete.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -146,27 +130,8 @@ public class ModifyUserDialog extends Dialog {
 		lblCreateDate.setText("Create Date"); //$NON-NLS-1$
 		
 		textCreateDate = new Text(container, SWT.BORDER);
-		textCreateDate.setEnabled(false);
 		textCreateDate.setEditable(false);
 		textCreateDate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblPasswordDescription = new Label(container, SWT.NONE);
-		lblPasswordDescription.setText("* The information below is used to find the password.");
-		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		
-		Label lblQuestion = new Label(container, SWT.NONE);
-		lblQuestion.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblQuestion.setText("Question");
-
-		textQuestion = new Text(container, SWT.BORDER);
-		textQuestion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblAnswer = new Label(container, SWT.NONE);
-		lblAnswer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblAnswer.setText("Answer");
-
-		textAnswer = new Text(container, SWT.BORDER);
-		textAnswer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		initData();
 		
@@ -180,36 +145,25 @@ public class ModifyUserDialog extends Dialog {
 	 * 초기 데이터를 설정 합니다.
 	 */
 	private void initData() {
-		textGroupName.setText(userDAO.getUser_group_name());
-		textGroupType.setText(userDAO.getRole_type());
+
 		textEmail.setText(userDAO.getEmail());
 		textName.setText(userDAO.getName());
 		textCreateDate.setText(userDAO.getCreate_time());
 		
 		comboApproval.setText(userDAO.getApproval_yn());
+		comboUserConfirm.setText(userDAO.getIs_email_certification());
 		comboDel.setText(userDAO.getDelYn());
-//		String question = CipherManager.getInstance().decryption(userDAO.getSecurity_question());
-//		if (null!= question && !"".equals(question.trim())) {
-//			try {
-//				SecurityHint questionKey = PublicTadpoleDefine.SecurityHint.valueOf(question);
-//				textQuestion.setText(questionKey.toString());
-//			} catch (Exception e) {
-//				// skip
-//				textQuestion.setText(question);
-//			}
-//		}
-//		textAnswer.setText(CipherManager.getInstance().decryption(userDAO.getSecurity_answer()));
 	}
 	
 	@Override
 	protected void okPressed() {
 		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
-			user.setApproval_yn(comboApproval.getText());
-			user.setDelYn(comboDel.getText());
 			user.setSeq(userDAO.getSeq());
-//			user.setSecurity_question(textQuestion.getText());
-//			user.setSecurity_answer(textAnswer.getText());
+			user.setApproval_yn(comboApproval.getText());
+			user.setIs_email_certification(comboUserConfirm.getText());
+			user.setDelYn(comboDel.getText());
+			
 			
 			// 사용자의 권한을 no로 만들면 session에서 삭제 하도록 합니다.
 			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) {
@@ -248,7 +202,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 400);
+		return new Point(400, 250);
 	}
 
 }

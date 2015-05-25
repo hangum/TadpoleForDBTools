@@ -2,6 +2,8 @@
 	http://ace.c9.io/#nav=embedding 의 guide를 참고로 합니다.
 	ace editor를 올챙이 프로젝트로 사용하기 위한 메인 페이지 입니다.
 	
+	change ace version 1.1.9 - 2015.05.13
+	
 	@author hangum
  -->
 <!DOCTYPE html>
@@ -10,36 +12,36 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Editor</title>
-  <style type="text/css" media="screen">
-   body {
-        overflow: hidden;
-    }
-    #editor { 
-        margin: 0;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-    #statusBar {
-        margin: 0;
-        font-size : 11px;
-        padding: 0;
-        position: absolute;
-        left: 0;
-        right: 8px;
-        bottom: 0;
-        height: 30px;
-        background-color: rgb(245, 245, 245);
-        color: gray;
-    }
-    .ace_status-indicator {
-        color: gray;
-        position: absolute;
-        right: 8px;
-        border-left: 1px solid;
-    }
+  <style>
+	   body {
+	        overflow: hidden;
+	    }
+	    #editor { 
+	        margin: 0;
+	        position: absolute;
+	        top: 0;
+	        bottom: 15px;
+	        left: 0;
+	        right: 0;
+	    }
+	    #statusBar {
+	        margin: 0;
+	        font-size : 10px;
+	        padding: 0;
+	        position: absolute;
+	        left: 0;
+	        right: 0;
+	        bottom: 0;
+	        height: 15px;
+	        background-color: rgb(245, 245, 245);
+	        color: gray;
+	    } 
+	    .ace_status-indicator {
+	        color: gray;
+	        position: absolute;
+	        right: 8px;
+	        border-left: 1px solid;
+	    }
   </style>
 </head>
 
@@ -50,6 +52,11 @@
 		<script src="src-noconflict/ace.js"></script>
 		<script src="src-noconflict/ext-language_tools.js"></script>
 		<script src="src-noconflict/ext-statusbar.js"></script>
+		<script src="src-noconflict/mode-sql.js"></script>
+		<script src="src-noconflict/mode-mysql.js"></script>
+		<script src="src-noconflict/mode-pgsql.js"></script>
+		<script src="src-noconflict/mode-sqlite.js"></script>
+		<script src="src-noconflict/mode-sqlserver.js"></script>
 		
 		<script src="tadpole-extension.js" charset="utf-8"></script>
 	</body>

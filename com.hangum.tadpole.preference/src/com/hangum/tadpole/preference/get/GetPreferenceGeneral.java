@@ -235,4 +235,10 @@ public class GetPreferenceGeneral {
 			return getRDBNumberISComma().equals(PublicTadpoleDefine.YES_NO.YES.name())?true:false;
 		}
 		
+		public static boolean getSyncEditorStat() {
+			UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SYNC_EIDOTR_STATS);
+			if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.SYNC_EIDOTR_STATS_VALUE); 
+			return Boolean.parseBoolean(userInfo.getValue0());
+		}
+		
 }

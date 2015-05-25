@@ -1,7 +1,15 @@
 /**
- * tadpole ace editor extension.
+ * 	tadpole ace editor extension.
  *  ace example at https://github.com/ajaxorg/ace/wiki/Embedding-API
- *  Default keyboard shortcuts : https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts 
+ *  
+ *  Default keyboard shortcuts : 
+ *  	https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts
+ *  
+ *  Dynamically update syntax highlighting mode rules for the Ace Editor:
+ *  	http://stackoverflow.com/questions/22166784/dynamically-update-syntax-highlighting-mode-rules-for-the-ace-editor
+ *  
+ *  @date 2015.05.
+ *  @author hangum, hangum@gmail.com
  */
 var editorService = {
 	/** initialize editor */
@@ -16,7 +24,6 @@ var editorService = {
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
-//	executeFlag : function() {},
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
@@ -48,7 +55,10 @@ var editorService = {
 	EXECUTE_QUERY 		: "25",
 	EXECUTE_ALL_QUERY 	: "26",
 	EXECUTE_PLAN  		: "30",
-	EXECUTE_FORMAT		: "35"
+	EXECUTE_FORMAT		: "35",
+	
+	F4_DML_OPEN			: "40",
+	GENERATE_SELECT		: "45"
 };
 
 var editor;
@@ -60,7 +70,7 @@ var isEdited = false;
 var varEditorType = 'TABLES';
 
 // enable live auto completion
-var completions = [];
+//var completions = [];
 
 /** initialize editor */
 {
@@ -75,36 +85,54 @@ var completions = [];
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
-	/*
-	 *  autocomplete
-	 *  http://stackoverflow.com/questions/13545433/autocompletion-in-ace-editor 
-	 */
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
-	    enableSnippets: true
-//	    ,
-//	    enableLiveAutocompletion: true
-	});
-	
-//	var completer = {
-//	        getCompletions: function(editor, session, pos, prefix, callback) {
-//	        	var text = editor.getValue(); 
-//	        	
-//	        	if (prefix.length === 0) { 
-//	        		callback(null, []); 
-//	        		return 
-//	        	} 
-//	        	 
-////	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
-//	        	callback(null, completions); 
-//	        } 
-//	} 
-//	langTools.addCompleter(completer); 
+	    enableSnippets: true,
+	    enableLiveAutocompletion: true
+	}); 
 };
+
+
+/**
+ * 동적으로 키워드르 추가할 수 있는 모드
+ */
+ace.define("DynHighlightRules", [], function(require, exports, module) {
+//	"use strict";
+	var oop = require("ace/lib/oop");
+	var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
+	
+	var DynHighlightRules = function() {
+	   this.setKeywords = function(kwMap) {     
+	       this.keywordRule.onMatch = this.createKeywordMapper(kwMap, "identifier");
+	   }
+	   this.keywordRule = {
+	       regex : "\\w+",
+	       onMatch : function() {return "text";}
+	   }
+	     
+	   this.$rules = {
+	        "start" : [ 
+	            {
+	                token: "string",
+	                start: '"', 
+	                end: '"',
+	                next: [{ token : "constant.language.escape.lsl", regex : /\\[tn"\\]/}]
+	            },
+	            this.keywordRule
+	        ]
+	   };
+	   this.normalizeRules();
+	};
+	
+	oop.inherits(DynHighlightRules, TextHighlightRules);
+	
+	exports.DynHighlightRules = DynHighlightRules;
+});
+  
 
 /** 
  * 에디터를 초기화 합니다. 
- * @param varMode mode
+ * @param varMode sql type(ex: sqlite, pgsql), EditorDefine#EXT_SQLite
  * @param varTableList table list
  * @param varType editorType (sql or procedure )
  * @param varInitText
@@ -114,22 +142,14 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 	varEditorType = varType;
 	
 	try {
-		var tables = varTableList.split("|");
-		for(var i=0; i<tables.length; i++) {
-			completions.push({ caption: tables[i], snippet: tables[i], meta: "Table" });
-		}
-	} catch(e) {
-		console.log(e);
-	}
-	
-	try {
 		var EditSession = ace.require("ace/edit_session").EditSession;
 		var UndoManager = ace.require("./undomanager").UndoManager;
 
-		var doc = new EditSession(varInitText);
-		doc.setUndoManager(new UndoManager());
-		doc.setMode(varMode);
-		doc.on('change', function() {
+		var session = new EditSession(varInitText);
+		session.setUndoManager(new UndoManager());
+		
+		session.setMode(varMode);
+		session.on('change', function() {
 			if(!isEdited) {
 				try {
 					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
@@ -139,8 +159,13 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 				isEdited = true;
 			}
 		});
+
+		// Add table list to Editor's keywordList
+		var keywordList = session.$mode.$highlightRules.$keywordList;
+		session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
 		
-		editor.setSession(doc);
+		editor.setSession(session);
+
 		editor.focus();
 	} catch(e) {
 		console.log(e);
@@ -155,41 +180,6 @@ editorService.saveData = function() {
 editorService.setFocus = function() {
 	editor.focus();
 };
-//editorService.executeFlag = function() {
-////	console.log('\t end java program....');
-//	isJavaRunning = false;
-//};
-
-///** user autocomplete */
-//editor.commands.on("afterExec", function(e){
-////	console.log("--> command --> " + e.command.name);
-//	
-//	if (e.command.name == "insertstring"&&/^[\\.]$/.test(e.args)) {
-//		var all = editor.completers;
-//		editor.completers = completions;
-//    	editor.execCommand("startAutocomplete");
-//    	editor.completers = all;
-//    	
-////    } else if(e.command.name == "startAutocomplete") {
-////    	var all = e.editor.completers;
-////    	
-////		var completer = {
-////		        getCompletions: function(editor, session, pos, prefix, callback) {
-////		        	var text = editor.getValue(); 
-////		        	
-////		        	if (prefix.length === 0) { 
-////		        		callback(null, []); 
-////		        		return 
-////		        	} 
-////		        	 
-////	//	        	completions.push({ caption: "test", snippet: "test", meta: "table" });
-////		        	callback(null, completions); 
-////		        } 
-////		} 
-////		langTools.addCompleter(completer);
-//	}
-//})
-
 
 //==[ Define short key ]======================================================================================================================
 var shortcutErrMsg = 'Opps, an execution error has occured!\nEither click the "SQL" button of the tool bar, or open a new editor window.';
@@ -228,6 +218,74 @@ editor.commands.addCommand({
     	} catch(e) {
     		console.log(e);
     		alert(shortcutErrMsg);
+    	}
+    },
+    readOnly: false
+});
+editor.commands.addCommand({
+    name: 'executeObjectViewer',
+    bindKey: {win: 'F4',  mac: 'F4'},
+    exec: function(editor) {
+    	try {
+    		var varSelectionContent = editor.getSelectedText();
+    		if(varSelectionContent != "") {
+    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, varSelectionContent);
+    		} else {
+    			// 현재 행의 텍스트.
+    			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+    			if(startQueryLine != "") {
+	
+	    			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
+	    			var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
+	    			var strArryBeforeTxt = strBeforeTxt.split(' ');
+	
+	    			// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
+	    			var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
+	    			var strArryAfterTxt = strAfterTxt.split(' ');
+	    			var strTableName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
+	    			
+	    			// 마지막 문자가 ; 라면 제거해준다.
+	    			strTableName = strTableName.replace(";", "");
+	    			
+	    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, strTableName);
+    			}
+    		}
+    	} catch(e) {
+    		console.log(e);
+    	}
+    },
+    readOnly: false
+});
+editor.commands.addCommand({
+    name: 'executeTableSelect',
+    bindKey: {win: 'Ctrl-I',  mac: 'Command-I'},
+    exec: function(editor) {
+    	try {
+    		var varSelectionContent = editor.getSelectedText();
+    		if(varSelectionContent != "") {
+    			AceEditorBrowserHandler(editorService.GENERATE_SELECT, varSelectionContent);
+    		} else {
+    			// 현재 행의 텍스트.
+    			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+    			if(startQueryLine != "") {
+	
+	    			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
+	    			var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
+	    			var strArryBeforeTxt = strBeforeTxt.split(' ');
+	
+	    			// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
+	    			var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
+	    			var strArryAfterTxt = strAfterTxt.split(' ');
+
+	    			var strTableName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
+	    			// 마지막 문자가 ; 라면 제거해준다.
+	    			strTableName = strTableName.replace(";", "");
+	    			
+	    			AceEditorBrowserHandler(editorService.GENERATE_SELECT, strTableName);
+    			}
+    		}
+    	} catch(e) {
+    		console.log(e);
     	}
     },
     readOnly: false
@@ -365,7 +423,6 @@ editorService.getSelectedText = function(varDelimiter) {
 					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
 //				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
 				
-				//
 				// 자신보다 한 행위의 쿼리를 읽어 들입니다.
 				//
 //				console.log("========== 선택된 행에 종료 문자가 있다면===");
@@ -542,9 +599,4 @@ editorService.helpDialog = function() {
 	} catch(e) {
 		console.log(e);
 	}
-
-//	ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
-//        module.init(editor);
-//        editor.showKeyboardShortcuts()
-//    })
 };

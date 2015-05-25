@@ -37,6 +37,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -193,7 +194,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserInfoPerference_9)) { //$NON-NLS-1$
 					try {
-//						TadpoleSystem_UserRole.withdrawal(SessionManager.getSeq());
+						TadpoleSystem_UserRole.withdrawal(SessionManager.getUserSeq());
 						
 						TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
 						SessionManager.logout();

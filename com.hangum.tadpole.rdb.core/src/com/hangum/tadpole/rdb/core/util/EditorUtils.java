@@ -10,14 +10,21 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.rdb.core.actions.global.SynchronizedEditorHandler;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 
 /**
@@ -105,5 +112,53 @@ public class EditorUtils {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * select connection manager
+	 * 
+	 * @param userDBDAO
+	 */
+	public static void selectConnectionManager(final UserDBDAO userDBDAO) {
+		if(!SynchronizedEditorHandler.isSynchronizedState()) return;
+		
+		if(userDBDAO != null) {
+			final Display display = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getDisplay();
+			display.asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					ManagerViewer managerView =  (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+					
+					ISelection is = managerView.getManagerTV().getSelection();
+					if(!is.isEmpty()) {
+						Object element = ((IStructuredSelection)is).getFirstElement();
+						if(element instanceof ManagerListDTO) {
+							setSelection(managerView, userDBDAO);
+
+						} else if(element instanceof UserDBDAO) {
+							UserDBDAO currentSelectionUserDB = (UserDBDAO)element;
+							if(currentSelectionUserDB.getSeq() != userDBDAO.getSeq()) {
+								setSelection(managerView, userDBDAO);
+							}
+						
+						} else if(element instanceof UserDBResourceDAO) {
+							UserDBResourceDAO dao = (UserDBResourceDAO)element;
+							if(dao.getDb_seq() != userDBDAO.getSeq()) {
+								setSelection(managerView, userDBDAO);
+							}
+						}
+						
+					} else {
+						setSelection(managerView, userDBDAO);
+					}
+				}
+				
+				private void setSelection(ManagerViewer managerView, final UserDBDAO userDBDAO) {
+					IStructuredSelection iss = new StructuredSelection(userDBDAO);
+					managerView.getManagerTV().setSelection(iss);
+				}
+			});
+			
+		}
 	}
 }

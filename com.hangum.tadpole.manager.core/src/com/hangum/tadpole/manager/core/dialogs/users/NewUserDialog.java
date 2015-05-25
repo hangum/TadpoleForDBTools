@@ -54,6 +54,7 @@ import com.hangum.tadpole.preference.get.GetAdminPreference;
  */
 public class NewUserDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewUserDialog.class);
+	private boolean isAdmin = false;
 	
 	private Text textEMail;
 	private Text textPasswd;
@@ -77,6 +78,17 @@ public class NewUserDialog extends Dialog {
 	public NewUserDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+	}
+
+	/**
+	 * @param shell
+	 * @param b
+	 */
+	public NewUserDialog(Shell parentShell, boolean isAdmin) {
+		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.isAdmin = isAdmin;
 	}
 
 	@Override
@@ -245,10 +257,16 @@ public class NewUserDialog extends Dialog {
 			 * 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
 			 */
 			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name();
+			String isEmamilConrim = PublicTadpoleDefine.YES_NO.NO.name();
+			if(isAdmin) {
+				approvalYn 		= PublicTadpoleDefine.YES_NO.YES.name();
+				isEmamilConrim 	= PublicTadpoleDefine.YES_NO.YES.name();
+			}
+			
 			String strEmailConformKey = Utils.getUniqueDigit(7);
 			TadpoleSystem_UserQuery.newUser(
 					PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
-					strEmail, strEmailConformKey, PublicTadpoleDefine.YES_NO.NO.name(), 
+					strEmail, strEmailConformKey, isEmamilConrim, 
 					passwd, 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
 					name, comboLanguage.getText(), approvalYn,  
@@ -289,7 +307,9 @@ public class NewUserDialog extends Dialog {
 			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
 			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
-			logger.error("Error send email", e); //$NON-NLS-1$
+			logger.error(String.format("New user key sening error name %s, email %s, confirm key %s", name, email, strConfirmKey), e); //$NON-NLS-1$
+			
+			MessageDialog.openError(getShell(), "Error", "사용자 확인 키를 보내는 중에 문제가 발생했습니다.\n어드민에게 문의 하여 주십시오.");
 		}
 	}
 	

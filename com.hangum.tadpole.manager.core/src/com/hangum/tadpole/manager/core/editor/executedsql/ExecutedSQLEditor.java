@@ -81,7 +81,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	private List<UserDBDAO> listUserDBDAO;
 
 	private Combo comboDatabase;
-	private Combo comboUser;
+	private Combo comboTypes;
 	
 	private Text textMillis;
 	private Grid gridHistory;
@@ -133,19 +133,24 @@ public class ExecutedSQLEditor extends EditorPart {
 		gd_comboDisplayName.widthHint = 200;
 		comboDatabase.setLayoutData(gd_comboDisplayName);
 		
-//		Label lblUser = new Label(compositeHead, SWT.NONE);
-//		lblUser.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
-//		GridData gd_lblUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-//		gd_lblUser.minimumWidth = 65;
-//		gd_lblUser.widthHint = 65;
-//		lblUser.setLayoutData(gd_lblUser);
-//		lblUser.setText("<b>User</b>");
-//
-//		comboUser = new Combo(compositeHead, SWT.READ_ONLY);
-//		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-//		gd_comboUserName.widthHint = 200;
-//		gd_comboUserName.minimumWidth = 200;
-//		comboUser.setLayoutData(gd_comboUserName);
+		Label lblTypes = new Label(compositeHead, SWT.NONE);
+		lblTypes.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		GridData gd_lblUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblUser.minimumWidth = 65;
+		gd_lblUser.widthHint = 65;
+		lblTypes.setLayoutData(gd_lblUser);
+		lblTypes.setText("<b>TYPE</b>");
+
+		comboTypes = new Combo(compositeHead, SWT.READ_ONLY);
+		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_comboUserName.widthHint = 200;
+		gd_comboUserName.minimumWidth = 200;
+		comboTypes.setLayoutData(gd_comboUserName);
+		
+		for (PublicTadpoleDefine.EXECUTE_SQL_TYPE type : PublicTadpoleDefine.EXECUTE_SQL_TYPE.values()) {
+			comboTypes.add(type.name());
+		}
+		comboTypes.select(0);
 		
 		Composite compositeInSearch = new Composite(compositeHead, SWT.NONE);
 		compositeInSearch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 4, 1));
@@ -340,7 +345,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		String strSearchTxt = "%" + StringUtils.trimToEmpty(textSearch.getText()) + "%";
 
 		try {
-			List<SQLHistoryDAO> listSQLHistory = TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(db_seq, startTime, endTime, duringExecute, strSearchTxt);
+			List<SQLHistoryDAO> listSQLHistory = TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(comboTypes.getText(), db_seq, startTime, endTime, duringExecute, strSearchTxt);
 			for (SQLHistoryDAO sqlHistoryDAO : listSQLHistory) {
 				mapSQLHistory.put(""+gridHistory.getRootItemCount(), sqlHistoryDAO);
 				

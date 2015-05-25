@@ -48,17 +48,19 @@ public class TadpoleSystem_ExecutedSQL {
 	/**
 	 * 쿼리 실행 히스토리 디테일 창을 얻습니다.
 	 * 
+	 * @param strType 
 	 * @param dbSeq
 	 * @param executeTime
 	 * @param durationLimit
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws Exception {
+	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws Exception {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("db_seq", 	dbSeq);
+		queryMap.put("type", strType);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(startTime);
@@ -77,7 +79,12 @@ public class TadpoleSystem_ExecutedSQL {
 		queryMap.put("strSearch", strSearch);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
+		List<java.util.Map> listResourceData =  new ArrayList<Map>();
+		if(!PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
+			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
+		} else {
+			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryAPIDetail", queryMap);
+		}
 		
 		for (Map resultMap : listResourceData) {
 			int seq = (Integer)resultMap.get("executed_sql_resource_seq");
@@ -97,7 +104,7 @@ public class TadpoleSystem_ExecutedSQL {
 			int row = (Integer)resultMap.get("row");
 			String result = (String)resultMap.get("result");
 			
-			String userName = (String) resultMap.get("name"); 
+			String userName =  resultMap.get("name") == null?"":(String)resultMap.get("name"); 
 			String dbName = (String) resultMap.get("display_name");
 			
 			String ipAddress = (String) resultMap.get("ipaddress");

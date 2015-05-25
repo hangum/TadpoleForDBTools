@@ -45,17 +45,9 @@ public class Messages extends NLS {
 
 	public static String NewUserDialog_21;
 
-	public static String NewUserDialog_22;
-
-	public static String NewUserDialog_23;
-
-	public static String NewUserDialog_24;
-
 	public static String NewUserDialog_25;
 
 	public static String NewUserDialog_26;
-
-	public static String NewUserDialog_27;
 
 	public static String NewUserDialog_3;
 
@@ -66,7 +58,6 @@ public class Messages extends NLS {
 
 	public static String NewUserDialog_42;
 
-	public static String NewUserDialog_5;
 	public static String NewUserDialog_6;
 	public static String NewUserDialog_7;
 	public static String NewUserDialog_8;
@@ -75,18 +66,42 @@ public class Messages extends NLS {
 	public static String NewUserDialog_btnManager_text;
 	public static String NewUserDialog_btnManager_text_1;
 	public static String NewUserDialog_btnUser_text;
-	public static String NewUserDialog_lblNewLabel_text;
 	public static String NewUserDialog_lblLanguage_text;
 
 	public static String SystemDBDataManager_8;
 	public static String NewUserDialog_lblGoogleOpt_text;
 	public static String NewUserDialog_btnCheckButton_text;
-	public static String NewUserDialog_btnGetOptCode_text;
 	public static String NewUserDialog_lblAccessKey_text;
 	public static String NewUserDialog_grpGoogleOtp_text;
 	public static String NewUserDialog_lblAccessKey_1_text;
 	public static String NewUserDialog_lblQrcodeUrl_text;
 	public static String NewUserDialog_lblOtpCdoe_text;
+
+	public static String TransactionConnectionListEditor_0;
+
+	public static String TransactionConnectionListEditor_1;
+
+	public static String TransactionConnectionListEditor_12;
+
+	public static String TransactionConnectionListEditor_13;
+
+	public static String TransactionConnectionListEditor_14;
+
+	public static String TransactionConnectionListEditor_15;
+
+	public static String TransactionConnectionListEditor_16;
+
+	public static String TransactionConnectionListEditor_2;
+
+	public static String TransactionConnectionListEditor_4;
+
+	public static String TransactionConnectionListEditor_5;
+
+	public static String TransactionConnectionListEditor_6;
+
+	public static String TransactionConnectionListEditor_8;
+
+	public static String TransactionConnectionListEditor_9;
 
 	public static String UserListComposite_0;
 

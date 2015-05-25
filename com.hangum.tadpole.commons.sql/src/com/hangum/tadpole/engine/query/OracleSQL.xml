@@ -47,6 +47,21 @@ ORDER BY T.table_name
 </select>
 
 <!-- 
+	db의 table 이름
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+  	SELECT 
+      T.table_name AS "NAME"
+      , S.COMMENTS AS "COMMENT"
+    FROM user_tables T 
+      LEFT JOIN USER_TAB_COMMENTS S
+            ON S.TABLE_NAME = T.TABLE_NAME
+    WHERE
+    	T.table_name = #name#
+	ORDER BY T.table_name
+</select>
+
+<!-- 
 	특정 table의 table이나 view 컬럼 정보
 	
 	컬럼 설명

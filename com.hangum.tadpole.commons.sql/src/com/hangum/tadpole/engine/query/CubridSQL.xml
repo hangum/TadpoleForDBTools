@@ -35,6 +35,21 @@ SELECT 1
 </select>
 
 <!-- 
+	db의 user table 이름
+	
+	컬럼 설명
+	TNAME 		: 테이블 명
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+	SELECT class_name name
+	FROM DB_CLASS
+	WHERE  is_system_class = 'NO' 
+		AND class_type = 'CLASS'
+		AND class_name = #name#
+	ORDER BY  class_name
+</select>
+
+<!-- 
 	특정 table, view 컬럼 정보
 	
 	컬럼 설명

@@ -45,6 +45,4 @@ public class GetAmazonPreference extends GetPreferenceGeneral {
 		return CipherManager.getInstance().decryption(getValue(PreferenceDefine.AMAZON_SECRET_NAME, PreferenceDefine.AMAZON_SECRET_VALUE));
 	}
 
-	
-
 }

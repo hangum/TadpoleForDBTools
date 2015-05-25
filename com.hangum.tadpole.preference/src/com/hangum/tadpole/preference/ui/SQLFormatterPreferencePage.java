@@ -137,7 +137,11 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateSQLFormatterInfoData(txtTabSize, txtNoInsertDecode, txtNoInsertIn);
+			TadpoleSystem_UserInfoData.updateSQLFormatterInfoData(
+					txtTabSize, txtNoInsertDecode, txtNoInsertIn,
+					txtNewLineBefeoreAndOr, txtNewLineBefeoreComma, txtRemoveEmptyLine,
+					txtWordbreak, strTextWidth
+					);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE, txtTabSize);

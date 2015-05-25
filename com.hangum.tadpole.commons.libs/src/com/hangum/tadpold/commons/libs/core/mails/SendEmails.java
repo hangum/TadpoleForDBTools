@@ -10,9 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpold.commons.libs.core.mails;
 
-import javax.activation.CommandMap;
-import javax.activation.MailcapCommandMap;
-
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.HtmlEmail;

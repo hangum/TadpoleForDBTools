@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
+import java.sql.Timestamp;
+
 /** 
  * user db resource data
  * 
@@ -18,8 +20,11 @@ package com.hangum.tadpole.engine.query.dao.system;
  */
 public class UserDBResourceDataDAO {
 	int seq;
+	long group_seq;  
 	int user_db_resource_seq;
 	String datas;
+	String delyn;
+	Timestamp create_time;
 	
 	public UserDBResourceDataDAO() {
 	}
@@ -46,6 +51,47 @@ public class UserDBResourceDataDAO {
 
 	public void setDatas(String datas) {
 		this.datas = datas;
+	}
+	/**
+	 * @return the group_seq
+	 */
+	public long getGroup_seq() {
+		return group_seq;
+	}
+
+	/**
+	 * @param group_seq the group_seq to set
+	 */
+	public void setGroup_seq(long group_seq) {
+		this.group_seq = group_seq;
+	}
+
+	/**
+	 * @return the delyn
+	 */
+	public String getDelyn() {
+		return delyn;
+	}
+
+	/**
+	 * @param delyn the delyn to set
+	 */
+	public void setDelyn(String delyn) {
+		this.delyn = delyn;
+	}
+
+	/**
+	 * @return the create_time
+	 */
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
 	}
 
 	

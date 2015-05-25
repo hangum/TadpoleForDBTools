@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
  *
  */
 public class PublicTadpoleDefine {
+	public static final String SERVICE_KEY_NAME = "serviceID";
 	/**
 	 * PLAN Statement ID
 	 */
@@ -139,7 +140,7 @@ public class PublicTadpoleDefine {
 	public static enum SHARED_TYPE {PUBLIC, PRIVATE};
 	
 	/** executed sql history type */
-	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION};
+	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION, API};
 	
 	/** SQL STATEMENT TYPE */
 	public static enum SQL_STATEMENTS_TYPE {SELECT, INSERT, UPDATE, DELETE, DROP, EXECUTE_PLAN, PROCEDURE};

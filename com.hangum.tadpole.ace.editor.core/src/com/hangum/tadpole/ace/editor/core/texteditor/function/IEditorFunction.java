@@ -26,6 +26,9 @@ public interface IEditorFunction  {
 	public static final int EXECUTE_PLAN 			= 30;
 	public static final int EXECUTE_FORMAT 			= 35;
 	
+	public static final int F4_DML_OPEN				= 40;
+	public static final int GENERATE_SELECT			= 45;
+	
 	/** query history page로 이동합니다 */
 	public static final int MOVE_HISTORY_PAGE		= 55;
 	

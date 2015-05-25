@@ -63,6 +63,22 @@ SELECT
   ORDER BY name
 </select>
 
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+ SELECT
+    relname as "name"
+    ,pg_catalog.obj_description(oid,'pg_class') as "comment"
+  FROM pg_catalog.pg_class ‌
+  WHERE 1 = 1 
+    AND relkind IN ('r','')
+    AND relname IN (
+      SELECT a.table_name
+        FROM information_schema.tables a
+        WHERE a.table_schema = 'public' 
+          AND a.table_type = 'BASE TABLE' )
+    AND relname = #name#
+  ORDER BY name
+</select>
+
 <!-- 
 	특정 table의 table이나 view 컬럼 정보
 	

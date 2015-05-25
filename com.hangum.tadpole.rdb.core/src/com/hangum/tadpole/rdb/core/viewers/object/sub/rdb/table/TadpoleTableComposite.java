@@ -11,7 +11,9 @@
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -562,7 +564,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN);
+				monitor.beginTask("Connecting database", IProgressMonitor.UNKNOWN);
 				
 				try {
 					listTablesDAO = getTableList(userDB);
@@ -661,6 +663,57 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		return showTables;
 	}
+	
+	/**
+	 * @param userDB
+	 * @param strObject
+	 * @return
+	 */
+	public static TableDAO getTable(UserDBDAO userDB, String strObject) throws Exception {
+		TableDAO tableDao = null;
+		List<TableDAO> showTables = new ArrayList<TableDAO>();
+		
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			List<TableDAO> tmpShowTables = new TajoConnectionManager().tableList(userDB);
+			
+			for(TableDAO dao : tmpShowTables) {
+				if(dao.getName().equals(strObject)) {
+					showTables.add(dao);
+					break;
+				}
+			}
+		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			List<TableDAO> tmpShowTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			
+			for(TableDAO dao : tmpShowTables) {
+				if(dao.getName().equals(strObject)) {
+					showTables.add(dao);
+					break;
+				}
+			}
+			
+		} else {
+			Map<String, Object> mapParam = new HashMap<String, Object>();
+			mapParam.put("db", 	userDB.getDb());
+			mapParam.put("name", 	strObject);
+			
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$			
+		}
+		
+		/** filter 정보가 있으면 처리합니다. */
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
+		
+		if(!showTables.isEmpty()) { 
+			tableDao = showTables.get(0);
+			tableDao.setSysName(SQLUtil.makeIdentifierName(userDB, tableDao.getName()));
+			return tableDao;
+		} else {
+			return null;
+		}
+	}
+
 	
 	/**
 	 * 디비 등록시 설정한 filter 정보를 적용한다.
@@ -797,5 +850,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		viewDDLAction.dispose();
 		tableDataEditorAction.dispose();
 	}
+
 	
 }

@@ -69,7 +69,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "VALUES " + PublicTadpoleDefine.LINE_SEPARATOR + " ( "); //$NON-NLS-1$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					if(i < (showTableColumns.size()-1)) sbSQL.append("?, ");  //$NON-NLS-1$
-					else sbSQL.append("? ); "); //$NON-NLS-1$
+					else sbSQL.append("? )"); //$NON-NLS-1$
 				}
 				
 				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), actionType);

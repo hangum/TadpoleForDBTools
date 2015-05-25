@@ -33,7 +33,6 @@ import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
-import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringRealTimeAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -175,11 +174,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	        toolbar.add(sendMessageAction);
 	        toolbar.add(new Separator());
         }
+        
+        toolbar.add(transactionConnectionAction);
+        toolbar.add(new Separator());
+    
+        toolbar.add(resourceManageAction);
+        toolbar.add(new Separator());
 
-//        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-        	toolbar.add(userPermissionAction);
-        	toolbar.add(new Separator());
-//        }
+    	toolbar.add(userPermissionAction);
+    	toolbar.add(new Separator());
         
     	toolbar.add(executedSQLAction);
         toolbar.add(new Separator());
@@ -190,14 +193,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(schemaHistoryAction);
         toolbar.add(new Separator());
             
-//        if(PermissionChecker.isShow(SessionManager.getRepresentRole())) {
-            toolbar.add(transactionConnectionAction);
-            toolbar.add(new Separator());
-//        }
-        
-        toolbar.add(resourceManageAction);
-        toolbar.add(new Separator());
-        
 //        toolbar.add(monitoringRealTimeAction);
 //        toolbar.add(new Separator());
         
