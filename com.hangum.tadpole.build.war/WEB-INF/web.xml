@@ -20,7 +20,7 @@
          the -console parameter to enabled OSGi console access.  -->
     <init-param>
       <param-name>commandline</param-name>
-      <param-value>-registryMultiLanguage -GAON -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog  -resourcesDir /Users/hangum/ -dbServer AFZDvApc3OY2Hpa26ULVGI+eGdck1hYYyw2RVwKC2zmKYVG183fuLzA3n+Bqx82sB/i8lIg4Siwf5s3Zl6gQQv3BRonx4YbocJsiSao07NGfubSd/pYnfKhddaHhKLOk0GMydpQJ4gqsQQbB/RQgwg==  <!-- -console --></param-value>     
+      <param-value>-registryMultiLanguage -GAON -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog  -resourcesDir /Users/hangum/ <!-- -console --></param-value>     
     </init-param>
 
     <load-on-startup>1</load-on-startup>    
