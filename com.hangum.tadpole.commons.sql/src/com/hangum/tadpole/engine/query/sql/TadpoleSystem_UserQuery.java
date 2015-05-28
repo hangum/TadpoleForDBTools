@@ -202,38 +202,6 @@ public class TadpoleSystem_UserQuery {
 		}
 	}
 	
-//	/**
-//	 * check security hint
-//	 *  
-//	 * @param email
-//	 * @param question
-//	 * @param answer
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static UserDAO checkSecurityHint(String email, String question, String answer) throws Exception {
-//		UserDAO login = new UserDAO();
-//		login.setEmail(email);
-////		login.setSecurity_question(CipherManager.getInstance().encryption(question));
-////		login.setSecurity_answer(CipherManager.getInstance().encryption(answer));
-//		
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-//		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("checkSecurityHint", login); //$NON-NLS-1$
-//	
-//		if(null == userInfo) {
-//			throw new Exception(Messages.TadpoleSystem_UserQuery_5);
-//		} else if(PublicTadpoleDefine.YES_NO.NO.name().equals( userInfo.getApproval_yn())) { //$NON-NLS-1$
-//			throw new Exception(Messages.TadpoleSystem_UserQuery_6);
-//		} else {
-//			if(question.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_question())) &&
-//					answer.equals(CipherManager.getInstance().decryption(userInfo.getSecurity_answer())) ) {
-//				return userInfo;
-//			} else {
-//				throw new Exception(Messages.TadpoleSystem_UserQuery_5);
-//			}
-//		}
-//	}
-	
 	/**
 	 * get admin
 	 * 
@@ -319,20 +287,6 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserOTPCode", user); //$NON-NLS-1$
 	}
-
-//	/**
-//	 * 사용자 힌트 변경
-//	 * 
-//	 * @param user
-//	 * @throws Exception
-//	 */
-//	public static void updateUserSecurityHint(UserDAO user) throws Exception {
-//		user.setSecurity_question(CipherManager.getInstance().encryption(user.getSecurity_question()));
-//		user.setSecurity_answer(CipherManager.getInstance().encryption(user.getSecurity_answer()));
-//		
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-//		sqlClient.update("updateUserSecurityHint", user); //$NON-NLS-1$
-//	}
 	
 	/**
 	 * 사용자 정보.
@@ -345,15 +299,5 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (UserDAO)sqlClient.queryForObject("getUserInfo", userSeq); //$NON-NLS-1$
 	}
-	
-//	/**
-//	 * 유저삭제
-//	 * @param user
-//	 * @throws Exception
-//	 */
-//	public static void deleteUser(UserDAO user) throws Exception {
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemConnector.getUserDB());
-//		sqlClient.update("deleteUser", user); //$NON-NLS-1$
-//	}
 
 }

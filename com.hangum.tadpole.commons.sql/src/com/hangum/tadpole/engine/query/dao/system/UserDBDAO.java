@@ -141,18 +141,12 @@ public class UserDBDAO implements Cloneable {
 	
 	protected String is_external_browser = "";
 	protected List<ExternalBrowserInfoDAO> listExternalBrowserdao = new ArrayList<ExternalBrowserInfoDAO>();
-
-//	protected String is_table_filter = "";
-//	protected String table_filter_include = "";
-//	protected String table_filter_exclude = "";
     
     // 운영서버일 경우 DML 문 실행시 YES, NO 묻기
     protected String question_dml = "";
     
     protected ManagerListDTO parent;
     protected List<UserDBResourceDAO> listUserDBErd = new ArrayList<UserDBResourceDAO>();
-    /** list of table column filter */
-//    protected List<TableFilterDAO> listTableColumnFilter;
     
     /** 디비의 버전 정보 */
     protected String version;
@@ -170,11 +164,6 @@ public class UserDBDAO implements Cloneable {
     
     /** db access control */
     protected DBAccessControlDAO dbAccessCtl = new DBAccessControlDAO();
-//    /** 사용자가 채크 했는지? YES일경우 사용자가 패스워드로 검증했음을 의미합니다*/
-//    protected String is_lock_user_check = PublicTadpoleDefine.YES_NO.NO.name();
-    
-//    /** userdb를 그룹으로 표시 하고자 할때 사용합니다. 현재는 로그인창에서 디비 관리하면에서 사용. */
-//    protected List<UserDBDAO> listUserDBGroup = new ArrayList<UserDBDAO>();
     
     public UserDBDAO() {
 	}
@@ -325,20 +314,6 @@ public class UserDBDAO implements Cloneable {
 		this.listUserDBErd = listUserDBErd;
 	}
 	
-//	/**
-//	 * @return the listTableColumnFilter
-//	 */
-//	public List<TableFilterDAO> getListTableColumnFilter() {
-//		return listTableColumnFilter;
-//	}
-//
-//	/**
-//	 * @param listTableColumnFilter the listTableColumnFilter to set
-//	 */
-//	public void setListTableColumnFilter(List<TableFilterDAO> listTableColumnFilter) {
-//		this.listTableColumnFilter = listTableColumnFilter;
-//	}
-
 	public String getDelYn() {
 		return delYn;
 	}
@@ -390,10 +365,6 @@ public class UserDBDAO implements Cloneable {
 	public void setUsers(String users) {
 		this.users = users;
 	}
-	
-//	public List<UserDBDAO> getListUserDBGroup() {
-//		return listUserDBGroup;
-//	}
 	
 	public String getVersion() {
 		return version;
@@ -538,40 +509,6 @@ public class UserDBDAO implements Cloneable {
 	public void setIs_autocommit(String is_autocommit) {
 		this.is_autocommit = is_autocommit;
 	}
-
-//	public String getTable_filter_include() {
-//		return table_filter_include;
-//	}
-//
-//	public void setTable_filter_include(String table_filter_include) {
-//		this.table_filter_include = table_filter_include;
-//	}
-//
-//	public String getTable_filter_exclude() {
-//		return table_filter_exclude;
-//	}
-//
-//	public void setTable_filter_exclude(String table_filter_exclude) {
-//		this.table_filter_exclude = table_filter_exclude;
-//	}
-//	
-//	/**
-//	 * @return the is_table_filter
-//	 */
-//	public String getIs_table_filter() {
-//		return is_table_filter;
-//	}
-//
-//	/**
-//	 * @param is_table_filter the is_table_filter to set
-//	 */
-//	public void setIs_table_filter(String is_table_filter) {
-//		this.is_table_filter = is_table_filter;
-//	}
-
-//	public void setListUserDBGroup(List<UserDBDAO> listUserDBGroup) {
-//		this.listUserDBGroup = listUserDBGroup;
-//	}
 
 	/**
 	 * @return the is_showtables

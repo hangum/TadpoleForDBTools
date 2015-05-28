@@ -11,7 +11,6 @@
 package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 /**
  * schedult result

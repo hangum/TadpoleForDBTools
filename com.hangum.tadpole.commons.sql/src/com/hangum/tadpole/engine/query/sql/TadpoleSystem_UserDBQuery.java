@@ -182,10 +182,6 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setIs_autocommit(userDb.getIs_autocommit());
 		userEncryptDao.setIs_showtables(userDb.getIs_showtables());
 		
-//		userEncryptDao.setIs_table_filter(userDb.getIs_table_filter());
-//		userEncryptDao.setTable_filter_include(userDb.getTable_filter_include());
-//		userEncryptDao.setTable_filter_exclude(userDb.getTable_filter_exclude());
-		
 		userEncryptDao.setIs_profile(userDb.getIs_profile());
 		userEncryptDao.setQuestion_dml(userDb.getQuestion_dml());
 		
@@ -260,10 +256,6 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setIs_autocommit(newUserDb.getIs_autocommit());
 		userEncryptDao.setIs_showtables(newUserDb.getIs_showtables());
 		
-//		userEncryptDao.setIs_table_filter(newUserDb.getIs_table_filter());
-//		userEncryptDao.setTable_filter_include(newUserDb.getTable_filter_include());
-//		userEncryptDao.setTable_filter_exclude(newUserDb.getTable_filter_exclude());
-		
 		userEncryptDao.setIs_profile(newUserDb.getIs_profile());
 		userEncryptDao.setQuestion_dml(newUserDb.getQuestion_dml());
 		
@@ -275,9 +267,6 @@ public class TadpoleSystem_UserDBQuery {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", userEncryptDao); //$NON-NLS-1$
-		
-		// table_filter 등록
-//		sqlClient.update("userDBFilterUpdate", userEncryptDao);
 		
 		// 데이터베이스 확장속성 등록
 		sqlClient.update("userDBEXTUpdate", userEncryptDao);
@@ -337,17 +326,6 @@ public class TadpoleSystem_UserDBQuery {
 		return (List<UserDBDAO>)sqlClient.queryForList("getCreateUserDB", SessionManager.getUserSeq());
 	}
 	
-//	/**
-//	 * 유저디비 + 메니저 디비 
-//	 * 단, 메니저일경우 메니져 디비만 리턴한다.
-//	 * 
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static List<UserDBDAO> getUserDB() throws Exception {
-//		return getUserDB(SessionManager.getGroupSeqs());
-//	}
-	
 	/**
 	 * 모든 유저의 디비를 보여 줍니다.
 	 * @return
@@ -382,26 +360,7 @@ public class TadpoleSystem_UserDBQuery {
 		
 		return userDB;
 	}
-	
-//	/**
-//	 * 유저의 디비를 보여 줍니다.
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static List<UserDBDAO> getAllUserDB(String userSeq) throws Exception {
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-//		return  (List<UserDBDAO>)sqlClient.queryForList("userDB", ""+userSeq); //$NON-NLS-1$
-//	}
-//	
-//	/**
-//	 * 유저의 디비를 보여 줍니다.
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public static List<UserDBDAO> getAllUserDBManager(String userSeq) throws Exception {
-//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-//		return  (List<UserDBDAO>)sqlClient.queryForList("userDBManager", ""+userSeq); //$NON-NLS-1$
-//	}
+
 	/**
 	 * 유저 삭제
 	 * @param seq
