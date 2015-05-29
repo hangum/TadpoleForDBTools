@@ -65,18 +65,13 @@ public class SendMessageDialog extends Dialog {
 	 */
 	public SendMessageDialog(Shell parentShell) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 	}
 	
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Send Email");
-	}
-
-	@Override
-	protected int getShellStyle() {
-		int ret = super.getShellStyle(); 
-		return ret | SWT.RESIZE;
 	}
 	
 	/**

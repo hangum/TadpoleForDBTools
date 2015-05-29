@@ -27,6 +27,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
+import com.hangum.tadpole.commons.admin.core.actions.UserLoginHistoryAction;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
@@ -59,6 +60,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** send message */
     private IAction sendMessageAction;
+    private IAction userLoginHistoryAction;
     
     /** User permission action */
     private IAction userPermissionAction;
@@ -108,6 +110,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	sendMessageAction = new SendMessageAction(window);
     	register(sendMessageAction);
+    	
+    	userLoginHistoryAction = new UserLoginHistoryAction(window);
+    	register(userLoginHistoryAction);
     	
     	userPermissionAction = new UserPermissionAction(window);
     	register(userPermissionAction);
@@ -172,6 +177,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         if(PermissionChecker.isAdmin(SessionManager.getRepresentRole())) {        
 	        toolbar.add(sendMessageAction);
+	        toolbar.add(userLoginHistoryAction);
 	        toolbar.add(new Separator());
         }
         

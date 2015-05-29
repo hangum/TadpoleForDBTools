@@ -203,6 +203,15 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
+	 * get login history
+	 * @param strEmail
+	 */
+	public static List<UserLoginHistoryDAO> getLoginHistory(String strEmail) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (List<UserLoginHistoryDAO>)sqlClient.queryForList("getLoginHistory", strEmail);
+	}
+	
+	/**
 	 * get admin
 	 * 
 	 * @return

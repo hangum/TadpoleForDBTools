@@ -222,11 +222,12 @@ public class ManagerViewer extends ViewPart {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
 		}
-
+		
 		managerTV.refresh();
-		managerTV.expandToLevel(2);
+//		managerTV.expandToLevel(2);
 		
 		AnalyticCaller.track(ManagerViewer.ID);
+		
 	}
 
 	/**

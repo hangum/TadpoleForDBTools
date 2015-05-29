@@ -153,6 +153,19 @@
 </insert>
 
 <!-- 
+	find login history
+ -->
+<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" parameterClass="java.lang.String">
+	SELECT b.*
+	FROM tadpole_user a,
+	    login_history b
+	WHERE
+	    	a.email = #email#
+	    AND a.seq = b.user_seq
+	ORDER BY b.connet_time DESC
+</select>
+
+<!-- 
 	When lost password, check security hint
  -->
 <select id="checkSecurityHint" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
