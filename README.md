@@ -80,7 +80,7 @@ Chrome web store
 *  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
 
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/v1.4.1/
+* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.1-r0/
 
 License
 -
