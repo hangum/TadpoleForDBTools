@@ -31,28 +31,6 @@ public class TadpoleSystemCommons {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSystemCommons.class);
 
-//	/**
-//	 * smtm.execute문의 쿼리를 날립니다. 즉 select 이외의 문...
-//	 * 
-//	 * @param selText
-//	 */
-//	public static boolean executSQL(UserDBDAO userDB, String selText) throws Exception {
-//		if(logger.isDebugEnabled()) logger.debug("[executeSQL]" + selText);
-//		
-//		Connection javaConn = null;
-//		Statement stmt = null;
-//		try {
-//			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-//			javaConn = client.getDataSource().getConnection();
-//			stmt = javaConn.createStatement();
-//
-//			return stmt.execute( selText );
-//		} finally {
-//			try { if(stmt != null) stmt.close(); } catch(Exception e){}
-//			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
-//		}
-//	}
-
 	/**
 	 * 쿼리중에 quote sql을 반영해서 작업합니다.
 	 * 

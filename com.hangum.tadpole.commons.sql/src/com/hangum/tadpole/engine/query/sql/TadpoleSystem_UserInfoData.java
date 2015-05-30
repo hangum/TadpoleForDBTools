@@ -15,7 +15,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
-import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -415,18 +414,6 @@ public class TadpoleSystem_UserInfoData {
 				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE);
 				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 				
-		// api server 
-//		userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_USE);
-//		userInfoData.setValue0(PreferenceDefine.SECURITY_CREDENTIAL_USE_VALUE);
-//		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-//		
-//		userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY);
-//		userInfoData.setValue0(Utils.getUniqueID());
-//		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-//		
-//		userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY);
-//		userInfoData.setValue0(Utils.getUniqueID());
-//		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 	}
 	
 	/**

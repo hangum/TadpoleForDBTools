@@ -27,7 +27,8 @@
 	VALUES ( #db_role_seq#, #select_lock#, #insert_lock#, #update_lock#, #delete_locl#, #ddl_lock# ); 
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO">
-		SELECT * FROM db_access_control 
+		SELECT * 
+		FROM db_access_control 
 		WHERE db_role_seq = #db_role_seq# 
 			AND select_lock = #select_lock#
 			AND insert_lock = #insert_lock#
@@ -43,8 +44,9 @@
  -->
 <select id="getAccessControl" resultClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO"
 				 parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
-	SELECT * FROM db_access_control 
-		WHERE db_role_seq = #seq#
+	SELECT * 
+	FROM db_access_control 
+	WHERE db_role_seq = #seq#
 </select>
 
 <!-- 
@@ -72,7 +74,7 @@
  -->
 <update id="updateAccessControl" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO">
 	UPDATE db_access_control
-		SET select_lock= #select_lock#,  insert_lock= #insert_lock#,  update_lock= #update_lock#,  delete_locl= #delete_locl#,  ddl_lock= #ddl_lock#
+	SET select_lock= #select_lock#,  insert_lock= #insert_lock#,  update_lock= #update_lock#,  delete_locl= #delete_locl#,  ddl_lock= #ddl_lock#
 	WHERE 
 		seq = #seq# 
 </update>
@@ -87,7 +89,7 @@
 	insertAccessControlDetail table
  -->
 <insert id="insertAccessControlDetail" parameterClass="com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO">
-	INSERT INTO  access_ctl_object (access_seq, type, obj_name, dontuse_object, detail_obj, description)
+	INSERT INTO access_ctl_object (access_seq, type, obj_name, dontuse_object, detail_obj, description)
 	VALUES (#access_seq#, #type#, #obj_name#, #dontuse_object#, #detail_obj#, #description#)
 </insert>
 	

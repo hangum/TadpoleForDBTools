@@ -44,8 +44,6 @@ public class UserDAO {
 
 	public UserDAO() {
 	}
-	
-	
 
 	/**
 	 * @param input_type
@@ -69,17 +67,6 @@ public class UserDAO {
 		this.language = language;
 		this.use_otp = use_otp;
 	}
-
-
-
-//	public UserDAO(String email, String name, String language, String approval_yn, String use_opt, String otp_secret) {
-//		this.email = email;
-//		this.name = name;
-//		this.language = language;
-//		this.approval_yn = approval_yn;
-//		this.use_otp = use_opt;
-//		this.otp_secret = otp_secret;
-//	}
 
 	/**
 	 * @return the input_type
@@ -213,7 +200,6 @@ public class UserDAO {
 		this.role_type = role_type;
 	}
 
-
 	/**
 	 * @return the is_email_certification
 	 */
@@ -227,6 +213,4 @@ public class UserDAO {
 	public void setIs_email_certification(String is_email_certification) {
 		this.is_email_certification = is_email_certification;
 	}
-
-	
 }

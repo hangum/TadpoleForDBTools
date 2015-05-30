@@ -31,7 +31,6 @@ public class ManagerListDTO {
 	
 	public ManagerListDTO(String name) {
 		this.name = name;
-//		this.dbType = dbType;
 	}
 	
 	public void addLogin(UserDBDAO dbInfo) {
@@ -53,8 +52,4 @@ public class ManagerListDTO {
 	public List<UserDBDAO> getManagerList() {
 		return managerList;
 	}
-	
-//	public DBDefine getDbType() {
-//		return dbType;
-//	}
 }

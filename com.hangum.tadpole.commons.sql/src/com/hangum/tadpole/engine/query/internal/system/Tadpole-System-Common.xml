@@ -28,7 +28,8 @@
 	=====================================================================
  -->
 <select id="system_information" resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
-    SELECT * FROM tadpole_system
+    SELECT * 
+    FROM tadpole_system
 </select>
 
 <!-- 
@@ -46,7 +47,9 @@
 	WHERE name=#name#
 </select>
 <update id="updateSequence" parameterClass="com.hangum.tadpole.engine.query.dao.system.commons.TadpoleSequenceDAO">
-	UPDATE tadpole_sequence SET no=#no# WHERE name = #name# 
+	UPDATE tadpole_sequence 
+	SET no=#no# 
+	WHERE name = #name# 
 </update>
     
 <!--
@@ -97,7 +100,10 @@
 	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-		SELECT * FROM tadpole_user WHERE email = #email# AND delyn = 'NO' 
+		SELECT * 
+		FROM tadpole_user 
+		WHERE email = #email# 
+			AND delyn = 'NO' 
 	</selectKey>
 </insert>
 
@@ -133,8 +139,7 @@
  -->
 <update id="updateEmailConfirm" parameterClass="java.lang.String">
 	UPDATE tadpole_user
-	SET
-		is_email_certification = 'YES'
+	SET is_email_certification = 'YES'
 	WHERE 
 		email = #email#
 </update> 
@@ -143,8 +148,22 @@
 	save login history
  -->
 <insert id="saveLoginHistory" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO">
-	INSERT INTO login_history(user_seq, login_ip) VALUES (#user_seq#, #login_ip#);
+	INSERT INTO login_history(user_seq, login_ip) 
+	VALUES (#user_seq#, #login_ip#);
 </insert>
+
+<!-- 
+	find login history
+ -->
+<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" parameterClass="java.lang.String">
+	SELECT b.*
+	FROM tadpole_user a,
+	    login_history b
+	WHERE
+	    	a.email = #email#
+	    AND a.seq = b.user_seq
+	ORDER BY b.connet_time DESC
+</select>
 
 <!-- 
 	When lost password, check security hint
@@ -164,10 +183,11 @@
 
 <!-- userDB의 manager 권한 리스트 -->
 <select id="groupManager" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.Integer">
-	select a.* from tadpole_user a,  user_role b
-	where 
-	 b.role_type = 'MANAGER'
-	and a.seq = b.user_seq;
+	SELECT a.* 
+	FROM tadpole_user a,  user_role b
+	WHERE 
+			b.role_type = 'MANAGER'
+		AND a.seq = b.user_seq;
 </select>
 
 <!-- 
@@ -196,7 +216,8 @@
 	유저의 권한 데이터를 수정합니다.
  -->
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	UPDATE tadpole_user SET
+	UPDATE tadpole_user 
+	SET
 		delYn = #delYn#,
 		approval_yn = #approval_yn#,
 		is_email_certification = #is_email_certification#
@@ -207,8 +228,8 @@
 	Change user password
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	UPDATE tadpole_user SET
-		passwd = #passwd#, use_otp = 'NO'
+	UPDATE tadpole_user 
+	SET passwd = #passwd#, use_otp = 'NO'
 	WHERE seq = #seq#
 </update>
 
@@ -216,19 +237,9 @@
 	Change user password
  -->
 <update id="updateUserPasswordWithID" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	UPDATE tadpole_user SET
-		passwd = #passwd#
+	UPDATE tadpole_user 
+	SET passwd = #passwd#
 	WHERE email = #email#
-</update>
-
-<!-- 
-	Change user security hint
- -->
-<update id="updateUserSecurityHint" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	UPDATE tadpole_user SET
-		<!-- security_question = #security_question#, 
-		security_answer = #security_answer# -->
-	WHERE seq = #seq#
 </update>
 
 <!-- 
@@ -245,7 +256,9 @@
 	유저를 삭제합니다.
  -->
 <delete id="deleteUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	DELETE FROM tadpole_user WHERE email = #email#
+	DELETE 
+	FROM tadpole_user 
+	WHERE email = #email#
 </delete>
 
 <!-- 
@@ -326,11 +339,11 @@
 <select id="isUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 	SELECT * FROM tadpole_db a
 	WHERE 
-		user_seq = #user_seq# and 
-		db = #db# and 
-		group_name = #group_name# and
-		display_name = #display_name# and
-		delYn = 'NO'
+		user_seq = #user_seq#  
+		AND db = #db#  
+		AND group_name = #group_name# 
+		AND display_name = #display_name# 
+		AND delYn = 'NO'
 </select>
 
 <!-- 모든 userDB를 리스트업 합니다. -->
@@ -347,29 +360,29 @@
 <select id="dailySummaryReportDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 	SELECT * FROM tadpole_db 
 	WHERE 
-		is_summary_report = 'YES' AND
-		delYn = 'NO'
+			is_summary_report = 'YES' 
+		AND delYn = 'NO'
 	ORDER BY group_name
 </select>
 
 <select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
-	select a.*, b.ROLE_ID role_id, 
+	SELECT a.*, b.ROLE_ID role_id, 
 			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
-	from tadpole_db a, tadpole_user_db_role b, user_db_ext c
-	where a.seq = b.db_seq
-		and a.seq = c.seq
-		and b.user_seq = #user_seq#
-		and b.user_seq = a.user_seq 
-	    and a.delyn = 'NO'
-	    and b.delyn = 'NO'
+	FROM tadpole_db a, tadpole_user_db_role b, user_db_ext c
+	WHERE a.seq = b.db_seq
+		AND a.seq = c.seq
+		AND b.user_seq = #user_seq#
+		AND b.user_seq = a.user_seq 
+	    AND a.delyn = 'NO'
+	    AND b.delyn = 'NO'
 </select>
 
 <!--  UserDB의 인스턴스 -->
 <select id="userDBInstance" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
 	SELECT * FROM tadpole_db 
 	WHERE 
-		seq = #seq# AND
-		delYn = 'NO'
+			seq = #seq# 
+		AND delYn = 'NO'
 </select>
 
 <!-- 
