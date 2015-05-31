@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.executedsql;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -46,7 +48,10 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
@@ -58,8 +63,8 @@ import com.swtdesigner.SWTResourceManager;
 /**
  * 실행한 쿼리.
  * 
- * 1. Name 콤보에 보여줄때는 사람을 기준으로 보여줄
  * 
+ * @since 2015.05.31 add download function(https://github.com/hangum/TadpoleForDBTools/issues/587)
  * @author hangum
  * 
  */
@@ -85,19 +90,29 @@ public class ExecutedSQLEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
+	private final String[] strArrHeader = {"#", "Database", "Date", "SQL", "Sec", "Row", "Result", "Message", "User", "IP"};
 
 	private Button btnSearch;
-	private Button btnShowQueryEditor;
 
 	private DateTime dateTimeStart;
 	private DateTime dateTimeEnd;
 
 	/** result list */
 	private Text textSearch;
-//	private SQLHistoryFilter filter;
 	
-	/** register key */
+	/** 
+	 * define grid data
+	 * 
+	 *  key is row id, value is data
+	 */
 	private Map<String, SQLHistoryDAO> mapSQLHistory = new HashMap<String, SQLHistoryDAO>();
+
+	/** tail composite */
+	private Composite compositeTail;
+	private Button btnShowQueryEditor;
+
+	/** download servcie handler. */
+	private DownloadServiceHandler downloadServiceHandler;
 	
 	/**
 	 * 
@@ -255,14 +270,29 @@ public class ExecutedSQLEditor extends EditorPart {
 		
 		createTableHistoryColumn();
 		
-		Composite compositeTail = new Composite(compositeBody, SWT.NONE);
-		compositeTail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeTail = new GridLayout(1, false);
+		compositeTail = new Composite(compositeBody, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeTail = new GridLayout(2, false);
 		gl_compositeTail.verticalSpacing = 2;
 		gl_compositeTail.horizontalSpacing = 2;
 		gl_compositeTail.marginHeight = 2;
 		gl_compositeTail.marginWidth = 2;
 		compositeTail.setLayout(gl_compositeTail);
+		
+		Button btnDownload = new Button(compositeTail, SWT.NONE);
+		GridData gd_btnDownload = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnDownload.minimumHeight = 25;
+		gd_btnDownload.heightHint = 25;
+		gd_btnDownload.minimumWidth = 120;
+		gd_btnDownload.widthHint = 120;
+		btnDownload.setLayoutData(gd_btnDownload);
+		btnDownload.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				download();
+			}
+		});
+		btnDownload.setText("Download");
 
 		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
 		GridData gd_btnShowQueryEditor = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -280,9 +310,43 @@ public class ExecutedSQLEditor extends EditorPart {
 		btnShowQueryEditor.setText("Show query in the Query editor");
 
 		initUIData();
+		registerServiceHandler();
 		
 		// google analytic
 		AnalyticCaller.track(ExecutedSQLEditor.ID);
+	}
+	
+	/**
+	 * download
+	 */
+	private void download() {
+		if(gridHistory.getItemCount() == 0) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you want to download?")) return;
+			
+		List<String[]> listCsvData = new ArrayList<String[]>();
+		
+		// add header
+		listCsvData.add(strArrHeader);
+	
+		String[] strArryData = new String[gridHistory.getColumnCount()];
+		for (int i=0; i<gridHistory.getItemCount(); i++ ) {
+			strArryData = new String[gridHistory.getColumnCount()];
+			
+			GridItem gi = gridHistory.getItem(i);
+			for(int intColumnCnt = 0; intColumnCnt<gridHistory.getColumnCount(); intColumnCnt++) {
+				strArryData[intColumnCnt] = Utils.convHtmlToLine(gi.getText(intColumnCnt));
+			}
+			listCsvData.add(strArryData);
+		}
+		
+		try {
+			String strCVSContent = CSVFileUtils.makeData(listCsvData);
+			downloadExtFile("SQLAudit.csv", strCVSContent);
+			
+			MessageDialog.openInformation(getSite().getShell(), "Confirm", "Success CSV file");
+		} catch (Exception e) {
+			logger.error("Save CSV Data", e);
+		}		
 	}
 
 	/**
@@ -448,57 +512,51 @@ public class ExecutedSQLEditor extends EditorPart {
 	public void setFocus() {
 		btnSearch.setFocus();
 	}
+	
+	/** download service handler call */
+	private void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
+	}
+
+	/**
+	 * download external file
+	 * 
+	 * @param fileName
+	 * @param newContents
+	 */
+	public void downloadExtFile(String fileName, String newContents) {
+		downloadServiceHandler.setName(fileName);
+		downloadServiceHandler.setByteContent(newContents.getBytes());
+		
+		DownloadUtils.provideDownload(compositeTail, downloadServiceHandler.getId());
+	}
+	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	@Override
+	public void dispose() {
+		unregisterServiceHandler();
+		super.dispose();
+	}
 
 	/**
 	 * grid column
 	 */
 	private void createTableHistoryColumn() {
-		// time
-		GridColumn tvcSeq = new GridColumn(gridHistory, SWT.LEFT);
-		tvcSeq.setWidth(50);
-		tvcSeq.setText("#");
 		
-		GridColumn tvcDatabase = new GridColumn(gridHistory, SWT.NONE);
-		tvcDatabase.setWidth(150);
-		tvcDatabase.setText("Database");
-				
-		// time
-		GridColumn tvcDate = new GridColumn(gridHistory, SWT.LEFT);
-		tvcDate.setWidth(150);
-		tvcDate.setText("Date");
+		int[] intColumnAlgin = {SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.LEFT, SWT.LEFT, SWT.LEFT};
+		int[] intColumnWidth = {50, 150, 150, 300, 60, 60, 90, 250, 80, 80};
 		
-		// sql
-		GridColumn tvcSQL = new GridColumn(gridHistory, SWT.LEFT);
-		tvcSQL.setWidth(300);
-		tvcSQL.setText("SQL");
-		tvcSQL.setWordWrap(true);
-
-		// duration
-		GridColumn tvcDuration = new GridColumn(gridHistory, SWT.RIGHT);
-		tvcDuration.setWidth(60);
-		tvcDuration.setText("Sec");
-		
-		// rows
-		GridColumn tvcRows = new GridColumn(gridHistory, SWT.RIGHT);
-		tvcRows.setWidth(60);
-		tvcRows.setText("Rows");
-		
-		// result
-		GridColumn tvcResult = new GridColumn(gridHistory, SWT.NONE);
-		tvcResult.setWidth(90);
-		tvcResult.setText("Result");
-
-		GridColumn tvcMessage = new GridColumn(gridHistory, SWT.NONE);
-		tvcMessage.setWidth(250);
-		tvcMessage.setText("Message");
-		
-		GridColumn tvcUser = new GridColumn(gridHistory, SWT.NONE);
-		tvcUser.setWidth(80);
-		tvcUser.setText("User");
-		
-		GridColumn tvcIP= new GridColumn(gridHistory, SWT.NONE);
-		tvcIP.setWidth(80);
-		tvcIP.setText("IP");
+		for (int i=0; i<intColumnAlgin.length; i++) {
+			GridColumn tvcIP= new GridColumn(gridHistory, intColumnAlgin[i]);
+			tvcIP.setWidth(intColumnWidth[i]);
+			tvcIP.setText(strArrHeader[i]);	
+		}
 		
 	}
 }
