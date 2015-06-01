@@ -30,20 +30,27 @@ public class CSVFileUtils {
 	private static final Logger logger = Logger.getLogger(CSVFileUtils.class);
 	
 	/**
+	 * csv data
 	 * 
+	 * @param 
 	 */
 	public static String makeData(List<String[]> listContent) throws Exception {
-		StringWriter sw = new StringWriter();
+		String strReust = "";
 		
+		StringWriter sw = new StringWriter();
 		CSVWriter writer = null;
 		try {
 			writer = new CSVWriter(sw);
 			writer.writeAll(listContent);
+			
+			strReust = sw.getBuffer().toString();
 		} finally {
 			if(writer != null) try { writer.close(); } catch(Exception e) {}
+			sw.close();
 		}
 		
-		return sw.getBuffer().toString();
+		
+		return strReust;
 	}
 
 }
