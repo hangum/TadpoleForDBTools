@@ -212,7 +212,7 @@ public class ApplicationArgumentUtils {
 	 * @return
 	 */
 	private static String getValue(String key) throws Exception {
-		String[] applicationArgs = Platform.getApplicationArgs();
+		String[] applicationArgs = getArgument();
 		for(int i=0; i<applicationArgs.length; i++) {
 			String arg = applicationArgs[i];
 			if( arg.startsWith(key) ) {
@@ -229,12 +229,23 @@ public class ApplicationArgumentUtils {
 	 * @return
 	 */
 	private static boolean checkString(String checkString) {
-		String[] applicationArgs = Platform.getApplicationArgs();
+		String[] applicationArgs = getArgument();
 		
 		for (String string : applicationArgs) {
 			if( string.equalsIgnoreCase(checkString) ) return true;
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * application argument
+	 * 
+	 * @return
+	 */
+	private static String[] getArgument() {
+		String[] applicationArgs = Platform.getApplicationArgs();
+		
+		return applicationArgs;
 	}
 }

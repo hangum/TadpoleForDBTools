@@ -48,10 +48,12 @@ public class MongoDBQueryUtil {
 		this.requestQuery = requestQuery;
 	}
 	
-	public void nextQuery() throws Exception {
+	public boolean nextQuery() throws Exception {
 		startPoint = nextPoint+1;
 		nextPoint = nextPoint + DATA_COUNT;
 		runSQLSelect();
+		
+		return hasNext();
 	}
 	
 	/**

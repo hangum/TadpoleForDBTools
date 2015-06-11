@@ -17,5 +17,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.importdb.core.dialog.importdb.csv,
  com.hangum.tadpole.importdb.core.dialog.importdb.editor,
- com.hangum.tadpole.importdb.core.dialog.importdb.sql
+ com.hangum.tadpole.importdb.core.dialog.importdb.sql,
+ com.hangum.tadpole.importdb.core.dialog.importdb.utils
 Import-Package: org.eclipse.rap.fileupload;version="3.0.0"
