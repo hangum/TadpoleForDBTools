@@ -20,7 +20,7 @@ package com.hangum.tadpole.engine.define;
  *
  */
 public class SQLConstants {
-	public static final String[] ADVANCED_KEYWORDS = { "PACKAGE", "FUNCTION", "TYPE", "TRIGGER", "MATERIALIZED", "IF",
+	public static final String[] ADVANCED_KEYWORDS = { "PACKAGE", "FUNCTION", /*"TYPE",*/ "TRIGGER", "MATERIALIZED", "IF",
 			"EACH", "RETURN", "WRAPPED" };
 
 	public static final String[] SQLITE_KEYWORDS = { "BORT", "ACTION", "ADD", "AFTER", "ALL", "ALTER", "ANALYZE",
