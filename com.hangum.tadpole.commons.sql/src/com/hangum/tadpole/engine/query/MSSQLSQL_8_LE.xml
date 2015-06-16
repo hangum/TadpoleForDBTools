@@ -281,7 +281,7 @@ SELECT
 <!-- 
 	RDB Information - Column summary page
  -->
-<select id="columnInformation" resultClass="com.hangum.tadpole.sql.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 	select 
 	      t.name as table_name
 	      , tc.value as table_comment 
@@ -406,7 +406,7 @@ sp_helptext '$object_name$'
 sp_helptext '$object_name$'
 </select>
 
-<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 
 select 
    p.ordinal_position as "order"
@@ -425,7 +425,7 @@ order by ordinal_position
   
 </select> 
    
-<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.sql.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 
 select 
    p.ordinal_position as "order"
