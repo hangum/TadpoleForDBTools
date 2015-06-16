@@ -20,6 +20,9 @@ import org.apache.commons.io.IOUtils;
  */
 public class PublicTadpoleDefine {
 	public static final String SERVICE_KEY_NAME = "serviceID";
+	
+	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.tadpole.owner.son";
+	
 	/**
 	 * PLAN Statement ID
 	 */

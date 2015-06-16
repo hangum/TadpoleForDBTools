@@ -20,6 +20,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
+import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -39,10 +40,11 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystemInitializer {
 	private static final Logger logger = Logger.getLogger(TadpoleSystemInitializer.class);
-
+	
 	private static UserDBDAO tadpoleEngineDB;
 
-	public static String DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db/";// //$NON-NLS-1$
+	public static String DEFAULT_DB_FILE_LOCATION = (SystemDefine.isOSGIRuntime()?Platform.getInstallLocation().getURL().getFile():System.getenv("user.home"))
+														 + "configuration/tadpole/db/";// //$NON-NLS-1$
 	public static final String DB_NAME = "tadpole-system.db"; //$NON-NLS-1$
 
 	/**

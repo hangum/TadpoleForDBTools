@@ -16,9 +16,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 
 /**
- * 시스템 시작 유틸 
+ * System application argument utils 
  * 
  * @author hangum
  *
@@ -40,7 +41,7 @@ public class ApplicationArgumentUtils {
 		try {
 			passwd = getValue("-passwd");
 		} catch(Exception e) {
-			passwd = "heechan.tadpole.owner.son";
+			passwd = PublicTadpoleDefine.SYSTEM_DEFAULT_PASSWORD;
 		}
 		
 		return passwd;
@@ -212,7 +213,7 @@ public class ApplicationArgumentUtils {
 	 * @return
 	 */
 	private static String getValue(String key) throws Exception {
-		String[] applicationArgs = getArgument();
+		String[] applicationArgs = getArguments();
 		for(int i=0; i<applicationArgs.length; i++) {
 			String arg = applicationArgs[i];
 			if( arg.startsWith(key) ) {
@@ -229,7 +230,7 @@ public class ApplicationArgumentUtils {
 	 * @return
 	 */
 	private static boolean checkString(String checkString) {
-		String[] applicationArgs = getArgument();
+		String[] applicationArgs = getArguments();
 		
 		for (String string : applicationArgs) {
 			if( string.equalsIgnoreCase(checkString) ) return true;
@@ -243,8 +244,24 @@ public class ApplicationArgumentUtils {
 	 * 
 	 * @return
 	 */
-	private static String[] getArgument() {
-		String[] applicationArgs = Platform.getApplicationArgs();
+	private static String[] getArguments() {
+		String[] applicationArgs = null;
+		
+		/* is osgi */
+		if(SystemDefine.isOSGIRuntime()) {
+			applicationArgs = Platform.getApplicationArgs();
+		/* is web server and single  */
+		} else {
+			applicationArgs = new String[4];
+			
+			applicationArgs[0] = "-dbServer";
+			applicationArgs[1] = System.getProperty("dbServer");
+			if(applicationArgs[1] == null) logger.error("**** System Initialize exception : Not found Tadpole engine db");
+				
+			applicationArgs[2] = "-passwd";
+			applicationArgs[3] = System.getProperty("passwd");
+			if(applicationArgs[3] == null) applicationArgs[3] = PublicTadpoleDefine.SYSTEM_DEFAULT_PASSWORD;
+		}
 		
 		return applicationArgs;
 	}
