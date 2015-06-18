@@ -209,7 +209,7 @@ public class QueryUtils {
 					results.appendChild(row);
 					for (int i = 1; i <= metaData.getColumnCount(); i++) {
 						String columnName = metaData.getColumnName(i);
-						Object value = rs.getObject(i);
+						Object value = rs.getObject(i) == null?"":rs.getObject(i);
 						Element node = doc.createElement(columnName);
 						node.appendChild(doc.createTextNode(value.toString()));
 						row.appendChild(node);
