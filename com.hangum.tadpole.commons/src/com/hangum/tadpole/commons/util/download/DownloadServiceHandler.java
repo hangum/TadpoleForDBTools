@@ -44,7 +44,7 @@ public class DownloadServiceHandler implements ServiceHandler {
 	private void makeHtmlFile(HttpServletResponse resp) {
 		OutputStream os = null;
 		try {
-			String contentType = getContentType().equals("") ? "text/html" : getContentType();
+			String contentType = getContentType().equals("") ? "text/plain" : getContentType();
 
 			// Set response headers
 			resp.setContentType(contentType);

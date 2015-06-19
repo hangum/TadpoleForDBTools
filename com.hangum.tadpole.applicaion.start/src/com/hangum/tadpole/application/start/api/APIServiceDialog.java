@@ -46,6 +46,8 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.util.JSONUtil;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
@@ -69,6 +71,9 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
 public class APIServiceDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(APIServiceDialog.class);
 	
+	/** DOWNLOAD BUTTON ID */
+	private int DOWNLOAD_BTN_ID = IDialogConstants.CLIENT_ID + 1;
+	
 	private StartupParameters serviceParameter;
 	
 	private Text textAPIName;
@@ -79,6 +84,9 @@ public class APIServiceDialog extends Dialog {
 	
 	private Button btnAddHeader;
 	private Text textDelimiter;
+	
+	/** download servcie handler. */
+	private DownloadServiceHandler downloadServiceHandler;
 
 	/**
 	 * Create the dialog.
@@ -169,6 +177,8 @@ public class APIServiceDialog extends Dialog {
 		initUI();
 		initData();
 
+		registerServiceHandler();
+		
 		return container;
 	}
 	
@@ -290,6 +300,7 @@ public class APIServiceDialog extends Dialog {
 	private List<Object> makeListParameter() throws Exception {
 		List<Object> listParam = new ArrayList<Object>();
 		String strArgement = textArgument.getText();
+		
 		// TODO check this code
 		List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://dumy.com?" + strArgement), "UTF-8");
 		Map<String, String> mapParam = new HashMap<String, String>();
@@ -309,6 +320,42 @@ public class APIServiceDialog extends Dialog {
 		return listParam;
 	}
 	
+	/** download service handler call */
+	private void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
+	}
+
+	/**
+	 * download external file
+	 * 
+	 * @param fileName
+	 * @param newContents
+	 */
+	public void downloadExtFile(String fileName, String newContents) {
+		downloadServiceHandler.setName(fileName);
+		downloadServiceHandler.setByteContent(newContents.getBytes());
+		
+		DownloadUtils.provideDownload(textDelimiter.getParent(), downloadServiceHandler.getId());
+	}
+	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		// download 
+		if(buttonId == DOWNLOAD_BTN_ID) {
+			String strResult = textResult.getText();
+			downloadExtFile("TadpoleAPIServer.txt", strResult);
+		} else {
+			super.buttonPressed(buttonId);
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
@@ -323,9 +370,10 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, DOWNLOAD_BTN_ID, "Download", false);
 		createButton(parent, IDialogConstants.OK_ID, "RUN", true);
 	}
-
+	
 	/**
 	 * Return the initial size of the dialog.
 	 */
