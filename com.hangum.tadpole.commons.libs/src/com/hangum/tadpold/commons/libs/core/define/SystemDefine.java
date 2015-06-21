@@ -22,7 +22,7 @@ public class SystemDefine {
 	public static final String NAME = "Tadpole DB Hub";
 	public static final String MAJOR_VERSION = "1.6.2 (fly)";
 	public static final String SUB_VERSION = "Build" + "(r0)";	
-	public static final String RELEASE_DATE = "2015.06.15";
+	public static final String RELEASE_DATE = "2015.06.20";
 	public static final String INFORMATION = "http://hangum.github.io/TadpoleForDBTools/";
 	
 	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";
@@ -33,6 +33,8 @@ public class SystemDefine {
 	 * @return
 	 */
 	public static boolean isOSGIRuntime() {
-		return Boolean.parseBoolean( System.getProperty("org.osgi.supports.framework.requirebundle") );
+		Object objectUseOSGI = System.getProperty("osgi.framework.useSystemProperties");
+		if(objectUseOSGI == null) return false;
+		else return true; 
 	}
 }

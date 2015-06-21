@@ -54,6 +54,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * API service dialog
@@ -279,13 +280,19 @@ public class APIServiceDialog extends Dialog {
 	 */
 	private String getSelect(final UserDBDAO userDB, String strSQL, List<Object> listParam) throws Exception {
 		String strResult = "";
-		if(QueryUtils.RESULT_TYPE.JSON.name().equals(comboResultType.getText())) {
-			JsonArray jsonArry = QueryUtils.selectToJson(userDB, strSQL, listParam);
-			strResult = JSONUtil.getPretty(jsonArry.toString());
-		} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
-			strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+		
+		if(SQLUtil.isStatement(strSQL)) {
+			
+			if(QueryUtils.RESULT_TYPE.JSON.name().equals(comboResultType.getText())) {
+				JsonArray jsonArry = QueryUtils.selectToJson(userDB, strSQL, listParam);
+				strResult = JSONUtil.getPretty(jsonArry.toString());
+			} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
+				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+			} else {
+				strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
+			}
 		} else {
-			strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
+			strResult = QueryUtils.executeDML(userDB, strSQL, listParam, comboResultType.getText());
 		}
 		
 		return strResult;

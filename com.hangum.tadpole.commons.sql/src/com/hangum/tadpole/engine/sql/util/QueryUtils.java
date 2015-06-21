@@ -36,6 +36,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -48,7 +49,75 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class QueryUtils {
 	private static final Logger logger = Logger.getLogger(QueryUtils.class);
+	
+	/** SUPPORT RESULT TYPE */
 	public static enum RESULT_TYPE {JSON, CSV, XML};
+	
+	/**
+	 * execute DML
+	 * 
+	 * @param userDB
+	 * @param strQuery
+	 * @param listParam
+	 * @param resultType
+	 * @throws Exception
+	 */
+	public static String executeDML(final UserDBDAO userDB, final String strQuery, final List<Object> listParam, final String resultType) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		QueryRunner qr = new QueryRunner(client.getDataSource());
+		int intEffectRowCount = qr.update(strQuery, listParam);
+		
+		String strReturn = "";
+		if(resultType.equals(RESULT_TYPE.CSV.name())) {
+			final StringWriter stWriter = new StringWriter();
+			CSVWriter csvWriter = new CSVWriter(stWriter, ',');
+			
+			String[] arryString = new String[2];
+			arryString[0] = "effectrow";
+			arryString[1] = String.valueOf(intEffectRowCount);
+			csvWriter.writeNext(arryString);
+			
+			strReturn = stWriter.toString();
+		} else if(resultType.equals(RESULT_TYPE.JSON.name())) {
+			final JsonArray jsonArry = new JsonArray();
+			JsonObject jsonObj = new JsonObject();
+			jsonObj.addProperty("effectrow", intEffectRowCount);
+			jsonArry.add(jsonObj);
+			
+			strReturn = JSONUtil.getPretty(jsonArry.toString());
+		} else if(resultType.equals(RESULT_TYPE.XML.name())) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    final Document doc = builder.newDocument();
+		    final Element results = doc.createElement("Results");
+		    doc.appendChild(results);
+		    
+		    Element row = doc.createElement("Row");
+			results.appendChild(row);
+			Element node = doc.createElement("effectrow");
+			node.appendChild(doc.createTextNode(String.valueOf(intEffectRowCount)));
+			row.appendChild(node);
+			
+			DOMSource domSource = new DOMSource(doc);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			tf.setAttribute("indent-number", 4);
+			
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			
+			final StringWriter stWriter = new StringWriter();
+			StreamResult sr = new StreamResult(stWriter);
+			transformer.transform(domSource, sr);
+			
+			strReturn = stWriter.toString();
+		}
+		
+		return strReturn;
+	}
 	
 	/**
 	 * query to csv
@@ -229,9 +298,9 @@ public class QueryUtils {
 		
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-		transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");//"ISO-8859-1");
 		StreamResult sr = new StreamResult(stWriter);
-		transformer.transform(domSource, sr);	
+		transformer.transform(domSource, sr);
 
 		return stWriter.toString();
 	}

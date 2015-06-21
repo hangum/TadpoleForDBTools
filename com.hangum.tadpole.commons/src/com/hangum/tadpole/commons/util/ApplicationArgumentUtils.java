@@ -29,7 +29,8 @@ public class ApplicationArgumentUtils {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
-
+	public static String[] applicationArgs = null;
+	
 	/**
 	 * engine에서 사용하는 패스워드.
 	 * 
@@ -245,13 +246,21 @@ public class ApplicationArgumentUtils {
 	 * @return
 	 */
 	private static String[] getArguments() {
-		String[] applicationArgs = null;
+		if(applicationArgs != null) return applicationArgs;
+		
+//		System.out.println("\t==[05:03]==========================================================");
+//		Properties p = System.getProperties();
+//		p.list(System.out);
+//		System.out.println("\t============================================================");
 		
 		/* is osgi */
 		if(SystemDefine.isOSGIRuntime()) {
+			logger.info("\t\t --> start OSGI Runtime....................................................");
 			applicationArgs = Platform.getApplicationArgs();
-		/* is web server and single  */
+		/* is single  */
 		} else {
+			logger.info("\t\t --> start api server ....................................................");
+			
 			applicationArgs = new String[4];
 			
 			applicationArgs[0] = "-dbServer";
