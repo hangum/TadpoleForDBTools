@@ -332,6 +332,16 @@ public class APIServiceDialog extends Dialog {
 		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
 		downloadServiceHandler = null;
 	}
+	
+	@Override
+	public boolean close() {
+		try {
+			unregisterServiceHandler();
+		} catch(Exception e) {
+			logger.error("unregisterServiceHandler", e);
+		}
+		return super.close();
+	}
 
 	/**
 	 * download external file

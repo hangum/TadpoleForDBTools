@@ -253,24 +253,41 @@ public class ApplicationArgumentUtils {
 //		p.list(System.out);
 //		System.out.println("\t============================================================");
 		
-		/* is osgi */
-		if(SystemDefine.isOSGIRuntime()) {
-			logger.info("\t\t --> start OSGI Runtime....................................................");
-			applicationArgs = Platform.getApplicationArgs();
-		/* is single  */
-		} else {
-			logger.info("\t\t --> start api server ....................................................");
-			
-			applicationArgs = new String[4];
-			
-			applicationArgs[0] = "-dbServer";
-			applicationArgs[1] = System.getProperty("dbServer");
-			if(applicationArgs[1] == null) logger.error("**** System Initialize exception : Not found Tadpole engine db");
+		try {
+			/* is osgi */
+			if(SystemDefine.isOSGIRuntime()) {
+	
+				logger.info("\t\t --> start OSGI Runtime....................................................");
+				applicationArgs = Platform.getApplicationArgs();
 				
-			applicationArgs[2] = "-passwd";
-			applicationArgs[3] = System.getProperty("passwd");
-			if(applicationArgs[3] == null) applicationArgs[3] = PublicTadpoleDefine.SYSTEM_DEFAULT_PASSWORD;
+			/* is single  */
+			} else {
+				logger.info("\t\t --> [0] start api server ....................................................");
+				applicationArgs = getWebServerArguments();
+			}
+		} catch(Throwable e) {
+			logger.info("\t\t [exception]--> [1] start api server ....................................................");
+			applicationArgs = getWebServerArguments();
 		}
+		
+		return applicationArgs;
+	}
+	
+	/**
+	 * traditional web server argument
+	 * 
+	 * @return
+	 */
+	private static String[] getWebServerArguments() {
+		applicationArgs = new String[4];
+		
+		applicationArgs[0] = "-dbServer";
+		applicationArgs[1] = System.getProperty("dbServer");
+		if(applicationArgs[1] == null) logger.error("**** System Initialize exception : Not found Tadpole engine db");
+			
+		applicationArgs[2] = "-passwd";
+		applicationArgs[3] = System.getProperty("passwd");
+		if(applicationArgs[3] == null) applicationArgs[3] = PublicTadpoleDefine.SYSTEM_DEFAULT_PASSWORD;
 		
 		return applicationArgs;
 	}
