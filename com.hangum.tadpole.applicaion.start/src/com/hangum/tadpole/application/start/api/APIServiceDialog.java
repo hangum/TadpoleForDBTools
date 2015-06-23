@@ -45,6 +45,7 @@ import com.google.gson.JsonArray;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -179,6 +180,8 @@ public class APIServiceDialog extends Dialog {
 		initData();
 
 		registerServiceHandler();
+		
+		AnalyticCaller.track("APIServiceDialog"); //$NON-NLS-1$
 		
 		return container;
 	}
