@@ -11,6 +11,7 @@
 package com.hangum.tadpole.application.start.api;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,8 +20,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -311,8 +314,11 @@ public class APIServiceDialog extends Dialog {
 		List<Object> listParam = new ArrayList<Object>();
 		String strArgement = textArgument.getText();
 		
+		String strUrl = URLEncoder.encode(strArgement);
+		logger.debug(strUrl);
+		
 		// TODO check this code
-		List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://dumy.com?" + strArgement), "UTF-8");
+		List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://dumy.com?" + strUrl), "UTF-8");
 		Map<String, String> mapParam = new HashMap<String, String>();
 		for (NameValuePair nameValuePair : params) {
 			mapParam.put(nameValuePair.getName(), nameValuePair.getValue());
