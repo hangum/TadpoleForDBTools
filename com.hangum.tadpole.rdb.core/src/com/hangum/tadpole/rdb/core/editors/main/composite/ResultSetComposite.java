@@ -740,8 +740,7 @@ public class ResultSetComposite extends Composite {
 			
 			statement.setFetchSize(intSelectLimitCnt);
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
 			) {
 				statement.setQueryTimeout(queryTimeOut);
 				statement.setMaxRows(intSelectLimitCnt);

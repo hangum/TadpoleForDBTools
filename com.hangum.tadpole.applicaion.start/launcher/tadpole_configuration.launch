@@ -16,7 +16,7 @@
 <booleanAttribute key="includeOptional" value="true"/>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console  -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog &#10;-dbServer GPnD5OD+3yg7yThj8DrESV9ymqkwRJA1AkYR5IUXKK1WmAgN21Y6fwW1ppI7M/bM84Ghl+QGNmBjyklvlmJIf778BfvkV408p8E7PGSur4qI/m+s7CR/3qHg1rWzVsXD7jA7yiCL54KxLTaScCCGZrJLduRAOuYm&#10; -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console  -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog &#10;-dbServer fsJzVNIWA0cqrx95fOZHQ5NXQmsy1HXcNgU+XICRpCyCldQqCvgb6BFZO8W3tOjHD0CBxJNOz/XXZQUU7/nBcD2xIdgTI/xYR1iLWPpp/aMAa4bTm09YJxi7l7T1kz1S7cjl67P3MDk2IxuDMNo9KdJWHHh5Mohh&#10; -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#10;-Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info"/>
 <stringAttribute key="org.eclipse.rap.launch.browserMode" value="EXTERNAL"/>
