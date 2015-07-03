@@ -886,7 +886,7 @@ public class ResultSetComposite extends Composite {
 			
 			progressBarQuery.setSelection(0);
 			
-			// HIVE, TAJO는 CANCLE 기능이 없습니다. 
+			// HIVE는 CANCLE 기능이 없습니다. 
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT ||
 					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
 			) {
