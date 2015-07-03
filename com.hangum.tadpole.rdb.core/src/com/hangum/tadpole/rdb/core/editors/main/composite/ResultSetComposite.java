@@ -959,10 +959,8 @@ public class ResultSetComposite extends Composite {
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.
-			SchemaHistoryDAO schemaDao = new SchemaHistoryDAO();
 			try {
-//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
-				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
+				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
 						"EDITOR", //$NON-NLS-1$
 						reqQuery.getQueryType().name(),
 						"", //$NON-NLS-1$
