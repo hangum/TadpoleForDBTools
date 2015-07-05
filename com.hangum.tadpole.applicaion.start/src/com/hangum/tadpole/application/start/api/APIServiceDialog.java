@@ -10,8 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.api;
 
-import java.net.URI;
-import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,11 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -67,6 +63,9 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
  *  			http://127.0.0.1:10081/tadpole?serviceID=10d3625a-eee1-409b-8a5f-16bb2a5f68d2&1=1&2=SQL
  *  
  *  			http://127.0.0.1:10081/tadpole?serviceID=c7f17960-cf68-46ac-9089-e429e711be39
+ *  
+ *  			-- save test
+ *  			http://127.0.0.1:10082/tadpole?serviceID=3ea2d6c6-53be-47e9-b1cb-6ce3e8b41ce5&1=a&2=33&3=b&4=cc&5=33
  *
  * @author hangum
  * @version 1.6.1
@@ -180,7 +179,7 @@ public class APIServiceDialog extends Dialog {
 		textResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();
-		initData();
+		initData(textArgument.getText());
 
 		registerServiceHandler();
 		
@@ -189,6 +188,9 @@ public class APIServiceDialog extends Dialog {
 		return container;
 	}
 	
+	/**
+	 * initialize UI
+	 */
 	private void initUI() {
 		Collection<String> collString = serviceParameter.getParameterNames();
 		String strAPIKey = serviceParameter.getParameter(PublicTadpoleDefine.SERVICE_KEY_NAME);
@@ -208,8 +210,10 @@ public class APIServiceDialog extends Dialog {
 	
 	/**
 	 * initialize ui
+	 * 
+	 * @param strArgument
 	 */
-	private void initData() {
+	private void initData(String strArgument) {
 		
 		Timestamp timstampStart = new Timestamp(System.currentTimeMillis());
 		UserDBDAO userDB = null;
@@ -225,7 +229,7 @@ public class APIServiceDialog extends Dialog {
 				
 				// find db
 				userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(userDBResourceDao.getDb_seq());
-				List<Object> listParam = makeListParameter();
+				List<Object> listParam = makeListParameter(strArgument);
 				
 				String strResultType = getSelect(userDB, strSQL, listParam);
 				textResult.setText(strResultType);
@@ -236,7 +240,7 @@ public class APIServiceDialog extends Dialog {
 			}
 			
 		} catch (Exception e) {
-			logger.error("find api", e);
+			logger.error("api exception", e);
 			
 			saveHistoryData(userDB, timstampStart, textAPIName.getText(), textArgument.getText(), PublicTadpoleDefine.SUCCESS_FAIL.F.name(), e.getMessage());
 			
@@ -307,27 +311,34 @@ public class APIServiceDialog extends Dialog {
 	/**
 	 * make parameter list
 	 * 
+	 * @param strArgument
 	 * @return
 	 * @throws Exception
 	 */
-	private List<Object> makeListParameter() throws Exception {
+	private List<Object> makeListParameter(String strArgument) throws Exception {
 		List<Object> listParam = new ArrayList<Object>();
-		String strArgement = textArgument.getText();
 		
-		String strUrl = URLEncoder.encode(strArgement);
-		logger.debug(strUrl);
-		
-		// TODO check this code
-		List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://dumy.com?" + strUrl), "UTF-8");
-		Map<String, String> mapParam = new HashMap<String, String>();
-		for (NameValuePair nameValuePair : params) {
-			mapParam.put(nameValuePair.getName(), nameValuePair.getValue());
+		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument);
+		Map<String, String> params = new HashMap<String, String>();
+		for (String param : StringUtils.split(strArgument, "&")) {
+			String pair[] = StringUtils.split(param, "=");
+			String key = URLDecoder.decode(pair[0], "UTF-8");
+			String value = "";
+			if (pair.length > 1) {
+				try {
+					value = URLDecoder.decode(pair[1], "UTF-8");
+				} catch(Exception e) {
+					value = pair[1];
+				}
+			}
+
+			params.put(key, value);
 		}
 
 		// assume this count... no way i'll argument is over 100..... --;;
 		for(int i=1; i<100; i++) {
-			if(mapParam.containsKey(String.valueOf(i))) {
-				listParam.add(mapParam.get(""+i));
+			if(params.containsKey(String.valueOf(i))) {
+				listParam.add(params.get(""+i));
 			} else {
 				break;
 			}
@@ -387,7 +398,7 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		initData();
+		initData(textArgument.getText());
 	}
 
 	/**

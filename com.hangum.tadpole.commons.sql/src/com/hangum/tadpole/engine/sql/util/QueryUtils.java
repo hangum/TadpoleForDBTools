@@ -11,9 +11,11 @@
 package com.hangum.tadpole.engine.sql.util;
 
 import java.io.StringWriter;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +34,16 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Query utils
@@ -54,6 +58,77 @@ public class QueryUtils {
 	public static enum RESULT_TYPE {JSON, CSV, XML};
 	
 	/**
+	 * select문 이외의 쿼리를 실행합니다
+	 * 
+	 * @param reqQuery
+	 * @exception
+	 */
+	private static Object runSQLOther(
+			final UserDBDAO userDB,
+			String strQuery, 
+			final List<Object> listParam
+	) throws SQLException, Exception 
+	{
+		
+		// is tajo
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+//			new TajoConnectionManager().executeUpdate(userDB, strQuery);
+			logger.error("Not support TAJO.");
+		} else { 
+			
+			java.sql.Connection javaConn = null;
+			PreparedStatement prepareStatement = null;
+			try {
+				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+				javaConn = client.getDataSource().getConnection();
+				prepareStatement = javaConn.prepareStatement(strQuery);
+				
+				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
+				if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					final String checkSQL = strQuery.trim().toUpperCase();
+					if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
+						strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+					final String checkSQL = strQuery.trim().toUpperCase();
+					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
+					) { //$NON-NLS-1$
+						strQuery = strQuery + PublicTadpoleDefine.SQL_DELIMITER; //$NON-NLS-1$
+					}
+				}
+				
+//				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+//				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | 
+//					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
+//				) { 
+//					return prepareStatement.execute(strQuery);
+//				} else {
+
+				for(int i=0; i<listParam.size(); i++) {
+					Object objParam = listParam.get(i);
+					prepareStatement.setObject(i+1, objParam);
+				}
+				
+				return prepareStatement.executeUpdate();
+				
+			} finally {
+				try { prepareStatement.close();} catch(Exception e) {}
+			}
+		}  	// end which db
+		
+		return false;
+	}
+	
+	/**
 	 * execute DML
 	 * 
 	 * @param userDB
@@ -64,8 +139,7 @@ public class QueryUtils {
 	 */
 	public static String executeDML(final UserDBDAO userDB, final String strQuery, final List<Object> listParam, final String resultType) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		QueryRunner qr = new QueryRunner(client.getDataSource());
-		int intEffectRowCount = qr.update(strQuery, listParam);
+		Object effectObject = runSQLOther(userDB, strQuery, listParam);
 		
 		String strReturn = "";
 		if(resultType.equals(RESULT_TYPE.CSV.name())) {
@@ -74,14 +148,14 @@ public class QueryUtils {
 			
 			String[] arryString = new String[2];
 			arryString[0] = "effectrow";
-			arryString[1] = String.valueOf(intEffectRowCount);
+			arryString[1] = String.valueOf(effectObject);
 			csvWriter.writeNext(arryString);
 			
 			strReturn = stWriter.toString();
 		} else if(resultType.equals(RESULT_TYPE.JSON.name())) {
 			final JsonArray jsonArry = new JsonArray();
 			JsonObject jsonObj = new JsonObject();
-			jsonObj.addProperty("effectrow", intEffectRowCount);
+			jsonObj.addProperty("effectrow", String.valueOf(effectObject));
 			jsonArry.add(jsonObj);
 			
 			strReturn = JSONUtil.getPretty(jsonArry.toString());
@@ -95,7 +169,7 @@ public class QueryUtils {
 		    Element row = doc.createElement("Row");
 			results.appendChild(row);
 			Element node = doc.createElement("effectrow");
-			node.appendChild(doc.createTextNode(String.valueOf(intEffectRowCount)));
+			node.appendChild(doc.createTextNode(String.valueOf(effectObject)));
 			row.appendChild(node);
 			
 			DOMSource domSource = new DOMSource(doc);
