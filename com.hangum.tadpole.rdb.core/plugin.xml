@@ -725,7 +725,6 @@
             name="Connection Wizard">
       </wizard>
    </extension>
-   <!--
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -746,10 +745,10 @@
             id="com.hangum.tadpole.rdb.core.command.synceditor"
             name="Synchronized Editor">
          <state
-               class="org.eclipse.ui.handlers.RegistryToggleState"
+               class="org.eclipse.ui.handlers.RegistryToggleState:true"
                id="org.eclipse.ui.commands.toggleState">
          </state>
       </command>
    </extension>
--->
+
 </plugin>
