@@ -734,7 +734,7 @@
                commandId="com.hangum.tadpole.rdb.core.command.synceditor"
                icon="resources/icons/synced.gif"
                style="toggle"
-               tooltip="Synchronized editor">
+               tooltip="Link with Editor">
          </command>
       </menuContribution>
    </extension>
