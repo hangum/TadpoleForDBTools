@@ -636,12 +636,9 @@ public class MongodbResultComposite extends Composite {
 			
 			DBObject explainDBObject = dbCursor.explain();
 			sbConsoleExecuteMsg.append(JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleErrorMsg.append(JSONUtil.getPretty(mongoDB.getLastError().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-	
-			mongoDB.forceError();
-	        mongoDB.resetError();
-	        
-//	        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
+			sbConsoleErrorMsg.append(JSONUtil.getPretty(mongoDB.getWriteConcern().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			if(logger.isDebugEnabled()) logger.debug(mongoDB.getWriteConcern().toString());
 			
 			// 결과 데이터를 출력합니다.
 			refreshDBView(dbCursor, dbCursor.count());
