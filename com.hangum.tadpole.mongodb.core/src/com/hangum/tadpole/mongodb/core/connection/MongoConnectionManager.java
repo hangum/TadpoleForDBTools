@@ -22,7 +22,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 
 /**
@@ -71,6 +70,9 @@ public class MongoConnectionManager {
 //					options.maxWaitTime = 120000;
 //					options.autoConnectRetry = false;
 //					options.safe = true;
+					
+//					MongoClientURI uri  = new MongoClientURI("mongodb://user:pass@host:port/db"); 
+//			        MongoClient client = new MongoClient(uri);
 					
 					String strReplcaSet = userDB.getExt1();
 					if(strReplcaSet == null | "".equals(strReplcaSet)) {

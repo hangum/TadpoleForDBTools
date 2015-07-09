@@ -636,7 +636,7 @@ public class MongodbResultComposite extends Composite {
 			
 			DBObject explainDBObject = dbCursor.explain();
 			sbConsoleExecuteMsg.append(JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleErrorMsg.append(JSONUtil.getPretty(mongoDB.getWriteConcern().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sbConsoleErrorMsg.append(JSONUtil.getPretty(mongoDB.getWriteConcern()==null?"":mongoDB.getWriteConcern().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			if(logger.isDebugEnabled()) logger.debug(mongoDB.getWriteConcern().toString());
 			
@@ -1062,8 +1062,8 @@ public class MongodbResultComposite extends Composite {
 	/**
 	 * error console
 	 */
-	public void consoleError() {
-		DBObject dbObject = (DBObject)JSON.parse(sbConsoleErrorMsg.toString());
+	public void consoleError() {		
+		DBObject dbObject = (DBObject)JSON.parse(sbConsoleErrorMsg.toString() );
 		FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName + " " + Messages.MongodbResultComposite_25, dbObject);
 		dlg.open();
 	}

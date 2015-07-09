@@ -39,7 +39,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
@@ -66,14 +68,13 @@ public class MongoDBQuery {
 	public static void createDB(UserDBDAO userDB) throws Exception {
 //		MongoOptions options = new MongoOptions();
 //		options.connectionsPerHost = 20;		
-		Mongo mongo = new Mongo(userDB.getHost(), Integer.parseInt(userDB.getPort()));
-		DB db = mongo.getDB(userDB.getDb());
+		MongoClient mongo = new MongoClient(userDB.getHost(), Integer.parseInt(userDB.getPort()));
+		MongoDatabase db = mongo.getDatabase(userDB.getDb());
 //		db.authenticate(userDB.getUsers(), userDB.getPasswd().toCharArray());
 		// 
 		// 신규는 다음과 같은 작업을 해주지 않으면 디비가 생성되지 않습니다.
-		// 
-		Set<String> listColNames = db.getCollectionNames();
-		for (String stringColName : listColNames) {}
+		db.getName();//CollectionNames();
+//		for (String stringColName : listColNames) {}
 		//
 	}
 	

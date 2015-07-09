@@ -37,9 +37,14 @@ public class JSONUtil {
 	public static String getPretty(String jsonString) {
 		if(jsonString == null) return "";
 
+		if(logger.isDebugEnabled()) {
+			logger.debug("======================================================");
+			logger.debug("==> ["+ jsonString + "]");
+			logger.debug("======================================================");
+		}
 		try {
 			JsonParser jp = new JsonParser();
-			JsonElement je = jp.parse(jsonString);
+			JsonElement je = jp.parse(StringUtils.trim(jsonString));
 			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			String strGson = gson.toJson(je);
@@ -49,7 +54,7 @@ public class JSONUtil {
 			
 			return strGson;
 		} catch(Exception e) {
-			logger.error("pretty json", e);
+//			logger.error("pretty json", e);
 		}
 
 		return jsonString;
