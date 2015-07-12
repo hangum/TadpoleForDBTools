@@ -66,7 +66,6 @@ import com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.mongodb.MongodbCollectionAnalyizeAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollCompactAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollFindAndModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.mongodb.ObjectMongodbCollStatesAction;
@@ -127,8 +126,6 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private ObjectMongodbCollCompactAction		collCompactAction;
 	
 	private ObjectMongodbCollValidateAction		collValidateAction;
-	
-	private MongodbCollectionAnalyizeAction collectionAnalyzerAction;
 	
 	
 	public TadpoleMongoDBCollectionComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
@@ -338,8 +335,6 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		
 		collValidateAction = new ObjectMongodbCollValidateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection validate"); //$NON-NLS-1$
 		
-		collectionAnalyzerAction = new MongodbCollectionAnalyizeAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, "Collection Analyzer"); //$NON-NLS-1$
-
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -370,9 +365,6 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(mapReduceAction);
 					manager.add(groupAction);
-					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(collectionAnalyzerAction);
 				}
 			}
 		});
@@ -402,7 +394,6 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		reIndexColAction.setUserDB(getUserDB());
 		mapReduceAction.setUserDB(getUserDB());
 		groupAction.setUserDB(getUserDB());
-		collectionAnalyzerAction.setUserDB(getUserDB());
 	}
 
 	public TableViewer getCollectionListViewer() {
@@ -503,6 +494,5 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		reIndexColAction.dispose();
 		mapReduceAction.dispose();
 		groupAction.dispose();
-		collectionAnalyzerAction.dispose();
 	}
 }

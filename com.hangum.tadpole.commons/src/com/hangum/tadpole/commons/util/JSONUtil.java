@@ -37,11 +37,11 @@ public class JSONUtil {
 	public static String getPretty(String jsonString) {
 		if(jsonString == null) return "";
 
-		if(logger.isDebugEnabled()) {
-			logger.debug("======================================================");
-			logger.debug("==> ["+ jsonString + "]");
-			logger.debug("======================================================");
-		}
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("======================================================");
+//			logger.debug("==> ["+ jsonString + "]");
+//			logger.debug("======================================================");
+//		}
 		try {
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(StringUtils.trim(jsonString));

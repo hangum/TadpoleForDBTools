@@ -87,11 +87,11 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 	}
 	
 	private void initUI() {
-//		try {
-//			tadpoleEditor.setText(JSONUtil.getPretty(content));
-//		} catch(Exception e) {
-//			logger.error("server status", e); //$NON-NLS-1$
-//		}
+		try {
+			tadpoleEditor.setText(JSONUtil.getPretty(content));
+		} catch(Exception e) {
+			logger.error("server status", e); //$NON-NLS-1$
+		}
 	}
 
 	/**

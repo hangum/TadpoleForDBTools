@@ -94,7 +94,7 @@ public class MongoConnectionManager {
 					}
 					
 //					// password 적용.
-//					db = mongoDB.getDB(userDB.getDb());
+					db = mongoDB.getDB(userDB.getDb());
 //					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
 //						// pass change
 //						String passwdDecrypt = "";

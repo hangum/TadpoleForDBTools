@@ -74,7 +74,7 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		
 		this.initExt = initExt;
 		if(initExt == EditorDefine.EXT_JSON) {
-			if("".equals(initContent)) {
+			if(initContent == null || "".equals(initContent)) {
 				initContent = EditorDefine.JSON_INITIALIZE_TXT;
 			}
 		}
