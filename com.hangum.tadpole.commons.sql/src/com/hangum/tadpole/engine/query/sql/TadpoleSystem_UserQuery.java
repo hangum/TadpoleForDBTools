@@ -37,12 +37,25 @@ public class TadpoleSystem_UserQuery {
 	/**
 	 * 모든 유효한 유저 목록을 가져옵니다.
 	 * 
+	 * @param delyn
 	 * @return
 	 * @throws Exception
 	 */
 	public static List<UserDAO> getAllUser() throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getAllUser"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 모든 유효한 유저 목록을 가져옵니다.
+	 * 
+	 * @param delyn
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<UserDAO> getLiveAllUser() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getLiveAllUser"); //$NON-NLS-1$
 	}
 	
 	/**

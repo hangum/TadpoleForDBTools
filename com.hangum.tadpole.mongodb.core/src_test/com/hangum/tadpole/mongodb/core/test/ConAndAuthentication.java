@@ -64,9 +64,9 @@ public class ConAndAuthentication {
 			// authentication(optional)
 			// boolean auth = db.authenticate(myUserName, myPassword);
 
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (MongoException e) {
+//		} catch (UnknownHostException e) {
+//			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

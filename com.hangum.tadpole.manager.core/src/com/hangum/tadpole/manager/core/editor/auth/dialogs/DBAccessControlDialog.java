@@ -282,11 +282,11 @@ public class DBAccessControlDialog extends Dialog {
 		
 		// oracle, tajo, hive, cubrid 는 사용하지 못하도록.
 		UserDBDAO userDB = userRoleDB.getParent();
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
-				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT |
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT |
-				userDB.getDBDefine() == DBDefine.TAJO_DEFAULT |
-				userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT |
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
 		) {
 			btnSelectAdd.setEnabled(false);

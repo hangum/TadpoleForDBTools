@@ -219,11 +219,25 @@ public class ResourceSaveDialog extends Dialog {
 				MessageDialog.openError(getShell(), "Confirm", "Does not support API.");
 				return;
 			}
-			String strURL = String.format("%s?%s=%s&1=FirstParameter&2=SecondParameter", 
-					"http://yoururl.com", 
-					PublicTadpoleDefine.SERVICE_KEY_NAME, strApiKey);
+			String strServerURL = "http://{yoururl.com}";
+//			String strQuery  = textQuery.getText();
+			String strArguments = "1={FirstParameter}&2={SecondParameter}";
+			
+			// api server url
+			String strURL = String.format("[API Server URL]\n%s?%s=%s&%s", 
+					strServerURL + "/rest/base", 
+					PublicTadpoleDefine.SERVICE_KEY_NAME, 
+					textAPIKey.getText(),
+					strArguments);
+			
+			// api dialog url
+			strURL += String.format("\n\n[API Dialog URL]\n%s?%s=%s&%s", 
+					strServerURL, 
+					PublicTadpoleDefine.SERVICE_KEY_NAME, 
+					textAPIKey.getText(),
+					strArguments);
 
-			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), "API URI", strURL);
+			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), "API URL Information", strURL);
 			dialog.open();
 		} else {
 			super.buttonPressed(buttonId);

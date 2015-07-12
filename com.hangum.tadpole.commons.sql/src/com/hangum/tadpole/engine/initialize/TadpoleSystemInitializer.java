@@ -39,10 +39,10 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystemInitializer {
 	private static final Logger logger = Logger.getLogger(TadpoleSystemInitializer.class);
-
+	
 	private static UserDBDAO tadpoleEngineDB;
 
-	public static String DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db/";// //$NON-NLS-1$
+	public static String DEFAULT_DB_FILE_LOCATION = "";// //$NON-NLS-1$
 	public static final String DB_NAME = "tadpole-system.db"; //$NON-NLS-1$
 
 	/**
@@ -55,6 +55,8 @@ public class TadpoleSystemInitializer {
 		if (!ApplicationArgumentUtils.isDBServer()) {
 
 			try {
+				DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db/";// //$NON-NLS-1$
+				
 				if(ApplicationArgumentUtils.isDBPath()) DEFAULT_DB_FILE_LOCATION = ApplicationArgumentUtils.getDBPath() + File.separator;
 				if (!new File(DEFAULT_DB_FILE_LOCATION).exists()) {
 					if(!new File(DEFAULT_DB_FILE_LOCATION).mkdirs()) {

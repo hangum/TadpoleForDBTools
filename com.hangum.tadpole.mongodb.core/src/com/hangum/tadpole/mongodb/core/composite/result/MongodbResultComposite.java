@@ -636,12 +636,9 @@ public class MongodbResultComposite extends Composite {
 			
 			DBObject explainDBObject = dbCursor.explain();
 			sbConsoleExecuteMsg.append(JSONUtil.getPretty(explainDBObject.toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			sbConsoleErrorMsg.append(JSONUtil.getPretty(mongoDB.getLastError().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
-	
-			mongoDB.forceError();
-	        mongoDB.resetError();
-	        
-//	        if(logger.isDebugEnabled()) logger.debug(sbConsoleMsg);
+			sbConsoleErrorMsg.append(JSONUtil.getPretty(mongoDB.getWriteConcern()==null?"":mongoDB.getWriteConcern().toString())).append("\r\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			if(logger.isDebugEnabled()) logger.debug(mongoDB.getWriteConcern().toString());
 			
 			// 결과 데이터를 출력합니다.
 			refreshDBView(dbCursor, dbCursor.count());
@@ -1062,11 +1059,103 @@ public class MongodbResultComposite extends Composite {
 	protected void checkSubclass() {
 	}
 	
+	public void structureView() {
+		final Display display = getDisplay();		
+		// job
+		Job job = new Job("Structure collection analyized job") { //$NON-NLS-1$
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Collectiono structure...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+			
+				List<DBObject> mapOnlyOnDBObject = new ArrayList<>();
+				
+				try {
+					MongoDBQueryUtil qu = new MongoDBQueryUtil(userDB, collectionName);
+					while(qu.nextQuery()) {
+						
+						// row 단위
+						List<DBObject> listDBObject = qu.getCollectionDataList();
+						for (DBObject dbObject : listDBObject) {
+							
+							if(mapOnlyOnDBObject.isEmpty()) mapOnlyOnDBObject.add(dbObject);
+							else {
+								// 검사한 모든 행이 없는지 검사 결과를 넣습니다. 
+								Map<Integer, Boolean> mapSearchResult = new HashMap<>();
+								
+								// 유일한 오브젝트에 모두 들어 있는지 비교한다.
+								for(int i=0; i<mapOnlyOnDBObject.size(); i++) {
+									DBObject alradyDbObject = mapOnlyOnDBObject.get(i);
+	//								if(logger.isDebugEnabled()) logger.debug("\t=====> find object is " + alradyDbObject.toString());
+									
+									// 검사하려는 오브젝트에 비교한다.
+									for (String strKey : dbObject.keySet()) {
+	//									if(logger.isDebugEnabled()) logger.debug("\t\t search object is " + strKey);
+										
+										if(!alradyDbObject.containsField(strKey)) {
+											mapSearchResult.put(i, true);
+											break;
+										}
+									}
+									
+								} // end already for
+								
+								int intFoundObject = 0;
+								for (int i=0; i<mapOnlyOnDBObject.size(); i++) {
+									if(mapSearchResult.containsKey(i)) {
+										intFoundObject++;
+									}
+								}
+								
+								if(intFoundObject == mapOnlyOnDBObject.size()) {
+									mapOnlyOnDBObject.add(dbObject);
+								}
+							}	// end if
+							
+						}
+						
+						refreshDBView(mapOnlyOnDBObject, mapOnlyOnDBObject.size());
+					}
+				
+				} catch (Exception e) {
+					logger.error("struct collection exception", e); //$NON-NLS-1$
+					return new Status(Status.ERROR, Activator.PLUGIN_ID, "collection structure " + e.getMessage()); //$NON-NLS-1$
+				} finally {
+					monitor.done();
+				}
+				
+				return Status.OK_STATUS;
+			}
+		};
+		
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+	
+				final IJobChangeEvent jobEvent = event; 
+				
+				display.asyncExec(new Runnable() {
+					public void run() {
+						if(jobEvent.getResult().isOK()) {
+							setResult();
+						} else {
+							sbConsoleErrorMsg.append(jobEvent.getResult().getMessage());
+							appendMessage(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
+						}
+					}
+				});	// end display.asyncExec				
+			}	// end done
+		});	// end job
+		
+		job.setName(userDB.getDisplay_name());
+		job.setUser(true);
+		job.schedule();
+	}
+	
 	/**
 	 * error console
 	 */
-	public void consoleError() {
-		DBObject dbObject = (DBObject)JSON.parse(sbConsoleErrorMsg.toString());
+	public void consoleError() {		
+		DBObject dbObject = (DBObject)JSON.parse(sbConsoleErrorMsg.toString() );
 		FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName + " " + Messages.MongodbResultComposite_25, dbObject);
 		dlg.open();
 	}

@@ -10,18 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 

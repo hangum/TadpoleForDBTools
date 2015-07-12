@@ -111,8 +111,7 @@ public class TadpoleSQLManager {
 //				} catch(Exception ee) {
 //					logger.error("request error", ee);
 //				}
-				
-				logger.error("=================================================\n get DB Instance \n seq is " + dbInfo.getSeq() + "\n" , e);
+				logger.error("===\n get DB Instance \n seq is " + dbInfo.getSeq() + "\n" , e);
 				
 				dbManager.remove(searchKey);
 				
@@ -125,18 +124,18 @@ public class TadpoleSQLManager {
 		return sqlMapClient;
 	}
 
-	/**
-	 * 전체 connection pool 정보를 가져옵니다.
-	 */
-	public static void getConnectionPoolStatus() {
-		SqlMapClient[] sqlMaps = (SqlMapClient[])dbManager.values().toArray();
-		for (SqlMapClient sqlMapClient : sqlMaps) {
-
-			BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
-//			logger.info("NumActive 	: " + basicDataSource.getNumActive());
-//			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
-		}
-	}
+//	/**
+//	 * 전체 connection pool 정보를 가져옵니다.
+//	 */
+//	public static void getConnectionPoolStatus() {
+//		SqlMapClient[] sqlMaps = (SqlMapClient[])dbManager.values().toArray();
+//		for (SqlMapClient sqlMapClient : sqlMaps) {
+//
+//			BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
+////			logger.info("NumActive 	: " + basicDataSource.getNumActive());
+////			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
+//		}
+//	}
 	
 	/**
 	 * 각 DB의 metadata를 넘겨줍니다.
@@ -169,8 +168,8 @@ public class TadpoleSQLManager {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
 		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			String strFullKeywords = StringUtils.join(SQLConstants.ADVANCED_KEYWORDS, ",") + "," + sqlKeywords;
-			tmd.setKeywords(strFullKeywords);
+//			String strFullKeywords = StringUtils.join(SQLConstants.ADVANCED_KEYWORDS, ",") + "," + sqlKeywords;
+//			tmd.setKeywords(strFullKeywords);
 		} else if(dbInfo.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method
 		} else if(dbInfo.getDBDefine() == DBDefine.HIVE_DEFAULT ||

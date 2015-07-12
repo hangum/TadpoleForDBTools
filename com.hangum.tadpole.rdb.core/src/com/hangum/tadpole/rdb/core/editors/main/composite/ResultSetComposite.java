@@ -12,9 +12,6 @@
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -30,7 +27,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -70,21 +66,19 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
@@ -440,22 +434,11 @@ public class ResultSetComposite extends Composite {
 			listCsvData.add(strArrys);
 		}
 		
-		String filename = PublicTadpoleDefine.TEMP_DIR + getUserDB().getDisplay_name() + "_SQLResultExport.csv"; //$NON-NLS-1$
 		try {
-			FileOutputStream fos = new FileOutputStream(filename);
-			OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8"); //$NON-NLS-1$
-			
-			CSVWriter writer = new CSVWriter(bw);
-			writer.writeAll(listCsvData);
-			bw.close();
-			
-			String strCVSContent = FileUtils.readFileToString(new File(filename));
-			
-			downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
+			String strCVSContent = CSVFileUtils.makeData(listCsvData);
+			downloadExtFile("SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
 		} catch(Exception ee) {
 			logger.error("csv type export error", ee); //$NON-NLS-1$
-		} finally {
-			FileUtils.deleteQuietly(new File(filename));
 		}
 	}
 	
@@ -652,7 +635,7 @@ public class ResultSetComposite extends Composite {
 								TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
 							}
 						} else {
-							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
+							ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
 					}
 					
@@ -756,8 +739,7 @@ public class ResultSetComposite extends Composite {
 			
 			statement.setFetchSize(intSelectLimitCnt);
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
 			) {
 				statement.setQueryTimeout(queryTimeOut);
 				statement.setMaxRows(intSelectLimitCnt);
@@ -903,10 +885,9 @@ public class ResultSetComposite extends Composite {
 			
 			progressBarQuery.setSelection(0);
 			
-			// HIVE, TAJO는 CANCLE 기능이 없습니다. 
+			// HIVE는 CANCLE 기능이 없습니다. 
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
 			) {
 				btnStopQuery.setEnabled(true);
 			}
@@ -977,10 +958,8 @@ public class ResultSetComposite extends Composite {
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.
-			SchemaHistoryDAO schemaDao = new SchemaHistoryDAO();
 			try {
-//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
-				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
+				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
 						"EDITOR", //$NON-NLS-1$
 						reqQuery.getQueryType().name(),
 						"", //$NON-NLS-1$

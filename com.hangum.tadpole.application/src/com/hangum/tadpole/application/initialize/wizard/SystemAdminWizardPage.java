@@ -52,7 +52,9 @@ public class SystemAdminWizardPage extends WizardPage {
 	private Text textPort;
 	private Text textSMTPEmail;
 	private Text textSMTPPasswd;
-
+	
+	private static final String PASSWORD_RULE_PATTERN = "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$";
+	
 	/**
 	 * Create the wizard.
 	 */
@@ -77,6 +79,10 @@ public class SystemAdminWizardPage extends WizardPage {
 		grpAdministratorUserInformation.setText(Messages.SystemAdminWizardPage_3);
 		
 		Label lblEmail = new Label(grpAdministratorUserInformation, SWT.NONE);
+		lblEmail.setAlignment(SWT.RIGHT);
+		GridData gd_lblEmail = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_lblEmail.widthHint = 120;
+		lblEmail.setLayoutData(gd_lblEmail);
 		lblEmail.setText(Messages.SystemAdminWizardPage_4);
 		
 		textEmail = new Text(grpAdministratorUserInformation, SWT.BORDER);
@@ -90,6 +96,8 @@ public class SystemAdminWizardPage extends WizardPage {
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
+		lblPasswd.setAlignment(SWT.RIGHT);
+		lblPasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPasswd.setText(Messages.SystemAdminWizardPage_5);
 		
 		textPasswd = new Text(grpAdministratorUserInformation, SWT.BORDER | SWT.PASSWORD);
@@ -102,6 +110,7 @@ public class SystemAdminWizardPage extends WizardPage {
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblRePasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
+		lblRePasswd.setAlignment(SWT.RIGHT);
 		lblRePasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblRePasswd.setText(Messages.SystemAdminWizardPage_6);
 		
@@ -120,6 +129,10 @@ public class SystemAdminWizardPage extends WizardPage {
 		grpSystemSmtp.setLayout(new GridLayout(2, false));
 		
 		Label lblSmtpServer = new Label(grpSystemSmtp, SWT.NONE);
+		lblSmtpServer.setAlignment(SWT.RIGHT);
+		GridData gd_lblSmtpServer = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_lblSmtpServer.widthHint = 120;
+		lblSmtpServer.setLayoutData(gd_lblSmtpServer);
 		lblSmtpServer.setText(Messages.SystemAdminWizardPage_8);
 		
 		textSMTPServer = new Text(grpSystemSmtp, SWT.BORDER);
@@ -134,6 +147,8 @@ public class SystemAdminWizardPage extends WizardPage {
 		textSMTPServer.setEditable(false);
 		
 		Label lblPort = new Label(grpSystemSmtp, SWT.NONE);
+		lblPort.setAlignment(SWT.RIGHT);
+		lblPort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPort.setText(Messages.SystemAdminWizardPage_10);
 		
 		textPort = new Text(grpSystemSmtp, SWT.BORDER);
@@ -148,6 +163,8 @@ public class SystemAdminWizardPage extends WizardPage {
 		textPort.setEditable(false);
 		
 		Label lblEmail_1 = new Label(grpSystemSmtp, SWT.NONE);
+		lblEmail_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblEmail_1.setAlignment(SWT.RIGHT);
 		lblEmail_1.setText(Messages.SystemAdminWizardPage_12);
 		
 		textSMTPEmail = new Text(grpSystemSmtp, SWT.BORDER);
@@ -160,6 +177,8 @@ public class SystemAdminWizardPage extends WizardPage {
 		textSMTPEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPasswd_1 = new Label(grpSystemSmtp, SWT.NONE);
+		lblPasswd_1.setAlignment(SWT.RIGHT);
+		lblPasswd_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPasswd_1.setText(Messages.SystemAdminWizardPage_13);
 		
 		textSMTPPasswd = new Text(grpSystemSmtp, SWT.BORDER | SWT.PASSWORD);
@@ -174,6 +193,9 @@ public class SystemAdminWizardPage extends WizardPage {
 		new Label(grpSystemSmtp, SWT.NONE);
 		
 		Button btnTestSendEmail = new Button(grpSystemSmtp, SWT.NONE);
+		GridData gd_btnTestSendEmail = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_btnTestSendEmail.widthHint = 200;
+		btnTestSendEmail.setLayoutData(gd_btnTestSendEmail);
 		btnTestSendEmail.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -238,10 +260,10 @@ public class SystemAdminWizardPage extends WizardPage {
 		} else if(!Utils.isEmail(textEmail.getText())) {
 			errorSet(textEmail, Messages.SystemAdminWizardPage_48);
 			return;
-		} else if("".equals(textPasswd.getText())) { //$NON-NLS-1$
+		} else if(!textPasswd.getText().matches(PASSWORD_RULE_PATTERN)) { //$NON-NLS-1$
 			errorSet(textPasswd, Messages.SystemAdminWizardPage_37);
 			return;
-		} else if("".equals(textRePasswd.getText())) { //$NON-NLS-1$
+		} else if(!textPasswd.getText().equals(textRePasswd.getText())) { //$NON-NLS-1$
 			errorSet(textRePasswd, Messages.SystemAdminWizardPage_39);
 			return;
 //		} else if(!textPasswd.getText().equals(textRePasswd.getText())) {

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.api;
 
-import java.net.URI;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -45,13 +44,17 @@ import com.google.gson.JsonArray;
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.JSONUtil;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * API service dialog
@@ -60,6 +63,9 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
  *  			http://127.0.0.1:10081/tadpole?serviceID=10d3625a-eee1-409b-8a5f-16bb2a5f68d2&1=1&2=SQL
  *  
  *  			http://127.0.0.1:10081/tadpole?serviceID=c7f17960-cf68-46ac-9089-e429e711be39
+ *  
+ *  			-- save test
+ *  			http://127.0.0.1:10082/tadpole?serviceID=3ea2d6c6-53be-47e9-b1cb-6ce3e8b41ce5&1=a&2=33&3=b&4=cc&5=33
  *
  * @author hangum
  * @version 1.6.1
@@ -68,6 +74,9 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
  */
 public class APIServiceDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(APIServiceDialog.class);
+	
+	/** DOWNLOAD BUTTON ID */
+	private int DOWNLOAD_BTN_ID = IDialogConstants.CLIENT_ID + 1;
 	
 	private StartupParameters serviceParameter;
 	
@@ -79,6 +88,9 @@ public class APIServiceDialog extends Dialog {
 	
 	private Button btnAddHeader;
 	private Text textDelimiter;
+	
+	/** download servcie handler. */
+	private DownloadServiceHandler downloadServiceHandler;
 
 	/**
 	 * Create the dialog.
@@ -167,11 +179,18 @@ public class APIServiceDialog extends Dialog {
 		textResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();
-		initData();
+		initData(textArgument.getText());
 
+		registerServiceHandler();
+		
+		AnalyticCaller.track("APIServiceDialog"); //$NON-NLS-1$
+		
 		return container;
 	}
 	
+	/**
+	 * initialize UI
+	 */
 	private void initUI() {
 		Collection<String> collString = serviceParameter.getParameterNames();
 		String strAPIKey = serviceParameter.getParameter(PublicTadpoleDefine.SERVICE_KEY_NAME);
@@ -191,8 +210,10 @@ public class APIServiceDialog extends Dialog {
 	
 	/**
 	 * initialize ui
+	 * 
+	 * @param strArgument
 	 */
-	private void initData() {
+	private void initData(String strArgument) {
 		
 		Timestamp timstampStart = new Timestamp(System.currentTimeMillis());
 		UserDBDAO userDB = null;
@@ -208,7 +229,7 @@ public class APIServiceDialog extends Dialog {
 				
 				// find db
 				userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(userDBResourceDao.getDb_seq());
-				List<Object> listParam = makeListParameter();
+				List<Object> listParam = makeListParameter(strArgument);
 				
 				String strResultType = getSelect(userDB, strSQL, listParam);
 				textResult.setText(strResultType);
@@ -219,7 +240,7 @@ public class APIServiceDialog extends Dialog {
 			}
 			
 		} catch (Exception e) {
-			logger.error("find api", e);
+			logger.error("api exception", e);
 			
 			saveHistoryData(userDB, timstampStart, textAPIName.getText(), textArgument.getText(), PublicTadpoleDefine.SUCCESS_FAIL.F.name(), e.getMessage());
 			
@@ -269,13 +290,19 @@ public class APIServiceDialog extends Dialog {
 	 */
 	private String getSelect(final UserDBDAO userDB, String strSQL, List<Object> listParam) throws Exception {
 		String strResult = "";
-		if(QueryUtils.RESULT_TYPE.JSON.name().equals(comboResultType.getText())) {
-			JsonArray jsonArry = QueryUtils.selectToJson(userDB, strSQL, listParam);
-			strResult = JSONUtil.getPretty(jsonArry.toString());
-		} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
-			strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+		
+		if(SQLUtil.isStatement(strSQL)) {
+			
+			if(QueryUtils.RESULT_TYPE.JSON.name().equals(comboResultType.getText())) {
+				JsonArray jsonArry = QueryUtils.selectToJson(userDB, strSQL, listParam);
+				strResult = JSONUtil.getPretty(jsonArry.toString());
+			} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
+				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+			} else {
+				strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
+			}
 		} else {
-			strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
+			strResult = QueryUtils.executeDML(userDB, strSQL, listParam, comboResultType.getText());
 		}
 		
 		return strResult;
@@ -284,23 +311,34 @@ public class APIServiceDialog extends Dialog {
 	/**
 	 * make parameter list
 	 * 
+	 * @param strArgument
 	 * @return
 	 * @throws Exception
 	 */
-	private List<Object> makeListParameter() throws Exception {
+	private List<Object> makeListParameter(String strArgument) throws Exception {
 		List<Object> listParam = new ArrayList<Object>();
-		String strArgement = textArgument.getText();
-		// TODO check this code
-		List<NameValuePair> params = URLEncodedUtils.parse(new URI("http://dumy.com?" + strArgement), "UTF-8");
-		Map<String, String> mapParam = new HashMap<String, String>();
-		for (NameValuePair nameValuePair : params) {
-			mapParam.put(nameValuePair.getName(), nameValuePair.getValue());
+		
+		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument);
+		Map<String, String> params = new HashMap<String, String>();
+		for (String param : StringUtils.split(strArgument, "&")) {
+			String pair[] = StringUtils.split(param, "=");
+			String key = URLDecoder.decode(pair[0], "UTF-8");
+			String value = "";
+			if (pair.length > 1) {
+				try {
+					value = URLDecoder.decode(pair[1], "UTF-8");
+				} catch(Exception e) {
+					value = pair[1];
+				}
+			}
+
+			params.put(key, value);
 		}
 
 		// assume this count... no way i'll argument is over 100..... --;;
 		for(int i=1; i<100; i++) {
-			if(mapParam.containsKey(String.valueOf(i))) {
-				listParam.add(mapParam.get(""+i));
+			if(params.containsKey(String.valueOf(i))) {
+				listParam.add(params.get(""+i));
 			} else {
 				break;
 			}
@@ -309,12 +347,58 @@ public class APIServiceDialog extends Dialog {
 		return listParam;
 	}
 	
+	/** download service handler call */
+	private void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
+	}
+	
+	@Override
+	public boolean close() {
+		try {
+			unregisterServiceHandler();
+		} catch(Exception e) {
+			logger.error("unregisterServiceHandler", e);
+		}
+		return super.close();
+	}
+
+	/**
+	 * download external file
+	 * 
+	 * @param fileName
+	 * @param newContents
+	 */
+	public void downloadExtFile(String fileName, String newContents) {
+		downloadServiceHandler.setName(fileName);
+		downloadServiceHandler.setByteContent(newContents.getBytes());
+		
+		DownloadUtils.provideDownload(textDelimiter.getParent(), downloadServiceHandler.getId());
+	}
+	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		// download 
+		if(buttonId == DOWNLOAD_BTN_ID) {
+			String strResult = textResult.getText();
+			downloadExtFile("TadpoleAPIServer.txt", strResult);
+		} else {
+			super.buttonPressed(buttonId);
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
 	protected void okPressed() {
-		initData();
+		initData(textArgument.getText());
 	}
 
 	/**
@@ -323,9 +407,10 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, DOWNLOAD_BTN_ID, "Download", false);
 		createButton(parent, IDialogConstants.OK_ID, "RUN", true);
 	}
-
+	
 	/**
 	 * Return the initial size of the dialog.
 	 */

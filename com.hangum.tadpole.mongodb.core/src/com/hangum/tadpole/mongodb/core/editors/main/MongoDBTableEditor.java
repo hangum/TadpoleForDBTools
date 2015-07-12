@@ -203,14 +203,23 @@ public class MongoDBTableEditor extends EditorPart {
 		});
 		btnExecutePlan.setText(Messages.MongoDBTableEditor_3);
 		
-		Button btnBasicLastCommandConsole = new Button(compositeBasicSearch, SWT.NONE);
-		btnBasicLastCommandConsole.addSelectionListener(new SelectionAdapter() {
+//		Button btnBasicLastCommandConsole = new Button(compositeBasicSearch, SWT.NONE);
+//		btnBasicLastCommandConsole.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				compositeResult.consoleError();
+//			}
+//		});
+//		btnBasicLastCommandConsole.setText(Messages.MongoDBTableEditor_4);
+		
+		Button btnStructureAnalized = new Button(compositeBasicSearch, SWT.NONE);
+		btnStructureAnalized.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				compositeResult.consoleError();
+				compositeResult.structureView();//consoleError();
 			}
 		});
-		btnBasicLastCommandConsole.setText(Messages.MongoDBTableEditor_4);
+		btnStructureAnalized.setText("Structure View");
 		
 		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);

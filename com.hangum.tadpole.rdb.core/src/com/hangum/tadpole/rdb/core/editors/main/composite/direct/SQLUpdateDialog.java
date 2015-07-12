@@ -102,7 +102,7 @@ public class SQLUpdateDialog extends Dialog {
 		RequestQuery reqQuery = new RequestQuery(strSQL, PublicTadpoleDefine.DB_ACTION.TABLES, 
 					EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.BLOCK, true);
 		try {
-			ExecuteOtherSQL.runSQLOther(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
+			ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 		} catch (Exception e) {
 			logger.error("SQL Execute error", e);
 			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n\n" + e.getMessage());

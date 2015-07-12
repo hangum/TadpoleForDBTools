@@ -346,12 +346,25 @@ public class ResourceManageEditor extends EditorPart {
 		btnShowUrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				String strServerURL = "http://{yoururl.com}";
+//				String strQuery  = textQuery.getText();
+				String strArguments = "1={FirstParameter}&2={SecondParameter}";
 				
-				String strURL = String.format("%s?%s=%s&1=FirstParameter&2=SecondParameter", 
-						"http://yoururl.com", 
-						PublicTadpoleDefine.SERVICE_KEY_NAME, textAPIKey.getText());
+				// api server url
+				String strURL = String.format("[API Server URL]\n%s?%s=%s&%s", 
+						strServerURL + "/rest/base", 
+						PublicTadpoleDefine.SERVICE_KEY_NAME, 
+						textAPIKey.getText(),
+						strArguments);
+				
+				// api dialog url
+				strURL += String.format("\n\n[API Dialog URL]\n%s?%s=%s&%s", 
+						strServerURL, 
+						PublicTadpoleDefine.SERVICE_KEY_NAME, 
+						textAPIKey.getText(),
+						strArguments);
 
-				TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URI", strURL);
+				TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URL Information", strURL);
 				dialog.open();
 			}
 		});

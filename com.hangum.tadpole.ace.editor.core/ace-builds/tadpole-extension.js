@@ -162,7 +162,7 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 
 		// Add table list to Editor's keywordList
 		var keywordList = session.$mode.$highlightRules.$keywordList;
-		session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
+		if(keywordList != null) session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
 		
 		editor.setSession(session);
 

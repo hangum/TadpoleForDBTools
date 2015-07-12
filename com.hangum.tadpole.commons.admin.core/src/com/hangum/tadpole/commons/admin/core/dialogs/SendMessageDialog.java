@@ -154,7 +154,7 @@ public class SendMessageDialog extends Dialog {
 			public IStatus run(IProgressMonitor monitor) {
 				
 				try {
-					List<UserDAO> listUser = TadpoleSystem_UserQuery.getAllUser();
+					List<UserDAO> listUser = TadpoleSystem_UserQuery.getLiveAllUser();
 					SendEmails email = new SendEmails(GetAdminPreference.getSMTPINFO());
 					
 					monitor.beginTask("Seing mail total is %d", listUser.size());
