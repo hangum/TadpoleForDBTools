@@ -61,7 +61,7 @@ public class BrowserFunctionUtil {
 		try {
 			browserEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
 		} catch(Exception e) {
-			logger.error("browser evaluate [ " + command + " ]\r\n", e); //$NON-NLS-1$ //$NON-NLS-2$
+//			logger.error("browser evaluate [ " + command + " ]\r\n", e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
