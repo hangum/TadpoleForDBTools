@@ -219,7 +219,7 @@ public class MongoDBTableEditor extends EditorPart {
 				compositeResult.structureView();//consoleError();
 			}
 		});
-		btnStructureAnalized.setText("Structure View");
+		btnStructureAnalized.setText("Show structure");
 		
 		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);

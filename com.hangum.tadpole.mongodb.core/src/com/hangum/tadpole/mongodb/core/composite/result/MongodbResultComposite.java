@@ -874,13 +874,17 @@ public class MongodbResultComposite extends Composite {
 			resultTableViewer.setSorter(sqlSorter);		
 			sqlFilter.setTable(resultTableViewer.getTable());
 		} else if(selectionIndex == TAB_POSITION_JSON_VIEW) {
-			StringBuffer sbJsonStr = new StringBuffer();		
+			StringBuffer sbJsonStr = new StringBuffer();
+			
+			sbJsonStr.append("{");
 			for(int i=0; i<sourceDataList.size(); i++) {
-				sbJsonStr.append("/* " + i + " */" + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
-				
-				String strJson = JSONUtil.getPretty(sourceDataList.get(i).get(MongoDBDefine.PRIMARY_ID_KEY).toString());
-				sbJsonStr.append(strJson + PublicTadpoleDefine.LINE_SEPARATOR);
+				sbJsonStr.append(i + ": ");
+				String strJson = sourceDataList.get(i).get(MongoDBDefine.PRIMARY_ID_KEY).toString();
+				if(i < sourceDataList.size()-1) sbJsonStr.append(strJson + ", ");
+				else sbJsonStr.append(strJson);
 			}
+			sbJsonStr.append("}");
+
 			setJsonView(sbJsonStr.toString());
 		}
 		
@@ -897,6 +901,8 @@ public class MongodbResultComposite extends Composite {
 			tabFolderMongoDB.setSelection(TAB_POSITION_TREE_VIEW);
 		} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( defaultResultPage )) {
 			tabFolderMongoDB.setSelection(TAB_POSITION_TABLE_VIEW);
+		} else if(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE.equals( defaultResultPage )) {
+			tabFolderMongoDB.setSelection(TAB_POSITION_JSON_VIEW);
 		} else {
 			tabFolderMongoDB.setSelection(TAB_POSITION_MESSAGE_VIEW);
 		}
@@ -1189,7 +1195,7 @@ public class MongodbResultComposite extends Composite {
 	 */
 	private void setJsonView(String strJSON) {
 		try {
-			tadpoleEditor.setText(strJSON);
+			tadpoleEditor.setText(JSONUtil.getPretty(strJSON));
 		} catch(Exception e) {
 			logger.error("json view", e); //$NON-NLS-1$
 		}
