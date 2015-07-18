@@ -19,10 +19,13 @@ import org.apache.commons.io.IOUtils;
  *
  */
 public class PublicTadpoleDefine {
+	
+	/** rest api service key */
 	public static final String SERVICE_KEY_NAME = "serviceID";
-	
+
+	/** default system encrypt password */
 	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.tadpole.owner.son";
-	
+
 	/**
 	 * PLAN Statement ID
 	 */
