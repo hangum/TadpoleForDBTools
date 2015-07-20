@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.mongodb.DB;
-import com.mongodb.DBAddress;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.ServerAddress;
 
 /**
@@ -71,12 +71,9 @@ public class MongoConnectionManager {
 //					options.autoConnectRetry = false;
 //					options.safe = true;
 					
-//					MongoClientURI uri  = new MongoClientURI("mongodb://user:pass@host:port/db"); 
-//			        MongoClient client = new MongoClient(uri);
-					
 					String strReplcaSet = userDB.getExt1();
 					if(strReplcaSet == null | "".equals(strReplcaSet)) {
-						mongoDB = new MongoClient(new DBAddress(userDB.getUrl()));//, options);
+						mongoDB = new MongoClient(new MongoClientURI(userDB.getUrl()));//, options);
 						
 					} else {
 						List<ServerAddress> listServerList = new ArrayList<ServerAddress>();
