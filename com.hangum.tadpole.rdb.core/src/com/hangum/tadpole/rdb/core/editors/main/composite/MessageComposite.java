@@ -91,12 +91,19 @@ public class MessageComposite extends Composite {
 		
 		// first show last error message
 		final String strOldText = textMessage.getText();
-		textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText + PublicTadpoleDefine.LINE_SEPARATOR);
-		
-		textMessage.setFocus();
-		
-		// Select the last error message.
-		textMessage.setSelection(0, strNewMessage.length());
+		if("".equals(strOldText)) {
+			textMessage.setText(strNewMessage);
+			textMessage.setFocus();
+			
+			// Select the last error message.
+			textMessage.setSelection(0, strNewMessage.length());
+		} else {
+			textMessage.setText(strOldText + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strNewMessage);
+			textMessage.setFocus();
+			
+			// Select the last error message.
+			textMessage.setSelection(strOldText.length()+4, strOldText.length() + 4 + strNewMessage.length());
+		}
 	}
 	
 	@Override
