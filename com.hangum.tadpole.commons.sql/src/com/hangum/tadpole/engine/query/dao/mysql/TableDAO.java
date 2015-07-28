@@ -28,7 +28,7 @@ public class TableDAO {
 	String name;
 	String comment="";
 	
-	/* MSSQL Server schema support */
+	/* postgresql, MSSQL Server schema support */
 	String table_name = "";
 	String schema_name = "";
 	
