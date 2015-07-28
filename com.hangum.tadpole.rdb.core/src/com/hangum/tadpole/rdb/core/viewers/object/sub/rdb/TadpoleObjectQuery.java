@@ -53,6 +53,8 @@ public class TadpoleObjectQuery {
 		String strTableName = "";
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
 		else 												strTableName = tableDao.getName();
+		
+		mapParam.put("schema", tableDao.getSchema_name());
 		mapParam.put("table", strTableName);
 
 		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
