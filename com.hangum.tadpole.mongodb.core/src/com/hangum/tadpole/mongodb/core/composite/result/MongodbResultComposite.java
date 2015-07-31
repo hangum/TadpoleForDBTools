@@ -1102,7 +1102,7 @@ public class MongodbResultComposite extends Composite {
 		Job job = new Job("Structure collection analyized job") { //$NON-NLS-1$
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Collectiono structure...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				monitor.beginTask("Collection structure...", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 			
 				List<DBObject> mapOnlyOnDBObject = new ArrayList<>();
 				
