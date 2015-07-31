@@ -18,7 +18,9 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -85,13 +87,11 @@ public class MongoConnectionManager {
 							
 							listServerList.add(new ServerAddress(strIpPort[0], Integer.parseInt(strIpPort[1])));
 						}
-//						options.setReadPreference(ReadPreference.primary());
-						
 						mongoDB = new MongoClient(listServerList);//, options);	
 					}
 					
 //					// password 적용.
-					db = mongoDB.getDB(userDB.getDb());
+//					db = mongoDB.getDB(userDB.getDb());
 //					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
 //						// pass change
 //						String passwdDecrypt = "";

@@ -97,7 +97,7 @@ public class PublicTadpoleDefine {
 	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE"; //$NON-NLS-1$
 	
 	/** Tadpole support browser list  */
-	public static enum TADPOLE_SUPPORT_BROWSER {FIREFOX, CHROME, SAFARI, IE};
+	public static enum TADPOLE_SUPPORT_BROWSER {EDGE, FIREFOX, CHROME, SAFARI, IE};
 	
 	/** 
 	 * This variable is user_role_table. 
