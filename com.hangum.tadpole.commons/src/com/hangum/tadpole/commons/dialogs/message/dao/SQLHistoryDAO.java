@@ -22,7 +22,7 @@ import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class SQLHistoryDAO {
 	int seq;
-
+	
 	/** Execute start time */
 	Timestamp startDateExecute;
 
@@ -39,6 +39,9 @@ public class SQLHistoryDAO {
 	int dbSeq;
 	String ipAddress;
 	
+	/** execute_sql_type */
+	PublicTadpoleDefine.EXECUTE_SQL_TYPE EXECUSTE_SQL_TYPE = PublicTadpoleDefine.EXECUTE_SQL_TYPE.SESSION;
+
 
 	public SQLHistoryDAO(Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message) {
 		this.userName = "";
@@ -190,6 +193,14 @@ public class SQLHistoryDAO {
 	 */
 	public void setMesssage(String messsage) {
 		this.messsage = messsage;
+	}
+
+	public PublicTadpoleDefine.EXECUTE_SQL_TYPE getEXECUSTE_SQL_TYPE() {
+		return EXECUSTE_SQL_TYPE;
+	}
+
+	public void setEXECUSTE_SQL_TYPE(PublicTadpoleDefine.EXECUTE_SQL_TYPE eXECUSTE_SQL_TYPE) {
+		EXECUSTE_SQL_TYPE = eXECUSTE_SQL_TYPE;
 	}
 
 }
