@@ -13,6 +13,8 @@ package com.hangum.tadpole.manager.core.editor.resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -346,13 +348,14 @@ public class ResourceManageEditor extends EditorPart {
 		btnShowUrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strServerURL = "http://{yoururl.com}";
-//				String strQuery  = textQuery.getText();
+
+				HttpServletRequest httpRequest = RWT.getRequest();
+				String strServerURL = String.format("http://%s:%s%s", httpRequest.getLocalName(), httpRequest.getLocalPort(), httpRequest.getServletPath());
 				String strArguments = "1={FirstParameter}&2={SecondParameter}";
 				
 				// api server url
 				String strURL = String.format("[API Server URL]\n%s?%s=%s&%s", 
-						strServerURL + "/rest/base", 
+						strServerURL + "api/rest/base", 
 						PublicTadpoleDefine.SERVICE_KEY_NAME, 
 						textAPIKey.getText(),
 						strArguments);
