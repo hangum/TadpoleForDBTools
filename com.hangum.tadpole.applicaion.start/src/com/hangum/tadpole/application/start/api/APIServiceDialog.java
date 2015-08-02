@@ -298,8 +298,10 @@ public class APIServiceDialog extends Dialog {
 				strResult = JSONUtil.getPretty(jsonArry.toString());
 			} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
 				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+			} else if(QueryUtils.RESULT_TYPE.XML.name().equals(comboResultType.getText())) {
+				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
 			} else {
-				strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
+				strResult = QueryUtils.selectToHTML_TABLE(userDB, strSQL, listParam);
 			}
 		} else {
 			strResult = QueryUtils.executeDML(userDB, strSQL, listParam, comboResultType.getText());

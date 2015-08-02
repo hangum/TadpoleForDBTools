@@ -10,10 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.dialog.save;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -219,13 +222,14 @@ public class ResourceSaveDialog extends Dialog {
 				MessageDialog.openError(getShell(), "Confirm", "Does not support API.");
 				return;
 			}
-			String strServerURL = "http://{yoururl.com}";
-//			String strQuery  = textQuery.getText();
+			
+			HttpServletRequest httpRequest = RWT.getRequest();
+			String strServerURL = String.format("http://%s:%s%s", httpRequest.getLocalName(), httpRequest.getLocalPort(), httpRequest.getServletPath());
 			String strArguments = "1={FirstParameter}&2={SecondParameter}";
 			
 			// api server url
 			String strURL = String.format("[API Server URL]\n%s?%s=%s&%s", 
-					strServerURL + "/rest/base", 
+					strServerURL + "api/rest/base", 
 					PublicTadpoleDefine.SERVICE_KEY_NAME, 
 					textAPIKey.getText(),
 					strArguments);
