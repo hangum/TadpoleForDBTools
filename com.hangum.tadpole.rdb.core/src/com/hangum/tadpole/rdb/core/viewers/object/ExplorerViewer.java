@@ -421,7 +421,7 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
 			refreshIndexes(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
-			refreshProcedure(false, strObjectName);
+			refreshProcedure(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
 			refreshPackage(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
@@ -625,6 +625,9 @@ public class ExplorerViewer extends ViewPart {
 				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), "");
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.INDEX) {
 				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), "");
+			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name(), "");
+				
 			} else {
 				refreshSelectTab();
 			// TO DO This code is temporary. do not understand refresh object is table view refresh. --;; - 15.4.20. hangum

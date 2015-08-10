@@ -224,9 +224,10 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh) {
-		if (!boolRefresh)
-			if (showProcedure != null)
-				return;
+		if (!boolRefresh) {
+			if (showProcedure != null) return;
+		}
+		
 		this.userDB = userDB;
 
 		try {
