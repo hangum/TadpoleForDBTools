@@ -115,7 +115,7 @@ public class ParameterDialog extends Dialog {
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
 
-		TableViewer tableViewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		TableViewer tableViewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -125,11 +125,6 @@ public class ParameterDialog extends Dialog {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ParamLabelProvider());
 		tableViewer.setInput(parameters);
-
-		tableViewer.refresh();
-		
-//		table.select(0);
-		table.setFocus();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -137,7 +132,17 @@ public class ParameterDialog extends Dialog {
 		return container;
 	}
 
+	/**
+	 * create table column
+	 * 
+	 * @param tableViewer
+	 * @param tcl_composite
+	 */
 	private void createTableColumn(TableViewer tableViewer, TableColumnLayout tcl_composite) {
+//		Not support Eclipse RAP.
+//		This class table course. course is keyboard controls
+//		final TableCursor cursor = new TableCursor(table, SWT.NONE);
+		
 		TableViewerColumn tvcSeq = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcSeq = tvcSeq.getColumn();
 		tcl_composite.setColumnData(tcSeq, new ColumnPixelData(30, true, true));
@@ -170,13 +175,6 @@ public class ParameterDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, "OK", true);
 		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
-//		Button button = createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
-//		button.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				parameters.clear();
-//			}
-//		});
 	}
 
 	/**
