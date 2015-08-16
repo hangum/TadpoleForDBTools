@@ -54,6 +54,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.engine.sql.util.SQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
@@ -229,14 +230,26 @@ public class APIServiceDialog extends Dialog {
 				
 				// find db
 				userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(userDBResourceDao.getDb_seq());
-				List<Object> listParam = makeListParameter(strArgument);
 				
-				String strResultType = getSelect(userDB, strSQL, listParam);
-				textResult.setText(strResultType);
+				//
+				SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
+				String strJavaSQL = oracleNamedParamUtil.parse(strSQL);
+				
+				Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
+				if(!mapIndex.isEmpty()) {
+					List<Object> listParam = makeOracleListParameter(mapIndex, strArgument);
+					
+					String strResultType = getSelect(userDB, strJavaSQL, listParam);
+					textResult.setText(strResultType);
+				} else {
+					List<Object> listParam = makeJavaListParameter(strArgument);
+					
+					String strResultType = getSelect(userDB, strSQL, listParam);
+					textResult.setText(strResultType);
+				}
 				
 				// save called history
 				saveHistoryData(userDB, timstampStart, textAPIName.getText(), textArgument.getText(), PublicTadpoleDefine.SUCCESS_FAIL.S.name(), "");
-				
 			}
 			
 		} catch (Exception e) {
@@ -309,15 +322,50 @@ public class APIServiceDialog extends Dialog {
 		
 		return strResult;
 	}
+
+	/**
+	 * make oracle type sql parameter
+	 * 
+	 * @param mapIndex
+	 * @param strArgument
+	 * @return
+	 */
+	private List<Object> makeOracleListParameter(Map<Integer, String> mapIndex, String strArgument) throws Exception {
+		List<Object> listParam = new ArrayList<Object>();
+		
+		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument);
+		Map<String, String> params = new HashMap<String, String>();
+		for (String param : StringUtils.split(strArgument, "&")) {
+			String pair[] = StringUtils.split(param, "=");
+			String key = URLDecoder.decode(pair[0], "UTF-8");
+			String value = "";
+			if (pair.length > 1) {
+				try {
+					value = URLDecoder.decode(pair[1], "UTF-8");
+				} catch(Exception e) {
+					value = pair[1];
+				}
+			}
+
+			params.put(key, value);
+		}
+		
+		for(int i=1; i<=mapIndex.size(); i++ ) {
+			String strKey = mapIndex.get(i);
+			listParam.add( params.get(strKey) );
+		}
+		return listParam;
+	}
+
 	
 	/**
 	 * make parameter list
 	 * 
-	 * @param strArgument
+	 * @param strArgument 
 	 * @return
 	 * @throws Exception
 	 */
-	private List<Object> makeListParameter(String strArgument) throws Exception {
+	private List<Object> makeJavaListParameter(String strArgument) throws Exception {
 		List<Object> listParam = new ArrayList<Object>();
 		
 		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument);
