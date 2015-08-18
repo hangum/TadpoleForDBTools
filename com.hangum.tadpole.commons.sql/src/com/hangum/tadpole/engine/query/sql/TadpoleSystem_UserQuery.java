@@ -95,7 +95,7 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
 	
-		if(isUser.size() == 0) {
+		if(isUser.isEmpty()) {
 			UserDAO userdb = (UserDAO)sqlClient.insert("newUser", loginDAO); //$NON-NLS-1$
 			TadpoleSystem_UserInfoData.initializeUserPreferenceData(userdb);
 			

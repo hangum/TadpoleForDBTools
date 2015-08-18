@@ -36,6 +36,24 @@ public class TadpoleSystem_UserDBResource {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBResource.class);
 	
 	/**
+	 * find restful
+	 *  
+	 * @param mapCredential
+	 * @return
+	 * @throws Exception
+	 */
+	public static UserDBResourceDAO findRESTURL(int intUserSEQ, String strUserDomainURL) throws Exception {
+		Map<String, Object> mapCredential = new HashMap<String, Object>();
+		mapCredential.put("user_seq", intUserSEQ);
+		mapCredential.put("restapi_uri", strUserDomainURL);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserDBResourceDAO userResource = (UserDBResourceDAO)sqlClient.queryForObject("findRESTURL", mapCredential);
+		
+		return userResource;
+	}
+	
+	/**
 	 * find api 
 	 * @param strAPIKey
 	 * @return
@@ -148,21 +166,22 @@ public class TadpoleSystem_UserDBResource {
 	/**
 	 * 이름이 중복되었는지 검사
 	 * 
-	 * @param user_seq
-	 * @param db_seq
-	 * @param name
+	 * @param userDB
+	 * @param retResourceDao
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean userDBResourceDuplication(PublicTadpoleDefine.RESOURCE_TYPE type, int user_seq, int db_seq, String filename) throws Exception {
-		UserDBResourceDAO dbResourceDAO = new UserDBResourceDAO();
-		dbResourceDAO.setResource_types(type.toString());
-		dbResourceDAO.setDb_seq(db_seq);
-		dbResourceDAO.setName(filename);
-//		dbResourceDAO.setRestapi_yesno(restapi_yesno);
+	public static void userDBResourceDuplication(UserDBDAO userDB, UserDBResourceDAO dbResourceDAO) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
+		if(!sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).isEmpty()) {
+			throw new Exception("Already user name. Please change resource name.");
+		}
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).size()  == 0; //$NON-NLS-1$
+		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(dbResourceDAO.getRestapi_yesno())) {
+			if(!sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).isEmpty()) {
+				throw new Exception("Already RESTAPI URI. Please change REST API URI.");
+			}
+		}
 	}
 	
 	/**

@@ -380,7 +380,7 @@ public class NewUserDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 //		return new Point(380, 250);
-		return new Point(380, 250);
+		return new Point(370, 240);
 	}
 
 }

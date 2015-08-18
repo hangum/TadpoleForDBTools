@@ -129,7 +129,7 @@ public class ResultSetUtils {
 	 * @throws SQLException
 	 */
 	public static Map<Integer, Integer> getColumnType(boolean isShowRowNum, ResultSetMetaData rsm) throws SQLException {
-		Map<Integer, Integer> mapColumnType = new HashMap<>();
+		Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
 		int intStartIndex = 0;
 		
 		if(isShowRowNum) {
@@ -382,7 +382,7 @@ public class ResultSetUtils {
 	 * @throws SQLException
 	 */
 	public static Map<Integer, Map> getColumnTableColumnName(UserDBDAO userDB, ResultSetMetaData rsm) {
-		Map<Integer, Map> mapTableColumn = new HashMap<>();
+		Map<Integer, Map> mapTableColumn = new HashMap<Integer, Map>();
 		
 		// 첫번째 컬럼 순번을 위해 삽입.
 		mapTableColumn.put(0, new HashMap());

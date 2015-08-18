@@ -41,13 +41,14 @@ public class ResourceManagerDAO extends AbstractDAO {
 	String delyn;
 	
 	String restapi_yesno = PublicTadpoleDefine.YES_NO.NO.name();
+	String restapi_uri = "";
 	String restapi_key = "";
 
 	public ResourceManagerDAO() {
 	}
 
 	public ResourceManagerDAO(long resource_seq, String resource_types, long user_seq, String user_name, long db_seq, long group_seq, String res_title,
-			String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_key) {
+			String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_uri, String restapi_key) {
 		this.resource_seq = resource_seq;
 		this.resource_types = resource_types;
 		this.user_seq = user_seq;
@@ -61,6 +62,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 		this.delyn = delyn;
 
 		this.restapi_yesno = restapi_yesno;
+		this.restapi_uri = restapi_uri;
 		this.restapi_key = restapi_key;
 	}
 
@@ -269,4 +271,13 @@ public class ResourceManagerDAO extends AbstractDAO {
 	public void setDelyn(String delyn) {
 		this.delyn = delyn;
 	}
+
+	public String getRestapi_uri() {
+		return restapi_uri;
+	}
+
+	public void setRestapi_uri(String restapi_uri) {
+		this.restapi_uri = restapi_uri;
+	}
+	
 }

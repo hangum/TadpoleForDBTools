@@ -81,7 +81,7 @@ public class SQLNamedParameterUtil {
      */
     public String parse(String query) {
     	mapNameToIndex = new HashMap<String, int[]>();
-    	mapIndexToName = new HashMap<>();
+    	mapIndexToName = new HashMap<Integer, String>();
     	
         // I was originally using regular expressions, but they didn't work well 
     	// for ignoring parameter-like strings inside quotes.

@@ -73,7 +73,7 @@ public class UserDBDAO implements Cloneable {
 	// ====================================== end
 
 	protected int seq = -999;
-	protected int user_seq;
+	protected int user_seq = -1;
 	
 //	/** 외부 시스템 seq 현재는 amamzon rds seq*/
 //	protected int ext_seq = -999;
@@ -86,7 +86,7 @@ public class UserDBDAO implements Cloneable {
 	protected String url;
 	protected String url_user_parameter = "";
 	
-	protected List<TadpoleUserDbRoleDAO> listChildren = new ArrayList<>();
+	protected List<TadpoleUserDbRoleDAO> listChildren = new ArrayList<TadpoleUserDbRoleDAO>();
 	
 	public String getUrl(String userType) {
 		return PermissionChecker.isShow(userType)?getUrl():"jdbc:*************************";

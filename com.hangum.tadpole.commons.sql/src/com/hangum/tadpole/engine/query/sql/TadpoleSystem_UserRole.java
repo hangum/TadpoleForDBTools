@@ -44,7 +44,7 @@ public class TadpoleSystem_UserRole {
 	public static boolean isDBAddRole(UserDBDAO userDB, UserDAO user) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
-		Map<String, Integer> mapParameter = new HashMap<>();
+		Map<String, Integer> mapParameter = new HashMap<String, Integer>();
 		mapParameter.put("db_seq", userDB.getSeq());
 		mapParameter.put("user_seq", user.getSeq());
 		
