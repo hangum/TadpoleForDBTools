@@ -39,6 +39,8 @@ public class ManagerLabelProvider extends LabelProvider {
 	public static String PRODUCTION_SERVER_START_TAG = "<em style='color:rgb(255, 0, 0)'>"; //$NON-NLS-1$
 	/** development markup start tag */
 	public static String DEVELOPMENT_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
+	/** development markup start tag */
+	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
 	
 	/** Markup end tag */
 	public static String END_TAG = "</em>"; //$NON-NLS-1$
@@ -65,7 +67,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "resources/icons/mariadb-add.png";
 		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
 		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "resources/icons/sqlite-add.png";
-		else if(DBDefine.MSSQL_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
+		else if(DBDefine.MSSQL_DEFAULT == dbType || DBDefine.MSSQL_8_LE_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
 		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "resources/icons/cubrid-add.png";
 		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
 		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
@@ -110,16 +112,16 @@ public class ManagerLabelProvider extends LabelProvider {
 	public static String getDBText(UserDBDAO userDB) {
 		String retText = "";
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
-			retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(userDB.getOperation_type(), 0, 3) + "] " + END_TAG;
+			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 3), END_TAG);
 		} else {
-			retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(userDB.getOperation_type(), 0, 3) + "] " + END_TAG;
+			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 3), END_TAG);
 		}
 		
 		// 자신의 디비만 보이도록 수정
 		if(userDB.getUser_seq() == SessionManager.getUserSeq()) {
-			retText += userDB.getDisplay_name() + " (" + userDB.getUsers() + "@" + userDB.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
-			retText += userDB.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			retText += userDB.getDisplay_name();
 		}
 		
 		return retText;
@@ -167,7 +169,8 @@ public class ManagerLabelProvider extends LabelProvider {
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			
-			String strSupportAPI = PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())?String.format("[%s]", dao.getRestapi_uri()):"";
+			String strSupportAPI = PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())?
+										String.format("%s [%s] %s", INFO_SERVER_START_TAG, dao.getRestapi_uri(), END_TAG):"";
 			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";
 			
 			return dao.getName() + " " + strSupportAPI + strComment;
