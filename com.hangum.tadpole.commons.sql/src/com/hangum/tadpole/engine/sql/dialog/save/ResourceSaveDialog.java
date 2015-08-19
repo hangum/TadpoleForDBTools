@@ -161,6 +161,10 @@ public class ResourceSaveDialog extends Dialog {
 	 * initialize ui
 	 */
 	private void initUI() {
+		if(resourceType == RESOURCE_TYPE.ERD) {
+			comboUseAPI.setEnabled(false);
+			textAPIURI.setEnabled(false);
+		}
 		textName.setFocus();
 		
 		// google analytic
@@ -169,12 +173,7 @@ public class ResourceSaveDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		String errMsg = isValid();
-		if(null != errMsg) {
-			MessageDialog.openError(null, "Confirm", errMsg); //$NON-NLS-1$
-			textName.setFocus();
-			return;
-		}
+		if(!isValid()) return;
 		
 		retResourceDao.setDb_seq(userDB.getSeq());
 		retResourceDao.setResource_types(resourceType.toString());
@@ -213,6 +212,7 @@ public class ResourceSaveDialog extends Dialog {
 			String strApiURI = textAPIURI.getText();
 			if(strApiURI.equals("")) {
 				MessageDialog.openError(getShell(), "Confirm", "Please input the API URI.");
+				textAPIURI.setFocus();
 				return;
 			} else if(RESOURCE_TYPE.ERD == resourceType) {
 				MessageDialog.openError(getShell(), "Confirm", "Does not support REST API.");
@@ -237,16 +237,8 @@ public class ResourceSaveDialog extends Dialog {
 			}
 			
 			// api server url
-			String strURL = String.format("[API Server URL]\n%s?%s=%s&%s", 
+			String strURL = String.format("%s%s?%s", 
 					strServerURL + "api/rest/base", 
-					PublicTadpoleDefine.SERVICE_KEY_NAME, 
-					textAPIURI.getText(),
-					strArguments);
-			
-			// api dialog url
-			strURL += String.format("\n\n[API Dialog URL]\n%s?%s=%s&%s", 
-					strServerURL, 
-					PublicTadpoleDefine.SERVICE_KEY_NAME, 
 					textAPIURI.getText(),
 					strArguments);
 
@@ -282,19 +274,34 @@ public class ResourceSaveDialog extends Dialog {
 	 * @param name
 	 * @return
 	 */
-	public String isValid() {
+	private boolean isValid() {
 		int len = StringUtils.trimToEmpty(textName.getText()).length();
-		if(len < 3) return "The name must enter at least 3 characters."; //$NON-NLS-1$
-		
+		if(len < 3) {
+			MessageDialog.openError(null, "Confirm", "The name must enter at least 3 characters."); //$NON-NLS-1$
+			textName.setFocus();
+			return false;
+		}
+
+		// sql type 
 		if(resourceType == RESOURCE_TYPE.SQL) {
-			if(comboUseAPI.getSelectionIndex() == 0) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboUseAPI.getText())) {
 				String strAPIURI = textAPIURI.getText().trim();
+				
+				if(strAPIURI.equals("")) {
+					MessageDialog.openError(getShell(), "Confirm", "Please input API URI");
+					textAPIURI.setFocus();
+					return false;
+				}
+				
+				
+				// check valid url. url pattern is must be /{parent}/{child}
+				
 				
 				
 			}
 		}
 		
-		return null;
+		return true;
 	}
 	
 	/**

@@ -12,9 +12,11 @@ package com.hangum.tadpole.manager.core.editor.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -70,6 +72,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.sql.util.SQLNamedParameterUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
@@ -108,7 +111,7 @@ public class ResourceManageEditor extends EditorPart {
 	private TreeViewer treeViewer;
 	private Text textDescription;
 	private Combo comboSupportAPI;
-	private Text textAPIKey;
+	private Text textAPIURL;
 
 	public ResourceManageEditor() {
 		super();
@@ -269,7 +272,7 @@ public class ResourceManageEditor extends EditorPart {
 					dao.setRes_title(textTitle.getText());
 					dao.setDescription(textDescription.getText());
 					dao.setRestapi_yesno(comboSupportAPI.getText());
-					dao.setRestapi_key(textAPIKey.getText());
+					dao.setRestapi_uri(textAPIURL.getText());
 					
 					TadpoleSystem_UserDBResource.updateResourceHeader(dao);
 					//reLoadResource();
@@ -328,8 +331,8 @@ public class ResourceManageEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if("YES".equals(comboSupportAPI.getText())) {
-					if("".equals(textAPIKey.getText())) {
-						textAPIKey.setText(Utils.getUniqueID());
+					if("".equals(textAPIURL.getText())) {
+						textAPIURL.setText(Utils.getUniqueID());
 					}
 				}
 			}
@@ -339,10 +342,10 @@ public class ResourceManageEditor extends EditorPart {
 		comboSupportAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblApiKey = new Label(composite, SWT.NONE);
-		lblApiKey.setText("API KEY");
+		lblApiKey.setText("API URL");
 		
-		textAPIKey = new Text(composite, SWT.BORDER | SWT.READ_ONLY);
-		textAPIKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textAPIURL = new Text(composite, SWT.BORDER | SWT.READ_ONLY);
+		textAPIURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Button btnShowUrl = new Button(composite, SWT.NONE);
 		btnShowUrl.addSelectionListener(new SelectionAdapter() {
@@ -351,22 +354,27 @@ public class ResourceManageEditor extends EditorPart {
 
 				HttpServletRequest httpRequest = RWT.getRequest();
 				String strServerURL = String.format("http://%s:%s%s", httpRequest.getLocalName(), httpRequest.getLocalPort(), httpRequest.getServletPath());
-				String strArguments = "1={FirstParameter}&2={SecondParameter}";
+				String strArguments = "";
+				
+				SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
+				oracleNamedParamUtil.parse(textQuery.getText());
+				Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
+				if(!mapIndex.isEmpty()) {
+					for(String strParam : mapIndex.values()) {
+						strArguments += strParam + "={" + strParam + "Value}&";	
+					}
+					strArguments = StringUtils.removeEnd(strArguments, "&");
+					 
+				} else {
+					strArguments = "1={FirstParameter}&2={SecondParameter}";
+				}
 				
 				// api server url
-				String strURL = String.format("[API Server URL]\n%s?%s=%s&%s", 
+				String strURL = String.format("%s%s?%s", 
 						strServerURL + "api/rest/base", 
-						PublicTadpoleDefine.SERVICE_KEY_NAME, 
-						textAPIKey.getText(),
+						textAPIURL.getText(),
 						strArguments);
 				
-				// api dialog url
-				strURL += String.format("\n\n[API Dialog URL]\n%s?%s=%s&%s", 
-						strServerURL, 
-						PublicTadpoleDefine.SERVICE_KEY_NAME, 
-						textAPIKey.getText(),
-						strArguments);
-
 				TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URL Information", strURL);
 				dialog.open();
 			}
@@ -386,8 +394,6 @@ public class ResourceManageEditor extends EditorPart {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -402,8 +408,8 @@ public class ResourceManageEditor extends EditorPart {
 				, new TableViewColumnDefine("RES_TITLE", "Subject", 150, SWT.LEFT) //
 				, new TableViewColumnDefine("SHARED_TYPE", "Share", 70, SWT.CENTER) //
 				, new TableViewColumnDefine("RESTAPI_YESNO", "Enable API", 100, SWT.CENTER) //
-				, new TableViewColumnDefine("RESTAPI_KEY", "API Key", 200, SWT.CENTER) //
-				, new TableViewColumnDefine("CREATE_TIME", "Create", 100, SWT.CENTER) //
+				, new TableViewColumnDefine("RESTAPI_URL", "API URL", 200, SWT.LEFT) //
+				, new TableViewColumnDefine("CREATE_TIME", "Create", 120, SWT.LEFT) //
 				, new TableViewColumnDefine("DESCRIPTION", "Description", 250, SWT.LEFT) //
 		};
 
@@ -458,7 +464,7 @@ public class ResourceManageEditor extends EditorPart {
 					textTitle.setText(dao.getRes_title());
 					textDescription.setText(dao.getDescription());
 					comboSupportAPI.setText(dao.getRestapi_yesno());
-					textAPIKey.setText(dao.getRestapi_key()==null?"":dao.getRestapi_key());
+					textAPIURL.setText(dao.getRestapi_uri()==null?"":dao.getRestapi_uri());
 					textQuery.setText("");
 					for (String data : result) {
 						textQuery.append(data);
