@@ -32,7 +32,6 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * 올챙이 시스템의 사용자 데이터를 정의 합니다.
  * 프리퍼런스 데이터를 저장합니다.
  * 
- * 
  * @author hangum
  *
  */
@@ -50,7 +49,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserInfoDataDAO> getUserCredential(String strAccessKey, String strSecretKey) throws Exception {
+	public static List<UserInfoDataDAO> getUserCredential(String strAccessKey, String strSecretKey) throws Exception {		
 		Map<String, String> mapParam = new HashMap<String, String>();
 		mapParam.put("SECURITY_CREDENTIAL_ACCESS_KEY", strAccessKey);
 		mapParam.put("SECURITY_CREDENTIAL_SECRET_KEY", strSecretKey);

@@ -72,6 +72,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			comboIsUse.add(YESNO.name());
 		}
 		comboIsUse.select(0);
+		comboIsUse.setEnabled(false);
 		
 		Label lblAccesskey = new Label(container, SWT.NONE);
 		lblAccesskey.setText("Access Key");
@@ -123,8 +124,8 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 
 		try {
 			updateInfo(PreferenceDefine.SECURITY_CREDENTIAL_USE, isUse);
-			updateEncriptInfo(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY, txtAccessKey);
-			updateEncriptInfo(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, txtSecretKey);
+			updateInfo(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY, txtAccessKey);
+			updateInfo(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, txtSecretKey);
 			
 		} catch(Exception e) {
 			logger.error("api security credential saveing", e);

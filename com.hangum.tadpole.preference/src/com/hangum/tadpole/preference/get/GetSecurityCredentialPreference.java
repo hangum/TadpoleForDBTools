@@ -46,7 +46,7 @@ public class GetSecurityCredentialPreference extends GetPreferenceGeneral {
 	public static String getAccessValue() {
 		String strCipher = getValue(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY, "");
 		if("".equals(strCipher)) return Utils.getUniqueID();
-		return CipherManager.getInstance().decryption(strCipher);
+		return strCipher;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class GetSecurityCredentialPreference extends GetPreferenceGeneral {
 	public static String getSecretValue() {
 		String strCipher = getValue(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, "");
 		if("".equals(strCipher)) return Utils.getUniqueID();
-		return CipherManager.getInstance().decryption(strCipher);
+		return strCipher;
 	}
 
 }
