@@ -81,9 +81,9 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
-import com.hangum.tadpole.engine.sql.util.JavaNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.JavaNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
-import com.hangum.tadpole.engine.sql.util.SQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
@@ -556,50 +556,49 @@ public class ResultSetComposite extends Composite {
 					// not support this java.sql.ParameterMetaData 
 					selectDBDefine == DBDefine.CUBRID_DEFAULT)
 			) {
-				int paramCnt = 0;
+				boolean isAlreadyApply = false;
 				try {
-					// java named parameter
-					JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
-					paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
-					if(paramCnt > 0) {
-						ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
+					// if named parameter?
+					SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
+					String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+					
+					Map<String, int[]> mapIndex = oracleNamedParamUtil.getIndexMap();
+					if(!mapIndex.isEmpty()) {
+						isAlreadyApply = true;
+						
+						ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndex);
 						if(Dialog.OK == epd.open()) {
-							ParameterObject paramObj = epd.getParameterObject();
-							String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+							
+							ParameterObject paramObj = epd.getOracleParameterObject(oracleNamedParamUtil.getMapIndexToName());
+							String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
 							reqQuery.setSql(repSQL);
 							
-							if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
+							if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
 						}
 					}
 				} catch(Exception e) {
 					logger.error("Parameter parse", e); //$NON-NLS-1$
 				}
-				
-				if(paramCnt == 0) {
+
+				if(!isAlreadyApply) {
 					try {
-						// if named parameter?
-						SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
-						String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
-						
-						Map<String, int[]> mapIndex = oracleNamedParamUtil.getIndexMap();
-						if(!mapIndex.isEmpty()) {
-							
-							ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndex);
+						// java named parameter
+						JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
+						int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
+						if(paramCnt > 0) {
+							ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
 							if(Dialog.OK == epd.open()) {
-								
-								
-								ParameterObject paramObj = epd.getOracleParameterObject(oracleNamedParamUtil.getMapIndexToName());
-								String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+								ParameterObject paramObj = epd.getParameterObject();
+								String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
 								reqQuery.setSql(repSQL);
 								
-								if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
+								if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
 							}
 						}
-						
 					} catch(Exception e) {
 						logger.error("Parameter parse", e); //$NON-NLS-1$
 					}
-				} // end if(paramCnt > 0) {
+				}  // if(!isAlreadyApply
 			}
 		}	// end if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
 		

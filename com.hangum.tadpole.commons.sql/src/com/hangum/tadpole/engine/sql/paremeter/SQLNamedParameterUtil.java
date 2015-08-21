@@ -11,7 +11,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.util;
+package com.hangum.tadpole.engine.sql.paremeter;
 
 import java.sql.PreparedStatement;
 import java.util.HashMap;

@@ -51,6 +51,7 @@ Export-Package:
  com.hangum.tadpole.engine.query.surface,
  com.hangum.tadpole.engine.security,
  com.hangum.tadpole.engine.sql.dialog.save,
+ com.hangum.tadpole.engine.sql.paremeter,
  com.hangum.tadpole.engine.sql.template,
  com.hangum.tadpole.engine.sql.util,
  com.hangum.tadpole.engine.sql.util.executer,

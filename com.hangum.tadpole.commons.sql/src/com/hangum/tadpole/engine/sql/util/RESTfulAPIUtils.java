@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.rap.rwt.RWT;
 
+import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
+
 /**
  * RESTful API UTILS
  * 
@@ -62,12 +64,10 @@ public class RESTfulAPIUtils {
 		HttpServletRequest httpRequest = RWT.getRequest();
 		String strServerURL = String.format("http://%s:%s%s", httpRequest.getLocalName(), httpRequest.getLocalPort(), httpRequest.getServletPath());
 		
-		String strArguments = getParameter(strSQL);
-		
 		return String.format("%s%s?%s", 
 								strServerURL + "api/rest/base", 
 								strRestURL,
-								strArguments);
+								getParameter(strSQL));
 	}
 	
 	/**
@@ -81,11 +81,6 @@ public class RESTfulAPIUtils {
 		Matcher m = p.matcher(url);
 	
 		return m.find();
-	}
-	
-	
-	public static void main(String[] args) {
-		System.out.println(RESTfulAPIUtils.validateURL("asdfas") );
 	}
 	
 }

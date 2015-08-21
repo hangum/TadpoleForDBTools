@@ -3,6 +3,8 @@ package com.hangum.tadpole.engine.sql.util;
 import java.util.Map;
 import java.util.Set;
 
+import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
+
 public class NamedParameterStatementUtilTest {
 	public static void main(String[] args) {
 		
