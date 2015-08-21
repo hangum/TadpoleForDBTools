@@ -59,8 +59,6 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
-import com.hangum.tadpole.commons.util.Utils;
-import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -238,6 +236,7 @@ public class ResourceManageEditor extends EditorPart {
 					textDescription.setText(resourceManagerDao.getDescription());
 					comboSupportAPI.setText(resourceManagerDao.getRestapi_yesno());
 					textAPIURL.setText(resourceManagerDao.getRestapi_uri()==null?"":resourceManagerDao.getRestapi_uri());
+					textAPIKey.setText(resourceManagerDao.getRestapi_key());
 					textQuery.setText("");
 					for (String data : result) {
 						textQuery.append(data);
@@ -312,10 +311,9 @@ public class ResourceManageEditor extends EditorPart {
 		lblNewLabel_1.setText("Title");
 
 		textTitle = new Text(compositeDetail, SWT.BORDER);
-		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
 		Button btnSave = new Button(compositeDetail, SWT.NONE);
-		btnSave.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -435,11 +433,11 @@ public class ResourceManageEditor extends EditorPart {
 		comboSupportAPI.add("NO");
 		comboSupportAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblApiKey = new Label(compositeDetail, SWT.NONE);
-		lblApiKey.setText("API URL");
+		Label lblApiURI = new Label(compositeDetail, SWT.NONE);
+		lblApiURI.setText("API URL");
 		
 		textAPIURL = new Text(compositeDetail, SWT.BORDER);
-		textAPIURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textAPIURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Button btnShowUrl = new Button(compositeDetail, SWT.NONE);
 		btnShowUrl.addSelectionListener(new SelectionAdapter() {
@@ -453,6 +451,16 @@ public class ResourceManageEditor extends EditorPart {
 			}
 		});
 		btnShowUrl.setText("Show URL");
+		new Label(compositeDetail, SWT.NONE);
+		new Label(compositeDetail, SWT.NONE);
+		
+		Label lblApiKey = new Label(compositeDetail, SWT.NONE);
+		lblApiKey.setText("API Key");
+		
+		textAPIKey = new Text(compositeDetail, SWT.BORDER);
+		textAPIKey.setEnabled(false);
+		textAPIKey.setEditable(false);
+		textAPIKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Button btnApiExecute = new Button(compositeDetail, SWT.NONE);
 		btnApiExecute.addSelectionListener(new SelectionAdapter() {
@@ -491,6 +499,7 @@ public class ResourceManageEditor extends EditorPart {
 			} // end selection			
 		} // end selectionchange
 	};
+	private Text textAPIKey;
 
 	@Override
 	public void setFocus() {
