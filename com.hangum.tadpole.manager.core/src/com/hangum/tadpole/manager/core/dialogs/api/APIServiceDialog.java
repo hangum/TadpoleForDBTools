@@ -8,12 +8,10 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.start.api;
+package com.hangum.tadpole.manager.core.dialogs.api;
 
 import java.net.URLDecoder;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.service.StartupParameters;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -41,32 +38,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.google.gson.JsonArray;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
 import com.hangum.tadpole.engine.sql.util.SQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
- * API service dialog
- *
- *  test url	http://127.0.0.1:10081/tadpole?serviceID=10d3625a-eee1-409b-8a5f-16bb2a5f68d2
- *  			http://127.0.0.1:10081/tadpole?serviceID=10d3625a-eee1-409b-8a5f-16bb2a5f68d2&1=1&2=SQL
- *  
- *  			http://127.0.0.1:10081/tadpole?serviceID=c7f17960-cf68-46ac-9089-e429e711be39
- *  
- *  			-- save test
- *  			http://127.0.0.1:10082/tadpole?serviceID=3ea2d6c6-53be-47e9-b1cb-6ce3e8b41ce5&1=a&2=33&3=b&4=cc&5=33
+ * Test API service dialog
  *
  * @author hangum
  * @version 1.6.1
@@ -79,7 +63,9 @@ public class APIServiceDialog extends Dialog {
 	/** DOWNLOAD BUTTON ID */
 	private int DOWNLOAD_BTN_ID = IDialogConstants.CLIENT_ID + 1;
 	
-	private StartupParameters serviceParameter;
+	private UserDBDAO userDB;
+	private String strSQL = "";
+	private ResourceManagerDAO resourceManagerDao;
 	
 	private Text textAPIName;
 	private Text textArgument;
@@ -92,22 +78,25 @@ public class APIServiceDialog extends Dialog {
 	
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
+	private Text textApiURL;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public APIServiceDialog(Shell parentShell, StartupParameters serviceParameter) {
+	public APIServiceDialog(Shell parentShell, UserDBDAO userDB, String strSQL, ResourceManagerDAO resourceManagerDao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
-		this.serviceParameter = serviceParameter;
+		this.userDB = userDB;
+		this.strSQL = strSQL;
+		this.resourceManagerDao = resourceManagerDao;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(SystemDefine.NAME + " API Dialog"); //$NON-NLS-1$
+		newShell.setText("RESTful API test Dialog"); //$NON-NLS-1$
 	}
 
 	/**
@@ -127,12 +116,21 @@ public class APIServiceDialog extends Dialog {
 		
 		textAPIName = new Text(compositeTitle, SWT.BORDER);
 		textAPIName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAPIName.setEnabled(false);
+		
+		Label lblApiUrl = new Label(compositeTitle, SWT.NONE);
+		lblApiUrl.setText("API URL");
+		
+		textApiURL = new Text(compositeTitle, SWT.BORDER);
+		textApiURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAPIName.setEnabled(false);
 		
 		Label lblArgument = new Label(compositeTitle, SWT.NONE);
 		lblArgument.setText("Argument");
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textArgument.setEnabled(false);
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
 		lblType.setText("Result Type");
@@ -180,7 +178,6 @@ public class APIServiceDialog extends Dialog {
 		textResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		initUI();
-		initData(textArgument.getText());
 
 		registerServiceHandler();
 		
@@ -193,18 +190,10 @@ public class APIServiceDialog extends Dialog {
 	 * initialize UI
 	 */
 	private void initUI() {
-		Collection<String> collString = serviceParameter.getParameterNames();
-		String strAPIKey = serviceParameter.getParameter(PublicTadpoleDefine.SERVICE_KEY_NAME);
+		textAPIName.setText(resourceManagerDao.getRes_title());
+		textApiURL.setText(resourceManagerDao.getRestapi_uri());
 		
-		String strArgument = "";
-		for (String strArgKey : collString) {
-			if(!strArgKey.equals(PublicTadpoleDefine.SERVICE_KEY_NAME)) {
-				strArgument += String.format("%s=%s&", strArgKey, serviceParameter.getParameter(strArgKey));
-			}
-		}
-		
-		textAPIName.setText(strAPIKey);
-		textArgument.setText(strArgument);
+		textArgument.setText(RESTfulAPIUtils.getParameter(strSQL));
 		btnAddHeader.setSelection(true);
 		textDelimiter.setText(",");
 	}
@@ -216,79 +205,27 @@ public class APIServiceDialog extends Dialog {
 	 */
 	private void initData(String strArgument) {
 		
-		Timestamp timstampStart = new Timestamp(System.currentTimeMillis());
-		UserDBDAO userDB = null;
-		
 		try {
-			UserDBResourceDAO userDBResourceDao = TadpoleSystem_UserDBResource.findAPIKey(textAPIName.getText());
-			if(userDBResourceDao == null) {
-				MessageDialog.openInformation(getShell(), "Confirm", "Not found apikey. please check out.");
+			SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
+			String strJavaSQL = oracleNamedParamUtil.parse(strSQL);
+			
+			Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
+			if(!mapIndex.isEmpty()) {
+				List<Object> listParam = makeOracleListParameter(mapIndex, strArgument);
+				
+				String strResultType = getSelect(userDB, strJavaSQL, listParam);
+				textResult.setText(strResultType);
 			} else {
+				List<Object> listParam = makeJavaListParameter(strArgument);
 				
-				String strSQL = TadpoleSystem_UserDBResource.getResourceData(userDBResourceDao);
-				if(logger.isDebugEnabled()) logger.debug(userDBResourceDao.getName() + ", " + strSQL);
-				
-				// find db
-				userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(userDBResourceDao.getDb_seq());
-				
-				//
-				SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
-				String strJavaSQL = oracleNamedParamUtil.parse(strSQL);
-				
-				Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
-				if(!mapIndex.isEmpty()) {
-					List<Object> listParam = makeOracleListParameter(mapIndex, strArgument);
-					
-					String strResultType = getSelect(userDB, strJavaSQL, listParam);
-					textResult.setText(strResultType);
-				} else {
-					List<Object> listParam = makeJavaListParameter(strArgument);
-					
-					String strResultType = getSelect(userDB, strSQL, listParam);
-					textResult.setText(strResultType);
-				}
-				
-				// save called history
-				saveHistoryData(userDB, timstampStart, textAPIName.getText(), textArgument.getText(), PublicTadpoleDefine.SUCCESS_FAIL.S.name(), "");
+				String strResultType = getSelect(userDB, strSQL, listParam);
+				textResult.setText(strResultType);
 			}
 			
 		} catch (Exception e) {
 			logger.error("api exception", e);
 			
-			saveHistoryData(userDB, timstampStart, textAPIName.getText(), textArgument.getText(), PublicTadpoleDefine.SUCCESS_FAIL.F.name(), e.getMessage());
-			
 			MessageDialog.openError(getShell(), "Error", "Rise exception. please check you argument and others.\n");
-		}
-	}
-	
-	/**
-	 * save api history
-	 * 
-	 * @param userDB
-	 * @param timstampStart
-	 * @param strApiname
-	 * @param strApiArgument
-	 * @param strResult
-	 * @param strErrorMsg
-	 */
-	private void saveHistoryData(final UserDBDAO userDB, Timestamp timstampStart, String strApiname, String strApiArgument, String strResult, String strErrorMsg) {
-		SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
-		sqlHistoryDAO.setDbSeq(userDB.getSeq());
-		sqlHistoryDAO.setStartDateExecute(timstampStart);
-		sqlHistoryDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
-		sqlHistoryDAO.setResult(strResult);
-		sqlHistoryDAO.setMesssage(strErrorMsg);
-		sqlHistoryDAO.setStrSQLText(strApiname + "&" + strApiArgument);
-		
-		sqlHistoryDAO.setIpAddress(RWT.getRequest().getRemoteAddr());
-		
-		try {
-			TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(-1, 
-					userDB, 
-					PublicTadpoleDefine.EXECUTE_SQL_TYPE.API, 
-					sqlHistoryDAO);
-		} catch(Exception e) {
-			logger.error("save history", e);
 		}
 	}
 	

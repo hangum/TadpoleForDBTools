@@ -43,7 +43,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 	String restapi_yesno = PublicTadpoleDefine.YES_NO.NO.name();
 	String restapi_uri = "";
 	String restapi_key = "";
-
+	
 	public ResourceManagerDAO() {
 	}
 
@@ -272,6 +272,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 		this.delyn = delyn;
 	}
 
+	@FieldNameAnnotationClass(fieldKey = "restapi_uri")
 	public String getRestapi_uri() {
 		return restapi_uri;
 	}

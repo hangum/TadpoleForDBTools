@@ -10,16 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.dialog.save;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -40,8 +35,10 @@ import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.engine.sql.util.SQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Resource save dialog
@@ -141,6 +138,16 @@ public class ResourceSaveDialog extends Dialog {
 		lblUseApi.setText(Messages.ResourceSaveDialog_lblUseApi_text);
 		
 		comboUseAPI = new Combo(container, SWT.READ_ONLY);
+		comboUseAPI.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(comboUseAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name())) {
+					textAPIURI.setEnabled(true);
+				} else {
+					textAPIURI.setEnabled(false);
+				}
+			}
+		});
 		comboUseAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboUseAPI.add(PublicTadpoleDefine.YES_NO.YES.name());
 		comboUseAPI.add(PublicTadpoleDefine.YES_NO.NO.name());
@@ -151,6 +158,7 @@ public class ResourceSaveDialog extends Dialog {
 		
 		textAPIURI = new Text(container, SWT.BORDER);
 		textAPIURI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAPIURI.setEnabled(false);
 
 		initUI();
 
@@ -219,29 +227,7 @@ public class ResourceSaveDialog extends Dialog {
 				return;
 			}
 			
-			HttpServletRequest httpRequest = RWT.getRequest();
-			String strServerURL = String.format("http://%s:%s%s", httpRequest.getLocalName(), httpRequest.getLocalPort(), httpRequest.getServletPath());
-			String strArguments = "";
-			
-			SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
-			oracleNamedParamUtil.parse(strContentData);
-			Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
-			if(!mapIndex.isEmpty()) {
-				for(String strParam : mapIndex.values()) {
-					strArguments += strParam + "={" + strParam + "Value}&";	
-				}
-				strArguments = StringUtils.removeEnd(strArguments, "&");
-				 
-			} else {
-				strArguments = "1={FirstParameter}&2={SecondParameter}";
-			}
-			
-			// api server url
-			String strURL = String.format("%s%s?%s", 
-					strServerURL + "api/rest/base", 
-					textAPIURI.getText(),
-					strArguments);
-
+			String strURL = RESTfulAPIUtils.makeURL(strContentData, textAPIURI.getText());
 			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), "API URL Information", strURL);
 			dialog.open();
 		} else {
@@ -293,11 +279,13 @@ public class ResourceSaveDialog extends Dialog {
 					return false;
 				}
 				
-				
 				// check valid url. url pattern is must be /{parent}/{child}
-				
-				
-				
+				if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
+					MessageDialog.openError(getShell(), "Error", "Check your url. url is must me start the '/' character");
+					
+					textAPIURI.setFocus();
+					return false;
+				}
 			}
 		}
 		

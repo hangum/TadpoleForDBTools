@@ -675,9 +675,34 @@ SELECT
 	SELECT * FROM user_db_resource
 	WHERE
 		resource_types = #resource_types# 	AND
-		db_seq = #db_seq# 					AND
-		name = #name# 						AND
+		user_seq 	= #user_seq# 			AND
 		restapi_uri = #restapi_uri#			AND
+		delYn = 'NO'
+</select>
+
+<!-- 
+	업데이트시에 데이터 중복 검사쿼리
+ -->
+<select id="userDBResourceDuplicationUpdate" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
+	SELECT * FROM user_db_resource
+	WHERE
+		resource_types 	= #resource_types# 	AND
+		db_seq 			= #db_seq# 			AND
+		name 			= #res_title# 		AND
+		resource_seq 	!= #resource_seq#	AND
+		delYn 			= 'NO'
+</select>
+
+<!-- 
+	업데이트시에 REST API 데이터 중복 검사쿼리
+ -->
+<select id="userDBResourceAPIDuplicationUpdate" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
+	SELECT * FROM user_db_resource
+	WHERE
+		resource_types = #resource_types# 	AND
+		user_seq 		= #user_seq# 			AND
+		restapi_uri 	= #restapi_uri#			AND
+		resource_seq 	!= #resource_seq#	AND
 		delYn = 'NO'
 </select>
 

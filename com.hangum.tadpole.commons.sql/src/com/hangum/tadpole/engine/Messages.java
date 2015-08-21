@@ -70,6 +70,7 @@ public class Messages extends NLS {
 	public static String TadpoleSystem_UserDBResource_12;
 	public static String TadpoleSystem_UserDBResource_3;
 	public static String TadpoleSystem_UserDBResource_6;
+	public static String TadpoleSystem_UserDBResource_8;
 	public static String TadpoleSystem_UserDBResource_9;
 	public static String TadpoleSystem_UserQuery_1;
 	public static String TadpoleSystem_UserQuery_11;

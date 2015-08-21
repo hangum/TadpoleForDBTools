@@ -17,6 +17,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
@@ -44,11 +45,11 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static UserDBResourceDAO findRESTURL(int intUserSEQ, String strUserDomainURL) throws Exception {
 		Map<String, Object> mapCredential = new HashMap<String, Object>();
-		mapCredential.put("user_seq", intUserSEQ);
-		mapCredential.put("restapi_uri", strUserDomainURL);
+		mapCredential.put("user_seq", intUserSEQ); //$NON-NLS-1$
+		mapCredential.put("restapi_uri", strUserDomainURL); //$NON-NLS-1$
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserDBResourceDAO userResource = (UserDBResourceDAO)sqlClient.queryForObject("findRESTURL", mapCredential);
+		UserDBResourceDAO userResource = (UserDBResourceDAO)sqlClient.queryForObject("findRESTURL", mapCredential); //$NON-NLS-1$
 		
 		return userResource;
 	}
@@ -61,7 +62,7 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static UserDBResourceDAO findAPIKey(String strAPIKey) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserDBResourceDAO userResource = (UserDBResourceDAO)sqlClient.queryForObject("findAPIKey", strAPIKey);
+		UserDBResourceDAO userResource = (UserDBResourceDAO)sqlClient.queryForObject("findAPIKey", strAPIKey); //$NON-NLS-1$
 		
 		return userResource;
 	}
@@ -143,7 +144,7 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static List<UserDBResourceDAO> userDbErdTree(UserDBDAO userDB) throws Exception {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put("seq", 		userDB.getSeq());
+		queryMap.put("seq", 		userDB.getSeq()); //$NON-NLS-1$
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (List<UserDBResourceDAO>)sqlClient.queryForList("userDbResourceTree", queryMap); //$NON-NLS-1$
@@ -164,7 +165,7 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
-	 * 이름이 중복되었는지 검사
+	 * 이름 또는 api url이 중복되었는지 검사
 	 * 
 	 * @param userDB
 	 * @param retResourceDao
@@ -173,13 +174,32 @@ public class TadpoleSystem_UserDBResource {
 	 */
 	public static void userDBResourceDuplication(UserDBDAO userDB, UserDBResourceDAO dbResourceDAO) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
-		if(!sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).isEmpty()) {
-			throw new Exception("Already user name. Please change resource name.");
+		if(!sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).isEmpty()) { //$NON-NLS-1$
+			throw new Exception(Messages.TadpoleSystem_UserDBResource_6);
 		}
 		
-		if(PublicTadpoleDefine.YES_NO.YES.toString().equals(dbResourceDAO.getRestapi_yesno())) {
-			if(!sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).isEmpty()) {
-				throw new Exception("Already RESTAPI URI. Please change REST API URI.");
+		if(!dbResourceDAO.getRestapi_uri().equals("")) {
+			if(!sqlClient.queryForList("userDBResourceAPIDuplication", dbResourceDAO).isEmpty()) { //$NON-NLS-1$
+				throw new Exception(Messages.TadpoleSystem_UserDBResource_8);
+			}
+		}
+	}
+	
+	/**
+	 * 리소스 업데이트시 중복 오류 검사.
+	 * 
+	 * @param userDB
+	 * @param dao
+	 */
+	public static void userDBResourceDupUpdate(UserDBDAO userDB, ResourceManagerDAO dao) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
+		if(!sqlClient.queryForList("userDBResourceDuplicationUpdate", dao).isEmpty()) { //$NON-NLS-1$
+			throw new Exception(Messages.TadpoleSystem_UserDBResource_6);
+		}
+		
+		if(!dao.getRestapi_uri().equals("")) {
+			if(!sqlClient.queryForList("userDBResourceAPIDuplicationUpdate", dao).isEmpty()) { //$NON-NLS-1$
+				throw new Exception(Messages.TadpoleSystem_UserDBResource_8);
 			}
 		}
 	}
