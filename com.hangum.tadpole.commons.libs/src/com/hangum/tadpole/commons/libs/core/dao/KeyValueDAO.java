@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpold.commons.libs.core.dao;
+package com.hangum.tadpole.commons.libs.core.dao;
 
 import java.util.ArrayList;
 import java.util.List;

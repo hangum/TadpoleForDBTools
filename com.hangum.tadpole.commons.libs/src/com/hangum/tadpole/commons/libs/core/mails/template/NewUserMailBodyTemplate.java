@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpold.commons.libs.core.mails.template;
+package com.hangum.tadpole.commons.libs.core.mails.template;
 
 /**
  * new user mail template

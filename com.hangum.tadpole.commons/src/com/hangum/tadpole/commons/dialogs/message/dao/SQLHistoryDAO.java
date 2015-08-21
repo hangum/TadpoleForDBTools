@@ -12,7 +12,7 @@ package com.hangum.tadpole.commons.dialogs.message.dao;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * 실행 쿼리와 쿼리 결과를 포함하는 dao

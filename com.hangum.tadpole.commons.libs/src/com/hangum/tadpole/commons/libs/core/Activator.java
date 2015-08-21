@@ -8,12 +8,12 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpold.commons.libs.core;
+package com.hangum.tadpole.commons.libs.core;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpold.commons.libs.core.logs.LogConfiguration;
+import com.hangum.tadpole.commons.libs.core.logs.LogConfiguration;
 
 
 public class Activator extends AbstractUIPlugin {

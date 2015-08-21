@@ -14,7 +14,7 @@
 //
 //import junit.framework.TestCase;
 //
-//import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+//import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 //import com.hangum.tadpole.sql.dao.system.UserDBDAO;
 //import com.hangum.tadpole.sql.dao.system.UserDBResourceDAO;
 //import com.hangum.tadpole.sql.dao.system.UserGroupDAO;

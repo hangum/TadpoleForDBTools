@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpold.commons.libs.core.mails.dto;
+package com.hangum.tadpole.commons.libs.core.mails.dto;
 
 /**
  * SMTP DTO

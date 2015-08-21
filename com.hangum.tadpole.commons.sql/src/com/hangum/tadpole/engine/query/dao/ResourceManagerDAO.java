@@ -11,7 +11,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.FieldNameAnnotationClass;
 

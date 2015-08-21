@@ -12,7 +12,7 @@ package com.hangum.tadpole.engine.query.dao.system.accesscontrol;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * access_ctl_object table dao

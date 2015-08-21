@@ -13,7 +13,7 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.util.Date;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * user_db_resource dao

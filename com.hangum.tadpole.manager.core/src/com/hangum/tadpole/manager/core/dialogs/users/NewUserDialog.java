@@ -33,12 +33,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
-import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
-import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
-import com.hangum.tadpold.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
+import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
+import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;

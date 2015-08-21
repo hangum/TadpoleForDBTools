@@ -14,11 +14,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;

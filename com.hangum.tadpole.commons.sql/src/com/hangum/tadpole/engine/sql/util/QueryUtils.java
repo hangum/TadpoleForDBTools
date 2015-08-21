@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.ResultSetUtil;
 import com.hangum.tadpole.engine.define.DBDefine;

@@ -12,7 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql;
 
 import org.eclipse.jface.viewers.Viewer;
 
-import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
+import com.hangum.tadpole.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 

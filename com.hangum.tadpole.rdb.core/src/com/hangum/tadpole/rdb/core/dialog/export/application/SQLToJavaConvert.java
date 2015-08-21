@@ -12,7 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.export.application;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
 
 /**

@@ -8,15 +8,15 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpold.commons.libs.core.mails;
+package com.hangum.tadpole.commons.libs.core.mails;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
-import com.hangum.tadpold.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 
 /**
  * SendEmail

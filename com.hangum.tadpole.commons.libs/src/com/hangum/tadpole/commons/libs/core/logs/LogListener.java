@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpold.commons.libs.core.logs;
+package com.hangum.tadpole.commons.libs.core.logs;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.ILogListener;

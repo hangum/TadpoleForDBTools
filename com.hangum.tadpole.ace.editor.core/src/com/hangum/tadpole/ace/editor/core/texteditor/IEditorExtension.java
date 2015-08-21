@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.texteditor;
 
-import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 
 /**
  * editor의 표준 인터페이스를 정의합니다.
