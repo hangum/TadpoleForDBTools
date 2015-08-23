@@ -570,6 +570,7 @@
 			user_seq 	= #user_seq#
 		AND restapi_uri != ""
 		AND restapi_yesno = 'YES'
+	ORDER by restapi_uri
 </select> 
 
 <select id="findAPIKey" parameterClass="java.lang.String" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
