@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -25,6 +24,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -35,6 +35,18 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleSystem_UserDBResource {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserDBResource.class);
+	
+	/**
+	 * Returns restful api list
+	 * 
+	 * @param intUserSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<ResourceManagerDAO> getRESTFulAPIList() throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (List<ResourceManagerDAO>)sqlClient.queryForList("getRESTFulAPIList", SessionManager.getUserSeq()); //$NON-NLS-1$
+	}
 	
 	/**
 	 * find restful

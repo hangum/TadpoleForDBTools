@@ -45,6 +45,7 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -81,7 +82,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.LoginDialog_0);
+		newShell.setText(String.format("%s v%s %s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION));
 		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png")); //$NON-NLS-1$
 	}
 

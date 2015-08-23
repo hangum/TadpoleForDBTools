@@ -564,6 +564,14 @@
 	user db resource
 	============================================================================================================================
  -->
+<select id="getRESTFulAPIList" parameterClass="java.lang.Integer" resultClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
+	SELECT * FROM user_db_resource 
+	WHERE 
+			user_seq 	= #user_seq#
+		AND restapi_uri != ""
+		AND restapi_yesno = 'YES'
+</select> 
+
 <select id="findAPIKey" parameterClass="java.lang.String" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource 
 	WHERE 

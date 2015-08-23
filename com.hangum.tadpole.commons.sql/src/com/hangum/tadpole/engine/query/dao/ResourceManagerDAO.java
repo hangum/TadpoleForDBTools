@@ -36,6 +36,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 	long group_seq;
 	String res_title;
 	String shared_type;
+	String name;
 	String description;
 	String create_time;
 	String delyn;
@@ -279,6 +280,14 @@ public class ResourceManagerDAO extends AbstractDAO {
 
 	public void setRestapi_uri(String restapi_uri) {
 		this.restapi_uri = restapi_uri;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }
