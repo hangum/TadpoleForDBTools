@@ -52,7 +52,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* STATEMENT TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
+		result.append("/* DROP TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
 		result.append("CREATE TABLE " + tableDAO.getName() + "( \n");
 		for (int i=0; i<srcList.size(); i++){
 			HashMap<String, Object> source =  srcList.get(i);
@@ -166,7 +166,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		StringBuilder result = new StringBuilder("");	
 		List<Map<String, String>> srcScriptList = (List<Map<String, String>>) client.queryForList("getIndexScript", indexDAO.getINDEX_NAME());
 		
-		result.append("/* STATEMENT INDEX " + indexDAO.getINDEX_NAME() + "; */ \n\n");
+		result.append("/* DROP INDEX " + indexDAO.getINDEX_NAME() + "; */ \n\n");
 		result.append("CREATE ");
 		
 		Map<String, String> indexMap = new HashMap<String, String>();
@@ -255,7 +255,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 					
 		List<String> srcScriptList = null;
 		if (StringUtils.contains(objType, "PROCEDURE")){
-			result.append("/* STATEMENT PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
+			result.append("/* DROP PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
 			result.append("CREATE OR REPLACE ");
 			srcScriptList = client.queryForList("getProcedureScript", procedureDAO.getName());				
 			for (int i=0; i<srcScriptList.size(); i++){
@@ -294,7 +294,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		if(logger.isDebugEnabled()) logger.debug("\n Trigger DDL Generation...");
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* STATEMENT TRIGGER " + objectName + "; */ \n\n");
+		result.append("/* DROP TRIGGER " + objectName + "; */ \n\n");
 		result.append("CREATE OR REPLACE ");
 
 		List<String> srcScriptList = client.queryForList("getTriggerScript", objectName);				

@@ -54,7 +54,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 		List<HashMap> srcList = client.queryForList("getTableScript", tableDAO.getName());
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* STATEMENT TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
+		result.append("/* DROP TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
 		result.append("CREATE TABLE " + tableDAO.getName() + "( \n");
 		for (int i=0; i<srcList.size(); i++){
 			HashMap<String, Object> source =  srcList.get(i);
@@ -156,7 +156,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* STATEMENT VIEW " + strName + "; */ \n\n");
+		result.append("/* DROP VIEW " + strName + "; */ \n\n");
 
 		List<String> srcProcList = client.queryForList("getViewScript", strName);				
 		for (int i=0; i<srcProcList.size(); i++){
@@ -237,7 +237,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* STATEMENT PROCEDURE " + triggerDAO.getName() + "; */ \n\n");
+		result.append("/* DROP PROCEDURE " + triggerDAO.getName() + "; */ \n\n");
 
 		List<String> srcProcList = client.queryForList("getTriggerScript", triggerDAO.getName());				
 		for (int i=0; i<srcProcList.size(); i++){
