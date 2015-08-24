@@ -223,16 +223,11 @@ public class SQLUtil {
 			 *  mysql의 경우 주석문자 즉, -- 바로 다음 문자가 --와 붙어 있으면 주석으로 인식하지 않아 오류가 발생합니다. --comment 이면 주석으로 인식하지 않습니다.(다른 디비(mssql, oralce, pgsql)은 주석으로 인식합니다)
 			 *  고칠가 고민하지만, 실제 쿼리에서도 동일하게 오류로 처리할 것이기에 주석을 지우지 않고 놔둡니다. - 2013.11.11- (hangum)
 			 */
-//			exeSQL = delComment(exeSQL, "--");
-			
-			// 마지막 쿼리를 재 사용하기위해
-//			exeSQL = StringUtils.replace(exeSQL, "\r", " ");
-//			exeSQL = StringUtils.replace(exeSQL, "\n", " ");
-//			exeSQL = StringUtils.replace(exeSQL, Define.LINE_SEPARATOR, " ");
-//			exeSQL = exeSQL.replaceAll("(\r\n|\n|\r)", " ");
-			
+//			
 			// 모든 쿼리에 공백 주석 제거
 			exeSQL = removeComment(exeSQL);
+			exeSQL = StringUtils.trimToEmpty(exeSQL);
+			exeSQL = StringUtils.removeEnd(exeSQL, "/");
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
 			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 			
@@ -240,7 +235,7 @@ public class SQLUtil {
 //			logger.error("query execute", e);
 //		}
 		
-		return exeSQL.trim();
+		return exeSQL;
 	}
 	
 	/**
