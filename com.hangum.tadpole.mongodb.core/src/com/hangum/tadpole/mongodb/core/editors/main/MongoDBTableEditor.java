@@ -67,9 +67,9 @@ public class MongoDBTableEditor extends EditorPart {
 	private CTabFolder tabFolderSearchPanel;
 	
 	/** collection column info */
-	private Map<String, CollectionFieldDAO> columnInfo;
-	/** collection의 전체 컬럼 */
-	private String strColumns = ""; //$NON-NLS-1$
+//	private Map<String, CollectionFieldDAO> columnInfo;
+//	/** collection의 전체 컬럼 */
+//	private String strColumns = ""; //$NON-NLS-1$
 	
 	/** 쿼리 결과 출력 */
 	private MongodbResultComposite compositeResult ;
@@ -327,14 +327,14 @@ public class MongoDBTableEditor extends EditorPart {
 		MongoDBEditorInput moInput = (MongoDBEditorInput)input;
 		this.userDB = moInput.getUserDB();
 		this.initColName = moInput.getCollectionName();
-		this.columnInfo = new HashMap<String, CollectionFieldDAO>();
-		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
-			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);
-			columnInfo.put(tcDAO.getField(), tcDAO);
-
-			strColumns += tcDAO.getField() + ", "; //$NON-NLS-1$
-		}
-		strColumns = StringUtils.chompLast(strColumns, ", "); //$NON-NLS-1$
+//		this.columnInfo = new HashMap<String, CollectionFieldDAO>();
+//		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
+//			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);
+//			columnInfo.put(tcDAO.getField(), tcDAO);
+//
+//			strColumns += tcDAO.getField() + ", "; //$NON-NLS-1$
+//		}
+//		strColumns = StringUtils.chompLast(strColumns, ", "); //$NON-NLS-1$
 		
 		setPartName(moInput.getName());		 //$NON-NLS-1$ //$NON-NLS-2$
 	}

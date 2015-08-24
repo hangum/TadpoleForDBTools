@@ -18,10 +18,12 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
 /**
@@ -58,9 +60,8 @@ public class MongoConnectionManager {
 		 * https://mongodb.github.io/casbah/guide/connecting.html
 		 */
 		synchronized (dbManager) {
-			
+			String searchKey = getKey(userDB);
 			try {
-				String searchKey = getKey(userDB);
 				MongoClient mongoDB = dbManager.get( searchKey );
 				
 				if(mongoDB == null) {
@@ -71,9 +72,28 @@ public class MongoConnectionManager {
 //					options.autoConnectRetry = false;
 //					options.safe = true;
 					
+					List<MongoCredential> listCredential = new ArrayList<>();
+					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
+						// pass change
+						String passwdDecrypt = "";
+						try {
+							passwdDecrypt = CipherManager.getInstance().decryption(userDB.getPasswd());
+						} catch(Exception e) {
+							passwdDecrypt = userDB.getPasswd();
+						}
+						
+						MongoCredential mongocredintial = MongoCredential.createCredential(userDB.getUsers(), userDB.getDb(), passwdDecrypt.toCharArray());
+						listCredential.add(mongocredintial);
+					}
+					
 					String strReplcaSet = userDB.getExt1();
 					if(strReplcaSet == null | "".equals(strReplcaSet)) {
-						mongoDB = new MongoClient(new MongoClientURI(userDB.getUrl()));//, options);
+						if(!listCredential.isEmpty()) {
+							ServerAddress sa = new ServerAddress(userDB.getHost(), Integer.parseInt(userDB.getPort()));
+							mongoDB = new MongoClient(sa, listCredential);
+						} else {
+							mongoDB = new MongoClient(new MongoClientURI(userDB.getUrl()));
+						}
 						
 					} else {
 						List<ServerAddress> listServerList = new ArrayList<ServerAddress>();
@@ -85,10 +105,15 @@ public class MongoConnectionManager {
 							
 							listServerList.add(new ServerAddress(strIpPort[0], Integer.parseInt(strIpPort[1])));
 						}
-						mongoDB = new MongoClient(listServerList);//, options);	
+						
+						if(!listCredential.isEmpty()) {
+							mongoDB = new MongoClient(listServerList, listCredential);//, options);
+						} else {
+							mongoDB = new MongoClient(listServerList);
+						}
 					}
 					
-//					// password 적용.
+					// password 적용.
 //					db = mongoDB.getDB(userDB.getDb());
 //					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
 //						// pass change
@@ -130,7 +155,9 @@ public class MongoConnectionManager {
 				}
 				
 			} catch(Exception e) {
-				logger.error("mongodb connection error", e);				
+				logger.error("mongodb connection error", e);	
+				dbManager.remove(searchKey);
+				
 				throw e;
 			}
 		}
@@ -145,6 +172,6 @@ public class MongoConnectionManager {
 	 * @return
 	 */
 	private static String getKey(UserDBDAO userDB) {
-		return userDB.getDbms_type()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd();
+		return userDB.getDbms_type()+userDB.getUrl()+userDB.getUsers()+userDB.getPasswd()+userDB.getDisplay_name();
 	}
 }
