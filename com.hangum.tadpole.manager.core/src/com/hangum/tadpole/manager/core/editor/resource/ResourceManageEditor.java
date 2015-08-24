@@ -313,6 +313,8 @@ public class ResourceManageEditor extends EditorPart {
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you wnat to save?")) return;
+				
 				try {
 					String share_type = comboShare.getCombo().getText();
 					share_type = (share_type == null || "".equals(share_type)) ? "PUBLIC" : share_type;
