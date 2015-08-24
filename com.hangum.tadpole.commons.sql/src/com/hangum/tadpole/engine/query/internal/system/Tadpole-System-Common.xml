@@ -622,7 +622,7 @@ SELECT
 	, m.user_seq as user_seq
 	, u.name as user_name
 	, m.db_seq as db_seq
-	, m.name as res_title
+	, m.name as name
 	, m.shared_type as shared_type
 	, m.description as description
 	, m.create_time as create_time
@@ -642,7 +642,7 @@ SELECT
 <update id="userDbResourceUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
 	update user_db_resource
 	set shared_type = #shared_type#
-	   ,name = #res_title#
+	   ,name = #name#
 	   ,description = #description#
 	   ,restapi_yesno = #restapi_yesno#
 	   ,restapi_uri = #restapi_uri#
@@ -697,7 +697,7 @@ SELECT
 	WHERE
 		resource_types 	= #resource_types# 	AND
 		db_seq 			= #db_seq# 			AND
-		name 			= #res_title# 		AND
+		name 			= #name# 		AND
 		resource_seq 	!= #resource_seq#	AND
 		delYn 			= 'NO'
 </select>

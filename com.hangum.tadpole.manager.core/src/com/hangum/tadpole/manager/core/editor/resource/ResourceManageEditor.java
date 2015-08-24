@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -59,6 +58,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -76,8 +76,6 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreato
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
-import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
-import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -94,23 +92,22 @@ public class ResourceManageEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(ResourceManageEditor.class);
 	
 	private Label lblDbname;
+	private TableViewer tableViewer;
+	private Text textFilter;
+	private DefaultTableColumnFilter columnFilter;
 
 	private UserDBDAO userDB;
 	private Text textQuery;
 	private Text textTitle;
-	private ComboViewer comboViewer;
-	private Combo comboShare;
-	private TableViewer tableViewer;
-	private Table tableResource;
-	private Text textFilter;
-	private DefaultTableColumnFilter columnFilter;
-
+	private ComboViewer comboShare;
+	
 	private Text textDescription;
 	private Combo comboSupportAPI;
 	private Text textAPIURL;
+	private Text textAPIKey;
 	
 	/** selected resource manager */
-	private ResourceManagerDAO resourceManagerDao = new ResourceManagerDAO();
+	private ResourceManagerDAO resourceManagerDao = null;
 
 	public ResourceManageEditor() {
 		super();
@@ -168,7 +165,7 @@ public class ResourceManageEditor extends EditorPart {
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				comboViewer.getCombo().clearSelection();
+				comboShare.getCombo().clearSelection();
 				textTitle.setText("");
 				textDescription.setText("");
 				textQuery.setText("");
@@ -211,7 +208,7 @@ public class ResourceManageEditor extends EditorPart {
 		compositeResourceList.setLayout(new GridLayout(1, false));
 
 		tableViewer = new TableViewer(compositeResourceList, SWT.BORDER | SWT.FULL_SELECTION);
-		tableResource = tableViewer.getTable();
+		Table tableResource = tableViewer.getTable();
 		tableResource.setHeaderVisible(true);
 		tableResource.setLinesVisible(true);
 		tableResource.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -221,8 +218,7 @@ public class ResourceManageEditor extends EditorPart {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 
-				if (tableViewer.getSelection().isEmpty())
-					return;
+				if (tableViewer.getSelection().isEmpty()) return;
 
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 				resourceManagerDao = (ResourceManagerDAO) ss.getFirstElement();
@@ -231,8 +227,8 @@ public class ResourceManageEditor extends EditorPart {
 					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 					List<String> result = sqlClient.queryForList("userDbResourceData", resourceManagerDao); //$NON-NLS-1$
 
-					comboShare.select("PUBLIC".equals(resourceManagerDao.getShared_type()) ? 0 : 1);
-					textTitle.setText(resourceManagerDao.getRes_title());
+					comboShare.getCombo().select("PUBLIC".equals(resourceManagerDao.getShared_type()) ? 0 : 1);
+					textTitle.setText(resourceManagerDao.getName());
 					textDescription.setText(resourceManagerDao.getDescription());
 					comboSupportAPI.setText(resourceManagerDao.getRestapi_yesno());
 					textAPIURL.setText(resourceManagerDao.getRestapi_uri()==null?"":resourceManagerDao.getRestapi_uri());
@@ -262,12 +258,12 @@ public class ResourceManageEditor extends EditorPart {
 				// TODO : 기존 데이터베이스 목록에 리소스를 표시하기 위한  DAO를 사용하는 부분과 호환성을 위해 변환.리소스DAO를 하나로 통합할 필요 있음.
 				UserDBResourceDAO ad = new UserDBResourceDAO();
 				ad.setResource_seq((int) dao.getResource_seq());
-				ad.setName(dao.getRes_title());
+				ad.setName(dao.getName());
 				ad.setParent(userDB);
 		
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if (PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
-					if (userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+					if (userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 						 MongoDBERDViewAction ea = new MongoDBERDViewAction();
 						 ea.run(ad);
 					} else {
@@ -302,10 +298,10 @@ public class ResourceManageEditor extends EditorPart {
 		Label lblNewLabel = new Label(compositeDetail, SWT.NONE);
 		lblNewLabel.setText("Share");
 
-		comboViewer = new ComboViewer(compositeDetail, SWT.NONE);
-		comboShare = comboViewer.getCombo();
-		comboShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboShare.setItems(new String[] { "PUBLIC", "PRIVATE" });
+		comboShare = new ComboViewer(compositeDetail, SWT.NONE | SWT.READ_ONLY);
+		Combo cShare = comboShare.getCombo();
+		cShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" });
 
 		Label lblNewLabel_1 = new Label(compositeDetail, SWT.NONE);
 		lblNewLabel_1.setText("Title");
@@ -317,32 +313,31 @@ public class ResourceManageEditor extends EditorPart {
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (tableViewer.getSelection().isEmpty()) return;
-
-				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
-				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
-				
-				if(!isValid(dao)) return;
-
 				try {
-					String share_type = comboShare.getText();
+					String share_type = comboShare.getCombo().getText();
 					share_type = (share_type == null || "".equals(share_type)) ? "PUBLIC" : share_type;
-					dao.setShared_type(share_type);
-					dao.setRes_title(textTitle.getText());
-					dao.setDescription(textDescription.getText());
-					dao.setRestapi_yesno(comboSupportAPI.getText());
-					dao.setRestapi_uri(textAPIURL.getText());
+					resourceManagerDao.setShared_type(share_type);
+					resourceManagerDao.setName(textTitle.getText());
+					resourceManagerDao.setDescription(textDescription.getText());
+					resourceManagerDao.setRestapi_yesno(comboSupportAPI.getText());
+					resourceManagerDao.setRestapi_uri(textAPIURL.getText());
+					
+					if(comboSupportAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name()) && "".equals(resourceManagerDao.getRestapi_key())) {
+						resourceManagerDao.setRestapi_key(Utils.getUniqueID());	
+					}
+					
+					if(!isValid(resourceManagerDao)) return;
 					
 					try {
-						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, dao);
+						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, resourceManagerDao);
 					} catch (Exception ee) {
-						logger.error("SQL Editor File validator", ee); //$NON-NLS-1$
+						logger.error("Resource validate", ee); //$NON-NLS-1$
 						MessageDialog.openError(null, "Error", ee.getMessage()); //$NON-NLS-1$
 						return;
 					}
 					
-					TadpoleSystem_UserDBResource.updateResourceHeader(dao);
-					tableViewer.refresh(dao, true);
+					TadpoleSystem_UserDBResource.updateResourceHeader(resourceManagerDao);
+					tableViewer.refresh(resourceManagerDao, true);
 					
 					MessageDialog.openInformation(getSite().getShell(), "Confirm", "Save resource data.");
 				} catch (Exception e1) {
@@ -444,10 +439,12 @@ public class ResourceManageEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				String strURL = RESTfulAPIUtils.makeURL(textQuery.getText(), textAPIURL.getText());
-				
-				TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URL Information", strURL);
-				dialog.open();
+				if(!"".equals(textAPIURL.getText())) {
+					String strURL = RESTfulAPIUtils.makeURL(textQuery.getText(), textAPIURL.getText());
+					
+					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URL Information", strURL);
+					dialog.open();
+				}
 			}
 		});
 		btnShowUrl.setText("Show URL");
@@ -466,11 +463,13 @@ public class ResourceManageEditor extends EditorPart {
 		btnApiExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				APIServiceDialog dialog = new APIServiceDialog(getSite().getShell(), userDB, textQuery.getText(), resourceManagerDao);
-				dialog.open();
+				if(!"".equals(textAPIURL.getText())) {
+					APIServiceDialog dialog = new APIServiceDialog(getSite().getShell(), userDB, textQuery.getText(), resourceManagerDao);
+					dialog.open();
+				}
 			}
 		});
-		btnApiExecute.setText("Execute");
+		btnApiExecute.setText("Execute Test");
 
 		textQuery = new Text(compositeDetail, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
@@ -499,7 +498,6 @@ public class ResourceManageEditor extends EditorPart {
 			} // end selection			
 		} // end selectionchange
 	};
-	private Text textAPIKey;
 
 	@Override
 	public void setFocus() {
@@ -553,28 +551,6 @@ public class ResourceManageEditor extends EditorPart {
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Can't load resource...", errStatus); //$NON-NLS-1$
 		}
 
-	}
-
-	/**
-	 * 트리를 갱신하고 쿼리 창을 엽니다.
-	 * 
-	 * @param dto
-	 */
-	public void selectAndOpenView(UserDBDAO dto) {
-
-		// mongodb 일경우 열지 않는다.
-		if (DBDefine.getDBDefine(dto) != DBDefine.MONGODB_DEFAULT) {
-			MainEditorInput mei = new MainEditorInput(dto);
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			try {
-				page.openEditor(mei, MainEditor.ID);
-			} catch (PartInitException e) {
-				logger.error("main editor open", e); //$NON-NLS-1$
-
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Can't open resource. ", errStatus); //$NON-NLS-1$
-			}
-		}
 	}
 
 	/**

@@ -123,14 +123,13 @@ public class APIServiceDialog extends Dialog {
 		
 		textApiURL = new Text(compositeTitle, SWT.BORDER);
 		textApiURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAPIName.setEnabled(false);
+		textApiURL.setEnabled(false);
 		
 		Label lblArgument = new Label(compositeTitle, SWT.NONE);
 		lblArgument.setText("Argument");
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textArgument.setEnabled(false);
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
 		lblType.setText("Result Type");
@@ -190,7 +189,7 @@ public class APIServiceDialog extends Dialog {
 	 * initialize UI
 	 */
 	private void initUI() {
-		textAPIName.setText(resourceManagerDao.getRes_title());
+		textAPIName.setText(resourceManagerDao.getName());
 		textApiURL.setText(resourceManagerDao.getRestapi_uri());
 		
 		textArgument.setText(RESTfulAPIUtils.getParameter(strSQL));
@@ -394,6 +393,7 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
 		createButton(parent, DOWNLOAD_BTN_ID, "Download", false);
 		createButton(parent, IDialogConstants.OK_ID, "RUN", true);
 	}

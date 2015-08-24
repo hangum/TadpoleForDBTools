@@ -18,9 +18,16 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -30,7 +37,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
@@ -40,10 +52,26 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
+import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
+import com.hangum.tadpole.manager.core.dialogs.api.APIServiceDialog;
 import com.hangum.tadpole.manager.core.editor.restfulapi.dao.RESTFulAPIDAO;
+import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
+import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
+import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * ResufulAPI Manager 
@@ -57,6 +85,18 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 	
 	private TreeViewer tvAPIList;
 	private List<RESTFulAPIDAO> listRestfulDao = new ArrayList<>();
+	private UserDBDAO userDB = null;
+	private ResourceManagerDAO rmDAO = null;
+	
+	//////////
+	private ComboViewer comboShare;
+	private Text textTitle;
+	private Text textDescription;
+	private Combo comboSupportAPI;
+	private Text textAPIURL;
+	private Text textAPIKey;
+	
+	private Text textQuery;
 
 	public RESTFulAPIManagerEditor() {
 	}
@@ -85,6 +125,76 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		compositeBody.setLayout(new GridLayout(1, false));
 		
 		tvAPIList = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tvAPIList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (tvAPIList.getSelection().isEmpty()) return;
+
+				StructuredSelection ss = (StructuredSelection) tvAPIList.getSelection();
+				RESTFulAPIDAO dao = (RESTFulAPIDAO) ss.getFirstElement();
+				rmDAO = dao.getResourceManagerDao();
+				
+				if(rmDAO == null) return;
+				
+				try {
+					userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(Integer.parseInt(""+rmDAO.getDb_seq()));
+					
+					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+					List<String> result = sqlClient.queryForList("userDbResourceData", rmDAO); //$NON-NLS-1$
+
+					comboShare.getCombo().select("PUBLIC".equals(rmDAO.getShared_type()) ? 0 : 1);
+					textTitle.setText(rmDAO.getName());
+					textDescription.setText(rmDAO.getDescription());
+					comboSupportAPI.setText(rmDAO.getRestapi_yesno());
+					textAPIURL.setText(rmDAO.getRestapi_uri()==null?"":rmDAO.getRestapi_uri());
+					textAPIKey.setText(rmDAO.getRestapi_key());
+					textQuery.setText("");
+					for (String data : result) {
+						textQuery.append(data);
+					}
+
+				} catch (Exception e) {
+					logger.error("Resource detail", e);
+				}
+			}
+		});
+		tvAPIList.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				if (tvAPIList.getSelection().isEmpty()) return;
+
+				StructuredSelection ss = (StructuredSelection) tvAPIList.getSelection();
+				RESTFulAPIDAO dao = (RESTFulAPIDAO) ss.getFirstElement();
+				ResourceManagerDAO rmDAO = dao.getResourceManagerDao();
+				
+				if(rmDAO == null) return;
+				
+				try {
+					
+					final UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(Integer.parseInt(""+rmDAO.getDb_seq()));
+					
+					// TODO : 기존 데이터베이스 목록에 리소스를 표시하기 위한  DAO를 사용하는 부분과 호환성을 위해 변환.리소스DAO를 하나로 통합할 필요 있음.
+					UserDBResourceDAO ad = new UserDBResourceDAO();
+					ad.setResource_seq((int) rmDAO.getResource_seq());
+					ad.setName(rmDAO.getName());
+					ad.setParent(userDB);
+			
+					// db object를 클릭하면 쿼리 창이 뜨도록하고.
+					if (PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(rmDAO.getResource_types())) {
+						if (userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
+							 MongoDBERDViewAction ea = new MongoDBERDViewAction();
+							 ea.run(ad);
+						} else {
+							 RDBERDViewAction ea = new RDBERDViewAction();
+							 ea.run(ad);
+						}
+					} else if (PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString().equals(rmDAO.getResource_types())) {
+						QueryEditorAction qea = new QueryEditorAction();
+						qea.run(ad);
+					}
+				} catch(Exception e) {
+					logger.error("select api", e);
+				}
+			}
+		});
 		Tree tree = tvAPIList.getTree();
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);
@@ -107,6 +217,210 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		
 		tvAPIList.setContentProvider(new APIListContentProvider());
 		tvAPIList.setLabelProvider(new APIListLabelProvider());
+		
+		
+/////////////////////////////////////////////////////////////////////////////////////////////
+		Group grpQuery = new Group(parent, SWT.NONE);
+		grpQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpQuery.setText("Detail");
+		GridLayout gl_grpQuery = new GridLayout(1, false);
+		gl_grpQuery.verticalSpacing = 1;
+		gl_grpQuery.horizontalSpacing = 1;
+		gl_grpQuery.marginHeight = 1;
+		gl_grpQuery.marginWidth = 1;
+		grpQuery.setLayout(gl_grpQuery);
+
+		Composite compositeDetail = new Composite(grpQuery, SWT.NONE | SWT.READ_ONLY);
+		GridLayout gl_compositeDetail = new GridLayout(7, false);
+		gl_compositeDetail.marginHeight = 2;
+		gl_compositeDetail.marginWidth = 2;
+		gl_compositeDetail.verticalSpacing = 2;
+		compositeDetail.setLayout(gl_compositeDetail);
+		compositeDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		Label lblNewLabel = new Label(compositeDetail, SWT.NONE);
+		lblNewLabel.setText("Share");
+
+		comboShare = new ComboViewer(compositeDetail, SWT.NONE);
+		Combo cShare = comboShare.getCombo();
+		cShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" });
+
+		Label lblNewLabel_1 = new Label(compositeDetail, SWT.NONE);
+		lblNewLabel_1.setText("Title");
+
+		textTitle = new Text(compositeDetail, SWT.BORDER);
+		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+
+		Button btnSave = new Button(compositeDetail, SWT.NONE);
+		btnSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(rmDAO == null) return;
+				
+				try {
+					String share_type = comboShare.getCombo().getText();
+					share_type = (share_type == null || "".equals(share_type)) ? "PUBLIC" : share_type;
+					rmDAO.setShared_type(share_type);
+					rmDAO.setName(textTitle.getText());
+					rmDAO.setDescription(textDescription.getText());
+					rmDAO.setRestapi_yesno(comboSupportAPI.getText());
+					rmDAO.setRestapi_uri(textAPIURL.getText());
+					
+					if(!isValid(rmDAO)) return;
+					
+					try {
+						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, rmDAO);
+					} catch (Exception ee) {
+						logger.error("Resource validate", ee); //$NON-NLS-1$
+						MessageDialog.openError(null, "Error", ee.getMessage()); //$NON-NLS-1$
+						return;
+					}
+					
+					if(comboSupportAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name()) && "".equals(rmDAO.getRestapi_key())) {
+						rmDAO.setRestapi_key(Utils.getUniqueID());	
+					}
+					
+					TadpoleSystem_UserDBResource.updateResourceHeader(rmDAO);
+					tvAPIList.refresh(rmDAO, true);
+					
+					MessageDialog.openInformation(getSite().getShell(), "Confirm", "Save resource data.");
+				} catch (Exception e1) {
+					logger.error("save resource", e1);
+					MessageDialog.openError(getSite().getShell(), "Error", "Rise exception.\n"+ e1.getMessage());
+				}
+			}
+			
+			/**
+			 * is valid
+			 * @return
+			 */
+			private boolean isValid(ResourceManagerDAO dao) {
+				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
+				if(len < 3) {
+					MessageDialog.openError(null, "Confirm", "The name must enter at least 3 characters."); //$NON-NLS-1$
+					textTitle.setFocus();
+					return false;
+				}
+
+				// sql type 
+				if(dao.getResource_types().equals(RESOURCE_TYPE.SQL.name())) {
+					if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboSupportAPI.getText())) {
+						String strAPIURI = textAPIURL.getText().trim();
+						
+						if(strAPIURI.equals("")) {
+							MessageDialog.openError(getSite().getShell(), "Confirm", "Please input API URI");
+							textAPIURL.setFocus();
+							return false;
+						}
+						
+						// check valid url. url pattern is must be /{parent}/{child}
+						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
+							MessageDialog.openError(getSite().getShell(), "Error", "Check your url. url is must me start the '/' character");
+							
+							textAPIURL.setFocus();
+							return false;
+						}
+					}
+				}
+				
+				return true;
+			}
+		});
+		btnSave.setText("Save");
+
+//		Button btnDelete = new Button(composite, SWT.NONE);
+//		btnDelete.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				if (tableViewer.getSelection().isEmpty()) return;
+//
+//				if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you wont to delete?")) return;
+//				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+//				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
+//
+//				// 기존에 사용하던 좌측 트리(디비목록)에 리소스를 표시하지 않을 경우에는 dao를 통일해서 하나만 쓰게 수정이
+//				// 필요함.
+//				UserDBResourceDAO userDBResource = new UserDBResourceDAO();
+//				userDBResource.setResource_seq((int) dao.getResource_seq());
+//				userDBResource.setName(dao.getRes_title());
+//				userDBResource.setParent(userDB);
+//
+//				try {
+//					TadpoleSystem_UserDBResource.delete(userDBResource);
+//					addUserResouceData(null);
+//				} catch (Exception e1) {
+//					logger.error("Resource delete " + dao.toString(), e1);
+//				}
+//			}
+//		});
+//		btnDelete.setText("Delete");
+
+		Label lblDescription = new Label(compositeDetail, SWT.NONE);
+		lblDescription.setText("Description");
+
+		textDescription = new Text(compositeDetail, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
+		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1);
+		gd_textDescription.heightHint = 44;
+		textDescription.setLayoutData(gd_textDescription);
+		
+		Label lblSupportApi = new Label(compositeDetail, SWT.NONE);
+		lblSupportApi.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSupportApi.setText("Support API");
+		
+		comboSupportAPI = new Combo(compositeDetail, SWT.READ_ONLY);
+		comboSupportAPI.add("YES");
+		comboSupportAPI.add("NO");
+		comboSupportAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblApiURI = new Label(compositeDetail, SWT.NONE);
+		lblApiURI.setText("API URL");
+		
+		textAPIURL = new Text(compositeDetail, SWT.BORDER);
+		textAPIURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		
+		Button btnShowUrl = new Button(compositeDetail, SWT.NONE);
+		btnShowUrl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(!"".equals(textAPIURL.getText())) {
+					String strURL = RESTfulAPIUtils.makeURL(textQuery.getText(), textAPIURL.getText());
+					
+					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URL Information", strURL);
+					dialog.open();
+				}
+			}
+		});
+		btnShowUrl.setText("Show URL");
+		new Label(compositeDetail, SWT.NONE);
+		new Label(compositeDetail, SWT.NONE);
+		
+		Label lblApiKey = new Label(compositeDetail, SWT.NONE);
+		lblApiKey.setText("API Key");
+		
+		textAPIKey = new Text(compositeDetail, SWT.BORDER);
+		textAPIKey.setEnabled(false);
+		textAPIKey.setEditable(false);
+		textAPIKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		
+		Button btnApiExecute = new Button(compositeDetail, SWT.NONE);
+		btnApiExecute.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(!"".equals(textAPIURL.getText())) {
+					if(userDB != null & rmDAO != null) {
+						APIServiceDialog dialog = new APIServiceDialog(getSite().getShell(), userDB, textQuery.getText(), rmDAO);
+						dialog.open();
+					}
+				}
+			}
+		});
+		btnApiExecute.setText("Execute Test");
+
+		textQuery = new Text(compositeDetail, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		
 		initUI();
 

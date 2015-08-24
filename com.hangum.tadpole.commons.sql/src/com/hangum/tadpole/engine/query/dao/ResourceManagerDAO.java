@@ -34,7 +34,6 @@ public class ResourceManagerDAO extends AbstractDAO {
 	String user_name;
 	long db_seq;
 	long group_seq;
-	String res_title;
 	String shared_type;
 	String name;
 	String description;
@@ -48,7 +47,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 	public ResourceManagerDAO() {
 	}
 
-	public ResourceManagerDAO(long resource_seq, String resource_types, long user_seq, String user_name, long db_seq, long group_seq, String res_title,
+	public ResourceManagerDAO(long resource_seq, String resource_types, long user_seq, String user_name, long db_seq, long group_seq, String name,
 			String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_uri, String restapi_key) {
 		this.resource_seq = resource_seq;
 		this.resource_types = resource_types;
@@ -56,7 +55,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 		this.user_name = user_name;
 		this.db_seq = db_seq;
 		this.group_seq = group_seq;
-		this.res_title = res_title;
+		this.name = name;
 		this.shared_type = shared_type;
 		this.description = description;
 		this.create_time = create_time;
@@ -114,15 +113,6 @@ public class ResourceManagerDAO extends AbstractDAO {
 	public long getGroup_seq() {
 		return group_seq;
 	}
-
-	/**
-	 * @return the res_title
-	 */
-	@FieldNameAnnotationClass(fieldKey = "res_title")
-	public String getRes_title() {
-		return res_title;
-	}
-
 	/**
 	 * @return the shared_type
 	 */
@@ -234,14 +224,6 @@ public class ResourceManagerDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @param res_title
-	 *            the res_title to set
-	 */
-	public void setRes_title(String res_title) {
-		this.res_title = res_title;
-	}
-
-	/**
 	 * @param shared_type
 	 *            the shared_type to set
 	 */
@@ -282,6 +264,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 		this.restapi_uri = restapi_uri;
 	}
 
+	@FieldNameAnnotationClass(fieldKey = "res_title")
 	public String getName() {
 		return name;
 	}
