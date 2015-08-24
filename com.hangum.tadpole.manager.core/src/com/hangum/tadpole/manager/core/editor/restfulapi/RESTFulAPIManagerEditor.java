@@ -220,10 +220,15 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		trclmnUrl.setWidth(150);
 		trclmnUrl.setText("URL");
 		
+		TreeViewerColumn tvcName = new TreeViewerColumn(tvAPIList, SWT.NONE);
+		TreeColumn trclmnDBName = tvcName.getColumn();
+		trclmnDBName.setWidth(150);
+		trclmnDBName.setText("API Name");
+		
 		TreeViewerColumn treeViewerColumn_1 = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnName = treeViewerColumn_1.getColumn();
-		trclmnName.setWidth(200);
-		trclmnName.setText("NAME");
+		trclmnName.setWidth(150);
+		trclmnName.setText("DB NAME");
 		
 		TreeViewerColumn treeViewerColumn_2 = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnDescription = treeViewerColumn_2.getColumn();
@@ -631,7 +636,8 @@ class APIListLabelProvider extends LabelProvider implements ITableLabelProvider 
 		if(rmDAO != null) {
 			switch(columnIndex) {
 			case 1: return rmDAO.getName();
-			case 2: return rmDAO.getDescription();
+			case 2: return rmDAO.getDisplay_name();
+			case 3: return rmDAO.getDescription();
 			}
 		}
 		

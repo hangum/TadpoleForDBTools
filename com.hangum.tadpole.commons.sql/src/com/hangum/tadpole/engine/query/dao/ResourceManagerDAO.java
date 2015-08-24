@@ -33,6 +33,8 @@ public class ResourceManagerDAO extends AbstractDAO {
 	long user_seq;
 	String user_name;
 	long db_seq;
+	String display_name;
+	
 	long group_seq;
 	String shared_type;
 	String name;
@@ -272,5 +274,13 @@ public class ResourceManagerDAO extends AbstractDAO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public String getDisplay_name() {
+		return display_name;
+	}
+
+	public void setDisplay_name(String display_name) {
+		this.display_name = display_name;
+	}
+
 }

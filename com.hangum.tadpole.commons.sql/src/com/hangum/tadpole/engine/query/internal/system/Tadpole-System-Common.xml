@@ -565,12 +565,15 @@
 	============================================================================================================================
  -->
 <select id="getRESTFulAPIList" parameterClass="java.lang.Integer" resultClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
-	SELECT * FROM user_db_resource 
+	SELECT a.*, b.display_name 
+	FROM user_db_resource a,
+		 tadpole_db b
 	WHERE 
-			user_seq 	= #user_seq#
-		AND restapi_uri != ""
-		AND restapi_yesno = 'YES'
-	ORDER by restapi_uri
+			a.user_seq 	= #user_seq#
+		AND a.restapi_uri != ""
+		AND a.restapi_yesno = 'YES'
+		AND a.db_seq = b.seq
+	ORDER BY a.restapi_uri
 </select> 
 
 <select id="findAPIKey" parameterClass="java.lang.String" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
