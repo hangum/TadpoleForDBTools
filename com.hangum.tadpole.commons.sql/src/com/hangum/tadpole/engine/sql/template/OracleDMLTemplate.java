@@ -32,28 +32,28 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 
 	/** procedure */
 	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE OR REPLACE PROCEDURE simpleproc2 (param1 out INT) " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	 " is " + PublicTadpoleDefine.LINE_SEPARATOR +
+																	 " IS " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " BEGIN  " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  "  SELECT COUNT(*) INTO param1 FROM t;  " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " END;";
 	/** package */
 	public static final String  TMP_CREATE_PACKAGE_STMT = "CREATE OR REPLACE PACKAGE PKG_SAMPLE " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	 " as " + PublicTadpoleDefine.LINE_SEPARATOR +
+																	 " AS " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " FUNCTION F_TEST RETURN VARCHAR2;  " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " PROCEDURE P_TEST (param1 IN VARCHAR2);  " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " END;" + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " /" + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  "CREATE or replace PACKAGE BODY PKG_SAMPLE " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	  " as " + PublicTadpoleDefine.LINE_SEPARATOR +
+																	  " AS " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " FUNCTION F_TEST RETURN VARCHAR2  " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	  " is  " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	  " begin  " + PublicTadpoleDefine.LINE_SEPARATOR +
+																	  " IS  " + PublicTadpoleDefine.LINE_SEPARATOR +
+																	  " BEGIN  " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  "     return to_char(sysdate, 'yyyymmdd');  " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " end;  " + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " PROCEDURE P_TEST (param1 IN VARCHAR2)  " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	  " is  " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	  " begin  " + PublicTadpoleDefine.LINE_SEPARATOR +
+																	  " IS  " + PublicTadpoleDefine.LINE_SEPARATOR +
+																	  " BEGIN  " + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  "     dbms_output.put_line(param1); " + PublicTadpoleDefine.LINE_SEPARATOR +
-																	  " end;  " + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR +
+																	  " END;  " + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR +
 																	  " /" + PublicTadpoleDefine.LINE_SEPARATOR ;
 }
