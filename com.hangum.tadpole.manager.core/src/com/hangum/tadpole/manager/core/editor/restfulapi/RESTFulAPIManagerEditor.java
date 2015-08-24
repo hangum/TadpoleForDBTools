@@ -67,11 +67,14 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
 import com.hangum.tadpole.manager.core.dialogs.api.APIServiceDialog;
+import com.hangum.tadpole.manager.core.dialogs.api.UserAPIServiceDialog;
 import com.hangum.tadpole.manager.core.editor.restfulapi.dao.RESTFulAPIDAO;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.swtdesigner.ResourceManager;
 
 /**
  * ResufulAPI Manager 
@@ -112,13 +115,25 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem tltmRefrsh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefrsh.setToolTipText("Refresh");
+		tltmRefrsh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png"));
 		tltmRefrsh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				initUI();
 			}
 		});
-		tltmRefrsh.setText("Refrsh");
+		
+		ToolItem tltmAPIExecute = new ToolItem(toolBar, SWT.NONE);
+		tltmAPIExecute.setToolTipText("Execute RESTFul API");
+		tltmAPIExecute.setImage(ResourceManager.getPluginImage(com.hangum.tadpole.manager.core.Activator.PLUGIN_ID, "resources/icons/restful_api.png"));
+		tltmAPIExecute.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UserAPIServiceDialog dialog = new UserAPIServiceDialog(getSite().getShell());
+				dialog.open();
+			}
+		});
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
