@@ -19,13 +19,16 @@ import java.sql.Types;
 public class MySQLProcedure {
 
 	/**
+	 * http://d2.naver.com/helloworld/1321
+	 * http://kwonnam.pe.kr/wiki/database/mysql/jdbc
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
 
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.29.128:3306/tadpole20", "root", "tadpole");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.29.138:34306/tadpole20?connectTimeout=4000&socketTimeout=5000", "root", "tadpole");
+			
 
 			CallableStatement stat = conn.prepareCall("call simpleproc(?)");
 			stat.registerOutParameter(1, Types.TINYINT);

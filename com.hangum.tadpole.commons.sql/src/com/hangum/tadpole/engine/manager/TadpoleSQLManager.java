@@ -12,6 +12,7 @@ package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +81,8 @@ public class TadpoleSQLManager {
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
 
+					DriverManager.setLoginTimeout(10);
+					
 					// oracle 일 경우 로케일을 설정 
 					try { 
 						if(DBDefine.getDBDefine(dbInfo) == DBDefine.ORACLE_DEFAULT) {

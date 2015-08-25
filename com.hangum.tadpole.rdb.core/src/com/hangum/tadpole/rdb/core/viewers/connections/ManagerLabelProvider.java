@@ -186,7 +186,7 @@ public class ManagerLabelProvider extends LabelProvider {
 	 * @param baseImage
 	 * @return
 	 */
-	private static Image getDecorateImage(Image baseImage, String strDecorateImage, int conor) {
+	private static Image getDecorateImage(Image baseImage, String strDecorateImage, int conor) throws Exception {
 		return ResourceManager.decorateImage(baseImage, 
 				ResourceManager.getPluginImage(Activator.PLUGIN_ID, strDecorateImage), 
 				conor);

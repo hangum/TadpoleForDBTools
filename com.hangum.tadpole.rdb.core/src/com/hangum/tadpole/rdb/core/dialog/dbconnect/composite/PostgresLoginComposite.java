@@ -190,10 +190,12 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textPassword.setText("tadpole");
 			
 			comboSSL.setText("NO");
+			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5");
 			
 		} else {
 			textPort.setText("5432");
 			comboSSL.setText("NO");
+			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5");
 		}
 
 		Combo comboGroup = preDBInfo.getComboGroup();
