@@ -25,13 +25,13 @@ public class MySQLProcedure {
 		try {
 
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://14.63.212.152:13306/tester", "tester", "1234");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://192.168.29.128:3306/tadpole20", "root", "tadpole");
 
 			CallableStatement stat = conn.prepareCall("call simpleproc(?)");
 			stat.registerOutParameter(1, Types.TINYINT);
 			stat.execute();
 
-			System.out.println(stat.getByte(2));
+			System.out.println(stat.getInt(1));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

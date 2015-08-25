@@ -312,9 +312,11 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		map.put("package_name", procedureDAO.getPackagename());
 		map.put("object_name", procedureDAO.getName());	
 
-		logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
-		logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
-		logger.debug("\n procedureDAO=" + procedureDAO);
+		if(logger.isDebugEnabled()) {
+			logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
+			logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
+			logger.debug("\n procedureDAO=" + procedureDAO);
+		}
 		
 		return client.queryForList("getProcedureInParamter", map);
 	}
