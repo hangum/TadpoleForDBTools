@@ -22,6 +22,7 @@ import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -65,12 +66,7 @@ public class MongoConnectionManager {
 				MongoClient mongoDB = dbManager.get( searchKey );
 				
 				if(mongoDB == null) {
-//					final MongoClientOptions options = MongoClientOptions.Builder();
-//					options.connectionsPerHost = 20;
-//					options.threadsAllowedToBlockForConnectionMultiplier = 5;
-//					options.maxWaitTime = 120000;
-//					options.autoConnectRetry = false;
-//					options.safe = true;
+					MongoClientOptions clintOptions = MongoClientOptions.builder().connectionsPerHost(200).connectTimeout(5000).socketTimeout(5000).build();
 					
 					List<MongoCredential> listCredential = new ArrayList<>();
 					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
@@ -90,7 +86,7 @@ public class MongoConnectionManager {
 					if(strReplcaSet == null | "".equals(strReplcaSet)) {
 						if(!listCredential.isEmpty()) {
 							ServerAddress sa = new ServerAddress(userDB.getHost(), Integer.parseInt(userDB.getPort()));
-							mongoDB = new MongoClient(sa, listCredential);
+							mongoDB = new MongoClient(sa, listCredential, clintOptions);
 						} else {
 							mongoDB = new MongoClient(new MongoClientURI(userDB.getUrl()));
 						}
@@ -107,52 +103,17 @@ public class MongoConnectionManager {
 						}
 						
 						if(!listCredential.isEmpty()) {
-							mongoDB = new MongoClient(listServerList, listCredential);//, options);
+							mongoDB = new MongoClient(listServerList, listCredential, clintOptions);
 						} else {
-							mongoDB = new MongoClient(listServerList);
+							mongoDB = new MongoClient(listServerList, clintOptions);
 						}
 					}
 					
-					// password 적용.
-//					db = mongoDB.getDB(userDB.getDb());
-//					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
-//						// pass change
-//						String passwdDecrypt = "";
-//						try {
-//							passwdDecrypt = CipherManager.getInstance().decryption(userDB.getPasswd());
-//						} catch(Exception e) {
-//							passwdDecrypt = userDB.getPasswd();
-//						}
-//						boolean auth = db.authenticate(userDB.getUsers(), passwdDecrypt.toCharArray());
-//						if(!auth) {
-//							throw new Exception(Messages.MongoDBConnection_3);
-//						}
-//					}	
-
-//					
-//					어드민 권한이 있어야 가능한 부분이므로 주석 처리합니다.
-//					
-//					// db 종류를 가져옵니다.
-//					List<String> listDB = mongoDB.getDatabaseNames();
-//					boolean isDB = false;
-//					for (String dbName : listDB) if(userDB.getDb().equals(dbName)) isDB = true;						
-//					if(!isDB) {
-//						throw new MongoDBNotFoundException(userDB.getDb() + Messages.MongoDBConnection_0);
-//					}
-//					try {
-//						//디비가 정상 생성 되어 있는지 권한이 올바른지 검사하기 위해 날려봅니다.
-//						db.getCollectionNames();
-//					} catch(Exception e) {
-//						logger.error("error", e);
-//						throw new MongoDBNotFoundException(userDB.getDb() + " " + e.getMessage());//Messages.MongoDBConnection_0);
-//					}
-					
 					// db를 map에 넣습니다.
 					dbManager.put(searchKey, mongoDB);
-					
-				} else {
-					db = mongoDB.getDB(userDB.getDb());
 				}
+				db = mongoDB.getDB(userDB.getDb());
+
 				
 			} catch(Exception e) {
 				logger.error("mongodb connection error", e);	
