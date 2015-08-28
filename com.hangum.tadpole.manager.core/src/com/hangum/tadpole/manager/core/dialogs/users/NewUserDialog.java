@@ -195,7 +195,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	private void generateGoogleOTP() {
 		if(!btnGetOptCode.getSelection()) {
-			getShell().setSize(380, 250);
+			getShell().setSize(370, 240);
 			textSecretKey.setText(""); //$NON-NLS-1$
 			labelQRCodeURL.setText(""); //$NON-NLS-1$
 			
@@ -204,13 +204,13 @@ public class NewUserDialog extends Dialog {
 		
 		String strEmail = textEMail.getText();
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			getShell().setSize(380, 250);
+			getShell().setSize(370, 240);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
 			return;
 		} else if(!Utils.isEmail(strEmail)) {
-			getShell().setSize(380, 250);
+			getShell().setSize(370, 240);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);

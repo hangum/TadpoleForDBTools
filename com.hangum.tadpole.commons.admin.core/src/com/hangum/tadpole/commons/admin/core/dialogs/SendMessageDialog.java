@@ -119,7 +119,7 @@ public class SendMessageDialog extends Dialog {
 		composite.setLayoutData(gd_composite);
 		
 		Label lblSeingHistory = new Label(composite, SWT.NONE);
-		lblSeingHistory.setText("Seing history");
+		lblSeingHistory.setText("Senging history");
 		
 		textSengingHistory = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textSengingHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.dialogs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -56,6 +57,8 @@ public class UserLoginHistoryDialog extends Dialog {
 	
 	private Text textEmail;
 	private TableViewer tvHistory;
+	
+	private List<UserLoginHistoryDAO> listLoginHistory = new ArrayList<>();
 
 	/**
 	 * Create the dialog.
@@ -147,12 +150,15 @@ public class UserLoginHistoryDialog extends Dialog {
 	private void search() {
 		String strEmail = textEmail.getText();
 		if("".equals(strEmail)) {
+			listLoginHistory.clear();
+			tvHistory.setInput(listLoginHistory);
+			
 			MessageDialog.openError(getShell(), "Error", "Please input the email.");
 			return;
 		}
 		
 		try {
-			List<UserLoginHistoryDAO> listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail);
+			listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail);
 			tvHistory.setInput(listLoginHistory);
 		} catch (Exception e) {
 			logger.error("find login history", e);

@@ -527,6 +527,8 @@ public class ResourceManageEditor extends EditorPart {
 	 * @param dao
 	 */
 	public void refreshResouceData() {
+		if(lblDbname.isDisposed()) return;
+		
 		lblDbname.setText(userDB.getDisplay_name());
 		
 		List<ResourceManagerDAO> listUserDBResources = new ArrayList<ResourceManagerDAO>();
@@ -552,7 +554,13 @@ public class ResourceManageEditor extends EditorPart {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Can't load resource...", errStatus); //$NON-NLS-1$
 		}
-
+	}
+	
+	@Override
+	public void dispose() {
+		if(managementViewerListener != null) managementViewerListener = null;
+		
+		super.dispose();
 	}
 
 	/**
