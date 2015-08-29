@@ -39,6 +39,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import com.hangum.tadpole.commons.admin.core.Messages;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import org.eclipse.swt.events.KeyAdapter;
@@ -144,6 +145,9 @@ public class UserLoginHistoryDialog extends Dialog {
 		tvHistory.setLabelProvider(new LoginHistoryLabelProvider());
 		
 		textEmail.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}
