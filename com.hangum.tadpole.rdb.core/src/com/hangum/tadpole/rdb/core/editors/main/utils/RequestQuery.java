@@ -78,6 +78,7 @@ public class RequestQuery {
 	public RequestQuery(String originalSql, DB_ACTION dbAction, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
 		this.userIp = RWT.getRequest().getRemoteAddr();
 		
+		this.originalSql = originalSql;
 		this.dbAction = dbAction;
 		this.sql = SQLUtil.sqlExecutable(originalSql);
 		sqlQueryType(this.sql);

@@ -117,6 +117,11 @@ import com.swtdesigner.SWTResourceManager;
  *
  */
 public class ResultSetComposite extends Composite {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3706926974815713584L;
+
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
 	
@@ -852,7 +857,7 @@ public class ResultSetComposite extends Composite {
 						}
 					});
 					
-					Thread.sleep(5);
+					Thread.sleep(3);
 					
 					// Is user stop?
 					if(!isUserInterrupt) {
