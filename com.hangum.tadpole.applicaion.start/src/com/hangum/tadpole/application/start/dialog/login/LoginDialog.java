@@ -82,7 +82,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(String.format("%s v%s %s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION));
+		newShell.setText(String.format("%s v%s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION));
 		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png")); //$NON-NLS-1$
 	}
 

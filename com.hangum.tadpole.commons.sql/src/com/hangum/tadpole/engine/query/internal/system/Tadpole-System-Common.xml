@@ -978,7 +978,7 @@ SELECT
 	  a.delyn = 'NO' AND
 	  a.seq = b.executed_sql_resource_seq AND
 	  b.datas like #filter#
-	order by a.create_time desc
+	order by a.create_time 
 	limit #count#	
 </select>
 
