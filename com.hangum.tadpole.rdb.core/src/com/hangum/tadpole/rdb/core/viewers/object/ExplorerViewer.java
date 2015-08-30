@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -33,13 +32,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -421,7 +418,7 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
 			refreshIndexes(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
-			refreshProcedure(false, strObjectName);
+			refreshProcedure(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
 			refreshPackage(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
@@ -625,6 +622,9 @@ public class ExplorerViewer extends ViewPart {
 				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), "");
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.INDEX) {
 				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), "");
+			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE) {
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name(), "");
+				
 			} else {
 				refreshSelectTab();
 			// TO DO This code is temporary. do not understand refresh object is table view refresh. --;; - 15.4.20. hangum

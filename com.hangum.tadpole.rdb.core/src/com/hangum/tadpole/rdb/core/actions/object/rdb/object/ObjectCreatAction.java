@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -57,7 +57,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
 			
 			// others db
-			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				
 				CreateTableAction cta = new CreateTableAction();
 				
@@ -71,7 +71,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				}
 				
 			// moongodb
-			} else if(DBDefine.getDBDefine(userDB) == DBDefine.MONGODB_DEFAULT) {				
+			} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {				
 				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == ncd.open() ) {
 					refreshTable();
@@ -82,11 +82,11 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
-			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				CreateIndexAction cia = new CreateIndexAction();
 				cia.run(userDB, actionType);
 			// moongodb
-			} else if(DBDefine.getDBDefine(userDB) == DBDefine.MONGODB_DEFAULT) {
+			} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				NewIndexDialog nid = new NewIndexDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == nid.open()) {
 					refreshIndexes();

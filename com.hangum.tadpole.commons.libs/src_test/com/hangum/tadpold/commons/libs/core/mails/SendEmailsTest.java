@@ -14,11 +14,12 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
-import com.hangum.tadpold.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
+import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 
 /**
- * Test class for {@link com.hangum.tadpold.commons.libs.core.mails.SendEmails}.
+ * Test class for {@link com.hangum.tadpole.commons.libs.core.mails.SendEmails}.
  *
  *
  * @author hangum
@@ -30,7 +31,7 @@ public class SendEmailsTest {
 	
 
 	/**
-	 * Test method for {@link com.hangum.tadpold.commons.libs.core.mails.SendEmails#sendMail(com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO)}.
+	 * Test method for {@link com.hangum.tadpole.commons.libs.core.mails.SendEmails#sendMail(com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO)}.
 	 */
 	@Test
 	public void testSendMail() {

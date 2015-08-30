@@ -31,6 +31,7 @@ import com.hangum.tadpole.commons.admin.core.actions.UserLoginHistoryAction;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
+import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
@@ -57,6 +58,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction queryOpenAction;
     private IAction dbRelationOpenAction;
     private IAction deleteResourceAction;
+    
+    private IAction restFulAPIAction;
     
     /** send message */
     private IAction sendMessageAction;
@@ -134,6 +137,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	resourceManageAction = new ResourceManagerAction(window);
     	register(resourceManageAction);
+    	
+    	restFulAPIAction = new RestfulAPIManagerAction(window);
+    	register(restFulAPIAction);
 
         exitAction = new ExitAction(window);
         register(exitAction);
@@ -177,9 +183,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         if(PermissionChecker.isAdmin(SessionManager.getRepresentRole())) {        
 	        toolbar.add(sendMessageAction);
+	        toolbar.add(new Separator());
 	        toolbar.add(userLoginHistoryAction);
 	        toolbar.add(new Separator());
         }
+        
+        toolbar.add(restFulAPIAction);
+        toolbar.add(new Separator());
         
         toolbar.add(transactionConnectionAction);
         toolbar.add(new Separator());

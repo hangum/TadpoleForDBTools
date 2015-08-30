@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;

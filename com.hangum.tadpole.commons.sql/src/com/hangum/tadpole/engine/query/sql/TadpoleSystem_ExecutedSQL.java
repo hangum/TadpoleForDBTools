@@ -21,8 +21,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -80,10 +80,10 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  new ArrayList<Map>();
-		if(!PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
-			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
+		if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
+			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryAPIDetail", queryMap);			
 		} else {
-			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryAPIDetail", queryMap);
+			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
 		}
 		
 		for (Map resultMap : listResourceData) {
@@ -115,6 +115,13 @@ public class TadpoleSystem_ExecutedSQL {
 			SQLHistoryDAO dao = new SQLHistoryDAO(userName, dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
 					ipAddress, dbSeq2);
 			dao.setSeq(seq);
+			if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
+				dao.setEXECUSTE_SQL_TYPE(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API);
+			} else {
+				dao.setEXECUSTE_SQL_TYPE(PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR);
+			}
+			
+			
 			returnSQLHistory.add(dao);
 		}
 		

@@ -10,6 +10,17 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
+
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
+
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
@@ -19,15 +30,6 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
-
-import org.apache.log4j.Logger;
-import org.eclipse.rap.rwt.RWT;
-
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * 에디터에서 사용자가 실행하려는 쿼리 정보를 정의합니다. 
@@ -79,7 +81,7 @@ public class RequestQuery {
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;
 		this.sql = SQLUtil.sqlExecutable(originalSql);
-		sqlQueryType(sql);
+		sqlQueryType(this.sql);
 		
 		this.mode = mode;
 		this.executeType = type;
@@ -97,15 +99,15 @@ public class RequestQuery {
 		try {
 			Statement statement = CCJSqlParserUtil.parse(sql);
 			if(statement instanceof Select) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+				queryType = QUERY_TYPE.SELECT;
 			} else if(statement instanceof Insert) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
+				queryType = QUERY_TYPE.INSERT;
 			} else if(statement instanceof Update) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.UPDATE;
+				queryType = QUERY_TYPE.UPDATE;
 			} else if(statement instanceof Delete) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.DELETE;
+				queryType = QUERY_TYPE.DELETE;
 			} else {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.DDL;
+				queryType = QUERY_TYPE.DDL;
 				
 				
 				if(statement instanceof CreateTable) {
@@ -122,7 +124,14 @@ public class RequestQuery {
 			
 		} catch (Throwable e) {
 			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
-			queryType = PublicTadpoleDefine.QUERY_TYPE.UNKNOWN;
+			
+			// if does exist "CREATE or replace PROCEDURE"
+			if(StringUtils.startsWithIgnoreCase(sql, "CREATE or replace PROCEDURE")) {
+				queryType 		= QUERY_TYPE.DDL;
+				queryDDLType 	= QUERY_DDL_TYPE.PROCEDURE;
+			} else {
+				queryType 	= QUERY_TYPE.UNKNOWN;
+			}
 		}
 	}
 	

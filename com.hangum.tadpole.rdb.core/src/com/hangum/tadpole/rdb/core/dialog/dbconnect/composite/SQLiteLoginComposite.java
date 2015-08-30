@@ -36,8 +36,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -53,7 +54,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  */
 public class SQLiteLoginComposite extends AbstractLoginComposite {
 	private static final Logger logger = Logger.getLogger(SQLiteLoginComposite.class);
-	private String rootResourceDir = ApplicationArgumentUtils.getResourcesDir() + SessionManager.getEMAIL() + PublicTadpoleDefine.DIR_SEPARATOR;
+	private String ROOT_RESOURCE_DIR = ApplicationArgumentUtils.getResourcesDir() + SessionManager.getEMAIL() + PublicTadpoleDefine.DIR_SEPARATOR;
 	private static final String INITIAL_TEXT = "No files uploaded."; //$NON-NLS-1$
 	
 	private Text fileNameLabel;
@@ -254,10 +255,10 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 */
 	@Override
 	public boolean isValidateInput(boolean isTest) {
-		logger.debug(rootResourceDir);
+//		logger.debug(rootResourceDir);
 		
 		// 데이터베이스 용 디렉토리가 없으면 생성합니다.
-		File fileRootResource = new File(rootResourceDir);
+		File fileRootResource = new File(ROOT_RESOURCE_DIR);
 		if(!fileRootResource.isDirectory()) {
 			fileRootResource.mkdirs();
 		}
@@ -279,7 +280,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			}
 			File userDBFile = arryFiles[arryFiles.length-1];
 			
-			File targetFile = new File(rootResourceDir + userDBFile.getName());
+			File targetFile = new File(ROOT_RESOURCE_DIR + userDBFile.getName());
 			if(targetFile.exists()) {
 				boolean isUpload = MessageDialog.openConfirm(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_24);
 				if(!isUpload) {
@@ -297,7 +298,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 				textCreationDB.setFocus();
 				return false;
 			} 
-			if(new File(rootResourceDir + textCreationDB.getText()).exists()) {
+			if(new File(ROOT_RESOURCE_DIR + textCreationDB.getText()).exists()) {
 				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_24);
 				textCreationDB.setFocus();
 				return false;
@@ -324,7 +325,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 				if(isTest) {
 					strDBUrl = userDBFile.getAbsolutePath();
 				} else {
-					strDBUrl = rootResourceDir + userDBFile.getName() + java.util.UUID.randomUUID();
+					strDBUrl = ROOT_RESOURCE_DIR + userDBFile.getName() + Utils.getUniqueID();
 					
 					try {
 						FileUtils.moveFile(userDBFile, new File(strDBUrl));
@@ -339,7 +340,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			// 신규 디비 생성.
 			} else {
 				strDBFile = textCreationDB.getText();
-				strDBUrl = rootResourceDir + textCreationDB.getText();
+				strDBUrl = ROOT_RESOURCE_DIR + textCreationDB.getText();
 			}
 			
 			strDBUrl = String.format(getSelectDB().getDB_URL_INFO(), strDBUrl);

@@ -15,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +35,9 @@ import org.w3c.dom.Element;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
+import com.hangum.tadpole.commons.util.ResultSetUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -55,7 +55,7 @@ public class QueryUtils {
 	private static final Logger logger = Logger.getLogger(QueryUtils.class);
 	
 	/** SUPPORT RESULT TYPE */
-	public static enum RESULT_TYPE {JSON, CSV, XML};
+	public static enum RESULT_TYPE {JSON, CSV, XML, HTML_TABLE};
 	
 	/**
 	 * select문 이외의 쿼리를 실행합니다
@@ -159,7 +159,7 @@ public class QueryUtils {
 			jsonArry.add(jsonObj);
 			
 			strReturn = JSONUtil.getPretty(jsonArry.toString());
-		} else if(resultType.equals(RESULT_TYPE.XML.name())) {
+		} else {//if(resultType.equals(RESULT_TYPE.XML.name())) {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		    DocumentBuilder builder = factory.newDocumentBuilder();
 		    final Document doc = builder.newDocument();
@@ -378,5 +378,34 @@ public class QueryUtils {
 
 		return stWriter.toString();
 	}
+	
+	/**
+	 * result to html_table
+	 * 
+	 * @param userDB
+	 * @param strQuery
+	 * @param listParam
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("deprecation")
+	public static String selectToHTML_TABLE(final UserDBDAO userDB, final String strQuery, final List<Object> listParam) throws Exception {
+		
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		QueryRunner qr = new QueryRunner(client.getDataSource());
+		Object strHTMLTable = qr.query(strQuery, listParam.toArray(), new ResultSetHandler<Object>() {
 
+			@Override
+			public Object handle(ResultSet rs) throws SQLException {
+
+				try {
+					return ResultSetUtil.makeResultSetTOHTML(rs, 1000);
+				} catch(Exception e) {
+					return e.getMessage();
+				}
+			}
+		});
+
+		return strHTMLTable.toString();	
+	}
 }

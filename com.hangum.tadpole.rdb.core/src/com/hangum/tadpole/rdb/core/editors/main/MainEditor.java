@@ -40,8 +40,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
@@ -50,6 +48,8 @@ import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
 import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -640,11 +640,12 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
-	 * new file name
+	 * new resource name
+	 * 
 	 * @return
 	 */
-	private UserDBResourceDAO getFileName(UserDBResourceDAO initDBResource) {
-		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
+	private UserDBResourceDAO getResouceName(UserDBResourceDAO initDBResource, String strContentData) {
+		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL, strContentData);
 		if(rsDialog.open() == Window.OK) {
 			return rsDialog.getRetResourceDao();
 		} else {
@@ -664,7 +665,7 @@ public class MainEditor extends EditorExtension {
 		try {
 			// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
 			if(dBResource == null) {
-				UserDBResourceDAO newDBResource = getFileName(null);
+				UserDBResourceDAO newDBResource = getResouceName(null, strContentData);
 				if(newDBResource == null) return false;
 
 				isSaved = saveResourceData(newDBResource, strContentData);
@@ -697,13 +698,14 @@ public class MainEditor extends EditorExtension {
 	public void doSaveAs() {
 		boolean isSaved = false;
 		
-		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
-		UserDBResourceDAO newDBResource = getFileName(dBResource);
-		if(newDBResource == null) return;
-		
 		// 저장을 호출합니다.
 		try {
 			String strEditorAllText = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+			
+			// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
+			UserDBResourceDAO newDBResource = getResouceName(dBResource, strEditorAllText);
+			if(newDBResource == null) return;
+			
 			isSaved = saveResourceData(newDBResource, strEditorAllText);
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", getUserEMail()), e); //$NON-NLS-1$

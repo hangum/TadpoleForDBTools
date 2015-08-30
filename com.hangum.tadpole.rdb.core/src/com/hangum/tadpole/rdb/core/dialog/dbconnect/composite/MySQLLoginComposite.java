@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -206,10 +206,14 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textUser.setText(Messages.DBLoginDialog_17);
 			textPassword.setText(Messages.DBLoginDialog_18);
 			textDatabase.setText(Messages.DBLoginDialog_19);
-			textPort.setText(Messages.DBLoginDialog_20);			
+			textPort.setText(Messages.DBLoginDialog_20);	
+			
+			textJDBCOptions.setText("connectTimeout=5000&socketTimeout=4000");
 		} else {
 			textPort.setText("3306");
+			textJDBCOptions.setText("connectTimeout=5000&socketTimeout=4000");
 		}
+		
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {

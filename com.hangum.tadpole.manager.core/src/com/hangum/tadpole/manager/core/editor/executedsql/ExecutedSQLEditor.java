@@ -45,17 +45,19 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -357,11 +359,26 @@ public class ExecutedSQLEditor extends EditorPart {
 		if(gridItems.length != 0) {
 			try {
 				SQLHistoryDAO sqlHistoryDao = mapSQLHistory.get(gridItems[0].getText(0));
+				
 				if (null != sqlHistoryDao) {
+					String strApiOrSQL = gridItems[0].getText(3);
+					
+					if(sqlHistoryDao.getEXECUSTE_SQL_TYPE() == PublicTadpoleDefine.EXECUTE_SQL_TYPE.API) {
+						int intFindAnd = StringUtils.indexOf(strApiOrSQL, "&");
+						String strApi = StringUtils.substring(strApiOrSQL, 0, intFindAnd);
+						
+						UserDBResourceDAO userDBResourceDao = TadpoleSystem_UserDBResource.findAPIKey(strApi);
+						String strSQL = TadpoleSystem_UserDBResource.getResourceData(userDBResourceDao);
+						if(logger.isDebugEnabled()) logger.debug(userDBResourceDao.getName() + ", " + strSQL);
+						
+						strApiOrSQL = strSQL;
+					}
+						
 					UserDBDAO dbDao = TadpoleSystem_UserDBQuery.getUserDBInstance(sqlHistoryDao.getDbSeq());
 					FindEditorAndWriteQueryUtil.run(dbDao, 
-								Utils.convHtmlToLine(gridItems[0].getText(3)) + PublicTadpoleDefine.SQL_DELIMITER, 
-								PublicTadpoleDefine.DB_ACTION.TABLES);
+								Utils.convHtmlToLine(strApiOrSQL) + PublicTadpoleDefine.SQL_DELIMITER, 
+							PublicTadpoleDefine.DB_ACTION.TABLES);
+
 				}
 			} catch (Exception e) {
 				logger.error("find editor and write query", e);

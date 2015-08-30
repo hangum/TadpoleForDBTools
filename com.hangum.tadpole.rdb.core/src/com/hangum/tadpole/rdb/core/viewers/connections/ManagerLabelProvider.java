@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -39,6 +39,8 @@ public class ManagerLabelProvider extends LabelProvider {
 	public static String PRODUCTION_SERVER_START_TAG = "<em style='color:rgb(255, 0, 0)'>"; //$NON-NLS-1$
 	/** development markup start tag */
 	public static String DEVELOPMENT_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
+	/** development markup start tag */
+	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
 	
 	/** Markup end tag */
 	public static String END_TAG = "</em>"; //$NON-NLS-1$
@@ -65,7 +67,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "resources/icons/mariadb-add.png";
 		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
 		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "resources/icons/sqlite-add.png";
-		else if(DBDefine.MSSQL_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
+		else if(DBDefine.MSSQL_DEFAULT == dbType || DBDefine.MSSQL_8_LE_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
 		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "resources/icons/cubrid-add.png";
 		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
 		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
@@ -77,14 +79,10 @@ public class ManagerLabelProvider extends LabelProvider {
 		
 		try {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
-				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {				
-					baseImage = ResourceManager.decorateImage(baseImage, 
-													ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/lock_0.28.png"), 
-													ResourceManager.BOTTOM_LEFT);
+				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {
+					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.BOTTOM_LEFT);
 				} else {
-					baseImage = ResourceManager.decorateImage(baseImage, 
-							ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unlock_0.28.png"), 
-							ResourceManager.BOTTOM_LEFT);
+					baseImage = getDecorateImage(baseImage, "resources/icons/unlock_0.28.png", ResourceManager.BOTTOM_LEFT);
 				}
 			}
 		} catch(Exception e) {
@@ -114,16 +112,16 @@ public class ManagerLabelProvider extends LabelProvider {
 	public static String getDBText(UserDBDAO userDB) {
 		String retText = "";
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
-			retText = PRODUCTION_SERVER_START_TAG + "[" + StringUtils.substring(userDB.getOperation_type(), 0, 3) + "] " + END_TAG;
+			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 		} else {
-			retText = DEVELOPMENT_SERVER_START_TAG + "[" + StringUtils.substring(userDB.getOperation_type(), 0, 3) + "] " + END_TAG;
+			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 		}
 		
 		// 자신의 디비만 보이도록 수정
 		if(userDB.getUser_seq() == SessionManager.getUserSeq()) {
-			retText += userDB.getDisplay_name() + " (" + userDB.getUsers() + "@" + userDB.getDb() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
-			retText += userDB.getDisplay_name(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			retText += userDB.getDisplay_name();
 		}
 		
 		return retText;
@@ -140,11 +138,21 @@ public class ManagerLabelProvider extends LabelProvider {
 		
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
+			
+			Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sql-query.png"); //$NON-NLS-1$
 			if(PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals( dao.getResource_types())) {
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
-			} else {
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sql-query.png"); //$NON-NLS-1$
+				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
 			}
+			
+			if(PublicTadpoleDefine.SHARED_TYPE.PRIVATE.name().equals(dao.getShared_type())) {
+				try {
+					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.TOP_RIGHT);
+				} catch(Exception e) {
+					logger.error("image decorate error", e);
+				}
+			}
+			
+			return baseImage;
 		}
 		
 		return super.getImage(element);
@@ -161,13 +169,26 @@ public class ManagerLabelProvider extends LabelProvider {
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			
-			String strSharedType = "[" + StringUtils.substring(dao.getShared_type(), 0, 3) + "]";
-			String strSupportAPI = PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())?"[API]":"";
+			String strSupportAPI = PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())?
+										String.format("%s [%s] %s", INFO_SERVER_START_TAG, dao.getRestapi_uri(), END_TAG):"";
 			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";
 			
-			return strSharedType + strSupportAPI + dao.getName() + strComment;
+			return dao.getName() + " " + strSupportAPI + strComment;
 		}
 		
 		return "## not set ##"; //$NON-NLS-1$
+	}
+	
+	
+	/**
+	 * lock image
+	 * 
+	 * @param baseImage
+	 * @return
+	 */
+	private static Image getDecorateImage(Image baseImage, String strDecorateImage, int conor) throws Exception {
+		return ResourceManager.decorateImage(baseImage, 
+				ResourceManager.getPluginImage(Activator.PLUGIN_ID, strDecorateImage), 
+				conor);
 	}
 }

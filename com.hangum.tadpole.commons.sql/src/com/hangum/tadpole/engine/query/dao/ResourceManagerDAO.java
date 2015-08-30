@@ -11,7 +11,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.FieldNameAnnotationClass;
 
@@ -33,34 +33,38 @@ public class ResourceManagerDAO extends AbstractDAO {
 	long user_seq;
 	String user_name;
 	long db_seq;
+	String display_name;
+	
 	long group_seq;
-	String res_title;
 	String shared_type;
+	String name;
 	String description;
 	String create_time;
 	String delyn;
 	
 	String restapi_yesno = PublicTadpoleDefine.YES_NO.NO.name();
+	String restapi_uri = "";
 	String restapi_key = "";
-
+	
 	public ResourceManagerDAO() {
 	}
 
-	public ResourceManagerDAO(long resource_seq, String resource_types, long user_seq, String user_name, long db_seq, long group_seq, String res_title,
-			String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_key) {
+	public ResourceManagerDAO(long resource_seq, String resource_types, long user_seq, String user_name, long db_seq, long group_seq, String name,
+			String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_uri, String restapi_key) {
 		this.resource_seq = resource_seq;
 		this.resource_types = resource_types;
 		this.user_seq = user_seq;
 		this.user_name = user_name;
 		this.db_seq = db_seq;
 		this.group_seq = group_seq;
-		this.res_title = res_title;
+		this.name = name;
 		this.shared_type = shared_type;
 		this.description = description;
 		this.create_time = create_time;
 		this.delyn = delyn;
 
 		this.restapi_yesno = restapi_yesno;
+		this.restapi_uri = restapi_uri;
 		this.restapi_key = restapi_key;
 	}
 
@@ -111,15 +115,6 @@ public class ResourceManagerDAO extends AbstractDAO {
 	public long getGroup_seq() {
 		return group_seq;
 	}
-
-	/**
-	 * @return the res_title
-	 */
-	@FieldNameAnnotationClass(fieldKey = "res_title")
-	public String getRes_title() {
-		return res_title;
-	}
-
 	/**
 	 * @return the shared_type
 	 */
@@ -231,14 +226,6 @@ public class ResourceManagerDAO extends AbstractDAO {
 	}
 
 	/**
-	 * @param res_title
-	 *            the res_title to set
-	 */
-	public void setRes_title(String res_title) {
-		this.res_title = res_title;
-	}
-
-	/**
 	 * @param shared_type
 	 *            the shared_type to set
 	 */
@@ -269,4 +256,31 @@ public class ResourceManagerDAO extends AbstractDAO {
 	public void setDelyn(String delyn) {
 		this.delyn = delyn;
 	}
+
+	@FieldNameAnnotationClass(fieldKey = "restapi_uri")
+	public String getRestapi_uri() {
+		return restapi_uri;
+	}
+
+	public void setRestapi_uri(String restapi_uri) {
+		this.restapi_uri = restapi_uri;
+	}
+
+	@FieldNameAnnotationClass(fieldKey = "res_title")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDisplay_name() {
+		return display_name;
+	}
+
+	public void setDisplay_name(String display_name) {
+		this.display_name = display_name;
+	}
+
 }

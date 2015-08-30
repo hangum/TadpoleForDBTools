@@ -36,7 +36,8 @@ CREATE TABLE `user_db_resource` (
 	`name`           VARCHAR(50)   NULL     COMMENT '리소스 명칭', -- 이름
 	`shared_type`    VARCHAR(7)    NOT NULL DEFAULT 'PRIVATE' COMMENT '개인 또는 그룹간 공유 구분', -- 공유종류
 	`restapi_yesno`  CHAR(3)       NULL     DEFAULT 'NO' COMMENT '레스트 api지원유무', -- 레스트api 지원유무
-	`restapi_key`    VARCHAR(50)   NULL     COMMENT '별칭', -- 레스트 api key
+	`restapi_uri`    VARCHAR(200)  NULL     COMMENT 'api uri', -- 레스트 api uri
+	`restapi_key`    VARCHAR(50)   NULL     COMMENT 'api key', -- 레스트 api key
 	`description`    VARCHAR(2000) NULL     COMMENT '리소스 설명', -- 설명
 	`create_time`    TIMESTAMP     NOT NULL DEFAULT NOW() COMMENT '생성일시', -- 생성일시
 	`delyn`          CHAR(3)       NOT NULL DEFAULT 'NO' COMMENT '삭제여부' -- 삭제여부

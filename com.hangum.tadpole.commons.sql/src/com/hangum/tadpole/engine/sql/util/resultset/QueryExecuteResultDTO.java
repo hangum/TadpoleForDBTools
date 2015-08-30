@@ -13,8 +13,8 @@ package com.hangum.tadpole.engine.sql.util.resultset;
 import java.sql.ResultSet;
 import java.util.Map;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_EXECUTE_STATUS;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_EXECUTE_STATUS;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**

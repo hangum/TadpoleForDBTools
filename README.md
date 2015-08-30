@@ -64,12 +64,11 @@ Document
  - English : https://github.com/hangum/TadpoleForDBTools/wiki/Developer-Guide-Eng
  - 한국어  : https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621473
 * RDB User Guide
- - English : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-Eng
- - 한국어  : https://tadpoledbhub.atlassian.net/wiki/display/TADPOLE/Tadpole+DB+Hub+DOC
+ - 한국어  : https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=20578325
  - Indonesia : https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID
 * MongoDB User Guide
  - English : https://github.com/hangum/TadpoleForDBTools/wiki/MongoDB-User-Guide-Eng
- - 한국어  : https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621445
+ - 한국어  : https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=20578325
 * RDB Tutorial
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
@@ -80,7 +79,7 @@ Chrome web store
 *  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
 
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.1-r0/
+* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.3/
 
 License
 -

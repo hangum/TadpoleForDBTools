@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -153,7 +153,6 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
 		
 		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);

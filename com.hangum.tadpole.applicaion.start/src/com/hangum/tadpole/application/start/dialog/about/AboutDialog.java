@@ -23,9 +23,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.swtdesigner.ResourceManager;
 
 /**

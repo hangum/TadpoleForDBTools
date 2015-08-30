@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpold.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;

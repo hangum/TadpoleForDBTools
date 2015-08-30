@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.service.StartupParameters;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -30,11 +29,9 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.application.start.api.APIServiceDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -202,16 +199,16 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * login 
      */
     private void login() {
-		// api call을 하기 위한 초기 진입점.  
-		StartupParameters serviceParameter = RWT.getClient().getService(StartupParameters.class );
-		String serviceID = serviceParameter.getParameter(PublicTadpoleDefine.SERVICE_KEY_NAME);
-		if(null != serviceID) {
-			if(logger.isDebugEnabled()) logger.debug( "####################### serviceid is " + serviceID );
-			
-			APIServiceDialog apiDialog = new APIServiceDialog(Display.getCurrent().getActiveShell(), serviceParameter);
-			apiDialog.open();
-
-		} else {
+//		// api call을 하기 위한 초기 진입점.  
+//		StartupParameters serviceParameter = RWT.getClient().getService(StartupParameters.class );
+//		String serviceID = serviceParameter.getParameter(PublicTadpoleDefine.SERVICE_KEY_NAME);
+//		if(null != serviceID) {
+//			if(logger.isDebugEnabled()) logger.debug( "####################### serviceid is " + serviceID );
+//			
+//			APIServiceDialog apiDialog = new APIServiceDialog(Display.getCurrent().getActiveShell(), serviceParameter);
+//			apiDialog.open();
+//
+//		} else {
 				
 	    	// If you already login?
 	    	if(0 == SessionManager.getUserSeq()) {
@@ -270,7 +267,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		    		
 		    	}
 	    	}
-		}
+//		}
     }
     
     /**

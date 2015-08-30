@@ -60,8 +60,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -193,9 +193,15 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
-					String strSQL = GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, showTableColumns);
-					if(StringUtils.isNotEmpty(strSQL)) {
-						FindEditorAndWriteQueryUtil.run(userDB, strSQL, PublicTadpoleDefine.DB_ACTION.TABLES);
+					
+					try {
+						List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+						String strSQL = GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, tmpTableColumns);
+						if(StringUtils.isNotEmpty(strSQL)) {
+							FindEditorAndWriteQueryUtil.run(userDB, strSQL, PublicTadpoleDefine.DB_ACTION.TABLES);
+						}
+					} catch(Exception e) {
+						logger.error("table columns", e);
 					}
 				}
 			}

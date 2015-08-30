@@ -112,7 +112,7 @@ public class MongoDBCollectionToMongodBImport extends DBImport {
 			
 			// row 단위
 			List<DBObject> listDBObject = qu.getCollectionDataList();
-			logger.debug("[work table]" + strNewColName + " size is " + listDBObject.size());
+			if(logger.isDebugEnabled()) logger.debug("[work table]" + strNewColName + " size is " + listDBObject.size());
 		
 			MongoDBQuery.insertDocument(getTargetUserDB(), strNewColName, listDBObject);
 		}

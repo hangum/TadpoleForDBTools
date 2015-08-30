@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import org.eclipse.swt.widgets.Button;

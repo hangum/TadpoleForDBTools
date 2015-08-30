@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -53,6 +53,8 @@ public class TadpoleObjectQuery {
 		String strTableName = "";
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
 		else 												strTableName = tableDao.getName();
+		
+		mapParam.put("schema", tableDao.getSchema_name());
 		mapParam.put("table", strTableName);
 
 		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {

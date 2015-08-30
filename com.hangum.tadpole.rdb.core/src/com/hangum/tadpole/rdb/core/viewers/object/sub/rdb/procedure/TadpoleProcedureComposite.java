@@ -35,8 +35,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -181,7 +181,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(executeAction_Procedure);
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+				if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT){
 					manager.add(objectCompileAction);
 				}
 			}
@@ -224,9 +224,10 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh) {
-		if (!boolRefresh)
-			if (showProcedure != null)
-				return;
+		if (!boolRefresh) {
+			if (showProcedure != null) return;
+		}
+		
 		this.userDB = userDB;
 
 		try {

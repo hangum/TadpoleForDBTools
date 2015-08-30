@@ -13,7 +13,7 @@ package com.hangum.tadpole.commons.util;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * <pre>

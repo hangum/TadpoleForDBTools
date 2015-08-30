@@ -22,8 +22,8 @@ import net.sf.jsqlparser.statement.update.Update;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 
 /**
  * SQL parser
