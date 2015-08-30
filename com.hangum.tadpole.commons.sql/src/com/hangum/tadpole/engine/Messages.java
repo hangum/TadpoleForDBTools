@@ -14,6 +14,12 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.engine.messages"; //$NON-NLS-1$
+	public static String DBLockDialog_0;
+	public static String DBLockDialog_1;
+	public static String DBLockDialog_2;
+	public static String DBLockDialog_3;
+	public static String DBLockDialog_4;
+	public static String DBLockDialog_5;
 	public static String TadpoleSQLManager_0;
 	public static String SQLHistoryCreateColumn_0;
 	public static String SQLHistoryCreateColumn_1;
