@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.preference.Messages;
@@ -103,6 +104,9 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		btnGenerateKey.setText("Generate Key");
 		
 		initDefaultValue();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}

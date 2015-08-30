@@ -208,6 +208,9 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		buttonWithdrawal.setText(Messages.UserInfoPerference_button_text);
 		new Label(container, SWT.NONE);
 		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return container;
 	}
 	
