@@ -66,6 +66,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.api.APIServiceDialog;
 import com.hangum.tadpole.manager.core.dialogs.api.UserAPIServiceDialog;
 import com.hangum.tadpole.manager.core.editor.restfulapi.dao.RESTFulAPIDAO;
@@ -115,8 +116,8 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem tltmRefrsh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefrsh.setToolTipText("Refresh");
-		tltmRefrsh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png"));
+		tltmRefrsh.setToolTipText(Messages.RESTFulAPIManagerEditor_1);
+		tltmRefrsh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 		tltmRefrsh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -125,8 +126,8 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		});
 		
 		ToolItem tltmAPIExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmAPIExecute.setToolTipText("Execute RESTFul API");
-		tltmAPIExecute.setImage(ResourceManager.getPluginImage(com.hangum.tadpole.manager.core.Activator.PLUGIN_ID, "resources/icons/restful_api.png"));
+		tltmAPIExecute.setToolTipText(Messages.RESTFulAPIManagerEditor_3);
+		tltmAPIExecute.setImage(ResourceManager.getPluginImage(com.hangum.tadpole.manager.core.Activator.PLUGIN_ID, "resources/icons/restful_api.png")); //$NON-NLS-1$
 		tltmAPIExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -151,24 +152,24 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 				if(rmDAO == null) return;
 				
 				try {
-					userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(Integer.parseInt(""+rmDAO.getDb_seq()));
+					userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(Integer.parseInt(""+rmDAO.getDb_seq())); //$NON-NLS-1$
 					
 					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 					List<String> result = sqlClient.queryForList("userDbResourceData", rmDAO); //$NON-NLS-1$
 
-					comboShare.getCombo().select("PUBLIC".equals(rmDAO.getShared_type()) ? 0 : 1);
+					comboShare.getCombo().select("PUBLIC".equals(rmDAO.getShared_type()) ? 0 : 1); //$NON-NLS-1$
 					textTitle.setText(rmDAO.getName());
 					textDescription.setText(rmDAO.getDescription());
 					comboSupportAPI.setText(rmDAO.getRestapi_yesno());
-					textAPIURL.setText(rmDAO.getRestapi_uri()==null?"":rmDAO.getRestapi_uri());
+					textAPIURL.setText(rmDAO.getRestapi_uri()==null?"":rmDAO.getRestapi_uri()); //$NON-NLS-1$
 					textAPIKey.setText(rmDAO.getRestapi_key());
-					textQuery.setText("");
+					textQuery.setText(""); //$NON-NLS-1$
 					for (String data : result) {
 						textQuery.append(data);
 					}
 
 				} catch (Exception e) {
-					logger.error("Resource detail", e);
+					logger.error("Resource detail", e); //$NON-NLS-1$
 				}
 			}
 		});
@@ -184,7 +185,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 				
 				try {
 					
-					final UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(Integer.parseInt(""+rmDAO.getDb_seq()));
+					final UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(Integer.parseInt(""+rmDAO.getDb_seq())); //$NON-NLS-1$
 					
 					// TODO : 기존 데이터베이스 목록에 리소스를 표시하기 위한  DAO를 사용하는 부분과 호환성을 위해 변환.리소스DAO를 하나로 통합할 필요 있음.
 					UserDBResourceDAO ad = new UserDBResourceDAO();
@@ -206,7 +207,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 						qea.run(ad);
 					}
 				} catch(Exception e) {
-					logger.error("select api", e);
+					logger.error("select api", e); //$NON-NLS-1$
 				}
 			}
 		});
@@ -218,22 +219,22 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		TreeViewerColumn treeViewerColumn = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnUrl = treeViewerColumn.getColumn();
 		trclmnUrl.setWidth(150);
-		trclmnUrl.setText("URL");
+		trclmnUrl.setText(Messages.RESTFulAPIManagerEditor_12);
 		
 		TreeViewerColumn tvcName = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnDBName = tvcName.getColumn();
 		trclmnDBName.setWidth(150);
-		trclmnDBName.setText("API Name");
+		trclmnDBName.setText(Messages.RESTFulAPIManagerEditor_13);
 		
 		TreeViewerColumn treeViewerColumn_1 = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnName = treeViewerColumn_1.getColumn();
 		trclmnName.setWidth(150);
-		trclmnName.setText("DB NAME");
+		trclmnName.setText(Messages.RESTFulAPIManagerEditor_14);
 		
 		TreeViewerColumn treeViewerColumn_2 = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnDescription = treeViewerColumn_2.getColumn();
 		trclmnDescription.setWidth(300);
-		trclmnDescription.setText("Description");
+		trclmnDescription.setText(Messages.RESTFulAPIManagerEditor_15);
 		
 		tvAPIList.setContentProvider(new APIListContentProvider());
 		tvAPIList.setLabelProvider(new APIListLabelProvider());
@@ -242,7 +243,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 /////////////////////////////////////////////////////////////////////////////////////////////
 		Group grpQuery = new Group(parent, SWT.NONE);
 		grpQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpQuery.setText("Detail");
+		grpQuery.setText(Messages.RESTFulAPIManagerEditor_16);
 		GridLayout gl_grpQuery = new GridLayout(1, false);
 		gl_grpQuery.verticalSpacing = 1;
 		gl_grpQuery.horizontalSpacing = 1;
@@ -259,15 +260,15 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		compositeDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Label lblNewLabel = new Label(compositeDetail, SWT.NONE);
-		lblNewLabel.setText("Share");
+		lblNewLabel.setText(Messages.RESTFulAPIManagerEditor_17);
 
 		comboShare = new ComboViewer(compositeDetail, SWT.NONE);
 		Combo cShare = comboShare.getCombo();
 		cShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" });
+		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" }); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Label lblNewLabel_1 = new Label(compositeDetail, SWT.NONE);
-		lblNewLabel_1.setText("Title");
+		lblNewLabel_1.setText(Messages.RESTFulAPIManagerEditor_20);
 
 		textTitle = new Text(compositeDetail, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -278,11 +279,11 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				if(rmDAO == null) return;
 				
-				if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you wnat to save?")) return;
+				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.RESTFulAPIManagerEditor_21, Messages.RESTFulAPIManagerEditor_22)) return;
 				
 				try {
 					String share_type = comboShare.getCombo().getText();
-					share_type = (share_type == null || "".equals(share_type)) ? "PUBLIC" : share_type;
+					share_type = (share_type == null || "".equals(share_type)) ? "PUBLIC" : share_type; //$NON-NLS-1$ //$NON-NLS-2$
 					rmDAO.setShared_type(share_type);
 					rmDAO.setName(textTitle.getText());
 					rmDAO.setDescription(textDescription.getText());
@@ -299,17 +300,17 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 						return;
 					}
 					
-					if(comboSupportAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name()) && "".equals(rmDAO.getRestapi_key())) {
+					if(comboSupportAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name()) && "".equals(rmDAO.getRestapi_key())) { //$NON-NLS-1$
 						rmDAO.setRestapi_key(Utils.getUniqueID());	
 					}
 					
 					TadpoleSystem_UserDBResource.updateResourceHeader(rmDAO);
 					tvAPIList.refresh(rmDAO, true);
 					
-					MessageDialog.openInformation(getSite().getShell(), "Confirm", "Save resource data.");
+					MessageDialog.openInformation(getSite().getShell(), Messages.RESTFulAPIManagerEditor_26, Messages.RESTFulAPIManagerEditor_27);
 				} catch (Exception e1) {
-					logger.error("save resource", e1);
-					MessageDialog.openError(getSite().getShell(), "Error", "Rise exception.\n"+ e1.getMessage());
+					logger.error("save resource", e1); //$NON-NLS-1$
+					MessageDialog.openError(getSite().getShell(), Messages.RESTFulAPIManagerEditor_2, Messages.RESTFulAPIManagerEditor_30+ e1.getMessage());
 				}
 			}
 			
@@ -320,7 +321,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openError(null, "Confirm", "The name must enter at least 3 characters."); //$NON-NLS-1$
+					MessageDialog.openError(null, "Confirm", Messages.RESTFulAPIManagerEditor_31); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -330,15 +331,15 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 					if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboSupportAPI.getText())) {
 						String strAPIURI = textAPIURL.getText().trim();
 						
-						if(strAPIURI.equals("")) {
-							MessageDialog.openError(getSite().getShell(), "Confirm", "Please input API URI");
+						if(strAPIURI.equals("")) { //$NON-NLS-1$
+							MessageDialog.openError(getSite().getShell(), Messages.RESTFulAPIManagerEditor_33, Messages.RESTFulAPIManagerEditor_34);
 							textAPIURL.setFocus();
 							return false;
 						}
 						
 						// check valid url. url pattern is must be /{parent}/{child}
 						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openError(getSite().getShell(), "Error", "Check your url. url is must me start the '/' character");
+							MessageDialog.openError(getSite().getShell(), Messages.RESTFulAPIManagerEditor_35, Messages.RESTFulAPIManagerEditor_36);
 							
 							textAPIURL.setFocus();
 							return false;
@@ -349,7 +350,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 				return true;
 			}
 		});
-		btnSave.setText("Save");
+		btnSave.setText(Messages.RESTFulAPIManagerEditor_37);
 
 //		Button btnDelete = new Button(composite, SWT.NONE);
 //		btnDelete.addSelectionListener(new SelectionAdapter() {
@@ -379,7 +380,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 //		btnDelete.setText("Delete");
 
 		Label lblDescription = new Label(compositeDetail, SWT.NONE);
-		lblDescription.setText("Description");
+		lblDescription.setText(Messages.RESTFulAPIManagerEditor_38);
 
 		textDescription = new Text(compositeDetail, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1);
@@ -388,15 +389,15 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		
 		Label lblSupportApi = new Label(compositeDetail, SWT.NONE);
 		lblSupportApi.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSupportApi.setText("Support API");
+		lblSupportApi.setText(Messages.RESTFulAPIManagerEditor_39);
 		
 		comboSupportAPI = new Combo(compositeDetail, SWT.READ_ONLY);
-		comboSupportAPI.add("YES");
-		comboSupportAPI.add("NO");
+		comboSupportAPI.add("YES"); //$NON-NLS-1$
+		comboSupportAPI.add("NO"); //$NON-NLS-1$
 		comboSupportAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblApiURI = new Label(compositeDetail, SWT.NONE);
-		lblApiURI.setText("API URL");
+		lblApiURI.setText(Messages.RESTFulAPIManagerEditor_42);
 		
 		textAPIURL = new Text(compositeDetail, SWT.BORDER);
 		textAPIURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -405,20 +406,20 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		btnShowUrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!"".equals(textAPIURL.getText())) {
+				if(!"".equals(textAPIURL.getText())) { //$NON-NLS-1$
 					String strURL = RESTfulAPIUtils.makeURL(textQuery.getText(), textAPIURL.getText());
 					
-					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), "API URL Information", strURL);
+					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), Messages.RESTFulAPIManagerEditor_44, strURL);
 					dialog.open();
 				}
 			}
 		});
-		btnShowUrl.setText("Show URL");
+		btnShowUrl.setText(Messages.RESTFulAPIManagerEditor_45);
 		new Label(compositeDetail, SWT.NONE);
 		new Label(compositeDetail, SWT.NONE);
 		
 		Label lblApiKey = new Label(compositeDetail, SWT.NONE);
-		lblApiKey.setText("API Key");
+		lblApiKey.setText(Messages.RESTFulAPIManagerEditor_46);
 		
 		textAPIKey = new Text(compositeDetail, SWT.BORDER);
 		textAPIKey.setEnabled(false);
@@ -429,7 +430,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		btnApiExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!"".equals(textAPIURL.getText())) {
+				if(!"".equals(textAPIURL.getText())) { //$NON-NLS-1$
 					if(userDB != null & rmDAO != null) {
 						APIServiceDialog dialog = new APIServiceDialog(getSite().getShell(), userDB, textQuery.getText(), rmDAO);
 						dialog.open();
@@ -437,7 +438,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 				}
 			}
 		});
-		btnApiExecute.setText("Execute Test");
+		btnApiExecute.setText(Messages.RESTFulAPIManagerEditor_48);
 
 		textQuery = new Text(compositeDetail, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
@@ -460,7 +461,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			
 			// 첫 번째 인덱스 항목을 넣는다.
 			for (ResourceManagerDAO resourceManagerDAO : listAPIList) {
-				String strURL = StringUtils.removeStart(resourceManagerDAO.getRestapi_uri(), "/");
+				String strURL = StringUtils.removeStart(resourceManagerDAO.getRestapi_uri(), "/"); //$NON-NLS-1$
 				
 				// 트리의 마지막에 데이터를 넣어야 한다.
 				String[] strArrySlash = StringUtils.split(strURL, '/');
@@ -474,7 +475,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			
 			// 두 번째 항목을 찾는다.
 			for (ResourceManagerDAO resourceManagerDAO : listAPIList) {
-				String strURL = StringUtils.removeStart(resourceManagerDAO.getRestapi_uri(), "/");
+				String strURL = StringUtils.removeStart(resourceManagerDAO.getRestapi_uri(), "/"); //$NON-NLS-1$
 				
 				// 트리의 마지막에 데이터를 넣어야 한다.
 				String[] strArrySlash = StringUtils.split(strURL, '/');
@@ -507,7 +508,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			
 			// 세 번째 항목을 찾는다.
 			for (ResourceManagerDAO resourceManagerDAO : listAPIList) {
-				String strURL = StringUtils.removeStart(resourceManagerDAO.getRestapi_uri(), "/");
+				String strURL = StringUtils.removeStart(resourceManagerDAO.getRestapi_uri(), "/"); //$NON-NLS-1$
 				
 				// 트리의 마지막에 데이터를 넣어야 한다.
 				String[] strArrySlash = StringUtils.split(strURL, '/');
@@ -530,7 +531,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			tvAPIList.setInput(listRestfulDao);
 			
 		} catch (Exception e) {
-			logger.error("RESTFulAPI List", e);
+			logger.error("RESTFulAPI List", e); //$NON-NLS-1$
 		}
 		
 		// google analytic
@@ -632,7 +633,7 @@ class APIListLabelProvider extends LabelProvider implements ITableLabelProvider 
 		RESTFulAPIDAO dao = (RESTFulAPIDAO)element;
 		ResourceManagerDAO rmDAO = dao.getResourceManagerDao();
 
-		if(columnIndex == 0) return "/" + dao.getStrURL();
+		if(columnIndex == 0) return "/" + dao.getStrURL(); //$NON-NLS-1$
 		if(rmDAO != null) {
 			switch(columnIndex) {
 			case 1: return rmDAO.getName();

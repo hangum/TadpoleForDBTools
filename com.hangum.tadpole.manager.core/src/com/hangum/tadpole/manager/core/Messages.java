@@ -79,6 +79,102 @@ public class Messages extends NLS {
 	public static String NewUserDialog_lblQrcodeUrl_text;
 	public static String NewUserDialog_lblOtpCdoe_text;
 
+	public static String ResourceManageEditor_12;
+
+	public static String ResourceManageEditor_13;
+
+	public static String ResourceManageEditor_16;
+
+	public static String ResourceManageEditor_17;
+
+	public static String ResourceManageEditor_18;
+
+	public static String ResourceManageEditor_23;
+
+	public static String ResourceManageEditor_25;
+
+	public static String ResourceManageEditor_26;
+
+	public static String ResourceManageEditor_27;
+
+	public static String ResourceManageEditor_30;
+
+	public static String ResourceManageEditor_32;
+
+	public static String ResourceManageEditor_33;
+
+	public static String ResourceManageEditor_34;
+
+	public static String ResourceManageEditor_35;
+
+	public static String ResourceManageEditor_38;
+
+	public static String ResourceManageEditor_40;
+
+	public static String ResourceManageEditor_41;
+
+	public static String ResourceManageEditor_42;
+
+	public static String ResourceManageEditor_44;
+
+	public static String ResourceManageEditor_45;
+
+	public static String RESTFulAPIManagerEditor_1;
+
+	public static String RESTFulAPIManagerEditor_12;
+
+	public static String RESTFulAPIManagerEditor_13;
+
+	public static String RESTFulAPIManagerEditor_14;
+
+	public static String RESTFulAPIManagerEditor_15;
+
+	public static String RESTFulAPIManagerEditor_16;
+
+	public static String RESTFulAPIManagerEditor_17;
+
+	public static String RESTFulAPIManagerEditor_2;
+
+	public static String RESTFulAPIManagerEditor_20;
+
+	public static String RESTFulAPIManagerEditor_21;
+
+	public static String RESTFulAPIManagerEditor_22;
+
+	public static String RESTFulAPIManagerEditor_26;
+
+	public static String RESTFulAPIManagerEditor_27;
+
+	public static String RESTFulAPIManagerEditor_3;
+
+	public static String RESTFulAPIManagerEditor_30;
+
+	public static String RESTFulAPIManagerEditor_31;
+
+	public static String RESTFulAPIManagerEditor_33;
+
+	public static String RESTFulAPIManagerEditor_34;
+
+	public static String RESTFulAPIManagerEditor_35;
+
+	public static String RESTFulAPIManagerEditor_36;
+
+	public static String RESTFulAPIManagerEditor_37;
+
+	public static String RESTFulAPIManagerEditor_38;
+
+	public static String RESTFulAPIManagerEditor_39;
+
+	public static String RESTFulAPIManagerEditor_42;
+
+	public static String RESTFulAPIManagerEditor_44;
+
+	public static String RESTFulAPIManagerEditor_45;
+
+	public static String RESTFulAPIManagerEditor_46;
+
+	public static String RESTFulAPIManagerEditor_48;
+
 	public static String TransactionConnectionListEditor_0;
 
 	public static String TransactionConnectionListEditor_1;
