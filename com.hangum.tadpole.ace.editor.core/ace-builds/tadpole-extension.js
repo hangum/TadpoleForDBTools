@@ -182,7 +182,7 @@ editorService.setFocus = function() {
 };
 
 //==[ Define short key ]======================================================================================================================
-var shortcutErrMsg = 'Opps, an execution error has occured!\nEither click the "SQL" button of the tool bar, or open a new editor window.';
+var shortcutErrMsg = 'Oops, an execution error has occured!\nEither click the "SQL" button of the tool bar, or open a new editor window.';
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
