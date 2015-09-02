@@ -179,6 +179,7 @@ public class TadpoleSystem_UserQuery {
 					throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 				}
 			} catch(Exception e) {
+				logger.error("do not login", e);
 				throw new Exception(Messages.TadpoleSystem_UserQuery_5);
 			}
 		}
