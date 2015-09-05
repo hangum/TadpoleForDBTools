@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -47,7 +49,7 @@ public class TadpoleSystem_SchemaHistory {
 	 * get schema history detail data
 	 * @param seq
 	 */
-	public static List<SchemaHistoryDetailDAO> getExecuteQueryHistoryDetail(int seq) throws Exception {
+	public static List<SchemaHistoryDetailDAO> getExecuteQueryHistoryDetail(int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getSchemaHistoryDetail", seq);
 	}
@@ -64,7 +66,7 @@ public class TadpoleSystem_SchemaHistory {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<SchemaHistoryDAO> getExecuteQueryHistory(int dbSeq, String workType, String objectType, String objectId, long startTime, long endTime) throws Exception {
+	public static List<SchemaHistoryDAO> getExecuteQueryHistory(int dbSeq, String workType, String objectType, String objectId, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
 		List<SchemaHistoryDAO> returnSchemaHistory = new ArrayList<SchemaHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -159,7 +161,7 @@ public class TadpoleSystem_SchemaHistory {
 	 * @param strSQL
 	 * @throws Exception
 	 */
-	private static void insertResourceData(SchemaHistoryDAO schemaHistoryDao, String strSQL) throws Exception {
+	private static void insertResourceData(SchemaHistoryDAO schemaHistoryDao, String strSQL) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		// content data를 저장합니다.

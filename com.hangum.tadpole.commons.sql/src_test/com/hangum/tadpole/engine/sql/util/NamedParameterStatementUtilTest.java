@@ -3,7 +3,7 @@ package com.hangum.tadpole.engine.sql.util;
 import java.util.Map;
 import java.util.Set;
 
-import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 
 public class NamedParameterStatementUtilTest {
 	public static void main(String[] args) {
@@ -12,7 +12,7 @@ public class NamedParameterStatementUtilTest {
 			String query = "select * from my_table where name = :name or address = ?address";
 //			String query = "select * from my_table where name = ? or address = ?";
 			
-			SQLNamedParameterUtil p = SQLNamedParameterUtil.getInstance();
+			OracleStyleSQLNamedParameterUtil p = OracleStyleSQLNamedParameterUtil.getInstance();
 			p.parse(query);
 			
 			Map<String, int[]> mapIndex = p.getIndexMap();

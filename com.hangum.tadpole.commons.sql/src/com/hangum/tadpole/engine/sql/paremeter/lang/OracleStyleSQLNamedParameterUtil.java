@@ -11,7 +11,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.paremeter;
+package com.hangum.tadpole.engine.sql.paremeter.lang;
 
 import java.sql.PreparedStatement;
 import java.util.HashMap;
@@ -50,22 +50,22 @@ import java.util.Map;
  * </PRE>
  *
 */
-public class SQLNamedParameterUtil {
-	private static SQLNamedParameterUtil instance;
+public class OracleStyleSQLNamedParameterUtil {
+	private static OracleStyleSQLNamedParameterUtil instance;
 	
     /** Maps parameter names to arrays of ints which are the parameter indices. */
     private Map<String, int[]> mapNameToIndex;
     private Map<Integer, String> mapIndexToName;
 
-    private SQLNamedParameterUtil() {}
+    private OracleStyleSQLNamedParameterUtil() {}
     
     /**
      * singleton construct
      * 
      * @return
      */
-    public static SQLNamedParameterUtil getInstance() {
-    	if(instance == null) instance = new SQLNamedParameterUtil();
+    public static OracleStyleSQLNamedParameterUtil getInstance() {
+    	if(instance == null) instance = new OracleStyleSQLNamedParameterUtil();
     	
     	return instance;
     }

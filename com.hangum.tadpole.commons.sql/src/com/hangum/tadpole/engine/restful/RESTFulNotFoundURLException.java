@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2015 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,24 +8,18 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.commons.exception;
+package com.hangum.tadpole.engine.restful;
 
-import java.sql.SQLException;
+/**
+ * URL Not found exception
+ * 
+ * @author hangum
+ *
+ */
+public class RESTFulNotFoundURLException extends Exception {
 
-public class TadpoleSQLException extends SQLException {
-	public TadpoleSQLException() {
-		super();
+	public RESTFulNotFoundURLException(String string) {
+		super(string);
 	}
 
-	public TadpoleSQLException(String message) {
-		super(message);
-	}
-
-	public TadpoleSQLException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	public TadpoleSQLException(Throwable cause) {
-		super(cause);
-	}
 }

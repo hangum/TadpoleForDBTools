@@ -65,7 +65,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.api.APIServiceDialog;
 import com.hangum.tadpole.manager.core.dialogs.api.UserAPIServiceDialog;

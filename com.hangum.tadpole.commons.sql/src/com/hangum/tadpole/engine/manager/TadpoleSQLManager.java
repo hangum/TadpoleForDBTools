@@ -26,6 +26,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -71,7 +72,7 @@ public class TadpoleSQLManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws Exception {
+	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws TadpoleSQLManagerException {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
@@ -118,7 +119,7 @@ public class TadpoleSQLManager {
 				
 				dbManager.remove(searchKey);
 				
-				throw new Exception(e);
+				throw new TadpoleSQLManagerException(e);
 			} finally {
 				if(conn != null) try {conn.close();} catch(Exception e) {}
 			}

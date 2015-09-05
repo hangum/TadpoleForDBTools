@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -45,7 +47,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param userDB
 	 * @throws Exception
 	 */
-	public static void updateDBOtherInformation(final UserDBDAO userDB) throws Exception {
+	public static void updateDBOtherInformation(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateDBOtherInformation", userDB);
 	}
@@ -56,7 +58,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List getRegisteredDB() throws Exception {
+	public static List getRegisteredDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getRegisteredDB");
 	}
@@ -72,7 +74,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isOldDBValidate(int user_seq, UserDBDAO userDBDao, UserDBDAO oldUserDBDao) throws Exception {
+	public static boolean isOldDBValidate(int user_seq, UserDBDAO userDBDao, UserDBDAO oldUserDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
 		queryMap.put("seq", oldUserDBDao.getSeq());
@@ -93,7 +95,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws Exception {
+	public static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
 		queryMap.put("display_name", userDBDao.getDisplay_name());
@@ -113,7 +115,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean isAlreadyExistDB(int user_seq, UserDBDAO userDBDao) throws Exception {
+	public static boolean isAlreadyExistDB(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
 		queryMap.put("url", 	userDBDao.getUrl());
@@ -133,7 +135,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<String> getUserGroupName() throws Exception {
+	public static List<String> getUserGroupName() throws TadpoleSQLManagerException, SQLException {
 		List<String> listGroupName = new ArrayList<String>();
 		
 		List<UserDBDAO> userDBS = getCreateUserDB();
@@ -154,7 +156,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param userDb
 	 * @param userSeq
 	 */
-	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws Exception {
+	public static UserDBDAO newUserDB(UserDBDAO userDb, int userSeq) throws TadpoleSQLManagerException, SQLException {
 		userDb.setUser_seq(userSeq);
 		
 		// data encryption
@@ -229,7 +231,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDBDAO updateUserDB(UserDBDAO newUserDb, UserDBDAO oldUserDb, int userSeq) throws Exception {
+	public static UserDBDAO updateUserDB(UserDBDAO newUserDb, UserDBDAO oldUserDb, int userSeq) throws TadpoleSQLManagerException, SQLException {
 		
 		UserDBOriginalDAO userEncryptDao = new UserDBOriginalDAO();
 		userEncryptDao.setUser_seq(userSeq);
@@ -281,7 +283,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getUserDB() throws Exception {
+	public static List<UserDBDAO> getUserDB() throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> mapParam = new HashMap<String, Object>();
 		mapParam.put("user_seq", SessionManager.getUserSeq());
 		mapParam.put("thisTime", System.currentTimeMillis());
@@ -321,7 +323,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getCreateUserDB() throws Exception {
+	public static List<UserDBDAO> getCreateUserDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (List<UserDBDAO>)sqlClient.queryForList("getCreateUserDB", SessionManager.getUserSeq());
 	}
@@ -331,7 +333,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getAllUserDB() throws Exception {
+	public static List<UserDBDAO> getAllUserDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return  (List<UserDBDAO>)sqlClient.queryForList("userDBPermissions"); //$NON-NLS-1$
 	}
@@ -341,7 +343,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getDailySummaryReportDB() throws Exception {
+	public static List<UserDBDAO> getDailySummaryReportDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return  (List<UserDBDAO>)sqlClient.queryForList("dailySummaryReportDB"); //$NON-NLS-1$
 	}
@@ -354,7 +356,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static UserDBDAO getUserDBInstance(int dbSeq) throws Exception {
+	public static UserDBDAO getUserDBInstance(int dbSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDBDAO userDB =  (UserDBDAO)sqlClient.queryForObject("userDBInstance", dbSeq);
 		
@@ -366,7 +368,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param seq
 	 * @throws Exception
 	 */
-	public static void removeUserDB(int seq) throws Exception {
+	public static void removeUserDB(int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		sqlClient.update("userDBDelete", seq); //$NON-NLS-1$		
@@ -378,7 +380,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param seq
 	 * @throws Exception
 	 */
-	public static void removeUserRoleDB(int seq) throws Exception {
+	public static void removeUserRoleDB(int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBRoleRemove", seq); //$NON-NLS-1$
 	}

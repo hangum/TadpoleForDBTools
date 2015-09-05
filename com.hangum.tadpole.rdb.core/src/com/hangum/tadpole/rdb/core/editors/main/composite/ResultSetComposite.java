@@ -81,8 +81,8 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
-import com.hangum.tadpole.engine.sql.paremeter.JavaNamedParameterUtil;
-import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -564,7 +564,7 @@ public class ResultSetComposite extends Composite {
 				boolean isAlreadyApply = false;
 				try {
 					// if named parameter?
-					SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
+					OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
 					String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
 					
 					Map<String, int[]> mapIndex = oracleNamedParamUtil.getIndexMap();

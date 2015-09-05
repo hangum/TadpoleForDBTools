@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -39,7 +41,7 @@ public class TadpoleSystemCommons {
 	 * @param strDML
 	 * @param args
 	 */
-	public static boolean executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws Exception {
+	public static boolean executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws TadpoleSQLManagerException, SQLException {
 		String strQuery = String.format(strDML, args);
 		
 		java.sql.Connection javaConn = null;

@@ -10,8 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
+
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO;
@@ -35,7 +38,7 @@ public class TadpoleSystemQuery {
 	 * @return
 	 * @throws Exception
 	 */
-	public static TadpoleSystemDAO getSystemInfo() throws Exception {
+	public static TadpoleSystemDAO getSystemInfo() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (TadpoleSystemDAO)sqlClient.queryForObject("system_information");
 	}
@@ -47,7 +50,7 @@ public class TadpoleSystemQuery {
 	 * @param sub_version
 	 * @throws Exception
 	 */
-	public static void updateSystemVersion(String major_version, String sub_version) throws Exception {
+	public static void updateSystemVersion(String major_version, String sub_version) throws TadpoleSQLManagerException, SQLException {
 		TadpoleSystemDAO dao = new TadpoleSystemDAO("", major_version, sub_version, "");
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

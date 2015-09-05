@@ -10,11 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -42,7 +44,7 @@ public class TadpoleSystem_Schedule {
 	 * @param seq
 	 * @throws Exception
 	 */
-	public static void deleteSchedule(int seq) throws Exception {
+	public static void deleteSchedule(int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("deleteScheduleMain", seq);
 	}
@@ -53,7 +55,7 @@ public class TadpoleSystem_Schedule {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<ScheduleResultDAO> getScheduleResult(int seq) throws Exception {
+	public static List<ScheduleResultDAO> getScheduleResult(int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getScheduleResult", seq);
 	}
@@ -65,7 +67,7 @@ public class TadpoleSystem_Schedule {
 	 * @param isResult
 	 * @param msg
 	 */
-	public static void saveScheduleResult(int seq, boolean isResult, String msg) throws Exception {
+	public static void saveScheduleResult(int seq, boolean isResult, String msg) throws TadpoleSQLManagerException, SQLException {
 		ScheduleResultDAO dao = new ScheduleResultDAO();
 		dao.setSchedule_main_seq(seq);
 		dao.setResult(isResult?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
@@ -81,7 +83,7 @@ public class TadpoleSystem_Schedule {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<ScheduleMainDAO> findAllScheduleMain() throws Exception {
+	public static List<ScheduleMainDAO> findAllScheduleMain() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getAllScheduleMain");
 	}
@@ -92,7 +94,7 @@ public class TadpoleSystem_Schedule {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<ScheduleMainDAO> findUserScheduleMain() throws Exception {
+	public static List<ScheduleMainDAO> findUserScheduleMain() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getUserScheduleMain", SessionManager.getUserSeq());
 	}
@@ -104,7 +106,7 @@ public class TadpoleSystem_Schedule {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ScheduleMainDAO findScheduleMain(final int seq) throws Exception {
+	public static ScheduleMainDAO findScheduleMain(final int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (ScheduleMainDAO)sqlClient.queryForObject("getScheduleMain", seq);
 	}
@@ -116,7 +118,7 @@ public class TadpoleSystem_Schedule {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<ScheduleDAO> findSchedule(final int seq) throws Exception {
+	public static List<ScheduleDAO> findSchedule(final int seq) throws TadpoleSQLManagerException, SQLException {
 		List<ScheduleDAO> listSchedule = new ArrayList<ScheduleDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -143,7 +145,7 @@ public class TadpoleSystem_Schedule {
 	 * @param cronExp
 	 * @param listSchedule
 	 */
-	public static ScheduleMainDAO addSchedule(final UserDBDAO userDB, String title, String desc, String cronExp, List<ScheduleDAO> listSchedule) throws Exception {
+	public static ScheduleMainDAO addSchedule(final UserDBDAO userDB, String title, String desc, String cronExp, List<ScheduleDAO> listSchedule) throws TadpoleSQLManagerException, SQLException {
 		int userSeq = SessionManager.getUserSeq();
 		
 		ScheduleMainDAO dao = new ScheduleMainDAO();
@@ -187,7 +189,7 @@ public class TadpoleSystem_Schedule {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ScheduleMainDAO modifySchedule(final UserDBDAO userDB, ScheduleMainDAO scheduleDao, List<ScheduleDAO> listSchedule) throws Exception {
+	public static ScheduleMainDAO modifySchedule(final UserDBDAO userDB, ScheduleMainDAO scheduleDao, List<ScheduleDAO> listSchedule) throws TadpoleSQLManagerException, SQLException {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("scheduleMainUpdate", scheduleDao);

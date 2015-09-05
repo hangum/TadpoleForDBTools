@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
@@ -49,7 +51,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserInfoDataDAO> getUserCredential(String strAccessKey, String strSecretKey) throws Exception {		
+	public static List<UserInfoDataDAO> getUserCredential(String strAccessKey, String strSecretKey) throws TadpoleSQLManagerException, SQLException {		
 		Map<String, String> mapParam = new HashMap<String, String>();
 		mapParam.put("SECURITY_CREDENTIAL_ACCESS_KEY", strAccessKey);
 		mapParam.put("SECURITY_CREDENTIAL_SECRET_KEY", strSecretKey);
@@ -64,7 +66,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserInfoDataDAO> getUserInfoData() throws Exception {
+	public static List<UserInfoDataDAO> getUserInfoData() throws TadpoleSQLManagerException, SQLException {
 		return getUserInfoData(SessionManager.getUserSeq());
 	}
 	/**
@@ -74,7 +76,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserInfoDataDAO> getUserInfoData(int userSeq) throws Exception {
+	public static List<UserInfoDataDAO> getUserInfoData(int userSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getUserInfoData", userSeq); //$NON-NLS-1$
 	}
@@ -85,7 +87,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param listUserData
 	 * @throws Exception
 	 */
-	public static void insertUserInfoData(List<UserInfoDataDAO> listUserData) throws Exception {
+	public static void insertUserInfoData(List<UserInfoDataDAO> listUserData) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userInfoDataInsert", listUserData); //$NON-NLS-1$
 	}
@@ -96,7 +98,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param listUserData
 	 * @throws Exception
 	 */
-	public static void insertUserInfoData(UserInfoDataDAO listUserData) throws Exception {
+	public static void insertUserInfoData(UserInfoDataDAO listUserData) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userInfoDataInsert", listUserData); //$NON-NLS-1$
 	}
@@ -108,7 +110,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param value
 	 * @throws Exception
 	 */
-	public static void updateEncriptValue(String key, String value) throws Exception {
+	public static void updateEncriptValue(String key, String value) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -129,7 +131,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param value
 	 * @throws Exception
 	 */
-	public static void updateValue(String key, String value) throws Exception {
+	public static void updateValue(String key, String value) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -154,7 +156,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtCommitCount commit count
 	 */
 	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
-			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn) throws Exception {
+			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -209,7 +211,7 @@ public class TadpoleSystem_UserInfoData {
 			String txtNewLineBefeoreAndOr, String txtNewLineBefeoreComma, String  txtRemoveEmptyLine,
 			String txtWordbreak, String strTextWidth
 			
-			) throws Exception {
+			) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB()); 
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -256,7 +258,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtResultPage
 	 * @throws Exception
 	 */
-	public static void updateMongoDBUserInfoData(String txtLimitCount, String txtMacCount, String txtFindPage, String txtResultPage) throws Exception {
+	public static void updateMongoDBUserInfoData(String txtLimitCount, String txtMacCount, String txtFindPage, String txtResultPage) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -291,7 +293,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param value0
 	 * @throws Exception
 	 */
-	public static void updateUserInfoData(String key, String value0) throws Exception {
+	public static void updateUserInfoData(String key, String value0) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
@@ -306,7 +308,7 @@ public class TadpoleSystem_UserInfoData {
 	 * 사용자의 프로필.
 	 * 
 	 */
-	public static void initializeUserPreferenceData(UserDAO userdb) throws Exception {
+	public static void initializeUserPreferenceData(UserDAO userdb) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(userdb.getSeq());
@@ -459,7 +461,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param value
 	 * @throws Exception
 	 */
-	private  void insertUserInfoData(UserDBDAO userdb, String key, String value) throws Exception {
+	private  void insertUserInfoData(UserDBDAO userdb, String key, String value) throws TadpoleSQLManagerException, SQLException {
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO(userdb.getSeq(), key, value);
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$

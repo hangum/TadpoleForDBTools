@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.paremeter;
+package com.hangum.tadpole.engine.sql.paremeter.lang;
 
 import java.sql.PreparedStatement;
 

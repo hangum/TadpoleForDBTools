@@ -1,5 +1,6 @@
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -38,7 +41,7 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringResultDAO> getMonitoringStatus(int dbSeq) throws Exception {
+	public static List<MonitoringResultDAO> getMonitoringStatus(int dbSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getMonitoringStatus", dbSeq);
 	}
@@ -50,7 +53,7 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringDashboardDAO> getMonitoringErrorStatus(String dbseqs) throws Exception {
+	public static List<MonitoringDashboardDAO> getMonitoringErrorStatus(String dbseqs) throws TadpoleSQLManagerException, SQLException {
 		if("".equals(dbseqs)) return new ArrayList<MonitoringDashboardDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -63,7 +66,7 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<UserDBDAO> getUserMonitoringDBList() throws Exception {
+	public static List<UserDBDAO> getUserMonitoringDBList() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getUserMonitoringDBList", SessionManager.getUserSeq());
 	}
@@ -74,7 +77,7 @@ public class TadpoleSystem_monitoring {
 	 * @param dao
 	 * @throws Exception
 	 */
-	public static void updateParameter(MonitoringIndexDAO dao) throws Exception {
+	public static void updateParameter(MonitoringIndexDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateParameter", dao);
 	}
@@ -85,7 +88,7 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringIndexDAO> getAllMonitoringList() throws Exception {
+	public static List<MonitoringIndexDAO> getAllMonitoringList() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getAllMonitoringList");
 	}
@@ -97,7 +100,7 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringIndexDAO> getUserMonitoringIndex(UserDBDAO userDB) throws Exception {
+	public static List<MonitoringIndexDAO> getUserMonitoringIndex(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getUserDBMonitoringIndex", userDB);
 	}
@@ -108,7 +111,7 @@ public class TadpoleSystem_monitoring {
 	 * @param userDB
 	 * @throws Exception
 	 */
-	public static void saveMonitoring(MonitoringMainDAO mainDao, MonitoringIndexDAO indexDao) throws Exception {
+	public static void saveMonitoring(MonitoringMainDAO mainDao, MonitoringIndexDAO indexDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
 		// 기존에 동일한 type, name으로 항목이 등록 되어 있는지 검사합니다.
 		List<MonitoringMainDAO> listMainList = sqlClient.queryForList("getMonitoringDuplicatCheck", mainDao);
@@ -117,7 +120,7 @@ public class TadpoleSystem_monitoring {
 			indexDao.setMonitoring_seq(mainDao.getSeq());
 			sqlClient.insert("insertMonitoringIndex", indexDao);
 		} else {
-			throw new Exception("이미 동일한 항목이 존재합니다. 이름을 수정하여 주십시오. ");
+			throw new TadpoleRuntimeException("이미 동일한 항목이 존재합니다. 이름을 수정하여 주십시오. ");
 		}
 	}
 	
@@ -127,7 +130,7 @@ public class TadpoleSystem_monitoring {
 	 * @param indexDao
 	 * @throws Exception
 	 */
-	public static void deleteMonitoringIndex(MonitoringIndexDAO indexDao) throws Exception {
+	public static void deleteMonitoringIndex(MonitoringIndexDAO indexDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.delete("deleteMonitoringMain", indexDao);
 		sqlClient.delete("deleteMonitoringIndex", indexDao);
@@ -183,7 +186,7 @@ public class TadpoleSystem_monitoring {
 	 * @throws Exception
 	 */
 	public static List<MonitoringResultDAO> getMonitoringResultHistory(MonitoringIndexDAO monitoringIndexDao, 
-											String strResultType, String strTerm, long startTime, long endTime) throws Exception {
+											String strResultType, String strTerm, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("monitoring_seq",	monitoringIndexDao.getMonitoring_seq());
 		queryMap.put("resultType", strResultType);	
@@ -213,7 +216,7 @@ public class TadpoleSystem_monitoring {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<MonitoringResultDAO> getMonitoringResultStatus(int intMonSeq, int intMonIndexSeq, String is_user_confirm, String resultType) throws Exception {
+	public static List<MonitoringResultDAO> getMonitoringResultStatus(int intMonSeq, int intMonIndexSeq, String is_user_confirm, String resultType) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("monitoring_seq",			intMonSeq);
 		queryMap.put("monitoring_index_seq",	intMonIndexSeq);
@@ -230,7 +233,7 @@ public class TadpoleSystem_monitoring {
 	 * @param dao
 	 * @return
 	 */
-	public static MonitoringResultDAO getMonitoringResult(MonitoringResultDAO dao) throws Exception {
+	public static MonitoringResultDAO getMonitoringResult(MonitoringResultDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (MonitoringResultDAO)sqlClient.queryForObject("getMonitoringResult", dao);
 	}
@@ -245,7 +248,7 @@ public class TadpoleSystem_monitoring {
 	 * 
 	 * @throws Exception
 	 */
-	public static void updateUserConfirmMsg(int seq, String strUserMsg) throws Exception {
+	public static void updateUserConfirmMsg(int seq, String strUserMsg) throws TadpoleSQLManagerException, SQLException {
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("seq",			seq);
@@ -262,7 +265,7 @@ public class TadpoleSystem_monitoring {
 	 * @param monitoring_index_seq
 	 * @param strUserMsg
 	 */
-	public static void updateUserConfirmMsg(int monitoring_seq, int monitoring_index_seq, String strUserMsg) throws Exception {
+	public static void updateUserConfirmMsg(int monitoring_seq, int monitoring_index_seq, String strUserMsg) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("monitoring_seq",			monitoring_seq);
 		queryMap.put("monitoring_index_seq",	monitoring_index_seq);
@@ -279,7 +282,7 @@ public class TadpoleSystem_monitoring {
 	 * @param mainDao
 	 * @param indexDao
 	 */
-	public static void updateMonitoring(MonitoringMainDAO mainDao, MonitoringIndexDAO indexDao) throws Exception {
+	public static void updateMonitoring(MonitoringMainDAO mainDao, MonitoringIndexDAO indexDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateMonitoringMain", mainDao);
 		sqlClient.update("updateMonitoringIndex", indexDao);

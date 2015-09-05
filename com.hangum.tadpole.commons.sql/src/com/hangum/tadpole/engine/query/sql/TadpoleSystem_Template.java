@@ -1,7 +1,9 @@
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -22,7 +24,7 @@ public class TadpoleSystem_Template {
 	 * @param dbDefine
 	 * @throws Exception
 	 */
-	public static List<TeadpoleMonitoringTemplateDAO> getMonitoringTemplate(DBDefine dbDefine) throws Exception {
+	public static List<TeadpoleMonitoringTemplateDAO> getMonitoringTemplate(DBDefine dbDefine) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getDefaultMonitoringSQLTemplate", dbDefine.getDBToString());
 	}
@@ -33,7 +35,7 @@ public class TadpoleSystem_Template {
 	 * @param templateDao
 	 * @throws Exception
 	 */
-	public static void saveMonitoringTemplate(TeadpoleMonitoringTemplateDAO templateDao) throws Exception {
+	public static void saveMonitoringTemplate(TeadpoleMonitoringTemplateDAO templateDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("saveMonitoringTemplate", templateDao);
 	}
@@ -43,7 +45,7 @@ public class TadpoleSystem_Template {
 	 * 
 	 * @param updateUseTemplateDao
 	 */
-	public static void updateMonitoringTemplate(TeadpoleMonitoringTemplateDAO updateUseTemplateDao) throws Exception {
+	public static void updateMonitoringTemplate(TeadpoleMonitoringTemplateDAO updateUseTemplateDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("updateUseTemplateDao", updateUseTemplateDao);
 	}

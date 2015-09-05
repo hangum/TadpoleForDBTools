@@ -10,13 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.api;
 
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -44,9 +39,10 @@ import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
+import com.hangum.tadpole.engine.sql.paremeter.NamedParameterDAO;
+import com.hangum.tadpole.engine.sql.paremeter.NamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
-import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.manager.core.Messages;
 
@@ -206,21 +202,9 @@ public class APIServiceDialog extends Dialog {
 	private void initData(String strArgument) {
 		
 		try {
-			SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
-			String strJavaSQL = oracleNamedParamUtil.parse(strSQL);
-			
-			Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
-			if(!mapIndex.isEmpty()) {
-				List<Object> listParam = makeOracleListParameter(mapIndex, strArgument);
-				
-				String strResultType = getSelect(userDB, strJavaSQL, listParam);
-				textResult.setText(strResultType);
-			} else {
-				List<Object> listParam = makeJavaListParameter(strArgument);
-				
-				String strResultType = getSelect(userDB, strSQL, listParam);
-				textResult.setText(strResultType);
-			}
+			NamedParameterDAO dao = NamedParameterUtil.parseParameterUtils(strSQL, strArgument);
+			String strResultType = getSelect(userDB, dao.getStrSQL(), dao.getListParam());
+			textResult.setText(strResultType);
 			
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
@@ -260,80 +244,6 @@ public class APIServiceDialog extends Dialog {
 		return strResult;
 	}
 
-	/**
-	 * make oracle type sql parameter
-	 * 
-	 * @param mapIndex
-	 * @param strArgument
-	 * @return
-	 */
-	private List<Object> makeOracleListParameter(Map<Integer, String> mapIndex, String strArgument) throws Exception {
-		List<Object> listParam = new ArrayList<Object>();
-		
-		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument); //$NON-NLS-1$
-		Map<String, String> params = new HashMap<String, String>();
-		for (String param : StringUtils.split(strArgument, "&")) { //$NON-NLS-1$
-			String pair[] = StringUtils.split(param, "="); //$NON-NLS-1$
-			String key = URLDecoder.decode(pair[0], "UTF-8"); //$NON-NLS-1$
-			String value = ""; //$NON-NLS-1$
-			if (pair.length > 1) {
-				try {
-					value = URLDecoder.decode(pair[1], "UTF-8"); //$NON-NLS-1$
-				} catch(Exception e) {
-					value = pair[1];
-				}
-			}
-
-			params.put(key, value);
-		}
-		
-		for(int i=1; i<=mapIndex.size(); i++ ) {
-			String strKey = mapIndex.get(i);
-			listParam.add( params.get(strKey) );
-		}
-		return listParam;
-	}
-
-	
-	/**
-	 * make parameter list
-	 * 
-	 * @param strArgument 
-	 * @return
-	 * @throws Exception
-	 */
-	private List<Object> makeJavaListParameter(String strArgument) throws Exception {
-		List<Object> listParam = new ArrayList<Object>();
-		
-		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument); //$NON-NLS-1$
-		Map<String, String> params = new HashMap<String, String>();
-		for (String param : StringUtils.split(strArgument, "&")) { //$NON-NLS-1$
-			String pair[] = StringUtils.split(param, "="); //$NON-NLS-1$
-			String key = URLDecoder.decode(pair[0], "UTF-8"); //$NON-NLS-1$
-			String value = ""; //$NON-NLS-1$
-			if (pair.length > 1) {
-				try {
-					value = URLDecoder.decode(pair[1], "UTF-8"); //$NON-NLS-1$
-				} catch(Exception e) {
-					value = pair[1];
-				}
-			}
-
-			params.put(key, value);
-		}
-
-		// assume this count... no way i'll argument is over 100..... --;;
-		for(int i=1; i<100; i++) {
-			if(params.containsKey(String.valueOf(i))) {
-				listParam.add(params.get(""+i)); //$NON-NLS-1$
-			} else {
-				break;
-			}
-		}
-
-		return listParam;
-	}
-	
 	/** download service handler call */
 	private void unregisterServiceHandler() {
 		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());

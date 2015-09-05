@@ -63,6 +63,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
+import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -331,7 +332,24 @@ public class MainEditor extends EditorExtension {
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
+		// api
+		ToolItem tltmAPI = new ToolItem(toolBar, SWT.NONE);
+		tltmAPI.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/restful_api.png")); //$NON-NLS-1$
+		tltmAPI.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+				
+				MainSQLEditorAPIServiceDialog dialog = new MainSQLEditorAPIServiceDialog(getSite().getShell(), strQuery);
+				dialog.open();
+				
+				setFocus();
+			}
+		});
+		tltmAPI.setToolTipText("RESTFul API");
+		
 		// semicolon
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
 		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
 		tltmSemicolon.setToolTipText(Messages.MainEditor_49);

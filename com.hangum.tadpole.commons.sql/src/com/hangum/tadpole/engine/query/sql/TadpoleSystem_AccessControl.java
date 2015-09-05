@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
@@ -35,7 +37,7 @@ public class TadpoleSystem_AccessControl {
 	 * To save default access control data.
 	 * 
 	 */
-	public static DBAccessControlDAO saveDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws Exception {
+	public static DBAccessControlDAO saveDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws TadpoleSQLManagerException, SQLException {
 		DBAccessControlDAO dao = new DBAccessControlDAO();
 		dao.setDb_role_seq(roleDao.getSeq());
 		
@@ -51,7 +53,7 @@ public class TadpoleSystem_AccessControl {
 	 * @param roleDao
 	 * @throws Exception
 	 */
-	public static DBAccessControlDAO getDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws Exception {
+	public static DBAccessControlDAO getDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		DBAccessControlDAO dbaccessCtl = (DBAccessControlDAO)sqlClient.queryForObject("getAccessControl", roleDao);
 		
@@ -72,7 +74,7 @@ public class TadpoleSystem_AccessControl {
 	 * @param intRoleSeq
 	 * @throws Exception
 	 */
-	public static DBAccessControlDAO getDBAccessControl(int intRoleSeq) throws Exception {
+	public static DBAccessControlDAO getDBAccessControl(int intRoleSeq) throws TadpoleSQLManagerException, SQLException {
 		TadpoleUserDbRoleDAO roleDao = new TadpoleUserDbRoleDAO();
 		roleDao.setSeq(intRoleSeq);
 		
@@ -85,7 +87,7 @@ public class TadpoleSystem_AccessControl {
 	 * @param dao
 	 * @throws Exception
 	 */
-	public static void updateDBAccessControl(DBAccessControlDAO dao) throws Exception {
+	public static void updateDBAccessControl(DBAccessControlDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateAccessControl", dao);
 		
