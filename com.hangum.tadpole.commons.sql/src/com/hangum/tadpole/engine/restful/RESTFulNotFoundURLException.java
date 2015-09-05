@@ -16,7 +16,7 @@ package com.hangum.tadpole.engine.restful;
  * @author hangum
  *
  */
-public class RESTFulNotFoundURLException extends Exception {
+public class RESTFulNotFoundURLException extends TadpoleException {
 
 	public RESTFulNotFoundURLException(String string) {
 		super(string);

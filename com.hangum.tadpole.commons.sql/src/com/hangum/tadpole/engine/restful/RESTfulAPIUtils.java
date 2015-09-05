@@ -67,23 +67,28 @@ public class RESTfulAPIUtils {
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public static Map<String, String> maekArgumentTOMap(String strArgument) throws UnsupportedEncodingException {
+	public static Map<String, String> maekArgumentTOMap(String strArgument) throws RESTFULUnsupportedEncodingException {
 		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument);
-		
 		Map<String, String> params = new HashMap<String, String>();
-		for (String param : StringUtils.split(strArgument, "&")) {
-			String pair[] = StringUtils.split(param, "=");
-			String key = URLDecoder.decode(pair[0], "UTF-8");
-			String value = "";
-			if (pair.length > 1) {
-				try {
-					value = URLDecoder.decode(pair[1], "UTF-8");
-				} catch(Exception e) {
-					value = pair[1];
+		
+		try {
+			for (String param : StringUtils.split(strArgument, "&")) {
+				String pair[] = StringUtils.split(param, "=");
+				String key = URLDecoder.decode(pair[0], "UTF-8");
+				
+				String value = "";
+				if (pair.length > 1) {
+					try {
+						value = URLDecoder.decode(pair[1], "UTF-8");
+					} catch(Exception e) {
+						value = pair[1];
+					}
 				}
+	
+				params.put(key, value);
 			}
-
-			params.put(key, value);
+		} catch (UnsupportedEncodingException e1) {
+			throw new RESTFULUnsupportedEncodingException(e1);
 		}
 		
 		return params;
@@ -98,7 +103,7 @@ public class RESTfulAPIUtils {
 	 * @throws RESTFulArgumentNotMatchException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static List<Object> makeArgumentToOracleList(Map<Integer, String> mapIndex, String strArgument) throws RESTFulArgumentNotMatchException, UnsupportedEncodingException {
+	public static List<Object> makeArgumentToOracleList(Map<Integer, String> mapIndex, String strArgument) throws RESTFulArgumentNotMatchException, RESTFULUnsupportedEncodingException {
 		List<Object> listParam = new ArrayList<Object>();
 		
 		Map<String, String> params = maekArgumentTOMap(strArgument);
@@ -122,7 +127,7 @@ public class RESTfulAPIUtils {
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public static List<Object> makeArgumentToJavaList(String strArgument) throws UnsupportedEncodingException {
+	public static List<Object> makeArgumentToJavaList(String strArgument) throws RESTFULUnsupportedEncodingException {
 		List<Object> listParam = new ArrayList<Object>();
 		
 		Map<String, String> params = maekArgumentTOMap(strArgument);

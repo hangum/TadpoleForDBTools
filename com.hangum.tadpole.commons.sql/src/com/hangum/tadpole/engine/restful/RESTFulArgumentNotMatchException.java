@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.restful;
 
-public class RESTFulArgumentNotMatchException extends Exception {
+public class RESTFulArgumentNotMatchException extends TadpoleException {
 
 	public RESTFulArgumentNotMatchException(String msg) {
 		super(msg);

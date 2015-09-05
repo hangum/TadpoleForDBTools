@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.restful;
 
-public class RESTFulSQLExecuteException extends Exception {
+public class RESTFulSQLExecuteException extends TadpoleException {
 
 	public RESTFulSQLExecuteException(String message, Exception e) {
 		super(message, e);

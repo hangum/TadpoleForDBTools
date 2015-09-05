@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.restful;
 
-public class SQLTemplateException extends Exception {
+public class SQLTemplateException extends TadpoleException {
 
 	public SQLTemplateException(String msg) {
 		super(msg);

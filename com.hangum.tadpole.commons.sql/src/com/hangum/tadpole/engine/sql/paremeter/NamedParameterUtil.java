@@ -13,6 +13,7 @@ package com.hangum.tadpole.engine.sql.paremeter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import com.hangum.tadpole.engine.restful.RESTFULUnsupportedEncodingException;
 import com.hangum.tadpole.engine.restful.RESTFulArgumentNotMatchException;
 import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
@@ -29,7 +30,7 @@ public class NamedParameterUtil {
 	 * @throws UnsupportedEncodingException
 	 * @throws RESTFulArgumentNotMatchException
 	 */
-	public static NamedParameterDAO parseParameterUtils(String strLastSQL, String strParameter) throws UnsupportedEncodingException, RESTFulArgumentNotMatchException {
+	public static NamedParameterDAO parseParameterUtils(String strLastSQL, String strParameter) throws RESTFULUnsupportedEncodingException, RESTFulArgumentNotMatchException {
 		NamedParameterDAO returnDao = new NamedParameterDAO();
 		
 		strLastSQL = SQLUtil.sqlExecutable(strLastSQL);
