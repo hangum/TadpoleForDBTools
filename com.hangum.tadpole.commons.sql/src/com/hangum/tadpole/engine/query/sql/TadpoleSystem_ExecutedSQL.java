@@ -55,7 +55,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @param executeTime
 	 * @param durationLimit
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws TadpoleSQLManagerException, SQLException {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
@@ -136,7 +136,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @param user_seq
 	 * @param dbSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<SQLHistoryDAO> getExecuteQueryHistory(int user_seq, int dbSeq, String filter) throws TadpoleSQLManagerException, SQLException {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
@@ -221,7 +221,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * 
 	 * @param userDBResource
 	 * @param contents
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	private static void insertResourceData(ExecutedSqlResourceDAO userDBResource, String contents) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

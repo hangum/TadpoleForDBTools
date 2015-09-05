@@ -22,7 +22,7 @@ public class TadpoleSystem_Sequence {
 	 *
 	 * @param dao
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static TadpoleSequenceDAO getSequence(TadpoleSequenceDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

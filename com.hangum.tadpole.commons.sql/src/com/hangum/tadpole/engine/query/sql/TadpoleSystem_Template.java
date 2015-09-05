@@ -22,7 +22,7 @@ public class TadpoleSystem_Template {
 	 * 모니터링 템플릿
 	 * 
 	 * @param dbDefine
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<TeadpoleMonitoringTemplateDAO> getMonitoringTemplate(DBDefine dbDefine) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -33,7 +33,7 @@ public class TadpoleSystem_Template {
 	 * save monitoring template
 	 * 
 	 * @param templateDao
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void saveMonitoringTemplate(TeadpoleMonitoringTemplateDAO templateDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

@@ -41,7 +41,7 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param delyn
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserDAO> getAllUser() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -53,7 +53,7 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param delyn
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserDAO> getLiveAllUser() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -74,7 +74,7 @@ public class TadpoleSystem_UserQuery {
 	 * @param use_otp
 	 * @param otp_secret
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
 								String roleType, String name, String language, String approvalYn, String use_otp, String otp_secret
@@ -112,7 +112,7 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param email
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static boolean isDuplication(String email) throws TadpoleSQLManagerException, SQLException {
 		
@@ -130,7 +130,7 @@ public class TadpoleSystem_UserQuery {
 	 * search like email 
 	 * @param email
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserDAO> findLikeUser(String email) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -144,7 +144,7 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param email
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO findUser(String email) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -163,7 +163,7 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param email
 	 * @param passwd
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO login(String email, String passwd) throws TadpoleSQLManagerException, SQLException {
 		UserDAO login = new UserDAO();
@@ -193,7 +193,7 @@ public class TadpoleSystem_UserQuery {
 	 * update email confirm
 	 * 
 	 * @param email
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateEmailConfirm(String email) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -231,7 +231,7 @@ public class TadpoleSystem_UserQuery {
 	 * get admin
 	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO getSystemAdmin() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -243,7 +243,7 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param groupSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO getGroupManager(int groupSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -254,7 +254,7 @@ public class TadpoleSystem_UserQuery {
 	 * admin user가 한명이라면 로그인 화면에서 기본 유저로 설정하기 위해...
 	 * 
 	 * @return UserDAO
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO loginUserCount() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -271,7 +271,7 @@ public class TadpoleSystem_UserQuery {
 	/**
 	 * 유저 데이터를 수정
 	 * @param user
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateUserData(UserDAO user) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -281,7 +281,7 @@ public class TadpoleSystem_UserQuery {
 	/**
 	 * 유저의 패스워드 번경
 	 * @param user
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateUserPassword(UserDAO user) throws TadpoleSQLManagerException, SQLException {
 		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
@@ -293,7 +293,7 @@ public class TadpoleSystem_UserQuery {
 	/**
 	 * 유저의 패스워드 번경
 	 * @param user
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateUserPasswordWithID(UserDAO user) throws TadpoleSQLManagerException, SQLException {
 		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
@@ -306,7 +306,7 @@ public class TadpoleSystem_UserQuery {
 	 * 사용자 힌트 변경
 	 * 
 	 * @param user
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateUserOTPCode(UserDAO user) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -318,7 +318,7 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param userSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO getUserInfo(int userSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

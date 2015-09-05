@@ -64,7 +64,7 @@ public class TadpoleSystem_SchemaHistory {
 	 * @param startTime
 	 * @param endTime
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<SchemaHistoryDAO> getExecuteQueryHistory(int dbSeq, String workType, String objectType, String objectId, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
 		List<SchemaHistoryDAO> returnSchemaHistory = new ArrayList<SchemaHistoryDAO>();
@@ -159,7 +159,7 @@ public class TadpoleSystem_SchemaHistory {
 	 * 
 	 * @param schemaHistoryDao
 	 * @param strSQL
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	private static void insertResourceData(SchemaHistoryDAO schemaHistoryDao, String strSQL) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

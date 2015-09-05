@@ -49,7 +49,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param strAccessKey
 	 * @param strSecretKey
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserInfoDataDAO> getUserCredential(String strAccessKey, String strSecretKey) throws TadpoleSQLManagerException, SQLException {		
 		Map<String, String> mapParam = new HashMap<String, String>();
@@ -64,7 +64,7 @@ public class TadpoleSystem_UserInfoData {
 	 * 사용자 정보 데이터. 
 	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserInfoDataDAO> getUserInfoData() throws TadpoleSQLManagerException, SQLException {
 		return getUserInfoData(SessionManager.getUserSeq());
@@ -74,7 +74,7 @@ public class TadpoleSystem_UserInfoData {
 	 * 
 	 * @param userSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserInfoDataDAO> getUserInfoData(int userSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -85,7 +85,7 @@ public class TadpoleSystem_UserInfoData {
 	 * user info data insert
 	 * 
 	 * @param listUserData
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void insertUserInfoData(List<UserInfoDataDAO> listUserData) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -96,7 +96,7 @@ public class TadpoleSystem_UserInfoData {
 	 * user info data insert
 	 * 
 	 * @param listUserData
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void insertUserInfoData(UserInfoDataDAO listUserData) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -108,7 +108,7 @@ public class TadpoleSystem_UserInfoData {
 	 * 
 	 * @param key
 	 * @param value
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateEncriptValue(String key, String value) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -129,7 +129,7 @@ public class TadpoleSystem_UserInfoData {
 	 * 
 	 * @param key
 	 * @param value
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateValue(String key, String value) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -256,7 +256,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtMacCount
 	 * @param txtFindPage
 	 * @param txtResultPage
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateMongoDBUserInfoData(String txtLimitCount, String txtMacCount, String txtFindPage, String txtResultPage) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -291,7 +291,7 @@ public class TadpoleSystem_UserInfoData {
 	 * 
 	 * @param key
 	 * @param value0
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateUserInfoData(String key, String value0) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -459,7 +459,7 @@ public class TadpoleSystem_UserInfoData {
 	 * @param userdb
 	 * @param key
 	 * @param value
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	private  void insertUserInfoData(UserDBDAO userdb, String key, String value) throws TadpoleSQLManagerException, SQLException {
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO(userdb.getSeq(), key, value);

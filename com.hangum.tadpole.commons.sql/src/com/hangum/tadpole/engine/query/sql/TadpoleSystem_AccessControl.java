@@ -52,7 +52,7 @@ public class TadpoleSystem_AccessControl {
 	 * Get user db access contorl data.
 	 * 
 	 * @param roleDao
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static DBAccessControlDAO getDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -77,7 +77,7 @@ public class TadpoleSystem_AccessControl {
 	 * Get user db access contorl data.
 	 * 
 	 * @param intRoleSeq
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static DBAccessControlDAO getDBAccessControl(int intRoleSeq) throws TadpoleSQLManagerException, SQLException {
 		TadpoleUserDbRoleDAO roleDao = new TadpoleUserDbRoleDAO();
@@ -90,7 +90,7 @@ public class TadpoleSystem_AccessControl {
 	 * update db access control
 	 * 
 	 * @param dao
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateDBAccessControl(DBAccessControlDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

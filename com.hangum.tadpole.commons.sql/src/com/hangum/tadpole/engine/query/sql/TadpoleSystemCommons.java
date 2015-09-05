@@ -40,6 +40,7 @@ public class TadpoleSystemCommons {
 	 * @param executeType
 	 * @param strDML
 	 * @param args
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static boolean executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws TadpoleSQLManagerException, SQLException {
 		String strQuery = String.format(strDML, args);

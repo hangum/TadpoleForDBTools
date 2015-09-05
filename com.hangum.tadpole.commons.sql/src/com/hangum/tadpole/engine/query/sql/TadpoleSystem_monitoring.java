@@ -39,7 +39,7 @@ public class TadpoleSystem_monitoring {
 	 * 
 	 * @param dbSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<MonitoringResultDAO> getMonitoringStatus(int dbSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -51,7 +51,7 @@ public class TadpoleSystem_monitoring {
 	 * 
 	 * @param dbseqs
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<MonitoringDashboardDAO> getMonitoringErrorStatus(String dbseqs) throws TadpoleSQLManagerException, SQLException {
 		if("".equals(dbseqs)) return new ArrayList<MonitoringDashboardDAO>();
@@ -64,7 +64,7 @@ public class TadpoleSystem_monitoring {
 	 * get user monitoring db list
 	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserDBDAO> getUserMonitoringDBList() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -75,7 +75,7 @@ public class TadpoleSystem_monitoring {
 	 * update parameter
 	 * 
 	 * @param dao
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateParameter(MonitoringIndexDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -86,7 +86,7 @@ public class TadpoleSystem_monitoring {
 	 * monitoring list
 	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<MonitoringIndexDAO> getAllMonitoringList() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -98,7 +98,7 @@ public class TadpoleSystem_monitoring {
 	 * 
 	 * @param userDB
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<MonitoringIndexDAO> getUserMonitoringIndex(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -109,7 +109,7 @@ public class TadpoleSystem_monitoring {
 	 * 모니터링 데이터를 저장합니다. 
 	 * 
 	 * @param userDB
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void saveMonitoring(MonitoringMainDAO mainDao, MonitoringIndexDAO indexDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
@@ -128,7 +128,7 @@ public class TadpoleSystem_monitoring {
 	 * delete monitoring index
 	 * 
 	 * @param indexDao
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void deleteMonitoringIndex(MonitoringIndexDAO indexDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -183,7 +183,7 @@ public class TadpoleSystem_monitoring {
 	 * @param endTime
 	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<MonitoringResultDAO> getMonitoringResultHistory(MonitoringIndexDAO monitoringIndexDao, 
 											String strResultType, String strTerm, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
@@ -214,7 +214,7 @@ public class TadpoleSystem_monitoring {
 	 * @param intMonIndexSeq
 	 * @param strUserConfirm
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<MonitoringResultDAO> getMonitoringResultStatus(int intMonSeq, int intMonIndexSeq, String is_user_confirm, String resultType) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -246,7 +246,7 @@ public class TadpoleSystem_monitoring {
 	 * @param monitoring_index_seq
 	 * @param strUserMsg
 	 * 
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateUserConfirmMsg(int seq, String strUserMsg) throws TadpoleSQLManagerException, SQLException {
 		

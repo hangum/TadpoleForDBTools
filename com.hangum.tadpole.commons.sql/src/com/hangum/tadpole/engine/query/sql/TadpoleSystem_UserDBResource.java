@@ -46,7 +46,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @param intUserSeq
 	 * @return
 	 * @throws SQLException 
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<ResourceManagerDAO> getRESTFulAPIList() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -61,7 +61,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws RESTFulNotFoundURLException 
 	 * @throws SQLException 
 	 * @throws TadpoleSQLManagerException 
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDBResourceDAO findRESTURL(int intUserSEQ, String strUserDomainURL) throws RESTFulNotFoundURLException, SQLException, TadpoleSQLManagerException {
 		Map<String, Object> mapCredential = new HashMap<String, Object>();
@@ -233,7 +233,7 @@ public class TadpoleSystem_UserDBResource {
 	 * user_db_resource_data 삭제.
 	 * 
 	 * @param userDBErd
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void delete(UserDBResourceDAO userDBErd) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -244,7 +244,7 @@ public class TadpoleSystem_UserDBResource {
 	 * userdb의 resource data를 얻습니다.
 	 * 
 	 * @param userDBResource
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static String getResourceData(UserDBResourceDAO userDBResource) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

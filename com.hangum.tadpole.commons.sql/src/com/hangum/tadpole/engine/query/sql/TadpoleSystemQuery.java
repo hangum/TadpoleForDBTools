@@ -36,7 +36,7 @@ public class TadpoleSystemQuery {
 	 * 운영중인 시스템 정보를 얻습니다.
 	 *  
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static TadpoleSystemDAO getSystemInfo() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -48,7 +48,7 @@ public class TadpoleSystemQuery {
 	 * 
 	 * @param major_version
 	 * @param sub_version
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateSystemVersion(String major_version, String sub_version) throws TadpoleSQLManagerException, SQLException {
 		TadpoleSystemDAO dao = new TadpoleSystemDAO("", major_version, sub_version, "");

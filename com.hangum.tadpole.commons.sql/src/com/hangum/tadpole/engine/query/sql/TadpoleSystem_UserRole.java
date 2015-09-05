@@ -27,7 +27,7 @@ public class TadpoleSystem_UserRole {
 	/**
 	 * 탈퇴.
 	 * @param userSeq
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void withdrawal(int userSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -41,7 +41,7 @@ public class TadpoleSystem_UserRole {
 	 * @param userDB
 	 * @param user
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static boolean isDBAddRole(UserDBDAO userDB, UserDAO user) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -60,7 +60,7 @@ public class TadpoleSystem_UserRole {
 	 * @param userSeq
 	 * @param dbSeq
 	 * @param roleType
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static TadpoleUserDbRoleDAO insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType) throws TadpoleSQLManagerException, SQLException {
 		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
@@ -91,7 +91,7 @@ public class TadpoleSystem_UserRole {
 	 * @param terms_of_use_starttime
 	 * @param terms_of_use_endtime
 	 * 
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static TadpoleUserDbRoleDAO insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType, String accessIp, Timestamp terms_of_use_starttime, Timestamp terms_of_use_endtime) throws TadpoleSQLManagerException, SQLException {
 		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
@@ -116,6 +116,7 @@ public class TadpoleSystem_UserRole {
 	 * update user role
 	 * 
 	 * @param userDBRoleDao
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateTadpoleUserDBRole(TadpoleUserDbRoleDAO userDBRoleDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -125,6 +126,7 @@ public class TadpoleSystem_UserRole {
 	/**
 	 * user list
 	 * @param userDB
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List getUserRoleList(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
