@@ -40,7 +40,7 @@ public class ManagerLabelProvider extends LabelProvider {
 	/** development markup start tag */
 	public static String DEVELOPMENT_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
 	/** development markup start tag */
-	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
+	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(145, 129, 129)'>"; //$NON-NLS-1$
 	
 	/** Markup end tag */
 	public static String END_TAG = "</em>"; //$NON-NLS-1$
