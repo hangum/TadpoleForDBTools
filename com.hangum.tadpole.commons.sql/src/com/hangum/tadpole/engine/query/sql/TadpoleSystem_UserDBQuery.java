@@ -45,7 +45,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * ex) db lock? visible
 	 * 
 	 * @param userDB
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static void updateDBOtherInformation(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -56,7 +56,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * Registered Database
 	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static List getRegisteredDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -72,7 +72,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param userDBDao
 	 * @param oldUserDBDao
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static boolean isOldDBValidate(int user_seq, UserDBDAO userDBDao, UserDBDAO oldUserDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -93,7 +93,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param user_seq
 	 * @param userDBDao
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -113,7 +113,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param user_seq
 	 * @param userDBDao
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static boolean isAlreadyExistDB(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -126,32 +126,6 @@ public class TadpoleSystem_UserDBQuery {
 		
 		if(listUserDB.isEmpty()) return false;
 		else return true;
-	}
-	
-	/**
-	 * group의 그룹명을 리턴합니다.
-	 * 
-	 * @param groupSeqs
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<String> getUserGroupName() throws TadpoleSQLManagerException, SQLException {
-		List<String> listGroupName = new ArrayList<String>();
-		
-		Map<String, Object> mapParam = new HashMap<String, Object>();
-		mapParam.put("user_seq", SessionManager.getUserSeq());
-		mapParam.put("thisTime", System.currentTimeMillis());
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
-
-		// set db access control
-		for (UserDBDAO userDB : listUserDB) {
-			if(!listGroupName.contains(userDB.getGroup_name())) {
-				listGroupName.add(userDB.getGroup_name());
-			}
-		}
-		
-		return listGroupName;
 	}
 	
 	/**
@@ -233,7 +207,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * @param oldUserDb
 	 * @param userSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static UserDBDAO updateUserDB(UserDBDAO newUserDb, UserDBDAO oldUserDb, int userSeq) throws TadpoleSQLManagerException, SQLException {
 		
@@ -281,10 +255,61 @@ public class TadpoleSystem_UserDBQuery {
 	}
 	
 	/**
+	 * group의 그룹명을 리턴합니다.
+	 * 
+	 * @param groupSeqs
+	 * @return
+	 * @throws TadpoleSQLManagerException, SQLException 
+	 */
+	public static List<String> getUserGroupName() throws TadpoleSQLManagerException, SQLException {
+		List<String> listGroupName = new ArrayList<String>();
+		
+		Map<String, Object> mapParam = new HashMap<String, Object>();
+		mapParam.put("user_seq", SessionManager.getUserSeq());
+		mapParam.put("thisTime", System.currentTimeMillis());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
+
+		// set db access control
+		for (UserDBDAO userDB : listUserDB) {
+			if(!listGroupName.contains(userDB.getGroup_name())) {
+				listGroupName.add(userDB.getGroup_name());
+			}
+		}
+		
+		return listGroupName;
+	}
+	
+	/**
+	 * 유저그룹의 디비 리스트
+	 * 
+	 * @param strGoupName
+	 * @return
+	 * @throws TadpoleSQLManagerException, SQLException 
+	 */
+	public static List<UserDBDAO> getUserGroupDB(String strGoupName) throws TadpoleSQLManagerException, SQLException {
+		Map<String, Object> mapParam = new HashMap<String, Object>();
+		mapParam.put("group_name", strGoupName);
+		mapParam.put("user_seq", SessionManager.getUserSeq());
+		mapParam.put("thisTime", System.currentTimeMillis());
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDBDAO> listUserDB = sqlClient.queryForList("userGroupDB", mapParam);
+
+		// set db access control
+		for (UserDBDAO userDBDAO : listUserDB) {
+			DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.getDBAccessControl(userDBDAO.getRole_seq());
+			userDBDAO.setDbAccessCtl(dbAccessCtl);
+		}
+		
+		return listUserDB;
+	}
+	
+	/**
 	 * 유저디비
 	 * 
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static List<UserDBDAO> getUserDB() throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> mapParam = new HashMap<String, Object>();
@@ -324,7 +349,7 @@ public class TadpoleSystem_UserDBQuery {
 	/**
 	 * 자신이 생성한 사용자 리스트
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static List<UserDBDAO> getCreateUserDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -334,7 +359,7 @@ public class TadpoleSystem_UserDBQuery {
 	/**
 	 * 모든 유저의 디비를 보여 줍니다.
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static List<UserDBDAO> getAllUserDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -344,7 +369,7 @@ public class TadpoleSystem_UserDBQuery {
 	/**
 	 * 일별 보고서 종류.
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static List<UserDBDAO> getDailySummaryReportDB() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -357,7 +382,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * 
 	 * @param dbSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static UserDBDAO getUserDBInstance(int dbSeq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -369,7 +394,7 @@ public class TadpoleSystem_UserDBQuery {
 	/**
 	 * 유저 삭제
 	 * @param seq
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static void removeUserDB(int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -381,7 +406,7 @@ public class TadpoleSystem_UserDBQuery {
 	 * 사용자 디비 롤을 삭제합니다.
 	 * 
 	 * @param seq
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static void removeUserRoleDB(int seq) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

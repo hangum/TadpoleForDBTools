@@ -107,15 +107,10 @@ public class ManagerViewer extends ViewPart {
 		compositeMainComposite.setLayout(gl_composite);
 		
 		managerTV = new TreeViewer(compositeMainComposite, SWT.NONE);
-		managerTV.addTreeListener(new ITreeViewerListener() {
-			public void treeCollapsed(TreeExpansionEvent event) {
-			}
-			public void treeExpanded(TreeExpansionEvent event) {
-			}
-		});
 		managerTV.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			public void selectionChanged(SelectionChangedEvent event) {
+				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(is.getFirstElement() instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
@@ -127,14 +122,31 @@ public class ManagerViewer extends ViewPart {
 					
 					addUserResouceData(userDB, false);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
+					
+
+					// 
+					// 아래 코드(managerTV.getControl().setFocus();)가 없으면, 오브젝트 탐색기의 event listener가 동작하지 않는다. 
+					// 이유는 글쎄 모르겠어.
+					//
+					managerTV.getControl().setFocus();
+				} else if(is.getFirstElement() instanceof ManagerListDTO) {
+					ManagerListDTO managerDTO = (ManagerListDTO)is.getFirstElement();
+					if(managerDTO.getManagerList().isEmpty()) {
+						try {
+							List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName());
+							for (UserDBDAO userDBDAO : userDBS) {
+								managerDTO.addLogin(userDBDAO);
+							}
+							
+							managerTV.refresh(managerDTO, false);
+							managerTV.expandToLevel(managerDTO, 2);//setExpandedElements(managerDTO.getManagerList().toArray());
+						} catch(Exception e) {
+							logger.error("get manager list", e);
+						}
+					}
 				}
 				
-				// 
-				// 아래 코드(managerTV.getControl().setFocus();)가 없으면, 오브젝트 탐색기의 event listener가 동작하지 않는다. 
-				// 이유는 글쎄 모르겠어.
-				//
-				managerTV.getControl().setFocus();
-			}
+			} 
 		});
 		managerTV.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -209,19 +221,24 @@ public class ManagerViewer extends ViewPart {
 		mapTreeList.clear();
 		
 		try {
-			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-			
-			for (UserDBDAO userDBDAO : userDBS) {
-				if(mapTreeList.containsKey(userDBDAO.getGroup_name())) {
-					mapTreeList.get(userDBDAO.getGroup_name()).addLogin(userDBDAO);
-				// 신규 그룹이면...
-				} else {
-					ManagerListDTO managerDto = new ManagerListDTO(userDBDAO.getGroup_name());
-					managerDto.addLogin(userDBDAO);
-					treeList.add(managerDto);
-					
-					mapTreeList.put(userDBDAO.getGroup_name(), managerDto);
-				}
+//			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+//			
+//			for (UserDBDAO userDBDAO : userDBS) {
+//				if(mapTreeList.containsKey(userDBDAO.getGroup_name())) {
+//					mapTreeList.get(userDBDAO.getGroup_name()).addLogin(userDBDAO);
+//				// 신규 그룹이면...
+//				} else {
+//					ManagerListDTO managerDto = new ManagerListDTO(userDBDAO.getGroup_name());
+//					managerDto.addLogin(userDBDAO);
+//					treeList.add(managerDto);
+//					
+//					mapTreeList.put(userDBDAO.getGroup_name(), managerDto);
+//				}
+//			}
+			List<String> listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
+			for (String strGroupName : listGroupName) {
+				ManagerListDTO managerDto = new ManagerListDTO(strGroupName);
+				treeList.add(managerDto);
 			}
 			
 		} catch (Exception e) {
