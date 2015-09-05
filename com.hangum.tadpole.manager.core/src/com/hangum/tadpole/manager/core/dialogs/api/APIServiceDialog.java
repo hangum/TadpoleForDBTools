@@ -12,6 +12,7 @@ package com.hangum.tadpole.manager.core.dialogs.api;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.google.gson.JsonArray;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -202,9 +204,26 @@ public class APIServiceDialog extends Dialog {
 	private void initData(String strArgument) {
 		
 		try {
-			NamedParameterDAO dao = NamedParameterUtil.parseParameterUtils(strSQL, strArgument);
-			String strResultType = getSelect(userDB, dao.getStrSQL(), dao.getListParam());
-			textResult.setText(strResultType);
+			String strReturnResult = "";
+			
+			// velocity 로 if else 가 있는지 검사합니다. 
+			String strSQLs = RESTfulAPIUtils.makeTemplateTOSQL("APIServiceDialog", strSQL, strArgument);
+			// 분리자 만큼 실행한다.
+			for (String strTmpSQL : strSQLs.split(PublicTadpoleDefine.SQL_DELIMITER)) {
+
+				NamedParameterDAO dao = NamedParameterUtil.parseParameterUtils(strTmpSQL, strArgument);
+				if(QueryUtils.RESULT_TYPE.JSON.name().equalsIgnoreCase(comboResultType.getText())) {
+					strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam()) + ",";
+				} else {
+					strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam());
+				}
+			}
+			
+			if(QueryUtils.RESULT_TYPE.JSON.name().equalsIgnoreCase(comboResultType.getText())) {
+				strReturnResult = "[" + StringUtils.removeEnd(strReturnResult, ",") + "]"; 
+			}
+			
+			textResult.setText(strReturnResult);
 			
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
@@ -233,7 +252,7 @@ public class APIServiceDialog extends Dialog {
 			} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
 				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
 			} else if(QueryUtils.RESULT_TYPE.XML.name().equals(comboResultType.getText())) {
-				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+				strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
 			} else {
 				strResult = QueryUtils.selectToHTML_TABLE(userDB, strSQL, listParam);
 			}
