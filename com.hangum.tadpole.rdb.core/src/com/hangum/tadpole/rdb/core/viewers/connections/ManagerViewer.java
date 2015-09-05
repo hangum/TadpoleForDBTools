@@ -139,7 +139,7 @@ public class ManagerViewer extends ViewPart {
 							}
 							
 							managerTV.refresh(managerDTO, false);
-							managerTV.expandToLevel(managerDTO, 2);//setExpandedElements(managerDTO.getManagerList().toArray());
+							managerTV.expandToLevel(managerDTO, 2);
 						} catch(Exception e) {
 							logger.error("get manager list", e);
 						}
