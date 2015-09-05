@@ -127,38 +127,38 @@ public class ExplorerViewer extends ViewPart {
 				String strSelectTab = tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getText();
 				String strSearchText = textSearch.getText();
 				
-				if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.COLLECTIONS.toString())) {
+				if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.COLLECTIONS.name())) {
 					mongoCollectionComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.name())) {
 					tableComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.name())) {
 					synonymComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.name())) {
 					viewComposite.filter(strSearchText);					
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.name())) {
 					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 						mongoIndexComposite.filter(strSearchText);
 					} else {
 						indexComposite.filter(strSearchText);
 					}					
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name())) {
 					procedureComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.name())) {
 					packageComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.name())) {
 					functionCompostite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.name())) {
 					triggerComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name())) {
 					mongoJavaScriptComposite.filter(strSearchText);
 				}
 			}
@@ -407,25 +407,25 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void refershSelectObject(String strSelectItemText, String strObjectName) {
 //		테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
-		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.toString())) {
+		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.name())) {
 			if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
 			refreshTable(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.name())) {
 			if(tabFolderObject.getSelectionIndex() != 1) tabFolderObject.setSelection(1);
 			refreshView(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.name())) {
 			refreshSynonym(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.name())) {
 			refreshIndexes(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name())) {
 			refreshProcedure(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.name())) {
 			refreshPackage(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.name())) {
 			refreshFunction(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.name())) {
 			refreshTrigger(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.toString())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name())) {
 			refreshJS(false, strObjectName);
 		}
 		

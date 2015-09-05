@@ -12,7 +12,9 @@ package com.hangum.tadpole.rdb.core.viewers.connections;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -66,6 +68,8 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
+import org.eclipse.jface.viewers.ITreeViewerListener;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 
 /**
  * connection manager 정보를 
@@ -79,6 +83,7 @@ public class ManagerViewer extends ViewPart {
 	
 	private Composite compositeMainComposite;
 	private List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
+	private Map<String, ManagerListDTO> mapTreeList = new HashMap<>();
 	private TreeViewer managerTV;
 	
 	/** download servcie handler. */
@@ -102,6 +107,12 @@ public class ManagerViewer extends ViewPart {
 		compositeMainComposite.setLayout(gl_composite);
 		
 		managerTV = new TreeViewer(compositeMainComposite, SWT.NONE);
+		managerTV.addTreeListener(new ITreeViewerListener() {
+			public void treeCollapsed(TreeExpansionEvent event) {
+			}
+			public void treeExpanded(TreeExpansionEvent event) {
+			}
+		});
 		managerTV.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -194,26 +205,23 @@ public class ManagerViewer extends ViewPart {
 	 * 트리 데이터 초기화
 	 */
 	public void init() {
-		// toolbar button 초기화.
-//		ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);  
-//	    Command command = commandService.getCommand(SynchronizedEditorHandler.ID);
-//	    State state = command.getState(SynchronizedEditorHandler.STATE_ID);
-//	    
-//	    if (GetPreferenceGeneral.getSyncEditorStat()) state.setValue(Boolean.TRUE);
-//	    else state.setValue(Boolean.FALSE);
-//	    
-//		try {
-//			HandlerUtil.toggleCommandState(command);
-//		} catch (ExecutionException e1) {
-//			logger.error("Synchronized editor and connection view", e1);
-//		}
-		
 		treeList.clear();
+		mapTreeList.clear();
 		
 		try {
 			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+			
 			for (UserDBDAO userDBDAO : userDBS) {
-				addUserDB(userDBDAO, false);				
+				if(mapTreeList.containsKey(userDBDAO.getGroup_name())) {
+					mapTreeList.get(userDBDAO.getGroup_name()).addLogin(userDBDAO);
+				// 신규 그룹이면...
+				} else {
+					ManagerListDTO managerDto = new ManagerListDTO(userDBDAO.getGroup_name());
+					managerDto.addLogin(userDBDAO);
+					treeList.add(managerDto);
+					
+					mapTreeList.put(userDBDAO.getGroup_name(), managerDto);
+				}
 			}
 			
 		} catch (Exception e) {
@@ -226,8 +234,7 @@ public class ManagerViewer extends ViewPart {
 		managerTV.refresh();
 //		managerTV.expandToLevel(2);
 		
-		AnalyticCaller.track(ManagerViewer.ID);
-		
+		AnalyticCaller.track(ManagerViewer.ID);		
 	}
 
 	/**
@@ -255,25 +262,25 @@ public class ManagerViewer extends ViewPart {
 		return treeList;
 	}
 	
-	/**
-	 * 트리에 추가될수 있는것인지 검증
-	 * 
-	 * @param dbType
-	 * @param userDB
-	 */
-	public boolean isAdd(DBDefine dbType, UserDBDAO userDB) {
-		for(ManagerListDTO dto: treeList) {
-			if(dto.getName().equals(dbType.getDBToString())) {
-				if(dto.getName().equals( userDB.getDisplay_name() )) return false;
-				
-				for (UserDBDAO alreaduserDB : dto.getManagerList()) {
-					if( alreaduserDB.getUrl().equals( userDB.getUrl() )) return false;
-				}
-			}
-		}
-	 	
-		return true;
-	}
+//	/**
+//	 * 트리에 추가될수 있는것인지 검증
+//	 * 
+//	 * @param dbType
+//	 * @param userDB
+//	 */
+//	public boolean isAdd(DBDefine dbType, UserDBDAO userDB) {
+//		for(ManagerListDTO dto: treeList) {
+//			if(dto.getName().equals(dbType.getDBToString())) {
+//				if(dto.getName().equals( userDB.getDisplay_name() )) return false;
+//				
+//				for (UserDBDAO alreaduserDB : dto.getManagerList()) {
+//					if( alreaduserDB.getUrl().equals( userDB.getUrl() )) return false;
+//				}
+//			}
+//		}
+//	 	
+//		return true;
+//	}
 	
 	/**
 	 * tree에 새로운 항목 추가
@@ -282,6 +289,7 @@ public class ManagerViewer extends ViewPart {
 	 * @param defaultOpen default editor open
 	 */
 	public void addUserDB(UserDBDAO userDB, boolean defaultOpen) {
+		
 		for(ManagerListDTO dto: treeList) {
 			if(dto.getName().equals(userDB.getGroup_name())) {
 				dto.addLogin(userDB);

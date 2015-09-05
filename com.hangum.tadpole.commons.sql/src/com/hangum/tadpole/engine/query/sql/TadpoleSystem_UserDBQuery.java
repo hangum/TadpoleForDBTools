@@ -138,10 +138,14 @@ public class TadpoleSystem_UserDBQuery {
 	public static List<String> getUserGroupName() throws TadpoleSQLManagerException, SQLException {
 		List<String> listGroupName = new ArrayList<String>();
 		
-		List<UserDBDAO> userDBS = getCreateUserDB();
-		for (UserDBDAO userDB : userDBS) {
-			boolean isAdd = false;
-			
+		Map<String, Object> mapParam = new HashMap<String, Object>();
+		mapParam.put("user_seq", SessionManager.getUserSeq());
+		mapParam.put("thisTime", System.currentTimeMillis());
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
+
+		// set db access control
+		for (UserDBDAO userDB : listUserDB) {
 			if(!listGroupName.contains(userDB.getGroup_name())) {
 				listGroupName.add(userDB.getGroup_name());
 			}
@@ -277,8 +281,7 @@ public class TadpoleSystem_UserDBQuery {
 	}
 	
 	/**
-	 * 유저디비 + 메니저 디비 
-	 * 단, 메니저일경우 메니져 디비만 리턴한다.
+	 * 유저디비
 	 * 
 	 * @return
 	 * @throws Exception
