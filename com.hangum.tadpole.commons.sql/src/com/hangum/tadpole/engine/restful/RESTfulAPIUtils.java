@@ -112,7 +112,7 @@ public class RESTfulAPIUtils {
 			String strKey = mapIndex.get(i);
 			
 			if(!params.containsKey(strKey)) {
-				throw new RESTFulArgumentNotMatchException("SQL Parameter not found. key name is " + strKey);
+				throw new RESTFulArgumentNotMatchException("SQL Parameter not found. Must have to key name is " + strKey);
 			} else {
 				listParam.add( params.get(strKey) );
 			}
