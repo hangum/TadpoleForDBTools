@@ -660,6 +660,39 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		}
 		
 		/** filter 정보가 있으면 처리합니다. */
+		return getTableAfterwork(showTables, userDB);
+	}
+	
+	/**
+	 * 보여 주어야할 테이블 목록을 정의합니다.
+	 *
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
+		List<TableDAO> showTables = null;
+				
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			showTables = new TajoConnectionManager().tableList(userDB);			
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
+		}
+		
+		/** filter 정보가 있으면 처리합니다. */
+		return getTableAfterwork(showTables, userDB);
+	}
+	
+	/**
+	 * Table 정보 처리 후에 
+	 * 
+	 * @param showTables
+	 * @param userDB
+	 * @return
+	 */
+	private static List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
+		/** filter 정보가 있으면 처리합니다. */
 		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.

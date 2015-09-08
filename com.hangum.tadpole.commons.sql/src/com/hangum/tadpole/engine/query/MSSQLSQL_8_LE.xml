@@ -29,19 +29,29 @@ SELECT getdate()
 </select>
 
 <!-- 
+	table 오직 테이블 이름만.
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	select o.name
+		from sysobjects o
+		    left join sysproperties c on o.id = c.id	     
+	    	and c.type = '3' and c.name = 'MS_Description'	
+		where o.xtype = 'U' 
+		order by o.name
+</select>
+
+<!-- 
 	table 이름
 	
 	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
-		
 	select o.name, c.value as comment 
 		from sysobjects o
 		    left join sysproperties c on o.id = c.id	     
 	    	and c.type = '3' and c.name = 'MS_Description'	
 		where o.xtype = 'U' 
 		order by o.name
-	
 </select>
 
 <!-- 

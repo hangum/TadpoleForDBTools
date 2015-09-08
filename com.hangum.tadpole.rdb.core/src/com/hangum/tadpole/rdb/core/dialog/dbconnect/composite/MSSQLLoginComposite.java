@@ -194,7 +194,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			textHost.setText("172.16.187.132"); //$NON-NLS-1$
+			textHost.setText("192.168.29.128"); //$NON-NLS-1$
 			textPort.setText("1433"); //$NON-NLS-1$
 			textDatabase.setText("northwind"); //$NON-NLS-1$
 			textUser.setText("sa"); //$NON-NLS-1$
@@ -354,7 +354,11 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 					strDB);
 		}
 		if(!"".equals(textJDBCOptions.getText())) {
-			dbUrl += "?" + textJDBCOptions.getText();
+			if(StringUtils.endsWith(dbUrl, ";")) {
+				dbUrl += textJDBCOptions.getText();
+			} else {
+				dbUrl += ";" + textJDBCOptions.getText();	
+			}
 		}
 
 		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);

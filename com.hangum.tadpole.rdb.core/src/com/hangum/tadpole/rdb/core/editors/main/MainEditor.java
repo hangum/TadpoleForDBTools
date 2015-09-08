@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -103,6 +104,9 @@ public class MainEditor extends EditorExtension {
 	
 	/** save mode */
 	private boolean isDirty = false;
+	
+	/** short cut prefix */
+	private static final String STR_SHORT_CUT_PREFIX = ShortcutPrefixUtils.getCtrlShortcut();
 	
 	private SashForm sashFormExtension;
 	private IMainEditorExtension[] compMainExtions;
@@ -198,7 +202,7 @@ public class MainEditor extends EditorExtension {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, STR_SHORT_CUT_PREFIX));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -244,7 +248,7 @@ public class MainEditor extends EditorExtension {
 				
 			}
 		});
-		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, STR_SHORT_CUT_PREFIX));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
@@ -261,7 +265,7 @@ public class MainEditor extends EditorExtension {
 				}
 			}
 		});
-		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, STR_SHORT_CUT_PREFIX));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSQLToApplication = new ToolItem(toolBar, SWT.NONE);
@@ -365,7 +369,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, STR_SHORT_CUT_PREFIX));
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
@@ -483,13 +487,21 @@ public class MainEditor extends EditorExtension {
 //	    } else {
 //	    	browserQueryEditor.setUrl(DEV_DB_URL);
 //	    }
-		registerBrowserFunctions();
+	    	
+	    final String strTableList = getAssistTableList();
+	    registerBrowserFunctions();
+	    /** 무슨 일인지 이벤트가 두번 탑니다. */
+	    final List<String> listInitialize = new ArrayList<String>();
 		
 		browserQueryEditor.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed( ProgressEvent event ) {
+				if(!listInitialize.isEmpty()) return;
+				
+				listInitialize.add("init_comp");
+				
 				try {
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), getAssistTableList(), getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), strTableList, getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -549,21 +561,18 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private String getAssistTableList() {
-		String strTablelist = ""; //$NON-NLS-1$
+		StringBuffer strTablelist = new StringBuffer();
 		
 		try {
-			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
+			List<TableDAO> showTables = TadpoleTableComposite.getTableListOnlyTableName(getUserDB());
 			for (TableDAO tableDao : showTables) {
-				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+				strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
 			}
-			
-			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
-			
 		} catch(Exception e) {
 			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
 		}
-		
-		return strTablelist;
+
+		return StringUtils.removeEnd(strTablelist.toString(), "|"); //$NON-NLS-1$
 	}
 
 	/**

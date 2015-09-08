@@ -31,7 +31,22 @@ SELECT sysdate	FROM dual
 </select>
 
 <!-- 
-	db의 모든 table 이름
+	db의 모든 table 이름만.
+	
+	컬럼 설명
+	TNAME 		: 테이블 명
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+  SELECT 
+      T.table_name AS "NAME"
+    FROM user_tables T 
+      LEFT JOIN USER_TAB_COMMENTS S
+            ON S.TABLE_NAME = T.TABLE_NAME
+ORDER BY T.table_name
+</select>
+
+<!-- 
+	db의 모든 table 이름, 코멘트.
 	
 	컬럼 설명
 	TNAME 		: 테이블 명
