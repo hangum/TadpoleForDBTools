@@ -262,15 +262,14 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static List<String> getUserGroupName() throws TadpoleSQLManagerException, SQLException {
-		List<String> listGroupName = new ArrayList<String>();
-		
 		Map<String, Object> mapParam = new HashMap<String, Object>();
 		mapParam.put("user_seq", SessionManager.getUserSeq());
 		mapParam.put("thisTime", System.currentTimeMillis());
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
-
+		
 		// set db access control
+		List<String> listGroupName = new ArrayList<String>();
 		for (UserDBDAO userDB : listUserDB) {
 			if(!listGroupName.contains(userDB.getGroup_name())) {
 				listGroupName.add(userDB.getGroup_name());

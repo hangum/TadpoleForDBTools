@@ -78,7 +78,6 @@ public class ServletUserAgent {
     	if(logger.isDebugEnabled()) {
 	    	logger.debug("=====================================================================");
 	    	logger.debug("user agent :" + userAgent);
-	    	logger.debug("=====================================================================");
     	}
     	
 //    	OS_Type = detectedOS(userAgent);

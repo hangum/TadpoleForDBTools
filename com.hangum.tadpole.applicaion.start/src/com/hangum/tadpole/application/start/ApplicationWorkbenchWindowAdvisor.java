@@ -35,8 +35,6 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
-import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -97,7 +95,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     @Override
     public void postWindowOpen() {
     	// fullscreen
-    	getWindowConfigurer().getWindow().getShell().setMaximized(true);;
+//    	getWindowConfigurer().getWindow().getShell().setMaximized(true);
     	
 //    	
 //    	
@@ -108,41 +106,41 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	mainUICallback();
 
     	// If login after does not DB exist, DB connect Dialog open.
-    	try {
-//    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-//    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
-    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-	    		if(0 == mv.getAllTreeList().size()) {
-	    			ConnectDatabase cd = new ConnectDatabase();
-	    			cd.run();
-	    		}
-//    		}
-    	} catch(Exception e) {
-    		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}
+//    	try {
+////    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+////    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+//    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+//	    		if(0 == mv.getAllTreeList().size()) {
+//	    			ConnectDatabase cd = new ConnectDatabase();
+//	    			cd.run();
+//	    		}
+////    		}
+//    	} catch(Exception e) {
+//    		logger.error("Is DB list?", e); //$NON-NLS-1$
+//    	}
     	
     }
     
-    /**
-     * check support browser
-     */
-    private void checkSupportBrowser() {
-	//    	try {
-	//    	// Add HttpListener(User data collection
-	//		System.out.println("================= start add session ==========================");
-	//		TadpoleSessionListener listener = new TadpoleSessionListener();
-	//		RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
-	//		System.out.println("================= end add session ==========================");
-	//	} catch(Exception e) {
-	//		e.printStackTrace();
-	//	}
-				
-		// Show Information Dialog(Is not Firefox, Chrome, Safari)
-//		if(!RequestInfoUtils.isSupportBrowser()) {
-//			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
-//			uiDialog.open();
-//		}
-    }
+//    /**
+//     * check support browser
+//     */
+//    private void checkSupportBrowser() {
+//	//    	try {
+//	//    	// Add HttpListener(User data collection
+//	//		System.out.println("================= start add session ==========================");
+//	//		TadpoleSessionListener listener = new TadpoleSessionListener();
+//	//		RWT.getUISession().getHttpSession().getServletContext().addListener(listener);//"com.hangum.tadpole.application.start.sessions.TadpoleSessionListener");
+//	//		System.out.println("================= end add session ==========================");
+//	//	} catch(Exception e) {
+//	//		e.printStackTrace();
+//	//	}
+//				
+//		// Show Information Dialog(Is not Firefox, Chrome, Safari)
+////		if(!RequestInfoUtils.isSupportBrowser()) {
+////			UserInformationDialog uiDialog = new UserInformationDialog(Display.getCurrent().getActiveShell(), RequestInfoUtils.getUserBrowser());
+////			uiDialog.open();
+////		}
+//    }
     
 //    /**
 //     * 시스템에서 사용자에게 메시지를 전해 줍니다.

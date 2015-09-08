@@ -217,12 +217,10 @@ public class ManagerViewer extends ViewPart {
 	public void init() {
 		treeList.clear();
 		mapTreeList.clear();
-		
+	
 		try {
-			List<String> listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
-			for (String strGroupName : listGroupName) {
-				ManagerListDTO managerDto = new ManagerListDTO(strGroupName);
-				treeList.add(managerDto);
+			for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
+				treeList.add(new ManagerListDTO(strGroupName));
 			}
 			
 		} catch (Exception e) {
@@ -233,9 +231,7 @@ public class ManagerViewer extends ViewPart {
 		}
 		
 		managerTV.refresh();
-//		managerTV.expandToLevel(2);
-		
-		AnalyticCaller.track(ManagerViewer.ID);		
+		AnalyticCaller.track(ManagerViewer.ID);
 	}
 
 	/**
@@ -262,26 +258,6 @@ public class ManagerViewer extends ViewPart {
 	public List<ManagerListDTO> getAllTreeList() {
 		return treeList;
 	}
-	
-//	/**
-//	 * 트리에 추가될수 있는것인지 검증
-//	 * 
-//	 * @param dbType
-//	 * @param userDB
-//	 */
-//	public boolean isAdd(DBDefine dbType, UserDBDAO userDB) {
-//		for(ManagerListDTO dto: treeList) {
-//			if(dto.getName().equals(dbType.getDBToString())) {
-//				if(dto.getName().equals( userDB.getDisplay_name() )) return false;
-//				
-//				for (UserDBDAO alreaduserDB : dto.getManagerList()) {
-//					if( alreaduserDB.getUrl().equals( userDB.getUrl() )) return false;
-//				}
-//			}
-//		}
-//	 	
-//		return true;
-//	}
 	
 	/**
 	 * tree에 새로운 항목 추가
@@ -467,7 +443,7 @@ public class ManagerViewer extends ViewPart {
 			downloadServiceHandler.setByteContent(arrayData);
 			DownloadUtils.provideDownload(compositeMainComposite, downloadServiceHandler.getId());
 		} catch(Exception e) {
-			logger.error("GridFS Download exception", e); //$NON-NLS-1$
+			logger.error("SQLite file Download exception", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", "DB Download Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
