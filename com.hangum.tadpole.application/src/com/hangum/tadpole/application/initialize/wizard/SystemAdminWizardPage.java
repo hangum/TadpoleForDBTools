@@ -71,7 +71,6 @@ public class SystemAdminWizardPage extends WizardPage {
 	 */
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
-
 		container.setLayout(new GridLayout(1, false));
 		
 		Group grpAdministratorUserInformation = new Group(container, SWT.NONE);

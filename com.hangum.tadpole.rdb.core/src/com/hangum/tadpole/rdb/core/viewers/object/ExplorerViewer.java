@@ -605,25 +605,26 @@ public class ExplorerViewer extends ViewPart {
 	public UserDBDAO getUserDB() {
 		return userDB;
 	}
-
+	
 	/**
-	 *  refresh object
+	 * refresh current tab
 	 * 
 	 * @param chgUserDB
-	 * @param schemaDao
+	 * @param queryDDLType
+	 * @param strObjectName
 	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
+	public void refreshCurrentTab(UserDBDAO chgUserDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType, String strObjectName) {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		
 		if(queryDDLType != null) {
 			if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.TABLE) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), "");
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), strObjectName);
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), "");
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), strObjectName);
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.INDEX) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), "");
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), strObjectName);
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name(), "");
+				refershSelectObject(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name(), strObjectName);
 				
 			} else {
 				refreshSelectTab();
@@ -632,6 +633,16 @@ public class ExplorerViewer extends ViewPart {
 //				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), "");
 			}
 		}
+	}
+
+	/**
+	 *  refresh object
+	 * 
+	 * @param chgUserDB
+	 * @param schemaDao
+	 */
+	public void refreshCurrentTab(UserDBDAO chgUserDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
+		refreshCurrentTab(chgUserDB, queryDDLType, "");
 	}
 	
 	@Override
