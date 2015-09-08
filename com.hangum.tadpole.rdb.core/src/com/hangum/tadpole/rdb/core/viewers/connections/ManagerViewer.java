@@ -219,20 +219,6 @@ public class ManagerViewer extends ViewPart {
 		mapTreeList.clear();
 		
 		try {
-//			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
-//			
-//			for (UserDBDAO userDBDAO : userDBS) {
-//				if(mapTreeList.containsKey(userDBDAO.getGroup_name())) {
-//					mapTreeList.get(userDBDAO.getGroup_name()).addLogin(userDBDAO);
-//				// 신규 그룹이면...
-//				} else {
-//					ManagerListDTO managerDto = new ManagerListDTO(userDBDAO.getGroup_name());
-//					managerDto.addLogin(userDBDAO);
-//					treeList.add(managerDto);
-//					
-//					mapTreeList.put(userDBDAO.getGroup_name(), managerDto);
-//				}
-//			}
 			List<String> listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
 			for (String strGroupName : listGroupName) {
 				ManagerListDTO managerDto = new ManagerListDTO(strGroupName);

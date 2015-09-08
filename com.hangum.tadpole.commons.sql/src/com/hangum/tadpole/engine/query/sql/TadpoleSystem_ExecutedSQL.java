@@ -131,7 +131,7 @@ public class TadpoleSystem_ExecutedSQL {
 	}
 	
 	/**
-	 * 마지막 실행했떤 쿼리 100개를 리턴합니다.
+	 * 마지막 실행했떤 쿼리 20개를 리턴합니다.
 	 * 
 	 * @param user_seq
 	 * @param dbSeq
@@ -145,7 +145,7 @@ public class TadpoleSystem_ExecutedSQL {
 		queryMap.put("user_seq",user_seq);
 		queryMap.put("db_seq", 	dbSeq);
 		queryMap.put("filter", "%" + filter + "%");
-		queryMap.put("count", 	50);
+		queryMap.put("count", 	20);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);

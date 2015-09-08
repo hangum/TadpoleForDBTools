@@ -28,7 +28,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 public class LogConfiguration {
 	String defaultFileName 	= "./logs/tadpole.log";
 	String filePattern 		= "%d %-5p [%t] %-17c{2} (%13F:%L) %3x - %m%n";
-	String defaultPattern 	= "%p - %C{1} : %M %m %n";
+	String defaultPattern 	= "%d{HH:mm:ss, SSS} %p - %C{1}:%M %m %n";
 	
 	public static Logger logger = Logger.getRootLogger();
 	

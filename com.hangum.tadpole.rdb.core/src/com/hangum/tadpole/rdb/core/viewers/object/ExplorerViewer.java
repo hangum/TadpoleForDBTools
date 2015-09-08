@@ -209,6 +209,7 @@ public class ExplorerViewer extends ViewPart {
 				} // end if(event.getProperty()
 			} //
 		}); // end property change
+		
 	}
 
 	/**

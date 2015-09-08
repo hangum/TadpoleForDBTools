@@ -128,6 +128,8 @@ public class ParameterDialog extends Dialog {
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
+		
+		tableViewer.getTable().setFocus();
 
 		return container;
 	}
