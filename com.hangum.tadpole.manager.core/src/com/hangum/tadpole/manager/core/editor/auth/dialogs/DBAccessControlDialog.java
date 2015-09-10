@@ -20,9 +20,13 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -50,12 +54,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_AccessControl;
-
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.swt.custom.CCombo;
 
 /**
  *  SQLAudit
@@ -153,6 +151,7 @@ public class DBAccessControlDialog extends Dialog {
 		}
 		comboUser.select(0);
 		new Label(compositeHead, SWT.NONE);
+		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
@@ -161,7 +160,7 @@ public class DBAccessControlDialog extends Dialog {
 		Group grpAuthority = new Group(compositeBody, SWT.NONE);
 		grpAuthority.setLayout(new GridLayout(2, false));
 		grpAuthority.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpAuthority.setText("Authority(Does't use check)");
+		grpAuthority.setText("Authority");
 		
 		btnSelect = new Button(grpAuthority, SWT.CHECK);
 		btnSelect.setEnabled(false);
@@ -304,11 +303,11 @@ public class DBAccessControlDialog extends Dialog {
 		try {
 			dbAccessDetail = TadpoleSystem_AccessControl.getDBAccessControl(tadpoleUserDbRoleDAO);
 			
-			btnSelect.setSelection(PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getSelect_lock()));
-			btnInsert.setSelection(PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getInsert_lock()));
-			btnUpdate.setSelection(PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getUpdate_lock()));
-			btnDelete.setSelection(PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getDelete_locl()));
-			btnDdl.setSelection(PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getDdl_lock()));
+//			btnSelect.setSelection(!PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getSelect_lock()));
+			btnInsert.setSelection(!PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getInsert_lock()));
+			btnUpdate.setSelection(!PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getUpdate_lock()));
+			btnDelete.setSelection(!PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getDelete_locl()));
+			btnDdl.setSelection(!PublicTadpoleDefine.YES_NO.YES.name().equals(dbAccessDetail.getDdl_lock()));
 			
 			listTableColumn.addAll(dbAccessDetail.getMapSelectAccessCtl().values());
 			tvSelect.refresh();
@@ -329,11 +328,11 @@ public class DBAccessControlDialog extends Dialog {
 		DBAccessControlDAO dao = new DBAccessControlDAO();
 		dao.setSeq(dbAccessDetail.getSeq());
 		
-		dao.setSelect_lock(btnSelect.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
-		dao.setInsert_lock(btnInsert.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
-		dao.setUpdate_lock(btnUpdate.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
-		dao.setDelete_locl(btnDelete.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
-		dao.setDdl_lock(btnDdl.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+//		dao.setSelect_lock(btnSelect.getSelection()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name());
+		dao.setInsert_lock(btnInsert.getSelection()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name());
+		dao.setUpdate_lock(btnUpdate.getSelection()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name());
+		dao.setDelete_locl(btnDelete.getSelection()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name());
+		dao.setDdl_lock(btnDdl.getSelection()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name());
 		
 		Map<String, AccessCtlObjectDAO> mapSelectAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
 		for(AccessCtlObjectDAO objectDao : listTableColumn) {
