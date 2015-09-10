@@ -268,7 +268,7 @@ public class SessionManager {
 	     
 	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", "");
 	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
-	     	executor.execute("setTimeout('"+browserText+"', 50)" );
+	     	executor.execute("setTimeout('"+browserText+"', 10)" );
 		} catch(Exception e) {
 			// ignore exception
 		}
