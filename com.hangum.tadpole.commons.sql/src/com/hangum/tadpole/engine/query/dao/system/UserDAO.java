@@ -39,6 +39,8 @@ public class UserDAO {
 	String use_otp;
 	String otp_secret;
 	
+	String allow_ip;
+	
 	/** tadpole_user_db_role column */
 	String role_id;
 
@@ -198,6 +200,14 @@ public class UserDAO {
 
 	public void setRole_type(String role_type) {
 		this.role_type = role_type;
+	}
+	
+	public String getAllow_ip() {
+		return allow_ip;
+	}
+
+	public void setAllow_ip(String allow_ip) {
+		this.allow_ip = allow_ip;
 	}
 
 	/**

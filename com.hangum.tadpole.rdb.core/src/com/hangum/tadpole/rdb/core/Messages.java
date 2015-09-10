@@ -90,7 +90,6 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_6;
 	public static String DBLoginDialog_7;
 	public static String DBLoginDialog_8;
-	public static String DBLoginDialog_9;
 	public static String GenerateSQLSelectAction_0;
 	public static String GenerateSQLSelectAction_1;
 	public static String GenerateSQLSelectAction_8;

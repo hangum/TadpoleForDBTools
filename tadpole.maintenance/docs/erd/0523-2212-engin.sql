@@ -13,7 +13,8 @@ CREATE TABLE `tadpole_user` (
 	`approval_yn`            CHAR(3)     NOT NULL DEFAULT 'NO' COMMENT '사용승인여부', -- 사용승인여부
 	`use_otp`                CHAR(3)     NOT NULL DEFAULT 'NO' COMMENT 'USER_OPT', -- USER_OPT
 	`is_email_certification` CHAR(3)     NULL     DEFAULT 'NO' COMMENT '이메일 인증여부', -- 이메일 인증여부
-	`otp_secret`             VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'OPT_SECRET' -- OPT_SECRET
+	`otp_secret`             VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'OPT_SECRET', -- OPT_SECRET
+	`allow_ip`             VARCHAR(20) NOT NULL DEFAULT '*' COMMENT 'allow ip' -- OPT_SECRET
 )
 COMMENT '사용자 정보를 관리한다.';
 

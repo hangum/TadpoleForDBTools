@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -213,8 +212,8 @@ public class AdminUserListComposite extends Composite {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {"Email", "Name", "Comrirm key", "Approval", "User Confirm", "Delete", "Create Time"};
-		int[] colSize = {200, 150, 120, 60, 60, 60, 120};
+		String[] colNames = {"Email", "Name", "Allow IP", "Comrirm key", "Approval", "User Confirm", "Delete", "Create Time"};
+		int[] colSize = {200, 150, 100, 100, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(userListViewer, SWT.NONE);

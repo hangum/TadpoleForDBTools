@@ -56,6 +56,7 @@ public class ModifyUserDialog extends Dialog {
 	private Combo comboApproval;
 	private Combo comboUserConfirm;
 	private Combo comboDel;
+	private Text textAllowIP;
 
 	/**
 	 * Create the dialog.
@@ -97,6 +98,13 @@ public class ModifyUserDialog extends Dialog {
 		textName = new Text(container, SWT.BORDER);
 		textName.setEditable(false);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblAllowIp = new Label(container, SWT.NONE);
+		lblAllowIp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblAllowIp.setText("Allow IP");
+		
+		textAllowIP = new Text(container, SWT.BORDER);
+		textAllowIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblApproval = new Label(container, SWT.NONE);
 		lblApproval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -148,6 +156,7 @@ public class ModifyUserDialog extends Dialog {
 
 		textEmail.setText(userDAO.getEmail());
 		textName.setText(userDAO.getName());
+		textAllowIP.setText(userDAO.getAllow_ip());
 		textCreateDate.setText(userDAO.getCreate_time());
 		
 		comboApproval.setText(userDAO.getApproval_yn());
@@ -160,10 +169,10 @@ public class ModifyUserDialog extends Dialog {
 		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
 			user.setSeq(userDAO.getSeq());
+			user.setAllow_ip(textAllowIP.getText());
 			user.setApproval_yn(comboApproval.getText());
 			user.setIs_email_certification(comboUserConfirm.getText());
 			user.setDelYn(comboDel.getText());
-			
 			
 			// 사용자의 권한을 no로 만들면 session에서 삭제 하도록 합니다.
 			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) {
@@ -202,7 +211,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(400, 250);
+		return new Point(400, 280);
 	}
 
 }

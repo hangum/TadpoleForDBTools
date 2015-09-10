@@ -226,6 +226,7 @@
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
 	SET
+		allow_ip = #allow_ip#,
 		delYn = #delYn#,
 		approval_yn = #approval_yn#,
 		is_email_certification = #is_email_certification#
