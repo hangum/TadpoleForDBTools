@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="tadpole-rap-2.1.0-emf-standalone" sequenceNumber="238">
+<?pde version="3.8"?><target name="tadpole-rap-2.1.0-emf-standalone" sequenceNumber="239">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.7.0.v20120130-0943"/>
@@ -12,6 +12,6 @@
 <location path="${git-tadpole}/targetProject/addons" type="Directory"/>
 <location path="${git-tadpole}/targetProject/eclipse-4.3-delta-pack" type="Directory"/>
 <location path="${git-tadpole}/targetProject/ext" type="Directory"/>
-<location path="${git-tadpole}/targetProject/rap-3.1.0-N-20150901-1314" type="Directory"/>
+<location path="${git-tadpole}/targetProject/rap-3.1.0-N-20150908-1209" type="Directory"/>
 </locations>
 </target>
