@@ -85,7 +85,6 @@ public class Messages extends NLS {
 	public static String TadpoleSystem_UserQuery_4;
 	public static String TadpoleSystem_UserQuery_7;
 	public static String TadpoleSystem_UserQuery_9;
-	public static String TadpoleSystemChecker_2;
 	public static String TadpoleSystemConnector_10;
 	public static String TadpoleSystemConnector_11;
 	public static String TadpoleSystemConnector_13;

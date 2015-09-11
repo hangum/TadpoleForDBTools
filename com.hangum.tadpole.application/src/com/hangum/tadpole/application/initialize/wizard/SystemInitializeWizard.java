@@ -14,6 +14,7 @@ import org.eclipse.jface.wizard.Wizard;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -34,7 +35,7 @@ public class SystemInitializeWizard extends Wizard {
 	protected SystemAdminWizardPage adminPage;
 
 	public SystemInitializeWizard() {
-		setWindowTitle("System initialize Wizard");
+		setWindowTitle(Messages.SystemAdminWizardPage_3);
 	}
 
 	@Override

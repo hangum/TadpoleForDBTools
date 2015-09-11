@@ -54,7 +54,7 @@ public class SystemAdminWizardPage extends WizardPage {
 	private Text textSMTPEmail;
 	private Text textSMTPPasswd;
 	
-	private static final String PASSWORD_RULE_PATTERN = "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$";
+	private static final String PASSWORD_RULE_PATTERN = "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$"; //$NON-NLS-1$
 	
 	/**
 	 * Create the wizard.
