@@ -48,7 +48,7 @@ public class DBDocComposite extends Composite {
 		
 		textURL = new Text(compositeHead, SWT.BORDER);
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textURL.setText("https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621445");
+		textURL.setText("https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=20578325");
 		
 		Button btnSearch = new Button(compositeHead, SWT.NONE);
 		btnSearch.addSelectionListener(new SelectionAdapter() {
