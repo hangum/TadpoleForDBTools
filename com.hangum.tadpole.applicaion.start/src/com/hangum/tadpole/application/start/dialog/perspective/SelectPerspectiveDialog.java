@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.application.start.BrowserActivator;
+import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.application.start.Perspective;
 import com.swtdesigner.ResourceManager;
 
@@ -46,7 +47,7 @@ public class SelectPerspectiveDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Select Perspective");
+		newShell.setText(Messages.SelectPerspectiveDialog_0);
 	}
 
 	@Override
@@ -61,27 +62,27 @@ public class SelectPerspectiveDialog extends Dialog {
 
 		Label lblIcon = new Label(container, SWT.NONE);
 		lblIcon.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
-		lblIcon.setText("icon");
-		lblIcon.setImage(ResourceManager.getPluginImageDescriptor(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools_log.png").createImage());
+		lblIcon.setText("icon"); //$NON-NLS-1$
+		lblIcon.setImage(ResourceManager.getPluginImageDescriptor(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools_log.png").createImage()); //$NON-NLS-1$
 
 		Label lblYouDoNot = new Label(container, SWT.WRAP);
 		lblYouDoNot.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true, 1, 1));
-		lblYouDoNot.setText("You do not set perspective.\nSelect a perspective.\n\nYou can change your perspective"
-				+ "\n\n> Preference >> Perspective");
+		lblYouDoNot.setText(Messages.SelectPerspectiveDialog_3
+				+ "\n\n> Preference >> Perspective"); //$NON-NLS-1$
 
 		Group grpSelectPerspective = new Group(container, SWT.NONE);
 		grpSelectPerspective.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 2, 1));
-		grpSelectPerspective.setText("Select perspective");
+		grpSelectPerspective.setText(Messages.SelectPerspectiveDialog_5);
 		grpSelectPerspective.setLayout(new GridLayout(1, false));
 
 		btnDefault = new Button(grpSelectPerspective, SWT.RADIO);
-		btnDefault.setText("Developer(default)");
+		btnDefault.setText(Messages.SelectPerspectiveDialog_6);
 
 		btnManager = new Button(grpSelectPerspective, SWT.RADIO);
-		btnManager.setText("Manager");
+		btnManager.setText(Messages.SelectPerspectiveDialog_7);
 
 		btnAdmin = new Button(grpSelectPerspective, SWT.RADIO);
-		btnAdmin.setText("Administrator");
+		btnAdmin.setText(Messages.SelectPerspectiveDialog_8);
 
 		btnDefault.setSelection(true);
 

@@ -69,8 +69,6 @@ public class Messages extends NLS {
 	public static String FindPasswordDialog_1;
 	public static String FindPasswordDialog_2;
 	public static String FindPasswordDialog_3;
-	public static String FindPasswordDialog_4;
-	public static String FindPasswordDialog_5;
 	public static String FindPasswordDialog_6;
 	public static String LoginDialog_lblNewLabel_text;
 	public static String OTPLoginDialog_0;
@@ -95,6 +93,12 @@ public class Messages extends NLS {
 	public static String LoginDialog_tblclmnName_text;
 	public static String LoginDialog_tblclmnCount_text;
 	public static String LoginDialog_button_text_1;
+	public static String SelectPerspectiveDialog_0;
+	public static String SelectPerspectiveDialog_3;
+	public static String SelectPerspectiveDialog_5;
+	public static String SelectPerspectiveDialog_6;
+	public static String SelectPerspectiveDialog_7;
+	public static String SelectPerspectiveDialog_8;
 	public static String UserInformationDialog_label_text;
 	static {
 		// initialize resource bundle

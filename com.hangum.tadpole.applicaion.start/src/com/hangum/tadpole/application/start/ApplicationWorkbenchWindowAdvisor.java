@@ -239,20 +239,21 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						SessionManager.setUserAllPreferenceData(mapUserInfoData);
 						
 						if ("".equals(SessionManager.getPerspective())) {
+							SessionManager.setPerspective(Perspective.DEFAULT);
 						
 	//						// user 사용자는 default perspective를 사용합니다.
 	//						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
 	//							SessionManager.setPerspective(Perspective.DEFAULT);
 	//						} else {
-								String persp;
-								SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
-								
-								if (Dialog.OK == dialog.open()) {
-									persp = dialog.getResult();
-								} else {
-									persp = Perspective.DEFAULT;
-								}
-								SessionManager.setPerspective(persp);
+//								String persp;
+//								SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
+//								
+//								if (Dialog.OK == dialog.open()) {
+//									persp = dialog.getResult();
+//								} else {
+//									persp = Perspective.DEFAULT;
+//								}
+//								SessionManager.setPerspective(persp);
 	//						}
 						}
 						
