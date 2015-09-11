@@ -30,7 +30,6 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.application.start.dialog.perspective.SelectPerspectiveDialog;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
@@ -75,13 +74,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //        configurer.setInitialSize(new Point(Display.getCurrent().getBounds().width, Display.getCurrent().getBounds().height));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
-        configurer.setShowMenuBar(false);
+        configurer.setShowMenuBar(true);
         configurer.setShowProgressIndicator(false);
         configurer.setTitle(SystemDefine.NAME + " " + SystemDefine.MAJOR_VERSION + " SR" + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
         
         // fullscreen
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
-        getWindowConfigurer().setShowMenuBar(false);
+        getWindowConfigurer().setShowMenuBar(true);
     
 //        // Set system exist message.
 //        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );

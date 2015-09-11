@@ -10,14 +10,17 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -125,12 +128,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	executedSQLAction = new ExecutedSQLAction(window);
     	register(executedSQLAction);
-    	
-//    	scheduleAction = new ScheduleAction(window);
-//    	register(scheduleAction);
-
-//    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
-//    	register(monitoringRealTimeAction);
     	    	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
@@ -159,6 +156,55 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
      * Comment at 2.1 RC3 has error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260) 
      */
     protected void fillMenuBar(IMenuManager menuBar) {
+    	MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
+    	MenuManager manageMenu = new MenuManager("&Manage", IWorkbenchActionConstants.M_PROJECT);
+    	MenuManager adminMenu = null;
+    	
+    	boolean isAdmin = PermissionChecker.isAdmin(SessionManager.getRepresentRole());
+    	if(isAdmin) {
+    		adminMenu = new MenuManager("&Admin", IWorkbenchActionConstants.MENU_PREFIX + "Admin");
+        }
+    	MenuManager preferenceMenu = new MenuManager("&Preference", IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
+		MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
+		
+		menuBar.add(fileMenu);
+		// Add a group marker indicating where action set menus will appear.
+		menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		menuBar.add(manageMenu);
+		menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		if(isAdmin) {
+			menuBar.add(adminMenu);
+			menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		}
+		menuBar.add(preferenceMenu);
+		menuBar.add(helpMenu);
+		
+		// File
+		fileMenu.add(connectAction);
+		fileMenu.add(saveAction);
+		fileMenu.add(saveAsAction);
+		fileMenu.add(new Separator());
+		fileMenu.add(exitAction);
+		
+		// Manage
+		manageMenu.add(restFulAPIAction);
+		manageMenu.add(transactionConnectionAction);
+		manageMenu.add(resourceManageAction);
+		manageMenu.add(userPermissionAction);
+		manageMenu.add(executedSQLAction);
+		manageMenu.add(schemaHistoryAction);
+		
+		if(isAdmin) {
+			adminMenu.add(sendMessageAction);
+			adminMenu.add(userLoginHistoryAction);
+		}
+
+		// preference action
+		preferenceMenu.add(preferenceAction);
+		
+		// Help
+		helpMenu.add(bugIssueAction);
+		helpMenu.add(aboutAction);
     }
     
     protected void fillCoolBar(ICoolBarManager coolBar) {
@@ -181,42 +227,36 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(deleteResourceAction);
         toolbar.add(new Separator());
         
-        if(PermissionChecker.isAdmin(SessionManager.getRepresentRole())) {        
-	        toolbar.add(sendMessageAction);
-	        toolbar.add(new Separator());
-	        toolbar.add(userLoginHistoryAction);
-	        toolbar.add(new Separator());
-        }
+//        if(PermissionChecker.isAdmin(SessionManager.getRepresentRole())) {
+//	        toolbar.add(sendMessageAction);
+//	        toolbar.add(new Separator());
+//	        toolbar.add(userLoginHistoryAction);
+//	        toolbar.add(new Separator());
+//        }
         
-        toolbar.add(restFulAPIAction);
-        toolbar.add(new Separator());
-        
-        toolbar.add(transactionConnectionAction);
-        toolbar.add(new Separator());
-    
-        toolbar.add(resourceManageAction);
-        toolbar.add(new Separator());
-
-    	toolbar.add(userPermissionAction);
-    	toolbar.add(new Separator());
-        
-    	toolbar.add(executedSQLAction);
-        toolbar.add(new Separator());
-        
-//        toolbar.add(scheduleAction);
+//        toolbar.add(restFulAPIAction);
+//        toolbar.add(new Separator());
+//        
+//        toolbar.add(transactionConnectionAction);
+//        toolbar.add(new Separator());
+//    
+//        toolbar.add(resourceManageAction);
+//        toolbar.add(new Separator());
+//
+//    	toolbar.add(userPermissionAction);
+//    	toolbar.add(new Separator());
+//        
+//    	toolbar.add(executedSQLAction);
+//        toolbar.add(new Separator());
+//        
+//        toolbar.add(schemaHistoryAction);
 //        toolbar.add(new Separator());
         
-        toolbar.add(schemaHistoryAction);
-        toolbar.add(new Separator());
-            
-//        toolbar.add(monitoringRealTimeAction);
+//        toolbar.add(preferenceAction);
 //        toolbar.add(new Separator());
-        
-        toolbar.add(preferenceAction);
-        toolbar.add(new Separator());
-        
+//        
         toolbar.add(bugIssueAction);
-        toolbar.add(aboutAction);
+//        toolbar.add(aboutAction);
         
     	toolbar.add(new Separator());
     	toolbar.add(exitAction);
