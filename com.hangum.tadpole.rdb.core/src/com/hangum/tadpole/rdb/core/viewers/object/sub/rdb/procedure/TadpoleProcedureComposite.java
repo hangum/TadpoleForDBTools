@@ -97,7 +97,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmProcedures.setText("Procedures"); //$NON-NLS-1$
+		tbtmProcedures.setText(Messages.TadpoleProcedureComposite_0);
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositeIndexes);

@@ -447,6 +447,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createMongoJavaScript() {
 		mongoJavaScriptComposite = new TadpoleMongoDBJavaScriptComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name());
 		mongoJavaScriptComposite.initAction();
 	}
 	
@@ -455,6 +456,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createMongoCollection() {
 		mongoCollectionComposite = new TadpoleMongoDBCollectionComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.COLLECTIONS.name());
 		mongoCollectionComposite.initAction();
 		tabFolderObject.setSelection(0);
 	}
@@ -464,6 +466,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createMongoIndex() {
 		mongoIndexComposite = new TadpoleMongoDBIndexesComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.INDEXES.name());
 		mongoIndexComposite.initAction();
 	}
 
@@ -472,6 +475,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createTrigger() {
 		triggerComposite = new TadpoleTriggerComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.TRIGGERS.name());
 		triggerComposite.initAction();
 	}
 
@@ -480,6 +484,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createFunction() {
 		functionCompostite = new TadpoleFunctionComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.FUNCTIONS.name());
 		functionCompostite.initAction();
 	}
 
@@ -488,6 +493,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createProcedure() {
 		procedureComposite = new TadpoleProcedureComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.PROCEDURES.name());
 		procedureComposite.initAction();
 	}
 
@@ -496,6 +502,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createPackage() {
 		packageComposite = new TadpolePackageComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.PACKAGES.name());
 		packageComposite.initAction();
 	}
 
@@ -504,6 +511,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createIndexes() {
 		indexComposite = new TadpoleIndexesComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.INDEXES.name());
 		indexComposite.initAction();
 	}
 
@@ -512,6 +520,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createView() {
 		viewComposite = new TadpoleViewerComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.VIEWS.name());
 		viewComposite.initAction();
 	}
 	
@@ -520,6 +529,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createTable() {
 		tableComposite = new TadpoleTableComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.TABLES.name());
 		tableComposite.initAction();
 		tabFolderObject.setSelection(0);
 	}
@@ -529,6 +539,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void createSynonym() {
 		synonymComposite = new TadpoleSynonymComposite(getSite(), tabFolderObject, userDB);
+		tableComposite.setData("DB_ACTION", PublicTadpoleDefine.DB_ACTION.SYNONYM.name());
 		synonymComposite.initAction();
 	}
 

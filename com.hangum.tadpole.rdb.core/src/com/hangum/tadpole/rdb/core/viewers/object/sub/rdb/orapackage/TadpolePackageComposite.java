@@ -113,7 +113,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmProcedures.setText("Packages"); //$NON-NLS-1$
+		tbtmProcedures.setText(Messages.TadpolePackageComposite_0);
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositePackages);
@@ -292,7 +292,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * package procedure function list
 	 */
 	protected void createProcedureFunctionListColumne(final TableViewer tv) {
-		String[] name = {"Type", "Name"};
+		String[] name = {Messages.TadpolePackageComposite_1, Messages.TadpolePackageComposite_2};
 		int[] size = {120, 300};
 
 		for (int i=0; i<name.length; i++) {

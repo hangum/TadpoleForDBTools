@@ -30,40 +30,6 @@ public class Messages extends NLS {
 	public static String SQLHistoryCreateColumn_6;
 	public static String SQLHistoryCreateColumn_7;
 	public static String SQLHistoryCreateColumn_8;
-	public static String SystemAdminWizardPage_1;
-	public static String SystemAdminWizardPage_10;
-	public static String SystemAdminWizardPage_11;
-	public static String SystemAdminWizardPage_12;
-	public static String SystemAdminWizardPage_13;
-	public static String SystemAdminWizardPage_15;
-	public static String SystemAdminWizardPage_16;
-	public static String SystemAdminWizardPage_19;
-	public static String SystemAdminWizardPage_2;
-	public static String SystemAdminWizardPage_22;
-	public static String SystemAdminWizardPage_25;
-	public static String SystemAdminWizardPage_26;
-	public static String SystemAdminWizardPage_27;
-	public static String SystemAdminWizardPage_28;
-	public static String SystemAdminWizardPage_29;
-	public static String SystemAdminWizardPage_3;
-	public static String SystemAdminWizardPage_30;
-	public static String SystemAdminWizardPage_32;
-	public static String SystemAdminWizardPage_33;
-	public static String SystemAdminWizardPage_35;
-	public static String SystemAdminWizardPage_37;
-	public static String SystemAdminWizardPage_39;
-	public static String SystemAdminWizardPage_4;
-	public static String SystemAdminWizardPage_41;
-	public static String SystemAdminWizardPage_43;
-	public static String SystemAdminWizardPage_45;
-	public static String SystemAdminWizardPage_47;
-	public static String SystemAdminWizardPage_48;
-	public static String SystemAdminWizardPage_49;
-	public static String SystemAdminWizardPage_5;
-	public static String SystemAdminWizardPage_6;
-	public static String SystemAdminWizardPage_7;
-	public static String SystemAdminWizardPage_8;
-	public static String SystemAdminWizardPage_9;
 	
 	public static String ResourceSaveDialog_0;
 	public static String ResourceSaveDialog_1;
@@ -102,7 +68,6 @@ public class Messages extends NLS {
 	public static String TadpoleSystem_UserQuery_3;
 	public static String TadpoleSystem_UserQuery_5;
 	public static String TadpoleSystem_UserQuery_6;
-	public static String SystemAdminWizardPage_btnLocalUse_text;
 	public static String ResourceSaveDialog_lblApiName_text;
 	public static String ResourceSaveDialog_lblUseApi_text;
 

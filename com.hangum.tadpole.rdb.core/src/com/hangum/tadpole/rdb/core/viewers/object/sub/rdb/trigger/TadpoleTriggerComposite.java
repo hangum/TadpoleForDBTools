@@ -88,7 +88,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTriggers = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTriggers.setText("Triggers"); //$NON-NLS-1$
+		tbtmTriggers.setText(Messages.TadpoleTriggerComposite_0);
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTriggers.setControl(compositeIndexes);

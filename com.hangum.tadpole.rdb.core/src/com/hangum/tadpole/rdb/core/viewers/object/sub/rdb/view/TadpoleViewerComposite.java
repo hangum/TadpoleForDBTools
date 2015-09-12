@@ -103,7 +103,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmViews.setText("Views"); //$NON-NLS-1$
+		tbtmViews.setText(Messages.TadpoleViewerComposite_0);
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmViews.setControl(compositeTables);
@@ -133,8 +133,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							StringBuffer sbSQL = new StringBuffer();
 		
 							Map<String, String> parameter = new HashMap<String, String>();
-							parameter.put("db", userDB.getDb());
-							parameter.put("table", viewName);
+							parameter.put("db", userDB.getDb()); //$NON-NLS-1$
+							parameter.put("table", viewName); //$NON-NLS-1$
 							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
@@ -171,8 +171,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 						if (is.getFirstElement() != null) {
 							String strTBName = is.getFirstElement().toString();
 							Map<String, String> param = new HashMap<String, String>();
-							param.put("db", userDB.getDb());
-							param.put("table", strTBName);
+							param.put("db", userDB.getDb()); //$NON-NLS-1$
+							param.put("table", strTBName); //$NON-NLS-1$
 
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
@@ -208,7 +208,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(viewListViewer, SWT.NONE);
 		TableColumn tblclmnTableName = tableViewerColumn.getColumn();
 		tblclmnTableName.setWidth(200);
-		tblclmnTableName.setText("Name"); //$NON-NLS-1$
+		tblclmnTableName.setText(Messages.TadpoleViewerComposite_5);
 		tblclmnTableName.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			

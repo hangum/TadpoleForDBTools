@@ -84,7 +84,7 @@ public class DBLoginDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("New Database Connection"); //$NON-NLS-1$
+		newShell.setText(Messages.DBLoginDialog_9);
 	}
 	
 	/**
@@ -193,7 +193,7 @@ public class DBLoginDialog extends Dialog {
 		container.layout();
 		
 		// google analytic
-		AnalyticCaller.track("DBLoginDialog");
+		AnalyticCaller.track("DBLoginDialog"); //$NON-NLS-1$
 	}
 	
 	/**
