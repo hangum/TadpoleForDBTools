@@ -184,6 +184,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(saveAction);
 		fileMenu.add(saveAsAction);
 		fileMenu.add(new Separator());
+		fileMenu.add(deleteResourceAction);
+		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
 		
 		// Manage
@@ -224,8 +226,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(dbRelationOpenAction);
         toolbar.add(new Separator());
         
-        toolbar.add(deleteResourceAction);
-        toolbar.add(new Separator());
+//        toolbar.add(deleteResourceAction);
+//        toolbar.add(new Separator());
         
 //        if(PermissionChecker.isAdmin(SessionManager.getRepresentRole())) {
 //	        toolbar.add(sendMessageAction);
