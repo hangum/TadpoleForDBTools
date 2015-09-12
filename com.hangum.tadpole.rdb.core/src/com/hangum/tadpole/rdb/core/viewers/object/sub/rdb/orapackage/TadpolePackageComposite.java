@@ -114,6 +114,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText(Messages.TadpolePackageComposite_0);
+		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.PACKAGES.name());
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositePackages);

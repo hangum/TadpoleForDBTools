@@ -98,6 +98,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem  tbtmFunctions = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmFunctions.setText(Messages.TadpoleFunctionComposite_0);
+		tbtmFunctions.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.FUNCTIONS.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmFunctions.setControl(compositeIndexes);

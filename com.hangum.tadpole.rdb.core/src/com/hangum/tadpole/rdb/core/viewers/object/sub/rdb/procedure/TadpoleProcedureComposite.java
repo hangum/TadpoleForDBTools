@@ -98,6 +98,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText(Messages.TadpoleProcedureComposite_0);
+		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.PROCEDURES.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositeIndexes);

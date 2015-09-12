@@ -105,6 +105,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmIndex.setText(Messages.TadpoleIndexesComposite_0);
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.INDEXES.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);

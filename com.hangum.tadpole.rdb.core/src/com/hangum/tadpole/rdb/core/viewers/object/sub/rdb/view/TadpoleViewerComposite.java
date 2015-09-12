@@ -104,6 +104,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmViews.setText(Messages.TadpoleViewerComposite_0);
+		tbtmViews.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.VIEWS.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmViews.setControl(compositeTables);

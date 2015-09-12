@@ -24,6 +24,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 
 /**
@@ -34,7 +35,8 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
  */
 public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
-//	protected final String strUserType = SessionManager.getRoleType();
+	/** TAB DATA KEY */
+	public static String TAB_DATA_KEY = "DB_ACTION";
 	
 	protected UserDBDAO userDB;
 	protected int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;

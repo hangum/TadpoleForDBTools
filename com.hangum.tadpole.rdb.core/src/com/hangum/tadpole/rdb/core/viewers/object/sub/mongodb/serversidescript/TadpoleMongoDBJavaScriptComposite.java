@@ -94,7 +94,8 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmIndex.setText("JavaScript"); //$NON-NLS-1$
+		tbtmIndex.setText("JavaScript");
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);

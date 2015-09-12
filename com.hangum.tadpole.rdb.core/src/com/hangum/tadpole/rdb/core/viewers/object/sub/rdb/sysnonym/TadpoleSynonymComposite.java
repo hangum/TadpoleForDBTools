@@ -66,6 +66,7 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvid
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -114,6 +115,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmTable.setText(Messages.TadpoleSynonymComposite_0);
+		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.SYNONYM.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);

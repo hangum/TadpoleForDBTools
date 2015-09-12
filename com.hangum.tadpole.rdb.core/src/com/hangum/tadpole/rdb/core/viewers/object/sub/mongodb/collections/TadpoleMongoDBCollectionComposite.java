@@ -136,7 +136,9 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTable.setText("Collections"); //$NON-NLS-1$
+		tbtmTable.setText("Collections");
+		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.COLLECTIONS.name());
+		
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
 		GridLayout gl_compositeTables = new GridLayout(1, false);
