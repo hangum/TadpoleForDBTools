@@ -23,8 +23,8 @@ public interface IEditorExtension {
 	public static final String DUMY_DATA = String.format("?%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.RELEASE_DATE);
 	
 	/** 개발디비 에디터 정의 */
-	public static final String DEV_DB_URL = "ace-builds/tadpole-editor.html" + DUMY_DATA;//"orion/tadpole/editor/RDBEmbeddededitor.html"; //$NON-NLS-1$
+	public static final String DEV_DB_URL = "ace-builds/tadpole-editor.html" + DUMY_DATA; //$NON-NLS-1$
 	
 	/** 운영디비 에디터 정의 */
-	public static final String REAL_DB_URL = "ace-builds/tadpole-editor.html" + DUMY_DATA;//"orion/tadpole/editor/REAL_RDBEmbeddededitor.html"; //$NON-NLS-1$
+	public static final String REAL_DB_URL = "ace-builds/tadpole-editor.html" + DUMY_DATA; //$NON-NLS-1$
 }

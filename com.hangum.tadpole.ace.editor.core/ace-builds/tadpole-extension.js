@@ -97,7 +97,6 @@ var varEditorType = 'TABLES';
  * 동적으로 키워드르 추가할 수 있는 모드
  */
 ace.define("DynHighlightRules", [], function(require, exports, module) {
-//	"use strict";
 	var oop = require("ace/lib/oop");
 	var TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
 	
@@ -125,7 +124,6 @@ ace.define("DynHighlightRules", [], function(require, exports, module) {
 	};
 	
 	oop.inherits(DynHighlightRules, TextHighlightRules);
-	
 	exports.DynHighlightRules = DynHighlightRules;
 });
   
