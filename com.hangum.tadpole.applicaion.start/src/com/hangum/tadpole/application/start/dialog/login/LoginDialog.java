@@ -179,7 +179,7 @@ public class LoginDialog extends Dialog {
 		compositeUserGide.setLayout(gl_compositeUserGide);
 		
 		Label lblUserKor = new Label(compositeUserGide, SWT.NONE);
-		lblUserKor.setText("<a href='https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621445' target='_blank'>(Korean)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblUserKor.setText("<a href='https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=20578325' target='_blank'>(Korean)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserKor.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserEng = new Label(compositeUserGide, SWT.NONE);
