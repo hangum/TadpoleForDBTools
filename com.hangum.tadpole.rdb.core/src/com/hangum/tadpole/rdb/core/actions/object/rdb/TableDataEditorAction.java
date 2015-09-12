@@ -45,13 +45,13 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TableDataEditorAction.class);
-	public static String ID = "com.hangum.tadpole.rdb.core.actions.object.rdb.TableDataEditorAction";
+	public static String ID = "com.hangum.tadpole.rdb.core.actions.object.rdb.TableDataEditorAction"; //$NON-NLS-1$
 
 	public TableDataEditorAction(IWorkbenchWindow window, DB_ACTION actionType) {
 		super(window, actionType);
 		
 		setId(ID + actionType);
-		setText("Table Data Editor");
+		setText(Messages.TableDataEditorAction_1);
 	}
 	
 	@Override
@@ -61,8 +61,8 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 			// get the table columns
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			Map<String, String> mapParam = new HashMap<String, String>();
-			mapParam.put("db", userDB.getDb());
-			mapParam.put("table", tableDAO.getName());
+			mapParam.put("db", userDB.getDb()); //$NON-NLS-1$
+			mapParam.put("table", tableDAO.getName()); //$NON-NLS-1$
 			List showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 
 			// Open the table director editor

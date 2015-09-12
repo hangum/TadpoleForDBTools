@@ -482,6 +482,7 @@ public class Messages extends NLS {
 	public static String PreDBInfoComposite_this_text;
 	public static String MSSQLLoginComposite_grpConnectionType_text;
 	public static String MSSQLLoginComposite_preDBInfo_text;
+	public static String TableDataEditorAction_1;
 	public static String TableDirectEditorComposite_1;
 	public static String TableDirectEditorComposite_17;
 	public static String TableDirectEditorComposite_19;
@@ -491,6 +492,7 @@ public class Messages extends NLS {
 	public static String OthersConnectionRDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
 	public static String ObjectDeleteAction_synonym;
+	public static String ObjectRefreshAction_1;
 	public static String RDBInformationComposite_17;
 	public static String TableDirectEditorComposite_lblOrderBy_text;
 	public static String TableDirectEditorComposite_lblLimit_text;
