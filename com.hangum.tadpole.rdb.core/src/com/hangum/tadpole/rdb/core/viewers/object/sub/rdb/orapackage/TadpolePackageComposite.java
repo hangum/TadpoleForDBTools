@@ -215,14 +215,14 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	}
 
 	private void createMenu() {
-		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
+		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_3);
+		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_4);
+		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_5);
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_6);
 
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_7);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_8);
 
 
 		// menu
@@ -235,6 +235,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_Package);
 						manager.add(dropAction_Package);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 					manager.add(refreshAction_Package);
 
@@ -242,8 +243,8 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					manager.add(viewDDLAction);
 				}
 
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(objectCompileAction);
 				}
 			}

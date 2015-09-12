@@ -42,12 +42,12 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	public ObjectExecuteProcedureAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Execute " + title);
+		setText(title);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		logger.debug("ObjectExecuteProcedureAction run...");
+		if(logger.isDebugEnabled()) logger.debug("ObjectExecuteProcedureAction run...");
 		ProcedureFunctionDAO procedureDAO;
 		if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
 			OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();

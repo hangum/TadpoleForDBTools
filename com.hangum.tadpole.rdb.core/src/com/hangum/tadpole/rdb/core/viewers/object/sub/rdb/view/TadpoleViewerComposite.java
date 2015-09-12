@@ -251,13 +251,13 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_1);
+		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_2);
+		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_3);
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_4);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_6);
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -270,6 +270,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_View);
 						manager.add(deleteAction_View);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 				}
 //				manager.add(modifyAction_View);
@@ -279,6 +280,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				manager.add(viewDDLAction);
 				
 				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(objectCompileAction);
 				}
 			}

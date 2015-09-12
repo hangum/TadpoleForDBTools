@@ -154,14 +154,14 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
-		dropAction_Function = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
-		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, Messages.TadpoleFunctionComposite_1);
+		dropAction_Function = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, Messages.TadpoleFunctionComposite_2);
+		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, Messages.TadpoleFunctionComposite_3);
 	
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, Messages.TadpoleFunctionComposite_4);
 
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, "Function"); //$NON-NLS-1$
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, Messages.TadpoleFunctionComposite_5);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.FUNCTIONS, Messages.TadpoleFunctionComposite_6);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -173,15 +173,19 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_Function);
 						manager.add(dropAction_Function);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 				}
 				manager.add(refreshAction_Function);
 				
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(viewDDLAction);
+				
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(executeAction_Procedure);
+				
 				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(objectCompileAction);
 				}
 			}

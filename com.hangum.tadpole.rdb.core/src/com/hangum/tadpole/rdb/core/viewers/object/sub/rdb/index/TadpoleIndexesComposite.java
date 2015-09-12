@@ -251,11 +251,11 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_1);
+		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_2);
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_7);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -267,6 +267,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_Index);
 						manager.add(dropAction_Index);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 					
 					manager.add(refreshAction_Index);

@@ -129,12 +129,12 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
-		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
-		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
+		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_1);
+		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_2);
+		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "View"); //$NON-NLS-1$
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, "Trigger"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_4);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_5);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -146,6 +146,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_Trigger);
 						manager.add(deleteAction_Trigger);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 				}
 					
@@ -154,6 +155,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(viewDDLAction);
 				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(objectCompileAction);
 				}
 				

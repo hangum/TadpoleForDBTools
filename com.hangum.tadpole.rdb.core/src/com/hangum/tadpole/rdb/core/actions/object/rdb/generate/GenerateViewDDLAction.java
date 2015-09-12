@@ -49,7 +49,7 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 		super(window, actionType);
 
 		setId(ID + actionType.toString());
-		setText(target + " DDL");
+		setText(target);
 		window.getSelectionService().addSelectionListener(this);
 	}
 

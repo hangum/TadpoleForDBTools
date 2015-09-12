@@ -16,7 +16,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 
 /**
@@ -36,7 +35,7 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 	public ObjectRefreshAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.ObjectRefreshAction_1);
+		setText(title);
 	}
 
 	@Override

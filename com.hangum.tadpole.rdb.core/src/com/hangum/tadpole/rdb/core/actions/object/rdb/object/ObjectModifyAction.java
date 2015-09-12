@@ -51,7 +51,7 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 	public ObjectModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Alter " + title); //$NON-NLS-1$
+		setText(title); //$NON-NLS-1$
 	}
 
 	@Override
