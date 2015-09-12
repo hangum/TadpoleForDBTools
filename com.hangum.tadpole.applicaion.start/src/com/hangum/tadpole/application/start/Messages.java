@@ -73,7 +73,6 @@ public class Messages extends NLS {
 	public static String ChangePasswordDialog_9;
 	public static String FindPasswordDialog_0;
 	public static String FindPasswordDialog_1;
-	public static String FindPasswordDialog_2;
 	public static String FindPasswordDialog_3;
 	public static String FindPasswordDialog_6;
 	public static String LoginDialog_lblNewLabel_text;
