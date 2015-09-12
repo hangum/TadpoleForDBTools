@@ -187,14 +187,14 @@ public class MainEditor extends EditorExtension {
 		
 		// fileupload 
 		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
-		tltmOpen.setToolTipText("Open a file");
+		tltmOpen.setToolTipText(Messages.MainEditor_35);
 		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/file-open.png")); //$NON-NLS-1$
 		tltmOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "SQL File Open");
+				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.MainEditor_36);
 				if(Dialog.OK == dialog.open()) {
-					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile());
+					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
 					appendText(dialog.getStrTxtFile());
 				}
 			}
@@ -280,7 +280,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
+	    tltmSQLToApplication.setToolTipText(Messages.MainEditor_40);
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 //		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
@@ -303,7 +303,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommit = new ToolItem(toolBar, SWT.CHECK);
 		tiAutoCommit.setSelection(false);
-		tiAutoCommit.setText("Transaction start"); //$NON-NLS-1$
+		tiAutoCommit.setText(Messages.MainEditor_41);
 		tiAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -313,7 +313,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText("Commit"); //$NON-NLS-1$
+		tiAutoCommitCommit.setText(Messages.MainEditor_44);
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -325,7 +325,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText("Rollback"); //$NON-NLS-1$
+		tiAutoCommitRollback.setText(Messages.MainEditor_48);
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -350,13 +350,13 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-		tltmAPI.setToolTipText("RESTFul API");
+		tltmAPI.setToolTipText(Messages.MainEditor_51);
 		
 		// semicolon
 		new ToolItem(toolBar, SWT.SEPARATOR);
-		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
-		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
-		tltmSemicolon.setToolTipText(Messages.MainEditor_49);
+//		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
+//		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
+//		tltmSemicolon.setToolTipText(Messages.MainEditor_49);
 		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
@@ -490,15 +490,14 @@ public class MainEditor extends EditorExtension {
 	    	
 	    final String strTableList = getAssistTableList();
 	    registerBrowserFunctions();
+	    
 	    /** 무슨 일인지 이벤트가 두번 탑니다. */
 	    final List<String> listInitialize = new ArrayList<String>();
-		
 		browserQueryEditor.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed( ProgressEvent event ) {
 				if(!listInitialize.isEmpty()) return;
-				
-				listInitialize.add("init_comp");
+				listInitialize.add("init_comp"); //$NON-NLS-1$
 				
 				try {
 					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), strTableList, getInitDefaultEditorStr()); //$NON-NLS-1$

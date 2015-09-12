@@ -34,26 +34,27 @@ import com.swtdesigner.SWTResourceManager;
  *
  */
 public class MessageComposite extends Composite {
-	/**  Logger for this class. */
+	/** Logger for this class. */
 	private static final Logger logger = Logger.getLogger(MessageComposite.class);
 	private Text textMessage;
 
 	/**
 	 * Create the composite.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
 	public MessageComposite(Composite parent, int style) {
-		super(parent, style);
+		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
-		
-		textMessage = new Text(this, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+
+		textMessage = new Text(this, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		textMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		
+		    
 		// text limit
 		textMessage.setTextLimit(10000);
-		
+
 		Button btnClear = new Button(this, SWT.NONE);
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -71,41 +72,36 @@ public class MessageComposite extends Composite {
 	 */
 	public void addAfterRefresh(TadpoleMessageDAO tadpoleMessageDAO) {
 		String strNewMessage = String.format("==[ %s ]============\n", tadpoleMessageDAO.getDateExecute().toString()); //$NON-NLS-1$
-		
+
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
-		if(throwable == null) {
+		if (throwable == null) {
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
 		} else {
 			if (throwable instanceof SQLException) {
-				SQLException sqlException = (SQLException)throwable;
+				SQLException sqlException = (SQLException) throwable;
 				StringBuffer sbMsg = new StringBuffer();
-				
-				sbMsg.append(String.format("[SQL State : %s, Error Code: %s]", sqlException.getSQLState(), sqlException.getErrorCode())); //$NON-NLS-1$
+
+				sbMsg.append(String.format("[SQL State : %s, Error Code: %s]", sqlException.getSQLState(), //$NON-NLS-1$
+						sqlException.getErrorCode()));
 				sbMsg.append(sqlException.getMessage());
-				
+
 				strNewMessage += sbMsg.toString();
 			} else {
 				strNewMessage += tadpoleMessageDAO.getStrMessage();
 			}
 		}
-		
+
 		// first show last error message
 		final String strOldText = textMessage.getText();
-		if("".equals(strOldText)) {
+		if ("".equals(strOldText)) {
 			textMessage.setText(strNewMessage);
-			textMessage.setFocus();
-			
-			// Select the last error message.
-			textMessage.setSelection(0, strNewMessage.length());
 		} else {
-			textMessage.setText(strOldText + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strNewMessage);
-			textMessage.setFocus();
-			
-			// Select the last error message.
-			textMessage.setSelection(strOldText.length()+4, strOldText.length() + 4 + strNewMessage.length());
+			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);
 		}
+		textMessage.setSelection(0, strNewMessage.length());
+		textMessage.setFocus();
 	}
-	
+
 	@Override
 	protected void checkSubclass() {
 	}
