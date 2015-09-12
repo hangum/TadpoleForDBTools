@@ -591,8 +591,8 @@ public class MainEditor extends EditorExtension {
 		// 기존 에디터에서 auto commit button 이 어떻게 설정 되어 있는지 가져옵니다.
 		initAutoCommitAction(true, false);
 		
-		// 
-		resultMainComposite.initMainComposite();
+		// 과거에 실행했던 쿼리 정보 가져오기.
+//		resultMainComposite.initMainComposite();
 		
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
