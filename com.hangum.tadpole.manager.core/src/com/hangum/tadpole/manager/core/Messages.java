@@ -17,6 +17,12 @@ public class Messages extends NLS {
 
 	public static String APIServiceDialog_11;
 
+	public static String ExecutedSQLAction_0;
+
+	public static String ExecutedSQLAction_1;
+
+	public static String ExecutedSQLAction_2;
+
 	public static String FindUserDialog_4;
 
 	public static String FindUserDialog_6;
@@ -70,6 +76,12 @@ public class Messages extends NLS {
 	public static String NewUserDialog_btnUser_text;
 	public static String NewUserDialog_lblLanguage_text;
 
+	public static String SchemaHistoryAction_0;
+
+	public static String SchemaHistoryAction_1;
+
+	public static String SchemaHistoryAction_2;
+
 	public static String SystemDBDataManager_8;
 	public static String NewUserDialog_lblGoogleOpt_text;
 	public static String NewUserDialog_btnCheckButton_text;
@@ -118,6 +130,14 @@ public class Messages extends NLS {
 	public static String ResourceManageEditor_44;
 
 	public static String ResourceManageEditor_45;
+
+	public static String ResourceManagerAction_0;
+
+	public static String ResourceManagerAction_1;
+
+	public static String RestfulAPIManagerAction_0;
+
+	public static String RestfulAPIManagerAction_1;
 
 	public static String RESTFulAPIManagerEditor_1;
 
@@ -201,6 +221,10 @@ public class Messages extends NLS {
 
 	public static String TransactionConnectionListEditor_9;
 
+	public static String TransactionConnectionManagerAction_0;
+
+	public static String TransactionConnectionManagerAction_1;
+
 	public static String UserListComposite_0;
 
 	public static String UserListComposite_1;
@@ -218,6 +242,12 @@ public class Messages extends NLS {
 	public static String UserListComposite_4;
 
 	public static String UserListComposite_5;
+
+	public static String UserPermissionAction_0;
+
+	public static String UserPermissionAction_1;
+
+	public static String UserPermissionAction_2;
 	
 	static {
 		// initialize resource bundle

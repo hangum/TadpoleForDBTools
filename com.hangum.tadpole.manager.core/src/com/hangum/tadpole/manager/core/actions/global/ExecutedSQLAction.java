@@ -25,6 +25,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.swtdesigner.ResourceManager;
@@ -49,9 +50,9 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 		this.window = window;
 		
 		setId(ID);
-		setText("SQL Audit");
-		setToolTipText("SQL Audit");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/queryhistory.png"));
+		setText(Messages.ExecutedSQLAction_0);
+		setToolTipText(Messages.ExecutedSQLAction_1);
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/queryhistory.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
@@ -64,7 +65,7 @@ public class ExecutedSQLAction extends Action implements ISelectionListener, IWo
 			logger.error("SQL Audit Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Audit Management editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExecutedSQLAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 

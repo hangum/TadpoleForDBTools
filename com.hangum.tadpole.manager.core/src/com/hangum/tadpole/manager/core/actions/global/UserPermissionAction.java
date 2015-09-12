@@ -25,6 +25,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor;
 import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditorInput;
 import com.swtdesigner.ResourceManager;
@@ -49,9 +50,9 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 		this.window = window;
 		
 		setId(ID);
-		setText("User And DB Manager");
-		setToolTipText("User And DB Manager");
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png"));
+		setText(Messages.UserPermissionAction_0);
+		setToolTipText(Messages.UserPermissionAction_1);
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
@@ -64,7 +65,7 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 			logger.error("User Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "User Management editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.UserPermissionAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 
