@@ -199,6 +199,7 @@ CREATE TABLE `tadpole_system` (
 	`major_version` VARCHAR(50)   NULL     COMMENT '버젼번호', -- 버젼번호
 	`sub_version`   VARCHAR(50)   NULL     COMMENT '서브버젼', -- 서브버젼
 	`information`   VARCHAR(2000) NULL     COMMENT '시스템정보', -- 시스템정보
+	`execute_type`  VARCHAR(10)   NOT NULL DEFAULT 'GROUP'    COMMENT '시스템 실행타입', -- 시스템실행타입
 	`create_time`   TIMESTAMP     NOT NULL DEFAULT NOW() COMMENT '생성일시' -- 생성일시
 )
 COMMENT '올챙이 시스템의 버젼정보등을 관리한다.';
