@@ -14,7 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import com.hangum.tadpole.manager.core.editor.transaction.connection.TransactionConnectionListEditorInput;
+import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * Schema History Editor input
@@ -49,7 +49,7 @@ public class SchemaHistoryEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Schema History";
+		return Messages.SchemaHistoryEditorInput_0;
 	}
 
 	@Override
@@ -59,6 +59,6 @@ public class SchemaHistoryEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Schema History";
+		return Messages.SchemaHistoryEditorInput_1;
 	}
 }

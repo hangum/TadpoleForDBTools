@@ -43,18 +43,18 @@ public class GeneralConnecionPoolLabelprovider extends LabelProvider implements 
 	public String getColumnText(Object element, int columnIndex) {
 		DBCPInfoDAO dao = (DBCPInfoDAO)element;
 		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14,
-				"Active Connections", "Max Active Count", "Idle Count", "Max wait"};
+				Messages.GeneralConnecionPoolLabelprovider_0, Messages.GeneralConnecionPoolLabelprovider_1, Messages.GeneralConnecionPoolLabelprovider_2, Messages.GeneralConnecionPoolLabelprovider_3};
 		
 		switch(columnIndex) {
 		case 0: return dao.getDbType();
 		case 1: return dao.getDisplayName();
 		case 2: return ""+dao.getNumberActive();
-		case 3: return ""+dao.getMaxActive();
-		case 4: return ""+dao.getNumberIdle();
-		case 5: return ""+dao.getMaxWait();
+		case 3: return ""+dao.getMaxActive(); //$NON-NLS-1$
+		case 4: return ""+dao.getNumberIdle(); //$NON-NLS-1$
+		case 5: return ""+dao.getMaxWait(); //$NON-NLS-1$
 		}
 		
-		return "** not set column **";
+		return "** not set column **"; //$NON-NLS-1$
 	}
 
 }

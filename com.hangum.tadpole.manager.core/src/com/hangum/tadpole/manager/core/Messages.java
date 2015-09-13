@@ -15,9 +15,37 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.manager.core.messages"; //$NON-NLS-1$
 
+	public static String AdminUserListComposite_0;
+
+	public static String AdminUserListComposite_1;
+
+	public static String AdminUserListComposite_10;
+
+	public static String AdminUserListComposite_11;
+
+	public static String AdminUserListComposite_12;
+
+	public static String AdminUserListComposite_2;
+
+	public static String AdminUserListComposite_3;
+
+	public static String AdminUserListComposite_4;
+
+	public static String AdminUserListComposite_5;
+
+	public static String AdminUserListComposite_6;
+
+	public static String AdminUserListComposite_7;
+
+	public static String AdminUserListComposite_8;
+
+	public static String AdminUserListComposite_9;
+
 	public static String APIServiceDialog_0;
 
 	public static String APIServiceDialog_1;
+
+	public static String APIServiceDialog_10;
 
 	public static String APIServiceDialog_11;
 
@@ -33,15 +61,83 @@ public class Messages extends NLS {
 
 	public static String APIServiceDialog_7;
 
+	public static String APIServiceDialog_8;
+
+	public static String APIServiceDialog_9;
+
+	public static String DBListComposite_0;
+
+	public static String DBListComposite_1;
+
+	public static String DBListComposite_10;
+
+	public static String DBListComposite_11;
+
+	public static String DBListComposite_12;
+
+	public static String DBListComposite_13;
+
+	public static String DBListComposite_14;
+
+	public static String DBListComposite_15;
+
+	public static String DBListComposite_16;
+
+	public static String DBListComposite_17;
+
+	public static String DBListComposite_18;
+
+	public static String DBListComposite_19;
+
+	public static String DBListComposite_2;
+
+	public static String DBListComposite_20;
+
+	public static String DBListComposite_21;
+
+	public static String DBListComposite_22;
+
+	public static String DBListComposite_23;
+
+	public static String DBListComposite_24;
+
+	public static String DBListComposite_25;
+
+	public static String DBListComposite_3;
+
+	public static String DBListComposite_4;
+
+	public static String DBListComposite_5;
+
+	public static String DBListComposite_6;
+
+	public static String DBListComposite_7;
+
+	public static String DBListComposite_8;
+
+	public static String DBListComposite_9;
+
 	public static String ExecutedSQLAction_0;
 
 	public static String ExecutedSQLAction_1;
 
 	public static String ExecutedSQLAction_2;
 
+	public static String ExecutedSQLEditorInput_0;
+
+	public static String ExecutedSQLEditorInput_1;
+
 	public static String FindUserDialog_4;
 
 	public static String FindUserDialog_6;
+
+	public static String GeneralConnecionPoolLabelprovider_0;
+
+	public static String GeneralConnecionPoolLabelprovider_1;
+
+	public static String GeneralConnecionPoolLabelprovider_2;
+
+	public static String GeneralConnecionPoolLabelprovider_3;
 
 	public static String ModifyUserDialog_12;
 
@@ -94,6 +190,36 @@ public class Messages extends NLS {
 
 	public static String SchemaHistoryAction_2;
 
+	public static String SchemaHistoryEditor_1;
+
+	public static String SchemaHistoryEditor_15;
+
+	public static String SchemaHistoryEditor_16;
+
+	public static String SchemaHistoryEditor_2;
+
+	public static String SchemaHistoryEditor_20;
+
+	public static String SchemaHistoryEditor_22;
+
+	public static String SchemaHistoryEditor_23;
+
+	public static String SchemaHistoryEditor_35;
+
+	public static String SchemaHistoryEditor_36;
+
+	public static String SchemaHistoryEditor_37;
+
+	public static String SchemaHistoryEditor_38;
+
+	public static String SchemaHistoryEditor_39;
+
+	public static String SchemaHistoryEditor_7;
+
+	public static String SchemaHistoryEditorInput_0;
+
+	public static String SchemaHistoryEditorInput_1;
+
 	public static String SystemDBDataManager_8;
 	public static String NewUserDialog_lblGoogleOpt_text;
 	public static String NewUserDialog_btnCheckButton_text;
@@ -103,15 +229,27 @@ public class Messages extends NLS {
 	public static String NewUserDialog_lblQrcodeUrl_text;
 	public static String NewUserDialog_lblOtpCdoe_text;
 
+	public static String ResourceManageEditor_0;
+
+	public static String ResourceManageEditor_1;
+
+	public static String ResourceManageEditor_11;
+
 	public static String ResourceManageEditor_12;
 
 	public static String ResourceManageEditor_13;
+
+	public static String ResourceManageEditor_15;
 
 	public static String ResourceManageEditor_16;
 
 	public static String ResourceManageEditor_17;
 
 	public static String ResourceManageEditor_18;
+
+	public static String ResourceManageEditor_20;
+
+	public static String ResourceManageEditor_22;
 
 	public static String ResourceManageEditor_23;
 
@@ -120,6 +258,8 @@ public class Messages extends NLS {
 	public static String ResourceManageEditor_26;
 
 	public static String ResourceManageEditor_27;
+
+	public static String ResourceManageEditor_3;
 
 	public static String ResourceManageEditor_30;
 
@@ -143,9 +283,19 @@ public class Messages extends NLS {
 
 	public static String ResourceManageEditor_45;
 
+	public static String ResourceManageEditor_5;
+
+	public static String ResourceManageEditor_7;
+
+	public static String ResourceManageEditor_9;
+
 	public static String ResourceManagerAction_0;
 
 	public static String ResourceManagerAction_1;
+
+	public static String ResourceManagerEditorInput_0;
+
+	public static String ResourceManagerEditorInput_1;
 
 	public static String RestfulAPIManagerAction_0;
 
@@ -233,6 +383,10 @@ public class Messages extends NLS {
 
 	public static String TransactionConnectionListEditor_9;
 
+	public static String TransactionConnectionListEditorInput_0;
+
+	public static String TransactionConnectionListEditorInput_1;
+
 	public static String TransactionConnectionManagerAction_0;
 
 	public static String TransactionConnectionManagerAction_1;
@@ -280,6 +434,14 @@ public class Messages extends NLS {
 	public static String UserListComposite_4;
 
 	public static String UserListComposite_5;
+
+	public static String UserManagementEditor_1;
+
+	public static String UserManagementEditor_2;
+
+	public static String UserManagementEditorInput_0;
+
+	public static String UserManagementEditorInput_1;
 
 	public static String UserPermissionAction_0;
 

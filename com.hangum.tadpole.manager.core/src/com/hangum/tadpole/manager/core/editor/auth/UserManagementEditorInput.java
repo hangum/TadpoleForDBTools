@@ -14,6 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.manager.core.Messages;
+
 /**
  * user management input
  * 
@@ -48,7 +50,7 @@ public class UserManagementEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "User Management";
+		return Messages.UserManagementEditorInput_0;
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class UserManagementEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "User Management";
+		return Messages.UserManagementEditorInput_1;
 	}
 
 }

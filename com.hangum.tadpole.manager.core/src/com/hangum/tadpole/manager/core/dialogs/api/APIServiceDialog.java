@@ -324,9 +324,9 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false); //$NON-NLS-1$
-		createButton(parent, DOWNLOAD_BTN_ID, "Download", false); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.OK_ID, "RUN", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.APIServiceDialog_8, false);
+		createButton(parent, DOWNLOAD_BTN_ID, Messages.APIServiceDialog_9, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.APIServiceDialog_10, true);
 	}
 	
 	/**

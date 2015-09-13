@@ -16,6 +16,7 @@ import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * Executed SQL Editor input
@@ -61,7 +62,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "SQL Audit";
+		return Messages.ExecutedSQLEditorInput_0;
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "SQL Audit";
+		return Messages.ExecutedSQLEditorInput_1;
 	}
 	
 	public UserDAO getUserDAO() {
