@@ -37,7 +37,7 @@ import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlD
  * @author hangum
  *
  */
-public class UserDBDAO implements Cloneable {	
+public class UserDBDAO extends TDBDBDAO implements Cloneable {	
 	
 	// TadpoleUserDbRoleDAO start ======================================
 	protected int role_seq;

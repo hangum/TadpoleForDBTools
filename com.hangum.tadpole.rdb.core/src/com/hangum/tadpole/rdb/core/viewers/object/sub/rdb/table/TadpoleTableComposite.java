@@ -643,7 +643,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
+	private List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 				
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
@@ -664,41 +664,27 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	/**
-	 * 보여 주어야할 테이블 목록을 정의합니다.
-	 *
-	 * @param userDB
-	 * @return
-	 * @throws Exception
-	 */
-	public static List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
-		List<TableDAO> showTables = null;
-				
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-			showTables = new TajoConnectionManager().tableList(userDB);			
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
-		}
-		
-		/** filter 정보가 있으면 처리합니다. */
-		return getTableAfterwork(showTables, userDB);
-	}
-	
-	/**
 	 * Table 정보 처리 후에 
 	 * 
 	 * @param showTables
 	 * @param userDB
 	 * @return
 	 */
-	private static List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
+	private List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
+		StringBuffer strTablelist = new StringBuffer();
 		/** filter 정보가 있으면 처리합니다. */
 		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 		for(TableDAO td : showTables) {
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+			
+			strTablelist.append(td.getSysName()).append("|"); //$NON-NLS-1$
 		}
+		
+		// setting UserDBDAO 
+		userDB.setListTable(showTables);
+		userDB.setTableListSeparator(StringUtils.removeEnd(strTablelist.toString(), "|")); //$NON-NLS-1$
 		
 		return showTables;
 	}
@@ -890,5 +876,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableDataEditorAction.dispose();
 	}
 
+	
 	
 }
