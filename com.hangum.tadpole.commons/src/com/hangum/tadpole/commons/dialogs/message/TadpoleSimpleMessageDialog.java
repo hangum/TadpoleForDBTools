@@ -58,7 +58,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Tadpole Dialog"); //$NON-NLS-1$
+		newShell.setText("Tadpole DB Hub Dialog"); //$NON-NLS-1$
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setMessage(title);
-		setTitle("Tadpole Message");
+		setTitle("Tadpole DB Hub Message");
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));

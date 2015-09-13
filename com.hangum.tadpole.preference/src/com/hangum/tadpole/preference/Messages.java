@@ -15,6 +15,10 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.preference.messages"; //$NON-NLS-1$
 	
+	public static String AmazonPreferencePage_0;
+
+	public static String AmazonPreferencePage_1;
+
 	public static String DefaultPreferencePage_0;
 	public static String DefaultPreferencePage_1;
 	public static String DefaultPreferencePage_2;
@@ -88,6 +92,18 @@ public class Messages extends NLS {
 
 	public static String MongoDBPreferencePage_7;
 
+	public static String SecurityCredentialPreference_0;
+
+	public static String SecurityCredentialPreference_1;
+
+	public static String SecurityCredentialPreference_2;
+
+	public static String SecurityCredentialPreference_3;
+
+	public static String SecurityCredentialPreference_4;
+
+	public static String SecurityCredentialPreference_5;
+
 	public static String SQLFormatterPreferencePage_0;
 
 	public static String SQLFormatterPreferencePage_3;
@@ -100,13 +116,20 @@ public class Messages extends NLS {
 	public static String SQLFormatterPreferencePage_btnWordBreak_text;
 	public static String RDBPreferencePage_lblResultViewFont_text;
 	public static String RDBPreferencePage_btnNewButton_text;
-	public static String RDBPreferencePage_lblNewLabel_3_text;
 	public static String RDBPreferencePage_lblQueryTimeout_text;
 	public static String GeneralPreferencePage_grpEmailAccount_text;
 	public static String GeneralPreferencePage_lblSmtpServer_text;
 	public static String GeneralPreferencePage_lblPort_text;
 	public static String GeneralPreferencePage_lblAccount_text;
 	public static String GeneralPreferencePage_lblPassword_text;
+	public static String PerspectivePreferencePage_0;
+
+	public static String PerspectivePreferencePage_3;
+
+	public static String PerspectivePreferencePage_4;
+
+	public static String PerspectivePreferencePage_6;
+
 	public static String UserInfoPerference_button_text;
 	public static String UserInfoPerference_grpGoogleAuth_text;
 	public static String UserInfoPerference_btnGoogleOtp_text;
