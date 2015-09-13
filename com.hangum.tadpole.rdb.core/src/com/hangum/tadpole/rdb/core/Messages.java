@@ -255,6 +255,16 @@ public class Messages extends NLS {
 	public static String GenerateSQLInsertAction_0;
 	public static String GenerateSQLInsertAction_9;
 	public static String GenerateSQLUpdateAction_13;
+	public static String GenerateStatmentDMLDialog_1;
+	public static String GenerateStatmentDMLDialog_10;
+	public static String GenerateStatmentDMLDialog_11;
+	public static String GenerateStatmentDMLDialog_12;
+	public static String GenerateStatmentDMLDialog_14;
+	public static String GenerateStatmentDMLDialog_15;
+	public static String GenerateStatmentDMLDialog_2;
+	public static String GenerateStatmentDMLDialog_8;
+	public static String GenerateStatmentDMLDialog_88;
+	public static String GenerateStatmentDMLDialog_9;
 	public static String ObjectDeleteAction_0;
 	public static String ObjectDeleteAction_1;
 	public static String ObjectDeleteAction_10;

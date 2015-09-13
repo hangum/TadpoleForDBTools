@@ -172,8 +172,8 @@ public class TadpoleSQLManager {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
 		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-//			String strFullKeywords = StringUtils.join(SQLConstants.ADVANCED_KEYWORDS, ",") + "," + sqlKeywords;
-//			tmd.setKeywords(strFullKeywords);
+			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + sqlKeywords;
+			tmd.setKeywords(strFullKeywords);
 		} else if(dbInfo.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method
 		} else if(dbInfo.getDBDefine() == DBDefine.HIVE_DEFAULT ||
