@@ -12,9 +12,9 @@ package com.hangum.tadpole.application.initialize.wizard;
 
 import org.eclipse.jface.wizard.Wizard;
 
+import com.hangum.tadpole.application.Messages;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
-import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -32,6 +32,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class SystemInitializeWizard extends Wizard {
+	protected SystemAdminWizardUseType systemUseType;
 	protected SystemAdminWizardPage adminPage;
 
 	public SystemInitializeWizard() {
@@ -40,6 +41,10 @@ public class SystemInitializeWizard extends Wizard {
 
 	@Override
 	public void addPages() {
+		
+		systemUseType = new SystemAdminWizardUseType();
+		addPage(systemUseType);
+		
 		adminPage = new SystemAdminWizardPage();
 		addPage(adminPage);
 	}

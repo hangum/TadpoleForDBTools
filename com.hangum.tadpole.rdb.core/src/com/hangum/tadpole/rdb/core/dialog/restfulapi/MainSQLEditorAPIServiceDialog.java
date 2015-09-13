@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.utils.VelocityUtils;
 import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * Test API service dialog
@@ -65,7 +66,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("User RESTful API test Dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.MainSQLEditorAPIServiceDialog_0);
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		compositeTitle.setLayout(new GridLayout(2, false));
 		
 		Label lblArgument = new Label(compositeTitle, SWT.NONE);
-		lblArgument.setText("Argument");
+		lblArgument.setText(Messages.MainSQLEditorAPIServiceDialog_1);
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -91,7 +92,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		
 		Group grpOriginalSql = new Group(sashForm, SWT.NONE);
 		grpOriginalSql.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpOriginalSql.setText("Original SQL");
+		grpOriginalSql.setText(Messages.MainSQLEditorAPIServiceDialog_2);
 		grpOriginalSql.setLayout(new GridLayout(1, false));
 		
 		textOriginal = new Text(grpOriginalSql, SWT.BORDER | SWT.MULTI);
@@ -99,7 +100,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		
 		Group grpResultSql = new Group(sashForm, SWT.NONE);
 		grpResultSql.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpResultSql.setText("Result SQL");
+		grpResultSql.setText(Messages.MainSQLEditorAPIServiceDialog_3);
 		grpResultSql.setLayout(new GridLayout(1, false));
 		
 		textResultSQL = new Text(grpResultSql, SWT.BORDER | SWT.MULTI);
@@ -127,15 +128,15 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 	protected void okPressed() {
 		try {
 			Map<String, String> mapParameter = RESTfulAPIUtils.maekArgumentTOMap(textArgument.getText());
-			String strResult = VelocityUtils.getTemplate("MainEditorTest", textOriginal.getText(), mapParameter);
+			String strResult = VelocityUtils.getTemplate("MainEditorTest", textOriginal.getText(), mapParameter); //$NON-NLS-1$
 			if(logger.isDebugEnabled()) logger.debug(strResult);
 			textResultSQL.setText(strResult);
 			
 			textResultSQL.getParent().layout();
 			
 		} catch(Exception e) {
-			logger.error("Template Exception", e);
-			MessageDialog.openError(getShell(), "Error", "Check you argument or SQL");
+			logger.error("Template Exception", e); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.MainSQLEditorAPIServiceDialog_6, Messages.MainSQLEditorAPIServiceDialog_7);
 		}
 	}
 
@@ -145,8 +146,8 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
-		createButton(parent, IDialogConstants.OK_ID, "RUN", true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.MainSQLEditorAPIServiceDialog_8, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.MainSQLEditorAPIServiceDialog_9, true);
 	}
 	
 	/**

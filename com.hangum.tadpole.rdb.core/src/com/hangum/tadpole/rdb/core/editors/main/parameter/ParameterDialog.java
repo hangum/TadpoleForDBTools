@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * 
@@ -96,7 +97,7 @@ public class ParameterDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Bind Parameters");
+		newShell.setText(Messages.ParameterDialog_0);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 	}
 	
@@ -148,23 +149,23 @@ public class ParameterDialog extends Dialog {
 		TableViewerColumn tvcSeq = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcSeq = tvcSeq.getColumn();
 		tcl_composite.setColumnData(tcSeq, new ColumnPixelData(30, true, true));
-		tcSeq.setText("Seq");
+		tcSeq.setText(Messages.ParameterDialog_1);
 
 		TableViewerColumn tvcName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcName = tvcName.getColumn();
 		tcl_composite.setColumnData(tcName, new ColumnPixelData(80, true, true));
-		tcName.setText("Param Name");
+		tcName.setText(Messages.ParameterDialog_2);
 
 		TableViewerColumn tvcType = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcType = tvcType.getColumn();
 		tcl_composite.setColumnData(tcType, new ColumnPixelData(80, true, true));
-		tcType.setText("Data Type");
+		tcType.setText(Messages.ParameterDialog_3);
 		tvcType.setEditingSupport(new ParameterEditingSupport(tableViewer, 2, this.userDB));
 
 		TableViewerColumn tvcValue = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcValue = tvcValue.getColumn();
 		tcl_composite.setColumnData(tcValue, new ColumnPixelData(150, true, true));
-		tcValue.setText("Param Value");
+		tcValue.setText(Messages.ParameterDialog_4);
 		tvcValue.setEditingSupport(new ParameterEditingSupport(tableViewer, 3, this.userDB));
 	}
 	
@@ -175,8 +176,8 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ParameterDialog_5, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ParameterDialog_6, false);
 	}
 
 	/**
@@ -221,7 +222,7 @@ public class ParameterDialog extends Dialog {
 			String strParamName = mapIndex.get(intKey);
 			
 			for (Map<Integer, Object> mapParam : parameters) {
-				String strTmpParamName = ""+mapParam.get(1);
+				String strTmpParamName = ""+mapParam.get(1); //$NON-NLS-1$
 				
 				if(StringUtils.equals(strParamName, strTmpParamName)) {
 					switch (RDBTypeToJavaTypeUtils.getJavaType((String) mapParam.get(2))) {
@@ -251,9 +252,9 @@ public class ParameterDialog extends Dialog {
 		for (int i = 0; i < paramCount; i++) {
 			Map<Integer, Object> map = new HashMap<Integer, Object>();
 			map.put(0, (i + 1));
-			map.put(1, "Param" + (i + 1));
+			map.put(1, "Param" + (i + 1)); //$NON-NLS-1$
 			map.put(2, RDBTypeToJavaTypeUtils.supportParameterTypes(userDB)[0]);
-			map.put(3, "");
+			map.put(3, ""); //$NON-NLS-1$
 			
 			parameters.add(map);
 		}
@@ -275,7 +276,7 @@ public class ParameterDialog extends Dialog {
 			map.put(0, (i++ + 1));
 			map.put(1, strKey);
 			map.put(2, RDBTypeToJavaTypeUtils.supportParameterTypes(userDB)[0]);
-			map.put(3, "");
+			map.put(3, ""); //$NON-NLS-1$
 			
 			parameters.add(map);
 		}

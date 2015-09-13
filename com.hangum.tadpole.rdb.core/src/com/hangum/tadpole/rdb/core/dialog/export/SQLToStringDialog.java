@@ -157,7 +157,7 @@ public class SQLToStringDialog extends Dialog {
 	
 	private void sqlToStr() {
 		String variable = textVariable.getText();
-		if(StringUtils.trim(variable).equals("")){
+		if(StringUtils.trim(variable).equals("")){ //$NON-NLS-1$
 			variable = SQLToJavaConvert.DEFAULT_VARIABLE;
 			textVariable.setText(variable);
 		}
@@ -167,13 +167,13 @@ public class SQLToStringDialog extends Dialog {
 		
 		SQLToLanguageConvert slt = new SQLToLanguageConvert( (EditorDefine.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
 		for(int i=0; i < sqls.length; i++) {
-			if("".equals(StringUtils.trimToEmpty(sqls[i]))) continue;
+			if("".equals(StringUtils.trimToEmpty(sqls[i]))) continue; //$NON-NLS-1$
 			
 			if(i ==0) sbStr.append( slt.sqlToString(variable, sqls[i]) );
 			else sbStr.append( slt.sqlToString(variable + i, sqls[i]) );
 			
 			// 쿼리가 여러개일 경우 하나씩 한개를 준다.
-			sbStr.append("\r\n");
+			sbStr.append("\r\n"); //$NON-NLS-1$
 		}
 		
 		textConvert.setText(sbStr.toString());
@@ -194,7 +194,7 @@ public class SQLToStringDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.SQLToStringDialog_6, true);
 	}
 
 	/**

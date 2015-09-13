@@ -15,6 +15,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
 
 /**
@@ -53,7 +54,7 @@ public class SessionListEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Session List" + " [" + userDB.getDb() +  "]";
+		return Messages.SessionListEditorInput_0 + userDB.getDb() +  "]"; //$NON-NLS-2$
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class SessionListEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Session List" + " [" + userDB.getDb() +  "]";
+		return Messages.SessionListEditorInput_2 + userDB.getDb() +  "]"; //$NON-NLS-2$
 	}
 
 	public UserDBDAO getUserDB() {

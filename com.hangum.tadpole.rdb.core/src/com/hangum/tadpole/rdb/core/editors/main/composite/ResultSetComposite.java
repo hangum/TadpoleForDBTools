@@ -543,7 +543,7 @@ public class ResultSetComposite extends Composite {
 		}
 
 		controlProgress(true);
-		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
+//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
 		
 		this.reqQuery = reqQuery; 
 		this.rsDAO = new QueryExecuteResultDTO();

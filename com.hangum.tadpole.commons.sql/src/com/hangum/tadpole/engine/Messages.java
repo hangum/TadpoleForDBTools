@@ -33,9 +33,20 @@ public class Messages extends NLS {
 	
 	public static String ResourceSaveDialog_0;
 	public static String ResourceSaveDialog_1;
+	public static String ResourceSaveDialog_10;
+	public static String ResourceSaveDialog_11;
+	public static String ResourceSaveDialog_12;
+	public static String ResourceSaveDialog_13;
+	public static String ResourceSaveDialog_14;
+	public static String ResourceSaveDialog_16;
+	public static String ResourceSaveDialog_19;
 	public static String ResourceSaveDialog_2;
+	public static String ResourceSaveDialog_20;
+	public static String ResourceSaveDialog_21;
 	public static String ResourceSaveDialog_3;
 	public static String ResourceSaveDialog_5;
+	public static String ResourceSaveDialog_7;
+	public static String ResourceSaveDialog_8;
 	public static String TadpoleSystem_UserDBQuery_11;
 	public static String TadpoleSystem_UserDBQuery_4;
 	public static String TadpoleSystem_UserDBQuery_7;

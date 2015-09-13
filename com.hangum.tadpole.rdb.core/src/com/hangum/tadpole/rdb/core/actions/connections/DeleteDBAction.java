@@ -57,7 +57,7 @@ public class DeleteDBAction implements IViewActionDelegate {
 
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		if(!MessageDialog.openConfirm(null, "Confirm", "[" + userDB.getDisplay_name() + "] " + Messages.DeleteDBAction_1)) return;  //$NON-NLS-1$
+		if(!MessageDialog.openConfirm(null, Messages.DeleteDBAction_0, "[" + userDB.getDisplay_name() + "] " + Messages.DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
 		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		
@@ -94,7 +94,7 @@ public class DeleteDBAction implements IViewActionDelegate {
 			TadpoleSystem_UserDBQuery.removeUserDB(userDB.getSeq());
 			TadpoleSQLManager.removeInstance(userDB);			
 		} catch (Exception e) { 
-			logger.error("disconnection exception", e);			
+			logger.error("disconnection exception", e);			 //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$

@@ -51,7 +51,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	 * @param style
 	 */
 	public PostgresLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample PostgreSQL", DBDefine.POSTGRE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample PostgreSQL", DBDefine.POSTGRE_DEFAULT, parent, style, listGroupName, selGroupName, userDB); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -139,7 +139,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblSupportSSL = new Label(grpConnectionType, SWT.NONE);
-		lblSupportSSL.setText("Support SSL?");
+		lblSupportSSL.setText(Messages.PostgresLoginComposite_1);
 		
 		comboSSL = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboSSL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -183,19 +183,19 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("127.0.0.1");
-			textPort.setText("5432");
-			textDatabase.setText("tadpole");
-			textUser.setText("postgres");
-			textPassword.setText("tadpole");
+			textHost.setText("127.0.0.1"); //$NON-NLS-1$
+			textPort.setText("5432"); //$NON-NLS-1$
+			textDatabase.setText("tadpole"); //$NON-NLS-1$
+			textUser.setText("postgres"); //$NON-NLS-1$
+			textPassword.setText("tadpole"); //$NON-NLS-1$
 			
-			comboSSL.setText("NO");
-			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5");
+			comboSSL.setText("NO"); //$NON-NLS-1$
+			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5"); //$NON-NLS-1$
 			
 		} else {
-			textPort.setText("5432");
-			comboSSL.setText("NO");
-			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5");
+			textPort.setText("5432"); //$NON-NLS-1$
+			comboSSL.setText("NO"); //$NON-NLS-1$
+			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5"); //$NON-NLS-1$
 		}
 
 		Combo comboGroup = preDBInfo.getComboGroup();
@@ -203,7 +203,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
+			if("".equals(selGroupName)) { //$NON-NLS-1$
 				comboGroup.setText(strOtherGroupName);
 			} else {
 				// 콤보 선택 
@@ -228,14 +228,14 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 							);
 		
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboSSL.getText())) {
-			dbUrl += "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+			dbUrl += "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"; //$NON-NLS-1$
 			
-			if(!"".equals(textJDBCOptions.getText())) {
-				dbUrl += "&" + textJDBCOptions.getText();
+			if(!"".equals(textJDBCOptions.getText())) { //$NON-NLS-1$
+				dbUrl += "&" + textJDBCOptions.getText(); //$NON-NLS-1$
 			}
 		} else {
-			if(!"".equals(textJDBCOptions.getText())) {
-				dbUrl += "?" + textJDBCOptions.getText();
+			if(!"".equals(textJDBCOptions.getText())) { //$NON-NLS-1$
+				dbUrl += "?" + textJDBCOptions.getText(); //$NON-NLS-1$
 			}
 		}
 

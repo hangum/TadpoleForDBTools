@@ -27,12 +27,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.application.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.Utils;
-import com.hangum.tadpole.engine.Messages;
 
 /**
  *

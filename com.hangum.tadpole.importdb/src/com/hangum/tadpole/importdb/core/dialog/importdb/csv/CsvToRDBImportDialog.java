@@ -117,7 +117,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDB.getDisplay_name() + " CSV File import"); //$NON-NLS-1$
+		newShell.setText(userDB.getDisplay_name() + Messages.CsvToRDBImportDialog_3);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		GridData gd_textSeprator = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_textSeprator.widthHint = 101;
 		textSeprator.setLayoutData(gd_textSeprator);
-		textSeprator.setText(",");
+		textSeprator.setText(","); //$NON-NLS-1$
 		
 		Label lblBatchSize = new Label(composite_3, SWT.NONE);
 		lblBatchSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -228,7 +228,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
-			textBatchSize.setText("1");
+			textBatchSize.setText("1"); //$NON-NLS-1$
 		}else{
 			textBatchSize.setEditable(true);
 			textBatchSize.setText(Messages.CsvToRDBImportDialog_text_1_text_1);
@@ -465,7 +465,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	}
 
 	private void appendPreviewSQL(String newSQL){
-		textSQL.setText(textSQL.getText() + newSQL + "\n");
+		textSQL.setText(textSQL.getText() + newSQL + "\n"); //$NON-NLS-1$
 	}
 	
 	/* ***************************************************************************************
@@ -496,28 +496,28 @@ public class CsvToRDBImportDialog extends Dialog {
 	private HashMap<String,Object> loadPrimaryKeyColumns(String tableName){
 		List<HashMap> showIndexColumns=null;
 		HashMap<String,Object> result = new HashMap<String,Object>();
-		String columns = "";
+		String columns = ""; //$NON-NLS-1$
 		try{
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showIndexColumns = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
 			for (HashMap dao: showIndexColumns){
 				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 					/* cid, name, type, notnull, dflt_value, pk */
-					if ("1".equals(dao.get("pk").toString())) {
-						result.put(dao.get("name").toString(), (Integer) dao.get("cid") + 1);	
-						columns += dao.get("name").toString() + ",";
+					if ("1".equals(dao.get("pk").toString())) { //$NON-NLS-1$ //$NON-NLS-2$
+						result.put(dao.get("name").toString(), (Integer) dao.get("cid") + 1);	 //$NON-NLS-1$ //$NON-NLS-2$
+						columns += dao.get("name").toString() + ","; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}else{
-					result.put(dao.get("column_name").toString(), Integer.parseInt( dao.get("column_order").toString()));	
-					columns += dao.get("column_name").toString() + ",";
+					result.put(dao.get("column_name").toString(), Integer.parseInt( dao.get("column_order").toString()));	 //$NON-NLS-1$ //$NON-NLS-2$
+					columns += dao.get("column_name").toString() + ","; //$NON-NLS-1$ //$NON-NLS-2$
 				}				
 			}
 		} catch (Exception e) {
 			logger.error("loadObjectDiableStatements", e); //$NON-NLS-1$
-			appendPreviewSQL("/* Disable Object not support or select. */");
+			appendPreviewSQL("/* Disable Object not support or select. */"); //$NON-NLS-1$
 		}
 		
-		result.put("all_key_columns", StringUtils.split(columns, ","));
+		result.put("all_key_columns", StringUtils.split(columns, ",")); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		return result;
 	}
@@ -527,7 +527,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	}
 	
 	private void downloadSQL(){
-		MessageDialog.openInformation(null, "Tadpole CSV Import", "not support...");
+		MessageDialog.openInformation(null, Messages.CsvToRDBImportDialog_7, "not support..."); //$NON-NLS-2$
 	}
 	
 	private void generatePreviewSQL(){
@@ -537,42 +537,42 @@ public class CsvToRDBImportDialog extends Dialog {
 		String tableName = textTableName.getText().trim();
 		
 		//PreviewSQL Clear!!!
-		textSQL.setText("");
+		textSQL.setText(""); //$NON-NLS-1$
 		
 		CSVLoader loader = new CSVLoader(textSeprator.getText(), textBatchSize.getText(), btnStop.getSelection());
-		String stmtType = "i";
+		String stmtType = "i"; //$NON-NLS-1$
 		try {
 			if (this.btnInsert.getSelection()) {
-				stmtType = "i";
+				stmtType = "i"; //$NON-NLS-1$
 			} else if (this.btnUpdate.getSelection()){
-				stmtType = "u";
+				stmtType = "u"; //$NON-NLS-1$
 			} else if (this.btnDelete.getSelection()){
-				stmtType = "d";
+				stmtType = "d"; //$NON-NLS-1$
 			}
 			
 			// truncate or delete
 			if (this.btnCopyNew.getSelection()) { 
-				tableName += "_COPY"; 
-				appendPreviewSQL("CREATE TABLE " + tableName + " AS \nSELECT * FROM " + textTableName.getText().trim() + " WHERE 1=0;\n");
+				tableName += "_COPY";  //$NON-NLS-1$
+				appendPreviewSQL("CREATE TABLE " + tableName + " AS \nSELECT * FROM " + textTableName.getText().trim() + " WHERE 1=0;\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}else{
 
 				// 기존 테이블에 대해서 작업할때만 테이블 제약조건 Disable / Enable 처리 필요함.
 				if (loadObjectDiableStatements(tableName)){
 					if (disableObjectResults !=null && disableObjectResults.size() > 0){
 						for (HashMap<String,String> map : disableObjectResults){
-							appendPreviewSQL(map.get("disable_statement").toString().concat("\n"));
+							appendPreviewSQL(map.get("disable_statement").toString().concat("\n")); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}else{
-						appendPreviewSQL("/*Find not found disable objects...*/");
+						appendPreviewSQL("/*Find not found disable objects...*/"); //$NON-NLS-1$
 					}
 				}
 				
-				if ("i".equals(stmtType)){
+				if ("i".equals(stmtType)){ //$NON-NLS-1$
 					// 기존 테이블에 insert하는 경우에만 기존자료 삭제 방법에 대해 처리한다.
 					if (this.btnTruncate.getSelection()) { 
-						appendPreviewSQL("TRUNCATE TABLE " + tableName + ";");
+						appendPreviewSQL(Messages.CsvToRDBImportDialog_51 + tableName + ";"); //$NON-NLS-2$
 					}else if (this.btnDeleteAll.getSelection()){
-						appendPreviewSQL("DELETE FROM " + tableName + ";");
+						appendPreviewSQL("DELETE FROM " + tableName + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}else{
 					// update, delete작업이 필요한 경우 대상테이블의 PrimaryKey정보를 조회한다.
@@ -633,19 +633,19 @@ public class CsvToRDBImportDialog extends Dialog {
 		CSVLoader loader = new CSVLoader(textSeprator.getText(), textBatchSize.getText(), btnStop.getSelection());
 		Connection conn =  null;
 		HashMap<String,Object> keyColumns = new HashMap<String,Object>();
-		String stmtType = "i";
-		String workType = "n";
+		String stmtType = "i"; //$NON-NLS-1$
+		String workType = "n"; //$NON-NLS-1$
 		try {
 			if (this.btnInsert.getSelection()) {
-				stmtType = "i";
+				stmtType = "i"; //$NON-NLS-1$
 			} else if (this.btnUpdate.getSelection()){
-				stmtType = "u";
+				stmtType = "u"; //$NON-NLS-1$
 			} else if (this.btnDelete.getSelection()){
-				stmtType = "d";
+				stmtType = "d"; //$NON-NLS-1$
 			}
 			
 			if(btnCopyNew.getSelection()){
-				workType = "c"; // Copy & New
+				workType = "c"; // Copy & New //$NON-NLS-1$
 				disableObjectResults.clear();
 			}else{
 				
@@ -653,9 +653,9 @@ public class CsvToRDBImportDialog extends Dialog {
 				loadObjectDiableStatements(textTableName.getText());
 
 				if(btnTruncate.getSelection()){
-					workType = "t"; // Truncate
+					workType = "t"; // Truncate //$NON-NLS-1$
 				}else if(btnDeleteAll.getSelection()){
-					workType = "d"; // Delete
+					workType = "d"; // Delete //$NON-NLS-1$
 				}
 			}
 			
@@ -668,7 +668,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			
 			this.appendPreviewSQL(loader.getImportResultLog().toString());
 			
-			MessageDialog.openInformation(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_26 + "\n count is "+ count);
+			MessageDialog.openInformation(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_26 + "\n count is "+ count); //$NON-NLS-1$
 		} catch (Exception e1) {
 			logger.error("CSV load error", e1); //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_29 + e1.getMessage());
@@ -740,7 +740,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, ID_BTN_INSERT, "Import", false);
+		createButton(parent, ID_BTN_INSERT, Messages.CsvToRDBImportDialog_8, false);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.CsvToRDBImportDialog_30, false);
 	}
 
