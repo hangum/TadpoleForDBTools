@@ -15,7 +15,23 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.manager.core.messages"; //$NON-NLS-1$
 
+	public static String APIServiceDialog_0;
+
+	public static String APIServiceDialog_1;
+
 	public static String APIServiceDialog_11;
+
+	public static String APIServiceDialog_2;
+
+	public static String APIServiceDialog_3;
+
+	public static String APIServiceDialog_4;
+
+	public static String APIServiceDialog_5;
+
+	public static String APIServiceDialog_6;
+
+	public static String APIServiceDialog_7;
 
 	public static String ExecutedSQLAction_0;
 
@@ -220,6 +236,32 @@ public class Messages extends NLS {
 	public static String TransactionConnectionManagerAction_0;
 
 	public static String TransactionConnectionManagerAction_1;
+
+	public static String UserAPIServiceDialog_0;
+
+	public static String UserAPIServiceDialog_1;
+
+	public static String UserAPIServiceDialog_10;
+
+	public static String UserAPIServiceDialog_12;
+
+	public static String UserAPIServiceDialog_2;
+
+	public static String UserAPIServiceDialog_25;
+
+	public static String UserAPIServiceDialog_26;
+
+	public static String UserAPIServiceDialog_27;
+
+	public static String UserAPIServiceDialog_3;
+
+	public static String UserAPIServiceDialog_4;
+
+	public static String UserAPIServiceDialog_5;
+
+	public static String UserAPIServiceDialog_6;
+
+	public static String UserAPIServiceDialog_9;
 
 	public static String UserListComposite_0;
 

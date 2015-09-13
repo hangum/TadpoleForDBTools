@@ -95,7 +95,7 @@ public class APIServiceDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("RESTful API test Dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.APIServiceDialog_7);
 	}
 
 	/**
@@ -111,27 +111,27 @@ public class APIServiceDialog extends Dialog {
 		compositeTitle.setLayout(new GridLayout(2, false));
 		
 		Label lblApiName = new Label(compositeTitle, SWT.NONE);
-		lblApiName.setText("API NAME"); //$NON-NLS-1$
+		lblApiName.setText(Messages.APIServiceDialog_0);
 		
 		textAPIName = new Text(compositeTitle, SWT.BORDER);
+		textAPIName.setEditable(false);
 		textAPIName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAPIName.setEnabled(false);
 		
 		Label lblApiUrl = new Label(compositeTitle, SWT.NONE);
-		lblApiUrl.setText("API URL"); //$NON-NLS-1$
+		lblApiUrl.setText(Messages.APIServiceDialog_1);
 		
 		textApiURL = new Text(compositeTitle, SWT.BORDER);
+		textApiURL.setEditable(false);
 		textApiURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textApiURL.setEnabled(false);
 		
 		Label lblArgument = new Label(compositeTitle, SWT.NONE);
-		lblArgument.setText("Argument"); //$NON-NLS-1$
+		lblArgument.setText(Messages.APIServiceDialog_2);
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
-		lblType.setText("Result Type"); //$NON-NLS-1$
+		lblType.setText(Messages.APIServiceDialog_3);
 		
 		comboResultType = new Combo(compositeTitle, SWT.READ_ONLY);
 		comboResultType.addSelectionListener(new SelectionAdapter() {
@@ -158,19 +158,20 @@ public class APIServiceDialog extends Dialog {
 		compositeDetailCSV.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnAddHeader = new Button(compositeDetailCSV, SWT.CHECK);
-		btnAddHeader.setText("Add Header"); //$NON-NLS-1$
+		btnAddHeader.setText(Messages.APIServiceDialog_4);
 		
 		Label lblDelimiter = new Label(compositeDetailCSV, SWT.NONE);
 		lblDelimiter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDelimiter.setText("Delimiter"); //$NON-NLS-1$
+		lblDelimiter.setText(Messages.APIServiceDialog_5);
 		
 		textDelimiter = new Text(compositeDetailCSV, SWT.BORDER);
+		textDelimiter.setEditable(false);
 		textDelimiter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Group grpResultSet = new Group(container, SWT.NONE);
 		grpResultSet.setLayout(new GridLayout(1, false));
 		grpResultSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpResultSet.setText("Result Set"); //$NON-NLS-1$
+		grpResultSet.setText(Messages.APIServiceDialog_6);
 		
 		textResult = new Text(grpResultSet, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -204,23 +205,23 @@ public class APIServiceDialog extends Dialog {
 	private void initData(String strArgument) {
 		
 		try {
-			String strReturnResult = "";
+			String strReturnResult = ""; //$NON-NLS-1$
 			
 			// velocity 로 if else 가 있는지 검사합니다. 
-			String strSQLs = RESTfulAPIUtils.makeTemplateTOSQL("APIServiceDialog", strSQL, strArgument);
+			String strSQLs = RESTfulAPIUtils.makeTemplateTOSQL("APIServiceDialog", strSQL, strArgument); //$NON-NLS-1$
 			// 분리자 만큼 실행한다.
 			for (String strTmpSQL : strSQLs.split(PublicTadpoleDefine.SQL_DELIMITER)) {
 
 				NamedParameterDAO dao = NamedParameterUtil.parseParameterUtils(strTmpSQL, strArgument);
 				if(QueryUtils.RESULT_TYPE.JSON.name().equalsIgnoreCase(comboResultType.getText())) {
-					strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam()) + ",";
+					strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam()) + ","; //$NON-NLS-1$
 				} else {
 					strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam());
 				}
 			}
 			
 			if(QueryUtils.RESULT_TYPE.JSON.name().equalsIgnoreCase(comboResultType.getText())) {
-				strReturnResult = "[" + StringUtils.removeEnd(strReturnResult, ",") + "]"; 
+				strReturnResult = "[" + StringUtils.removeEnd(strReturnResult, ",") + "]";  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			
 			textResult.setText(strReturnResult);
@@ -228,7 +229,7 @@ public class APIServiceDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Error", Messages.APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Error", Messages.APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
