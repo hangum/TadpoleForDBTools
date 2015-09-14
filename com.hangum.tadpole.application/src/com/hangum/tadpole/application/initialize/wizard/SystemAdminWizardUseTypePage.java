@@ -11,7 +11,6 @@
 package com.hangum.tadpole.application.initialize.wizard;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,7 +34,10 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 public class SystemAdminWizardUseTypePage extends WizardPage {
 	private static final Logger logger = Logger.getLogger(SystemAdminWizardUseTypePage.class);
 	
-	private String[] USER_GROUP = {Messages.SystemAdminWizardUseType_3, Messages.SystemAdminWizardUseType_4};//"개인", "그룹"};
+	private String[] USER_GROUP = {Messages.SystemAdminWizardUseType_3, Messages.SystemAdminWizardUseType_4};
+	private String[] USER_INFO = {Messages.SystemAdminWizardUseType_6, Messages.SystemAdminWizardUseType_7};
+	
+	private Label labelInfo;
 	private Combo comboUserGroup;
 	
 	/**
@@ -44,7 +46,7 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 	public SystemAdminWizardUseTypePage() {
 		super(Messages.SystemAdminWizardUseType_1);
 		setTitle(Messages.SystemAdminWizardUseType_1);
-		setDescription(Messages.SystemAdminWizardUseType_2);//"Select User Group");
+		setDescription(Messages.SystemAdminWizardUseTypePage_0);
 	}
 
 	/**
@@ -64,6 +66,8 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 		comboUserGroup.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				labelInfo.setText(USER_INFO[comboUserGroup.getSelectionIndex()]);
+				
 				getWizard().getContainer().updateButtons();	
 			}
 		});
@@ -74,6 +78,13 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 		comboUserGroup.select(0);
 		
 		setControl(container);
+		new Label(container, SWT.NONE);
+		
+		labelInfo = new Label(container, SWT.WRAP);
+		labelInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		labelInfo.setText(USER_INFO[0]);
+		
+		// 
 		setPageComplete(true);
 		
 		AnalyticCaller.track("SystemAdminWizardUseType"); //$NON-NLS-1$
@@ -81,8 +92,6 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 	
 	@Override
 	public boolean canFlipToNextPage() {
-		if(logger.isDebugEnabled()) logger.debug("============= can Flip To Next Page, combo select is " + comboUserGroup.getSelectionIndex());
-		
 		if(comboUserGroup.getSelectionIndex() == 1) return true;
 		else return false;
 	}

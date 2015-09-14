@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
@@ -30,10 +31,16 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -105,18 +112,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	mainUICallback();
 
     	// If login after does not DB exist, DB connect Dialog open.
-//    	try {
-////    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-////    		if(!PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
-//    			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-//	    		if(0 == mv.getAllTreeList().size()) {
-//	    			ConnectDatabase cd = new ConnectDatabase();
-//	    			cd.run();
-//	    		}
-////    		}
-//    	} catch(Exception e) {
-//    		logger.error("Is DB list?", e); //$NON-NLS-1$
-//    	}
+    	try {
+//    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+    		if(0 == mv.getAllTreeList().size()) {
+    			if(MessageDialog.openConfirm(null, Messages.ApplicationWorkbenchWindowAdvisor_0, Messages.ApplicationWorkbenchWindowAdvisor_3)) {
+    			ConnectDatabase cd = new ConnectDatabase();
+    			cd.run();
+	    		}
+    		}
+    	} catch(Exception e) {
+    		logger.error("Is DB list?", e); //$NON-NLS-1$
+    	}
     	
     }
     
@@ -196,76 +203,70 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * login 
      */
     private void login() {
-//		// api call을 하기 위한 초기 진입점.  
-//		StartupParameters serviceParameter = RWT.getClient().getService(StartupParameters.class );
-//		String serviceID = serviceParameter.getParameter(PublicTadpoleDefine.SERVICE_KEY_NAME);
-//		if(null != serviceID) {
-//			if(logger.isDebugEnabled()) logger.debug( "####################### serviceid is " + serviceID );
-//			
-//			APIServiceDialog apiDialog = new APIServiceDialog(Display.getCurrent().getActiveShell(), serviceParameter);
-//			apiDialog.open();
-//
-//		} else {
-				
-	    	// If you already login?
-	    	if(0 == SessionManager.getUserSeq()) {
-	    	
-		    	// Open login dialog    
-		    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
-		    	
-		    	// When login cancel button, i use in manager authority.
-		    	if(Dialog.OK != loginDialog.open()) {
-		    		//not flow this logic
-	//	    		
-	//	    		String userId = TadpoleSystemInitializer.MANAGER_EMAIL;
-	//				String password = TadpoleSystemInitializer.MANAGER_PASSWD;
-	//		    	try {
-	//					SessionManager.addSession(TadpoleSystem_UserQuery.login(userId, password));
-	//					initSession();
-	//				} catch (Exception e) {
-	//					logger.error("demo mode user login", e); //$NON-NLS-1$
-	//					MessageDialog.openError(getWindowConfigurer().getWindow().getShell(), Messages.LoginDialog_7, e.getMessage());
-	//					return;
-	//				}	
-		    	} else {
-		    		try {
-		    			// Stored user session.
-						List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
-						Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
-						for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-							mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
-						}
-						SessionManager.setUserAllPreferenceData(mapUserInfoData);
-						
-						if ("".equals(SessionManager.getPerspective())) {
-							SessionManager.setPerspective(Perspective.DEFAULT);
-						
-	//						// user 사용자는 default perspective를 사용합니다.
-	//						if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
-	//							SessionManager.setPerspective(Perspective.DEFAULT);
-	//						} else {
-//								String persp;
-//								SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
-//								
-//								if (Dialog.OK == dialog.open()) {
-//									persp = dialog.getResult();
-//								} else {
-//									persp = Perspective.DEFAULT;
-//								}
-//								SessionManager.setPerspective(persp);
-	//						}
-						}
-						
-						initSession();
-						
-		    		} catch(Exception e) {
-		    			
-		    			logger.error("session set", e); //$NON-NLS-1$
-		    		}
-		    		
-		    	}
-	    	}
-//		}
+    	// 이미 로그인 되어 있다.
+    	if(0 != SessionManager.getUserSeq()) return;
+
+    	try {
+    		if(TadpoleApplicationContextManager.isPersonOperationType()) {
+    			UserDAO userDao = TadpoleSystem_UserQuery.findUser(PublicTadpoleDefine.SYSTEM_DEFAULT_USER);
+    			
+    			SessionManager.addSession(userDao);
+    			// save login_history
+    			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
+    			
+    			initializeUserSession();
+    		} else {
+    	    	// Open login dialog    
+    	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
+    	    	if(Dialog.OK == loginDialog.open()) {
+    	    		initializeUserSession();
+    	    	}
+    		}
+
+    	} catch (Exception e) {
+    		logger.error("System login fail", e); //$NON-NLS-1$
+    		MessageDialog.openError(null, "Confirm", "System login fail.  Please contact admin"); //$NON-NLS-1$ //$NON-NLS-2$
+    	}
+    	
+    }
+
+    /**
+     * initialize user session
+     */
+    private void initializeUserSession() {
+    	try {
+			// Stored user session.
+			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData();
+			Map<String, Object> mapUserInfoData = new HashMap<String, Object>();
+			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
+				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
+			}
+			SessionManager.setUserAllPreferenceData(mapUserInfoData);
+			
+			if ("".equals(SessionManager.getPerspective())) { //$NON-NLS-1$
+				SessionManager.setPerspective(Perspective.DEFAULT);
+			
+//					// user 사용자는 default perspective를 사용합니다.
+//					if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
+//						SessionManager.setPerspective(Perspective.DEFAULT);
+//					} else {
+//							String persp;
+//							SelectPerspectiveDialog dialog = new SelectPerspectiveDialog(Display.getCurrent().getActiveShell());
+//							
+//							if (Dialog.OK == dialog.open()) {
+//								persp = dialog.getResult();
+//							} else {
+//								persp = Perspective.DEFAULT;
+//							}
+//							SessionManager.setPerspective(persp);
+//					}
+			}
+			
+			initSession();
+			
+		} catch(Exception e) {
+			logger.error("session set", e); //$NON-NLS-1$
+		}
     }
     
     /**

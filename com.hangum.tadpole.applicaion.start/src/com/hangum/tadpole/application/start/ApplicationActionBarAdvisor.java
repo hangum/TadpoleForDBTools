@@ -31,6 +31,7 @@ import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
 import com.hangum.tadpole.commons.admin.core.actions.UserLoginHistoryAction;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
@@ -185,8 +186,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(saveAsAction);
 		fileMenu.add(new Separator());
 		fileMenu.add(deleteResourceAction);
-		fileMenu.add(new Separator());
-		fileMenu.add(exitAction);
+		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+			fileMenu.add(new Separator());
+			fileMenu.add(exitAction);
+		}
 		
 		// Manage
 		manageMenu.add(restFulAPIAction);
@@ -259,9 +262,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        
 //        toolbar.add(bugIssueAction);
 //        toolbar.add(aboutAction);
-        
-    	toolbar.add(new Separator());
-    	toolbar.add(exitAction);
+        if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+	    	toolbar.add(new Separator());
+	    	toolbar.add(exitAction);
+        }
     }
     
 }

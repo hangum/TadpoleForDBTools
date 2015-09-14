@@ -23,9 +23,7 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import com.hangum.tadpole.application.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
-import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.rdb.core.Activator;
 
 /**
@@ -49,31 +47,22 @@ public class Application implements EntryPoint {
 	 * If the system table does not exist, create a table.
 	 */
 	private void systemInitialize() {
-		// 시스템 초기 데이터 베이스 생성.
-		boolean isTadpoleInitialize = PlatformUI.getPreferenceStore().getBoolean(PreferenceDefine.IS_TADPOLE_INITIALIZE);
-		if(!isTadpoleInitialize || ApplicationArgumentUtils.isForceSystemInitialize()) {
-			try {
-				boolean isInitialize = TadpoleSystemInitializer.initSystem();
-				if(!isInitialize) {
-					logger.info("Initialize System default setting.");
-					
-					WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
-					if(Dialog.OK != dialog.open()) {
-						throw new Exception("User does not define administrator.\nPlease setting admin user.\n");
-					}
-				}
-						
-//				
-//					throw new Exception("System initialize fail");
-//				}
-				PlatformUI.getPreferenceStore().setValue(PreferenceDefine.IS_TADPOLE_INITIALIZE, true);
-			} catch(Exception e) {
-				logger.error("System initialize error", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
+		try {
+			boolean isInitialize = TadpoleSystemInitializer.initSystem();
+			if(!isInitialize) {
+				logger.info("Initialize System default setting.");
 				
-				System.exit(0);
+				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
+				if(Dialog.OK != dialog.open()) {
+					throw new Exception("System initialize fail.\n");
+				}
 			}
+		} catch(Exception e) {
+			logger.error("System initialize error", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
+			
+			System.exit(0);
 		}
 	}
 }

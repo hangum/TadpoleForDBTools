@@ -27,6 +27,7 @@ public class PublicTadpoleDefine {
 	public static final String SERVICE_KEY_NAME = "serviceID";
 	
 	/** default system encrypt password */
+	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
 	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.tadpole.owner.son";
 
 	/**

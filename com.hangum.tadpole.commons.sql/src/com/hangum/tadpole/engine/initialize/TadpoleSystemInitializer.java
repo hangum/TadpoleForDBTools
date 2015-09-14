@@ -14,7 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -23,9 +22,8 @@ import org.eclipse.core.runtime.Platform;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * <pre>
@@ -124,9 +122,7 @@ public class TadpoleSystemInitializer {
 			}
 		}
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List listUserTable = sqlClient.queryForList("getSystemAdmin"); //$NON-NLS-1$
-		return listUserTable.size() == 0?false:true;
+		return TadpoleApplicationContextManager.getSystemAdmin() == null?false:true;
 	}
 
 	/**

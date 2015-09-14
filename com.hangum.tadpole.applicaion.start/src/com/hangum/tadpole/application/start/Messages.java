@@ -27,8 +27,10 @@ public class Messages extends NLS {
 	public static String ApplicationActionBarAdvisor_3;
 	public static String ApplicationActionBarAdvisor_4;
 	public static String ApplicationActionBarAdvisor_5;
+	public static String ApplicationWorkbenchWindowAdvisor_0;
 	public static String ApplicationWorkbenchWindowAdvisor_1;
 	public static String ApplicationWorkbenchWindowAdvisor_2;
+	public static String ApplicationWorkbenchWindowAdvisor_3;
 	public static String ApplicationWorkbenchWindowAdvisor_4;
 	public static String LoginDialog_0;
 	public static String LoginDialog_1;
