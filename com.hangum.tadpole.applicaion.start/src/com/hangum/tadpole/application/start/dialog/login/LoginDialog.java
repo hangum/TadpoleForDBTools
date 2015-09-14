@@ -47,12 +47,14 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -325,7 +327,15 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
-		createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
+		try {
+			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+			if(!"".equals(smtpDto.getEmail())) {
+				createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
+			}
+		} catch (Exception e) {
+			logger.error("view findpasswd button", e);
+		}
+		
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 	

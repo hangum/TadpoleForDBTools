@@ -38,6 +38,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
@@ -293,19 +294,23 @@ public class NewUserDialog extends Dialog {
 	 */
 	private void sendEmailAccessKey(String name, String email, String strConfirmKey) {
 		try {
-			// manager 에게 메일을 보낸다.
-			EmailDTO emailDao = new EmailDTO();
-			emailDao.setSubject("Add new Tadpole user."); //$NON-NLS-1$
-			// 
-			// 그룹, 사용자, 권한.
-			// 
-			NewUserMailBodyTemplate mailContent = new NewUserMailBodyTemplate();
-			String strContent = mailContent.getContent(name, email, strConfirmKey);
-			emailDao.setContent(strContent);
-			emailDao.setTo(email);
-			
-			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
-			sendEmail.sendMail(emailDao);
+			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+			if(!"".equals(smtpDto.getEmail())) {
+				// manager 에게 메일을 보낸다.
+				EmailDTO emailDao = new EmailDTO();
+				emailDao.setSubject("Add new Tadpole user."); //$NON-NLS-1$
+				// 
+				// 그룹, 사용자, 권한.
+				// 
+				NewUserMailBodyTemplate mailContent = new NewUserMailBodyTemplate();
+				String strContent = mailContent.getContent(name, email, strConfirmKey);
+				emailDao.setContent(strContent);
+				emailDao.setTo(email);
+				
+				
+				SendEmails sendEmail = new SendEmails(smtpDto);
+				sendEmail.sendMail(emailDao);
+			}
 		} catch(Exception e) {
 			logger.error(String.format("New user key sening error name %s, email %s, confirm key %s", name, email, strConfirmKey), e); //$NON-NLS-1$
 			

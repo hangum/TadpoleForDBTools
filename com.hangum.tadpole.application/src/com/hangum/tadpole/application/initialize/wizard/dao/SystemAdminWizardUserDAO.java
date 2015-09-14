@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.initialize.wizard;
+package com.hangum.tadpole.application.initialize.wizard.dao;
 
 
 /**
@@ -19,23 +19,17 @@ package com.hangum.tadpole.application.initialize.wizard;
  * @since 2015. 3. 19.
  *
  */
-public class SystemAdminWizardPageDAO {
+public class SystemAdminWizardUserDAO {
 	
 	// user info
 	private String email;
 	private String passwd;
 	private String rePasswd;
 	
-	// smtp info
-	private String sMTPServer;
-	private String port;
-	private String sMTPEmail;
-	private String sMTPPasswd;
-	
 	/**
 	 * 
 	 */
-	public SystemAdminWizardPageDAO() {
+	public SystemAdminWizardUserDAO() {
 	}
 
 	/**
@@ -78,62 +72,6 @@ public class SystemAdminWizardPageDAO {
 	 */
 	public void setRePasswd(String rePasswd) {
 		this.rePasswd = rePasswd;
-	}
-
-	/**
-	 * @return the sMTPServer
-	 */
-	public String getsMTPServer() {
-		return sMTPServer;
-	}
-
-	/**
-	 * @param sMTPServer the sMTPServer to set
-	 */
-	public void setsMTPServer(String sMTPServer) {
-		this.sMTPServer = sMTPServer;
-	}
-
-	/**
-	 * @return the port
-	 */
-	public String getPort() {
-		return port;
-	}
-
-	/**
-	 * @param port the port to set
-	 */
-	public void setPort(String port) {
-		this.port = port;
-	}
-
-	/**
-	 * @return the sMTPEmail
-	 */
-	public String getsMTPEmail() {
-		return sMTPEmail;
-	}
-
-	/**
-	 * @param sMTPEmail the sMTPEmail to set
-	 */
-	public void setsMTPEmail(String sMTPEmail) {
-		this.sMTPEmail = sMTPEmail;
-	}
-
-	/**
-	 * @return the sMTPPasswd
-	 */
-	public String getsMTPPasswd() {
-		return sMTPPasswd;
-	}
-
-	/**
-	 * @param sMTPPasswd the sMTPPasswd to set
-	 */
-	public void setsMTPPasswd(String sMTPPasswd) {
-		this.sMTPPasswd = sMTPPasswd;
 	}
 
 	

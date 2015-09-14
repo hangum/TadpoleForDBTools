@@ -58,6 +58,18 @@ public class Utils {
 		Matcher m = p.matcher(email);
 		return m.matches();
 	}
+
+	/**
+	 * validate passwd
+	 * 
+	 * @param passwd
+	 * @return
+	 */
+	public static boolean isPassword(String passwd) {
+		Pattern p = Pattern.compile("^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$"); //$NON-NLS-1$
+		Matcher m = p.matcher(passwd);
+		return m.matches();
+	}
 	
 	/**
 	 * unique id 를 넘겨준다. 

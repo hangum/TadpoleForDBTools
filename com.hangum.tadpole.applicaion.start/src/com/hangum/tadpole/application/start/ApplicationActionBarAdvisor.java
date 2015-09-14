@@ -257,7 +257,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        toolbar.add(preferenceAction);
 //        toolbar.add(new Separator());
 //        
-        toolbar.add(bugIssueAction);
+//        toolbar.add(bugIssueAction);
 //        toolbar.add(aboutAction);
         
     	toolbar.add(new Separator());

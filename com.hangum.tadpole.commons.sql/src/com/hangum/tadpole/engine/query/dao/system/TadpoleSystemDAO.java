@@ -12,6 +12,8 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Date;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * System dao 
  *
@@ -25,6 +27,7 @@ public class TadpoleSystemDAO {
 	String major_version;
 	String sub_version;	
 	String information;
+	String execute_type = PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name();
 	Date create_time;
 	
 	public TadpoleSystemDAO() {

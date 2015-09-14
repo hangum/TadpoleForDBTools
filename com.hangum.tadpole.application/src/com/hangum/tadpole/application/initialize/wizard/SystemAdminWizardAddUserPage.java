@@ -1,0 +1,167 @@
+/*******************************************************************************
+ * Copyright (c) 2012 - 2015 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
+package com.hangum.tadpole.application.initialize.wizard;
+
+import org.apache.log4j.Logger;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+
+import com.hangum.tadpole.application.Messages;
+import com.hangum.tadpole.application.initialize.wizard.dao.SystemAdminWizardUserDAO;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.Utils;
+
+/**
+ *
+ * System Adminitstrator wizard
+ *
+ * @author hangum
+ * @version 1.6.1
+ * @since 2015. 3. 19.
+ *
+ */
+public class SystemAdminWizardAddUserPage extends WizardPage {
+	private static final Logger logger = Logger.getLogger(SystemAdminWizardAddUserPage.class);
+	
+	private Text textEmail;
+	private Text textPasswd;
+	private Text textRePasswd;
+	
+	/**
+	 * Create the wizard.
+	 */
+	public SystemAdminWizardAddUserPage() {
+		super("SystemInitializeWizard"); //$NON-NLS-1$
+		setTitle(Messages.SystemAdminWizardPage_1);
+		setDescription(Messages.SystemAdminWizardPage_2);
+	}
+
+	/**
+	 * Create contents of the wizard.
+	 * @param parent
+	 */
+	public void createControl(Composite parent) {
+		Composite container = new Composite(parent, SWT.NULL);
+		container.setLayout(new GridLayout(1, false));
+		
+		Group grpAdministratorUserInformation = new Group(container, SWT.NONE);
+		grpAdministratorUserInformation.setLayout(new GridLayout(2, false));
+		grpAdministratorUserInformation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpAdministratorUserInformation.setText(Messages.SystemAdminWizardPage_3);
+		
+		Label lblEmail = new Label(grpAdministratorUserInformation, SWT.NONE);
+		lblEmail.setAlignment(SWT.RIGHT);
+		GridData gd_lblEmail = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_lblEmail.widthHint = 120;
+		lblEmail.setLayoutData(gd_lblEmail);
+		lblEmail.setText(Messages.SystemAdminWizardPage_4);
+		
+		textEmail = new Text(grpAdministratorUserInformation, SWT.BORDER);
+		textEmail.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection | e.keyCode == SWT.TAB) validatePage(textEmail);
+			}
+		});
+		
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
+		lblPasswd.setAlignment(SWT.RIGHT);
+		lblPasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblPasswd.setText(Messages.SystemAdminWizardPage_5);
+		
+		textPasswd = new Text(grpAdministratorUserInformation, SWT.BORDER | SWT.PASSWORD);
+		textPasswd.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection | e.keyCode == SWT.TAB) validatePage(textPasswd);
+			}
+		});
+		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblRePasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
+		lblRePasswd.setAlignment(SWT.RIGHT);
+		lblRePasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblRePasswd.setText(Messages.SystemAdminWizardPage_6);
+		
+		textRePasswd = new Text(grpAdministratorUserInformation, SWT.BORDER | SWT.PASSWORD);
+		textRePasswd.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection | e.keyCode == SWT.TAB) validatePage(textRePasswd);
+			}
+		});
+		textRePasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		setControl(container);
+		setPageComplete(false);
+		
+		AnalyticCaller.track("SystemAdminWizardAddUserPage"); //$NON-NLS-1$
+		
+		textEmail.setFocus();
+	}
+	
+	/**
+	 * validation ui
+	 * 
+	 */
+	private void validatePage(Control controlWorker) {
+		if("".equals(textEmail.getText())) { //$NON-NLS-1$
+			errorSet(textEmail, Messages.SystemAdminWizardPage_35);
+			return;
+		} else if(!Utils.isEmail(textEmail.getText())) {
+			errorSet(textEmail, Messages.SystemAdminWizardPage_48);
+			return;
+		} else if(!Utils.isPassword(textPasswd.getText())) { //$NON-NLS-1$
+			errorSet(textPasswd, Messages.SystemAdminWizardPage_37);
+			return;
+		} else if(!textPasswd.getText().equals(textRePasswd.getText())) { //$NON-NLS-1$
+			errorSet(textRePasswd, Messages.SystemAdminWizardPage_39);
+			return;
+		}
+		
+		setErrorMessage(null);
+		setPageComplete(true);
+	}
+	
+	private void errorSet(Control ctl, String msg) {
+		ctl.setFocus();
+		setErrorMessage(msg);
+		setPageComplete(false);
+	}
+	
+	/**
+	 * get wizard dao
+	 * 
+	 * @return
+	 */
+	public SystemAdminWizardUserDAO getUserData() {
+		SystemAdminWizardUserDAO dao = new SystemAdminWizardUserDAO();
+		
+		dao.setEmail(textEmail.getText());
+		dao.setPasswd(textPasswd.getText());
+		dao.setRePasswd(textRePasswd.getText());
+		
+		return dao;
+	}
+	
+	
+}
