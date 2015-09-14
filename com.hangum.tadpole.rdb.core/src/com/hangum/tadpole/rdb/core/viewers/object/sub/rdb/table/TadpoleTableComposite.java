@@ -196,10 +196,17 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
 					
 					try {
-						List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
-						String strSQL = GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, tmpTableColumns);
-						if(StringUtils.isNotEmpty(strSQL)) {
-							FindEditorAndWriteQueryUtil.run(userDB, strSQL, PublicTadpoleDefine.DB_ACTION.TABLES);
+						if (selectTableName.equals(tableDAO.getName())) {
+							String strSQL = GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, showTableColumns);
+							if(StringUtils.isNotEmpty(strSQL)) {
+								FindEditorAndWriteQueryUtil.run(userDB, strSQL, PublicTadpoleDefine.DB_ACTION.TABLES);
+							}
+						} else {
+							List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+							String strSQL = GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, tmpTableColumns);
+							if(StringUtils.isNotEmpty(strSQL)) {
+								FindEditorAndWriteQueryUtil.run(userDB, strSQL, PublicTadpoleDefine.DB_ACTION.TABLES);
+							}
 						}
 					} catch(Exception e) {
 						logger.error("table columns", e); //$NON-NLS-1$

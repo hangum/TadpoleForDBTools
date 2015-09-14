@@ -63,6 +63,12 @@ public class Messages extends NLS {
 	public static String BugIssueAction_2;
 	public static String BugIssueAction_3;
 	public static String LoginDialog_lblPleaseSignIn_text;
+	public static String AboutDialog_0;
+	public static String AboutDialog_5;
+	public static String AboutDialog_6;
+	public static String AboutDialog_7;
+	public static String AboutDialog_8;
+	public static String AboutDialog_9;
 	public static String AboutDialog_lblMajorversion_text;
 	public static String AboutDialog_lblReleaseDate_text;
 	public static String ChangePasswordDialog_1;

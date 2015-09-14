@@ -71,7 +71,7 @@ public class ModifyUserDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Modify User"); //$NON-NLS-1$
+		newShell.setText(Messages.ModifyUserDialog_0);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText("email"); //$NON-NLS-1$
+		lblEmail.setText(Messages.ModifyUserDialog_1);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setEditable(false);
@@ -93,7 +93,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText("Name"); //$NON-NLS-1$
+		lblName.setText(Messages.ModifyUserDialog_2);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setEditable(false);
@@ -101,14 +101,14 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblAllowIp = new Label(container, SWT.NONE);
 		lblAllowIp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblAllowIp.setText("Allow IP");
+		lblAllowIp.setText(Messages.ModifyUserDialog_3);
 		
 		textAllowIP = new Text(container, SWT.BORDER);
 		textAllowIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblApproval = new Label(container, SWT.NONE);
 		lblApproval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblApproval.setText("Approval"); //$NON-NLS-1$
+		lblApproval.setText(Messages.ModifyUserDialog_4);
 		
 		comboApproval = new Combo(container, SWT.READ_ONLY);
 		comboApproval.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -117,7 +117,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblUserConfirm = new Label(container, SWT.NONE);
 		lblUserConfirm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblUserConfirm.setText("User Confirm"); //$NON-NLS-1$
+		lblUserConfirm.setText(Messages.ModifyUserDialog_5);
 		
 		comboUserConfirm = new Combo(container, SWT.READ_ONLY);
 		comboUserConfirm.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -126,16 +126,16 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblDelete = new Label(container, SWT.NONE);
 		lblDelete.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDelete.setText("Delete"); //$NON-NLS-1$
+		lblDelete.setText(Messages.ModifyUserDialog_6);
 		
 		comboDel = new Combo(container, SWT.READ_ONLY);
 		comboDel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboDel.add(Messages.ModifyUserDialog_9);
+		comboDel.add("YES"); //$NON-NLS-1$
 		comboDel.add("NO"); //$NON-NLS-1$
 		
 		Label lblCreateDate = new Label(container, SWT.NONE);
 		lblCreateDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCreateDate.setText("Create Date"); //$NON-NLS-1$
+		lblCreateDate.setText(Messages.ModifyUserDialog_7);
 		
 		textCreateDate = new Text(container, SWT.BORDER);
 		textCreateDate.setEditable(false);
@@ -175,7 +175,7 @@ public class ModifyUserDialog extends Dialog {
 			user.setDelYn(comboDel.getText());
 			
 			// 사용자의 권한을 no로 만들면 session에서 삭제 하도록 합니다.
-			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) {
+			if("YES".equals(user.getDelYn()) || "YES".equals(user.getApproval_yn())) { //$NON-NLS-1$ //$NON-NLS-2$
 				String sessionId = SessionManagerListener.getSessionIds(user.getEmail());
 			}
 			
@@ -202,8 +202,8 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.ModifyUserDialog_11, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ModifyUserDialog_14, false);
 	}
 
 	/**

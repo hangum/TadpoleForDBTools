@@ -65,6 +65,42 @@ public class Messages extends NLS {
 
 	public static String APIServiceDialog_9;
 
+	public static String DBAccessControlDialog_0;
+
+	public static String DBAccessControlDialog_1;
+
+	public static String DBAccessControlDialog_10;
+
+	public static String DBAccessControlDialog_11;
+
+	public static String DBAccessControlDialog_12;
+
+	public static String DBAccessControlDialog_13;
+
+	public static String DBAccessControlDialog_2;
+
+	public static String DBAccessControlDialog_22;
+
+	public static String DBAccessControlDialog_23;
+
+	public static String DBAccessControlDialog_24;
+
+	public static String DBAccessControlDialog_25;
+
+	public static String DBAccessControlDialog_26;
+
+	public static String DBAccessControlDialog_27;
+
+	public static String DBAccessControlDialog_5;
+
+	public static String DBAccessControlDialog_6;
+
+	public static String DBAccessControlDialog_7;
+
+	public static String DBAccessControlDialog_8;
+
+	public static String DBAccessControlDialog_9;
+
 	public static String DBListComposite_0;
 
 	public static String DBListComposite_1;
@@ -117,6 +153,44 @@ public class Messages extends NLS {
 
 	public static String DBListComposite_9;
 
+	public static String DBOthresConfigDialog_0;
+
+	public static String DBOthresConfigDialog_1;
+
+	public static String DBOthresConfigDialog_2;
+
+	public static String DBOthresConfigDialog_3;
+
+	public static String DBOthresConfigDialog_4;
+
+	public static String DBOthresConfigDialog_5;
+
+	public static String DBOthresConfigDialog_7;
+
+	public static String DBOthresConfigDialog_8;
+
+	public static String DetailUserAndDBRoleDialog_0;
+
+	public static String DetailUserAndDBRoleDialog_1;
+
+	public static String DetailUserAndDBRoleDialog_11;
+
+	public static String DetailUserAndDBRoleDialog_14;
+
+	public static String DetailUserAndDBRoleDialog_15;
+
+	public static String DetailUserAndDBRoleDialog_16;
+
+	public static String DetailUserAndDBRoleDialog_2;
+
+	public static String DetailUserAndDBRoleDialog_4;
+
+	public static String DetailUserAndDBRoleDialog_7;
+
+	public static String DetailUserAndDBRoleDialog_8;
+
+	public static String DetailUserAndDBRoleDialog_9;
+
 	public static String ExecutedSQLAction_0;
 
 	public static String ExecutedSQLAction_1;
@@ -126,6 +200,42 @@ public class Messages extends NLS {
 	public static String ExecutedSQLEditorInput_0;
 
 	public static String ExecutedSQLEditorInput_1;
+
+	public static String FindUserAndDBRoleDialog_0;
+
+	public static String FindUserAndDBRoleDialog_1;
+
+	public static String FindUserAndDBRoleDialog_10;
+
+	public static String FindUserAndDBRoleDialog_12;
+
+	public static String FindUserAndDBRoleDialog_13;
+
+	public static String FindUserAndDBRoleDialog_14;
+
+	public static String FindUserAndDBRoleDialog_15;
+
+	public static String FindUserAndDBRoleDialog_16;
+
+	public static String FindUserAndDBRoleDialog_17;
+
+	public static String FindUserAndDBRoleDialog_18;
+
+	public static String FindUserAndDBRoleDialog_19;
+
+	public static String FindUserAndDBRoleDialog_2;
+
+	public static String FindUserAndDBRoleDialog_20;
+
+	public static String FindUserAndDBRoleDialog_3;
+
+	public static String FindUserAndDBRoleDialog_4;
+
+	public static String FindUserAndDBRoleDialog_5;
+
+	public static String FindUserAndDBRoleDialog_6;
+
+	public static String FindUserAndDBRoleDialog_7;
 
 	public static String FindUserDialog_4;
 
@@ -139,11 +249,29 @@ public class Messages extends NLS {
 
 	public static String GeneralConnecionPoolLabelprovider_3;
 
+	public static String ModifyUserDialog_0;
+
+	public static String ModifyUserDialog_1;
+
+	public static String ModifyUserDialog_11;
+
 	public static String ModifyUserDialog_12;
 
 	public static String ModifyUserDialog_13;
 
-	public static String ModifyUserDialog_9;
+	public static String ModifyUserDialog_14;
+
+	public static String ModifyUserDialog_2;
+
+	public static String ModifyUserDialog_3;
+
+	public static String ModifyUserDialog_4;
+
+	public static String ModifyUserDialog_5;
+
+	public static String ModifyUserDialog_6;
+
+	public static String ModifyUserDialog_7;
 
 	public static String NewUserDialog_0;
 	public static String NewUserDialog_1;
