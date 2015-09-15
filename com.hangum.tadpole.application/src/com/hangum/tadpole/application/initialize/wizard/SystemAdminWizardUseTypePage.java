@@ -21,9 +21,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.hangum.tadpole.application.Activator;
 import com.hangum.tadpole.application.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.swtdesigner.ResourceManager;
 
 /**
  * System Admin wizard user type
@@ -36,9 +38,11 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 	
 	private String[] USER_GROUP = {Messages.SystemAdminWizardUseType_3, Messages.SystemAdminWizardUseType_4};
 	private String[] USER_INFO = {Messages.SystemAdminWizardUseType_6, Messages.SystemAdminWizardUseType_7};
+	private String[] USER_IMAGE= {"resources/icons/user.png", "resources/icons/user_group.png"}; //$NON-NLS-1$ //$NON-NLS-1$
 	
 	private Label labelInfo;
 	private Combo comboUserGroup;
+	private Label labelImage;
 	
 	/**
 	 * Create the wizard.
@@ -56,7 +60,7 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 
-		container.setLayout(new GridLayout(2, false));
+		container.setLayout(new GridLayout(3, false));
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -67,6 +71,7 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				labelInfo.setText(USER_INFO[comboUserGroup.getSelectionIndex()]);
+				labelImage.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, USER_IMAGE[comboUserGroup.getSelectionIndex()]));
 				
 				getWizard().getContainer().updateButtons();	
 			}
@@ -78,11 +83,16 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 		comboUserGroup.select(0);
 		
 		setControl(container);
+		
+		labelImage = new Label(container, SWT.NONE);
+		labelImage.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, USER_IMAGE[0]));
+		
 		new Label(container, SWT.NONE);
 		
 		labelInfo = new Label(container, SWT.WRAP);
 		labelInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		labelInfo.setText(USER_INFO[0]);
+		new Label(container, SWT.NONE);
 		
 		// 
 		setPageComplete(true);
