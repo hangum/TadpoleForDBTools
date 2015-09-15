@@ -147,6 +147,7 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setGroup_name(userDb.getGroup_name());
 		userEncryptDao.setDisplay_name(userDb.getDisplay_name());
 		userEncryptDao.setOperation_type(userDb.getOperation_type());
+		userEncryptDao.setIs_lock(userDb.getIs_lock());
 		
 		userEncryptDao.setHost(CipherManager.getInstance().encryption(userDb.getHost()));
 		userEncryptDao.setPort(CipherManager.getInstance().encryption(userDb.getPort()));

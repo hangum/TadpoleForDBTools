@@ -38,6 +38,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -200,7 +201,6 @@ public class DBLoginDialog extends Dialog {
 	 * db widget을 생성한다.
 	 */
 	private void createDBWidget(UserDBDAO userDB) {
-		
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
 		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB);
 	}
@@ -217,7 +217,11 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private boolean addDB() {
 		if (loginComposite.saveDBData()) {
-			this.retuserDb = loginComposite.getDBDTO();	
+			this.retuserDb = loginComposite.getDBDTO();
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(this.retuserDb.getIs_lock())) {
+				SessionManager.setUnlokDB(retuserDb);
+			}
+			
 			return true;
 		}
 		

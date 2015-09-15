@@ -264,7 +264,14 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type(PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString());
+
+		String dbOpType = PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).name();
+		userDB.setOperation_type(dbOpType);
+		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) || dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
+		{
+			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
+		}
+
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
