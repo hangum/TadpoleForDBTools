@@ -271,7 +271,9 @@ public class NewUserDialog extends Dialog {
 					passwd, 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
 					name, comboLanguage.getText(), approvalYn,  
-					btnGetOptCode.getSelection()?"YES":"NO", textSecretKey.getText()); //$NON-NLS-1$ //$NON-NLS-2$
+					btnGetOptCode.getSelection()?"YES":"NO", 
+					textSecretKey.getText(),
+					"*"); //$NON-NLS-1$ //$NON-NLS-2$
 			sendEmailAccessKey(name, strEmail, strEmailConformKey);
 			
 			MessageDialog.openInformation(null, "Confirm", Messages.NewUserDialog_31); //$NON-NLS-1$

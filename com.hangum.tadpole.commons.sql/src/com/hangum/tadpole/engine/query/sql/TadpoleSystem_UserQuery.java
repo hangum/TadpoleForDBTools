@@ -77,7 +77,8 @@ public class TadpoleSystem_UserQuery {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
-								String roleType, String name, String language, String approvalYn, String use_otp, String otp_secret
+								String roleType, String name, String language, String approvalYn, String use_otp, String otp_secret,
+								String strAllowIP
 	) throws TadpoleSQLManagerException, SQLException {
 		UserDAO loginDAO = new UserDAO();
 		loginDAO.setInput_type(inputType);
@@ -93,6 +94,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setApproval_yn(approvalYn);
 		loginDAO.setUse_otp(use_otp);
 		loginDAO.setOtp_secret(otp_secret);
+		loginDAO.setAllow_ip(strAllowIP);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$

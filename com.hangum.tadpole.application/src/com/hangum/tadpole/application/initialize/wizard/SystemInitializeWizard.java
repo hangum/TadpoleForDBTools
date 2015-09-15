@@ -65,11 +65,19 @@ public class SystemInitializeWizard extends Wizard {
 				TadpoleSystemQuery.updateSystemInformation(PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name());
 				
 				// 기본 유저 하면을 입력합니다.				
-				TadpoleSystem_UserQuery.newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
-				PublicTadpoleDefine.SYSTEM_DEFAULT_USER, Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
-				"1005tadPole1206", 	
-				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-				"Tadpole Default Admin", "en", PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+				TadpoleSystem_UserQuery.newUser(
+						PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
+						PublicTadpoleDefine.SYSTEM_DEFAULT_USER, 
+						Utils.getUniqueDigit(7), 
+						PublicTadpoleDefine.YES_NO.YES.name(),
+						"1005tadPole1206", 	
+						PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
+						"Tadpole Default Admin", 
+						"en", 
+						PublicTadpoleDefine.YES_NO.YES.name(), 
+						PublicTadpoleDefine.YES_NO.NO.name(), 
+						"",
+						"127.*"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
@@ -87,7 +95,7 @@ public class SystemInitializeWizard extends Wizard {
 				adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
 				adminDao.getPasswd(), 	
 				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-				"Tadpole System Admin", "en", PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+				"Tadpole System Admin", "en", PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), "", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
