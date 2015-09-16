@@ -33,6 +33,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * delete database action.
@@ -54,10 +55,13 @@ public class DeleteDBAction implements IViewActionDelegate {
 
 	@Override
 	public void run(IAction action) {
-
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
+		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
+			MessageDialog.openError(null, Messages.DeleteDBAction_0, Messages.DeleteDBAction_2);
+			return;
+		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.DeleteDBAction_0, "[" + userDB.getDisplay_name() + "] " + Messages.DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
+		if(!MessageDialog.openConfirm(null, Messages.DeleteDBAction_0, Messages.DeleteDBAction_3 + userDB.getDisplay_name() + "] " + Messages.DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
 		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		

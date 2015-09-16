@@ -146,8 +146,8 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.MainSQLEditorAPIServiceDialog_8, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.MainSQLEditorAPIServiceDialog_9, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.MainSQLEditorAPIServiceDialog_8, false);
 	}
 	
 	/**

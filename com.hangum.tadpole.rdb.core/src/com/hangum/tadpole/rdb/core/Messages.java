@@ -209,6 +209,8 @@ public class Messages extends NLS {
 	public static String DBLoginDialog_btnPing_text;
 	public static String DeleteDBAction_0;
 	public static String DeleteDBAction_1;
+	public static String DeleteDBAction_2;
+	public static String DeleteDBAction_3;
 	public static String DeleteResourceAction_0;
 	public static String DeleteResourceAction_3;
 	public static String DeleteResourceAction_4;

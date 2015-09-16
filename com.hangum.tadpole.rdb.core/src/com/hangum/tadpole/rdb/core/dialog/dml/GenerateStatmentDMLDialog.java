@@ -575,7 +575,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 			createButton(parent, IDialogConstants.OK_ID, Messages.GenerateStatmentDMLDialog_2, false);
 			createButton(parent, IDialogConstants.CANCEL_ID, Messages.GenerateStatmentDMLDialog_88, false);
 		} else {
-			createButton(parent, IDialogConstants.CANCEL_ID, Messages.GenerateStatmentDMLDialog_2, false);	
+			createButton(parent, IDialogConstants.CANCEL_ID, Messages.GenerateStatmentDMLDialog_88, false);	
 		}
 		
 	}

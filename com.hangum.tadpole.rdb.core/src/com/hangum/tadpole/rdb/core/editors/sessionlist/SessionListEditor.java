@@ -48,6 +48,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -177,7 +178,17 @@ public class SessionListEditor extends EditorPart {
 		tltmKillProcess.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				killProcess();
+				boolean isPossible = false;
+				if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
+				else {
+					if(!PermissionChecker.isProductBackup(userDB)) isPossible = true;
+				}
+				
+				if(isPossible) {
+					killProcess();
+				} else {
+					MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.MainEditor_21);
+				}
 			}
 		});
 		tltmKillProcess.setEnabled(false);
