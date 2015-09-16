@@ -49,10 +49,9 @@ public class MessageComposite extends Composite {
 
 		textMessage = new Text(this, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		textMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		    
 		// text limit
-		textMessage.setTextLimit(10000);
+		textMessage.setTextLimit(1000);
 
 		Button btnClear = new Button(this, SWT.NONE);
 		btnClear.addSelectionListener(new SelectionAdapter() {
@@ -74,10 +73,10 @@ public class MessageComposite extends Composite {
 
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if (throwable == null) {
-			strNewMessage = String.format("==[ System Message ]============\n");
+			strNewMessage = String.format(Messages.MessageComposite_2);
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
 		} else {
-			strNewMessage = String.format("==[ Exception caught ]============\n");
+			strNewMessage = String.format(Messages.MessageComposite_3);
 			
 			Throwable cause = throwable.getCause();
 			if (cause instanceof SQLException) {
@@ -85,13 +84,13 @@ public class MessageComposite extends Composite {
 					SQLException sqlException = (SQLException) cause;
 					StringBuffer sbMsg = new StringBuffer();
 	
-					sbMsg.append(String.format("SQL State Code: %s\nError Code: %s\n", sqlException.getSQLState(), //$NON-NLS-1$
+					sbMsg.append(String.format(Messages.MessageComposite_5, sqlException.getSQLState(),
 							sqlException.getErrorCode()));
-					sbMsg.append(String.format("Message : %s", sqlException.getMessage()));
+					sbMsg.append(String.format(Messages.MessageComposite_4, sqlException.getMessage()));
 	
 					strNewMessage += sbMsg.toString();
 				} catch(Exception e) {
-					logger.error("Catch exception", e);
+					logger.error("Catch exception", e); //$NON-NLS-1$
 					strNewMessage += tadpoleMessageDAO.getStrMessage();
 				}
 			} else {
@@ -101,7 +100,7 @@ public class MessageComposite extends Composite {
 
 		// first show last error message
 		final String strOldText = textMessage.getText();
-		if ("".equals(strOldText)) {
+		if ("".equals(strOldText)) { //$NON-NLS-1$
 			textMessage.setText(strNewMessage);
 		} else {
 			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);
