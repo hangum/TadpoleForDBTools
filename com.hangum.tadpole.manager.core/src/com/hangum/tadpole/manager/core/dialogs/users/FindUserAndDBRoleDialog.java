@@ -234,7 +234,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				
 				MessageDialog.openInformation(getShell(), Messages.FindUserAndDBRoleDialog_7, Messages.FindUserAndDBRoleDialog_10);
 				
-				super.okPressed();
+//				super.okPressed();
 			} else {
 				MessageDialog.openError(getShell(), Messages.FindUserAndDBRoleDialog_7, Messages.FindUserAndDBRoleDialog_12);
 			}

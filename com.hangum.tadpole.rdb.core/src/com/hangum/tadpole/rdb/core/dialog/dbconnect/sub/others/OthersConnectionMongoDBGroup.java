@@ -50,7 +50,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 	private Button btnReadOnlyConnection;
 	private Button btnShowTables;
 	private Button btnExternalBrowser;
-	private Button btnIsVisible;
+//	private Button btnIsVisible;
 	private Button btnSendMonitoring;
 
 	/**
@@ -110,9 +110,9 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		btnShowTables.setSelection(true);
 		btnShowTables.setText(Messages.OthersConnectionMongoDBGroup_btnShowTables_text);
 		
-		btnIsVisible = new Button(this, SWT.CHECK);
-		btnIsVisible.setSelection(true);
-		btnIsVisible.setText(Messages.OthersConnectionMongoDBGroup_btnIsVisible_text);
+//		btnIsVisible = new Button(this, SWT.CHECK);
+//		btnIsVisible.setSelection(true);
+//		btnIsVisible.setText(Messages.OthersConnectionMongoDBGroup_btnIsVisible_text);
 		
 		btnSendMonitoring = new Button(this, SWT.CHECK);
 		btnSendMonitoring.setEnabled(false);
@@ -140,15 +140,15 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		otherConnectionDAO.setReadOnlyConnection(getBtnReadOnlyConnection());
 		otherConnectionDAO.setShowTables(getBtnShowTables());
 		
-		otherConnectionDAO.setVisible(getIsVisible());
+//		otherConnectionDAO.setVisible(getIsVisible());
 		otherConnectionDAO.setSummaryReport(getSendMonitoring());
 		
 		return otherConnectionDAO;
 	}
 	
-	public boolean getIsVisible() {
-		return btnIsVisible.getSelection();
-	}
+//	public boolean getIsVisible() {
+//		return btnIsVisible.getSelection();
+//	}
 	public boolean getSendMonitoring() {
 		return btnSendMonitoring.getSelection();
 	}

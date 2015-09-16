@@ -40,6 +40,7 @@ import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.mails.template.NewUserMailBodyTemplate;
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -210,7 +211,7 @@ public class NewUserDialog extends Dialog {
 			textEMail.setFocus();
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_7);
 			return;
-		} else if(!Utils.isEmail(strEmail)) {
+		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
 			getShell().setSize(370, 240);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
@@ -353,7 +354,7 @@ public class NewUserDialog extends Dialog {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_13);
 			textName.setFocus();
 			return false;
-		} else if(!Utils.isEmail(strEmail)) {
+		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
 			textEMail.setFocus();
 			return false;

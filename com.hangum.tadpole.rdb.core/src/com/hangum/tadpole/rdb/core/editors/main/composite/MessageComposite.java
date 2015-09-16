@@ -73,24 +73,23 @@ public class MessageComposite extends Composite {
 
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if (throwable == null) {
-			strNewMessage = String.format(Messages.MessageComposite_2);
+			strNewMessage = Messages.MessageComposite_2;
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
 		} else {
-			strNewMessage = String.format(Messages.MessageComposite_3);
+			strNewMessage = Messages.MessageComposite_3;
 			
 			Throwable cause = throwable.getCause();
 			if (cause instanceof SQLException) {
 				try {
-					SQLException sqlException = (SQLException) cause;
+					SQLException sqlException = (SQLException)cause;
+
 					StringBuffer sbMsg = new StringBuffer();
-	
-					sbMsg.append(String.format(Messages.MessageComposite_5, sqlException.getSQLState(),
-							sqlException.getErrorCode()));
+					sbMsg.append(String.format(Messages.MessageComposite_5, sqlException.getSQLState(), sqlException.getErrorCode()));
 					sbMsg.append(String.format(Messages.MessageComposite_4, sqlException.getMessage()));
 	
 					strNewMessage += sbMsg.toString();
 				} catch(Exception e) {
-					logger.error("Catch exception", e); //$NON-NLS-1$
+					logger.error("SQLException to striing", e); //$NON-NLS-1$
 					strNewMessage += tadpoleMessageDAO.getStrMessage();
 				}
 			} else {

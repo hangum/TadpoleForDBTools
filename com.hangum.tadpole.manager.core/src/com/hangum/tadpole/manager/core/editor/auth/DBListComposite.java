@@ -51,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
@@ -178,13 +179,30 @@ public class DBListComposite extends Composite {
 				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 				
 				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), (UserDBDAO)ss.getFirstElement());
-				if(Dialog.OK == dialog.open()) {
-					TadpoleUserDbRoleDAO userRole = dialog.getUserRoleDAO();
-					userRole.setParent(userDB);
-					userDB.getListChildren().add(userRole);
-					
-					tvDBList.refresh(userDB);
+				dialog.open();
+				
+				userDB.getListChildren().clear();
+				try {
+					List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
+					if(userDB.getListChildren().isEmpty()) {
+						for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
+							tadpoleUserDbRoleDAO.setParent(userDB);
+						}
+						
+						userDB.setListChildren(listUser);
+						tvDBList.refresh(userDB, true);
+						tvDBList.expandToLevel(3);
+					}
+				} catch (Exception e3) {
+					logger.error(Messages.DBListComposite_10, e3);
 				}
+				
+//				TadpoleUserDbRoleDAO userRole = dialog.getUserRoleDAO();
+//				userRole.setParent(userDB);
+//				userDB.getListChildren().add(userRole);
+//				
+//				tvDBList.refresh(userDB);
+			
 			}
 		});
 		tltmAddUser.setToolTipText(Messages.DBListComposite_3);
@@ -295,7 +313,7 @@ public class DBListComposite extends Composite {
 							
 							userDB.setListChildren(listUser);
 							tvDBList.refresh(userDB, true);
-							tvDBList.expandToLevel(2);
+							tvDBList.expandToLevel(3);
 						}
 					} catch (Exception e) {
 						logger.error(Messages.DBListComposite_10, e);
@@ -370,8 +388,8 @@ public class DBListComposite extends Composite {
 		colRoleName.getColumn().setText(Messages.DBListComposite_12);
 		
 		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colName.getColumn().setWidth(180);
-		colName.getColumn().setText(Messages.DBListComposite_13);
+		colName.getColumn().setWidth(330);
+		colName.getColumn().setText(Messages.DBListComposite_13 + "(" + Messages.DBListComposite_16 + ")");
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colApproval.getColumn().setWidth(70);
@@ -380,10 +398,6 @@ public class DBListComposite extends Composite {
 		TreeViewerColumn colVisible = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colVisible.getColumn().setWidth(50);
 		colVisible.getColumn().setText(Messages.DBListComposite_15);
-		
-		TreeViewerColumn colTermsOfUser = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colTermsOfUser.getColumn().setWidth(300);
-		colTermsOfUser.getColumn().setText(Messages.DBListComposite_16);
 		
 		tvDBList.setContentProvider(new DBListContentProvider());
 		tvDBList.setLabelProvider(new DBListLabelProvider());
@@ -599,7 +613,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 			switch(columnIndex) {
 				case 0: return String.format("%s (%s)", roleDao.getName(), roleDao.getEmail());
 				case 1: return roleDao.getRole_id();
-				case 5: return roleDao.getTerms_of_use_starttime() + " ~ " + roleDao.getTerms_of_use_endtime();
+				case 2: return Utils.dateToStr(roleDao.getTerms_of_use_starttime()) + " ~ " + Utils.dateToStr(roleDao.getTerms_of_use_endtime());
 			}
 		}
 		

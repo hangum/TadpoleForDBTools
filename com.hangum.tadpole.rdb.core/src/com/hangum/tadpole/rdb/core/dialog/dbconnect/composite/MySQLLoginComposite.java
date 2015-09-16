@@ -165,7 +165,6 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		comboLocale.select(0);
 		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
 		
 		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);

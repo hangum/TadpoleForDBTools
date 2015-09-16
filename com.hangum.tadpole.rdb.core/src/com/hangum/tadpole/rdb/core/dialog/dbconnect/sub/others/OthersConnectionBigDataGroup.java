@@ -46,7 +46,7 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 	private Button btnExecuteQuestionDml;
 	private Button btnShowTables;
 	private Button btnExternalBrowser;
-	private Button btnIsVisible;
+//	private Button btnIsVisible;
 	private Button btnSendMonitoring;
 	
 	/**
@@ -113,9 +113,9 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_5);
 		
-		btnIsVisible = new Button(this, SWT.CHECK);
-		btnIsVisible.setSelection(true);
-		btnIsVisible.setText(Messages.OthersConnectionBigDataGroup_btnIsVisible_text);
+//		btnIsVisible = new Button(this, SWT.CHECK);
+//		btnIsVisible.setSelection(true);
+//		btnIsVisible.setText(Messages.OthersConnectionBigDataGroup_btnIsVisible_text);
 		
 		btnSendMonitoring = new Button(this, SWT.CHECK);
 		btnSendMonitoring.setSelection(true);
@@ -197,15 +197,15 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 			otherConnectionDAO.setListExterBroswer(getDefaultExternalBrowserInfo());
 		}
 		
-		otherConnectionDAO.setVisible(getIsVisible());
+//		otherConnectionDAO.setVisible(getIsVisible());
 		otherConnectionDAO.setSummaryReport(getSendMonitoring());
 		
 		return otherConnectionDAO;
 	}
 	
-	public boolean getIsVisible() {
-		return btnIsVisible.getSelection();
-	}
+//	public boolean getIsVisible() {
+//		return btnIsVisible.getSelection();
+//	}
 	public boolean getSendMonitoring() {
 		return btnSendMonitoring.getSelection();
 	}

@@ -99,6 +99,7 @@
 	FROM tadpole_user 
 	WHERE 
 		email like #email#
+		AND delyn = 'NO'
 </select>
 
 <!-- 

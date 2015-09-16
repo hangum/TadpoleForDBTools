@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.application.Messages;
 import com.hangum.tadpole.application.initialize.wizard.dao.SystemAdminWizardUserDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.Utils;
 
 /**
@@ -74,15 +75,19 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		lblEmail.setText(Messages.SystemAdminWizardPage_4);
 		
 		textEmail = new Text(grpAdministratorUserInformation, SWT.BORDER);
-//		textEmail.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//				String strEmail =  textEmail.getText() + e.character;
-//				String strPass = textPasswd.getText();
-//				String strRePass = textRePasswd.getText();
-//				validateValue(strEmail, strPass, strRePass);
-//			}
-//		});
+		textEmail.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.TAB) {
+					String strEmail =  textEmail.getText() + e.character;
+					if(!ValidChecker.isValidEmailAddress(strEmail)) {
+						errorSet(textEmail, Messages.SystemAdminWizardPage_35);
+					} else {
+						setErrorMessage(null);
+					}
+				}
+			}
+		});
 		
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -144,7 +149,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			errorSet(textEmail, Messages.SystemAdminWizardPage_35);
 			return;
-		} else if(!Utils.isEmail(strEmail)) {
+		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
 			errorSet(textEmail, Messages.SystemAdminWizardPage_48);
 			return;
 		} else if(!Utils.isPassword(strPass)) { //$NON-NLS-1$

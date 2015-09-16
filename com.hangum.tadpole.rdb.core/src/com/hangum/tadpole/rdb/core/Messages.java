@@ -82,6 +82,8 @@ public class Messages extends NLS {
 	public static String TableEditPart_6;
 	public static String TableEditPart_8;
 	public static String TableEditPart_9;
+	public static String ColumnsComposite_0;
+	public static String ColumnsComposite_1;
 	public static String ConnectDatabaseAction_1;
 	public static String ConnectDatabaseAction_2;
 	public static String DBInformationDialog_0;
@@ -642,7 +644,20 @@ public class Messages extends NLS {
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
 	public static String ObjectDeleteAction_synonym;
 	public static String ObjectRefreshAction_1;
+	public static String RDBDBInfosEditor_1;
+	public static String RDBDBInfosEditor_2;
+	public static String RDBDBInfosEditor_3;
+	public static String RDBInformationComposite_0;
+	public static String RDBInformationComposite_1;
 	public static String RDBInformationComposite_17;
+	public static String RDBInformationComposite_2;
+	public static String RDBInformationComposite_3;
+	public static String RDBInformationComposite_4;
+	public static String RDBInformationComposite_5;
+	public static String RDBInformationComposite_6;
+	public static String RDBInformationComposite_7;
+	public static String RDBInformationComposite_8;
+	public static String RDBInformationComposite_9;
 	public static String TableDirectEditorComposite_lblOrderBy_text;
 	public static String TableDirectEditorComposite_lblLimit_text;
 	public static String TableDirectEditorComposite_lblStart_text;
@@ -676,6 +691,8 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_btnFileUpload_text;
 	public static String SQLiteLoginComposite_btnCreationDb_text;
 	public static String TableDirectEditorComposite_tltmRefersh_text;
+	public static String TablesComposite_0;
+	public static String TablesComposite_1;
 	public static String RecordViewDialog_0;
 	public static String RecordViewDialog_1;
 	public static String RecordViewDialog_13;

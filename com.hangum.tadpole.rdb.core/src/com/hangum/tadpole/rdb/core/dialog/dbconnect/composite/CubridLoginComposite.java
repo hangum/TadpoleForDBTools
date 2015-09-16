@@ -21,7 +21,6 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * cubrid login composite

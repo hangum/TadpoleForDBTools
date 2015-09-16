@@ -118,9 +118,9 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBGroup_6);
 		
-		btnIsVisible = new Button(this, SWT.CHECK);
-		btnIsVisible.setSelection(true);
-		btnIsVisible.setText(Messages.OthersConnectionRDBGroup_btnIsVisible_text);
+//		btnIsVisible = new Button(this, SWT.CHECK);
+//		btnIsVisible.setSelection(true);
+//		btnIsVisible.setText(Messages.OthersConnectionRDBGroup_btnIsVisible_text);
 		
 		btnSendMonitoring = new Button(this, SWT.CHECK);
 		btnSendMonitoring.setSelection(true);
@@ -171,7 +171,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		otherConnectionDAO.setProfiling(getBtnProfiler());
 		otherConnectionDAO.setDMLStatement(getBtnExecuteQuestionDml());
 		
-		otherConnectionDAO.setVisible(getIsVisible());
+//		otherConnectionDAO.setVisible(getIsVisible());
 		otherConnectionDAO.setSummaryReport(getSendMonitoring());
 //		otherConnectionDAO.setMonitoring(getIsMonitoring());
 		

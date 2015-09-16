@@ -34,7 +34,7 @@ public class OthersConnectionInfoDAO {
 //	String strTableFilterInclude = "";
 //	String strTableFilterExclude = "";
 	
-	boolean isVisible = true;
+//	boolean isVisible = true;
 	boolean isSummaryReport = true;
 	
 	boolean isMonitoring = true;
@@ -186,13 +186,13 @@ public class OthersConnectionInfoDAO {
 		this.listExterBroswer = listExterBroswer;
 	}
 
-	public boolean isVisible() {
-		return isVisible;
-	}
-
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
+//	public boolean isVisible() {
+//		return isVisible;
+//	}
+//
+//	public void setVisible(boolean isVisible) {
+//		this.isVisible = isVisible;
+//	}
 
 	public boolean isSummaryReport() {
 		return isSummaryReport;

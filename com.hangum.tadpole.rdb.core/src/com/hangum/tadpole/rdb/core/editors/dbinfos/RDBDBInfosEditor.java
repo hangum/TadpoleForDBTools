@@ -26,6 +26,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnsComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.RDBInformationComposite;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TablesComposite;
@@ -41,7 +42,7 @@ public class RDBDBInfosEditor extends EditorPart {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(RDBDBInfosEditor.class);
-	public static final String ID = "com.hangum.tadpole.rdb.core.editor.rdb.dbinfos";
+	public static final String ID = "com.hangum.tadpole.rdb.core.editor.rdb.dbinfos"; //$NON-NLS-1$
 	
 	private UserDBDAO userDB;
 	private RDBInformationComposite compositeRDBInformation;
@@ -83,7 +84,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		
 		//[information composite start]///////////////////////////////		
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
-		tbtmServerStatus.setText("DB Information");
+		tbtmServerStatus.setText(Messages.RDBDBInfosEditor_1);
 		
 		compositeRDBInformation = new RDBInformationComposite(tabFolder, SWT.NONE, userDB);
 		tbtmServerStatus.setControl(compositeRDBInformation);
@@ -92,7 +93,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		
 		//[table information start]
 		CTabItem tbtmCollectionSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmCollectionSummary.setText("Table Summary");
+		tbtmCollectionSummary.setText(Messages.RDBDBInfosEditor_2);
 		
 		tableInformationComposite = new TablesComposite(tabFolder, SWT.NONE, userDB);
 		tbtmCollectionSummary.setControl(tableInformationComposite);
@@ -106,7 +107,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		//[table information end]
 		
 		CTabItem tbtmColumnSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmColumnSummary.setText("Column Summary");
+		tbtmColumnSummary.setText(Messages.RDBDBInfosEditor_3);
 		columnInformationComposite = new ColumnsComposite(tabFolder, SWT.NONE, userDB);
 		tbtmColumnSummary.setControl(columnInformationComposite);
 		

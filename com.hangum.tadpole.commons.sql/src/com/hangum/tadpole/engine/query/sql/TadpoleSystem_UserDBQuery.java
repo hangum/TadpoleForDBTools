@@ -168,7 +168,7 @@ public class TadpoleSystem_UserDBQuery {
 		
 		userEncryptDao.setIs_external_browser(userDb.getIs_external_browser());
 		
-		userEncryptDao.setIs_visible(userDb.getIs_visible());
+//		userEncryptDao.setIs_visible(userDb.getIs_visible());
 		userEncryptDao.setIs_summary_report(userDb.getIs_summary_report());
 		userEncryptDao.setIs_monitoring(userDb.getIs_monitoring());
 		//
