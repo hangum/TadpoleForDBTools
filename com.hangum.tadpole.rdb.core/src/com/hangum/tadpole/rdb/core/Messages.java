@@ -699,6 +699,8 @@ public class Messages extends NLS {
 	public static String RecordViewDialog_2;
 	public static String RecordViewDialog_5;
 	public static String RecordViewDialog_7;
+	public static String ResultMainComposite_1;
+	public static String ResultMainComposite_3;
 	public static String ResultSetComposite_0;
 	public static String ResultSetComposite_2;
 	public static String ResultSetComposite_7;

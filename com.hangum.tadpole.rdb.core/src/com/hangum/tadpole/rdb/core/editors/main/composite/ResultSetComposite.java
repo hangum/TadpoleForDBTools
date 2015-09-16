@@ -750,7 +750,7 @@ public class ResultSetComposite extends Composite {
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
 			if(!strCostumSQL.equals(reqQuery.getSql())) {
-				logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
+				if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
 				reqQuery.setSql(strCostumSQL);
 			}
 		}
