@@ -950,6 +950,7 @@ SELECT
  			b.datas, 
  			a.row, 
  			a.result,
+ 		   	u.email,
  		   	u.name, 
  		   	db.display_name, 
  		   	a.ipaddress, 
@@ -965,6 +966,7 @@ SELECT
 	 </isNotNull>
  <![CDATA[
 	  a.delyn = 'NO' AND
+	  u.email like #email# AND
 	  a.seq = b.executed_sql_resource_seq AND
 	  a.startdateexecute >= #startTime# AND  
       a.enddateexecute <= #endTime# AND

@@ -197,6 +197,48 @@ public class Messages extends NLS {
 
 	public static String ExecutedSQLAction_2;
 
+	public static String ExecutedSQLEditor_10;
+
+	public static String ExecutedSQLEditor_11;
+
+	public static String ExecutedSQLEditor_12;
+
+	public static String ExecutedSQLEditor_13;
+
+	public static String ExecutedSQLEditor_14;
+
+	public static String ExecutedSQLEditor_15;
+
+	public static String ExecutedSQLEditor_17;
+
+	public static String ExecutedSQLEditor_19;
+
+	public static String ExecutedSQLEditor_2;
+
+	public static String ExecutedSQLEditor_25;
+
+	public static String ExecutedSQLEditor_26;
+
+	public static String ExecutedSQLEditor_27;
+
+	public static String ExecutedSQLEditor_28;
+
+	public static String ExecutedSQLEditor_3;
+
+	public static String ExecutedSQLEditor_31;
+
+	public static String ExecutedSQLEditor_4;
+
+	public static String ExecutedSQLEditor_5;
+
+	public static String ExecutedSQLEditor_6;
+
+	public static String ExecutedSQLEditor_7;
+
+	public static String ExecutedSQLEditor_8;
+
+	public static String ExecutedSQLEditor_9;
+
 	public static String ExecutedSQLEditorInput_0;
 
 	public static String ExecutedSQLEditorInput_1;
@@ -293,14 +335,24 @@ public class Messages extends NLS {
 
 	public static String NewUserDialog_21;
 
+	public static String NewUserDialog_24;
+
+	public static String NewUserDialog_29;
+
 	public static String NewUserDialog_3;
 
 	public static String NewUserDialog_31;
+
+	public static String NewUserDialog_32;
+
+	public static String NewUserDialog_34;
 	public static String NewUserDialog_4;
 
 	public static String NewUserDialog_40;
 
 	public static String NewUserDialog_42;
+
+	public static String NewUserDialog_5;
 
 	public static String NewUserDialog_6;
 	public static String NewUserDialog_7;

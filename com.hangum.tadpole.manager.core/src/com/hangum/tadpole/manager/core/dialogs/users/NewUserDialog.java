@@ -155,7 +155,7 @@ public class NewUserDialog extends Dialog {
 		btnGetOptCode.setText(Messages.NewUserDialog_btnCheckButton_text);
 		
 		Label lblWhatIsQRCode = new Label(container, SWT.NONE);
-		lblWhatIsQRCode.setText("<a href='https://github.com/google/google-authenticator/wiki/' target='_blank'>What is Google OTP?</a>");
+		lblWhatIsQRCode.setText(Messages.NewUserDialog_5);
 		lblWhatIsQRCode.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Group grpGoogleOtp = new Group(container, SWT.NONE);
@@ -174,7 +174,7 @@ public class NewUserDialog extends Dialog {
 		lblQrcodeUrl.setText(Messages.NewUserDialog_lblQrcodeUrl_text);
 		
 		labelQRCodeURL = new Label(grpGoogleOtp, SWT.NONE);
-		labelQRCodeURL.setText("");
+		labelQRCodeURL.setText(""); //$NON-NLS-1$
 		labelQRCodeURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		labelQRCodeURL.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
@@ -229,7 +229,7 @@ public class NewUserDialog extends Dialog {
 		}
 		
 		strURL = StringEscapeUtils.escapeHtml(strURL);
-		labelQRCodeURL.setText(String.format("<a href='%s' target='_blank'>Show QRCode(Only support Google Chrome)</a>", strURL));
+		labelQRCodeURL.setText(String.format("<a href='%s' target='_blank'>Show QRCode(Only support Google Chrome)</a>", strURL)); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -242,7 +242,7 @@ public class NewUserDialog extends Dialog {
 		if(!validation(strEmail, passwd, rePasswd, name)) return;
 		if(btnGetOptCode.getSelection()) {
 			if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-				MessageDialog.openError(getShell(), "Error", Messages.NewUserDialog_40); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), Messages.NewUserDialog_24, Messages.NewUserDialog_40);
 				textOTPCode.setFocus();
 				return;
 			}
@@ -271,12 +271,23 @@ public class NewUserDialog extends Dialog {
 					passwd, 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
 					name, comboLanguage.getText(), approvalYn,  
-					btnGetOptCode.getSelection()?"YES":"NO", 
+					btnGetOptCode.getSelection()?"YES":"NO",  //$NON-NLS-1$ //$NON-NLS-2$
 					textSecretKey.getText(),
 					"*"); //$NON-NLS-1$ //$NON-NLS-2$
-			sendEmailAccessKey(name, strEmail, strEmailConformKey);
+		
+			boolean isSentMail = false;
+			try {
+				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+				if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+					sendEmailAccessKey(name, strEmail, strEmailConformKey);
+					isSentMail = true;
+				}
+			} catch(Exception e) {
+				// ingor exception
+			}
 			
-			MessageDialog.openInformation(null, "Confirm", Messages.NewUserDialog_31); //$NON-NLS-1$
+			if(isSentMail) MessageDialog.openInformation(null, Messages.NewUserDialog_14, Messages.NewUserDialog_31);
+			else MessageDialog.openInformation(null, Messages.NewUserDialog_14, Messages.NewUserDialog_29); //$NON-NLS-1$
 			
 		} catch (Exception e) {
 			logger.error(Messages.NewUserDialog_8, e);
@@ -297,10 +308,10 @@ public class NewUserDialog extends Dialog {
 	private void sendEmailAccessKey(String name, String email, String strConfirmKey) {
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(!"".equals(smtpDto.getEmail())) {
+			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
 				// manager 에게 메일을 보낸다.
 				EmailDTO emailDao = new EmailDTO();
-				emailDao.setSubject("Add new Tadpole user."); //$NON-NLS-1$
+				emailDao.setSubject(Messages.NewUserDialog_32);
 				// 
 				// 그룹, 사용자, 권한.
 				// 
@@ -309,14 +320,13 @@ public class NewUserDialog extends Dialog {
 				emailDao.setContent(strContent);
 				emailDao.setTo(email);
 				
-				
 				SendEmails sendEmail = new SendEmails(smtpDto);
 				sendEmail.sendMail(emailDao);
 			}
 		} catch(Exception e) {
 			logger.error(String.format("New user key sening error name %s, email %s, confirm key %s", name, email, strConfirmKey), e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Error", "사용자 확인 키를 보내는 중에 문제가 발생했습니다.\n어드민에게 문의 하여 주십시오.");
+			MessageDialog.openError(getShell(), Messages.NewUserDialog_24, Messages.NewUserDialog_34);
 		}
 	}
 	

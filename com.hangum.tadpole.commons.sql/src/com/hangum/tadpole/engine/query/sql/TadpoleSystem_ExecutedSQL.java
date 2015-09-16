@@ -57,10 +57,11 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws TadpoleSQLManagerException, SQLException {
+	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String strEmail, String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws TadpoleSQLManagerException, SQLException {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("email", 	strEmail);
 		queryMap.put("db_seq", 	dbSeq);
 		queryMap.put("type", strType);
 		
@@ -106,7 +107,8 @@ public class TadpoleSystem_ExecutedSQL {
 			int row = (Integer)resultMap.get("row");
 			String result = (String)resultMap.get("result");
 			
-			String userName =  resultMap.get("name") == null?"":(String)resultMap.get("name"); 
+			String userName =  resultMap.get("name") == null?"":(String)resultMap.get("name");
+			String userEmail = (String)resultMap.get("email");
 			String dbName = (String) resultMap.get("display_name");
 			
 			String ipAddress = (String) resultMap.get("ipaddress");
@@ -114,7 +116,7 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			String strMessage = (String)resultMap.get("message");
 
-			SQLHistoryDAO dao = new SQLHistoryDAO(userName, dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
+			SQLHistoryDAO dao = new SQLHistoryDAO(userName+"("+ userEmail+")", dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
 					ipAddress, dbSeq2);
 			dao.setSeq(seq);
 			if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
