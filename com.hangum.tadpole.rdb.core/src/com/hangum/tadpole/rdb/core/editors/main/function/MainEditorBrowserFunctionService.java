@@ -112,7 +112,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	@Override
 	protected void f4DMLOpen(Object[] argument) {
-		String strObject = (String) argument[1];
+		String strObject = StringUtils.removeEnd((String) argument[1], ",");
 		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
 		
 		try {
@@ -133,7 +133,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	@Override
 	protected void generateSelect(Object[] arguments) {
-		String strSQL = "select * from " + (String) arguments[1];
+		String strSQL = "select * from " + StringUtils.removeEnd((String) arguments[1], ",");
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
 		exeType = EXECUTE_TYPE.BLOCK;
 		

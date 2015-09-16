@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.define;
 
+import java.util.Properties;
+
 import org.apache.commons.io.IOUtils;
+import org.eclipse.rap.rwt.RWT;
 
 /**
  * 올챙이 전역 정의 
@@ -107,6 +110,19 @@ public class PublicTadpoleDefine {
 	 * This variable is user_role_table. 
 	 */
 	public static enum USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER, GUEST};
+	
+	/**
+	 * Setting SQL Client Info
+	 * @return
+	 */
+	public static Properties getSQLClientInfo() {
+		Properties prop = new Properties();
+		prop.setProperty("ApplicationName", String.format("%s %s %s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.RELEASE_DATE));
+		prop.setProperty("ClientUser", 		RWT.getRequest().getRemoteHost());
+		prop.setProperty("ClientHostname", 	RWT.getRequest().getLocalAddr());
+		
+		return prop;
+	}
 	
 	/**
 	 * db operation type
