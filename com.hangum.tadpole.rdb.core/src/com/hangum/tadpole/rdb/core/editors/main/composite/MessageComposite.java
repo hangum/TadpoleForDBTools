@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.swtdesigner.SWTResourceManager;
 
 /**
  * Result Message Composite
@@ -50,7 +49,7 @@ public class MessageComposite extends Composite {
 
 		textMessage = new Text(this, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+//		textMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 		    
 		// text limit
 		textMessage.setTextLimit(10000);
@@ -71,21 +70,30 @@ public class MessageComposite extends Composite {
 	 * @param tadpoleMessageDAO
 	 */
 	public void addAfterRefresh(TadpoleMessageDAO tadpoleMessageDAO) {
-		String strNewMessage = String.format("==[ %s ]============\n", tadpoleMessageDAO.getDateExecute().toString()); //$NON-NLS-1$
+		String strNewMessage = "";
 
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if (throwable == null) {
+			strNewMessage = String.format("==[ System Message ]============\n");
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
 		} else {
-			if (throwable instanceof SQLException) {
-				SQLException sqlException = (SQLException) throwable;
-				StringBuffer sbMsg = new StringBuffer();
-
-				sbMsg.append(String.format("[SQL State : %s, Error Code: %s]", sqlException.getSQLState(), //$NON-NLS-1$
-						sqlException.getErrorCode()));
-				sbMsg.append(sqlException.getMessage());
-
-				strNewMessage += sbMsg.toString();
+			strNewMessage = String.format("==[ Exception caught ]============\n");
+			
+			Throwable cause = throwable.getCause();
+			if (cause instanceof SQLException) {
+				try {
+					SQLException sqlException = (SQLException) cause;
+					StringBuffer sbMsg = new StringBuffer();
+	
+					sbMsg.append(String.format("SQL State Code: %s\nError Code: %s\n", sqlException.getSQLState(), //$NON-NLS-1$
+							sqlException.getErrorCode()));
+					sbMsg.append(String.format("Message : %s", sqlException.getMessage()));
+	
+					strNewMessage += sbMsg.toString();
+				} catch(Exception e) {
+					logger.error("Catch exception", e);
+					strNewMessage += tadpoleMessageDAO.getStrMessage();
+				}
 			} else {
 				strNewMessage += tadpoleMessageDAO.getStrMessage();
 			}
