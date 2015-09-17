@@ -124,7 +124,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	// column info
 	private TableViewer tableColumnViewer;
 	private ObjectComparator tableColumnComparator;
-	private List<TableColumnDAO> showTableColumns;
+	private List<TableColumnDAO> showTableColumns = new ArrayList<>();
 	
 	private AbstractObjectAction creatAction_Table;
 	private AbstractObjectAction dropAction_Table;
@@ -232,7 +232,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
 						
 					} else {
-						showTableColumns = null;
+						showTableColumns = new ArrayList<>();
 						selectTableName = ""; //$NON-NLS-1$
 					}
 
