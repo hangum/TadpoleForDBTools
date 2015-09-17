@@ -46,7 +46,8 @@ public class PublicTadpoleDefine {
 	/**
 	 * 분리자
 	 */
-	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
+	public static String DELIMITER = "||TDB-DELIMITER||"; //$NON-NLS-1$
+	public static String DELIMITER_DBL = "||TDB-DELIMITER-DBL||"; //$NON-NLS-1$
 	
 	/** 라인분리자 */
 	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$

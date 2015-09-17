@@ -186,7 +186,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
