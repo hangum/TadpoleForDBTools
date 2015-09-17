@@ -333,7 +333,8 @@ public class LoginDialog extends Dialog {
 				createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
 			}
 		} catch (Exception e) {
-			logger.error("view findpasswd button", e);
+//			logger.error("view findpasswd button", e);
+//			ignore exception
 		}
 		
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
