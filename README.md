@@ -78,8 +78,11 @@ Site
 Chrome web store
 *  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
 
+Extension
+* Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
+
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.3/
+* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.4/
 
 License
 -

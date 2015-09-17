@@ -218,10 +218,10 @@ public class LoginDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == ID_NEW_USER) {
 			newUser();
-		
+			textEMail.setFocus();
 		} else if(buttonId == ID_FINDPASSWORD) {
 			findPassword();
-
+			textEMail.setFocus();
 		} else {
 			okPressed();
 		}
