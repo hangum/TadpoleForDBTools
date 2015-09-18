@@ -19,6 +19,46 @@ public class Messages extends NLS {
 
 	public static String AmazonPreferencePage_1;
 
+	public static String ChangeUsePersonalToGrouprDialog_0;
+
+	public static String ChangeUsePersonalToGrouprDialog_1;
+
+	public static String ChangeUsePersonalToGrouprDialog_10;
+
+	public static String ChangeUsePersonalToGrouprDialog_11;
+
+	public static String ChangeUsePersonalToGrouprDialog_13;
+
+	public static String ChangeUsePersonalToGrouprDialog_15;
+
+	public static String ChangeUsePersonalToGrouprDialog_17;
+
+	public static String ChangeUsePersonalToGrouprDialog_19;
+
+	public static String ChangeUsePersonalToGrouprDialog_2;
+
+	public static String ChangeUsePersonalToGrouprDialog_21;
+
+	public static String ChangeUsePersonalToGrouprDialog_23;
+
+	public static String ChangeUsePersonalToGrouprDialog_26;
+
+	public static String ChangeUsePersonalToGrouprDialog_27;
+
+	public static String ChangeUsePersonalToGrouprDialog_28;
+
+	public static String ChangeUsePersonalToGrouprDialog_3;
+
+	public static String ChangeUsePersonalToGrouprDialog_4;
+
+	public static String ChangeUsePersonalToGrouprDialog_5;
+
+	public static String ChangeUsePersonalToGrouprDialog_6;
+
+	public static String ChangeUsePersonalToGrouprDialog_7;
+
+	public static String ChangeUsePersonalToGrouprDialog_9;
+
 	public static String DefaultPreferencePage_0;
 	public static String DefaultPreferencePage_1;
 	public static String DefaultPreferencePage_2;
@@ -26,6 +66,8 @@ public class Messages extends NLS {
 	public static String UserInfoPerference_0;
 
 	public static String UserInfoPerference_1;
+
+	public static String UserInfoPerference_10;
 
 	public static String UserInfoPerference_11;
 
@@ -45,6 +87,8 @@ public class Messages extends NLS {
 
 	public static String UserInfoPerference_5;
 	public static String UserInfoPerference_6;
+
+	public static String UserInfoPerference_7;
 	public static String UserInfoPerference_8;
 
 	public static String UserInfoPerference_9;

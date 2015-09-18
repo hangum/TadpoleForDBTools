@@ -98,7 +98,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	 */
 	private void personView(Composite container) {
 		Label label = new Label(container, SWT.NONE);
-		label.setText("* 개인 사용자");
+		label.setText(Messages.UserInfoPerference_7);
 		
 		Button btnNewButton = new Button(container, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -109,7 +109,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				
 			}
 		});
-		btnNewButton.setText("로그인 형태의 그룹 사용으로 바꾸시겠습니까?");
+		btnNewButton.setText(Messages.UserInfoPerference_10);
 	}
 	
 	/**
@@ -223,7 +223,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		}
 		
 		Label lblOptCode = new Label(grpGoogleAuth, SWT.NONE);
-		lblOptCode.setText("OTP Code");
+		lblOptCode.setText("OTP Code"); //$NON-NLS-1$
 		lblOptCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
@@ -284,7 +284,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 			String pass = textPassword.getText().trim();
 			String rePass = textRePassword.getText().trim();
-			String useOTP = btnGetOptCode.getSelection()?"YES":"NO";
+			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$
 			String otpSecretKey = textSecretKey.getText();
 			
 			if(!pass.equals(rePass)) {
