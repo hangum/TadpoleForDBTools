@@ -153,7 +153,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		
 		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getQuestion_dml())?true:false);
 		
-		setIsVisible(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_visible())?true:false);
+//		setIsVisible(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_visible())?true:false);
 //		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_summary_report())?true:false);
 //		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_monitoring())?true:false);
 	}
@@ -225,9 +225,9 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	public boolean getIsVisible() {
 		return btnIsVisible.getSelection();
 	}
-	public void setIsVisible(boolean isSelect) {
-		btnIsVisible.setSelection(isSelect);
-	}
+//	public void setIsVisible(boolean isSelect) {
+//		btnIsVisible.setSelection(isSelect);
+//	}
 	
 	public boolean getSendMonitoring() {
 		return btnSendMonitoring.getSelection();
