@@ -187,26 +187,28 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		
 		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Button buttonWithdrawal = new Button(container, SWT.NONE);
-		buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserInfoPerference_9)) { //$NON-NLS-1$
-					try {
-						TadpoleSystem_UserRole.withdrawal(SessionManager.getUserSeq());
-						
-						TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
-						SessionManager.logout();
-					} catch (Exception e1) {
-						logger.error("user withdrawal", e1); //$NON-NLS-1$
+
+		if(!SessionManager.isAdmin()) {
+			Button buttonWithdrawal = new Button(container, SWT.NONE);
+			buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(MessageDialog.openConfirm(null, "Confirm", Messages.UserInfoPerference_9)) { //$NON-NLS-1$
+						try {
+							TadpoleSystem_UserRole.withdrawal(SessionManager.getUserSeq());
+							
+							TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
+							SessionManager.logout();
+						} catch (Exception e1) {
+							logger.error("user withdrawal", e1); //$NON-NLS-1$
+						}
 					}
+						
 				}
-					
-			}
-		});
-		buttonWithdrawal.setText(Messages.UserInfoPerference_button_text);
-		new Label(container, SWT.NONE);
+			});
+			buttonWithdrawal.setText(Messages.UserInfoPerference_button_text);
+			new Label(container, SWT.NONE);
+		}
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
