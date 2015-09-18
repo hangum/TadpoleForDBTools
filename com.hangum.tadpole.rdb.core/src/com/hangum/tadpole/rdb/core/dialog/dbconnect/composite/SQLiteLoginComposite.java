@@ -88,7 +88,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);

@@ -31,7 +31,7 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 	 */
 	public OthersConnectionRDBGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
-		btnSendMonitoring.setText("Summary ");
+//		btnSendMonitoring.setText("Summary ");
 	}
 	
 	/**
@@ -54,13 +54,13 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 	
 	@Override
 	public void initUI() {
-		if(getSelectDB() == DBDefine.MYSQL_DEFAULT || getSelectDB() == DBDefine.MARIADB_DEFAULT) {
-			btnSendMonitoring.setEnabled(true);
-//			btnIsMonitoring.setEnabled(true);
-		} else {
-			btnSendMonitoring.setEnabled(false);
+//		if(getSelectDB() == DBDefine.MYSQL_DEFAULT || getSelectDB() == DBDefine.MARIADB_DEFAULT) {
+//			btnSendMonitoring.setEnabled(true);
+////			btnIsMonitoring.setEnabled(true);
+//		} else {
+//			btnSendMonitoring.setEnabled(false);
 //			btnIsMonitoring.setEnabled(false);
-		}
+//		}
 	}
 	
 }

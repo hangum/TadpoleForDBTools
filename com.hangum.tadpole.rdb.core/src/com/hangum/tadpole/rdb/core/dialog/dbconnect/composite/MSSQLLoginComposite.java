@@ -92,7 +92,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
@@ -145,7 +145,13 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.DBLoginDialog_2);
@@ -158,12 +164,6 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		
-		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
-		
-		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
-		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

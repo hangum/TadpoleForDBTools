@@ -47,7 +47,7 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 	private Button btnShowTables;
 	private Button btnExternalBrowser;
 //	private Button btnIsVisible;
-	private Button btnSendMonitoring;
+//	private Button btnSendMonitoring;
 	
 	/**
 	 * Create the composite.
@@ -60,7 +60,7 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		super(parent, style, selectDB);
 		
 		setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_0);
-		GridLayout gridLayout = new GridLayout(4, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -117,13 +117,13 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 //		btnIsVisible.setSelection(true);
 //		btnIsVisible.setText(Messages.OthersConnectionBigDataGroup_btnIsVisible_text);
 		
-		btnSendMonitoring = new Button(this, SWT.CHECK);
-		btnSendMonitoring.setSelection(true);
-		btnSendMonitoring.setEnabled(false);
-		btnSendMonitoring.setText(Messages.OthersConnectionBigDataGroup_btnSendMonitoring_text);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
+//		btnSendMonitoring = new Button(this, SWT.CHECK);
+//		btnSendMonitoring.setSelection(true);
+//		btnSendMonitoring.setEnabled(false);
+//		btnSendMonitoring.setText(Messages.OthersConnectionBigDataGroup_btnSendMonitoring_text);
+//		new Label(this, SWT.NONE);
+//		new Label(this, SWT.NONE);
+//		new Label(this, SWT.NONE);
 	}
 	
 	/**
@@ -198,7 +198,7 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		}
 		
 //		otherConnectionDAO.setVisible(getIsVisible());
-		otherConnectionDAO.setSummaryReport(getSendMonitoring());
+//		otherConnectionDAO.setSummaryReport(getSendMonitoring());
 		
 		return otherConnectionDAO;
 	}
@@ -206,9 +206,9 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 //	public boolean getIsVisible() {
 //		return btnIsVisible.getSelection();
 //	}
-	public boolean getSendMonitoring() {
-		return btnSendMonitoring.getSelection();
-	}
+//	public boolean getSendMonitoring() {
+//		return btnSendMonitoring.getSelection();
+//	}
 	
 	/**
 	 * @return the btnReadOnlyConnection

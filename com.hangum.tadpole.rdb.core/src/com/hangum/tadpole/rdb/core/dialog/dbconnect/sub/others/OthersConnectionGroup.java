@@ -50,8 +50,8 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	protected Button btnProfiler;
 	protected Button btnExecuteQuestionDml;
 	protected Button btnShowTables;
-	protected Button btnIsVisible;
-	protected Button btnSendMonitoring;
+//	protected Button btnIsVisible;
+//	protected Button btnSendMonitoring;
 //	protected Button btnIsMonitoring;
 	
 	/**
@@ -62,7 +62,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	public OthersConnectionGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
 		setText(Messages.OthersConnectionRDBGroup_0);
-		GridLayout gridLayout = new GridLayout(4, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -122,9 +122,10 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 //		btnIsVisible.setSelection(true);
 //		btnIsVisible.setText(Messages.OthersConnectionRDBGroup_btnIsVisible_text);
 		
-		btnSendMonitoring = new Button(this, SWT.CHECK);
-		btnSendMonitoring.setSelection(true);
-		btnSendMonitoring.setText(Messages.OthersConnectionRDBGroup_btnSendMonitoring_text);
+//		btnSendMonitoring = new Button(this, SWT.CHECK);
+//		btnSendMonitoring.setEnabled(false);
+//		btnSendMonitoring.setSelection(false);
+//		btnSendMonitoring.setText(Messages.OthersConnectionRDBGroup_btnSendMonitoring_text);
 		
 //		btnIsMonitoring = new Button(this, SWT.CHECK);
 //		btnIsMonitoring.setSelection(true);
@@ -172,7 +173,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		otherConnectionDAO.setDMLStatement(getBtnExecuteQuestionDml());
 		
 //		otherConnectionDAO.setVisible(getIsVisible());
-		otherConnectionDAO.setSummaryReport(getSendMonitoring());
+//		otherConnectionDAO.setSummaryReport(getSendMonitoring());
 //		otherConnectionDAO.setMonitoring(getIsMonitoring());
 		
 		return otherConnectionDAO;
@@ -222,16 +223,16 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnProfiler.setSelection(isSelect);
 	}
 	
-	public boolean getIsVisible() {
-		return btnIsVisible.getSelection();
-	}
+//	public boolean getIsVisible() {
+//		return btnIsVisible.getSelection();
+//	}
 //	public void setIsVisible(boolean isSelect) {
 //		btnIsVisible.setSelection(isSelect);
 //	}
 	
-	public boolean getSendMonitoring() {
-		return btnSendMonitoring.getSelection();
-	}
+//	public boolean getSendMonitoring() {
+//		return btnSendMonitoring.getSelection();
+//	}
 //	public void setSendMonitoring(boolean isSelect) {
 //		btnIsMonitoring.setSelection(isSelect);
 //	}

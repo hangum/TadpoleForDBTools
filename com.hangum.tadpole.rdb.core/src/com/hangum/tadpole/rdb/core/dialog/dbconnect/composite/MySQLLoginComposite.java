@@ -84,7 +84,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
@@ -137,19 +137,13 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
 		
-		Label lblUser = new Label(grpConnectionType, SWT.NONE);
-		lblUser.setText(Messages.DBLoginDialog_2);
-		
-		textUser = new Text(grpConnectionType, SWT.BORDER);
-		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
-		lblPassword.setText(Messages.DBLoginDialog_3);
-		
-		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
-		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
 		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
@@ -164,11 +158,17 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		}
 		comboLocale.select(0);
 		
-		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		Label lblUser = new Label(grpConnectionType, SWT.NONE);
+		lblUser.setText(Messages.DBLoginDialog_2);
 		
-		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
-		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		textUser = new Text(grpConnectionType, SWT.BORDER);
+		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
+		lblPassword.setText(Messages.DBLoginDialog_3);
+		
+		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
+		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
