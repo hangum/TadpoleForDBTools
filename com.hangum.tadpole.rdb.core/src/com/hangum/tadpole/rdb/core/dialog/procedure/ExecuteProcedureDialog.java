@@ -83,7 +83,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	public ExecuteProcedureDialog(Shell parentShell, UserDBDAO userDB, ProcedureFunctionDAO procedureDAO) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 
 		this.userDB = userDB;
 		this.procedureDAO = procedureDAO;

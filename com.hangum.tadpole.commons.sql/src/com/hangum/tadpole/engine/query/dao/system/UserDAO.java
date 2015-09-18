@@ -39,7 +39,7 @@ public class UserDAO {
 	String use_otp;
 	String otp_secret;
 	
-	String allow_ip;
+	String allow_ip = "*";
 	
 	/** tadpole_user_db_role column */
 	String role_id;

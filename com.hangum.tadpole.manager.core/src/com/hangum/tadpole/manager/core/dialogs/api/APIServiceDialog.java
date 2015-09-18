@@ -85,7 +85,7 @@ public class APIServiceDialog extends Dialog {
 	 */
 	public APIServiceDialog(Shell parentShell, UserDBDAO userDB, String strSQL, ResourceManagerDAO resourceManagerDao) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDB = userDB;
 		this.strSQL = strSQL;

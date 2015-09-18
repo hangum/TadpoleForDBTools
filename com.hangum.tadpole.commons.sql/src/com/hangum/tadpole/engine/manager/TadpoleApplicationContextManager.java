@@ -78,4 +78,13 @@ public class TadpoleApplicationContextManager {
     	return userDao;
 	}
 	
+	/**
+	 * initial System context
+	 */
+	public static void initSystem() {
+		ApplicationContext context = RWT.getApplicationContext();
+		context.removeAttribute("getSystemInfo");
+		context.removeAttribute("getSystemAdmin");
+	}
+	
 }

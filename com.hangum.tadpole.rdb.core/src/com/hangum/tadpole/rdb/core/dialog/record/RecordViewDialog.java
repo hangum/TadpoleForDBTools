@@ -62,7 +62,7 @@ public class RecordViewDialog extends Dialog {
 	public RecordViewDialog(Shell parentShell, QueryExecuteResultDTO dto,
 			Object selection) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		this.dto = dto;
 		this.resultSet = dto.getDataList().getData();
 		this.loc = resultSet.indexOf(selection);

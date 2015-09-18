@@ -63,7 +63,7 @@ public class DBInformationDialog extends Dialog {
 	 */
 	public DBInformationDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		this.userDB = userDB;
 	}
 	

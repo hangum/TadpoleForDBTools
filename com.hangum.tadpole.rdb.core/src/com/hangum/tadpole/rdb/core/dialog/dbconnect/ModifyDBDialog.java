@@ -63,7 +63,7 @@ public class ModifyDBDialog extends Dialog {
 	 */
 	public ModifyDBDialog(Shell parentShell, UserDBDAO userDBDAO) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDBDAO = userDBDAO;
 		try {

@@ -64,6 +64,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	public ModifyUserDialog(Shell parentShell, UserDAO userDAO) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDAO = userDAO;
 	}

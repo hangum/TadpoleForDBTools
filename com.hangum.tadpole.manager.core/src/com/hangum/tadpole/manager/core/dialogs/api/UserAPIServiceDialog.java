@@ -83,7 +83,7 @@ public class UserAPIServiceDialog extends Dialog {
 	 */
 	public UserAPIServiceDialog(Shell parentShell) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 	}
 	
 	@Override

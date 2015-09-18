@@ -61,7 +61,7 @@ public class DetailUserAndDBRoleDialog extends Dialog {
 	 */
 	public DetailUserAndDBRoleDialog(Shell parentShell, TadpoleUserDbRoleDAO userDBRole) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDBRole = userDBRole;
 	}

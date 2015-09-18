@@ -56,5 +56,5 @@ public class TadpoleSystemQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("update_system", dao);
 	}
-
+	
 }

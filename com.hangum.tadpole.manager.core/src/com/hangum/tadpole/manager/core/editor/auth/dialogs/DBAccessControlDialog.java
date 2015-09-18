@@ -93,7 +93,7 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	public DBAccessControlDialog(Shell parentShell, final TadpoleUserDbRoleDAO userRoleDB) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE| SWT.APPLICATION_MODAL);
 		
 		this.userRoleDB = userRoleDB;
 		this.useDB = userRoleDB.getParent();

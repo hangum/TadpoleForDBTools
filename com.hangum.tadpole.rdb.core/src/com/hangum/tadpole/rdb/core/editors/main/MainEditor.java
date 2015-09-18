@@ -182,7 +182,7 @@ public class MainEditor extends EditorExtension {
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+				DBInformationDialog dialog = new DBInformationDialog(getSite().getShell(), userDB);
 				dialog.open();
 				setFocus();
 			}

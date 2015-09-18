@@ -271,6 +271,18 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
+	 * 개인 사용자가 그룹 사용자로 수정
+	 * 
+	 * @param user
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static void updateUserPersonToGroup(UserDAO user) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+		sqlClient.update("updateUserPersonToGroup", user); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 유저 데이터를 수정
 	 * @param user
 	 * @throws TadpoleSQLManagerException, SQLException

@@ -116,8 +116,8 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, approval_yn, use_otp, otp_secret)
-	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#)
+	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, approval_yn, use_otp, otp_secret, allow_ip)
+	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 		SELECT * 
@@ -231,6 +231,19 @@
 	FROM tadpole_user 
 	WHERE seq = #seq#
 </select>
+
+<!-- 
+	유저의 권한 데이터를 수정합니다.
+ -->
+<update id="updateUserPersonToGroup" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user 
+	SET
+		email = #email#,
+		passwd = #passwd#,
+		name = #name#,
+		allow_ip = #allow_ip#
+	WHERE seq = #seq#
+</update>
 
 <!-- 
 	유저의 권한 데이터를 수정합니다.

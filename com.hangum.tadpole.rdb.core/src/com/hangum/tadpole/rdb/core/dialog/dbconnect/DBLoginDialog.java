@@ -78,7 +78,7 @@ public class DBLoginDialog extends Dialog {
 	
 	public DBLoginDialog(Shell paShell, String selGroupName) {
 		super(paShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		this.selGroupName = selGroupName;
 	}
 

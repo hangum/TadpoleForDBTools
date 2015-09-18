@@ -49,7 +49,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	 */
 	public TadpoleSimpleMessageDialog(Shell parentShell, String title, String message) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.title = title;
 		this.message = message;

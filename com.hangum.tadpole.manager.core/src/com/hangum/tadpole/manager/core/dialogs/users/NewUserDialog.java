@@ -79,7 +79,6 @@ public class NewUserDialog extends Dialog {
 	 */
 	public NewUserDialog(Shell parentShell) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 	}
 
 	/**
@@ -88,7 +87,6 @@ public class NewUserDialog extends Dialog {
 	 */
 	public NewUserDialog(Shell parentShell, boolean isAdmin) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.isAdmin = isAdmin;
 	}
@@ -97,6 +95,8 @@ public class NewUserDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.NewUserDialog_0);
+		
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 	}
 	
 	/**

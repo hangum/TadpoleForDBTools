@@ -66,7 +66,7 @@ public class SendMessageDialog extends Dialog {
 	 */
 	public SendMessageDialog(Shell parentShell) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 	}
 	
 	@Override

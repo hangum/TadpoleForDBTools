@@ -75,6 +75,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 	 */
 	public ExtensionBrowserURLDialog(Shell parentShell, List<ExternalBrowserInfoDAO> listExterBroswer) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.listExterBroswer = listExterBroswer;
 	}

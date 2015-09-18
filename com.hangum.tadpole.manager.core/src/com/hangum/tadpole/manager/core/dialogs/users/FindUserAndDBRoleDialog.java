@@ -82,7 +82,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 */
 	public FindUserAndDBRoleDialog(Shell parentShell, UserDBDAO userDBDao) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDBDao = userDBDao;
 	}
