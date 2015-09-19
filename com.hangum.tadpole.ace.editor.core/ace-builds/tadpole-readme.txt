@@ -1,4 +1,6 @@
 -- new version 작업시 참고사항
+-- javascript 압축은 : https://marketplace.eclipse.org/content/yuicompressor 를 사용하였슴.
+
 												15.05.14-hangum 
 
 1. ace.js의 파일에 this.getSyntaxFoldRange 메소드를 추가해야합니다.
