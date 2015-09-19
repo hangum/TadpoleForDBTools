@@ -123,7 +123,8 @@ public class RequestQuery {
 			}
 			
 		} catch (Throwable e) {
-			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
+//			logger.error(String.format("sql parse exception. [ %s ]", sql), e);
+			logger.error(String.format("sql parse exception. [ %s ]", sql));
 			
 			// if does exist "CREATE or replace PROCEDURE"
 			if(StringUtils.startsWithIgnoreCase(sql, "CREATE or replace PROCEDURE")) {
