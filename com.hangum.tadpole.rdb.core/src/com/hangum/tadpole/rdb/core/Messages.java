@@ -622,8 +622,6 @@ public class Messages extends NLS {
 	public static String MessageComposite_4;
 	public static String MessageComposite_5;
 	public static String MySQLLoginComposite_lblOperationType_text;
-//	public static String IntroEditor_label_text;
-	public static String IntroEditor_label_1_text;
 	public static String ParameterDialog_0;
 	public static String ParameterDialog_1;
 	public static String ParameterDialog_2;
