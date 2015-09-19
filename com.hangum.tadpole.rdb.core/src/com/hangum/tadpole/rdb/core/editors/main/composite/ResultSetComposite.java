@@ -16,7 +16,6 @@ import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -677,7 +676,7 @@ public class ResultSetComposite extends Composite {
 					
 //					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 				} catch(Exception e) {
-					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
+//					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
 					sqlHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
 					sqlHistoryDAO.setMesssage(e.getMessage());
@@ -792,8 +791,8 @@ public class ResultSetComposite extends Composite {
 			resultSet = runSQLSelect(statement, reqQuery);
 			
 			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT, getUserDB(), true, resultSet, intSelectLimitCnt);
-		} catch(SQLException e) {
-			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
+		} catch(Exception e) {
+//			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
 		} finally {
 			isCheckRunning = false;
@@ -814,11 +813,11 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param requestQuery
 	 */
-	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws SQLException, Exception {
+	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
-			public ResultSet call() throws SQLException {
+			public ResultSet call() throws Exception {
 				statement.execute(reqQuery.getSql());
 				return statement.getResultSet();
 			}

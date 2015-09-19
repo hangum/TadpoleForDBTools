@@ -59,7 +59,7 @@ public class LogConfiguration {
 		consoleAppender = new ConsoleAppender(new PatternLayout(defaultPattern) );
 
 		if(ApplicationArgumentUtils.isDebugMode()) this.level = Level.DEBUG;
-		else this.level = Level.INFO;
+		else this.level = Level.ERROR;
 		
 		logger = Logger.getRootLogger();
 		logger.setLevel(this.level);
