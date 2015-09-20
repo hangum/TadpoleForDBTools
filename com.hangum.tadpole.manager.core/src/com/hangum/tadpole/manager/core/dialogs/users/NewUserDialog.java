@@ -260,7 +260,14 @@ public class NewUserDialog extends Dialog {
 			 */
 			String approvalYn = ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name();
 			String isEmamilConrim = PublicTadpoleDefine.YES_NO.NO.name();
-			if(isAdmin) {
+			
+			SMTPDTO smtpDto = new SMTPDTO();
+			try {
+				smtpDto = GetAdminPreference.getSessionSMTPINFO();
+			} catch(Exception e) {
+				// igonre exception
+			}
+			if(isAdmin || "".equals(smtpDto.getEmail())) {
 				approvalYn 		= PublicTadpoleDefine.YES_NO.YES.name();
 				isEmamilConrim 	= PublicTadpoleDefine.YES_NO.YES.name();
 			}
@@ -277,14 +284,9 @@ public class NewUserDialog extends Dialog {
 					"*"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 			boolean isSentMail = false;
-			try {
-				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-				if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-					sendEmailAccessKey(name, strEmail, strEmailConformKey);
-					isSentMail = true;
-				}
-			} catch(Exception e) {
-				// ingor exception
+			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+				sendEmailAccessKey(name, strEmail, strEmailConformKey);
+				isSentMail = true;
 			}
 			
 			if(isSentMail) MessageDialog.openInformation(null, Messages.NewUserDialog_14, Messages.NewUserDialog_31);
@@ -309,21 +311,20 @@ public class NewUserDialog extends Dialog {
 	private void sendEmailAccessKey(String name, String email, String strConfirmKey) {
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-				// manager 에게 메일을 보낸다.
-				EmailDTO emailDao = new EmailDTO();
-				emailDao.setSubject(Messages.NewUserDialog_32);
-				// 
-				// 그룹, 사용자, 권한.
-				// 
-				NewUserMailBodyTemplate mailContent = new NewUserMailBodyTemplate();
-				String strContent = mailContent.getContent(name, email, strConfirmKey);
-				emailDao.setContent(strContent);
-				emailDao.setTo(email);
-				
-				SendEmails sendEmail = new SendEmails(smtpDto);
-				sendEmail.sendMail(emailDao);
-			}
+			
+			// manager 에게 메일을 보낸다.
+			EmailDTO emailDao = new EmailDTO();
+			emailDao.setSubject(Messages.NewUserDialog_32);
+			// 
+			// 그룹, 사용자, 권한.
+			// 
+			NewUserMailBodyTemplate mailContent = new NewUserMailBodyTemplate();
+			String strContent = mailContent.getContent(name, email, strConfirmKey);
+			emailDao.setContent(strContent);
+			emailDao.setTo(email);
+			
+			SendEmails sendEmail = new SendEmails(smtpDto);
+			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
 			logger.error(String.format("New user key sening error name %s, email %s, confirm key %s", name, email, strConfirmKey), e); //$NON-NLS-1$
 			
