@@ -623,11 +623,19 @@ public class Messages extends NLS {
 
 	public static String UserManagementEditorInput_1;
 
+	public static String UserManagementEditorInput_2;
+
+	public static String UserManagementEditorInput_3;
+
 	public static String UserPermissionAction_0;
 
 	public static String UserPermissionAction_1;
 
 	public static String UserPermissionAction_2;
+
+	public static String UserPermissionAction_3;
+
+	public static String UserPermissionAction_4;
 	
 	static {
 		// initialize resource bundle

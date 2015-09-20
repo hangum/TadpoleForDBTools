@@ -28,6 +28,7 @@ import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor;
 import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditorInput;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -50,8 +51,13 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.UserPermissionAction_0);
-		setToolTipText(Messages.UserPermissionAction_1);
+		if(SessionManager.isAdmin()) {
+			setText(Messages.UserPermissionAction_0);
+			setToolTipText(Messages.UserPermissionAction_1);
+		} else {
+			setText(Messages.UserPermissionAction_3);
+			setToolTipText(Messages.UserPermissionAction_4);
+		}
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}

@@ -15,6 +15,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * user management input
@@ -50,7 +51,11 @@ public class UserManagementEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.UserManagementEditorInput_0;
+		if(SessionManager.isAdmin()) {
+			return Messages.UserManagementEditorInput_0;
+		} else {
+			return Messages.UserManagementEditorInput_2;
+		}
 	}
 
 	@Override
@@ -60,7 +65,11 @@ public class UserManagementEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.UserManagementEditorInput_1;
+		if(SessionManager.isAdmin()) {
+			return Messages.UserManagementEditorInput_1;
+		} else {
+			return Messages.UserManagementEditorInput_3;
+		}
 	}
 
 }

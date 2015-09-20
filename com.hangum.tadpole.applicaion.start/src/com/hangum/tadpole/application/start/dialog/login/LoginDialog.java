@@ -281,7 +281,7 @@ public class LoginDialog extends Dialog {
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 		} catch (Exception e) {
-			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
+			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_29, e.getMessage());
 			
 			textPasswd.setFocus();
