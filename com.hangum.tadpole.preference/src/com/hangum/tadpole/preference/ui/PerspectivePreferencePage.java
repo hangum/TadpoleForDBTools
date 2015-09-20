@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -34,9 +35,9 @@ public class PerspectivePreferencePage extends TadpoleDefaulPreferencePage imple
 
 	private static final Logger logger = Logger.getLogger(PerspectivePreferencePage.class);
 	
-	private final String ADMIN = "admin";
-	private final String MANAGER = "manager";
-	private final String DEFAULT = "default";
+	private final String ADMIN = "admin"; //$NON-NLS-1$
+	private final String MANAGER = "manager"; //$NON-NLS-1$
+	private final String DEFAULT = "default"; //$NON-NLS-1$
 	
 	private Button btnDefault;
 	private Button btnManager;
@@ -57,20 +58,20 @@ public class PerspectivePreferencePage extends TadpoleDefaulPreferencePage imple
 		
 		Group grpSelectPerspective = new Group(container, SWT.NONE);
 		grpSelectPerspective.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpSelectPerspective.setText("Select perspective");
+		grpSelectPerspective.setText(Messages.PerspectivePreferencePage_3);
 		grpSelectPerspective.setLayout(new GridLayout(1, false));
 		
 		btnDefault = new Button(grpSelectPerspective, SWT.RADIO);
-		btnDefault.setText("Developer(default)");
+		btnDefault.setText(Messages.PerspectivePreferencePage_4);
 		
 		btnManager = new Button(grpSelectPerspective, SWT.RADIO);
-		btnManager.setText("Manager");
+		btnManager.setText(Messages.PerspectivePreferencePage_0);
 //		if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
 			btnManager.setEnabled(false);
 //		}
 		
 		btnAdmin = new Button(grpSelectPerspective, SWT.RADIO);
-		btnAdmin.setText("Administrator");
+		btnAdmin.setText(Messages.PerspectivePreferencePage_6);
 		if(SessionManager.isAdmin()) {
 			btnAdmin.setEnabled(false);
 		}
@@ -117,7 +118,7 @@ public class PerspectivePreferencePage extends TadpoleDefaulPreferencePage imple
 		if (!selection.equals(perspective)) {
 			SessionManager.setPerspective(perspective);
 			selection = perspective;
-			logger.info("Change Perspective to " + selection);
+			logger.info("Change Perspective to " + selection); //$NON-NLS-1$
 		}
 	}
 }

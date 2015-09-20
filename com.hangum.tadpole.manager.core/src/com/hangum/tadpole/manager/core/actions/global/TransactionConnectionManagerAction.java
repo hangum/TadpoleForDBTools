@@ -24,6 +24,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.transaction.connection.TransactionConnectionListEditor;
 import com.hangum.tadpole.manager.core.editor.transaction.connection.TransactionConnectionListEditorInput;
 import com.swtdesigner.ResourceManager;
@@ -47,8 +48,8 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 		this.window = window;
 		
 		setId(ID);
-		setText("Connection Manager");
-		setToolTipText("Connection Manager");
+		setText(Messages.TransactionConnectionManagerAction_0);
+		setToolTipText(Messages.TransactionConnectionManagerAction_1);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/transaction_db_status.png"));
 		setEnabled(true);
 	}
@@ -62,7 +63,7 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 			logger.error("Connections Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Connections Management editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Connections Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

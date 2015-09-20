@@ -63,7 +63,7 @@ public class DBInformationDialog extends Dialog {
 	 */
 	public DBInformationDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		this.userDB = userDB;
 	}
 	
@@ -176,11 +176,11 @@ public class DBInformationDialog extends Dialog {
 	protected Point getInitialSize() {
 		DBDefine dbDefine = DBDefine.getDBDefine(userDB);
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			return new Point(450, 460);
+			return new Point(570, 460);
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT) {
-			return new Point(450, 480);
+			return new Point(560, 480);
 		} else {
-			return new Point(450, 530);
+			return new Point(560, 510);
 		}
 	}
 

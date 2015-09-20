@@ -10,8 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
+
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO;
@@ -33,25 +37,24 @@ public class TadpoleSystemQuery {
 	 * 운영중인 시스템 정보를 얻습니다.
 	 *  
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static TadpoleSystemDAO getSystemInfo() throws Exception {
+	public static TadpoleSystemDAO getSystemInfo() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return (TadpoleSystemDAO)sqlClient.queryForObject("system_information");
 	}
 	
 	/**
-	 * update system version information
+	 * update system information
 	 * 
-	 * @param major_version
-	 * @param sub_version
-	 * @throws Exception
+	 * @param useType
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static void updateSystemVersion(String major_version, String sub_version) throws Exception {
-		TadpoleSystemDAO dao = new TadpoleSystemDAO("", major_version, sub_version, "");
+	public static void updateSystemInformation(String useType) throws TadpoleSQLManagerException, SQLException {
+		TadpoleSystemDAO dao = new TadpoleSystemDAO(SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.INFORMATION, useType);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("update_system", dao);
 	}
-
+	
 }

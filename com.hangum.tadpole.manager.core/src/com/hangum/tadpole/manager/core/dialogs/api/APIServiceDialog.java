@@ -10,11 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.api;
 
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -39,14 +35,16 @@ import org.eclipse.swt.widgets.Text;
 
 import com.google.gson.JsonArray;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
+import com.hangum.tadpole.engine.sql.paremeter.NamedParameterDAO;
+import com.hangum.tadpole.engine.sql.paremeter.NamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
-import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.manager.core.Messages;
 
@@ -87,7 +85,7 @@ public class APIServiceDialog extends Dialog {
 	 */
 	public APIServiceDialog(Shell parentShell, UserDBDAO userDB, String strSQL, ResourceManagerDAO resourceManagerDao) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDB = userDB;
 		this.strSQL = strSQL;
@@ -97,7 +95,7 @@ public class APIServiceDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("RESTful API test Dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.APIServiceDialog_7);
 	}
 
 	/**
@@ -113,27 +111,27 @@ public class APIServiceDialog extends Dialog {
 		compositeTitle.setLayout(new GridLayout(2, false));
 		
 		Label lblApiName = new Label(compositeTitle, SWT.NONE);
-		lblApiName.setText("API NAME"); //$NON-NLS-1$
+		lblApiName.setText(Messages.APIServiceDialog_0);
 		
 		textAPIName = new Text(compositeTitle, SWT.BORDER);
+		textAPIName.setEditable(false);
 		textAPIName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textAPIName.setEnabled(false);
 		
 		Label lblApiUrl = new Label(compositeTitle, SWT.NONE);
-		lblApiUrl.setText("API URL"); //$NON-NLS-1$
+		lblApiUrl.setText(Messages.APIServiceDialog_1);
 		
 		textApiURL = new Text(compositeTitle, SWT.BORDER);
+		textApiURL.setEditable(false);
 		textApiURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textApiURL.setEnabled(false);
 		
 		Label lblArgument = new Label(compositeTitle, SWT.NONE);
-		lblArgument.setText("Argument"); //$NON-NLS-1$
+		lblArgument.setText(Messages.APIServiceDialog_2);
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
-		lblType.setText("Result Type"); //$NON-NLS-1$
+		lblType.setText(Messages.APIServiceDialog_3);
 		
 		comboResultType = new Combo(compositeTitle, SWT.READ_ONLY);
 		comboResultType.addSelectionListener(new SelectionAdapter() {
@@ -160,19 +158,20 @@ public class APIServiceDialog extends Dialog {
 		compositeDetailCSV.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnAddHeader = new Button(compositeDetailCSV, SWT.CHECK);
-		btnAddHeader.setText("Add Header"); //$NON-NLS-1$
+		btnAddHeader.setText(Messages.APIServiceDialog_4);
 		
 		Label lblDelimiter = new Label(compositeDetailCSV, SWT.NONE);
 		lblDelimiter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDelimiter.setText("Delimiter"); //$NON-NLS-1$
+		lblDelimiter.setText(Messages.APIServiceDialog_5);
 		
 		textDelimiter = new Text(compositeDetailCSV, SWT.BORDER);
+		textDelimiter.setEditable(false);
 		textDelimiter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Group grpResultSet = new Group(container, SWT.NONE);
 		grpResultSet.setLayout(new GridLayout(1, false));
 		grpResultSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpResultSet.setText("Result Set"); //$NON-NLS-1$
+		grpResultSet.setText(Messages.APIServiceDialog_6);
 		
 		textResult = new Text(grpResultSet, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -206,26 +205,31 @@ public class APIServiceDialog extends Dialog {
 	private void initData(String strArgument) {
 		
 		try {
-			SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
-			String strJavaSQL = oracleNamedParamUtil.parse(strSQL);
+			String strReturnResult = ""; //$NON-NLS-1$
 			
-			Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
-			if(!mapIndex.isEmpty()) {
-				List<Object> listParam = makeOracleListParameter(mapIndex, strArgument);
-				
-				String strResultType = getSelect(userDB, strJavaSQL, listParam);
-				textResult.setText(strResultType);
-			} else {
-				List<Object> listParam = makeJavaListParameter(strArgument);
-				
-				String strResultType = getSelect(userDB, strSQL, listParam);
-				textResult.setText(strResultType);
+			// velocity 로 if else 가 있는지 검사합니다. 
+			String strSQLs = RESTfulAPIUtils.makeTemplateTOSQL("APIServiceDialog", strSQL, strArgument); //$NON-NLS-1$
+			// 분리자 만큼 실행한다.
+			for (String strTmpSQL : strSQLs.split(PublicTadpoleDefine.SQL_DELIMITER)) {
+
+				NamedParameterDAO dao = NamedParameterUtil.parseParameterUtils(strTmpSQL, strArgument);
+				if(QueryUtils.RESULT_TYPE.JSON.name().equalsIgnoreCase(comboResultType.getText())) {
+					strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam()) + ","; //$NON-NLS-1$
+				} else {
+					strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam());
+				}
 			}
+			
+			if(QueryUtils.RESULT_TYPE.JSON.name().equalsIgnoreCase(comboResultType.getText())) {
+				strReturnResult = "[" + StringUtils.removeEnd(strReturnResult, ",") + "]";  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+			
+			textResult.setText(strReturnResult);
 			
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Error", Messages.APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Error", Messages.APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
@@ -249,7 +253,7 @@ public class APIServiceDialog extends Dialog {
 			} else if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
 				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
 			} else if(QueryUtils.RESULT_TYPE.XML.name().equals(comboResultType.getText())) {
-				strResult = QueryUtils.selectToCSV(userDB, strSQL, listParam, btnAddHeader.getSelection(), textDelimiter.getText());
+				strResult = QueryUtils.selectToXML(userDB, strSQL, listParam);
 			} else {
 				strResult = QueryUtils.selectToHTML_TABLE(userDB, strSQL, listParam);
 			}
@@ -260,80 +264,6 @@ public class APIServiceDialog extends Dialog {
 		return strResult;
 	}
 
-	/**
-	 * make oracle type sql parameter
-	 * 
-	 * @param mapIndex
-	 * @param strArgument
-	 * @return
-	 */
-	private List<Object> makeOracleListParameter(Map<Integer, String> mapIndex, String strArgument) throws Exception {
-		List<Object> listParam = new ArrayList<Object>();
-		
-		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument); //$NON-NLS-1$
-		Map<String, String> params = new HashMap<String, String>();
-		for (String param : StringUtils.split(strArgument, "&")) { //$NON-NLS-1$
-			String pair[] = StringUtils.split(param, "="); //$NON-NLS-1$
-			String key = URLDecoder.decode(pair[0], "UTF-8"); //$NON-NLS-1$
-			String value = ""; //$NON-NLS-1$
-			if (pair.length > 1) {
-				try {
-					value = URLDecoder.decode(pair[1], "UTF-8"); //$NON-NLS-1$
-				} catch(Exception e) {
-					value = pair[1];
-				}
-			}
-
-			params.put(key, value);
-		}
-		
-		for(int i=1; i<=mapIndex.size(); i++ ) {
-			String strKey = mapIndex.get(i);
-			listParam.add( params.get(strKey) );
-		}
-		return listParam;
-	}
-
-	
-	/**
-	 * make parameter list
-	 * 
-	 * @param strArgument 
-	 * @return
-	 * @throws Exception
-	 */
-	private List<Object> makeJavaListParameter(String strArgument) throws Exception {
-		List<Object> listParam = new ArrayList<Object>();
-		
-		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument); //$NON-NLS-1$
-		Map<String, String> params = new HashMap<String, String>();
-		for (String param : StringUtils.split(strArgument, "&")) { //$NON-NLS-1$
-			String pair[] = StringUtils.split(param, "="); //$NON-NLS-1$
-			String key = URLDecoder.decode(pair[0], "UTF-8"); //$NON-NLS-1$
-			String value = ""; //$NON-NLS-1$
-			if (pair.length > 1) {
-				try {
-					value = URLDecoder.decode(pair[1], "UTF-8"); //$NON-NLS-1$
-				} catch(Exception e) {
-					value = pair[1];
-				}
-			}
-
-			params.put(key, value);
-		}
-
-		// assume this count... no way i'll argument is over 100..... --;;
-		for(int i=1; i<100; i++) {
-			if(params.containsKey(String.valueOf(i))) {
-				listParam.add(params.get(""+i)); //$NON-NLS-1$
-			} else {
-				break;
-			}
-		}
-
-		return listParam;
-	}
-	
 	/** download service handler call */
 	private void unregisterServiceHandler() {
 		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
@@ -394,9 +324,9 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false); //$NON-NLS-1$
-		createButton(parent, DOWNLOAD_BTN_ID, "Download", false); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.OK_ID, "RUN", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.APIServiceDialog_8, false);
+		createButton(parent, DOWNLOAD_BTN_ID, Messages.APIServiceDialog_9, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.APIServiceDialog_10, true);
 	}
 	
 	/**

@@ -71,7 +71,7 @@ public class QueryHistoryComposite extends Composite {
 		gridSQLHistory.setLinesVisible(true);
 		gridSQLHistory.setHeaderVisible(true);
 		gridSQLHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		gridSQLHistory.setToolTipText("");
+		gridSQLHistory.setToolTipText(""); //$NON-NLS-1$
 		
 		gridSQLHistory.addMouseListener(new MouseAdapter() {
 			public void mouseDoubleClick(MouseEvent e) {
@@ -238,26 +238,26 @@ public class QueryHistoryComposite extends Composite {
 		GridItem item = new GridItem(gridSQLHistory, SWT.V_SCROLL | SWT.H_SCROLL);
 		
 		String strSQL = StringUtils.strip(sqlHistoryDAO.getStrSQLText());
-		int intLine = StringUtils.countMatches(strSQL, "\n");
+		int intLine = StringUtils.countMatches(strSQL, "\n"); //$NON-NLS-1$
 		if(intLine >= 1) {
 			int height = (intLine+1) * 24;
 			if(height > 100) item.setHeight(100); 
 			else item.setHeight(height);
 		}
 		
-		item.setText(0, ""+gridSQLHistory.getRootItemCount());
+		item.setText(0, ""+gridSQLHistory.getRootItemCount()); //$NON-NLS-1$
 		item.setText(1, Utils.dateToStr(sqlHistoryDAO.getStartDateExecute()));
 		item.setText(2, Utils.convLineToHtml(strSQL));
 		item.setToolTipText(2, strSQL);
 		
-		item.setText(3, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f));
-		item.setText(4, ""+sqlHistoryDAO.getRows());
+		item.setText(3, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f)); //$NON-NLS-1$
+		item.setText(4, ""+sqlHistoryDAO.getRows()); //$NON-NLS-1$
 		item.setText(5, sqlHistoryDAO.getResult());
 		
 		item.setText(6, Utils.convLineToHtml(sqlHistoryDAO.getMesssage()));
 		item.setToolTipText(6, sqlHistoryDAO.getMesssage());
 		
-		if("F".equals(sqlHistoryDAO.getResult())) {
+		if("F".equals(sqlHistoryDAO.getResult())) { //$NON-NLS-1$
 			item.setBackground(SWTResourceManager.getColor(240, 180, 167));
 		}
 	}
@@ -289,37 +289,37 @@ public class QueryHistoryComposite extends Composite {
 		// time
 		GridColumn tvcSeq = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcSeq.setWidth(50);
-		tvcSeq.setText("#");
+		tvcSeq.setText("#"); //$NON-NLS-1$
 				
 		// time
 		GridColumn tvcDate = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcDate.setWidth(150);
-		tvcDate.setText("Date");
+		tvcDate.setText(Messages.QueryHistoryComposite_7);
 		
 		// sql
 		GridColumn tvcSQL = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcSQL.setWidth(300);
-		tvcSQL.setText("SQL");
+		tvcSQL.setText(Messages.QueryHistoryComposite_8);
 		tvcSQL.setWordWrap(true);
 
 		// duration
 		GridColumn tvcDuration = new GridColumn(gridSQLHistory, SWT.RIGHT);
 		tvcDuration.setWidth(60);
-		tvcDuration.setText("Sec");
+		tvcDuration.setText(Messages.QueryHistoryComposite_9);
 		
 		// rows
 		GridColumn tvcRows = new GridColumn(gridSQLHistory, SWT.RIGHT);
 		tvcRows.setWidth(60);
-		tvcRows.setText("Rows");
+		tvcRows.setText(Messages.QueryHistoryComposite_10);
 		
 		// result
 		GridColumn tvcResult = new GridColumn(gridSQLHistory, SWT.NONE);
 		tvcResult.setWidth(90);
-		tvcResult.setText("Result");
+		tvcResult.setText(Messages.QueryHistoryComposite_11);
 
 		GridColumn tvcMessage = new GridColumn(gridSQLHistory, SWT.NONE);
 		tvcMessage.setWidth(250);
-		tvcMessage.setText("Message");
+		tvcMessage.setText(Messages.QueryHistoryComposite_12);
 	}
 	
 }

@@ -65,7 +65,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.api.APIServiceDialog;
 import com.hangum.tadpole.manager.core.dialogs.api.UserAPIServiceDialog;
@@ -262,7 +262,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		Label lblNewLabel = new Label(compositeDetail, SWT.NONE);
 		lblNewLabel.setText(Messages.RESTFulAPIManagerEditor_17);
 
-		comboShare = new ComboViewer(compositeDetail, SWT.NONE);
+		comboShare = new ComboViewer(compositeDetail, SWT.NONE | SWT.READ_ONLY);
 		Combo cShare = comboShare.getCombo();
 		cShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" }); //$NON-NLS-1$ //$NON-NLS-2$
@@ -422,7 +422,6 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		lblApiKey.setText(Messages.RESTFulAPIManagerEditor_46);
 		
 		textAPIKey = new Text(compositeDetail, SWT.BORDER);
-		textAPIKey.setEnabled(false);
 		textAPIKey.setEditable(false);
 		textAPIKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		

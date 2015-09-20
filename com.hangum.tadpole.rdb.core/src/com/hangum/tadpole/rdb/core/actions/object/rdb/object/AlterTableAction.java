@@ -46,7 +46,7 @@ public class AlterTableAction extends AbstractObjectSelectAction {
 	public AlterTableAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Alter " + title);
+		setText(title);
 		
 		window.getSelectionService().addSelectionListener(this);
 	}

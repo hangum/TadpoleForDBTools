@@ -17,9 +17,11 @@ import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.ConnectionDecorationContributionsHandler;
@@ -40,7 +42,7 @@ public class ManagerLabelProvider extends LabelProvider {
 	/** development markup start tag */
 	public static String DEVELOPMENT_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
 	/** development markup start tag */
-	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
+	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(145, 129, 129)'>"; //$NON-NLS-1$
 	
 	/** Markup end tag */
 	public static String END_TAG = "</em>"; //$NON-NLS-1$
@@ -117,11 +119,17 @@ public class ManagerLabelProvider extends LabelProvider {
 			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 		}
 		
-		// 자신의 디비만 보이도록 수정
-		if(userDB.getUser_seq() == SessionManager.getUserSeq()) {
+		if(PermissionChecker.isDBAdminRole(userDB)) {
 			retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
-			retText += userDB.getDisplay_name();
+			
+			// 프러덕이나 백업디비이면디비 이름만보이면 됨.
+			if(PermissionChecker.isProductBackup(userDB)) {
+				retText += userDB.getDisplay_name();
+			// 기타 디비 이면 다 보이면 됨.
+			} else {
+				retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$				
+			}
 		}
 		
 		return retText;

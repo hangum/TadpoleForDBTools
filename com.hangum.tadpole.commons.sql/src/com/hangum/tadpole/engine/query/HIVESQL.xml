@@ -32,6 +32,13 @@
 </select>
 
 <!-- 
+	table 오직 테이블 이름만.
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	show tables
+</select>
+
+<!-- 
 	table 이름
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">

@@ -49,9 +49,9 @@
 	
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Common.xml" />
 	
-	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Schedule.xml" />
-	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Monitoring.xml" />
-	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Template.xml" />
+	<!-- sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Schedule.xml" /-->
+	<!-- sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Monitoring.xml" /-->
+	<!-- sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Template.xml" /-->
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-AccessControl.xml" />
 
 </sqlMapConfig>

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.model.Style;
 
 /**
@@ -57,7 +58,7 @@ public class ERDViewStyleDailog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("ERD Setting Dialog");
+		newShell.setText(Messages.ERDViewStyleDailog_0);
 	}
 
 	/**
@@ -76,39 +77,39 @@ public class ERDViewStyleDailog extends Dialog {
 		grpTableTitle = new Group(container, SWT.NONE);
 		grpTableTitle.setLayout(new GridLayout(3, false));
 		grpTableTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpTableTitle.setText("Table Title");
+		grpTableTitle.setText(Messages.ERDViewStyleDailog_1);
 		
 		btnTableName = new Button(grpTableTitle, SWT.RADIO);
-		btnTableName.setText("Table Name");
-		btnTableName.setData("name");
+		btnTableName.setText(Messages.ERDViewStyleDailog_2);
+		btnTableName.setData("name"); //$NON-NLS-1$
 		
 		btnTableComment = new Button(grpTableTitle, SWT.RADIO);
-		btnTableComment.setText("Table Comment ");
-		btnTableComment.setData("comment");
+		btnTableComment.setText(Messages.ERDViewStyleDailog_4);
+		btnTableComment.setData("comment"); //$NON-NLS-1$
 		
 		btnTableNameComment = new Button(grpTableTitle, SWT.RADIO);
-		btnTableNameComment.setText("Table Name + Comment");
-		btnTableNameComment.setData("nameComment");
+		btnTableNameComment.setText(Messages.ERDViewStyleDailog_6);
+		btnTableNameComment.setData("nameComment"); //$NON-NLS-1$
 		
 		Group grpColumn = new Group(container, SWT.NONE);
 		grpColumn.setLayout(new GridLayout(1, false));
 		grpColumn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpColumn.setText("Column ");
+		grpColumn.setText(Messages.ERDViewStyleDailog_8);
 		
 		btnPrimaryKey = new Button(grpColumn, SWT.CHECK);
-		btnPrimaryKey.setText("Primary Key");
+		btnPrimaryKey.setText(Messages.ERDViewStyleDailog_9);
 		
 		btnColumnName = new Button(grpColumn, SWT.CHECK);
-		btnColumnName.setText("Name");
+		btnColumnName.setText(Messages.ERDViewStyleDailog_10);
 		
 		btnColumnComent = new Button(grpColumn, SWT.CHECK);
-		btnColumnComent.setText("Coment");
+		btnColumnComent.setText(Messages.ERDViewStyleDailog_11);
 		
 		btnColumnType = new Button(grpColumn, SWT.CHECK);
-		btnColumnType.setText("Type");
+		btnColumnType.setText(Messages.ERDViewStyleDailog_12);
 		
 		btnNullCheck = new Button(grpColumn, SWT.CHECK);
-		btnNullCheck.setText("Null Check");
+		btnNullCheck.setText(Messages.ERDViewStyleDailog_13);
 		
 		initUI();
 
@@ -117,15 +118,15 @@ public class ERDViewStyleDailog extends Dialog {
 	
 	private void initUI() {
 		String tableTitle = erdStyle.getTableTitle();
-		if("name".equals(tableTitle)) 		btnTableName.setSelection(true);
-		else if("comment".equals(tableTitle)) btnTableComment.setSelection(true);
+		if("name".equals(tableTitle)) 		btnTableName.setSelection(true); //$NON-NLS-1$
+		else if("comment".equals(tableTitle)) btnTableComment.setSelection(true); //$NON-NLS-1$
 		else 									btnTableNameComment.setSelection(true);
 		
-		if("YES".equals(erdStyle.getColumnPrimaryKey())) 	btnPrimaryKey.setSelection(true);
-		if("YES".equals(erdStyle.getColumnName())) 			btnColumnName.setSelection(true);
-		if("YES".equals(erdStyle.getColumnComment())) 		btnColumnComent.setSelection(true);
-		if("YES".equals(erdStyle.getColumnType())) 			btnColumnType.setSelection(true);
-		if("YES".equals(erdStyle.getColumnNullCheck())) 	btnNullCheck.setSelection(true);
+		if("YES".equals(erdStyle.getColumnPrimaryKey())) 	btnPrimaryKey.setSelection(true); //$NON-NLS-1$
+		if("YES".equals(erdStyle.getColumnName())) 			btnColumnName.setSelection(true); //$NON-NLS-1$
+		if("YES".equals(erdStyle.getColumnComment())) 		btnColumnComent.setSelection(true); //$NON-NLS-1$
+		if("YES".equals(erdStyle.getColumnType())) 			btnColumnType.setSelection(true); //$NON-NLS-1$
+		if("YES".equals(erdStyle.getColumnNullCheck())) 	btnNullCheck.setSelection(true); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -134,20 +135,20 @@ public class ERDViewStyleDailog extends Dialog {
 		else if(btnTableComment.getSelection()) erdStyle.setTableTitle(btnTableComment.getData().toString());
 		else 									erdStyle.setTableTitle(btnTableNameComment.getData().toString());
 	
-		if(btnPrimaryKey.getSelection()) 	erdStyle.setColumnPrimaryKey("YES");
-		else 								erdStyle.setColumnPrimaryKey("NO");
+		if(btnPrimaryKey.getSelection()) 	erdStyle.setColumnPrimaryKey("YES"); //$NON-NLS-1$
+		else 								erdStyle.setColumnPrimaryKey("NO"); //$NON-NLS-1$
 		
-		if(btnColumnName.getSelection()) 	erdStyle.setColumnName("YES");
-		else 								erdStyle.setColumnName("NO");
+		if(btnColumnName.getSelection()) 	erdStyle.setColumnName("YES"); //$NON-NLS-1$
+		else 								erdStyle.setColumnName("NO"); //$NON-NLS-1$
 		
-		if(btnColumnComent.getSelection()) 	erdStyle.setColumnComment("YES");
-		else 								erdStyle.setColumnComment("NO");
+		if(btnColumnComent.getSelection()) 	erdStyle.setColumnComment("YES"); //$NON-NLS-1$
+		else 								erdStyle.setColumnComment("NO"); //$NON-NLS-1$
 		
-		if(btnColumnType.getSelection()) 	erdStyle.setColumnType("YES");
-		else 								erdStyle.setColumnType("NO");
+		if(btnColumnType.getSelection()) 	erdStyle.setColumnType("YES"); //$NON-NLS-1$
+		else 								erdStyle.setColumnType("NO"); //$NON-NLS-1$
 		
-		if(btnNullCheck.getSelection()) 	erdStyle.setColumnNullCheck("YES");
-		else 								erdStyle.setColumnNullCheck("NO");
+		if(btnNullCheck.getSelection()) 	erdStyle.setColumnNullCheck("YES"); //$NON-NLS-1$
+		else 								erdStyle.setColumnNullCheck("NO"); //$NON-NLS-1$
 		
 		super.okPressed();
 	}
@@ -162,8 +163,8 @@ public class ERDViewStyleDailog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ERDViewStyleDailog_3, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ERDViewStyleDailog_32, false);
 	}
 
 	/**

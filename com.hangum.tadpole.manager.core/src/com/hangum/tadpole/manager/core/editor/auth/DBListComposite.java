@@ -51,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
@@ -58,6 +59,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.users.DetailUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.FindUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.editor.auth.dialogs.DBAccessControlDialog;
@@ -131,7 +133,7 @@ public class DBListComposite extends Composite {
 				initData();
 			}
 		});
-		tltmRefresh.setToolTipText("Refresh");
+		tltmRefresh.setToolTipText(Messages.DBListComposite_0);
 		
 		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -143,7 +145,7 @@ public class DBListComposite extends Composite {
 				configurationDB();	
 			}
 		});
-		tltmConfigurationDB.setToolTipText("Configuration database");
+		tltmConfigurationDB.setToolTipText(Messages.DBListComposite_1);
 		tltmConfigurationDB.setEnabled(false);
 		
 		tltmOtherInformation = new ToolItem(toolBar, SWT.NONE);
@@ -161,7 +163,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmOtherInformation.setEnabled(false);
-		tltmOtherInformation.setToolTipText("Other Information");
+		tltmOtherInformation.setToolTipText(Messages.DBListComposite_2);
 		
 		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
 
@@ -177,16 +179,33 @@ public class DBListComposite extends Composite {
 				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 				
 				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), (UserDBDAO)ss.getFirstElement());
-				if(Dialog.OK == dialog.open()) {
-					TadpoleUserDbRoleDAO userRole = dialog.getUserRoleDAO();
-					userRole.setParent(userDB);
-					userDB.getListChildren().add(userRole);
-					
-					tvDBList.refresh(userDB);
+				dialog.open();
+				
+				userDB.getListChildren().clear();
+				try {
+					List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
+					if(userDB.getListChildren().isEmpty()) {
+						for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
+							tadpoleUserDbRoleDAO.setParent(userDB);
+						}
+						
+						userDB.setListChildren(listUser);
+						tvDBList.refresh(userDB, true);
+						tvDBList.expandToLevel(3);
+					}
+				} catch (Exception e3) {
+					logger.error(Messages.DBListComposite_10, e3);
 				}
+				
+//				TadpoleUserDbRoleDAO userRole = dialog.getUserRoleDAO();
+//				userRole.setParent(userDB);
+//				userDB.getListChildren().add(userRole);
+//				
+//				tvDBList.refresh(userDB);
+			
 			}
 		});
-		tltmAddUser.setToolTipText("Add user");
+		tltmAddUser.setToolTipText(Messages.DBListComposite_3);
 		
 		tltmDBAccessCtl = new ToolItem(toolBar, SWT.NONE);
 		tltmDBAccessCtl.setImage(ToobalImageUtils.getFiltering());
@@ -201,7 +220,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmDBAccessCtl.setEnabled(false);
-		tltmDBAccessCtl.setToolTipText("DB Access Control");
+		tltmDBAccessCtl.setToolTipText(Messages.DBListComposite_4);
 		
 		tltmUserInfo = new ToolItem(toolBar, SWT.NONE);
 		tltmUserInfo.setImage(ToobalImageUtils.getUserInfo());
@@ -212,7 +231,7 @@ public class DBListComposite extends Composite {
 				detailUser();
 			}
 		});
-		tltmUserInfo.setToolTipText("Update user role");
+		tltmUserInfo.setToolTipText(Messages.DBListComposite_5);
 		
 		tltmUserDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmUserDelete.setImage(ToobalImageUtils.getUserRemove());
@@ -223,7 +242,7 @@ public class DBListComposite extends Composite {
 				deleteUser();
 			}
 		});
-		tltmUserDelete.setToolTipText("Delete user");
+		tltmUserDelete.setToolTipText(Messages.DBListComposite_6);
 		
 		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -236,7 +255,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmQueryHistory.setEnabled(false);
-		tltmQueryHistory.setToolTipText("Query History");
+		tltmQueryHistory.setToolTipText(Messages.DBListComposite_7);
 		
 		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
 		tltmSQLEditor.setImage(ToobalImageUtils.getSQLEditor()); //$NON-NLS-1$
@@ -247,13 +266,13 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmSQLEditor.setEnabled(false);
-		tltmSQLEditor.setToolTipText("SQL Editor");
+		tltmSQLEditor.setToolTipText(Messages.DBListComposite_8);
 		
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText("Search");
+		lblSearch.setText(Messages.DBListComposite_9);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -294,10 +313,10 @@ public class DBListComposite extends Composite {
 							
 							userDB.setListChildren(listUser);
 							tvDBList.refresh(userDB, true);
-							tvDBList.expandToLevel(2);
+							tvDBList.expandToLevel(3);
 						}
 					} catch (Exception e) {
-						logger.error("get user list", e);
+						logger.error(Messages.DBListComposite_10, e);
 					}
 					
 					tltmConfigurationDB.setEnabled(true);
@@ -362,27 +381,23 @@ public class DBListComposite extends Composite {
 		
 		TreeViewerColumn colGroupName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colGroupName.getColumn().setWidth(250);
-		colGroupName.getColumn().setText("Name(email)");
+		colGroupName.getColumn().setText(Messages.DBListComposite_11);
 				
 		TreeViewerColumn colRoleName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colRoleName.getColumn().setWidth(80);
-		colRoleName.getColumn().setText("Role");
+		colRoleName.getColumn().setText(Messages.DBListComposite_12);
 		
 		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colName.getColumn().setWidth(180);
-		colName.getColumn().setText("DB Info");
+		colName.getColumn().setWidth(330);
+		colName.getColumn().setText(Messages.DBListComposite_13 + "(" + Messages.DBListComposite_16 + ")");
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colApproval.getColumn().setWidth(70);
-		colApproval.getColumn().setText("User");
+		colApproval.getColumn().setText(Messages.DBListComposite_14);
 		
 		TreeViewerColumn colVisible = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colVisible.getColumn().setWidth(50);
-		colVisible.getColumn().setText("Visible");
-		
-		TreeViewerColumn colTermsOfUser = new TreeViewerColumn(tvDBList, SWT.NONE);
-		colTermsOfUser.getColumn().setWidth(300);
-		colTermsOfUser.getColumn().setText("Terms of use");
+		colVisible.getColumn().setText(Messages.DBListComposite_15);
 		
 		tvDBList.setContentProvider(new DBListContentProvider());
 		tvDBList.setLabelProvider(new DBListLabelProvider());
@@ -452,7 +467,7 @@ public class DBListComposite extends Composite {
 		TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)ss.getFirstElement();
 		if(userDBRole.getParent().getUser_seq() == userDBRole.getUser_seq()) return;
 		
-		if(!MessageDialog.openConfirm(null, "Confirm", "Do you want to delete the user?") ) return; //$NON-NLS-1$
+		if(!MessageDialog.openConfirm(null, Messages.DBListComposite_17, Messages.DBListComposite_18) ) return;
 
 		try {
 			TadpoleSystem_UserDBQuery.removeUserRoleDB(userDBRole.getSeq());
@@ -462,9 +477,9 @@ public class DBListComposite extends Composite {
 			tvDBList.refresh(userDB);
 
 		} catch (Exception e) { 
-			logger.error("delete user exception", e);				
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Delete user", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			logger.error("delete user exception", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.DBListComposite_19, Messages.DBListComposite_20, errStatus);
 		}
 	}
 	
@@ -483,8 +498,8 @@ public class DBListComposite extends Composite {
 			} catch(Exception e) {
 				logger.error("Query History open", e); //$NON-NLS-1$
 				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Query History", errStatus); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
+				ExceptionDetailsErrorDialog.openError(null, Messages.DBListComposite_21, Messages.DBListComposite_22, errStatus);
 			}
 		}
 	}
@@ -502,8 +517,8 @@ public class DBListComposite extends Composite {
 		} catch(Exception e) {
 			logger.error("SQL Editor open", e); //$NON-NLS-1$
 			
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Editor", errStatus); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
+			ExceptionDetailsErrorDialog.openError(null, Messages.DBListComposite_23, Messages.DBListComposite_24, errStatus);
 		}
 	}
 	
@@ -543,7 +558,7 @@ public class DBListComposite extends Composite {
 			tvDBList.expandToLevel(2);
 			
 		} catch (Exception e) {
-			logger.error("db list", e);
+			logger.error(Messages.DBListComposite_25, e);
 		}
 	}
 	
@@ -584,7 +599,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 				case 2:
 					// sqlite
 					if("".equals(userDB.getHost())) return userDB.getUrl();
-					return userDB.getHost() + ":"  + userDB.getPort();
+					return userDB.getHost() + " : "  + userDB.getPort();
 				case 3: return userDB.getUsers();
 				case 4: return userDB.getIs_visible();
 			}
@@ -598,7 +613,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 			switch(columnIndex) {
 				case 0: return String.format("%s (%s)", roleDao.getName(), roleDao.getEmail());
 				case 1: return roleDao.getRole_id();
-				case 5: return roleDao.getTerms_of_use_starttime() + " ~ " + roleDao.getTerms_of_use_endtime();
+				case 2: return Utils.dateToStr(roleDao.getTerms_of_use_starttime()) + " ~ " + Utils.dateToStr(roleDao.getTerms_of_use_endtime());
 			}
 		}
 		

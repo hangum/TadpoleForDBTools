@@ -54,6 +54,7 @@ public class TableColumnFilterDialog extends Dialog {
 	 */
 	public TableColumnFilterDialog(Shell parentShell, DBAccessControlDAO dbAccessDetail) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.dbAccessDetail = dbAccessDetail;
 	}

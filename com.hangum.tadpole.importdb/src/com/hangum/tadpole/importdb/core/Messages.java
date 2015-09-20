@@ -28,10 +28,14 @@ public class Messages extends NLS {
 	public static String CsvToRDBImportDialog_24;
 	public static String CsvToRDBImportDialog_26;
 	public static String CsvToRDBImportDialog_29;
+	public static String CsvToRDBImportDialog_3;
 	public static String CsvToRDBImportDialog_30;
 	public static String CsvToRDBImportDialog_4;
 	public static String CsvToRDBImportDialog_5;
+	public static String CsvToRDBImportDialog_51;
 	public static String CsvToRDBImportDialog_6;
+	public static String CsvToRDBImportDialog_7;
+	public static String CsvToRDBImportDialog_8;
 	public static String MongoDBImportEditor_0;
 	public static String MongoDBImportEditor_1;
 	public static String MongoDBImportEditor_10;
@@ -51,6 +55,8 @@ public class Messages extends NLS {
 	public static String QueryToMongoDBImport_5;
 	public static String TableColumnLIstComposite_1;
 	public static String SQLToDBImportDialog_0;
+	public static String SQLToDBImportDialog_1;
+	public static String SQLToDBImportDialog_2;
 	public static String SQLToDBImportDialog_BatchSize;
 	public static String SQLToDBImportDialog_grpSqlResult_text;
 	public static String SQLToDBImportDialog_btnInsert_text;

@@ -66,7 +66,7 @@ import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.api.APIServiceDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -160,7 +160,7 @@ public class ResourceManageEditor extends EditorPart {
 		toolBar.setLayoutData(gd_toolBar);
 
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setToolTipText("Refresh"); //$NON-NLS-1$
+		tltmRefresh.setToolTipText(Messages.ResourceManageEditor_0);
 		tltmRefresh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 		
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -188,7 +188,7 @@ public class ResourceManageEditor extends EditorPart {
 
 		Label lblFilter = new Label(compositeFilter, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText("Filter"); //$NON-NLS-1$
+		lblFilter.setText(Messages.ResourceManageEditor_1);
 
 		textFilter = new Text(compositeFilter, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -458,7 +458,6 @@ public class ResourceManageEditor extends EditorPart {
 		lblApiKey.setText(Messages.ResourceManageEditor_42);
 		
 		textAPIKey = new Text(compositeDetail, SWT.BORDER);
-		textAPIKey.setEnabled(false);
 		textAPIKey.setEditable(false);
 		textAPIKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
@@ -570,14 +569,14 @@ public class ResourceManageEditor extends EditorPart {
 	private void createTableColumn() {
 
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] {
-		new TableViewColumnDefine("RESOURCE_SEQ", "ID", 50, SWT.RIGHT) //$NON-NLS-1$ //$NON-NLS-2$
-				, new TableViewColumnDefine("RESOURCE_TYPES", "Type", 60, SWT.CENTER) //$NON-NLS-1$ //$NON-NLS-2$
-				, new TableViewColumnDefine("USER_NAME", "User", 90, SWT.CENTER) //$NON-NLS-1$ //$NON-NLS-2$
-				, new TableViewColumnDefine("RES_TITLE", "Subject", 150, SWT.LEFT) //$NON-NLS-1$ //$NON-NLS-2$
-				, new TableViewColumnDefine("RESTAPI_URI", "API URL", 150, SWT.LEFT) //$NON-NLS-1$ //$NON-NLS-2$
-				, new TableViewColumnDefine("SHARED_TYPE", "Share", 70, SWT.CENTER) //$NON-NLS-1$ //$NON-NLS-2$
-				, new TableViewColumnDefine("DESCRIPTION", "Description", 250, SWT.LEFT) //$NON-NLS-1$ //$NON-NLS-2$
-				, new TableViewColumnDefine("CREATE_TIME", "Create", 120, SWT.LEFT) //$NON-NLS-1$ //$NON-NLS-2$
+		new TableViewColumnDefine("RESOURCE_SEQ", Messages.ResourceManageEditor_3, 50, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.ResourceManageEditor_5, 60, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("USER_NAME", Messages.ResourceManageEditor_7, 90, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("RES_TITLE", Messages.ResourceManageEditor_9, 150, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("RESTAPI_URI", Messages.ResourceManageEditor_11, 150, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("SHARED_TYPE", Messages.ResourceManageEditor_15, 70, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("DESCRIPTION", Messages.ResourceManageEditor_20, 250, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("CREATE_TIME", Messages.ResourceManageEditor_22, 120, SWT.LEFT) //$NON-NLS-1$
 		};
 
 		ColumnHeaderCreator.createColumnHeader(tableViewer, tableColumnDef);

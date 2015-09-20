@@ -30,12 +30,12 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 	 */
 //	private static final Logger logger = Logger.getLogger(ObjectRefreshAction.class);
 
-	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.refresh";
+	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.refresh"; //$NON-NLS-1$
 
 	public ObjectRefreshAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Refresh " + title);
+		setText(title);
 	}
 
 	@Override

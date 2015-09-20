@@ -23,6 +23,8 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 
 /**
@@ -33,7 +35,8 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
  */
 public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
-//	protected final String strUserType = SessionManager.getRoleType();
+	/** TAB DATA KEY */
+	public static String TAB_DATA_KEY = "DB_ACTION";
 	
 	protected UserDBDAO userDB;
 	protected int DND_OPERATIONS = DND.DROP_COPY | DND.DROP_MOVE;
@@ -140,9 +143,9 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createTriggerColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Trigger", "Event", "Table", "Statement", "Timing",
-			"Created", "sql_mode", "Definer", "character_set_client", "collation_connection", "Database",
-			"Collation"
+		String[] name = {Messages.AbstractObjectComposite_0, Messages.AbstractObjectComposite_1, Messages.AbstractObjectComposite_2, Messages.AbstractObjectComposite_3, Messages.AbstractObjectComposite_4,
+			Messages.AbstractObjectComposite_5, Messages.AbstractObjectComposite_6, Messages.AbstractObjectComposite_7, Messages.AbstractObjectComposite_8, Messages.AbstractObjectComposite_9, Messages.AbstractObjectComposite_10,
+			Messages.AbstractObjectComposite_11
 		};
 		int[] size = {120, 70, 70, 70, 70,
 					   70, 70, 70, 70, 70, 
@@ -162,9 +165,9 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createProcedureFunctionColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Name", "Definer", "Modified", "Created",
-						"Security_type", "Comment", "character_set_client", "collation_connection", "Database", 
-						"Collation"
+		String[] name = {Messages.AbstractObjectComposite_12, Messages.AbstractObjectComposite_13, Messages.AbstractObjectComposite_14, Messages.AbstractObjectComposite_15,
+						Messages.AbstractObjectComposite_16, Messages.AbstractObjectComposite_17, Messages.AbstractObjectComposite_18, Messages.AbstractObjectComposite_19, Messages.AbstractObjectComposite_20, 
+						Messages.AbstractObjectComposite_21
 		};
 		int[] size = {120, 70, 70, 70,
 						70, 70, 70, 70, 70, 
@@ -188,7 +191,7 @@ public abstract class AbstractObjectComposite extends Composite {
 //						"COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED", 
 //						"NULLABLE", 	"INDEX TYPE","COMMENT"
 //		};
-		String[] name = {"Table Name", "Index Name","Type","Comment"};
+		String[] name = {Messages.AbstractObjectComposite_22, Messages.AbstractObjectComposite_23,Messages.AbstractObjectComposite_24,Messages.AbstractObjectComposite_25};
 		int[] size = {120, 120, 70, 70//, 70, 
 //						70,	70, 70, 70, 70, 
 //						70, 70,	70
@@ -206,7 +209,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * view column
 	 */
 	protected void createViewColumne(TableViewer tv) {
-		String[] name = {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
+		String[] name = {Messages.AbstractObjectComposite_26, Messages.AbstractObjectComposite_27, Messages.AbstractObjectComposite_28, Messages.AbstractObjectComposite_29, Messages.AbstractObjectComposite_30, Messages.AbstractObjectComposite_31, Messages.AbstractObjectComposite_32};
 		int[] size = {120, 70, 50, 100, 50, 50, 50};
 
 		for (int i=0; i<name.length; i++) {

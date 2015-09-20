@@ -37,6 +37,23 @@ SELECT getdate()
 </select>
 
 <!-- 
+	table 오직 테이블 이름만.
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+SELECT
+    tbl.name AS name
+  FROM
+    sys.tables AS tbl
+    inner join sys.schemas as s on s.schema_id = tbl.schema_id
+      LEFT JOIN sys.extended_properties AS p
+        ON p.major_id = tbl.object_id
+        AND p.minor_id = 0
+        AND p.class = 1
+        AND p.name = 'MS_Description'
+  ORDER BY s.name, tbl.name 
+</select>
+
+<!-- 
 	table 이름
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">

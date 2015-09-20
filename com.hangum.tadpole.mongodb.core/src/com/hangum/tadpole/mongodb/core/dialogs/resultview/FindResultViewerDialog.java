@@ -55,7 +55,7 @@ public class FindResultViewerDialog extends Dialog {
 	 */
 	public FindResultViewerDialog(Shell parentShell, String strTitle, UserDBDAO userDB, String initColName, Iterable<DBObject> iteResult) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.strTitle = strTitle;
 		this.userDB = userDB;

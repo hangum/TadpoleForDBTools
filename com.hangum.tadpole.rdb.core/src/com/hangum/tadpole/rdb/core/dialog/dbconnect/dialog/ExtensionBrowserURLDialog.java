@@ -75,6 +75,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 	 */
 	public ExtensionBrowserURLDialog(Shell parentShell, List<ExternalBrowserInfoDAO> listExterBroswer) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.listExterBroswer = listExterBroswer;
 	}
@@ -99,7 +100,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		Group grpList = new Group(container, SWT.NONE);
 		grpList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpList.setText("List"); //$NON-NLS-1$
+		grpList.setText(Messages.ExtensionBrowserURLDialog_1);
 		grpList.setLayout(new GridLayout(1, false));
 		
 		tableViewer = new TableViewer(grpList, SWT.BORDER | SWT.FULL_SELECTION);
@@ -119,19 +120,19 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		TableColumn tblclmnUsed = new TableColumn(table, SWT.NONE);
 		tblclmnUsed.setWidth(30);
-		tblclmnUsed.setText("Use"); //$NON-NLS-1$
+		tblclmnUsed.setText(Messages.ExtensionBrowserURLDialog_2);
 		
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
 		tblclmnName.setWidth(100);
-		tblclmnName.setText("Name"); //$NON-NLS-1$
+		tblclmnName.setText(Messages.ExtensionBrowserURLDialog_3);
 		
 		TableColumn tblclmnUrl = new TableColumn(table, SWT.NONE);
 		tblclmnUrl.setWidth(200);
-		tblclmnUrl.setText("URL"); //$NON-NLS-1$
+		tblclmnUrl.setText(Messages.ExtensionBrowserURLDialog_4);
 		
 		TableColumn tblclmnComment = new TableColumn(table, SWT.NONE);
 		tblclmnComment.setWidth(100);
-		tblclmnComment.setText("Comment"); //$NON-NLS-1$
+		tblclmnComment.setText(Messages.ExtensionBrowserURLDialog_5);
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ExtensionBrowserLableProvider());
@@ -139,11 +140,11 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		Group grpAdd = new Group(grpList, SWT.NONE);
 		grpAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		grpAdd.setText("Add data"); //$NON-NLS-1$
+		grpAdd.setText(Messages.ExtensionBrowserURLDialog_6);
 		grpAdd.setLayout(new GridLayout(2, false));
 		
 		Label lblUse = new Label(grpAdd, SWT.NONE);
-		lblUse.setText("Use"); //$NON-NLS-1$
+		lblUse.setText(Messages.ExtensionBrowserURLDialog_7);
 		
 		comboUsed = new Combo(grpAdd, SWT.READ_ONLY);
 		comboUsed.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -152,20 +153,20 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		comboUsed.select(0);
 		
 		Label lblName = new Label(grpAdd, SWT.NONE);
-		lblName.setText("Name"); //$NON-NLS-1$
+		lblName.setText(Messages.ExtensionBrowserURLDialog_8);
 		
 		textName = new Text(grpAdd, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblUrl = new Label(grpAdd, SWT.NONE);
-		lblUrl.setText("URL"); //$NON-NLS-1$
+		lblUrl.setText(Messages.ExtensionBrowserURLDialog_9);
 		
 		textURL = new Text(grpAdd, SWT.BORDER);
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(grpAdd, SWT.NONE);
 		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDescription.setText("Description"); //$NON-NLS-1$
+		lblDescription.setText(Messages.ExtensionBrowserURLDialog_10);
 		
 		textComment = new Text(grpAdd, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -185,7 +186,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 				addExtensionBrowserData();
 			}
 		});
-		btnAdd.setText("Add"); //$NON-NLS-1$
+		btnAdd.setText(Messages.ExtensionBrowserURLDialog_11);
 		
 		Button btnDelete = new Button(composite, SWT.NONE);
 		btnDelete.addSelectionListener(new SelectionAdapter() {
@@ -194,7 +195,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 				deleteExtensionBrowserData();
 			}
 		});
-		btnDelete.setText("Delete"); //$NON-NLS-1$
+		btnDelete.setText(Messages.ExtensionBrowserURLDialog_12);
 
 		return container;
 	}
@@ -275,8 +276,8 @@ public class ExtensionBrowserURLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Save", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.ExtensionBrowserURLDialog_13, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ExtensionBrowserURLDialog_14, false);
 	}
 	
 	@Override

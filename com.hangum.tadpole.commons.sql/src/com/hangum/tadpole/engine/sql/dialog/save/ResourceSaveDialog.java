@@ -35,7 +35,7 @@ import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.engine.sql.util.RESTfulAPIUtils;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -192,7 +192,7 @@ public class ResourceSaveDialog extends Dialog {
 		retResourceDao.setDescription(textDescription.getText());
 		
 		retResourceDao.setRestapi_yesno(comboUseAPI.getText());
-		String strAPIKEY = "";
+		String strAPIKEY = ""; //$NON-NLS-1$
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboUseAPI.getText())) {
 			strAPIKEY = Utils.getUniqueID();
 		}
@@ -218,17 +218,17 @@ public class ResourceSaveDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == BTN_SHOW_URL) {
 			String strApiURI = textAPIURI.getText();
-			if(strApiURI.equals("")) {
-				MessageDialog.openError(getShell(), "Confirm", "Please input the API URI.");
+			if(strApiURI.equals("")) { //$NON-NLS-1$
+				MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_8);
 				textAPIURI.setFocus();
 				return;
 			} else if(RESOURCE_TYPE.ERD == resourceType) {
-				MessageDialog.openError(getShell(), "Confirm", "Does not support REST API.");
+				MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_10);
 				return;
 			}
 			
 			String strURL = RESTfulAPIUtils.makeURL(strContentData, textAPIURI.getText());
-			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), "API URL Information", strURL);
+			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.ResourceSaveDialog_11, strURL);
 			dialog.open();
 		} else {
 			super.buttonPressed(buttonId);
@@ -241,9 +241,9 @@ public class ResourceSaveDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, BTN_SHOW_URL, "Show URL", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.OK_ID, "Save", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
+		createButton(parent, BTN_SHOW_URL, Messages.ResourceSaveDialog_12, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ResourceSaveDialog_13, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ResourceSaveDialog_14, false);
 	}
 
 	/**
@@ -263,7 +263,7 @@ public class ResourceSaveDialog extends Dialog {
 	private boolean isValid() {
 		int len = StringUtils.trimToEmpty(textName.getText()).length();
 		if(len < 3) {
-			MessageDialog.openError(null, "Confirm", "The name must enter at least 3 characters."); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_16);
 			textName.setFocus();
 			return false;
 		}
@@ -273,15 +273,15 @@ public class ResourceSaveDialog extends Dialog {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboUseAPI.getText())) {
 				String strAPIURI = textAPIURI.getText().trim();
 				
-				if(strAPIURI.equals("")) {
-					MessageDialog.openError(getShell(), "Confirm", "Please input API URI");
+				if(strAPIURI.equals("")) { //$NON-NLS-1$
+					MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_19);
 					textAPIURI.setFocus();
 					return false;
 				}
 				
 				// check valid url. url pattern is must be /{parent}/{child}
 				if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
-					MessageDialog.openError(getShell(), "Error", "Check your url. url is must me start the '/' character");
+					MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_20, Messages.ResourceSaveDialog_21);
 					
 					textAPIURI.setFocus();
 					return false;

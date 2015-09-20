@@ -108,4 +108,13 @@ public class RequestInfoUtils {
 		return sua.getOSSimpleType();
 	}
 	
+	/**
+	 * user request ip
+	 * 
+	 * @return
+	 */
+	public static String getRequestIP() {
+		return RWT.getRequest().getLocalAddr();
+	}
+	
 }

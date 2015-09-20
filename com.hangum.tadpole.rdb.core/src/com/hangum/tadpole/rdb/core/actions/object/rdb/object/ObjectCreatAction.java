@@ -49,7 +49,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 	public ObjectCreatAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Create " + title);
+		setText(title);
 	}
 
 	@Override

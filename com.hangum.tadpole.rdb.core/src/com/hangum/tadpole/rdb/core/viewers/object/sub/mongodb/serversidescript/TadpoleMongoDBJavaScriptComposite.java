@@ -94,7 +94,8 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmIndex.setText("JavaScript"); //$NON-NLS-1$
+		tbtmIndex.setText("Javascript"); //$NON-NLS-1$
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
@@ -126,10 +127,10 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 						page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
 						
 					} catch (PartInitException e) {
-						logger.error("Mongodb javascirpt", e);
+						logger.error("Mongodb javascirpt", e); //$NON-NLS-1$
 						
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, "Error", "JavaScript Open Exception", errStatus); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(null, "Error", Messages.TadpoleMongoDBJavaScriptComposite_2, errStatus); //$NON-NLS-1$
 					}
 
 				} catch (Exception e) {
@@ -165,7 +166,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * @param indexComparator
 	 */
 	private void createMongoDBIndexesColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {"Name", "Contetn"};
+		String[] name = {Messages.TadpoleMongoDBJavaScriptComposite_3, Messages.TadpoleMongoDBJavaScriptComposite_4};
 		int[] size = {120, 200};
 
 		for (int i=0; i<name.length; i++) {
@@ -181,10 +182,10 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
-		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
-		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Java Script"); //$NON-NLS-1$
-		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, "Execute Java Script"); //$NON-NLS-1$)
+		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_5);
+		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_6);
+		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_7);
+		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_8);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

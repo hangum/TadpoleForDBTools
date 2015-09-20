@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
@@ -35,7 +37,7 @@ public class TadpoleSystem_AccessControl {
 	 * To save default access control data.
 	 * 
 	 */
-	public static DBAccessControlDAO saveDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws Exception {
+	public static DBAccessControlDAO saveDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws TadpoleSQLManagerException, SQLException {
 		DBAccessControlDAO dao = new DBAccessControlDAO();
 		dao.setDb_role_seq(roleDao.getSeq());
 		
@@ -49,19 +51,23 @@ public class TadpoleSystem_AccessControl {
 	 * Get user db access contorl data.
 	 * 
 	 * @param roleDao
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static DBAccessControlDAO getDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws Exception {
+	public static DBAccessControlDAO getDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		DBAccessControlDAO dbaccessCtl = (DBAccessControlDAO)sqlClient.queryForObject("getAccessControl", roleDao);
 		
-		// select 항목이 있다면..
-		List<AccessCtlObjectDAO> listAccessDetail = sqlClient.queryForList("getAccessCtlDetail", dbaccessCtl.getSeq());
-		Map<String, AccessCtlObjectDAO> mapAccessDetail = new HashMap<String, AccessCtlObjectDAO>();
-		for (AccessCtlObjectDAO accessCtlObjectDAO : listAccessDetail) {
-			mapAccessDetail.put(accessCtlObjectDAO.getObj_name(), accessCtlObjectDAO);
-		}
-		dbaccessCtl.setMapSelectAccessCtl(mapAccessDetail);
+		if(dbaccessCtl.getIntDetailCnt() == 0) {
+			dbaccessCtl.setMapSelectAccessCtl(new HashMap<String, AccessCtlObjectDAO>());
+		} else {
+			// select 항목이 있다면..
+			List<AccessCtlObjectDAO> listAccessDetail = sqlClient.queryForList("getAccessCtlDetail", dbaccessCtl.getSeq());
+			Map<String, AccessCtlObjectDAO> mapAccessDetail = new HashMap<String, AccessCtlObjectDAO>();
+			for (AccessCtlObjectDAO accessCtlObjectDAO : listAccessDetail) {
+				mapAccessDetail.put(accessCtlObjectDAO.getObj_name(), accessCtlObjectDAO);
+			}
+			dbaccessCtl.setMapSelectAccessCtl(mapAccessDetail);
+		} 
 		
 		return dbaccessCtl;
 	}
@@ -70,9 +76,9 @@ public class TadpoleSystem_AccessControl {
 	 * Get user db access contorl data.
 	 * 
 	 * @param intRoleSeq
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static DBAccessControlDAO getDBAccessControl(int intRoleSeq) throws Exception {
+	public static DBAccessControlDAO getDBAccessControl(int intRoleSeq) throws TadpoleSQLManagerException, SQLException {
 		TadpoleUserDbRoleDAO roleDao = new TadpoleUserDbRoleDAO();
 		roleDao.setSeq(intRoleSeq);
 		
@@ -83,9 +89,9 @@ public class TadpoleSystem_AccessControl {
 	 * update db access control
 	 * 
 	 * @param dao
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static void updateDBAccessControl(DBAccessControlDAO dao) throws Exception {
+	public static void updateDBAccessControl(DBAccessControlDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateAccessControl", dao);
 		

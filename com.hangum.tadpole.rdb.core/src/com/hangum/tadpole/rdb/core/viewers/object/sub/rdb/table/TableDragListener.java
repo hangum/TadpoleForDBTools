@@ -42,13 +42,21 @@ public class TableDragListener implements DragSourceListener {
 	public void dragSetData(DragSourceEvent event) {
 		IStructuredSelection iss = (IStructuredSelection)viewer.getSelection();
 		if(!iss.isEmpty()) {
-
-			TableDAO td = (TableDAO)iss.getFirstElement();
-			if(userDB.getDbms_type().equals(DBDefine.SQLite_DEFAULT)) {
-				event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName() + PublicTadpoleDefine.DELIMITER + "";
-			} else {
-				event.data = userDB.getSeq() + PublicTadpoleDefine.DELIMITER + td.getName() + PublicTadpoleDefine.DELIMITER + td.getComment();
+			
+			StringBuffer sbData = new StringBuffer();
+			sbData.append(userDB.getSeq() + PublicTadpoleDefine.DELIMITER);
+			
+			for(Object objTable : iss.toList()) {
+				TableDAO td = (TableDAO)objTable;//iss.getFirstElement();
+				if(userDB.getDbms_type().equals(DBDefine.SQLite_DEFAULT)) {
+					sbData.append(td.getName() + PublicTadpoleDefine.DELIMITER + "");
+				} else {
+					sbData.append(td.getName() + PublicTadpoleDefine.DELIMITER + td.getComment());
+				}
+				sbData.append(PublicTadpoleDefine.DELIMITER + PublicTadpoleDefine.DELIMITER_DBL);
 			}
+			
+			event.data = sbData.toString();
 		}
 	}
 

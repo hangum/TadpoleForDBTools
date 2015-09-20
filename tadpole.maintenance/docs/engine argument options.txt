@@ -38,7 +38,9 @@ Program Argument
 					*/
  -defaultDB     : 디비 입력시 선택디비 나열:
  				: ex : -defaultDB MySQL
- -forceSystemInitialize : 시스테의 초기테이블 데이터 생성을 항상 점검합니다.  일반적으로 한번만 합니다.  검사는 프리퍼런스에 하구요.
+ 
+ 
+ /* 더이상 사용하지 않는다. -forceSystemInitialize : 시스테의 초기테이블 데이터 생성을 항상 점검합니다.  일반적으로 한번만 합니다.  검사는 프리퍼런스에 하구요. */
 
   -resourcesDir  : resource directory 를 설정합니다.    
  				  전체 리소스는 리소스 루트에 각 사용자 리소스느는 id뒤에 놓습니다.

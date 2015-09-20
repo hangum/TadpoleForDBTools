@@ -34,7 +34,9 @@ public class Messages extends NLS {
 	public static String RDBShortcutHelpDialog_2;
 	public static String RDBShortcutHelpDialog_3;
 	public static String RDBShortcutHelpDialog_4;
+	public static String RDBShortcutHelpDialog_5;
 	public static String RDBShortcutHelpDialog_7;
+	public static String RDBShortcutHelpDialog_8;
 	public static String RDBShortcutHelpDialog_9;
 	static {
 		// initialize resource bundle

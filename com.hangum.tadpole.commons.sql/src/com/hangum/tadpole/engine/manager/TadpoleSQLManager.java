@@ -26,6 +26,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -71,7 +72,7 @@ public class TadpoleSQLManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws Exception {
+	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws TadpoleSQLManagerException {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
@@ -118,7 +119,7 @@ public class TadpoleSQLManager {
 				
 				dbManager.remove(searchKey);
 				
-				throw new Exception(e);
+				throw new TadpoleSQLManagerException(e);
 			} finally {
 				if(conn != null) try {conn.close();} catch(Exception e) {}
 			}
@@ -171,8 +172,8 @@ public class TadpoleSQLManager {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
 		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-//			String strFullKeywords = StringUtils.join(SQLConstants.ADVANCED_KEYWORDS, ",") + "," + sqlKeywords;
-//			tmd.setKeywords(strFullKeywords);
+			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + sqlKeywords;
+			tmd.setKeywords(strFullKeywords);
 		} else if(dbInfo.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method
 		} else if(dbInfo.getDBDefine() == DBDefine.HIVE_DEFAULT ||

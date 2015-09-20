@@ -33,9 +33,25 @@ public class PermissionChecker {
 	public static boolean isDBAdminRole(UserDBDAO userDB) {
 		String strDBRole = userDB.getRole_id();
 		
-		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strDBRole) || 
-				PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strDBRole) ||
-				PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strDBRole)) return true;
+		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.name().equals(strDBRole) || 
+				PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.name().equals(strDBRole) ||
+				PublicTadpoleDefine.USER_ROLE_TYPE.DBA.name().equals(strDBRole)) return true;
+		
+		return false;
+	}
+	
+	/**
+	 * db 가 프러덕이거나 백업 디비이면. 
+	 * @param userDB
+	 * @return
+	 */
+	public static boolean isProductBackup(UserDBDAO userDB) {
+		String strDBType = userDB.getOperation_type();
+		
+		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.name().equals(strDBType) ||
+				PublicTadpoleDefine.DBOperationType.BACKUP.name().equals(strDBType)) {
+			return true;
+		}
 		
 		return false;
 	}
@@ -88,9 +104,9 @@ public class PermissionChecker {
 			return true;
 		// real db라면 
 		} else {
-			if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType) || 
-					PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType) ||
-					PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strUserType)) return true;
+			if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.name().equals(strUserType) || 
+					PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.name().equals(strUserType) ||
+					PublicTadpoleDefine.USER_ROLE_TYPE.DBA.name().equals(strUserType)) return true;
 			
 			// GUEST USER인 경우 SELECT 만 허락합니다.
 			if(SQLUtil.isStatement(strSQL)) return true;
@@ -108,7 +124,7 @@ public class PermissionChecker {
 	public static boolean isAdmin(String strUserType) {
 		boolean boolReturn = false;
 		
-		if(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString().equals(strUserType)) { 
+		if(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(strUserType)) { 
 			boolReturn = true;
 		}
 		
@@ -125,7 +141,9 @@ public class PermissionChecker {
 		boolean boolReturn = false;
 		
 		if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType) || 
-				PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType)) {
+				PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType) ||
+				PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strUserType)
+				) {
 			boolReturn = true;
 		}
 		
@@ -171,9 +189,9 @@ public class PermissionChecker {
 		
 		// real db라면 
 		} else {
-			if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString().equals(strUserType) || 
-					PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.toString().equals(strUserType) ||
-					PublicTadpoleDefine.USER_ROLE_TYPE.DBA.toString().equals(strUserType)) return true;
+			if(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.name().equals(strUserType) || 
+					PublicTadpoleDefine.USER_ROLE_TYPE.MANAGER.name().equals(strUserType) ||
+					PublicTadpoleDefine.USER_ROLE_TYPE.DBA.name().equals(strUserType)) return true;
 		}
 		
 		return boolReturn;

@@ -148,7 +148,6 @@ public class IntroEditor extends EditorPart {
 //		
 ////		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
 ////		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-////		labelOsci.setText(Messages.IntroEditor_label_1_text);
 //		
 //		CLabel labelXenonix = new CLabel(grpDonor, SWT.NONE);
 //		labelXenonix.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

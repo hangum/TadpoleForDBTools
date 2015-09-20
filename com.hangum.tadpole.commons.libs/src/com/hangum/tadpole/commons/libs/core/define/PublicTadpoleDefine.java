@@ -10,7 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.define;
 
+import java.util.Properties;
+
 import org.apache.commons.io.IOUtils;
+import org.eclipse.rap.rwt.RWT;
 
 /**
  * 올챙이 전역 정의 
@@ -19,12 +22,16 @@ import org.apache.commons.io.IOUtils;
  *
  */
 public class PublicTadpoleDefine {
-	
+
+	/** 시스템 사용 그룹 정의 */
+	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  
+
 	/** rest api service key */
 	public static final String SERVICE_KEY_NAME = "serviceID";
-
+	
 	/** default system encrypt password */
-	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.tadpole.owner.son";
+	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
+	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.me.son";
 
 	/**
 	 * PLAN Statement ID
@@ -39,7 +46,8 @@ public class PublicTadpoleDefine {
 	/**
 	 * 분리자
 	 */
-	public static String DELIMITER = "||TADPOLE-DELIMITER||"; //$NON-NLS-1$
+	public static String DELIMITER = "||TDB-DELIMITER||"; //$NON-NLS-1$
+	public static String DELIMITER_DBL = "||TDB-DELIMITER-DBL||"; //$NON-NLS-1$
 	
 	/** 라인분리자 */
 	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
@@ -103,6 +111,19 @@ public class PublicTadpoleDefine {
 	 * This variable is user_role_table. 
 	 */
 	public static enum USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER, GUEST};
+	
+	/**
+	 * Setting SQL Client Info
+	 * @return
+	 */
+	public static Properties getSQLClientInfo() {
+		Properties prop = new Properties();
+		prop.setProperty("ApplicationName", String.format("%s %s %s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.RELEASE_DATE));
+		prop.setProperty("ClientUser", 		RWT.getRequest().getRemoteHost());
+		prop.setProperty("ClientHostname", 	RWT.getRequest().getLocalAddr());
+		
+		return prop;
+	}
 	
 	/**
 	 * db operation type

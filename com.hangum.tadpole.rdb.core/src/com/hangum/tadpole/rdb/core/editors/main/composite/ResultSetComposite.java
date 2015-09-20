@@ -16,7 +16,6 @@ import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -81,8 +80,8 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
-import com.hangum.tadpole.engine.sql.paremeter.JavaNamedParameterUtil;
-import com.hangum.tadpole.engine.sql.paremeter.SQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -543,7 +542,7 @@ public class ResultSetComposite extends Composite {
 		}
 
 		controlProgress(true);
-		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
+//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
 		
 		this.reqQuery = reqQuery; 
 		this.rsDAO = new QueryExecuteResultDTO();
@@ -564,7 +563,7 @@ public class ResultSetComposite extends Composite {
 				boolean isAlreadyApply = false;
 				try {
 					// if named parameter?
-					SQLNamedParameterUtil oracleNamedParamUtil = SQLNamedParameterUtil.getInstance();
+					OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
 					String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
 					
 					Map<String, int[]> mapIndex = oracleNamedParamUtil.getIndexMap();
@@ -677,7 +676,7 @@ public class ResultSetComposite extends Composite {
 					
 //					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 				} catch(Exception e) {
-					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
+//					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
 					sqlHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
 					sqlHistoryDAO.setMesssage(e.getMessage());
@@ -750,7 +749,7 @@ public class ResultSetComposite extends Composite {
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
 			if(!strCostumSQL.equals(reqQuery.getSql())) {
-				logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
+				if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
 				reqQuery.setSql(strCostumSQL);
 			}
 		}
@@ -792,8 +791,8 @@ public class ResultSetComposite extends Composite {
 			resultSet = runSQLSelect(statement, reqQuery);
 			
 			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT, getUserDB(), true, resultSet, intSelectLimitCnt);
-		} catch(SQLException e) {
-			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
+		} catch(Exception e) {
+//			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
 		} finally {
 			isCheckRunning = false;
@@ -814,11 +813,11 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param requestQuery
 	 */
-	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws SQLException, Exception {
+	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
-			public ResultSet call() throws SQLException {
+			public ResultSet call() throws Exception {
 				statement.execute(reqQuery.getSql());
 				return statement.getResultSet();
 			}

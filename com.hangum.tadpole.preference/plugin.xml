@@ -6,42 +6,42 @@
       <page
             class="com.hangum.tadpole.preference.ui.GeneralPreferencePage"
             id="com.hangum.tadpole.preference.page.general"
-            name="General">
+            name="%page.name">
       </page>
       <page
             class="com.hangum.tadpole.preference.ui.UserInfoPerference"
             id="com.hangum.db.browser.rap.core.page.userInfo"
-            name="User">
+            name="%page.name.0">
       </page>
       <page
             class="com.hangum.tadpole.preference.ui.RDBPreferencePage"
             id="com.hangum.db.browser.rap.core.page.rdb"
-            name="RDB">
+            name="%page.name.1">
       </page>
       <page
             class="com.hangum.tadpole.preference.ui.SQLFormatterPreferencePage"
             id="com.hangum.tadpole.preference.page.sqlformatter"
-            name="SQL Formatter">
+            name="%page.name.2">
       </page>
       <page
             class="com.hangum.tadpole.preference.ui.MongoDBPreferencePage"
             id="com.hangum.tadpole.preference.page.mongodb"
-            name="MongoDB">
+            name="%page.name.3">
       </page>
       <page
             class="com.hangum.tadpole.preference.ui.AmazonPreferencePage"
             id="com.hangum.tadpole.preference.page.aws.amazon"
-            name="Amazon account">
+            name="%page.name.4">
       </page>
       <page
             class="com.hangum.tadpole.preference.ui.PerspectivePreferencePage"
             id="com.hangum.tadpole.preference.page.perspective"
-            name="Perspective">
+            name="%page.name.5">
       </page>
       <page
             class="com.hangum.tadpole.preference.ui.SecurityCredentialPreference"
             id="com.hangum.tadpole.preference.page.securityCredentials"
-            name="API Security Credentials">
+            name="%page.name.6">
       </page>
    </extension>
 </plugin>

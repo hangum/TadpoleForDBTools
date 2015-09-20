@@ -68,7 +68,7 @@ public class UserLoginHistoryDialog extends Dialog {
 	 */
 	public UserLoginHistoryDialog(Shell parentShell) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 	}
 	
 	@Override

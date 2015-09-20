@@ -128,19 +128,19 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	 * 단축키 데이터
 	 */
 	private void initData() {
-		listShortcut.add(new ShortcutHelpDAO("Show Table Information", 	"F4")); //$NON-NLS-2$
-		listShortcut.add(new ShortcutHelpDAO("Select table name", 	prefixCtrlShortcut +"+ I")); //$NON-NLS-2$
+		listShortcut.add(new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_5, 	"F4")); //$NON-NLS-2$
+		listShortcut.add(new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_8, 	prefixCtrlShortcut +"+ I")); //$NON-NLS-2$
 		
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_4, 			prefixCtrlShortcut + "+ S") 		);
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_4, 			prefixCtrlShortcut + "+ S") 		); //$NON-NLS-1$
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
-			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		);
+			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		); //$NON-NLS-1$
 		} else {
-			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$
+			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$ //$NON-NLS-1$
 		}
 		
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$ //$NON-NLS-1$
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$ //$NON-NLS-1$
+		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
 		super.initShortList();
 		

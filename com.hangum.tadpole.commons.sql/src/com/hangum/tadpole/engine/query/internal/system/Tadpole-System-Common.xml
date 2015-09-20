@@ -32,6 +32,17 @@
     FROM tadpole_system
 </select>
 
+<!-- 사용처를 수정합니다. -->
+<update id="update_system" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO">
+	UPDATE tadpole_system
+	SET 
+		 name 			= #name#
+		,major_version 	= #major_version#
+		,sub_version 	= #sub_version#
+		,information 	= #information#
+		,execute_type 	= #execute_type#
+</update>
+
 <!-- 
 	=====================================================================
 	Tadpole Sequence
@@ -88,6 +99,7 @@
 	FROM tadpole_user 
 	WHERE 
 		email like #email#
+		AND delyn = 'NO'
 </select>
 
 <!-- 
@@ -104,8 +116,8 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, approval_yn, use_otp, otp_secret)
-	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#)
+	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, approval_yn, use_otp, otp_secret, allow_ip)
+	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 		SELECT * 
@@ -223,9 +235,23 @@
 <!-- 
 	유저의 권한 데이터를 수정합니다.
  -->
+<update id="updateUserPersonToGroup" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user 
+	SET
+		email = #email#,
+		passwd = #passwd#,
+		name = #name#,
+		allow_ip = #allow_ip#
+	WHERE seq = #seq#
+</update>
+
+<!-- 
+	유저의 권한 데이터를 수정합니다.
+ -->
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
 	SET
+		allow_ip = #allow_ip#,
 		delYn = #delYn#,
 		approval_yn = #approval_yn#,
 		is_email_certification = #is_email_certification#
@@ -399,11 +425,13 @@
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBOriginalDAO">
 	INSERT INTO tadpole_db( 
 		user_seq, operation_type, dbms_type, url, url_user_parameter, db, group_name, display_name, host, port, locale, passwd, users, 
-		is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser, is_monitoring, is_visible, is_summary_report
+		is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser, is_monitoring, is_visible, is_summary_report, 
+		is_lock
 	)
 	VALUES(
 		#user_seq#, #operation_type#, #dbms_type#, #url#, #url_user_parameter#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
-		#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#, #is_monitoring#, #is_visible#, #is_summary_report#
+		#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#, #is_monitoring#, #is_visible#, #is_summary_report#,
+		#is_lock#
 	);
 		
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -936,6 +964,7 @@ SELECT
  			b.datas, 
  			a.row, 
  			a.result,
+ 		   	u.email,
  		   	u.name, 
  		   	db.display_name, 
  		   	a.ipaddress, 
@@ -951,6 +980,7 @@ SELECT
 	 </isNotNull>
  <![CDATA[
 	  a.delyn = 'NO' AND
+	  u.email like #email# AND
 	  a.seq = b.executed_sql_resource_seq AND
 	  a.startdateexecute >= #startTime# AND  
       a.enddateexecute <= #endTime# AND

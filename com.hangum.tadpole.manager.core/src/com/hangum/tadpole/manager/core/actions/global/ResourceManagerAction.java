@@ -25,6 +25,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.resource.ResourceManageEditor;
 import com.hangum.tadpole.manager.core.editor.resource.ResourceManagerEditorInput;
 import com.swtdesigner.ResourceManager;
@@ -49,9 +50,9 @@ public class ResourceManagerAction extends Action implements ISelectionListener,
 		this.window = window;
 		
 		setId(ID);
-		setText("Resource Manager");
-		setToolTipText("Resource Manager");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/resources.png"));
+		setText(Messages.ResourceManagerAction_0);
+		setToolTipText(Messages.ResourceManagerAction_1);
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/resources.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
@@ -64,7 +65,7 @@ public class ResourceManagerAction extends Action implements ISelectionListener,
 			logger.error("Resource Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Resource Management editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Resource Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

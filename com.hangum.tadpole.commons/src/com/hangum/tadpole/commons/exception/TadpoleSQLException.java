@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.exception;
 
-public class TadpoleSQLException extends Exception {
+import java.sql.SQLException;
+
+public class TadpoleSQLException extends SQLException {
 	public TadpoleSQLException() {
 		super();
 	}

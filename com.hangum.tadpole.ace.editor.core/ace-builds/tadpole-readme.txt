@@ -1,4 +1,5 @@
 -- new version 작업시 참고사항
+
 												15.05.14-hangum 
 
 1. ace.js의 파일에 this.getSyntaxFoldRange 메소드를 추가해야합니다.
@@ -39,3 +40,5 @@
 3. 나머지 sql 파일들은 기존 ace 에디터를 가져와서 폴딩 기능을 수정한것입니다.  
 	제일 하단의 폴딩 함수와, 폴딩을 조절하는 코드를 수정해야합니다. 
 	복잡하면, 기존의 커밋 히스토리를 참고합니다. 
+4. javascript 압축은 : https://marketplace.eclipse.org/content/yuicompressor 를 사용하였슴.
+	-- ace.js의 압축은 효휼이 높은 : http://jscompress.com/ 를 이용했습니다.

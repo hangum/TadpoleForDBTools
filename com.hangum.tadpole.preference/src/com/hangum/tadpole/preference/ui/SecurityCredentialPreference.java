@@ -65,7 +65,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblUse = new Label(container, SWT.NONE);
-		lblUse.setText("Use");
+		lblUse.setText(Messages.SecurityCredentialPreference_0);
 		
 		comboIsUse = new Combo(container, SWT.READ_ONLY);
 		comboIsUse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -73,17 +73,16 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			comboIsUse.add(YESNO.name());
 		}
 		comboIsUse.select(0);
-		comboIsUse.setEnabled(false);
 		
 		Label lblAccesskey = new Label(container, SWT.NONE);
-		lblAccesskey.setText("Access Key");
+		lblAccesskey.setText(Messages.SecurityCredentialPreference_1);
 		
 		textAccessKey = new Text(container, SWT.BORDER);
 		textAccessKey.setEditable(false);
 		textAccessKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSecretKey = new Label(container, SWT.NONE);
-		lblSecretKey.setText("Secret Key");
+		lblSecretKey.setText(Messages.SecurityCredentialPreference_2);
 		
 		textSecretKey = new Text(container, SWT.BORDER);
 		textSecretKey.setEditable(false);
@@ -95,13 +94,13 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				if(!MessageDialog.openConfirm(getShell(), "Confirm", "Are you new api key?")) return;
+				if(!MessageDialog.openConfirm(getShell(), Messages.SecurityCredentialPreference_3, Messages.SecurityCredentialPreference_4)) return;
 				
 				textAccessKey.setText(Utils.getUniqueID());
 				textSecretKey.setText(Utils.getUniqueID());
 			}
 		});
-		btnGenerateKey.setText("Generate Key");
+		btnGenerateKey.setText(Messages.SecurityCredentialPreference_5);
 		
 		initDefaultValue();
 		
@@ -132,7 +131,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			updateInfo(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, txtSecretKey);
 			
 		} catch(Exception e) {
-			logger.error("api security credential saveing", e);
+			logger.error("api security credential saveing", e); //$NON-NLS-1$
 			
 			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;

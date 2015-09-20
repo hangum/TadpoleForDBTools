@@ -48,7 +48,7 @@ public class AboutDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("About...");
+		newShell.setText(Messages.AboutDialog_0);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class AboutDialog extends Dialog {
 		gd_lblNewLabelImage.minimumWidth = 300;
 		lblNewLabelImage.setLayoutData(gd_lblNewLabelImage);
 //		lblNewLabel_1.setText(Messages.AboutDialog_lblNewLabel_1_text);
-		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools.png"));
+		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools.png")); //$NON-NLS-1$
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));
@@ -85,30 +85,30 @@ public class AboutDialog extends Dialog {
 
 		// Thanks, stariki
 		Text txtVersion = new Text(composite_1, SWT.NONE) ;
-		txtVersion.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION);
+		txtVersion.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
 		txtVersion.setEditable(false);
 
 		Text txtRleaseDate = new Text(composite_1, SWT.NONE) ;
-		txtRleaseDate.setText(Messages.AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE);
+		txtRleaseDate.setText(Messages.AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE); //$NON-NLS-1$
 		txtRleaseDate.setEditable(false);
 		
 		Label label = new Label(composite_1, SWT.NONE);
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel0.setText("Mail : <a href=\"mailto:adi.tadpole@gmail.com\" target=\"_blank\">adi.tadpole@gmail.com</a>");//Messages.AboutAction_4);
+		lblNewLabel0.setText(Messages.AboutDialog_5);//Messages.AboutAction_4);
 
 		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
 		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText("Home : <a href=\"https://github.com/hangum/TadpoleForDBTools\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools</a>");//Messages.AboutAction_4);
+		lblNewLabel2.setText(Messages.AboutDialog_6);//Messages.AboutAction_4);
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel3.setText("Register Issue : <a href=\"https://github.com/hangum/TadpoleForDBTools/issues?state=open\" target=\"_blank\">https://github.com/hangum/TadpoleForDBTools/issues?state=open</a>");//Messages.AboutAction_4);
+		lblNewLabel3.setText(Messages.AboutDialog_7);//Messages.AboutAction_4);
 		
 		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
 		lblLicenseLgpl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblLicenseLgpl.setText("License: <a href=\"http://www.gnu.org/licenses/why-not-lgpl.en.html\" target=\"_blank\">LGPL</a>");
+		lblLicenseLgpl.setText(Messages.AboutDialog_8);
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
@@ -123,7 +123,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.AboutDialog_9, true);
 	}
 
 	/**

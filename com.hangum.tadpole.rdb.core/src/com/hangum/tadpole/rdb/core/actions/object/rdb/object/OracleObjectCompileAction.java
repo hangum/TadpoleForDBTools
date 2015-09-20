@@ -49,7 +49,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	public OracleObjectCompileAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Compile " + title);
+		setText(title);
 		window.getSelectionService().addSelectionListener(this);
 	}
 

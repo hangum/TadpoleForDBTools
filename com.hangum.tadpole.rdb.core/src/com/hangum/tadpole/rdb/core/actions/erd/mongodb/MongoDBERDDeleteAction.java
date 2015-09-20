@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 public class MongoDBERDDeleteAction implements IViewActionDelegate {
 	/**
@@ -41,7 +42,10 @@ public class MongoDBERDDeleteAction implements IViewActionDelegate {
 	@Override
 	public void run(IAction action) {
 		UserDBResourceDAO userDB = (UserDBResourceDAO)sel.getFirstElement();
-		
+		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
+			MessageDialog.openError(null, Messages.DeleteDBAction_0, Messages.DeleteDBAction_2);
+			return;
+		}
 		if(MessageDialog.openConfirm(null, Messages.ERDDeleteAction_0, Messages.ERDDeleteAction_1)) run(userDB);
 	}
 	

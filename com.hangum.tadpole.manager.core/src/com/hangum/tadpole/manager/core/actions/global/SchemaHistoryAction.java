@@ -25,6 +25,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.schemahistory.SchemaHistoryEditor;
 import com.hangum.tadpole.manager.core.editor.schemahistory.SchemaHistoryEditorInput;
 import com.swtdesigner.ResourceManager;
@@ -49,9 +50,9 @@ public class SchemaHistoryAction extends Action implements ISelectionListener, I
 		this.window = window;
 		
 		setId(ID);
-		setText("Schema History");
-		setToolTipText("Schema History");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/schema_history.png"));
+		setText(Messages.SchemaHistoryAction_0);
+		setToolTipText(Messages.SchemaHistoryAction_1);
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/schema_history.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
@@ -64,7 +65,7 @@ public class SchemaHistoryAction extends Action implements ISelectionListener, I
 			logger.error("SchemaHistory editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "SchemaHistory editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.SchemaHistoryAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 
