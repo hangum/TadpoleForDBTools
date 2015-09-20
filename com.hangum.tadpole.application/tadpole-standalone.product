@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-GAON -passwd tadpole.default.passwd -standalone -test -useDB all -defaultDB MySQL
+      <programArgs>-GAON -standalone -test -useDB all -defaultDB MySQL
       </programArgs>
       <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1
       </vmArgs>
