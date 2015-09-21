@@ -186,6 +186,8 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	private void paintingModel(int nextTableX, int nextTableY, String [] arryTables, Map<String, List<TableColumnDAO>> mapTable) {
 		Rectangle prevRectangle = null;
 		
+		int originalX = nextTableX;
+		int intCount = 1;
 		for (String strTable : arryTables) {
 			String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
 			if(arryTable.length == 0) continue;
@@ -216,22 +218,17 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 					tableModel.setComment(tableComment);
 				}
 				
-				if(prevRectangle == null) {
-					prevRectangle = new Rectangle(nextTableX, 
-							nextTableY, 
-							TadpoleModelUtils.END_TABLE_WIDTH, 
-							TadpoleModelUtils.END_TABLE_HIGHT); 
-				} else {
-					// 테이블의 좌표를 잡아줍니다. 
-					prevRectangle = new Rectangle(nextTableX, 
-												nextTableY, 
-												TadpoleModelUtils.END_TABLE_WIDTH, 
-												TadpoleModelUtils.END_TABLE_HIGHT);
-				}
+				// 테이블의 좌표를 잡아줍니다. 
+				prevRectangle = new Rectangle(nextTableX, 
+											nextTableY, 
+											TadpoleModelUtils.END_TABLE_WIDTH, 
+											TadpoleModelUtils.END_TABLE_HIGHT);
 				tableModel.setConstraints(prevRectangle);
-				nextTableX = prevRectangle.getTopRight().x + TadpoleModelUtils.GAP_WIDTH;
-				nextTableY = prevRectangle.getTopRight().x + TadpoleModelUtils.START_TABLE_WIDTH;
-				
+
+				// 다음 좌표를 계산합니다.
+				nextTableX = originalX + (TadpoleModelUtils.GAP_WIDTH * intCount);
+				intCount++;
+
 				try {
 					// 컬럼 모델 생성
 					for (TableColumnDAO columnDAO : mapTable.get(tableName)) {

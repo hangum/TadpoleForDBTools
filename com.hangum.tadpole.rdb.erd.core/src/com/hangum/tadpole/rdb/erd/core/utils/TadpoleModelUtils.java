@@ -57,7 +57,7 @@ public enum TadpoleModelUtils {
 	
 	/** 다음 테이블의 간격 */
 	public static final int GAP_HIGHT =  50;
-	public static final int GAP_WIDTH =  400;
+	public static final int GAP_WIDTH =  350;
 		
 	private RdbFactory factory = RdbFactory.eINSTANCE;
 	

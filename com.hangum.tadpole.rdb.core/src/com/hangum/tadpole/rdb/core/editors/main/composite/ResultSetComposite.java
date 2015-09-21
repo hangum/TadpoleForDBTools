@@ -860,16 +860,18 @@ public class ResultSetComposite extends Composite {
 						}
 					}
 					
-					if(i>100) i = 0;
-					final int progressAdd = i++; 
-					btnStopQuery.getDisplay().asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							progressBarQuery.setSelection(progressAdd);
-						}
-					});
-
-					Thread.sleep(20);
+					if(isCheckRunning) {
+						if(i>100) i = 0;
+						final int progressAdd = i++; 
+						btnStopQuery.getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								progressBarQuery.setSelection(progressAdd);
+							}
+						});
+	
+						Thread.sleep(20);
+					}
 				}   // end while
 			} catch(Exception e) {
 				logger.error("isCheckThread exception", e); //$NON-NLS-1$
