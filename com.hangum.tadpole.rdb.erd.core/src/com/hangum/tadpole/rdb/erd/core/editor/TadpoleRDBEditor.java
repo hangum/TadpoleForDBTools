@@ -133,7 +133,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		Job job = new Job("ERD Initialize") {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("ERD Initialize", IProgressMonitor.UNKNOWN);
+				monitor.beginTask("Painting table object", IProgressMonitor.UNKNOWN);
 		
 				try {
 					RdbFactory factory = RdbFactory.eINSTANCE;
@@ -142,7 +142,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 						
 						// 모든 table 정보를 가져온다.
 						if(isAllTable) {
-							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
+							db = TadpoleModelUtils.INSTANCE.getDBAllTable(monitor, userDB);
 						// 부분 테이블 정보를 처리한다.
 						} else {
 							db = factory.createDB();
@@ -171,6 +171,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 			}
 		};
 		
+		final TadpoleRDBEditor rdbEditor = this;
 		// job의 event를 처리해 줍니다.
 		job.addJobChangeListener(new JobChangeAdapter() {
 			
@@ -201,9 +202,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 							
 						}
 						getGraphicalViewer().setContents(db);
-						
+		
 						// dnd
-						getGraphicalViewer().addDropTargetListener(new TableTransferDropTargetListener(getGraphicalViewer(), userDB, db));
+						getGraphicalViewer().addDropTargetListener(new TableTransferDropTargetListener(rdbEditor, getGraphicalViewer(), userDB, db));
 					}
 					
 				});	// end display.asyncExec
@@ -213,7 +214,9 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
-		job.schedule();		
+		job.schedule();
+		
+
 	}	
 	
 	@Override

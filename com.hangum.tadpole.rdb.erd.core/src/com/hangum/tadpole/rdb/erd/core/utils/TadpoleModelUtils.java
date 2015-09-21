@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -74,7 +75,7 @@ public enum TadpoleModelUtils {
 	 * @param userDB
 	 * @return
 	 */
-	public DB getDBAllTable(final UserDBDAO userDB) throws Exception {
+	public DB getDBAllTable(final IProgressMonitor monitor, final UserDBDAO userDB) throws Exception {
 
 		DB db = factory.createDB();
 		db.setDbType(userDB.getDbms_type());
@@ -93,7 +94,11 @@ public enum TadpoleModelUtils {
 		int nextTableX = START_TABLE_WIDTH;
 		int nextTableY = START_TABLE_HIGHT;
 		
-		for(TableDAO table : tables) {
+		for(int i=0; i<tables.size(); i++) {
+			final TableDAO table = tables.get(i);
+			
+			monitor.subTask(String.format("Working %s/%s", i, tables.size()));
+			
 			Table tableModel = factory.createTable();
 			tableModel.setDb(db);
 			tableModel.setName(table.getName());
