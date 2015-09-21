@@ -846,31 +846,30 @@ public class ResultSetComposite extends Composite {
 			
 			try {
 				while(isCheckRunning) {
-					if(i>100) i = 0;
-					final int progressAdd = i++; 
-					
-					btnStopQuery.getDisplay().syncExec(new Runnable() {
-						@Override
-						public void run() {
-							progressBarQuery.setSelection(progressAdd);
-						}
-					});
-					
-					Thread.sleep(3);
 					
 					// Is user stop?
 					if(!isUserInterrupt) {
-						stmt.cancel();
 						isCheckRunning = false;
+						stmt.cancel();
 						
 						try {
-							if(logger.isDebugEnabled()) logger.debug("User stop operation is [statement close] " + stmt.isClosed()); //$NON-NLS-1$
+							if(logger.isDebugEnabled()) logger.debug("********* User stop operation is [statement close] " + stmt.isClosed()); //$NON-NLS-1$
 							if(!stmt.isClosed()) execServiceQuery.shutdown();
 						} catch(Exception ee) {
 							logger.error("Execute stop", ee); //$NON-NLS-1$
 						}
 					}
 					
+					if(i>100) i = 0;
+					final int progressAdd = i++; 
+					btnStopQuery.getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							progressBarQuery.setSelection(progressAdd);
+						}
+					});
+
+					Thread.sleep(20);
 				}   // end while
 			} catch(Exception e) {
 				logger.error("isCheckThread exception", e); //$NON-NLS-1$

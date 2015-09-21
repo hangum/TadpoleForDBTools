@@ -157,7 +157,7 @@ public class ResultMainComposite extends Composite {
 		if(logger.isDebugEnabled()) logger.debug("==> executeQuery user query is " + reqQuery.getOriginalSql()); //$NON-NLS-1$
 		
 		// selected first tab request quring.
-//		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
+		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		try {
 			// 요청쿼리가 없다면 무시합니다. 
