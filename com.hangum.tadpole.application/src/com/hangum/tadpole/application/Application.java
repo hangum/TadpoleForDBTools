@@ -50,7 +50,7 @@ public class Application implements EntryPoint {
 		try {
 			boolean isInitialize = TadpoleSystemInitializer.initSystem();
 			if(!isInitialize) {
-				logger.info("Initialize System default setting.");
+				if(logger.isInfoEnabled()) logger.info("Initialize System default setting.");
 				
 				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
 				if(Dialog.OK != dialog.open()) {
