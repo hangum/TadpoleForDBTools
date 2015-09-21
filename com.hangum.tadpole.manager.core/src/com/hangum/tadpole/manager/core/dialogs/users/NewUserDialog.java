@@ -43,6 +43,9 @@ import com.hangum.tadpole.commons.libs.core.mails.template.NewUserMailBodyTempla
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.engine.initialize.AddDefaultSampleDBToUser;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
@@ -273,7 +276,7 @@ public class NewUserDialog extends Dialog {
 			}
 			
 			String strEmailConformKey = Utils.getUniqueDigit(7);
-			TadpoleSystem_UserQuery.newUser(
+			UserDAO userDao = TadpoleSystem_UserQuery.newUser(
 					PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
 					strEmail, strEmailConformKey, isEmamilConrim, 
 					passwd, 
@@ -287,6 +290,12 @@ public class NewUserDialog extends Dialog {
 			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
 				sendEmailAccessKey(name, strEmail, strEmailConformKey);
 				isSentMail = true;
+			}
+			
+			try {
+				AddDefaultSampleDBToUser.addUserDefaultDB(userDao.getSeq(), userDao.getEmail());
+			} catch (Exception e) {
+				logger.error("Sample db copy error", e);
 			}
 			
 			if(isSentMail) MessageDialog.openInformation(null, Messages.NewUserDialog_14, Messages.NewUserDialog_31);

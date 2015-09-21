@@ -17,6 +17,8 @@ import com.hangum.tadpole.application.Messages;
 import com.hangum.tadpole.application.initialize.wizard.dao.SystemAdminWizardUserDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.engine.initialize.AddDefaultSampleDBToUser;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystemQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 
@@ -58,6 +60,8 @@ public class SystemInitializeWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
+		UserDAO systeUser = null; 
+		
 		if(PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name().equals(systemUseType.getUseType())) {
 			
 			try {
@@ -65,7 +69,7 @@ public class SystemInitializeWizard extends Wizard {
 				TadpoleSystemQuery.updateSystemInformation(PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name());
 				
 				// 기본 유저 하면을 입력합니다.				
-				TadpoleSystem_UserQuery.newUser(
+				systeUser = TadpoleSystem_UserQuery.newUser(
 						PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
 						PublicTadpoleDefine.SYSTEM_DEFAULT_USER, 
 						Utils.getUniqueDigit(7), 
@@ -91,7 +95,7 @@ public class SystemInitializeWizard extends Wizard {
 				TadpoleSystemQuery.updateSystemInformation(PublicTadpoleDefine.SYSTEM_USE_GROUP.GROUP.name());
 
 				// 사용자 등록
-				TadpoleSystem_UserQuery.newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
+				systeUser = TadpoleSystem_UserQuery.newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
 				adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
 				adminDao.getPasswd(), 	
 				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
@@ -100,6 +104,13 @@ public class SystemInitializeWizard extends Wizard {
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
 			}
+		}
+		
+		// savmpe database 를 생성합니다.
+		try {
+			AddDefaultSampleDBToUser.addUserDefaultDB(systeUser.getSeq(), systeUser.getEmail());
+		} catch (Exception e) {
+			logger.error("Sample db copy error", e);
 		}
 		
 		return true;
