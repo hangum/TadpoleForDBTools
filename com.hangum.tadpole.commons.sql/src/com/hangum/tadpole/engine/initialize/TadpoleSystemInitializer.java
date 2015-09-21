@@ -109,15 +109,15 @@ public class TadpoleSystemInitializer {
 				ClassLoader classLoader = TadpoleSystemInitializer.class.getClassLoader();
 				InputStream is = classLoader.getResourceAsStream("com/hangum/tadpole/engine/initialize/TadpoleEngineDBEngine.sqlite");
 				
-				int size = is.available();
-				byte[] dataByte = new byte[size];
-				is.read(dataByte, 0, size);
-				is.close();
+				byte[] dataByte = new byte[1024];
+				int len = 0;
 				
 				FileOutputStream fos = new FileOutputStream(DEFAULT_DB_FILE_LOCATION + DB_NAME);
-				fos.write(dataByte);
-				fos.flush();
+				while((len = is.read(dataByte)) > 0) {
+					fos.write(dataByte, 0, len);
+				}
 				
+				fos.close();
 				is.close();
 			}
 		}

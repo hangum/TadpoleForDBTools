@@ -35,6 +35,7 @@ public class AddDefaultSampleDBToUser {
 	
 	private static String strDefaultGroup = "SAMPLE GROUP";
 	private static String strDefaultDisplayName = "SAMPLE_Chinnok_Sqlite.sqlite";
+	private static String strFileName = "Chinook_Sqlite.sqlite";
 
 	/**
 	 * Sampledb copy
@@ -56,8 +57,9 @@ public class AddDefaultSampleDBToUser {
 		
 		UserDBDAO userDB = new UserDBDAO();
 		userDB.setDbms_type(DBDefine.SQLite_DEFAULT.getDBToString());
-		userDB.setUrl(String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), ROOT_RESOURCE_DIR + strDefaultDisplayName));
-		userDB.setDb(strDefaultDisplayName); //$NON-NLS-1$
+		String strUrl = String.format(DBDefine.SQLite_DEFAULT.getDB_URL_INFO(), ROOT_RESOURCE_DIR + strDefaultDisplayName);
+		userDB.setUrl(strUrl);
+		userDB.setDb(strFileName); //$NON-NLS-1$
 		userDB.setGroup_name(strDefaultGroup);
 		userDB.setDisplay_name(strDefaultDisplayName);
 		userDB.setOperation_type(PublicTadpoleDefine.DBOperationType.DEVELOP.name());
@@ -77,7 +79,6 @@ public class AddDefaultSampleDBToUser {
 		userDB.setListExternalBrowserdao(new ArrayList<ExternalBrowserInfoDAO>());
 		userDB.setIs_summary_report(PublicTadpoleDefine.YES_NO.NO.name());
 		userDB.setIs_monitoring(PublicTadpoleDefine.YES_NO.NO.name());
-		
 
 		TadpoleSystem_UserDBQuery.newUserDB(userDB, userSeq);
 	}
@@ -92,15 +93,15 @@ public class AddDefaultSampleDBToUser {
 		ClassLoader classLoader = TadpoleSystemInitializer.class.getClassLoader();
 		InputStream is = classLoader.getResourceAsStream("com/hangum/tadpole/engine/initialize/Chinook_Sqlite.sqlite");
 		
-		int size = is.available();
-		byte[] dataByte = new byte[size];
-		is.read(dataByte, 0, size);
-		is.close();
+		byte[] dataByte = new byte[1024];
+		int len = 0;
 		
 		FileOutputStream fos = new FileOutputStream(toLocation + strDefaultDisplayName);
-		fos.write(dataByte);
-		fos.flush();
+		while((len = is.read(dataByte)) > 0) {
+			fos.write(dataByte, 0, len);
+		}
 		
+		fos.close();
 		is.close();
 	}
 
