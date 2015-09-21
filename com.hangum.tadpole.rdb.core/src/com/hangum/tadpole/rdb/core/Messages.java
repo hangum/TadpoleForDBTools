@@ -16,7 +16,6 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
 	public static String MainEditor_74;
 	public static String AbstractLoginComposite_0;
-	public static String AbstractLoginComposite_1;
 	public static String AbstractLoginComposite_2;
 	public static String AbstractLoginComposite_3;
 	public static String AbstractLoginComposite_4;
@@ -693,6 +692,11 @@ public class Messages extends NLS {
 	public static String TableDirectEditorComposite_tltmRefersh_text;
 	public static String TablesComposite_0;
 	public static String TablesComposite_1;
+	public static String TDBErroDialog_0;
+	public static String TDBErroDialog_1;
+	public static String TDBErroDialog_2;
+	public static String TDBErroDialog_3;
+	public static String TDBErroDialog_4;
 	public static String RecordViewDialog_0;
 	public static String RecordViewDialog_1;
 	public static String RecordViewDialog_13;
