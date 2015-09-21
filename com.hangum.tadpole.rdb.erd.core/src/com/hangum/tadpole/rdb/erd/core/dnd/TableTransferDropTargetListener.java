@@ -37,6 +37,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.relation.RelationUtil;
+import com.hangum.tadpole.rdb.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.Column;
 import com.hangum.tadpole.rdb.model.DB;
@@ -105,6 +106,10 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			return;
 		}
 		
+		Rectangle prevRectangle = null;
+		int nextTableX = getDropLocation().x;
+		int nextTableY = getDropLocation().y;
+		
 		String strFullData = StringUtils.substringAfter(strDragSource, PublicTadpoleDefine.DELIMITER);
 		String [] arryTables = StringUtils.splitByWholeSeparator(strFullData, PublicTadpoleDefine.DELIMITER_DBL);
 		for (String strTable : arryTables) {
@@ -137,7 +142,21 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 					tableModel.setComment(tableComment);
 				}
 				
-				tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
+				if(prevRectangle == null) {
+					prevRectangle = new Rectangle(TadpoleModelUtils.START_TABLE_WIDTH, 
+							TadpoleModelUtils.START_TABLE_HIGHT, 
+							TadpoleModelUtils.END_TABLE_WIDTH, 
+							TadpoleModelUtils.END_TABLE_HIGHT); 
+				} else {
+					// 테이블의 좌표를 잡아줍니다. 
+					prevRectangle = new Rectangle(nextTableX, 
+												nextTableY, 
+												TadpoleModelUtils.END_TABLE_WIDTH, 
+												TadpoleModelUtils.END_TABLE_HIGHT);
+				}
+				tableModel.setConstraints(prevRectangle);//new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
+				nextTableX = prevRectangle.getTopRight().x + TadpoleModelUtils.GAP_WIDTH;
+				nextTableY = TadpoleModelUtils.START_TABLE_WIDTH;
 				
 				try {
 					// 컬럼 모델 생성
