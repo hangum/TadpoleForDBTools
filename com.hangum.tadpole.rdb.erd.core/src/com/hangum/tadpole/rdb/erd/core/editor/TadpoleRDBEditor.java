@@ -113,9 +113,6 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 	/** 처음로드될때부터 모든 테이블 로드 인지 */
 	private boolean isAllTable = false;
 	
-//	/** auto layout action */
-//	private AutoLayoutAction autoLayoutAction;
-	
 	/** short key handler */
 	private KeyHandler keyHandler;
 
@@ -171,8 +168,8 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 			}
 		};
 		
-		final TadpoleRDBEditor rdbEditor = this;
 		// job의 event를 처리해 줍니다.
+		final TadpoleRDBEditor rdbEditor = this;
 		job.addJobChangeListener(new JobChangeAdapter() {
 			
 			public void done(IJobChangeEvent event) {

@@ -414,7 +414,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		
 		// 테이블 등록시 테이블 목록 보이지 않는 옵션을 선택했는지.
 		if(PublicTadpoleDefine.YES_NO.NO.name().equals(this.userDB.getIs_showtables())) {
-			showTables.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, "")); //$NON-NLS-2$ //$NON-NLS-1$
+			showTables.add(new TableDAO(Messages.TadpoleMongoDBCollectionComposite_4, Messages.TadpoleMongoDBCollectionComposite_17)); //$NON-NLS-2$ //$NON-NLS-1$
 			
 			tableListViewer.setInput(showTables);
 			tableListViewer.refresh();
@@ -425,7 +425,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				monitor.beginTask(Messages.TadpoleMongoDBCollectionComposite_18, IProgressMonitor.UNKNOWN);
 				
 				try {
 					showTables= MongoDBQuery.listCollection(userDB);

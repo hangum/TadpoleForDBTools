@@ -577,7 +577,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		Job job = new Job(Messages.MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connecting database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				monitor.beginTask(Messages.TadpoleTableComposite_17, IProgressMonitor.UNKNOWN);
 				
 				try {
 					listTablesDAO = getTableList(userDB);

@@ -405,6 +405,8 @@ public class Messages extends NLS {
 	public static String TadpoleMongoDBCollectionComposite_14;
 	public static String TadpoleMongoDBCollectionComposite_15;
 	public static String TadpoleMongoDBCollectionComposite_16;
+	public static String TadpoleMongoDBCollectionComposite_17;
+	public static String TadpoleMongoDBCollectionComposite_18;
 	public static String TadpoleMongoDBCollectionComposite_2;
 	public static String TadpoleMongoDBCollectionComposite_3;
 	public static String TadpoleMongoDBCollectionComposite_4;
@@ -467,6 +469,7 @@ public class Messages extends NLS {
 	public static String TadpoleTableComposite_14;
 	public static String TadpoleTableComposite_15;
 	public static String TadpoleTableComposite_16;
+	public static String TadpoleTableComposite_17;
 	public static String TadpoleTableComposite_2;
 	public static String TadpoleTableComposite_3;
 	public static String TadpoleTableComposite_4;

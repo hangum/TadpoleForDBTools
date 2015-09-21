@@ -32,8 +32,6 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -151,7 +149,6 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				return Status.OK_STATUS;
 			}
 		};
-		
 	
 		// job의 event를 처리해 줍니다.
 		job.addJobChangeListener(new JobChangeAdapter() {
@@ -174,7 +171,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 		
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
-		job.schedule();	
+		job.schedule();
 		
 	}
 	

@@ -45,8 +45,6 @@ public enum TadpoleModelUtils {
 	
 	private static final Logger logger = Logger.getLogger(TadpoleModelUtils.class);
 	
-//	private UserDBDAO userDB;
-	
 	/** 한 행에 테이블을 표시하는 갯수 */
 	public static final int ROW_COUNT = 5;
 	
@@ -72,6 +70,7 @@ public enum TadpoleModelUtils {
 	/**
 	 * logindb의  모든 테이블 정보를 리턴합니다.
 	 * 
+	 * @param monitor
 	 * @param userDB
 	 * @return
 	 */
@@ -95,10 +94,9 @@ public enum TadpoleModelUtils {
 		int nextTableY = START_TABLE_HIGHT;
 		
 		for(int i=0; i<tables.size(); i++) {
-			final TableDAO table = tables.get(i);
-			
 			monitor.subTask(String.format("Working %s/%s", i, tables.size()));
 			
+			final TableDAO table = tables.get(i);
 			Table tableModel = factory.createTable();
 			tableModel.setDb(db);
 			tableModel.setName(table.getName());

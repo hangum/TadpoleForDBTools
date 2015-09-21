@@ -27,7 +27,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 
-import com.hangum.tadpole.rdb.erd.core.actions.ERDRefreshAction;
 import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleAction;
 import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleRetargetAction;
 

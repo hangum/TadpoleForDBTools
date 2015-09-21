@@ -127,7 +127,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 					if(db == null) {
 						// 모든 table 정보를 가져온다.
 						if(isAllTable) {
-							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
+							db = TadpoleModelUtils.INSTANCE.getDBAllTable(monitor, userDB);
 						// 부분 테이블 정보를 처리한다.
 						} else {
 							MongodbFactory factory = MongodbFactory.eINSTANCE;
@@ -151,6 +151,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 		};
 		
 		// job의 event를 처리해 줍니다.
+		final TadpoleMongoDBERDEditor mongoEditor = this;
 		job.addJobChangeListener(new JobChangeAdapter() {
 			
 			public void done(IJobChangeEvent event) {
@@ -176,7 +177,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 						getGraphicalViewer().setContents(db);
 						
 						// dnd
-						getGraphicalViewer().addDropTargetListener(new TableTransferDropTargetListener(getGraphicalViewer(), userDB, db));
+						getGraphicalViewer().addDropTargetListener(new TableTransferDropTargetListener(mongoEditor, getGraphicalViewer(), userDB, db));
 					}
 					
 				});	// end display.asyncExec
