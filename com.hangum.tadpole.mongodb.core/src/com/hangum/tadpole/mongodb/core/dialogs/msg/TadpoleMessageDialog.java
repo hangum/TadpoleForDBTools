@@ -52,7 +52,7 @@ public class TadpoleMessageDialog extends Dialog {
 	 */
 	public TadpoleMessageDialog(Shell parentShell, String title, String head, String message) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.title = title;
 		this.head = head;

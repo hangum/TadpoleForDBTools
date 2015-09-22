@@ -11,6 +11,8 @@
 package com.hangum.tadpole.importdb.core.dialog.importdb.mongodb;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,7 +122,14 @@ public class RDBTableToMongoDBImport extends DBImport {
 					// BigDecimal is not support mongodb 
 					if(resultMap.get(j) instanceof java.math.BigDecimal) {
 						BigDecimal db = (BigDecimal)resultMap.get(j);
-						insertObject.put(mapCNameToIndex.get(j), db.longValue());	
+						insertObject.put(mapCNameToIndex.get(j), ""+db.longValue());
+					} else if(resultMap.get(j) instanceof java.math.BigInteger) {
+						BigInteger db = (BigInteger)resultMap.get(j);
+						insertObject.put(mapCNameToIndex.get(j), ""+db.longValue());
+					} else if(resultMap.get(j) instanceof java.sql.Timestamp) {
+						Timestamp ts = (Timestamp)resultMap.get(j);
+						
+						insertObject.put(mapCNameToIndex.get(j), ts.toString());
 					} else {
 						insertObject.put(mapCNameToIndex.get(j), resultMap.get(j));
 					}						

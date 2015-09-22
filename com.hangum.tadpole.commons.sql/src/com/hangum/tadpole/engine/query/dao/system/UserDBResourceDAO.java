@@ -13,7 +13,7 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.util.Date;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * user_db_resource dao
@@ -33,6 +33,7 @@ public class UserDBResourceDAO {
 	
 	// 공유자원 rest-api 지원 여부.
 	String restapi_yesno = PublicTadpoleDefine.YES_NO.NO.name();
+	String restapi_uri = "";
 	String restapi_key = "";
 	
 	// 기타 부가 정보. 
@@ -201,5 +202,12 @@ public class UserDBResourceDAO {
 		this.restapi_key = restapi_key;
 	}
 
-	
+	public String getRestapi_uri() {
+		return restapi_uri;
+	}
+
+	public void setRestapi_uri(String restapi_uri) {
+		this.restapi_uri = restapi_uri;
+	}
+
 }

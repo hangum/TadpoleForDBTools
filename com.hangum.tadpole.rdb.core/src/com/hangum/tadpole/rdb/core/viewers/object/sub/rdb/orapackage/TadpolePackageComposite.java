@@ -40,8 +40,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -113,7 +113,8 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmProcedures.setText("Packages"); //$NON-NLS-1$
+		tbtmProcedures.setText(Messages.TadpolePackageComposite_0);
+		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.PACKAGES.name());
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositePackages);
@@ -214,14 +215,14 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	}
 
 	private void createMenu() {
-		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
+		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_3);
+		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_4);
+		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_5);
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_6);
 
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, "Package"); //$NON-NLS-1$
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_7);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_8);
 
 
 		// menu
@@ -234,6 +235,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_Package);
 						manager.add(dropAction_Package);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 					manager.add(refreshAction_Package);
 
@@ -241,8 +243,8 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					manager.add(viewDDLAction);
 				}
 
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(objectCompileAction);
 				}
 			}
@@ -292,7 +294,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * package procedure function list
 	 */
 	protected void createProcedureFunctionListColumne(final TableViewer tv) {
-		String[] name = {"Type", "Name"};
+		String[] name = {Messages.TadpolePackageComposite_1, Messages.TadpolePackageComposite_2};
 		int[] size = {120, 300};
 
 		for (int i=0; i<name.length; i++) {

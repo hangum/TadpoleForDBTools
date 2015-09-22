@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.template;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * MySQL 디비의 쿼리를 정의 합니다.

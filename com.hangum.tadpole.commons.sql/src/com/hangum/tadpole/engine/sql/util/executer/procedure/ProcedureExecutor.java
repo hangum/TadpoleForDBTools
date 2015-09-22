@@ -18,7 +18,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -97,7 +97,7 @@ public abstract class ProcedureExecutor {
 	 */
 	protected String getMakeExecuteScript() throws Exception {
 		StringBuffer sbQuery = new StringBuffer();
-		if ("FUNCTION".equals(procedureDAO.getType())){
+		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
 				sbQuery.append("select " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
 			}else{
@@ -142,7 +142,7 @@ public abstract class ProcedureExecutor {
 			if (type.equals(listInParamValues.get(i).getType())) cnt++;
 		}
 		for(int i=0;i< this.listOutParamValues.size();i++){
-			if (type.equals(listOutParamValues.get(i).getType()) && "OUT".equals(listOutParamValues.get(i).getType())) cnt++;
+			if (type.equals(listOutParamValues.get(i).getType()) && "OUT".equalsIgnoreCase(listOutParamValues.get(i).getType())) cnt++;
 		}
 		
 		return cnt;
@@ -151,7 +151,7 @@ public abstract class ProcedureExecutor {
 		int cnt = this.listInParamValues.size();
 		
 		for(int i=0;i< this.listOutParamValues.size();i++){
-			if ("OUT".equals(listOutParamValues.get(i).getType())) cnt++;
+			if ("OUT".equalsIgnoreCase(listOutParamValues.get(i).getType())) cnt++;
 		}
 		
 		return cnt;

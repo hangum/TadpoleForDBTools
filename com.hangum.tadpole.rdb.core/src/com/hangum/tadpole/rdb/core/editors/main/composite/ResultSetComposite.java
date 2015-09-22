@@ -12,14 +12,10 @@
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -30,7 +26,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -70,23 +65,23 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
+import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -121,6 +116,11 @@ import com.swtdesigner.SWTResourceManager;
  *
  */
 public class ResultSetComposite extends Composite {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3706926974815713584L;
+
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
 	
@@ -440,22 +440,11 @@ public class ResultSetComposite extends Composite {
 			listCsvData.add(strArrys);
 		}
 		
-		String filename = PublicTadpoleDefine.TEMP_DIR + getUserDB().getDisplay_name() + "_SQLResultExport.csv"; //$NON-NLS-1$
 		try {
-			FileOutputStream fos = new FileOutputStream(filename);
-			OutputStreamWriter bw = new OutputStreamWriter(fos, "UTF-8"); //$NON-NLS-1$
-			
-			CSVWriter writer = new CSVWriter(bw);
-			writer.writeAll(listCsvData);
-			bw.close();
-			
-			String strCVSContent = FileUtils.readFileToString(new File(filename));
-			
-			downloadExtFile(getUserDB().getDisplay_name() + "_SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
+			String strCVSContent = CSVFileUtils.makeData(listCsvData);
+			downloadExtFile("SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
 		} catch(Exception ee) {
 			logger.error("csv type export error", ee); //$NON-NLS-1$
-		} finally {
-			FileUtils.deleteQuietly(new File(filename));
 		}
 	}
 	
@@ -553,7 +542,7 @@ public class ResultSetComposite extends Composite {
 		}
 
 		controlProgress(true);
-		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
+//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
 		
 		this.reqQuery = reqQuery; 
 		this.rsDAO = new QueryExecuteResultDTO();
@@ -571,22 +560,51 @@ public class ResultSetComposite extends Composite {
 					// not support this java.sql.ParameterMetaData 
 					selectDBDefine == DBDefine.CUBRID_DEFAULT)
 			) {
+				boolean isAlreadyApply = false;
 				try {
-					ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), reqQuery.getSql());
-					if (epd.getParamCount() > 0){
+					// if named parameter?
+					OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
+					String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+					
+					Map<String, int[]> mapIndex = oracleNamedParamUtil.getIndexMap();
+					if(!mapIndex.isEmpty()) {
+						isAlreadyApply = true;
+						
+						ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndex);
 						if(Dialog.OK == epd.open()) {
-							ParameterObject paramObj = epd.getParameterObject();
-							String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+							
+							ParameterObject paramObj = epd.getOracleParameterObject(oracleNamedParamUtil.getMapIndexToName());
+							String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
 							reqQuery.setSql(repSQL);
 							
-							if(logger.isDebugEnabled()) logger.debug("User parameter query is  " + repSQL); //$NON-NLS-1$
+							if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
 						}
 					}
 				} catch(Exception e) {
 					logger.error("Parameter parse", e); //$NON-NLS-1$
 				}
+
+				if(!isAlreadyApply) {
+					try {
+						// java named parameter
+						JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
+						int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
+						if(paramCnt > 0) {
+							ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
+							if(Dialog.OK == epd.open()) {
+								ParameterObject paramObj = epd.getParameterObject();
+								String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+								reqQuery.setSql(repSQL);
+								
+								if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
+							}
+						}
+					} catch(Exception e) {
+						logger.error("Parameter parse", e); //$NON-NLS-1$
+					}
+				}  // if(!isAlreadyApply
 			}
-		}
+		}	// end if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
 		
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
@@ -652,13 +670,13 @@ public class ResultSetComposite extends Composite {
 								TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
 							}
 						} else {
-							ExecuteOtherSQL.runSQLOther(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
+							ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
 					}
 					
 //					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 				} catch(Exception e) {
-					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
+//					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
 					sqlHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
 					sqlHistoryDAO.setMesssage(e.getMessage());
@@ -731,7 +749,7 @@ public class ResultSetComposite extends Composite {
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
 			if(!strCostumSQL.equals(reqQuery.getSql())) {
-				logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
+				if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
 				reqQuery.setSql(strCostumSQL);
 			}
 		}
@@ -756,8 +774,7 @@ public class ResultSetComposite extends Composite {
 			
 			statement.setFetchSize(intSelectLimitCnt);
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
 			) {
 				statement.setQueryTimeout(queryTimeOut);
 				statement.setMaxRows(intSelectLimitCnt);
@@ -774,8 +791,8 @@ public class ResultSetComposite extends Composite {
 			resultSet = runSQLSelect(statement, reqQuery);
 			
 			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT, getUserDB(), true, resultSet, intSelectLimitCnt);
-		} catch(SQLException e) {
-			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
+		} catch(Exception e) {
+//			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
 		} finally {
 			isCheckRunning = false;
@@ -796,11 +813,11 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param requestQuery
 	 */
-	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws SQLException, Exception {
+	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
-			public ResultSet call() throws SQLException {
+			public ResultSet call() throws Exception {
 				statement.execute(reqQuery.getSql());
 				return statement.getResultSet();
 			}
@@ -839,7 +856,7 @@ public class ResultSetComposite extends Composite {
 						}
 					});
 					
-					Thread.sleep(5);
+					Thread.sleep(3);
 					
 					// Is user stop?
 					if(!isUserInterrupt) {
@@ -903,10 +920,9 @@ public class ResultSetComposite extends Composite {
 			
 			progressBarQuery.setSelection(0);
 			
-			// HIVE, TAJO는 CANCLE 기능이 없습니다. 
+			// HIVE는 CANCLE 기능이 없습니다. 
 			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT)
+					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
 			) {
 				btnStopQuery.setEnabled(true);
 			}
@@ -977,10 +993,8 @@ public class ResultSetComposite extends Composite {
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.
-			SchemaHistoryDAO schemaDao = new SchemaHistoryDAO();
 			try {
-//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
-				schemaDao = TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
+				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
 						"EDITOR", //$NON-NLS-1$
 						reqQuery.getQueryType().name(),
 						"", //$NON-NLS-1$

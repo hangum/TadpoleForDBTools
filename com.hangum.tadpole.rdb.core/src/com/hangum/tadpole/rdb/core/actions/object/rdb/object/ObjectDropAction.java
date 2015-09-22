@@ -15,8 +15,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBServerSideJavaScriptDAO;
@@ -49,7 +49,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 		super(window, actionType);
 		
 		setId(ID + actionType);
-		setText("Drop " + title); //$NON-NLS-1$
+		setText(title);
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_2, Messages.ObjectDeleteAction_3)) {
-					String strSQL = "drop table " + dao.getSysName();
+					String strSQL = "drop table " + dao.getSysName(); //$NON-NLS-1$
 					try {
 						if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 							new TajoConnectionManager().executeUpdate(userDB, strSQL);

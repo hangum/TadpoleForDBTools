@@ -47,9 +47,9 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		
 		setId(ID);
 		setText(Messages.ExitAction_0);
-		setToolTipText("Log out");
+		setToolTipText(Messages.ExitAction_1);
 
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png"));
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png")); //$NON-NLS-1$
 	}
 
 	@Override

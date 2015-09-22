@@ -39,8 +39,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -104,7 +104,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmIndex.setText("Indexes"); //$NON-NLS-1$
+		tbtmIndex.setText(Messages.TadpoleIndexesComposite_0);
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.INDEXES.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
@@ -146,9 +147,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 
 						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 						HashMap<String, String>paramMap = new HashMap<String, String>();
-						paramMap.put("table_schema", index.getTABLE_SCHEMA());
-						paramMap.put("table_name", index.getTABLE_NAME());
-						paramMap.put("index_name", index.getINDEX_NAME());
+						paramMap.put("table_schema", index.getTABLE_SCHEMA()); //$NON-NLS-1$
+						paramMap.put("table_name", index.getTABLE_NAME()); //$NON-NLS-1$
+						paramMap.put("index_name", index.getINDEX_NAME()); //$NON-NLS-1$
 						
 						showIndexColumns = sqlClient.queryForList("indexDetailList", paramMap); //$NON-NLS-1$
 
@@ -235,7 +236,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * index column list
 	 */
 	protected void createIndexColumne(final TableViewer tv) {
-		String[] name = {"Seq", "Column", "Order"};
+		String[] name = {Messages.TadpoleIndexesComposite_4, Messages.TadpoleIndexesComposite_5, Messages.TadpoleIndexesComposite_6};
 		int[] size = {60, 300, 50};
 
 		for (int i=0; i<name.length; i++) {
@@ -250,11 +251,11 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "Index"); //$NON-NLS-1$
+		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_1);
+		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_2);
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_7);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -266,6 +267,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_Index);
 						manager.add(dropAction_Index);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 					
 					manager.add(refreshAction_Index);

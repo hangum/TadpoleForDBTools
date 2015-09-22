@@ -42,7 +42,7 @@ import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 public class SynchronizedEditorHandler extends AbstractHandler {
 	private static final Logger logger = Logger.getLogger(SynchronizedEditorHandler.class);
 	public static final String ID = "com.hangum.tadpole.rdb.core.command.synceditor";
-	public static final String STATE_ID = "org.eclipse.ui.commands.toggleState";//com.hangum.tadpole.rdb.core.command.synceditor.state";
+	public static final String STATE_ID = "org.eclipse.ui.commands.toggleState";
 	
 	/**
 	 * 현재 synceditor의 상태 정보를 가지고 온다.

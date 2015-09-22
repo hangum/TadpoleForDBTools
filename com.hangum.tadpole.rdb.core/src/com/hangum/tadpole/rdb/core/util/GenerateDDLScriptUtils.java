@@ -17,8 +17,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -55,7 +55,11 @@ public class GenerateDDLScriptUtils {
 				else sbSQL.append(" "); //$NON-NLS-1$
 			}
 			
-			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + tableDAO.getSysName() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM "); //$NON-NLS-1$ 
+			if("".equals(tableDAO.getSchema_name())) sbSQL.append(tableDAO.getSysName()); //$NON-NLS-2$
+			else  sbSQL.append(tableDAO.getSchema_name() + "." + tableDAO.getSysName()); //$NON-NLS-2$
+			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 			
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLSelectAction_8, e);

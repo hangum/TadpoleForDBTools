@@ -16,8 +16,8 @@ import java.sql.Statement;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -26,12 +26,11 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * 
+ * Execute ddl, insert, update, delete etc..
  *
  * @author hangum
  * @version 1.6.1
@@ -41,16 +40,19 @@ public class ExecuteOtherSQL {
 	private static final Logger logger = Logger.getLogger(ExecuteOtherSQL.class);
 	
 	/**
-	 * select문 이외의 쿼리를 실행합니다
+	 * other sql execution
 	 * 
 	 * @param reqQuery
-	 * @exception
+	 * @param userDB
+	 * @param userType
+	 * @param userEmail
+	 * @throws SQLException
+	 * @throws Exception
 	 */
-	public static void runSQLOther(
-			final RequestQuery reqQuery, 
+	public static void runPermissionSQLExecution(final RequestQuery reqQuery, 
 			final UserDBDAO userDB,
 			final String userType,
-			final String userEmail) throws SQLException, Exception 
+			final String userEmail) throws SQLException, Exception
 	{
 		if(!PermissionChecker.isExecute(userType, userDB, reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
@@ -77,6 +79,22 @@ public class ExecuteOtherSQL {
 				throw new Exception(Messages.MainEditor_21);
 			}
 		}
+		
+		runSQLOther(reqQuery, userDB, userType, userEmail);
+	}
+	
+	/**
+	 * select문 이외의 쿼리를 실행합니다
+	 * 
+	 * @param reqQuery
+	 * @exception
+	 */
+	public static void runSQLOther(
+			final RequestQuery reqQuery, 
+			final UserDBDAO userDB,
+			final String userType,
+			final String userEmail) throws SQLException, Exception 
+	{
 		
 		// is tajo
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
@@ -116,13 +134,13 @@ public class ExecuteOtherSQL {
 						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
 						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
 					) { //$NON-NLS-1$
-						reqQuery.setSql(reqQuery.getSql() + UserPreference.QUERY_DELIMITER); //$NON-NLS-1$
+						reqQuery.setSql(reqQuery.getSql() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 					}
 				}
 				
 				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | 
-					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT |
+				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
 				) { 
 					

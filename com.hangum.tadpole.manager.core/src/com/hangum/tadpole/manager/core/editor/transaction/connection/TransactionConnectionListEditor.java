@@ -11,10 +11,6 @@
 package com.hangum.tadpole.manager.core.editor.transaction.connection;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,7 +50,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Transaction Connection List
@@ -183,7 +178,8 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * general table create columns
 	 */
 	private void createGeneralColumns() {
-		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14, "Active Connections", "Max Active Count", "Idle Count", "Max wait"};
+		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14, 
+				Messages.GeneralConnecionPoolLabelprovider_0, Messages.GeneralConnecionPoolLabelprovider_1, Messages.GeneralConnecionPoolLabelprovider_2, Messages.GeneralConnecionPoolLabelprovider_3};
 		int[] sizes = {80, 200, 100, 100, 100, 100};
 				
 		for(int i=0; i<names.length; i++) {

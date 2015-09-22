@@ -16,8 +16,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -209,7 +208,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 	 */
 	@Override
 	public String getFunctionScript(ProcedureFunctionDAO functionDAO) throws Exception {
-		logger.debug("\n Function DDL Generation...");
+		if(logger.isDebugEnabled()) logger.debug("\n Function DDL Generation...");
 
 		return (getFunctionScript(functionDAO.getName()));
 
@@ -256,7 +255,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 	@Override
 	public String getProcedureScript(ProcedureFunctionDAO procedureDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		logger.debug("\n Procedure DDL Generation...");
+		if(logger.isDebugEnabled()) logger.debug("\n Procedure DDL Generation...");
 
 		StringBuilder result = new StringBuilder("");
 
@@ -299,7 +298,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		String objectName = triggerDAO.getTrigger();
 
-		logger.debug("\n Trigger DDL Generation...");
+		if(logger.isDebugEnabled()) logger.debug("\n Trigger DDL Generation...");
 
 		StringBuilder result = new StringBuilder("");
 
@@ -323,9 +322,11 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		map.put("package_name", procedureDAO.getPackagename());
 		map.put("object_name", procedureDAO.getName());
 
-		logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
-		logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
-		logger.debug("\n procedureDAO=" + procedureDAO);
+		if(logger.isDebugEnabled()) {
+			logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
+			logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
+			logger.debug("\n procedureDAO=" + procedureDAO);
+		}
 
 		return client.queryForList("getProcedureInParamter", map);
 	}

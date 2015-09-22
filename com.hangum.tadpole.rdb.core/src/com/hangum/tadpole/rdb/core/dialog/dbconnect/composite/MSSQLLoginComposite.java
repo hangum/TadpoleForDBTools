@@ -29,9 +29,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -92,7 +92,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
@@ -145,7 +145,13 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.DBLoginDialog_2);
@@ -158,13 +164,6 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		
-		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
-		
-		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
-		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -194,14 +193,17 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			textHost.setText("172.16.187.132"); //$NON-NLS-1$
+			textHost.setText("192.168.29.128"); //$NON-NLS-1$
 			textPort.setText("1433"); //$NON-NLS-1$
 			textDatabase.setText("northwind"); //$NON-NLS-1$
 			textUser.setText("sa"); //$NON-NLS-1$
 			textPassword.setText("tadpole"); //$NON-NLS-1$
 			
+			textJDBCOptions.setText(";loginTimeout=5;socketTimeout=5");
+			
 		} else {
 			textPort.setText("1433"); //$NON-NLS-1$
+			textJDBCOptions.setText(";loginTimeout=5;socketTimeout=5");
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
@@ -351,7 +353,11 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 					strDB);
 		}
 		if(!"".equals(textJDBCOptions.getText())) {
-			dbUrl += "?" + textJDBCOptions.getText();
+			if(StringUtils.endsWith(dbUrl, ";")) {
+				dbUrl += textJDBCOptions.getText();
+			} else {
+				dbUrl += ";" + textJDBCOptions.getText();	
+			}
 		}
 
 		if(logger.isDebugEnabled()) logger.debug("[db url]" + dbUrl);
@@ -363,8 +369,14 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		userDB.setDb(StringUtils.trimToEmpty(textDatabase.getText()));
 		userDB.setGroup_name(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()));
 		userDB.setDisplay_name(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()));
-		userDB.setOperation_type( PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).toString() );
-		
+
+		String dbOpType = PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).name();
+		userDB.setOperation_type(dbOpType);
+		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) || dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
+		{
+			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
+		}
+
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));

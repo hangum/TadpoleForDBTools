@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -53,7 +54,7 @@ public class DBLockDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("DB Password input dialog");
+		newShell.setText(Messages.DBLockDialog_0);
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class DBLockDialog extends Dialog {
 		
 		Label lblDbPassword = new Label(container, SWT.NONE);
 		lblDbPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDbPassword.setText("DB Password");
+		lblDbPassword.setText(Messages.DBLockDialog_1);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.addKeyListener(new KeyAdapter() {
@@ -94,7 +95,7 @@ public class DBLockDialog extends Dialog {
 		String strPassword = textPassword.getText();
 		
 		if(!strPassword.equals(userDB.getPasswd())) {
-			MessageDialog.openError(getShell(), "Error", "Password is not match.\nCheck your password");
+			MessageDialog.openError(getShell(), Messages.DBLockDialog_2, Messages.DBLockDialog_3);
 			textPassword.setFocus();
 			
 			return;
@@ -108,8 +109,8 @@ public class DBLockDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.DBLockDialog_4, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLockDialog_5, false);
 	}
 
 	/**

@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.dialogs.ERDViewStyleDailog;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.part.TableEditPart;
@@ -44,9 +45,9 @@ public class ERDViewStyleAction extends SelectionAction {
 		this.viewer = graphicalViewer;
 		
 		setId(ID);
-		setText("Show Column");
-		setToolTipText("Show Column");
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/viewStyle.png"));
+		setText(Messages.ERDViewStyleAction_0);
+		setToolTipText(Messages.ERDViewStyleAction_0);
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/viewStyle.png")); //$NON-NLS-1$
 	}
 	
 	public GraphicalViewer getViewer() {
@@ -61,7 +62,7 @@ public class ERDViewStyleAction extends SelectionAction {
 		if(Dialog.OK == dialog.open()) {
 			
 			dbModel.setStyle( dialog.getErdStyle() );
-			dbModel.getStyle().setGrid("YES");
+			dbModel.getStyle().setGrid("YES"); //$NON-NLS-1$
 			
 			List models = getViewer().getContents().getChildren();
 			// nodes

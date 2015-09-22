@@ -19,11 +19,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpold.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 
 /**
@@ -52,28 +52,28 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 			dto = new SMTPDTO();
 			
 //			try {
-				UserDAO userDao = TadpoleSystem_UserQuery.getSystemAdmin();
-				List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
-				Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
-				for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-					mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
-				}
-				
-				String strHost = getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE);
-				String strPort = getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE);
-				String strEmail = getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE);
-				String strPwd = getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE);
+			UserDAO userDao = TadpoleApplicationContextManager.getSystemAdmin();
+			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
+			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
+			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
+				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
+			}
 			
-				dto.setHost(strHost);
-				dto.setPort(strPort);
-				dto.setEmail(strEmail);
-				dto.setPasswd(strPwd);
-				
-				if("".equals(strHost) | "".equals(strPort) | "".equals(strEmail) | "".equals(strPwd)) {
-					throw new Exception("SMTP Server가 설정 되어 있지 않습니다. ");
-				}
-				
-				sStore.setAttribute("smtpinfo", dto);
+			String strHost = getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE);
+			String strPort = getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE);
+			String strEmail = getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE);
+			String strPwd = getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE);
+		
+			dto.setHost(strHost);
+			dto.setPort(strPort);
+			dto.setEmail(strEmail);
+			dto.setPasswd(strPwd);
+			
+			if("".equals(strHost) | "".equals(strPort) | "".equals(strEmail) | "".equals(strPwd)) {
+				throw new Exception("SMTP Server가 설정 되어 있지 않습니다. ");
+			}
+			
+			sStore.setAttribute("smtpinfo", dto);
 //			} catch (Exception e) {
 //				logger.error("get stmt info", e);
 //			}
@@ -86,7 +86,7 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 		SMTPDTO dto = new SMTPDTO();
 		
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getSystemAdmin();
+			UserDAO userDao = TadpoleApplicationContextManager.getSystemAdmin();
 			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
 			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
 			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						

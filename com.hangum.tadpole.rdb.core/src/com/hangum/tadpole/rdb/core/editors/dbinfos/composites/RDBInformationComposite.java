@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.hangum.tadpold.commons.libs.core.dao.KeyValueDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.dao.KeyValueDAO;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -67,12 +67,12 @@ public class RDBInformationComposite extends Composite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnName = tableViewerColumn.getColumn();
 		tblclmnName.setWidth(130);
-		tblclmnName.setText("Name"); //$NON-NLS-1$
+		tblclmnName.setText(Messages.RDBInformationComposite_0);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnValue = tableViewerColumn_1.getColumn();
 		tblclmnValue.setWidth(300);
-		tblclmnValue.setText("Value"); //$NON-NLS-1$
+		tblclmnValue.setText(Messages.RDBInformationComposite_1);
 		
 		tvInformation.setContentProvider(new ArrayContentProvider());
 		tvInformation.setLabelProvider(new RDBInformationLabelProvider());
@@ -86,20 +86,20 @@ public class RDBInformationComposite extends Composite {
 	private void initUI() {
 		listInfo = new ArrayList<KeyValueDAO>();
 		
-		listInfo.add(new KeyValueDAO("Operation type", 	userDB.getOperation_type())); //$NON-NLS-1$
-		listInfo.add(new KeyValueDAO("Group Name", 		userDB.getGroup_name())); //$NON-NLS-1$
-		listInfo.add(new KeyValueDAO("Display Name", 	userDB.getDisplay_name())); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_2, 	userDB.getOperation_type()));
+		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_3, 		userDB.getGroup_name()));
+		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_4, 	userDB.getDisplay_name()));
 		
-		listInfo.add(new KeyValueDAO("JDBC URL", 		userDB.getUrl(userDB.getRole_id()))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_5, 		userDB.getUrl(userDB.getRole_id())));
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost(userDB.getRole_id()) + "/" + userDB.getPort(userDB.getRole_id()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		listInfo.add(new KeyValueDAO("Database", 		userDB.getDb(userDB.getRole_id()))); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_6, 		userDB.getDb(userDB.getRole_id())));
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers(userDB.getRole_id()))); //$NON-NLS-1$
 		}
 		
-		listInfo.add(new KeyValueDAO("Read Only", 		userDB.getIs_readOnlyConnect())); //$NON-NLS-1$
+		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_7, 		userDB.getIs_readOnlyConnect()));
 //		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
 //		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
 //			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
@@ -107,13 +107,13 @@ public class RDBInformationComposite extends Composite {
 //		}
 		// 몽고디비는 없으므로.. 
 		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
-			listInfo.add(new KeyValueDAO("Auto Commit",		userDB.getIs_autocommit())); //$NON-NLS-1$
-			listInfo.add(new KeyValueDAO("Profile", 		userDB.getIs_profile())); //$NON-NLS-1$
+			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_8,		userDB.getIs_autocommit()));
+			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_9, 		userDB.getIs_profile()));
 			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_17, 	userDB.getQuestion_dml()));
 		}
 		
 		// google analytic
-		AnalyticCaller.track(RDBDBInfosEditor.ID, "RDBInformationComposite");
+		AnalyticCaller.track(RDBDBInfosEditor.ID, "RDBInformationComposite"); //$NON-NLS-1$
 	}
 
 	@Override

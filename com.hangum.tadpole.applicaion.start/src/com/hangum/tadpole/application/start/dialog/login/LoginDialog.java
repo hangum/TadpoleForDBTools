@@ -41,16 +41,20 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -81,7 +85,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.LoginDialog_0);
+		newShell.setText(String.format("%s v%s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION)); //$NON-NLS-1$
 		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png")); //$NON-NLS-1$
 	}
 
@@ -177,7 +181,7 @@ public class LoginDialog extends Dialog {
 		compositeUserGide.setLayout(gl_compositeUserGide);
 		
 		Label lblUserKor = new Label(compositeUserGide, SWT.NONE);
-		lblUserKor.setText("<a href='https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=2621445' target='_blank'>(Korean)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblUserKor.setText("<a href='https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=20578325' target='_blank'>(Korean)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserKor.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblUserEng = new Label(compositeUserGide, SWT.NONE);
@@ -214,10 +218,10 @@ public class LoginDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == ID_NEW_USER) {
 			newUser();
-		
+			textEMail.setFocus();
 		} else if(buttonId == ID_FINDPASSWORD) {
 			findPassword();
-
+			textEMail.setFocus();
 		} else {
 			okPressed();
 		}
@@ -235,21 +239,31 @@ public class LoginDialog extends Dialog {
 			
 			// firsttime email confirm
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
-				InputDialog inputDialog=new InputDialog(getShell(), "Email Key Dialog", "Input email confirm KEY", "", null);
+				InputDialog inputDialog=new InputDialog(getShell(), Messages.LoginDialog_10, Messages.LoginDialog_17, "", null); //$NON-NLS-3$
 				if(inputDialog.open() == Window.OK) {
 					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
-						throw new Exception("Do not correct email confirm message. check your email.");
+						throw new Exception(Messages.LoginDialog_19);
 					} else {
 						TadpoleSystem_UserQuery.updateEmailConfirm(strEmail);
 					}
 				} else {
-					throw new Exception("Please input the email key.");
+					throw new Exception(Messages.LoginDialog_20);
 				}
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
 				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_27);
 				
+				return;
+			}
+			
+			// Check the allow ip
+			String strAllowIP = userDao.getAllow_ip();
+			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
+			if(logger.isDebugEnabled())logger.debug(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_23+ RequestInfoUtils.getRequestIP());
+			if(!isAllow) {
+				logger.error(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_26+ RequestInfoUtils.getRequestIP());
+				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_28);
 				return;
 			}
 			
@@ -267,8 +281,8 @@ public class LoginDialog extends Dialog {
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 		} catch (Exception e) {
-			logger.error("Login exception. request email is " + strEmail, e); //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), "Error", e.getMessage());
+			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
+			MessageDialog.openError(getParentShell(), Messages.LoginDialog_29, e.getMessage());
 			
 			textPasswd.setFocus();
 			return;
@@ -313,7 +327,16 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
-		createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
+		try {
+			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+			if(!"".equals(smtpDto.getEmail())) {
+				createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
+			}
+		} catch (Exception e) {
+//			logger.error("view findpasswd button", e);
+//			ignore exception
+		}
+		
 		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 	
@@ -322,7 +345,7 @@ public class LoginDialog extends Dialog {
 	 */
 	private void initUI() {
 		if(!RequestInfoUtils.isSupportBrowser()) {
-			String errMsg = "User browser is  " + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.UserInformationDialog_5 + "\n" + Messages.LoginDialog_lblNewLabel_text;
+			String errMsg = Messages.LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.UserInformationDialog_5 + "\n" + Messages.LoginDialog_lblNewLabel_text; //$NON-NLS-2$ //$NON-NLS-3$
 			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, errMsg);
 		}
 	}

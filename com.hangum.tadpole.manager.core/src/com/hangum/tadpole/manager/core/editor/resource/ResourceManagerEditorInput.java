@@ -14,6 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.manager.core.Messages;
+
 /**
  * Resource Manager input
  * 
@@ -45,7 +47,7 @@ public class ResourceManagerEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Resource Manager";
+		return Messages.ResourceManagerEditorInput_0;
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class ResourceManagerEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Resource Manager";
+		return Messages.ResourceManagerEditorInput_1;
 	}
 
 }

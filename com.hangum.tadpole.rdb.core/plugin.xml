@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor" name="MainEditor" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor.exsd"/>
-   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.connection.decoration" name="Connection Decoration" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.connection.decoration.exsd"/>
-   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.table.decoration" name="Table and column Decoration" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.table.decoration.exsd"/>
+   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor" name="%extension-point.name" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.main.editor.exsd"/>
+   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.connection.decoration" name="%extension-point.name.0" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.connection.decoration.exsd"/>
+   <extension-point id="com.hangum.tadpole.rdb.core.extensionpoint.definition.table.decoration" name="%extension-point.name.1" schema="schema/com.hangum.tadpole.rdb.core.extensionpoint.definition.table.decoration.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <category
@@ -61,34 +61,34 @@
             default="false"
             icon="resources/icons/session-list.png"
             id="com.hangum.tadpole.rdb.core.editor.sessionlist"
-            name="Session List">
+            name="%editor.name.4">
       </editor>
       <editor
             class="com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor"
             default="false"
             icon="resources/icons/db_information.png"
             id="com.hangum.tadpole.rdb.core.editor.rdb.dbinfos"
-            name="RDB DB Information">
+            name="%editor.name.5">
       </editor>
       <editor
             class="com.hangum.tadpole.rdb.core.editors.objects.table.TableInformationEditor"
             default="false"
             id="com.hangum.tadpole.rdb.core.editor.objects.tableinfo"
-            name="Table Information">
+            name="%editor.name.6">
       </editor>
       <editor
             class="com.hangum.tadpole.rdb.core.editors.externalbrowser.ExternalBrowserEditor"
             default="false"
             icon="resources/icons/commons/internet_browser.png"
             id="com.hangum.tadpole.rdb.core.editor.externalBrowser"
-            name="External Browser">
+            name="%editor.name.7">
       </editor>
       <editor
             class="com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditor"
             default="false"
             icon="resources/icons/editor/object_editor.png"
             id="com.hangum.tadpole.rdb.core.editor.main.procedure"
-            name="Procedure">
+            name="%editor.name.8">
       </editor>
    </extension>
    <extension
@@ -121,7 +121,7 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.DeleteDBAction"
                icon="resources/icons/delete_database.png"
                id="com.hangum.tadpole.rdb.core.action2"
-               label="Delete Database"
+               label="%action.label.23"
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
@@ -160,7 +160,7 @@
          <menu
                icon="resources/icons/user.png"
                id="menu.admin"
-               label="Administer">
+               label="%menu.label.2">
             <groupMarker
                   name="admin">
             </groupMarker>
@@ -169,7 +169,7 @@
                class="com.hangum.tadpole.rdb.core.actions.admin.CsvToRdbImportAction"
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import.csv"
-               label="CSV File Import"
+               label="%action.label.24"
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
@@ -181,7 +181,7 @@
                class="com.hangum.tadpole.rdb.core.actions.admin.SQLToRdbImportAction"
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import.sql"
-               label="SQL File Import"
+               label="%action.label.25"
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
@@ -312,7 +312,7 @@
                enablesFor="1"
                icon="resources/icons/current-operation.png"
                id="com.hangum.tadpole.rdb.core.action.sessionlist"
-               label="Session List"
+               label="%action.label.26"
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
@@ -324,14 +324,14 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.ShowDBInformationAction"
                icon="resources/icons/db_information.png"
                id="com.hangum.tadpole.rdb.core.action.rdb.dbInformation"
-               label="DB Information"
+               label="%action.label.27"
                menubarPath="additions">
          </action>
          <action
                class="com.hangum.tadpole.rdb.core.actions.commons.ExtensionBrowserAction"
                icon="resources/icons/commons/internet_browser.png"
                id="com.hangum.tadpole.rdb.core.action.extensionBrowser"
-               label="Admin Browser">
+               label="%action.label.28">
          </action>
          <!--
          <action
@@ -369,7 +369,7 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.ext.DownloadSQLiteDBAction"
                icon="resources/icons/download.png"
                id="com.hangum.tadpole.rdb.core.action.sqlite.download"
-               label="DB Download">
+               label="%action.label.29">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -406,7 +406,7 @@
          <menu
                icon="resources/icons/user.png"
                id="menu.admin"
-               label="Administer">
+               label="%menu.label.3">
             <groupMarker
                   name="admin">
             </groupMarker>
@@ -468,7 +468,7 @@
                class="com.hangum.tadpole.rdb.core.actions.commons.ExtensionBrowserAction"
                icon="resources/icons/commons/internet_browser.png"
                id="com.hangum.tadpole.rdb.core.action.extensionBrowser"
-               label="Admin Browser">
+               label="%action.label.30">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -504,7 +504,7 @@
          <menu
                icon="resources/icons/user.png"
                id="menu.admin"
-               label="Administer">
+               label="%menu.label.4">
             <groupMarker
                   name="admin">
             </groupMarker>
@@ -525,7 +525,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbCurrentOpAction"
                icon="resources/icons/current-operation.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.currentop"
-               label="Session List"
+               label="%action.label.31"
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
@@ -573,7 +573,7 @@
                class="com.hangum.tadpole.rdb.core.actions.connections.ShowDBInformationAction"
                icon="resources/icons/db_information.png"
                id="com.hangum.tadpole.rdb.core.action.rdb.dbInformation"
-               label="DB Information"
+               label="%action.label.32"
                menubarPath="additions">
          </action>tion>
          <action
@@ -592,7 +592,7 @@
                class="com.hangum.tadpole.rdb.core.actions.nosql.mongodb.MongodbCommandAction"
                icon="resources/icons/command.png"
                id="com.hangum.tadpole.rdb.core.action.run.command"
-               label="Command"
+               label="%action.label.33"
                menubarPath="menu.admin/admin">
             <enablement>
                <objectClass
@@ -652,7 +652,7 @@
                class="com.hangum.tadpole.rdb.core.actions.commons.ExtensionBrowserAction"
                icon="resources/icons/commons/internet_browser.png"
                id="com.hangum.tadpole.rdb.core.action.extensionBrowser"
-               label="Admin Browser">
+               label="%action.label.34">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -722,10 +722,9 @@
       <wizard
             class="com.hangum.tadpole.wizard.create.connection.NewConnectionWizard"
             id="com.hangum.tadpole.rdb.core.wizard.connection.db"
-            name="Connection Wizard">
+            name="%wizard.name">
       </wizard>
    </extension>
-   <!--
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -735,7 +734,7 @@
                commandId="com.hangum.tadpole.rdb.core.command.synceditor"
                icon="resources/icons/synced.gif"
                style="toggle"
-               tooltip="Synchronized editor">
+               tooltip="%command.tooltip">
          </command>
       </menuContribution>
    </extension>
@@ -744,12 +743,12 @@
       <command
             defaultHandler="com.hangum.tadpole.rdb.core.actions.global.SynchronizedEditorHandler"
             id="com.hangum.tadpole.rdb.core.command.synceditor"
-            name="Synchronized Editor">
+            name="%command.name">
          <state
-               class="org.eclipse.ui.handlers.RegistryToggleState"
+               class="org.eclipse.ui.handlers.RegistryToggleState:true"
                id="org.eclipse.ui.commands.toggleState">
          </state>
       </command>
    </extension>
--->
+
 </plugin>

@@ -62,7 +62,7 @@ public class CollectionCompactDialog extends Dialog {
 	public CollectionCompactDialog(Shell parentShell, UserDBDAO userDB, String collName) {
 		super(parentShell);
 		
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		this.userDB = userDB;
 		this.collName = collName;
 	}

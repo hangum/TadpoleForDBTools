@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.template;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * Define HIVE DML

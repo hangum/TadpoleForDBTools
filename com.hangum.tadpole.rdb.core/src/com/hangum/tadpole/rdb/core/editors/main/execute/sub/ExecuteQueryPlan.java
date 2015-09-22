@@ -13,7 +13,7 @@ package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;

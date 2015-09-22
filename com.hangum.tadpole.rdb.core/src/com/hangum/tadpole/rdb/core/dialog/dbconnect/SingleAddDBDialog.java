@@ -61,7 +61,7 @@ public class SingleAddDBDialog extends Dialog {
 	 */
 	public SingleAddDBDialog(Shell parentShell, AWSRDSUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.amazonRDSDto = amazonRDSDto;
 		this.listGroupName = listGroupName;

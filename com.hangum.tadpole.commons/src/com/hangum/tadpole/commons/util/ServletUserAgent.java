@@ -13,6 +13,7 @@ package com.hangum.tadpole.commons.util;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 
 /**
  * <pre>
@@ -23,6 +24,8 @@ import org.apache.commons.lang.math.NumberUtils;
  *
  */
 public class ServletUserAgent {
+	private static final Logger logger = Logger.getLogger(ServletUserAgent.class);
+	
 	/** tadpole가 지원하는 시스템만 */
 	public enum OS_SIMPLE_TYPE {
         MACOSX,
@@ -49,6 +52,7 @@ public class ServletUserAgent {
     }
     /**알아낼수있는 전체 브라우저 */
     public enum BROWSER_TYPE {
+    	EDGE,
         IE,
         FIREFOX,
         CHROME,
@@ -58,10 +62,10 @@ public class ServletUserAgent {
     }
 
 //    private  OS_TYPE 		OS_Type 		= OS_TYPE.UNKNOWN;
-    private  OS_SIMPLE_TYPE OS_Simple_Type 	= OS_SIMPLE_TYPE.UNKNOWN;
-	private  BROWSER_TYPE 	Browser_Type 	= BROWSER_TYPE.UNKNOWN;
+    private  OS_SIMPLE_TYPE oS_Simple_Type 	= OS_SIMPLE_TYPE.UNKNOWN;
+	private  BROWSER_TYPE 	browser_Type 	= BROWSER_TYPE.UNKNOWN;
     private  int 			majorVersion	= 0;
-    private  String 		fullVersion		= null;
+    private  String 		fullVersion		= "0";
     
     /**
      * 시스템의 정보를 가져온다.
@@ -71,8 +75,13 @@ public class ServletUserAgent {
     public void detect(HttpServletRequest req) {
     	String userAgent = req.getHeader("User-Agent");
     	
+    	if(logger.isDebugEnabled()) {
+	    	logger.debug("=====================================================================");
+	    	logger.debug("user agent :" + userAgent);
+    	}
+    	
 //    	OS_Type = detectedOS(userAgent);
-    	OS_Simple_Type = detectedOSSimple(userAgent);
+    	oS_Simple_Type = detectedOSSimple(userAgent);
     	detectBrowser(userAgent);
     }
     
@@ -122,33 +131,18 @@ public class ServletUserAgent {
         if (null != userAgentStr) {
             
         	try {
-                if(userAgentStr.contains("Chrome/")) {
-                    Browser_Type = BROWSER_TYPE.CHROME;
-                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Chrome/")+7);
-                    fullVersion = fullVersion.substring(0, fullVersion.indexOf(" ")).trim();
-                    majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
-                } else if (userAgentStr.contains("Safari/")) {
-                    Browser_Type = BROWSER_TYPE.SAFARI;
-                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Version/")+8);
-                    fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
-                    majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
-                } else if (userAgentStr.contains("Opera ") || userAgentStr.contains("Opera/")) {
-                    Browser_Type = BROWSER_TYPE.OPERA;
-                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Opera ")+6);
-                    fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
-                    majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
-                } else if (userAgentStr.contains("Firefox/")) {
-                    Browser_Type = BROWSER_TYPE.FIREFOX;
-                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Firefox/")+8);
-                    fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
+        		if(userAgentStr.contains("Edge/")) {
+        			browser_Type = BROWSER_TYPE.EDGE;
+        			fullVersion = userAgentStr.substring(userAgentStr.indexOf("Edge/")+5);
+//                    fullVersion = fullVersion;//.substring(0, fullVersion.indexOf(";")).trim();
                     majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
                 }  else if (userAgentStr.contains("MSIE ")) {
-                    Browser_Type = BROWSER_TYPE.IE;
+                    browser_Type = BROWSER_TYPE.IE;
                     fullVersion = userAgentStr.substring(userAgentStr.indexOf("MSIE ")+5);
                     fullVersion = fullVersion.substring(0, fullVersion.indexOf(";")).trim();
                     majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
                 } else if (userAgentStr.contains("Trident")) {
-                	Browser_Type = BROWSER_TYPE.IE;
+                	browser_Type = BROWSER_TYPE.IE;
 
 //                	Internet Explorer 11
 //                	Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko  
@@ -162,12 +156,32 @@ public class ServletUserAgent {
                         fullVersion = fullVersion.substring(3, fullVersion.indexOf(")")).trim();
                         majorVersion = (int)NumberUtils.toFloat(fullVersion);
                 	}
-                    
+        		} else if(userAgentStr.contains("Chrome/")) {
+                    browser_Type = BROWSER_TYPE.CHROME;
+                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Chrome/")+7);
+                    fullVersion = fullVersion.substring(0, fullVersion.indexOf(" ")).trim();
+                    majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
+                } else if (userAgentStr.contains("Firefox/")) {
+                    browser_Type = BROWSER_TYPE.FIREFOX;
+                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Firefox/")+8);
+                    fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
+                    majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
+                } else if (userAgentStr.contains("Opera ") || userAgentStr.contains("Opera/")) {
+                    browser_Type = BROWSER_TYPE.OPERA;
+                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Opera ")+6);
+                    fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
+                    majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
+
+                } else if (userAgentStr.contains("Safari/")) {
+                    browser_Type = BROWSER_TYPE.SAFARI;
+                    fullVersion = userAgentStr.substring(userAgentStr.indexOf("Version/")+8);
+                    fullVersion = fullVersion.substring(0, (fullVersion.indexOf(" ") > 0 ? fullVersion.indexOf(" ") : fullVersion.length())).trim();
+                    majorVersion = Integer.parseInt(fullVersion.substring(0, fullVersion.indexOf(".")));
                 }
-            } catch (NumberFormatException nfe) {
-                fullVersion = null;
+            } catch (Exception nfe) {
+                fullVersion = "0";
                 majorVersion = 0;
-            }
+            } 
         }
     }
 
@@ -176,11 +190,11 @@ public class ServletUserAgent {
 //    }
     
     public OS_SIMPLE_TYPE getOSSimpleType() {
-    	return OS_Simple_Type;
+    	return oS_Simple_Type;
     }
 
     public BROWSER_TYPE getBrowserType() {
-        return Browser_Type;
+        return browser_Type;
     }
     
     public String getFullVersion() {

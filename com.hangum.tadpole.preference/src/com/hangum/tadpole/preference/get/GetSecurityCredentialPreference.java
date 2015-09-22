@@ -12,8 +12,8 @@ package com.hangum.tadpole.preference.get;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 
@@ -46,7 +46,7 @@ public class GetSecurityCredentialPreference extends GetPreferenceGeneral {
 	public static String getAccessValue() {
 		String strCipher = getValue(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY, "");
 		if("".equals(strCipher)) return Utils.getUniqueID();
-		return CipherManager.getInstance().decryption(strCipher);
+		return strCipher;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class GetSecurityCredentialPreference extends GetPreferenceGeneral {
 	public static String getSecretValue() {
 		String strCipher = getValue(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, "");
 		if("".equals(strCipher)) return Utils.getUniqueID();
-		return CipherManager.getInstance().decryption(strCipher);
+		return strCipher;
 	}
 
 }

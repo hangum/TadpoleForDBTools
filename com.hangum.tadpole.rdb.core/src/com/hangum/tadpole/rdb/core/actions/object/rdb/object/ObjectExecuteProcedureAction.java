@@ -14,8 +14,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -42,12 +42,12 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	public ObjectExecuteProcedureAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("Execute " + title);
+		setText(title);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		logger.debug("ObjectExecuteProcedureAction run...");
+		if(logger.isDebugEnabled()) logger.debug("ObjectExecuteProcedureAction run...");
 		ProcedureFunctionDAO procedureDAO;
 		if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
 			OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();

@@ -33,7 +33,7 @@ public class OthersConnectionRDBWithoutTunnelingGroup extends OthersConnectionGr
 	
 	@Override
 	public void initUI() {
-		btnSendMonitoring.setEnabled(false);
+//		btnSendMonitoring.setEnabled(false);
 	}
 	
 }

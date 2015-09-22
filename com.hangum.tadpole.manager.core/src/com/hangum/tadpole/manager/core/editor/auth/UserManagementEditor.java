@@ -22,9 +22,10 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -93,7 +94,7 @@ public class UserManagementEditor extends EditorPart {
 			
 			// Users
 			CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-			tbtmItem.setText("User List");
+			tbtmItem.setText(Messages.UserManagementEditor_1);
 			
 			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
 			tbtmItem.setControl(compositeUserList);
@@ -102,7 +103,7 @@ public class UserManagementEditor extends EditorPart {
 		
 		// DBs
 		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
-		tbtmDB.setText("DB List");
+		tbtmDB.setText(Messages.UserManagementEditor_2);
 		
 		Composite compositeDBList = new DBListComposite(tabFolder, SWT.NONE);
 		tbtmDB.setControl(compositeDBList);

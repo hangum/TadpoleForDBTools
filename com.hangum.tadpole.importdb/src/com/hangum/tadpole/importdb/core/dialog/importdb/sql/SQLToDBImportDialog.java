@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -105,7 +105,7 @@ public class SQLToDBImportDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDB.getDisplay_name() + " SQL File import"); //$NON-NLS-1$
+		newShell.setText(userDB.getDisplay_name() + Messages.SQLToDBImportDialog_1);
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class SQLToDBImportDialog extends Dialog {
 		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
-			textBatchSize.setText("1");
+			textBatchSize.setText(Messages.SQLToDBImportDialog_2);
 		}else{
 			textBatchSize.setEditable(true);
 			textBatchSize.setText(Messages.SQLToDBImportDialog_BatchSize);
@@ -247,8 +247,8 @@ public class SQLToDBImportDialog extends Dialog {
 			// bom마크가 있는지 charset은 무엇인지 확인한다.
 			bomInputStream = new BOMInputStream(FileUtils.openInputStream(FileUtils.getFile(userUploadFile)));//`, false, ByteOrderMark.UTF_8, ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE, ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
 			
-			String charsetName = "utf-8"; 
-			String strSQLData = "";
+			String charsetName = "utf-8";  //$NON-NLS-1$
+			String strSQLData = ""; //$NON-NLS-1$
 			if(bomInputStream.getBOM() == null) {
 				strSQLData = FileUtils.readFileToString(userUploadFile, charsetName);
 			}else{
@@ -350,7 +350,7 @@ public class SQLToDBImportDialog extends Dialog {
 						SQLException ne = e.getNextException();						
 						while (ne != null){
 							logger.error("NEXT SQLException is ", ne);//$NON-NLS-1$
-							bufferBatchResult.append(ne.getMessage()+"\n");
+							bufferBatchResult.append(ne.getMessage()+"\n"); //$NON-NLS-1$
 							ne = ne.getNextException();
 						}
 						

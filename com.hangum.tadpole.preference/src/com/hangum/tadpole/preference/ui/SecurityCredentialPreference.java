@@ -26,7 +26,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -64,7 +65,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblUse = new Label(container, SWT.NONE);
-		lblUse.setText("Use");
+		lblUse.setText(Messages.SecurityCredentialPreference_0);
 		
 		comboIsUse = new Combo(container, SWT.READ_ONLY);
 		comboIsUse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -74,14 +75,14 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		comboIsUse.select(0);
 		
 		Label lblAccesskey = new Label(container, SWT.NONE);
-		lblAccesskey.setText("Access Key");
+		lblAccesskey.setText(Messages.SecurityCredentialPreference_1);
 		
 		textAccessKey = new Text(container, SWT.BORDER);
 		textAccessKey.setEditable(false);
 		textAccessKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSecretKey = new Label(container, SWT.NONE);
-		lblSecretKey.setText("Secret Key");
+		lblSecretKey.setText(Messages.SecurityCredentialPreference_2);
 		
 		textSecretKey = new Text(container, SWT.BORDER);
 		textSecretKey.setEditable(false);
@@ -93,15 +94,18 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				if(!MessageDialog.openConfirm(getShell(), "Confirm", "Are you new api key?")) return;
+				if(!MessageDialog.openConfirm(getShell(), Messages.SecurityCredentialPreference_3, Messages.SecurityCredentialPreference_4)) return;
 				
 				textAccessKey.setText(Utils.getUniqueID());
 				textSecretKey.setText(Utils.getUniqueID());
 			}
 		});
-		btnGenerateKey.setText("Generate Key");
+		btnGenerateKey.setText(Messages.SecurityCredentialPreference_5);
 		
 		initDefaultValue();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return container;
 	}
@@ -123,11 +127,11 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 
 		try {
 			updateInfo(PreferenceDefine.SECURITY_CREDENTIAL_USE, isUse);
-			updateEncriptInfo(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY, txtAccessKey);
-			updateEncriptInfo(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, txtSecretKey);
+			updateInfo(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY, txtAccessKey);
+			updateInfo(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, txtSecretKey);
 			
 		} catch(Exception e) {
-			logger.error("api security credential saveing", e);
+			logger.error("api security credential saveing", e); //$NON-NLS-1$
 			
 			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;

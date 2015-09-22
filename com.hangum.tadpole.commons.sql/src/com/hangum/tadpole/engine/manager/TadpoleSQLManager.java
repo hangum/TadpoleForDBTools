@@ -12,6 +12,7 @@ package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,8 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.SQLConstants;
@@ -70,7 +72,7 @@ public class TadpoleSQLManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws Exception {
+	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws TadpoleSQLManagerException {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
@@ -80,6 +82,8 @@ public class TadpoleSQLManager {
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
 
+					DriverManager.setLoginTimeout(10);
+					
 					// oracle 일 경우 로케일을 설정 
 					try { 
 						if(DBDefine.getDBDefine(dbInfo) == DBDefine.ORACLE_DEFAULT) {
@@ -111,12 +115,11 @@ public class TadpoleSQLManager {
 //				} catch(Exception ee) {
 //					logger.error("request error", ee);
 //				}
-				
-				logger.error("=================================================\n get DB Instance \n seq is " + dbInfo.getSeq() + "\n" , e);
+				logger.error("===\n get DB Instance \n seq is " + dbInfo.getSeq() + "\n" , e);
 				
 				dbManager.remove(searchKey);
 				
-				throw new Exception(e);
+				throw new TadpoleSQLManagerException(e);
 			} finally {
 				if(conn != null) try {conn.close();} catch(Exception e) {}
 			}
@@ -125,18 +128,18 @@ public class TadpoleSQLManager {
 		return sqlMapClient;
 	}
 
-	/**
-	 * 전체 connection pool 정보를 가져옵니다.
-	 */
-	public static void getConnectionPoolStatus() {
-		SqlMapClient[] sqlMaps = (SqlMapClient[])dbManager.values().toArray();
-		for (SqlMapClient sqlMapClient : sqlMaps) {
-
-			BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
-//			logger.info("NumActive 	: " + basicDataSource.getNumActive());
-//			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
-		}
-	}
+//	/**
+//	 * 전체 connection pool 정보를 가져옵니다.
+//	 */
+//	public static void getConnectionPoolStatus() {
+//		SqlMapClient[] sqlMaps = (SqlMapClient[])dbManager.values().toArray();
+//		for (SqlMapClient sqlMapClient : sqlMaps) {
+//
+//			BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
+////			logger.info("NumActive 	: " + basicDataSource.getNumActive());
+////			logger.info("NumIdle 	: " + basicDataSource.getNumIdle());
+//		}
+//	}
 	
 	/**
 	 * 각 DB의 metadata를 넘겨줍니다.
@@ -169,7 +172,7 @@ public class TadpoleSQLManager {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
 		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			String strFullKeywords = StringUtils.join(SQLConstants.ADVANCED_KEYWORDS, ",") + "," + sqlKeywords;
+			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + sqlKeywords;
 			tmd.setKeywords(strFullKeywords);
 		} else if(dbInfo.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method

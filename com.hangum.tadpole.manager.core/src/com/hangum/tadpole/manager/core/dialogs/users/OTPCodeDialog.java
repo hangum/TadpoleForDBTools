@@ -45,7 +45,7 @@ public class OTPCodeDialog extends Dialog {
 	 */
 	public OTPCodeDialog(Shell parentShell, String url) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.url = url;
 	}

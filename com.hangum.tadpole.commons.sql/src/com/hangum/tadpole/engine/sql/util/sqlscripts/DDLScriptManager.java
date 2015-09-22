@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -75,16 +75,16 @@ public class DDLScriptManager {
 	 * @throws Exception
 	 */
 	private void initRDBScript() throws Exception {
-		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			rdbScript = new SQLiteDDLScript(userDB, actionType);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT ) {
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ) {
 			rdbScript = new OracleDDLScript(userDB, actionType);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ) {
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ) {
 			rdbScript = new PostgreSQLDDLScript(userDB, actionType);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ||
+		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 			rdbScript = new MySqlDDLScript(userDB, actionType);
 		} else {

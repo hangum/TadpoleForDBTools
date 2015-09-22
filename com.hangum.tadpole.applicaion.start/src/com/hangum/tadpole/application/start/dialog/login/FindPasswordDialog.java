@@ -24,12 +24,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.mails.SendEmails;
-import com.hangum.tadpold.commons.libs.core.mails.dto.EmailDTO;
-import com.hangum.tadpold.commons.libs.core.mails.template.TemporaryPasswordMailBodyTemplate;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
+import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.libs.core.mails.template.TemporaryPasswordMailBodyTemplate;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -64,7 +64,7 @@ public class FindPasswordDialog extends Dialog {
 		
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
-		gridLayout.numColumns = 1;
+		gridLayout.numColumns = 2;
 		gridLayout.verticalSpacing = 5;
 		gridLayout.horizontalSpacing = 5;
 		gridLayout.marginHeight = 5;
@@ -72,14 +72,14 @@ public class FindPasswordDialog extends Dialog {
 		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setText(Messages.FindPasswordDialog_3);
-
+		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		textEmail.setFocus();
+		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
-		
-		textEmail.setFocus();
 		
 		return container;
 	}

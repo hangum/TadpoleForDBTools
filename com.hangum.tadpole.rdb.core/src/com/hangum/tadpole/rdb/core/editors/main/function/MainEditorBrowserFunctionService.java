@@ -111,8 +111,10 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 * @see com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService#f4DMLOpen(java.lang.Object[])
 	 */
 	@Override
-	protected void f4DMLOpen(Object[] argument) {
-		String strObject = (String) argument[1];
+	protected void f4DMLOpen(Object[] arguments) {
+		String strObject = StringUtils.removeStart((String) arguments[1], ",");
+		strObject = StringUtils.removeEnd(strObject, ",");
+		
 		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
 		
 		try {
@@ -133,7 +135,10 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	@Override
 	protected void generateSelect(Object[] arguments) {
-		String strSQL = "select * from " + (String) arguments[1];
+		String strObject = StringUtils.removeStart((String) arguments[1], ",");
+		strObject = StringUtils.removeEnd(strObject, ",");
+		
+		String strSQL = "select * from " + strObject;
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
 		exeType = EXECUTE_TYPE.BLOCK;
 		

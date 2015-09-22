@@ -16,7 +16,6 @@ import org.eclipse.ui.PartInitException;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * Object Editor
@@ -50,13 +49,6 @@ public class ObjectEditor extends MainEditor {
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 	}
-
-
-//	@Override
-//	public void createPartControl(Composite parent) {
-//		// TODO Auto-generated method stub
-//
-//	}
 
 	@Override
 	public void setFocus() {

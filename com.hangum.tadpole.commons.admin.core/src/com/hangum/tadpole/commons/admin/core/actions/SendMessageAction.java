@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.SendMessageDialog;
 import com.swtdesigner.ResourceManager;
 
@@ -41,9 +42,9 @@ public class SendMessageAction extends Action implements ISelectionListener, IWo
 		this.window = window;
 		
 		setId(ID);
-		setText("Send Message");
-		setToolTipText("Send Message");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sendmessage.png"));
+		setText(Messages.SendMessageAction_0);
+		setToolTipText(Messages.SendMessageAction_0);
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sendmessage.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	

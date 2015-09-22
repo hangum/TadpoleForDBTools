@@ -83,7 +83,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	public ExecuteProcedureDialog(Shell parentShell, UserDBDAO userDB, ProcedureFunctionDAO procedureDAO) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 
 		this.userDB = userDB;
 		this.procedureDAO = procedureDAO;
@@ -207,8 +207,10 @@ public class ExecuteProcedureDialog extends Dialog {
 		if(sqlResultTableViewer != null) {
 			for(int i=0; i<sqlResultTableViewer.length; i++) {
 				TableViewer tv = sqlResultTableViewer[i];
-				tv.getTable().clearAll();
-				tv.getTable().dispose();
+				if(!tv.getTable().isDisposed()) {
+					tv.getTable().clearAll();
+					tv.getTable().dispose();
+				}
 			}
 		}
 		

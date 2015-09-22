@@ -30,14 +30,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -77,14 +78,14 @@ public class DBLoginDialog extends Dialog {
 	
 	public DBLoginDialog(Shell paShell, String selGroupName) {
 		super(paShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		this.selGroupName = selGroupName;
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("New Database Connection"); //$NON-NLS-1$
+		newShell.setText(Messages.DBLoginDialog_9);
 	}
 	
 	/**
@@ -193,14 +194,13 @@ public class DBLoginDialog extends Dialog {
 		container.layout();
 		
 		// google analytic
-		AnalyticCaller.track("DBLoginDialog");
+		AnalyticCaller.track("DBLoginDialog"); //$NON-NLS-1$
 	}
 	
 	/**
 	 * db widget을 생성한다.
 	 */
 	private void createDBWidget(UserDBDAO userDB) {
-		
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
 		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB);
 	}
@@ -217,7 +217,11 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private boolean addDB() {
 		if (loginComposite.saveDBData()) {
-			this.retuserDb = loginComposite.getDBDTO();	
+			this.retuserDb = loginComposite.getDBDTO();
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(this.retuserDb.getIs_lock())) {
+				SessionManager.setUnlokDB(retuserDb);
+			}
+			
 			return true;
 		}
 		
@@ -272,6 +276,6 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 470);
+		return new Point(530, 470);
 	}
 }

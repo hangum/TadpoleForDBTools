@@ -46,7 +46,7 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 	 */
 	public TadpoleSimpleMessageDialog(Shell parentShell, String title, String content) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.title = title;
 		this.content = content;
@@ -87,11 +87,11 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 	}
 	
 	private void initUI() {
-//		try {
-//			tadpoleEditor.setText(JSONUtil.getPretty(content));
-//		} catch(Exception e) {
-//			logger.error("server status", e); //$NON-NLS-1$
-//		}
+		try {
+			tadpoleEditor.setText(JSONUtil.getPretty(content));
+		} catch(Exception e) {
+			logger.error("server status", e); //$NON-NLS-1$
+		}
 	}
 
 	/**

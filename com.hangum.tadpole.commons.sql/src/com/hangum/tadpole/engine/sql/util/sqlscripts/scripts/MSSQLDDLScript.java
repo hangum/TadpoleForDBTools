@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.sqlscripts.scripts;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**

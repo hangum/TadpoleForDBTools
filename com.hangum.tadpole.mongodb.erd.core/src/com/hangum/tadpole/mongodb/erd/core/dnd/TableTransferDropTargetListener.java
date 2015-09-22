@@ -29,10 +29,11 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.mongodb.erd.core.Messages;
 import com.hangum.tadpole.mongodb.erd.core.relation.RelationUtil;
@@ -90,9 +91,9 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	
 	@Override
 	protected void handleDrop() {
-		String[] arrayDragSourceData = null;
+		String strDragSource = (String)getCurrentEvent().data;
 		try {
-			arrayDragSourceData = StringUtils.splitByWholeSeparator(((String)getCurrentEvent().data), PublicTadpoleDefine.DELIMITER);
+			String[] arrayDragSourceData = StringUtils.splitByWholeSeparator(strDragSource, PublicTadpoleDefine.DELIMITER);
 
 			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
 			if(userDB.getSeq() != sourceDBSeq) {
@@ -105,51 +106,58 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			return;
 		}
 		
-		String tableName = arrayDragSourceData[1];		
-		String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
-		
-		// 이미 editor 상에 테이블 정보를 가져온다.
-		Map<String, Table> mapDBTables = new HashMap<String, Table>();
-		for (Table table : db.getTables()) {
-			mapDBTables.put(table.getName(), table);
-			refTableNames += "'" + table.getName() + "',"; //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		refTableNames = StringUtils.chompLast(refTableNames, ","); //$NON-NLS-1$
-		
-		// 이미 등록되어 있는 것이 아니라면
-		if(mapDBTables.get(tableName) == null) {
-			// 테이블 모델 생성
-			Table tableModel = tadpoleFactory.createTable();
-			tableModel.setName(tableName);
-			tableModel.setDb(db);
-			tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
+		String strFullData = StringUtils.substringAfter(strDragSource, PublicTadpoleDefine.DELIMITER);
+		String [] arryTables = StringUtils.splitByWholeSeparator(strFullData, PublicTadpoleDefine.DELIMITER_DBL);
+		for (String strTable : arryTables) {
+			String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
+			if(arryTable.length == 0) continue;
 			
-			try {
-				// 컬럼 모델 생성
-				for (CollectionFieldDAO columnDAO : getColumns(tableName)) {										
-					Column column = tadpoleFactory.createColumn();					
-					column.setField(columnDAO.getField());
-					column.setKey(columnDAO.getKey());
-					column.setType(columnDAO.getType());
-					if("BasicDBObject".equals(columnDAO.getType())) {
-						makeSubDoc(tableModel, column, columnDAO);
-					}						
-					
-					column.setTable(tableModel);
-				}
-				mapDBTables.put(tableName, tableModel);
-				RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
-				
-			} catch(Exception e) {
-				logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+			String tableName = arryTable[0];
+			String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
+			
+			// 이미 editor 상에 테이블 정보를 가져온다.
+			Map<String, Table> mapDBTables = new HashMap<String, Table>();
+			for (Table table : db.getTables()) {
+				mapDBTables.put(table.getName(), table);
+				refTableNames += "'" + table.getName() + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
+			refTableNames = StringUtils.chompLast(refTableNames, ","); //$NON-NLS-1$
 			
-			transferFactory.setTable(tableModel);
-		} else {
-			transferFactory.setTable(mapDBTables.get(tableName));
+			// 이미 등록되어 있는 것이 아니라면
+			if(mapDBTables.get(tableName) == null) {
+				// 테이블 모델 생성
+				Table tableModel = tadpoleFactory.createTable();
+				tableModel.setName(tableName);
+				tableModel.setDb(db);
+				tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
+				
+				try {
+					// 컬럼 모델 생성
+					for (CollectionFieldDAO columnDAO : getColumns(tableName)) {										
+						Column column = tadpoleFactory.createColumn();					
+						column.setField(columnDAO.getField());
+						column.setKey(columnDAO.getKey());
+						column.setType(columnDAO.getType());
+						if("BasicDBObject".equals(columnDAO.getType())) {
+							makeSubDoc(tableModel, column, columnDAO);
+						}						
+						
+						column.setTable(tableModel);
+					}
+					mapDBTables.put(tableName, tableModel);
+					RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
+					
+				} catch(Exception e) {
+					logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+				}
+				
+				transferFactory.setTable(tableModel);
+			} else {
+				transferFactory.setTable(mapDBTables.get(tableName));
+			}
 		}
 		
 		super.handleDrop();
@@ -193,11 +201,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	 * @throws Exception
 	 */
 	public List<CollectionFieldDAO> getColumns(String strTBName) throws Exception {
-		Mongo mongo = new Mongo(new DBAddress(userDB.getUrl()) );
-		com.mongodb.DB mongoDB = mongo.getDB(userDB.getDb());
-		DBCollection coll = mongoDB.getCollection(strTBName);
-									
-		return MongoDBTableColumn.tableColumnInfo(coll.getIndexInfo(), coll.findOne());
+		return MongoDBQuery.collectionColumn(userDB, strTBName);
 	}
 
 }

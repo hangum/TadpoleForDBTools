@@ -80,7 +80,7 @@ public class ColumnsComposite extends Composite {
 
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText("Filter");
+		lblNewLabel.setText(Messages.ColumnsComposite_0);
 
 		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -101,7 +101,7 @@ public class ColumnsComposite extends Composite {
 				initUI();
 			}
 		});
-		btnRefresh.setText("Refresh");
+		btnRefresh.setText(Messages.ColumnsComposite_1);
 
 		tvColumnInform = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvColumnInform.getTable();
@@ -126,77 +126,77 @@ public class ColumnsComposite extends Composite {
 		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
-			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NULLABLE", "Nullable", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) // //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
 		} else if (DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
-			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NULLABLE", "Nullable", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("PARTITIONED", "Paritioned", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_PRECISION", "Data Precision", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_SCALE", "Data Scale", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("PARTITIONED", "Paritioned", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_PRECISION", "Data Precision", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_SCALE", "Data Scale", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
 		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
-			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 150, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 120, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 150, SWT.LEFT).assignEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, 3) )  //
-					, new TableViewColumnDefine ("NULLABLE", "Nullable", 60, SWT.CENTER) //
-					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 120, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 60, SWT.CENTER) //
-					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 60, SWT.CENTER) //
-					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.RIGHT) //
-					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.RIGHT) //
-					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.RIGHT) //
-					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 120, SWT.LEFT) //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 150, SWT.LEFT) // //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 120, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 150, SWT.LEFT).assignEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, 3) )  // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 60, SWT.CENTER) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 120, SWT.LEFT) // //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 60, SWT.CENTER) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 60, SWT.CENTER) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.RIGHT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.RIGHT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.RIGHT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 120, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
 		} else {
 			tableColumnDef = new TableViewColumnDefine [] { //
-			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) //
-					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT).assignEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, 3) ) //
-					, new TableViewColumnDefine ("NULLABLE", "Nullable", 60, SWT.CENTER) //
-					, new TableViewColumnDefine ("PK", "PK", 60, SWT.CENTER) //
-					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) //
-					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) //
+			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 100, SWT.LEFT).assignEditingSupport(new DBInfoCommentEditorSupport(tvColumnInform, userDB, 3) ) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 60, SWT.CENTER) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("PK", "PK", 60, SWT.CENTER) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Data Default", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_TYPE_MOD", "Data Type Mod", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("CHAR_USED", "Char Used", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("HISTOGRAM", "Histogram", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_DISTINCT", "Num Distinct", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NUM_NULLS", "Num Nulls", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 		}
 
@@ -225,12 +225,12 @@ public class ColumnsComposite extends Composite {
 
 
 					for (HashMap<String, String> sqliteMap : sqliteColumnList) {//
-						RDBInfomationforColumnDAO dao = new RDBInfomationforColumnDAO(table.get("name"), ""//
-								, sqliteMap.get("name"), ""//
-								, sqliteMap.get("type")//
-								, ("0".equals(String.valueOf(sqliteMap.get("notnull"))) ? "No" : "")//
-								, String.valueOf(sqliteMap.get("dflt_value") == null ? "" : sqliteMap.get("dflt_value"))//
-								, ("1".equals(String.valueOf(sqliteMap.get("pk"))) ? "PK" : "") //
+						RDBInfomationforColumnDAO dao = new RDBInfomationforColumnDAO(table.get("name"), ""// //$NON-NLS-1$ //$NON-NLS-2$
+								, sqliteMap.get("name"), ""// //$NON-NLS-1$ //$NON-NLS-2$
+								, sqliteMap.get("type")// //$NON-NLS-1$
+								, ("0".equals(String.valueOf(sqliteMap.get("notnull"))) ? "No" : "")// //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+								, String.valueOf(sqliteMap.get("dflt_value") == null ? "" : sqliteMap.get("dflt_value"))// //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								, ("1".equals(String.valueOf(sqliteMap.get("pk"))) ? "PK" : "") // //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						);
 						listTableInform.add(dao);
 					}
@@ -243,9 +243,9 @@ public class ColumnsComposite extends Composite {
 			tvColumnInform.refresh();
 			
 			// google analytic
-			AnalyticCaller.track(RDBDBInfosEditor.ID, "ColumnsComposite");
+			AnalyticCaller.track(RDBDBInfosEditor.ID, "ColumnsComposite"); //$NON-NLS-1$
 		} catch (Exception e) {
-			logger.error("initialize column summary", e);
+			logger.error("initialize column summary", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$

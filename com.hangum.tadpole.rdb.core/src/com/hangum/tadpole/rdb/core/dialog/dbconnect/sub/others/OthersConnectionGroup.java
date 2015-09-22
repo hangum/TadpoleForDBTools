@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -50,8 +50,8 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	protected Button btnProfiler;
 	protected Button btnExecuteQuestionDml;
 	protected Button btnShowTables;
-	protected Button btnIsVisible;
-	protected Button btnSendMonitoring;
+//	protected Button btnIsVisible;
+//	protected Button btnSendMonitoring;
 //	protected Button btnIsMonitoring;
 	
 	/**
@@ -62,7 +62,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	public OthersConnectionGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
 		setText(Messages.OthersConnectionRDBGroup_0);
-		GridLayout gridLayout = new GridLayout(4, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -118,13 +118,14 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBGroup_6);
 		
-		btnIsVisible = new Button(this, SWT.CHECK);
-		btnIsVisible.setSelection(true);
-		btnIsVisible.setText(Messages.OthersConnectionRDBGroup_btnIsVisible_text);
+//		btnIsVisible = new Button(this, SWT.CHECK);
+//		btnIsVisible.setSelection(true);
+//		btnIsVisible.setText(Messages.OthersConnectionRDBGroup_btnIsVisible_text);
 		
-		btnSendMonitoring = new Button(this, SWT.CHECK);
-		btnSendMonitoring.setSelection(true);
-		btnSendMonitoring.setText(Messages.OthersConnectionRDBGroup_btnSendMonitoring_text);
+//		btnSendMonitoring = new Button(this, SWT.CHECK);
+//		btnSendMonitoring.setEnabled(false);
+//		btnSendMonitoring.setSelection(false);
+//		btnSendMonitoring.setText(Messages.OthersConnectionRDBGroup_btnSendMonitoring_text);
 		
 //		btnIsMonitoring = new Button(this, SWT.CHECK);
 //		btnIsMonitoring.setSelection(true);
@@ -153,7 +154,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		
 		setBtnExecuteQuestionDml(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getQuestion_dml())?true:false);
 		
-		setIsVisible(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_visible())?true:false);
+//		setIsVisible(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_visible())?true:false);
 //		setSendMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_summary_report())?true:false);
 //		setIsMonitoring(PublicTadpoleDefine.YES_NO.YES.name().equals(oldUserDB.getIs_monitoring())?true:false);
 	}
@@ -171,8 +172,8 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		otherConnectionDAO.setProfiling(getBtnProfiler());
 		otherConnectionDAO.setDMLStatement(getBtnExecuteQuestionDml());
 		
-		otherConnectionDAO.setVisible(getIsVisible());
-		otherConnectionDAO.setSummaryReport(getSendMonitoring());
+//		otherConnectionDAO.setVisible(getIsVisible());
+//		otherConnectionDAO.setSummaryReport(getSendMonitoring());
 //		otherConnectionDAO.setMonitoring(getIsMonitoring());
 		
 		return otherConnectionDAO;
@@ -222,16 +223,16 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnProfiler.setSelection(isSelect);
 	}
 	
-	public boolean getIsVisible() {
-		return btnIsVisible.getSelection();
-	}
-	public void setIsVisible(boolean isSelect) {
-		btnIsVisible.setSelection(isSelect);
-	}
+//	public boolean getIsVisible() {
+//		return btnIsVisible.getSelection();
+//	}
+//	public void setIsVisible(boolean isSelect) {
+//		btnIsVisible.setSelection(isSelect);
+//	}
 	
-	public boolean getSendMonitoring() {
-		return btnSendMonitoring.getSelection();
-	}
+//	public boolean getSendMonitoring() {
+//		return btnSendMonitoring.getSelection();
+//	}
 //	public void setSendMonitoring(boolean isSelect) {
 //		btnIsMonitoring.setSelection(isSelect);
 //	}

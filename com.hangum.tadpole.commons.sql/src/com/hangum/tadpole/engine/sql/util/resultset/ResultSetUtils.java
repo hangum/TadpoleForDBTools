@@ -129,7 +129,7 @@ public class ResultSetUtils {
 	 * @throws SQLException
 	 */
 	public static Map<Integer, Integer> getColumnType(boolean isShowRowNum, ResultSetMetaData rsm) throws SQLException {
-		Map<Integer, Integer> mapColumnType = new HashMap<>();
+		Map<Integer, Integer> mapColumnType = new HashMap<Integer, Integer>();
 		int intStartIndex = 0;
 		
 		if(isShowRowNum) {
@@ -343,7 +343,7 @@ public class ResultSetUtils {
 				mapColumnName.put(i+intStartIndex, pgsqlMeta.getBaseTableName(i+1));
 				
 //				if(logger.isDebugEnabled()) logger.debug("Table name is " + pgsqlMeta.getBaseTableName(i+1));
-			} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+			} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
 				mapColumnName.put(i+intStartIndex, "Apache Hive is not support this method.");
 			} else {
 				if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
@@ -382,7 +382,7 @@ public class ResultSetUtils {
 	 * @throws SQLException
 	 */
 	public static Map<Integer, Map> getColumnTableColumnName(UserDBDAO userDB, ResultSetMetaData rsm) {
-		Map<Integer, Map> mapTableColumn = new HashMap<>();
+		Map<Integer, Map> mapTableColumn = new HashMap<Integer, Map>();
 		
 		// 첫번째 컬럼 순번을 위해 삽입.
 		mapTableColumn.put(0, new HashMap());

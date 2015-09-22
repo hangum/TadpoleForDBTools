@@ -172,8 +172,11 @@ public enum DBDefine {
 			 */
 			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
 			
-			/** http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html */
-			case MONGODB_DEFAULT:	return "%s:%s/%s";
+			/* http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html
+			 *  
+			 * mongodb://[dbuser:dbpassword@]host:port/dbname
+			 */
+			case MONGODB_DEFAULT:	return "mongodb://%s:%s";//@%s:%s:%s";
 			
 			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
 			case HIVE2_DEFAULT:		return "jdbc:hive2://%s:%s/%s";

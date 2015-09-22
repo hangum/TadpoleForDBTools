@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -89,7 +89,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		gl_compositeBody.horizontalSpacing = 2;
 		gl_compositeBody.marginWidth = 0;
 		compositeBody.setLayout(gl_compositeBody);
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
@@ -153,7 +153,23 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
-		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));		
+		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
+		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
+		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
+		
+		comboLocale = new Combo(grpConnectionType, SWT.NONE);
+		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+			
+		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
+		comboLocale.setVisibleItemCount(12);
+		comboLocale.select(0);
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.DBLoginDialog_2);
@@ -167,23 +183,6 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblLocale = new Label(grpConnectionType, SWT.NONE);
-		lblLocale.setText(Messages.MySQLLoginComposite_lblLocale_text);
-		
-		comboLocale = new Combo(grpConnectionType, SWT.NONE);
-		comboLocale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
-			
-		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
-		comboLocale.setVisibleItemCount(12);
-		comboLocale.select(0);
-		
-		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
-		
-		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
-		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
-
 		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -212,11 +211,11 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName()); //$NON-NLS-1$
 			
-			textHost.setText("dbs004.mongosoup.de"); //$NON-NLS-1$
+			textHost.setText("127.0.0.1"); //$NON-NLS-1$
 			textPort.setText("27017");			 //$NON-NLS-1$
-			textDatabase.setText("cc_uRkAeyCDcSSi"); //$NON-NLS-1$
-			textUser.setText("uRkAeyCDcSSi"); //$NON-NLS-1$
-			textPassword.setText("NdPYZyWsZwhm"); //$NON-NLS-1$
+			textDatabase.setText("test"); //$NON-NLS-1$
+			textUser.setText(""); //$NON-NLS-1$
+			textPassword.setText(""); //$NON-NLS-1$
 			
 		} else {
 			textPort.setText("27017");			 //$NON-NLS-1$
@@ -249,7 +248,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
 		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
-//		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$		
+		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$		
 		
 		return true;
 	}
@@ -299,7 +298,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_external_browser(otherConnectionDAO.isExterBrowser()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		userDB.setListExternalBrowserdao(otherConnectionDAO.getListExterBroswer());
 		
-		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
+//		userDB.setIs_visible(otherConnectionDAO.isVisible()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
 		// 처음 등록자는 권한이 어드민입니다.

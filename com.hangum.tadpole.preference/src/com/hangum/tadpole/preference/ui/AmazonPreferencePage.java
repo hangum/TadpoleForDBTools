@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetAmazonPreference;
@@ -56,18 +57,21 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 		containerMain.setLayout(new GridLayout(2, false));
 		
 		Label lblAccessKey = new Label(containerMain, SWT.NONE);
-		lblAccessKey.setText("Access Key");
+		lblAccessKey.setText(Messages.AmazonPreferencePage_0);
 		
 		textAccessKey = new Text(containerMain, SWT.BORDER);
 		textAccessKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSecretKey = new Label(containerMain, SWT.NONE);
-		lblSecretKey.setText("Secret Key");
+		lblSecretKey.setText(Messages.AmazonPreferencePage_1);
 		
 		textSecretKey = new Text(containerMain, SWT.BORDER | SWT.PASSWORD);
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		initDefaultValue();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 		
 		return containerMain;
 	}
@@ -100,7 +104,7 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 			updateEncriptInfo(PreferenceDefine.AMAZON_SECRET_NAME, txtSecretKey);
 			
 		} catch(Exception e) {
-			logger.error("GeneralPreference saveing", e);
+			logger.error("GeneralPreference saveing", e); //$NON-NLS-1$
 			
 			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;

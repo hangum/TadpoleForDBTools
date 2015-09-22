@@ -23,7 +23,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  */
 public class ManagerListDTO {
 	String name;
-//	DBDefine dbType;
 	List<UserDBDAO> managerList = new ArrayList<UserDBDAO>();
 	
 	public ManagerListDTO() {

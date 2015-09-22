@@ -48,6 +48,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -74,7 +75,7 @@ public class SessionListEditor extends EditorPart {
 	 */
 	private static final Logger logger = Logger.getLogger(SessionListEditor.class);
 
-	public static final String ID = "com.hangum.tadpole.rdb.core.editor.sessionlist";
+	public static final String ID = "com.hangum.tadpole.rdb.core.editor.sessionlist"; //$NON-NLS-1$
 	
 	protected final int user_seq = SessionManager.getUserSeq();
 	
@@ -145,7 +146,7 @@ public class SessionListEditor extends EditorPart {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tltmStart = new ToolItem(toolBar, SWT.NONE);
-		tltmStart.setToolTipText("Start");
+		tltmStart.setToolTipText(Messages.SessionListEditor_1);
 		tltmStart.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/start.png")); //$NON-NLS-1$
 		tltmStart.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -159,7 +160,7 @@ public class SessionListEditor extends EditorPart {
 		tltmStart.setEnabled(false);
 		
 		tltmStop = new ToolItem(toolBar, SWT.NONE);
-		tltmStop.setToolTipText("Stop");
+		tltmStop.setToolTipText(Messages.SessionListEditor_2);
 		tltmStop.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/stop.png")); //$NON-NLS-1$
 		tltmStop.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -172,12 +173,22 @@ public class SessionListEditor extends EditorPart {
 		});
 		
 		final ToolItem tltmKillProcess = new ToolItem(toolBar, SWT.NONE);
-		tltmKillProcess.setToolTipText("Kill Process");
+		tltmKillProcess.setToolTipText(Messages.SessionListEditor_3);
 		tltmKillProcess.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/kill_process.png")); //$NON-NLS-1$
 		tltmKillProcess.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				killProcess();
+				boolean isPossible = false;
+				if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
+				else {
+					if(!PermissionChecker.isProductBackup(userDB)) isPossible = true;
+				}
+				
+				if(isPossible) {
+					killProcess();
+				} else {
+					MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.MainEditor_21);
+				}
 			}
 		});
 		tltmKillProcess.setEnabled(false);
@@ -185,7 +196,7 @@ public class SessionListEditor extends EditorPart {
 		ToolItem tltmSecondsRefresh = new ToolItem(toolBar, SWT.NONE);
 		tltmSecondsRefresh.setEnabled(false);
 		tltmSecondsRefresh.setSelection(true);
-		tltmSecondsRefresh.setText("Refresh Rate : 5 Seconds");
+		tltmSecondsRefresh.setText(Messages.SessionListEditor_4);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -206,7 +217,7 @@ public class SessionListEditor extends EditorPart {
 					textQuery.setText(sl.getInfo());
 					textQuery.setFocus();
 				} else {
-					textQuery.setText("");
+					textQuery.setText(""); //$NON-NLS-1$
 				}
 			}
 		});
@@ -217,7 +228,7 @@ public class SessionListEditor extends EditorPart {
 		
 		Group compositeQuery = new Group(sashForm, SWT.NONE);
 		compositeQuery.setLayout(new GridLayout(1, false));
-		compositeQuery.setText("Query");
+		compositeQuery.setText(Messages.SessionListEditor_6);
 		
 		textQuery = new Text(compositeQuery, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -277,19 +288,19 @@ public class SessionListEditor extends EditorPart {
 		StructuredSelection ss = (StructuredSelection)tableViewerSessionList.getSelection();
 		SessionListDAO sl = (SessionListDAO)ss.getFirstElement();
 		
-		if(!MessageDialog.openConfirm(null, "Confirm", "Do you want kill process?")) return;
+		if(!MessageDialog.openConfirm(null, Messages.SessionListEditor_7, Messages.SessionListEditor_8)) return;
 		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			if (DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
-				client.queryForObject("killProcess", Integer.parseInt(sl.getId()));
+				client.queryForObject("killProcess", Integer.parseInt(sl.getId())); //$NON-NLS-1$
 			} else {
-				client.queryForObject("killProcess", sl.getId());
+				client.queryForObject("killProcess", sl.getId()); //$NON-NLS-1$
 			}
 			
 			initSessionListData();
 		} catch(Exception e) {
-			logger.error("killprocess exception", e);
+			logger.error("killprocess exception", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
@@ -306,35 +317,35 @@ public class SessionListEditor extends EditorPart {
 			List<?> listSessionList = null;
 			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 
-				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant");
+				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission", errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.SessionListEditor_13, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
 				try {
-					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView");
+					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
 				}catch (Exception e) {
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "You do not have permission to viewing session", errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.SessionListEditor_15, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
-				int version = (Integer) sqlClient.queryForObject("getVersion");				
+				int version = (Integer) sqlClient.queryForObject("getVersion");				 //$NON-NLS-1$
 				if (version <= 9){
-					listSessionList = sqlClient.queryForList("sessionList_9");
+					listSessionList = sqlClient.queryForList("sessionList_9"); //$NON-NLS-1$
 				}else{
-					listSessionList = sqlClient.queryForList("sessionList");
+					listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
 				}
 			}else{
-				listSessionList = sqlClient.queryForList("sessionList");
+				listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
 			}
 			
 			tableViewerSessionList.setInput(listSessionList);
 			tableViewerSessionList.refresh();
 		} catch (Exception e) {
-			logger.error("initialize session list", e);
+			logger.error("initialize session list", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
@@ -348,7 +359,7 @@ public class SessionListEditor extends EditorPart {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] name = {"PID", "User", "Host", "Database", "Command", "Time", "State", "Info"};
+		String[] name = {Messages.SessionListEditor_21, Messages.SessionListEditor_22, Messages.SessionListEditor_23, Messages.SessionListEditor_24, Messages.SessionListEditor_25, Messages.SessionListEditor_26, Messages.SessionListEditor_27, Messages.SessionListEditor_28};
 		int[] size = {70, 70, 150, 70, 70, 100, 50, 200};
 
 		for (int i=0; i<name.length; i++) {

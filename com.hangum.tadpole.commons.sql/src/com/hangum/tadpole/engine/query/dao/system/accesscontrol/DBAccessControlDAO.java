@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * 
@@ -34,7 +34,10 @@ public class DBAccessControlDAO {
 	String delete_locl = PublicTadpoleDefine.YES_NO.NO.name();
 	String ddl_lock	 	= PublicTadpoleDefine.YES_NO.NO.name();
 	Timestamp create_time;
-	String delyn; 
+	String delyn;
+	
+	/** access control detail count */
+	int intDetailCnt = -1;
 	
 	/** select access ctl */
 	Map<String, AccessCtlObjectDAO> mapSelectAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
@@ -45,7 +48,6 @@ public class DBAccessControlDAO {
 	public DBAccessControlDAO() {
 	}
 	
-
 	/**
 	 * @return the mapSelectAccessCtl
 	 */
@@ -53,16 +55,12 @@ public class DBAccessControlDAO {
 		return mapSelectAccessCtl;
 	}
 
-
-
 	/**
 	 * @param mapSelectAccessCtl the mapSelectAccessCtl to set
 	 */
 	public void setMapSelectAccessCtl(Map<String, AccessCtlObjectDAO> mapSelectAccessCtl) {
 		this.mapSelectAccessCtl = mapSelectAccessCtl;
 	}
-
-
 
 	/**
 	 * @return the seq
@@ -188,6 +186,14 @@ public class DBAccessControlDAO {
 	 */
 	public void setDelyn(String delyn) {
 		this.delyn = delyn;
+	}
+
+	public int getIntDetailCnt() {
+		return intDetailCnt;
+	}
+
+	public void setIntDetailCnt(int intDetailCnt) {
+		this.intDetailCnt = intDetailCnt;
 	}
 	
 }

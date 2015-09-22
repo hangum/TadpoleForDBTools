@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.rap.ui.launch.RAPLauncher">
+<booleanAttribute key="append.args" value="true"/>
+<booleanAttribute key="askclear" value="false"/>
+<booleanAttribute key="automaticAdd" value="true"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearws" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/tadpole_configuration"/>
+<booleanAttribute key="default" value="true"/>
+<booleanAttribute key="default_auto_start" value="true"/>
+<intAttribute key="default_start_level" value="4"/>
+<stringAttribute key="deselected_workspace_plugins" value="com.hangum.tadpole.build.war,com.hangum.tadpole.engine.test,com.hangum.tadpole.mongodb.core.test"/>
+<booleanAttribute key="includeOptional" value="true"/>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ko -consoleLog -console -GAON  -test -testDB -forceSystemInitialize -defaultDB MySQL -ddebuglog &#13;&#10;-db Server BZSmKIt+/Mwzm9tZHAgzrHenP+Nm9i0yK/RLZLvJ4v8rJWtjQjmR8Nx0+TE7r8XJtKlFHsbPnxhNiT+D86XWnsXtLGMJWLgb9F5Rrnuxrb2OKirsQM+/sydp2OfNK7d1M1W1zQd3d7OhAtnBmFjwcNd2otVizkgr&#10; -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#13;&#10;-Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info  -Xms1024m -Xmx2048m"/>
+<stringAttribute key="org.eclipse.rap.launch.browserMode" value="EXTERNAL"/>
+<stringAttribute key="org.eclipse.rap.launch.contextpath" value="/"/>
+<stringAttribute key="org.eclipse.rap.launch.dataLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.rap.tools.launch/tadpole_configuration"/>
+<booleanAttribute key="org.eclipse.rap.launch.developmentMode" value="true"/>
+<booleanAttribute key="org.eclipse.rap.launch.openBrowser" value="true"/>
+<intAttribute key="org.eclipse.rap.launch.port" value="10082"/>
+<stringAttribute key="org.eclipse.rap.launch.servletPath" value="/tadpole"/>
+<intAttribute key="org.eclipse.rap.launch.sessionTimeout" value="0"/>
+<booleanAttribute key="org.eclipse.rap.launch.useDefaultDataLocation" value="true"/>
+<booleanAttribute key="org.eclipse.rap.launch.useManualContextPath" value="false"/>
+<booleanAttribute key="org.eclipse.rap.launch.useManualPort" value="true"/>
+<booleanAttribute key="org.eclipse.rap.launch.useSessionTimeout" value="false"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<booleanAttribute key="show_selected_only" value="false"/>
+<stringAttribute key="target_bundles" value="com.ibm.icu.base@default:default,javax.servlet@default:default,javax.xml@default:default,org.apache.commons.fileupload@default:default,org.apache.commons.io@default:default,org.apache.felix.gogo.runtime@default:default,org.apache.felix.gogo.shell@default:default,org.eclipse.core.commands@default:default,org.eclipse.core.contenttype@default:default,org.eclipse.core.databinding.observable@default:default,org.eclipse.core.databinding.property@default:default,org.eclipse.core.databinding@default:default,org.eclipse.core.expressions@default:default,org.eclipse.core.jobs@default:default,org.eclipse.core.runtime@default:true,org.eclipse.emf.common@default:default,org.eclipse.emf.ecore.xmi@default:default,org.eclipse.emf.ecore@default:default,org.eclipse.equinox.app@default:default,org.eclipse.equinox.common@2:true,org.eclipse.equinox.console@default:default,org.eclipse.equinox.http.jetty@default:default,org.eclipse.equinox.http.registry@default:default,org.eclipse.equinox.http.servlet@default:default,org.eclipse.equinox.preferences@default:default,org.eclipse.equinox.registry@default:default,org.eclipse.help@default:default,org.eclipse.jetty.http@default:default,org.eclipse.jetty.io@default:default,org.eclipse.jetty.security@default:default,org.eclipse.jetty.server@default:default,org.eclipse.jetty.servlet@default:default,org.eclipse.jetty.util@default:default,org.eclipse.osgi.services@default:default,org.eclipse.osgi@-1:true,org.eclipse.rap.addons.d3chart@default:default,org.eclipse.rap.design.example@default:default,org.eclipse.rap.draw2d.compatibility@default:default,org.eclipse.rap.draw2d@default:default,org.eclipse.rap.filedialog@default:default,org.eclipse.rap.fileupload@default:default,org.eclipse.rap.gef@default:default,org.eclipse.rap.jettycustomizer@default:false,org.eclipse.rap.jface.databinding@default:default,org.eclipse.rap.jface@default:default,org.eclipse.rap.nebula.jface.gridviewer@default:default,org.eclipse.rap.nebula.widgets.grid@default:default,org.eclipse.rap.rwt.osgi@default:default,org.eclipse.rap.rwt.testfixture@default:default,org.eclipse.rap.rwt@default:default,org.eclipse.rap.ui.views@default:default,org.eclipse.rap.ui.workbench@default:default,org.eclipse.rap.ui@default:default,org.hamcrest.core@default:default,org.junit@default:default"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<stringAttribute key="workspace_bundles" value="com.hangum.tadpole.ace.editor.core@default:default,com.hangum.tadpole.admin.manager.core@default:default,com.hangum.tadpole.application@default:default,com.hangum.tadpole.applicattion.start@default:default,com.hangum.tadpole.aws.rds.commons.core@default:default,com.hangum.tadpole.cipher.core@default:default,com.hangum.tadpole.commons.admin.core@default:default,com.hangum.tadpole.commons.libs@default:default,com.hangum.tadpole.commons.utils@default:default,com.hangum.tadpole.engine@default:default,com.hangum.tadpole.help.core@default:default,com.hangum.tadpole.hive.core@default:default,com.hangum.tadpole.importdb@default:default,com.hangum.tadpole.manager.core@default:default,com.hangum.tadpole.mongodb.core.ext@default:default,com.hangum.tadpole.mongodb.core@default:default,com.hangum.tadpole.mongodb.erd.core@default:default,com.hangum.tadpole.mongodb.model@default:default,com.hangum.tadpole.monitoring.core@default:default,com.hangum.tadpole.preference@default:default,com.hangum.tadpole.rdb.core.ext@default:default,com.hangum.tadpole.rdb.core@default:default,com.hangum.tadpole.rdb.erd.core@default:default,com.hangum.tadpole.rdb.model@default:default,com.hangum.tadpole.sql.parser@default:default,com.hangum.tadpole.tajo.core@default:default"/>
+</launchConfiguration>

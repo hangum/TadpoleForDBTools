@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.sql.util;
 
 import java.io.StringWriter;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -32,13 +33,17 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import au.com.bytecode.opencsv.CSVWriter;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.JSONUtil;
+import com.hangum.tadpole.commons.util.ResultSetUtil;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Query utils
@@ -48,7 +53,145 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class QueryUtils {
 	private static final Logger logger = Logger.getLogger(QueryUtils.class);
-	public static enum RESULT_TYPE {JSON, CSV, XML};
+	
+	/** SUPPORT RESULT TYPE */
+	public static enum RESULT_TYPE {JSON, CSV, XML, HTML_TABLE};
+	
+	/**
+	 * select문 이외의 쿼리를 실행합니다
+	 * 
+	 * @param reqQuery
+	 * @exception
+	 */
+	private static Object runSQLOther(
+			final UserDBDAO userDB,
+			String strQuery, 
+			final List<Object> listParam
+	) throws SQLException, Exception 
+	{
+		
+		// is tajo
+		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+//			new TajoConnectionManager().executeUpdate(userDB, strQuery);
+			logger.error("Not support TAJO.");
+		} else { 
+			
+			java.sql.Connection javaConn = null;
+			PreparedStatement prepareStatement = null;
+			try {
+				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+				javaConn = client.getDataSource().getConnection();
+				prepareStatement = javaConn.prepareStatement(strQuery);
+				
+				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
+				if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					final String checkSQL = strQuery.trim().toUpperCase();
+					if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
+						strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+					final String checkSQL = strQuery.trim().toUpperCase();
+					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
+						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
+					) { //$NON-NLS-1$
+						strQuery = strQuery + PublicTadpoleDefine.SQL_DELIMITER; //$NON-NLS-1$
+					}
+				}
+				
+//				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+//				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | 
+//					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
+//				) { 
+//					return prepareStatement.execute(strQuery);
+//				} else {
+
+				for(int i=0; i<listParam.size(); i++) {
+					Object objParam = listParam.get(i);
+					prepareStatement.setObject(i+1, objParam);
+				}
+				
+				return prepareStatement.executeUpdate();
+				
+			} finally {
+				try { prepareStatement.close();} catch(Exception e) {}
+			}
+		}  	// end which db
+		
+		return false;
+	}
+	
+	/**
+	 * execute DML
+	 * 
+	 * @param userDB
+	 * @param strQuery
+	 * @param listParam
+	 * @param resultType
+	 * @throws Exception
+	 */
+	public static String executeDML(final UserDBDAO userDB, final String strQuery, final List<Object> listParam, final String resultType) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		Object effectObject = runSQLOther(userDB, strQuery, listParam);
+		
+		String strReturn = "";
+		if(resultType.equals(RESULT_TYPE.CSV.name())) {
+			final StringWriter stWriter = new StringWriter();
+			CSVWriter csvWriter = new CSVWriter(stWriter, ',');
+			
+			String[] arryString = new String[2];
+			arryString[0] = "effectrow";
+			arryString[1] = String.valueOf(effectObject);
+			csvWriter.writeNext(arryString);
+			
+			strReturn = stWriter.toString();
+		} else if(resultType.equals(RESULT_TYPE.JSON.name())) {
+			final JsonArray jsonArry = new JsonArray();
+			JsonObject jsonObj = new JsonObject();
+			jsonObj.addProperty("effectrow", String.valueOf(effectObject));
+			jsonArry.add(jsonObj);
+			
+			strReturn = JSONUtil.getPretty(jsonArry.toString());
+		} else {//if(resultType.equals(RESULT_TYPE.XML.name())) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder builder = factory.newDocumentBuilder();
+		    final Document doc = builder.newDocument();
+		    final Element results = doc.createElement("Results");
+		    doc.appendChild(results);
+		    
+		    Element row = doc.createElement("Row");
+			results.appendChild(row);
+			Element node = doc.createElement("effectrow");
+			node.appendChild(doc.createTextNode(String.valueOf(effectObject)));
+			row.appendChild(node);
+			
+			DOMSource domSource = new DOMSource(doc);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			tf.setAttribute("indent-number", 4);
+			
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			
+			final StringWriter stWriter = new StringWriter();
+			StreamResult sr = new StreamResult(stWriter);
+			transformer.transform(domSource, sr);
+			
+			strReturn = stWriter.toString();
+		}
+		
+		return strReturn;
+	}
 	
 	/**
 	 * query to csv
@@ -209,7 +352,7 @@ public class QueryUtils {
 					results.appendChild(row);
 					for (int i = 1; i <= metaData.getColumnCount(); i++) {
 						String columnName = metaData.getColumnName(i);
-						Object value = rs.getObject(i);
+						Object value = rs.getObject(i) == null?"":rs.getObject(i);
 						Element node = doc.createElement(columnName);
 						node.appendChild(doc.createTextNode(value.toString()));
 						row.appendChild(node);
@@ -229,11 +372,40 @@ public class QueryUtils {
 		
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-		transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");//"ISO-8859-1");
 		StreamResult sr = new StreamResult(stWriter);
-		transformer.transform(domSource, sr);	
+		transformer.transform(domSource, sr);
 
 		return stWriter.toString();
 	}
+	
+	/**
+	 * result to html_table
+	 * 
+	 * @param userDB
+	 * @param strQuery
+	 * @param listParam
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("deprecation")
+	public static String selectToHTML_TABLE(final UserDBDAO userDB, final String strQuery, final List<Object> listParam) throws Exception {
+		
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		QueryRunner qr = new QueryRunner(client.getDataSource());
+		Object strHTMLTable = qr.query(strQuery, listParam.toArray(), new ResultSetHandler<Object>() {
 
+			@Override
+			public Object handle(ResultSet rs) throws SQLException {
+
+				try {
+					return ResultSetUtil.makeResultSetTOHTML(rs, 1000);
+				} catch(Exception e) {
+					return e.getMessage();
+				}
+			}
+		});
+
+		return strHTMLTable.toString();	
+	}
 }

@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
-import com.hangum.tadpold.commons.libs.core.utils.NullSafeComparator;
+import com.hangum.tadpole.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 
 /**

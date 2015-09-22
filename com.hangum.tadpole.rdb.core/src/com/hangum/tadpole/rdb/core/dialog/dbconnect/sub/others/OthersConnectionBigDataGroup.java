@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -46,8 +46,8 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 	private Button btnExecuteQuestionDml;
 	private Button btnShowTables;
 	private Button btnExternalBrowser;
-	private Button btnIsVisible;
-	private Button btnSendMonitoring;
+//	private Button btnIsVisible;
+//	private Button btnSendMonitoring;
 	
 	/**
 	 * Create the composite.
@@ -60,7 +60,7 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		super(parent, style, selectDB);
 		
 		setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_0);
-		GridLayout gridLayout = new GridLayout(4, false);
+		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
@@ -113,17 +113,17 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
 		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBWithoutTunnelingGroup_5);
 		
-		btnIsVisible = new Button(this, SWT.CHECK);
-		btnIsVisible.setSelection(true);
-		btnIsVisible.setText(Messages.OthersConnectionBigDataGroup_btnIsVisible_text);
+//		btnIsVisible = new Button(this, SWT.CHECK);
+//		btnIsVisible.setSelection(true);
+//		btnIsVisible.setText(Messages.OthersConnectionBigDataGroup_btnIsVisible_text);
 		
-		btnSendMonitoring = new Button(this, SWT.CHECK);
-		btnSendMonitoring.setSelection(true);
-		btnSendMonitoring.setEnabled(false);
-		btnSendMonitoring.setText(Messages.OthersConnectionBigDataGroup_btnSendMonitoring_text);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
-		new Label(this, SWT.NONE);
+//		btnSendMonitoring = new Button(this, SWT.CHECK);
+//		btnSendMonitoring.setSelection(true);
+//		btnSendMonitoring.setEnabled(false);
+//		btnSendMonitoring.setText(Messages.OthersConnectionBigDataGroup_btnSendMonitoring_text);
+//		new Label(this, SWT.NONE);
+//		new Label(this, SWT.NONE);
+//		new Label(this, SWT.NONE);
 	}
 	
 	/**
@@ -197,18 +197,18 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 			otherConnectionDAO.setListExterBroswer(getDefaultExternalBrowserInfo());
 		}
 		
-		otherConnectionDAO.setVisible(getIsVisible());
-		otherConnectionDAO.setSummaryReport(getSendMonitoring());
+//		otherConnectionDAO.setVisible(getIsVisible());
+//		otherConnectionDAO.setSummaryReport(getSendMonitoring());
 		
 		return otherConnectionDAO;
 	}
 	
-	public boolean getIsVisible() {
-		return btnIsVisible.getSelection();
-	}
-	public boolean getSendMonitoring() {
-		return btnSendMonitoring.getSelection();
-	}
+//	public boolean getIsVisible() {
+//		return btnIsVisible.getSelection();
+//	}
+//	public boolean getSendMonitoring() {
+//		return btnSendMonitoring.getSelection();
+//	}
 	
 	/**
 	 * @return the btnReadOnlyConnection

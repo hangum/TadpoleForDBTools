@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.UserLoginHistoryDialog;
 import com.swtdesigner.ResourceManager;
 
@@ -41,9 +42,9 @@ public class UserLoginHistoryAction extends Action implements ISelectionListener
 		this.window = window;
 		
 		setId(ID);
-		setText("User Login History");
-		setToolTipText("User Login History");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/userHistory.png"));
+		setText(Messages.UserLoginHistoryAction_0);
+		setToolTipText(Messages.UserLoginHistoryAction_0);
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/userHistory.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	

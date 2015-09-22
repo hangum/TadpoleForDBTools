@@ -13,7 +13,8 @@ CREATE TABLE `tadpole_user` (
 	`approval_yn`            CHAR(3)     NOT NULL DEFAULT 'NO' COMMENT '사용승인여부', -- 사용승인여부
 	`use_otp`                CHAR(3)     NOT NULL DEFAULT 'NO' COMMENT 'USER_OPT', -- USER_OPT
 	`is_email_certification` CHAR(3)     NULL     DEFAULT 'NO' COMMENT '이메일 인증여부', -- 이메일 인증여부
-	`otp_secret`             VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'OPT_SECRET' -- OPT_SECRET
+	`otp_secret`             VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'OPT_SECRET', -- OPT_SECRET
+	`allow_ip`             VARCHAR(20) NOT NULL DEFAULT '*' COMMENT 'allow ip' -- OPT_SECRET
 )
 COMMENT '사용자 정보를 관리한다.';
 
@@ -36,7 +37,8 @@ CREATE TABLE `user_db_resource` (
 	`name`           VARCHAR(50)   NULL     COMMENT '리소스 명칭', -- 이름
 	`shared_type`    VARCHAR(7)    NOT NULL DEFAULT 'PRIVATE' COMMENT '개인 또는 그룹간 공유 구분', -- 공유종류
 	`restapi_yesno`  CHAR(3)       NULL     DEFAULT 'NO' COMMENT '레스트 api지원유무', -- 레스트api 지원유무
-	`restapi_key`    VARCHAR(50)   NULL     COMMENT '별칭', -- 레스트 api key
+	`restapi_uri`    VARCHAR(200)  NULL     COMMENT 'api uri', -- 레스트 api uri
+	`restapi_key`    VARCHAR(50)   NULL     COMMENT 'api key', -- 레스트 api key
 	`description`    VARCHAR(2000) NULL     COMMENT '리소스 설명', -- 설명
 	`create_time`    TIMESTAMP     NOT NULL DEFAULT NOW() COMMENT '생성일시', -- 생성일시
 	`delyn`          CHAR(3)       NOT NULL DEFAULT 'NO' COMMENT '삭제여부' -- 삭제여부
@@ -197,6 +199,7 @@ CREATE TABLE `tadpole_system` (
 	`major_version` VARCHAR(50)   NULL     COMMENT '버젼번호', -- 버젼번호
 	`sub_version`   VARCHAR(50)   NULL     COMMENT '서브버젼', -- 서브버젼
 	`information`   VARCHAR(2000) NULL     COMMENT '시스템정보', -- 시스템정보
+	`execute_type`  VARCHAR(10)   NOT NULL DEFAULT 'PERSONAL'    COMMENT '시스템 실행타입', -- 시스템실행타입
 	`create_time`   TIMESTAMP     NOT NULL DEFAULT NOW() COMMENT '생성일시' -- 생성일시
 )
 COMMENT '올챙이 시스템의 버젼정보등을 관리한다.';

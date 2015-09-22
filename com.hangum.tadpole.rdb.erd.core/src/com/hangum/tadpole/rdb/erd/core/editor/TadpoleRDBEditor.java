@@ -64,12 +64,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.xml.sax.InputSource;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
@@ -503,7 +502,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		if(userDBErd == null) {
 			
 			// file 이름 dialog
-			ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, null, userDB, PublicTadpoleDefine.RESOURCE_TYPE.ERD);
+			ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, null, userDB, PublicTadpoleDefine.RESOURCE_TYPE.ERD, "");
 			if (rsDialog.open() == Window.OK) {
 				
 				try {

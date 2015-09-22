@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.relation.RelationUtil;
 import com.hangum.tadpole.rdb.erd.core.utils.TadpoleModelUtils;
@@ -57,9 +58,9 @@ public class ERDRefreshAction extends SelectionAction {
 		this.viewer = graphicalViewer;
 		
 		setId(ID);
-		setText("Refresh View");
-		setToolTipText("Refresh View");
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/refresh.png"));
+		setText(Messages.ERDRefreshAction_0);
+		setToolTipText(Messages.ERDRefreshAction_0);
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 	}
 	
 	public GraphicalViewer getViewer() {
@@ -68,7 +69,7 @@ public class ERDRefreshAction extends SelectionAction {
 	
 	@Override
 	public void run() {
-		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), "Confirm", "Do you want to refresh?")) return;
+		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), Messages.ERDRefreshAction_3, Messages.ERDRefreshAction_4)) return;
 		
 		DB dbModel = rdbEditor.getDb();
 		
@@ -102,10 +103,10 @@ public class ERDRefreshAction extends SelectionAction {
 				tableModel.setName(table.getName());
 				
 				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-					tableModel.setComment("");	
+					tableModel.setComment("");	 //$NON-NLS-1$
 				} else {
 					String tableComment = table.getComment();
-					tableComment = StringUtils.substring(""+tableComment, 0, 10);
+					tableComment = StringUtils.substring(""+tableComment, 0, 10); //$NON-NLS-1$
 					tableModel.setComment(tableComment);
 				}
 				
@@ -124,8 +125,8 @@ public class ERDRefreshAction extends SelectionAction {
 					column.setType(columnDAO.getType());
 					
 					String strComment = columnDAO.getComment();
-					if(strComment == null) strComment = "";
-					strComment = StringUtils.substring(""+strComment, 0, 10);
+					if(strComment == null) strComment = ""; //$NON-NLS-1$
+					strComment = StringUtils.substring(""+strComment, 0, 10); //$NON-NLS-1$
 					column.setComment(strComment);
 					
 					column.setTable(tableModel);
@@ -138,7 +139,7 @@ public class ERDRefreshAction extends SelectionAction {
 			RelationUtil.calRelation(userDB, mapDBTables, dbModel);
 			
 		} catch (Exception e) {
-			logger.error("Get all table list", e);
+			logger.error("Get all table list", e); //$NON-NLS-1$
 		}
 	}
 	

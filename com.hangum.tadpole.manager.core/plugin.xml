@@ -38,6 +38,13 @@
             id="com.hangum.tadpole.manager.core.editor.schemahistory"
             name="Schema History">
       </editor>
+      <editor
+            class="com.hangum.tadpole.manager.core.editor.restfulapi.RESTFulAPIManagerEditor"
+            default="false"
+            icon="resources/icons/restful_api.png"
+            id="com.hangum.tadpole.manager.core.editor.restfulapi"
+            name="RESTful API Manager">
+      </editor>
    </extension>
 
 </plugin>

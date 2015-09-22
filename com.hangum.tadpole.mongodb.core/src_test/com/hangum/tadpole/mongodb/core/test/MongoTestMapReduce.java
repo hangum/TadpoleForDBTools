@@ -80,8 +80,8 @@ public class MongoTestMapReduce {
 			
 			System.out.println( obj );
 		}
-		out.getRaw();
-		out.getRaw();
+//		out.getRaw();
+//		out.getRaw();
 		
 		mongo.close();
 

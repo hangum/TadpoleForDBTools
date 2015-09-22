@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -103,7 +103,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmViews.setText("Views"); //$NON-NLS-1$
+		tbtmViews.setText(Messages.TadpoleViewerComposite_0);
+		tbtmViews.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.VIEWS.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmViews.setControl(compositeTables);
@@ -133,8 +134,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							StringBuffer sbSQL = new StringBuffer();
 		
 							Map<String, String> parameter = new HashMap<String, String>();
-							parameter.put("db", userDB.getDb());
-							parameter.put("table", viewName);
+							parameter.put("db", userDB.getDb()); //$NON-NLS-1$
+							parameter.put("table", viewName); //$NON-NLS-1$
 							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
@@ -171,8 +172,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 						if (is.getFirstElement() != null) {
 							String strTBName = is.getFirstElement().toString();
 							Map<String, String> param = new HashMap<String, String>();
-							param.put("db", userDB.getDb());
-							param.put("table", strTBName);
+							param.put("db", userDB.getDb()); //$NON-NLS-1$
+							param.put("table", strTBName); //$NON-NLS-1$
 
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
@@ -208,7 +209,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(viewListViewer, SWT.NONE);
 		TableColumn tblclmnTableName = tableViewerColumn.getColumn();
 		tblclmnTableName.setWidth(200);
-		tblclmnTableName.setText("Name"); //$NON-NLS-1$
+		tblclmnTableName.setText(Messages.TadpoleViewerComposite_5);
 		tblclmnTableName.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			
@@ -250,13 +251,13 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_1);
+		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_2);
+		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_3);
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_4);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_6);
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -269,6 +270,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 					if(!isDDLLock()) {
 						manager.add(creatAction_View);
 						manager.add(deleteAction_View);
+						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
 				}
 //				manager.add(modifyAction_View);
@@ -278,6 +280,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				manager.add(viewDDLAction);
 				
 				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(objectCompileAction);
 				}
 			}

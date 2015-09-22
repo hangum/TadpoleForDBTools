@@ -40,6 +40,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.manager.core.editor.auth.provider.UserCompFilter;
@@ -112,7 +113,7 @@ public class AdminUserListComposite extends Composite {
 				initUI();
 			}
 		});
-		tltmRefresh.setToolTipText("Refresh");
+		tltmRefresh.setToolTipText(Messages.AdminUserListComposite_0);
 	
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 		tltmAdd.setImage(ToobalImageUtils.getAdd());
@@ -122,7 +123,7 @@ public class AdminUserListComposite extends Composite {
 				addUser();
 			}
 		});
-		tltmAdd.setToolTipText("Add");
+		tltmAdd.setToolTipText(Messages.AdminUserListComposite_1);
 	
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.setImage(ToobalImageUtils.getModify());
@@ -133,11 +134,11 @@ public class AdminUserListComposite extends Composite {
 				modifyUser();
 			}
 		});
-		tltmModify.setToolTipText("Modify");
+		tltmModify.setToolTipText(Messages.AdminUserListComposite_2);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText("Search");
+		lblSearch.setText(Messages.AdminUserListComposite_3);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -212,8 +213,8 @@ public class AdminUserListComposite extends Composite {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {"Email", "Name", "Comrirm key", "Approval", "User Confirm", "Delete", "Create Time"};
-		int[] colSize = {200, 150, 120, 60, 60, 60, 120};
+		String[] colNames = {Messages.AdminUserListComposite_4, Messages.AdminUserListComposite_5, Messages.AdminUserListComposite_6, Messages.AdminUserListComposite_7, Messages.AdminUserListComposite_8, Messages.AdminUserListComposite_9, Messages.AdminUserListComposite_10, Messages.AdminUserListComposite_11};
+		int[] colSize = {200, 150, 100, 100, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(userListViewer, SWT.NONE);
@@ -235,7 +236,7 @@ public class AdminUserListComposite extends Composite {
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();
 		} catch(Exception e) {
-			logger.error("Get user list", e);
+			logger.error(Messages.AdminUserListComposite_12, e);
 		}
 	}
 	

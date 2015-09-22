@@ -25,7 +25,7 @@ import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
@@ -268,7 +268,7 @@ public class SessionManager {
 	     
 	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", "");
 	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
-	     	executor.execute("setTimeout('"+browserText+"', 50)" );
+	     	executor.execute("setTimeout('"+browserText+"', 10)" );
 		} catch(Exception e) {
 			// ignore exception
 		}

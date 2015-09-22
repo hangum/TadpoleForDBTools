@@ -67,9 +67,9 @@ public class MongoDBTableEditor extends EditorPart {
 	private CTabFolder tabFolderSearchPanel;
 	
 	/** collection column info */
-	private Map<String, CollectionFieldDAO> columnInfo;
-	/** collection의 전체 컬럼 */
-	private String strColumns = ""; //$NON-NLS-1$
+//	private Map<String, CollectionFieldDAO> columnInfo;
+//	/** collection의 전체 컬럼 */
+//	private String strColumns = ""; //$NON-NLS-1$
 	
 	/** 쿼리 결과 출력 */
 	private MongodbResultComposite compositeResult ;
@@ -203,14 +203,23 @@ public class MongoDBTableEditor extends EditorPart {
 		});
 		btnExecutePlan.setText(Messages.MongoDBTableEditor_3);
 		
-		Button btnBasicLastCommandConsole = new Button(compositeBasicSearch, SWT.NONE);
-		btnBasicLastCommandConsole.addSelectionListener(new SelectionAdapter() {
+//		Button btnBasicLastCommandConsole = new Button(compositeBasicSearch, SWT.NONE);
+//		btnBasicLastCommandConsole.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				compositeResult.consoleError();
+//			}
+//		});
+//		btnBasicLastCommandConsole.setText(Messages.MongoDBTableEditor_4);
+		
+		Button btnStructureAnalized = new Button(compositeBasicSearch, SWT.NONE);
+		btnStructureAnalized.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				compositeResult.consoleError();
+				compositeResult.structureView();//consoleError();
 			}
 		});
-		btnBasicLastCommandConsole.setText(Messages.MongoDBTableEditor_4);
+		btnStructureAnalized.setText("Show structure");
 		
 		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -318,14 +327,14 @@ public class MongoDBTableEditor extends EditorPart {
 		MongoDBEditorInput moInput = (MongoDBEditorInput)input;
 		this.userDB = moInput.getUserDB();
 		this.initColName = moInput.getCollectionName();
-		this.columnInfo = new HashMap<String, CollectionFieldDAO>();
-		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
-			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);
-			columnInfo.put(tcDAO.getField(), tcDAO);
-
-			strColumns += tcDAO.getField() + ", "; //$NON-NLS-1$
-		}
-		strColumns = StringUtils.chompLast(strColumns, ", "); //$NON-NLS-1$
+//		this.columnInfo = new HashMap<String, CollectionFieldDAO>();
+//		for (int i=0; i<moInput.getShowTableColumns().size(); i++) {
+//			CollectionFieldDAO tcDAO = (CollectionFieldDAO)moInput.getShowTableColumns().get(i);
+//			columnInfo.put(tcDAO.getField(), tcDAO);
+//
+//			strColumns += tcDAO.getField() + ", "; //$NON-NLS-1$
+//		}
+//		strColumns = StringUtils.chompLast(strColumns, ", "); //$NON-NLS-1$
 		
 		setPartName(moInput.getName());		 //$NON-NLS-1$ //$NON-NLS-2$
 	}

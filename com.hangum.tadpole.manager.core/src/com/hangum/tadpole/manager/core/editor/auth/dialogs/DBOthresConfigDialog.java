@@ -23,9 +23,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.manager.core.Messages;
+
 import org.eclipse.swt.widgets.Label;
 
 /**
@@ -53,7 +55,7 @@ public class DBOthresConfigDialog extends Dialog {
 	 */
 	public DBOthresConfigDialog(Shell parentShell, final UserDBDAO userDB) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDB = userDB;
 	}
@@ -61,7 +63,7 @@ public class DBOthresConfigDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("DB Other setting dialog"); //$NON-NLS-1$
+		newShell.setText(Messages.DBOthresConfigDialog_0);
 	}
 
 	/**
@@ -82,17 +84,17 @@ public class DBOthresConfigDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(1, false));
 		
 		Label lblSettingDatabaseOther = new Label(compositeHead, SWT.NONE);
-		lblSettingDatabaseOther.setText("Setting Database Other information");
+		lblSettingDatabaseOther.setText(Messages.DBOthresConfigDialog_1);
 		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		btnVisible = new Button(composite, SWT.CHECK);
-		btnVisible.setText("Is visible?");
+		btnVisible.setText(Messages.DBOthresConfigDialog_2);
 		
 		btnDbLock = new Button(composite, SWT.CHECK);
-		btnDbLock.setText("DB lock?");
+		btnDbLock.setText(Messages.DBOthresConfigDialog_3);
 		
 		initUI();
 
@@ -104,14 +106,14 @@ public class DBOthresConfigDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		if(MessageDialog.openConfirm(getShell(), "Confirm", "Do you want to save?")) {
+		if(MessageDialog.openConfirm(getShell(), Messages.DBOthresConfigDialog_4, Messages.DBOthresConfigDialog_5)) {
 			try {
 				userDB.setIs_visible(btnVisible.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 				userDB.setIs_lock(btnDbLock.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 				
 				TadpoleSystem_UserDBQuery.updateDBOtherInformation(userDB);
 			} catch (Exception e) {
-				logger.error("update faile", e);
+				logger.error("update faile", e); //$NON-NLS-1$
 			}
 			
 			super.okPressed();
@@ -137,8 +139,8 @@ public class DBOthresConfigDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.DBOthresConfigDialog_7, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBOthresConfigDialog_8, false);
 	}
 
 	/**

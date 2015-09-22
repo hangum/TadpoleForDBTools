@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,8 +22,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -53,12 +55,13 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @param executeTime
 	 * @param durationLimit
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws Exception {
+	public static List<SQLHistoryDAO> getExecuteQueryHistoryDetail(String strEmail, String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws TadpoleSQLManagerException, SQLException {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("email", 	strEmail);
 		queryMap.put("db_seq", 	dbSeq);
 		queryMap.put("type", strType);
 		
@@ -80,10 +83,10 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  new ArrayList<Map>();
-		if(!PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
-			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
+		if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
+			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryAPIDetail", queryMap);			
 		} else {
-			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryAPIDetail", queryMap);
+			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryDetail", queryMap);
 		}
 		
 		for (Map resultMap : listResourceData) {
@@ -104,7 +107,8 @@ public class TadpoleSystem_ExecutedSQL {
 			int row = (Integer)resultMap.get("row");
 			String result = (String)resultMap.get("result");
 			
-			String userName =  resultMap.get("name") == null?"":(String)resultMap.get("name"); 
+			String userName =  resultMap.get("name") == null?"":(String)resultMap.get("name");
+			String userEmail = (String)resultMap.get("email");
 			String dbName = (String) resultMap.get("display_name");
 			
 			String ipAddress = (String) resultMap.get("ipaddress");
@@ -112,9 +116,16 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			String strMessage = (String)resultMap.get("message");
 
-			SQLHistoryDAO dao = new SQLHistoryDAO(userName, dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
+			SQLHistoryDAO dao = new SQLHistoryDAO(userName+"("+ userEmail+")", dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
 					ipAddress, dbSeq2);
 			dao.setSeq(seq);
+			if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
+				dao.setEXECUSTE_SQL_TYPE(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API);
+			} else {
+				dao.setEXECUSTE_SQL_TYPE(PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR);
+			}
+			
+			
 			returnSQLHistory.add(dao);
 		}
 		
@@ -122,21 +133,21 @@ public class TadpoleSystem_ExecutedSQL {
 	}
 	
 	/**
-	 * 마지막 실행했떤 쿼리 100개를 리턴합니다.
+	 * 마지막 실행했떤 쿼리 20개를 리턴합니다.
 	 * 
 	 * @param user_seq
 	 * @param dbSeq
 	 * @return
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static List<SQLHistoryDAO> getExecuteQueryHistory(int user_seq, int dbSeq, String filter) throws Exception {
+	public static List<SQLHistoryDAO> getExecuteQueryHistory(int user_seq, int dbSeq, String filter) throws TadpoleSQLManagerException, SQLException {
 		List<SQLHistoryDAO> returnSQLHistory = new ArrayList<SQLHistoryDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq",user_seq);
 		queryMap.put("db_seq", 	dbSeq);
 		queryMap.put("filter", "%" + filter + "%");
-		queryMap.put("count", 	50);
+		queryMap.put("count", 	20);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);
@@ -183,7 +194,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @param sqlType
 	 * @param sqlHistoryDAO
 	 */
-	public static void saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE sqlType, SQLHistoryDAO sqlHistoryDAO) throws Exception {
+	public static void saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE sqlType, SQLHistoryDAO sqlHistoryDAO) throws TadpoleSQLManagerException, SQLException {
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_profile())) {
 			ExecutedSqlResourceDAO executeSQLResourceDao = new ExecutedSqlResourceDAO();
 			executeSQLResourceDao.setDb_seq(userDB.getSeq());
@@ -212,9 +223,9 @@ public class TadpoleSystem_ExecutedSQL {
 	 * 
 	 * @param userDBResource
 	 * @param contents
-	 * @throws Exception
+	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	private static void insertResourceData(ExecutedSqlResourceDAO userDBResource, String contents) throws Exception {
+	private static void insertResourceData(ExecutedSqlResourceDAO userDBResource, String contents) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		// content data를 저장합니다.

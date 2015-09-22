@@ -81,7 +81,8 @@ public class UserManagerDialog extends Dialog {
 	 */
 	public UserManagerDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
+		
 		this.userDB = userDB;
 	}
 

@@ -64,7 +64,7 @@ public class NewDocumentDialog extends Dialog {
 	 */
 	public NewDocumentDialog(Shell parentShell, UserDBDAO userDB, String collectionName) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		this.userDB = userDB;
 		this.collectionName = collectionName;
 	}

@@ -13,7 +13,7 @@ package com.hangum.tadpole.commons.util;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * <pre>
@@ -106,6 +106,15 @@ public class RequestInfoUtils {
 		sua.detect(RWT.getRequest());
 		
 		return sua.getOSSimpleType();
+	}
+	
+	/**
+	 * user request ip
+	 * 
+	 * @return
+	 */
+	public static String getRequestIP() {
+		return RWT.getRequest().getLocalAddr();
 	}
 	
 }

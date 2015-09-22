@@ -10,12 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.parameter;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,10 +36,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
-import com.ibatis.sqlmap.client.SqlMapClient;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * 
@@ -73,7 +73,6 @@ public class ParameterDialog extends Dialog {
 	
 	private Table table;
 	private UserDBDAO userDB;
-	private int paramCount = 0;
 	private List<Map<Integer, Object>> parameters;
 
 	/**
@@ -81,28 +80,27 @@ public class ParameterDialog extends Dialog {
 	 * 
 	 * @param parentShell
 	 */
-	public ParameterDialog(Shell parentShell) {
+	public ParameterDialog(Shell parentShell, final UserDBDAO userDB, int paramCount) {
 		super(parentShell);
+		
+		this.userDB = userDB;
+		this.makeParamCount(paramCount);
+	}
+
+	public ParameterDialog(Shell parentShell, final UserDBDAO userDB, Map<String, int[]> mapIndex) {
+		super(parentShell);
+		
+		this.userDB = userDB;
+		this.makeParamCount(mapIndex);
 	}
 
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Bind Parameters");
-	}
-
-	/**
-	 * @wbp.parser.constructor
-	 */
-	public ParameterDialog(Shell parentShell, UserDBDAO userDB, String executeQuery) throws Exception {
-		super(parentShell);
+		newShell.setText(Messages.ParameterDialog_0);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-
-		this.userDB = userDB;
-		this.calcParamCount(executeQuery);
-		this.makeParamCount();
 	}
-
+	
 	/**
 	 * Create contents of the dialog.
 	 * 
@@ -118,7 +116,7 @@ public class ParameterDialog extends Dialog {
 		TableColumnLayout tcl_composite = new TableColumnLayout();
 		composite.setLayout(tcl_composite);
 
-		TableViewer tableViewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		TableViewer tableViewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -128,39 +126,46 @@ public class ParameterDialog extends Dialog {
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ParamLabelProvider());
 		tableViewer.setInput(parameters);
-
-		tableViewer.refresh();
-		
-//		table.select(0);
-		table.setFocus();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
+		
+		tableViewer.getTable().setFocus();
 
 		return container;
 	}
 
+	/**
+	 * create table column
+	 * 
+	 * @param tableViewer
+	 * @param tcl_composite
+	 */
 	private void createTableColumn(TableViewer tableViewer, TableColumnLayout tcl_composite) {
+//		Not support Eclipse RAP.
+//		This class table course. course is keyboard controls
+//		final TableCursor cursor = new TableCursor(table, SWT.NONE);
+		
 		TableViewerColumn tvcSeq = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcSeq = tvcSeq.getColumn();
 		tcl_composite.setColumnData(tcSeq, new ColumnPixelData(30, true, true));
-		tcSeq.setText("Seq");
+		tcSeq.setText(Messages.ParameterDialog_1);
 
 		TableViewerColumn tvcName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcName = tvcName.getColumn();
 		tcl_composite.setColumnData(tcName, new ColumnPixelData(80, true, true));
-		tcName.setText("Param Name");
+		tcName.setText(Messages.ParameterDialog_2);
 
 		TableViewerColumn tvcType = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcType = tvcType.getColumn();
 		tcl_composite.setColumnData(tcType, new ColumnPixelData(80, true, true));
-		tcType.setText("Data Type");
+		tcType.setText(Messages.ParameterDialog_3);
 		tvcType.setEditingSupport(new ParameterEditingSupport(tableViewer, 2, this.userDB));
 
 		TableViewerColumn tvcValue = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcValue = tvcValue.getColumn();
 		tcl_composite.setColumnData(tcValue, new ColumnPixelData(150, true, true));
-		tcValue.setText("Param Value");
+		tcValue.setText(Messages.ParameterDialog_4);
 		tvcValue.setEditingSupport(new ParameterEditingSupport(tableViewer, 3, this.userDB));
 	}
 	
@@ -171,15 +176,8 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
-//		Button button = createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
-//		button.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				parameters.clear();
-//			}
-//		});
+		createButton(parent, IDialogConstants.OK_ID, Messages.ParameterDialog_5, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ParameterDialog_6, false);
 	}
 
 	/**
@@ -190,6 +188,11 @@ public class ParameterDialog extends Dialog {
 		return new Point(370, 300);
 	}
 
+	/**
+	 * Return java style parameter
+	 * 
+	 * @return
+	 */
 	public ParameterObject getParameterObject() {
 		ParameterObject param = new ParameterObject();
 
@@ -205,57 +208,88 @@ public class ParameterDialog extends Dialog {
 		}
 		return param;
 	}
+	
+	/**
+	 * Returns oracle styled parameter object
+	 * 
+	 * @param mapIndex
+	 * @return
+	 */
+	public ParameterObject getOracleParameterObject(Map<Integer, String> mapIndex) {
+		ParameterObject param = new ParameterObject();
+		
+		for(Integer intKey : mapIndex.keySet()) {
+			String strParamName = mapIndex.get(intKey);
+			
+			for (Map<Integer, Object> mapParam : parameters) {
+				String strTmpParamName = ""+mapParam.get(1); //$NON-NLS-1$
+				
+				if(StringUtils.equals(strParamName, strTmpParamName)) {
+					switch (RDBTypeToJavaTypeUtils.getJavaType((String) mapParam.get(2))) {
+					case java.sql.Types.INTEGER:
+						param.setObject(Integer.valueOf(mapParam.get(3).toString()));
+						break;
+					default:
+						param.setObject(mapParam.get(3));
+						break;
+					}					
+				}
 
-//	private Map<Integer, String> mapParamType = new HashMap<Integer, String>();
-	protected void calcParamCount(String executeQuery) throws Exception {
-
-		java.sql.Connection javaConn = null;
-		PreparedStatement stmt = null;
-		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
-			stmt = javaConn.prepareStatement(executeQuery);
-			java.sql.ParameterMetaData pmd = stmt.getParameterMetaData();
-			if(pmd != null) {
-				paramCount = pmd.getParameterCount();	
-			} else {
-				paramCount = 0;
 			}
-			
-//			for(int i=0; i<pmd.getParameterCount(); i++) {
-//				mapParamType.put(i, pmd.getParameterTypeName(i));
-//			}
-			
-		} catch (Exception e) {
-			logger.error("Count parameter error", e);
-			paramCount = 0;
-			throw e;
-		} finally {
-			try {
-				if(stmt != null) stmt.close();
-			} catch (Exception e) {}
-			
-			try {
-				if(javaConn != null) javaConn.close();
-			} catch (Exception e) {}
 		}
+			
+		return param;
 	}
+	
 
-	protected void makeParamCount() {
+	/**
+	 * java type
+	 * 
+	 * @param paramCount
+	 */
+	protected void makeParamCount(int paramCount) {
 		parameters = new ArrayList<Map<Integer, Object>>();
 		for (int i = 0; i < paramCount; i++) {
 			Map<Integer, Object> map = new HashMap<Integer, Object>();
 			map.put(0, (i + 1));
-			map.put(1, "Param" + (i + 1));
+			map.put(1, "Param" + (i + 1)); //$NON-NLS-1$
 			map.put(2, RDBTypeToJavaTypeUtils.supportParameterTypes(userDB)[0]);
-			// map.put(2, "VARCHAR");
-			map.put(3, "");
+			map.put(3, ""); //$NON-NLS-1$
 			
 			parameters.add(map);
 		}
 	}
-
-	public int getParamCount() {
-		return paramCount;
+	
+	/**
+	 * oracel type 
+	 * 
+	 * @param mapIndex
+	 */
+	protected void makeParamCount(Map<String, int[]> mapIndex) {
+		
+		parameters = new ArrayList<Map<Integer, Object>>();
+		Set<String> keys = mapIndex.keySet();
+		
+		int i = 0;
+		for (String strKey : keys) {
+			Map<Integer, Object> map = new HashMap<Integer, Object>();
+			map.put(0, (i++ + 1));
+			map.put(1, strKey);
+			map.put(2, RDBTypeToJavaTypeUtils.supportParameterTypes(userDB)[0]);
+			map.put(3, ""); //$NON-NLS-1$
+			
+			parameters.add(map);
+		}
+		
 	}
+	
+	/**
+	 * table dao
+	 * 
+	 * @return
+	 */
+	public List<Map<Integer, Object>> getParameters() {
+		return parameters;
+	}
+
 }

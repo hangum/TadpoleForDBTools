@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.dialog.save;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -25,17 +26,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
-
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -64,10 +65,12 @@ public class ResourceSaveDialog extends Dialog {
 	private Combo comboSharedType;
 	
 	private Combo comboUseAPI;
-	private Text textAPIKey;
+	private Text textAPIURI;
 	
 	/** return UserDBResourceDAO */
 	private UserDBResourceDAO retResourceDao = new UserDBResourceDAO();
+	
+	private String strContentData;
 
 	/**
 	 * Create the dialog.
@@ -76,7 +79,7 @@ public class ResourceSaveDialog extends Dialog {
 	 * @param userDB
 	 * @param resourceType
 	 */
-	public ResourceSaveDialog(Shell parentShell, UserDBResourceDAO initDBResource, UserDBDAO userDB, PublicTadpoleDefine.RESOURCE_TYPE resourceType) {
+	public ResourceSaveDialog(Shell parentShell, UserDBResourceDAO initDBResource, UserDBDAO userDB, PublicTadpoleDefine.RESOURCE_TYPE resourceType, String strContentData) {
 		super(parentShell);
 		
 		if(initDBResource == null) this.initDBResource = new UserDBResourceDAO();
@@ -84,6 +87,7 @@ public class ResourceSaveDialog extends Dialog {
 		
 		this.userDB = userDB;
 		this.resourceType = resourceType;
+		this.strContentData = strContentData;
 	}
 	
 	@Override
@@ -137,11 +141,10 @@ public class ResourceSaveDialog extends Dialog {
 		comboUseAPI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboUseAPI.getText())) {
-					String strApiName = textAPIKey.getText();
-					if("".equals(strApiName)) {
-						textAPIKey.setText(Utils.getUniqueID());
-					}
+				if(comboUseAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name())) {
+					textAPIURI.setEnabled(true);
+				} else {
+					textAPIURI.setEnabled(false);
 				}
 			}
 		});
@@ -150,12 +153,12 @@ public class ResourceSaveDialog extends Dialog {
 		comboUseAPI.add(PublicTadpoleDefine.YES_NO.NO.name());
 		comboUseAPI.select(1);
 		
-		Label lblApiName = new Label(container, SWT.NONE);
-		lblApiName.setText(Messages.ResourceSaveDialog_lblApiName_text);
+		Label lblApiURI = new Label(container, SWT.NONE);
+		lblApiURI.setText(Messages.ResourceSaveDialog_lblApiName_text);
 		
-		textAPIKey = new Text(container, SWT.BORDER);
-		textAPIKey.setEditable(false);
-		textAPIKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAPIURI = new Text(container, SWT.BORDER);
+		textAPIURI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAPIURI.setEnabled(false);
 
 		initUI();
 
@@ -166,21 +169,19 @@ public class ResourceSaveDialog extends Dialog {
 	 * initialize ui
 	 */
 	private void initUI() {
+		if(resourceType == RESOURCE_TYPE.ERD) {
+			comboUseAPI.setEnabled(false);
+			textAPIURI.setEnabled(false);
+		}
 		textName.setFocus();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
-				
 	}
 	
 	@Override
 	protected void okPressed() {
-		String errMsg = isValid();
-		if(null != errMsg) {
-			MessageDialog.openError(null, "Confirm", errMsg); //$NON-NLS-1$
-			textName.setFocus();
-			return;
-		}
+		if(!isValid()) return;
 		
 		retResourceDao.setDb_seq(userDB.getSeq());
 		retResourceDao.setResource_types(resourceType.toString());
@@ -191,17 +192,19 @@ public class ResourceSaveDialog extends Dialog {
 		retResourceDao.setDescription(textDescription.getText());
 		
 		retResourceDao.setRestapi_yesno(comboUseAPI.getText());
-		retResourceDao.setRestapi_key(textAPIKey.getText());
+		String strAPIKEY = ""; //$NON-NLS-1$
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboUseAPI.getText())) {
+			strAPIKEY = Utils.getUniqueID();
+		}
+		retResourceDao.setRestapi_key(strAPIKEY);
+		retResourceDao.setRestapi_uri(textAPIURI.getText());
 		
 		// Checking duplication name
 		try {
-			if(!TadpoleSystem_UserDBResource.userDBResourceDuplication(resourceType, userDB.getUser_seq(), userDB.getSeq(), textName.getText())) {
-				MessageDialog.openError(null, "Duplication", Messages.ResourceSaveDialog_5); //$NON-NLS-1$
-				return;
-			}
+			TadpoleSystem_UserDBResource.userDBResourceDuplication(userDB, retResourceDao);
 		} catch (Exception e) {
 			logger.error("SQL Editor File validator", e); //$NON-NLS-1$
-			
+			MessageDialog.openError(null, "Error", e.getMessage()); //$NON-NLS-1$
 			return;
 		}
 		
@@ -214,16 +217,18 @@ public class ResourceSaveDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == BTN_SHOW_URL) {
-			String strApiKey = textAPIKey.getText();
-			if(RESOURCE_TYPE.ERD == resourceType | strApiKey.equals("")) {
-				MessageDialog.openError(getShell(), "Confirm", "Does not support API.");
+			String strApiURI = textAPIURI.getText();
+			if(strApiURI.equals("")) { //$NON-NLS-1$
+				MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_8);
+				textAPIURI.setFocus();
+				return;
+			} else if(RESOURCE_TYPE.ERD == resourceType) {
+				MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_10);
 				return;
 			}
-			String strURL = String.format("%s?%s=%s&1=FirstParameter&2=SecondParameter", 
-					"http://yoururl.com", 
-					PublicTadpoleDefine.SERVICE_KEY_NAME, strApiKey);
-
-			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), "API URI", strURL);
+			
+			String strURL = RESTfulAPIUtils.makeURL(strContentData, textAPIURI.getText());
+			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.ResourceSaveDialog_11, strURL);
 			dialog.open();
 		} else {
 			super.buttonPressed(buttonId);
@@ -236,9 +241,9 @@ public class ResourceSaveDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, BTN_SHOW_URL, "Show URL", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.OK_ID, "Save", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
+		createButton(parent, BTN_SHOW_URL, Messages.ResourceSaveDialog_12, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ResourceSaveDialog_13, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ResourceSaveDialog_14, false);
 	}
 
 	/**
@@ -255,11 +260,36 @@ public class ResourceSaveDialog extends Dialog {
 	 * @param name
 	 * @return
 	 */
-	public String isValid() {
-		int len = textName.getText().trim().length();
-		if(len < 3) return "The name must enter at least 3 characters."; //$NON-NLS-1$
+	private boolean isValid() {
+		int len = StringUtils.trimToEmpty(textName.getText()).length();
+		if(len < 3) {
+			MessageDialog.openError(null, Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_16);
+			textName.setFocus();
+			return false;
+		}
+
+		// sql type 
+		if(resourceType == RESOURCE_TYPE.SQL) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(comboUseAPI.getText())) {
+				String strAPIURI = textAPIURI.getText().trim();
+				
+				if(strAPIURI.equals("")) { //$NON-NLS-1$
+					MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_7, Messages.ResourceSaveDialog_19);
+					textAPIURI.setFocus();
+					return false;
+				}
+				
+				// check valid url. url pattern is must be /{parent}/{child}
+				if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
+					MessageDialog.openError(getShell(), Messages.ResourceSaveDialog_20, Messages.ResourceSaveDialog_21);
+					
+					textAPIURI.setFocus();
+					return false;
+				}
+			}
+		}
 		
-		return null;
+		return true;
 	}
 	
 	/**

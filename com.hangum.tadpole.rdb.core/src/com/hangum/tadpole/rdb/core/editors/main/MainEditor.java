@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,8 +41,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
@@ -50,27 +49,34 @@ import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
 import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
+import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.editors.main.utils.UserPreference;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
+import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.sql.format.SQLFormater;
+import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
+import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -102,6 +108,9 @@ public class MainEditor extends EditorExtension {
 	
 	/** save mode */
 	private boolean isDirty = false;
+	
+	/** short cut prefix */
+	private static final String STR_SHORT_CUT_PREFIX = ShortcutPrefixUtils.getCtrlShortcut();
 	
 	private SashForm sashFormExtension;
 	private IMainEditorExtension[] compMainExtions;
@@ -166,14 +175,14 @@ public class MainEditor extends EditorExtension {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText("Connection Name"); //$NON-NLS-1$
+		tltmConnectURL.setToolTipText(Messages.MainEditor_37);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setText(userDB.getDisplay_name());
 		
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DBInformationDialog dialog = new DBInformationDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+				DBInformationDialog dialog = new DBInformationDialog(getSite().getShell(), userDB);
 				dialog.open();
 				setFocus();
 			}
@@ -182,14 +191,14 @@ public class MainEditor extends EditorExtension {
 		
 		// fileupload 
 		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
-		tltmOpen.setToolTipText("Open a file");
+		tltmOpen.setToolTipText(Messages.MainEditor_35);
 		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/file-open.png")); //$NON-NLS-1$
 		tltmOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "SQL File Open");
+				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.MainEditor_36);
 				if(Dialog.OK == dialog.open()) {
-					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile());
+					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
 					appendText(dialog.getStrTxtFile());
 				}
 			}
@@ -197,12 +206,12 @@ public class MainEditor extends EditorExtension {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, STR_SHORT_CUT_PREFIX));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, UserPreference.QUERY_DELIMITER);
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
 				
 				EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
 				if( Boolean.parseBoolean( browserEvaluateToStr(EditorFunctionService.IS_BLOCK_TEXT) ) ) {
@@ -236,14 +245,14 @@ public class MainEditor extends EditorExtension {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, UserPreference.QUERY_DELIMITER); //$NON-NLS-1$
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
 				executeCommand(reqQuery);
 				
 			}
 		});
-		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, STR_SHORT_CUT_PREFIX));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
@@ -260,7 +269,7 @@ public class MainEditor extends EditorExtension {
 				}
 			}
 		});
-		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, STR_SHORT_CUT_PREFIX));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSQLToApplication = new ToolItem(toolBar, SWT.NONE);
@@ -275,7 +284,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-	    tltmSQLToApplication.setToolTipText("SQL statement to Application code"); //$NON-NLS-1$
+	    tltmSQLToApplication.setToolTipText(Messages.MainEditor_40);
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 //		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
@@ -298,7 +307,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommit = new ToolItem(toolBar, SWT.CHECK);
 		tiAutoCommit.setSelection(false);
-		tiAutoCommit.setText("Transaction start"); //$NON-NLS-1$
+		tiAutoCommit.setText(Messages.MainEditor_41);
 		tiAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -308,7 +317,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText("Commit"); //$NON-NLS-1$
+		tiAutoCommitCommit.setText(Messages.MainEditor_44);
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -320,7 +329,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText("Rollback"); //$NON-NLS-1$
+		tiAutoCommitRollback.setText(Messages.MainEditor_48);
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -331,10 +340,27 @@ public class MainEditor extends EditorExtension {
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
+		// api
+		ToolItem tltmAPI = new ToolItem(toolBar, SWT.NONE);
+		tltmAPI.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/restful_api.png")); //$NON-NLS-1$
+		tltmAPI.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+				
+				MainSQLEditorAPIServiceDialog dialog = new MainSQLEditorAPIServiceDialog(getSite().getShell(), strQuery);
+				dialog.open();
+				
+				setFocus();
+			}
+		});
+		tltmAPI.setToolTipText(Messages.MainEditor_51);
+		
 		// semicolon
-		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
-		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
-		tltmSemicolon.setToolTipText(Messages.MainEditor_49);
+		new ToolItem(toolBar, SWT.SEPARATOR);
+//		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
+//		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
+//		tltmSemicolon.setToolTipText(Messages.MainEditor_49);
 		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
@@ -347,7 +373,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, ShortcutPrefixUtils.getCtrlShortcut()));
+		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, STR_SHORT_CUT_PREFIX));
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
@@ -465,13 +491,21 @@ public class MainEditor extends EditorExtension {
 //	    } else {
 //	    	browserQueryEditor.setUrl(DEV_DB_URL);
 //	    }
-		registerBrowserFunctions();
-		
+	    	
+	    final String strTmpTb = userDB.getTableListSeparator();
+	    final String strTableList = "".equals(strTmpTb)?getAssistTableList():strTmpTb;
+	    registerBrowserFunctions();
+	    
+	    /** 무슨 일인지 이벤트가 두번 탑니다. */
+	    final List<String> listInitialize = new ArrayList<String>();
 		browserQueryEditor.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed( ProgressEvent event ) {
+				if(!listInitialize.isEmpty()) return;
+				listInitialize.add("init_comp"); //$NON-NLS-1$
+				
 				try {
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), getAssistTableList(), getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), strTableList, getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -531,21 +565,56 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private String getAssistTableList() {
-		String strTablelist = ""; //$NON-NLS-1$
+		StringBuffer strTablelist = new StringBuffer();
 		
 		try {
-			List<TableDAO> showTables = TadpoleTableComposite.getTableList(getUserDB());
+			List<TableDAO> showTables = getTableListOnlyTableName(getUserDB());
 			for (TableDAO tableDao : showTables) {
-				strTablelist += tableDao.getSysName() + "|"; //$NON-NLS-1$
+				strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
 			}
-			
-			strTablelist = StringUtils.removeEnd(strTablelist, "|"); //$NON-NLS-1$
-			
 		} catch(Exception e) {
 			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
 		}
+
+		return StringUtils.removeEnd(strTablelist.toString(), "|"); //$NON-NLS-1$
+	}
+	/**
+	 * 보여 주어야할 테이블 목록을 정의합니다.
+	 *
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	private List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
+		List<TableDAO> showTables = null;
+				
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			showTables = new TajoConnectionManager().tableList(userDB);			
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
+		}
 		
-		return strTablelist;
+		/** filter 정보가 있으면 처리합니다. */
+		return getTableAfterwork(showTables, userDB);
+	}
+	/**
+	 * Table 정보 처리 후에 
+	 * 
+	 * @param showTables
+	 * @param userDB
+	 * @return
+	 */
+	private List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
+		/** filter 정보가 있으면 처리합니다. */
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(TableDAO td : showTables) {
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+		}
+		
+		return showTables;
 	}
 
 	/**
@@ -565,8 +634,8 @@ public class MainEditor extends EditorExtension {
 		// 기존 에디터에서 auto commit button 이 어떻게 설정 되어 있는지 가져옵니다.
 		initAutoCommitAction(true, false);
 		
-		// 
-		resultMainComposite.initMainComposite();
+		// 과거에 실행했던 쿼리 정보 가져오기.
+//		resultMainComposite.initMainComposite();
 		
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
@@ -636,15 +705,16 @@ public class MainEditor extends EditorExtension {
 	@Override
 	public void setFocus() {
 		setOrionTextFocus();
-//		EditorUtils.selectConnectionManager(getUserDB());
+		EditorUtils.selectConnectionManager(getUserDB());
 	}
 	
 	/**
-	 * new file name
+	 * new resource name
+	 * 
 	 * @return
 	 */
-	private UserDBResourceDAO getFileName(UserDBResourceDAO initDBResource) {
-		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL);
+	private UserDBResourceDAO getResouceName(UserDBResourceDAO initDBResource, String strContentData) {
+		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL, strContentData);
 		if(rsDialog.open() == Window.OK) {
 			return rsDialog.getRetResourceDao();
 		} else {
@@ -664,7 +734,7 @@ public class MainEditor extends EditorExtension {
 		try {
 			// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
 			if(dBResource == null) {
-				UserDBResourceDAO newDBResource = getFileName(null);
+				UserDBResourceDAO newDBResource = getResouceName(null, strContentData);
 				if(newDBResource == null) return false;
 
 				isSaved = saveResourceData(newDBResource, strContentData);
@@ -697,13 +767,14 @@ public class MainEditor extends EditorExtension {
 	public void doSaveAs() {
 		boolean isSaved = false;
 		
-		// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
-		UserDBResourceDAO newDBResource = getFileName(dBResource);
-		if(newDBResource == null) return;
-		
 		// 저장을 호출합니다.
 		try {
 			String strEditorAllText = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
+			
+			// 신규 저장일때는 리소스타입, 이름, 코멘를 입력받습니다.
+			UserDBResourceDAO newDBResource = getResouceName(dBResource, strEditorAllText);
+			if(newDBResource == null) return;
+			
 			isSaved = saveResourceData(newDBResource, strEditorAllText);
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", getUserEMail()), e); //$NON-NLS-1$

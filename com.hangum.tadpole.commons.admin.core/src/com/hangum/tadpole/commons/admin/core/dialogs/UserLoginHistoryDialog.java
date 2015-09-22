@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.dialogs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -37,6 +38,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+import com.hangum.tadpole.commons.admin.core.Messages;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import org.eclipse.swt.events.KeyAdapter;
@@ -56,6 +59,8 @@ public class UserLoginHistoryDialog extends Dialog {
 	
 	private Text textEmail;
 	private TableViewer tvHistory;
+	
+	private List<UserLoginHistoryDAO> listLoginHistory = new ArrayList<>();
 
 	/**
 	 * Create the dialog.
@@ -63,13 +68,13 @@ public class UserLoginHistoryDialog extends Dialog {
 	 */
 	public UserLoginHistoryDialog(Shell parentShell) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 	}
 	
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Login history");
+		newShell.setText(Messages.UserLoginHistoryDialog_0);
 	}
 
 	/**
@@ -91,7 +96,7 @@ public class UserLoginHistoryDialog extends Dialog {
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText("Email");
+		lblEmail.setText(Messages.UserLoginHistoryDialog_1);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.addKeyListener(new KeyAdapter() {
@@ -109,7 +114,7 @@ public class UserLoginHistoryDialog extends Dialog {
 				search();
 			}
 		});
-		btnSearch.setText("Search");
+		btnSearch.setText(Messages.UserLoginHistoryDialog_2);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -124,38 +129,44 @@ public class UserLoginHistoryDialog extends Dialog {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnIp = tableViewerColumn.getColumn();
 		tblclmnIp.setWidth(100);
-		tblclmnIp.setText("IP");
+		tblclmnIp.setText(Messages.UserLoginHistoryDialog_3);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnConnectionTime = tableViewerColumn_1.getColumn();
 		tblclmnConnectionTime.setWidth(200);
-		tblclmnConnectionTime.setText("login time");
+		tblclmnConnectionTime.setText(Messages.UserLoginHistoryDialog_4);
 		
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnLogoutTime = tableViewerColumn_2.getColumn();
 		tblclmnLogoutTime.setWidth(200);
-		tblclmnLogoutTime.setText("logout time");
+		tblclmnLogoutTime.setText(Messages.UserLoginHistoryDialog_5);
 		
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new LoginHistoryLabelProvider());
 		
 		textEmail.setFocus();
+		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}
 	
 	private void search() {
 		String strEmail = textEmail.getText();
-		if("".equals(strEmail)) {
-			MessageDialog.openError(getShell(), "Error", "Please input the email.");
+		if("".equals(strEmail)) { //$NON-NLS-1$
+			listLoginHistory.clear();
+			tvHistory.setInput(listLoginHistory);
+			
+			MessageDialog.openError(getShell(), Messages.UserLoginHistoryDialog_7, Messages.UserLoginHistoryDialog_8);
 			return;
 		}
 		
 		try {
-			List<UserLoginHistoryDAO> listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail);
+			listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail);
 			tvHistory.setInput(listLoginHistory);
 		} catch (Exception e) {
-			logger.error("find login history", e);
+			logger.error("find login history", e); //$NON-NLS-1$
 		}
 	}
 
@@ -165,7 +176,7 @@ public class UserLoginHistoryDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.UserLoginHistoryDialog_10, false);
 	}
 
 	/**
@@ -199,10 +210,10 @@ class LoginHistoryLabelProvider  extends LabelProvider implements ITableLabelPro
 		switch(columnIndex) {
 		case 0 : return dao.getLogin_ip();
 		case 1 : return dao.getConnet_time().toString();
-		case 2 : return dao.getDisconnect_time() == null?"":dao.getDisconnect_time().toString();
+		case 2 : return dao.getDisconnect_time() == null?"":dao.getDisconnect_time().toString(); //$NON-NLS-1$
 		}
 		
-		return "*** not column setting ***";
+		return "*** not column setting ***"; //$NON-NLS-1$
 	}
 	
 }

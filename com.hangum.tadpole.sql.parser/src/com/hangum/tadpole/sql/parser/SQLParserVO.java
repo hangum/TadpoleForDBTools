@@ -13,8 +13,8 @@ package com.hangum.tadpole.sql.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 
 /**
  * SQLparser value object

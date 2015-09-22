@@ -29,8 +29,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpold.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -90,9 +90,9 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	
 	@Override
 	protected void handleDrop() {
-		String[] arrayDragSourceData = null;
+		String strDragSource = (String)getCurrentEvent().data;
 		try {
-			arrayDragSourceData = StringUtils.splitByWholeSeparator(((String)getCurrentEvent().data), PublicTadpoleDefine.DELIMITER);
+			String[] arrayDragSourceData = StringUtils.splitByWholeSeparator(strDragSource, PublicTadpoleDefine.DELIMITER);
 
 			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
 			if(userDB.getSeq() != sourceDBSeq) {
@@ -105,68 +105,75 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			return;
 		}
 		
-		String tableName = arrayDragSourceData[1];		
-		String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
-		
-		// 이미 editor 상에 테이블 정보를 가져온다.
-		Map<String, Table> mapDBTables = new HashMap<String, Table>();
-		for (Table table : db.getTables()) {
-			mapDBTables.put(table.getName(), table);
-			refTableNames += "'" + table.getName() + "',"; //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		refTableNames = StringUtils.chompLast(refTableNames, ","); //$NON-NLS-1$
-		
-		// 이미 등록되어 있는 것이 아니라면
-		if(mapDBTables.get(tableName) == null) {
-			// 테이블 모델 생성
-			Table tableModel = tadpoleFactory.createTable();
-			tableModel.setName(tableName);
-			tableModel.setDb(db);
+		String strFullData = StringUtils.substringAfter(strDragSource, PublicTadpoleDefine.DELIMITER);
+		String [] arryTables = StringUtils.splitByWholeSeparator(strFullData, PublicTadpoleDefine.DELIMITER_DBL);
+		for (String strTable : arryTables) {
+			String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
+			if(arryTable.length == 0) continue;
 			
-			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-				tableModel.setComment("");
-			} else {
-				String tableComment = arrayDragSourceData[2];
-				tableComment = StringUtils.substring(""+tableComment, 0, 10);
-				tableModel.setComment(tableComment);
+			String tableName = arryTable[0];
+			String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
+			
+			// 이미 editor 상에 테이블 정보를 가져온다.
+			Map<String, Table> mapDBTables = new HashMap<String, Table>();
+			for (Table table : db.getTables()) {
+				mapDBTables.put(table.getName(), table);
+				refTableNames += "'" + table.getName() + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
+			refTableNames = StringUtils.chompLast(refTableNames, ","); //$NON-NLS-1$
 			
-			tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
-			
-			try {
-				// 컬럼 모델 생성
-				for (TableColumnDAO columnDAO : getColumns(tableName)) {
-					Column column = tadpoleFactory.createColumn();
-					
-					column.setDefault(columnDAO.getDefault());
-					column.setExtra(columnDAO.getExtra());
-					column.setField(columnDAO.getField());
-					column.setNull(columnDAO.getNull());
-					column.setKey(columnDAO.getKey());
-					column.setType(columnDAO.getType());
-					
-					String strComment = columnDAO.getComment();
-					if(strComment == null) strComment = "";
-					else strComment = StringUtils.substring(""+strComment, 0, 10);
-					column.setComment(strComment);
-					
-					column.setTable(tableModel);
-					tableModel.getColumns().add(column);
+			// 이미 등록되어 있는 것이 아니라면
+			if(mapDBTables.get(tableName) == null) {
+				// 테이블 모델 생성
+				Table tableModel = tadpoleFactory.createTable();
+				tableModel.setName(tableName);
+				tableModel.setDb(db);
+				
+				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+					tableModel.setComment("");
+				} else {
+					String tableComment = arryTable[1];
+					tableComment = StringUtils.substring(""+tableComment, 0, 10);
+					tableModel.setComment(tableComment);
 				}
-				mapDBTables.put(tableName, tableModel);
-				RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
 				
-			} catch(Exception e) {
-				logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
+				tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
 				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+				try {
+					// 컬럼 모델 생성
+					for (TableColumnDAO columnDAO : getColumns(tableName)) {
+						Column column = tadpoleFactory.createColumn();
+						
+						column.setDefault(columnDAO.getDefault());
+						column.setExtra(columnDAO.getExtra());
+						column.setField(columnDAO.getField());
+						column.setNull(columnDAO.getNull());
+						column.setKey(columnDAO.getKey());
+						column.setType(columnDAO.getType());
+						
+						String strComment = columnDAO.getComment();
+						if(strComment == null) strComment = "";
+						else strComment = StringUtils.substring(""+strComment, 0, 10);
+						column.setComment(strComment);
+						
+						column.setTable(tableModel);
+						tableModel.getColumns().add(column);
+					}
+					mapDBTables.put(tableName, tableModel);
+					RelationUtil.calRelation(userDB, mapDBTables, db, refTableNames);//RelationUtil.getReferenceTable(userDB, refTableNames));
+					
+				} catch(Exception e) {
+					logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+				}
+				
+				transferFactory.setTable(tableModel);
+			} else {
+				transferFactory.setTable(mapDBTables.get(tableName));
 			}
-			
-			transferFactory.setTable(tableModel);
-		} else {
-			transferFactory.setTable(mapDBTables.get(tableName));
-		}
+		}	//  end tables
 		
 		super.handleDrop();
 	}

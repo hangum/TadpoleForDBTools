@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="tadpole-rap-2.1.0-emf-standalone" sequenceNumber="216">
+<?pde version="3.8"?><target name="tadpole-rap-2.1.0-emf-standalone" sequenceNumber="240">
 <locations>
-<location path="${git-tadpole}/targetProject/rap-gef-port-2.1" type="Directory"/>
-<location path="${git-tadpole}/targetProject/addons" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.7.0.v20120130-0943"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 <location path="${git-tadpole}/targetProject/test" type="Directory"/>
 <location path="${git-tadpole}/targetProject/standalone-launcher" type="Directory"/>
+<location path="${git-tadpole}/targetProject/multiTab" type="Directory"/>
+<location path="${git-tadpole}/targetProject/rap-gef-port-2.1" type="Directory"/>
+<location path="${git-tadpole}/targetProject/addons" type="Directory"/>
 <location path="${git-tadpole}/targetProject/eclipse-4.3-delta-pack" type="Directory"/>
 <location path="${git-tadpole}/targetProject/ext" type="Directory"/>
-<location path="${git-tadpole}/targetProject/multiTab" type="Directory"/>
-<location path="${git-tadpole}/targetProject/rap-mars-3.0.0-S-20150525-1014" type="Directory"/>
+<location path="${git-tadpole}/targetProject/rap-3.1.0-N-20150914-1435" type="Directory"/>
 </locations>
 </target>
