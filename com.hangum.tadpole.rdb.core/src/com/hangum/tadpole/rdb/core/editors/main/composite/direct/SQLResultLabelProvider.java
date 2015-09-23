@@ -96,7 +96,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			return ResourceManager.getColor(152, 118, 137);
 			
 		} else if(queryMode == QUERY_MODE.QUERY) {
-			if(obj.toString().length() > getRDBShowInTheColumn()) {
+			if(getRDBShowInTheColumn() != -1 && obj.toString().length() > getRDBShowInTheColumn()) {
 				return ResourceManager.getColor(152, 118, 137);
 			}
 		}
@@ -138,6 +138,9 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		if(obj == null) {
 			return PublicTadpoleDefine.DEFINE_NULL_VALUE;
 		} else {
+			if(getRDBShowInTheColumn() == -1) {
+				return obj.toString();
+			} 
 			return queryMode == QUERY_MODE.QUERY ? 
 					StringUtils.abbreviate(obj.toString(), 0, getRDBShowInTheColumn()) :
 					obj.toString();
