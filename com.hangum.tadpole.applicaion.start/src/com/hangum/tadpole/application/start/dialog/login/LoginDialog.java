@@ -50,6 +50,7 @@ import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -203,7 +204,12 @@ public class LoginDialog extends Dialog {
 		lblContact.setText(Messages.LoginDialog_lblContact_text_1);
 		
 		Label lblContactUrl = new Label(compositeLetter, SWT.NONE);
-		lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>adi.tadpole@gmail.com</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		try {
+			UserDAO systemUserDao = TadpoleApplicationContextManager.getSystemAdmin();
+			lblContactUrl.setText(String.format("<a href='mailto:%s'>%s(%s)</a>", systemUserDao.getEmail(), systemUserDao.getName(), systemUserDao.getEmail())); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (Exception e1) {
+			lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>Admin(adi.tadpole@gmail.com)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		textEMail.setFocus();
