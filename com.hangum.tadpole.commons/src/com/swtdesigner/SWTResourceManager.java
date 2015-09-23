@@ -308,6 +308,10 @@ public class SWTResourceManager {
 	 * Maps fonts to their bold versions.
 	 */
 	private static Map<Font, Font> m_fontToBoldFontMap = new HashMap<Font, Font>();
+	/** 
+	 * Map fonts to their italic versions.
+	 */
+	private static Map<Font, Font> m_fontToItalicFontMap = new HashMap<Font, Font>();
 	/**
 	 * Returns a {@link Font} based on its name, height and style.
 	 * 
@@ -378,6 +382,24 @@ public class SWTResourceManager {
 			FontData data = fontDatas[0];
 			font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
 			m_fontToBoldFontMap.put(baseFont, font);
+		}
+		return font;
+	}
+	
+	/**
+	 * Returns a italic version of the given {@link Font}.
+	 * 
+	 * @param baseFont
+	 *            the {@link Font} for which a bold version is desired
+	 * @return the bold version of the given {@link Font}
+	 */
+	public static Font getItalicFont(Font baseFont) {
+		Font font = m_fontToItalicFontMap.get(baseFont);
+		if (font == null) {
+			FontData fontDatas[] = baseFont.getFontData();
+			FontData data = fontDatas[0];
+			font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.ITALIC);
+			m_fontToItalicFontMap.put(baseFont, font);
 		}
 		return font;
 	}
