@@ -323,6 +323,7 @@
 		tadpole_user b
 	WHERE 
 			a.delyn = 'NO'
+		AND dbms_type != 'SQLite'
 		AND a.user_seq = b.seq
 		AND b.delyn = 'NO'
 	GROUP BY dbms_type

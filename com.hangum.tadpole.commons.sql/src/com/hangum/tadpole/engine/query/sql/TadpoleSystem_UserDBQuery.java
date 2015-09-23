@@ -53,7 +53,7 @@ public class TadpoleSystem_UserDBQuery {
 	}
 	
 	/**
-	 * Registered Database
+	 * Registered Database(Not include sqlite)
 	 * 
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException 
