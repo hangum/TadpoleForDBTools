@@ -1,3 +1,5 @@
+-- CREATE DATABASE `tadpole20` /*!40100 COLLATE 'utf8_general_ci' */
+
 -- 사용자
 CREATE TABLE `tadpole_user` (
 	`seq`                    INT         NOT NULL COMMENT '사용자순번', -- 사용자순번

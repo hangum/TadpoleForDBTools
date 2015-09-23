@@ -56,7 +56,21 @@ public class SQLUtil {
 	 * 		PRAGMA는 sqlite의 시스템 쿼리 얻는 거.
 	 * </PRE>
 	 */
-	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*|^PRAGMA.*|^SP_HELP.*";
+	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*";
+	private static final String ORACLE_PATTERN_STATEMENT = "";
+	private static final String MYSQL_PATTERN_STATEMENT = "";
+	private static final String PGSQL_PATTERN_STATEMENT = "";
+	private static final String SQLITE_PATTERN_STATEMENT = "";
+	private static final String CUBRID_PATTERN_STATEMENT = "";
+	
+	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*" 
+							+ MSSQL_PATTERN_STATEMENT
+							+ ORACLE_PATTERN_STATEMENT
+							+ MYSQL_PATTERN_STATEMENT
+							+ PGSQL_PATTERN_STATEMENT
+							+ SQLITE_PATTERN_STATEMENT
+							+ CUBRID_PATTERN_STATEMENT
+						;
 	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
