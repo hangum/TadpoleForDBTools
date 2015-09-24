@@ -174,9 +174,9 @@ public class ManagerLabelProvider extends LabelProvider {
 			return getDBText((UserDBDAO)element);
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
-			String strShareType = "[PU] ";
+			String strShareType = "[Pu] ";
 			if(PublicTadpoleDefine.SHARED_TYPE.PRIVATE.name().equals(dao.getShared_type())) {
-				strShareType = "[PR] ";
+				strShareType = "[Pr] ";
 			}
 			
 			String strSupportAPI = PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())?
