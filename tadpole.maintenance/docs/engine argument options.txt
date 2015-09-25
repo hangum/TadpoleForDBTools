@@ -47,7 +47,6 @@ Program Argument
  				  폴더가 설정되어지 있지 않다면 .exe가 있거나 혹은 context root 디렉토리의 패런트  아래에 놓습니다. 
 
  -passwd : 엔진에서 사용할 패스워드.
- -GAON   : Google Analytics 사용.
  -newUserPermit : 신규 유저등록시 어드민의 허락이 필요한지 유무. 허락이 필요하면 YES, 옵션이 없으면 NO 입니다. 
  					-newUserPermit YES|NO
   
