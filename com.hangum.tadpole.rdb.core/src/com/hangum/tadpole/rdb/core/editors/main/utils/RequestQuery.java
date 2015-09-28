@@ -109,7 +109,6 @@ public class RequestQuery {
 			} else {
 				queryType = QUERY_TYPE.DDL;
 				
-				
 				if(statement instanceof CreateTable) {
 //					logger.debug( "table name is " + ((CreateTable) statement).getTable().getName() );
 					queryDDLType = QUERY_DDL_TYPE.TABLE;

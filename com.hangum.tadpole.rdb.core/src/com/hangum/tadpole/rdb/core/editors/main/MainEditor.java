@@ -688,7 +688,15 @@ public class MainEditor extends EditorExtension {
 		}
 	}
 	
+	/**
+	 * execute query
+	 * 
+	 * @param reqQuery
+	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		// 요청쿼리가 없다면 무시합니다. 
+		if(StringUtils.isEmpty(reqQuery.getSql())) return;
+
 		resultMainComposite.executeCommand(reqQuery);
 
 		// google analytic

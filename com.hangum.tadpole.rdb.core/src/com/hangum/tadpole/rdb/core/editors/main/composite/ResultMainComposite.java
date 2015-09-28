@@ -154,54 +154,10 @@ public class ResultMainComposite extends Composite {
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
-		if(logger.isDebugEnabled()) logger.debug("==> executeQuery user query is " + reqQuery.getOriginalSql()); //$NON-NLS-1$
+		this.reqQuery = reqQuery;
 		
-		// selected first tab request quring.
-		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
-		
-		try {
-			// 요청쿼리가 없다면 무시합니다. 
-			if(StringUtils.isEmpty(reqQuery.getSql())) return;
-			this.reqQuery = reqQuery;
-
-			// security check.
-			if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
-				throw new Exception(Messages.ResultMainComposite_1);
-			}
-			
-			// 실행해도 되는지 묻는다.
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())
-					|| PermissionChecker.isProductBackup(getUserDB())
-			) {
-				boolean isDMLQuestion = false;
-				if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
-					for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
-						if(!SQLUtil.isStatement(strSQL)) {
-							isDMLQuestion = true;
-							break;
-						}
-					}
-				} else {
-					if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
-				}
-			
-				if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) {
-					this.mainEditor.setFocus();
-					return;
-				}
-			}
-
-			// 실제 쿼리 실행.
-			compositeResultSet.executeCommand(reqQuery);
-			
-		} catch(Exception e) {
-			logger.error("execute query", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Executing Query", Messages.ResultMainComposite_3, errStatus); //$NON-NLS-1$
-		} finally {
-			// 에디터가 작업이 끝났음을 알립니다.
-//			browserEvaluate(EditorFunctionService.EXECUTE_DONE);
-		}
+		boolean isExecuteQuery = compositeResultSet.executeCommand(reqQuery);
+		if(!isExecuteQuery) setOrionTextFocus();
 	}
 	
 	/**

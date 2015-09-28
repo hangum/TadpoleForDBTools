@@ -235,7 +235,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	protected boolean isValidateDatabase(final UserDBDAO userDB, boolean isTest) {
 		if(!checkDatabase(userDB, isTest)) return false;
-		if(!isAlreadExistDB(userDB)) return false;
+		if(!isTest) if(!isAlreadExistDB(userDB)) return false;
 		
 		return true;
 	}

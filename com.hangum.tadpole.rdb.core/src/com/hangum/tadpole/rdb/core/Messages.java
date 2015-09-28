@@ -558,6 +558,11 @@ public class Messages extends NLS {
 	public static String IntroEditorInput_1;
 	public static String MainEditor_tltmExecute_toolTipText;
 	public static String MainEditor_tltmExecute_toolTipText_1;
+	public static String ModifyDBDialog_0;
+	public static String ModifyDBDialog_1;
+	public static String ModifyDBDialog_2;
+	public static String ModifyDBDialog_3;
+	public static String ModifyDBDialog_4;
 	public static String MongoDBLoginComposite_2;
 	public static String MongoDBLoginComposite_4;
 	public static String MongoDBLoginComposite_9;
@@ -705,9 +710,12 @@ public class Messages extends NLS {
 	public static String RecordViewDialog_2;
 	public static String RecordViewDialog_5;
 	public static String RecordViewDialog_7;
+	public static String ResultMainComposite_0;
 	public static String ResultMainComposite_1;
+	public static String ResultMainComposite_2;
 	public static String ResultMainComposite_3;
 	public static String ResultSetComposite_0;
+	public static String ResultSetComposite_1;
 	public static String ResultSetComposite_2;
 	public static String ResultSetComposite_7;
 	public static String ResultSetComposite_8;

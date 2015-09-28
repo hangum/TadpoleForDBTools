@@ -425,20 +425,8 @@ public class DBListComposite extends Composite {
 			
 			final ModifyDBDialog dialog = new ModifyDBDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 			if(dialog.open() == Dialog.OK) {
-				UserDBDAO modifyUserDB = dialog.getDTO();
-
-				// 마음에 안들어................. -----------------------------------;;;
-				for (ManagerListDTO managerListDTO : listUserDBs) {
-					List<UserDBDAO> listDBs = managerListDTO.getManagerList();
-					if(listDBs.contains(userDB)) {
-						listDBs.remove(userDB);
-						listDBs.add(modifyUserDB);
-						break;
-					}
-				}
-			
-				tvDBList.refresh();
-				tvDBList.setSelection(new StructuredSelection(modifyUserDB), true);
+				initData();
+				tvDBList.setSelection(new StructuredSelection(dialog.getDTO()), true);
 			}
 		}
 	}

@@ -69,6 +69,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
@@ -80,6 +81,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
@@ -528,27 +530,50 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * 쿼리를 수행합니다.
+	 * 쿼리가 실행 가능한 상태인지 검사한다.
+	 * 
+	 * - DB lock 상태인지?
+	 * - dml 을 묻는 상태인지?
+	 * - 프러덕, 백업 디비라서 select가 아닌지 묻는지?
 	 * 
 	 * @param reqQuery
+	 * @throws Exception
 	 */
-	public void executeCommand(final RequestQuery reqQuery) {
-		// 쿼리를 이미 실행 중이라면 무시합니다.
-		if(jobQueryManager != null) {
-			if(Job.RUNNING == jobQueryManager.getState()) {
-				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
-				return;
+	private boolean ifExecuteQuery() throws Exception {
+		// security check.
+		if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
+			throw new Exception(Messages.ResultMainComposite_1);
+		}
+		
+		// 실행해도 되는지 묻는다.
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())
+				|| PermissionChecker.isProductBackup(getUserDB())
+		) {
+			boolean isDMLQuestion = false;
+			if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
+				for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
+					if(!SQLUtil.isStatement(strSQL)) {
+						isDMLQuestion = true;
+						break;
+					}
+				}
+			} else {
+				if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
+			}
+		
+			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, Messages.ResultMainComposite_0, Messages.MainEditor_56)) {
+				return false;
 			}
 		}
 
-		controlProgress(true);
-//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
-		
-		this.reqQuery = reqQuery; 
-		this.rsDAO = new QueryExecuteResultDTO();
-		sqlFilter.setFilter(""); //$NON-NLS-1$
-		textFilter.setText(""); //$NON-NLS-1$
-		
+		return true;
+	}
+	
+	/**
+	 * 파라미터 쿼리인지 검사하여 쿼리를 만듭니다.
+	 * @return
+	 */
+	private boolean ifIsParameterQuery() {
 		final Shell runShell = textFilter.getShell();
 		
 		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
@@ -572,16 +597,17 @@ public class ResultSetComposite extends Composite {
 						
 						ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndex);
 						if(Dialog.OK == epd.open()) {
-							
 							ParameterObject paramObj = epd.getOracleParameterObject(oracleNamedParamUtil.getMapIndexToName());
 							String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
 							reqQuery.setSql(repSQL);
 							
 							if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
+						} else {
+							return false;
 						}
 					}
 				} catch(Exception e) {
-					logger.error("Parameter parse", e); //$NON-NLS-1$
+					logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
 				}
 
 				if(!isAlreadyApply) {
@@ -597,14 +623,58 @@ public class ResultSetComposite extends Composite {
 								reqQuery.setSql(repSQL);
 								
 								if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
+							} else {
+								return false;
 							}
 						}
 					} catch(Exception e) {
-						logger.error("Parameter parse", e); //$NON-NLS-1$
+						logger.error("Java style parameter parse", e); //$NON-NLS-1$
 					}
 				}  // if(!isAlreadyApply
 			}
 		}	// end if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
+
+		return true;
+	}
+	
+	/**
+	 * 쿼리를 수행합니다.
+	 * 
+	 * @param reqQuery
+	 */
+	public boolean executeCommand(final RequestQuery reqQuery) {
+		this.reqQuery = reqQuery;
+		
+		// 쿼리를 이미 실행 중이라면 무시합니다.
+		if(jobQueryManager != null) {
+			if(Job.RUNNING == jobQueryManager.getState()) {
+				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
+				executeErrorProgress(new Exception(Messages.ResultSetComposite_1), Messages.ResultSetComposite_1);
+				return false;
+			}
+		}
+
+		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
+		try {
+			if(!ifExecuteQuery()) return false;
+		} catch(Exception e) {
+			executeErrorProgress(e, e.getMessage());
+			return false;
+		}
+		
+		// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
+		if(!ifIsParameterQuery()) return false;
+		
+		// 프로그래스 상태와 쿼리 상태를 초기화한다.
+		controlProgress(true);
+		
+//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
+		this.rsDAO = new QueryExecuteResultDTO();
+		this.sqlFilter.setFilter(""); //$NON-NLS-1$
+		this.textFilter.setText(""); //$NON-NLS-1$
+		
+		// selected first tab request quring.
+		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		// 쿼리를 실행 합니다. 
 		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
@@ -725,6 +795,8 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.setPriority(Job.INTERACTIVE);
 		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
+		
+		return true;
 	}
 	
 	/**

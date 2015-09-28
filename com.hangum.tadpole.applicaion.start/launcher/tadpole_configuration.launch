@@ -16,7 +16,7 @@
 <booleanAttribute key="includeOptional" value="true"/>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl en -consoleLog -console -GAON  -test -testDB -forceSystemInitialize -defaultDB MySQL -debuglog -passwd heechan.tadpole.owner.son&#13;&#10;-db Server BZSmKIt+/Mwzm9tZHAgzrHenP+Nm9i0yK/RLZLvJ4v8rJWtjQjmR8Nx0+TE7r8XJtKlFHsbPnxhNiT+D86XWnsXtLGMJWLgb9F5Rrnuxrb2OKirsQM+/sydp2OfNK7d1M1W1zQd3d7OhAtnBmFjwcNd2otVizkgr&#10; -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ko -consoleLog -console  -test -testDB -forceSystemInitialize -defaultDB MySQL -debuglog -passwd heechan.tadpole.owner.son&#13;&#10;-dbServer BZSmKIt+/Mwzm9tZHAgzrHenP+Nm9i0yK/RLZLvJ4v8rJWtjQjmR8Nx0+TE7r8XJtKlFHsbPnxhNiT+D86XWnsXtLGMJWLgb9F5Rrnuxrb2OKirsQM+/sydp2OfNK7d1M1W1zQd3d7OhAtnBmFjwcNd2otVizkgr&#10; -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#13;&#10;-Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info  -Xms1024m -Xmx2048m"/>
 <stringAttribute key="org.eclipse.rap.launch.browserMode" value="EXTERNAL"/>
