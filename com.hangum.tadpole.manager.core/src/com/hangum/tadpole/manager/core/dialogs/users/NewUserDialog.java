@@ -45,7 +45,6 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.AddDefaultSampleDBToUser;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
@@ -75,6 +74,8 @@ public class NewUserDialog extends Dialog {
 	private Label labelQRCodeURL;
 	private Label lblOtpCdoe;
 	private Text textOTPCode;
+	
+	private UserDAO userDao = new UserDAO();
 	
 	/**
 	 * Create the dialog.
@@ -276,7 +277,7 @@ public class NewUserDialog extends Dialog {
 			}
 			
 			String strEmailConformKey = Utils.getUniqueDigit(7);
-			UserDAO userDao = TadpoleSystem_UserQuery.newUser(
+			userDao = TadpoleSystem_UserQuery.newUser(
 					PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
 					strEmail, strEmailConformKey, isEmamilConrim, 
 					passwd, 
@@ -407,8 +408,15 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-//		return new Point(380, 250);
 		return new Point(370, 240);
+	}
+	
+	/**
+	 * Return user dao
+	 * @return
+	 */
+	public UserDAO getUserDao() {
+		return userDao;
 	}
 
 }

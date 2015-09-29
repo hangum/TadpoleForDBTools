@@ -69,7 +69,6 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.commons.util.CSVFileUtils;

@@ -405,7 +405,11 @@ public class LoginDialog extends Dialog {
 
 	private void newUser() {
 		NewUserDialog newUser = new NewUserDialog(getParentShell());
-		newUser.open();
+		if(Dialog.OK == newUser.open()) {
+			String strEmail = newUser.getUserDao().getEmail();
+			textEMail.setText(strEmail);
+			textPasswd.setFocus();
+		}
 	}
 	
 	private void findPassword() {
