@@ -702,7 +702,6 @@ public class Messages extends NLS {
 	public static String TablesComposite_0;
 	public static String TablesComposite_1;
 	public static String TDBErroDialog_0;
-	public static String TDBErroDialog_1;
 	public static String TDBErroDialog_2;
 	public static String TDBErroDialog_3;
 	public static String TDBErroDialog_4;

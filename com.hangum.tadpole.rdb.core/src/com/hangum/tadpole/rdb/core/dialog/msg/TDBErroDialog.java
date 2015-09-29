@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.dbconnect.dialog;
+package com.hangum.tadpole.rdb.core.dialog.msg;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -65,8 +65,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setMessage(title, IMessageProvider.ERROR);
-		setTitle(Messages.TDBErroDialog_1);
+		setMessage(title, IMessageProvider.INFORMATION);
 		
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);

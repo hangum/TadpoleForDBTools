@@ -30,6 +30,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -109,7 +110,8 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 				result.append("[" + rs.getString("line") + "Line / " + rs.getString("line") + "Column] " + rs.getString("text") + "\n");
 			}
 			
-			MessageDialog.openError(null, "Compile result", result.toString());
+			TDBInfoDialog dialog = new TDBInfoDialog(null, "Compile result", result.toString());
+			dialog.open();
 			
 		} catch (Exception e) {
 			logger.error(viewName + " compile", e);
@@ -154,7 +156,8 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 				result.append("[" + rs.getString("line") + "Line / " + rs.getString("line") + "Column] " + rs.getString("text") + "\n");
 			}
 			
-			MessageDialog.openError(null, "Compile result", result.toString());
+			TDBInfoDialog dialog = new TDBInfoDialog(null, "Compile result", result.toString());
+			dialog.open();
 			
 		} catch (Exception e) {
 			logger.error(objName + " compile", e);
@@ -204,8 +207,8 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 				result.append("[" + rs.getString("line") + "Line / " + rs.getString("line") + "Column] " + rs.getString("text") + "\n");
 			}
 			
-			MessageDialog.openError(null, "Compile result", result.toString());
-			
+			TDBInfoDialog dialog = new TDBInfoDialog(null, "Compile result", result.toString());
+			dialog.open();
 			
 		} catch (Exception e) {
 			logger.error(procedureDAO.getName() + " compile", e);
