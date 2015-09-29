@@ -15,6 +15,13 @@ public class Messages extends NLS {
 	public static String ExceptionDetailsErrorDialog_2;
 	public static String ExceptionDetailsErrorDialog_3;
 	public static String ExceptionDetailsErrorDialog_5;
+	public static String SingleFileuploadDialog_1;
+	public static String SingleFileuploadDialog_2;
+	public static String SingleFileuploadDialog_3;
+	public static String SingleFileuploadDialog_5;
+	public static String SingleFileuploadDialog_7;
+	public static String SingleFileuploadDialog_8;
+	public static String SingleFileuploadDialog_9;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

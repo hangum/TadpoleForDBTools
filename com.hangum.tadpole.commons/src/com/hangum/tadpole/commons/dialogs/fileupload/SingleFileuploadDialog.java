@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.Messages;
+
 /**
  * SQL to db import dialog
  * 
@@ -46,7 +48,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class SingleFileuploadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(SingleFileuploadDialog.class);
-	private String strTitle = "";
+	private String strTitle = ""; //$NON-NLS-1$
 	
 	private static final String INITIAL_TEXT = "No files uploaded."; //$NON-NLS-1$
 	
@@ -93,7 +95,7 @@ public class SingleFileuploadDialog extends Dialog {
 		
 		Label lblFileName = new Label(compositeHead, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFileName.setText("File name");
+		lblFileName.setText(Messages.SingleFileuploadDialog_1);
 		
 		fileNameLabel = new Text(compositeHead, SWT.BORDER);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -109,7 +111,7 @@ public class SingleFileuploadDialog extends Dialog {
 		lblDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		*/		
 		fileUpload = new FileUpload(compositeHead, SWT.NONE);
-		fileUpload.setText("Select File");
+		fileUpload.setText(Messages.SingleFileuploadDialog_2);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -133,7 +135,7 @@ public class SingleFileuploadDialog extends Dialog {
 		try {
 			if(!insert()) return;
 		} catch(Exception e) {
-			MessageDialog.openError(null, "Error", e.getMessage());
+			MessageDialog.openError(null, Messages.SingleFileuploadDialog_3, e.getMessage());
 			return;
 		}
 		
@@ -144,13 +146,13 @@ public class SingleFileuploadDialog extends Dialog {
 		return strTxtFile;
 	}
 
-	String strTxtFile = "";
+	String strTxtFile = ""; //$NON-NLS-1$
 	private boolean insert() throws Exception {
 		BOMInputStream bomInputStream ;
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			throw new Exception("Please upload a file");
+			throw new Exception(Messages.SingleFileuploadDialog_5);
 		}
 		
 		File userUploadFile = arryFiles[arryFiles.length-1];
@@ -168,8 +170,8 @@ public class SingleFileuploadDialog extends Dialog {
 			}
 						
 		} catch (Exception e) {
-			logger.error("file read error", e);
-			throw new Exception("File load error." + e.getMessage());
+			logger.error("file read error", e); //$NON-NLS-1$
+			throw new Exception(Messages.SingleFileuploadDialog_7 + e.getMessage());
 		}
 		
 		return true;
@@ -223,8 +225,8 @@ public class SingleFileuploadDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", false);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.SingleFileuploadDialog_8, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.SingleFileuploadDialog_9, false);
 	}
 
 	/**
