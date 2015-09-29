@@ -120,7 +120,7 @@ public class SQLResultEditingSupport extends EditingSupport {
 		} catch(Exception e) {
 			strFormatStatement = strUpdateStatement;
 		}
-		logger.debug("Update SQL Statement is " + strFormatStatement);
+		if(logger.isDebugEnabled()) logger.debug("Update SQL Statement is " + strFormatStatement);
 		
 		SQLUpdateDialog dialog = new SQLUpdateDialog(getViewer().getControl().getShell(), rsDAO.getUserDB(),  strFormatStatement);
 		if(Dialog.OK == dialog.open()) {
