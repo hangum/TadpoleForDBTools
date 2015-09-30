@@ -34,15 +34,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -53,7 +54,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProced
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
-import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -122,13 +122,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 				if(!iss.isEmpty()) {
-					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
-					
-					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
-					if(pm.isExecuted(procedureDAO, getUserDB())) {
-						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
-						epd.open();
-					}
+					GenerateViewDDLAction action = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_4);
+					action.run(iss, getUserDB(), DB_ACTION.PROCEDURES);
 				}	// end iss.isempty
 			}
 		});

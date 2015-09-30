@@ -90,7 +90,7 @@ public class MainEditor extends EditorExtension {
 	private ToolItem tiAutoCommit = null, tiAutoCommitCommit = null, tiAutoCommitRollback = null;
 
 	/** result tab */
-	private ResultMainComposite resultMainComposite;
+	protected ResultMainComposite resultMainComposite;
 
 	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
 	protected String initDefaultEditorStr = ""; //$NON-NLS-1$
@@ -102,13 +102,13 @@ public class MainEditor extends EditorExtension {
 	protected UserDBResourceDAO dBResource;
 	
 	/** save mode */
-	private boolean isDirty = false;
+	protected boolean isDirty = false;
 	
 	/** short cut prefix */
-	private static final String STR_SHORT_CUT_PREFIX = ShortcutPrefixUtils.getCtrlShortcut();
+	protected static final String STR_SHORT_CUT_PREFIX = ShortcutPrefixUtils.getCtrlShortcut();
 	
-	private SashForm sashFormExtension;
-	private IMainEditorExtension[] compMainExtions;
+	protected SashForm sashFormExtension;
+	protected IMainEditorExtension[] compMainExtions;
 	
 	public MainEditor() {
 		super();
@@ -449,35 +449,6 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
-	 * append text at position
-	 * @param strText
-	 */
-	public void appendTextAtPosition(String strText) {
-		try {
-			browserEvaluate(EditorFunctionService.INSERT_TEXT, strText);
-		} catch(Exception ee){
-			logger.error("query text at position" , ee); //$NON-NLS-1$
-		}
-	}
-	
-	/**
-	 * append text at position
-	 * 
-	 * @param strText
-	 */
-	public void appendText(String strText) {
-		try {
-			if(!StringUtils.endsWith(strText, PublicTadpoleDefine.SQL_DELIMITER)) {
-				strText += PublicTadpoleDefine.SQL_DELIMITER;
-			}
-			
-			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
-		} catch(Exception ee){
-			logger.error("query text" , ee); //$NON-NLS-1$
-		}
-	}
-	
-	/**
 	 * browser handler
 	 */
 	protected void addBrowserService() {
@@ -508,27 +479,6 @@ public class MainEditor extends EditorExtension {
 			}
 			public void changed( ProgressEvent event ) {}			
 		});
-	}
-	
-	/**
-	 * find editor extension
-	 * 
-	 * eg) mysql, pgsql
-	 * @return
-	 */
-	private String findEditorExt() {
-		String ext = EditorDefine.EXT_DEFAULT;
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_MYSQL;
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_PGSQL;
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_SQLite;
-//		테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
-//		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
-//			ext = EditorDefine.EXT_MSSQL;
-		}
-		return ext;
 	}
 
 	/**
@@ -621,6 +571,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	public boolean isAutoCommit() {
+		if(tiAutoCommit == null) return true;
 		return !tiAutoCommit.getSelection();
 	}
 	

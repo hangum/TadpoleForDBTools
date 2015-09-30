@@ -20,6 +20,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -31,9 +34,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -109,6 +114,16 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		Table tableTableList = triggerTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
+		
+		triggerTableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
+				if(!iss.isEmpty()) {
+					GenerateViewDDLAction action = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_4);
+					action.run(iss, getUserDB(), DB_ACTION.TRIGGERS);
+				}	// end iss.isempty
+			}
+		});
 
 		triggerComparator = new TriggerComparator();
 		triggerTableViewer.setSorter(triggerComparator);

@@ -817,11 +817,13 @@ public class ResultSetComposite extends Composite {
 		
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-		for (IMainEditorExtension iMainEditorExtension : extensions) {
-			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
-			if(!strCostumSQL.equals(reqQuery.getSql())) {
-				if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
-				reqQuery.setSql(strCostumSQL);
+		if(extensions != null) {
+			for (IMainEditorExtension iMainEditorExtension : extensions) {
+				String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
+				if(!strCostumSQL.equals(reqQuery.getSql())) {
+					if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
+					reqQuery.setSql(strCostumSQL);
+				}
 			}
 		}
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
@@ -975,6 +977,7 @@ public class ResultSetComposite extends Composite {
 		
 		// 확장포인트에 실행결과를 위임합니다. 
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+		if(extensions == null) return;
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			iMainEditorExtension.queryEndedExecute(rsDAO);
 		}
