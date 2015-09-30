@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,6 +51,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -307,19 +309,22 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showViews = sqlClient.queryForList("viewList", userDB.getDb()); //$NON-NLS-1$
-
-			viewListViewer.setInput(showViews);
-			viewListViewer.refresh();
-			
-			TableUtil.packTable(viewListViewer.getTable());
-			
+			showViews = DBSystemSchema.getViewList(userDB);
 		} catch (Exception e) {
+			showViews.clear();
+			
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_61, errStatus); //$NON-NLS-1$
 		}
+		
+		// update content assist
+		userDB.setViewListSeparator(StringUtils.removeEnd(StringUtils.join(showViews.toArray(), "|"), "|"));
+	
+		viewListViewer.setInput(showViews);
+		viewListViewer.refresh();
+		
+		TableUtil.packTable(viewListViewer.getTable());
 	}
 
 	/**

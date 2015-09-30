@@ -88,6 +88,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
+import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -678,7 +679,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * @return
 	 */
 	private List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
-		StringBuffer strTablelist = new StringBuffer();
+		final StringBuffer strTablelist = new StringBuffer();
 		/** filter 정보가 있으면 처리합니다. */
 		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
 		
@@ -691,7 +692,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// setting UserDBDAO 
 		userDB.setListTable(showTables);
-		userDB.setTableListSeparator(StringUtils.removeEnd(strTablelist.toString(), "|")); //$NON-NLS-1$
+//		userDB.setTableListSeparator(StringUtils.removeEnd(strTablelist.toString(), "|")); //$NON-NLS-1$
+
+		// content assist util
+		MakeContentAssistUtil contentAssistUtil = new MakeContentAssistUtil();
+		contentAssistUtil.makeContentAssistUtil(userDB);
 		
 		return showTables;
 	}

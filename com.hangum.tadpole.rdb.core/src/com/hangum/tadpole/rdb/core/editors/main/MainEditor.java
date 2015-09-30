@@ -54,13 +54,9 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -70,13 +66,12 @@ import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
+import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.sql.format.SQLFormater;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -487,13 +482,14 @@ public class MainEditor extends EditorExtension {
 	 */
 	protected void addBrowserService() {
 //		if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.PRODUCTION) {
-	    	browserQueryEditor.setUrl(REAL_DB_URL);
+		browserQueryEditor.setUrl(REAL_DB_URL);
 //	    } else {
 //	    	browserQueryEditor.setUrl(DEV_DB_URL);
 //	    }
 	    	
-	    final String strTmpTb = userDB.getTableListSeparator();
-	    final String strTableList = "".equals(strTmpTb)?getAssistTableList():strTmpTb;
+		MakeContentAssistUtil constAssistUtil = new MakeContentAssistUtil();
+	    final String strConstList = constAssistUtil.makeContentAssistUtil(userDB);
+	    
 	    registerBrowserFunctions();
 	    
 	    /** 무슨 일인지 이벤트가 두번 탑니다. */
@@ -505,7 +501,7 @@ public class MainEditor extends EditorExtension {
 				listInitialize.add("init_comp"); //$NON-NLS-1$
 				
 				try {
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), strTableList, getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), strConstList, getInitDefaultEditorStr()); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
@@ -533,88 +529,6 @@ public class MainEditor extends EditorExtension {
 //			ext = EditorDefine.EXT_MSSQL;
 		}
 		return ext;
-	}
-	
-//	/**
-//	 * List of assist table column name
-//	 * 
-//	 * @param tableName
-//	 * @return
-//	 */
-//	public String getAssistColumnList(String tableName) {
-//		String strColumnlist = ""; //$NON-NLS-1$
-//		
-//		try {
-//			TableDAO table = mapTableList.get(tableName);
-//			
-//			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
-//			for (TableColumnDAO tableDao : showTableColumns) {
-//				strColumnlist += tableDao.getSysName() + "|"; //$NON-NLS-1$
-//			}
-//			strColumnlist = StringUtils.removeEnd(strColumnlist, "|"); //$NON-NLS-1$
-//		} catch(Exception e) {
-//			logger.error("MainEditor get the table column list", e); //$NON-NLS-1$
-//		}
-//		
-//		return strColumnlist;
-//	}
-//	
-	/**
-	 * List of assist table name 
-	 * 
-	 * @return
-	 */
-	private String getAssistTableList() {
-		StringBuffer strTablelist = new StringBuffer();
-		
-		try {
-			List<TableDAO> showTables = getTableListOnlyTableName(getUserDB());
-			for (TableDAO tableDao : showTables) {
-				strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
-			}
-		} catch(Exception e) {
-			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
-		}
-
-		return StringUtils.removeEnd(strTablelist.toString(), "|"); //$NON-NLS-1$
-	}
-	/**
-	 * 보여 주어야할 테이블 목록을 정의합니다.
-	 *
-	 * @param userDB
-	 * @return
-	 * @throws Exception
-	 */
-	private List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
-		List<TableDAO> showTables = null;
-				
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-			showTables = new TajoConnectionManager().tableList(userDB);			
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
-		}
-		
-		/** filter 정보가 있으면 처리합니다. */
-		return getTableAfterwork(showTables, userDB);
-	}
-	/**
-	 * Table 정보 처리 후에 
-	 * 
-	 * @param showTables
-	 * @param userDB
-	 * @return
-	 */
-	private List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
-		/** filter 정보가 있으면 처리합니다. */
-		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
-		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(TableDAO td : showTables) {
-			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
-		}
-		
-		return showTables;
 	}
 
 	/**

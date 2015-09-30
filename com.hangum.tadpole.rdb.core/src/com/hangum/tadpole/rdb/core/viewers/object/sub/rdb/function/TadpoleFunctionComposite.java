@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,10 +39,10 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -53,11 +54,11 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProced
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
+import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionLabelProvicer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionViewFilter;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Function composite
@@ -230,13 +231,19 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
+			showFunction = DBSystemSchema.getFunctionList(userDB);
 
 			functionTableViewer.setInput(showFunction);
 			functionTableViewer.refresh();
 			
 			TableUtil.packTable(functionTableViewer.getTable());
+
+			// updatae constant assist
+			StringBuffer strFunctionlist = new StringBuffer();
+			for (ProcedureFunctionDAO tableDao : showFunction) {
+				strFunctionlist.append(tableDao.getName()).append("|"); //$NON-NLS-1$
+			}
+			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), "|"));
 
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$
