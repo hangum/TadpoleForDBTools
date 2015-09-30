@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -35,6 +36,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -46,6 +48,8 @@ import com.hangum.tadpole.engine.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 
 /**
  * procedure 실행 다이얼로그.
@@ -73,6 +77,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	
 	private Group grpTables;
 	private Button btnExecute;
+	private Text textDBMSOutput;
 
 	/**
 	 * Create the dialog.
@@ -92,7 +97,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(procedureDAO.getName() + " Procedure Dialog");
+		newShell.setText(procedureDAO.getName() + Messages.ExecuteProcedureDialog_0);
 	}
 
 	/**
@@ -123,8 +128,8 @@ public class ExecuteProcedureDialog extends Dialog {
 			initProcedureExecuter();
 			this.parameterList = getInParameter();
 		} catch(Exception e) {
-			logger.error("get in parameter", e);
-			MessageDialog.openError(null, "Error", e.getMessage());
+			logger.error("get in parameter", e); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.ExecuteProcedureDialog_error, e.getMessage());
 			
 			super.okPressed();
 		}
@@ -149,8 +154,8 @@ public class ExecuteProcedureDialog extends Dialog {
 			labelType[i] = new Label(compositeInput, SWT.NONE);
 			labelType[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 			
-			String tmpLength = StringUtils.isEmpty(inParameters.getLength())?"" : "(" + inParameters.getLength() + ")";
-			labelType[i].setText(inParameters.getRdbType() + " " + tmpLength);
+			String tmpLength = StringUtils.isEmpty(inParameters.getLength())?"" : "(" + inParameters.getLength() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			labelType[i].setText(inParameters.getRdbType() + " " + tmpLength); //$NON-NLS-1$
 		}
 		
 		Composite compositeBtn = new Composite(container, SWT.NONE);
@@ -169,9 +174,12 @@ public class ExecuteProcedureDialog extends Dialog {
 				executeProcedure();
 			}
 		});
-		btnExecute.setText("Execute");
+		btnExecute.setText(Messages.ExecuteProcedureDialog_1);
 		
-		grpTables = new Group(container, SWT.NONE);
+		SashForm sashForm = new SashForm(container, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		grpTables = new Group(sashForm, SWT.NONE);
 		GridLayout gl_grpTables = new GridLayout(1, false);
 		gl_grpTables.horizontalSpacing = 2;
 		gl_grpTables.verticalSpacing = 2;
@@ -179,7 +187,21 @@ public class ExecuteProcedureDialog extends Dialog {
 		gl_grpTables.marginWidth = 2;
 		grpTables.setLayout(gl_grpTables);
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpTables.setText("Result Set view");
+		grpTables.setText(Messages.ExecuteProcedureDialog_8);
+		
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			Group grpDbmsOutput = new Group(sashForm, SWT.NONE);
+			grpDbmsOutput.setLayout(new GridLayout(1, false));
+			GridData gd_grpDbmsOutput = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+			gd_grpDbmsOutput.minimumHeight = 50;
+			gd_grpDbmsOutput.heightHint = 50;
+			grpDbmsOutput.setLayoutData(gd_grpDbmsOutput);
+			grpDbmsOutput.setText(Messages.ExecuteProcedureDialog_grpDbmsOutput_text);
+			
+			textDBMSOutput = new Text(grpDbmsOutput, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+			textDBMSOutput.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			sashForm.setWeights(new int[] {7, 3});
+		}
 		
 		initUI();
 		
@@ -222,6 +244,10 @@ public class ExecuteProcedureDialog extends Dialog {
 		try {
 			boolean ret = procedureExecutor.exec(parameterList);
 			if(ret) {
+				if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+					textDBMSOutput.setText(procedureExecutor.getStrOutput());
+				}
+				
 				List<ResultSetUtilDTO> listResultDao = procedureExecutor.getResultDAO();
 				sqlResultTableViewer = new TableViewer[listResultDao.size()];
 				
@@ -249,8 +275,10 @@ public class ExecuteProcedureDialog extends Dialog {
 			
 			grpTables.layout();
 		} catch(Exception e) {
-			logger.error("Procedure execute Result view", e);
-			MessageDialog.openError(null, "Error", e.getMessage());
+			logger.error("Procedure execute Result view", e); //$NON-NLS-1$
+			
+			TDBInfoDialog dialog = new TDBInfoDialog(null, "Object execution exception", e.getMessage());
+			dialog.open();
 		}
 	}
 	
@@ -279,7 +307,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Close", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ExecuteProcedureDialog_11, false);
 	}
 
 	/**

@@ -12,11 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -27,14 +23,9 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;

@@ -97,15 +97,15 @@ public class MessageComposite extends Composite {
 			}
 		}
 
-		// first show last error message
-		final String strOldText = textMessage.getText();
-		if ("".equals(strOldText)) { //$NON-NLS-1$
+//		// first show last error message
+//		final String strOldText = textMessage.getText();
+//		if ("".equals(strOldText)) { //$NON-NLS-1$
 			textMessage.setText(strNewMessage);
-		} else {
-			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);
-		}
-		textMessage.setSelection(0, strNewMessage.length());
-		textMessage.setFocus();
+//		} else {
+//			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);
+//		}
+//		textMessage.setSelection(0, strNewMessage.length());
+//		textMessage.setFocus();
 	}
 
 	@Override

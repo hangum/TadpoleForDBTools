@@ -219,6 +219,11 @@ public class Messages extends NLS {
 	public static String ERDDeleteAction_2;
 	public static String ERDDeleteAction_3;
 	public static String ERDDeleteAction_4;
+	public static String ExecuteProcedureDialog_0;
+	public static String ExecuteProcedureDialog_1;
+	public static String ExecuteProcedureDialog_11;
+	public static String ExecuteProcedureDialog_8;
+	public static String ExecuteProcedureDialog_error;
 	public static String ExitAction_0;
 	public static String ExitAction_1;
 	public static String ExitAction_2;
@@ -701,7 +706,6 @@ public class Messages extends NLS {
 	public static String TableDirectEditorComposite_tltmRefersh_text;
 	public static String TablesComposite_0;
 	public static String TablesComposite_1;
-	public static String TDBErroDialog_0;
 	public static String TDBErroDialog_2;
 	public static String TDBErroDialog_3;
 	public static String TDBErroDialog_4;
@@ -726,6 +730,7 @@ public class Messages extends NLS {
 	public static String OthersConnectionGroup_btnIsMonitoring_text;
 	public static String ResultSetComposite_lblFilter_text;
 	public static String MySQLLoginComposite_lblJdbcOptions_text;
+	public static String ExecuteProcedureDialog_grpDbmsOutput_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

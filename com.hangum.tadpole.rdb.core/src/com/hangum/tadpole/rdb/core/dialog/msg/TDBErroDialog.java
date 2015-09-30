@@ -56,7 +56,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.TDBErroDialog_0);
+		newShell.setText(title);
 	}
 
 	/**

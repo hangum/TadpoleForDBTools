@@ -50,6 +50,8 @@ public abstract class ProcedureExecutor {
 	
 	/** result dao */
 	protected List<ResultSetUtilDTO> resultDAO = new ArrayList<ResultSetUtilDTO>();
+	
+	protected String strOutput = "";
 
 	/**
 	 * procedure executor
@@ -239,4 +241,18 @@ public abstract class ProcedureExecutor {
 	 */
 	public abstract boolean exec(List<InOutParameterDAO> parameterList) throws Exception ;
 
+	/**
+	 * @return the strOutput
+	 */
+	public String getStrOutput() {
+		return strOutput;
+	}
+
+	/**
+	 * @param strOutput the strOutput to set
+	 */
+	public void setStrOutput(String strOutput) {
+		this.strOutput = strOutput;
+	}
+	
 }
