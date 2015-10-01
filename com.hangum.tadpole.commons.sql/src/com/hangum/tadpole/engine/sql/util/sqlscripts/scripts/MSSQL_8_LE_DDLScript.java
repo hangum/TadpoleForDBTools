@@ -211,7 +211,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 			
 			return result.toString();
 		} catch(Exception e) {
-			logger.error("get view script [" + procedureDAO.getName() + "]", e);
+			logger.error("get procedure script [" + procedureDAO.getName() + "]", e);
 			
 			throw e;
 		}

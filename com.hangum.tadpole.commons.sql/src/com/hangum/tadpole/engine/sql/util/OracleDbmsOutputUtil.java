@@ -41,7 +41,7 @@ public static void main (String args [])
  * @author hangum
  *
  */
-public class DbmsOutputUtil {
+public class OracleDbmsOutputUtil {
 	private StringBuffer output = new StringBuffer();
 	
 	/*
@@ -74,7 +74,7 @@ public class DbmsOutputUtil {
 	 * will not chunk up a line.
 	 *
 	 */
-	public DbmsOutputUtil( Connection conn ) throws SQLException {
+	public OracleDbmsOutputUtil( Connection conn ) throws SQLException {
 	    enable_stmt  = conn.prepareCall( "begin dbms_output.enable(:1); end;" );
 	    disable_stmt = conn.prepareCall( "begin dbms_output.disable; end;" );
 

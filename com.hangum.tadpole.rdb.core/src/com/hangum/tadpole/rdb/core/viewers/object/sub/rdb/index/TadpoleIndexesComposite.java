@@ -88,7 +88,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Index;
 	private ObjectDropAction dropAction_Index;
 	private ObjectRefreshAction refreshAction_Index;
-	private GenerateViewDDLAction viewDDLAction;
+//	private GenerateViewDDLAction viewDDLAction;
 
 	/**
 	 * indexes info
@@ -255,7 +255,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_2);
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_7);
+//		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_7);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -272,8 +272,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 					
 					manager.add(refreshAction_Index);
 					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(viewDDLAction);
+//					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+//					manager.add(viewDDLAction);
 				}
 			}
 		});
@@ -294,7 +294,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		dropAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
 		
-		viewDDLAction.setUserDB(getUserDB());
+//		viewDDLAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -350,6 +350,6 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		creatAction_Index.dispose();
 		dropAction_Index.dispose();
 		refreshAction_Index.dispose();
-		viewDDLAction.dispose();
+//		viewDDLAction.dispose();
 	}
 }

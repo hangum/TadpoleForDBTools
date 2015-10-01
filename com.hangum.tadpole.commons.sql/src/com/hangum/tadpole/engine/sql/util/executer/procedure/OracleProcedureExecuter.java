@@ -23,7 +23,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.DbmsOutputUtil;
+import com.hangum.tadpole.engine.sql.util.OracleDbmsOutputUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -79,7 +79,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 		java.sql.CallableStatement cstmt = null;
 		java.sql.PreparedStatement pstmt = null;
 
-		DbmsOutputUtil dbmsOutput = null;
+		OracleDbmsOutputUtil dbmsOutput = null;
 		try {
 			if(listOutParamValues == null) getOutParameters();
 
@@ -87,7 +87,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			javaConn = client.getDataSource().getConnection();
 			
 			try {
-				dbmsOutput = new DbmsOutputUtil( javaConn );
+				dbmsOutput = new OracleDbmsOutputUtil( javaConn );
 				dbmsOutput.enable(1000000);
 			} catch(SQLException e) { 
 				logger.error("dbmsoutput exception", e); 
