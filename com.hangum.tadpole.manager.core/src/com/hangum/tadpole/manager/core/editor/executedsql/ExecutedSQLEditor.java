@@ -45,7 +45,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
@@ -110,7 +110,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	 * 
 	 *  key is row id, value is data
 	 */
-	private Map<String, SQLHistoryDAO> mapSQLHistory = new HashMap<String, SQLHistoryDAO>();
+	private Map<String, RequestResultDAO> mapSQLHistory = new HashMap<String, RequestResultDAO>();
 
 	/** tail composite */
 	private Composite compositeTail;
@@ -352,12 +352,12 @@ public class ExecutedSQLEditor extends EditorPart {
 		GridItem[] gridItems = gridHistory.getSelection();
 		if(gridItems.length != 0) {
 			try {
-				SQLHistoryDAO sqlHistoryDao = mapSQLHistory.get(gridItems[0].getText(0));
+				RequestResultDAO reqResultDao = mapSQLHistory.get(gridItems[0].getText(0));
 				
-				if (null != sqlHistoryDao) {
+				if (null != reqResultDao) {
 					String strApiOrSQL = gridItems[0].getText(4);
 					
-					if(sqlHistoryDao.getEXECUSTE_SQL_TYPE() == PublicTadpoleDefine.EXECUTE_SQL_TYPE.API) {
+					if(reqResultDao.getEXECUSTE_SQL_TYPE() == PublicTadpoleDefine.EXECUTE_SQL_TYPE.API) {
 						int intFindAnd = StringUtils.indexOf(strApiOrSQL, "&"); //$NON-NLS-1$
 						String strApi = StringUtils.substring(strApiOrSQL, 0, intFindAnd);
 						
@@ -368,7 +368,7 @@ public class ExecutedSQLEditor extends EditorPart {
 						strApiOrSQL = strSQL;
 					}
 						
-					UserDBDAO dbDao = TadpoleSystem_UserDBQuery.getUserDBInstance(sqlHistoryDao.getDbSeq());
+					UserDBDAO dbDao = TadpoleSystem_UserDBQuery.getUserDBInstance(reqResultDao.getDbSeq());
 					FindEditorAndWriteQueryUtil.run(dbDao, 
 								Utils.convHtmlToLine(strApiOrSQL) + PublicTadpoleDefine.SQL_DELIMITER, 
 							PublicTadpoleDefine.DB_ACTION.TABLES);
@@ -422,14 +422,14 @@ public class ExecutedSQLEditor extends EditorPart {
 		String strSearchTxt = "%" + StringUtils.trimToEmpty(textSearch.getText()) + "%"; //$NON-NLS-1$ //$NON-NLS-2$
 
 		try {
-			List<SQLHistoryDAO> listSQLHistory = 
+			List<RequestResultDAO> listSQLHistory = 
 					TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(strEmail, comboTypes.getText(), db_seq, startTime, endTime, duringExecute, strSearchTxt);
-			for (SQLHistoryDAO sqlHistoryDAO : listSQLHistory) {
-				mapSQLHistory.put(""+gridHistory.getRootItemCount(), sqlHistoryDAO); //$NON-NLS-1$
+			for (RequestResultDAO reqResultDAO : listSQLHistory) {
+				mapSQLHistory.put(""+gridHistory.getRootItemCount(), reqResultDAO); //$NON-NLS-1$
 				
 				GridItem item = new GridItem(gridHistory, SWT.V_SCROLL | SWT.H_SCROLL);
 				
-				String strSQL = StringUtils.strip(sqlHistoryDAO.getStrSQLText());
+				String strSQL = StringUtils.strip(reqResultDAO.getStrSQLText());
 				int intLine = StringUtils.countMatches(strSQL, "\n"); //$NON-NLS-1$
 				if(intLine >= 1) {
 					int height = (intLine+1) * 24;
@@ -438,23 +438,23 @@ public class ExecutedSQLEditor extends EditorPart {
 				}
 				
 				item.setText(0, ""+gridHistory.getRootItemCount()); //$NON-NLS-1$
-				item.setText(1, sqlHistoryDAO.getDbName());
-				item.setText(2, sqlHistoryDAO.getUserName());
-				item.setText(3, Utils.dateToStr(sqlHistoryDAO.getStartDateExecute()));
+				item.setText(1, reqResultDAO.getDbName());
+				item.setText(2, reqResultDAO.getUserName());
+				item.setText(3, Utils.dateToStr(reqResultDAO.getStartDateExecute()));
 //				logger.debug(Utils.convLineToHtml(strSQL));
 				item.setText(4, Utils.convLineToHtml(strSQL));
 				item.setToolTipText(4, strSQL);
 				
-				item.setText(5, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f)); //$NON-NLS-1$
-				item.setText(6, ""+sqlHistoryDAO.getRows()); //$NON-NLS-1$
-				item.setText(7, sqlHistoryDAO.getResult());
+				item.setText(5, ""+( (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) / 1000f)); //$NON-NLS-1$
+				item.setText(6, ""+reqResultDAO.getRows()); //$NON-NLS-1$
+				item.setText(7, reqResultDAO.getResult());
 				
-				item.setText(8, Utils.convLineToHtml(sqlHistoryDAO.getMesssage()));
-				item.setToolTipText(8, sqlHistoryDAO.getMesssage());
+				item.setText(8, Utils.convLineToHtml(reqResultDAO.getMesssage()));
+				item.setToolTipText(8, reqResultDAO.getMesssage());
 				
-				item.setText(9, sqlHistoryDAO.getIpAddress());
+				item.setText(9, reqResultDAO.getIpAddress());
 				
-				if("F".equals(sqlHistoryDAO.getResult())) { //$NON-NLS-1$
+				if("F".equals(reqResultDAO.getResult())) { //$NON-NLS-1$
 					item.setBackground(SWTResourceManager.getColor(240, 180, 167));
 //				} else {
 //					item.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));

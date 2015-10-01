@@ -126,7 +126,7 @@ public class MainEditor extends EditorExtension {
 
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
-		else  setPartName(dBResource.getName());
+		else setPartName(dBResource.getName());
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
@@ -202,7 +202,7 @@ public class MainEditor extends EditorExtension {
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, STR_SHORT_CUT_PREFIX));
-		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png")); //$NON-NLS-1$
+		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/play.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

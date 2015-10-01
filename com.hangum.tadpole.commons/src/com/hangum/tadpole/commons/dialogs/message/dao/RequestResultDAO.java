@@ -20,7 +20,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  * @author hangum
  * 
  */
-public class SQLHistoryDAO {
+public class RequestResultDAO {
 	int seq;
 	
 	/** Execute start time */
@@ -42,8 +42,7 @@ public class SQLHistoryDAO {
 	/** execute_sql_type */
 	PublicTadpoleDefine.EXECUTE_SQL_TYPE EXECUSTE_SQL_TYPE = PublicTadpoleDefine.EXECUTE_SQL_TYPE.SESSION;
 
-
-	public SQLHistoryDAO(Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message) {
+	public RequestResultDAO(Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message) {
 		this.userName = "";
 		this.dbName = "";
 		this.startDateExecute = dateExecute;
@@ -55,7 +54,7 @@ public class SQLHistoryDAO {
 	}
 
 	// Sql history for executedSqlEditor
-	public SQLHistoryDAO(String userName, String dbName, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message,
+	public RequestResultDAO(String userName, String dbName, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message,
 			String ipAddress, int dbSeq) {
 		this.userName = userName;
 		this.dbName = dbName;
@@ -69,7 +68,7 @@ public class SQLHistoryDAO {
 		this.messsage = message;
 	}
 
-	public SQLHistoryDAO() {
+	public RequestResultDAO() {
 	}
 
 	public String getUserName() {

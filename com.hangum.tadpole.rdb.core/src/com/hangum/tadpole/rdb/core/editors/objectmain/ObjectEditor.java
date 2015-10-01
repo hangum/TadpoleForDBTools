@@ -10,8 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
@@ -28,10 +32,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
@@ -48,10 +57,10 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class ObjectEditor extends MainEditor {
-	public static final String ID = "com.hangum.tadpole.rdb.core.editor.main.procedure";
-	
-	/**  Logger for this class. */
+	public static final String ID = "com.hangum.tadpole.rdb.core.editor.main.procedure"; //$NON-NLS-1$
 	private static final Logger logger = Logger.getLogger(ObjectEditor.class);
+	
+	private String objectName = ""; //$NON-NLS-1$
 	
 	public ObjectEditor() {
 		super();
@@ -67,10 +76,11 @@ public class ObjectEditor extends MainEditor {
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
-		strRoleType = userDB.getRole_id();//SessionManager.getRoleType(userDB);
-		dBResource = qei.getResourceDAO();
-		if(dBResource == null) setPartName(qei.getName());
-		else  setPartName(dBResource.getName());
+		strRoleType = userDB.getRole_id();
+		if("".equals(qei.getObjectName())) setPartName(qei.getName()); //$NON-NLS-1$
+		else setPartName(String.format("%s (%s)", qei.getName(), qei.getObjectName())); //$NON-NLS-1$
+		
+		objectName = qei.getObjectName();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -134,7 +144,7 @@ public class ObjectEditor extends MainEditor {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmCompile = new ToolItem(toolBar, SWT.NONE);
-		tltmCompile.setToolTipText(String.format("Compile", STR_SHORT_CUT_PREFIX));
+		tltmCompile.setToolTipText(String.format(Messages.ObjectEditor_1, STR_SHORT_CUT_PREFIX));
 		tltmCompile.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/compile.png")); //$NON-NLS-1$
 		tltmCompile.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -147,18 +157,17 @@ public class ObjectEditor extends MainEditor {
 				}
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, executeType, isAutoCommit());
-				executeCommand(reqQuery);
+				executeCommand(reqQuery);				
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 //		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-//		tltmExecute.setToolTipText("Execute");
+//		tltmExecute.setToolTipText(Messages.ObjectEditor_5);
 //		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/play.png")); //$NON-NLS-1$
 //		tltmExecute.addSelectionListener(new SelectionAdapter() {
 //			@Override
 //			public void widgetSelected(SelectionEvent e) {
-//				
 //
 //			}
 //		});
@@ -205,6 +214,84 @@ public class ObjectEditor extends MainEditor {
 		
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
+	}
+	
+	/**
+	 * execute query
+	 * 
+	 * @param reqQuery
+	 */
+	public void executeCommand(final RequestQuery reqQuery) {
+		// 요청쿼리가 없다면 무시합니다. 
+		if(StringUtils.isEmpty(reqQuery.getSql())) return;
+
+		if(reqQuery.getExecuteType() == EXECUTE_TYPE.BLOCK) {
+			resultMainComposite.executeCommand(reqQuery);
+		} else {
+			RequestResultDAO reqResultDAO = new RequestResultDAO();
+			try {
+				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
+					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT) mysqlProcess(reqResultDAO.getMesssage(), reqQuery);					
+				} else {
+					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+				}
+				
+			} catch(Exception e) {
+				String strResultMsg = e.getMessage();
+				reqResultDAO.setMesssage(reqResultDAO.getMesssage() + "\n\n" + strResultMsg); //$NON-NLS-1$
+				afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+			} finally {
+				setOrionTextFocus();
+			}
+		}
+
+		// google analytic
+		AnalyticCaller.track(ObjectEditor.ID, "executeCommandObject"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * after process
+	 * 
+	 * @param reqResultDAO
+	 * @param title
+	 */
+	private void afterProcess(RequestResultDAO reqResultDAO, String title) {
+		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
+		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
+			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
+		} else {
+			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getStrSQLText())); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * mysql 처리를 합니다.
+	 * 
+	 * @param strResultMsg
+	 * @param reqQuery
+	 */
+	private void mysqlProcess(String strResultMsg, RequestQuery reqQuery) {
+		if(StringUtils.endsWith(strResultMsg, "already exists")) { //$NON-NLS-1$
+			
+			String strPrefix = StringUtils.removeEnd(strResultMsg, "already exists"); //$NON-NLS-1$
+			String strObjectName = StringUtils.substringBefore(strResultMsg, " "); //$NON-NLS-1$
+			String cmd = "DROP " + strPrefix; //$NON-NLS-1$
+			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, strObjectName))) {
+				RequestResultDAO reqResultDAO = new RequestResultDAO();
+				try {
+					reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", cmd); //$NON-NLS-1$
+					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+					
+					reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+				} catch(Exception ee) {
+					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+				}
+			}
+		}	
 	}
 	
 }

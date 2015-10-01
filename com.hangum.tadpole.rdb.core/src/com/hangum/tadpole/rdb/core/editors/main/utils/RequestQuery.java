@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
@@ -66,6 +67,9 @@ public class RequestQuery {
 	
 	/** TABLE, INDEX, VIEW, OTHERES */
 	private QUERY_DDL_TYPE queryDDLType = QUERY_DDL_TYPE.UNKNOWN;
+	
+	/** query result */
+	private RequestResultDAO resultDao = new RequestResultDAO();
 
 	/**
 	 * 
@@ -87,7 +91,7 @@ public class RequestQuery {
 		this.executeType = type;
 		this.isAutoCommit = isAutoCommit;
 	}
-	
+
 	/**
 	 * sql of query type
 	 * 
@@ -260,6 +264,20 @@ public class RequestQuery {
 	 */
 	public void setQueryDDLType(QUERY_DDL_TYPE queryDDLType) {
 		this.queryDDLType = queryDDLType;
+	}
+
+	/**
+	 * @return the resultDao
+	 */
+	public RequestResultDAO getResultDao() {
+		return resultDao;
+	}
+
+	/**
+	 * @param resultDao the resultDao to set
+	 */
+	public void setResultDao(RequestResultDAO resultDao) {
+		this.resultDao = resultDao;
 	}
 
 }

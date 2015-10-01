@@ -76,30 +76,31 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
 			CreateIndexAction cia = new CreateIndexAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
-			
-			try {
-				DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
-				String strScript = scriptManager.getScript(selection.getFirstElement());
-				strScript = StringUtils.replaceOnce(strScript, "CREATE", "ALTER");
-				if(strScript.indexOf("ALTER") == -1) {
-					strScript = StringUtils.replaceOnce(strScript, "create", "alter");
-				}
-				
-				FindEditorAndWriteQueryUtil.run(userDB, strScript, true, actionType);		
-			} catch(Exception e) {
-				logger.error("Alter ddl script", e);
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", selection.getFirstElement() + " Load scipt error", errStatus); //$NON-NLS-1$
-			}
-			
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
-			CreateFunctionAction cia = new CreateFunctionAction();
-			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
-			CreateTriggerAction cia = new CreateTriggerAction();
-			cia.run(userDB, actionType);
+//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+//			
+//			try {
+//				DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
+//				String strScript = scriptManager.getScript(selection.getFirstElement());
+//				strScript = StringUtils.replaceOnce(strScript, "CREATE", "ALTER");
+//				if(strScript.indexOf("ALTER") == -1) {
+//					strScript = StringUtils.replaceOnce(strScript, "create", "alter");
+//				}
+//				
+////				FindEditorAndWriteQueryUtil.run(userDB, strScript, true, actionType);
+//				logger.debug("====================>");
+//			} catch(Exception e) {
+//				logger.error("Alter ddl script", e);
+//				
+//				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(null, "Error", selection.getFirstElement() + " Load scipt error", errStatus); //$NON-NLS-1$
+//			}
+//			
+//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+//			CreateFunctionAction cia = new CreateFunctionAction();
+//			cia.run(userDB, actionType);
+//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
+//			CreateTriggerAction cia = new CreateTriggerAction();
+//			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
 			CreateJavaScriptAction csa = new CreateJavaScriptAction();
 			csa.run(userDB, actionType);

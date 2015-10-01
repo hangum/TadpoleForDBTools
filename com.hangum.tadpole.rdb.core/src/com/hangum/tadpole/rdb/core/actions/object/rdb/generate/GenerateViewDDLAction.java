@@ -57,7 +57,9 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		try {
 			DDLScriptManager scriptManager;
-
+			String strObjectName = "";
+			String strScript = "";
+			
 			Object obj = null;
 			if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
 				OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
@@ -90,12 +92,18 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 					scriptManager = new DDLScriptManager(userDB, actionType);
 					obj = synonym;
 				}
+				
+				strObjectName = synonym.getName();
+				strScript = scriptManager.getScript(obj);
 			} else {
 				scriptManager = new DDLScriptManager(userDB, actionType);
 				obj = selection.getFirstElement();
+				
+				strScript = scriptManager.getScript(obj);
+				strObjectName = scriptManager.getObjectName();
 			}
 
-			FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(obj), true, actionType);
+			FindEditorAndWriteQueryUtil.run(userDB, strObjectName, strScript, true, actionType);
 		} catch (Exception e) {
 			logger.error("view ddl", e);
 			MessageDialog.openError(null, "Confirm", "Not support this function.");

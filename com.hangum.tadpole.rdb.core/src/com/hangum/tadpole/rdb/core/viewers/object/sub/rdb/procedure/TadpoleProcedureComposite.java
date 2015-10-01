@@ -51,7 +51,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
@@ -76,7 +75,6 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private ProcedureFunctionViewFilter procedureFilter;
 
 	private ObjectCreatAction creatAction_Procedure;
-	private ObjectModifyAction modifyAction_Procedure;
 	private ObjectDropAction dropAction_Procedure;
 	private ObjectRefreshAction refreshAction_Procedure;
 	private GenerateViewDDLAction viewDDLAction;
@@ -148,7 +146,6 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 	private void createMenu() {
 		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_1);
-		modifyAction_Procedure = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_2);
 		dropAction_Procedure = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_3);
 		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_4);
 
@@ -166,7 +163,6 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					if(!isDDLLock()) {
 						manager.add(creatAction_Procedure);
-						manager.add(modifyAction_Procedure);
 						manager.add(dropAction_Procedure);
 						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					}
@@ -209,7 +205,6 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		procedureTableViewer.refresh();
 
 		creatAction_Procedure.setUserDB(getUserDB());
-		modifyAction_Procedure.setUserDB(getUserDB());
 		dropAction_Procedure.setUserDB(getUserDB());
 		refreshAction_Procedure.setUserDB(getUserDB());
 		executeAction_Procedure.setUserDB(getUserDB());
@@ -263,7 +258,6 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		super.dispose();
 		
 		creatAction_Procedure.dispose();
-		modifyAction_Procedure.dispose();
 		dropAction_Procedure.dispose();
 		refreshAction_Procedure.dispose();
 		viewDDLAction.dispose();

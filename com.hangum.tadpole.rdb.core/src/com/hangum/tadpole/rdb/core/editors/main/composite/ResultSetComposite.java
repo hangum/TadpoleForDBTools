@@ -68,7 +68,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
-import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
@@ -676,7 +676,7 @@ public class ResultSetComposite extends Composite {
 		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		// 쿼리를 실행 합니다. 
-		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
+		final RequestResultDAO reqResultDAO = new RequestResultDAO();
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
 		final String strPlanTBName 	= GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
@@ -688,9 +688,9 @@ public class ResultSetComposite extends Composite {
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(reqQuery.getSql(), IProgressMonitor.UNKNOWN);
 				
-				sqlHistoryDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
-				sqlHistoryDAO.setIpAddress(reqQuery.getUserIp());
-				sqlHistoryDAO.setStrSQLText(reqQuery.getOriginalSql());
+				reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
+				reqResultDAO.setIpAddress(reqQuery.getUserIp());
+				reqResultDAO.setStrSQLText(reqQuery.getOriginalSql());
 				
 				try {
 					
@@ -719,7 +719,7 @@ public class ResultSetComposite extends Composite {
 						// select 문장 실행
 						if(SQLUtil.isStatement(reqQuery.getSql())) { //$NON-NLS-1$
 							rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
-							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
+							reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
 						
@@ -728,7 +728,7 @@ public class ResultSetComposite extends Composite {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
 								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
-								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
+								reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 							}
 
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
@@ -743,16 +743,14 @@ public class ResultSetComposite extends Composite {
 						}
 					}
 					
-//					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 				} catch(Exception e) {
-//					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
-					sqlHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
-					sqlHistoryDAO.setMesssage(e.getMessage());
+					reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
+					reqResultDAO.setMesssage(e.getMessage());
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
 				} finally {
-					sqlHistoryDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
+					reqResultDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
 					monitor.done();
 				}
 				
@@ -771,13 +769,16 @@ public class ResultSetComposite extends Composite {
 					public void run() {
 						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
-							executeFinish(reqQuery, sqlHistoryDAO);
+							executeFinish(reqQuery, reqResultDAO);
 						} else {
 							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 						
+						// 처리를 위해 결과를 담아 둡니다.
+						reqQuery.setResultDao(reqResultDAO);
+						
 						// 히스토리 화면을 갱신합니다.
-						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(sqlHistoryDAO);
+						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 						
 						// 주의) 일반적으로는 포커스가 잘 가지만, 
 						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
@@ -1022,7 +1023,7 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
-	public void executeFinish(RequestQuery reqQuery, SQLHistoryDAO executingSQLDAO) {
+	public void executeFinish(RequestQuery reqQuery, RequestResultDAO executingSQLDAO) {
 		if(SQLUtil.isStatement(reqQuery.getSql())) {			
 
 			// table data를 생성한다.
