@@ -25,7 +25,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.help.core.views.HelpViewPart;
 import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor;
 import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditorInput;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
