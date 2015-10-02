@@ -39,20 +39,18 @@ public abstract class ProcedureExecutor {
 	 */
 	private static final Logger logger = Logger.getLogger(ProcedureExecutor.class);
 	
-//	/** Result Max row count */
-//	protected int queryResultCount 	= GetPreferenceGeneral.getQueryResultCount();
-	
 	protected UserDBDAO userDB;
-	protected List<InOutParameterDAO> listInParamValues;
-	protected List<InOutParameterDAO> listOutParamValues;
+	protected List<InOutParameterDAO> listInParamValues = new ArrayList<InOutParameterDAO>();
+	protected List<InOutParameterDAO> listOutParamValues = new ArrayList<InOutParameterDAO>();
 	
 	protected ProcedureFunctionDAO procedureDAO;
 	
 	/** result dao */
 	protected List<ResultSetUtilDTO> resultDAO = new ArrayList<ResultSetUtilDTO>();
 	
+	/** dbms output - only oracle */
 	protected String strOutput = "";
-
+	
 	/**
 	 * procedure executor
 	 * 
@@ -97,7 +95,7 @@ public abstract class ProcedureExecutor {
 	 * @return
 	 * @throws Exception
 	 */
-	protected String getMakeExecuteScript() throws Exception {
+	public String getMakeExecuteScript() throws Exception {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
@@ -240,7 +238,7 @@ public abstract class ProcedureExecutor {
 	 * @return
 	 */
 	public abstract boolean exec(List<InOutParameterDAO> parameterList) throws Exception ;
-
+	
 	/**
 	 * @return the strOutput
 	 */
@@ -254,5 +252,5 @@ public abstract class ProcedureExecutor {
 	public void setStrOutput(String strOutput) {
 		this.strOutput = strOutput;
 	}
-	
+
 }

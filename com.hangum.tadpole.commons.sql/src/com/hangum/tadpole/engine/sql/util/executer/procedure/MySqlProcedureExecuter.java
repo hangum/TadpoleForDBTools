@@ -65,6 +65,72 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 		super(procedureDAO, userDB);
 	}
 	
+	/**
+	 * execute script
+	 */
+	public String getMakeExecuteScript() throws Exception {
+		StringBuffer sbQuery = new StringBuffer();
+		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
+			if(!"".equals(procedureDAO.getPackagename())){
+				sbQuery.append("select " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+			}else{
+				sbQuery.append("select " + procedureDAO.getName() + "(");
+			}
+			
+			List<InOutParameterDAO> inList = getInParameters();
+			for(int i=0; i<inList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = inList.get(i);
+				if(i == (inList.size()-1)) sbQuery.append(inOutParameterDAO.getName());
+				else sbQuery.append(String.format("%s, ", inOutParameterDAO.getName()));
+			}
+			sbQuery.append(");");
+		}else{
+			
+			// output parameter 
+			for (InOutParameterDAO inOutParameterDAO : getOutParameters()) {
+				if(RDBTypeToJavaTypeUtils.isNumberType(inOutParameterDAO.getRdbType())) {
+					sbQuery.append(String.format("set @%s = 0;\n", inOutParameterDAO.getName()));
+				} else {
+					sbQuery.append(String.format("set @%s = \"\";\n", inOutParameterDAO.getName()));
+				}
+			}
+			
+			// 프로시저 본체 만들기.
+			if(!"".equals(procedureDAO.getPackagename())){
+				sbQuery.append(String.format("call %s.%s(", procedureDAO.getPackagename(), procedureDAO.getName()));
+			}else{
+				sbQuery.append(String.format("call %s(", procedureDAO.getName()));
+			}
+			
+			// in 설정
+			List<InOutParameterDAO> inList = getInParameters();
+			for(int i=0; i<inList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = inList.get(i);
+				if(i == (inList.size()-1)) sbQuery.append(inOutParameterDAO.getName());
+				else sbQuery.append(String.format("%s, ", inOutParameterDAO.getName()));
+			}
+			
+			// out 설정
+			List<InOutParameterDAO> outList = getOutParameters();
+			if(!inList.isEmpty() && !outList.isEmpty()) sbQuery.append(", ");
+			for(int i=0; i<outList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = outList.get(i);
+				if(i != (outList.size()-1)) sbQuery.append(String.format("@%s,", inOutParameterDAO.getName()));
+				else sbQuery.append(String.format("@%s",inOutParameterDAO.getName()));
+			}
+			sbQuery.append(");\n");
+
+			// out 출력
+			for (InOutParameterDAO inOutParameterDAO : getOutParameters()) {
+				sbQuery.append(String.format("select @%s;\n", inOutParameterDAO.getName()));
+			}
+		}
+
+		if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
+		
+		return sbQuery.toString();
+	}
+	
 	@Override
 	public boolean exec(List<InOutParameterDAO> parameterList)  throws Exception {
 		initResult();

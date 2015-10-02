@@ -10,18 +10,23 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -48,20 +53,36 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
 		if(logger.isDebugEnabled()) logger.debug("ObjectExecuteProcedureAction run...");
+
 		ProcedureFunctionDAO procedureDAO;
-		if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
-			OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
-			procedureDAO = new ProcedureFunctionDAO();
-			procedureDAO.setName(synonym.getName());
-			if (synonym.getObject_type().startsWith("PACKAGE"))
-				procedureDAO.setPackagename(synonym.getName());
-		} else {
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
-		}
-		ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
-		if (pm.isExecuted(procedureDAO, userDB)) {
-			ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, userDB, procedureDAO);
-			epd.open();
+			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
+			pm.isExecuted(procedureDAO, userDB);
+			
+			try {
+				String strScript = pm.getExecuter().getMakeExecuteScript();
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.DB_ACTION.TABLES);
+				
+			} catch(Exception e) {
+				logger.error("procedure execute", e);
+			}
+			
+		} else {
+			if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
+				OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
+				procedureDAO = new ProcedureFunctionDAO();
+				procedureDAO.setName(synonym.getName());
+				if (synonym.getObject_type().startsWith("PACKAGE"))
+					procedureDAO.setPackagename(synonym.getName());
+			} else {
+				procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
+			}
+			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
+			if (pm.isExecuted(procedureDAO, userDB)) {
+				ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, userDB, procedureDAO);
+				epd.open();
+			}
 		}
 	}// end method
 

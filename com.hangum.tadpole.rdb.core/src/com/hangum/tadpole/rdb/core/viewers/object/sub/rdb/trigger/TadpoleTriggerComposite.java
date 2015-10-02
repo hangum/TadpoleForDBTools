@@ -114,16 +114,6 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		Table tableTableList = triggerTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
-		
-		triggerTableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
-				if(!iss.isEmpty()) {
-					GenerateViewDDLAction action = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_4);
-					action.run(iss, getUserDB(), DB_ACTION.TRIGGERS);
-				}	// end iss.isempty
-			}
-		});
 
 		triggerComparator = new TriggerComparator();
 		triggerTableViewer.setSorter(triggerComparator);

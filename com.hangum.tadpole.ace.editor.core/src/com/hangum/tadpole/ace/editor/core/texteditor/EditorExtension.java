@@ -152,7 +152,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	public void appendText(String strText) {
 		try {
-			if(!StringUtils.endsWith(strText, PublicTadpoleDefine.SQL_DELIMITER)) {
+			if(!StringUtils.endsWith(StringUtils.trimToEmpty(strText), PublicTadpoleDefine.SQL_DELIMITER)) {
 				strText += PublicTadpoleDefine.SQL_DELIMITER;
 			}
 			

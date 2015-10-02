@@ -120,7 +120,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 				if(!iss.isEmpty()) {
-					GenerateViewDDLAction action = new GenerateViewDDLAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_4);
+					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_4);
 					action.run(iss, getUserDB(), DB_ACTION.PROCEDURES);
 				}	// end iss.isempty
 			}
