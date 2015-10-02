@@ -59,6 +59,8 @@ import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Tadpole DB Hub User login dialog.
@@ -113,13 +115,21 @@ public class LoginDialog extends Dialog {
 		
 		Composite compositeLogin = new Composite(container, SWT.NONE);
 		compositeLogin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeLogin.setLayout(new GridLayout(2, false));
+		compositeLogin.setLayout(new GridLayout(3, false));
 		
 		Label lblEmail = new Label(compositeLogin, SWT.NONE);
 		lblEmail.setText(Messages.LoginDialog_1);
 		
 		textEMail = new Text(compositeLogin, SWT.BORDER);
-		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textEMail.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					textPasswd.setFocus();
+				}
+			}
+		});
+		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblPassword = new Label(compositeLogin, SWT.NONE);
 		lblPassword.setText(Messages.LoginDialog_4);
@@ -134,6 +144,15 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnLogin = new Button(compositeLogin, SWT.NONE);
+		btnLogin.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				okPressed();
+			}
+		});
+		btnLogin.setText(Messages.LoginDialog_15);
 
 		// ---------------------  Registered database ----------------------------------------------------
 		try {
@@ -332,7 +351,7 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
+//		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 		
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
 		try {
