@@ -627,6 +627,16 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		return super.clone();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)obj;
+			return userDB.getSeq() == getSeq();
+		}
+		
+		return super.equals(obj);
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
