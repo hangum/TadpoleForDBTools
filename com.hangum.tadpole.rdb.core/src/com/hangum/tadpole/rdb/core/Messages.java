@@ -738,6 +738,8 @@ public class Messages extends NLS {
 	public static String ResultSetComposite_lblFilter_text;
 	public static String MySQLLoginComposite_lblJdbcOptions_text;
 	public static String ExecuteProcedureDialog_grpDbmsOutput_text;
+	public static String ExecuteProcedureDialog_lblObjectType_text;
+	public static String ExecuteProcedureDialog_lblObjectName_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
