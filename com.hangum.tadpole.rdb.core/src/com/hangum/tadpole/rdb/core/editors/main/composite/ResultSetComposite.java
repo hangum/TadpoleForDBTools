@@ -897,7 +897,11 @@ public class ResultSetComposite extends Composite {
 			}
 		});
 		
-		return queryFuture.get();
+		try {
+			return queryFuture.get();
+		} catch(Exception e) {
+			throw new Exception("Unkown exception : " + e.getMessage());
+		}
 	}
 
 	/**

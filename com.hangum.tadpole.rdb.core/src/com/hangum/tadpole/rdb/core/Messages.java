@@ -654,10 +654,12 @@ public class Messages extends NLS {
 	public static String OthersConnectionRDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
 	public static String ObjectDeleteAction_synonym;
+	public static String ObjectEditor_0;
 	public static String ObjectEditor_1;
 	public static String ObjectEditor_12;
 	public static String ObjectEditor_13;
 	public static String ObjectEditor_2;
+	public static String ObjectEditor_3;
 	public static String ObjectEditor_5;
 	public static String ObjectRefreshAction_1;
 	public static String RDBDBInfosEditor_1;

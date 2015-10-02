@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -34,6 +35,7 @@ import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
  *
  */
 public class EditorUtils {
+	private static final Logger logger = Logger.getLogger(EditorUtils.class);
 
 	/**
 	 * find SQL editor

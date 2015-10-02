@@ -32,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
 import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
@@ -78,9 +79,6 @@ public class ObjectEditor extends MainEditor {
 		else setPartName(String.format("%s (%s)", qei.getName(), qei.getObjectName())); //$NON-NLS-1$
 		
 		objectName = qei.getObjectName();
-		
-		// google analytic
-		AnalyticCaller.track(this.getClass().getName());
 	}
 
 	@Override
@@ -154,7 +152,7 @@ public class ObjectEditor extends MainEditor {
 				}
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, executeType, isAutoCommit());
-				executeCommand(reqQuery);				
+				executeCommand(reqQuery);
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
@@ -225,6 +223,11 @@ public class ObjectEditor extends MainEditor {
 		if(reqQuery.getExecuteType() == EXECUTE_TYPE.BLOCK) {
 			resultMainComposite.executeCommand(reqQuery);
 		} else {
+			if(!MessageDialog.openConfirm(null, Messages.ObjectEditor_0, Messages.ObjectEditor_3)) {
+				setOrionTextFocus();
+				return;
+			}
+			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
 				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
@@ -240,6 +243,8 @@ public class ObjectEditor extends MainEditor {
 				reqResultDAO.setMesssage(reqResultDAO.getMesssage() + "\n\n" + strResultMsg); //$NON-NLS-1$
 				afterProcess(reqResultDAO, ""); //$NON-NLS-1$
 			} finally {
+				setDirty(false);
+				browserEvaluate(IEditorFunction.SAVE_DATA);
 				setOrionTextFocus();
 			}
 		}

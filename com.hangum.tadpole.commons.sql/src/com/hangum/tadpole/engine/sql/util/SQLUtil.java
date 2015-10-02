@@ -56,7 +56,7 @@ public class SQLUtil {
 	 * 		PRAGMA는 sqlite의 시스템 쿼리 얻는 거.
 	 * </PRE>
 	 */
-	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*";
+	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*|^EXEC.*";
 	private static final String ORACLE_PATTERN_STATEMENT = "";
 	private static final String MYSQL_PATTERN_STATEMENT = "|^CALL.*";
 	private static final String PGSQL_PATTERN_STATEMENT = "";
