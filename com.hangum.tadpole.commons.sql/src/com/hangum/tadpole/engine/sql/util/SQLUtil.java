@@ -58,7 +58,7 @@ public class SQLUtil {
 	 */
 	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*";
 	private static final String ORACLE_PATTERN_STATEMENT = "";
-	private static final String MYSQL_PATTERN_STATEMENT = "";
+	private static final String MYSQL_PATTERN_STATEMENT = "|^CALL.*";
 	private static final String PGSQL_PATTERN_STATEMENT = "";
 	private static final String SQLITE_PATTERN_STATEMENT = "";
 	private static final String CUBRID_PATTERN_STATEMENT = "";
