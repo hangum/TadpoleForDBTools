@@ -231,18 +231,22 @@ public class ObjectEditor extends MainEditor {
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
 				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+			} catch(Exception e) {
+				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
+				reqResultDAO.setMesssage(e.getMessage());
+				
+			} finally {
 				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
 					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
-					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT) mysqlProcess(reqResultDAO.getMesssage(), reqQuery);					
+					
+					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+						mysqlAfterProcess(reqResultDAO, reqQuery);
+					}
+					
 				} else {
 					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
 				}
-				
-			} catch(Exception e) {
-				String strResultMsg = e.getMessage();
-				reqResultDAO.setMesssage(reqResultDAO.getMesssage() + "\n\n" + strResultMsg); //$NON-NLS-1$
-				afterProcess(reqResultDAO, ""); //$NON-NLS-1$
-			} finally {
+
 				setDirty(false);
 				browserEvaluate(IEditorFunction.SAVE_DATA);
 				setOrionTextFocus();
@@ -272,23 +276,24 @@ public class ObjectEditor extends MainEditor {
 	/**
 	 * mysql 처리를 합니다.
 	 * 
-	 * @param strResultMsg
+	 * @param reqResultDAO
 	 * @param reqQuery
+	 * @param e
 	 */
-	private void mysqlProcess(String strResultMsg, RequestQuery reqQuery) {
-		if(StringUtils.endsWith(strResultMsg, "already exists")) { //$NON-NLS-1$
+	private void mysqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
+		if(StringUtils.contains(reqResultDAO.getMesssage(), "already exists")) { //$NON-NLS-1$
 			
-			String strPrefix = StringUtils.removeEnd(strResultMsg, "already exists"); //$NON-NLS-1$
-			String strObjectName = StringUtils.substringBefore(strResultMsg, " "); //$NON-NLS-1$
+			String strPrefix = StringUtils.removeEnd(reqResultDAO.getMesssage(), "already exists"); //$NON-NLS-1$
+			String strObjectName = StringUtils.substringBefore(reqResultDAO.getMesssage(), " "); //$NON-NLS-1$
 			String cmd = "DROP " + strPrefix; //$NON-NLS-1$
 			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, strObjectName))) {
-				RequestResultDAO reqResultDAO = new RequestResultDAO();
+				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
-					reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", cmd); //$NON-NLS-1$
-					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", cmd); //$NON-NLS-1$
+					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
 					
-					reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
-					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
 				} catch(Exception ee) {
 					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
 				}

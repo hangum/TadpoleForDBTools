@@ -11,11 +11,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -178,26 +180,25 @@ public class ResultSetComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
-		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_composite = new GridLayout(4, false);
-		gl_composite.verticalSpacing = 1;
-		gl_composite.horizontalSpacing = 1;
-		gl_composite.marginHeight = 1;
-		gl_composite.marginWidth = 1;
-		composite.setLayout(gl_composite);
+		Composite compHead = new Composite(this, SWT.NONE);
+		compHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_composite = new GridLayout(5, false);
+		gl_composite.verticalSpacing = 3;
+		gl_composite.horizontalSpacing = 3;
+		gl_composite.marginHeight = 3;
+		gl_composite.marginWidth = 3;
+		compHead.setLayout(gl_composite);
 		
-		Label lblFilter = new Label(composite, SWT.NONE);
-		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.ResultSetComposite_lblFilter_text);
+		Label lblProgress = new Label(compHead, SWT.NONE);
+		lblProgress.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblProgress.setText(Messages.ResultSetComposite_3);
 		
-		textFilter = new Text(composite,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
-		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		progressBarQuery = new ProgressBar(composite, SWT.SMOOTH);
+		progressBarQuery = new ProgressBar(compHead, SWT.NULL);
+		progressBarQuery.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+//		progressBarQuery.setBackground(SWTResourceManager.getColor(127,255,0));
 		progressBarQuery.setSelection(0);
 		
-		btnStopQuery = new Button(composite, SWT.NONE);
+		btnStopQuery = new Button(compHead, SWT.NONE);
 		btnStopQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -206,6 +207,13 @@ public class ResultSetComposite extends Composite {
 		});
 		btnStopQuery.setText(Messages.RDBResultComposite_btnStp_text);
 		btnStopQuery.setEnabled(false);
+		
+		Label lblFilter = new Label(compHead, SWT.NONE);
+		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblFilter.setText(Messages.ResultSetComposite_lblFilter_text);
+		
+		textFilter = new Text(compHead,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		textFilter.addKeyListener(new KeyAdapter() {
 			@Override
@@ -891,17 +899,19 @@ public class ResultSetComposite extends Composite {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
-			public ResultSet call() throws Exception {
+			public ResultSet call() throws SQLException {
 				statement.execute(reqQuery.getSql());
 				return statement.getResultSet();
 			}
 		});
 		
-		try {
-			return queryFuture.get();
-		} catch(Exception e) {
-			throw new Exception("Unkown exception : " + e.getMessage());
-		}
+		
+		/* SELECTㅁ ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
+    
+		 * Caused by: java.lang.NullPointerException
+			at oracle.jdbc.driver.T4C8Oall.getNumRows(T4C8Oall.java:973)
+		 */
+		return queryFuture.get();
 	}
 
 	/**

@@ -60,6 +60,9 @@ public class TadpoleSystemCommons {
 		} catch(Exception e) {
 			reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
 			reqResultDAO.setMesssage(e.getMessage());
+			reqResultDAO.setException(e);
+			
+//			throw e;
 		} finally {
 			reqResultDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
 		}

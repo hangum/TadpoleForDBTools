@@ -39,6 +39,8 @@ public class RequestResultDAO {
 	int dbSeq;
 	String ipAddress;
 	
+	Exception exception;
+	
 	/** execute_sql_type */
 	PublicTadpoleDefine.EXECUTE_SQL_TYPE EXECUSTE_SQL_TYPE = PublicTadpoleDefine.EXECUTE_SQL_TYPE.SESSION;
 
@@ -202,4 +204,17 @@ public class RequestResultDAO {
 		EXECUSTE_SQL_TYPE = eXECUSTE_SQL_TYPE;
 	}
 
+	/**
+	 * @return the exception
+	 */
+	public Exception getException() {
+		return exception;
+	}
+
+	/**
+	 * @param exception the exception to set
+	 */
+	public void setException(Exception exception) {
+		this.exception = exception;
+	}
 }

@@ -1,0 +1,19 @@
+/** modify hyunjong.*/
+Widget-ToolTip {
+ ....
+  text-align: left;
+}
+
+
+/* ProgressBar default theme */
+/** change to hyunjong */
+ProgressBar {
+  background-color: #ebebeb;
+ ....
+}
+
+/** change to hyunjong */
+ProgressBar-Indicator {
+  background-color: #7FFF00;
+  ....
+}
