@@ -125,7 +125,8 @@ public class LoginDialog extends Dialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if(e.keyCode == SWT.Selection) {
-					textPasswd.setFocus();
+					if(!"".equals(textPasswd.getText())) okPressed();
+					else textPasswd.setFocus();
 				}
 			}
 		});
