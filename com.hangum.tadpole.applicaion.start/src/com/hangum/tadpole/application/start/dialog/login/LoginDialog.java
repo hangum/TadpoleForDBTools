@@ -332,6 +332,8 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
+		
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
@@ -342,8 +344,6 @@ public class LoginDialog extends Dialog {
 //			logger.error("view findpasswd button", e);
 //			ignore exception
 		}
-		
-		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 	
 	/**
