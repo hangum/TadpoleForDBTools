@@ -83,8 +83,6 @@ public class TDBErroDialog extends TitleAreaDialog {
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 		
-		textMessage.setFocus();
-
 		return area;
 	}
 
