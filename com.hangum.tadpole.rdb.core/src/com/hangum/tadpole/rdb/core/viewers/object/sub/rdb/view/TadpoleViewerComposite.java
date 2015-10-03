@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,10 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -81,7 +84,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	
 	private TableViewer viewListViewer;
 	private ObjectComparator viewComparator;
-	private List<String> showViews;
+	private List<String> showViews = new ArrayList<>();
 	private TableViewer viewColumnViewer;
 	private List<TableColumnDAO> showViewColumns;
 	private RDBViewFilter viewFilter;
@@ -179,8 +182,13 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
-						} else
+						} else {
 							showViewColumns = null;
+						}
+						
+						for(TableColumnDAO td : showViewColumns) {
+							td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
+						}
 
 						viewColumnViewer.setInput(showViewColumns);
 						viewColumnViewer.refresh();
@@ -306,16 +314,23 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 */
 	public void refreshView(final UserDBDAO userDB, boolean boolRefresh) {
 		if(!boolRefresh) if(showViews != null) return;
+		showViews.clear();
 		this.userDB = userDB;
 		
+		List<String> tmpViews = new ArrayList<>();
 		try {
-			showViews = DBSystemSchema.getViewList(userDB);
+			tmpViews = DBSystemSchema.getViewList(userDB);
 		} catch (Exception e) {
 			showViews.clear();
 			
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_61, errStatus); //$NON-NLS-1$
+		}
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(String strViewName : tmpViews) {
+			showViews.add(SQLUtil.makeIdentifierName(userDB, strViewName));
 		}
 		
 		// update content assist

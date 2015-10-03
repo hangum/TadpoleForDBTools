@@ -751,7 +751,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		}
 	}
 
-	
 	/**
 	 * 디비 등록시 설정한 filter 정보를 적용한다.
 	 * 
@@ -887,7 +886,4 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		viewDDLAction.dispose();
 		tableDataEditorAction.dispose();
 	}
-
-	
-	
 }
