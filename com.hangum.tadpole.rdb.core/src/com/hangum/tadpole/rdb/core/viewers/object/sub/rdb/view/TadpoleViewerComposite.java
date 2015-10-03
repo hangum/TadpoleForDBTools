@@ -84,7 +84,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	
 	private TableViewer viewListViewer;
 	private ObjectComparator viewComparator;
-	private List<String> showViews = new ArrayList<>();
+	private List<TableDAO> showViews = new ArrayList<>();
 	private TableViewer viewColumnViewer;
 	private List<TableColumnDAO> showViewColumns;
 	private RDBViewFilter viewFilter;
@@ -135,12 +135,12 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 					if (null != is) {
 						try {
-							String viewName = (String)is.getFirstElement();
+							TableDAO viewDao = (TableDAO)is.getFirstElement();
 							StringBuffer sbSQL = new StringBuffer();
 		
 							Map<String, String> parameter = new HashMap<String, String>();
 							parameter.put("db", userDB.getDb()); //$NON-NLS-1$
-							parameter.put("table", viewName); //$NON-NLS-1$
+							parameter.put("table", viewDao.getName()); //$NON-NLS-1$
 							
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
@@ -154,7 +154,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 								if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
 								else sbSQL.append(" "); //$NON-NLS-1$
 							}
-							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + viewName + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + viewDao.getSysName() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 							
 							//
 							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.DB_ACTION.VIEWS);
@@ -175,10 +175,11 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
 					if (!is.isEmpty()) {
 						if (is.getFirstElement() != null) {
-							String strTBName = is.getFirstElement().toString();
+							TableDAO viewDao = (TableDAO)is.getFirstElement();
+							
 							Map<String, String> param = new HashMap<String, String>();
 							param.put("db", userDB.getDb()); //$NON-NLS-1$
-							param.put("table", strTBName); //$NON-NLS-1$
+							param.put("table", viewDao.getName()); //$NON-NLS-1$
 
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
@@ -186,10 +187,6 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							showViewColumns = null;
 						}
 						
-						for(TableColumnDAO td : showViewColumns) {
-							td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
-						}
-
 						viewColumnViewer.setInput(showViewColumns);
 						viewColumnViewer.refresh();
 						TableUtil.packTable(viewColumnViewer.getTable());
@@ -230,7 +227,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			
 			@Override
 			public String getText(Object element) {
-				return element.toString();
+				TableDAO tdbDao = (TableDAO)element;
+				return tdbDao.getName();
 			}
 		});
 		viewListViewer.setContentProvider(new ArrayContentProvider());
@@ -317,9 +315,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		showViews.clear();
 		this.userDB = userDB;
 		
-		List<String> tmpViews = new ArrayList<>();
 		try {
-			tmpViews = DBSystemSchema.getViewList(userDB);
+			showViews = DBSystemSchema.getViewList(userDB);
 		} catch (Exception e) {
 			showViews.clear();
 			
@@ -328,13 +325,12 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_61, errStatus); //$NON-NLS-1$
 		}
 		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(String strViewName : tmpViews) {
-			showViews.add(SQLUtil.makeIdentifierName(userDB, strViewName));
-		}
-		
 		// update content assist
-		userDB.setViewListSeparator(StringUtils.removeEnd(StringUtils.join(showViews.toArray(), "|"), "|"));
+		StringBuffer strTablelist = new StringBuffer();
+		for (TableDAO tableDao : showViews) {
+			strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
+		}
+		userDB.setViewListSeparator( StringUtils.removeEnd(strTablelist.toString(), "|")); //$NON-NLS-1$
 	
 		viewListViewer.setInput(showViews);
 		viewListViewer.refresh();

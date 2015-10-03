@@ -108,12 +108,17 @@ public class MakeContentAssistUtil {
 	 * @return
 	 */
 	public String getAssistViewList(final UserDBDAO userDB) {
+		StringBuffer strTablelist = new StringBuffer();
 		try {
-			List<String> showViews = DBSystemSchema.getViewList(userDB);
-			userDB.setViewListSeparator( StringUtils.removeEnd(StringUtils.join(showViews.toArray(), "|"), "|") ); //$NON-NLS-1$
+			List<TableDAO> showViews = DBSystemSchema.getViewList(userDB);
+			
+			for (TableDAO tableDao : showViews) {
+				strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
+			}
 		} catch(Exception e) {
 			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
 		}
+		userDB.setViewListSeparator( StringUtils.removeEnd(strTablelist.toString(), "|")); //$NON-NLS-1$
 
 		return userDB.getViewListSeparator();
 	}

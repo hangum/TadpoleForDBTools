@@ -18,7 +18,9 @@ import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -37,13 +39,26 @@ public class DBSystemSchema {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static List<String> getViewList(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+	public static List<TableDAO> getViewList(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ) return new ArrayList<String>();
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ) return new ArrayList<TableDAO>();
+		
+		List<TableDAO> listTblView = new ArrayList<TableDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("viewList", userDB.getDb()); //$NON-NLS-1$
+		List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(String strView : listView) {
+			TableDAO tblDao = new TableDAO();
+			tblDao.setName(strView);
+			tblDao.setSysName(SQLUtil.makeIdentifierName(userDB, strView));
+			
+			listTblView.add(tblDao);
+		}
+		
+		return listTblView; 
 	}
 
 	/**

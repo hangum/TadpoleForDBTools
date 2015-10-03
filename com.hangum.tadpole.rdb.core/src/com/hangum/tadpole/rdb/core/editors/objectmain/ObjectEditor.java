@@ -204,9 +204,6 @@ public class ObjectEditor extends MainEditor {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		// 과거에 실행했던 쿼리 정보 가져오기.
-//		resultMainComposite.initMainComposite();
-		
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
 	}
