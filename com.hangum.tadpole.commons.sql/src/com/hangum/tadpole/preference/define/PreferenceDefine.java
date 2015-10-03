@@ -84,7 +84,7 @@ public class PreferenceDefine {
 		public static final String SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE = "true";
 		
 		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE 	= "SQL_FORMATTER_WORD_WIDTH_PREFERENCE";
-		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "80";
+		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "120";
 		
 	/** SESSION TIME OUT */
 	public static final String SESSION_DFEAULT_PREFERENCE = "SESSION_DFEAULT_PREFERENCE";

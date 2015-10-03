@@ -82,7 +82,7 @@ var varEditorType = 'TABLES';
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
     
 	editor.setTheme("ace/theme/eclipse");
-	editor.setShowPrintMargin(true);
+	editor.setShowPrintMargin(false);
 	editor.setHighlightActiveLine(true);
 	
 	editor.setOptions({
@@ -157,6 +157,8 @@ editorService.initEditor = function(varMode, varType, varTableList, varInitText)
 				isEdited = true;
 			}
 		});
+		session.setUseWrapMode(true);
+		session.setWrapLimitRange(120, 120);
 
 		// Add table list to Editor's keywordList
 		var keywordList = session.$mode.$highlightRules.$keywordList;
