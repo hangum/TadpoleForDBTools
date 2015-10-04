@@ -25,6 +25,8 @@ import com.hangum.tadpole.ace.editor.core.texteditor.IEditorExtension;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
 import com.hangum.tadpole.ace.editor.core.utils.EvaluateWidgets;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 
 /**
  * tadpole editor 
@@ -104,10 +106,19 @@ public class TadpoleEditorWidget extends EvaluateWidgets implements IEditorExten
 		browserEditor.setUrl(DEV_DB_URL);
 		registerBrowserFunctions();
 		
+		final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+	    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+	    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+	    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
+		
 		browserEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
 				try {
-					getBfUtils().browserEvaluate(IEditorFunction.INITIALIZE, initExt, "NONE", "", initContent);
+					getBfUtils().browserEvaluate(IEditorFunction.MONGO_INITIALIZE, 
+							initExt, initContent,
+							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+					);
 				} catch(Exception e) {
 					logger.error("browser initialize", e);	  
 				}

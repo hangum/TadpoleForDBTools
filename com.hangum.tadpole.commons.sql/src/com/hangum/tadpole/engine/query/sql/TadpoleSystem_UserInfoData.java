@@ -466,5 +466,4 @@ public class TadpoleSystem_UserInfoData {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 	}
-	
 }

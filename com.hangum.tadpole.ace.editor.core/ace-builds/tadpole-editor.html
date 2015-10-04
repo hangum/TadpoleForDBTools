@@ -10,8 +10,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Editor</title>
   <style>
 	   body {
 	        overflow: hidden;
@@ -39,9 +37,29 @@
 	    .ace_status-indicator {
 	        color: gray;
 	        position: absolute;
-	        right: 8px;
+	        right: 9px;
 	        border-left: 1px solid;
 	    }
+	    .ace_gutter-cell {
+		    padding-left: 3px!important;
+		}
+		​.ace_gutter-cell {
+		    padding-left: 0px!important;
+		    border-left: 3px solid transparent
+		}
+		.ace_gutter-cell.ace_warning {
+		    background: none;
+		    border-left-color: yellow;
+		}
+		.ace_gutter-cell.ace_error {
+		    background: none;
+		    border-left-color: red;
+		}
+		.ace_gutter-cell.ace_info {
+		    background: none;
+		    border-left-color: gray;
+		}
+				
   </style>
 </head>
 
@@ -58,6 +76,7 @@
 		<script src="src-min-noconflict/mode-sqlite.js"></script>
 		<script src="src-min-noconflict/mode-sqlserver.js"></script>
 		
+		<!--  tdb-ext-min.js -->
 		<script src="tdb-ext-min.js" charset="utf-8"></script>
 	</body>
 

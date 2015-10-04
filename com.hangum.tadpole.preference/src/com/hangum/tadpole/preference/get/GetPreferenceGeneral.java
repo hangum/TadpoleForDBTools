@@ -240,5 +240,36 @@ public class GetPreferenceGeneral {
 			if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.SYNC_EIDOTR_STATS_VALUE); 
 			return Boolean.parseBoolean(userInfo.getValue0());
 		}
-		
+
+	///////////////// edito setting ////////////////////////////////////////////////////////////////////////////
+	public static String getEditorTheme() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_THEME);
+		if(null == userInfo) return PreferenceDefine.EDITOR_THEME_VALUE; 
+		return userInfo.getValue0();
+	}
+	
+	public static String getEditorFontSize() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_FONT_SIZE);
+		if(null == userInfo) return PreferenceDefine.EDITOR_FONT_SIZE_VALUE; 
+		return userInfo.getValue0();
+	}
+	
+	public static boolean getEditorIsWarp() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_IS_WARP);
+		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_IS_WARP_VALUE); 
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
+	
+	public static String getEditorWarpLimitValue() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_WRAP_LIMIT);
+		if(null == userInfo) return PreferenceDefine.EDITOR_WRAP_LIMIT_VALUE; 
+		return userInfo.getValue0();
+	}
+	
+	public static boolean getEditorShowGutter() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_SHOW_GUTTER);
+		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_SHOW_GUTTER_VALUE); 
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
+	
 }

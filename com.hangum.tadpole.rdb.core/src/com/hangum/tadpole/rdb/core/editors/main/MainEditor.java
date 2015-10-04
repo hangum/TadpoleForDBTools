@@ -59,6 +59,8 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
@@ -438,7 +440,17 @@ public class MainEditor extends EditorExtension {
 							}
 						}	// end tltmAutoCommit
 					}	// end seq
-				} // end if(event.getProperty()
+				} else if(event.getProperty() == PreferenceDefine.EDITOR_CHANGE_EVENT) {
+					final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+				    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+				    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
+				    
+				    browserEvaluate(IEditorFunction.CHANGE_EDITOR_STYLE, 
+							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+						);
+				}
 			} //
 		}); // end property change
 	
@@ -461,6 +473,11 @@ public class MainEditor extends EditorExtension {
 		MakeContentAssistUtil constAssistUtil = new MakeContentAssistUtil();
 	    final String strConstList = constAssistUtil.makeContentAssistUtil(userDB);
 	    
+	    final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+	    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+	    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+	    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
 	    registerBrowserFunctions();
 	    
 	    /** 무슨 일인지 이벤트가 두번 탑니다. */
@@ -472,7 +489,10 @@ public class MainEditor extends EditorExtension {
 				listInitialize.add("init_comp"); //$NON-NLS-1$
 				
 				try {
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), strConstList, getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.RDB_INITIALIZE, 
+							findEditorExt(), dbAction.toString(), strConstList, getInitDefaultEditorStr(),
+							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+							); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}

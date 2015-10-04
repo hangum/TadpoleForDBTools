@@ -14,11 +14,8 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -50,8 +47,7 @@ public class MessageComposite extends Composite {
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		    
 		// text limit
-		textMessage.setTextLimit(1000);
-
+//		textMessage.setTextLimit(1000);
 //		Button btnClear = new Button(this, SWT.NONE);
 //		btnClear.addSelectionListener(new SelectionAdapter() {
 //			@Override

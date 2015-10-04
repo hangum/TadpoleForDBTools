@@ -122,15 +122,15 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		String txtNoInsertDecode = ""+btnNoInsertNewDecode.getSelection(); //$NON-NLS-1$
 		String txtNoInsertIn = ""+btnNoInsertNewIn.getSelection(); //$NON-NLS-1$
 		
-		String txtNewLineBefeoreAndOr = ""+btnNewLineBefeoreAndOr.getSelection();
-		String txtNewLineBefeoreComma = ""+btnNewLineBeforeComma.getSelection();
-		String txtRemoveEmptyLine = ""+btnRemoveEmptyLine.getSelection();
+		String txtNewLineBefeoreAndOr = ""+btnNewLineBefeoreAndOr.getSelection(); //$NON-NLS-1$
+		String txtNewLineBefeoreComma = ""+btnNewLineBeforeComma.getSelection(); //$NON-NLS-1$
+		String txtRemoveEmptyLine = ""+btnRemoveEmptyLine.getSelection(); //$NON-NLS-1$
 		
-		String txtWordbreak = ""+btnWordBreak.getSelection();
+		String txtWordbreak = ""+btnWordBreak.getSelection(); //$NON-NLS-1$
 		String strTextWidth = textWidth.getText();
 		
 		if(!NumberUtils.isNumber(textWidth.getText())) {
-			MessageDialog.openError(getShell(), "Confirm", "Please enter number."); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.SQLFormatterPreferencePage_7, Messages.SQLFormatterPreferencePage_8);
 			textWidth.setFocus();
 			return false;
 		}
@@ -156,9 +156,9 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE, strTextWidth);	
 			
 		} catch(Exception e) {
-			logger.error("SQLFormatter preference saveing", e);
+			logger.error("SQLFormatter preference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.SQLFormatterPreferencePage_7, Messages.RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

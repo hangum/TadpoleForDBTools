@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.define;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -216,7 +218,40 @@ public class PublicTadpoleDefine {
 										};
 	
 	
-	
+	/**
+	 * ace editor theme list
+		https://docs.c9.io/docs/syntax-highlighting-themes
+	*/
+	private static Map<String, String> mapTheme = new HashMap<String, String>();
+	public static Map<String, String> getMapTheme() {
+		if(mapTheme.isEmpty()) {
+			mapTheme.put("Chrome", 			"chrome");
+			mapTheme.put("Clouds", 			"clouds");
+			mapTheme.put("Clouds Midnight", "clouds_midnight");
+			mapTheme.put("Cobalt", 			"cobalt");
+			mapTheme.put("Crimson Editor", 	"crimson_editor");
+			mapTheme.put("Dawn", 			"dawn");
+			mapTheme.put("Eclipse", 		"eclipse");
+			mapTheme.put("Idle Fingers", 	"idle_fingers");
+			mapTheme.put("Kr Theme", 		"kr_theme");
+			mapTheme.put("Merbivore", 		"merbivore");
+			mapTheme.put("Merbivore Soft", 	"merbivore_soft");
+			mapTheme.put("Mono Industrial", "mono_industrial");
+			mapTheme.put("Monokai", 		"monokai");
+			mapTheme.put("Pastel On Dark", 	"pastel_on_dark");
+			mapTheme.put("Solarized Dark", 	"solarized_dark");
+			mapTheme.put("Solarized Light", "solarized_light");
+			mapTheme.put("TextMate", 		"textmate");
+			mapTheme.put("Tomorrow", 		"tomorrow");
+			mapTheme.put("Tomorrow Night", 	"tomorrow_night");
+			mapTheme.put("Tomorrow Night Blue", 	"tomorrow_night_blue");
+			mapTheme.put("Tomorrow Night Bright", 	"tomorrow_night_bright");
+			mapTheme.put("Tomorrow Night Eighties", "tomorrow_night_eighties");
+			mapTheme.put("Twilight", 				"twilight");
+			mapTheme.put("Vibrant Inkv", 			"vibrant_inkv");
+		}
+		return mapTheme;
+	}
 	/**
 	 * is primary key
 	 * @param key

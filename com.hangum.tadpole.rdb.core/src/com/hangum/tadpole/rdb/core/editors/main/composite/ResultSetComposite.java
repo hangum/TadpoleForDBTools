@@ -11,7 +11,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.math.BigInteger;
 import java.sql.Blob;
