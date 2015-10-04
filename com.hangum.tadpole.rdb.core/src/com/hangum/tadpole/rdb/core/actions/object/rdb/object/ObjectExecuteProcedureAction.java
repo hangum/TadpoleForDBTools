@@ -55,7 +55,9 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 		if(logger.isDebugEnabled()) logger.debug("ObjectExecuteProcedureAction run...");
 
 		ProcedureFunctionDAO procedureDAO;
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT 
+				|| userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT 
+		) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
 			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
 			pm.isExecuted(procedureDAO, userDB);

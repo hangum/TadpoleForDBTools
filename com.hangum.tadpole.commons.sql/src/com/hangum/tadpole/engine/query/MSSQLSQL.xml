@@ -236,7 +236,7 @@ SELECT
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 select 
 	p.routine_schema + '.' + p.routine_name as name
-	,'P' as type
+	,'PROCEDURE' as type
 	,routine_catalog as db
 	,p.created as created
 	,p.last_altered as last_altered
@@ -253,7 +253,7 @@ order by p.routine_schema, p.routine_name
 <select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 select 
 	p.routine_schema + '.' + p.routine_name as name
-	,'P' as type
+	,'FUNCTION' as type
 	,routine_catalog as db
 	,p.created as created
 	,p.last_altered as last_altered

@@ -44,6 +44,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -224,9 +225,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
-
+			showProcedure = DBSystemSchema.getProcedure(userDB);
 			procedureTableViewer.setInput(showProcedure);
 			procedureTableViewer.refresh();
 			

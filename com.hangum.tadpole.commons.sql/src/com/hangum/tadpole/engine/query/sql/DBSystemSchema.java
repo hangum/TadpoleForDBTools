@@ -77,6 +77,39 @@ public class DBSystemSchema {
 		) return new ArrayList<ProcedureFunctionDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
+		List<ProcedureFunctionDAO> listFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(ProcedureFunctionDAO pfDao : listFunction) {
+			pfDao.setSysName(SQLUtil.makeIdentifierName(userDB, pfDao.getName()));
+		}
+		
+		return listFunction;
+	}
+	
+	/**
+	 * return procedure list
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<ProcedureFunctionDAO> getProcedure(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.SQLite_DEFAULT 
+		) return new ArrayList<ProcedureFunctionDAO>();
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		List<ProcedureFunctionDAO> listProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(ProcedureFunctionDAO pfDao : listProcedure) {
+			pfDao.setSysName(SQLUtil.makeIdentifierName(userDB, pfDao.getName()));
+		}
+		
+		return listProcedure;
 	}
 }

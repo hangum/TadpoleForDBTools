@@ -76,6 +76,54 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 		super(procedureDAO, userDB);
 	}
 	
+	/**
+	 * execute script
+	 */
+	public String getMakeExecuteScript() throws Exception {
+		StringBuffer sbQuery = new StringBuffer();
+		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
+			if(!"".equals(procedureDAO.getPackagename())){
+				sbQuery.append("select " + procedureDAO.getPackagename() + "." + procedureDAO.getSysName() + "(");
+			}else{
+				sbQuery.append("select " + procedureDAO.getSysName() + "(");
+			}
+			
+			List<InOutParameterDAO> inList = getInParameters();
+			for(int i=0; i<inList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = inList.get(i);
+
+				String name = StringUtils.removeStart(inOutParameterDAO.getName(), "@");
+				if(i == (inList.size()-1)) sbQuery.append(String.format(":%s", name));
+				else sbQuery.append(String.format(":%s, ", name));
+			}
+			sbQuery.append(");");
+			
+		} else {
+			
+			// 프로시저 본체 만들기.
+			if(!"".equals(procedureDAO.getPackagename())){
+				sbQuery.append(String.format("EXEC %s.%s ", procedureDAO.getPackagename(), procedureDAO.getSysName()));
+			} else {
+				sbQuery.append(String.format("EXEC %s ", procedureDAO.getSysName()));
+			}
+			
+			// out 설정
+			List<InOutParameterDAO> inList = getInParameters();
+			for(int i=0; i<inList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = inList.get(i);
+				String name = inOutParameterDAO.getName();
+				String nameVal = StringUtils.removeStart(inOutParameterDAO.getName(), "@");
+				if(i != (inList.size()-1)) sbQuery.append(String.format("%s = :%s, ", name, nameVal));
+				else sbQuery.append(String.format("%s = :%s", name, nameVal));
+			}
+
+		}
+
+		if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
+		
+		return sbQuery.toString();
+	}
+	
 	@Override
 	public boolean exec(List<InOutParameterDAO> parameterList)  throws Exception {
 		initResult();

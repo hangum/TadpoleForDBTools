@@ -230,11 +230,11 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			functionTableViewer.refresh();
 			
 			TableUtil.packTable(functionTableViewer.getTable());
-
+			
 			// updatae constant assist
 			StringBuffer strFunctionlist = new StringBuffer();
 			for (ProcedureFunctionDAO tableDao : showFunction) {
-				strFunctionlist.append(tableDao.getName()).append("|"); //$NON-NLS-1$
+				strFunctionlist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
 			}
 			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), "|"));
 

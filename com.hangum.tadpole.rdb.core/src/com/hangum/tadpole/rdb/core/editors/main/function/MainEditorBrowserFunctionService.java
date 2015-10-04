@@ -115,8 +115,10 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	@Override
 	protected void f4DMLOpen(Object[] arguments) {
-		String strObject = StringUtils.removeStart((String) arguments[1], ",");
-		strObject = StringUtils.removeEnd(strObject, ",");
+		String strObject = StringUtils.remove((String) arguments[1], ",");
+		strObject = StringUtils.remove(strObject, "(");
+		strObject = StringUtils.remove(strObject, ")");
+		
 		if(StringUtils.contains(strObject, ".")) strObject = StringUtils.substringAfter(strObject, ".");
 		
 		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
@@ -154,8 +156,9 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	@Override
 	protected void generateSelect(Object[] arguments) {
-		String strObject = StringUtils.removeStart((String) arguments[1], ",");
-		strObject = StringUtils.removeEnd(strObject, ",");
+		String strObject = StringUtils.remove((String) arguments[1], ",");
+		strObject = StringUtils.remove(strObject, "(");
+		strObject = StringUtils.remove(strObject, ")");
 		
 		String strSQL = "select * from " + strObject;
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
