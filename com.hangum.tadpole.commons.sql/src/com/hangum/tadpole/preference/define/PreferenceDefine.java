@@ -174,7 +174,7 @@ public class PreferenceDefine {
 	/** editor info */
 	public static final String EDITOR_CHANGE_EVENT = "_EDITOR_CHANGE_EVENT_";
 	public static final String EDITOR_THEME 		= "EDITOR_THEME";
-	public static final String EDITOR_THEME_VALUE	= "eclipse";
+	public static final String EDITOR_THEME_VALUE	= "Chrome";
 	
 	public static final String EDITOR_FONT_SIZE 		= "EDITOR_FONT_SIZE";
 	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";
