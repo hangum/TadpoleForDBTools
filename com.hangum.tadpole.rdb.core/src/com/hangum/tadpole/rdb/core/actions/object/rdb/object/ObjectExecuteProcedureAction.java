@@ -67,6 +67,18 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT && actionType == DB_ACTION.FUNCTIONS) {
+			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
+			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
+			pm.isExecuted(procedureDAO, userDB);
+			
+			try {
+				String strScript = pm.getExecuter().getMakeExecuteScript();
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.DB_ACTION.TABLES);
+				
+			} catch(Exception e) {
+				logger.error("procedure execute", e);
+			}
 			
 		} else {
 			if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {

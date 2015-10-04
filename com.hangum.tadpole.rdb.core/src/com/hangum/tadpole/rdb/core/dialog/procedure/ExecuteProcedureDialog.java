@@ -71,7 +71,8 @@ public class ExecuteProcedureDialog extends Dialog {
 
 	private UserDBDAO userDB;
 	private ProcedureFunctionDAO procedureDAO;
-	private List<InOutParameterDAO> parameterList = new ArrayList<InOutParameterDAO>();
+	private List<InOutParameterDAO> parameterInList = new ArrayList<InOutParameterDAO>();
+	private List<InOutParameterDAO> parameterOutList = new ArrayList<InOutParameterDAO>();
 	
 	private Label[] labelInput;
 	private Text[] textInputs;
@@ -139,7 +140,9 @@ public class ExecuteProcedureDialog extends Dialog {
 		
 		try {
 			initProcedureExecuter();
-			this.parameterList = getInParameter();
+			this.parameterInList = getInParameter();
+			this.parameterOutList = getOutParameters();
+			
 		} catch(Exception e) {
 			logger.error("get in parameter", e); //$NON-NLS-1$
 			MessageDialog.openError(null, Messages.ExecuteProcedureDialog_error, e.getMessage());
@@ -147,7 +150,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			super.okPressed();
 		}
 		
-		if(!parameterList.isEmpty()) {
+		if(!parameterInList.isEmpty()) {
 			Group compositeInput = new Group(containerInput, SWT.NONE);
 			GridLayout gl_compositeInput = new GridLayout(3, false);
 			gl_compositeInput.verticalSpacing = 2;
@@ -159,12 +162,12 @@ public class ExecuteProcedureDialog extends Dialog {
 			compositeInput.setText("Input Parameter");
 	
 			//////[ input values ]////////////////////////////////////////////////////////////////////////
-			labelInput 	= new Label[parameterList.size()];
-			textInputs 	= new Text[parameterList.size()];
-			labelType 	= new Label[parameterList.size()];
+			labelInput 	= new Label[parameterInList.size()];
+			textInputs 	= new Text[parameterInList.size()];
+			labelType 	= new Label[parameterInList.size()];
 			
 			for(int i=0; i<labelInput.length; i++) {
-				InOutParameterDAO inParameters = parameterList.get(i);
+				InOutParameterDAO inParameters = parameterInList.get(i);
 					
 				labelInput[i] = new Label(compositeInput, SWT.NONE);
 				labelInput[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
@@ -270,13 +273,13 @@ public class ExecuteProcedureDialog extends Dialog {
 			}
 		}
 		
-		for(int i=0; i<parameterList.size(); i++) {
-			InOutParameterDAO inParam = parameterList.get(i);
+		for(int i=0; i<parameterInList.size(); i++) {
+			InOutParameterDAO inParam = parameterInList.get(i);
 			inParam.setValue(textInputs[i].getText());
 		}
 		
 		try {
-			boolean ret = procedureExecutor.exec(parameterList);
+			boolean ret = procedureExecutor.exec(parameterInList);
 			if(ret) {
 				if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 					textDBMSOutput.setText(procedureExecutor.getStrOutput());
@@ -335,6 +338,10 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	private List<InOutParameterDAO> getInParameter() throws Exception {
 		return procedureExecutor.getInParameters();
+	}
+	
+	private List<InOutParameterDAO> getOutParameters() throws Exception {
+		return procedureExecutor.getOutParameters();
 	}
 
 	/**

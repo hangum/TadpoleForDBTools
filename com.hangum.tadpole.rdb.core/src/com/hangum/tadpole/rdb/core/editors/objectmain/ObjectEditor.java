@@ -253,6 +253,7 @@ public class ObjectEditor extends MainEditor {
 			try {
 				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
 			} catch(Exception e) {
+				logger.error("execute ddl", e);
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
 				reqResultDAO.setMesssage(e.getMessage());
 				
