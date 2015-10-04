@@ -79,8 +79,8 @@ var varEditorType = 'TABLES';
 	var langTools = ace.require("ace/ext/language_tools");
 	var editor = ace.edit("editor");
 	
-//	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
-//    var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
+	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
+    var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
     
 	editor.setShowPrintMargin(false);
 	editor.setHighlightActiveLine(true);
