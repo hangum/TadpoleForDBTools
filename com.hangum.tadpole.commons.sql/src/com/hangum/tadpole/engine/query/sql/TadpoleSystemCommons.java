@@ -47,8 +47,16 @@ public class TadpoleSystemCommons {
 	 * @throws Exception
 	 */
 	public static RequestResultDAO executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws Exception {
-		if(logger.isDebugEnabled()) logger.debug(String.format(strDML, args));
-		String strQuery = String.format(strDML, args);
+		String strQuery = "";
+		
+		// sql에 포멧터의 특수문자가 있는 경우 오라클의 v_hist_sequ   indwrk_hist.hist_sequ%TYPE; 경우에러.
+		// 잠재적인 에러 요인인데.. - hyunjong
+		try {
+			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, args));
+			strQuery = String.format(strDML, args);
+		} catch(Exception e) {
+			strQuery = strDML;
+		}
 		
 		RequestResultDAO reqResultDAO = new RequestResultDAO();
 		reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));

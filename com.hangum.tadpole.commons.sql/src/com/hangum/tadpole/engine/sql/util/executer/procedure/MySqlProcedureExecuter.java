@@ -80,8 +80,8 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 			List<InOutParameterDAO> inList = getInParameters();
 			for(int i=0; i<inList.size(); i++) {
 				InOutParameterDAO inOutParameterDAO = inList.get(i);
-				if(i == (inList.size()-1)) sbQuery.append(inOutParameterDAO.getName());
-				else sbQuery.append(String.format("%s, ", inOutParameterDAO.getName()));
+				if(i == (inList.size()-1)) sbQuery.append(String.format(":%s", inOutParameterDAO.getName()));
+				else sbQuery.append(String.format(":%s, ", inOutParameterDAO.getName()));
 			}
 			sbQuery.append(");");
 		}else{
@@ -106,8 +106,8 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 			List<InOutParameterDAO> inList = getInParameters();
 			for(int i=0; i<inList.size(); i++) {
 				InOutParameterDAO inOutParameterDAO = inList.get(i);
-				if(i == (inList.size()-1)) sbQuery.append(inOutParameterDAO.getName());
-				else sbQuery.append(String.format("%s, ", inOutParameterDAO.getName()));
+				if(i == (inList.size()-1)) sbQuery.append(String.format(":%s", inOutParameterDAO.getName()));
+				else sbQuery.append(String.format(":%s, ", inOutParameterDAO.getName()));
 			}
 			
 			// out 설정

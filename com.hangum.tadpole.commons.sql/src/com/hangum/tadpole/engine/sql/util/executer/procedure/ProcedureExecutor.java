@@ -104,12 +104,13 @@ public abstract class ProcedureExecutor {
 				sbQuery.append("select " + procedureDAO.getName() + "(");
 			}
 			
-			int intParamSize = getParametersCount();
-			for (int i = 0; i < intParamSize; i++) {
-				if (i == 0) sbQuery.append("?");
-				else 		sbQuery.append(",?");
+			List<InOutParameterDAO> inList = getInParameters();
+			for(int i=0; i<inList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = inList.get(i);
+				if(i == (inList.size()-1)) sbQuery.append(inOutParameterDAO.getName());
+				else sbQuery.append(String.format(":%s, ", inOutParameterDAO.getName()));
 			}
-			sbQuery.append(") as result from dual ");
+			sbQuery.append(") as result from dual");
 		}else{
 			if(!"".equals(procedureDAO.getPackagename())){
 				sbQuery.append("{call " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
