@@ -14,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
@@ -39,6 +41,8 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
@@ -199,6 +203,26 @@ public class ObjectEditor extends MainEditor {
 		
 		sashForm.setWeights(new int[] {65, 35});
 		initEditor();
+		
+		// change editor style
+		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+
+				if(event.getProperty() == PreferenceDefine.EDITOR_CHANGE_EVENT) {
+					final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+				    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+				    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
+				    
+				    browserEvaluate(IEditorFunction.CHANGE_EDITOR_STYLE, 
+							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+						);
+				}
+			} //
+		}); // end property change
+			
 	}
 	/**
 	 * initialize editor
