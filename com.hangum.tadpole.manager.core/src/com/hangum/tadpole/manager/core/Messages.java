@@ -303,6 +303,10 @@ public class Messages extends NLS {
 
 	public static String ModifyUserDialog_14;
 
+	public static String ModifyUserDialog_17;
+
+	public static String ModifyUserDialog_19;
+
 	public static String ModifyUserDialog_2;
 
 	public static String ModifyUserDialog_3;
@@ -314,6 +318,10 @@ public class Messages extends NLS {
 	public static String ModifyUserDialog_6;
 
 	public static String ModifyUserDialog_7;
+
+	public static String ModifyUserDialog_8;
+
+	public static String ModifyUserDialog_9;
 
 	public static String NewUserDialog_0;
 	public static String NewUserDialog_1;

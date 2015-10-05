@@ -33,6 +33,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.session.manager.SessionManagerListener;
 
 /**
@@ -46,6 +47,9 @@ public class ModifyUserDialog extends Dialog {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(ModifyUserDialog.class);
+
+	/** 사용자 패스워드 초기화 */
+	private int BTN_INITIALIZE_PASSWORD = IDialogConstants.CLIENT_ID + 1;
 	
 	private UserDAO userDAO;
 	
@@ -166,6 +170,27 @@ public class ModifyUserDialog extends Dialog {
 	}
 	
 	@Override
+	protected void buttonPressed(int buttonId) {
+		if(BTN_INITIALIZE_PASSWORD == buttonId) {
+			if(MessageDialog.openConfirm(null, Messages.ModifyUserDialog_8, String.format(Messages.ModifyUserDialog_9, "tadpole"))) { //$NON-NLS-3$
+				userDAO.setPasswd("tadpole"); //$NON-NLS-1$
+				try {
+					TadpoleSystem_UserQuery.updateUserPassword(userDAO);
+					SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), userDAO.getPasswd());
+					
+					MessageDialog.openInformation(null, Messages.ModifyUserDialog_8, Messages.ModifyUserDialog_17);
+				} catch(Exception e) {
+					logger.error("Changing password", e); //$NON-NLS-1$
+					MessageDialog.openError(getShell(), "Error", e.getMessage());			 //$NON-NLS-1$
+				}
+			}
+			
+		} else {
+			super.buttonPressed(buttonId);
+		}
+	}
+	
+	@Override
 	protected void okPressed() {
 		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
@@ -203,6 +228,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, BTN_INITIALIZE_PASSWORD, Messages.ModifyUserDialog_19, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.ModifyUserDialog_11, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ModifyUserDialog_14, false);
 	}
@@ -212,7 +238,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(400, 280);
+		return new Point(430, 290);
 	}
 
 }
