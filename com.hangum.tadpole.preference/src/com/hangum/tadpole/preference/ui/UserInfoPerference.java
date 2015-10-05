@@ -328,7 +328,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				SessionManager.setPassword(user.getPasswd());
 			} catch (Exception e) {
 				logger.error("password change", e); //$NON-NLS-1$
-				MessageDialog.openError(getShell(), "Confirm", e.getMessage());			 //$NON-NLS-1$
+				MessageDialog.openError(getShell(), "Error", e.getMessage());			 //$NON-NLS-1$
 				
 				return false;
 			}
