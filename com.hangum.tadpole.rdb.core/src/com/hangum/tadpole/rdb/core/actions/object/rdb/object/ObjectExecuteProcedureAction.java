@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -20,7 +18,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
@@ -81,7 +78,18 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT && actionType == DB_ACTION.FUNCTIONS) {
+			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
+			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
+			pm.isExecuted(procedureDAO, userDB);
 			
+			try {
+				String strScript = pm.getExecuter().getMakeExecuteScript();
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.DB_ACTION.TABLES);
+				
+			} catch(Exception e) {
+				logger.error("procedure execute", e);
+			}
 		} else {
 			if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
 				OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();

@@ -11,7 +11,12 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
@@ -19,6 +24,7 @@ import org.eclipse.rap.rwt.RWT;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -222,11 +228,30 @@ public class TadpoleSystem_UserQuery {
 	
 	/**
 	 * get login history
+	 * 
 	 * @param strEmail
+	 * @param startTime
+	 * @param endTime
 	 */
-	public static List<UserLoginHistoryDAO> getLoginHistory(String strEmail) throws TadpoleSQLManagerException, SQLException {
+	public static List<UserLoginHistoryDAO> getLoginHistory(String strEmail, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (List<UserLoginHistoryDAO>)sqlClient.queryForList("getLoginHistory", strEmail);
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("email",		strEmail);
+		
+		if(ApplicationArgumentUtils.isDBServer()) {
+			Date date = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			queryMap.put("startTime",  formatter.format(date));
+			
+			Date dateendTime = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateendTime));			
+		} else {
+			queryMap.put("startTime",  	startTime);
+			queryMap.put("endTime", 	endTime);
+		}
+		
+		return (List<UserLoginHistoryDAO>)sqlClient.queryForList("getLoginHistory", queryMap);
 	}
 	
 	/**

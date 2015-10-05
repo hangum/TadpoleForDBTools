@@ -155,6 +155,24 @@
 </select>
 
 <!-- 
+find login history
+ -->
+<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" 
+													parameterClass="java.util.Map">
+<![CDATA[
+	SELECT b.seq, b.user_seq, b.login_ip, b.connet_time, b.disconnect_time
+	FROM tadpole_user a,
+	    login_history b
+	WHERE
+	    	a.email = #email#
+	    AND a.seq = b.user_seq
+	    AND b.connet_time >= #startTime#
+       	AND b.connet_time <= #endTime#
+	ORDER BY b.connet_time DESC
+]]>
+</select>
+
+<!-- 
 	user email confirm
  -->
 <update id="updateEmailConfirm" parameterClass="java.lang.String">
@@ -171,19 +189,6 @@
 	INSERT INTO login_history(user_seq, login_ip) 
 	VALUES (#user_seq#, #login_ip#);
 </insert>
-
-<!-- 
-	find login history
- -->
-<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" parameterClass="java.lang.String">
-	SELECT b.*
-	FROM tadpole_user a,
-	    login_history b
-	WHERE
-	    	a.email = #email#
-	    AND a.seq = b.user_seq
-	ORDER BY b.connet_time DESC
-</select>
 
 <!-- 
 	When lost password, check security hint

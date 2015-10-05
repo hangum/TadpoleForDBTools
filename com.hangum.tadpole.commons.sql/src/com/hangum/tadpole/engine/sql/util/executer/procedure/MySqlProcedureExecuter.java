@@ -27,7 +27,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * oracle procedure executer
+ * mysql procedure executer
  * 
  * <pre>
  * 

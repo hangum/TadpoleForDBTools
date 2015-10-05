@@ -23,6 +23,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.MSSQLProcedureExecuter;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.MySqlProcedureExecuter;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.OracleProcedureExecuter;
+import com.hangum.tadpole.engine.sql.util.executer.procedure.PostgreSQLProcedureExecuter;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.ProcedureExecutor;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -62,6 +63,8 @@ public class ProcedureExecuterManager {
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
+//		} else if(DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+//			return new PostgreSQLProcedureExecuter(procedureDAO, userDB);
 		} else {
 			throw new Exception(Messages.ProcedureExecuterManager_0);
 		}

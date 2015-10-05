@@ -220,7 +220,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 
 		HashMap<String, String> srcProc = null;
 //		result.append("/* DROP FUNCTION " + funcName + "; */ \n\n");
-		result.append("CREATE OR REPLACE FUNCTION " + funcName);
+		result.append("CREATE FUNCTION " + funcName);
 		srcProc = (HashMap<String, String>) client.queryForObject("getFunctionScript", funcName);
 		String parameters[] = String.valueOf(srcProc.get("parameter_types")).split(" ");
 

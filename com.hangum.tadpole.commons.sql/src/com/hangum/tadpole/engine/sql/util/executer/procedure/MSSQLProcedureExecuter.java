@@ -28,33 +28,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * oracle procedure executer
- * 
-<pre>
-Procedure sample....
-
-create procedure p_test1( @param1   int ,@param2    int  = 2 OUTPUT, @ret   float out) as
-   begin
-      SET @ret = @param1 / @param2;
-   END;
-
-create procedure p_test2( @param1   int ,@param2    int  = 2 OUTPUT, @ret   float out) as
-   begin      
-      select * from sysobjects;      
-   END;
-
-CREATE PROCEDURE p_test3(@param1  INT,@param2 INT = 2 OUTPUT, @ret FLOAT OUT) AS
-BEGIN
-   SELECT    *      from sysobjects;      
-   SELECT    *      FROM sysobjects;
-end;
-
-CREATE PROCEDURE p_test4 AS
-BEGIN
-   SELECT    *      from sysobjects;      
-end;
-
-</pre>
+ * mssql procedure executer
  * 
  * @author hangum
  * @author nilriri

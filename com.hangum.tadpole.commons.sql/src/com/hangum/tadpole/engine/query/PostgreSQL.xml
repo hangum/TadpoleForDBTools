@@ -327,6 +327,15 @@ FROM
 	and pronargs > 0; 
 </select>
 
+<select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT  prosrc
+	FROM    pg_catalog.pg_namespace n
+	JOIN    pg_catalog.pg_proc p
+	ON      pronamespace = n.oid
+	WHERE   nspname = 'public'
+	and proname like '$object_name$';
+</select>
+
 <!-- 
 	show 내역
 	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
