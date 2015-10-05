@@ -57,9 +57,9 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("select " + procedureDAO.getPackagename() + "." + procedureDAO.getSysName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getPackagename() + "." + procedureDAO.getSysName() + "(");
 			}else{
-				sbQuery.append("select " + procedureDAO.getSysName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getSysName() + "(");
 			}
 			
 			List<InOutParameterDAO> inList = getInParameters();

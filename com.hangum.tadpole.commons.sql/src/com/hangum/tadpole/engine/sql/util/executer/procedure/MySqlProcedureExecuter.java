@@ -72,9 +72,9 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("select " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
 			}else{
-				sbQuery.append("select " + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getName() + "(");
 			}
 			
 			List<InOutParameterDAO> inList = getInParameters();
@@ -89,17 +89,17 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 			// output parameter 
 			for (InOutParameterDAO inOutParameterDAO : getOutParameters()) {
 				if(RDBTypeToJavaTypeUtils.isNumberType(inOutParameterDAO.getRdbType())) {
-					sbQuery.append(String.format("set @%s = 0;\n", inOutParameterDAO.getName()));
+					sbQuery.append(String.format("SET @%s = 0;\n", inOutParameterDAO.getName()));
 				} else {
-					sbQuery.append(String.format("set @%s = \"\";\n", inOutParameterDAO.getName()));
+					sbQuery.append(String.format("SET @%s = \"\";\n", inOutParameterDAO.getName()));
 				}
 			}
 			
 			// 프로시저 본체 만들기.
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append(String.format("call %s.%s(", procedureDAO.getPackagename(), procedureDAO.getName()));
+				sbQuery.append(String.format("CALL %s.%s(", procedureDAO.getPackagename(), procedureDAO.getName()));
 			}else{
-				sbQuery.append(String.format("call %s(", procedureDAO.getName()));
+				sbQuery.append(String.format("CALL %s(", procedureDAO.getName()));
 			}
 			
 			// in 설정
@@ -122,7 +122,7 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 
 			// out 출력
 			for (InOutParameterDAO inOutParameterDAO : getOutParameters()) {
-				sbQuery.append(String.format("select @%s;\n", inOutParameterDAO.getName()));
+				sbQuery.append(String.format("SELECT @%s;\n", inOutParameterDAO.getName()));
 			}
 		}
 

@@ -110,8 +110,10 @@ public class DDLScriptManager {
 			
 			retStr = rdbScript.getTableScript(tbl);
 		} else if(PublicTadpoleDefine.DB_ACTION.VIEWS == actionType) {
-			setObjectName(obj.toString());
-			retStr = rdbScript.getViewScript(obj.toString());
+			TableDAO tbl = (TableDAO)obj;
+			
+			setObjectName(tbl.getName());
+			retStr = rdbScript.getViewScript(tbl.getName());
 		} else if(PublicTadpoleDefine.DB_ACTION.INDEXES == actionType) {
 			InformationSchemaDAO index = (InformationSchemaDAO)obj;
 			setObjectName(index.getINDEX_NAME());

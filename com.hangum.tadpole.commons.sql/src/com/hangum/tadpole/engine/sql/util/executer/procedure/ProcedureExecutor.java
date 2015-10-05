@@ -99,9 +99,9 @@ public abstract class ProcedureExecutor {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("select " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
 			}else{
-				sbQuery.append("select " + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getName() + "(");
 			}
 			
 			List<InOutParameterDAO> inList = getInParameters();

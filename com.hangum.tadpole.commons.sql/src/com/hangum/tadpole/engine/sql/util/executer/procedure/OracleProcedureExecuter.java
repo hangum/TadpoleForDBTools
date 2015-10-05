@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -96,7 +97,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			// make the script
 			String strExecuteScript = getMakeExecuteScript();
 			
-			if (strExecuteScript.startsWith("select")){
+			if (StringUtils.startsWithIgnoreCase(strExecuteScript, "SELECT")){
 				// function execute...
 				
 				pstmt = javaConn.prepareStatement(strExecuteScript);

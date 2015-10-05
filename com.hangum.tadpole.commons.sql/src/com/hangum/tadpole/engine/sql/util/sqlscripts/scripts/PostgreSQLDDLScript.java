@@ -223,7 +223,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		result.append("CREATE FUNCTION " + funcName);
 		srcProc = (HashMap<String, String>) client.queryForObject("getFunctionScript", funcName);
 		String parameters[] = String.valueOf(srcProc.get("parameter_types")).split(" ");
-
+		
 		result.append("(");
 		for (String param : parameters) {
 			if (!"".equals(param)) {
@@ -323,12 +323,11 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		map.put("object_name", procedureDAO.getName());
 
 		if(logger.isDebugEnabled()) {
-			logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
-			logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
-			logger.debug("\n procedureDAO=" + procedureDAO);
+			logger.debug("\n package_name=" + map.get("package_name"));
+			logger.debug("\n object_name=" + map.get("object_name"));
 		}
 
-		return client.queryForList("getProcedureInParamter", map);
+		return client.queryForList("getProcedureInParamter", procedureDAO.getName());
 	}
 
 	@Override

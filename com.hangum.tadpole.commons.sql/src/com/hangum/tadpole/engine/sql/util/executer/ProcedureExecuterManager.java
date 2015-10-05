@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.executer;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.engine.Messages;
@@ -63,8 +63,8 @@ public class ProcedureExecuterManager {
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
-//		} else if(DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
-//			return new PostgreSQLProcedureExecuter(procedureDAO, userDB);
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+			return new PostgreSQLProcedureExecuter(procedureDAO, userDB);
 		} else {
 			throw new Exception(Messages.ProcedureExecuterManager_0);
 		}

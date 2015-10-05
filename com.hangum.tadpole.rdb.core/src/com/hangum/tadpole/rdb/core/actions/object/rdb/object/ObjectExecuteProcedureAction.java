@@ -78,7 +78,7 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT && actionType == DB_ACTION.FUNCTIONS) {
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
 			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
 			pm.isExecuted(procedureDAO, userDB);
