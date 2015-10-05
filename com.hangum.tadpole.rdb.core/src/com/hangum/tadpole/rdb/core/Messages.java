@@ -713,6 +713,9 @@ public class Messages extends NLS {
 	public static String TableDirectEditorComposite_tltmRefersh_text;
 	public static String TablesComposite_0;
 	public static String TablesComposite_1;
+	public static String TablesComposite_2;
+	public static String TablesComposite_3;
+	public static String TablesComposite_5;
 	public static String TDBErroDialog_2;
 	public static String TDBErroDialog_3;
 	public static String TDBErroDialog_4;
@@ -741,6 +744,8 @@ public class Messages extends NLS {
 	public static String ExecuteProcedureDialog_grpDbmsOutput_text;
 	public static String ExecuteProcedureDialog_lblObjectType_text;
 	public static String ExecuteProcedureDialog_lblObjectName_text;
+	public static String TablesComposite_btnCsvExport_text;
+	public static String ColumnsComposite_btnDownload_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
