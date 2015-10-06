@@ -42,12 +42,12 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.UserLoginHistoryDialog;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.ModifyUserDialog;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserCompFilter;
+import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserLabelProvider;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.manager.core.editor.auth.provider.UserCompFilter;
-import com.hangum.tadpole.manager.core.editor.auth.provider.UserLabelProvider;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -232,8 +232,10 @@ public class UserListComposite extends Composite {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {Messages.AdminUserListComposite_4, Messages.AdminUserListComposite_5, Messages.AdminUserListComposite_6, Messages.AdminUserListComposite_7, Messages.AdminUserListComposite_8, Messages.AdminUserListComposite_9, Messages.AdminUserListComposite_10, Messages.AdminUserListComposite_11};
-		int[] colSize = {200, 150, 100, 100, 60, 60, 60, 120};
+		String[] colNames = {Messages.AdminUserListComposite_4, Messages.AdminUserListComposite_5, 
+							Messages.AdminUserListComposite_6, "디비 등록가능 여부", Messages.AdminUserListComposite_7, Messages.AdminUserListComposite_8, 
+							Messages.AdminUserListComposite_9, Messages.AdminUserListComposite_10, Messages.AdminUserListComposite_11};
+		int[] colSize = {200, 150, 90, 70, 60, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(userListViewer, SWT.NONE);

@@ -57,6 +57,7 @@ public class ModifyUserDialog extends Dialog {
 	private Text textName;
 	private Text textCreateDate;
 	
+	private Combo comboIsRegistDB;
 	private Combo comboApproval;
 	private Combo comboUserConfirm;
 	private Combo comboDel;
@@ -111,6 +112,15 @@ public class ModifyUserDialog extends Dialog {
 		textAllowIP = new Text(container, SWT.BORDER);
 		textAllowIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblIsRegistDb = new Label(container, SWT.NONE);
+		lblIsRegistDb.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblIsRegistDb.setText(Messages.ModifyUserDialog_lblIsRegistDb_text);
+		
+		comboIsRegistDB = new Combo(container, SWT.READ_ONLY);
+		comboIsRegistDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboIsRegistDB.add("YES"); //$NON-NLS-1$
+		comboIsRegistDB.add("NO"); //$NON-NLS-1$
+		
 		Label lblApproval = new Label(container, SWT.NONE);
 		lblApproval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblApproval.setText(Messages.ModifyUserDialog_4);
@@ -164,6 +174,7 @@ public class ModifyUserDialog extends Dialog {
 		textAllowIP.setText(userDAO.getAllow_ip());
 		textCreateDate.setText(userDAO.getCreate_time());
 		
+		comboIsRegistDB.setText(userDAO.getIs_regist_db());
 		comboApproval.setText(userDAO.getApproval_yn());
 		comboUserConfirm.setText(userDAO.getIs_email_certification());
 		comboDel.setText(userDAO.getDelYn());
@@ -196,6 +207,7 @@ public class ModifyUserDialog extends Dialog {
 			UserDAO user = new UserDAO();
 			user.setSeq(userDAO.getSeq());
 			user.setAllow_ip(textAllowIP.getText());
+			user.setIs_regist_db(comboIsRegistDB.getText());
 			user.setApproval_yn(comboApproval.getText());
 			user.setIs_email_certification(comboUserConfirm.getText());
 			user.setDelYn(comboDel.getText());
@@ -238,7 +250,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(430, 290);
+		return new Point(430, 320);
 	}
 
 }

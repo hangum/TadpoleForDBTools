@@ -216,10 +216,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main")); //$NON-NLS-1$
         
-//        if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
-	        toolbar.add(connectAction);
-	        toolbar.add(new Separator());
-//        }
+        toolbar.add(connectAction);
+        toolbar.add(new Separator());
         
         toolbar.add(saveAction);
         toolbar.add(saveAsAction);

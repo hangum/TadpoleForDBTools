@@ -258,6 +258,7 @@ find login history
 	SET
 		allow_ip = #allow_ip#,
 		delYn = #delYn#,
+		is_regist_db = #is_regist_db#,
 		approval_yn = #approval_yn#,
 		is_email_certification = #is_email_certification#
 	WHERE seq = #seq#

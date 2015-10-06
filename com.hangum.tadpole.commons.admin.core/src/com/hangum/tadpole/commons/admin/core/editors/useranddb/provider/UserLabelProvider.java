@@ -29,11 +29,12 @@ public class UserLabelProvider extends LabelProvider implements ITableLabelProvi
 		case 0: return user.getEmail();
 		case 1: return user.getName();
 		case 2: return user.getAllow_ip();
-		case 3: return user.getEmail_key();
-		case 4: return user.getApproval_yn();
-		case 5: return user.getIs_email_certification();
-		case 6: return user.getDelYn();
-		case 7: return user.getCreate_time();
+		case 3: return user.getIs_regist_db();
+		case 4: return user.getEmail_key();
+		case 5: return user.getApproval_yn();
+		case 6: return user.getIs_email_certification();
+		case 7: return user.getDelYn();
+		case 8: return user.getCreate_time();
 		}
 		
 		return "*** not set column ***";

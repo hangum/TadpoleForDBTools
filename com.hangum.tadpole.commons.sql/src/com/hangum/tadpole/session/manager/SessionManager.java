@@ -54,7 +54,8 @@ public class SessionManager {
 								/* 자신의 유저 seq */		USER_SEQ, 
 														LOGIN_EMAIL, 
 														LOGIN_PASSWORD, 
-														LOGIN_NAME, 
+														LOGIN_NAME,
+														IS_REGIST_DB,
 								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
 														USER_INFO_DATA,
 														
@@ -93,19 +94,20 @@ public class SessionManager {
 	/**
 	 * 사용자를 session에 등록
 	 * 
-	 * @param loginUserDao
+	 * @param userDao
 	 */
-	public static void addSession(UserDAO loginUserDao) {
+	public static void addSession(UserDAO userDao) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.toString(), loginUserDao.getRole_type());
-		sStore.setAttribute(NAME.USER_SEQ.toString(), loginUserDao.getSeq());
-		sStore.setAttribute(NAME.LOGIN_EMAIL.toString(), loginUserDao.getEmail());
-		sStore.setAttribute(NAME.LOGIN_PASSWORD.toString(), loginUserDao.getPasswd());
-		sStore.setAttribute(NAME.LOGIN_NAME.toString(), loginUserDao.getName());
-		sStore.setAttribute(NAME.PERSPECTIVE.toString(), "default");
+		sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.name(), userDao.getRole_type());
+		sStore.setAttribute(NAME.USER_SEQ.name(), userDao.getSeq());
+		sStore.setAttribute(NAME.LOGIN_EMAIL.name(), userDao.getEmail());
+		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), userDao.getPasswd());
+		sStore.setAttribute(NAME.LOGIN_NAME.name(), userDao.getName());
+		sStore.setAttribute(NAME.IS_REGIST_DB.name(), userDao.getIs_regist_db());
+		sStore.setAttribute(NAME.PERSPECTIVE.name(), "default");
 		
-		sStore.setAttribute(NAME.USE_OTP.toString(), loginUserDao.getUse_otp());
-		sStore.setAttribute(NAME.OTP_SECRET_KEY.toString(), loginUserDao.getOtp_secret());
+		sStore.setAttribute(NAME.USE_OTP.name(), userDao.getUse_otp());
+		sStore.setAttribute(NAME.OTP_SECRET_KEY.name(), userDao.getOtp_secret());
 		
 		sStore.setAttribute(NAME.UNLOCK_DB_LIST.name(), new ArrayList<Integer>());
 	}
@@ -117,16 +119,16 @@ public class SessionManager {
 	 */
 	public static void setPassword(String strPasswd) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		sStore.setAttribute(NAME.LOGIN_PASSWORD.toString(), strPasswd);
+		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), strPasswd);
 	}
 	
 	public static void setUesrSeq(int seq) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		sStore.setAttribute(NAME.USER_SEQ.toString(), seq);
+		sStore.setAttribute(NAME.USER_SEQ.name(), seq);
 	}
 	public static int getUserSeq() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Object obj = sStore.getAttribute(NAME.USER_SEQ.toString());
+		Object obj = sStore.getAttribute(NAME.USER_SEQ.name());
 		
 		if(obj == null) return 0;
 		else return (Integer)obj;
@@ -134,26 +136,30 @@ public class SessionManager {
 	
 	public static String getEMAIL() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.LOGIN_EMAIL.toString());
+		return (String)sStore.getAttribute(NAME.LOGIN_EMAIL.name());
 	}
 	
 	public static String getPassword() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.LOGIN_PASSWORD.toString());
+		return (String)sStore.getAttribute(NAME.LOGIN_PASSWORD.name());
 	}
 	
 	public static String getName() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.LOGIN_NAME.toString());
+		return (String)sStore.getAttribute(NAME.LOGIN_NAME.name());
+	}
+	public static String getIsRegistDB() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.IS_REGIST_DB.name());
 	}
 	
 	public static String getUseOTP() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.USE_OTP.toString());
+		return (String)sStore.getAttribute(NAME.USE_OTP.name());
 	}
 	public static String getOTPSecretKey() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.OTP_SECRET_KEY.toString());
+		return (String)sStore.getAttribute(NAME.OTP_SECRET_KEY.name());
 	}
 	
 	/**
@@ -175,11 +181,11 @@ public class SessionManager {
 	 */
 	public static String getRepresentRole() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.toString());
+		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.name());
 	}
 	
 	public static boolean isAdmin() {
-		return PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString().equals(getRepresentRole()) ? true : false;
+		return PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(getRepresentRole()) ? true : false;
 	}
 
 	/**
@@ -187,7 +193,7 @@ public class SessionManager {
 	 */
 	public static void setUserAllPreferenceData(Map<String, Object> mapUserInfo) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		sStore.setAttribute(NAME.USER_INFO_DATA.toString(), mapUserInfo);		
+		sStore.setAttribute(NAME.USER_INFO_DATA.name(), mapUserInfo);		
 	}
 	
 	/**
@@ -198,7 +204,7 @@ public class SessionManager {
 	public static void setUserInfo(String key, String obj) {
 		
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.toString());
+		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
 		UserInfoDataDAO userInfoDataDAO = (UserInfoDataDAO)mapUserInfoData.get(key);
 		if(userInfoDataDAO == null) {
 			userInfoDataDAO = new UserInfoDataDAO();
@@ -217,7 +223,7 @@ public class SessionManager {
 			
 		mapUserInfoData.put(key, userInfoDataDAO);
 		
-		sStore.setAttribute(NAME.USER_INFO_DATA.toString(), mapUserInfoData);
+		sStore.setAttribute(NAME.USER_INFO_DATA.name(), mapUserInfoData);
 	}
 	
 	/**
@@ -228,7 +234,7 @@ public class SessionManager {
 	 */
 	public static UserInfoDataDAO getUserInfo(String key) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.toString());
+		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
 		
 		return (UserInfoDataDAO)mapUserInfoData.get(key);
 	}
@@ -295,16 +301,16 @@ public class SessionManager {
 	}
 	
 	public static String getPerspective() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(NAME.PERSPECTIVE.toString());
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(NAME.PERSPECTIVE.name());
 		return userInfo == null ? "" : userInfo.getValue0();
 	}
 	
 	public static void setPerspective(String persp) { 
 		// db update 
 		try {
-			TadpoleSystem_UserInfoData.updateUserInfoData(NAME.PERSPECTIVE.toString(), persp);
+			TadpoleSystem_UserInfoData.updateUserInfoData(NAME.PERSPECTIVE.name(), persp);
 			// session update
-			SessionManager.setUserInfo(NAME.PERSPECTIVE.toString(), persp);
+			SessionManager.setUserInfo(NAME.PERSPECTIVE.name(), persp);
 			SessionManager.resetPerspective();
 		} catch (Exception e) {
 			logger.error("Error change perspective", e);

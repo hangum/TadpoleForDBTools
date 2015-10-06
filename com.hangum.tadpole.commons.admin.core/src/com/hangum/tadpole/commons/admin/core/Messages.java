@@ -152,6 +152,7 @@ public class Messages extends NLS {
 	public static String NewUserDialog_lblAccessKey_1_text;
 	public static String NewUserDialog_lblQrcodeUrl_text;
 	public static String NewUserDialog_lblOtpCdoe_text;
+	public static String ModifyUserDialog_lblIsRegistDb_text;
 
 
 	static {
