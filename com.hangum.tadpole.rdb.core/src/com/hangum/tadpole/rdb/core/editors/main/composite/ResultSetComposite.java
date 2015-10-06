@@ -424,6 +424,9 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void exportResultCSVType() {
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		if(dataList.isEmpty()) return;
+		
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		// column 헤더추가.
 		TableColumn[] tcs = tvQueryResult.getTable().getColumns();
@@ -434,15 +437,11 @@ public class ResultSetComposite extends Composite {
 		}
 		listCsvData.add(strArrys);
 		
-		// column 데이터 추가
-		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-		
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			strArrys = new String[mapColumns.size()-1];
 			for(int j=1; j<mapColumns.size(); j++) {
-//				if(RDBTypeToJavaTypeUtils.isNumberType(columnType.get(j))) {
 				strArrys[j-1] = ""+mapColumns.get(j); //$NON-NLS-1$
 			}
 			listCsvData.add(strArrys);
