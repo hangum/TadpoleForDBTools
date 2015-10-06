@@ -25,8 +25,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor;
-import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditorInput;
+import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
+import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 //import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
@@ -96,7 +96,7 @@ public class Perspective implements IPerspectiveFactory {
 //		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
-		openEditor(UserManagementEditor.ID);
+		openEditor(DBMgmtEditor.ID);
 	}
 
 	public void managerPerspective(IPageLayout layout) {
@@ -141,8 +141,8 @@ public class Perspective implements IPerspectiveFactory {
 
 	private void openEditor(String id) {
 		IEditorInput input = null;
-		if (id.equals(UserManagementEditor.ID)) {
-			input = new UserManagementEditorInput();
+		if (id.equals(DBMgmtEditor.ID)) {
+			input = new DBMgntEditorInput();
 		} else if (id.equals(ExecutedSQLEditor.ID)) {
 			input = new ExecutedSQLEditorInput();
 		}

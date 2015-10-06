@@ -11,17 +11,22 @@
 package com.hangum.tadpole.commons.admin.core.actions;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
-import com.hangum.tadpole.commons.admin.core.dialogs.UserLoginHistoryDialog;
+import com.hangum.tadpole.commons.admin.core.editors.useranddb.UserMgmtEditor;
+import com.hangum.tadpole.commons.admin.core.editors.useranddb.UserMgntEditorInput;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -30,28 +35,35 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class UserLoginHistoryAction extends Action implements ISelectionListener, IWorkbenchAction {
+public class AdminUserAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(UserLoginHistoryAction.class);
-	private final static String ID = "com.hangum.tadpole.commons.admin.core.actions.global.UserLoginHistoryAction"; //$NON-NLS-1$
+	private static final Logger logger = Logger.getLogger(AdminUserAction.class);
+	private final static String ID = "com.hangum.tadpole.commons.admin.core.actions.admin.global.UserAction"; //$NON-NLS-1$
 	private final IWorkbenchWindow window;
 	
-	public UserLoginHistoryAction(IWorkbenchWindow window) {
+	public AdminUserAction(IWorkbenchWindow window) {
 		this.window = window;
 		
 		setId(ID);
 		setText(Messages.UserLoginHistoryAction_0);
 		setToolTipText(Messages.UserLoginHistoryAction_0);
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/userHistory.png")); //$NON-NLS-1$
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
 	@Override
 	public void run() {
-		UserLoginHistoryDialog dialog = new UserLoginHistoryDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-		dialog.open();
+		try {
+			UserMgntEditorInput userMe = new UserMgntEditorInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, UserMgmtEditor.ID);
+		} catch (PartInitException e) {
+			logger.error("Database Management editor", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "User Action", errStatus); //$NON-NLS-1$
+		}
 	}
 
 	@Override

@@ -44,6 +44,7 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import org.eclipse.swt.events.KeyAdapter;
@@ -60,11 +61,11 @@ import org.eclipse.swt.events.KeyEvent;
  */
 public class UserLoginHistoryDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(UserLoginHistoryDialog.class);
+	private UserDAO userDao;
 	
 	private Text textEmail;
 	private DateTime dateTimeStart;
 	private DateTime dateTimeEnd;
-	
 	private TableViewer tvHistory;
 	
 	private List<UserLoginHistoryDAO> listLoginHistory = new ArrayList<>();
@@ -72,10 +73,13 @@ public class UserLoginHistoryDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param userDao 
 	 */
-	public UserLoginHistoryDialog(Shell parentShell) {
+	public UserLoginHistoryDialog(Shell parentShell, UserDAO userDao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
+		
+		this.userDao = userDao;
 	}
 	
 	@Override
@@ -180,9 +184,7 @@ public class UserLoginHistoryDialog extends Dialog {
 		cal.add(Calendar.DAY_OF_YEAR, -7);
 		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 		
-		if(TadpoleApplicationContextManager.isPersonOperationType()) {
-			textEmail.setText(PublicTadpoleDefine.SYSTEM_DEFAULT_USER);
-		}
+		textEmail.setText(userDao.getEmail());
 	}
 	
 	private void search() {

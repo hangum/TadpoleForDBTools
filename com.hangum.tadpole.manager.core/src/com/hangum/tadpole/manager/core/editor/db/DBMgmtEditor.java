@@ -8,12 +8,10 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.auth;
+package com.hangum.tadpole.manager.core.editor.db;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -23,10 +21,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.manager.core.Messages;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * 사용자 관리 에디터
@@ -34,10 +28,10 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
-public class UserManagementEditor extends EditorPart {
-	public static final String ID = "com.hangum.tadpole.manager.core.editor.usermanagement";
+public class DBMgmtEditor extends EditorPart {
+	public static final String ID = "com.hangum.tadpole.manager.core.editor.dbmgnt";
 
-	public UserManagementEditor() {
+	public DBMgmtEditor() {
 	}
 
 	@Override
@@ -53,7 +47,7 @@ public class UserManagementEditor extends EditorPart {
 		setSite(site);
 		setInput(input);
 		
-		UserManagementEditorInput qei = (UserManagementEditorInput)input;
+		DBMgntEditorInput qei = (DBMgntEditorInput)input;
 		setPartName(qei.getName());
 	}
 
@@ -85,34 +79,31 @@ public class UserManagementEditor extends EditorPart {
 		gl_composite.marginWidth = 0;
 		compositeMain.setLayout(gl_composite);
 
-		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolder.setBorderVisible(false);		
-		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-		
-		if(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(SessionManager.getRepresentRole())) {
-			
-			// Users
-			CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-			tbtmItem.setText(Messages.UserManagementEditor_1);
-			
-			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
-			tbtmItem.setControl(compositeUserList);
-			compositeUserList.setLayout(new GridLayout(1, false));
-		}
+//		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
+//		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		tabFolder.setBorderVisible(false);		
+//		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
+//		
+//		if(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(SessionManager.getRepresentRole())) {
+//			
+//			// Users
+//			CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
+//			tbtmItem.setText(Messages.UserManagementEditor_1);
+//			
+//			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
+//			tbtmItem.setControl(compositeUserList);
+//			compositeUserList.setLayout(new GridLayout(1, false));
+//		}
 		
 		// DBs
-		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
-		tbtmDB.setText(Messages.UserManagementEditor_2);
+//		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
+//		tbtmDB.setText(Messages.UserManagementEditor_2);
 		
-		Composite compositeDBList = new DBListComposite(tabFolder, SWT.NONE);
-		tbtmDB.setControl(compositeDBList);
-		compositeDBList.setLayout(new GridLayout(1, false));
-		
-		tabFolder.setSelection(0);
+		Composite compositeDBList = new DBListComposite(compositeMain, SWT.NONE);
+		compositeDBList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		// google analytic
-		AnalyticCaller.track(UserManagementEditor.ID);
+		AnalyticCaller.track(DBMgmtEditor.ID);
 	}
 
 	@Override

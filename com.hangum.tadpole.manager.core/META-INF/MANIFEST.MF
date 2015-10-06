@@ -20,7 +20,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.manager.core.actions.global,
  com.hangum.tadpole.manager.core.dialogs.users,
- com.hangum.tadpole.manager.core.editor.auth,
+ com.hangum.tadpole.manager.core.editor.db,
  com.hangum.tadpole.manager.core.editor.executedsql,
  com.hangum.tadpole.manager.core.editor.resource
 Import-Package: javax.servlet;version="2.4.0",

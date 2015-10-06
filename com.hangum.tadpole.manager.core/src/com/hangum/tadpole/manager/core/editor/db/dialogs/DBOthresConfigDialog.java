@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.auth.dialogs;
+package com.hangum.tadpole.manager.core.editor.db.dialogs;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;

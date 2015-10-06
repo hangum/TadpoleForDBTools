@@ -30,6 +30,8 @@ import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -43,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -54,13 +57,10 @@ import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Tadpole DB Hub User login dialog.

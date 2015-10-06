@@ -480,6 +480,7 @@ public class ExecutedSQLEditor extends EditorPart {
 				comboDatabase.add(userDBDAO.getDisplay_name());
 				comboDatabase.setData(userDBDAO.getDisplay_name(), userDBDAO);
 			}
+			comboTypes.setVisibleItemCount(listUserDBDAO.size());
 			comboDatabase.select(0);
 
 		} catch (Exception e) {

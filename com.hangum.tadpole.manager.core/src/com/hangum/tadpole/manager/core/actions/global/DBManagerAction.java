@@ -26,9 +26,8 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
-import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor;
-import com.hangum.tadpole.manager.core.editor.auth.UserManagementEditorInput;
-import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
+import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -37,27 +36,22 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class UserPermissionAction extends Action implements ISelectionListener, IWorkbenchAction {
+public class DBManagerAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(UserPermissionAction.class);
-	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.UserPermissionAction"; //$NON-NLS-1$
+	private static final Logger logger = Logger.getLogger(DBManagerAction.class);
+	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.DatabaseManagerAction"; //$NON-NLS-1$
 	
 	private final IWorkbenchWindow window;
 	private IStructuredSelection iss;
 	
-	public UserPermissionAction(IWorkbenchWindow window) {
+	public DBManagerAction(IWorkbenchWindow window) {
 		this.window = window;
 		
 		setId(ID);
-		if(SessionManager.isAdmin()) {
-			setText(Messages.UserPermissionAction_0);
-			setToolTipText(Messages.UserPermissionAction_1);
-		} else {
-			setText(Messages.UserPermissionAction_3);
-			setToolTipText(Messages.UserPermissionAction_4);
-		}
+		setText(Messages.UserPermissionAction_3);
+		setToolTipText(Messages.UserPermissionAction_4);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -65,10 +59,10 @@ public class UserPermissionAction extends Action implements ISelectionListener, 
 	@Override
 	public void run() {
 		try {
-			UserManagementEditorInput userMe = new UserManagementEditorInput();
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, UserManagementEditor.ID);
+			DBMgntEditorInput userMe = new DBMgntEditorInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, DBMgmtEditor.ID);
 		} catch (PartInitException e) {
-			logger.error("User Management editor", e); //$NON-NLS-1$
+			logger.error("Database Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.UserPermissionAction_2, errStatus); //$NON-NLS-1$

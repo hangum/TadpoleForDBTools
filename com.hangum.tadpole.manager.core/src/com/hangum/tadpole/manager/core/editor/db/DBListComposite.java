@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.auth;
+package com.hangum.tadpole.manager.core.editor.db;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +62,8 @@ import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.users.DetailUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.FindUserAndDBRoleDialog;
-import com.hangum.tadpole.manager.core.editor.auth.dialogs.DBAccessControlDialog;
-import com.hangum.tadpole.manager.core.editor.auth.dialogs.DBOthresConfigDialog;
+import com.hangum.tadpole.manager.core.editor.db.dialogs.DBAccessControlDialog;
+import com.hangum.tadpole.manager.core.editor.db.dialogs.DBOthresConfigDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;

@@ -8,14 +8,13 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.auth;
+package com.hangum.tadpole.manager.core.editor.db;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.manager.core.Messages;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * user management input
@@ -23,9 +22,9 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
-public class UserManagementEditorInput implements IEditorInput {
+public class DBMgntEditorInput implements IEditorInput {
 	
-	public UserManagementEditorInput() {
+	public DBMgntEditorInput() {
 	}
 
 	@Override
@@ -40,8 +39,8 @@ public class UserManagementEditorInput implements IEditorInput {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if( !(obj instanceof UserManagementEditorInput) ) return false;
-		return ((UserManagementEditorInput)obj).getName().equals(getName());
+		if( !(obj instanceof DBMgntEditorInput) ) return false;
+		return ((DBMgntEditorInput)obj).getName().equals(getName());
 	}
 
 	@Override
@@ -51,11 +50,7 @@ public class UserManagementEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		if(SessionManager.isAdmin()) {
-			return Messages.UserManagementEditorInput_0;
-		} else {
-			return Messages.UserManagementEditorInput_2;
-		}
+		return Messages.UserManagementEditorInput_2;
 	}
 
 	@Override
@@ -65,11 +60,7 @@ public class UserManagementEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		if(SessionManager.isAdmin()) {
-			return Messages.UserManagementEditorInput_1;
-		} else {
-			return Messages.UserManagementEditorInput_3;
-		}
+		return Messages.UserManagementEditorInput_3;
 	}
 
 }

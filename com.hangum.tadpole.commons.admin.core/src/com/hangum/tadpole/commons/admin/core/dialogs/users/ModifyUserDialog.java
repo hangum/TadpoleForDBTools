@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.dialogs.users;
+package com.hangum.tadpole.commons.admin.core.dialogs.users;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -27,12 +27,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.manager.core.Activator;
-import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.session.manager.SessionManagerListener;
 

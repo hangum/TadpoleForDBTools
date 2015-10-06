@@ -153,7 +153,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
 							
-							sbSQL.append(" SELECT "); //$NON-NLS-1$
+							sbSQL.append("SELECT "); //$NON-NLS-1$
 							for (int i=0; i<showTableColumns.size(); i++) {
 								TableColumnDAO dao = showTableColumns.get(i);
 								sbSQL.append(dao.getField());
@@ -162,7 +162,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 								if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
 								else sbSQL.append(" "); //$NON-NLS-1$
 							}
-							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM " + viewDao.getSysName() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
+							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "FROM " + viewDao.getSysName() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 							
 							//
 							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.DB_ACTION.VIEWS);

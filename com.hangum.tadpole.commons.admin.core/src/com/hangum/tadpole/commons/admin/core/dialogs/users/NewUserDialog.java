@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.dialogs.users;
+package com.hangum.tadpole.commons.admin.core.dialogs.users;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
@@ -46,7 +47,6 @@ import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.AddDefaultSampleDBToUser;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
 
 /**

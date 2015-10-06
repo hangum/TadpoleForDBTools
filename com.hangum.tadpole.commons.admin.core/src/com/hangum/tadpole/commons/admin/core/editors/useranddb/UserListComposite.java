@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.auth;
+package com.hangum.tadpole.commons.admin.core.editors.useranddb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +35,20 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.Messages;
+import com.hangum.tadpole.commons.admin.core.dialogs.UserLoginHistoryDialog;
+import com.hangum.tadpole.commons.admin.core.dialogs.users.ModifyUserDialog;
+import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.manager.core.Messages;
-import com.hangum.tadpole.manager.core.dialogs.users.ModifyUserDialog;
-import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.manager.core.editor.auth.provider.UserCompFilter;
 import com.hangum.tadpole.manager.core.editor.auth.provider.UserLabelProvider;
+import com.swtdesigner.ResourceManager;
 
 /**
  * 어드민 사용하는 사용자리스트 화면
@@ -54,14 +58,15 @@ import com.hangum.tadpole.manager.core.editor.auth.provider.UserLabelProvider;
  * @author hangum
  *
  */
-public class AdminUserListComposite extends Composite {
+public class UserListComposite extends Composite {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(AdminUserListComposite.class);
+	private static final Logger logger = Logger.getLogger(UserListComposite.class);
 	
 	/** toolbar button */
 	private ToolItem tltmModify;
+	private ToolItem tltmLoginHistory;
 //	private ToolItem tltmQuery;
 	
 	/** search text */
@@ -75,7 +80,7 @@ public class AdminUserListComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public AdminUserListComposite(Composite parent, int style) {
+	public UserListComposite(Composite parent, int style) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
@@ -86,20 +91,20 @@ public class AdminUserListComposite extends Composite {
 		
 		Composite composite = new Composite(this, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.verticalSpacing = 2;
-		gl_composite.horizontalSpacing = 2;
-		gl_composite.marginHeight = 2;
-		gl_composite.marginWidth = 2;
+		gl_composite.verticalSpacing = 4;
+		gl_composite.horizontalSpacing = 4;
+		gl_composite.marginHeight = 4;
+		gl_composite.marginWidth = 4;
 		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeHead = new Composite(composite, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeHead = new GridLayout(2, false);
-		gl_compositeHead.verticalSpacing = 0;
-		gl_compositeHead.horizontalSpacing = 0;
-		gl_compositeHead.marginHeight = 0;
-		gl_compositeHead.marginWidth = 0;
+		gl_compositeHead.verticalSpacing = 4;
+		gl_compositeHead.horizontalSpacing = 4;
+		gl_compositeHead.marginHeight = 4;
+		gl_compositeHead.marginWidth = 4;
 		compositeHead.setLayout(gl_compositeHead);
 		
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
@@ -128,13 +133,26 @@ public class AdminUserListComposite extends Composite {
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.setImage(ToobalImageUtils.getModify());
 		tltmModify.setEnabled(false);
+		tltmModify.setToolTipText(Messages.AdminUserListComposite_2);
 		tltmModify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				modifyUser();
 			}
 		});
-		tltmModify.setToolTipText(Messages.AdminUserListComposite_2);
+		tltmModify.setEnabled(false);
+		
+		tltmLoginHistory = new ToolItem(toolBar, SWT.NONE);
+		tltmLoginHistory.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/userHistory.png"));
+		tltmLoginHistory.setToolTipText("Login History");
+		tltmLoginHistory.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				loginHistory();
+			}
+		});
+		tltmLoginHistory.setEnabled(false);
+		
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -166,7 +184,8 @@ public class AdminUserListComposite extends Composite {
 //		});
 		userListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if(tltmModify != null) tltmModify.setEnabled(true);
+				 tltmModify.setEnabled(true);
+				 tltmLoginHistory.setEnabled(true);
 			}
 		});
 		Table table = userListViewer.getTable();
@@ -236,7 +255,7 @@ public class AdminUserListComposite extends Composite {
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();
 		} catch(Exception e) {
-			logger.error(Messages.AdminUserListComposite_12, e);
+//			logger.error(Messages.AdminUserListComposite_12, e);
 		}
 	}
 	
@@ -264,6 +283,19 @@ public class AdminUserListComposite extends Composite {
 			}
 
 		}
+	}
+	
+	/**
+	 * login history
+	 */
+	private void loginHistory() {
+		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
+		if(!ss.isEmpty()) {
+			UserDAO userDao = (UserDAO)ss.getFirstElement();
+
+			UserLoginHistoryDialog dialog = new UserLoginHistoryDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDao);
+			dialog.open();
+		}		
 	}
 
 	@Override
