@@ -14,6 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.manager.core.Messages;
 
 /**
@@ -23,8 +24,13 @@ import com.hangum.tadpole.manager.core.Messages;
  *
  */
 public class DBMgntEditorInput implements IEditorInput {
+	UserDAO userDAO;
 	
 	public DBMgntEditorInput() {
+	}
+
+	public DBMgntEditorInput(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 
 	@Override
@@ -61,6 +67,10 @@ public class DBMgntEditorInput implements IEditorInput {
 	@Override
 	public String getToolTipText() {
 		return Messages.UserManagementEditorInput_3;
+	}
+	
+	public UserDAO getUserDAO() {
+		return userDAO;
 	}
 
 }

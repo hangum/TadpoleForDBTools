@@ -33,7 +33,7 @@ import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
+import com.hangum.tadpole.manager.core.actions.global.SQLAuditAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
@@ -127,7 +127,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	transactionConnectionAction = new TransactionConnectionManagerAction(window);
     	register(transactionConnectionAction);
     	
-    	executedSQLAction = new ExecutedSQLAction(window);
+    	executedSQLAction = new SQLAuditAction(window);
     	register(executedSQLAction);
     	    	
     	schemaHistoryAction = new SchemaHistoryAction(window);

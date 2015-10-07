@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -35,6 +37,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
@@ -44,10 +47,15 @@ import com.hangum.tadpole.commons.admin.core.dialogs.users.ModifyUserDialog;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserCompFilter;
 import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserLabelProvider;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.ToobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
+import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
+import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
+import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -67,7 +75,8 @@ public class UserListComposite extends Composite {
 	/** toolbar button */
 	private ToolItem tltmModify;
 	private ToolItem tltmLoginHistory;
-//	private ToolItem tltmQuery;
+	private ToolItem tltmDBList;
+	private ToolItem tltmSQLAudit;
 	
 	/** search text */
 	private Text textSearch;
@@ -153,6 +162,27 @@ public class UserListComposite extends Composite {
 		});
 		tltmLoginHistory.setEnabled(false);
 		
+		tltmDBList = new ToolItem(toolBar, SWT.NONE);
+		tltmDBList.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/db.png"));
+		tltmDBList.setToolTipText("DB List");
+		tltmDBList.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				dbList();
+			}
+		});
+		tltmDBList.setEnabled(false);
+		
+		tltmSQLAudit = new ToolItem(toolBar, SWT.NONE);
+		tltmSQLAudit.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png"));
+		tltmSQLAudit.setToolTipText("SQL Audit");
+		tltmSQLAudit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				viewQueryHistory();
+			}
+		});
+		tltmSQLAudit.setEnabled(false);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -177,15 +207,12 @@ public class UserListComposite extends Composite {
 		compositeBody.setLayout(gl_compositeBody);
 		
 		userListViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
-//		userListViewer.addDoubleClickListener(new IDoubleClickListener() {
-//			public void doubleClick(DoubleClickEvent event) {
-//				viewQueryHistory();
-//			}
-//		});
 		userListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				 tltmModify.setEnabled(true);
 				 tltmLoginHistory.setEnabled(true);
+				 tltmDBList.setEnabled(true);
+				 tltmSQLAudit.setEnabled(true);
 			}
 		});
 		Table table = userListViewer.getTable();
@@ -207,26 +234,6 @@ public class UserListComposite extends Composite {
 		AnalyticCaller.track(this.getClass().getName());
 				
 	}
-	
-	/**
-	 * 사용자가 실행 했던 쿼리의 히스토리를 봅니다.
-	 */
-//	private void viewQueryHistory() {
-//		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
-//		if(ss != null) {
-//			 UserDAO userDAO = ((UserDAO)ss.getFirstElement());
-//			
-//			try {
-//				ExecutedSQLEditorInput esei = new ExecutedSQLEditorInput(userDAO);
-//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, ExecutedSQLEditor.ID, false);
-//			} catch(Exception e) {
-//				logger.error("SQL Audit open", e); //$NON-NLS-1$
-//				
-//				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Audit", errStatus); //$NON-NLS-1$
-//			}
-//		}
-//	}
 	
 	/**
 	 * create column
@@ -257,7 +264,7 @@ public class UserListComposite extends Composite {
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();
 		} catch(Exception e) {
-//			logger.error(Messages.AdminUserListComposite_12, e);
+			logger.error(Messages.AdminUserListComposite_12, e);
 		}
 	}
 	
@@ -297,7 +304,47 @@ public class UserListComposite extends Composite {
 
 			UserLoginHistoryDialog dialog = new UserLoginHistoryDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDao);
 			dialog.open();
-		}		
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void dbList() {
+		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
+		if(!ss.isEmpty()) {
+			UserDAO userDAO = ((UserDAO)ss.getFirstElement());
+			
+			try {
+				DBMgntEditorInput userMe = new DBMgntEditorInput(userDAO);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, DBMgmtEditor.ID);
+			} catch (PartInitException e) {
+				logger.error("Database Management editor", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "", errStatus); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	/**
+	 * 사용자가 실행 했던 쿼리의 히스토리를 봅니다.
+	 */
+	private void viewQueryHistory() {
+		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
+		if(ss != null) {
+			 UserDAO userDAO = ((UserDAO)ss.getFirstElement());
+			
+			try {
+				ExecutedSQLEditorInput esei = new ExecutedSQLEditorInput(userDAO);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, ExecutedSQLEditor.ID, false);
+			} catch(Exception e) {
+				logger.error("SQL Audit open", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Audit", errStatus); //$NON-NLS-1$
+			}
+		}
 	}
 
 	@Override

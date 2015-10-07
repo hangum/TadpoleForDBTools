@@ -13,7 +13,7 @@
       <editor
             class="com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor"
             default="false"
-            icon="resources/icons/queryhistory.png"
+            icon="resources/icons/sqlaudit.png"
             id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
             name="SQL Audit">
       </editor>

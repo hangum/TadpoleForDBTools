@@ -472,7 +472,7 @@ public class ExecutedSQLEditor extends EditorPart {
 
 		try {
 			// database name combo
-			listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
+			listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
 			comboDatabase.add("All"); //$NON-NLS-1$
 			comboDatabase.setData("All", null); //$NON-NLS-1$
 			

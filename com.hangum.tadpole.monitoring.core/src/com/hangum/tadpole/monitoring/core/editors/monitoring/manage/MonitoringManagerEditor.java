@@ -477,7 +477,7 @@ public class MonitoringManagerEditor extends EditorPart {
 	public void reLoadDBList() {
 		try {
 			treeList.clear();
-			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getSessionUserDB();
 			// 그룹 이름을 생성합니다.
 			List<String> groupNames = new ArrayList<String>();
 			for (UserDBDAO userDBDAO : userDBS) {

@@ -22,7 +22,8 @@ Export-Package: com.hangum.tadpole.manager.core.actions.global,
  com.hangum.tadpole.manager.core.dialogs.users,
  com.hangum.tadpole.manager.core.editor.db,
  com.hangum.tadpole.manager.core.editor.executedsql,
- com.hangum.tadpole.manager.core.editor.resource
+ com.hangum.tadpole.manager.core.editor.resource,
+ com.hangum.tadpole.manager.core.editor.schemahistory
 Import-Package: javax.servlet;version="2.4.0",
  javax.servlet.http;version="2.4.0"
 Bundle-Localization: /OSGI-INF/l10n/bundle

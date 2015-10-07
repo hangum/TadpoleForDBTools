@@ -21,6 +21,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 
 /**
  * 사용자 관리 에디터
@@ -30,6 +31,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
  */
 public class DBMgmtEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.manager.core.editor.dbmgnt";
+	private UserDAO userDAO;
 
 	public DBMgmtEditor() {
 	}
@@ -49,6 +51,8 @@ public class DBMgmtEditor extends EditorPart {
 		
 		DBMgntEditorInput qei = (DBMgntEditorInput)input;
 		setPartName(qei.getName());
+		
+		userDAO = qei.getUserDAO();
 	}
 
 	@Override
@@ -99,7 +103,7 @@ public class DBMgmtEditor extends EditorPart {
 //		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
 //		tbtmDB.setText(Messages.UserManagementEditor_2);
 		
-		Composite compositeDBList = new DBListComposite(compositeMain, SWT.NONE);
+		Composite compositeDBList = new DBListComposite(compositeMain, SWT.NONE, userDAO);
 		compositeDBList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		// google analytic

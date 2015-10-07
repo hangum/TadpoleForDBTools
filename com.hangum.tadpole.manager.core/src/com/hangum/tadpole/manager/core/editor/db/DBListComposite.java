@@ -55,6 +55,7 @@ import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
@@ -70,9 +71,10 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
- * 어드민, 메니저, DBA가 사용하는 DB List composite
+ * 사용자 DB List composite
  * 
  * @author hangum
  * @since 2015.03.31
@@ -84,6 +86,7 @@ public class DBListComposite extends Composite {
 	 */
 	private static final Logger logger = Logger.getLogger(DBListComposite.class);
 
+	private UserDAO userDAO;
 	private TreeViewer tvDBList;
 	private List<ManagerListDTO> listUserDBs = new ArrayList<ManagerListDTO>();
 	
@@ -107,8 +110,9 @@ public class DBListComposite extends Composite {
 	 * Create the composite.
 	 * @param parent
 	 * @param style
+	 * @param userDAO 
 	 */
-	public DBListComposite(Composite parent, int style) {
+	public DBListComposite(Composite parent, int style, UserDAO userDAO) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
@@ -116,9 +120,10 @@ public class DBListComposite extends Composite {
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
+		this.userDAO = userDAO;
 		
 		Composite compositeHead = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeHead = new GridLayout(3, false);
+		GridLayout gl_compositeHead = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -268,6 +273,11 @@ public class DBListComposite extends Composite {
 		tltmSQLEditor.setEnabled(false);
 		tltmSQLEditor.setToolTipText(Messages.DBListComposite_8);
 		
+		Label lblUserName = new Label(compositeHead, SWT.NONE);
+		if(userDAO != null) {
+			lblUserName.setText(String.format("%s(%s)", userDAO.getName(), userDAO.getEmail()));
+		}
+		
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
@@ -276,6 +286,7 @@ public class DBListComposite extends Composite {
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeHead, SWT.NONE);
 		new Label(compositeHead, SWT.NONE);
 		
 		textSearch.addKeyListener(new KeyAdapter() {
@@ -521,7 +532,10 @@ public class DBListComposite extends Composite {
 	private void initData() {
 		listUserDBs.clear();
 		try {
-			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getCreateUserDB();
+			List<UserDBDAO> userDBS = new ArrayList<>();
+			if(userDAO == null) userDBS = TadpoleSystem_UserDBQuery.getCreateUserDB();
+			else userDBS = TadpoleSystem_UserDBQuery.getCreateUserDB(userDAO);
+			
 			for (UserDBDAO userDB : userDBS) {
 				boolean isAdd = false;
 				

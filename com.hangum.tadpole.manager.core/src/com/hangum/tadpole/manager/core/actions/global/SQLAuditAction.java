@@ -36,23 +36,23 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class ExecutedSQLAction extends Action implements ISelectionListener, IWorkbenchAction {
+public class SQLAuditAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ExecutedSQLAction.class);
+	private static final Logger logger = Logger.getLogger(SQLAuditAction.class);
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.ExecutedSQLAction"; //$NON-NLS-1$
 	
 	private final IWorkbenchWindow window;
 	private IStructuredSelection iss;
 	
-	public ExecutedSQLAction(IWorkbenchWindow window) {
+	public SQLAuditAction(IWorkbenchWindow window) {
 		this.window = window;
 		
 		setId(ID);
 		setText(Messages.ExecutedSQLAction_0);
 		setToolTipText(Messages.ExecutedSQLAction_1);
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/queryhistory.png")); //$NON-NLS-1$
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
