@@ -155,7 +155,9 @@ public class TadpoleSQLManager {
 				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
 				break;
 			case MSSQL_DEFAULT:			
-			case MSSQL_8_LE_DEFAULT:	
+			case MSSQL_8_LE_DEFAULT:
+			case MYSQL_DEFAULT:
+			case MARIADB_DEFAULT:
 			case SQLite_DEFAULT:		
 				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
 				break;

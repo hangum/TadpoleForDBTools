@@ -12,12 +12,15 @@ package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -59,6 +62,34 @@ public class DBSystemSchema {
 		}
 		
 		return listTblView; 
+	}
+	
+	/**
+	 * getViewColumn
+	 * 
+	 * @param userDB
+	 * @param tableDao
+	 * @return 
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<TableColumnDAO> getViewColumnList(final UserDBDAO userDB, final TableDAO tableDao) throws TadpoleSQLManagerException, SQLException {
+		List<TableColumnDAO> showViewColumns = new ArrayList<TableColumnDAO>();
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("db", userDB.getDb()); //$NON-NLS-1$
+		param.put("table", tableDao.getName()); //$NON-NLS-1$
+
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
+		
+		// if find the keyword is add system quote.
+		for(TableColumnDAO td : showViewColumns) {
+			System.out.println("=============> " + SQLUtil.makeIdentifierName(userDB, td.getField()));
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
+		}
+		
+		return showViewColumns;
 	}
 
 	/**

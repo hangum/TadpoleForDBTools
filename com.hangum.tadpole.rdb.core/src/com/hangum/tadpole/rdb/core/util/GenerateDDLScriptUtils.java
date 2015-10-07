@@ -38,7 +38,14 @@ public class GenerateDDLScriptUtils {
 	 */
 	private static final Logger logger = Logger.getLogger(GenerateDDLScriptUtils.class); 
 	
-	
+	/**
+	 * get table script
+	 * 
+	 * @param userDB
+	 * @param tableDAO
+	 * @param showTableColumns
+	 * @return
+	 */
 	public static String genTableScript(UserDBDAO userDB, TableDAO tableDAO, List<TableColumnDAO> showTableColumns) {
 		if(showTableColumns == null) return "";
 		if(showTableColumns.isEmpty()) return "";

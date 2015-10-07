@@ -11,9 +11,7 @@
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -51,7 +49,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -71,7 +68,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
-import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -145,18 +141,12 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 						try {
 							TableDAO viewDao = (TableDAO)is.getFirstElement();
 							StringBuffer sbSQL = new StringBuffer();
-		
-							Map<String, String> parameter = new HashMap<String, String>();
-							parameter.put("db", userDB.getDb()); //$NON-NLS-1$
-							parameter.put("table", viewDao.getName()); //$NON-NLS-1$
-							
-							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-							List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", parameter); //$NON-NLS-1$
-							
+
+							List<TableColumnDAO> showTableColumns = DBSystemSchema.getViewColumnList(userDB, viewDao);
 							sbSQL.append("SELECT "); //$NON-NLS-1$
 							for (int i=0; i<showTableColumns.size(); i++) {
 								TableColumnDAO dao = showTableColumns.get(i);
-								sbSQL.append(dao.getField());
+								sbSQL.append(dao.getSysName());
 								
 								// 마지막 컬럼에는 ,를 않넣어주어야하니까 
 								if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
@@ -184,13 +174,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 					if (!is.isEmpty()) {
 						if (is.getFirstElement() != null) {
 							TableDAO viewDao = (TableDAO)is.getFirstElement();
-							
-							Map<String, String> param = new HashMap<String, String>();
-							param.put("db", userDB.getDb()); //$NON-NLS-1$
-							param.put("table", viewDao.getName()); //$NON-NLS-1$
-
-							SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-							showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
+							showViewColumns = DBSystemSchema.getViewColumnList(userDB, viewDao);
 						} else {
 							showViewColumns = new ArrayList<>();
 						}
