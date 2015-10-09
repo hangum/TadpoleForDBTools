@@ -71,7 +71,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
-import com.hangum.tadpole.session.manager.SessionManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * 사용자 DB List composite
@@ -123,7 +123,7 @@ public class DBListComposite extends Composite {
 		this.userDAO = userDAO;
 		
 		Composite compositeHead = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeHead = new GridLayout(4, false);
+		GridLayout gl_compositeHead = new GridLayout(5, false);
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -262,6 +262,7 @@ public class DBListComposite extends Composite {
 		tltmQueryHistory.setEnabled(false);
 		tltmQueryHistory.setToolTipText(Messages.DBListComposite_7);
 		
+		ToolItem toolItem_2 = new ToolItem(toolBar, SWT.SEPARATOR);
 		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
 		tltmSQLEditor.setImage(ToobalImageUtils.getSQLEditor()); //$NON-NLS-1$
 		tltmSQLEditor.addSelectionListener(new SelectionAdapter() {
@@ -273,21 +274,24 @@ public class DBListComposite extends Composite {
 		tltmSQLEditor.setEnabled(false);
 		tltmSQLEditor.setToolTipText(Messages.DBListComposite_8);
 		
+		Label label = new Label(compositeHead, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		Label lblUser = new Label(compositeHead, SWT.NONE);
 		Label lblUserName = new Label(compositeHead, SWT.NONE);
 		if(userDAO != null) {
-			lblUserName.setText(String.format("%s(%s)", userDAO.getName(), userDAO.getEmail()));
+			lblUser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+			lblUser.setText(Messages.DBListComposite_26);
+			
+			lblUserName.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+			lblUserName.setText(String.format("%s(%s)", userDAO.getName(), userDAO.getEmail())); //$NON-NLS-1$
 		}
-		
-		new Label(compositeHead, SWT.NONE);
-		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblSearch.setText(Messages.DBListComposite_9);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
-		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeHead, SWT.NONE);
-		new Label(compositeHead, SWT.NONE);
+		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		textSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -400,7 +404,7 @@ public class DBListComposite extends Composite {
 		
 		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colName.getColumn().setWidth(330);
-		colName.getColumn().setText(Messages.DBListComposite_13 + "(" + Messages.DBListComposite_16 + ")");
+		colName.getColumn().setText(Messages.DBListComposite_13 + "(" + Messages.DBListComposite_16 + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colApproval.getColumn().setWidth(70);
@@ -597,11 +601,11 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 			switch(columnIndex) {
 				case 0: return ManagerLabelProvider.getDBText(userDB);
-				case 1: return "";//userDB.getRole_id();
+				case 1: return "";//userDB.getRole_id(); //$NON-NLS-1$
 				case 2:
 					// sqlite
-					if("".equals(userDB.getHost())) return userDB.getUrl();
-					return userDB.getHost() + " : "  + userDB.getPort();
+					if("".equals(userDB.getHost())) return userDB.getUrl(); //$NON-NLS-1$
+					return userDB.getHost() + " : "  + userDB.getPort(); //$NON-NLS-1$
 				case 3: return userDB.getUsers();
 				case 4: return userDB.getIs_visible();
 			}
@@ -609,17 +613,17 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 		} else if(element instanceof ManagerListDTO) {
 			ManagerListDTO mgDto = (ManagerListDTO)element;
 			if(columnIndex == 0) return mgDto.getName();
-			else return "";
+			else return ""; //$NON-NLS-1$
 		} else if(element instanceof TadpoleUserDbRoleDAO) {
 			TadpoleUserDbRoleDAO roleDao = (TadpoleUserDbRoleDAO)element;
 			switch(columnIndex) {
-				case 0: return String.format("%s (%s)", roleDao.getName(), roleDao.getEmail());
+				case 0: return String.format("%s (%s)", roleDao.getName(), roleDao.getEmail()); //$NON-NLS-1$
 				case 1: return roleDao.getRole_id();
-				case 2: return Utils.dateToStr(roleDao.getTerms_of_use_starttime()) + " ~ " + Utils.dateToStr(roleDao.getTerms_of_use_endtime());
+				case 2: return Utils.dateToStr(roleDao.getTerms_of_use_starttime()) + " ~ " + Utils.dateToStr(roleDao.getTerms_of_use_endtime()); //$NON-NLS-1$
 			}
 		}
 		
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 	
 }
@@ -634,7 +638,7 @@ class AdminCompFilter extends ViewerFilter {
 	String searchString;
 	
 	public void setSearchString(String s) {
-		this.searchString = ".*" + s.toLowerCase() + ".*";
+		this.searchString = ".*" + s.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

@@ -113,6 +113,8 @@ public class Messages extends NLS {
 
 	public static String DBListComposite_25;
 
+	public static String DBListComposite_26;
+
 	public static String DBListComposite_3;
 
 	public static String DBListComposite_4;

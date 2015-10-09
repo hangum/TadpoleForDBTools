@@ -271,7 +271,7 @@ public class NewUserDialog extends Dialog {
 			} catch(Exception e) {
 				// igonre exception
 			}
-			if(isAdmin || "".equals(smtpDto.getEmail())) {
+			if(isAdmin || "".equals(smtpDto.getEmail())) { //$NON-NLS-1$
 				approvalYn 		= PublicTadpoleDefine.YES_NO.YES.name();
 				isEmamilConrim 	= PublicTadpoleDefine.YES_NO.YES.name();
 			}
@@ -296,7 +296,7 @@ public class NewUserDialog extends Dialog {
 			try {
 				AddDefaultSampleDBToUser.addUserDefaultDB(userDao.getSeq(), userDao.getEmail());
 			} catch (Exception e) {
-				logger.error("Sample db copy error", e);
+				logger.error("Sample db copy error", e); //$NON-NLS-1$
 			}
 			
 			if(isSentMail) MessageDialog.openInformation(null, Messages.NewUserDialog_14, Messages.NewUserDialog_31);
@@ -368,6 +368,10 @@ public class NewUserDialog extends Dialog {
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
 			MessageDialog.openError(getParentShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_15);
 			textEMail.setFocus();
+			return false;
+		} else if(StringUtils.length(strPass) < 5) {
+			MessageDialog.openError(getShell(), Messages.NewUserDialog_6, Messages.NewUserDialog_25);
+			textPasswd.setFocus();
 			return false;
 		}
 		

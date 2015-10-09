@@ -182,8 +182,8 @@ public class PreferenceDefine {
 	public static final String EDITOR_IS_WARP 		= "EDITOR_IS_WARP";
 	public static final String EDITOR_IS_WARP_VALUE = "true";
 	
-	public static final String EDITOR_WRAP_LIMIT 		= "220";
-	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "220";
+	public static final String EDITOR_WRAP_LIMIT 		= "EDITOR_WRAP_LIMIT";
+	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "120";
 	
 	public static final String EDITOR_SHOW_GUTTER = "EDITOR_SHOW_GUTTER";
 	public static final String EDITOR_SHOW_GUTTER_VALUE = "true";

@@ -128,6 +128,7 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmRefresh.setToolTipText(Messages.AdminUserListComposite_0);
+		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 	
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 		tltmAdd.setImage(ToobalImageUtils.getAdd());
@@ -150,6 +151,7 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmModify.setEnabled(false);
+		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmLoginHistory = new ToolItem(toolBar, SWT.NONE);
 		tltmLoginHistory.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/userHistory.png"));
@@ -161,6 +163,7 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmLoginHistory.setEnabled(false);
+		ToolItem toolItem_2 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmDBList = new ToolItem(toolBar, SWT.NONE);
 		tltmDBList.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/db.png"));
@@ -172,6 +175,7 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmDBList.setEnabled(false);
+		ToolItem toolItem_3 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmSQLAudit = new ToolItem(toolBar, SWT.NONE);
 		tltmSQLAudit.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png"));

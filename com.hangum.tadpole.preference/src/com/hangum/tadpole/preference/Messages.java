@@ -75,6 +75,8 @@ public class Messages extends NLS {
 
 	public static String UserInfoPerference_13;
 
+	public static String UserInfoPerference_14;
+
 	public static String UserInfoPerference_15;
 
 	public static String UserInfoPerference_16;

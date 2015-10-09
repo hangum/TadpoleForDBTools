@@ -287,6 +287,12 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$
 			String otpSecretKey = textSecretKey.getText();
 			
+			if(StringUtils.length(pass) < 5) {
+				MessageDialog.openError(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_14);
+				textPassword.setFocus();
+				return false;
+			}
+			
 			if(pass.equals("")) { //$NON-NLS-1$
 				MessageDialog.openError(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_17);
 				textPassword.setFocus();

@@ -78,26 +78,6 @@ public class UserMgmtEditor extends EditorPart {
 		gl_composite.horizontalSpacing = 0;
 		gl_composite.marginWidth = 0;
 		compositeMain.setLayout(gl_composite);
-
-//		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
-//		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		tabFolder.setBorderVisible(false);		
-//		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-//		
-//		if(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(SessionManager.getRepresentRole())) {
-//			
-//			// Users
-//			CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-//			tbtmItem.setText(Messages.UserManagementEditor_1);
-//			
-//			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
-//			tbtmItem.setControl(compositeUserList);
-//			compositeUserList.setLayout(new GridLayout(1, false));
-//		}
-		
-		// DBs
-//		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
-//		tbtmDB.setText(Messages.UserManagementEditor_2);
 		
 		Composite compositeDBList = new UserListComposite(compositeMain, SWT.NONE);
 		compositeDBList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

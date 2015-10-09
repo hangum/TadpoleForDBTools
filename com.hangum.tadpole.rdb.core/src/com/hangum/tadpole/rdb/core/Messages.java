@@ -642,6 +642,8 @@ public class Messages extends NLS {
 	public static String ParameterDialog_6;
 	public static String PostgresLoginComposite_1;
 	public static String PreDBInfoComposite_this_text;
+	public static String PreferenceAction_1;
+	public static String PreferenceAction_2;
 	public static String MSSQLLoginComposite_grpConnectionType_text;
 	public static String MSSQLLoginComposite_preDBInfo_text;
 	public static String TableDataEditorAction_1;

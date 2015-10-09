@@ -61,6 +61,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -132,6 +133,27 @@ public class ExecutedSQLEditor extends EditorPart {
 		gl_parent.verticalSpacing = 2;
 		gl_parent.horizontalSpacing = 2;
 		parent.setLayout(gl_parent);
+		
+		
+		
+		
+		if(userDAO != null) {
+			Composite compositeUserInfo = new Composite(parent, SWT.NONE);
+			compositeUserInfo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 4, 1));
+			compositeUserInfo.setLayout(new GridLayout(3, false));
+			
+			Label label = new Label(compositeUserInfo, SWT.NONE);
+			label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+			Label lblUser = new Label(compositeUserInfo, SWT.NONE);
+			Label lblUserName = new Label(compositeUserInfo, SWT.NONE);
+			
+			lblUser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+			lblUser.setText(Messages.DBListComposite_26);
+			
+			lblUserName.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+			lblUserName.setText(String.format("%s(%s)", userDAO.getName(), userDAO.getEmail())); //$NON-NLS-1$
+		}
 
 		Group compositeHead = new Group(parent, SWT.NONE);
 		compositeHead.setText(Messages.ExecutedSQLEditor_11);
@@ -226,7 +248,6 @@ public class ExecutedSQLEditor extends EditorPart {
 		textSearch = new Text(compositeSearchDetail, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textSearch.setMessage(Messages.ExecutedSQLEditor_5);
-//		textSearch.setToolTipText("After entering a value, press the Enter key.");
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -472,7 +493,12 @@ public class ExecutedSQLEditor extends EditorPart {
 
 		try {
 			// database name combo
-			listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
+			if(userDAO == null) {
+				userDAO = new UserDAO();
+				userDAO.setSeq(SessionManager.getUserSeq());
+				listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
+			} else listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
+			
 			comboDatabase.add("All"); //$NON-NLS-1$
 			comboDatabase.setData("All", null); //$NON-NLS-1$
 			
@@ -480,7 +506,7 @@ public class ExecutedSQLEditor extends EditorPart {
 				comboDatabase.add(userDBDAO.getDisplay_name());
 				comboDatabase.setData(userDBDAO.getDisplay_name(), userDBDAO);
 			}
-			comboTypes.setVisibleItemCount(listUserDBDAO.size());
+			comboDatabase.setVisibleItemCount(listUserDBDAO.size()+1);
 			comboDatabase.select(0);
 
 		} catch (Exception e) {
