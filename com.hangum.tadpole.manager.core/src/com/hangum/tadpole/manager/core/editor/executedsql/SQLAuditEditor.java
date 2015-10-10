@@ -233,7 +233,15 @@ public class SQLAuditEditor extends EditorPart {
 		gd_textMillis.widthHint = 70;
 		textMillis.setLayoutData(gd_textMillis);
 		textMillis.setText("500"); //$NON-NLS-1$
-																				
+		textMillis.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					search();
+				}
+			}
+		});
+		
 		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
 		lblMilis.setText(Messages.ExecutedSQLEditor_19);
 		new Label(compositeInSearch, SWT.NONE);

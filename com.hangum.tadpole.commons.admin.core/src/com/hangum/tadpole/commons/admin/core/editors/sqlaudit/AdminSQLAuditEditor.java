@@ -45,6 +45,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -79,7 +80,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", "데이터베이스", "사용자", "날짜", "SQL", "초", "리턴행", "결과", "메시지", "IP"}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.AdminSQLAuditEditor_0, Messages.AdminSQLAuditEditor_1, Messages.AdminSQLAuditEditor_2, Messages.AdminSQLAuditEditor_3, Messages.AdminSQLAuditEditor_4, Messages.AdminSQLAuditEditor_5, Messages.AdminSQLAuditEditor_6, Messages.AdminSQLAuditEditor_7, Messages.AdminSQLAuditEditor_8}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -118,7 +119,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		parent.setLayout(gl_parent);
 		
 		Group compositeHead = new Group(parent, SWT.NONE);
-		compositeHead.setText("검색");
+		compositeHead.setText(Messages.AdminSQLAuditEditor_9);
 		GridLayout gl_compositeHead = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -130,7 +131,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		gd_lblUser.minimumWidth = 65;
 		gd_lblUser.widthHint = 65;
 		lblTypes.setLayoutData(gd_lblUser);
-		lblTypes.setText("호출 타입");
+		lblTypes.setText(Messages.AdminSQLAuditEditor_10);
 		
 		comboTypes = new Combo(compositeHead, SWT.READ_ONLY);
 		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -138,7 +139,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		gd_comboUserName.minimumWidth = 200;
 		comboTypes.setLayoutData(gd_comboUserName);
 		
-		comboTypes.add("All");
+		comboTypes.add("All"); //$NON-NLS-1$
 		for (PublicTadpoleDefine.EXECUTE_SQL_TYPE type : PublicTadpoleDefine.EXECUTE_SQL_TYPE.values()) {
 			comboTypes.add(type.name());
 		}
@@ -146,7 +147,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		comboTypes.select(0);
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText("이메일");
+		lblEmail.setText(Messages.AdminSQLAuditEditor_12);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -169,7 +170,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		compositeInSearch.setLayout(gl_compositeInSearch);
 				
 		Label lblDate = new Label(compositeInSearch, SWT.NONE);
-		lblDate.setText("기간");
+		lblDate.setText(Messages.AdminSQLAuditEditor_13);
 						
 		dateTimeStart = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 		Label label = new Label(compositeInSearch, SWT.NONE);
@@ -178,16 +179,24 @@ public class AdminSQLAuditEditor extends EditorPart {
 		dateTimeEnd = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 												
 		Label lblDuring = new Label(compositeInSearch, SWT.RIGHT);
-		lblDuring.setText("수행시간");
+		lblDuring.setText(Messages.AdminSQLAuditEditor_14);
 																
 		textMillis = new Text(compositeInSearch, SWT.BORDER | SWT.CENTER);
 		GridData gd_textMillis = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_textMillis.widthHint = 70;
 		textMillis.setLayoutData(gd_textMillis);
 		textMillis.setText("500"); //$NON-NLS-1$
+		textMillis.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					search();
+				}
+			}
+		});
 																				
 		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
-		lblMilis.setText("(밀리 초)");
+		lblMilis.setText(Messages.AdminSQLAuditEditor_15);
 		new Label(compositeInSearch, SWT.NONE);
 		
 		Composite compositeSearchDetail = new Composite(compositeHead, SWT.NONE);
@@ -195,11 +204,11 @@ public class AdminSQLAuditEditor extends EditorPart {
 		compositeSearchDetail.setLayout(new GridLayout(3, false));
 		
 		Label lblSQL = new Label(compositeSearchDetail, SWT.NONE);
-		lblSQL.setText("SQL");
+		lblSQL.setText(Messages.AdminSQLAuditEditor_3);
 		
 		textSearch = new Text(compositeSearchDetail, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textSearch.setMessage("SQL");
+		textSearch.setMessage(Messages.AdminSQLAuditEditor_3);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -217,7 +226,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				search();
 			}
 		});
-		btnSearch.setText("검색");
+		btnSearch.setText(Messages.AdminSQLAuditEditor_18);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -267,7 +276,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				download();
 			}
 		});
-		btnDownload.setText("CSV로 내보내기");
+		btnDownload.setText(Messages.AdminSQLAuditEditor_19);
 
 		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
 		btnShowQueryEditor.addSelectionListener(new SelectionAdapter() {
@@ -276,7 +285,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
-		btnShowQueryEditor.setText("SQL을 에디터로 보내기");
+		btnShowQueryEditor.setText(Messages.AdminSQLAuditEditor_20);
 
 		initUIData();
 		registerServiceHandler();
@@ -290,7 +299,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	 */
 	private void download() {
 		if(gridHistory.getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(getSite().getShell(), "확인", "다운로드 하시겠습니까?")) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.AdminSQLAuditEditor_21, Messages.AdminSQLAuditEditor_22)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -312,7 +321,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("SQLAudit.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(getSite().getShell(), "확인", "다운로드가 완료 되었습니다");
+			MessageDialog.openInformation(getSite().getShell(), Messages.AdminSQLAuditEditor_21, Messages.AdminSQLAuditEditor_24);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		

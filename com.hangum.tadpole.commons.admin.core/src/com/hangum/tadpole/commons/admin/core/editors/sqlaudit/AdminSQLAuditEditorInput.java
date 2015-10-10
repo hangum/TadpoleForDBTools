@@ -14,6 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.commons.admin.core.Messages;
+
 /**
  * Executed SQL Editor input
  * 
@@ -48,7 +50,7 @@ public class AdminSQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Admin SQL Audit";
+		return Messages.AdminSQLAuditEditorInput_0;
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class AdminSQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Admin SQL Audit";
+		return Messages.AdminSQLAuditEditorInput_1;
 	}
 	
 }

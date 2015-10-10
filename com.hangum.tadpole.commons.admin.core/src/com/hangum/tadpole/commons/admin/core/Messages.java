@@ -6,6 +6,75 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.admin.core.messages"; //$NON-NLS-1$
 	
 
+	public static String AdminSQLAuditEditor_0;
+
+
+	public static String AdminSQLAuditEditor_1;
+
+
+	public static String AdminSQLAuditEditor_10;
+
+
+	public static String AdminSQLAuditEditor_12;
+
+
+	public static String AdminSQLAuditEditor_13;
+
+
+	public static String AdminSQLAuditEditor_14;
+
+
+	public static String AdminSQLAuditEditor_15;
+
+
+	public static String AdminSQLAuditEditor_18;
+
+
+	public static String AdminSQLAuditEditor_19;
+
+
+	public static String AdminSQLAuditEditor_2;
+
+
+	public static String AdminSQLAuditEditor_20;
+
+
+	public static String AdminSQLAuditEditor_21;
+
+
+	public static String AdminSQLAuditEditor_22;
+
+
+	public static String AdminSQLAuditEditor_24;
+
+
+	public static String AdminSQLAuditEditor_3;
+
+
+	public static String AdminSQLAuditEditor_4;
+
+
+	public static String AdminSQLAuditEditor_5;
+
+
+	public static String AdminSQLAuditEditor_6;
+
+
+	public static String AdminSQLAuditEditor_7;
+
+
+	public static String AdminSQLAuditEditor_8;
+
+
+	public static String AdminSQLAuditEditor_9;
+
+
+	public static String AdminSQLAuditEditorInput_0;
+
+
+	public static String AdminSQLAuditEditorInput_1;
+
+
 	public static String AdminUserListComposite_0;
 
 	public static String AdminUserListComposite_1;
