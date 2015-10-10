@@ -186,21 +186,31 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createIndexesColumn(final TableViewer tv, final ObjectComparator comparator) {
-//		String[] name = {"TABLE NAME", "INDEX NAME", "NON UNIQUE", "INDEX SCHEMA", "SEQ IN INDEX", 
-//						"COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED", 
-//						"NULLABLE", 	"INDEX TYPE","COMMENT"
-//		};
 		String[] name = {Messages.AbstractObjectComposite_22, Messages.AbstractObjectComposite_23,Messages.AbstractObjectComposite_24,Messages.AbstractObjectComposite_25};
-		int[] size = {120, 120, 70, 70//, 70, 
-//						70,	70, 70, 70, 70, 
-//						70, 70,	70
-		};
+		int[] size = {120, 120, 70, 70};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
+		}
+	}
+	
+	/**
+	 * 
+	 * @param tv
+	 * @param comparator
+	 */
+	protected void crateSchedule(final TableViewer tv, final ObjectComparator comparator) {
+		String[] name = {"WHAT", "JOB", "NEXT_DATE", "NEXT_SEC", "FAILURES", "BROKEN"};
+		int[] size = {120, 120, 70, 70, 70, 70};
+
+		for (int i=0; i<name.length; i++) {
+			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
+			tableColumn.getColumn().setText(name[i]);
+			tableColumn.getColumn().setWidth(size[i]);
+//			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
 	

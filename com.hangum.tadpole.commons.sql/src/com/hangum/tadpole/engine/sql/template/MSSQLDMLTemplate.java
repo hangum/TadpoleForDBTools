@@ -30,41 +30,38 @@ public class MSSQLDMLTemplate extends AbstractDMLTemplate {
 	
 	/** table  */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR +  
-						 " id INT  NOT NULL,  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-						 " name char(60) default NULL, " + PublicTadpoleDefine.LINE_SEPARATOR + 
-						 " PRIMARY KEY (id) " + PublicTadpoleDefine.LINE_SEPARATOR + 
-						" );";
+						 "	id INT  NOT NULL,  " + PublicTadpoleDefine.LINE_SEPARATOR + 
+						 "	name char(60) default NULL, " + PublicTadpoleDefine.LINE_SEPARATOR + 
+						 "	PRIMARY KEY (id) " + PublicTadpoleDefine.LINE_SEPARATOR + 
+						");";
 
-	
 	/** view  */
-	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																" SELECT   columns   FROM   table;";
+	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW view_name AS " + PublicTadpoleDefine.LINE_SEPARATOR +  
+														"	SELECT columns FROM table;";
 	
 	/** index */
 	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR +
-													" ON table_name ( columns );";
-	
-	
+													"	ON table_name ( columns );";
 	
 	/** procedure */
 	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE PROCEDURE simpleproc " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																	  " AS " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																	  "  SELECT COUNT(*) INTO param1 FROM t;";
+														  "	AS " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														  "		SELECT COUNT(*) INTO param1 FROM t;";
 	
 	
 	/** function */
 	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION fc_sample_table5 (@v_name VARCHAR ) " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	RETURNS TABLE	" + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	AS	" + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	RETURN (	" + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	 SELECT  *	" + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	 FROM  sample_table" + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	 WHERE name = @v_name" + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	); ";
+														"RETURNS TABLE	" + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"AS	" + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"RETURN (	" + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"	SELECT  *	" + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"	FROM  sample_table" + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"	WHERE name = @v_name" + PublicTadpoleDefine.LINE_SEPARATOR + 
+														");";
 	
 	/** trigger */
 	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER reminder1 " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"	ON sample_table " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"ON sample_table " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														"	AFTER INSERT, UPDATE  " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														"	AS RAISERROR ('Notify Customer Relations', 16, 10); ";
 }

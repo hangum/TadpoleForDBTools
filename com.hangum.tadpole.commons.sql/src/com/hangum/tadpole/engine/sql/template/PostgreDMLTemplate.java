@@ -21,43 +21,40 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 public class PostgreDMLTemplate extends MySQLDMLTemplate {
 	public static final String TMP_GET_PARTDATA = "%s limit %s offset %s";
 
-	// plan_table	
-	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN (ANALYZE on, VERBOSE on, COSTS on, BUFFERS on, TIMING on)  ";
+	/** plan_table */	
+	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN (ANALYZE on, VERBOSE on, COSTS on, BUFFERS on, TIMING on) ";
 
 	/** table */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE emp ( " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"    empname text, " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"    salary integer, " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"    last_date timestamp, " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"    last_user text " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"  );";
+														"	empname text, " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"	salary integer, " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"	last_date timestamp, " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														"	last_user text " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														");";
 	
 	/** view  */
 	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW empComedies AS " + PublicTadpoleDefine.LINE_SEPARATOR + 
-													   " SELECT * " + PublicTadpoleDefine.LINE_SEPARATOR + 
-													   " FROM emp " + PublicTadpoleDefine.LINE_SEPARATOR + 
-													   " WHERE empname = 'Comedy';";
+													   "	SELECT * " + PublicTadpoleDefine.LINE_SEPARATOR + 
+													   "	FROM emp " + PublicTadpoleDefine.LINE_SEPARATOR + 
+													   "	WHERE empname = 'Comedy';";
 	
 	/** index */
 	public static final String  TMP_CREATE_INDEX_STMT = "CREATE UNIQUE INDEX empname_idx ON emp (empname);";
 	
-	
-	
 	/** procedure */
 	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE PROCEDURE simpleproc (OUT param1 INT) " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																	  " BEGIN  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																	  "  SELECT COUNT(*) INTO param1 FROM t;  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																	  " END;";
-	
+														  "BEGIN " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														  "	SELECT COUNT(*) INTO param1 FROM t; " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														  "END;";
 	
 	/** function */
 	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE OR REPLACE FUNCTION increment(i INT) RETURNS INT AS $$ " + PublicTadpoleDefine.LINE_SEPARATOR +
-															  "  BEGIN " + PublicTadpoleDefine.LINE_SEPARATOR +
-															  "    RETURN i + 1; " + PublicTadpoleDefine.LINE_SEPARATOR +
-															  "  END; " + PublicTadpoleDefine.LINE_SEPARATOR +
-															  "  $$ LANGUAGE plpgsql; ";
+														  "BEGIN " + PublicTadpoleDefine.LINE_SEPARATOR +
+														  "	RETURN i + 1; " + PublicTadpoleDefine.LINE_SEPARATOR +
+														  "END; " + PublicTadpoleDefine.LINE_SEPARATOR +
+														  "$$ LANGUAGE plpgsql; ";
 	
 	/** trigger */
-	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER emp_stamp BEFORE INSERT OR UPDATE ON films  " + PublicTadpoleDefine.LINE_SEPARATOR + 
+	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER emp_stamp BEFORE INSERT OR UPDATE ON films " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														" FOR EACH ROW EXECUTE PROCEDURE emp_stamp();";
 }

@@ -49,6 +49,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFuncti
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.schedule.TadpoleScheduleComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynonymComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
@@ -75,6 +76,7 @@ public class ExplorerViewer extends ViewPart {
 	private CTabFolder tabFolderObject;
 	private Text textSearch;
 	
+	// rdb
 	private Composite compositeBody;
 	private TadpoleTriggerComposite 	triggerComposite 	= null;
 	private TadpoleFunctionComposite 	functionCompostite 	= null;
@@ -83,7 +85,10 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleIndexesComposite 	indexComposite 		= null;
 	private TadpoleViewerComposite 		viewComposite 		= null;
 	private TadpoleTableComposite 		tableComposite 		= null;
+	// oracle
 	private TadpoleSynonymComposite 	synonymComposite 	= null;
+	private TadpoleScheduleComposite    scheduleComposite 	= null;
+	
 	
 	// mongodb
 	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
@@ -130,6 +135,8 @@ public class ExplorerViewer extends ViewPart {
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.name())) {
 					synonymComposite.filter(strSearchText);
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SCHEDULE.name())) {
+//					scheduleComposite.filter(strSearchText);
 				
 				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.name())) {
 					viewComposite.filter(strSearchText);					
@@ -232,7 +239,8 @@ public class ExplorerViewer extends ViewPart {
 		// 기존 사용자원을 반납합니다. 
 		if(null != tableComposite) tableComposite.dispose(); 
 		if(null != viewComposite) viewComposite.dispose(); 
-		if(null != synonymComposite) synonymComposite.dispose(); 
+		if(null != synonymComposite) synonymComposite.dispose();
+		if(null != scheduleComposite) scheduleComposite.dispose();
 		if(null != indexComposite) indexComposite.dispose(); 
 		if(null != procedureComposite) procedureComposite.dispose(); 
 		if(null != packageComposite) packageComposite.dispose(); 
@@ -339,6 +347,7 @@ public class ExplorerViewer extends ViewPart {
 			createPackage();
 			createFunction();
 			createTrigger();
+//			createSchedule();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(),
@@ -351,7 +360,8 @@ public class ExplorerViewer extends ViewPart {
 				packageComposite.getTableViewer(), 
 				packageComposite.getSubTableViewer(),
 				functionCompostite.getTableviewer(), 
-				triggerComposite.getTableViewer()
+				triggerComposite.getTableViewer(),
+//				scheduleComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		// cubrid, mysql, postgre, mssql
@@ -412,6 +422,8 @@ public class ExplorerViewer extends ViewPart {
 			refreshFunction(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.name())) {
 			refreshTrigger(true, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SCHEDULE.name())) {
+			refreshSchedule(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name())) {
 			refreshJS(false, strObjectName);
 		}
@@ -517,6 +529,14 @@ public class ExplorerViewer extends ViewPart {
 		synonymComposite = new TadpoleSynonymComposite(getSite(), tabFolderObject, userDB);
 		synonymComposite.initAction();
 	}
+	
+	/**
+	 * define oracle schedule
+	 */
+	private void createSchedule() {
+		scheduleComposite = new TadpoleScheduleComposite(getSite(), tabFolderObject, userDB);
+		scheduleComposite.initAction();
+	}
 
 	/**
 	 * Synonym 정보를 최신으로 리프레쉬합니다.
@@ -555,6 +575,10 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshPackage(boolean boolRefresh, String strObjectName) {
 		packageComposite.refreshPackage(userDB, boolRefresh);
+	}
+	
+	public void refreshSchedule(boolean boolRefresh, String strObjectName) {
+		scheduleComposite.refreshSchedule(userDB, boolRefresh);
 	}
 
 	/**

@@ -16,7 +16,8 @@ CREATE TABLE `tadpole_user` (
 	`use_otp`                CHAR(3)     NOT NULL DEFAULT 'NO' COMMENT 'USER_OPT', -- USER_OPT
 	`is_email_certification` CHAR(3)     NULL     DEFAULT 'NO' COMMENT '이메일 인증여부', -- 이메일 인증여부
 	`otp_secret`             VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'OPT_SECRET', -- OPT_SECRET
-	`allow_ip`             VARCHAR(20) NOT NULL DEFAULT '*' COMMENT 'allow ip' -- OPT_SECRET
+	`allow_ip`             	VARCHAR(20) NOT NULL DEFAULT '*' COMMENT 'allow ip', -- 로그인시 허용가능 ip 지정
+	`is_regist_db` 			CHAR(3) NOT NULL DEFAULT 'YES' COMMENT 'Is register DB' AFTER `is_regist_db` -- 사용자 디비를 등록할 수 있는지 여부
 )
 COMMENT '사용자 정보를 관리한다.';
 
