@@ -43,5 +43,10 @@
             id="com.hangum.tadpole.preference.page.securityCredentials"
             name="%page.name.6">
       </page>
+      <page
+            class="com.hangum.tadpole.preference.ui.EditorPreferencePage"
+            id="com.hangum.tadpole.preference.page.editor"
+            name="%page.name.7">
+      </page>
    </extension>
 </plugin>

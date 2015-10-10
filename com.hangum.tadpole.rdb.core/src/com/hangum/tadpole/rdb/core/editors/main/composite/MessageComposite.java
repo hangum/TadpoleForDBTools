@@ -14,16 +14,12 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**
@@ -51,16 +47,15 @@ public class MessageComposite extends Composite {
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		    
 		// text limit
-		textMessage.setTextLimit(1000);
-
-		Button btnClear = new Button(this, SWT.NONE);
-		btnClear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				textMessage.setText(""); //$NON-NLS-1$
-			}
-		});
-		btnClear.setText(Messages.MessageComposite_1);
+//		textMessage.setTextLimit(1000);
+//		Button btnClear = new Button(this, SWT.NONE);
+//		btnClear.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				textMessage.setText(""); //$NON-NLS-1$
+//			}
+//		});
+//		btnClear.setText(Messages.MessageComposite_1);
 	}
 
 	/**
@@ -97,15 +92,15 @@ public class MessageComposite extends Composite {
 			}
 		}
 
-		// first show last error message
-		final String strOldText = textMessage.getText();
-		if ("".equals(strOldText)) { //$NON-NLS-1$
+//		// first show last error message
+//		final String strOldText = textMessage.getText();
+//		if ("".equals(strOldText)) { //$NON-NLS-1$
 			textMessage.setText(strNewMessage);
-		} else {
-			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);
-		}
-		textMessage.setSelection(0, strNewMessage.length());
-		textMessage.setFocus();
+//		} else {
+//			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);
+//		}
+//		textMessage.setSelection(0, strNewMessage.length());
+//		textMessage.setFocus();
 	}
 
 	@Override

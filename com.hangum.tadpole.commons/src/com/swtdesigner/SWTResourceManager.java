@@ -21,9 +21,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 
@@ -245,12 +247,12 @@ public class SWTResourceManager {
 		}
 		//
 		Image result = decoratedMap.get(decorator);
-//		if (result == null) {
-//			Rectangle bib = baseImage.getBounds();
-//			Rectangle dib = decorator.getBounds();
-//			//
-//			result = new Image(Display.getCurrent(), bib.width, bib.height);
-//			//
+		if (result == null) {
+			Rectangle bib = baseImage.getBounds();
+			Rectangle dib = decorator.getBounds();
+			//
+			result = new Image(Display.getCurrent(), bib.width, bib.height);
+			//
 //			GC gc = new GC(result);
 //			gc.drawImage(baseImage, 0, 0);
 //			if (corner == TOP_LEFT) {
@@ -263,9 +265,9 @@ public class SWTResourceManager {
 //				gc.drawImage(decorator, bib.width - dib.width, bib.height - dib.height);
 //			}
 //			gc.dispose();
-//			//
-//			decoratedMap.put(decorator, result);
-//		}
+			//
+			decoratedMap.put(decorator, result);
+		}
 		return result;
 	}
 	/**
@@ -306,6 +308,10 @@ public class SWTResourceManager {
 	 * Maps fonts to their bold versions.
 	 */
 	private static Map<Font, Font> m_fontToBoldFontMap = new HashMap<Font, Font>();
+	/** 
+	 * Map fonts to their italic versions.
+	 */
+	private static Map<Font, Font> m_fontToItalicFontMap = new HashMap<Font, Font>();
 	/**
 	 * Returns a {@link Font} based on its name, height and style.
 	 * 
@@ -376,6 +382,24 @@ public class SWTResourceManager {
 			FontData data = fontDatas[0];
 			font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
 			m_fontToBoldFontMap.put(baseFont, font);
+		}
+		return font;
+	}
+	
+	/**
+	 * Returns a italic version of the given {@link Font}.
+	 * 
+	 * @param baseFont
+	 *            the {@link Font} for which a bold version is desired
+	 * @return the bold version of the given {@link Font}
+	 */
+	public static Font getItalicFont(Font baseFont) {
+		Font font = m_fontToItalicFontMap.get(baseFont);
+		if (font == null) {
+			FontData fontDatas[] = baseFont.getFontData();
+			FontData data = fontDatas[0];
+			font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.ITALIC);
+			m_fontToItalicFontMap.put(baseFont, font);
 		}
 		return font;
 	}

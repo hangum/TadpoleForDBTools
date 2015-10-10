@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.application.SQLToJavaConvert;
 
@@ -70,6 +71,7 @@ public class SQLToStringDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.SQLToStringDialog_2);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**

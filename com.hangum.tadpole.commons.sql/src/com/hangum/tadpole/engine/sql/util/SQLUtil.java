@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
@@ -56,7 +57,21 @@ public class SQLUtil {
 	 * 		PRAGMA는 sqlite의 시스템 쿼리 얻는 거.
 	 * </PRE>
 	 */
-	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*|^PRAGMA.*";
+	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*|^EXEC.*";
+	private static final String ORACLE_PATTERN_STATEMENT = "";
+	private static final String MYSQL_PATTERN_STATEMENT = "|^CALL.*";
+	private static final String PGSQL_PATTERN_STATEMENT = "";
+	private static final String SQLITE_PATTERN_STATEMENT = "";
+	private static final String CUBRID_PATTERN_STATEMENT = "";
+	
+	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*" 
+							+ MSSQL_PATTERN_STATEMENT
+							+ ORACLE_PATTERN_STATEMENT
+							+ MYSQL_PATTERN_STATEMENT
+							+ PGSQL_PATTERN_STATEMENT
+							+ SQLITE_PATTERN_STATEMENT
+							+ CUBRID_PATTERN_STATEMENT
+						;
 	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	
 	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
@@ -239,43 +254,50 @@ public class SQLUtil {
 	}
 	
 	/**
-	 * 쿼리에 사용 할 Table name을 만듭니다.
+	 * 쿼리에 사용 할 Table, column name을 만듭니다.
 	 * 
 	 * @param userDB
-	 * @param tableName
+	 * @param name
 	 * @return
 	 */
-	public static String makeIdentifierName(UserDBDAO userDB, String tableName) {
+	public static String makeIdentifierName(UserDBDAO userDB, String name) {
 		boolean isChanged = false;
-		String retStr = tableName;
+		String retStr = name;
 		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
 		
 		if(tmd == null) return retStr;
+
+		// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;; 
+		if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+			if(StringUtils.contains(name, "\"")) {
+				return name = String.format("[%s]", name);
+			}
+		}
 		
 		switch(tmd.getSTORE_TYPE()) {
 //		case NONE: 
 //			retStr = tableName;
 //			break;
 		case BLANK: 
-			if(tableName.matches(".*\\s.*")) {
+			if(name.matches(".*\\s.*")) {
 				isChanged = true;
-				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}
 			break;
 		case LOWCASE_BLANK:
-			if(tableName.matches(".*[a-z\\s].*")) {
+			if(name.matches(".*[a-z\\s].*")) {
 				isChanged = true;
-				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}
 			break;
 		case UPPERCASE_BLANK:
-			if(tableName.matches(".*[A-Z\\s].*")) {
+			if(name.matches(".*[A-Z\\s].*")) {
 				isChanged = true;
-				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}
 			break;
 		}
-			
+		
 		// Is keywords?
 		// schema.tableName
 		if(!isChanged) {

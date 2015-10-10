@@ -20,6 +20,10 @@ public class Messages extends NLS {
 	public static String DBLockDialog_3;
 	public static String DBLockDialog_4;
 	public static String DBLockDialog_5;
+	public static String ProcedureExecuterManager_0;
+	public static String ProcedureExecuterManager_4;
+	public static String ProcedureExecuterManager_6;
+	public static String ProcedureExecuterManager_error;
 	public static String TadpoleSQLManager_0;
 	public static String SQLHistoryCreateColumn_0;
 	public static String SQLHistoryCreateColumn_1;

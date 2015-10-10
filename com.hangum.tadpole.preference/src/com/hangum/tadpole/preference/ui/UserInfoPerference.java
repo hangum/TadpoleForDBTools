@@ -287,18 +287,26 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$
 			String otpSecretKey = textSecretKey.getText();
 			
-			if(!pass.equals(rePass)) {
-				MessageDialog.openError(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_6);
+			if(StringUtils.length(pass) < 5) {
+				MessageDialog.openError(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_14);
+				textPassword.setFocus();
 				return false;
 			}
 			
-			if(btnGetOptCode.getSelection()) {
+			if(pass.equals("")) { //$NON-NLS-1$
+				MessageDialog.openError(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_17);
+				textPassword.setFocus();
+				return false;
+			} else if(!pass.equals(rePass)) {
+				MessageDialog.openError(getShell(), Messages.UserInfoPerference_0, Messages.UserInfoPerference_6);
+				textPassword.setFocus();
+				return false;
+			} else if(btnGetOptCode.getSelection()) {
 				if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
 					MessageDialog.openError(getShell(), "Error", Messages.UserInfoPerference_15); //$NON-NLS-1$
 					textOTPCode.setFocus();
 					return false;
-				}
-				if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
+				} else if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
 					MessageDialog.openError(getShell(), "Error", Messages.UserInfoPerference_16); //$NON-NLS-1$
 					textOTPCode.setFocus();
 					return false;
@@ -328,7 +336,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				SessionManager.setPassword(user.getPasswd());
 			} catch (Exception e) {
 				logger.error("password change", e); //$NON-NLS-1$
-				MessageDialog.openError(getShell(), "Confirm", e.getMessage());			 //$NON-NLS-1$
+				MessageDialog.openError(getShell(), "Error", e.getMessage());			 //$NON-NLS-1$
 				
 				return false;
 			}

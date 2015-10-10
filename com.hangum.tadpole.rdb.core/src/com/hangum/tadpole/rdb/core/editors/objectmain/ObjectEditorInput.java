@@ -21,6 +21,8 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
  *
  */
 public class ObjectEditorInput extends MainEditorInput {
+	/** object name */
+	private String objectName = "";
 
 	public ObjectEditorInput(UserDBDAO userDB) {
 		super(userDB);
@@ -28,6 +30,21 @@ public class ObjectEditorInput extends MainEditorInput {
 
 	public ObjectEditorInput(UserDBDAO userDB, String lowSQL, DB_ACTION initAction) {
 		super(userDB, lowSQL, initAction);
+	}
+	
+	public ObjectEditorInput(UserDBDAO userDB, String objectName, String lowSQL, DB_ACTION initAction) {
+		super(userDB, lowSQL, initAction);
+		
+		this.objectName = objectName;
+	}
+	
+	/**
+	 * object name
+	 * 
+	 * @return
+	 */
+	public String getObjectName() {
+		return objectName;
 	}
 
 }

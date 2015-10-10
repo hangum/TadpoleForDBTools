@@ -27,21 +27,20 @@ public class HIVEDMLTemplate extends AbstractDMLTemplate {
 	 */	
 	public static final String TMP_GET_PARTDATA = " %s limit %s,%s";
 	
-	public static final String TMP_EXPLAIN_EXTENDED = "explain  ";
+	public static final String TMP_EXPLAIN_EXTENDED = "explain ";
 	
 	/** table - mysql */
-	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   (  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-						 " id int,   " + PublicTadpoleDefine.LINE_SEPARATOR +
-						 " name string  " + PublicTadpoleDefine.LINE_SEPARATOR +
-						" );";
+	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 
+						 "	id int,   " + PublicTadpoleDefine.LINE_SEPARATOR +
+						 "	name string  " + PublicTadpoleDefine.LINE_SEPARATOR +
+						");";
 	
 	/** view */
-	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS  " + PublicTadpoleDefine.LINE_SEPARATOR + 
-																" SELECT   columns   FROM   table_name;";
+	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW view_name AS " + PublicTadpoleDefine.LINE_SEPARATOR + 
+													"	SELECT columns FROM table_name;";
 
 	/** alter view template */
 	public static final String TMP_ALTER_VIEW_STMT = "ALTER ALGORITHM=UNDEFINED DEFINER='%s'@'%' " + PublicTadpoleDefine.LINE_SEPARATOR +
-													" SQL SECURITY DEFINER VIEW '%s' AS " + PublicTadpoleDefine.LINE_SEPARATOR +
-													"";
+													"	SQL SECURITY DEFINER VIEW '%s' AS " + PublicTadpoleDefine.LINE_SEPARATOR;
 	
 }

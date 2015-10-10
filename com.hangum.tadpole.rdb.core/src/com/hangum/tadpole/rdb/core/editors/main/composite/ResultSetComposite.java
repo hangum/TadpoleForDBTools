@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
-import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
@@ -80,6 +81,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
@@ -177,26 +179,24 @@ public class ResultSetComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
-		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_composite = new GridLayout(4, false);
-		gl_composite.verticalSpacing = 1;
-		gl_composite.horizontalSpacing = 1;
-		gl_composite.marginHeight = 1;
-		gl_composite.marginWidth = 1;
-		composite.setLayout(gl_composite);
+		Composite compHead = new Composite(this, SWT.NONE);
+		compHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_composite = new GridLayout(5, false);
+		gl_composite.verticalSpacing = 3;
+		gl_composite.horizontalSpacing = 3;
+		gl_composite.marginHeight = 3;
+		gl_composite.marginWidth = 3;
+		compHead.setLayout(gl_composite);
 		
-		Label lblFilter = new Label(composite, SWT.NONE);
-		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.ResultSetComposite_lblFilter_text);
+		Label lblProgress = new Label(compHead, SWT.NONE);
+		lblProgress.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblProgress.setText(Messages.ResultSetComposite_3);
 		
-		textFilter = new Text(composite,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
-		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		progressBarQuery = new ProgressBar(composite, SWT.SMOOTH);
+		progressBarQuery = new ProgressBar(compHead, SWT.NULL);
+//		progressBarQuery.setBackground(SWTResourceManager.getColor(127,255,0));
 		progressBarQuery.setSelection(0);
 		
-		btnStopQuery = new Button(composite, SWT.NONE);
+		btnStopQuery = new Button(compHead, SWT.NONE);
 		btnStopQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -205,6 +205,13 @@ public class ResultSetComposite extends Composite {
 		});
 		btnStopQuery.setText(Messages.RDBResultComposite_btnStp_text);
 		btnStopQuery.setEnabled(false);
+		
+		Label lblFilter = new Label(compHead, SWT.NONE);
+		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblFilter.setText(Messages.ResultSetComposite_lblFilter_text);
+		
+		textFilter = new Text(compHead,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
+		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		textFilter.addKeyListener(new KeyAdapter() {
 			@Override
@@ -315,6 +322,7 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
 	}
@@ -416,6 +424,9 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void exportResultCSVType() {
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		if(dataList.isEmpty()) return;
+		
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		// column 헤더추가.
 		TableColumn[] tcs = tvQueryResult.getTable().getColumns();
@@ -426,15 +437,11 @@ public class ResultSetComposite extends Composite {
 		}
 		listCsvData.add(strArrys);
 		
-		// column 데이터 추가
-		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-		
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			strArrys = new String[mapColumns.size()-1];
 			for(int j=1; j<mapColumns.size(); j++) {
-//				if(RDBTypeToJavaTypeUtils.isNumberType(columnType.get(j))) {
 				strArrys[j-1] = ""+mapColumns.get(j); //$NON-NLS-1$
 			}
 			listCsvData.add(strArrys);
@@ -528,27 +535,50 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * 쿼리를 수행합니다.
+	 * 쿼리가 실행 가능한 상태인지 검사한다.
+	 * 
+	 * - DB lock 상태인지?
+	 * - dml 을 묻는 상태인지?
+	 * - 프러덕, 백업 디비라서 select가 아닌지 묻는지?
 	 * 
 	 * @param reqQuery
+	 * @throws Exception
 	 */
-	public void executeCommand(final RequestQuery reqQuery) {
-		// 쿼리를 이미 실행 중이라면 무시합니다.
-		if(jobQueryManager != null) {
-			if(Job.RUNNING == jobQueryManager.getState()) {
-				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
-				return;
+	private boolean ifExecuteQuery() throws Exception {
+		// security check.
+		if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
+			throw new Exception(Messages.ResultMainComposite_1);
+		}
+		
+		// 실행해도 되는지 묻는다.
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())
+				|| PermissionChecker.isProductBackup(getUserDB())
+		) {
+			boolean isDMLQuestion = false;
+			if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
+				for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
+					if(!SQLUtil.isStatement(strSQL)) {
+						isDMLQuestion = true;
+						break;
+					}
+				}
+			} else {
+				if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
+			}
+		
+			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, Messages.ResultMainComposite_0, Messages.MainEditor_56)) {
+				return false;
 			}
 		}
 
-		controlProgress(true);
-//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
-		
-		this.reqQuery = reqQuery; 
-		this.rsDAO = new QueryExecuteResultDTO();
-		sqlFilter.setFilter(""); //$NON-NLS-1$
-		textFilter.setText(""); //$NON-NLS-1$
-		
+		return true;
+	}
+	
+	/**
+	 * 파라미터 쿼리인지 검사하여 쿼리를 만듭니다.
+	 * @return
+	 */
+	private boolean ifIsParameterQuery() {
 		final Shell runShell = textFilter.getShell();
 		
 		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
@@ -572,16 +602,17 @@ public class ResultSetComposite extends Composite {
 						
 						ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndex);
 						if(Dialog.OK == epd.open()) {
-							
 							ParameterObject paramObj = epd.getOracleParameterObject(oracleNamedParamUtil.getMapIndexToName());
 							String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
 							reqQuery.setSql(repSQL);
 							
 							if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
+						} else {
+							return false;
 						}
 					}
 				} catch(Exception e) {
-					logger.error("Parameter parse", e); //$NON-NLS-1$
+					logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
 				}
 
 				if(!isAlreadyApply) {
@@ -597,17 +628,61 @@ public class ResultSetComposite extends Composite {
 								reqQuery.setSql(repSQL);
 								
 								if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
+							} else {
+								return false;
 							}
 						}
 					} catch(Exception e) {
-						logger.error("Parameter parse", e); //$NON-NLS-1$
+						logger.error("Java style parameter parse", e); //$NON-NLS-1$
 					}
 				}  // if(!isAlreadyApply
 			}
 		}	// end if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
+
+		return true;
+	}
+	
+	/**
+	 * 쿼리를 수행합니다.
+	 * 
+	 * @param reqQuery
+	 */
+	public boolean executeCommand(final RequestQuery reqQuery) {
+		this.reqQuery = reqQuery;
+		
+		// 쿼리를 이미 실행 중이라면 무시합니다.
+		if(jobQueryManager != null) {
+			if(Job.RUNNING == jobQueryManager.getState()) {
+				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
+				executeErrorProgress(new Exception(Messages.ResultSetComposite_1), Messages.ResultSetComposite_1);
+				return false;
+			}
+		}
+
+		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
+		try {
+			if(!ifExecuteQuery()) return false;
+		} catch(Exception e) {
+			executeErrorProgress(e, e.getMessage());
+			return false;
+		}
+		
+		// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
+		if(!ifIsParameterQuery()) return false;
+		
+		// 프로그래스 상태와 쿼리 상태를 초기화한다.
+		controlProgress(true);
+		
+//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
+		this.rsDAO = new QueryExecuteResultDTO();
+		this.sqlFilter.setFilter(""); //$NON-NLS-1$
+		this.textFilter.setText(""); //$NON-NLS-1$
+		
+		// selected first tab request quring.
+		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		// 쿼리를 실행 합니다. 
-		final SQLHistoryDAO sqlHistoryDAO = new SQLHistoryDAO();
+		final RequestResultDAO reqResultDAO = new RequestResultDAO();
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
 		final String strPlanTBName 	= GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
@@ -619,9 +694,9 @@ public class ResultSetComposite extends Composite {
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(reqQuery.getSql(), IProgressMonitor.UNKNOWN);
 				
-				sqlHistoryDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
-				sqlHistoryDAO.setIpAddress(reqQuery.getUserIp());
-				sqlHistoryDAO.setStrSQLText(reqQuery.getOriginalSql());
+				reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
+				reqResultDAO.setIpAddress(reqQuery.getUserIp());
+				reqResultDAO.setStrSQLText(reqQuery.getOriginalSql());
 				
 				try {
 					
@@ -650,7 +725,7 @@ public class ResultSetComposite extends Composite {
 						// select 문장 실행
 						if(SQLUtil.isStatement(reqQuery.getSql())) { //$NON-NLS-1$
 							rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
-							sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
+							reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
 						
@@ -659,7 +734,7 @@ public class ResultSetComposite extends Composite {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
 								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
-								sqlHistoryDAO.setRows(rsDAO.getDataList().getData().size());
+								reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 							}
 
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
@@ -674,16 +749,14 @@ public class ResultSetComposite extends Composite {
 						}
 					}
 					
-//					if(logger.isDebugEnabled()) logger.debug("End query ========================= "  ); //$NON-NLS-1$
 				} catch(Exception e) {
-//					logger.error(Messages.MainEditor_50 + reqQuery.getSql(), e);
 					
-					sqlHistoryDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.toString()); //$NON-NLS-1$
-					sqlHistoryDAO.setMesssage(e.getMessage());
+					reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
+					reqResultDAO.setMesssage(e.getMessage());
 					
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
 				} finally {
-					sqlHistoryDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
+					reqResultDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
 					monitor.done();
 				}
 				
@@ -702,13 +775,16 @@ public class ResultSetComposite extends Composite {
 					public void run() {
 						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
-							executeFinish(reqQuery, sqlHistoryDAO);
+							executeFinish(reqQuery, reqResultDAO);
 						} else {
 							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 						
+						// 처리를 위해 결과를 담아 둡니다.
+						reqQuery.setResultDao(reqResultDAO);
+						
 						// 히스토리 화면을 갱신합니다.
-						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(sqlHistoryDAO);
+						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 						
 						// 주의) 일반적으로는 포커스가 잘 가지만, 
 						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
@@ -725,6 +801,8 @@ public class ResultSetComposite extends Composite {
 		jobQueryManager.setPriority(Job.INTERACTIVE);
 		jobQueryManager.setName(getUserDB().getDisplay_name() + reqQuery.getOriginalSql());
 		jobQueryManager.schedule();
+		
+		return true;
 	}
 	
 	/**
@@ -746,11 +824,13 @@ public class ResultSetComposite extends Composite {
 		
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
-		for (IMainEditorExtension iMainEditorExtension : extensions) {
-			String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
-			if(!strCostumSQL.equals(reqQuery.getSql())) {
-				if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
-				reqQuery.setSql(strCostumSQL);
+		if(extensions != null) {
+			for (IMainEditorExtension iMainEditorExtension : extensions) {
+				String strCostumSQL = iMainEditorExtension.sqlCostume(reqQuery.getSql());
+				if(!strCostumSQL.equals(reqQuery.getSql())) {
+					if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
+					reqQuery.setSql(strCostumSQL);
+				}
 			}
 		}
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
@@ -817,12 +897,18 @@ public class ResultSetComposite extends Composite {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
-			public ResultSet call() throws Exception {
+			public ResultSet call() throws SQLException {
 				statement.execute(reqQuery.getSql());
 				return statement.getResultSet();
 			}
 		});
 		
+		
+		/* SELECTㅁ ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
+    
+		 * Caused by: java.lang.NullPointerException
+			at oracle.jdbc.driver.T4C8Oall.getNumRows(T4C8Oall.java:973)
+		 */
 		return queryFuture.get();
 	}
 
@@ -846,31 +932,32 @@ public class ResultSetComposite extends Composite {
 			
 			try {
 				while(isCheckRunning) {
-					if(i>100) i = 0;
-					final int progressAdd = i++; 
-					
-					btnStopQuery.getDisplay().syncExec(new Runnable() {
-						@Override
-						public void run() {
-							progressBarQuery.setSelection(progressAdd);
-						}
-					});
-					
-					Thread.sleep(3);
 					
 					// Is user stop?
 					if(!isUserInterrupt) {
-						stmt.cancel();
 						isCheckRunning = false;
+						stmt.cancel();
 						
 						try {
-							if(logger.isDebugEnabled()) logger.debug("User stop operation is [statement close] " + stmt.isClosed()); //$NON-NLS-1$
+							if(logger.isDebugEnabled()) logger.debug("********* User stop operation is [statement close] " + stmt.isClosed()); //$NON-NLS-1$
 							if(!stmt.isClosed()) execServiceQuery.shutdown();
 						} catch(Exception ee) {
 							logger.error("Execute stop", ee); //$NON-NLS-1$
 						}
 					}
 					
+					if(isCheckRunning) {
+						if(i>100) i = 0;
+						final int progressAdd = i++; 
+						btnStopQuery.getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								progressBarQuery.setSelection(progressAdd);
+							}
+						});
+	
+						Thread.sleep(20);
+					}
 				}   // end while
 			} catch(Exception e) {
 				logger.error("isCheckThread exception", e); //$NON-NLS-1$
@@ -903,6 +990,7 @@ public class ResultSetComposite extends Composite {
 		
 		// 확장포인트에 실행결과를 위임합니다. 
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+		if(extensions == null) return;
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			iMainEditorExtension.queryEndedExecute(rsDAO);
 		}
@@ -947,7 +1035,7 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
-	public void executeFinish(RequestQuery reqQuery, SQLHistoryDAO executingSQLDAO) {
+	public void executeFinish(RequestQuery reqQuery, RequestResultDAO executingSQLDAO) {
 		if(SQLUtil.isStatement(reqQuery.getSql())) {			
 
 			// table data를 생성한다.

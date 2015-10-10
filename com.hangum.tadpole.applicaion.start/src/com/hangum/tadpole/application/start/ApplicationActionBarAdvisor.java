@@ -30,15 +30,16 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
-import com.hangum.tadpole.commons.admin.core.actions.UserLoginHistoryAction;
+import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
+import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
+import com.hangum.tadpole.manager.core.actions.global.SQLAuditAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
-import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
+import com.hangum.tadpole.manager.core.actions.global.DBManagerAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -67,10 +68,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** send message */
     private IAction sendMessageAction;
-    private IAction userLoginHistoryAction;
+    private IAction adminUserAction;
+    private IAction adminSQLAuditAction;
     
     /** User permission action */
-    private IAction userPermissionAction;
+    private IAction dbMgmtAction;
     
     /** transaction connection */
     private IAction transactionConnectionAction;
@@ -83,7 +85,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** schema history */
     private IAction schemaHistoryAction;
-    
     private IAction resourceManageAction;
     
     private IAction preferenceAction;
@@ -118,17 +119,20 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	sendMessageAction = new SendMessageAction(window);
     	register(sendMessageAction);
     	
-    	userLoginHistoryAction = new UserLoginHistoryAction(window);
-    	register(userLoginHistoryAction);
+    	adminUserAction = new AdminUserAction(window);
+    	register(adminUserAction);
     	
-    	userPermissionAction = new UserPermissionAction(window);
-    	register(userPermissionAction);
+    	dbMgmtAction = new DBManagerAction(window);
+    	register(dbMgmtAction);
     	
     	transactionConnectionAction = new TransactionConnectionManagerAction(window);
     	register(transactionConnectionAction);
     	
-    	executedSQLAction = new ExecutedSQLAction(window);
+    	executedSQLAction = new SQLAuditAction(window);
     	register(executedSQLAction);
+    	
+    	adminSQLAuditAction = new AdminSQLAuditAction(window);
+    	register(adminSQLAuditAction);
     	    	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
@@ -195,13 +199,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		manageMenu.add(restFulAPIAction);
 		manageMenu.add(transactionConnectionAction);
 		manageMenu.add(resourceManageAction);
-		manageMenu.add(userPermissionAction);
+		manageMenu.add(dbMgmtAction);
 		manageMenu.add(executedSQLAction);
 		manageMenu.add(schemaHistoryAction);
 		
 		if(isAdmin) {
 			adminMenu.add(sendMessageAction);
-			adminMenu.add(userLoginHistoryAction);
+			adminMenu.add(adminUserAction);
+			adminMenu.add(adminSQLAuditAction);
 		}
 
 		// preference action
@@ -216,10 +221,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main")); //$NON-NLS-1$
         
-//        if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
-	        toolbar.add(connectAction);
-	        toolbar.add(new Separator());
-//        }
+        toolbar.add(connectAction);
+        toolbar.add(new Separator());
         
         toolbar.add(saveAction);
         toolbar.add(saveAsAction);

@@ -13,14 +13,22 @@
  */
 var editorService = {
 	/** initialize editor */
-	initEditor : function(varExt, varKeyword, varInitText) {},
+	RDBinitEditor : function(varMode, varType, varTableList, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
+	MONGODBinitEditor : function(varMode, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
+	/** change editor style */
+	changeEditorStyle : function(varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
 	
 	/** set editor focus */
 	setFocus : function() {},
+	
+	/** define theme */
+	setTheme : function(varTheme) {},
 
-//	/** define font */
-//	SetFont : 0,
-//	setFont : function(varFontName, varFontSize){},
+	/** define fontsize */
+	setFontSize : function(varFontSize) {},
+	
+	/** define wrap */
+	setWrap : function(varBool, varLimit) {},
 	
 	/** 자바에서 저장했을때 호출 합니다 */
 	saveData : function() {},
@@ -61,28 +69,20 @@ var editorService = {
 	GENERATE_SELECT		: "45"
 };
 
-var editor;
+//var editor;
 /** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
-///** 자바에서 처리가 끝났는지 */
-//var isJavaRunning = false;
 /** open 된 에디터 타입 */
 var varEditorType = 'TABLES';
-
-// enable live auto completion
-//var completions = [];
-
 /** initialize editor */
-{
+//{
 	var langTools = ace.require("ace/ext/language_tools");
-	editor = ace.edit("editor");
-	document.getElementById('editor').style.fontSize= '12px';
+	var editor = ace.edit("editor");
 	
 	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
     
-	editor.setTheme("ace/theme/eclipse");
-	editor.setShowPrintMargin(true);
+	editor.setShowPrintMargin(false);
 	editor.setHighlightActiveLine(true);
 	
 	editor.setOptions({
@@ -90,8 +90,83 @@ var varEditorType = 'TABLES';
 	    enableSnippets: true,
 	    enableLiveAutocompletion: true
 	}); 
-};
+//};
 
+/** 
+ * 에디터를 초기화 합니다. 
+ * @param varMode sql type(ex: sqlite, pgsql), EditorDefine#EXT_SQLite
+ * @param varTableList table list
+ * @param varType editorType (sql or procedure )
+ * @param varInitText
+ * @param varTheme is editor theme
+ * @param varFontSize  font size of editor
+ * @param varIsWrap Wrap of editor
+ * @param varWarpLimit Wrap limit of editor
+ * @param varIsShowGutter Show gutter is editoe
+ * 
+ */
+editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
+	varEditorType = varType;
+	
+	try {
+		var EditSession = ace.require("ace/edit_session").EditSession;
+		var UndoManager = ace.require("./undomanager").UndoManager;
+		editor.resize(true)
+		var session = new EditSession(varInitText);
+		session.setUndoManager(new UndoManager());
+		session.setMode(varMode);
+		session.on('change', function() {
+			if(!isEdited) {
+				try {
+					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
+				} catch(e) {
+					console.log(e);
+				}
+				isEdited = true;
+			}
+		});
+		
+		if(varTableList != '') {
+			// Add table list to Editor's keywordList
+			var keywordList = session.$mode.$highlightRules.$keywordList;
+			if(keywordList != null) session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
+		}
+
+		editor.setTheme("ace/theme/" + varTheme);
+		editor.setFontSize(varFontSize + 'px');
+		editor.renderer.setShowGutter(varIsShowGutter === 'true');
+		
+		var boolIsWrap = varIsWrap === 'true';
+		session.setUseWrapMode(boolIsWrap);
+		if(boolIsWrap) session.setWrapLimitRange(varWarpLimit, varWarpLimit);
+		editor.setSession(session);
+		editor.focus();
+	} catch(e) {
+		console.log(e);
+	}
+};
+/** 
+ * 에디터를 초기화 합니다. 
+ * @param varMode sql type(ex: sqlite, pgsql, javascript) EditorDefine#EXT_SQLite
+ * @param varInitText
+ * 
+ */
+editorService.MONGODBinitEditor = function(varMode, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
+	editorService.RDBinitEditor(varMode, 'NONE', '', varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter);
+};
+/*
+ * change editor style
+ */
+editorService.changeEditorStyle = function(varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
+	editor.setTheme("ace/theme/" + varTheme);
+	editor.setFontSize(varFontSize + 'px');
+	editor.renderer.setShowGutter(varIsShowGutter === 'true');
+	
+	var boolIsWrap = varIsWrap === 'true';
+	session.setUseWrapMode(boolIsWrap);
+	if(boolIsWrap) session.setWrapLimitRange(varWarpLimit, varWarpLimit);
+	editor.setSession(session);
+}
 
 /**
  * 동적으로 키워드르 추가할 수 있는 모드
@@ -126,49 +201,6 @@ ace.define("DynHighlightRules", [], function(require, exports, module) {
 	oop.inherits(DynHighlightRules, TextHighlightRules);
 	exports.DynHighlightRules = DynHighlightRules;
 });
-  
-
-/** 
- * 에디터를 초기화 합니다. 
- * @param varMode sql type(ex: sqlite, pgsql), EditorDefine#EXT_SQLite
- * @param varTableList table list
- * @param varType editorType (sql or procedure )
- * @param varInitText
- * 
- */
-editorService.initEditor = function(varMode, varType, varTableList, varInitText) {
-	varEditorType = varType;
-	
-	try {
-		var EditSession = ace.require("ace/edit_session").EditSession;
-		var UndoManager = ace.require("./undomanager").UndoManager;
-
-		var session = new EditSession(varInitText);
-		session.setUndoManager(new UndoManager());
-		
-		session.setMode(varMode);
-		session.on('change', function() {
-			if(!isEdited) {
-				try {
-					AceEditorBrowserHandler(editorService.DIRTY_CHANGED);
-				} catch(e) {
-					console.log(e);
-				}
-				isEdited = true;
-			}
-		});
-
-		// Add table list to Editor's keywordList
-		var keywordList = session.$mode.$highlightRules.$keywordList;
-		if(keywordList != null) session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
-		
-		editor.setSession(session);
-
-		editor.focus();
-	} catch(e) {
-		console.log(e);
-	}
-};
 
 /**  자바에서 에디터가 저장되었을때 에디터 수정 메시지를 받기위해 호출되어 집니다. */
 editorService.saveData = function() {
@@ -352,18 +384,6 @@ editor.commands.addCommand({
     readOnly: false
 });
 
-/**
- * define font information
- * 폰트 종류와 사이즈가 변화가 있으면 에디터가 깨지는 현상이 있음. 
- */
-editorService.setFont = function(varFontName, varFontSize) {
-	try {
-		document.getElementById('editor').style.fontSize= varFontSize + 'px';
-		document.getElementById('editor').style.fontFamily= varFontName;
-	} catch(e) {
-		console.log(e);
-	}
-};
 /** define tab size */
 editorService.setTabSize = function(varTabSize) {
 	editor.getSession().setTabSize(varTabSize);

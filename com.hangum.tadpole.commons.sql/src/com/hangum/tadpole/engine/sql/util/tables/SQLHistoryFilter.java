@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 
 /**
 * SQLHistory filter
@@ -35,7 +35,7 @@ public class SQLHistoryFilter extends ViewerFilter {
 			return true;
 		}
 			
-		SQLHistoryDAO sqlDAO = (SQLHistoryDAO)element;
+		RequestResultDAO sqlDAO = (RequestResultDAO)element;
 		
 		if(StringUtils.deleteWhitespace(sqlDAO.getStrSQLText()).toLowerCase().matches(searchString)) return true;
 		if((""+sqlDAO.getStartDateExecute()).toLowerCase().matches(searchString)) return true;

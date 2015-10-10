@@ -54,15 +54,13 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
@@ -70,13 +68,12 @@ import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
+import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.sql.format.SQLFormater;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -95,7 +92,7 @@ public class MainEditor extends EditorExtension {
 	private ToolItem tiAutoCommit = null, tiAutoCommitCommit = null, tiAutoCommitRollback = null;
 
 	/** result tab */
-	private ResultMainComposite resultMainComposite;
+	protected ResultMainComposite resultMainComposite;
 
 	/** edior가 초기화 될때 처음 로드 되어야 하는 String. */
 	protected String initDefaultEditorStr = ""; //$NON-NLS-1$
@@ -107,13 +104,13 @@ public class MainEditor extends EditorExtension {
 	protected UserDBResourceDAO dBResource;
 	
 	/** save mode */
-	private boolean isDirty = false;
+	protected boolean isDirty = false;
 	
 	/** short cut prefix */
-	private static final String STR_SHORT_CUT_PREFIX = ShortcutPrefixUtils.getCtrlShortcut();
+	protected static final String STR_SHORT_CUT_PREFIX = ShortcutPrefixUtils.getCtrlShortcut();
 	
-	private SashForm sashFormExtension;
-	private IMainEditorExtension[] compMainExtions;
+	protected SashForm sashFormExtension;
+	protected IMainEditorExtension[] compMainExtions;
 	
 	public MainEditor() {
 		super();
@@ -131,7 +128,7 @@ public class MainEditor extends EditorExtension {
 
 		dBResource = qei.getResourceDAO();
 		if(dBResource == null) setPartName(qei.getName());
-		else  setPartName(dBResource.getName());
+		else setPartName(dBResource.getName());
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
@@ -207,7 +204,7 @@ public class MainEditor extends EditorExtension {
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, STR_SHORT_CUT_PREFIX));
-		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query.png")); //$NON-NLS-1$
+		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/play.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -443,7 +440,17 @@ public class MainEditor extends EditorExtension {
 							}
 						}	// end tltmAutoCommit
 					}	// end seq
-				} // end if(event.getProperty()
+				} else if(event.getProperty() == PreferenceDefine.EDITOR_CHANGE_EVENT) {
+					final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+				    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+				    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
+				    
+				    browserEvaluate(IEditorFunction.CHANGE_EDITOR_STYLE, 
+							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+						);
+				}
 			} //
 		}); // end property change
 	
@@ -454,46 +461,23 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
-	 * append text at position
-	 * @param strText
-	 */
-	public void appendTextAtPosition(String strText) {
-		try {
-			browserEvaluate(EditorFunctionService.INSERT_TEXT, strText);
-		} catch(Exception ee){
-			logger.error("query text at position" , ee); //$NON-NLS-1$
-		}
-	}
-	
-	/**
-	 * append text at position
-	 * 
-	 * @param strText
-	 */
-	public void appendText(String strText) {
-		try {
-			if(!StringUtils.endsWith(strText, PublicTadpoleDefine.SQL_DELIMITER)) {
-				strText += PublicTadpoleDefine.SQL_DELIMITER;
-			}
-			
-			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
-		} catch(Exception ee){
-			logger.error("query text" , ee); //$NON-NLS-1$
-		}
-	}
-	
-	/**
 	 * browser handler
 	 */
 	protected void addBrowserService() {
 //		if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.PRODUCTION) {
-	    	browserQueryEditor.setUrl(REAL_DB_URL);
+		browserQueryEditor.setUrl(REAL_DB_URL);
 //	    } else {
 //	    	browserQueryEditor.setUrl(DEV_DB_URL);
 //	    }
 	    	
-	    final String strTmpTb = userDB.getTableListSeparator();
-	    final String strTableList = "".equals(strTmpTb)?getAssistTableList():strTmpTb;
+		MakeContentAssistUtil constAssistUtil = new MakeContentAssistUtil();
+	    final String strConstList = constAssistUtil.makeContentAssistUtil(userDB);
+	    
+	    final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+	    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+	    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+	    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
 	    registerBrowserFunctions();
 	    
 	    /** 무슨 일인지 이벤트가 두번 탑니다. */
@@ -505,116 +489,16 @@ public class MainEditor extends EditorExtension {
 				listInitialize.add("init_comp"); //$NON-NLS-1$
 				
 				try {
-					browserEvaluate(IEditorFunction.INITIALIZE, findEditorExt(), dbAction.toString(), strTableList, getInitDefaultEditorStr()); //$NON-NLS-1$
+					browserEvaluate(IEditorFunction.RDB_INITIALIZE, 
+							findEditorExt(), dbAction.toString(), strConstList, getInitDefaultEditorStr(),
+							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+							); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
 				}
 			}
 			public void changed( ProgressEvent event ) {}			
 		});
-	}
-	
-	/**
-	 * find editor extension
-	 * 
-	 * eg) mysql, pgsql
-	 * @return
-	 */
-	private String findEditorExt() {
-		String ext = EditorDefine.EXT_DEFAULT;
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_MYSQL;
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_PGSQL;
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_SQLite;
-//		테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
-//		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
-//			ext = EditorDefine.EXT_MSSQL;
-		}
-		return ext;
-	}
-	
-//	/**
-//	 * List of assist table column name
-//	 * 
-//	 * @param tableName
-//	 * @return
-//	 */
-//	public String getAssistColumnList(String tableName) {
-//		String strColumnlist = ""; //$NON-NLS-1$
-//		
-//		try {
-//			TableDAO table = mapTableList.get(tableName);
-//			
-//			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
-//			for (TableColumnDAO tableDao : showTableColumns) {
-//				strColumnlist += tableDao.getSysName() + "|"; //$NON-NLS-1$
-//			}
-//			strColumnlist = StringUtils.removeEnd(strColumnlist, "|"); //$NON-NLS-1$
-//		} catch(Exception e) {
-//			logger.error("MainEditor get the table column list", e); //$NON-NLS-1$
-//		}
-//		
-//		return strColumnlist;
-//	}
-//	
-	/**
-	 * List of assist table name 
-	 * 
-	 * @return
-	 */
-	private String getAssistTableList() {
-		StringBuffer strTablelist = new StringBuffer();
-		
-		try {
-			List<TableDAO> showTables = getTableListOnlyTableName(getUserDB());
-			for (TableDAO tableDao : showTables) {
-				strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
-			}
-		} catch(Exception e) {
-			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
-		}
-
-		return StringUtils.removeEnd(strTablelist.toString(), "|"); //$NON-NLS-1$
-	}
-	/**
-	 * 보여 주어야할 테이블 목록을 정의합니다.
-	 *
-	 * @param userDB
-	 * @return
-	 * @throws Exception
-	 */
-	private List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
-		List<TableDAO> showTables = null;
-				
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-			showTables = new TajoConnectionManager().tableList(userDB);			
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
-		}
-		
-		/** filter 정보가 있으면 처리합니다. */
-		return getTableAfterwork(showTables, userDB);
-	}
-	/**
-	 * Table 정보 처리 후에 
-	 * 
-	 * @param showTables
-	 * @param userDB
-	 * @return
-	 */
-	private List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
-		/** filter 정보가 있으면 처리합니다. */
-		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
-		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(TableDAO td : showTables) {
-			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
-		}
-		
-		return showTables;
 	}
 
 	/**
@@ -688,7 +572,15 @@ public class MainEditor extends EditorExtension {
 		}
 	}
 	
+	/**
+	 * execute query
+	 * 
+	 * @param reqQuery
+	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		// 요청쿼리가 없다면 무시합니다. 
+		if(StringUtils.isEmpty(reqQuery.getSql())) return;
+
 		resultMainComposite.executeCommand(reqQuery);
 
 		// google analytic
@@ -699,6 +591,7 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	public boolean isAutoCommit() {
+		if(tiAutoCommit == null) return true;
 		return !tiAutoCommit.getSelection();
 	}
 	

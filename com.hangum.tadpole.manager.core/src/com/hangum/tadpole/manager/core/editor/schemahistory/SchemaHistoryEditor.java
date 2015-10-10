@@ -322,7 +322,7 @@ public class SchemaHistoryEditor extends EditorPart {
 	 */
 	private void initUI() {
 		try {
-			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
+			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getSessionUserDB();
 			for (UserDBDAO userDBDAO : listUserDBDAO) {
 				if(userDBDAO.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 					comboDisplayName.add(userDBDAO.getDisplay_name());

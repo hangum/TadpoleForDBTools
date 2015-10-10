@@ -38,7 +38,14 @@ public class GenerateDDLScriptUtils {
 	 */
 	private static final Logger logger = Logger.getLogger(GenerateDDLScriptUtils.class); 
 	
-	
+	/**
+	 * get table script
+	 * 
+	 * @param userDB
+	 * @param tableDAO
+	 * @param showTableColumns
+	 * @return
+	 */
 	public static String genTableScript(UserDBDAO userDB, TableDAO tableDAO, List<TableColumnDAO> showTableColumns) {
 		if(showTableColumns == null) return "";
 		if(showTableColumns.isEmpty()) return "";
@@ -56,7 +63,7 @@ public class GenerateDDLScriptUtils {
 			}
 			
 			
-			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + " FROM "); //$NON-NLS-1$ 
+			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "FROM "); //$NON-NLS-1$ 
 			if("".equals(tableDAO.getSchema_name())) sbSQL.append(tableDAO.getSysName()); //$NON-NLS-2$
 			else  sbSQL.append(tableDAO.getSchema_name() + "." + tableDAO.getSysName()); //$NON-NLS-2$
 			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER);

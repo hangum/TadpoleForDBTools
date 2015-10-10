@@ -250,7 +250,7 @@ public class MongoDBImportEditor extends EditorPart {
 		
 		try {
 			int visibleItemCount = 0;
-			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserDB();
+			List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getSessionUserDB();
 			for (UserDBDAO userDBDAO : userDBS) {
 				// 임포트 하려는 자신은 제외 
 				if(targetDBDAO.getSeq() != userDBDAO.getSeq()) {

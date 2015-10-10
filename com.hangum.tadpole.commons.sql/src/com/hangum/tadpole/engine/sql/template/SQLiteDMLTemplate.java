@@ -24,28 +24,28 @@ public class SQLiteDMLTemplate extends AbstractDMLTemplate {
 	 */	
 	public static final String TMP_GET_PARTDATA = "%s limit %s,%s;";
 	
-	public static final String TMP_EXPLAIN_EXTENDED = "explain  ";
+	public static final String TMP_EXPLAIN_EXTENDED = "explain ";
 	
 	/** table */
-	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE   sample_table   ( " + PublicTadpoleDefine.LINE_SEPARATOR +  
-						 " id INTEGER NOT NULL,  " + PublicTadpoleDefine.LINE_SEPARATOR +  
-						 " name char(60) default NULL, " + PublicTadpoleDefine.LINE_SEPARATOR +  
-						 " PRIMARY KEY (id) " + PublicTadpoleDefine.LINE_SEPARATOR +  
-						" );";
+	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR +  
+						 "	id INTEGER NOT NULL, " + PublicTadpoleDefine.LINE_SEPARATOR +  
+						 "	name char(60) default NULL, " + PublicTadpoleDefine.LINE_SEPARATOR +  
+						 "	PRIMARY KEY (id) " + PublicTadpoleDefine.LINE_SEPARATOR +  
+						");";
 
 	/** view  */
-	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW   view_name   AS " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																" SELECT   columns   FROM   table_name;";
+	public static final String  TMP_CREATE_VIEW_STMT = "CREATE VIEW view_name AS " + PublicTadpoleDefine.LINE_SEPARATOR +  
+													"SELECT columns FROM table_name;";
 	
 	/** index */
-	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR + 
-															" ON table_name ( columns );";
+	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX index_name " + PublicTadpoleDefine.LINE_SEPARATOR + 
+													"ON table_name ( columns );";
 	
 	/** trigger */
 	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER testref BEFORE INSERT ON test1 " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																"	  FOR EACH ROW BEGIN  " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																"	    INSERT INTO test2 SET a2 = NEW.a1;  " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																"	    DELETE FROM test3 WHERE a3 = NEW.a1;  " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																"	    UPDATE test4 SET b4 = b4 + 1 WHERE a4 = NEW.a1;  " + PublicTadpoleDefine.LINE_SEPARATOR +  
-																"	  END;";
+														"FOR EACH ROW BEGIN " + PublicTadpoleDefine.LINE_SEPARATOR +  
+														"	INSERT INTO test2 SET a2 = NEW.a1; " + PublicTadpoleDefine.LINE_SEPARATOR +  
+														"	DELETE FROM test3 WHERE a3 = NEW.a1; " + PublicTadpoleDefine.LINE_SEPARATOR +  
+														"	UPDATE test4 SET b4 = b4 + 1 WHERE a4 = NEW.a1; " + PublicTadpoleDefine.LINE_SEPARATOR +  
+														"END;";
 }

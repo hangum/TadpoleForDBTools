@@ -125,7 +125,12 @@ public class RDBTypeToJavaTypeUtils {
 	}
 
 	public static boolean isNumberType(String rdbType) {
-		return isNumberType(mapTypes.get(rdbType));
+		if(rdbType == null) return false;
+		
+		Integer intType = mapTypes.get(rdbType.toUpperCase());
+		if(intType == null) return false;
+		
+		return isNumberType(intType);
 	}
 
 	/**

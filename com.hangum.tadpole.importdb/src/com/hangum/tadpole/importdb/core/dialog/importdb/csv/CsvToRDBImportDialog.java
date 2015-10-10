@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.csv.CSVLoader;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -118,6 +119,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(userDB.getDisplay_name() + Messages.CsvToRDBImportDialog_3);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	@Override

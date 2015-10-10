@@ -10,12 +10,46 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
+import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.swtdesigner.ResourceManager;
 
 /**
  * Object Editor
@@ -25,8 +59,11 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
  *
  */
 public class ObjectEditor extends MainEditor {
-	public static final String ID = "com.hangum.tadpole.rdb.core.editor.main.procedure";
-
+	public static final String ID = "com.hangum.tadpole.rdb.core.editor.main.procedure"; //$NON-NLS-1$
+	private static final Logger logger = Logger.getLogger(ObjectEditor.class);
+	
+	private String objectName = ""; //$NON-NLS-1$
+	
 	public ObjectEditor() {
 		super();
 	}
@@ -41,17 +78,249 @@ public class ObjectEditor extends MainEditor {
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
-		strRoleType = userDB.getRole_id();//SessionManager.getRoleType(userDB);
-		dBResource = qei.getResourceDAO();
-		if(dBResource == null) setPartName(qei.getName());
-		else  setPartName(dBResource.getName());
+		strRoleType = userDB.getRole_id();
+		if("".equals(qei.getObjectName())) setPartName(qei.getName()); //$NON-NLS-1$
+		else setPartName(String.format("%s (%s)", qei.getName(), qei.getObjectName())); //$NON-NLS-1$
 		
-		// google analytic
-		AnalyticCaller.track(this.getClass().getName());
+		objectName = qei.getObjectName();
 	}
 
 	@Override
-	public void setFocus() {
-	}
+	public void createPartControl(Composite parent) {
+		GridLayout gl_parent = new GridLayout(1, false);
+		gl_parent.verticalSpacing = 2;
+		gl_parent.horizontalSpacing = 2;
+		gl_parent.marginHeight = 2;
+		gl_parent.marginWidth = 2;
+		parent.setLayout(gl_parent);
+		
+		// 에디터 확장을 위한 기본 베이스 위젲을 설정합니다.
+		sashFormExtension = new SashForm(parent, SWT.NONE);
+		sashFormExtension.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+				
+		SashForm sashForm = new SashForm(sashFormExtension, SWT.VERTICAL);
+		sashForm.setSashWidth(4);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		final Composite compositeEditor = new Composite(sashForm, SWT.NONE);
+		GridLayout gl_compositeEditor = new GridLayout(1, false);
+		gl_compositeEditor.verticalSpacing = 0;
+		gl_compositeEditor.horizontalSpacing = 0;
+		gl_compositeEditor.marginHeight = 0;
+		gl_compositeEditor.marginWidth = 0;
+		compositeEditor.setLayout(gl_compositeEditor);
+		
+		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
+		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
+		tltmConnectURL.setToolTipText(Messages.MainEditor_37);
+		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
+		tltmConnectURL.setText(userDB.getDisplay_name());
+		
+		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DBInformationDialog dialog = new DBInformationDialog(getSite().getShell(), userDB);
+				dialog.open();
+				setFocus();
+			}
+		});
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		// fileupload 
+		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
+		tltmOpen.setToolTipText(Messages.MainEditor_35);
+		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/file-open.png")); //$NON-NLS-1$
+		tltmOpen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.MainEditor_36);
+				if(Dialog.OK == dialog.open()) {
+					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
+					appendText(dialog.getStrTxtFile());
+				}
+			}
+		});
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmCompile = new ToolItem(toolBar, SWT.NONE);
+		tltmCompile.setToolTipText(String.format(Messages.ObjectEditor_1, STR_SHORT_CUT_PREFIX));
+		tltmCompile.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/compile.png")); //$NON-NLS-1$
+		tltmCompile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
+				
+				EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
+				if( Boolean.parseBoolean( browserEvaluateToStr(EditorFunctionService.IS_BLOCK_TEXT) ) ) {
+					executeType = EditorDefine.EXECUTE_TYPE.BLOCK;
+				}
+				
+				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, executeType, isAutoCommit());
+				executeCommand(reqQuery);
+			}
+		});
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+//		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
+//		tltmExecute.setToolTipText(Messages.ObjectEditor_5);
+//		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/play.png")); //$NON-NLS-1$
+//		tltmExecute.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//
+//			}
+//		});
+//		new ToolItem(toolBar, SWT.SEPARATOR);
+//		
+//		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
+//		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
+//		tltmHelp.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				RDBShortcutHelpDialog dialog = new RDBShortcutHelpDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.NONE);
+//				dialog.open();
+//				
+//				setFocus();
+//			}
+//		});
+//		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, STR_SHORT_CUT_PREFIX));
+	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
+	    
+	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
+	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
+	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
+	    
+	    addBrowserService();
+	    
+	    resultMainComposite = new ResultMainComposite(sashForm, SWT.BORDER);
+		GridLayout gl_compositeResult = new GridLayout(1, false);
+		gl_compositeResult.verticalSpacing = 0;
+		gl_compositeResult.horizontalSpacing = 0;
+		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginWidth = 0;
+	    resultMainComposite.setLayout(gl_compositeResult);
+	    resultMainComposite.setMainEditor(this);
+		
+		sashForm.setWeights(new int[] {65, 35});
+		initEditor();
+		
+		// change editor style
+		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
 
+				if(event.getProperty() == PreferenceDefine.EDITOR_CHANGE_EVENT) {
+					final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+				    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+				    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
+				    
+				    browserEvaluate(IEditorFunction.CHANGE_EDITOR_STYLE, 
+							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+						);
+				}
+			} //
+		}); // end property change
+			
+	}
+	/**
+	 * initialize editor
+	 */
+	private void initEditor() {
+		// google analytic
+		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
+	}
+	
+	/**
+	 * execute query
+	 * 
+	 * @param reqQuery
+	 */
+	public void executeCommand(final RequestQuery reqQuery) {
+		// 요청쿼리가 없다면 무시합니다. 
+		if(StringUtils.isEmpty(reqQuery.getSql())) return;
+
+		if(reqQuery.getExecuteType() == EXECUTE_TYPE.BLOCK) {
+			resultMainComposite.executeCommand(reqQuery);
+		} else {
+			if(!MessageDialog.openConfirm(null, Messages.ObjectEditor_0, Messages.ObjectEditor_3)) {
+				setOrionTextFocus();
+				return;
+			}
+			
+			RequestResultDAO reqResultDAO = new RequestResultDAO();
+			try {
+				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+			} catch(Exception e) {
+				logger.error("execute ddl", e);
+				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
+				reqResultDAO.setMesssage(e.getMessage());
+				
+			} finally {
+				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
+					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+					
+					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+						mysqlAfterProcess(reqResultDAO, reqQuery);
+					}
+					
+				} else {
+					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+				}
+
+				setDirty(false);
+				browserEvaluate(IEditorFunction.SAVE_DATA);
+				setOrionTextFocus();
+			}
+		}
+
+		// google analytic
+		AnalyticCaller.track(ObjectEditor.ID, "executeCommandObject"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * after process
+	 * 
+	 * @param reqResultDAO
+	 * @param title
+	 */
+	private void afterProcess(RequestResultDAO reqResultDAO, String title) {
+		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
+		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
+			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
+		} else {
+			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getStrSQLText())); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * mysql 처리를 합니다.
+	 * 
+	 * @param reqResultDAO
+	 * @param reqQuery
+	 * @param e
+	 */
+	private void mysqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
+		if(StringUtils.contains(reqResultDAO.getMesssage(), "already exists")) { //$NON-NLS-1$
+			
+			String strPrefix = StringUtils.removeEnd(reqResultDAO.getMesssage(), "already exists"); //$NON-NLS-1$
+			String strObjectName = StringUtils.substringBefore(reqResultDAO.getMesssage(), " "); //$NON-NLS-1$
+			String cmd = "DROP " + strPrefix; //$NON-NLS-1$
+			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, strObjectName))) {
+				RequestResultDAO reqReResultDAO = new RequestResultDAO();
+				try {
+					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", cmd); //$NON-NLS-1$
+					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
+					
+					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
+				} catch(Exception ee) {
+					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+				}
+			}
+		}	
+	}
+	
 }

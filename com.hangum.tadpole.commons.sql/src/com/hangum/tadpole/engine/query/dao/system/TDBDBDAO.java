@@ -25,11 +25,28 @@ public class TDBDBDAO {
 	
 	/** This variable is content assist */
 	protected String tableListSeparator = "";
+	/** This variable is content assit */
+	protected String viewListSeparator = "";
+	protected String functionLisstSeparator = "";
 	
 	/** table list */
 	protected List<TableDAO> listTable = new ArrayList<TableDAO>();
 	
 	public TDBDBDAO() {
+	}
+
+	/**
+	 * @return the viewListSeparator
+	 */
+	public String getViewListSeparator() {
+		return viewListSeparator;
+	}
+
+	/**
+	 * @param viewListSeparator the viewListSeparator to set
+	 */
+	public void setViewListSeparator(String viewListSeparator) {
+		this.viewListSeparator = viewListSeparator;
 	}
 
 	/**
@@ -60,5 +77,18 @@ public class TDBDBDAO {
 		this.listTable = listTable;
 	}
 
+	/**
+	 * @return the functionLisstSeparator
+	 */
+	public String getFunctionLisstSeparator() {
+		return functionLisstSeparator;
+	}
+
+	/**
+	 * @param functionLisstSeparator the functionLisstSeparator to set
+	 */
+	public void setFunctionLisstSeparator(String functionLisstSeparator) {
+		this.functionLisstSeparator = functionLisstSeparator;
+	}
 	
 }

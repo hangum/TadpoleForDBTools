@@ -10,14 +10,18 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.texteditor;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -72,6 +76,28 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 		return userSeq;
 	}
 	
+
+	/**
+	 * find editor extension
+	 * 
+	 * eg) mysql, pgsql
+	 * @return
+	 */
+	protected String findEditorExt() {
+		String ext = EditorDefine.EXT_DEFAULT;
+		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_MYSQL;
+		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_PGSQL;
+		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+			ext = EditorDefine.EXT_SQLite;
+//		테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
+//		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+//			ext = EditorDefine.EXT_MSSQL;
+		}
+		return ext;
+	}
+	
 	/**
 	 * command
 	 * 
@@ -80,6 +106,7 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	public void browserEvaluate(String command) {
 		browserEvaluate(command, "");
 	}
+	
 	/** 
 	 * browser function call
 	 * 
@@ -103,6 +130,35 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			browserQueryEditor.evaluate(String.format(command, TadpoleEditorUtils.makeGrantArgs(args)));
 		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("browser evaluate [ " + command + " ]\r\n", getUserEMail()), e); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+	
+	/**
+	 * append text at position
+	 * @param strText
+	 */
+	public void appendTextAtPosition(String strText) {
+		try {
+			browserEvaluate(EditorFunctionService.INSERT_TEXT, strText);
+		} catch(Exception ee){
+			logger.error("query text at position" , ee); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * append text at position
+	 * 
+	 * @param strText
+	 */
+	public void appendText(String strText) {
+		try {
+			if(!StringUtils.endsWith(StringUtils.trimToEmpty(strText), PublicTadpoleDefine.SQL_DELIMITER)) {
+				strText += PublicTadpoleDefine.SQL_DELIMITER;
+			}
+			
+			browserEvaluate(EditorFunctionService.APPEND_TEXT, strText);
+		} catch(Exception ee){
+			logger.error("query text" , ee); //$NON-NLS-1$
 		}
 	}
 	

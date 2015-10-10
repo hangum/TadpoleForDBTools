@@ -291,7 +291,8 @@ FROM
 	prorettype = 2279 : procedure return type trigger
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT  proname "name" 
+	SELECT  proname "name", 
+			'PROCEDURE' as type 
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
 	ON      pronamespace = n.oid 
@@ -319,13 +320,22 @@ FROM
 	collation				:
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT  proname "name" 
+	SELECT  proname "name", 'FUNCTION' as type 
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
 	ON      pronamespace = n.oid 
 	WHERE   nspname = 'public'
 	and pronargs > 0; 
 </select>
+
+<!-- <select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT  prosrc
+	FROM    pg_catalog.pg_namespace n
+	JOIN    pg_catalog.pg_proc p
+	ON      pronamespace = n.oid
+	WHERE   nspname = 'public'
+	and proname like '$object_name$';
+</select> -->
 
 <!-- 
 	show 내역
@@ -600,6 +610,22 @@ and t.tgisinternal = false
  FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
  WHERE   nspname = 'public'   
  and proname = #object_name#
+</select>
+
+<!-- 
+
+ -->        
+<select id="getProcedureInParamter"  resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+	SELECT  proname as name, 
+			proargnames as arguments,
+	        oidvectortypes(proargtypes) as rdbType, 
+	        t.typname as return_type,
+	        prosrc as source
+	FROM    pg_catalog.pg_namespace n
+	JOIN    pg_catalog.pg_proc p   ON    pronamespace = n.oid     
+	JOIN    pg_type t ON p.prorettype = t.oid  
+	WHERE   nspname = 'public'  
+		AND proname = #object_name#;
 </select>
  
 <!-- 

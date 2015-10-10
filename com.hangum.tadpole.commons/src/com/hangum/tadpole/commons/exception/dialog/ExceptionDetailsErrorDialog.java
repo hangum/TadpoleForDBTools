@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
 /**
  * A dialog to display one or more errors to the user, as contained in an
@@ -170,6 +171,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText(title);
+        shell.setImage(GlobalImageUtils.getTadpoleIcon());
     }
 
     /*

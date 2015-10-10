@@ -75,9 +75,13 @@ public class Messages extends NLS {
 
 	public static String UserInfoPerference_13;
 
+	public static String UserInfoPerference_14;
+
 	public static String UserInfoPerference_15;
 
 	public static String UserInfoPerference_16;
+
+	public static String UserInfoPerference_17;
 
 	public static String UserInfoPerference_2;
 
@@ -153,6 +157,10 @@ public class Messages extends NLS {
 	public static String SQLFormatterPreferencePage_3;
 
 	public static String SQLFormatterPreferencePage_4;
+
+	public static String SQLFormatterPreferencePage_7;
+
+	public static String SQLFormatterPreferencePage_8;
 	public static String RDBPreferencePage_lblNumberColumnAdd_text;
 	public static String SQLFormatterPreferencePage_btnCheckButton_text;
 	public static String SQLFormatterPreferencePage_btnNewLineBefore_text;
@@ -178,7 +186,6 @@ public class Messages extends NLS {
 	public static String UserInfoPerference_grpGoogleAuth_text;
 	public static String UserInfoPerference_btnGoogleOtp_text;
 	public static String UserInfoPerference_lblSecretKey_text;
-	public static String UserInfoPerference_lblNewLabel_text;
 	public static String UserInfoPerference_btnGoogleOtp_text_1;
 	public static String UserInfoPerference_lblSecretKey_text_1;
 	public static String UserInfoPerference_lblQrcodeUrl_text;
@@ -187,6 +194,15 @@ public class Messages extends NLS {
 	public static String RDBPreferencePage_text_text;
 	public static String RDBPreferencePage_lblCharacterShownIn_text;
 	public static String RDBPreferencePage_text_text_1;
+	public static String EditorPreferencePage_0;
+
+	public static String EditorPreferencePage_1;
+
+	public static String EditorPreferencePage_2;
+
+	public static String EditorPreferencePage_6;
+
+	public static String EditorPreferencePage_lblTheme_text;
 	
 	static {
 		// initialize resource bundle

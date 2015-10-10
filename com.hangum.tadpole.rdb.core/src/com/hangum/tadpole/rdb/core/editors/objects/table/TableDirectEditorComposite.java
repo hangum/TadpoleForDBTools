@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -161,7 +161,7 @@ public class TableDirectEditorComposite extends Composite {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
+		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -175,7 +175,7 @@ public class TableDirectEditorComposite extends Composite {
 		tltmRefresh.setToolTipText(Messages.TableDirectEditorComposite_tltmRefersh_text);
 		
 		tltmSave = new ToolItem(toolBar, SWT.NONE);
-		tltmSave.setImage(ToobalImageUtils.getSave());
+		tltmSave.setImage(GlobalImageUtils.getSave());
 		tltmSave.setEnabled(false);
 		tltmSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -186,7 +186,7 @@ public class TableDirectEditorComposite extends Composite {
 		tltmSave.setToolTipText(Messages.TableEditPart_0);
 		
 		tltmInsert = new ToolItem(toolBar, SWT.NONE);
-		tltmInsert.setImage(ToobalImageUtils.getAdd());
+		tltmInsert.setImage(GlobalImageUtils.getAdd());
 		tltmInsert.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -196,7 +196,7 @@ public class TableDirectEditorComposite extends Composite {
 		tltmInsert.setToolTipText(Messages.TableEditPart_tltmInsert_text);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
-		tltmDelete.setImage(ToobalImageUtils.getDelete());
+		tltmDelete.setImage(GlobalImageUtils.getDelete());
 		tltmDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

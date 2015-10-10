@@ -155,6 +155,24 @@
 </select>
 
 <!-- 
+find login history
+ -->
+<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" 
+													parameterClass="java.util.Map">
+<![CDATA[
+	SELECT b.seq, b.user_seq, b.login_ip, b.connet_time, b.disconnect_time
+	FROM tadpole_user a,
+	    login_history b
+	WHERE
+	    	a.email = #email#
+	    AND a.seq = b.user_seq
+	    AND b.connet_time >= #startTime#
+       	AND b.connet_time <= #endTime#
+	ORDER BY b.connet_time DESC
+]]>
+</select>
+
+<!-- 
 	user email confirm
  -->
 <update id="updateEmailConfirm" parameterClass="java.lang.String">
@@ -171,19 +189,6 @@
 	INSERT INTO login_history(user_seq, login_ip) 
 	VALUES (#user_seq#, #login_ip#);
 </insert>
-
-<!-- 
-	find login history
- -->
-<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" parameterClass="java.lang.String">
-	SELECT b.*
-	FROM tadpole_user a,
-	    login_history b
-	WHERE
-	    	a.email = #email#
-	    AND a.seq = b.user_seq
-	ORDER BY b.connet_time DESC
-</select>
 
 <!-- 
 	When lost password, check security hint
@@ -253,6 +258,7 @@
 	SET
 		allow_ip = #allow_ip#,
 		delYn = #delYn#,
+		is_regist_db = #is_regist_db#,
 		approval_yn = #approval_yn#,
 		is_email_certification = #is_email_certification#
 	WHERE seq = #seq#
@@ -323,6 +329,7 @@
 		tadpole_user b
 	WHERE 
 			a.delyn = 'NO'
+		AND dbms_type != 'SQLite'
 		AND a.user_seq = b.seq
 		AND b.delyn = 'NO'
 	GROUP BY dbms_type
@@ -936,19 +943,21 @@ SELECT
 	  a.db_seq in ($db_seq$) AND 
 	 </isNotNull>
  <![CDATA[
-	  a.delyn = 'NO' AND
-	  a.seq = b.executed_sql_resource_seq AND
-	  a.startdateexecute >= #startTime# AND  
-      a.enddateexecute <= #endTime# AND
-      a.duration >= #duration# AND
-      b.datas like #strSearch# AND 
-      a.db_seq = db.seq AND
-      a.types = #type#
+	  		a.delyn = 'NO' 
+	  AND a.seq = b.executed_sql_resource_seq 
+	  AND a.startdateexecute >= #startTime# 
+      AND a.enddateexecute <= #endTime# 
+      AND a.duration >= #duration# 
+      AND b.datas like #strSearch#  
+      AND a.db_seq = db.seq
+]]>	       
+      <isNotNull property="type">
+      	AND a.types = #type#
+      </isNotNull>	
 	order by a.create_time desc
 	limit #count#
-]]>	
-</select>
 
+</select>
 
 <!-- 
 	쿼리의 실행 히스토리를 얻습니다.
@@ -974,24 +983,29 @@ SELECT
 		 executed_sql_resource_data b,
 		 tadpole_user u,
 		 tadpole_db db
-	where 1=1 AND
+	where 1=1 
 	 <isNotNull property="db_seq">
-	  a.db_seq in ($db_seq$) AND 
+	  AND  a.db_seq in ($db_seq$) 
 	 </isNotNull>
  <![CDATA[
-	  a.delyn = 'NO' AND
-	  u.email like #email# AND
-	  a.seq = b.executed_sql_resource_seq AND
-	  a.startdateexecute >= #startTime# AND  
-      a.enddateexecute <= #endTime# AND
-      a.duration >= #duration# AND
-      a.user_seq = u.seq AND
-      b.datas like #strSearch# AND 
-      a.db_seq = db.seq AND
-      a.types = #type#
+	  AND a.delyn = 'NO' 
+	  AND u.email like #email#
+	  AND a.seq = b.executed_sql_resource_seq 
+	  AND a.startdateexecute >= #startTime#   
+      AND a.enddateexecute <= #endTime# 
+      AND a.duration >= #duration# 
+      AND a.user_seq = u.seq 
+      AND b.datas like #strSearch#  
+      AND a.db_seq = db.seq 
+]]>	
+      
+       <isNotNull property="type">
+      	AND a.types = #type#
+      </isNotNull>
+      	
 	order by a.create_time desc
 	limit #count#
-]]>	
+
 </select>
 
 <!-- 
@@ -1008,7 +1022,7 @@ SELECT
 	  a.delyn = 'NO' AND
 	  a.seq = b.executed_sql_resource_seq AND
 	  b.datas like #filter#
-	order by a.create_time 
+	order by a.create_time desc
 	limit #count#	
 </select>
 

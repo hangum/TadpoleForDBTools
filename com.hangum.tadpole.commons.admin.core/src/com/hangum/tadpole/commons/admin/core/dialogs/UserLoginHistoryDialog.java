@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.admin.core.dialogs;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,6 +31,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -40,6 +42,9 @@ import org.eclipse.swt.events.SelectionEvent;
 
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import org.eclipse.swt.events.KeyAdapter;
@@ -56,8 +61,11 @@ import org.eclipse.swt.events.KeyEvent;
  */
 public class UserLoginHistoryDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(UserLoginHistoryDialog.class);
+	private UserDAO userDao;
 	
 	private Text textEmail;
+	private DateTime dateTimeStart;
+	private DateTime dateTimeEnd;
 	private TableViewer tvHistory;
 	
 	private List<UserLoginHistoryDAO> listLoginHistory = new ArrayList<>();
@@ -65,10 +73,13 @@ public class UserLoginHistoryDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param userDao 
 	 */
-	public UserLoginHistoryDialog(Shell parentShell) {
+	public UserLoginHistoryDialog(Shell parentShell, UserDAO userDao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
+		
+		this.userDao = userDao;
 	}
 	
 	@Override
@@ -92,7 +103,7 @@ public class UserLoginHistoryDialog extends Dialog {
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(3, false));
+		compositeHead.setLayout(new GridLayout(5, false));
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -105,9 +116,9 @@ public class UserLoginHistoryDialog extends Dialog {
 				if(e.keyCode == SWT.Selection) search();
 			}
 		});
-		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		Button btnSearch = new Button(compositeHead, SWT.NONE);
+		btnSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -115,6 +126,16 @@ public class UserLoginHistoryDialog extends Dialog {
 			}
 		});
 		btnSearch.setText(Messages.UserLoginHistoryDialog_2);
+		
+		Label lblDate = new Label(compositeHead, SWT.NONE);
+		lblDate.setText("로그인 시간");
+						
+		dateTimeStart = new DateTime(compositeHead, SWT.BORDER | SWT.DROP_DOWN);
+		Label label = new Label(compositeHead, SWT.NONE);
+		label.setText("~"); //$NON-NLS-1$
+								
+		dateTimeEnd = new DateTime(compositeHead, SWT.BORDER | SWT.DROP_DOWN);
+		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -136,13 +157,15 @@ public class UserLoginHistoryDialog extends Dialog {
 		tblclmnConnectionTime.setWidth(200);
 		tblclmnConnectionTime.setText(Messages.UserLoginHistoryDialog_4);
 		
-		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvHistory, SWT.NONE);
-		TableColumn tblclmnLogoutTime = tableViewerColumn_2.getColumn();
-		tblclmnLogoutTime.setWidth(200);
-		tblclmnLogoutTime.setText(Messages.UserLoginHistoryDialog_5);
+//		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvHistory, SWT.NONE);
+//		TableColumn tblclmnLogoutTime = tableViewerColumn_2.getColumn();
+//		tblclmnLogoutTime.setWidth(200);
+//		tblclmnLogoutTime.setText(Messages.UserLoginHistoryDialog_5);
 		
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new LoginHistoryLabelProvider());
+		
+		initUI();
 		
 		textEmail.setFocus();
 		
@@ -150,6 +173,18 @@ public class UserLoginHistoryDialog extends Dialog {
 		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
+	}
+	
+	/** 
+	 * initialize ui
+	 */
+	private void initUI() {
+		// Range of date
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		textEmail.setText(userDao.getEmail());
 	}
 	
 	private void search() {
@@ -163,7 +198,13 @@ public class UserLoginHistoryDialog extends Dialog {
 		}
 		
 		try {
-			listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail);
+			Calendar cal = Calendar.getInstance();
+			cal.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
+			long startTime = cal.getTimeInMillis();
+			cal.set(dateTimeEnd.getYear(), dateTimeEnd.getMonth(), dateTimeEnd.getDay(), 23, 59, 59);
+			long endTime = cal.getTimeInMillis();
+			
+			listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail, startTime, endTime);
 			tvHistory.setInput(listLoginHistory);
 		} catch (Exception e) {
 			logger.error("find login history", e); //$NON-NLS-1$

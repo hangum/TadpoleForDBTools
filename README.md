@@ -1,6 +1,6 @@
 Tadpole DB Hub
 ==
-
+[![Join the chat at https://gitter.im/TadpoleDBHub](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TadpoleDBHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
@@ -82,7 +82,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.4/
+* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.5/
 
 License
 -

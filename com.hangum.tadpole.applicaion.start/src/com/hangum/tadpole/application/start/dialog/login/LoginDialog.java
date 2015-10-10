@@ -30,6 +30,8 @@ import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -43,17 +45,19 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.manager.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -86,7 +90,7 @@ public class LoginDialog extends Dialog {
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(String.format("%s v%s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION)); //$NON-NLS-1$
-		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png")); //$NON-NLS-1$
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -112,13 +116,22 @@ public class LoginDialog extends Dialog {
 		
 		Composite compositeLogin = new Composite(container, SWT.NONE);
 		compositeLogin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeLogin.setLayout(new GridLayout(2, false));
+		compositeLogin.setLayout(new GridLayout(3, false));
 		
 		Label lblEmail = new Label(compositeLogin, SWT.NONE);
 		lblEmail.setText(Messages.LoginDialog_1);
 		
 		textEMail = new Text(compositeLogin, SWT.BORDER);
-		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textEMail.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					if(!"".equals(textPasswd.getText())) okPressed();
+					else textPasswd.setFocus();
+				}
+			}
+		});
+		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblPassword = new Label(compositeLogin, SWT.NONE);
 		lblPassword.setText(Messages.LoginDialog_4);
@@ -133,6 +146,15 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Button btnLogin = new Button(compositeLogin, SWT.NONE);
+		btnLogin.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				okPressed();
+			}
+		});
+		btnLogin.setText(Messages.LoginDialog_15);
 
 		// ---------------------  Registered database ----------------------------------------------------
 		try {
@@ -203,7 +225,12 @@ public class LoginDialog extends Dialog {
 		lblContact.setText(Messages.LoginDialog_lblContact_text_1);
 		
 		Label lblContactUrl = new Label(compositeLetter, SWT.NONE);
-		lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>adi.tadpole@gmail.com</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		try {
+			UserDAO systemUserDao = TadpoleApplicationContextManager.getSystemAdmin();
+			lblContactUrl.setText(String.format("<a href='mailto:%s'>%s(%s)</a>", systemUserDao.getEmail(), systemUserDao.getName(), systemUserDao.getEmail())); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (Exception e1) {
+			lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>Admin(adi.tadpole@gmail.com)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		textEMail.setFocus();
@@ -326,6 +353,8 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+//		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
+		
 		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
@@ -336,8 +365,6 @@ public class LoginDialog extends Dialog {
 //			logger.error("view findpasswd button", e);
 //			ignore exception
 		}
-		
-		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
 	}
 	
 	/**
@@ -399,7 +426,11 @@ public class LoginDialog extends Dialog {
 
 	private void newUser() {
 		NewUserDialog newUser = new NewUserDialog(getParentShell());
-		newUser.open();
+		if(Dialog.OK == newUser.open()) {
+			String strEmail = newUser.getUserDao().getEmail();
+			textEMail.setText(strEmail);
+			textPasswd.setFocus();
+		}
 	}
 	
 	private void findPassword() {
@@ -413,9 +444,9 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		if(listDBMart.isEmpty()) {
-			return new Point(540, 310);
+			return new Point(480, 290);
 		} else {
-			return new Point(540, 470);
+			return new Point(480, 460);
 		}
 	}
 }

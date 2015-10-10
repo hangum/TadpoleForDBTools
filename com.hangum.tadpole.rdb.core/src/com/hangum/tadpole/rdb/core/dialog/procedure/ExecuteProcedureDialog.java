@@ -20,6 +20,9 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -35,6 +38,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -46,6 +51,8 @@ import com.hangum.tadpole.engine.sql.util.tables.SQLResultLabelProvider;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 
 /**
  * procedure 실행 다이얼로그.
@@ -65,7 +72,8 @@ public class ExecuteProcedureDialog extends Dialog {
 
 	private UserDBDAO userDB;
 	private ProcedureFunctionDAO procedureDAO;
-	private List<InOutParameterDAO> parameterList = new ArrayList<InOutParameterDAO>();
+	private List<InOutParameterDAO> parameterInList = new ArrayList<InOutParameterDAO>();
+	private List<InOutParameterDAO> parameterOutList = new ArrayList<InOutParameterDAO>();
 	
 	private Label[] labelInput;
 	private Text[] textInputs;
@@ -73,6 +81,9 @@ public class ExecuteProcedureDialog extends Dialog {
 	
 	private Group grpTables;
 	private Button btnExecute;
+	private Text textDBMSOutput;
+	private Text textObjectName;
+	private Text textObjectType;
 
 	/**
 	 * Create the dialog.
@@ -92,7 +103,8 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(procedureDAO.getName() + " Procedure Dialog");
+		newShell.setText(Messages.ExecuteProcedureDialog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -102,58 +114,89 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		GridLayout gridLayout = (GridLayout) container.getLayout();
-		gridLayout.verticalSpacing = 1;
-		gridLayout.horizontalSpacing = 1;
-		gridLayout.marginHeight = 1;
-		gridLayout.marginWidth = 1;
+		Composite containerInput = (Composite) super.createDialogArea(parent);
+		GridLayout gl_containerInput = (GridLayout) containerInput.getLayout();
+		gl_containerInput.verticalSpacing = 1;
+		gl_containerInput.horizontalSpacing = 1;
+		gl_containerInput.marginHeight = 1;
+		gl_containerInput.marginWidth = 1;
+		
+		Composite compositeHead = new Composite(containerInput, SWT.NONE);
+		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeHead.setLayout(new GridLayout(2, false));
+		
+		Label lblObjectType = new Label(compositeHead, SWT.NONE);
+		lblObjectType.setText(Messages.ExecuteProcedureDialog_lblObjectType_text);
+		
+		textObjectType = new Text(compositeHead, SWT.BORDER);
+		textObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblObjectName = new Label(compositeHead, SWT.NONE);
+		lblObjectName.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		lblObjectName.setText(Messages.ExecuteProcedureDialog_lblObjectName_text);
+		
+		textObjectName = new Text(compositeHead, SWT.BORDER);
+		textObjectName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		// input value가 몇개가 되어야 하는지 조사하여 입력값으로 보여줍니다.
-		Composite compositeInput = new Composite(container, SWT.NONE);
-		GridLayout gl_compositeInput = new GridLayout(3, false);
-		gl_compositeInput.verticalSpacing = 2;
-		gl_compositeInput.horizontalSpacing = 2;
-		gl_compositeInput.marginHeight = 2;
-		gl_compositeInput.marginWidth = 2;
-		compositeInput.setLayout(gl_compositeInput);
-		compositeInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		try {
 			initProcedureExecuter();
-			this.parameterList = getInParameter();
+			this.parameterInList = getInParameter();
+			this.parameterOutList = getOutParameters();
+			
 		} catch(Exception e) {
-			logger.error("get in parameter", e);
-			MessageDialog.openError(null, "Error", e.getMessage());
+			logger.error("get in parameter", e); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.ExecuteProcedureDialog_error, e.getMessage());
 			
 			super.okPressed();
 		}
-
-		//////[ input values ]////////////////////////////////////////////////////////////////////////
-		labelInput 	= new Label[parameterList.size()];
-		textInputs 	= new Text[parameterList.size()];
-		labelType 	= new Label[parameterList.size()];
 		
-		for(int i=0; i<labelInput.length; i++) {
-			InOutParameterDAO inParameters = parameterList.get(i);
+		if(!parameterInList.isEmpty()) {
+			Group compositeInput = new Group(containerInput, SWT.NONE);
+			GridLayout gl_compositeInput = new GridLayout(3, false);
+			gl_compositeInput.verticalSpacing = 2;
+			gl_compositeInput.horizontalSpacing = 2;
+			gl_compositeInput.marginHeight = 2;
+			gl_compositeInput.marginWidth = 2;
+			compositeInput.setLayout(gl_compositeInput);
+			compositeInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			compositeInput.setText("Input Parameter");
+	
+			//////[ input values ]////////////////////////////////////////////////////////////////////////
+			labelInput 	= new Label[parameterInList.size()];
+			textInputs 	= new Text[parameterInList.size()];
+			labelType 	= new Label[parameterInList.size()];
+			
+			for(int i=0; i<labelInput.length; i++) {
+				InOutParameterDAO inParameters = parameterInList.get(i);
+					
+				labelInput[i] = new Label(compositeInput, SWT.NONE);
+				labelInput[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+				labelInput[i].setText(inParameters.getName());
 				
-			labelInput[i] = new Label(compositeInput, SWT.NONE);
-			labelInput[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-			labelInput[i].setText(inParameters.getName());
-			
-			textInputs[i] = new Text(compositeInput, SWT.BORDER);
-			textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			// Parameter default value set.
-			textInputs[i].setText(inParameters.getValue());
-			
-			labelType[i] = new Label(compositeInput, SWT.NONE);
-			labelType[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-			
-			String tmpLength = StringUtils.isEmpty(inParameters.getLength())?"" : "(" + inParameters.getLength() + ")";
-			labelType[i].setText(inParameters.getRdbType() + " " + tmpLength);
+				textInputs[i] = new Text(compositeInput, SWT.BORDER);
+				textInputs[i].setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+				textInputs[i].addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						if(e.keyCode == SWT.Selection) {
+							executeProcedure();
+						}
+					}
+				});
+				// Parameter default value set.
+				textInputs[i].setText(inParameters.getValue());
+				
+				labelType[i] = new Label(compositeInput, SWT.NONE);
+				labelType[i].setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+				
+				String tmpLength = StringUtils.isEmpty(inParameters.getLength())?"" : "(" + inParameters.getLength() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				labelType[i].setText(inParameters.getRdbType() + " " + tmpLength); //$NON-NLS-1$
+			}
 		}
 		
-		Composite compositeBtn = new Composite(container, SWT.NONE);
+		Composite compositeBtn = new Composite(containerInput, SWT.NONE);
 		GridLayout gl_compositeBtn = new GridLayout(1, false);
 		gl_compositeBtn.verticalSpacing = 2;
 		gl_compositeBtn.horizontalSpacing = 2;
@@ -163,15 +206,19 @@ public class ExecuteProcedureDialog extends Dialog {
 		compositeBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		
 		btnExecute = new Button(compositeBtn, SWT.NONE);
+		btnExecute.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		btnExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				executeProcedure();
 			}
 		});
-		btnExecute.setText("Execute");
+		btnExecute.setText(Messages.ExecuteProcedureDialog_1);
 		
-		grpTables = new Group(container, SWT.NONE);
+		SashForm sashForm = new SashForm(containerInput, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		grpTables = new Group(sashForm, SWT.NONE);
 		GridLayout gl_grpTables = new GridLayout(1, false);
 		gl_grpTables.horizontalSpacing = 2;
 		gl_grpTables.verticalSpacing = 2;
@@ -179,14 +226,28 @@ public class ExecuteProcedureDialog extends Dialog {
 		gl_grpTables.marginWidth = 2;
 		grpTables.setLayout(gl_grpTables);
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpTables.setText("Result Set view");
+		grpTables.setText(Messages.ExecuteProcedureDialog_8);
+		
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			Group grpDbmsOutput = new Group(sashForm, SWT.NONE);
+			grpDbmsOutput.setLayout(new GridLayout(1, false));
+			GridData gd_grpDbmsOutput = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+			gd_grpDbmsOutput.minimumHeight = 50;
+			gd_grpDbmsOutput.heightHint = 50;
+			grpDbmsOutput.setLayoutData(gd_grpDbmsOutput);
+			grpDbmsOutput.setText(Messages.ExecuteProcedureDialog_grpDbmsOutput_text);
+			
+			textDBMSOutput = new Text(grpDbmsOutput, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+			textDBMSOutput.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			sashForm.setWeights(new int[] {7, 3});
+		}
 		
 		initUI();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 
-		return container;
+		return containerInput;
 	}
 	
 	/**
@@ -214,14 +275,18 @@ public class ExecuteProcedureDialog extends Dialog {
 			}
 		}
 		
-		for(int i=0; i<parameterList.size(); i++) {
-			InOutParameterDAO inParam = parameterList.get(i);
+		for(int i=0; i<parameterInList.size(); i++) {
+			InOutParameterDAO inParam = parameterInList.get(i);
 			inParam.setValue(textInputs[i].getText());
 		}
 		
 		try {
-			boolean ret = procedureExecutor.exec(parameterList);
+			boolean ret = procedureExecutor.exec(parameterInList);
 			if(ret) {
+				if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+					textDBMSOutput.setText(procedureExecutor.getStrOutput());
+				}
+				
 				List<ResultSetUtilDTO> listResultDao = procedureExecutor.getResultDAO();
 				sqlResultTableViewer = new TableViewer[listResultDao.size()];
 				
@@ -249,8 +314,10 @@ public class ExecuteProcedureDialog extends Dialog {
 			
 			grpTables.layout();
 		} catch(Exception e) {
-			logger.error("Procedure execute Result view", e);
-			MessageDialog.openError(null, "Error", e.getMessage());
+			logger.error("Procedure execute Result view", e); //$NON-NLS-1$
+			
+			TDBInfoDialog dialog = new TDBInfoDialog(null, "Object execution exception", e.getMessage());
+			dialog.open();
 		}
 	}
 	
@@ -258,6 +325,9 @@ public class ExecuteProcedureDialog extends Dialog {
 	 * init ui
 	 */
 	private void initUI() {
+		textObjectType.setText(procedureDAO.getType());
+		textObjectName.setText(procedureDAO.getName());
+		
 		if(textInputs != null && textInputs.length > 0) {
 			textInputs[0].setFocus();
 		} else {
@@ -271,6 +341,10 @@ public class ExecuteProcedureDialog extends Dialog {
 	private List<InOutParameterDAO> getInParameter() throws Exception {
 		return procedureExecutor.getInParameters();
 	}
+	
+	private List<InOutParameterDAO> getOutParameters() throws Exception {
+		return procedureExecutor.getOutParameters();
+	}
 
 	/**
 	 * Create contents of the button bar.
@@ -279,7 +353,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Close", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ExecuteProcedureDialog_11, false);
 	}
 
 	/**

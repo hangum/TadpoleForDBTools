@@ -41,8 +41,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
-import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -114,18 +112,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	mainUICallback();
 
     	// If login after does not DB exist, DB connect Dialog open.
-    	try {
-//    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-    		if(0 == mv.getAllTreeList().size()) {
-    			if(MessageDialog.openConfirm(null, Messages.ApplicationWorkbenchWindowAdvisor_0, Messages.ApplicationWorkbenchWindowAdvisor_3)) {
-    			ConnectDatabase cd = new ConnectDatabase();
-    			cd.run();
-	    		}
-    		}
-    	} catch(Exception e) {
-    		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}
+//    	try {
+////    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+//			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+//    		if(0 == mv.getAllTreeList().size()) {
+//    			if(MessageDialog.openConfirm(null, Messages.ApplicationWorkbenchWindowAdvisor_0, Messages.ApplicationWorkbenchWindowAdvisor_3)) {
+//    			ConnectDatabase cd = new ConnectDatabase();
+//    			cd.run();
+//	    		}
+//    		}
+//    	} catch(Exception e) {
+//    		logger.error("Is DB list?", e); //$NON-NLS-1$
+//    	}
     	
     }
     

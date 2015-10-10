@@ -11,6 +11,14 @@
 package com.hangum.tadpole.engine.query.dao.mysql;
 
 public class ProcedureFunctionDAO {
+	/** 
+	 * 시스템에서 쿼리에 사용할 이름을 정의 .
+	 * 보여줄때는 {@link TableDAO#name}을 사용하고, 쿼리를 사용할때는 . 
+	 * 
+	 * 자세한 사항은 https://github.com/hangum/TadpoleForDBTools/issues/412 를 참고합니다.
+	 */
+	String sysName = "";
+	
 	String Db;
 	String Name;
 	String Type;
@@ -147,6 +155,19 @@ public class ProcedureFunctionDAO {
 	public void setCollation(String collation) {
 		Collation = collation;
 	}
-	
+
+	/**
+	 * @return the sysName
+	 */
+	public String getSysName() {
+		return sysName;
+	}
+
+	/**
+	 * @param sysName the sysName to set
+	 */
+	public void setSysName(String sysName) {
+		this.sysName = sysName;
+	}
 	
 }

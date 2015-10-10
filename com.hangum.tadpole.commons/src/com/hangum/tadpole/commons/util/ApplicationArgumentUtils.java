@@ -169,8 +169,8 @@ public class ApplicationArgumentUtils {
 	 * 
 	 * @return
 	 */
-	public static boolean isGAON() {
-		return checkString("-GAON");
+	public static boolean isGAOFF() {
+		return checkString("-GAOFF");
 	}
 	
 	/**

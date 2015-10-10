@@ -48,6 +48,7 @@ import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -58,6 +59,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
@@ -370,12 +372,20 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 	 */
 	private void addBrowserService() {
 		browserQueryEditor.setUrl(DEV_DB_URL);
+
+		final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
+	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
+	    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+	    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
+	    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
 		
 		registerBrowserFunctions();
-		
 		browserQueryEditor.addProgressListener( new ProgressListener() {
 			public void completed( ProgressEvent event ) {
-				browserEvaluate(IEditorFunction.INITIALIZE, EditorDefine.EXT_JAVASCRIPT, "NONE", "", getInputJavaScriptContent());
+				browserEvaluate(IEditorFunction.MONGO_INITIALIZE, 
+						EditorDefine.EXT_JAVASCRIPT, getInputJavaScriptContent(),
+						varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+				);
 			}
 			public void changed( ProgressEvent event ) {}
 		});

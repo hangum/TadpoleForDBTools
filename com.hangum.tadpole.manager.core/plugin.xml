@@ -4,16 +4,16 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="com.hangum.tadpole.manager.core.editor.auth.UserManagementEditor"
+            class="com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor"
             default="false"
-            icon="resources/icons/user.png"
-            id="com.hangum.tadpole.manager.core.editor.usermanagement"
+            icon="resources/icons/db.png"
+            id="com.hangum.tadpole.manager.core.editor.dbmgnt"
             name="%editor.name">
       </editor>
       <editor
-            class="com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor"
+            class="com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor"
             default="false"
-            icon="resources/icons/queryhistory.png"
+            icon="resources/icons/sqlaudit.png"
             id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
             name="SQL Audit">
       </editor>

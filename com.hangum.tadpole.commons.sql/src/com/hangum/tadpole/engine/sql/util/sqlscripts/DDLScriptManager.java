@@ -30,6 +30,8 @@ import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.OracleDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.PostgreSQLDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.SQLiteDDLScript;
 
+import net.sf.jsqlparser.schema.Table;
+
 /**
  * DDLScript Mananager
  * 
@@ -37,6 +39,7 @@ import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.SQLiteDDLScript;
  *
  */
 public class DDLScriptManager {
+	protected String objectName = "";
 	protected UserDBDAO userDB;
 	protected DB_ACTION actionType;
 	
@@ -102,25 +105,46 @@ public class DDLScriptManager {
 		
 		// find DDL Object
 		if(PublicTadpoleDefine.DB_ACTION.TABLES == actionType) {
-			retStr = rdbScript.getTableScript((TableDAO)obj);
+			TableDAO tbl = (TableDAO)obj;
+			setObjectName(tbl.getName());
+			
+			retStr = rdbScript.getTableScript(tbl);
 		} else if(PublicTadpoleDefine.DB_ACTION.VIEWS == actionType) {
-			retStr = rdbScript.getViewScript(obj.toString());
+			TableDAO tbl = (TableDAO)obj;
+			
+			setObjectName(tbl.getName());
+			retStr = rdbScript.getViewScript(tbl.getName());
 		} else if(PublicTadpoleDefine.DB_ACTION.INDEXES == actionType) {
-			retStr = rdbScript.getIndexScript((InformationSchemaDAO)obj);
+			InformationSchemaDAO index = (InformationSchemaDAO)obj;
+			setObjectName(index.getINDEX_NAME());
+			
+			retStr = rdbScript.getIndexScript(index);
 		} else if(PublicTadpoleDefine.DB_ACTION.FUNCTIONS == actionType) {
-			retStr = rdbScript.getFunctionScript((ProcedureFunctionDAO)obj);
+			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
+			setObjectName(procedure.getName());
+			
+			retStr = rdbScript.getFunctionScript(procedure);
 		} else if(PublicTadpoleDefine.DB_ACTION.PROCEDURES == actionType) {
-			retStr = rdbScript.getProcedureScript((ProcedureFunctionDAO)obj);
+			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
+			setObjectName(procedure.getName());
+			
+			retStr = rdbScript.getProcedureScript(procedure);
 		} else if(PublicTadpoleDefine.DB_ACTION.PACKAGES == actionType) {
-			retStr = rdbScript.getProcedureScript((ProcedureFunctionDAO)obj);
+			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
+			setObjectName(procedure.getName());
+			
+			retStr = rdbScript.getProcedureScript(procedure);
 		} else if(PublicTadpoleDefine.DB_ACTION.TRIGGERS == actionType) {
-			retStr = rdbScript.getTriggerScript((TriggerDAO)obj);
+			TriggerDAO trigger = (TriggerDAO)obj;
+			setObjectName(trigger.getName());
+			
+			retStr = rdbScript.getTriggerScript(trigger);
 		} else {
 			throw new Exception("Not support Database");
 		}
 		
 		// 마지막 ; 문자가 포함되어있을 경우.
-		if(StringUtils.endsWith(StringUtils.trim(retStr), PublicTadpoleDefine.SQL_DELIMITER)) {
+		if(StringUtils.endsWith(StringUtils.trimToEmpty(retStr), PublicTadpoleDefine.SQL_DELIMITER)) {
 			return retStr;
 		} else {
 			return retStr + PublicTadpoleDefine.SQL_DELIMITER;
@@ -148,4 +172,19 @@ public class DDLScriptManager {
 	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
 		return rdbScript.getProcedureOutParamter(procedureDAO);
 	}
+
+	/**
+	 * @return the objectName
+	 */
+	public String getObjectName() {
+		return objectName;
+	}
+
+	/**
+	 * @param objectName the objectName to set
+	 */
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
+	}
+	
 }

@@ -84,7 +84,7 @@ public class PreferenceDefine {
 		public static final String SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE = "true";
 		
 		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE 	= "SQL_FORMATTER_WORD_WIDTH_PREFERENCE";
-		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "80";
+		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "120";
 		
 	/** SESSION TIME OUT */
 	public static final String SESSION_DFEAULT_PREFERENCE = "SESSION_DFEAULT_PREFERENCE";
@@ -170,4 +170,22 @@ public class PreferenceDefine {
 		
 		public static final String SECURITY_CREDENTIAL_SECRET_KEY 		= "SECURITY_CREDENTIAL_SECRET_KEY";
 		public static final String SECURITY_CREDENTIAL_SECRET_KEY_VALUE = Utils.getUniqueID();
+		
+	/** editor info */
+	public static final String EDITOR_CHANGE_EVENT = "_EDITOR_CHANGE_EVENT_";
+	public static final String EDITOR_THEME 		= "EDITOR_THEME";
+	public static final String EDITOR_THEME_VALUE	= "Chrome";
+	
+	public static final String EDITOR_FONT_SIZE 		= "EDITOR_FONT_SIZE";
+	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";
+	
+	public static final String EDITOR_IS_WARP 		= "EDITOR_IS_WARP";
+	public static final String EDITOR_IS_WARP_VALUE = "true";
+	
+	public static final String EDITOR_WRAP_LIMIT 		= "EDITOR_WRAP_LIMIT";
+	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "120";
+	
+	public static final String EDITOR_SHOW_GUTTER = "EDITOR_SHOW_GUTTER";
+	public static final String EDITOR_SHOW_GUTTER_VALUE = "true";
+		
 }

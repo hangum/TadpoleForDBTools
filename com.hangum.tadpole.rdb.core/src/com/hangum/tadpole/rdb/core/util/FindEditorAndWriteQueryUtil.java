@@ -48,14 +48,15 @@ public class FindEditorAndWriteQueryUtil {
 	 * 쿼리 스트링을 에디터로 엽니다.
 	 * 
 	 * @param userDB
-	 * @param lowSQL
+	 * @param strObjectName
+	 * @param strScript 
 	 * @param isNewEditor 항상 새로운 창으로 엽니다.
 	 * @param initAction action이 호출된곳.
 	 */
-	public static void run(UserDBDAO userDB, String lowSQL, boolean isNewEditor, PublicTadpoleDefine.DB_ACTION initAction) {
+	public static void run(UserDBDAO userDB, String strObjectName, String strScript, boolean isNewEditor, PublicTadpoleDefine.DB_ACTION initAction) {
 		
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
-			newMongoDBEditorOpen(userDB, lowSQL);
+			newMongoDBEditorOpen(userDB, strScript);
 		} else {
 
 //			if(isFormating) {
@@ -70,12 +71,12 @@ public class FindEditorAndWriteQueryUtil {
 			if(SQLUtil.isSELECTEditor(initAction)) {
 				IEditorPart editor = EditorUtils.findSQLEditor(userDB);
 				if(editor == null || isNewEditor) {				
-					newSQLEditorOpen(userDB, lowSQL, initAction);		
+					newSQLEditorOpen(userDB, strScript, initAction);		
 				} else {
-					appendSQLEditorOpen(editor, userDB, lowSQL);				
+					appendSQLEditorOpen(editor, userDB, strScript);				
 				}	// end reference
 			} else {
-				newObjectEditorOpen(userDB, lowSQL, initAction);
+				newObjectEditorOpen(userDB, strObjectName, strScript, initAction);
 			}
 		}	// end db
 	}
@@ -89,7 +90,7 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param initAction
 	 */
 	public static void run(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
-		run(userDB, lowSQL, false, initAction);
+		run(userDB, "", lowSQL, false, initAction);
 	}
 	
 	/**
@@ -116,12 +117,13 @@ public class FindEditorAndWriteQueryUtil {
 	 * new window open
 	 * 
 	 * @param userDB
-	 * @param lowSQL
+	 * @param objectName
+	 * @param strScript 
 	 * @param initAction
 	 */
-	private static void newObjectEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
+	private static void newObjectEditorOpen(UserDBDAO userDB, String objectName, String strScript, PublicTadpoleDefine.DB_ACTION initAction) {
 		try {
-			ObjectEditorInput mei = new ObjectEditorInput(userDB, lowSQL, initAction);
+			ObjectEditorInput mei = new ObjectEditorInput(userDB, objectName, strScript, initAction);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, ObjectEditor.ID, false);
 		} catch (PartInitException e) {
 			logger.error("new sql editor open", e); //$NON-NLS-1$

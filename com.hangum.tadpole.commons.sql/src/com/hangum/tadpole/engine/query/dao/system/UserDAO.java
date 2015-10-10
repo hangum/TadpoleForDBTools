@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * user 정보 정의
@@ -40,6 +41,9 @@ public class UserDAO {
 	String otp_secret;
 	
 	String allow_ip = "*";
+
+	/** 디비등록 가능 여부 */
+	String is_regist_db = PublicTadpoleDefine.YES_NO.YES.name();
 	
 	/** tadpole_user_db_role column */
 	String role_id;
@@ -222,5 +226,19 @@ public class UserDAO {
 	 */
 	public void setIs_email_certification(String is_email_certification) {
 		this.is_email_certification = is_email_certification;
+	}
+
+	/**
+	 * @return the is_regist_db
+	 */
+	public String getIs_regist_db() {
+		return is_regist_db;
+	}
+
+	/**
+	 * @param is_regist_db the is_regist_db to set
+	 */
+	public void setIs_regist_db(String is_regist_db) {
+		this.is_regist_db = is_regist_db;
 	}
 }

@@ -12,10 +12,14 @@ package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
 import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -40,30 +44,65 @@ public class TadpoleSystemCommons {
 	 * @param executeType
 	 * @param strDML
 	 * @param args
+	 * @throws Exception
+	 */
+	public static RequestResultDAO executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws Exception {
+		String strQuery = "";
+		
+		// sql에 포멧터의 특수문자가 있는 경우 오라클의 v_hist_sequ   indwrk_hist.hist_sequ%TYPE; 경우에러.
+		// 잠재적인 에러 요인인데.. - hyunjong
+		try {
+			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, args));
+			strQuery = String.format(strDML, args);
+		} catch(Exception e) {
+			strQuery = strDML;
+		}
+		
+		RequestResultDAO reqResultDAO = new RequestResultDAO();
+		reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
+		reqResultDAO.setIpAddress(RWT.getRequest().getRemoteAddr());
+		reqResultDAO.setStrSQLText(strQuery);
+	
+		try {
+			boolean bool = executSQL(userDB, executeType, strQuery);
+		} catch(Exception e) {
+			reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
+			reqResultDAO.setMesssage(e.getMessage());
+			reqResultDAO.setException(e);
+			
+//			throw e;
+		} finally {
+			reqResultDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
+		}
+		
+		return reqResultDAO;
+	}
+	
+	/**
+	 * 쿼리중에 quote sql을 반영해서 작업합니다.
+	 * 
+	 * @param userDB
+	 * @param executeType
+	 * @param strSQL
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static boolean executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws TadpoleSQLManagerException, SQLException {
-		String strQuery = String.format(strDML, args);
-		
+	private static boolean executSQL(UserDBDAO userDB, String executeType, String strSQL) throws TadpoleSQLManagerException, SQLException {
 		java.sql.Connection javaConn = null;
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
-			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, args));
-			
 			Statement stmt = javaConn.createStatement();
 
-			return stmt.execute(strDML);
+			return stmt.execute(strSQL);
 			
 		} finally {
 			// save schema history
-			
 			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, 
 				"EDITOR",
 				executeType,
 				"",
-				strQuery);
+				strSQL);
 			
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 			

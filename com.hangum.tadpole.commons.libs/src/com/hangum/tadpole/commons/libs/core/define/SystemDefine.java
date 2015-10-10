@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.define;
 
-
 /**
  * 시스템 정보를 정의합니다.
  * 
@@ -20,9 +19,9 @@ package com.hangum.tadpole.commons.libs.core.define;
 public class SystemDefine {
 	
 	public static final String NAME = "Tadpole DB Hub";
-	public static final String MAJOR_VERSION = "1.6.4 (fly)";
-	public static final String SUB_VERSION = "Build" + "(R0)";	
-	public static final String RELEASE_DATE = "2015.09.20";
+	public static final String MAJOR_VERSION = "1.6.5";
+	public static final String SUB_VERSION = "Build(R0)";	
+	public static final String RELEASE_DATE = "2015.10.10";
 	public static final String INFORMATION = "http://hangum.github.io/TadpoleForDBTools/";
 	
 	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";

@@ -179,8 +179,10 @@ public class ManagerViewer extends ViewPart {
 					}
 				// manager
 				} else if (selElement instanceof ManagerListDTO) {
-					ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
-					cda.runConnectionDialog(is);
+					if("YES".equals(SessionManager.getIsRegistDB())) {
+						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
+						cda.runConnectionDialog(is);
+					}
 				}
 			}
 		});

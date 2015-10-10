@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -34,15 +35,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -52,12 +54,10 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
-import com.hangum.tadpole.rdb.core.dialog.procedure.ExecuteProcedureDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionLabelProvicer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.ProcedureFunctionViewFilter;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Function composite
@@ -132,17 +132,11 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 				if(!iss.isEmpty()) {
-					ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)iss.getFirstElement();
-					
-					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
-					if(pm.isExecuted(procedureDAO, getUserDB())) {
-						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
-						epd.open();
-					}
+					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_ACTION.FUNCTIONS, Messages.TadpoleFunctionComposite_4);
+					action.run(iss, getUserDB(), DB_ACTION.FUNCTIONS);
 				}	// end iss.isempty
 			}
 		});
-
 
 		functionFilter = new ProcedureFunctionViewFilter();
 		functionTableViewer.addFilter(functionFilter);
@@ -230,13 +224,19 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
+			showFunction = DBSystemSchema.getFunctionList(userDB);
 
 			functionTableViewer.setInput(showFunction);
 			functionTableViewer.refresh();
 			
 			TableUtil.packTable(functionTableViewer.getTable());
+			
+			// updatae constant assist
+			StringBuffer strFunctionlist = new StringBuffer();
+			for (ProcedureFunctionDAO tableDao : showFunction) {
+				strFunctionlist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
+			}
+			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), "|"));
 
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$

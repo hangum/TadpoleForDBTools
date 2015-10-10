@@ -27,6 +27,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -97,7 +98,8 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		sel = (IStructuredSelection)selection;
-
+		
+		if("NO".equals(SessionManager.getIsRegistDB())) setEnabled(false);
 	}
 
 }

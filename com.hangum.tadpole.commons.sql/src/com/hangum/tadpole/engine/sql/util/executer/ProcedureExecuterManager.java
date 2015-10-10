@@ -10,10 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.executer;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.DBInfoDAO;
@@ -22,6 +23,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.MSSQLProcedureExecuter;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.MySqlProcedureExecuter;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.OracleProcedureExecuter;
+import com.hangum.tadpole.engine.sql.util.executer.procedure.PostgreSQLProcedureExecuter;
 import com.hangum.tadpole.engine.sql.util.executer.procedure.ProcedureExecutor;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -61,8 +63,10 @@ public class ProcedureExecuterManager {
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+			return new PostgreSQLProcedureExecuter(procedureDAO, userDB);
 		} else {
-			throw new Exception("Not Support database");
+			throw new Exception(Messages.ProcedureExecuterManager_0);
 		}
 	}
 	
@@ -90,11 +94,11 @@ public class ProcedureExecuterManager {
 	 */
 	public boolean isExecuted(ProcedureFunctionDAO procedureDAO, UserDBDAO selectUseDB) {
 		if(!isSupport()) {
-			MessageDialog.openError(null, "Error", "Not Support database");
+			MessageDialog.openError(null, Messages.ProcedureExecuterManager_error, Messages.ProcedureExecuterManager_0);
 			return false;
 		}
 		if(!procedureDAO.isValid()) {
-			MessageDialog.openError(null, "Error", "Not valid this procedure.");
+			MessageDialog.openError(null, Messages.ProcedureExecuterManager_error, Messages.ProcedureExecuterManager_4);
 			return false;
 		}
 		
@@ -106,11 +110,11 @@ public class ProcedureExecuterManager {
 				dbVersion = Double.parseDouble( StringUtils.substring(dbInfo.getProductversion(), 0, 3) );
 			
 				if (dbVersion < 5.5){
-					MessageDialog.openError(null, "Error", "The current version does not support.\n\n5.5 or later is supported.");
+					MessageDialog.openError(null, Messages.ProcedureExecuterManager_error, Messages.ProcedureExecuterManager_6);
 					return false;
 				}
 			} catch (Exception e) {
-				logger.error("find DB info", e);
+				logger.error("find DB info", e); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -121,7 +125,7 @@ public class ProcedureExecuterManager {
 			ProcedureExecutor procedureExecutor = getExecuter();
 			procedureExecutor.getInParameters();
 		} catch(Exception e) {
-			MessageDialog.openError(null, "Error", e.getMessage());
+			MessageDialog.openError(null, Messages.ProcedureExecuterManager_error, e.getMessage());
 			return false;
 		}
 		

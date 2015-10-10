@@ -20,7 +20,7 @@ public class TadpoleMetaData {
 	/**
 	 * 이슈정리 : https://github.com/hangum/TadpoleForDBTools/issues/412
 	 * 
-	 *	ms sql, sqlite
+	 *	mysql, maria, ms sql, sqlite
 	 * 공백이 있을 경우 묶는다.(대소문자 상관없음)
 	 *
 	 *	pg sql, tajo
@@ -29,7 +29,7 @@ public class TadpoleMetaData {
 	 *	oracle
 	 * 소문자 이거나 중간에 공백이 있으면 묶는다.
 	 *
-	 *	mysql, maria, hive  
+	 *	hive  
 	 * 처리하지 않음.
 	 *
 	 * @author hangum

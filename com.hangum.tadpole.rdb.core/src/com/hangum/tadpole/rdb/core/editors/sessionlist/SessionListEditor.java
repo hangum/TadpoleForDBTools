@@ -242,6 +242,9 @@ public class SessionListEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {7, 3});
 		
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		// init data
 		initSessionListData();
 		
@@ -350,9 +353,6 @@ public class SessionListEditor extends EditorPart {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
 		}
-		
-		// google analytic
-		AnalyticCaller.track(this.getClass().getName());
 	}
 	
 	/**

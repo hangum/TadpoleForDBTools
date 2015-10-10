@@ -24,7 +24,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 
 /**
@@ -187,15 +186,8 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createIndexesColumn(final TableViewer tv, final ObjectComparator comparator) {
-//		String[] name = {"TABLE NAME", "INDEX NAME", "NON UNIQUE", "INDEX SCHEMA", "SEQ IN INDEX", 
-//						"COLUMN NAME", "COLLATION", "CARDINALITY", "SUB PART", "PACKED", 
-//						"NULLABLE", 	"INDEX TYPE","COMMENT"
-//		};
 		String[] name = {Messages.AbstractObjectComposite_22, Messages.AbstractObjectComposite_23,Messages.AbstractObjectComposite_24,Messages.AbstractObjectComposite_25};
-		int[] size = {120, 120, 70, 70//, 70, 
-//						70,	70, 70, 70, 70, 
-//						70, 70,	70
-		};
+		int[] size = {120, 120, 70, 70};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
@@ -206,16 +198,19 @@ public abstract class AbstractObjectComposite extends Composite {
 	}
 	
 	/**
-	 * view column
+	 * 
+	 * @param tv
+	 * @param comparator
 	 */
-	protected void createViewColumne(TableViewer tv) {
-		String[] name = {Messages.AbstractObjectComposite_26, Messages.AbstractObjectComposite_27, Messages.AbstractObjectComposite_28, Messages.AbstractObjectComposite_29, Messages.AbstractObjectComposite_30, Messages.AbstractObjectComposite_31, Messages.AbstractObjectComposite_32};
-		int[] size = {120, 70, 50, 100, 50, 50, 50};
+	protected void crateSchedule(final TableViewer tv, final ObjectComparator comparator) {
+		String[] name = {"WHAT", "JOB", "NEXT_DATE", "NEXT_SEC", "FAILURES", "BROKEN"};
+		int[] size = {120, 120, 70, 70, 70, 70};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+//			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
 	

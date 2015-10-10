@@ -55,12 +55,6 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 			TableColumnDAO tcDAO = (TableColumnDAO)obj;
 			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
 		}
-		
-//		String strColumnName = "";
-//		for(Object obj : selection.toArray()) {
-//			TableColumnDAO tcDAO = (TableColumnDAO)obj;
-//			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
-//		}
 		strColumnName = StringUtils.removeEnd(strColumnName, ", "); //$NON-NLS-1$
 		
 		FindEditorAndWriteQueryUtil.runAtPosition(strColumnName);
