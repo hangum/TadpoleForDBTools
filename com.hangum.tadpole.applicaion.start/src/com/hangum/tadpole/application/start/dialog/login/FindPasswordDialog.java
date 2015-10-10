@@ -30,6 +30,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.template.TemporaryPasswordMailBodyTemplate;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -55,7 +56,7 @@ public class FindPasswordDialog extends Dialog {
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Fogot password");
-		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png")); //$NON-NLS-1$
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	@Override

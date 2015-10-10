@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.help.HelpDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -65,6 +66,7 @@ public class CollValidateDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(collName + " - validate Dialog");
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**

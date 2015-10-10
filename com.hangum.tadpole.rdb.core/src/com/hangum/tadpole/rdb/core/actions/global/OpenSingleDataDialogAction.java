@@ -43,16 +43,7 @@ public class OpenSingleDataDialogAction extends Action implements IWorkbenchActi
 	
 	@Override
 	public void run() {
-		Shell[] shellList = PlatformUI.getWorkbench().getDisplay().getShells();
-		for (Shell shell : shellList) {
-			if (shell.getData().getClass() == RecordViewDialog.class) {
-				shell.close();
-				break;
-			}
-		}
-		RecordViewDialog dialog = new RecordViewDialog(PlatformUI
-				.getWorkbench().getDisplay().getActiveShell(), dto,
-				iss.getFirstElement());
+		RecordViewDialog dialog = new RecordViewDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), dto, iss.getFirstElement());
 		dialog.open();
 	}
 	

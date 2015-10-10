@@ -21,15 +21,23 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class ToobalImageUtils {
+public class GlobalImageUtils {
 	public static final String IMAGE_Activator_ID = Activator.ID;
+	
+	/**
+	 * add tadpole db hub
+	 * @return
+	 */
+	public static final Image getTadpoleIcon() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/Tadpole15-15.png");
+	}
 	
 	/**
 	 * add database 
 	 * @return
 	 */
 	public static final Image getAddDatabase() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/add_database.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/add_database.png");
 	}
 	
 	/**
@@ -37,7 +45,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getOtherInformation() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/Info-16.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/Info-16.png");
 	}
 	
 	/**
@@ -45,7 +53,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getFiltering() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/filled_filter.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/filled_filter.png");
 	}
 	
 	/**
@@ -53,7 +61,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getConfigurationDatabase() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/configuration_database.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/configuration_database.png");
 	}
 
 	
@@ -62,7 +70,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getRefresh() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/refresh.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/refresh.png");
 	}
 	
 	/**
@@ -70,7 +78,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getAdd() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/add.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/add.png");
 	}
 	
 	/**
@@ -78,7 +86,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getUserAdd() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/user-add-0.56.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/user-add-0.56.png");
 	}
 	
 	/**
@@ -86,7 +94,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getUserInfo() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/user_info-0.56.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/user_info-0.56.png");
 	}
 	
 	/**
@@ -94,7 +102,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static final Image getUserRemove() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/user-remove-0.56.png.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/user-remove-0.56.png.png");
 	}
 	
 	/**
@@ -102,7 +110,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static Image getSave() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/save.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/save.png");
 	}
 
 	/**
@@ -110,7 +118,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static Image getDelete() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/delete.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/delete.png");
 	}
 
 	/**
@@ -118,7 +126,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static Image getModify() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/modify.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/modify.png");
 	}
 
 	/**
@@ -126,7 +134,7 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static Image getExport() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/export.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/export.png");
 	}
 
 	/**
@@ -134,14 +142,14 @@ public class ToobalImageUtils {
 	 * @return
 	 */
 	public static Image getImport() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/import.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/import.png");
 	}
 
 	public static Image getQueryHistory() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/queryhistory.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/queryhistory.png");
 	}
 	
 	public static Image getSQLEditor() {
-		return ResourceManager.getPluginImage(ToobalImageUtils.IMAGE_Activator_ID, "resources/icons/sql-query.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/sql-query.png");
 	}
 }

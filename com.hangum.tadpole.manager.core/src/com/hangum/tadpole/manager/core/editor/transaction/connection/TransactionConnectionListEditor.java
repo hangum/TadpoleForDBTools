@@ -43,7 +43,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.manager.DBCPInfoDAO;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -149,7 +149,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 				initGeneral();
 			}
 		});
-		tltmCRefresh.setImage(ToobalImageUtils.getRefresh());
+		tltmCRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmCRefresh.setToolTipText(Messages.TransactionConnectionListEditor_2);
 		
 		tvGeneral = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
@@ -214,7 +214,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
+		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

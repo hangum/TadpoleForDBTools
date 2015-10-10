@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.Messages;
 
@@ -55,7 +56,8 @@ public class TadpoleSimpleMessageDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(title);//Messages.TadpoleSimpleMessageDialog_2);
+		newShell.setText(title);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**

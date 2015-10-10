@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.Messages;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
 /**
  * SQL to db import dialog
@@ -74,6 +75,7 @@ public class SingleFileuploadDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(strTitle);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**

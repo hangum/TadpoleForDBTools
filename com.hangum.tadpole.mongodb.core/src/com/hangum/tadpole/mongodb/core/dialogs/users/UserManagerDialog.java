@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
@@ -281,6 +282,7 @@ public class UserManagerDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Add User Dialog"); //$NON-NLS-1$
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 }

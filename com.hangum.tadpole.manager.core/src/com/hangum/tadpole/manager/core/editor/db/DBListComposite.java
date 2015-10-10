@@ -50,7 +50,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
@@ -131,7 +131,7 @@ public class DBListComposite extends Composite {
 		toolBar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
+		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -143,7 +143,7 @@ public class DBListComposite extends Composite {
 		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmConfigurationDB = new ToolItem(toolBar, SWT.NONE);
-		tltmConfigurationDB.setImage(ToobalImageUtils.getConfigurationDatabase());
+		tltmConfigurationDB.setImage(GlobalImageUtils.getConfigurationDatabase());
 		tltmConfigurationDB.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -154,7 +154,7 @@ public class DBListComposite extends Composite {
 		tltmConfigurationDB.setEnabled(false);
 		
 		tltmOtherInformation = new ToolItem(toolBar, SWT.NONE);
-		tltmOtherInformation.setImage(ToobalImageUtils.getOtherInformation());
+		tltmOtherInformation.setImage(GlobalImageUtils.getOtherInformation());
 		tltmOtherInformation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -173,7 +173,7 @@ public class DBListComposite extends Composite {
 		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
 
 		tltmAddUser = new ToolItem(toolBar, SWT.NONE);
-		tltmAddUser.setImage(ToobalImageUtils.getUserAdd());
+		tltmAddUser.setImage(GlobalImageUtils.getUserAdd());
 		tltmAddUser.setEnabled(false);
 		tltmAddUser.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -213,7 +213,7 @@ public class DBListComposite extends Composite {
 		tltmAddUser.setToolTipText(Messages.DBListComposite_3);
 		
 		tltmDBAccessCtl = new ToolItem(toolBar, SWT.NONE);
-		tltmDBAccessCtl.setImage(ToobalImageUtils.getFiltering());
+		tltmDBAccessCtl.setImage(GlobalImageUtils.getFiltering());
 		tltmDBAccessCtl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -228,7 +228,7 @@ public class DBListComposite extends Composite {
 		tltmDBAccessCtl.setToolTipText(Messages.DBListComposite_4);
 		
 		tltmUserInfo = new ToolItem(toolBar, SWT.NONE);
-		tltmUserInfo.setImage(ToobalImageUtils.getUserInfo());
+		tltmUserInfo.setImage(GlobalImageUtils.getUserInfo());
 		tltmUserInfo.setEnabled(false);
 		tltmUserInfo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -239,7 +239,7 @@ public class DBListComposite extends Composite {
 		tltmUserInfo.setToolTipText(Messages.DBListComposite_5);
 		
 		tltmUserDelete = new ToolItem(toolBar, SWT.NONE);
-		tltmUserDelete.setImage(ToobalImageUtils.getUserRemove());
+		tltmUserDelete.setImage(GlobalImageUtils.getUserRemove());
 		tltmUserDelete.setEnabled(false);
 		tltmUserDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -252,7 +252,7 @@ public class DBListComposite extends Composite {
 		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmQueryHistory = new ToolItem(toolBar, SWT.NONE);
-		tltmQueryHistory.setImage(ToobalImageUtils.getQueryHistory()); //$NON-NLS-1$
+		tltmQueryHistory.setImage(GlobalImageUtils.getQueryHistory()); //$NON-NLS-1$
 		tltmQueryHistory.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -264,7 +264,7 @@ public class DBListComposite extends Composite {
 		
 		ToolItem toolItem_2 = new ToolItem(toolBar, SWT.SEPARATOR);
 		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
-		tltmSQLEditor.setImage(ToobalImageUtils.getSQLEditor()); //$NON-NLS-1$
+		tltmSQLEditor.setImage(GlobalImageUtils.getSQLEditor()); //$NON-NLS-1$
 		tltmSQLEditor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

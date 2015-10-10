@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -49,6 +50,7 @@ public class AboutDialog extends Dialog {
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.AboutDialog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**

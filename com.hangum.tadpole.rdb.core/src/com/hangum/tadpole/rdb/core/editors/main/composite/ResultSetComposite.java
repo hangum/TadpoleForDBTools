@@ -193,7 +193,6 @@ public class ResultSetComposite extends Composite {
 		lblProgress.setText(Messages.ResultSetComposite_3);
 		
 		progressBarQuery = new ProgressBar(compHead, SWT.NULL);
-		progressBarQuery.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 //		progressBarQuery.setBackground(SWTResourceManager.getColor(127,255,0));
 		progressBarQuery.setSelection(0);
 		
@@ -323,6 +322,7 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
 	}

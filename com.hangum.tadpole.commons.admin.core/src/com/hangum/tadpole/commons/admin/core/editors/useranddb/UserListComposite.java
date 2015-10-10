@@ -49,7 +49,7 @@ import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserComp
 import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserLabelProvider;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.ToobalImageUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
@@ -120,7 +120,7 @@ public class UserListComposite extends Composite {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setImage(ToobalImageUtils.getRefresh());
+		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -131,7 +131,7 @@ public class UserListComposite extends Composite {
 		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 	
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
-		tltmAdd.setImage(ToobalImageUtils.getAdd());
+		tltmAdd.setImage(GlobalImageUtils.getAdd());
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -141,7 +141,7 @@ public class UserListComposite extends Composite {
 		tltmAdd.setToolTipText(Messages.AdminUserListComposite_1);
 	
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
-		tltmModify.setImage(ToobalImageUtils.getModify());
+		tltmModify.setImage(GlobalImageUtils.getModify());
 		tltmModify.setEnabled(false);
 		tltmModify.setToolTipText(Messages.AdminUserListComposite_2);
 		tltmModify.addSelectionListener(new SelectionAdapter() {
