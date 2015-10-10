@@ -48,6 +48,23 @@ public class TadpoleSystem_ExecutedSQL {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_ExecutedSQL.class);
 	
 	/**
+	 * 모든 sql 히스토리 조회
+	 * 
+	 * @param strEmail
+	 * @param strType
+	 * @param startTime
+	 * @param endTime
+	 * @param duringExecute
+	 * @param strSearch
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<RequestResultDAO> getAllExecuteQueryHistoryDetail(String strEmail, String strType, long startTime, long endTime, int duringExecute, String strSearch) throws TadpoleSQLManagerException, SQLException {
+		return getExecuteQueryHistoryDetail(strEmail, strType, "", startTime, endTime, duringExecute, strSearch);
+	}
+	
+	/**
 	 * 쿼리 실행 히스토리 디테일 창을 얻습니다.
 	 * 
 	 * @param strType 
@@ -62,8 +79,8 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("email", 	strEmail);
-		queryMap.put("db_seq", 	dbSeq);
-		queryMap.put("type", strType);
+		if(!"".equals(dbSeq)) queryMap.put("db_seq", 	dbSeq);
+		if(!"All".equals(strType)) queryMap.put("type", strType);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(startTime);
@@ -237,5 +254,5 @@ public class TadpoleSystem_ExecutedSQL {
 			sqlClient.insert("userExecuteSQLResourceDataInsert", dataDao); //$NON-NLS-1$				
 		}
 	}
-	
+
 }

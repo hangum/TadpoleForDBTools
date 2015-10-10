@@ -30,6 +30,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
+import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -68,6 +69,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     /** send message */
     private IAction sendMessageAction;
     private IAction adminUserAction;
+    private IAction adminSQLAuditAction;
     
     /** User permission action */
     private IAction dbMgmtAction;
@@ -83,7 +85,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** schema history */
     private IAction schemaHistoryAction;
-    
     private IAction resourceManageAction;
     
     private IAction preferenceAction;
@@ -129,6 +130,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	executedSQLAction = new SQLAuditAction(window);
     	register(executedSQLAction);
+    	
+    	adminSQLAuditAction = new AdminSQLAuditAction(window);
+    	register(adminSQLAuditAction);
     	    	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
@@ -202,6 +206,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		if(isAdmin) {
 			adminMenu.add(sendMessageAction);
 			adminMenu.add(adminUserAction);
+			adminMenu.add(adminSQLAuditAction);
 		}
 
 		// preference action

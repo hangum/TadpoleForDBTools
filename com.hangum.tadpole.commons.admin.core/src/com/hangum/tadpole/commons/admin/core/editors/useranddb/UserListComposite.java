@@ -54,8 +54,8 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
 import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
-import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
-import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
+import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -340,8 +340,8 @@ public class UserListComposite extends Composite {
 			 UserDAO userDAO = ((UserDAO)ss.getFirstElement());
 			
 			try {
-				ExecutedSQLEditorInput esei = new ExecutedSQLEditorInput(userDAO);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, ExecutedSQLEditor.ID, false);
+				SQLAuditEditorInput esei = new SQLAuditEditorInput(userDAO);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, SQLAuditEditor.ID, false);
 			} catch(Exception e) {
 				logger.error("SQL Audit open", e); //$NON-NLS-1$
 				

@@ -8,15 +8,11 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.executedsql;
+package com.hangum.tadpole.commons.admin.core.editors.sqlaudit;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
-
-import com.hangum.tadpole.engine.query.dao.system.UserDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * Executed SQL Editor input
@@ -24,19 +20,9 @@ import com.hangum.tadpole.manager.core.Messages;
  * @author hangum
  *
  */
-public class ExecutedSQLEditorInput implements IEditorInput {
-	private UserDAO userDAO;
-	private UserDBDAO userDBDAO;
+public class AdminSQLAuditEditorInput implements IEditorInput {
 
-	public ExecutedSQLEditorInput(UserDAO selectUserDAO) {
-		this.userDAO = selectUserDAO;
-	}
-	
-	public ExecutedSQLEditorInput() {
-	}
-
-	public ExecutedSQLEditorInput(UserDBDAO userDBDAO) {
-		this.userDBDAO = userDBDAO;
+	public AdminSQLAuditEditorInput() {
 	}
 
 	@Override
@@ -51,8 +37,8 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if( !(obj instanceof ExecutedSQLEditorInput) ) return false;
-		return ((ExecutedSQLEditorInput)obj).getName().equals(getName());
+		if( !(obj instanceof AdminSQLAuditEditorInput) ) return false;
+		return ((AdminSQLAuditEditorInput)obj).getName().equals(getName());
 	}
 
 	@Override
@@ -62,7 +48,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.ExecutedSQLEditorInput_0;
+		return "Admin SQL Audit";
 	}
 
 	@Override
@@ -72,14 +58,7 @@ public class ExecutedSQLEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.ExecutedSQLEditorInput_1;
+		return "Admin SQL Audit";
 	}
 	
-	public UserDAO getUserDAO() {
-		return userDAO;
-	}
-	
-	public UserDBDAO getUserDBDAO() {
-		return userDBDAO;
-	}
 }

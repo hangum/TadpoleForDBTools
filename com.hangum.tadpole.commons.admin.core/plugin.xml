@@ -10,6 +10,13 @@
             id="com.hangum.tadpole.commons.admin.core.editor.users"
             name="User List">
       </editor>
+      <editor
+            class="com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditor"
+            default="false"
+            icon="resources/icons/sqlaudit.png"
+            id="com.hangum.tadpole.commons.admin.core.edito.sqlaudit"
+            name="Admin SQL Audit">
+      </editor>
    </extension>
 
 </plugin>

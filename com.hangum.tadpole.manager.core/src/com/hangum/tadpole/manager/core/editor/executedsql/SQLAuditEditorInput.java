@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 hangum.
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.commons.admin.core.editors.sqlaudit;
+package com.hangum.tadpole.manager.core.editor.executedsql;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -16,6 +16,7 @@ import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * Executed SQL Editor input
@@ -25,14 +26,19 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  */
 public class SQLAuditEditorInput implements IEditorInput {
 	private UserDAO userDAO;
-
-	public SQLAuditEditorInput() {
-	}
+	private UserDBDAO userDBDAO;
 
 	public SQLAuditEditorInput(UserDAO selectUserDAO) {
 		this.userDAO = selectUserDAO;
 	}
 	
+	public SQLAuditEditorInput() {
+	}
+
+	public SQLAuditEditorInput(UserDBDAO userDBDAO) {
+		this.userDBDAO = userDBDAO;
+	}
+
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;
@@ -56,7 +62,7 @@ public class SQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "SQL Audit";
+		return Messages.ExecutedSQLEditorInput_0;
 	}
 
 	@Override
@@ -66,10 +72,14 @@ public class SQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "SQL Audit";
+		return Messages.ExecutedSQLEditorInput_1;
 	}
 	
 	public UserDAO getUserDAO() {
 		return userDAO;
+	}
+	
+	public UserDBDAO getUserDBDAO() {
+		return userDBDAO;
 	}
 }

@@ -27,8 +27,8 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
 import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
-import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
-import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
+import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
 //import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
@@ -118,7 +118,7 @@ public class Perspective implements IPerspectiveFactory {
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
 		
-		openEditor(ExecutedSQLEditor.ID);
+		openEditor(SQLAuditEditor.ID);
 	}
 
 	public void defaultPerspective(IPageLayout layout) {
@@ -143,8 +143,8 @@ public class Perspective implements IPerspectiveFactory {
 		IEditorInput input = null;
 		if (id.equals(DBMgmtEditor.ID)) {
 			input = new DBMgntEditorInput();
-		} else if (id.equals(ExecutedSQLEditor.ID)) {
-			input = new ExecutedSQLEditorInput();
+		} else if (id.equals(SQLAuditEditor.ID)) {
+			input = new SQLAuditEditorInput();
 		}
 		try {
 			// Check duplicated editor.

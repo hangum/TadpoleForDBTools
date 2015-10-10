@@ -65,8 +65,8 @@ import com.hangum.tadpole.manager.core.dialogs.users.DetailUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.dialogs.users.FindUserAndDBRoleDialog;
 import com.hangum.tadpole.manager.core.editor.db.dialogs.DBAccessControlDialog;
 import com.hangum.tadpole.manager.core.editor.db.dialogs.DBOthresConfigDialog;
-import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor;
-import com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditorInput;
+import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
+import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
@@ -496,8 +496,8 @@ public class DBListComposite extends Composite {
 		Object objSelect = ss.getFirstElement();
 		if(objSelect instanceof UserDBDAO) {
 			try {
-				ExecutedSQLEditorInput esei = new ExecutedSQLEditorInput((UserDBDAO)ss.getFirstElement());
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, ExecutedSQLEditor.ID, false);
+				SQLAuditEditorInput esei = new SQLAuditEditorInput((UserDBDAO)ss.getFirstElement());
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, SQLAuditEditor.ID, false);
 			} catch(Exception e) {
 				logger.error("Query History open", e); //$NON-NLS-1$
 				

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2015 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,14 +8,13 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.actions.global;
+package com.hangum.tadpole.commons.admin.core.actions;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -23,35 +22,32 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditor;
+import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditorInput;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.manager.core.Activator;
-import com.hangum.tadpole.manager.core.Messages;
-import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
-import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
 import com.swtdesigner.ResourceManager;
 
 /**
- * 실행된 sql action
+ * Admin SQL Audit action
  * 
  * @author hangum
  *
  */
-public class SQLAuditAction extends Action implements ISelectionListener, IWorkbenchAction {
+public class AdminSQLAuditAction extends Action implements ISelectionListener, IWorkbenchAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(SQLAuditAction.class);
-	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.ExecutedSQLAction"; //$NON-NLS-1$
-	
+	private static final Logger logger = Logger.getLogger(AdminSQLAuditAction.class);
+	private final static String ID = "com.hangum.tadpole.commons.admin.core.actions.admin.global.SQLAuditAction"; //$NON-NLS-1$
 	private final IWorkbenchWindow window;
-	private IStructuredSelection iss;
 	
-	public SQLAuditAction(IWorkbenchWindow window) {
+	public AdminSQLAuditAction(IWorkbenchWindow window) {
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.ExecutedSQLAction_0);
-		setToolTipText(Messages.ExecutedSQLAction_1);
+		setText("Admin SQL Audit");
+		setToolTipText("Admin SQL Audit");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -59,13 +55,13 @@ public class SQLAuditAction extends Action implements ISelectionListener, IWorkb
 	@Override
 	public void run() {
 		try {
-			SQLAuditEditorInput executedSQL = new SQLAuditEditorInput();
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(executedSQL, SQLAuditEditor.ID);
+			AdminSQLAuditEditorInput sqlAuditInput = new AdminSQLAuditEditorInput();
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sqlAuditInput, AdminSQLAuditEditor.ID);
 		} catch (PartInitException e) {
-			logger.error("SQL Audit Management editor", e); //$NON-NLS-1$
+			logger.error("Admin SQL Audit editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExecutedSQLAction_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "Admin SQL Audit Action", errStatus); //$NON-NLS-1$
 		}
 	}
 

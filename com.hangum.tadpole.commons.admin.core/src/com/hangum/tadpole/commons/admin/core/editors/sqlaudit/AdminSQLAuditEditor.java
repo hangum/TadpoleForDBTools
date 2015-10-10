@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.manager.core.editor.executedsql;
+package com.hangum.tadpole.commons.admin.core.editors.sqlaudit;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,51 +52,34 @@ import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.manager.core.Activator;
-import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.session.manager.SessionManager;
-import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
- * 실행한 쿼리.
+ * 어드민의 실행한 쿼리.
  * 
- * 
- * @since 2015.05.31 add download function(https://github.com/hangum/TadpoleForDBTools/issues/587)
  * @author hangum
  * 
  */
-public class ExecutedSQLEditor extends EditorPart {
+public class AdminSQLAuditEditor extends EditorPart {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ExecutedSQLEditor.class);
+	private static final Logger logger = Logger.getLogger(AdminSQLAuditEditor.class);
 
-	public static String ID = "com.hangum.tadpole.manager.core.editor.manager.executed_sql"; //$NON-NLS-1$
-	/** 마지막 검색시 사용하는 UserDBDAO */
-	private UserDBDAO searchUserDBDAO = null;
-
-	/** 제일 처음 설정 될때 사용하는 dao */
-	private UserDAO userDAO;
-	private UserDBDAO userDBDAO;
+	public static String ID = "com.hangum.tadpole.commons.admin.core.edito.sqlaudit"; //$NON-NLS-1$
 	
-	/** 사용자 db list */
-	private List<UserDBDAO> listUserDBDAO;
-
-	private Combo comboDatabase;
 	private Combo comboTypes;
 	private Text textEmail;
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.ExecutedSQLEditor_2, Messages.ExecutedSQLEditor_3, Messages.ExecutedSQLEditor_4, Messages.ExecutedSQLEditor_5, Messages.ExecutedSQLEditor_6, Messages.ExecutedSQLEditor_7, Messages.ExecutedSQLEditor_8, Messages.ExecutedSQLEditor_9, Messages.ExecutedSQLEditor_10}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", "데이터베이스", "사용자", "날짜", "SQL", "초", "리턴행", "결과", "메시지", "IP"}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -123,7 +106,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	/**
 	 * 
 	 */
-	public ExecutedSQLEditor() {
+	public AdminSQLAuditEditor() {
 		super();
 	}
 
@@ -134,65 +117,36 @@ public class ExecutedSQLEditor extends EditorPart {
 		gl_parent.horizontalSpacing = 2;
 		parent.setLayout(gl_parent);
 		
-		
-		
-		
-		if(userDAO != null) {
-			Composite compositeUserInfo = new Composite(parent, SWT.NONE);
-			compositeUserInfo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 4, 1));
-			compositeUserInfo.setLayout(new GridLayout(3, false));
-			
-			Label label = new Label(compositeUserInfo, SWT.NONE);
-			label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-			Label lblUser = new Label(compositeUserInfo, SWT.NONE);
-			Label lblUserName = new Label(compositeUserInfo, SWT.NONE);
-			
-			lblUser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-			lblUser.setText(Messages.DBListComposite_26);
-			
-			lblUserName.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-			lblUserName.setText(String.format("%s(%s)", userDAO.getName(), userDAO.getEmail())); //$NON-NLS-1$
-		}
-
 		Group compositeHead = new Group(parent, SWT.NONE);
-		compositeHead.setText(Messages.ExecutedSQLEditor_11);
+		compositeHead.setText("검색");
 		GridLayout gl_compositeHead = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
-		Label lblDatabase = new Label(compositeHead, SWT.NONE);
-		GridData gd_lblDatabase = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblDatabase.widthHint = 65;
-		gd_lblDatabase.minimumWidth = 65;
-		lblDatabase.setLayoutData(gd_lblDatabase);
-		lblDatabase.setText(Messages.ExecutedSQLEditor_12);
-
-		comboDatabase = new Combo(compositeHead, SWT.READ_ONLY);
-		GridData gd_comboDisplayName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_comboDisplayName.minimumWidth = 200;
-		gd_comboDisplayName.widthHint = 200;
-		comboDatabase.setLayoutData(gd_comboDisplayName);
+		
 		
 		Label lblTypes = new Label(compositeHead, SWT.NONE);
 		GridData gd_lblUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblUser.minimumWidth = 65;
 		gd_lblUser.widthHint = 65;
 		lblTypes.setLayoutData(gd_lblUser);
-		lblTypes.setText(Messages.ExecutedSQLEditor_13);
+		lblTypes.setText("호출 타입");
 		
 		comboTypes = new Combo(compositeHead, SWT.READ_ONLY);
 		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_comboUserName.widthHint = 200;
 		gd_comboUserName.minimumWidth = 200;
 		comboTypes.setLayoutData(gd_comboUserName);
+		
+		comboTypes.add("All");
 		for (PublicTadpoleDefine.EXECUTE_SQL_TYPE type : PublicTadpoleDefine.EXECUTE_SQL_TYPE.values()) {
 			comboTypes.add(type.name());
 		}
+		comboTypes.setVisibleItemCount(PublicTadpoleDefine.EXECUTE_SQL_TYPE.values().length + 1);
 		comboTypes.select(0);
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText(Messages.ExecutedSQLEditor_14);
+		lblEmail.setText("이메일");
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -204,8 +158,6 @@ public class ExecutedSQLEditor extends EditorPart {
 				}
 			}
 		});
-		new Label(compositeHead, SWT.NONE);
-		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeInSearch = new Composite(compositeHead, SWT.NONE);
 		compositeInSearch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 4, 1));
@@ -217,7 +169,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		compositeInSearch.setLayout(gl_compositeInSearch);
 				
 		Label lblDate = new Label(compositeInSearch, SWT.NONE);
-		lblDate.setText(Messages.ExecutedSQLEditor_15);
+		lblDate.setText("기간");
 						
 		dateTimeStart = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 		Label label = new Label(compositeInSearch, SWT.NONE);
@@ -226,7 +178,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		dateTimeEnd = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 												
 		Label lblDuring = new Label(compositeInSearch, SWT.RIGHT);
-		lblDuring.setText(Messages.ExecutedSQLEditor_17);
+		lblDuring.setText("수행시간");
 																
 		textMillis = new Text(compositeInSearch, SWT.BORDER | SWT.CENTER);
 		GridData gd_textMillis = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
@@ -235,7 +187,7 @@ public class ExecutedSQLEditor extends EditorPart {
 		textMillis.setText("500"); //$NON-NLS-1$
 																				
 		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
-		lblMilis.setText(Messages.ExecutedSQLEditor_19);
+		lblMilis.setText("(밀리 초)");
 		new Label(compositeInSearch, SWT.NONE);
 		
 		Composite compositeSearchDetail = new Composite(compositeHead, SWT.NONE);
@@ -243,11 +195,11 @@ public class ExecutedSQLEditor extends EditorPart {
 		compositeSearchDetail.setLayout(new GridLayout(3, false));
 		
 		Label lblSQL = new Label(compositeSearchDetail, SWT.NONE);
-		lblSQL.setText(Messages.ExecutedSQLEditor_5);
+		lblSQL.setText("SQL");
 		
 		textSearch = new Text(compositeSearchDetail, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textSearch.setMessage(Messages.ExecutedSQLEditor_5);
+		textSearch.setMessage("SQL");
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -258,14 +210,14 @@ public class ExecutedSQLEditor extends EditorPart {
 		});
 		
 		btnSearch = new Button(compositeSearchDetail, SWT.NONE);
-		btnSearch.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/search.png")); //$NON-NLS-1$
+//		btnSearch.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/search.png")); //$NON-NLS-1$
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.ExecutedSQLEditor_11);
+		btnSearch.setText("검색");
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -315,7 +267,7 @@ public class ExecutedSQLEditor extends EditorPart {
 				download();
 			}
 		});
-		btnDownload.setText(Messages.ExecutedSQLEditor_25);
+		btnDownload.setText("CSV로 내보내기");
 
 		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
 		btnShowQueryEditor.addSelectionListener(new SelectionAdapter() {
@@ -324,13 +276,13 @@ public class ExecutedSQLEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
-		btnShowQueryEditor.setText(Messages.ExecutedSQLEditor_26);
+		btnShowQueryEditor.setText("SQL을 에디터로 보내기");
 
 		initUIData();
 		registerServiceHandler();
 		
 		// google analytic
-		AnalyticCaller.track(ExecutedSQLEditor.ID);
+		AnalyticCaller.track(AdminSQLAuditEditor.ID);
 	}
 	
 	/**
@@ -338,7 +290,7 @@ public class ExecutedSQLEditor extends EditorPart {
 	 */
 	private void download() {
 		if(gridHistory.getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.ExecutedSQLEditor_27, Messages.ExecutedSQLEditor_28)) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), "확인", "다운로드 하시겠습니까?")) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -360,7 +312,7 @@ public class ExecutedSQLEditor extends EditorPart {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("SQLAudit.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(getSite().getShell(), Messages.ExecutedSQLEditor_27, Messages.ExecutedSQLEditor_31);
+			MessageDialog.openInformation(getSite().getShell(), "확인", "다운로드가 완료 되었습니다");
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		
@@ -393,7 +345,6 @@ public class ExecutedSQLEditor extends EditorPart {
 					FindEditorAndWriteQueryUtil.run(dbDao, 
 								Utils.convHtmlToLine(strApiOrSQL) + PublicTadpoleDefine.SQL_DELIMITER, 
 							PublicTadpoleDefine.DB_ACTION.TABLES);
-
 				}
 			} catch (Exception e) {
 				logger.error("find editor and write query", e); //$NON-NLS-1$
@@ -417,20 +368,6 @@ public class ExecutedSQLEditor extends EditorPart {
 		mapSQLHistory.clear();
 		
 		String strEmail = "%" + StringUtils.trim(textEmail.getText()) + "%"; //$NON-NLS-1$ //$NON-NLS-2$
-		
-		// check all db
-		String db_seq = ""; //$NON-NLS-1$
-		if (!comboDatabase.getText().equals("All")) { //$NON-NLS-1$
-			searchUserDBDAO = (UserDBDAO) comboDatabase.getData(comboDatabase.getText());
-			db_seq = ""+searchUserDBDAO.getSeq(); //$NON-NLS-1$
-		} else {
-			searchUserDBDAO = null;
-			for(int i=0; i<listUserDBDAO.size(); i++) {
-				UserDBDAO userDB = listUserDBDAO.get(i);
-				if(i == (listUserDBDAO.size()-1)) db_seq += (""+userDB.getSeq()); //$NON-NLS-1$
-				else db_seq += userDB.getSeq() + ","; //$NON-NLS-1$
-			}
-		}
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
@@ -444,9 +381,10 @@ public class ExecutedSQLEditor extends EditorPart {
 
 		try {
 			List<RequestResultDAO> listSQLHistory = 
-					TadpoleSystem_ExecutedSQL.getExecuteQueryHistoryDetail(strEmail, comboTypes.getText(), db_seq, startTime, endTime, duringExecute, strSearchTxt);
-			for (RequestResultDAO reqResultDAO : listSQLHistory) {
-				mapSQLHistory.put(""+gridHistory.getRootItemCount(), reqResultDAO); //$NON-NLS-1$
+					TadpoleSystem_ExecutedSQL.getAllExecuteQueryHistoryDetail(strEmail, comboTypes.getText(), startTime, endTime, duringExecute, strSearchTxt);
+			for (int i=0; i<listSQLHistory.size(); i++) {
+				RequestResultDAO reqResultDAO = (RequestResultDAO)listSQLHistory.get(i);
+				mapSQLHistory.put(""+i, reqResultDAO); //$NON-NLS-1$
 				
 				GridItem item = new GridItem(gridHistory, SWT.V_SCROLL | SWT.H_SCROLL);
 				
@@ -458,11 +396,10 @@ public class ExecutedSQLEditor extends EditorPart {
 					else item.setHeight(height);
 				}
 				
-				item.setText(0, ""+gridHistory.getRootItemCount()); //$NON-NLS-1$
+				item.setText(0, ""+i); //$NON-NLS-1$
 				item.setText(1, reqResultDAO.getDbName());
 				item.setText(2, reqResultDAO.getUserName());
 				item.setText(3, Utils.dateToStr(reqResultDAO.getStartDateExecute()));
-//				logger.debug(Utils.convLineToHtml(strSQL));
 				item.setText(4, Utils.convLineToHtml(strSQL));
 				item.setToolTipText(4, strSQL);
 				
@@ -477,8 +414,6 @@ public class ExecutedSQLEditor extends EditorPart {
 				
 				if("F".equals(reqResultDAO.getResult())) { //$NON-NLS-1$
 					item.setBackground(SWTResourceManager.getColor(240, 180, 167));
-//				} else {
-//					item.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 				}
 			}
 		} catch (Exception ee) {
@@ -491,28 +426,6 @@ public class ExecutedSQLEditor extends EditorPart {
 	 */
 	private void initUIData() {
 
-		try {
-			// database name combo
-			if(userDAO == null) {
-				userDAO = new UserDAO();
-				userDAO.setSeq(SessionManager.getUserSeq());
-				listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
-			} else listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
-			
-			comboDatabase.add("All"); //$NON-NLS-1$
-			comboDatabase.setData("All", null); //$NON-NLS-1$
-			
-			for (UserDBDAO userDBDAO : listUserDBDAO) {
-				comboDatabase.add(userDBDAO.getDisplay_name());
-				comboDatabase.setData(userDBDAO.getDisplay_name(), userDBDAO);
-			}
-			comboDatabase.setVisibleItemCount(listUserDBDAO.size()+1);
-			comboDatabase.select(0);
-
-		} catch (Exception e) {
-			logger.error("get db list", e); //$NON-NLS-1$
-		}
-		// Range of date
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -7);
 		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
@@ -531,11 +444,8 @@ public class ExecutedSQLEditor extends EditorPart {
 		setSite(site);
 		setInput(input);
 
-		ExecutedSQLEditorInput esqli = (ExecutedSQLEditorInput) input;
+		AdminSQLAuditEditorInput esqli = (AdminSQLAuditEditorInput) input;
 		setPartName(esqli.getName());
-
-		this.userDAO = esqli.getUserDAO();
-		this.userDBDAO = esqli.getUserDBDAO();
 	}
 
 	@Override

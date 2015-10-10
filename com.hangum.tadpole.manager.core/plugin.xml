@@ -11,7 +11,7 @@
             name="%editor.name">
       </editor>
       <editor
-            class="com.hangum.tadpole.manager.core.editor.executedsql.ExecutedSQLEditor"
+            class="com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor"
             default="false"
             icon="resources/icons/sqlaudit.png"
             id="com.hangum.tadpole.manager.core.editor.manager.executed_sql"
