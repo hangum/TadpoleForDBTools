@@ -186,7 +186,8 @@ public class PublicTadpoleDefine {
 		TRIGGERS,
 		COLLECTIONS,
 		JAVASCRIPT,
-		PACKAGES
+		PACKAGES,
+		SCHEDULE
 	};
 	
 	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */

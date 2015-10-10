@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
@@ -83,10 +84,10 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 
-		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.30f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.22f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 
-		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id" + ManagerViewer.ID);
+		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.22f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
 		
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
@@ -104,10 +105,10 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 
-		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.30f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.22f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 
-		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id" + ManagerViewer.ID);
+		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.22f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
 
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
@@ -126,11 +127,11 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 
-		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.30f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.22f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 //		leftFolder.addView(HelpViewPart.ID);
 
-		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.30f, "id" + ManagerViewer.ID);
+		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.22f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
 
 		// viewer closealbe false
