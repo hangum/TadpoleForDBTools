@@ -133,12 +133,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	private AbstractObjectAction generateSampleData;
 	
-	private GenerateSQLDMLAction generateDMLAction;
+	private AbstractObjectAction generateDMLAction;
 
-	private GenerateSQLSelectAction selectStmtAction;
-	private GenerateSQLSelectAction insertStmtAction;
-	private GenerateSQLSelectAction updateStmtAction;
-	private GenerateSQLSelectAction deleteStmtAction;
+	private AbstractObjectAction selectStmtAction;
+	private AbstractObjectAction insertStmtAction;
+	private AbstractObjectAction updateStmtAction;
+	private AbstractObjectAction deleteStmtAction;
 	
 	private AbstractObjectAction viewDDLAction;
 	private AbstractObjectAction tableDataEditorAction;

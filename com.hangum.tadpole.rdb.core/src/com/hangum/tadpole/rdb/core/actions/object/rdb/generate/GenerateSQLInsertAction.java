@@ -57,7 +57,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 			try {
 				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
 				
-				sbSQL.append("INSERT INTO " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR + " ("); //$NON-NLS-1$ //$NON-NLS-2$
+				sbSQL.append("INSERT INTO " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR + "	("); //$NON-NLS-1$ //$NON-NLS-2$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					TableColumnDAO dao = showTableColumns.get(i);
 					sbSQL.append(dao.getSysName());
@@ -66,7 +66,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 					if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
 					else sbSQL.append(") "); //$NON-NLS-1$
 				}
-				sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "VALUES " + PublicTadpoleDefine.LINE_SEPARATOR + " ( "); //$NON-NLS-1$
+				sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "VALUES " + PublicTadpoleDefine.LINE_SEPARATOR + "	( "); //$NON-NLS-1$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					if(i < (showTableColumns.size()-1)) sbSQL.append("?, ");  //$NON-NLS-1$
 					else sbSQL.append("? )"); //$NON-NLS-1$

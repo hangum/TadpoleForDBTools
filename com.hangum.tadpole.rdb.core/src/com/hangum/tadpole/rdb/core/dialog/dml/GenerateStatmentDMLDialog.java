@@ -371,7 +371,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		if(StringUtils.isEmpty(StringUtils.trim(sbColumn.toString()))) sbColumn.append(" * " ); //$NON-NLS-1$
 		
 		resultSQL.append(sbColumn.toString());
-		resultSQL.append("  FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append("FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 		cnt = 0;
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
@@ -488,7 +488,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				}
 			}
 		}
-		resultSQL.append(")" + PublicTadpoleDefine.LINE_SEPARATOR + " VALUES ( "); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append(")" + PublicTadpoleDefine.LINE_SEPARATOR + "VALUES ( "); //$NON-NLS-1$ //$NON-NLS-2$
 		cnt = 0;
 
 		if (firstDao.isCheck()) {
@@ -535,7 +535,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
 
-				if (cnt == 0) resultSQL.append(" WHERE "); //$NON-NLS-1$
+				if (cnt == 0) resultSQL.append("WHERE "); //$NON-NLS-1$
 				else resultSQL.append("\t AND "); //$NON-NLS-1$
 				
 				resultSQL.append(allDao.getSysName()).append(" = ? "); //$NON-NLS-1$

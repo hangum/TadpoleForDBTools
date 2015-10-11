@@ -59,8 +59,8 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				if(PublicTadpoleDefine.isKEY(dao.getKey())) {
-					if(cnt == 0) sbSQL.append("\t" + dao.getSysName() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
-					else sbSQL.append("\tAND " + dao.getSysName() + " = ?"); //$NON-NLS-1$ //$NON-NLS-2$
+					if(cnt == 0) sbSQL.append("\t\t" + dao.getSysName() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
+					else sbSQL.append("\tAND " + dao.getSysName() + " = ? " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$ //$NON-NLS-2$
 					cnt++;
 				}				
 			}
