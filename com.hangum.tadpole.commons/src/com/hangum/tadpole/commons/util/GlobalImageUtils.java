@@ -25,6 +25,23 @@ public class GlobalImageUtils {
 	public static final String IMAGE_Activator_ID = Activator.ID;
 	
 	/**
+	 * start image
+	 * @return
+	 */
+	public static final Image getStart() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/start.png");
+	}
+	
+	
+	/**
+	 * stop image
+	 * @return
+	 */
+	public static final Image getStop() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/stop.png");
+	}
+	
+	/**
 	 * add tadpole db hub
 	 * @return
 	 */

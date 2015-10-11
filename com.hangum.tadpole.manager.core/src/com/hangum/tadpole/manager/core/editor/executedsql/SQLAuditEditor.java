@@ -24,6 +24,7 @@ import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -37,12 +38,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
@@ -50,6 +55,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -122,6 +128,12 @@ public class SQLAuditEditor extends EditorPart {
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
 	
+	private ToolItem tltmStart;
+	private ToolItem tltmStop;
+	private boolean isThread = true;
+	private final ServerPushSession pushSession = new ServerPushSession();
+	private boolean isNotRefreshUi = true;
+	
 	/**
 	 * 
 	 */
@@ -136,28 +148,64 @@ public class SQLAuditEditor extends EditorPart {
 		gl_parent.horizontalSpacing = 2;
 		parent.setLayout(gl_parent);
 		
+		Composite compositeToolbarHead = new Composite(parent, SWT.NONE);
+		compositeToolbarHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeHead = new GridLayout(3, false);
+		gl_compositeHead.marginHeight = 0;
+		gl_compositeHead.horizontalSpacing = 0;
+		gl_compositeHead.marginWidth = 0;
+		compositeToolbarHead.setLayout(gl_compositeHead);
+		
+		ToolBar toolBar = new ToolBar(compositeToolbarHead, SWT.FLAT | SWT.RIGHT);
+		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		tltmStart = new ToolItem(toolBar, SWT.NONE);
+		tltmStart.setToolTipText(Messages.SQLAuditEditor_0);
+		tltmStart.setImage(GlobalImageUtils.getStart()); //$NON-NLS-1$
+		tltmStart.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				isNotRefreshUi = true;
+				
+				tltmStart.setEnabled(false);
+				tltmStop.setEnabled(true);
+			}
+		});
+		tltmStart.setEnabled(false);
+		
+		tltmStop = new ToolItem(toolBar, SWT.NONE);
+		tltmStop.setToolTipText(Messages.SQLAuditEditor_1);
+		tltmStop.setImage(GlobalImageUtils.getStop()); //$NON-NLS-1$
+		tltmStop.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				isNotRefreshUi = false;
+				
+				tltmStart.setEnabled(true);
+				tltmStop.setEnabled(false);
+			} 
+		});
+		
+		ToolItem tltmSecondsRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmSecondsRefresh.setEnabled(false);
+		tltmSecondsRefresh.setSelection(true);
+		tltmSecondsRefresh.setText(Messages.SQLAuditEditor_2);
+		
+	////////////////////////////////////////////////////////////////////////////////////////////////
+		Label label = new Label(compositeToolbarHead, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Label lblUserName = new Label(compositeToolbarHead, SWT.NONE);
+		
 		if(userDAO != null) {
-			Composite compositeUserInfo = new Composite(parent, SWT.NONE);
-			compositeUserInfo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 4, 1));
-			compositeUserInfo.setLayout(new GridLayout(3, false));
-			
-			Label label = new Label(compositeUserInfo, SWT.NONE);
-			label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-			Label lblUser = new Label(compositeUserInfo, SWT.NONE);
-			Label lblUserName = new Label(compositeUserInfo, SWT.NONE);
-			
-			lblUser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-			lblUser.setText(Messages.DBListComposite_26);
-			
 			lblUserName.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-			lblUserName.setText(String.format("%s(%s)", userDAO.getName(), userDAO.getEmail())); //$NON-NLS-1$
+			lblUserName.setText(String.format("%s : %s(%s)", Messages.DBListComposite_26, userDAO.getName(), userDAO.getEmail())); //$NON-NLS-1$
 		}
+		////////////////////////////////////////////////////////////////////////////////////////////////
 
 		Group compositeHead = new Group(parent, SWT.NONE);
 		compositeHead.setText(Messages.ExecutedSQLEditor_11);
-		GridLayout gl_compositeHead = new GridLayout(4, false);
-		compositeHead.setLayout(gl_compositeHead);
+		GridLayout gl_compositeHead2 = new GridLayout(4, false);
+		compositeHead.setLayout(gl_compositeHead2);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
 		Label lblDatabase = new Label(compositeHead, SWT.NONE);
@@ -219,8 +267,8 @@ public class SQLAuditEditor extends EditorPart {
 		lblDate.setText(Messages.ExecutedSQLEditor_15);
 						
 		dateTimeStart = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
-		Label label = new Label(compositeInSearch, SWT.NONE);
-		label.setText("~"); //$NON-NLS-1$
+		Label labelTerm = new Label(compositeInSearch, SWT.NONE);
+		labelTerm.setText("~"); //$NON-NLS-1$
 								
 		dateTimeEnd = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 												
@@ -524,6 +572,40 @@ public class SQLAuditEditor extends EditorPart {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -7);
 		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		callbackui();
+	}
+	
+	private void callbackui() {
+		pushSession.start();
+		Thread thread = new Thread(startUIThread());
+		thread.setDaemon(true);
+		thread.start();
+	}
+	
+	private Runnable startUIThread() {
+		final String email = SessionManager.getEMAIL();
+		final Display display = PlatformUI.getWorkbench().getDisplay();// tvError.getTable().getDisplay();
+
+		Runnable bgRunnable = new Runnable() {
+			@Override
+			public void run() {
+
+				while(isThread) {
+					display.asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							if(isNotRefreshUi) search();
+						}
+					});
+					
+					// 20 seconds
+					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
+				}
+			};
+		};
+
+		return bgRunnable;
 	}
 
 	@Override
@@ -590,6 +672,9 @@ public class SQLAuditEditor extends EditorPart {
 	@Override
 	public void dispose() {
 		unregisterServiceHandler();
+
+		isThread = false;
+		pushSession.stop();
 		super.dispose();
 	}
 
