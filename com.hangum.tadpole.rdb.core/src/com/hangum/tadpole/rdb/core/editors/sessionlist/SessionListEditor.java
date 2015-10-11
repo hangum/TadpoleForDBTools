@@ -46,6 +46,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -147,7 +148,7 @@ public class SessionListEditor extends EditorPart {
 		
 		tltmStart = new ToolItem(toolBar, SWT.NONE);
 		tltmStart.setToolTipText(Messages.SessionListEditor_1);
-		tltmStart.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/start.png")); //$NON-NLS-1$
+		tltmStart.setImage(GlobalImageUtils.getStart()); //$NON-NLS-1$
 		tltmStart.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -161,7 +162,7 @@ public class SessionListEditor extends EditorPart {
 		
 		tltmStop = new ToolItem(toolBar, SWT.NONE);
 		tltmStop.setToolTipText(Messages.SessionListEditor_2);
-		tltmStop.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/stop.png")); //$NON-NLS-1$
+		tltmStop.setImage(GlobalImageUtils.getStop()); //$NON-NLS-1$
 		tltmStop.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

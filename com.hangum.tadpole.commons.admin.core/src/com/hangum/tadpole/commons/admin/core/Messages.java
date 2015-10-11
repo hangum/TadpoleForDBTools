@@ -15,6 +15,9 @@ public class Messages extends NLS {
 	public static String AdminSQLAuditEditor_10;
 
 
+	public static String AdminSQLAuditEditor_11;
+
+
 	public static String AdminSQLAuditEditor_12;
 
 
@@ -25,6 +28,12 @@ public class Messages extends NLS {
 
 
 	public static String AdminSQLAuditEditor_15;
+
+
+	public static String AdminSQLAuditEditor_16;
+
+
+	public static String AdminSQLAuditEditor_17;
 
 
 	public static String AdminSQLAuditEditor_18;

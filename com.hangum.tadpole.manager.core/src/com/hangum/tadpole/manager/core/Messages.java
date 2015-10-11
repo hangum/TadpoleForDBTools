@@ -304,6 +304,12 @@ public class Messages extends NLS {
 
 	public static String SchemaHistoryEditorInput_1;
 
+	public static String SQLAuditEditor_0;
+
+	public static String SQLAuditEditor_1;
+
+	public static String SQLAuditEditor_2;
+
 	public static String SystemDBDataManager_8;
 	
 	public static String ResourceManageEditor_0;

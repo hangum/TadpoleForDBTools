@@ -24,6 +24,7 @@ import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -37,12 +38,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.admin.core.Messages;
@@ -50,6 +55,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -59,10 +65,11 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
- * 어드민의 실행한 쿼리.
+ * 어드민  사용자가 실행한 쿼리.
  * 
  * @author hangum
  * 
@@ -104,6 +111,12 @@ public class AdminSQLAuditEditor extends EditorPart {
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
 	
+	private ToolItem tltmStart;
+	private ToolItem tltmStop;
+	private boolean isThread = true;
+	private final ServerPushSession pushSession = new ServerPushSession();
+	private boolean isNotRefreshUi = true;
+	
 	/**
 	 * 
 	 */
@@ -118,14 +131,55 @@ public class AdminSQLAuditEditor extends EditorPart {
 		gl_parent.horizontalSpacing = 2;
 		parent.setLayout(gl_parent);
 		
+		Composite compositeToolbarHead = new Composite(parent, SWT.NONE);
+		compositeToolbarHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeHead = new GridLayout(1, false);
+		gl_compositeHead.marginHeight = 0;
+		gl_compositeHead.horizontalSpacing = 0;
+		gl_compositeHead.marginWidth = 0;
+		compositeToolbarHead.setLayout(gl_compositeHead);
+		
+		ToolBar toolBar = new ToolBar(compositeToolbarHead, SWT.FLAT | SWT.RIGHT);
+		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		tltmStart = new ToolItem(toolBar, SWT.NONE);
+		tltmStart.setToolTipText(Messages.AdminSQLAuditEditor_11);
+		tltmStart.setImage(GlobalImageUtils.getStart()); //$NON-NLS-1$
+		tltmStart.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				isNotRefreshUi = true;
+				
+				tltmStart.setEnabled(false);
+				tltmStop.setEnabled(true);
+			}
+		});
+		tltmStart.setEnabled(false);
+		
+		tltmStop = new ToolItem(toolBar, SWT.NONE);
+		tltmStop.setToolTipText(Messages.AdminSQLAuditEditor_16);
+		tltmStop.setImage(GlobalImageUtils.getStop()); //$NON-NLS-1$
+		tltmStop.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				isNotRefreshUi = false;
+				
+				tltmStart.setEnabled(true);
+				tltmStop.setEnabled(false);
+			} 
+		});
+		
+		ToolItem tltmSecondsRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmSecondsRefresh.setEnabled(false);
+		tltmSecondsRefresh.setSelection(true);
+		tltmSecondsRefresh.setText(Messages.AdminSQLAuditEditor_17);
+		
 		Group compositeHead = new Group(parent, SWT.NONE);
 		compositeHead.setText(Messages.AdminSQLAuditEditor_9);
-		GridLayout gl_compositeHead = new GridLayout(4, false);
-		compositeHead.setLayout(gl_compositeHead);
+		GridLayout gl_compositeHead2 = new GridLayout(4, false);
+		compositeHead.setLayout(gl_compositeHead2);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
-		
-		
 		Label lblTypes = new Label(compositeHead, SWT.NONE);
 		GridData gd_lblUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblUser.minimumWidth = 65;
@@ -434,10 +488,43 @@ public class AdminSQLAuditEditor extends EditorPart {
 	 * 데이터를 초기 로드합니다.
 	 */
 	private void initUIData() {
-
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -7);
 		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		callbackui();
+	}
+	
+	private void callbackui() {
+		pushSession.start();
+		Thread thread = new Thread(startUIThread());
+		thread.setDaemon(true);
+		thread.start();
+	}
+	
+	private Runnable startUIThread() {
+		final String email = SessionManager.getEMAIL();
+		final Display display = PlatformUI.getWorkbench().getDisplay();// tvError.getTable().getDisplay();
+
+		Runnable bgRunnable = new Runnable() {
+			@Override
+			public void run() {
+
+				while(isThread) {
+					display.asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							if(isNotRefreshUi) search();
+						}
+					});
+					
+					// 20 seconds
+					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
+				}
+			};
+		};
+
+		return bgRunnable;
 	}
 
 	@Override
@@ -500,6 +587,9 @@ public class AdminSQLAuditEditor extends EditorPart {
 	@Override
 	public void dispose() {
 		unregisterServiceHandler();
+
+		isThread = false;
+		pushSession.stop();
 		super.dispose();
 	}
 
