@@ -14,6 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.manager.core.Messages;
 
@@ -24,12 +25,15 @@ import com.hangum.tadpole.manager.core.Messages;
  *
  */
 public class DBMgntEditorInput implements IEditorInput {
-	UserDAO userDAO;
+	private PublicTadpoleDefine.USER_ROLE_TYPE roleType;
+	private UserDAO userDAO;
 	
-	public DBMgntEditorInput() {
+	public DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE roleType) {
+		this.roleType = roleType;
 	}
 
-	public DBMgntEditorInput(UserDAO userDAO) {
+	public DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE roleType, UserDAO userDAO) {
+		this.roleType = roleType;
 		this.userDAO = userDAO;
 	}
 
@@ -56,7 +60,11 @@ public class DBMgntEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.UserManagementEditorInput_2;
+		if(getUserDAO() != null) {
+			return String.format("%s (%s)", Messages.UserManagementEditorInput_2, getUserDAO().getName());
+		} else {
+			return Messages.UserManagementEditorInput_2;
+		}
 	}
 
 	@Override
@@ -73,4 +81,7 @@ public class DBMgntEditorInput implements IEditorInput {
 		return userDAO;
 	}
 
+	public PublicTadpoleDefine.USER_ROLE_TYPE getRoleType() {
+		return roleType;
+	}
 }

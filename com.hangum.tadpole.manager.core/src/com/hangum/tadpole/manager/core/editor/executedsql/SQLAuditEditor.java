@@ -48,6 +48,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -86,6 +87,7 @@ public class SQLAuditEditor extends EditorPart {
 	/** 제일 처음 설정 될때 사용하는 dao */
 	private UserDAO userDAO;
 	private UserDBDAO userDBDAO;
+	private PublicTadpoleDefine.USER_ROLE_TYPE roleType;
 	
 	/** 사용자 db list */
 	private List<UserDBDAO> listUserDBDAO;
@@ -133,9 +135,6 @@ public class SQLAuditEditor extends EditorPart {
 		gl_parent.verticalSpacing = 2;
 		gl_parent.horizontalSpacing = 2;
 		parent.setLayout(gl_parent);
-		
-		
-		
 		
 		if(userDAO != null) {
 			Composite compositeUserInfo = new Composite(parent, SWT.NONE);
@@ -500,12 +499,13 @@ public class SQLAuditEditor extends EditorPart {
 	private void initUIData() {
 
 		try {
-			// database name combo
-			if(userDAO == null) {
+			if(roleType == USER_ROLE_TYPE.SYSTEM_ADMIN) {
+				listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
+			} else {
 				userDAO = new UserDAO();
 				userDAO.setSeq(SessionManager.getUserSeq());
 				listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
-			} else listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB(userDAO);
+			}
 			
 			comboDatabase.add("All"); //$NON-NLS-1$
 			comboDatabase.setData("All", null); //$NON-NLS-1$
@@ -544,6 +544,7 @@ public class SQLAuditEditor extends EditorPart {
 
 		this.userDAO = esqli.getUserDAO();
 		this.userDBDAO = esqli.getUserDBDAO();
+		this.roleType = esqli.getRoleType();
 	}
 
 	@Override

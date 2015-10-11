@@ -21,6 +21,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 
 /**
@@ -32,16 +33,9 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 public class DBMgmtEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.manager.core.editor.dbmgnt";
 	private UserDAO userDAO;
+	private PublicTadpoleDefine.USER_ROLE_TYPE roleType;
 
 	public DBMgmtEditor() {
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-	}
-
-	@Override
-	public void doSaveAs() {
 	}
 
 	@Override
@@ -52,7 +46,8 @@ public class DBMgmtEditor extends EditorPart {
 		DBMgntEditorInput qei = (DBMgntEditorInput)input;
 		setPartName(qei.getName());
 		
-		userDAO = qei.getUserDAO();
+		this.userDAO = qei.getUserDAO();
+		this.roleType = qei.getRoleType();
 	}
 
 	@Override
@@ -83,27 +78,7 @@ public class DBMgmtEditor extends EditorPart {
 		gl_composite.marginWidth = 0;
 		compositeMain.setLayout(gl_composite);
 
-//		CTabFolder tabFolder = new CTabFolder(compositeMain, SWT.NONE);
-//		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		tabFolder.setBorderVisible(false);		
-//		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
-//		
-//		if(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(SessionManager.getRepresentRole())) {
-//			
-//			// Users
-//			CTabItem tbtmItem = new CTabItem(tabFolder, SWT.NONE);
-//			tbtmItem.setText(Messages.UserManagementEditor_1);
-//			
-//			Composite compositeUserList = new AdminUserListComposite(tabFolder, SWT.NONE);
-//			tbtmItem.setControl(compositeUserList);
-//			compositeUserList.setLayout(new GridLayout(1, false));
-//		}
-		
-		// DBs
-//		CTabItem tbtmDB = new CTabItem(tabFolder, SWT.NONE);
-//		tbtmDB.setText(Messages.UserManagementEditor_2);
-		
-		Composite compositeDBList = new DBListComposite(compositeMain, SWT.NONE, userDAO);
+		Composite compositeDBList = new DBListComposite(compositeMain, SWT.NONE, userDAO, roleType);
 		compositeDBList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		// google analytic
@@ -114,4 +89,12 @@ public class DBMgmtEditor extends EditorPart {
 	public void setFocus() {
 	}
 
+
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+	}
+
+	@Override
+	public void doSaveAs() {
+	}
 }

@@ -50,6 +50,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -87,6 +88,8 @@ public class DBListComposite extends Composite {
 	private static final Logger logger = Logger.getLogger(DBListComposite.class);
 
 	private UserDAO userDAO;
+	private USER_ROLE_TYPE roleType;
+	
 	private TreeViewer tvDBList;
 	private List<ManagerListDTO> listUserDBs = new ArrayList<ManagerListDTO>();
 	
@@ -111,8 +114,9 @@ public class DBListComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 * @param userDAO 
+	 * @param roleType 
 	 */
-	public DBListComposite(Composite parent, int style, UserDAO userDAO) {
+	public DBListComposite(Composite parent, int style, UserDAO userDAO, USER_ROLE_TYPE roleType) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
@@ -121,6 +125,7 @@ public class DBListComposite extends Composite {
 		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
 		this.userDAO = userDAO;
+		this.roleType = roleType;
 		
 		Composite compositeHead = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeHead = new GridLayout(5, false);
@@ -496,7 +501,7 @@ public class DBListComposite extends Composite {
 		Object objSelect = ss.getFirstElement();
 		if(objSelect instanceof UserDBDAO) {
 			try {
-				SQLAuditEditorInput esei = new SQLAuditEditorInput((UserDBDAO)ss.getFirstElement());
+				SQLAuditEditorInput esei = new SQLAuditEditorInput(userDAO, (UserDBDAO)ss.getFirstElement(), roleType);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, SQLAuditEditor.ID, false);
 			} catch(Exception e) {
 				logger.error("Query History open", e); //$NON-NLS-1$
