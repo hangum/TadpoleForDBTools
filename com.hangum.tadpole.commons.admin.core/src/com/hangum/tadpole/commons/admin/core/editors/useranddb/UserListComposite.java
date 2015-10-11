@@ -49,6 +49,8 @@ import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserComp
 import com.hangum.tadpole.commons.admin.core.editors.useranddb.provider.UserLabelProvider;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -320,7 +322,7 @@ public class UserListComposite extends Composite {
 			UserDAO userDAO = ((UserDAO)ss.getFirstElement());
 			
 			try {
-				DBMgntEditorInput userMe = new DBMgntEditorInput(userDAO);
+				DBMgntEditorInput userMe = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN, userDAO);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, DBMgmtEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("Database Management editor", e); //$NON-NLS-1$
@@ -340,8 +342,8 @@ public class UserListComposite extends Composite {
 			 UserDAO userDAO = ((UserDAO)ss.getFirstElement());
 			
 			try {
-				SQLAuditEditorInput esei = new SQLAuditEditorInput(userDAO);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, SQLAuditEditor.ID, false);
+				SQLAuditEditorInput esei = new SQLAuditEditorInput(userDAO, USER_ROLE_TYPE.SYSTEM_ADMIN);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(esei, SQLAuditEditor.ID, true);
 			} catch(Exception e) {
 				logger.error("SQL Audit open", e); //$NON-NLS-1$
 				

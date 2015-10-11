@@ -26,6 +26,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
 import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
 import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
@@ -142,11 +144,22 @@ public class Perspective implements IPerspectiveFactory {
 
 	private void openEditor(String id) {
 		IEditorInput input = null;
-		if (id.equals(DBMgmtEditor.ID)) {
-			input = new DBMgntEditorInput();
-		} else if (id.equals(SQLAuditEditor.ID)) {
-			input = new SQLAuditEditorInput();
-		}
+		
+		boolean isAdmin = PermissionChecker.isAdmin(SessionManager.getRepresentRole());
+    	if(isAdmin) {
+			if (id.equals(DBMgmtEditor.ID)) {
+				input = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN);
+			} else if (id.equals(SQLAuditEditor.ID)) {
+				input = new SQLAuditEditorInput();
+			}
+    	} else {
+    		if (id.equals(DBMgmtEditor.ID)) {
+				input = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.USER);
+			} else if (id.equals(SQLAuditEditor.ID)) {
+				input = new SQLAuditEditorInput();
+			}
+    	}
+    	
 		try {
 			// Check duplicated editor.
 			IEditorReference[] editorRefs = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();

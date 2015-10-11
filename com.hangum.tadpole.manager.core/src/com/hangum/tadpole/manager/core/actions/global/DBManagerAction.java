@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
@@ -52,14 +53,14 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 		setId(ID);
 		setText(Messages.UserPermissionAction_3);
 		setToolTipText(Messages.UserPermissionAction_4);
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user_group.png")); //$NON-NLS-1$
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/db.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
 	@Override
 	public void run() {
 		try {
-			DBMgntEditorInput userMe = new DBMgntEditorInput();
+			DBMgntEditorInput userMe = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(userMe, DBMgmtEditor.ID);
 		} catch (PartInitException e) {
 			logger.error("Database Management editor", e); //$NON-NLS-1$

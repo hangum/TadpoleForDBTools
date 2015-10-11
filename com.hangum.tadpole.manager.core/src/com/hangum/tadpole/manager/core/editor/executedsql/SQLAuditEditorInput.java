@@ -14,6 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.manager.core.Messages;
@@ -27,18 +28,20 @@ import com.hangum.tadpole.manager.core.Messages;
 public class SQLAuditEditorInput implements IEditorInput {
 	private UserDAO userDAO;
 	private UserDBDAO userDBDAO;
+	private USER_ROLE_TYPE roleType;
 
-	public SQLAuditEditorInput(UserDAO selectUserDAO) {
-		this.userDAO = selectUserDAO;
-	}
-	
 	public SQLAuditEditorInput() {
 	}
-
-	public SQLAuditEditorInput(UserDBDAO userDBDAO) {
-		this.userDBDAO = userDBDAO;
+	
+	public SQLAuditEditorInput(UserDAO userDAO, USER_ROLE_TYPE roleType) {
+		this(userDAO, null, roleType);
 	}
 
+	public SQLAuditEditorInput(UserDAO userDAO, UserDBDAO userDBDAO, USER_ROLE_TYPE roleType) {
+		this.userDAO = userDAO;
+		this.userDBDAO = userDBDAO;
+		this.roleType = roleType;
+	}
 	@Override
 	public Object getAdapter(Class adapter) {
 		return null;
@@ -52,6 +55,7 @@ public class SQLAuditEditorInput implements IEditorInput {
 	@Override
 	public boolean equals(Object obj) {
 		if( !(obj instanceof SQLAuditEditorInput) ) return false;
+		
 		return ((SQLAuditEditorInput)obj).getName().equals(getName());
 	}
 
@@ -62,7 +66,11 @@ public class SQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.ExecutedSQLEditorInput_0;
+		if(getUserDAO() != null) {
+			return String.format("%s (%s)", Messages.ExecutedSQLEditorInput_0, getUserDAO().getName());
+		} else {
+			return Messages.ExecutedSQLEditorInput_0;
+		}
 	}
 
 	@Override
@@ -81,5 +89,9 @@ public class SQLAuditEditorInput implements IEditorInput {
 	
 	public UserDBDAO getUserDBDAO() {
 		return userDBDAO;
+	}
+	
+	public USER_ROLE_TYPE getRoleType() {
+		return roleType;
 	}
 }
