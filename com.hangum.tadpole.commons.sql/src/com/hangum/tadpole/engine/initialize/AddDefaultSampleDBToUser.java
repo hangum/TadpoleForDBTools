@@ -33,7 +33,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 public class AddDefaultSampleDBToUser {
 	private static final Logger logger = Logger.getLogger(AddDefaultSampleDBToUser.class);
 	
-	private static String strDefaultGroup = "SAMPLE GROUP";
+	private static String strDefaultGroup = "SAMPLE DB";
 	private static String strDefaultDisplayName = "SAMPLE_Chinnok_Sqlite.sqlite";
 	private static String strFileName = "Chinook_Sqlite.sqlite";
 
