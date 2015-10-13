@@ -69,6 +69,7 @@
 <select id="getAllUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	SELECT * 
 	FROM tadpole_user 
+	ORDER BY create_time DESC
 </select>
 
 <!--
@@ -79,6 +80,7 @@
 	FROM tadpole_user 
 	WHERE 
 		delyn = 'NO'
+	ORDER BY create_time DESC
 </select>
 
 <!--
