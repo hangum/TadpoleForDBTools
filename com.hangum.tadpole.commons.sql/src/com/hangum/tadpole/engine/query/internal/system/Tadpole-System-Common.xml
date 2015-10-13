@@ -102,6 +102,7 @@
 	WHERE 
 		email like #email#
 		AND delyn = 'NO'
+	ORDER BY create_time DESC
 </select>
 
 <!-- 
@@ -112,6 +113,7 @@
 	FROM tadpole_user 
 	WHERE 
 		email = #email#
+	ORDER BY create_time DESC
 </select>
 
 <!-- 
