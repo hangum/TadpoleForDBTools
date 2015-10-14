@@ -21,7 +21,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.importdb.core.dialog.importdb.csv.CsvToRDBImportDialog;
+import com.hangum.tadpole.importexport.core.dialogs.CsvToRDBImportDialog;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**

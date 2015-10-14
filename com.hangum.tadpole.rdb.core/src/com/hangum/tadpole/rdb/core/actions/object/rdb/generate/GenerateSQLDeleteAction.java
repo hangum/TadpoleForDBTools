@@ -20,7 +20,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -42,12 +42,12 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 	private static final Logger logger = Logger.getLogger(GenerateSQLDeleteAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateSQLDeleteAction"; //$NON-NLS-1$
 	
-	public GenerateSQLDeleteAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public GenerateSQLDeleteAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType, title);
 	}
 	
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		StringBuffer sbSQL = new StringBuffer();
 		try {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
@@ -66,7 +66,7 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			}
 			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 			
-			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.DB_ACTION.TABLES);
+			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 		} catch(Exception e) {
 			logger.error(Messages.GenerateSQLDeleteAction_10, e);
 			

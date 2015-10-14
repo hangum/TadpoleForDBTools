@@ -113,7 +113,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmViews.setText(Messages.TadpoleViewerComposite_0);
-		tbtmViews.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.VIEWS.name());
+		tbtmViews.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmViews.setControl(compositeTables);
@@ -155,7 +155,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "FROM " + viewDao.getSysName() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$ //$NON-NLS-2$
 							
 							//
-							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.DB_ACTION.VIEWS);
+							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS);
 						} catch(Exception e) {
 							logger.error(Messages.GenerateSQLSelectAction_8, e);
 							
@@ -263,7 +263,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * create table column menu
 	 */
 	private void createTableColumnMenu() {
-		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View"); //$NON-NLS-1$
+		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, "View"); //$NON-NLS-1$
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -283,13 +283,13 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_1);
-		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_2);
-		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_3);
-//		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, "View");
+		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.TadpoleViewerComposite_1);
+		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.TadpoleViewerComposite_2);
+		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.TadpoleViewerComposite_3);
+//		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, "View");
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_4);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.VIEWS, Messages.TadpoleViewerComposite_6);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.TadpoleViewerComposite_4);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.TadpoleViewerComposite_6);
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

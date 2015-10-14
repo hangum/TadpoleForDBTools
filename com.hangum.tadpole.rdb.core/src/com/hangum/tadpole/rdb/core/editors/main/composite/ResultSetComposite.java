@@ -12,6 +12,7 @@
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -27,6 +28,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -75,6 +77,7 @@ import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -84,6 +87,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.util.CSVUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -310,11 +314,20 @@ public class ResultSetComposite extends Composite {
 		btnSQLResultExportCSV.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				exportResultCSVType();
+				if(MessageDialog.openConfirm(getShell(), Messages.ResultSetComposite_4, Messages.ResultSetComposite_5)) exportResultCSVType();
 			}
 			
 		});
 		btnSQLResultExportCSV.setText(Messages.MainEditor_btnExport_text);
+		
+		Button btnResultToExportSQL = new Button(compositeBtn, SWT.NONE);
+		btnResultToExportSQL.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(MessageDialog.openConfirm(getShell(), Messages.ResultSetComposite_4, Messages.ResultSetComposite_5)) exportInsertIntoStatement();
+			}
+		});
+		btnResultToExportSQL.setText(Messages.ResultSetComposite_10);
 		
 		compositeDumy = new Composite(compositeBtn, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
@@ -322,7 +335,6 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
 	}
@@ -420,36 +432,36 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * Export resultset csv
+	 * export insert into statement
+	 */
+	private void exportInsertIntoStatement() {
+		try {
+			String strTableName = "TempTable"; //$NON-NLS-1$
+			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1); 
+			
+			String strPath = SQLUtil.makeFileInsertStatment(strTableName, rsDAO);
+			String strZipFile = ZipUtils.pack(strPath);
+			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+			
+			downloadExtFile(strTableName+"_SQL.zip", bytesZip); //$NON-NLS-1$
+		} catch (Exception e) {
+			logger.error("make insertinto", e); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * Export resultset csvMessages.ResultSetComposite_14
 	 * 
 	 */
 	private void exportResultCSVType() {
-		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-		if(dataList.isEmpty()) return;
-		
-		List<String[]> listCsvData = new ArrayList<String[]>();
-		// column 헤더추가.
-		TableColumn[] tcs = tvQueryResult.getTable().getColumns();
-		String[] strArrys = new String[tcs.length-1];
-		for(int i=1; i<tcs.length; i++) {
-			TableColumn tableColumn = tcs[i];
-			strArrys[i-1] = tableColumn.getText();
-		}
-		listCsvData.add(strArrys);
-		
-		for(int i=0; i<dataList.size(); i++) {
-			Map<Integer, Object> mapColumns = dataList.get(i);
-			
-			strArrys = new String[mapColumns.size()-1];
-			for(int j=1; j<mapColumns.size(); j++) {
-				strArrys[j-1] = ""+mapColumns.get(j); //$NON-NLS-1$
-			}
-			listCsvData.add(strArrys);
-		}
-		
 		try {
-			String strCVSContent = CSVFileUtils.makeData(listCsvData);
-			downloadExtFile("SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
+			String strTableName = "TempTable"; //$NON-NLS-1$
+			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1); 
+			String strPath = CSVUtil.makeCSVFile(strTableName, rsDAO);
+			String strZipFile = ZipUtils.pack(strPath);
+			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+			
+			downloadExtFile(strTableName +"CSV.zip", bytesZip);
 		} catch(Exception ee) {
 			logger.error("csv type export error", ee); //$NON-NLS-1$
 		}
@@ -790,7 +802,7 @@ public class ResultSetComposite extends Composite {
 						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
 						getRdbResultComposite().setOrionTextFocus();
 
-						// ace editor에게 작업이 끝났음을 알립니다.
+						// 모든 쿼리가 종료 되었음을 알린다.
 						finallyEndExecuteCommand();
 					}
 				});	// end display.asyncExec
@@ -870,7 +882,7 @@ public class ResultSetComposite extends Composite {
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
 			
-			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT, getUserDB(), true, resultSet, intSelectLimitCnt);
+			rsDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt);
 		} catch(Exception e) {
 //			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
@@ -1044,7 +1056,7 @@ public class ResultSetComposite extends Composite {
 			
 			boolean isEditable = true;
 			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
-			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter, isEditable);
+			SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
 			
 			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
 			tvQueryResult.setContentProvider(new ArrayContentProvider());
@@ -1140,9 +1152,9 @@ public class ResultSetComposite extends Composite {
 	 * @param fileName
 	 * @param newContents
 	 */
-	public void downloadExtFile(String fileName, String newContents) {
+	public void downloadExtFile(String fileName, byte[] newContents) {
 		downloadServiceHandler.setName(fileName);
-		downloadServiceHandler.setByteContent(newContents.getBytes());
+		downloadServiceHandler.setByteContent(newContents);
 		
 		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
 	}

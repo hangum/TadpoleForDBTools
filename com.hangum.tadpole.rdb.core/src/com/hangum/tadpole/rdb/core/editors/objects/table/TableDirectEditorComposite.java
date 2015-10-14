@@ -287,8 +287,8 @@ public class TableDirectEditorComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 
 				try {
-					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.TABLES);
-					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.DB_ACTION.TABLES);
+					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				} catch(Exception ee) {
 					MessageDialog.openError(null, "Confirm", ee.getMessage()); //$NON-NLS-1$
 				}

@@ -53,7 +53,7 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param isNewEditor 항상 새로운 창으로 엽니다.
 	 * @param initAction action이 호출된곳.
 	 */
-	public static void run(UserDBDAO userDB, String strObjectName, String strScript, boolean isNewEditor, PublicTadpoleDefine.DB_ACTION initAction) {
+	public static void run(UserDBDAO userDB, String strObjectName, String strScript, boolean isNewEditor, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			newMongoDBEditorOpen(userDB, strScript);
@@ -89,7 +89,7 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param lowSQL
 	 * @param initAction
 	 */
-	public static void run(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
+	public static void run(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		run(userDB, "", lowSQL, false, initAction);
 	}
 	
@@ -121,7 +121,7 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param strScript 
 	 * @param initAction
 	 */
-	private static void newObjectEditorOpen(UserDBDAO userDB, String objectName, String strScript, PublicTadpoleDefine.DB_ACTION initAction) {
+	private static void newObjectEditorOpen(UserDBDAO userDB, String objectName, String strScript, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		try {
 			ObjectEditorInput mei = new ObjectEditorInput(userDB, objectName, strScript, initAction);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, ObjectEditor.ID, false);
@@ -140,7 +140,7 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param lowSQL
 	 * @param initAction
 	 */
-	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.DB_ACTION initAction) {
+	private static void newSQLEditorOpen(UserDBDAO userDB, String lowSQL, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		try {
 			MainEditorInput mei = new MainEditorInput(userDB, lowSQL, initAction);
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID, false);

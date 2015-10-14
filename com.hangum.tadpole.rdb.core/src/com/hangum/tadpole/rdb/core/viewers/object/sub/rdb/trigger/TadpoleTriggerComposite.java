@@ -38,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -94,7 +94,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTriggers = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmTriggers.setText(Messages.TadpoleTriggerComposite_0);
-		tbtmTriggers.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.TRIGGERS.name());
+		tbtmTriggers.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTriggers.setControl(compositeIndexes);
@@ -134,12 +134,12 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_1);
-		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_2);
-		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_3);
+		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_1);
+		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_2);
+		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_4);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_5);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_4);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_5);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

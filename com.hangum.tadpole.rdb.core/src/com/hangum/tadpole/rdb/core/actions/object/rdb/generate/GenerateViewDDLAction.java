@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
@@ -45,7 +45,7 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	 * @param actionType
 	 * @param target
 	 */
-	public GenerateViewDDLAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String target) {
+	public GenerateViewDDLAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String target) {
 		super(window, actionType);
 
 		setId(ID + actionType.toString());
@@ -54,37 +54,37 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		try {
 			DDLScriptManager scriptManager;
 			String strObjectName = "";
 			String strScript = "";
 			
 			Object obj = null;
-			if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
+			if (PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.equals(actionType)) {
 				OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
 				
-				if (PublicTadpoleDefine.DB_ACTION.TABLES.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.TABLES);
+				if (PublicTadpoleDefine.OBJECT_TYPE.TABLES.toString().startsWith(synonym.getObject_type())) {
+					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 					TableDAO dao = new TableDAO();
 					dao.setName(synonym.getName());
 					obj = dao;
-				} else if (PublicTadpoleDefine.DB_ACTION.VIEWS.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.VIEWS);
+				} else if (PublicTadpoleDefine.OBJECT_TYPE.VIEWS.toString().startsWith(synonym.getObject_type())) {
+					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.VIEWS);
 					obj = synonym.getName();
-				} else if (PublicTadpoleDefine.DB_ACTION.PACKAGES.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.PACKAGES);
+				} else if (PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.toString().startsWith(synonym.getObject_type())) {
+					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.PACKAGES);
 					ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
 					dao.setName(synonym.getName());
 					dao.setPackagename(synonym.getName());
 					obj = dao;
-				} else if (PublicTadpoleDefine.DB_ACTION.PROCEDURES.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.PROCEDURES);
+				} else if (PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.toString().startsWith(synonym.getObject_type())) {
+					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES);
 					ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
 					dao.setName(synonym.getName());
 					obj = dao;
-				} else if (PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.FUNCTIONS);
+				} else if (PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.toString().startsWith(synonym.getObject_type())) {
+					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
 					ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
 					dao.setName(synonym.getName());
 					obj = dao;

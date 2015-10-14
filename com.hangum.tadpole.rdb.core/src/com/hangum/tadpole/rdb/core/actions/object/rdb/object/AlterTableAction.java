@@ -18,7 +18,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
@@ -43,7 +43,7 @@ public class AlterTableAction extends AbstractObjectSelectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.alterTable";
 	
-	public AlterTableAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public AlterTableAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
@@ -57,14 +57,14 @@ public class AlterTableAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tc = (TableDAO)selection.getFirstElement();
 		
 		AlterTableDialog dialog = new AlterTableDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB, tc);
 		dialog.open();
 		
 		
-//		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
+//		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 //			
 //			// others db
 //			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
@@ -88,10 +88,10 @@ public class AlterTableAction extends AbstractObjectSelectAction {
 //				}
 //			}
 //			
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 //			CreateViewAction cva = new CreateViewAction();
 //			cva.run(userDB, actionType);
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
 //			if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 //				CreateIndexAction cia = new CreateIndexAction();
 //				cia.run(userDB, actionType);
@@ -102,19 +102,19 @@ public class AlterTableAction extends AbstractObjectSelectAction {
 //					refreshIndexes();
 //				}
 //			}
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 //			CreateProcedureAction cia = new CreateProcedureAction();
 //			cia.run(userDB, actionType);
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
 //			CreatePackageAction cia = new CreatePackageAction();
 //			cia.run(userDB, actionType);
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 //			CreateFunctionAction cia = new CreateFunctionAction();
 //			cia.run(userDB, actionType);
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 //			CreateTriggerAction cia = new CreateTriggerAction();
 //			cia.run(userDB, actionType);
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT) {
 //			CreateJavaScriptAction csa = new CreateJavaScriptAction();
 //			csa.run(userDB, actionType);
 //		}

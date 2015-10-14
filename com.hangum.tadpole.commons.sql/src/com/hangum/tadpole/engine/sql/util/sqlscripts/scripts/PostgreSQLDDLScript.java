@@ -36,7 +36,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 	private static final Logger logger = Logger.getLogger(PostgreSQLDDLScript.class);
 
-	public PostgreSQLDDLScript(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
+	public PostgreSQLDDLScript(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		super(userDB, actionType);
 	}
 

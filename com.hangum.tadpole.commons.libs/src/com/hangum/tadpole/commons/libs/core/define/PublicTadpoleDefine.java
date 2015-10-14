@@ -86,9 +86,6 @@ public class PublicTadpoleDefine {
 	/** user login type */
 	public static enum INPUT_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};
 	
-	/** 쿼리 실행 결과  */
-	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
-
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 
 	
@@ -128,6 +125,41 @@ public class PublicTadpoleDefine {
 	}
 	
 	/**
+	 * ace editor theme list
+		https://docs.c9.io/docs/syntax-highlighting-themes
+	*/
+	private static Map<String, String> mapTheme = new HashMap<String, String>();
+	public static Map<String, String> getMapTheme() {
+		if(mapTheme.isEmpty()) {
+			mapTheme.put("Chrome", 			"chrome");
+			mapTheme.put("Clouds", 			"clouds");
+			mapTheme.put("Clouds Midnight", "clouds_midnight");
+			mapTheme.put("Cobalt", 			"cobalt");
+			mapTheme.put("Crimson Editor", 	"crimson_editor");
+			mapTheme.put("Dawn", 			"dawn");
+			mapTheme.put("Eclipse", 		"eclipse");
+			mapTheme.put("Idle Fingers", 	"idle_fingers");
+			mapTheme.put("Kr Theme", 		"kr_theme");
+			mapTheme.put("Merbivore", 		"merbivore");
+			mapTheme.put("Merbivore Soft", 	"merbivore_soft");
+			mapTheme.put("Mono Industrial", "mono_industrial");
+			mapTheme.put("Monokai", 		"monokai");
+			mapTheme.put("Pastel On Dark", 	"pastel_on_dark");
+			mapTheme.put("Solarized Dark", 	"solarized_dark");
+			mapTheme.put("Solarized Light", "solarized_light");
+			mapTheme.put("TextMate", 		"textmate");
+			mapTheme.put("Tomorrow", 		"tomorrow");
+			mapTheme.put("Tomorrow Night", 	"tomorrow_night");
+			mapTheme.put("Tomorrow Night Blue", 	"tomorrow_night_blue");
+			mapTheme.put("Tomorrow Night Bright", 	"tomorrow_night_bright");
+			mapTheme.put("Tomorrow Night Eighties", "tomorrow_night_eighties");
+			mapTheme.put("Twilight", 				"twilight");
+			mapTheme.put("Vibrant Inkv", 			"vibrant_inkv");
+		}
+		return mapTheme;
+	}
+	
+	/**
 	 * db operation type
 	 * 
 	 * @author hangum
@@ -163,19 +195,19 @@ public class PublicTadpoleDefine {
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
 	/** save resource type */
-	public static enum RESOURCE_TYPE { ERD, SQL };
+	public static enum RESOURCE_TYPE {ERD, SQL};
 	
 	/** define SQL, ERD shared type */
 	public static enum SHARED_TYPE {PUBLIC, PRIVATE};
 	
 	/** executed sql history type */
 	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION, API};
-	
-	/** SQL STATEMENT TYPE */
-	public static enum SQL_STATEMENTS_TYPE {SELECT, INSERT, UPDATE, DELETE, DROP, EXECUTE_PLAN, PROCEDURE};
-	
+
+	/** 쿼리 실행 결과  */
+	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
+
 	/** objec explorer에서 정의한 action */
-	public static enum DB_ACTION {
+	public static enum OBJECT_TYPE {
 		TABLES, 
 		VIEWS, 
 		SYNONYM,
@@ -189,18 +221,20 @@ public class PublicTadpoleDefine {
 		PACKAGES,
 		SCHEDULE
 	};
-	
+
 	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
-	
+
+	/** SQL TYPE
+	 * http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands
+	 */
+	public static enum SQL_TYPE {DDL, DML, DCL, TCL};
+
 	/** query type */
 	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNOWN};
 	
 	/** query ddl type, 현재 jsqlparser에서는 이 세가지 타입만을 지원합니다 */
-	public static enum QUERY_DDL_TYPE {TABLE, VIEW, INDEX, PROCEDURE, UNKNOWN};
-	
-	/** 디비들의 키 이름을 정의합니다 */
-//	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
+	public static enum QUERY_DDL_TYPE {TABLE, VIEW, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, UNKNOWN};
 	
 	public static String[] DB_PRIMARY_KEY = {
 											"PRI", 
@@ -218,41 +252,6 @@ public class PublicTadpoleDefine {
 											"PRIMARY KEY,FOREIGN KEY"	// pgsql
 										};
 	
-	
-	/**
-	 * ace editor theme list
-		https://docs.c9.io/docs/syntax-highlighting-themes
-	*/
-	private static Map<String, String> mapTheme = new HashMap<String, String>();
-	public static Map<String, String> getMapTheme() {
-		if(mapTheme.isEmpty()) {
-			mapTheme.put("Chrome", 			"chrome");
-			mapTheme.put("Clouds", 			"clouds");
-			mapTheme.put("Clouds Midnight", "clouds_midnight");
-			mapTheme.put("Cobalt", 			"cobalt");
-			mapTheme.put("Crimson Editor", 	"crimson_editor");
-			mapTheme.put("Dawn", 			"dawn");
-			mapTheme.put("Eclipse", 		"eclipse");
-			mapTheme.put("Idle Fingers", 	"idle_fingers");
-			mapTheme.put("Kr Theme", 		"kr_theme");
-			mapTheme.put("Merbivore", 		"merbivore");
-			mapTheme.put("Merbivore Soft", 	"merbivore_soft");
-			mapTheme.put("Mono Industrial", "mono_industrial");
-			mapTheme.put("Monokai", 		"monokai");
-			mapTheme.put("Pastel On Dark", 	"pastel_on_dark");
-			mapTheme.put("Solarized Dark", 	"solarized_dark");
-			mapTheme.put("Solarized Light", "solarized_light");
-			mapTheme.put("TextMate", 		"textmate");
-			mapTheme.put("Tomorrow", 		"tomorrow");
-			mapTheme.put("Tomorrow Night", 	"tomorrow_night");
-			mapTheme.put("Tomorrow Night Blue", 	"tomorrow_night_blue");
-			mapTheme.put("Tomorrow Night Bright", 	"tomorrow_night_bright");
-			mapTheme.put("Tomorrow Night Eighties", "tomorrow_night_eighties");
-			mapTheme.put("Twilight", 				"twilight");
-			mapTheme.put("Vibrant Inkv", 			"vibrant_inkv");
-		}
-		return mapTheme;
-	}
 	/**
 	 * is primary key
 	 * @param key

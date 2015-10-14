@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
@@ -41,14 +41,14 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.execute.procedure";
 
-	public ObjectExecuteProcedureAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectExecuteProcedureAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		if(logger.isDebugEnabled()) logger.debug("ObjectExecuteProcedureAction run...");
 
 		ProcedureFunctionDAO procedureDAO;
@@ -61,19 +61,19 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			
 			try {
 				String strScript = pm.getExecuter().getMakeExecuteScript();
-				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.DB_ACTION.TABLES);
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT && actionType == DB_ACTION.FUNCTIONS) {
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT && actionType == OBJECT_TYPE.FUNCTIONS) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
 			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
 			pm.isExecuted(procedureDAO, userDB);
 			
 			try {
 				String strScript = pm.getExecuter().getMakeExecuteScript();
-				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.DB_ACTION.TABLES);
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
@@ -85,13 +85,13 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			
 			try {
 				String strScript = pm.getExecuter().getMakeExecuteScript();
-				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.DB_ACTION.TABLES);
+				FindEditorAndWriteQueryUtil.run(userDB, strScript, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
 		} else {
-			if (PublicTadpoleDefine.DB_ACTION.SYNONYM.equals(actionType)) {
+			if (PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.equals(actionType)) {
 				OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
 				procedureDAO = new ProcedureFunctionDAO();
 				procedureDAO.setName(synonym.getName());

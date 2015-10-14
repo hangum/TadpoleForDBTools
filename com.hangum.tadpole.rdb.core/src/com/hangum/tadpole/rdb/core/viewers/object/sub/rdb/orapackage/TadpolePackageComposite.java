@@ -114,7 +114,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText(Messages.TadpolePackageComposite_0);
-		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.PACKAGES.name());
+		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name());
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositePackages);
@@ -215,14 +215,14 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	}
 
 	private void createMenu() {
-		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_3);
-		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_4);
-		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_5);
+		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_3);
+		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_4);
+		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_5);
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_6);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_6);
 
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_7);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PACKAGES, Messages.TadpolePackageComposite_8);
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_7);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_8);
 
 
 		// menu

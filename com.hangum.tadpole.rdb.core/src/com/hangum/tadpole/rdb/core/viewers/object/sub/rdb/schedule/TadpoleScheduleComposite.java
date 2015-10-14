@@ -33,7 +33,7 @@ public class TadpoleScheduleComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText("Schedule");
-		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.SCHEDULE.name());
+		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.SCHEDULE.name());
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositePackages);

@@ -50,7 +50,7 @@ import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -64,7 +64,7 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
-import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
@@ -98,7 +98,7 @@ public class MainEditor extends EditorExtension {
 	protected String initDefaultEditorStr = ""; //$NON-NLS-1$
 	
 	/** 현재 editor가 열린 상태. 즉 table, view, index 등의 상태. */
-	protected DB_ACTION dbAction;
+	protected OBJECT_TYPE dbAction;
 	
 	/** resource 정보. */
 	protected UserDBResourceDAO dBResource;
@@ -751,7 +751,7 @@ public class MainEditor extends EditorExtension {
 	 * 
 	 * @return
 	 */
-	public DB_ACTION getDbAction() {
+	public OBJECT_TYPE getDbAction() {
 		return dbAction;
 	}
 	

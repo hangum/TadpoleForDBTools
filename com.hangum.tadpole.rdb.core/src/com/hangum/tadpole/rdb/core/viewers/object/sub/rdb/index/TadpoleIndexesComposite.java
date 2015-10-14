@@ -105,7 +105,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmIndex.setText(Messages.TadpoleIndexesComposite_0);
-		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.INDEXES.name());
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
@@ -251,11 +251,11 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_1);
-		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_2);
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_3);
+		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.TadpoleIndexesComposite_1);
+		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.TadpoleIndexesComposite_2);
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.TadpoleIndexesComposite_3);
 		
-//		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_7);
+//		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.TadpoleIndexesComposite_7);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

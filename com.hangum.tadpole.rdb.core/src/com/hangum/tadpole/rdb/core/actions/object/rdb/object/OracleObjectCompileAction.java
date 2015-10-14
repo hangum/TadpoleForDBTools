@@ -16,13 +16,12 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -47,7 +46,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.compile";
 	
-	public OracleObjectCompileAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public OracleObjectCompileAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
@@ -55,26 +54,26 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
-			if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {			
+			if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {			
 				
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
+			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 				ViewCompile(selection, userDB);	
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
+			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
 			
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
 				OtherObjectCompile("PROCEDURE", dao.getName().trim().toUpperCase(), userDB);			
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
 				packageCompile(selection, userDB);
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
 				OtherObjectCompile("FUNCTION",  dao.getName().trim().toUpperCase(), userDB);			
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
+			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				TriggerDAO dao = (TriggerDAO)selection.getFirstElement();
 				OtherObjectCompile("TRIGGER",  dao.getName().trim().toUpperCase(), userDB);			
-			} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
+			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT) {
 			
 			}
 		}

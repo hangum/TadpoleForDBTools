@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -30,9 +29,6 @@ public class ResultSetUtilDTO {
 	 * userDB dao
 	 */
 	private UserDBDAO userDB;
-	
-	/** EXECUTE STATEMENT TYPE */
-	private PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType = PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT;
 	
 	/** 
 	 * column 이름. <columnIndex, name>
@@ -77,14 +73,13 @@ public class ResultSetUtilDTO {
 	 * @param mapColumnType
 	 * @param sourceDataList
 	 */
-	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, 
+	public ResultSetUtilDTO(
 			UserDBDAO userDB, 
 			Map<Integer, String> columnName,
 			Map<Integer, String> columnTableName,
 			Map<Integer, Integer> columnType, 
 			TadpoleResultSet dataList
 	) {
-		this.statementType = statementType;
 		this.userDB 	= userDB;
 		this.columnName = columnName;
 		this.columnTableName = columnTableName;
@@ -95,7 +90,6 @@ public class ResultSetUtilDTO {
 	/**
 	 * 메인에디터에서 보여주기위한 정보를 만듭니다.
 	 *
-	 * @param statementType
 	 * @param userDB
 	 * @param isShowRownum
 	 * @param rs
@@ -103,9 +97,9 @@ public class ResultSetUtilDTO {
 	 * @param isResultComma
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, final UserDBDAO userDB, 
-								final boolean isShowRownum, final ResultSet rs, final int limitCount) throws Exception {
-		this.statementType = statementType;
+	public ResultSetUtilDTO(
+						final UserDBDAO userDB, 
+						final boolean isShowRownum, final ResultSet rs, final int limitCount) throws Exception {
 		this.userDB = userDB;
 		
 		if(rs != null) {
@@ -190,20 +184,6 @@ public class ResultSetUtilDTO {
 
 	public void setColumnMetaData(Map<Integer, Map> columnMetaData) {
 		this.columnMetaData = columnMetaData;
-	}
-
-	/**
-	 * @return the statementType
-	 */
-	public PublicTadpoleDefine.SQL_STATEMENTS_TYPE getStatementType() {
-		return statementType;
-	}
-
-	/**
-	 * @param statementType the statementType to set
-	 */
-	public void setStatementType(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType) {
-		this.statementType = statementType;
 	}
 
 	/**

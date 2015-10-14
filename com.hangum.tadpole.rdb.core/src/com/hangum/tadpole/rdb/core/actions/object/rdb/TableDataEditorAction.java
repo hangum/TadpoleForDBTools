@@ -23,7 +23,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -47,7 +47,7 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 	private static final Logger logger = Logger.getLogger(TableDataEditorAction.class);
 	public static String ID = "com.hangum.tadpole.rdb.core.actions.object.rdb.TableDataEditorAction"; //$NON-NLS-1$
 
-	public TableDataEditorAction(IWorkbenchWindow window, DB_ACTION actionType) {
+	public TableDataEditorAction(IWorkbenchWindow window, OBJECT_TYPE actionType) {
 		super(window, actionType);
 		
 		setId(ID + actionType);
@@ -55,7 +55,7 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 	}
 	
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		try {
 			// get the table columns

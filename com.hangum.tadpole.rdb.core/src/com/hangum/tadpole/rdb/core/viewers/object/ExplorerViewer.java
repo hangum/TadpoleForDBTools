@@ -127,40 +127,40 @@ public class ExplorerViewer extends ViewPart {
 				String strSelectTab = ""+tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getData(AbstractObjectComposite.TAB_DATA_KEY);
 				String strSearchText = textSearch.getText();
 				
-				if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.COLLECTIONS.name())) {
+				if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.COLLECTIONS.name())) {
 					mongoCollectionComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name())) {
 					tableComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name())) {
 					synonymComposite.filter(strSearchText);
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SCHEDULE.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SCHEDULE.name())) {
 //					scheduleComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name())) {
 					viewComposite.filter(strSearchText);					
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name())) {
 					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 						mongoIndexComposite.filter(strSearchText);
 					} else {
 						indexComposite.filter(strSearchText);
 					}					
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name())) {
 					procedureComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name())) {
 					packageComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.name())) {
 					functionCompostite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name())) {
 					triggerComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT.name())) {
 					mongoJavaScriptComposite.filter(strSearchText);
 				}
 			}
@@ -385,7 +385,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
 		
-		refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name());
+		refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name());
 	}
 	
 	/**
@@ -404,27 +404,27 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void refershSelectObject(String strSelectItemText, String strObjectName) {
 //		테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
-		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TABLES.name())) {
+		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name())) {
 			if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
 			refreshTable(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.VIEWS.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name())) {
 			if(tabFolderObject.getSelectionIndex() != 1) tabFolderObject.setSelection(1);
 			refreshView(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SYNONYM.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name())) {
 			refreshSynonym(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.INDEXES.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name())) {
 			refreshIndexes(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name())) {
 			refreshProcedure(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.PACKAGES.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name())) {
 			refreshPackage(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.FUNCTIONS.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.name())) {
 			refreshFunction(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.TRIGGERS.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name())) {
 			refreshTrigger(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.SCHEDULE.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SCHEDULE.name())) {
 			refreshSchedule(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT.name())) {
 			refreshJS(false, strObjectName);
 		}
 		
@@ -629,19 +629,19 @@ public class ExplorerViewer extends ViewPart {
 		
 		if(queryDDLType != null) {
 			if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.TABLE) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), strObjectName);
+				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name(), strObjectName);
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.VIEWS.name(), strObjectName);
+				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name(), strObjectName);
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.INDEX) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.INDEXES.name(), strObjectName);
+				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name(), strObjectName);
 			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE) {
-				refershSelectObject(PublicTadpoleDefine.DB_ACTION.PROCEDURES.name(), strObjectName);
+				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name(), strObjectName);
 				
 			} else {
 				refreshSelectTab();
 			// TO DO This code is temporary. do not understand refresh object is table view refresh. --;; - 15.4.20. hangum
 //			} else {
-//				refershSelectObject(PublicTadpoleDefine.DB_ACTION.TABLES.name(), "");
+//				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name(), "");
 			}
 		}
 	}

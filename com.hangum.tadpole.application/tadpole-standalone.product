@@ -7,9 +7,15 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-GAON -standalone -useDB all -defaultDB MySQL
+      <programArgs>-standalone -useDB all -defaultDB MySQL
       </programArgs>
-      <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1
+      <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1  -Xverify:none 
+-XX:+UseParallelGC
+-XX:-UseConcMarkSweepGC 
+-XX:PermSize=32M
+-XX:MaxPermSize=128M  
+-XX:MaxNewSize=128M 
+-XX:NewSize=64M
       </vmArgs>
    </launcherArgs>
 
@@ -43,10 +49,11 @@
       <plugin id="com.hangum.tadpole.commons.admin.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.utils"/>
+      <plugin id="com.hangum.tadpole.commons.utils.zip"/>
       <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.hive.core"/>
-      <plugin id="com.hangum.tadpole.importdb"/>
+      <plugin id="com.hangum.tadpole.importexport.db"/>
       <plugin id="com.hangum.tadpole.manager.core"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
@@ -159,10 +166,11 @@
       <plugin id="com.hangum.tadpole.commons.admin.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.utils.zip" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.importexport.db" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />

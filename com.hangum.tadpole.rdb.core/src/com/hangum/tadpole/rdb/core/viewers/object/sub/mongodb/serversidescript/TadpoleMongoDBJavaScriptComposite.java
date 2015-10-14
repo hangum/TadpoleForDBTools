@@ -95,7 +95,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmIndex.setText("Javascript"); //$NON-NLS-1$
-		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name());
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
@@ -182,10 +182,10 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_5);
-		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_6);
-		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_7);
-		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_8);
+		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_5);
+		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_6);
+		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_7);
+		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_8);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

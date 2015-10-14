@@ -17,7 +17,7 @@ import org.eclipse.rap.rwt.RWT;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -54,7 +54,7 @@ public class RequestQuery {
 	/** 에디터가 실행 가능한 쿼리로 수정한 */
 	private String sql = "";
 	
-	private DB_ACTION dbAction = DB_ACTION.TABLES;
+	private OBJECT_TYPE dbAction = OBJECT_TYPE.TABLES;
 	
 	/** 사용자 쿼리를 지정한다 */
 	private EditorDefine.QUERY_MODE mode = EditorDefine.QUERY_MODE.QUERY;
@@ -79,7 +79,7 @@ public class RequestQuery {
 	 * @param type 쿼리, 실행 계획인지 {@code EditorDefine.EXECUTE_TYPE}
 	 * @param isAutoCommit autocommit
 	 */
-	public RequestQuery(String originalSql, DB_ACTION dbAction, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
+	public RequestQuery(String originalSql, OBJECT_TYPE dbAction, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
 		this.userIp = RWT.getRequest().getRemoteAddr();
 		
 		this.originalSql = originalSql;
@@ -241,14 +241,14 @@ public class RequestQuery {
 	/**
 	 * @return the dbAction
 	 */
-	public DB_ACTION getDbAction() {
+	public OBJECT_TYPE getDbAction() {
 		return dbAction;
 	}
 
 	/**
 	 * @param dbAction the dbAction to set
 	 */
-	public void setDbAction(DB_ACTION dbAction) {
+	public void setDbAction(OBJECT_TYPE dbAction) {
 		this.dbAction = dbAction;
 	}
 

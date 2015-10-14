@@ -10,10 +10,25 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util;
 
-import java.sql.ResultSet;
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.util.StringHelper;
+import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -21,17 +36,6 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
-import com.hangum.tadpole.db.metadata.TadpoleMetaData;
-import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
 
 /**
  * <pre>
@@ -49,6 +53,9 @@ public class SQLUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLUtil.class);
 	
+	/** REGEXP pattern flag */
+	private static int PATTERN_FLAG = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+	
 	/**
 	 * pattern statement 
 	 * 
@@ -64,24 +71,14 @@ public class SQLUtil {
 	private static final String SQLITE_PATTERN_STATEMENT = "";
 	private static final String CUBRID_PATTERN_STATEMENT = "";
 	
-	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*" 
+	private static final String BASE_PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*" 
 							+ MSSQL_PATTERN_STATEMENT
 							+ ORACLE_PATTERN_STATEMENT
 							+ MYSQL_PATTERN_STATEMENT
 							+ PGSQL_PATTERN_STATEMENT
 							+ SQLITE_PATTERN_STATEMENT
-							+ CUBRID_PATTERN_STATEMENT
-						;
-	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-	
-	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
-	private static final String PATTERN_EXECUTE_UPDATE = "^INSERT.*|^UPDATE.*|^DELETET.*|^MERGE.*|^COMMIT.*|^ROLLBACK.*|^SAVEPOINT.*";
-	private static final String PATTERN_EXECUTE_CREATE = "^CREATE.*|^DECLARE.*";
-	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE /*+ PATTERN_EXECUTE_UPDATE*/ + "|" + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-	
-
-//	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
-//	private static final String PATTERN_COMMENT2 = "(--.*)|(//.*)";
+							+ CUBRID_PATTERN_STATEMENT;
+	private static final Pattern PATTERN_DML_BASIC = Pattern.compile(BASE_PATTERN_STATEMENT, PATTERN_FLAG);
 	
 	/** 허용되지 않는 sql 정의 */
 	private static final String[] NOT_ALLOWED_SQL = {
@@ -129,20 +126,20 @@ public class SQLUtil {
 		return isRet;
 	}
 	
-	/**
-	 * execute query
-	 * 
-	 * @param strSQL
-	 * @return
-	 */
-	public static boolean isExecute(String strSQL) {
-		strSQL = removeComment(strSQL);
-		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
-			return true;
-		}
-		
-		return false;
-	}
+//	/**
+//	 * execute query
+//	 * 
+//	 * @param strSQL
+//	 * @return
+//	 */
+//	public static boolean isExecute(String strSQL) {
+//		strSQL = removeComment(strSQL);
+//		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
+//			return true;
+//		}
+//		
+//		return false;
+//	}
 	
 	
 	/**
@@ -153,7 +150,7 @@ public class SQLUtil {
 	 */
 	public static boolean isStatement(String strSQL) {
 		strSQL = removeComment(strSQL);
-		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
+		if((PATTERN_DML_BASIC.matcher(strSQL)).matches()) {
 			return true;
 //		} else {
 //			try {
@@ -189,37 +186,6 @@ public class SQLUtil {
 //	}
 	
 	/**
-	 * INSERT 문을 생성합니다.
-	 * 
-	 * @param tableName
-	 * @param rs
-	 * @return
-	 * @throws Exception
-	 */
-	public static String makeInsertStatment(String tableName, ResultSet rs) throws Exception {
-		StringBuffer result = new StringBuffer("INSERT INTO " + tableName + "(");
-		
-		Map<Integer, String> mapTable = ResultSetUtils.getColumnName(rs);
-		for( int i=0 ;i<mapTable.size(); i++ ) {
-			if( i != (mapTable.size()-1) ) result.append( mapTable.get(i) + ",");
-			else result.append( mapTable.get(i));
-		}
-		
-		result.append(") VALUES(");
-		
-		for( int i=0 ;i<mapTable.size(); i++ ) {
-			if( i != (mapTable.size()-1) ) result.append("?,");
-			else result.append('?');
-		}
-		
-		result.append(')');			
-		
-		if(logger.isDebugEnabled()) logger.debug("[make insert statment is " + result.toString());
-		
-		return result.toString();
-	}
-	
-	/**
 	 * 쿼리를 jdbc에서 실행 가능한 쿼리로 보정합니다.
 	 * 
 	 * @param exeSQL
@@ -251,6 +217,67 @@ public class SQLUtil {
 //		}
 		
 		return exeSQL;
+	}
+	
+	/**
+	 * INSERT 문을 생성합니다.
+	 * 
+	 * @param tableName
+	 * @param rs
+	 * @return 파일 위치
+	 * 
+	 * @throws Exception
+	 */
+	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strFile = tableName + ".sql";
+		String strFullPath = strTmpDir + strFile;
+		
+		final String INSERT_INTO_STMT = "INSERT INTO " + tableName + " (%s) VALUES (%S);" + PublicTadpoleDefine.LINE_SEPARATOR; 
+		
+		// 컬럼 이름.
+		String strColumns = "";
+		Map<Integer, String> mapTable = rsDAO.getColumnLabelName();
+		for( int i=1 ;i<mapTable.size(); i++ ) {
+			if(i != (mapTable.size()-1)) strColumns += mapTable.get(i) + ",";
+			else strColumns += mapTable.get(i);
+		}
+		
+		// 데이터를 담는다.
+		StringBuffer sbInsertInto = new StringBuffer();
+		int DATA_COUNT = 1000;
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
+		String strResult = new String();		
+		for(int i=0; i<dataList.size(); i++) {
+			Map<Integer, Object> mapColumns = dataList.get(i);
+			
+			strResult = "";
+			for(int j=1; j<mapColumns.size(); j++) {
+				Object strValue = mapColumns.get(j);
+				strValue = strValue == null?"":strValue;
+				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+					strValue = StringHelper.escapeSQL(strValue.toString());
+					
+					strValue = String.format("'%s'", strValue);
+				}
+				
+				if(j != (mapTable.size()-1)) strResult += strValue + ",";
+				else strResult += strValue;
+			}
+			sbInsertInto.append(String.format(INSERT_INTO_STMT, strColumns, strResult));
+			
+			if((i%DATA_COUNT) == 0) {
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				sbInsertInto.setLength(0);
+			}
+		}
+		if(sbInsertInto.length() > 0) {
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+		}
+		
+		return strFullPath;
 	}
 	
 	/**
@@ -379,11 +406,11 @@ public class SQLUtil {
 	 * @param dbAction
 	 * @return
 	 */
-	public static boolean isSELECTEditor(DB_ACTION dbAction) {
-		if(dbAction == DB_ACTION.TABLES ||
-				dbAction == DB_ACTION.VIEWS ||
-				dbAction == DB_ACTION.SYNONYM ||
-				dbAction == DB_ACTION.INDEXES) {
+	public static boolean isSELECTEditor(OBJECT_TYPE dbAction) {
+		if(dbAction == OBJECT_TYPE.TABLES ||
+				dbAction == OBJECT_TYPE.VIEWS ||
+				dbAction == OBJECT_TYPE.SYNONYM ||
+				dbAction == OBJECT_TYPE.INDEXES) {
 			return true;
 		}
 		

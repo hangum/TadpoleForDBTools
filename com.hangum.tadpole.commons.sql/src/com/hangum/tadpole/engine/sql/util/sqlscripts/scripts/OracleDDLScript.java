@@ -38,7 +38,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class OracleDDLScript extends AbstractRDBDDLScript {
 	private static final Logger logger = Logger.getLogger(OracleDDLScript.class);
 	
-	public OracleDDLScript(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
+	public OracleDDLScript(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		super(userDB, actionType);
 	}
 

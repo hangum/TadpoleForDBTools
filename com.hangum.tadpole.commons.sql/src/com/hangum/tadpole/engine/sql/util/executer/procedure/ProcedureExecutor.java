@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -170,7 +169,9 @@ public abstract class ProcedureExecutor {
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
 		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000);
 
-		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, userDB, mapColumns, mapTableColum, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(
+//				PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, 
+				userDB, mapColumns, mapTableColum, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -210,7 +211,7 @@ public abstract class ProcedureExecutor {
 		mapColumnTable.put(4, "dumy");
 		mapColumnTable.put(5, "dumy");
 		
-		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, userDB, mapColumns, mapColumnTable, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(userDB, mapColumns, mapColumnTable, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	

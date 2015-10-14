@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Zip
+Bundle-SymbolicName: com.hangum.tadpole.commons.utils.zip
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.commons.utils.zip.Activator
+Bundle-Vendor: HANGUM
+Require-Bundle: org.eclipse.core.runtime,
+ org.apache.commons.io;bundle-version="2.2.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: libs/log4j-over-slf4j-1.7.12.jar,
+ libs/slf4j-api-1.7.12.jar,
+ libs/zt-zip-1.8.jar,
+ .
+Export-Package: com.hangum.tadpole.commons.utils.zip.util

@@ -114,7 +114,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmTable.setText(Messages.TadpoleSynonymComposite_0);
-		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.SYNONYM.name());
+		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
@@ -139,12 +139,12 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 					if (null != is) {
 						OracleSynonymDAO tableDAO = (OracleSynonymDAO) is.getFirstElement();
 
-						if (PublicTadpoleDefine.DB_ACTION.FUNCTIONS.toString().startsWith(tableDAO.getObject_type())) {
-							AbstractRDBDDLScript rdbScript = new OracleDDLScript(userDB, PublicTadpoleDefine.DB_ACTION.FUNCTIONS);
+						if (PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.toString().startsWith(tableDAO.getObject_type())) {
+							AbstractRDBDDLScript rdbScript = new OracleDDLScript(userDB, PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
 							ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
 							dao.setName(tableDAO.getTable_name());
 
-							FindEditorAndWriteQueryUtil.run(userDB, rdbScript.getFunctionScript(dao), PublicTadpoleDefine.DB_ACTION.FUNCTIONS);
+							FindEditorAndWriteQueryUtil.run(userDB, rdbScript.getFunctionScript(dao), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
 						}
 					}
 				} catch (Exception e) {
@@ -261,10 +261,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 * create Table menu
 	 */
 	private void createSynonymMenu() {
-		dropAction_Synonym = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "Synonym"); //$NON-NLS-1$
-		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "Synonym"); //$NON-NLS-1$
-		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "Synonym"); //$NON-NLS-1$
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.SYNONYM, "View"); //$NON-NLS-1$
+		dropAction_Synonym = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Synonym"); //$NON-NLS-1$
+		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Synonym"); //$NON-NLS-1$
+		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Synonym"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "View"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Synonym"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -15,7 +15,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -41,7 +41,7 @@ import net.sf.jsqlparser.schema.Table;
 public class DDLScriptManager {
 	protected String objectName = "";
 	protected UserDBDAO userDB;
-	protected DB_ACTION actionType;
+	protected OBJECT_TYPE actionType;
 	
 	protected AbstractRDBDDLScript rdbScript = null;
 	
@@ -52,7 +52,7 @@ public class DDLScriptManager {
 	 * @param actionType
 	 * @throws Exception
 	 */
-	public DDLScriptManager(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) throws Exception {
+	public DDLScriptManager(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE actionType) throws Exception {
 		this.userDB = userDB;
 		this.actionType = actionType;
 		
@@ -104,37 +104,37 @@ public class DDLScriptManager {
 		String retStr = "";
 		
 		// find DDL Object
-		if(PublicTadpoleDefine.DB_ACTION.TABLES == actionType) {
+		if(PublicTadpoleDefine.OBJECT_TYPE.TABLES == actionType) {
 			TableDAO tbl = (TableDAO)obj;
 			setObjectName(tbl.getName());
 			
 			retStr = rdbScript.getTableScript(tbl);
-		} else if(PublicTadpoleDefine.DB_ACTION.VIEWS == actionType) {
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.VIEWS == actionType) {
 			TableDAO tbl = (TableDAO)obj;
 			
 			setObjectName(tbl.getName());
 			retStr = rdbScript.getViewScript(tbl.getName());
-		} else if(PublicTadpoleDefine.DB_ACTION.INDEXES == actionType) {
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.INDEXES == actionType) {
 			InformationSchemaDAO index = (InformationSchemaDAO)obj;
 			setObjectName(index.getINDEX_NAME());
 			
 			retStr = rdbScript.getIndexScript(index);
-		} else if(PublicTadpoleDefine.DB_ACTION.FUNCTIONS == actionType) {
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS == actionType) {
 			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
 			setObjectName(procedure.getName());
 			
 			retStr = rdbScript.getFunctionScript(procedure);
-		} else if(PublicTadpoleDefine.DB_ACTION.PROCEDURES == actionType) {
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES == actionType) {
 			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
 			setObjectName(procedure.getName());
 			
 			retStr = rdbScript.getProcedureScript(procedure);
-		} else if(PublicTadpoleDefine.DB_ACTION.PACKAGES == actionType) {
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES == actionType) {
 			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
 			setObjectName(procedure.getName());
 			
 			retStr = rdbScript.getProcedureScript(procedure);
-		} else if(PublicTadpoleDefine.DB_ACTION.TRIGGERS == actionType) {
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS == actionType) {
 			TriggerDAO trigger = (TriggerDAO)obj;
 			setObjectName(trigger.getName());
 			

@@ -23,7 +23,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -41,7 +41,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	UserDBDAO userDB = null;
 	IStructuredSelection selection;
 
-	private PublicTadpoleDefine.DB_ACTION actionType;
+	private PublicTadpoleDefine.OBJECT_TYPE actionType;
 	
 	public AbstractObjectAction() {
 	}
@@ -52,7 +52,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param actionType view의 작업 타입
 	 * @param userDB
 	 */
-	public AbstractObjectAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType) {
+	public AbstractObjectAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		this.window = window;
 		this.actionType = actionType;
 		
@@ -186,7 +186,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param selection selection of ExplorerViewer
 	 * @param actionType
 	 */
-	abstract public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType);
+	abstract public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType);
 	
 	@Override
 	public void dispose() {

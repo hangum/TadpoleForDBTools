@@ -16,7 +16,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -40,7 +40,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	 * @param userDB
 	 * @param actionType
 	 */
-	public MSSQL_8_LE_DDLScript(UserDBDAO userDB, DB_ACTION actionType) {
+	public MSSQL_8_LE_DDLScript(UserDBDAO userDB, OBJECT_TYPE actionType) {
 		super(userDB, actionType);
 	}
 
