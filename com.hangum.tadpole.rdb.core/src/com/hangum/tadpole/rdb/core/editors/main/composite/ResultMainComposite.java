@@ -195,8 +195,8 @@ public class ResultMainComposite extends Composite {
 	 * @param throwable
 	 * @param msg
 	 */
-	public void refreshMessageView(Throwable throwable, String msg) {
-		compositeMessage.addAfterRefresh(new TadpoleMessageDAO(new Date(), msg, throwable));		
+	public void refreshMessageView(RequestQuery requestQuery, Throwable throwable, String msg) {
+		compositeMessage.addAfterRefresh(requestQuery, new TadpoleMessageDAO(new Date(), msg, throwable));		
 	}
 
 	public IWorkbenchPartSite getSite() {

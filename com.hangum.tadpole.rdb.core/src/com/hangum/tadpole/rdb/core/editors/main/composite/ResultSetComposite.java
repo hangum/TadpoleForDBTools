@@ -62,7 +62,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
@@ -74,7 +73,6 @@ import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
-import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
@@ -114,6 +112,7 @@ import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
+import org.eclipse.swt.widgets.Combo;
 
 /**
  * result set composite
@@ -284,7 +283,7 @@ public class ResultSetComposite extends Composite {
 		
 		Composite compositeBtn = new Composite(this, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(6, false);
+		GridLayout gl_compositeBtn = new GridLayout(7, false);
 		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
@@ -310,24 +309,28 @@ public class ResultSetComposite extends Composite {
 		});
 		btnDetailView.setText(Messages.ResultSetComposite_0);
 		
-		Button btnSQLResultExportCSV = new Button(compositeBtn, SWT.NONE);
-		btnSQLResultExportCSV.addSelectionListener(new SelectionAdapter() {
+		comboDownload = new Combo(compositeBtn, SWT.NONE | SWT.READ_ONLY);
+		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
+		comboDownload.add("CSV"); //$NON-NLS-1$
+		comboDownload.add("INSERT INTO statement"); //$NON-NLS-1$
+		comboDownload.select(0);
+		
+		Button btnSQLResultDownload = new Button(compositeBtn, SWT.NONE);
+		btnSQLResultDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
+		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.ResultSetComposite_4, Messages.ResultSetComposite_5)) exportResultCSVType();
+				if(MessageDialog.openConfirm(getShell(), Messages.ResultSetComposite_4, Messages.ResultSetComposite_5)) {
+					if("CSV".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportResultCSVType();	
+					} else {
+						exportInsertIntoStatement();
+					}
+				}
 			}
 			
 		});
-		btnSQLResultExportCSV.setText(Messages.MainEditor_btnExport_text);
-		
-		Button btnResultToExportSQL = new Button(compositeBtn, SWT.NONE);
-		btnResultToExportSQL.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.ResultSetComposite_4, Messages.ResultSetComposite_5)) exportInsertIntoStatement();
-			}
-		});
-		btnResultToExportSQL.setText(Messages.ResultSetComposite_10);
+		btnSQLResultDownload.setText(Messages.ResultSetComposite_11);
 		
 		compositeDumy = new Composite(compositeBtn, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
@@ -335,6 +338,7 @@ public class ResultSetComposite extends Composite {
 		
 		lblQueryResultStatus = new Label(compositeBtn, SWT.NONE);
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		new Label(compositeBtn, SWT.NONE);
 		
 		registerServiceHandler();
 	}
@@ -437,7 +441,8 @@ public class ResultSetComposite extends Composite {
 	private void exportInsertIntoStatement() {
 		try {
 			String strTableName = "TempTable"; //$NON-NLS-1$
-			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1); 
+			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
+			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
 			
 			String strPath = SQLUtil.makeFileInsertStatment(strTableName, rsDAO);
 			String strZipFile = ZipUtils.pack(strPath);
@@ -456,12 +461,14 @@ public class ResultSetComposite extends Composite {
 	private void exportResultCSVType() {
 		try {
 			String strTableName = "TempTable"; //$NON-NLS-1$
-			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1); 
+			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
+			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
+			
 			String strPath = CSVUtil.makeCSVFile(strTableName, rsDAO);
 			String strZipFile = ZipUtils.pack(strPath);
 			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
 			
-			downloadExtFile(strTableName +"CSV.zip", bytesZip);
+			downloadExtFile(strTableName +"_CSV.zip", bytesZip); //$NON-NLS-1$
 		} catch(Exception ee) {
 			logger.error("csv type export error", ee); //$NON-NLS-1$
 		}
@@ -522,9 +529,9 @@ public class ResultSetComposite extends Composite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 
 			final TadpoleResultSet trs = rsDAO.getDataList();
-			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount()); //$NON-NLS-1$ //$NON-NLS-2$
+//			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount()); //$NON-NLS-1$ //$NON-NLS-2$
 			if(trs.getData().size() > tableResult.getItemCount()) {
-				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())); //$NON-NLS-1$ //$NON-NLS-2$
+//				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())); //$NON-NLS-1$ //$NON-NLS-2$
 				if(trs.getData().size() > (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())) {
 					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
 				} else {
@@ -666,7 +673,7 @@ public class ResultSetComposite extends Composite {
 		if(jobQueryManager != null) {
 			if(Job.RUNNING == jobQueryManager.getState()) {
 				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
-				executeErrorProgress(new Exception(Messages.ResultSetComposite_1), Messages.ResultSetComposite_1);
+				executeErrorProgress(reqQuery, new Exception(Messages.ResultSetComposite_1), Messages.ResultSetComposite_1);
 				return false;
 			}
 		}
@@ -675,7 +682,7 @@ public class ResultSetComposite extends Composite {
 		try {
 			if(!ifExecuteQuery()) return false;
 		} catch(Exception e) {
-			executeErrorProgress(e, e.getMessage());
+			executeErrorProgress(reqQuery, e, e.getMessage());
 			return false;
 		}
 		
@@ -789,7 +796,7 @@ public class ResultSetComposite extends Composite {
 						if(jobEvent.getResult().isOK()) {
 							executeFinish(reqQuery, reqResultDAO);
 						} else {
-							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
+							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 						}
 						
 						// 처리를 위해 결과를 담아 둡니다.
@@ -829,6 +836,7 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
 	private Button btnDetailView;
+	private Combo comboDownload;
 	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
@@ -981,12 +989,13 @@ public class ResultSetComposite extends Composite {
 	/**
 	 * error message 추가한다.
 	 * 
+	 * @param requestQuery
 	 * @param throwable
 	 * @param msg
 	 */
-	public void executeErrorProgress(Throwable throwable, final String msg) {
+	public void executeErrorProgress(RequestQuery requestQuery, Throwable throwable, final String msg) {
 		getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		getRdbResultComposite().refreshMessageView(throwable, msg);
+		getRdbResultComposite().refreshMessageView(requestQuery, throwable, msg);
 	}
 	
 	private UserDBDAO getUserDB() {
@@ -1089,7 +1098,7 @@ public class ResultSetComposite extends Composite {
 			TableUtil.packTable(tvQueryResult.getTable());
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		} else {
-			getRdbResultComposite().refreshMessageView(null, "success. \n" + executingSQLDAO.getStrSQLText()); //$NON-NLS-1$
+			getRdbResultComposite().refreshMessageView(reqQuery, null, Messages.ResultSetComposite_10 + executingSQLDAO.getStrSQLText());
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.

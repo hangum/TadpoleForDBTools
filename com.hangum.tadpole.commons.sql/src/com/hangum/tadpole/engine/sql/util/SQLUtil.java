@@ -54,7 +54,7 @@ public class SQLUtil {
 	private static final Logger logger = Logger.getLogger(SQLUtil.class);
 	
 	/** REGEXP pattern flag */
-	private static int PATTERN_FLAG = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+	private static final int PATTERN_FLAG = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 	
 	/**
 	 * pattern statement 

@@ -225,15 +225,13 @@ public class PublicTadpoleDefine {
 	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
 
-	/** SQL TYPE
-	 * http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands
-	 */
-	public static enum SQL_TYPE {DDL, DML, DCL, TCL};
+	/** sql type - http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands */
+	public static enum SQL_TYPE {DDL, DML};//, DCL, TCL};
 
 	/** query type */
-	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNOWN};
+	public static enum QUERY_TYPE {SELECT, EXPLAIN_PLAN, INSERT, UPDATE, DELETE, DDL, TEC, UNKNOWN};
 	
-	/** query ddl type, 현재 jsqlparser에서는 이 세가지 타입만을 지원합니다 */
+	/** query ddl type */
 	public static enum QUERY_DDL_TYPE {TABLE, VIEW, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, UNKNOWN};
 	
 	public static String[] DB_PRIMARY_KEY = {

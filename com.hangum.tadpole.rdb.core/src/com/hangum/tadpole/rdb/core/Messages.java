@@ -519,7 +519,6 @@ public class Messages extends NLS {
 	public static String SQLToStringDialog_3;
 	public static String SQLToStringDialog_4;
 	public static String SQLToStringDialog_6;
-	public static String MainEditor_btnExport_text;
 	public static String MainEditorInput_0;
 	public static String MainEditorInput_3;
 	public static String MainEditorInput_4;
@@ -734,6 +733,7 @@ public class Messages extends NLS {
 	public static String ResultSetComposite_0;
 	public static String ResultSetComposite_1;
 	public static String ResultSetComposite_10;
+	public static String ResultSetComposite_11;
 	public static String ResultSetComposite_2;
 	public static String ResultSetComposite_3;
 	public static String ResultSetComposite_4;

@@ -259,14 +259,14 @@ public class ObjectEditor extends MainEditor {
 				
 			} finally {
 				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
-					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 					
 					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 						mysqlAfterProcess(reqResultDAO, reqQuery);
 					}
 					
 				} else {
-					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqResultDAO, Messages.ObjectEditor_2);
 				}
 
 				setDirty(false);
@@ -282,16 +282,17 @@ public class ObjectEditor extends MainEditor {
 	/**
 	 * after process
 	 * 
+	 * @param reqQuery
 	 * @param reqResultDAO
 	 * @param title
 	 */
-	private void afterProcess(RequestResultDAO reqResultDAO, String title) {
+	private void afterProcess(RequestQuery reqQuery, RequestResultDAO reqResultDAO, String title) {
 		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
-			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
+			resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
 		} else {
-			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getStrSQLText())); //$NON-NLS-1$
+			resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getStrSQLText())); //$NON-NLS-1$
 		}
 	}
 	
@@ -312,12 +313,12 @@ public class ObjectEditor extends MainEditor {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
 					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", cmd); //$NON-NLS-1$
-					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 					
 					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
-					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 				} catch(Exception ee) {
-					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 				}
 			}
 		}	

@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * Result Message Composite
@@ -61,10 +62,11 @@ public class MessageComposite extends Composite {
 	/**
 	 * table view refresh
 	 * 
+	 * @param requestQuery
 	 * @param tadpoleMessageDAO
 	 */
-	public void addAfterRefresh(TadpoleMessageDAO tadpoleMessageDAO) {
-		String strNewMessage = "";
+	public void addAfterRefresh(RequestQuery requestQuery, TadpoleMessageDAO tadpoleMessageDAO) {
+		String strNewMessage = ""; //$NON-NLS-1$
 
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if (throwable == null) {
