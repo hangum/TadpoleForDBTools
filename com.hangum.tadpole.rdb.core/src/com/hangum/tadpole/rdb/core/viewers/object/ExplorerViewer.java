@@ -625,11 +625,22 @@ public class ExplorerViewer extends ViewPart {
 	 * @param reqQuery
 	 */
 	public void refreshCurrentTab(UserDBDAO chgUserDB, final RequestQuery reqQuery) {
-		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		if(reqQuery.getSqlDDLType() == null) return;
 		
 		QUERY_DDL_TYPE queryDDLType = reqQuery.getSqlDDLType();
 		String strObjectName = reqQuery.getSqlObjectName();
+		
+		refreshCurrentTab(queryDDLType, strObjectName, chgUserDB);
+	}
+	
+	/**
+	 * 
+	 * @param queryDDLType
+	 * @param strObjectName
+	 * @param chgUserDB
+	 */
+	public void refreshCurrentTab(QUERY_DDL_TYPE queryDDLType, String strObjectName, UserDBDAO chgUserDB) {
+		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		
 		if(queryDDLType == QUERY_DDL_TYPE.TABLE) {
 			refershSelectObject(OBJECT_TYPE.TABLES.name(), strObjectName);

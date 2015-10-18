@@ -63,8 +63,6 @@ public class TadpoleSystemCommons {
 			reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
 			reqResultDAO.setMesssage(e.getMessage());
 			reqResultDAO.setException(e);
-			
-//			throw e;
 		} finally {
 			reqResultDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
 		}
@@ -82,31 +80,22 @@ public class TadpoleSystemCommons {
 	 */
 	private static boolean _executSQL(UserDBDAO userDB, QUERY_DDL_TYPE query_DDL_TYPE, String objName, String strSQL) throws TadpoleSQLManagerException, SQLException {
 		java.sql.Connection javaConn = null;
+		Statement stmt = null;
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
-			Statement stmt = javaConn.createStatement();
-
+			stmt = javaConn.createStatement();
 			return stmt.execute(strSQL);
 			
 		} finally {
-			// save schema history
-//			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, 
-//				"EDITOR",
-//				executeType,
-//				"",
-//				strSQL);
-//			try {
-				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB,
-						"EDITOR", //$NON-NLS-1$
-						query_DDL_TYPE.name(),
-						objName,
-						strSQL);
-//			} catch(Exception e) {
-//				logger.error("save schemahistory", e); //$NON-NLS-1$
-//			}
+			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB,
+					"EDITOR", //$NON-NLS-1$
+					query_DDL_TYPE.name(),
+					objName,
+					strSQL);
 			
+			try { if(stmt != null) stmt.close(); } catch(Exception e) {}
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 			
 		}

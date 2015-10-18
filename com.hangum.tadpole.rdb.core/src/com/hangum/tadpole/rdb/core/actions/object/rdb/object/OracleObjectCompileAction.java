@@ -10,9 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
-import java.sql.ResultSet;
-import java.sql.Statement;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,14 +20,13 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.OracleObjectCompileUtils;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -55,27 +51,25 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-		if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
-			if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {			
-				
-			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
-				ViewCompile(selection, userDB);	
-			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+		if (DBDefine.getDBDefine(userDB) != DBDefine.ORACLE_DEFAULT) return;
+		
+		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {			
 			
-			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
-				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
-				OtherObjectCompile("PROCEDURE", dao.getName().trim().toUpperCase(), userDB);			
-			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
-				packageCompile(selection, userDB);
-			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
-				ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
-				OtherObjectCompile("FUNCTION",  dao.getName().trim().toUpperCase(), userDB);			
-			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
-				TriggerDAO dao = (TriggerDAO)selection.getFirstElement();
-				OtherObjectCompile("TRIGGER",  dao.getName().trim().toUpperCase(), userDB);			
-			} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT) {
-			
-			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+			viewCompile((String)selection.getFirstElement(), userDB);	
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+		
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
+			ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
+			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE, "PROCEDURE", dao.getName().trim().toUpperCase(), userDB);			
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
+			packageCompile((ProcedureFunctionDAO)selection.getFirstElement(), userDB);
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
+			ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
+			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.FUNCTION, "FUNCTION",  dao.getName().trim().toUpperCase(), userDB);			
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
+			TriggerDAO dao = (TriggerDAO)selection.getFirstElement();
+			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.TRIGGER, "TRIGGER",  dao.getName().trim().toUpperCase(), userDB);			
 		}
 	}
 	
@@ -85,31 +79,10 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	 * @param selection
 	 * @param userDB
 	 */
-	public void ViewCompile(IStructuredSelection selection, UserDBDAO userDB) {
-		String viewName = (String)selection.getFirstElement();
-		
-		String sqlQuery = "ALTER VIEW " + userDB.getUsers() + "." + viewName.trim().toUpperCase() + " COMPILE ";
-
-		java.sql.Connection javaConn = null;
-		Statement statement = null;
-		ResultSet rs = null;
+	public void viewCompile(String viewName, UserDBDAO userDB) {
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
-			
-			statement = javaConn.createStatement();
-			statement.execute(sqlQuery);
-			
-			sqlQuery = "Select * From sys.user_Errors where name='"+ viewName.trim().toUpperCase() +"' and type = 'VIEW' order by type, sequence ";
-			
-			rs = statement.executeQuery(sqlQuery);
-			
-			StringBuffer result = new StringBuffer("Complete object compile...\n\n");
-			while (rs.next()) {
-				result.append("[" + rs.getString("line") + "Line / " + rs.getString("line") + "Column] " + rs.getString("text") + "\n");
-			}
-			
-			TDBInfoDialog dialog = new TDBInfoDialog(null, "Compile result", result.toString());
+			String result = OracleObjectCompileUtils.viewCompile(viewName, userDB);
+			TDBInfoDialog dialog = new TDBInfoDialog(null, "Compile result", result);
 			dialog.open();
 			
 		} catch (Exception e) {
@@ -118,43 +91,21 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", viewName + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
-			try { rs.close();} catch(Exception e) {}
-			try { statement.close();} catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e){}
-
-			this.refreshPackage();
+			refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW, viewName.trim(), userDB);
 		}
 	}
 	
 	/**
 	 * other object compile
 	 * 
+	 * @param actionType 
 	 * @param objType
 	 * @param objName
 	 * @param userDB
 	 */
-	public void OtherObjectCompile(String objType, String objName, UserDBDAO userDB) {
-		String sqlQuery = "ALTER "+objType+" " + userDB.getUsers() + "." + objName.trim().toUpperCase() + " COMPILE DEBUG ";
-
-		java.sql.Connection javaConn = null;
-		Statement statement = null;
-		ResultSet rs = null;
+	public void otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objType, String objName, UserDBDAO userDB) {
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
-			
-			statement = javaConn.createStatement();
-			statement.execute(sqlQuery);
-			
-			sqlQuery = "Select * From sys.user_Errors where name='"+ objName +"' and type = '"+objType+"' order by type, sequence ";
-			
-			rs = statement.executeQuery(sqlQuery);
-			
-			StringBuffer result = new StringBuffer("Complete object compile...\n\n");
-			while (rs.next()) {
-				result.append("[" + rs.getString("line") + "Line / " + rs.getString("line") + "Column] " + rs.getString("text") + "\n");
-			}
-			
+			String result = OracleObjectCompileUtils.otherObjectCompile(actionType, objType, objName, userDB);
 			TDBInfoDialog dialog = new TDBInfoDialog(null, "Compile result", result.toString());
 			dialog.open();
 			
@@ -164,48 +115,19 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", objName + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
-			try { rs.close();} catch(Exception e) {}
-			try { statement.close();} catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e){}
-
-			this.refreshPackage();
+			refreshObject(actionType, objName, userDB);
 		}
 	}
 	
 	/**
 	 * package compile
 	 * 
-	 * @param selection
+	 * @param procedureDAO
 	 * @param userDB
 	 */
-	public void packageCompile(IStructuredSelection selection, UserDBDAO userDB) {
-		
-		ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
-		
-		String sqlQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + procedureDAO.getName().trim().toUpperCase() + " COMPILE DEBUG SPECIFICATION ";
-		String sqlBodyQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + procedureDAO.getName().trim().toUpperCase() + " COMPILE DEBUG BODY ";
-
-		java.sql.Connection javaConn = null;
-		Statement statement = null;
-		ResultSet rs = null;
+	public void packageCompile(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
-			
-			statement = javaConn.createStatement();
-			statement.execute(sqlQuery);
-			statement.execute(sqlBodyQuery);
-			
-			
-			sqlQuery = "Select * From sys.user_Errors where name='"+ procedureDAO.getName().trim().toUpperCase() +"' and type in ('PACKAGE', 'PACKAGE BODY') order by type, sequence ";
-			
-			rs = statement.executeQuery(sqlQuery);
-			
-			StringBuffer result = new StringBuffer("Complete object compile...\n\n");
-			while (rs.next()) {
-				result.append("[" + rs.getString("line") + "Line / " + rs.getString("line") + "Column] " + rs.getString("text") + "\n");
-			}
-			
+			String result = OracleObjectCompileUtils.packageCompile(procedureDAO.getName(), userDB);
 			TDBInfoDialog dialog = new TDBInfoDialog(null, "Compile result", result.toString());
 			dialog.open();
 			
@@ -215,11 +137,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", procedureDAO.getName() + " compile error", errStatus); //$NON-NLS-1$
 		} finally {
-			try { rs.close();} catch(Exception e) {}
-			try { statement.close();} catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e){}
-
-			this.refreshPackage();
+			refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE.PACKAGE, procedureDAO.getName(), userDB);
 		}
 	}
 	

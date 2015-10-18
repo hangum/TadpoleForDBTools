@@ -49,6 +49,7 @@ import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
@@ -80,9 +81,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Procedure;
 	private ObjectDropAction dropAction_Procedure;
 	private ObjectRefreshAction refreshAction_Procedure;
-	private GenerateViewDDLAction viewDDLAction;
-	private ObjectExecuteProcedureAction executeAction_Procedure;
-	private OracleObjectCompileAction objectCompileAction;
+	private AbstractObjectSelectAction viewDDLAction;
+	private AbstractObjectSelectAction executeAction_Procedure;
+	private AbstractObjectSelectAction objectCompileAction;
 
 	/**
 	 * procedure

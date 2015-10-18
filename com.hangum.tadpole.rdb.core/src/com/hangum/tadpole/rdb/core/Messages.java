@@ -661,7 +661,9 @@ public class Messages extends NLS {
 	public static String ObjectEditor_13;
 	public static String ObjectEditor_2;
 	public static String ObjectEditor_3;
+	public static String ObjectEditor_4;
 	public static String ObjectEditor_5;
+	public static String ObjectEditor_7;
 	public static String ObjectRefreshAction_1;
 	public static String RDBDBInfosEditor_1;
 	public static String RDBDBInfosEditor_2;

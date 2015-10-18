@@ -140,6 +140,18 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * refresh object
+	 * 
+	 * @param actionType
+	 * @param objName
+	 * @param userDB
+	 */
+	protected void refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objName, UserDBDAO userDB) {
+		ExplorerViewer ev = getExplorerView();
+		ev.refreshCurrentTab(actionType, objName, userDB);
+	}
+	
+	/**
 	 * Trigger 최신정보로 갱신
 	 */
 	protected void refreshTrigger() {

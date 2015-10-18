@@ -42,7 +42,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.sql.util.OracleObjectCompileUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -52,9 +52,8 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
-
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 /**
  * Object Editor
  * 
@@ -216,9 +215,9 @@ public class ObjectEditor extends MainEditor {
 				if(event.getProperty() == PreferenceDefine.EDITOR_CHANGE_EVENT) {
 					final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
 				    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
-				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp(); //$NON-NLS-1$
 				    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
-				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
+				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter(); //$NON-NLS-1$
 				    
 				    browserEvaluate(IEditorFunction.CHANGE_EDITOR_STYLE, 
 							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
@@ -255,16 +254,16 @@ public class ObjectEditor extends MainEditor {
 			}
 			
 			if(logger.isDebugEnabled()) {
-				logger.debug("============================================================================");
+				logger.debug("============================================================================"); //$NON-NLS-1$
 				logger.debug(reqQuery.toString());
-				logger.debug("============================================================================");
+				logger.debug("============================================================================"); //$NON-NLS-1$
 			}
 			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
 				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
 			} catch(Exception e) {
-				logger.error("execute ddl", e);
+				logger.error("execute ddl", e); //$NON-NLS-1$
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
 				reqResultDAO.setMesssage(e.getMessage());
 				
@@ -277,6 +276,20 @@ public class ObjectEditor extends MainEditor {
 					}
 					
 				} else {
+					if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+						String retMsg = Messages.ObjectEditor_4;
+						try {
+							retMsg = oracleAfterProcess(reqResultDAO, reqQuery);
+							if(!"".equals(retMsg)) { //$NON-NLS-1$
+								retMsg = Messages.ObjectEditor_7 + retMsg;
+							}
+						} catch(Exception e) {
+							logger.error("Oracle Object compile", e); //$NON-NLS-1$
+						}
+
+						reqResultDAO.setMesssage(retMsg);
+					}
+					
 					afterProcess(reqQuery, reqResultDAO, Messages.ObjectEditor_2);
 				}
 
@@ -291,6 +304,32 @@ public class ObjectEditor extends MainEditor {
 	}
 	
 	/**
+	 * oracle object 
+	 * 컴파일 후 - 오브젝트 상태를 표시해 줄수 있도록 합니다. 
+	 * 
+	 * @param reqResultDAO
+	 * @param reqQuery
+	 * @return
+	 */
+	private String oracleAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) throws Exception {
+		String retMsg = ""; //$NON-NLS-1$
+		
+		QUERY_DDL_TYPE ddlType = reqQuery.getSqlDDLType();
+		String strObjectName = reqQuery.getSqlObjectName();
+		if(ddlType == QUERY_DDL_TYPE.PROCEDURE) {
+			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.PROCEDURE, "PROCEDURE", strObjectName.toUpperCase(), userDB); //$NON-NLS-1$
+		} else if(ddlType == QUERY_DDL_TYPE.PACKAGE) {
+			retMsg = OracleObjectCompileUtils.packageCompile(strObjectName, userDB);
+		} else if(ddlType == QUERY_DDL_TYPE.FUNCTION) {
+			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.FUNCTION, "FUNCTION", strObjectName.toUpperCase(), userDB);			 //$NON-NLS-1$
+		} else if(ddlType == QUERY_DDL_TYPE.TRIGGER) {
+			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.TRIGGER, "TRIGGER",  strObjectName.toUpperCase(), userDB);			 //$NON-NLS-1$
+		}
+		
+		return retMsg;
+	}
+
+	/**
 	 * after process
 	 * 
 	 * @param reqQuery
@@ -300,10 +339,9 @@ public class ObjectEditor extends MainEditor {
 	private void afterProcess(RequestQuery reqQuery, RequestResultDAO reqResultDAO, String title) {
 		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
-			resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
-		} else {
-			resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getStrSQLText())); //$NON-NLS-1$
+		resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
+		
+		if(PublicTadpoleDefine.SUCCESS_FAIL.S.name().equals(reqResultDAO.getResult())) {
 			refreshExplorerView(getUserDB(), reqQuery);
 		}
 	}
