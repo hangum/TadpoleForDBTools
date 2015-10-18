@@ -177,7 +177,7 @@ public class PreferenceDefine {
 	public static final String EDITOR_THEME_VALUE	= "Chrome";
 	
 	public static final String EDITOR_FONT_SIZE 		= "EDITOR_FONT_SIZE";
-	public static final String EDITOR_FONT_SIZE_VALUE 	= "11";
+	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";
 	
 	public static final String EDITOR_IS_WARP 		= "EDITOR_IS_WARP";
 	public static final String EDITOR_IS_WARP_VALUE = "true";
