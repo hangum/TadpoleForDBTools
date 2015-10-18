@@ -371,7 +371,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		if(StringUtils.isEmpty(StringUtils.trim(sbColumn.toString()))) sbColumn.append(" * " ); //$NON-NLS-1$
 		
 		resultSQL.append(sbColumn.toString());
-		resultSQL.append("FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append(" FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 		cnt = 0;
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$

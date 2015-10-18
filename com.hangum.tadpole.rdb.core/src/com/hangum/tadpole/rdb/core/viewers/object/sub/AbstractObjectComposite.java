@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,6 +35,8 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
  */
 public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
+	protected CTabFolder tabFolderObject;
+	
 	/** TAB DATA KEY */
 	public static String TAB_DATA_KEY = "DB_ACTION";
 	
@@ -84,10 +87,11 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param parent
 	 * @param userDB
 	 */
-	public AbstractObjectComposite(IWorkbenchPartSite site, Composite parent, UserDBDAO userDB) {
-		super(parent, SWT.NONE);
+	public AbstractObjectComposite(IWorkbenchPartSite site, CTabFolder tabFolderObject, UserDBDAO userDB) {
+		super(tabFolderObject, SWT.NONE);
 		
 		this.site = site;
+		this.tabFolderObject = tabFolderObject;
 		this.userDB = userDB;
 	}
 	
@@ -121,6 +125,11 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * init action
 	 */
 	public abstract void initAction();
+	
+	/**
+	 * select data of table
+	 */
+	public abstract void selectDataOfTable(String strObjectName);
 
 	/**
 	 * 테이블, 테이블 컬럼의 컬럼을 에디트 할수 있는지.
@@ -235,6 +244,14 @@ public abstract class AbstractObjectComposite extends Composite {
 		};
 		
 		return adapter;
+	}
+	
+	/**
+	 * get tabFolder
+	 * @return
+	 */
+	protected CTabFolder getTabFolderObject() {
+		return tabFolderObject;
 	}
 	
 	@Override

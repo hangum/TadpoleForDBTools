@@ -12,7 +12,9 @@ package com.hangum.tadpole.rdb.core.dialog.msg;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.rdb.core.Messages;
@@ -33,6 +35,12 @@ public class TDBInfoDialog extends TDBErroDialog {
 	 */
 	public TDBInfoDialog(Shell parentShell, String title, String message) {
 		super(parentShell, title, message);
+	}
+	
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		setMessage(title, IMessageProvider.ERROR);
+		return super.createDialogArea(parent);
 	}
 
 	/**

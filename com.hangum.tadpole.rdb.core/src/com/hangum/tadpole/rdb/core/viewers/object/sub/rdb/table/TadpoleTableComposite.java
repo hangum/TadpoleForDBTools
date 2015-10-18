@@ -112,7 +112,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleTableComposite.class);
-	
+	private CTabItem tbtmTable;	
 	/** selected table name */
 	private String selectTableName = ""; //$NON-NLS-1$
 
@@ -169,7 +169,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
-		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmTable.setText(Messages.TadpoleTableComposite_0);
 		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.TABLES.name());
 
@@ -595,24 +595,11 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
 							tableListViewer.setInput(listTablesDAO);
-							
-							// if strObjectName is not empty, select object
-							if("".equals(strObjectName) || strObjectName == null) { //$NON-NLS-1$
-								tableListViewer.refresh();
-							} else {
-								// find select object and viewer select
-								TableDAO selectTable = null;
-								for (TableDAO tableDao : listTablesDAO) {
-									if(strObjectName.equals(tableDao.getName())) {
-										selectTable = tableDao;
-										break;
-									}
-								}
-								tableListViewer.setSelection(new StructuredSelection(selectTable), true);
-							}
-							
 							TableUtil.packTable(tableListViewer.getTable());
+							// select tabitem
+							getTabFolderObject().setSelection(tbtmTable);
 							
+							selectDataOfTable(strObjectName);
 						} else {
 							if (listTablesDAO != null) listTablesDAO.clear();
 							tableListViewer.setInput(listTablesDAO);
@@ -681,7 +668,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// setting UserDBDAO 
 		userDB.setListTable(showTables);
-//		userDB.setTableListSeparator(StringUtils.removeEnd(strTablelist.toString(), "|")); //$NON-NLS-1$
 
 		// content assist util
 		MakeContentAssistUtil contentAssistUtil = new MakeContentAssistUtil();
@@ -876,5 +862,21 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableDataEditorAction.dispose();
 		
 		tableColumnSelectionAction.dispose();
+	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if("".equals(strObjectName) || strObjectName == null) return;
+		
+		tableListViewer.getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<listTablesDAO.size(); i++) {
+			TableDAO tableDao = (TableDAO)tableListViewer.getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+				tableListViewer.setSelection(new StructuredSelection(tableListViewer.getElementAt(i)), true);
+				break;
+			}
+		}
 	}
 }

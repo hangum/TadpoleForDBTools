@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,6 +24,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -68,6 +70,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleProcedureComposite.class);
 
+	private CTabItem tbtmProcedures;
+	
 	private TableViewer procedureTableViewer;
 	private ProcedureFunctionComparator procedureComparator;
 	private List<ProcedureFunctionDAO> showProcedure;
@@ -93,7 +97,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	}
 
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText(Messages.TadpoleProcedureComposite_0);
 		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name());
 
@@ -214,8 +218,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 	/**
 	 * procedure 정보를 최신으로 갱신 합니다.
+	 * @param strObjectName 
 	 */
-	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh) {
+	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if (!boolRefresh) {
 			if (showProcedure != null) return;
 		}
@@ -228,7 +233,11 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			procedureTableViewer.refresh();
 			
 			TableUtil.packTable(procedureTableViewer.getTable());
+			
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmProcedures);
 
+			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
 			logger.error("showProcedure refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -261,5 +270,20 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		executeAction_Procedure.dispose();
 		objectCompileAction.dispose();
 	}
-	
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if("".equals(strObjectName) || strObjectName == null) return;
+		
+		getTableViewer().getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<showProcedure.size(); i++) {
+			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getTableViewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+				getTableViewer().setSelection(new StructuredSelection(getTableViewer().getElementAt(i)), true);
+				break;
+			}
+		}		
+	}
 }

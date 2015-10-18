@@ -8,11 +8,12 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.parser;
+package com.hangum.tadpole.engine.sql.parser.dto;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_STATUS;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 
 /**
@@ -30,13 +31,16 @@ public class QueryInfoDTO {
 	private SQL_TYPE sqlType = SQL_TYPE.DML;
 
 	/** query type */
-	private QUERY_TYPE queryType = QUERY_TYPE.SELECT;
+	private QUERY_DML_TYPE queryType = QUERY_DML_TYPE.SELECT;
 	
 	/** query ddl type */
 	private QUERY_DDL_TYPE queryDDLType = QUERY_DDL_TYPE.TABLE;
+	/** if ddl type is name of object */
+	private String objectName = "";
+	/** DDL 일 경우 쿼리의 상태 */
+	private QUERY_DDL_STATUS queryStatus = QUERY_DDL_STATUS.CREATE;
 	
-	public QueryInfoDTO() {
-	}
+	public QueryInfoDTO() {}
 
 	/**
 	 * @return the isStatement
@@ -69,14 +73,14 @@ public class QueryInfoDTO {
 	/**
 	 * @return the queryType
 	 */
-	public PublicTadpoleDefine.QUERY_TYPE getQueryType() {
+	public PublicTadpoleDefine.QUERY_DML_TYPE getQueryType() {
 		return queryType;
 	}
 
 	/**
 	 * @param queryType the queryType to set
 	 */
-	public void setQueryType(PublicTadpoleDefine.QUERY_TYPE queryType) {
+	public void setQueryType(PublicTadpoleDefine.QUERY_DML_TYPE queryType) {
 		this.queryType = queryType;
 	}
 
@@ -93,5 +97,33 @@ public class QueryInfoDTO {
 	public void setQueryDDLType(PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
 		this.queryDDLType = queryDDLType;
 	}
-	
+
+	/**
+	 * @return the objectName
+	 */
+	public String getObjectName() {
+		return objectName;
+	}
+
+	/**
+	 * @param objectName the objectName to set
+	 */
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
+	}
+
+	/**
+	 * @return the queryStatus
+	 */
+	public QUERY_DDL_STATUS getQueryStatus() {
+		return queryStatus;
+	}
+
+	/**
+	 * @param queryStatus the queryStatus to set
+	 */
+	public void setQueryStatus(QUERY_DDL_STATUS queryStatus) {
+		this.queryStatus = queryStatus;
+	}
+
 }

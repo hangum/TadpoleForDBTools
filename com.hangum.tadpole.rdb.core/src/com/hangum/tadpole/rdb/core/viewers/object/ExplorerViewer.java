@@ -34,12 +34,15 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
@@ -127,40 +130,40 @@ public class ExplorerViewer extends ViewPart {
 				String strSelectTab = ""+tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getData(AbstractObjectComposite.TAB_DATA_KEY);
 				String strSearchText = textSearch.getText();
 				
-				if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.COLLECTIONS.name())) {
+				if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.COLLECTIONS.name())) {
 					mongoCollectionComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
 					tableComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
 					synonymComposite.filter(strSearchText);
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SCHEDULE.name())) {
+//				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SCHEDULE.name())) {
 //					scheduleComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 					viewComposite.filter(strSearchText);					
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
 					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 						mongoIndexComposite.filter(strSearchText);
 					} else {
 						indexComposite.filter(strSearchText);
 					}					
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
 					procedureComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
 					packageComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
 					functionCompostite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
 					triggerComposite.filter(strSearchText);
 				
-				} else if (strSelectTab.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT.name())) {
+				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 					mongoJavaScriptComposite.filter(strSearchText);
 				}
 			}
@@ -300,8 +303,8 @@ public class ExplorerViewer extends ViewPart {
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
-				tableComposite.getTableColumnViewer(),
-				viewComposite.getViewListViewer(), 
+//				tableComposite.getTableColumnViewer(),
+				viewComposite.getTableViewer(), 
 				indexComposite.getTableViewer(), 
 				triggerComposite.getTableViewer()
 			};
@@ -320,8 +323,8 @@ public class ExplorerViewer extends ViewPart {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(),
-				tableComposite.getTableColumnViewer()
+				tableComposite.getTableListViewer()
+//				tableComposite.getTableColumnViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
@@ -351,14 +354,13 @@ public class ExplorerViewer extends ViewPart {
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(),
-				tableComposite.getTableColumnViewer(),
-				viewComposite.getViewListViewer(), 
-				synonymComposite.getSynonymListViewer(),
-				synonymComposite.getSynonymColumnViewer(),
+//				tableComposite.getTableColumnViewer(),
+				viewComposite.getTableViewer(), 
+				synonymComposite.getTableviewer(),
 				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
 				packageComposite.getTableViewer(), 
-				packageComposite.getSubTableViewer(),
+				packageComposite.getTableViewer(),
 				functionCompostite.getTableviewer(), 
 				triggerComposite.getTableViewer(),
 //				scheduleComposite.getTableViewer()
@@ -375,8 +377,8 @@ public class ExplorerViewer extends ViewPart {
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
-				tableComposite.getTableColumnViewer(),
-				viewComposite.getViewListViewer(), 
+//				tableComposite.getTableColumnViewer(),
+				viewComposite.getTableViewer(), 
 				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
 				functionCompostite.getTableviewer(), 
@@ -401,30 +403,29 @@ public class ExplorerViewer extends ViewPart {
 	 * 현재 선택된 tab을 리프레쉬합니다.
 	 * 
 	 * @param strSelectItemText TabItem text
+	 * @param strObjectName
 	 */
 	private void refershSelectObject(String strSelectItemText, String strObjectName) {
-//		테이블 초기화 될때 무조건 리프레쉬 되므로 다시리프레쉬 되는것을 막습니다.
-		if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name())) {
-			if(tabFolderObject.getSelectionIndex() != 0) tabFolderObject.setSelection(0);
+
+		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
 			refreshTable(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name())) {
-			if(tabFolderObject.getSelectionIndex() != 1) tabFolderObject.setSelection(1);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 			refreshView(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
 			refreshSynonym(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
 			refreshIndexes(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
 			refreshProcedure(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
 			refreshPackage(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
 			refreshFunction(false, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
 			refreshTrigger(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.SCHEDULE.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SCHEDULE.name())) {
 			refreshSchedule(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT.name())) {
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 			refreshJS(false, strObjectName);
 		}
 		
@@ -436,7 +437,7 @@ public class ExplorerViewer extends ViewPart {
 	 * selected tab refresh
 	 */
 	private void refreshSelectTab() {
-		if(logger.isDebugEnabled()) logger.debug("tabFolderObject.getSelection().getText()" + tabFolderObject.getSelection().getText());
+//		if(logger.isDebugEnabled()) logger.debug("tabFolderObject.getSelection().getText()" + tabFolderObject.getSelection().getText());
 		refershSelectObject(tabFolderObject.getSelection().getText(), "");
 	}
 	
@@ -542,14 +543,14 @@ public class ExplorerViewer extends ViewPart {
 	 * Synonym 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshSynonym(boolean boolRefresh, String strObjectName) {
-		synonymComposite.refreshSynonym(getUserDB(), boolRefresh);
+		synonymComposite.refreshSynonym(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**
 	 * view 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshView(boolean boolRefresh, String strObjectName) {
-		viewComposite.refreshView(getUserDB(), boolRefresh);
+		viewComposite.refreshView(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**
@@ -559,7 +560,7 @@ public class ExplorerViewer extends ViewPart {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
 			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
 		} else {
-			indexComposite.refreshIndexes(getUserDB(), boolRefresh);
+			indexComposite.refreshIndexes(getUserDB(), boolRefresh, strObjectName);
 		}
 	}
 
@@ -567,32 +568,32 @@ public class ExplorerViewer extends ViewPart {
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshProcedure(boolean boolRefresh, String strObjectName) {
-		procedureComposite.refreshProcedure(userDB, boolRefresh);
+		procedureComposite.refreshProcedure(userDB, boolRefresh, strObjectName);
 	}
 
 	/**
 	 * package 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshPackage(boolean boolRefresh, String strObjectName) {
-		packageComposite.refreshPackage(userDB, boolRefresh);
+		packageComposite.refreshPackage(userDB, boolRefresh, strObjectName);
 	}
 	
 	public void refreshSchedule(boolean boolRefresh, String strObjectName) {
-		scheduleComposite.refreshSchedule(userDB, boolRefresh);
+//		scheduleComposite.refreshSchedule(userDB, boolRefresh, strObjectName);
 	}
 
 	/**
 	 * trigger 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
-		triggerComposite.refreshTrigger(userDB, boolRefresh);
+		triggerComposite.refreshTrigger(userDB, boolRefresh, strObjectName);
 	}
 
 	/**
 	 * function 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshFunction(boolean boolRefresh, String strObjectName) {
-		functionCompostite.refreshFunction(userDB, boolRefresh);
+		functionCompostite.refreshFunction(userDB, boolRefresh, strObjectName);
 	}
 
 	/**
@@ -618,42 +619,37 @@ public class ExplorerViewer extends ViewPart {
 	}
 	
 	/**
-	 * refresh current tab
-	 * 
-	 * @param chgUserDB
-	 * @param queryDDLType
-	 * @param strObjectName
-	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType, String strObjectName) {
-		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
-		
-		if(queryDDLType != null) {
-			if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.TABLE) {
-				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name(), strObjectName);
-			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW) {
-				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name(), strObjectName);
-			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.INDEX) {
-				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name(), strObjectName);
-			} else if(queryDDLType == PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE) {
-				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name(), strObjectName);
-				
-			} else {
-				refreshSelectTab();
-			// TO DO This code is temporary. do not understand refresh object is table view refresh. --;; - 15.4.20. hangum
-//			} else {
-//				refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name(), "");
-			}
-		}
-	}
-
-	/**
 	 *  refresh object
 	 * 
 	 * @param chgUserDB
-	 * @param schemaDao
+	 * @param reqQuery
 	 */
-	public void refreshCurrentTab(UserDBDAO chgUserDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
-		refreshCurrentTab(chgUserDB, queryDDLType, "");
+	public void refreshCurrentTab(UserDBDAO chgUserDB, final RequestQuery reqQuery) {
+		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
+		if(reqQuery.getSqlDDLType() == null) return;
+		
+		QUERY_DDL_TYPE queryDDLType = reqQuery.getSqlDDLType();
+		String strObjectName = reqQuery.getSqlObjectName();
+		
+		if(queryDDLType == QUERY_DDL_TYPE.TABLE) {
+			refershSelectObject(OBJECT_TYPE.TABLES.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.VIEW) {
+			refershSelectObject(OBJECT_TYPE.VIEWS.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.INDEX) {
+			refershSelectObject(OBJECT_TYPE.INDEXES.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.PROCEDURE) {
+			refershSelectObject(OBJECT_TYPE.PROCEDURES.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.FUNCTION) {
+			refershSelectObject(OBJECT_TYPE.FUNCTIONS.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
+			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.PACKAGE) {
+			refershSelectObject(OBJECT_TYPE.PACKAGES.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.SYNONYM) {
+			refershSelectObject(OBJECT_TYPE.SYNONYM.name(), strObjectName);
+		} else {
+			refreshSelectTab();
+		}
 	}
 	
 	@Override

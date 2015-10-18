@@ -199,7 +199,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				});
 
 				// if select statement update
-				if(PublicTadpoleDefine.QUERY_TYPE.SELECT == reqQuery.getQueryType() && isEditable) {
+				if(PublicTadpoleDefine.QUERY_DML_TYPE.SELECT == reqQuery.getSqlDMLType() && isEditable) {
 					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
 				}
 				

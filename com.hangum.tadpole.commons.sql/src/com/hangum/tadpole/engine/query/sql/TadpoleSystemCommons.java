@@ -20,8 +20,11 @@ import org.eclipse.rap.rwt.RWT;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.parser.ddl.ParserDDL;
+import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -41,30 +44,21 @@ public class TadpoleSystemCommons {
 	 * 쿼리중에 quote sql을 반영해서 작업합니다.
 	 * 
 	 * @param userDB
-	 * @param executeType
-	 * @param strDML
-	 * @param args
+	 * @param sql
 	 * @throws Exception
 	 */
-	public static RequestResultDAO executSQL(UserDBDAO userDB, String executeType, String strDML, String ... args) throws Exception {
-		String strQuery = "";
-		
-		// sql에 포멧터의 특수문자가 있는 경우 오라클의 v_hist_sequ   indwrk_hist.hist_sequ%TYPE; 경우에러.
-		// 잠재적인 에러 요인인데.. - hyunjong
-		try {
-			if(logger.isDebugEnabled()) logger.debug(String.format(strDML, args));
-			strQuery = String.format(strDML, args);
-		} catch(Exception e) {
-			strQuery = strDML;
-		}
+	public static RequestResultDAO executSQL(UserDBDAO userDB, String sql) throws Exception {
 		
 		RequestResultDAO reqResultDAO = new RequestResultDAO();
 		reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
 		reqResultDAO.setIpAddress(RWT.getRequest().getRemoteAddr());
-		reqResultDAO.setStrSQLText(strQuery);
+		reqResultDAO.setStrSQLText(sql);
 	
 		try {
-			boolean bool = executSQL(userDB, executeType, strQuery);
+			QueryInfoDTO queryInfoDTO = new QueryInfoDTO();
+			ParserDDL parser = new ParserDDL();
+			parser.parseQuery(sql, queryInfoDTO);
+			boolean bool = _executSQL(userDB, queryInfoDTO.getQueryDDLType(), queryInfoDTO.getObjectName(), sql);
 		} catch(Exception e) {
 			reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
 			reqResultDAO.setMesssage(e.getMessage());
@@ -82,11 +76,11 @@ public class TadpoleSystemCommons {
 	 * 쿼리중에 quote sql을 반영해서 작업합니다.
 	 * 
 	 * @param userDB
-	 * @param executeType
+	 * @param query_DDL_TYPE
 	 * @param strSQL
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	private static boolean executSQL(UserDBDAO userDB, String executeType, String strSQL) throws TadpoleSQLManagerException, SQLException {
+	private static boolean _executSQL(UserDBDAO userDB, QUERY_DDL_TYPE query_DDL_TYPE, String objName, String strSQL) throws TadpoleSQLManagerException, SQLException {
 		java.sql.Connection javaConn = null;
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
@@ -98,11 +92,20 @@ public class TadpoleSystemCommons {
 			
 		} finally {
 			// save schema history
-			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, 
-				"EDITOR",
-				executeType,
-				"",
-				strSQL);
+//			TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB, 
+//				"EDITOR",
+//				executeType,
+//				"",
+//				strSQL);
+//			try {
+				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB,
+						"EDITOR", //$NON-NLS-1$
+						query_DDL_TYPE.name(),
+						objName,
+						strSQL);
+//			} catch(Exception e) {
+//				logger.error("save schemahistory", e); //$NON-NLS-1$
+//			}
 			
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 			

@@ -497,4 +497,10 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		mapReduceAction.dispose();
 		groupAction.dispose();
 	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		// TODO Auto-generated method stub
+		
+	}
 }

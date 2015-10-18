@@ -8,22 +8,17 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.parser;
+package com.hangum.tadpole.engine.sql.parser.define;
 
-import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
+import java.util.regex.Pattern;
 
 /**
- * Tadpole SQL parser
- * 		
+ * parser deifne
+ * 
  * @author hangum
  *
  */
-public interface TDBSQLParser {
-	/**
-	 * sql parser
-	 * 
-	 * @param sql
-	 * @return
-	 */
-	QueryInfoDTO parser(String sql);
+public class ParserDefine {
+	/** REGEXP pattern flag */
+	public final static int PATTERN_FLAG = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
 }

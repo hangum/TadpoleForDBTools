@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.sql.SQLException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

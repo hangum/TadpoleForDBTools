@@ -56,6 +56,8 @@ Export-Package:
  com.hangum.tadpole.engine.sql.dialog.save,
  com.hangum.tadpole.engine.sql.paremeter,
  com.hangum.tadpole.engine.sql.paremeter.lang,
+ com.hangum.tadpole.engine.sql.parser,
+ com.hangum.tadpole.engine.sql.parser.dto,
  com.hangum.tadpole.engine.sql.template,
  com.hangum.tadpole.engine.sql.util,
  com.hangum.tadpole.engine.sql.util.executer,

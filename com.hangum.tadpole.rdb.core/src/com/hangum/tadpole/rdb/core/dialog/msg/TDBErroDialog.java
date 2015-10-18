@@ -38,7 +38,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	private static final Logger logger = Logger.getLogger(TDBErroDialog.class);
 	private Text textMessage;
 	
-	private String title;
+	protected String title;
 	private String message;
 	private Label lblMessage;
 	
@@ -57,7 +57,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(title);
+		newShell.setText(Messages.TDBErroDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -67,7 +67,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setMessage(title, IMessageProvider.INFORMATION);
+		setMessage(title, IMessageProvider.ERROR);
 		
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
@@ -78,7 +78,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 		lblMessage.setText(Messages.TDBErroDialog_2);
 		new Label(container, SWT.NONE);
 		
-		textMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMessage = new Text(container, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
 		
@@ -103,6 +103,6 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 422);
+		return new Point(450, 350);
 	}
 }

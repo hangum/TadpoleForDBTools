@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -81,7 +82,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleViewerComposite.class);
-	
+	private CTabItem tbtmViews;
 	private TableViewer viewListViewer;
 	private ObjectComparator viewComparator;
 	private List<TableDAO> showViews = new ArrayList<>();
@@ -89,7 +90,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private TableViewer viewColumnViewer;
 	private ObjectComparator tableColumnComparator;
 	private List<TableColumnDAO> showViewColumns = new ArrayList<>();
-	private RDBViewFilter viewFilter;
+	private TadpoleViewFilter viewFilter;
 	
 	private ObjectCreatAction creatAction_View;
 	private ObjectDropAction deleteAction_View;
@@ -111,7 +112,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmViews.setText(Messages.TadpoleViewerComposite_0);
 		tbtmViews.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name());
 
@@ -225,7 +226,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewListViewer.setContentProvider(new ArrayContentProvider());
 		viewListViewer.setInput(showViews);
 		
-		viewFilter = new RDBViewFilter();
+		viewFilter = new TadpoleViewFilter();
 		viewListViewer.addFilter(viewFilter);
 
 		createMenu();
@@ -333,8 +334,11 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 
 	/**
 	 * view 정보를 최신으로 리프레쉬합니다.
+	 * @param userDB
+	 * @param boolRefresh
+	 * @param strObjectName 
 	 */
-	public void refreshView(final UserDBDAO userDB, boolean boolRefresh) {
+	public void refreshView(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(showViews != null) return;
 		showViews.clear();
 		this.userDB = userDB;
@@ -360,7 +364,12 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewListViewer.refresh();
 		
 		TableUtil.packTable(viewListViewer.getTable());
+		
+		// select tabitem
+		getTabFolderObject().setSelection(tbtmViews);
+		selectDataOfTable(strObjectName);
 	}
+
 
 	/**
 	 * initialize action
@@ -390,7 +399,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * get tableViewer
 	 * @return
 	 */
-	public TableViewer getViewListViewer() {
+	public TableViewer getTableViewer() {
 		return viewListViewer;
 	}
 
@@ -449,5 +458,20 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		};
 		
 		return selectionAdapter;
+	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if(strObjectName == null || "".equals(strObjectName)) return;
+		getTableViewer().getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<showViews.size(); i++) {
+			TableDAO tableDao = (TableDAO)getTableViewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+				getTableViewer().setSelection(new StructuredSelection(getTableViewer().getElementAt(i)), true);
+				break;
+			}
+		}		
 	}
 }

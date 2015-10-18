@@ -279,4 +279,10 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		refreshActionJS.dispose();
 		serverJavaScript.dispose();
 	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -20,7 +20,7 @@ import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
  * @author hangum
  *
  */
-public class RDBViewFilter extends TadpoleViewrFilter {
+public class TadpoleViewFilter extends TadpoleViewrFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {

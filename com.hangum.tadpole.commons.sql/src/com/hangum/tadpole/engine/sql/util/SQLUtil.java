@@ -423,26 +423,26 @@ public class SQLUtil {
 	 * @param sql
 	 * @return query type
 	 */
-	public static PublicTadpoleDefine.QUERY_TYPE sqlQueryType(String sql) {
-		PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+	public static PublicTadpoleDefine.QUERY_DML_TYPE sqlQueryType(String sql) {
+		PublicTadpoleDefine.QUERY_DML_TYPE queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		
 		try {
 			Statement statement = CCJSqlParserUtil.parse(sql);
 			if(statement instanceof Select) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.SELECT;
 			} else if(statement instanceof Insert) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.INSERT;
 			} else if(statement instanceof Update) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.UPDATE;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UPDATE;
 			} else if(statement instanceof Delete) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.DELETE;
-			} else {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.DDL;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.DELETE;
+//			} else {
+//				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.DDL;
 			}
 			
 		} catch (Throwable e) {
 			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
-			queryType = PublicTadpoleDefine.QUERY_TYPE.UNKNOWN;
+			queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		}
 		
 		return queryType;

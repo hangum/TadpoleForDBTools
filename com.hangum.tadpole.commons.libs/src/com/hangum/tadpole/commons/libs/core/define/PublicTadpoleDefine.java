@@ -18,7 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.rap.rwt.RWT;
 
 /**
- * 올챙이 전역 정의 
+ * 전역 변수 정의 
  * 
  * @author hangum
  *
@@ -205,6 +205,9 @@ public class PublicTadpoleDefine {
 
 	/** 쿼리 실행 결과  */
 	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
+	
+	/** 데이터 수정 상태를 가르킵니다 */
+	public static enum DATA_STATUS {NEW, MODIFY, DEL};
 
 	/** objec explorer에서 정의한 action */
 	public static enum OBJECT_TYPE {
@@ -222,17 +225,15 @@ public class PublicTadpoleDefine {
 		SCHEDULE
 	};
 
-	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
-	public static enum DATA_STATUS {NEW, MODIFY, DEL};
-
 	/** sql type - http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands */
 	public static enum SQL_TYPE {DDL, DML};//, DCL, TCL};
 
 	/** query type */
-	public static enum QUERY_TYPE {SELECT, EXPLAIN_PLAN, INSERT, UPDATE, DELETE, DDL, TEC, UNKNOWN};
+	public static enum QUERY_DML_TYPE {SELECT, EXPLAIN_PLAN, INSERT, UPDATE, DELETE, UNKNOWN};
 	
 	/** query ddl type */
-	public static enum QUERY_DDL_TYPE {TABLE, VIEW, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, UNKNOWN};
+	public static enum QUERY_DDL_STATUS {CREATE, ALTER, DROP, UNKNOWN};
+	public static enum QUERY_DDL_TYPE 	{TABLE, VIEW, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, UNKNOWN};
 	
 	public static String[] DB_PRIMARY_KEY = {
 											"PRI", 

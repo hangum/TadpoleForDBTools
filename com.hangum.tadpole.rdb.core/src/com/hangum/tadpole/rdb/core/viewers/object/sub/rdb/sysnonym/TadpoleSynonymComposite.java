@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -32,6 +33,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -81,6 +83,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSynonymComposite.class);
 
+	private CTabItem tbtmSynonym;
 	/** select synonym name */
 	private String selectSynonymName = ""; //$NON-NLS-1$
 
@@ -112,12 +115,12 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	}
 
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTable.setText(Messages.TadpoleSynonymComposite_0);
-		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name());
+		tbtmSynonym = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmSynonym.setText(Messages.TadpoleSynonymComposite_0);
+		tbtmSynonym.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
-		tbtmTable.setControl(compositeTables);
+		tbtmSynonym.setControl(compositeTables);
 		GridLayout gl_compositeTables = new GridLayout(1, false);
 		gl_compositeTables.verticalSpacing = 2;
 		gl_compositeTables.horizontalSpacing = 2;
@@ -306,11 +309,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 	/**
 	 * 정보를 최신으로 리프레쉬합니다.
+	 * @param strObjectName 
 	 */
-	public void refreshSynonym(final UserDBDAO selectUserDb, boolean boolRefresh) {
-		if (!boolRefresh)
-			if (selectUserDb == null)
-				return;
+	public void refreshSynonym(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
+		if (!boolRefresh) if (selectUserDb == null) return;
 		this.userDB = selectUserDb;
 
 		Job job = new Job(Messages.MainEditor_45) {
@@ -344,6 +346,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 							synonymListViewer.refresh();
 							TableUtil.packTable(synonymListViewer.getTable());
 
+							// select tabitem
+							getTabFolderObject().setSelection(tbtmSynonym);
+							
+							selectDataOfTable(strObjectName);
 						} else {
 							if (showSynonyms != null)
 								showSynonyms.clear();
@@ -393,7 +399,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 * 
 	 * @return
 	 */
-	public TableViewer getSynonymListViewer() {
+	public TableViewer getTableviewer() {
 		return synonymListViewer;
 	}
 
@@ -428,5 +434,21 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	@Override
 	public void setSearchText(String searchText) {
 		synonymFilter.setSearchString(searchText);
+	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if("".equals(strObjectName) || strObjectName == null) return;
+		
+		getTableviewer().getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<showSynonymColumns.size(); i++) {
+			OracleSynonymDAO tableDao = (OracleSynonymDAO)getTableviewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getSynonym_name())) {
+				getTableviewer().setSelection(new StructuredSelection(getTableviewer().getElementAt(i)), true);
+				break;
+			}
+		}
 	}
 }

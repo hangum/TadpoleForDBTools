@@ -40,7 +40,9 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -49,6 +51,8 @@ import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -244,14 +248,21 @@ public class ObjectEditor extends MainEditor {
 		if(reqQuery.getExecuteType() == EXECUTE_TYPE.BLOCK) {
 			resultMainComposite.executeCommand(reqQuery);
 		} else {
+			
 			if(!MessageDialog.openConfirm(null, Messages.ObjectEditor_0, Messages.ObjectEditor_3)) {
 				setOrionTextFocus();
 				return;
 			}
 			
+			if(logger.isDebugEnabled()) {
+				logger.debug("============================================================================");
+				logger.debug(reqQuery.toString());
+				logger.debug("============================================================================");
+			}
+			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
-				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
 			} catch(Exception e) {
 				logger.error("execute ddl", e);
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
@@ -293,7 +304,29 @@ public class ObjectEditor extends MainEditor {
 			resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
 		} else {
 			resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getStrSQLText())); //$NON-NLS-1$
+			refreshExplorerView(getUserDB(), reqQuery);
 		}
+	}
+	
+	/**
+	 * CREATE, DROP, ALTER 문이 실행되어 ExplorerViewer view를 리프레쉬합니다.
+	 * 
+	 * @param userDB
+	 * @param reqQuery
+	 */
+	protected void refreshExplorerView(final UserDBDAO userDB, final RequestQuery reqQuery) {
+		resultMainComposite.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
+					ev.refreshCurrentTab(userDB, reqQuery);
+				} catch (PartInitException e) {
+					logger.error("ExplorerView show", e); //$NON-NLS-1$
+				}
+			}
+			
+		});
 	}
 	
 	/**
@@ -312,10 +345,10 @@ public class ObjectEditor extends MainEditor {
 			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, strObjectName))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
-					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", cmd); //$NON-NLS-1$
+					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, cmd); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 					
-					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 				} catch(Exception ee) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$

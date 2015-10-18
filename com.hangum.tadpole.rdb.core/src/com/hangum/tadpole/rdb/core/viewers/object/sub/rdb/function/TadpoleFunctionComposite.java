@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -71,6 +72,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleFunctionComposite.class);
 	
+	private CTabItem  tbtmFunctions;
 	private TableViewer functionTableViewer;
 	private ProcedureFunctionComparator functionComparator;
 	private List<ProcedureFunctionDAO> showFunction;
@@ -96,7 +98,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem  tbtmFunctions = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmFunctions = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmFunctions.setText(Messages.TadpoleFunctionComposite_0);
 		tbtmFunctions.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.name());
 
@@ -219,7 +221,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	/**
 	 * function 정보를 최신으로 갱신 합니다.
 	 */
-	public void refreshFunction(final UserDBDAO userDB, boolean boolRefresh) {
+	public void refreshFunction(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(showFunction != null) return;
 		this.userDB = userDB;
 		
@@ -231,6 +233,9 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			
 			TableUtil.packTable(functionTableViewer.getTable());
 			
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmFunctions);
+			
 			// updatae constant assist
 			StringBuffer strFunctionlist = new StringBuffer();
 			for (ProcedureFunctionDAO tableDao : showFunction) {
@@ -238,6 +243,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			}
 			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), "|"));
 
+			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -271,4 +277,19 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		objectCompileAction.dispose();
 	}
 
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if("".equals(strObjectName) || strObjectName == null) return;
+		
+		getTableviewer().getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<showFunction.size(); i++) {
+			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getTableviewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+				getTableviewer().setSelection(new StructuredSelection(getTableviewer().getElementAt(i)), true);
+				break;
+			}
+		}
+	}
 }

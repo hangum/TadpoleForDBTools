@@ -10,23 +10,22 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_STATUS;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
+import com.hangum.tadpole.engine.sql.parser.BasicTDBSQLParser;
+import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.create.index.CreateIndex;
-import net.sf.jsqlparser.statement.create.table.CreateTable;
-import net.sf.jsqlparser.statement.create.view.CreateView;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
@@ -61,12 +60,20 @@ public class RequestQuery {
 			
 	/** 사용자가 쿼리를 실행 하는 타입 */
 	private EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
+
+	/** sql is statement */
+	private boolean isStatement = false;
+	
+	/** sql type */
+	private SQL_TYPE sqlType = SQL_TYPE.DML;
 	
 	/** User request query type */
-	private PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+	private QUERY_DML_TYPE sqlDMLType = QUERY_DML_TYPE.UNKNOWN;
 	
 	/** TABLE, INDEX, VIEW, OTHERES */
-	private QUERY_DDL_TYPE queryDDLType = QUERY_DDL_TYPE.UNKNOWN;
+	private QUERY_DDL_TYPE sqlDDLType = QUERY_DDL_TYPE.UNKNOWN;
+	private String sqlObjectName = "";
+	private QUERY_DDL_STATUS queryStatus = QUERY_DDL_STATUS.UNKNOWN;
 	
 	/** query result */
 	private RequestResultDAO resultDao = new RequestResultDAO();
@@ -85,11 +92,13 @@ public class RequestQuery {
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;
 		this.sql = SQLUtil.sqlExecutable(originalSql);
-		sqlQueryType(this.sql);
+		praseSQL(this.sql);
 		
 		this.mode = mode;
 		this.executeType = type;
 		this.isAutoCommit = isAutoCommit;
+		
+		
 	}
 
 	/**
@@ -98,48 +107,37 @@ public class RequestQuery {
 	 * @param sql
 	 * @return query type
 	 */
-	public void sqlQueryType(String sql) {
+	public void praseSQL(String sql) {
+		BasicTDBSQLParser parser = new BasicTDBSQLParser();
+		QueryInfoDTO queryInfoDto = parser.parser(sql);
+		setStatement(queryInfoDto.isStatement());
 		
-		try {
-			Statement statement = CCJSqlParserUtil.parse(sql);
-			if(statement instanceof Select) {
-				queryType = QUERY_TYPE.SELECT;
-			} else if(statement instanceof Insert) {
-				queryType = QUERY_TYPE.INSERT;
-			} else if(statement instanceof Update) {
-				queryType = QUERY_TYPE.UPDATE;
-			} else if(statement instanceof Delete) {
-				queryType = QUERY_TYPE.DELETE;
-			} else {
-				queryType = QUERY_TYPE.DDL;
-				
-				if(statement instanceof CreateTable) {
-//					logger.debug( "table name is " + ((CreateTable) statement).getTable().getName() );
-					queryDDLType = QUERY_DDL_TYPE.TABLE;
-				} else if(statement instanceof CreateView) {
-//					logger.debug( "view name is " + ((CreateView) statement).getView().getName() );
-					queryDDLType = QUERY_DDL_TYPE.VIEW;
-				} else if(statement instanceof CreateIndex) {
-//					logger.debug( "index name is " + ((CreateIndex) statement).getIndex().getName() );
-					queryDDLType = QUERY_DDL_TYPE.INDEX;
-				}		
+		if(queryInfoDto.isStatement()) {
+			setSqlType(SQL_TYPE.DML);
+			sqlDMLType = QUERY_DML_TYPE.UNKNOWN;
+			try {
+				Statement statement = CCJSqlParserUtil.parse(sql);
+				if(statement instanceof Select) {
+					sqlDMLType = QUERY_DML_TYPE.SELECT;
+				} else if(statement instanceof Insert) {
+					sqlDMLType = QUERY_DML_TYPE.INSERT;
+				} else if(statement instanceof Update) {
+					sqlDMLType = QUERY_DML_TYPE.UPDATE;
+				} else if(statement instanceof Delete) {
+					sqlDMLType = QUERY_DML_TYPE.DELETE;
+				}
+			} catch (Throwable e) {
+				logger.error(String.format("sql parse exception. [ %s ]", sql));
 			}
 			
-		} catch (Throwable e) {
-//			logger.error(String.format("sql parse exception. [ %s ]", sql), e);
-			logger.error(String.format("sql parse exception. [ %s ]", sql));
-			
-			// if does exist "CREATE or replace PROCEDURE"
-			if(StringUtils.startsWithIgnoreCase(sql, "CREATE or replace PROCEDURE")) {
-				queryType 		= QUERY_TYPE.DDL;
-				queryDDLType 	= QUERY_DDL_TYPE.PROCEDURE;
-			} else {
-				queryType 	= QUERY_TYPE.UNKNOWN;
-			}
+		} else {
+			setSqlType(SQL_TYPE.DDL);
+			sqlDDLType = queryInfoDto.getQueryDDLType();
+			queryStatus = queryInfoDto.getQueryStatus();
+			sqlObjectName = queryInfoDto.getObjectName();
 		}
 	}
 	
-
 	/**
 	 * @return the sql
 	 */
@@ -180,20 +178,6 @@ public class RequestQuery {
 	 */
 	public void setExecuteType(EditorDefine.EXECUTE_TYPE executeType) {
 		this.executeType = executeType;
-	}
-
-	/**
-	 * @return the queryType
-	 */
-	public PublicTadpoleDefine.QUERY_TYPE getQueryType() {
-		return queryType;
-	}
-
-	/**
-	 * @param queryType the queryType to set
-	 */
-	public void setQueryType(PublicTadpoleDefine.QUERY_TYPE queryType) {
-		this.queryType = queryType;
 	}
 
 	/**
@@ -253,20 +237,6 @@ public class RequestQuery {
 	}
 
 	/**
-	 * @return the queryDDLType
-	 */
-	public QUERY_DDL_TYPE getQueryDDLType() {
-		return queryDDLType;
-	}
-
-	/**
-	 * @param queryDDLType the queryDDLType to set
-	 */
-	public void setQueryDDLType(QUERY_DDL_TYPE queryDDLType) {
-		this.queryDDLType = queryDDLType;
-	}
-
-	/**
 	 * @return the resultDao
 	 */
 	public RequestResultDAO getResultDao() {
@@ -278,6 +248,102 @@ public class RequestQuery {
 	 */
 	public void setResultDao(RequestResultDAO resultDao) {
 		this.resultDao = resultDao;
+	}
+
+	/**
+	 * @return the isStatement
+	 */
+	public boolean isStatement() {
+		return isStatement;
+	}
+
+	/**
+	 * @param isStatement the isStatement to set
+	 */
+	public void setStatement(boolean isStatement) {
+		this.isStatement = isStatement;
+	}
+
+	/**
+	 * @return the sqlType
+	 */
+	public SQL_TYPE getSqlType() {
+		return sqlType;
+	}
+
+	/**
+	 * @param sqlType the sqlType to set
+	 */
+	public void setSqlType(SQL_TYPE sqlType) {
+		this.sqlType = sqlType;
+	}
+
+	/**
+	 * @return the sqlDMLType
+	 */
+	public QUERY_DML_TYPE getSqlDMLType() {
+		return sqlDMLType;
+	}
+
+	/**
+	 * @param sqlDMLType the sqlDMLType to set
+	 */
+	public void setSqlDMLType(QUERY_DML_TYPE sqlDMLType) {
+		this.sqlDMLType = sqlDMLType;
+	}
+
+	/**
+	 * @return the sqlDDLType
+	 */
+	public QUERY_DDL_TYPE getSqlDDLType() {
+		return sqlDDLType;
+	}
+
+	/**
+	 * @param sqlDDLType the sqlDDLType to set
+	 */
+	public void setSqlDDLType(QUERY_DDL_TYPE sqlDDLType) {
+		this.sqlDDLType = sqlDDLType;
+	}
+
+	/**
+	 * @return the sqlObjectName
+	 */
+	public String getSqlObjectName() {
+		return sqlObjectName;
+	}
+
+	/**
+	 * @param sqlObjectName the sqlObjectName to set
+	 */
+	public void setSqlObjectName(String sqlObjectName) {
+		this.sqlObjectName = sqlObjectName;
+	}
+
+	/**
+	 * @return the queryStatus
+	 */
+	public QUERY_DDL_STATUS getQueryStatus() {
+		return queryStatus;
+	}
+
+	/**
+	 * @param queryStatus the queryStatus to set
+	 */
+	public void setQueryStatus(QUERY_DDL_STATUS queryStatus) {
+		this.queryStatus = queryStatus;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "RequestQuery [userIp=" + userIp + ", isAutoCommit=" + isAutoCommit + ", originalSql=" + originalSql
+				+ ", sql=" + sql + ", \ndbAction=" + dbAction + ", mode=" + mode + ", executeType=" + executeType
+				+ ", \nisStatement=" + isStatement + ", sqlType=" + sqlType + ", sqlDMLType=" + sqlDMLType
+				+ ", \nsqlDDLType=" + sqlDDLType + ", sqlObjectName=" + sqlObjectName + ", queryStatus=" + queryStatus
+				+ ", \nresultDao=" + resultDao + "]";
 	}
 
 }

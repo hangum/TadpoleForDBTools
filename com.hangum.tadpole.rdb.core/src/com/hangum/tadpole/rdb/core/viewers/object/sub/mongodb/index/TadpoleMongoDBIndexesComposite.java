@@ -295,4 +295,10 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		deleteAction_Index.dispose();
 		refreshAction_Index.dispose();
 	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		// TODO Auto-generated method stub
+		
+	}
 }

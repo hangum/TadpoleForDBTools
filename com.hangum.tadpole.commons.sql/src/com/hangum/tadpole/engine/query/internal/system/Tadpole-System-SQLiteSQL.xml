@@ -67,5 +67,21 @@
         	AND b.terms_of_use_endtime >= #thisTime#
 	]]>	
 	</select>
-	
+
+	<!-- 
+	find login history
+	 -->
+	<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" 
+														parameterClass="java.util.Map">
+	<![CDATA[
+		SELECT b.seq, b.user_seq, b.login_ip, b.connet_time sqliteConnet_time, b.disconnect_time sqliteDisconnect_time
+		FROM tadpole_user a,
+		    login_history b
+		WHERE
+		    	a.email = #email#
+		    AND a.seq = b.user_seq
+		    AND strftime('%Y-%m-%d %H:%M:%S', b.connet_time) BETWEEN #startTime# AND #endTime#
+		ORDER BY b.connet_time DESC
+	]]>
+	</select>	
 </sqlMap>

@@ -55,6 +55,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -112,7 +113,6 @@ import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
-import org.eclipse.swt.widgets.Combo;
 
 /**
  * result set composite
@@ -573,7 +573,7 @@ public class ResultSetComposite extends Composite {
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())
 				|| PermissionChecker.isProductBackup(getUserDB())
 		) {
-			boolean isDMLQuestion = false;
+			boolean isDMLQuestion = reqQuery.isStatement();
 			if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
 				for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
 					if(!SQLUtil.isStatement(strSQL)) {
@@ -581,8 +581,8 @@ public class ResultSetComposite extends Composite {
 						break;
 					}
 				}
-			} else {
-				if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
+//			} else {
+//				if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
 			}
 		
 			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, Messages.ResultMainComposite_0, Messages.MainEditor_56)) {
@@ -1057,7 +1057,7 @@ public class ResultSetComposite extends Composite {
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
 	public void executeFinish(RequestQuery reqQuery, RequestResultDAO executingSQLDAO) {
-		if(SQLUtil.isStatement(reqQuery.getSql())) {			
+		if(reqQuery.isStatement()) {
 
 			// table data를 생성한다.
 			final TadpoleResultSet trs = rsDAO.getDataList();
@@ -1105,18 +1105,14 @@ public class ResultSetComposite extends Composite {
 			try {
 				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
 						"EDITOR", //$NON-NLS-1$
-						reqQuery.getQueryType().name(),
-						"", //$NON-NLS-1$
+						reqQuery.getSqlDDLType().name(),
+						reqQuery.getSqlObjectName(),
 						reqQuery.getSql());
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}
 		
-			if(reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.DDL |
-					reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.UNKNOWN
-					) {
-				refreshExplorerView(getUserDB(), reqQuery.getQueryDDLType());
-			}
+			refreshExplorerView(getUserDB(), reqQuery);
 		}
 	}
 	
@@ -1124,15 +1120,15 @@ public class ResultSetComposite extends Composite {
 	 * CREATE, DROP, ALTER 문이 실행되어 ExplorerViewer view를 리프레쉬합니다.
 	 * 
 	 * @param userDB
-	 * @param schemaDao
+	 * @param reqQuery
 	 */
-	private void refreshExplorerView(final UserDBDAO userDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
+	protected void refreshExplorerView(final UserDBDAO userDB, final RequestQuery reqQuery) {
 		rdbResultComposite.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-					ev.refreshCurrentTab(userDB, queryDDLType);
+					ev.refreshCurrentTab(userDB, reqQuery);
 				} catch (PartInitException e) {
 					logger.error("ExplorerView show", e); //$NON-NLS-1$
 				}
@@ -1165,7 +1161,7 @@ public class ResultSetComposite extends Composite {
 		downloadServiceHandler.setName(fileName);
 		downloadServiceHandler.setByteContent(newContents);
 		
-		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+		DownloadUtils.provideDownload(getShell(), downloadServiceHandler.getId());
 	}
 	
 	private void appendTextAtPosition(String cmd) {
