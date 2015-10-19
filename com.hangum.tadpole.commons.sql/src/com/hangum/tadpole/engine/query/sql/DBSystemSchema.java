@@ -85,7 +85,6 @@ public class DBSystemSchema {
 		
 		// if find the keyword is add system quote.
 		for(TableColumnDAO td : showViewColumns) {
-			System.out.println("=============> " + SQLUtil.makeIdentifierName(userDB, td.getField()));
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
 		}
 		
