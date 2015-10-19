@@ -156,8 +156,8 @@ public class UserListComposite extends Composite {
 		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmLoginHistory = new ToolItem(toolBar, SWT.NONE);
-		tltmLoginHistory.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/userHistory.png"));
-		tltmLoginHistory.setToolTipText("Login History");
+		tltmLoginHistory.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/userHistory.png")); //$NON-NLS-1$
+		tltmLoginHistory.setToolTipText(Messages.UserListComposite_1);
 		tltmLoginHistory.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -168,8 +168,8 @@ public class UserListComposite extends Composite {
 		ToolItem toolItem_2 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmDBList = new ToolItem(toolBar, SWT.NONE);
-		tltmDBList.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/db.png"));
-		tltmDBList.setToolTipText("DB List");
+		tltmDBList.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/db.png")); //$NON-NLS-1$
+		tltmDBList.setToolTipText(Messages.UserListComposite_3);
 		tltmDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -180,8 +180,8 @@ public class UserListComposite extends Composite {
 		ToolItem toolItem_3 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmSQLAudit = new ToolItem(toolBar, SWT.NONE);
-		tltmSQLAudit.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png"));
-		tltmSQLAudit.setToolTipText("SQL Audit");
+		tltmSQLAudit.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
+		tltmSQLAudit.setToolTipText(Messages.UserListComposite_5);
 		tltmSQLAudit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -246,7 +246,7 @@ public class UserListComposite extends Composite {
 	 */
 	private void createColumn() {
 		String[] colNames = {Messages.AdminUserListComposite_4, Messages.AdminUserListComposite_5, 
-							Messages.AdminUserListComposite_6, "디비 등록가능 여부", Messages.AdminUserListComposite_7, Messages.AdminUserListComposite_8, 
+							Messages.AdminUserListComposite_6, Messages.UserListComposite_6, Messages.AdminUserListComposite_7, Messages.AdminUserListComposite_8, 
 							Messages.AdminUserListComposite_9, Messages.AdminUserListComposite_10, Messages.AdminUserListComposite_11};
 		int[] colSize = {200, 150, 90, 70, 60, 60, 60, 60, 120};
 		
@@ -328,7 +328,7 @@ public class UserListComposite extends Composite {
 				logger.error("Database Management editor", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "", errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", "", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -348,7 +348,7 @@ public class UserListComposite extends Composite {
 				logger.error("SQL Audit open", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "SQL Audit", errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.UserListComposite_8, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

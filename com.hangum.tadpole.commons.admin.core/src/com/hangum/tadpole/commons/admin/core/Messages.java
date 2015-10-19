@@ -132,6 +132,21 @@ public class Messages extends NLS {
 	public static String SendMessageDialog_7;
 	public static String SendMessageDialog_8;
 	public static String SendMessageDialog_9;
+	public static String UserListComposite_1;
+
+
+	public static String UserListComposite_3;
+
+
+	public static String UserListComposite_5;
+
+
+	public static String UserListComposite_6;
+
+
+	public static String UserListComposite_8;
+
+
 	public static String UserLoginHistoryAction_0;
 	public static String UserLoginHistoryDialog_0;
 	public static String UserLoginHistoryDialog_1;
