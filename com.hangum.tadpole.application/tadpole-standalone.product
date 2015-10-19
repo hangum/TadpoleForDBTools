@@ -24,7 +24,7 @@
    <splash
       location="com.hangum.tadpole.application" />
    <launcher name="tadpole-standalone">
-      <linux icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.ico"/>
+      <linux icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.xpm"/>
       <macosx icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.icns"/>
       <solaris/>
       <win useIco="true">
