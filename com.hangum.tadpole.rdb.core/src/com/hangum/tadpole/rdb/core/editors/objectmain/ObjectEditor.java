@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
+import java.sql.SQLException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -41,7 +43,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
+import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.OracleObjectCompileUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -253,15 +255,15 @@ public class ObjectEditor extends MainEditor {
 				return;
 			}
 			
-			if(logger.isDebugEnabled()) {
-				logger.debug("============================================================================"); //$NON-NLS-1$
-				logger.debug(reqQuery.toString());
-				logger.debug("============================================================================"); //$NON-NLS-1$
-			}
+//			if(logger.isDebugEnabled()) {
+//				logger.debug("============================================================================"); //$NON-NLS-1$
+//				logger.debug(reqQuery.toString());
+//				logger.debug("============================================================================"); //$NON-NLS-1$
+//			}
 			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
-				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+				reqResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
 			} catch(Exception e) {
 				logger.error("execute ddl", e); //$NON-NLS-1$
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
@@ -273,6 +275,8 @@ public class ObjectEditor extends MainEditor {
 					
 					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 						mysqlAfterProcess(reqResultDAO, reqQuery);
+					} else if(getUserDB().getDBDefine() == DBDefine.MSSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+						mssqlAfterProcess(reqResultDAO, reqQuery);
 					}
 					
 				} else {
@@ -339,7 +343,7 @@ public class ObjectEditor extends MainEditor {
 	private void afterProcess(RequestQuery reqQuery, RequestResultDAO reqResultDAO, String title) {
 		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		resultMainComposite.refreshMessageView(reqQuery, null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
+		resultMainComposite.refreshMessageView(reqQuery, reqResultDAO.getException(), String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
 		
 		if(PublicTadpoleDefine.SUCCESS_FAIL.S.name().equals(reqResultDAO.getResult())) {
 			refreshExplorerView(getUserDB(), reqQuery);
@@ -375,24 +379,81 @@ public class ObjectEditor extends MainEditor {
 	 * @param e
 	 */
 	private void mysqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
-		if(StringUtils.contains(reqResultDAO.getMesssage(), "already exists")) { //$NON-NLS-1$
+		if(reqResultDAO.getException() == null) return;
+		
+		String strSQLState = "";
+		int intSQLErrorCode = -1;
+		Throwable cause = reqResultDAO.getException();;
+		if (cause instanceof SQLException) {
+			try {
+				SQLException sqlException = (SQLException)cause;
+				strSQLState = sqlException.getSQLState();
+				intSQLErrorCode =sqlException.getErrorCode();
+				
+				if(logger.isDebugEnabled()) logger.debug("==========> SQLState : " + strSQLState + "\t SQLErrorCode : " + intSQLErrorCode);
+			} catch(Exception e) {
+				logger.error("SQLException to striing", e); //$NON-NLS-1$
+			}
+		}
+		
+		if(strSQLState.equals("42000") && intSQLErrorCode == 1304) { //$NON-NLS-1$
 			
-			String strPrefix = StringUtils.removeEnd(reqResultDAO.getMesssage(), "already exists"); //$NON-NLS-1$
-			String strObjectName = StringUtils.substringBefore(reqResultDAO.getMesssage(), " "); //$NON-NLS-1$
-			String cmd = "DROP " + strPrefix; //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, strObjectName))) {
+			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
+			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
-					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, cmd); //$NON-NLS-1$
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 					
-					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 				} catch(Exception ee) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 				}
 			}
-		}	
+//		1064는 컴파일 에러.
+//		} else if(strSQLState.equals("42000") && intSQLErrorCode == 1064) { //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * mssql after process
+	 * @param reqResultDAO
+	 * @param reqQuery
+	 */
+	private void mssqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
+//		if(reqResultDAO.getException() == null) return;
+//		String strSQLState = "";
+//		int intSQLErrorCode = -1;
+//		Throwable cause = reqResultDAO.getException();;
+//		if (cause instanceof SQLException) {
+//			try {
+//				SQLException sqlException = (SQLException)cause;
+//				strSQLState = sqlException.getSQLState();
+//				intSQLErrorCode =sqlException.getErrorCode();
+//				
+//				if(logger.isDebugEnabled()) logger.debug("==========> SQLState : " + strSQLState + "\t SQLErrorCode : " + intSQLErrorCode);
+//			} catch(Exception e) {
+//				logger.error("SQLException to striing", e); //$NON-NLS-1$
+//			}
+//		}
+//		
+//		if(strSQLState.equals("S0001") && intSQLErrorCode == 2714) { //$NON-NLS-1$
+//			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
+//			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+//				RequestResultDAO reqReResultDAO = new RequestResultDAO();
+//				try {
+//					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
+//					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+//					
+//					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+//					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+//				} catch(Exception ee) {
+//					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
+//				}
+//			}
+//		}
+		
 	}
 	
 }

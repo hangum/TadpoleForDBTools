@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.query.sql;
+package com.hangum.tadpole.engine.sql.util;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,6 +23,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.sql.parser.ddl.ParserDDL;
 import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -34,11 +35,11 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class TadpoleSystemCommons {
+public class ExecuteDDLCommand {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TadpoleSystemCommons.class);
+	private static final Logger logger = Logger.getLogger(ExecuteDDLCommand.class);
 
 	/**
 	 * 쿼리중에 quote sql을 반영해서 작업합니다.
@@ -60,6 +61,7 @@ public class TadpoleSystemCommons {
 			parser.parseQuery(sql, queryInfoDTO);
 			boolean bool = _executSQL(userDB, queryInfoDTO.getQueryDDLType(), queryInfoDTO.getObjectName(), sql);
 		} catch(Exception e) {
+			logger.error("execute sql", e);
 			reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
 			reqResultDAO.setMesssage(e.getMessage());
 			reqResultDAO.setException(e);

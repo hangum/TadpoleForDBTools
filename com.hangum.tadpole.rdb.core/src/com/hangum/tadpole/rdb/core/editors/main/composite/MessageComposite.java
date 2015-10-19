@@ -12,7 +12,6 @@ package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -23,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * Result Message Composite
@@ -73,6 +73,8 @@ public class MessageComposite extends Composite {
 		if (throwable == null) {
 			strNewMessage = Messages.MessageComposite_2;
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
+			
+			textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
 		} else {
 			strNewMessage = Messages.MessageComposite_3;
 			
@@ -93,6 +95,8 @@ public class MessageComposite extends Composite {
 			} else {
 				strNewMessage += tadpoleMessageDAO.getStrMessage();
 			}
+			
+			textMessage.setBackground(SWTResourceManager.getColor(255, 228, 225));
 		}
 
 //		// first show last error message

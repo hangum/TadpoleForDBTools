@@ -27,7 +27,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
+import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
@@ -104,7 +104,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			OracleSynonymDAO dao = (OracleSynonymDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_8, Messages.ObjectDeleteAction_synonym)) {
 				try {
-					executeSQL(userDB, "drop synonym " + dao.getTable_owner() + "." + dao.getSynonym_name()); //$NON-NLS-1$
+					executeSQL(userDB, "drop synonym " + dao.getTable_owner() + "." + dao.getSynonym_name()); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					refreshSynonym();
 				} catch(Exception e) {
@@ -156,7 +156,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			}
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
 			ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
-			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_23, Messages.ObjectDeleteAction_24)) {
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_23, Messages.ObjectDropAction_1)) {
 				try {
 					try{
 						executeSQL(userDB, "drop package body " + procedureDAO.getName()); //$NON-NLS-1$
@@ -218,7 +218,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 	 * @throws Exception
 	 */
 	private void executeSQL(UserDBDAO userDB, String cmd) throws Exception {
-		RequestResultDAO resultDao = TadpoleSystemCommons.executSQL(userDB, cmd); //$NON-NLS-1$
+		RequestResultDAO resultDao = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
 		if(resultDao.getResult() == PublicTadpoleDefine.SUCCESS_FAIL.F.name()) {
 			exeMessage(Messages.ObjectDeleteAction_0, resultDao.getException());		
 		}

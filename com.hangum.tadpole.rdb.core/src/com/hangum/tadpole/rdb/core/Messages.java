@@ -573,6 +573,10 @@ public class Messages extends NLS {
 	public static String SQLToStringDialog_lblVariable_text;
 	public static String SQLToStringDialog_btnNewButton_text;
 	public static String OracleLoginComposite_lblDatabase_text;
+	public static String OracleObjectCompileAction_11;
+	public static String OracleObjectCompileAction_12;
+	public static String OracleObjectCompileAction_13;
+	public static String OracleObjectCompileAction_5;
 	public static String OthersConnectionMongoDBGroup_0;
 	public static String OthersConnectionMongoDBGroup_1;
 	public static String OthersConnectionMongoDBGroup_2;
@@ -655,6 +659,7 @@ public class Messages extends NLS {
 	public static String OthersConnectionRDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
 	public static String ObjectDeleteAction_synonym;
+	public static String ObjectDropAction_1;
 	public static String ObjectEditor_0;
 	public static String ObjectEditor_1;
 	public static String ObjectEditor_12;

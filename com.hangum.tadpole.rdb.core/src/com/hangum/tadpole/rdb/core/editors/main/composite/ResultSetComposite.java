@@ -924,7 +924,7 @@ public class ResultSetComposite extends Composite {
 		});
 		
 		
-		/* SELECTㅁ ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
+		/* SELECT ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
     
 		 * Caused by: java.lang.NullPointerException
 			at oracle.jdbc.driver.T4C8Oall.getNumRows(T4C8Oall.java:973)

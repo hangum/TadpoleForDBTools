@@ -66,11 +66,13 @@ public class ParserDDL {
 		int intContentLength = matcher.group(1).length();
 		
 		if(logger.isDebugEnabled()) {
+			logger.debug("===DDL Parser======================================");
 			logger.debug("SQL :" + sql);
 			logger.debug("object name: " + matcher.group(1));
 			logger.debug("intContentLength : " + intContentLength );
-			logger.debug("endIx : " + intEndIndex );
+			logger.debug("intEndIndex : " + intEndIndex );
 			logger.debug("start index: " + (intEndIndex - intContentLength));
+			logger.debug("===DDL Parser======================================");
 		}
 		
 		String objctName = StringUtils.substring(sql, (intEndIndex - intContentLength), intEndIndex);
