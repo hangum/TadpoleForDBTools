@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -141,7 +142,7 @@ public class OracleObjectCompileUtils {
 	 * @return
 	 */
 	private static String prettyMsg(String line, String position, String msg) {
-		return String.format("%s line / %s poistion\n%s", line, position, msg); //$NON-NLS-1$
+		return String.format(Messages.OracleObjectCompileUtils_0, line, position, msg);
 	}
 	
 }
