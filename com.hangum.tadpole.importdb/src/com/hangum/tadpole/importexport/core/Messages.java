@@ -61,7 +61,6 @@ public class Messages extends NLS {
 	public static String SQLToDBImportDialog_grpSqlResult_text;
 	public static String SQLToDBImportDialog_btnInsert_text;
 	public static String SQLToDBImportDialog_lblSeprator_text;
-	public static String SQLToDBImportDialog_text_1_text;
 	public static String SQLToDBImportDialog_btnTruncateBeforeLoad_text;
 	public static String SQLToDBImportDialog_Close;
 	public static String SQLToDBImportDialog_Exception;
@@ -99,8 +98,6 @@ public class Messages extends NLS {
 	public static String CsvToRDBImportDialog_btnIgnore_toolTipText;
 	public static String CsvToRDBImportDialog_btnStop_toolTipText;
 	public static String CsvToRDBImportDialog_btnRadioButton_text;
-	public static String CsvToRDBImportDialog_label_text;
-	public static String MongoDBImportEditor_lblNewLabel_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

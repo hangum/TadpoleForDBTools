@@ -171,7 +171,6 @@ public class SQLToDBImportDialog extends Dialog {
 		lblSeprator.setText(Messages.SQLToDBImportDialog_lblSeprator_text);
 		
 		textSeprator = new Text(compositeHead, SWT.BORDER);
-		textSeprator.setText(Messages.SQLToDBImportDialog_text_1_text);
 		textSeprator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
