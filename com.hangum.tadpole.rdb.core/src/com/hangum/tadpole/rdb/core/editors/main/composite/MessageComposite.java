@@ -79,19 +79,10 @@ public class MessageComposite extends Composite {
 			strNewMessage = Messages.MessageComposite_3;
 			
 			Throwable cause = throwable.getCause();
-			if (cause instanceof SQLException) {
-				try {
-					SQLException sqlException = (SQLException)cause;
-
-					StringBuffer sbMsg = new StringBuffer();
-					sbMsg.append(String.format(Messages.MessageComposite_5, sqlException.getSQLState(), sqlException.getErrorCode()));
-					sbMsg.append(String.format(Messages.MessageComposite_4, sqlException.getMessage()));
-	
-					strNewMessage += sbMsg.toString();
-				} catch(Exception e) {
-					logger.error("SQLException to striing", e); //$NON-NLS-1$
-					strNewMessage += tadpoleMessageDAO.getStrMessage();
-				}
+			if(throwable instanceof SQLException) {
+				strNewMessage += sqlExceptionToMsg((SQLException)throwable, tadpoleMessageDAO);
+			} else if (cause instanceof SQLException) {
+				strNewMessage += sqlExceptionToMsg((SQLException)cause, tadpoleMessageDAO);
 			} else {
 				strNewMessage += tadpoleMessageDAO.getStrMessage();
 			}
@@ -108,6 +99,29 @@ public class MessageComposite extends Composite {
 //		}
 //		textMessage.setSelection(0, strNewMessage.length());
 //		textMessage.setFocus();
+	}
+	
+	/**
+	 * SQLException to pretty message
+	 * 
+	 * @param sqlException
+	 * @param tadpoleMessageDAO
+	 * @return
+	 */
+	private String sqlExceptionToMsg(SQLException sqlException, TadpoleMessageDAO tadpoleMessageDAO) {
+		String strNewMessage = "";
+		try {
+			StringBuffer sbMsg = new StringBuffer();
+			sbMsg.append(String.format(Messages.MessageComposite_5, sqlException.getSQLState(), sqlException.getErrorCode()));
+			sbMsg.append(String.format(Messages.MessageComposite_4, sqlException.getMessage()));
+
+			strNewMessage += sbMsg.toString();
+		} catch(Exception e) {
+			logger.error("SQLException to striing", e); //$NON-NLS-1$
+			strNewMessage += tadpoleMessageDAO.getStrMessage();
+		}
+		
+		return strNewMessage;
 	}
 
 	@Override

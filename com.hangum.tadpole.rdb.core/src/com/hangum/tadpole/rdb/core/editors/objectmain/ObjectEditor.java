@@ -281,7 +281,7 @@ public class ObjectEditor extends MainEditor {
 					
 				} else {
 					if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-						String retMsg = Messages.ObjectEditor_4;
+						String retMsg = "";
 						try {
 							retMsg = oracleAfterProcess(reqResultDAO, reqQuery);
 							if(!"".equals(retMsg)) { //$NON-NLS-1$
