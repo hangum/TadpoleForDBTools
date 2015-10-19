@@ -88,10 +88,10 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			}
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 			
-			String viewName = (String)selection.getFirstElement();
+			TableDAO viewDao = (TableDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.ObjectDeleteAction_8, Messages.ObjectDeleteAction_9)) {
 				try {
-					executeSQL(userDB, "drop view " + viewName); //$NON-NLS-1$
+					executeSQL(userDB, "drop view " + viewDao.getSysName()); //$NON-NLS-1$
 					
 					refreshView();
 				} catch(Exception e) {
