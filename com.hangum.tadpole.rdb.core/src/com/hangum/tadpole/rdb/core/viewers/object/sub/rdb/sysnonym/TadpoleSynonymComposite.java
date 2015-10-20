@@ -264,10 +264,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 * create Table menu
 	 */
 	private void createSynonymMenu() {
-		dropAction_Synonym = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Synonym"); //$NON-NLS-1$
-		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Synonym"); //$NON-NLS-1$
-		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Synonym"); //$NON-NLS-1$
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "View"); //$NON-NLS-1$
+		dropAction_Synonym = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Drop Synonym"); //$NON-NLS-1$
+		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Refresh"); //$NON-NLS-1$
+		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "Execute"); //$NON-NLS-1$
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, "View script"); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Synonym"); //$NON-NLS-1$ //$NON-NLS-2$
