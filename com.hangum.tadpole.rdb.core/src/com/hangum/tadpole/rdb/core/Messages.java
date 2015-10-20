@@ -721,6 +721,8 @@ public class Messages extends NLS {
 	public static String SQLUpdateDialog_9;
 	public static String SQLUpdateDialog_Error;
 	public static String TableDirectEditorComposite_tltmRefersh_text;
+	public static String TableInformationEditor_0;
+	public static String TableInformationEditor_1;
 	public static String TablesComposite_0;
 	public static String TablesComposite_1;
 	public static String TablesComposite_2;
