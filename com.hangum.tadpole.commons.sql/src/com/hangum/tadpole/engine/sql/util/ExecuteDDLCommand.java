@@ -81,6 +81,7 @@ public class ExecuteDDLCommand {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	private static boolean _executSQL(UserDBDAO userDB, QUERY_DDL_TYPE query_DDL_TYPE, String objName, String strSQL) throws TadpoleSQLManagerException, SQLException {
+		
 		java.sql.Connection javaConn = null;
 		Statement stmt = null;
 		try {

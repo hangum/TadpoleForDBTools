@@ -31,6 +31,7 @@ import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
+import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
 /**
@@ -55,6 +56,13 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 	
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
+		try {
+			if(!GrantCheckerUtils.ifExecuteQuery(userDB)) return;
+		} catch (Exception e) {
+			MessageDialog.openError(getWindow().getShell(), Messages.ObjectDeleteAction_2, e.getMessage());
+			return;
+		}
+		
 		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 			TableDAO dao = (TableDAO)selection.getFirstElement();
 

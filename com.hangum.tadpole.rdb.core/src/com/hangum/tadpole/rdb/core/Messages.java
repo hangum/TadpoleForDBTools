@@ -273,6 +273,9 @@ public class Messages extends NLS {
 	public static String GenerateStatmentDMLDialog_8;
 	public static String GenerateStatmentDMLDialog_88;
 	public static String GenerateStatmentDMLDialog_9;
+	public static String GrantCheckerUtils_0;
+	public static String GrantCheckerUtils_1;
+	public static String GrantCheckerUtils_2;
 	public static String ObjectDeleteAction_0;
 	public static String ObjectDeleteAction_1;
 	public static String ObjectDeleteAction_10;

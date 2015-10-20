@@ -53,6 +53,7 @@ import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.swtdesigner.ResourceManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
@@ -249,17 +250,17 @@ public class ObjectEditor extends MainEditor {
 		if(reqQuery.getExecuteType() == EXECUTE_TYPE.BLOCK) {
 			resultMainComposite.executeCommand(reqQuery);
 		} else {
+			try {
+				if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) return;
+			} catch (Exception e1) {
+				logger.error("if execute query?", e1);
+				return;
+			}
 			
 			if(!MessageDialog.openConfirm(null, Messages.ObjectEditor_0, Messages.ObjectEditor_3)) {
 				setOrionTextFocus();
 				return;
 			}
-			
-//			if(logger.isDebugEnabled()) {
-//				logger.debug("============================================================================"); //$NON-NLS-1$
-//				logger.debug(reqQuery.toString());
-//				logger.debug("============================================================================"); //$NON-NLS-1$
-//			}
 			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {

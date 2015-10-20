@@ -107,6 +107,7 @@ import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
@@ -554,46 +555,6 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * 쿼리가 실행 가능한 상태인지 검사한다.
-	 * 
-	 * - DB lock 상태인지?
-	 * - dml 을 묻는 상태인지?
-	 * - 프러덕, 백업 디비라서 select가 아닌지 묻는지?
-	 * 
-	 * @param reqQuery
-	 * @throws Exception
-	 */
-	private boolean ifExecuteQuery() throws Exception {
-		// security check.
-		if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
-			throw new Exception(Messages.ResultMainComposite_1);
-		}
-		
-		// 실행해도 되는지 묻는다.
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())
-				|| PermissionChecker.isProductBackup(getUserDB())
-		) {
-			boolean isDMLQuestion = reqQuery.isStatement();
-			if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
-				for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
-					if(!SQLUtil.isStatement(strSQL)) {
-						isDMLQuestion = true;
-						break;
-					}
-				}
-//			} else {
-//				if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
-			}
-		
-			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, Messages.ResultMainComposite_0, Messages.MainEditor_56)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-	
-	/**
 	 * 파라미터 쿼리인지 검사하여 쿼리를 만듭니다.
 	 * @return
 	 */
@@ -680,7 +641,7 @@ public class ResultSetComposite extends Composite {
 
 		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
 		try {
-			if(!ifExecuteQuery()) return false;
+			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) return false;
 		} catch(Exception e) {
 			executeErrorProgress(reqQuery, e, e.getMessage());
 			return false;
