@@ -15,29 +15,29 @@ import java.util.HashMap;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.record.RecordViewDialog;
 
 /**
- * Query Result 창에서 선택된 데이터를 한번에 보기 위한 창을 
+ * Query Result 창에서 선택된 로우 데이터를 한번에 보기 위한 창을 
  * 열어 줍니다.
  * 
  * @author billy.goo
  *
  */
-public class OpenSingleDataDialogAction extends Action implements IWorkbenchAction {
-	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenSingleDataDialogAction"; //$NON-NLS-1$
+public class OpenSingleRowDataDialogAction extends Action implements IWorkbenchAction {
+	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenSingleRowDataDialogAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
 	private QueryExecuteResultDTO dto;
 	
-	public OpenSingleDataDialogAction() {
+	public OpenSingleRowDataDialogAction() {
 		setId(ID);
-		setText("View Detail");
-		setToolTipText("View Detail");
+		setText(Messages.OpenSingleRowDataDialogAction_0);
+		setToolTipText(Messages.OpenSingleRowDataDialogAction_0);
 		setEnabled(false);
 	}
 	

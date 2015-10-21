@@ -10,10 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.editors.main;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -39,7 +35,6 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;

@@ -67,7 +67,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setMessage(title, IMessageProvider.INFORMATION);
+		setMessage(title, IMessageProvider.ERROR);
 		
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);

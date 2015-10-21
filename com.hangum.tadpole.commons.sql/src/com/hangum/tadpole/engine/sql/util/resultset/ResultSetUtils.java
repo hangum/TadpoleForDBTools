@@ -158,7 +158,14 @@ public class ResultSetUtils {
 //			logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
 //			logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
 //			logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-			mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
+			//
+			// mysql json 타입의 자바 변수가 1로 매칭 되어 있어서, 이것을 pgsql의 json 타입의 값인 1111로 매칭합니다.
+			//							- 2015.10.21 mysql 5.7
+			if(StringUtils.equalsIgnoreCase("json", rsm.getColumnTypeName(i+1))) {
+				mapColumnType.put(i+intStartIndex, 1111);
+			} else {
+				mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
+			}
 //			logger.debug("\t Column Label " + rsm.getColumnLabel(i+1) );
 			
 //			logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));

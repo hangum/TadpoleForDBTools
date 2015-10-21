@@ -57,6 +57,12 @@ public class TableColumnDAO {
 	String col_name = "";
 	String data_type = "";
 	
+	/**
+	 * column value
+	 * 컬럼에 실제 들어 있는 값을 정의 합니다. 
+	 */
+	String col_value = "";
+	
 	public TableColumnDAO() {
 	}
 	
@@ -215,5 +221,18 @@ public class TableColumnDAO {
 		setType(data_type);
 	}
 
+	/**
+	 * @return the col_value
+	 */
+	public String getCol_value() {
+		return col_value;
+	}
+
+	/**
+	 * @param col_value the col_value to set
+	 */
+	public void setCol_value(String col_value) {
+		this.col_value = col_value;
+	}
 	
 }

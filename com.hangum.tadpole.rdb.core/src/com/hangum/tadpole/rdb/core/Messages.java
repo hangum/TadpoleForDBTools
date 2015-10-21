@@ -325,6 +325,8 @@ public class Messages extends NLS {
 	public static String OpenDBRelationAction_2;
 	public static String OpenQueryEditorAction_1;
 	public static String OpenQueryEditorAction_2;
+	public static String OpenSingleColumnDataDialogAction_0;
+	public static String OpenSingleRowDataDialogAction_0;
 	public static String OracleLoginComposite_0;
 	public static String OracleLoginComposite_1;
 	public static String OracleLoginComposite_10;
@@ -746,6 +748,7 @@ public class Messages extends NLS {
 	public static String ResultSetComposite_1;
 	public static String ResultSetComposite_10;
 	public static String ResultSetComposite_11;
+	public static String ResultSetComposite_16;
 	public static String ResultSetComposite_2;
 	public static String ResultSetComposite_3;
 	public static String ResultSetComposite_4;
@@ -763,6 +766,7 @@ public class Messages extends NLS {
 	public static String ExecuteProcedureDialog_lblObjectName_text;
 	public static String TablesComposite_btnCsvExport_text;
 	public static String ColumnsComposite_btnDownload_text;
+	public static String ResultSetComposite_btnColumnDetail_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
