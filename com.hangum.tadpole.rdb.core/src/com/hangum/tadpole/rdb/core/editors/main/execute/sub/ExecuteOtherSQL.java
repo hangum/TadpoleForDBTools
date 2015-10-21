@@ -102,7 +102,7 @@ public class ExecuteOtherSQL {
 		} else { 
 		
 			// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-			if(TransactionManger.transactionQuery(reqQuery.getSql(), userEmail, userDB)) return;
+			if(TransactionManger.calledCommitOrRollback(reqQuery.getSql(), userEmail, userDB)) return;
 			
 			java.sql.Connection javaConn = null;
 			Statement statement = null;

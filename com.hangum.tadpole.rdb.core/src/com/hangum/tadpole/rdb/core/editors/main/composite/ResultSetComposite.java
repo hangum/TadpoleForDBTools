@@ -711,9 +711,11 @@ public class ResultSetComposite extends Composite {
 						if(reqQuery.isAutoCommit()) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
-							} else {
+							} else if(reqQuery.isStatement()) {
 								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
 								reqResultDAO.setRows(rsDAO.getDataList().getData().size());
+							} else {
+								ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 							}
 
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
@@ -721,10 +723,8 @@ public class ResultSetComposite extends Composite {
 								startTransactionMode();
 								reqQuery.setAutoCommit(false);
 							} else {
-								TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
+								TransactionManger.calledCommitOrRollback(reqQuery.getSql(), strUserEmail, getUserDB());
 							}
-						} else {
-							ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
 					}
 					
