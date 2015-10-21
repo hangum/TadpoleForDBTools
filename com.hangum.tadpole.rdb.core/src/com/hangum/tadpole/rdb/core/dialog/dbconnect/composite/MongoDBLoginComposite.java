@@ -216,6 +216,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText("test"); //$NON-NLS-1$
 			textUser.setText(""); //$NON-NLS-1$
 			textPassword.setText(""); //$NON-NLS-1$
+			textJDBCOptions.setText("maxPoolSize=20&connectTimeoutMS=3000&socketTimeoutMS=3000");
 			
 		} else {
 			textPort.setText("27017");			 //$NON-NLS-1$
@@ -264,7 +265,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 								StringUtils.trimToEmpty(textDatabase.getText())
 							);
 		if(!"".equals(textJDBCOptions.getText())) {
-			dbUrl += "?" + textJDBCOptions.getText();
+			dbUrl += "/?" + textJDBCOptions.getText();
 		}
 
 		userDB = new UserDBDAO();
