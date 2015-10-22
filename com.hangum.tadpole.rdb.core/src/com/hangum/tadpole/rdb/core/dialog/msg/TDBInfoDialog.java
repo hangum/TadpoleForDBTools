@@ -75,7 +75,7 @@ public class TDBInfoDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText("Detail message");
+		lblMessage.setText(Messages.TDBInfoDialog_0);
 		new Label(container, SWT.NONE);
 		
 		textMessage = new Text(container, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);

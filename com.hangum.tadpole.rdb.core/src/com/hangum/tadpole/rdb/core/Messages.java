@@ -734,6 +734,7 @@ public class Messages extends NLS {
 	public static String TDBErroDialog_2;
 	public static String TDBErroDialog_3;
 	public static String TDBErroDialog_4;
+	public static String TDBInfoDialog_0;
 	public static String RecordViewDialog_0;
 	public static String RecordViewDialog_1;
 	public static String RecordViewDialog_13;
