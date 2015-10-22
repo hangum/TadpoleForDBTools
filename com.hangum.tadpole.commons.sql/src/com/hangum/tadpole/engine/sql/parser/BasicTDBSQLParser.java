@@ -40,7 +40,7 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	
 	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*|^EXEC.*";
 	private static final String ORACLE_PATTERN_STATEMENT = "";
-	private static final String MYSQL_PATTERN_STATEMENT = "|^CALL.*";
+	private static final String MYSQL_PATTERN_STATEMENT = "|^CALL.*|^SET.*";
 	private static final String PGSQL_PATTERN_STATEMENT = "";
 	private static final String SQLITE_PATTERN_STATEMENT = "";
 	private static final String CUBRID_PATTERN_STATEMENT = "";
