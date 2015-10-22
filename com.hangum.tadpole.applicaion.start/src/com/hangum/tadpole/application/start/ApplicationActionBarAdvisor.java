@@ -67,7 +67,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction restFulAPIAction;
     
     /** send message */
-    private IAction sendMessageAction;
+    private IAction adminSendMessageAction;
     private IAction adminUserAction;
     private IAction adminSQLAuditAction;
     
@@ -116,8 +116,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	deleteResourceAction = new DeleteResourceAction(window);
     	register(deleteResourceAction);
     	
-    	sendMessageAction = new SendMessageAction(window);
-    	register(sendMessageAction);
+    	adminSendMessageAction = new SendMessageAction(window);
+    	register(adminSendMessageAction);
     	
     	adminUserAction = new AdminUserAction(window);
     	register(adminUserAction);
@@ -204,7 +204,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		manageMenu.add(schemaHistoryAction);
 		
 		if(isAdmin) {
-			adminMenu.add(sendMessageAction);
+			adminMenu.add(adminSendMessageAction);
 			adminMenu.add(adminUserAction);
 			adminMenu.add(adminSQLAuditAction);
 		}

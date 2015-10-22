@@ -80,6 +80,8 @@
 	FROM tadpole_user 
 	WHERE 
 		delyn = 'NO'
+	AND approval_yn = 'YES'
+	AND is_email_certification = 'YES'	
 	ORDER BY create_time DESC
 </select>
 
