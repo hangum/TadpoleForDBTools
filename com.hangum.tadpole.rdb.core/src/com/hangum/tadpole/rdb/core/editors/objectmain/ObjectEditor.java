@@ -154,7 +154,7 @@ public class ObjectEditor extends MainEditor {
 		tltmCompile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
+				String strQuery = browserEvaluateToStr(EditorFunctionService.GET_SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
 				
 				EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
 				if( Boolean.parseBoolean( browserEvaluateToStr(EditorFunctionService.IS_BLOCK_TEXT) ) ) {

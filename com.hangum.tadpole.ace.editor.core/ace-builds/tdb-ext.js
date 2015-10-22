@@ -36,6 +36,7 @@ var editorService = {
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
 	getSelectedText : function(varDelimiter) {},
+	setSelectedText : function() {},
 	
 	/** insert text */
 	insertText : function(varText) {},
@@ -233,20 +234,13 @@ editor.commands.addCommand({
  * @returns {Boolean}
  */
 editorService.isBlockText = function() {
-	var isBlock = false;
 	if("" != editor.getSelectedText()) {
-		isBlock = true;
-	} else {
-		// selected text
-		var selectTxt = editorService.getSelectedText(";");
-		var intQueryLine = editor.getCursorPosition().row;
-		editor.gotoLine(intQueryLine-1);
-		
-		editor.find(selectTxt);
+		return true;
 	}
 	
-	return isBlock;
+	return false;
 }
+
 
 editor.commands.addCommand({
     name: 'executeQuery',
@@ -401,6 +395,15 @@ editorService.setTabSize = function(varTabSize) {
 /** getAllText */
 editorService.getAllText = function() {
 	return editor.getValue();
+};
+/** set seltected text */
+editorService.setSelectedText = function() {
+	// selected text
+	var selectTxt = editorService.getSelectedText(";");
+	var intQueryLine = editor.getCursorPosition().row;
+	editor.gotoLine(intQueryLine-1);
+	
+	editor.find(selectTxt);
 };
 /**
  * 수행해야할 작업 목록을 가져옵니다.
