@@ -234,7 +234,16 @@ editor.commands.addCommand({
  */
 editorService.isBlockText = function() {
 	var isBlock = false;
-	if("" != editor.getSelectedText())  isBlock = true;
+	if("" != editor.getSelectedText()) {
+		isBlock = true;
+	} else {
+		// selected text
+		var selectTxt = editorService.getSelectedText(";");
+		var intQueryLine = editor.getCursorPosition().row;
+		editor.gotoLine(intQueryLine-1);
+		
+		editor.find(selectTxt);
+	}
 	
 	return isBlock;
 }
@@ -244,7 +253,8 @@ editor.commands.addCommand({
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-   			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
+    		var selectTxt = editorService.getSelectedText(";");
+   			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, selectTxt, editorService.isBlockText());
     	} catch(e) {
     		console.log(e);
     		alert(shortcutErrMsg);
