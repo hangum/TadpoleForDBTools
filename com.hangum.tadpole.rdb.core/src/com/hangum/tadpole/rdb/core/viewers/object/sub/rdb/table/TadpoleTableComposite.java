@@ -873,7 +873,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// find select object and viewer select
 		for(int i=0; i<listTablesDAO.size(); i++) {
 			TableDAO tableDao = (TableDAO)tableListViewer.getElementAt(i);
-			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+			if(tableDao != null & StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
 				tableListViewer.setSelection(new StructuredSelection(tableListViewer.getElementAt(i)), true);
 				break;
 			}

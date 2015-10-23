@@ -685,7 +685,9 @@ public class ResultSetComposite extends Composite {
 
 		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
 		try {
-			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) return false;
+			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) {
+				return false;
+			}
 		} catch(Exception e) {
 			executeErrorProgress(reqQuery, e, e.getMessage());
 			return false;
@@ -811,10 +813,6 @@ public class ResultSetComposite extends Composite {
 						// 히스토리 화면을 갱신합니다.
 						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 						
-						// 주의) 일반적으로는 포커스가 잘 가지만, 
-						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
-						getRdbResultComposite().setOrionTextFocus();
-
 						// 모든 쿼리가 종료 되었음을 알린다.
 						finallyEndExecuteCommand();
 					}
@@ -1022,6 +1020,10 @@ public class ResultSetComposite extends Composite {
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			iMainEditorExtension.queryEndedExecute(rsDAO);
 		}
+
+		// 주의) 일반적으로는 포커스가 잘 가지만, 
+		// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
+		getRdbResultComposite().setOrionTextFocus();
 	}
 	
 	/**

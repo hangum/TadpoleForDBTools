@@ -148,7 +148,9 @@ public class ResultMainComposite extends Composite {
 		this.reqQuery = reqQuery;
 		
 		boolean isExecuteQuery = compositeResultSet.executeCommand(reqQuery);
-		if(!isExecuteQuery) setOrionTextFocus();
+		if(!isExecuteQuery) {
+			setOrionTextFocus();
+		}
 	}
 	
 	/**
