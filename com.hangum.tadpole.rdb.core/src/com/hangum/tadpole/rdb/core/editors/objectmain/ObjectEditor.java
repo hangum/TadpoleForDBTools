@@ -423,37 +423,37 @@ public class ObjectEditor extends MainEditor {
 	 * @param reqQuery
 	 */
 	private void mssqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
-//		if(reqResultDAO.getException() == null) return;
-//		String strSQLState = "";
-//		int intSQLErrorCode = -1;
-//		Throwable cause = reqResultDAO.getException();;
-//		if (cause instanceof SQLException) {
-//			try {
-//				SQLException sqlException = (SQLException)cause;
-//				strSQLState = sqlException.getSQLState();
-//				intSQLErrorCode =sqlException.getErrorCode();
-//				
-//				if(logger.isDebugEnabled()) logger.debug("==========> SQLState : " + strSQLState + "\t SQLErrorCode : " + intSQLErrorCode);
-//			} catch(Exception e) {
-//				logger.error("SQLException to striing", e); //$NON-NLS-1$
-//			}
-//		}
-//		
-//		if(strSQLState.equals("S0001") && intSQLErrorCode == 2714) { //$NON-NLS-1$
-//			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
-//			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
-//				RequestResultDAO reqReResultDAO = new RequestResultDAO();
-//				try {
-//					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
-//					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
-//					
-//					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
-//					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
-//				} catch(Exception ee) {
-//					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
-//				}
-//			}
-//		}
+		if(reqResultDAO.getException() == null) return;
+		String strSQLState = "";
+		int intSQLErrorCode = -1;
+		Throwable cause = reqResultDAO.getException();;
+		if (cause instanceof SQLException) {
+			try {
+				SQLException sqlException = (SQLException)cause;
+				strSQLState = sqlException.getSQLState();
+				intSQLErrorCode =sqlException.getErrorCode();
+				
+				if(logger.isDebugEnabled()) logger.debug("==========> SQLState : " + strSQLState + "\t SQLErrorCode : " + intSQLErrorCode);
+			} catch(Exception e) {
+				logger.error("SQLException to striing", e); //$NON-NLS-1$
+			}
+		}
+		
+		if(strSQLState.equals("S0001") && intSQLErrorCode == 2714) { //$NON-NLS-1$
+			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
+			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+				RequestResultDAO reqReResultDAO = new RequestResultDAO();
+				try {
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+					
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+				} catch(Exception ee) {
+					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
+				}
+			}
+		}
 		
 	}
 	
