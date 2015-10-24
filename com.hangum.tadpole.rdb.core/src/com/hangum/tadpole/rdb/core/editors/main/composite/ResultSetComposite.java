@@ -521,7 +521,10 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void openSinglColumViewDialog() {
 		TableColumnDAO columnDao = selectColumnToEditor();
-		if(columnDao == null) return;
+		if(columnDao == null) {
+			MessageDialog.openWarning(getShell(), Messages.ResultSetComposite_7, Messages.ResultSetComposite_6);
+			return;
+		}
 			
 		String strType = columnDao.getType();
 		if("JSON".equalsIgnoreCase(strType)) { //$NON-NLS-1$
