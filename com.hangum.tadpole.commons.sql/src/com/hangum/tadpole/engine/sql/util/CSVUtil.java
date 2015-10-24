@@ -68,8 +68,6 @@ public class CSVUtil {
 		}
 		
 		// 컬럼 이름.
-		
-		
 		if(!listCsvData.isEmpty()) {
 			FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData), true);
 		}
