@@ -42,7 +42,7 @@ public class CSVUtil {
 		// column .
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
 		String[] strArrys = new String[mapLabelName.size()-1];
-		for(int i=1; i<strArrys.length; i++) {
+		for(int i=1; i<mapLabelName.size(); i++) {
 			strArrys[i-1] = mapLabelName.get(i);
 		}
 		listCsvData.add(strArrys);
