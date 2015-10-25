@@ -271,6 +271,7 @@ public class SessionManager {
 			HttpSession sStore = RWT.getRequest().getSession();			
 			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
 			sStore.invalidate();
+			
 			//fixed https://github.com/hangum/TadpoleForDBTools/issues/647
 			String defaultUrl = MessageFormat.format(
 				"{0}://{1}:{2}{3}",
@@ -280,7 +281,6 @@ public class SessionManager {
 								RWT.getRequest().getRequestURI() 
 							}
 			);
-	     
 	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", defaultUrl);
 	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
 	     	executor.execute("setTimeout('"+browserText+"', 100)" );

@@ -73,6 +73,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
+import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
@@ -132,6 +133,9 @@ public class MainEditor extends EditorExtension {
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
+		
+		// setting title image
+		setTitleImage(DBIconsUtils.getDBImage(getUserDB()));
 	}
 	
 	@Override

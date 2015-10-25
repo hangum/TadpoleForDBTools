@@ -53,55 +53,6 @@ public class ManagerLabelProvider extends LabelProvider {
 	public static Image getGroupImage() {
 		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/server_database.png"); //$NON-NLS-1$
 	}
-	/**
-	 * get db image
-	 * 
-	 * @param userDB
-	 * @return
-	 */
-	public static Image getDBImage(UserDBDAO userDB) {
-		String strBaseImage = "";
-		
-		DBDefine dbType = DBDefine.getDBDefine(userDB);
-		if(DBDefine.MYSQL_DEFAULT == dbType) 		strBaseImage = "resources/icons/mysql-add.png";
-		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "resources/icons/mariadb-add.png";
-		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
-		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "resources/icons/sqlite-add.png";
-		else if(DBDefine.MSSQL_DEFAULT == dbType || DBDefine.MSSQL_8_LE_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
-		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "resources/icons/cubrid-add.png";
-		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
-		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
-		else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) strBaseImage = "resources/icons/hive-add.png";
-		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.jpg";
-		else  strBaseImage = "resources/icons/database-add.png";
-		
-		Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
-		
-		try {
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
-				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {
-					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.BOTTOM_LEFT);
-				} else {
-					baseImage = getDecorateImage(baseImage, "resources/icons/unlock_0.28.png", ResourceManager.BOTTOM_LEFT);
-				}
-			}
-		} catch(Exception e) {
-			logger.error("Image decoration", e);
-		}
-		
-		// extension image decoration
-		try {
-			ConnectionDecorationContributionsHandler handler = new ConnectionDecorationContributionsHandler();
-			Image extensionImage = handler.getImage(userDB);
-			if(extensionImage != null) {
-				return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
-			}
-		} catch(Exception e) {
-			logger.error("extension point exception", e);
-		}
-		
-		return baseImage;
-	}
 	
 	/**
 	 * user label text
@@ -140,7 +91,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			return getGroupImage();
 
 		} else if(element instanceof UserDBDAO) {
-			return getDBImage((UserDBDAO)element);			
+			return DBIconsUtils.getDBImage((UserDBDAO)element);			
 		
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
@@ -152,7 +103,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			
 			if(PublicTadpoleDefine.SHARED_TYPE.PRIVATE.name().equals(dao.getShared_type())) {
 				try {
-					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.TOP_RIGHT);
+					baseImage = DBIconsUtils.getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.TOP_RIGHT);
 				} catch(Exception e) {
 					logger.error("image decorate error", e);
 				}
@@ -189,16 +140,4 @@ public class ManagerLabelProvider extends LabelProvider {
 		return "## not set ##"; //$NON-NLS-1$
 	}
 	
-	
-	/**
-	 * lock image
-	 * 
-	 * @param baseImage
-	 * @return
-	 */
-	private static Image getDecorateImage(Image baseImage, String strDecorateImage, int conor) throws Exception {
-		return ResourceManager.decorateImage(baseImage, 
-				ResourceManager.getPluginImage(Activator.PLUGIN_ID, strDecorateImage), 
-				conor);
-	}
 }
