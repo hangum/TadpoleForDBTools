@@ -61,9 +61,34 @@ public class DBIconsUtils {
 	 * @param userDB
 	 * @return
 	 */
-	public static Image getDBImage(UserDBDAO userDB) {
+	public static Image getDBNormalImage(UserDBDAO userDB) {
 		String strBaseImage = getDBImageUrl(userDB);
-		Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
+		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
+	}
+	
+	/**
+	 * get procedure image
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static Image getProcedureImage(UserDBDAO userDB) {
+		Image baseImage = getDBNormalImage(userDB);
+		try {
+			return getDecorateImage(baseImage, "resources/icons/object_editor_0.28.png", ResourceManager.BOTTOM_RIGHT);
+		} catch(Exception e) {
+			return baseImage;
+		}
+	}
+	
+	/**
+	 * get db image
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static Image getDBConnectionImage(UserDBDAO userDB) {
+		Image baseImage = getDBNormalImage(userDB);
 		
 		try {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {

@@ -591,7 +591,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if(element instanceof UserDBDAO) {
-			if(columnIndex == 0) return DBIconsUtils.getDBImage((UserDBDAO)element);
+			if(columnIndex == 0) return DBIconsUtils.getDBConnectionImage((UserDBDAO)element);
 		} else if(element instanceof ManagerListDTO) {
 			if(columnIndex == 0) return ManagerLabelProvider.getGroupImage();
 		}

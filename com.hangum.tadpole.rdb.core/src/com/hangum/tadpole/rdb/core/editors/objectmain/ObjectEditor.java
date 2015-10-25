@@ -54,6 +54,7 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
+import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.swtdesigner.ResourceManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
@@ -89,6 +90,9 @@ public class ObjectEditor extends MainEditor {
 		else setPartName(String.format("%s (%s)", qei.getName(), qei.getObjectName())); //$NON-NLS-1$
 		
 		objectName = qei.getObjectName();
+		
+		// setting title image
+		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
 	}
 
 	@Override

@@ -91,7 +91,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			return getGroupImage();
 
 		} else if(element instanceof UserDBDAO) {
-			return DBIconsUtils.getDBImage((UserDBDAO)element);			
+			return DBIconsUtils.getDBConnectionImage((UserDBDAO)element);			
 		
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;

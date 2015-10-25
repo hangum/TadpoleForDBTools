@@ -135,7 +135,7 @@ public class MainEditor extends EditorExtension {
 		super.setUserType(strRoleType);
 		
 		// setting title image
-		setTitleImage(DBIconsUtils.getDBImage(getUserDB()));
+		setTitleImage(DBIconsUtils.getDBNormalImage(getUserDB()));
 	}
 	
 	@Override
