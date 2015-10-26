@@ -93,9 +93,9 @@ public class DBIconsUtils {
 		try {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
 				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {
-					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.BOTTOM_LEFT);
+					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.BOTTOM_RIGHT);
 				} else {
-					baseImage = getDecorateImage(baseImage, "resources/icons/unlock_0.28.png", ResourceManager.BOTTOM_LEFT);
+					baseImage = getDecorateImage(baseImage, "resources/icons/unlock_0.28.png", ResourceManager.BOTTOM_RIGHT);
 				}
 			}
 		} catch(Exception e) {
@@ -107,7 +107,7 @@ public class DBIconsUtils {
 			ConnectionDecorationContributionsHandler handler = new ConnectionDecorationContributionsHandler();
 			Image extensionImage = handler.getImage(userDB);
 			if(extensionImage != null) {
-				return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
+				return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_LEFT);
 			}
 		} catch(Exception e) {
 			logger.error("extension point exception", e);
