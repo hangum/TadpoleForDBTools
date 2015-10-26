@@ -601,9 +601,7 @@ public class ResultSetComposite extends Composite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 
 			final TadpoleResultSet trs = rsDAO.getDataList();
-//			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount()); //$NON-NLS-1$ //$NON-NLS-2$
 			if(trs.getData().size() > tableResult.getItemCount()) {
-//				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())); //$NON-NLS-1$ //$NON-NLS-2$
 				if(trs.getData().size() > (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())) {
 					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
 				} else {
