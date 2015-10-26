@@ -124,15 +124,16 @@ public class MainEditor extends EditorExtension {
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
+		String strPartName = qei.getName();
 		dBResource = qei.getResourceDAO();
-		if(dBResource == null) setPartName(qei.getName());
-		else setPartName(dBResource.getName());
+		if(dBResource != null) strPartName = dBResource.getName();
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
 
 		setSite(site);
 		setInput(input);
+		setPartName(strPartName);
 		setTitleImage(DBIconsUtils.getDBNormalImage(getUserDB()));
 	}
 	

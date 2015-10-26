@@ -23,7 +23,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -42,6 +41,7 @@ import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
@@ -58,7 +58,6 @@ import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.swtdesigner.ResourceManager;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 /**
  * Object Editor
  * 
@@ -82,14 +81,16 @@ public class ObjectEditor extends MainEditor {
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
-
 		strRoleType = userDB.getRole_id();
-		if("".equals(qei.getObjectName())) setPartName(qei.getName()); //$NON-NLS-1$
-		else setPartName(String.format("%s (%s)", qei.getName(), qei.getObjectName())); //$NON-NLS-1$
+		
+		String strPartName = "";
+		if("".equals(qei.getObjectName())) strPartName = qei.getName(); //$NON-NLS-1$
+		else strPartName = String.format("%s (%s)", qei.getName(), qei.getObjectName()); //$NON-NLS-1$
 		objectName = qei.getObjectName();
 
 		setSite(site);
 		setInput(input);
+		setPartName(strPartName);
 		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
 	}
 
