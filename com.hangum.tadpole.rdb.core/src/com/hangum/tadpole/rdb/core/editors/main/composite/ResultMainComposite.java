@@ -211,7 +211,7 @@ public class ResultMainComposite extends Composite {
 	 * @param msg
 	 */
 	public void refreshMessageView(RequestQuery requestQuery, Throwable throwable, String msg) {
-		compositeMessage.addAfterRefresh(requestQuery, new TadpoleMessageDAO(new Date(), msg, throwable));		
+		compositeMessage.addAfterRefresh(getUserDB(), requestQuery, new TadpoleMessageDAO(new Date(), msg, throwable));		
 	}
 	
 	/**

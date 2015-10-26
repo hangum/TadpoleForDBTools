@@ -770,6 +770,7 @@ public class Messages extends NLS {
 	public static String TablesComposite_btnCsvExport_text;
 	public static String ColumnsComposite_btnDownload_text;
 	public static String ResultSetComposite_btnColumnDetail_text;
+	public static String MessageComposite_lblGoogleSearch_1_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
