@@ -388,72 +388,95 @@ public class ResultSetComposite extends Composite {
 				
 				// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
 				if(i == 0) {
+					columnDao.setName("_TDB_ALL_");
+					columnDao.setType(null);
+					
+					for (int j=1; j<tableResult.getColumnCount(); j++) {
+						Object columnObject = mapColumns.get(j);
+						
+						if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(j))) {
+							String strText = ""; //$NON-NLS-1$
+							
+							// if select value is null can 
+							if(columnObject == null) strText = "0"; //$NON-NLS-1$
+							else strText = columnObject.toString();
+							columnDao.setCol_value(columnDao.getCol_value() + strText + ", ");
+						} else {
+							String strText = ""; //$NON-NLS-1$
+							
+							// if select value is null can 
+							if(columnObject == null) strText = "''"; //$NON-NLS-1$
+							else strText = columnObject.toString();
+							columnDao.setCol_value(columnDao.getCol_value() + "'" + strText + "', ");
+						}
+					}
+					columnDao.setCol_value(StringUtils.removeEnd(columnDao.getCol_value(), ", "));
+
+					break;
 				} else {
 					
 					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
 					Object columnObject = mapColumns.get(i);
-//					logger.debug("=======mapColumns type===================================================="); //$NON-NLS-1$
-//					logger.debug(rsDAO.getColumnType().get(i));
 					
 					String strType = RDBTypeToJavaTypeUtils.getRDBType(rsDAO.getColumnType().get(i));
-//					logger.debug("== rdb type is : " + strType); //$NON-NLS-1$
-//					logger.debug("======mapColumns type====================================================="); //$NON-NLS-1$
+					columnDao.setName(rsDAO.getColumnName().get(i));
 					columnDao.setType(strType);
 					
-					// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
-					//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
-					if (columnObject != null && columnObject instanceof java.sql.Clob ){
-						Clob cl = (Clob) columnObject;
-
-						StringBuffer clobContent = new StringBuffer();
-						String readBuffer = new String();
-
-						// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
-						BufferedReader bufferedReader;
-						try {
-							bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
-							while ((readBuffer = bufferedReader.readLine())!= null) {
-								clobContent.append(readBuffer);
-							}
-
-							columnDao.setCol_value(clobContent.toString());				
-						} catch (Exception e) {
-							logger.error("Clob column echeck", e); //$NON-NLS-1$
-						}
-					}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
-						try {
-							Blob blob = (Blob) columnObject;
-							columnDao = null;
-							
-							TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
-							dlg.open();
-
-						} catch (Exception e) {
-							logger.error("Blob column echeck", e); //$NON-NLS-1$
-						}
+					if(columnObject != null) {
+						// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
+						if (columnObject instanceof java.sql.Clob ){
+							Clob cl = (Clob) columnObject;
 	
-					}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
-						byte[] b = (byte[])columnObject;
-						StringBuffer str = new StringBuffer();
-						try {
-							for (byte buf : b){
-								str.append(buf);
+							StringBuffer clobContent = new StringBuffer();
+							String readBuffer = new String();
+	
+							// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
+							BufferedReader bufferedReader;
+							try {
+								bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
+								while ((readBuffer = bufferedReader.readLine())!= null) {
+									clobContent.append(readBuffer);
+								}
+	
+								columnDao.setCol_value(clobContent.toString());				
+							} catch (Exception e) {
+								logger.error("Clob column echeck", e); //$NON-NLS-1$
 							}
-							str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
+						}else if (columnObject instanceof java.sql.Blob ){
+							try {
+								Blob blob = (Blob) columnObject;
+								columnDao = null;
+								
+								TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
+								dlg.open();
+	
+							} catch (Exception e) {
+								logger.error("Blob column echeck", e); //$NON-NLS-1$
+							}
+		
+						}else if (columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
+							byte[] b = (byte[])columnObject;
+							StringBuffer str = new StringBuffer();
+							try {
+								for (byte buf : b){
+									str.append(buf);
+								}
+								str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
+								
+								columnDao.setCol_value(str.toString());
+							} catch (Exception e) {
+								logger.error("Clob column echeck", e); //$NON-NLS-1$
+							}
+						}else{
+							String strText = ""; //$NON-NLS-1$
 							
-							columnDao.setCol_value(str.toString());
-						} catch (Exception e) {
-							logger.error("Clob column echeck", e); //$NON-NLS-1$
+							// if select value is null can 
+							if(columnObject == null) strText = ""; //$NON-NLS-1$
+							else strText = columnObject.toString();
+							
+							columnDao.setCol_value(strText);
 						}
-					}else{
-						String strText = ""; //$NON-NLS-1$
-						
-						// if select value is null can 
-						if(columnObject == null) strText = ""; //$NON-NLS-1$
-						else strText = columnObject.toString();
-						
-						columnDao.setCol_value(strText);
-					}
+					} 	// end object null
 				}	// end if first column
 			
 				break;
