@@ -16,9 +16,9 @@ import java.sql.DriverManager;
 public class PostgresTest extends AbstractDriverInfo {
 	public static void main(String[] args) throws Exception {
 
-		String url = "jdbc:postgresql:tadpole";
-		String usr = "postgres";
-		String pwd = "postgres";
+		String url = "jdbc:postgresql://localhost/hangum";
+		String usr = "hangum";
+		String pwd = "";
 
 		Class.forName("org.postgresql.Driver");
 

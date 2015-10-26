@@ -119,9 +119,6 @@ public class MainEditor extends EditorExtension {
 	
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setSite(site);
-		setInput(input);
-		
 		MainEditorInput qei = (MainEditorInput)input;
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
@@ -133,8 +130,9 @@ public class MainEditor extends EditorExtension {
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
-		
-		// setting title image
+
+		setSite(site);
+		setInput(input);
 		setTitleImage(DBIconsUtils.getDBNormalImage(getUserDB()));
 	}
 	

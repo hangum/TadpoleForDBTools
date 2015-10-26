@@ -745,6 +745,7 @@ public class Messages extends NLS {
 	public static String ResultMainComposite_1;
 	public static String ResultMainComposite_2;
 	public static String ResultMainComposite_3;
+	public static String ResultMainComposite_4;
 	public static String ResultSetComposite_0;
 	public static String ResultSetComposite_1;
 	public static String ResultSetComposite_10;

@@ -25,10 +25,14 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	public static final String TMP_GET_PARTDATA = " %s limit %s,%s";
 	
 	/**
-	 * 
-	 * explain FORMAT=json (greate than 5.6) 
+	 * explain  
 	 */
 	public static final String TMP_EXPLAIN_EXTENDED = "explain extended ";
+	
+	/**
+	 * explain FORMAT=json (greate than 5.6) 
+	 */
+	public static final String TMP_EXPLAIN_EXTENDED_JSON = "explain format=json ";
 	
 	/** table - mysql */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 

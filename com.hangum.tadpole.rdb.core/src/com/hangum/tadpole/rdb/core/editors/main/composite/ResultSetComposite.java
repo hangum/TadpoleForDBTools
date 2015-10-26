@@ -125,9 +125,6 @@ import com.swtdesigner.SWTResourceManager;
  *
  */
 public class ResultSetComposite extends Composite {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3706926974815713584L;
 
 	/**  Logger for this class. */
@@ -801,7 +798,6 @@ public class ResultSetComposite extends Composite {
 					}
 					
 				} catch(Exception e) {
-					
 					reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
 					reqResultDAO.setMesssage(e.getMessage());
 					
@@ -829,7 +825,7 @@ public class ResultSetComposite extends Composite {
 							executeFinish(reqQuery, reqResultDAO);
 						} else {
 							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
-							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
+//							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
 						}
 						
 						// 처리를 위해 결과를 담아 둡니다.
@@ -1092,45 +1088,49 @@ public class ResultSetComposite extends Composite {
 	 */
 	public void executeFinish(RequestQuery reqQuery, RequestResultDAO executingSQLDAO) {
 		if(reqQuery.isStatement()) {
-
-			// table data를 생성한다.
-			final TadpoleResultSet trs = rsDAO.getDataList();
-			sqlSorter = new SQLResultSorter(-999);
 			
-			boolean isEditable = true;
-			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
-			SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
-			
-			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
-			tvQueryResult.setContentProvider(new ArrayContentProvider());
-			
-			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-			if(trs.getData().size() > GetPreferenceGeneral.getPageCount()) {
-				tvQueryResult.setInput(trs.getData().subList(0, GetPreferenceGeneral.getPageCount()));	
-			} else {
-				tvQueryResult.setInput(trs.getData());
+			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
+				getRdbResultComposite().setQueryPlanView(reqQuery, rsDAO);
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.QUERY_PLAN);
+			} else {	// table data를 생성한다.
+				final TadpoleResultSet trs = rsDAO.getDataList();
+				sqlSorter = new SQLResultSorter(-999);
+				
+				boolean isEditable = true;
+				if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
+				SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
+				
+				tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
+				tvQueryResult.setContentProvider(new ArrayContentProvider());
+				
+				// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
+				if(trs.getData().size() > GetPreferenceGeneral.getPageCount()) {
+					tvQueryResult.setInput(trs.getData().subList(0, GetPreferenceGeneral.getPageCount()));	
+				} else {
+					tvQueryResult.setInput(trs.getData());
+				}
+				tvQueryResult.setSorter(sqlSorter);
+				
+				// 메시지를 출력합니다.
+				float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
+				String strResultMsg = ""; //$NON-NLS-1$
+				if(trs.isEndOfRead()) {
+					strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+				} else {
+					// 데이터가 한계가 넘어 갔습니다.
+					String strMsg = String.format(Messages.MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
+					strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+				}
+				
+				tvQueryResult.getTable().setToolTipText(strResultMsg);
+				lblQueryResultStatus.setText(strResultMsg);
+				lblQueryResultStatus.pack();
+				sqlFilter.setTable(tvQueryResult.getTable());
+				
+				// Pack the columns
+				TableUtil.packTable(tvQueryResult.getTable());
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 			}
-			tvQueryResult.setSorter(sqlSorter);
-			
-			// 메시지를 출력합니다.
-			float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
-			String strResultMsg = ""; //$NON-NLS-1$
-			if(trs.isEndOfRead()) {
-				strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
-			} else {
-				// 데이터가 한계가 넘어 갔습니다.
-				String strMsg = String.format(Messages.MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
-				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
-			}
-			
-			tvQueryResult.getTable().setToolTipText(strResultMsg);
-			lblQueryResultStatus.setText(strResultMsg);
-			lblQueryResultStatus.pack();
-			sqlFilter.setTable(tvQueryResult.getTable());
-			
-			// Pack the columns
-			TableUtil.packTable(tvQueryResult.getTable());
-			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		} else {
 			getRdbResultComposite().refreshMessageView(reqQuery, null, Messages.ResultSetComposite_10 + executingSQLDAO.getStrSQLText());
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);

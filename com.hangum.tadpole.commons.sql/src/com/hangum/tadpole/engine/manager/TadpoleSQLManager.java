@@ -68,16 +68,16 @@ public class TadpoleSQLManager {
 	 * 
 	 * </pre>
 	 * 
-	 * @param dbInfo
+	 * @param dbDao
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws TadpoleSQLManagerException {
+	public static SqlMapClient getInstance(final UserDBDAO dbDao) throws TadpoleSQLManagerException {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
 //		synchronized (dbManager) {
-			String searchKey = getKey(dbInfo);
+			String searchKey = getKey(dbDao);
 			try {
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
@@ -86,9 +86,9 @@ public class TadpoleSQLManager {
 					
 					// oracle 일 경우 로케일을 설정 
 					try { 
-						if(DBDefine.getDBDefine(dbInfo) == DBDefine.ORACLE_DEFAULT) {
-							if(dbInfo.getLocale() != null && !"".equals(dbInfo.getLocale())) {
-								Locale.setDefault(new Locale(dbInfo.getLocale()));
+						if(DBDefine.getDBDefine(dbDao) == DBDefine.ORACLE_DEFAULT) {
+							if(dbDao.getLocale() != null && !"".equals(dbDao.getLocale())) {
+								Locale.setDefault(new Locale(dbDao.getLocale()));
 							}
 						}
 					} catch(Exception e) {
@@ -97,7 +97,7 @@ public class TadpoleSQLManager {
 					// oracle 일 경우 locale 설정 
 					
 					// connection pool 을 가져옵니다.
-					sqlMapClient = SQLMap.getInstance(dbInfo);
+					sqlMapClient = SQLMap.getInstance(dbDao);
 					dbManager.put(searchKey, sqlMapClient);
 					
 					// metadata를 가져와서 저장해 놓습니다.
@@ -105,7 +105,7 @@ public class TadpoleSQLManager {
 					
 					// don't belive keyword. --;;
 					DatabaseMetaData dbMetadata = conn.getMetaData();
-					setMetaData(searchKey, dbInfo, dbMetadata.getSQLKeywords());
+					setMetaData(searchKey, dbDao, dbMetadata);
 				}
 				
 			} catch(Exception e) {
@@ -115,7 +115,7 @@ public class TadpoleSQLManager {
 //				} catch(Exception ee) {
 //					logger.error("request error", ee);
 //				}
-				logger.error("===\n get DB Instance \n seq is " + dbInfo.getSeq() + "\n" , e);
+				logger.error("===\n get DB Instance \n seq is " + dbDao.getSeq() + "\n" , e);
 				
 				dbManager.remove(searchKey);
 				
@@ -144,13 +144,16 @@ public class TadpoleSQLManager {
 	/**
 	 * 각 DB의 metadata를 넘겨줍니다.
 	 * 
+	 * @param searchKey
+	 * @param dbDao
+	 * @param dbMetadata
 	 * @return
 	 */
-	public static void setMetaData(String searchKey, final UserDBDAO dbInfo, String sqlKeywords) throws Exception {
+	public static void setMetaData(String searchKey, final UserDBDAO dbDao, DatabaseMetaData tmpDBMetadata) throws Exception {
 		TadpoleMetaData tmd = null;
 		
 		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다. 
-		switch ( dbInfo.getDBDefine() ) {
+		switch ( dbDao.getDBDefine() ) {
 			case ORACLE_DEFAULT:		
 				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
 				break;
@@ -170,22 +173,25 @@ public class TadpoleSQLManager {
 		}
 
 		// set keyword
-		if(dbInfo.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		if(dbDao.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
-		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + sqlKeywords;
+		} else if(dbDao.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbDao.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbDao.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + dbMetadata;
 			tmd.setKeywords(strFullKeywords);
-		} else if(dbInfo.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+		} else if(dbDao.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method
-		} else if(dbInfo.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				dbInfo.getDBDefine() == DBDefine.HIVE2_DEFAULT
+		} else if(dbDao.getDBDefine() == DBDefine.HIVE_DEFAULT ||
+				dbDao.getDBDefine() == DBDefine.HIVE2_DEFAULT
 		) {
 			// not support this methods
 			tmd.setKeywords("");
 		} else {
-			tmd.setKeywords(sqlKeywords);
+			tmd.setKeywords(tmpDBMetadata.getSQLKeywords());
 		}
+		
+		tmd.setDbMajorVersion(tmpDBMetadata.getDatabaseMajorVersion());
+		tmd.setMinorVersion(tmpDBMetadata.getDatabaseMinorVersion());
 		
 		dbMetadata.put(searchKey, tmd);
 	}

@@ -29,11 +29,11 @@ public class MSSQLInstanceTest {
 	}
 //	hangum-8ec868b1/Northwin
 	private String getConnectionUrl() {
-//		return url + serverName + ":" + portNumber + "/"+ databaseName + ";instance=inst";
+		return url + serverName + ":" + portNumber + "/"+ databaseName + ";instance=inst";
 		
 //		hangum-8ec868b1/Northwin
 //		HANGUM-8EC868B1\SQLEXPRESS
-		return url + "HANGUM-8EC868B1/Northwin;instance=SQLEXPRESS";
+//		return url + "HANGUM-8EC868B1/Northwin;instance=SQLEXPRESS";
 	}
 
 	private java.sql.Connection getConnection() {

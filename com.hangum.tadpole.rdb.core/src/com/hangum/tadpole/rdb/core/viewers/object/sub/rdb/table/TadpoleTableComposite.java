@@ -635,7 +635,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 			// sql keyword를 설정합니다.
 			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
-				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getKeyworkd(userDB));
+				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
 			}
 			
 		} else {

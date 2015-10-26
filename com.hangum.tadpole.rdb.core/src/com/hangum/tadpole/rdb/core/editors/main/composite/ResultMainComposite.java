@@ -26,8 +26,10 @@ import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.composite.plan.GeneralPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
@@ -36,7 +38,6 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
  * @author hangum
  *
  */
-@SuppressWarnings("serial")
 public class ResultMainComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultMainComposite.class);
@@ -52,6 +53,8 @@ public class ResultMainComposite extends Composite {
 
 	/** 쿼리 결과 페이지 로케이션 */
 	private ResultSetComposite compositeResultSet;
+	
+	private GeneralPlanComposite compositeQueryPlan;
 	
 	/** query history */
     private QueryHistoryComposite compositeQueryHistory;
@@ -88,8 +91,9 @@ public class ResultMainComposite extends Composite {
 		
 		// Set tab index
 		tabFolderResult.setData(EditorDefine.RESULT_TAB.RESULT_SET.toString(), 		0);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB.SQL_RECALL.toString(), 		1);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE.toString(), 2);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.QUERY_PLAN.toString(), 		1);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.SQL_RECALL.toString(), 		2);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE.toString(), 3);
 
 		///////////////////// tab resultset //////////////////////////		
 		compositeResultSet = new ResultSetComposite(tabFolderResult, SWT.NONE);
@@ -99,6 +103,15 @@ public class ResultMainComposite extends Composite {
 		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
 		tbtmResult.setText(Messages.MainEditor_7);
 		tbtmResult.setControl(compositeResultSet);
+		
+		///////////////////// tab sql plan //////////////////////////		
+		compositeQueryPlan = new GeneralPlanComposite(tabFolderResult, SWT.NONE);
+		compositeQueryPlan.setRDBResultComposite(this);
+		compositeQueryPlan.setLayout(new GridLayout(1, false));
+		
+		CTabItem tbtmQueryPlan = new CTabItem(tabFolderResult, SWT.NONE);
+		tbtmQueryPlan.setText(Messages.ResultMainComposite_4);
+		tbtmQueryPlan.setControl(compositeQueryPlan);
 
 		///////////////////// tab query history //////////////////////////
 		compositeQueryHistory = new QueryHistoryComposite(tabFolderResult, SWT.NONE);
@@ -119,7 +132,7 @@ public class ResultMainComposite extends Composite {
 		tbtmMessage.setControl(compositeMessage);
 		///////////////////// tab Message //////////////////////////		
 	    
-		tabFolderResult.setSelection(1);
+		tabFolderResult.setSelection(2);
 	}
 	
 	/**
@@ -199,6 +212,16 @@ public class ResultMainComposite extends Composite {
 	 */
 	public void refreshMessageView(RequestQuery requestQuery, Throwable throwable, String msg) {
 		compositeMessage.addAfterRefresh(requestQuery, new TadpoleMessageDAO(new Date(), msg, throwable));		
+	}
+	
+	/**
+	 * set query plan view
+	 * 
+	 * @param reqQuery
+	 * @param rsDAO
+	 */
+	public void setQueryPlanView(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
 	}
 
 	public IWorkbenchPartSite getSite() {

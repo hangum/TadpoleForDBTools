@@ -23,6 +23,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -77,9 +78,6 @@ public class ObjectEditor extends MainEditor {
 	
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setSite(site);
-		setInput(input);
-		
 		ObjectEditorInput qei = (ObjectEditorInput)input;
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
@@ -88,10 +86,10 @@ public class ObjectEditor extends MainEditor {
 		strRoleType = userDB.getRole_id();
 		if("".equals(qei.getObjectName())) setPartName(qei.getName()); //$NON-NLS-1$
 		else setPartName(String.format("%s (%s)", qei.getName(), qei.getObjectName())); //$NON-NLS-1$
-		
 		objectName = qei.getObjectName();
-		
-		// setting title image
+
+		setSite(site);
+		setInput(input);
 		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
 	}
 
