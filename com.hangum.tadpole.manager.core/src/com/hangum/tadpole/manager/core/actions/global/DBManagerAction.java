@@ -29,6 +29,7 @@ import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
 import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -45,7 +46,7 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.DatabaseManagerAction"; //$NON-NLS-1$
 	
 	private final IWorkbenchWindow window;
-	private IStructuredSelection iss;
+	private IStructuredSelection sel;
 	
 	public DBManagerAction(IWorkbenchWindow window) {
 		this.window = window;
@@ -54,7 +55,7 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 		setText(Messages.UserPermissionAction_3);
 		setToolTipText(Messages.UserPermissionAction_4);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/db.png")); //$NON-NLS-1$
-		setEnabled(true);
+		window.getSelectionService().addPostSelectionListener(this);
 	}
 	
 	@Override
@@ -72,6 +73,9 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		sel = (IStructuredSelection)selection;
+		
+		if("NO".equals(SessionManager.getIsRegistDB())) setEnabled(false);
 	}
 
 	@Override

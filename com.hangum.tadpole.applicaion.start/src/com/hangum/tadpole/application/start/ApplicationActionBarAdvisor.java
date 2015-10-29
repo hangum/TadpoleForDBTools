@@ -199,7 +199,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		manageMenu.add(restFulAPIAction);
 		manageMenu.add(transactionConnectionAction);
 		manageMenu.add(resourceManageAction);
-		manageMenu.add(dbMgmtAction);
+		if("YES".equals(SessionManager.getIsRegistDB())) {
+			manageMenu.add(dbMgmtAction);
+		}
 		manageMenu.add(executedSQLAction);
 		manageMenu.add(schemaHistoryAction);
 		
