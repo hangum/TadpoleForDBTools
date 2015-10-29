@@ -66,7 +66,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	
 	private UserDBDAO userDBDao;
 	
-	private Text textEMail;
+	private Text textUserEMail;
 	private TableViewer tableViewer;
 	private List<UserDAO> listUserGroup = new ArrayList<UserDAO>();
 	
@@ -116,8 +116,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblEmail.setText(Messages.FindUserAndDBRoleDialog_1);
 		
-		textEMail = new Text(compositeHead, SWT.BORDER);
-		textEMail.addKeyListener(new KeyAdapter() {
+		textUserEMail = new Text(compositeHead, SWT.BORDER);
+		textUserEMail.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if(e.keyCode == SWT.Selection) {
@@ -125,7 +125,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				}
 			}
 		});
-		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textUserEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Button btnSearch = new Button(compositeHead, SWT.NONE);
 		btnSearch.addSelectionListener(new SelectionAdapter() {
@@ -184,7 +184,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 				
-		textEMail.setFocus();
+		textUserEMail.setFocus();
 
 		return container;
 	}
@@ -251,13 +251,13 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 * 검색.
 	 */
 	private void search() {
-		String txtEmail = textEMail.getText();
-		if("".equals(txtEmail)) return; //$NON-NLS-1$
+		String txtUserEmail = textUserEMail.getText();
+//		if("".equals(txtUserEmail)) return; //$NON-NLS-1$
 		
 		listUserGroup.clear();
 		
 		try {
-			listUserGroup =  TadpoleSystem_UserQuery.findLikeUser(txtEmail);
+			listUserGroup =  TadpoleSystem_UserQuery.findLikeUser(txtUserEmail);
 			tableViewer.setInput(listUserGroup);
 			tableViewer.refresh();
 		} catch(Exception e) {

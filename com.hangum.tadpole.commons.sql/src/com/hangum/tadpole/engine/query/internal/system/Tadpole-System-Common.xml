@@ -102,7 +102,7 @@
 	SELECT *
 	FROM tadpole_user 
 	WHERE 
-		email like #email#
+		(email like #email# OR name like #email#)
 		AND delyn = 'NO'
 	ORDER BY create_time DESC
 </select>
