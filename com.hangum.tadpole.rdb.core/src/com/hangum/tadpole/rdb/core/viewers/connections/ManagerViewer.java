@@ -120,7 +120,6 @@ public class ManagerViewer extends ViewPart {
 					
 					addUserResouceData(userDB, false);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
-					
 
 					// 
 					// 아래 코드(managerTV.getControl().setFocus();)가 없으면, 오브젝트 탐색기의 event listener가 동작하지 않는다. 

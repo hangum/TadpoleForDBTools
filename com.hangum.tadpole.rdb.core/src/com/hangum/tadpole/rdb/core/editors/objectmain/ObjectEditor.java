@@ -69,8 +69,6 @@ public class ObjectEditor extends MainEditor {
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.main.procedure"; //$NON-NLS-1$
 	private static final Logger logger = Logger.getLogger(ObjectEditor.class);
 	
-	private String objectName = ""; //$NON-NLS-1$
-	
 	public ObjectEditor() {
 		super();
 	}
@@ -86,12 +84,11 @@ public class ObjectEditor extends MainEditor {
 		String strPartName = "";
 		if("".equals(qei.getObjectName())) strPartName = qei.getName(); //$NON-NLS-1$
 		else strPartName = String.format("%s (%s)", qei.getName(), qei.getObjectName()); //$NON-NLS-1$
-		objectName = qei.getObjectName();
 
 		setSite(site);
 		setInput(input);
 		setPartName(strPartName);
-		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
+//		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
 	}
 
 	@Override

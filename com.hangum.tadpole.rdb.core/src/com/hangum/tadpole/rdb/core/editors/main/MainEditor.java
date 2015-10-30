@@ -73,7 +73,6 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
-import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
@@ -134,7 +133,7 @@ public class MainEditor extends EditorExtension {
 		setSite(site);
 		setInput(input);
 		setPartName(strPartName);
-		setTitleImage(DBIconsUtils.getDBNormalImage(getUserDB()));
+//		setTitleImage(DBIconsUtils.getDBNormalImage(getUserDB()));
 	}
 	
 	@Override

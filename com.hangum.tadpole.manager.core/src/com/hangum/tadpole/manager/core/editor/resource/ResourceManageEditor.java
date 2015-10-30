@@ -74,7 +74,6 @@ import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
-import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -582,7 +581,7 @@ public class ResourceManageEditor extends EditorPart {
 		ColumnHeaderCreator.createColumnHeader(tableViewer, tableColumnDef);
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setLabelProvider(new DefaultLabelProvider(tableViewer));
+		tableViewer.setLabelProvider(new ResourceManagerLabelProvider(tableViewer));
 	}
 
 }

@@ -776,8 +776,8 @@ SELECT
 	resource data를 저장합니다.
  -->
 <insert id="userDbResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO">
-	INSERT INTO user_db_resource_data(group_seq, user_db_resource_seq, datas)
-	VALUES(#group_seq#, #user_db_resource_seq#, #datas#)
+	INSERT INTO user_db_resource_data(user_seq, group_seq, user_db_resource_seq, datas)
+	VALUES(#user_seq#, #group_seq#, #user_db_resource_seq#, #datas#)
 </insert>
 
 <!-- 

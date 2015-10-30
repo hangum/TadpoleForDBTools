@@ -151,6 +151,7 @@ public class TadpoleSystem_UserDBResource {
 		UserDBResourceDataDAO dataDao = new UserDBResourceDataDAO();
 		dataDao.setUser_db_resource_seq(userDBResource.getResource_seq());
 		dataDao.setGroup_seq(System.currentTimeMillis());
+		dataDao.setUser_seq(SessionManager.getUserSeq());
 		
 		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
 		for (String content : arrayContent) {

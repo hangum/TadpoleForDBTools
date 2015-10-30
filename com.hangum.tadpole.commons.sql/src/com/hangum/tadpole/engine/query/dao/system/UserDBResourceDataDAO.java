@@ -22,6 +22,7 @@ public class UserDBResourceDataDAO {
 	int seq;
 	long group_seq;  
 	int user_db_resource_seq;
+	int user_seq;
 	String datas;
 	String delyn;
 	Timestamp create_time;
@@ -92,6 +93,20 @@ public class UserDBResourceDataDAO {
 	 */
 	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
+	}
+
+	/**
+	 * @return the user_seq
+	 */
+	public int getUser_seq() {
+		return user_seq;
+	}
+
+	/**
+	 * @param user_seq the user_seq to set
+	 */
+	public void setUser_seq(int user_seq) {
+		this.user_seq = user_seq;
 	}
 
 	
