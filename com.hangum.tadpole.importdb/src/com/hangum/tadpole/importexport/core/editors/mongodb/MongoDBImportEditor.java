@@ -37,7 +37,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
@@ -202,30 +201,35 @@ public class MongoDBImportEditor extends EditorPart {
 		});
 		btnImport.setText(Messages.MongoDBImportEditor_4);
 		
-		CTabItem tabItemQuery = new CTabItem(tabFolderQuery, SWT.NONE);
-		tabItemQuery.setText(Messages.MongoDBImportEditor_7);
-		
-		Composite compositeQuery = new Composite(tabFolderQuery, SWT.NONE);
-		tabItemQuery.setControl(compositeQuery);
-		compositeQuery.setLayout(new GridLayout(1, false));
-		
-		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
-		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Composite compositeQueryTail = new Composite(compositeQuery, SWT.NONE);
-		compositeQueryTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeQueryTail.setLayout(new GridLayout(3, false));
-		
-		Label lblCollectionName = new Label(compositeQueryTail, SWT.NONE);
-		lblCollectionName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCollectionName.setBounds(0, 0, 56, 15);
-		lblCollectionName.setText(Messages.MongoDBImportEditor_9);
-		
-		textCollectionName = new Text(compositeQueryTail, SWT.BORDER);
-		textCollectionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		btnExistOnDelete = new Button(compositeQueryTail, SWT.CHECK);
-		btnExistOnDelete.setText(Messages.MongoDBImportEditor_10);
+//		
+//		기능 테스트가 정상적으로 되지 않아서 일단 막아놓습니다. --;;
+//										15.10.31. hangum
+//		
+			
+//		CTabItem tabItemQuery = new CTabItem(tabFolderQuery, SWT.NONE);
+//		tabItemQuery.setText(Messages.MongoDBImportEditor_7);
+//		
+//		Composite compositeQuery = new Composite(tabFolderQuery, SWT.NONE);
+//		tabItemQuery.setControl(compositeQuery);
+//		compositeQuery.setLayout(new GridLayout(1, false));
+//		
+//		textQuery = new TadpoleEditorWidget(compositeQuery, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
+//		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		
+//		Composite compositeQueryTail = new Composite(compositeQuery, SWT.NONE);
+//		compositeQueryTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		compositeQueryTail.setLayout(new GridLayout(3, false));
+//		
+//		Label lblCollectionName = new Label(compositeQueryTail, SWT.NONE);
+//		lblCollectionName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblCollectionName.setBounds(0, 0, 56, 15);
+//		lblCollectionName.setText(Messages.MongoDBImportEditor_9);
+//		
+//		textCollectionName = new Text(compositeQueryTail, SWT.BORDER);
+//		textCollectionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		
+//		btnExistOnDelete = new Button(compositeQueryTail, SWT.CHECK);
+//		btnExistOnDelete.setText(Messages.MongoDBImportEditor_10);
 		
 //		Button btnPreview = new Button(compositeQueryTail, SWT.NONE);
 //		btnPreview.setText("Preview");
