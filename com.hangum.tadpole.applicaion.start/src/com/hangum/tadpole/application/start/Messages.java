@@ -113,6 +113,7 @@ public class Messages extends NLS {
 	public static String SelectPerspectiveDialog_7;
 	public static String SelectPerspectiveDialog_8;
 	public static String UserInformationDialog_label_text;
+	public static String LoginDialog_lblDonation_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
