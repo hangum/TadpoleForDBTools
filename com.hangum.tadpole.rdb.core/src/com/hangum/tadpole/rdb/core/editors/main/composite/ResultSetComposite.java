@@ -69,7 +69,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -300,7 +299,7 @@ public class ResultSetComposite extends Composite {
 					if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
 						appendTextAtPosition(columnDao.getCol_value());
 					} else {
-						appendTextAtPosition(String.format(" %s ", columnDao.getCol_value())); //$NON-NLS-1$
+						appendTextAtPosition(String.format(" '%s' ", columnDao.getCol_value())); //$NON-NLS-1$
 					}
 				}
 			}
