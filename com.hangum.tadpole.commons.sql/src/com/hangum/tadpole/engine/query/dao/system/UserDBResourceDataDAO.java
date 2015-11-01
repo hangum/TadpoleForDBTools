@@ -23,9 +23,11 @@ public class UserDBResourceDataDAO {
 	long group_seq;  
 	int user_db_resource_seq;
 	int user_seq;
-	String datas;
+	String datas = "";
 	String delyn;
 	Timestamp create_time;
+	
+	String usernames;
 	
 	public UserDBResourceDataDAO() {
 	}
@@ -109,5 +111,18 @@ public class UserDBResourceDataDAO {
 		this.user_seq = user_seq;
 	}
 
-	
+	/**
+	 * @return the usernames
+	 */
+	public String getUsernames() {
+		return usernames;
+	}
+
+	/**
+	 * @param usernames the usernames to set
+	 */
+	public void setUsernames(String usernames) {
+		this.usernames = usernames;
+	}
+
 }

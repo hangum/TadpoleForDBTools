@@ -53,11 +53,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
@@ -69,6 +72,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.api.APIServiceDialog;
+import com.hangum.tadpole.manager.core.dialogs.resources.ResourceHistoryDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
@@ -91,13 +95,15 @@ public class ResourceManageEditor extends EditorPart {
 	public final static String ID = "com.hangum.tadpole.manager.core.editor.resource.manager"; //$NON-NLS-1$
 	private static final Logger logger = Logger.getLogger(ResourceManageEditor.class);
 	
+	private ToolItem tltmHistory;
+	
 	private Label lblDbname;
 	private TableViewer tableViewer;
 	private Text textFilter;
 	private DefaultTableColumnFilter columnFilter;
 
 	private UserDBDAO userDB;
-	private Text textQuery;
+	private TadpoleEditorWidget textQuery;
 	private Text textTitle;
 	private ComboViewer comboShare;
 	
@@ -174,6 +180,18 @@ public class ResourceManageEditor extends EditorPart {
 			}
 		});
 		
+		tltmHistory = new ToolItem(toolBar, SWT.NONE);
+		tltmHistory.setToolTipText("History");
+		tltmHistory.setImage(GlobalImageUtils.getHistory());
+		tltmHistory.setEnabled(false);
+		
+		tltmHistory.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				showHistory();
+			}
+		});
+		
 		lblDbname = new Label(compositeToolbar, SWT.NONE);
 		lblDbname.setText(""); //$NON-NLS-1$
 
@@ -217,8 +235,11 @@ public class ResourceManageEditor extends EditorPart {
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
-
-				if (tableViewer.getSelection().isEmpty()) return;
+				if (tableViewer.getSelection().isEmpty()) {
+					tltmHistory.setEnabled(false);
+					return;
+				}
+				tltmHistory.setEnabled(true);
 
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 				resourceManagerDao = (ResourceManagerDAO) ss.getFirstElement();
@@ -234,9 +255,12 @@ public class ResourceManageEditor extends EditorPart {
 					textAPIURL.setText(resourceManagerDao.getRestapi_uri()==null?"":resourceManagerDao.getRestapi_uri()); //$NON-NLS-1$
 					textAPIKey.setText(resourceManagerDao.getRestapi_key());
 					textQuery.setText(""); //$NON-NLS-1$
+					
+					StringBuffer sbData = new StringBuffer();
 					for (String data : result) {
-						textQuery.append(data);
+						sbData.append(data);
 					}
+					textQuery.setText(sbData.toString());
 
 				} catch (Exception e) {
 					logger.error("Resource detail", e); //$NON-NLS-1$
@@ -472,7 +496,9 @@ public class ResourceManageEditor extends EditorPart {
 		});
 		btnApiExecute.setText(Messages.ResourceManageEditor_44);
 
-		textQuery = new Text(compositeDetail, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+//		textQuery = new Text(compositeDetail, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+//		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
+		textQuery = new TadpoleEditorWidget(compositeDetail, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
 
 		createTableColumn();
@@ -582,6 +608,19 @@ public class ResourceManageEditor extends EditorPart {
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ResourceManagerLabelProvider(tableViewer));
+	}
+	
+	/**
+	 * show history button
+	 */
+	private void showHistory() {
+		StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+		if(ss.isEmpty()) return;
+		
+		ResourceManagerDAO resourceManagerDao = (ResourceManagerDAO) ss.getFirstElement();
+		
+		ResourceHistoryDialog dialog = new ResourceHistoryDialog(getSite().getShell(), resourceManagerDao);
+		dialog.open();
 	}
 
 }

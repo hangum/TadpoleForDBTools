@@ -244,7 +244,7 @@ public class LoginDialog extends Dialog {
 //		lblDonation.setText(Messages.LoginDialog_lblDonation_text);
 
 		Browser browser = new Browser(compositeLetter, SWT.NONE);
-		GridData gd_browser = new GridData(SWT.FILL, SWT.RIGHT, true, false, 1, 1);
+		GridData gd_browser = new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1);
 		browser.setLayoutData(gd_browser);
 		browser.setText(strPaypal);
 		
@@ -459,7 +459,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		if(listDBMart.isEmpty()) {
-			return new Point(480, 320);
+			return new Point(480, 310);
 		} else {
 			return new Point(480, 460);
 		}

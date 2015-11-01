@@ -18,6 +18,16 @@
 
 <sqlMap namespace="Tadpole-System-MySQL">
 
+	<select id="getResouceDataHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO" parameterClass="java.lang.Long">
+		SELECT concat( b.name, '(', b.email, ')') as usernames, a.* 
+		FROM user_db_resource_data a,
+		    tadpole_user b
+		WHERE
+		        a.user_seq = b.seq
+			AND	user_db_resource_seq = #resource_seq#
+		order by a.seq
+	</select>
+
 	<!--
 		============================================================================================================================ 
 		user table이 있는 지 여부에 따라 시스템 테이블의 존재 유무를 가린다.

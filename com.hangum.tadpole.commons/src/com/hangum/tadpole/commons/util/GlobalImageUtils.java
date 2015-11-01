@@ -24,6 +24,15 @@ import com.swtdesigner.ResourceManager;
 public class GlobalImageUtils {
 	public static final String IMAGE_Activator_ID = Activator.ID;
 	
+
+	/**
+	 * history image
+	 * @return
+	 */
+	public static final Image getHistory() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/history.png");
+	}
+	
 	/**
 	 * start image
 	 * @return
@@ -31,7 +40,6 @@ public class GlobalImageUtils {
 	public static final Image getStart() {
 		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/start.png");
 	}
-	
 	
 	/**
 	 * stop image

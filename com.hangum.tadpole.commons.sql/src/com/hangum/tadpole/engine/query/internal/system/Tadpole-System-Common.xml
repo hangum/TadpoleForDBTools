@@ -685,6 +685,8 @@ SELECT
 	order by seq
 </select>
 
+
+
 <select id="userDbResource" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource
 	WHERE
