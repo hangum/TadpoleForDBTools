@@ -1,4 +1,4 @@
-package com.hangum.tadpole.manager.core.dialogs.resources;
+package com.hangum.tadpole.rdb.core.dialog.resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,9 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
-import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
-import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * Resource history dialog
@@ -172,7 +171,7 @@ public class ResourceHistoryDialog extends Dialog {
 		try {
 			List<UserDBResourceDataDAO> listData = new ArrayList<UserDBResourceDataDAO>();
 			
-			int intBeforeSeq = -1;
+			long intBeforeSeq = -1;
 			UserDBResourceDataDAO tmpDAO = null; 
 			List<UserDBResourceDataDAO> listSource = TadpoleSystem_UserDBResource.getResouceDataHistory(resourceManagerDao);
 			for (UserDBResourceDataDAO resourceDAO :listSource) {
@@ -182,7 +181,7 @@ public class ResourceHistoryDialog extends Dialog {
 					}
 					
 					tmpDAO = new UserDBResourceDataDAO();
-					intBeforeSeq = resourceDAO.getSeq();
+					intBeforeSeq = resourceDAO.getGroup_seq();
 				}
 				tmpDAO.setCreate_time(resourceDAO.getCreate_time());
 				tmpDAO.setUser_seq(resourceDAO.getUser_seq());

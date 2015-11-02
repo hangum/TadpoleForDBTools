@@ -40,6 +40,8 @@ public class UserDBResourceDAO {
 	Date create_time;
 	String delYn;
 	
+	String usernames = "";
+	
 	// db object tree 표현을 위해
 	UserDBDAO parent;
 	
@@ -208,6 +210,20 @@ public class UserDBResourceDAO {
 
 	public void setRestapi_uri(String restapi_uri) {
 		this.restapi_uri = restapi_uri;
+	}
+
+	/**
+	 * @return the usernames
+	 */
+	public String getUsernames() {
+		return usernames;
+	}
+
+	/**
+	 * @param usernames the usernames to set
+	 */
+	public void setUsernames(String usernames) {
+		this.usernames = usernames;
 	}
 
 }

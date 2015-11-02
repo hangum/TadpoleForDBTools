@@ -692,6 +692,14 @@
                label="%action.label.22"
                menubarPath="additions">
          </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.ResourceHistoryAction"
+               enablesFor="1"
+               icon="resources/icons/history.png"
+               id="com.hangum.tadpole.rdb.core.action.historyResource"
+               label="History"
+               menubarPath="additions">
+         </action>
          <visibility>
             <objectState
                   name="type"

@@ -17,6 +17,19 @@
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="Tadpole-System-SQLiteSQL">
+	<select id="userDbResourceTree" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
+		SELECT  b.name || '(' || b.email || ')' as usernames, 
+				a.*  
+		FROM user_db_resource a,
+			tadpole_user b
+		WHERE
+			a.user_seq = b.seq AND
+			a.db_seq = #seq#  AND
+			a.resource_types in ('ERD', 'SQL') AND
+			a.delYn = 'NO'		
+		ORDER BY a.resource_types, a.name
+	</select>
+	
 	<select id="getResouceDataHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO" parameterClass="java.lang.Long">
 		SELECT b.name || '(' || b.email || ')' as usernames, 
 				a.* 

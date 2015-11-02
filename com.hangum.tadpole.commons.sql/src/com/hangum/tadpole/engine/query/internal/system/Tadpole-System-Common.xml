@@ -632,15 +632,6 @@
 	</selectKey>
 </insert>
 
-<select id="userDbResourceTree" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
-	SELECT * FROM user_db_resource
-	WHERE
-		db_seq = #seq#  AND
-		resource_types in ('ERD', 'SQL') AND
-		delYn = 'NO'		
-	ORDER BY resource_types, name
-</select>
-
 <select id="userDbResourceManager" resultClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 SELECT 
 	m.resource_seq as resource_seq
