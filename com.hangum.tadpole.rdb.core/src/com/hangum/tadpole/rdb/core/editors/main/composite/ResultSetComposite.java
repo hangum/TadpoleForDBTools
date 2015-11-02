@@ -296,10 +296,14 @@ public class ResultSetComposite extends Composite {
 				if(columnDao == null) return;
 				
 				if(!"".equals(columnDao.getCol_value())) { //$NON-NLS-1$
-					if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
-						appendTextAtPosition(columnDao.getCol_value());
+					if(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO.equals(columnDao.getName())) {
+						appendTextAtPosition(columnDao.getCol_value()); //$NON-NLS-1$
 					} else {
-						appendTextAtPosition(String.format(" '%s' ", columnDao.getCol_value())); //$NON-NLS-1$
+						if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
+							appendTextAtPosition(columnDao.getCol_value());
+						} else {
+							appendTextAtPosition(String.format(" '%s'", columnDao.getCol_value())); //$NON-NLS-1$
+						}
 					}
 				}
 			}
@@ -385,7 +389,7 @@ public class ResultSetComposite extends Composite {
 				
 				// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
 				if(i == 0) {
-					columnDao.setName("_TDB_ALL_");
+					columnDao.setName(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO);
 					columnDao.setType(null);
 					
 					for (int j=1; j<tableResult.getColumnCount(); j++) {
@@ -415,7 +419,10 @@ public class ResultSetComposite extends Composite {
 					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
 					Object columnObject = mapColumns.get(i);
 					
-					String strType = RDBTypeToJavaTypeUtils.getRDBType(rsDAO.getColumnType().get(i));
+					Integer intType = rsDAO.getColumnType().get(i);
+					if(intType == null) intType = java.sql.Types.VARCHAR;
+					String strType = RDBTypeToJavaTypeUtils.getRDBType(intType);
+					
 					columnDao.setName(rsDAO.getColumnName().get(i));
 					columnDao.setType(strType);
 					

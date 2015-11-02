@@ -38,12 +38,15 @@ public class PublicTadpoleDefine {
 	/**
 	 * PLAN Statement ID
 	 */
-	public static String STATEMENT_ID = "||TADPOLE-STATEMENT_ID||"; //$NON-NLS-1$
+	public static String STATEMENT_ID = "||TDB_STATEMENT_ID||"; //$NON-NLS-1$
+
+	/** 0번째 테이블 컬럼을 선택한다 */
+	public static String DEFINE_TABLE_COLUMN_BASE_ZERO = "_TDB_BASE_ZERO_";
 	
 	/**
 	 * 특별 컬럼을 정의 합니다. 
 	 */
-	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "TADPOLE_HIDE_";
+	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "_TDB_HIDE_";
 	
 	/**
 	 * 분리자
@@ -295,7 +298,7 @@ public class PublicTadpoleDefine {
 	 * @return
 	 */
 	public static boolean isKEY(String key) {
-		return isKEY(key, YES_NO.NO.toString());
+		return isKEY(key, YES_NO.NO.name());
 	}
 	public static boolean isKEY(String key, String isNull) {
 		boolean isReturn = true;
