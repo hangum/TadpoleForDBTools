@@ -312,6 +312,24 @@ public class Messages extends NLS {
 
 	public static String SystemDBDataManager_8;
 	
+	public static String ResourceHistoryDialog_0;
+
+	public static String ResourceHistoryDialog_1;
+
+	public static String ResourceHistoryDialog_10;
+
+	public static String ResourceHistoryDialog_2;
+
+	public static String ResourceHistoryDialog_3;
+
+	public static String ResourceHistoryDialog_4;
+
+	public static String ResourceHistoryDialog_5;
+
+	public static String ResourceHistoryDialog_7;
+
+	public static String ResourceHistoryDialog_9;
+
 	public static String ResourceManageEditor_0;
 
 	public static String ResourceManageEditor_1;

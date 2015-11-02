@@ -9,9 +9,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -26,8 +28,10 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
+import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * Resource history dialog
@@ -44,6 +48,8 @@ public class ResourceHistoryDialog extends Dialog {
 	private Text textDescription;
 	private Text textCreateTime;
 	private TableViewer tvHistory;
+	private Text textLeft;
+	private Text textRight;
 
 	/**
 	 * Create the dialog.
@@ -60,7 +66,7 @@ public class ResourceHistoryDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Resource History");
+		newShell.setText(Messages.ResourceHistoryDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -71,20 +77,25 @@ public class ResourceHistoryDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
+		GridLayout gridLayout = (GridLayout) container.getLayout();
+		gridLayout.verticalSpacing = 5;
+		gridLayout.horizontalSpacing = 5;
+		gridLayout.marginHeight = 5;
+		gridLayout.marginWidth = 5;
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
-		lblTitle.setText("Title");
+		lblTitle.setText(Messages.ResourceHistoryDialog_1);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textTitle.setText(resourceManagerDao.getName());
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
-		lblDescription.setText("Description");
+		lblDescription.setText(Messages.ResourceHistoryDialog_2);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -97,24 +108,24 @@ public class ResourceHistoryDialog extends Dialog {
 		compositeHeaderUser.setLayout(new GridLayout(4, false));
 		
 		Label lblUser = new Label(compositeHeaderUser, SWT.NONE);
-		lblUser.setText("User");
+		lblUser.setText(Messages.ResourceHistoryDialog_3);
 		
 		textUser = new Text(compositeHeaderUser, SWT.BORDER | SWT.READ_ONLY);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textUser.setText(resourceManagerDao.getUser_name());
 		
 		Label lblCreateTime = new Label(compositeHeaderUser, SWT.NONE);
-		lblCreateTime.setText("Create time");
+		lblCreateTime.setText(Messages.ResourceHistoryDialog_4);
 		
 		textCreateTime = new Text(compositeHeaderUser, SWT.BORDER | SWT.READ_ONLY);
 		textCreateTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textCreateTime.setText(resourceManagerDao.getCreate_time());
 		
-		Composite compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		SashForm sashForm = new SashForm(container, SWT.VERTICAL);
+		sashForm.setLayout(new GridLayout(1, false));
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		tvHistory = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tvHistory = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		Table table = tvHistory.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -123,21 +134,32 @@ public class ResourceHistoryDialog extends Dialog {
 		TableViewerColumn tvcDate = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnDate = tvcDate.getColumn();
 		tblclmnDate.setWidth(100);
-		tblclmnDate.setText("Date");
+		tblclmnDate.setText(Messages.ResourceHistoryDialog_5);
 		
 		TableViewerColumn tvcUser = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnUser = tvcUser.getColumn();
 		tblclmnUser.setWidth(100);
-		tblclmnUser.setText("User");
+		tblclmnUser.setText(Messages.ResourceHistoryDialog_3);
 		
 		TableViewerColumn tvcSQL = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnSql = tvcSQL.getColumn();
 		tblclmnSql.setWidth(500);
-		tblclmnSql.setText("SQL");
+		tblclmnSql.setText(Messages.ResourceHistoryDialog_7);
 		
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new ResourceHistoryLabelProvider());
+
+		Composite compositeCompare = new Composite(sashForm, SWT.NONE);
+		compositeCompare.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeCompare.setLayout(new GridLayout(2, false));
 		
+		textLeft = new Text(compositeCompare, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		textRight = new Text(compositeCompare, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textRight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		sashForm.setWeights(new int[] {7, 3});
 		initUIData();
 		
 		return container;
@@ -171,7 +193,29 @@ public class ResourceHistoryDialog extends Dialog {
 			if(!listSource.isEmpty()) listData.add(tmpDAO);
 			tvHistory.setInput(listData);
 		} catch (Exception e) {
-			logger.error("finding resource data", e);
+			logger.error("finding resource data", e); //$NON-NLS-1$
+		}
+	}
+	
+	@Override
+	protected void okPressed() {
+		StructuredSelection iss = (StructuredSelection)tvHistory.getSelection();
+		if(iss.isEmpty()) return;
+		
+		Object[] objListSel = iss.toArray();
+		try {
+			for(int i=0; i<objListSel.length; i++) {
+				if(i==2) break;
+				
+				UserDBResourceDataDAO dao = (UserDBResourceDataDAO)objListSel[i];
+				if(i==0) {
+					textLeft.setText(dao.getDatas());
+				} else {
+					textRight.setText(dao.getDatas());
+				}
+			}
+		} catch(Exception e) {
+			logger.error("Get detail sql", e); //$NON-NLS-1$
 		}
 	}
 
@@ -181,8 +225,8 @@ public class ResourceHistoryDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.ResourceHistoryDialog_9, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ResourceHistoryDialog_10, false);
 	}
 
 	/**
@@ -208,10 +252,10 @@ class ResourceHistoryLabelProvider extends LabelProvider implements ITableLabelP
 		
 		switch(columnIndex) {
 		case 0: return resourceDAO.getCreate_time().toString();
-		case 1: return ""+resourceDAO.getUsernames();
+		case 1: return ""+resourceDAO.getUsernames(); //$NON-NLS-1$
 		case 2: return resourceDAO.getDatas();
 		}
-		return "*** not set columns ***";
+		return "*** not set columns ***"; //$NON-NLS-1$
 	}
 	
 }
