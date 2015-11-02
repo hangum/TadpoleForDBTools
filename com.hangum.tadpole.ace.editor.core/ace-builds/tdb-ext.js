@@ -621,7 +621,8 @@ editorService.addText = function(varText) {
 	}
 };
 editorService.reNewText = function(varText) {
-	editor.setValue(varText);
+	editor.setValue("");
+	editor.insert(varText);
 };
 /**  help dilaog */
 editorService.helpDialog = function() {
