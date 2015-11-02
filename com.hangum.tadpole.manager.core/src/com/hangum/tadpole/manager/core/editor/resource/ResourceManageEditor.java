@@ -496,8 +496,6 @@ public class ResourceManageEditor extends EditorPart {
 		});
 		btnApiExecute.setText(Messages.ResourceManageEditor_44);
 
-//		textQuery = new Text(compositeDetail, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-//		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
 		textQuery = new TadpoleEditorWidget(compositeDetail, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
 

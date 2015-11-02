@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
@@ -47,8 +49,8 @@ public class ResourceHistoryDialog extends Dialog {
 	private Text textDescription;
 	private Text textCreateTime;
 	private TableViewer tvHistory;
-	private Text textLeft;
-	private Text textRight;
+	private TadpoleEditorWidget textLeft;
+	private TadpoleEditorWidget textRight;
 
 	/**
 	 * Create the dialog.
@@ -152,13 +154,13 @@ public class ResourceHistoryDialog extends Dialog {
 		compositeCompare.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeCompare.setLayout(new GridLayout(2, false));
 		
-		textLeft = new Text(compositeCompare, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textLeft = new TadpoleEditorWidget(compositeCompare, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		textRight = new Text(compositeCompare, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+
+		textRight = new TadpoleEditorWidget(compositeCompare, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textRight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		sashForm.setWeights(new int[] {7, 3});
+		sashForm.setWeights(new int[] {6, 4});
 		initUIData();
 		
 		return container;
