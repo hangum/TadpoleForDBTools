@@ -389,11 +389,13 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_15;
 	public static String SQLiteLoginComposite_16;
 	public static String SQLiteLoginComposite_17;
+	public static String SQLiteLoginComposite_18;
 	public static String SQLiteLoginComposite_19;
 	public static String SQLiteLoginComposite_2;
 	public static String SQLiteLoginComposite_22;
 	public static String SQLiteLoginComposite_23;
 	public static String SQLiteLoginComposite_24;
+	public static String SQLiteLoginComposite_25;
 	public static String SQLiteLoginComposite_29;
 	public static String SQLiteLoginComposite_3;
 	public static String SQLiteLoginComposite_4;

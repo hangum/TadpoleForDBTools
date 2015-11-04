@@ -126,7 +126,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String fileName = fileUpload.getFileName();
-				if("".equals(fileName) || null == fileName) return;
+				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
 				if(!MessageDialog.openConfirm(null, Messages.SQLiteLoginComposite_16, Messages.SQLiteLoginComposite_17)) return;
 				
@@ -158,7 +158,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 				uiInit(true);
 			}
 		});
-		chkBtnFileLocationDb.setText("File location of server");
+		chkBtnFileLocationDb.setText(Messages.SQLiteLoginComposite_18);
 		
 		textFileLocationDB = new Text(grpConnectionType, SWT.BORDER);
 		textFileLocationDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -189,7 +189,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			public void uploadFinished(FileUploadEvent event) {
 				for( FileDetails file : event.getFileDetails() ) {
 					addToLog( "uploaded : " + file.getFileName() ); //$NON-NLS-1$
-					if(logger.isDebugEnabled()) logger.debug("===> " + file.getFileName());
+					if(logger.isDebugEnabled()) logger.debug("===> " + file.getFileName()); //$NON-NLS-1$
 				}
 			}			
 		});
@@ -306,7 +306,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		} else if(chkBtnFileLocationDb.getSelection()) {
 			File targetFile = new File(textFileLocationDB.getText());
 			if(!targetFile.exists()) {
-				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "파일이 발견되지 않았습니다. 파일 위치를 지정해 주십시오.");
+				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, Messages.SQLiteLoginComposite_25);
 				textFileLocationDB.setFocus();
 				return false;
 			}
