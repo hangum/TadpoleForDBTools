@@ -59,9 +59,11 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	
 	private Text fileNameLabel;
 	private Text textCreationDB;
+	private Text textFileLocationDB;
 
 	private Button chkBtnFileUpload;
 	private Button chkBtnCreationDb;
+	private Button chkBtnFileLocationDb;
 	
 	private FileUpload fileUpload;
 	private DiskFileUploadReceiver receiver;
@@ -147,6 +149,19 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		textCreationDB = new Text(grpConnectionType, SWT.BORDER);
 		textCreationDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		chkBtnFileLocationDb = new Button(grpConnectionType, SWT.RADIO);
+		chkBtnFileLocationDb.setSelection(false);
+		chkBtnFileLocationDb.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				uiInit(true);
+			}
+		});
+		chkBtnFileLocationDb.setText("File location of server");
+		
+		textFileLocationDB = new Text(grpConnectionType, SWT.BORDER);
+		textFileLocationDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		othersConnectionInfo = new OthersConnectionRDBWithoutTunnelingGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -288,7 +303,13 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 					return false;
 				}
 			}
-			
+		} else if(chkBtnFileLocationDb.getSelection()) {
+			File targetFile = new File(textFileLocationDB.getText());
+			if(!targetFile.exists()) {
+				MessageDialog.openError(null, Messages.SQLiteLoginComposite_6, "파일이 발견되지 않았습니다. 파일 위치를 지정해 주십시오.");
+				textFileLocationDB.setFocus();
+				return false;
+			}
 		// 신규 디비 생성.
 		} else {
 			String strFile = StringUtils.trimToEmpty(textCreationDB.getText());
@@ -336,7 +357,9 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 						return false;
 					}
 				}
-				
+			} else if(chkBtnFileLocationDb.getSelection()) {
+				strDBFile = textFileLocationDB.getText();
+				strDBUrl = textFileLocationDB.getText();
 			// 신규 디비 생성.
 			} else {
 				strDBFile = textCreationDB.getText();
