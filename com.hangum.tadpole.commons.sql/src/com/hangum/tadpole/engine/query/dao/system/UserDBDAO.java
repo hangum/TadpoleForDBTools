@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -118,7 +119,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		return PermissionChecker.isShow(userType)?getUsers():"********";
 	}
 	
-	protected Date create_time;
+	protected Timestamp create_time;
 	protected String delYn;
 	
 	protected String ext1 = "";
@@ -290,11 +291,11 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		this.passwd = passwd;
 	}
 
-	public Date getCreate_time() {
+	public Timestamp getCreate_time() {
 		return create_time;
 	}
 
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
 	}
     

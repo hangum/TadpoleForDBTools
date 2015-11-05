@@ -8,6 +8,9 @@
   
   Contributors:
       hangum - initial API and implementation
+      
+      sqlite timestamp
+      http://mybatis-user.963551.n3.nabble.com/TypeHandler-for-sqlite-Date-td4025669.html
 -->
 <!-- 
 	
@@ -17,9 +20,21 @@
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="Tadpole-System-SQLiteSQL">
+    
 	<select id="userDbResourceTree" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
 		SELECT  b.name || '(' || b.email || ')' as usernames, 
-				a.*  
+				 a.resource_seq as resource_seq
+			    ,a.resource_types as resource_types
+			    ,a.user_seq as user_seq
+			    ,a.db_seq as db_seq
+			    ,a.name as name
+			    ,a.shared_type as shared_type
+			    ,a.restapi_yesno as restapi_yesno
+			    ,a.restapi_uri as restapi_uri
+			    ,a.restapi_key as restapi_key
+			    ,a.description as description
+			    ,a.create_time as sqliteCreate_time
+			    ,a.delyn as delyn
 		FROM user_db_resource a,
 			tadpole_user b
 		WHERE
@@ -32,7 +47,13 @@
 	
 	<select id="getResouceDataHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO" parameterClass="java.lang.Long">
 		SELECT b.name || '(' || b.email || ')' as usernames, 
-				a.* 
+				 a.seq as seq
+			    ,a.user_seq as user_seq
+			    ,a.group_seq as group_seq
+			    ,a.user_db_resource_seq as user_db_resource_seq
+			    ,a.datas as datas
+			    ,a.delyn as delyn
+			    ,a.create_time as sqliteCreate_time
 		FROM user_db_resource_data a,
 		    tadpole_user b
 		WHERE

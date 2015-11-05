@@ -185,7 +185,9 @@ public class ResourceHistoryDialog extends Dialog {
 					tmpDAO = new UserDBResourceDataDAO();
 					intBeforeSeq = resourceDAO.getGroup_seq();
 				}
-				tmpDAO.setCreate_time(resourceDAO.getCreate_time());
+				if(resourceDAO.getCreate_time() != null) tmpDAO.setCreate_time(resourceDAO.getCreate_time());
+				else tmpDAO.setSqliteCreate_time(resourceDAO.getSqliteCreate_time());
+				
 				tmpDAO.setUser_seq(resourceDAO.getUser_seq());
 				tmpDAO.setUsernames(resourceDAO.getUsernames());
 				tmpDAO.setDatas(tmpDAO.getDatas() + resourceDAO.getDatas());
@@ -252,7 +254,7 @@ class ResourceHistoryLabelProvider extends LabelProvider implements ITableLabelP
 		UserDBResourceDataDAO resourceDAO  = (UserDBResourceDataDAO)element;
 		
 		switch(columnIndex) {
-		case 0: return resourceDAO.getCreate_time().toString();
+		case 0: return resourceDAO.getCreate_time()==null?resourceDAO.getSqliteCreate_time():resourceDAO.getCreate_time().toString();
 		case 1: return ""+resourceDAO.getUsernames(); //$NON-NLS-1$
 		case 2: return resourceDAO.getDatas();
 		}

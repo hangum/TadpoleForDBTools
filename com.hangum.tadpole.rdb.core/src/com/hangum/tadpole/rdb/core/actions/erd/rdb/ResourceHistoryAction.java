@@ -47,7 +47,7 @@ public class ResourceHistoryAction implements IViewActionDelegate {
 		managerDao.setName(resourceDB.getName());
 		managerDao.setDescription(resourceDB.getDescription());
 		managerDao.setResource_seq(resourceDB.getResource_seq());
-		managerDao.setCreate_time(resourceDB.getCreate_time().toLocaleString());
+		managerDao.setCreate_time(resourceDB.getCreate_time() == null?resourceDB.getSqliteCreate_time():resourceDB.getCreate_time().toLocaleString());
 		managerDao.setUser_name(resourceDB.getUsernames());
 		
 		ResourceHistoryDialog dialog = new ResourceHistoryDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), managerDao);

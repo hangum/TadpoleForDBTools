@@ -26,6 +26,7 @@ public class UserDBResourceDataDAO {
 	String datas = "";
 	String delyn;
 	Timestamp create_time;
+	String sqliteCreate_time;
 	
 	String usernames;
 	
@@ -125,4 +126,19 @@ public class UserDBResourceDataDAO {
 		this.usernames = usernames;
 	}
 
+	/**
+	 * @return the sqliteCreate_time
+	 */
+	public String getSqliteCreate_time() {
+		return sqliteCreate_time;
+	}
+
+	/**
+	 * @param sqliteCreate_time the sqliteCreate_time to set
+	 */
+	public void setSqliteCreate_time(String sqliteCreate_time) {
+		this.sqliteCreate_time = sqliteCreate_time;
+	}
+
+	
 }
