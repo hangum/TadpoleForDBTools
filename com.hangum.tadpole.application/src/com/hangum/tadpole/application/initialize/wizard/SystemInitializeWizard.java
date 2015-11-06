@@ -81,7 +81,7 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.YES_NO.YES.name(), 
 						PublicTadpoleDefine.YES_NO.NO.name(), 
 						"",
-						"127.*"); //$NON-NLS-1$ //$NON-NLS-2$
+						"*"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
