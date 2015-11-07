@@ -86,10 +86,10 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 
-		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.22f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.26f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 
-		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.22f, "id" + ManagerViewer.ID);
+		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
 		
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
@@ -107,10 +107,10 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 
-		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.22f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.26f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 
-		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.22f, "id" + ManagerViewer.ID);
+		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
 
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
@@ -129,11 +129,11 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true);
 		layout.setFixed(false);
 
-		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.22f, editorArea);
+		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.26f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 //		leftFolder.addView(HelpViewPart.ID);
 
-		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.22f, "id" + ManagerViewer.ID);
+		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
 
 		// viewer closealbe false

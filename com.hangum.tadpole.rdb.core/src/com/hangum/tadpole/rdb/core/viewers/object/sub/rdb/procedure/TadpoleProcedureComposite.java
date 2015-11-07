@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,6 +24,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -38,9 +40,8 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -48,6 +49,7 @@ import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
@@ -56,7 +58,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * RDB procedure composite
@@ -70,6 +71,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleProcedureComposite.class);
 
+	private CTabItem tbtmProcedures;
+	
 	private TableViewer procedureTableViewer;
 	private ProcedureFunctionComparator procedureComparator;
 	private List<ProcedureFunctionDAO> showProcedure;
@@ -78,9 +81,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Procedure;
 	private ObjectDropAction dropAction_Procedure;
 	private ObjectRefreshAction refreshAction_Procedure;
-	private GenerateViewDDLAction viewDDLAction;
-	private ObjectExecuteProcedureAction executeAction_Procedure;
-	private OracleObjectCompileAction objectCompileAction;
+	private AbstractObjectSelectAction viewDDLAction;
+	private AbstractObjectSelectAction executeAction_Procedure;
+	private AbstractObjectSelectAction objectCompileAction;
 
 	/**
 	 * procedure
@@ -95,9 +98,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	}
 
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setText(Messages.TadpoleProcedureComposite_0);
-		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.PROCEDURES.name());
+		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmProcedures.setControl(compositeIndexes);
@@ -121,8 +124,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 				if(!iss.isEmpty()) {
-					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_4);
-					action.run(iss, getUserDB(), DB_ACTION.PROCEDURES);
+					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), OBJECT_TYPE.PROCEDURES, Messages.TadpoleProcedureComposite_4);
+					action.run(iss, getUserDB(), OBJECT_TYPE.PROCEDURES);
 				}	// end iss.isempty
 			}
 		});
@@ -146,14 +149,14 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	}
 
 	private void createMenu() {
-		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_1);
-		dropAction_Procedure = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_3);
-		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_4);
+		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.TadpoleProcedureComposite_1);
+		dropAction_Procedure = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.TadpoleProcedureComposite_3);
+		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.TadpoleProcedureComposite_4);
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_5);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.TadpoleProcedureComposite_5);
 
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_6);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.PROCEDURES, Messages.TadpoleProcedureComposite_7);
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.TadpoleProcedureComposite_6);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.TadpoleProcedureComposite_7);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -216,8 +219,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 	/**
 	 * procedure 정보를 최신으로 갱신 합니다.
+	 * @param strObjectName 
 	 */
-	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh) {
+	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if (!boolRefresh) {
 			if (showProcedure != null) return;
 		}
@@ -230,7 +234,11 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			procedureTableViewer.refresh();
 			
 			TableUtil.packTable(procedureTableViewer.getTable());
+			
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmProcedures);
 
+			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
 			logger.error("showProcedure refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
@@ -263,5 +271,20 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		executeAction_Procedure.dispose();
 		objectCompileAction.dispose();
 	}
-	
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if("".equals(strObjectName) || strObjectName == null) return;
+		
+		getTableViewer().getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<showProcedure.size(); i++) {
+			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getTableViewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+				getTableViewer().setSelection(new StructuredSelection(getTableViewer().getElementAt(i)), true);
+				break;
+			}
+		}		
+	}
 }

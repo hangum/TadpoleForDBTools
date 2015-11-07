@@ -13,7 +13,7 @@ package com.hangum.tadpole.engine.sql.util.sqlscripts.scripts;
 import java.util.List;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -29,7 +29,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  */
 public abstract class AbstractRDBDDLScript {
 	protected UserDBDAO userDB;
-	protected DB_ACTION actionType;
+	protected OBJECT_TYPE actionType;
 
 	/**'
 	 * 각 디비별로 데이터를 가져옵니다.
@@ -37,7 +37,7 @@ public abstract class AbstractRDBDDLScript {
 	 * @param userDB
 	 * @param actionType
 	 */
-	public AbstractRDBDDLScript(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
+	public AbstractRDBDDLScript(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		this.userDB = userDB;
 		this.actionType = actionType;
 	}

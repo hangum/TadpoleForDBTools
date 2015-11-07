@@ -69,6 +69,7 @@
 <select id="getAllUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	SELECT * 
 	FROM tadpole_user 
+	ORDER BY create_time DESC
 </select>
 
 <!--
@@ -79,6 +80,9 @@
 	FROM tadpole_user 
 	WHERE 
 		delyn = 'NO'
+	AND approval_yn = 'YES'
+	AND is_email_certification = 'YES'	
+	ORDER BY create_time DESC
 </select>
 
 <!--
@@ -98,8 +102,9 @@
 	SELECT *
 	FROM tadpole_user 
 	WHERE 
-		email like #email#
+		(email like #email# OR name like #email#)
 		AND delyn = 'NO'
+	ORDER BY create_time DESC
 </select>
 
 <!-- 
@@ -110,6 +115,7 @@
 	FROM tadpole_user 
 	WHERE 
 		email = #email#
+	ORDER BY create_time DESC
 </select>
 
 <!-- 
@@ -152,24 +158,6 @@
 	WHERE 
 			email = #email#
 		AND delyn = 'NO'
-</select>
-
-<!-- 
-find login history
- -->
-<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" 
-													parameterClass="java.util.Map">
-<![CDATA[
-	SELECT b.seq, b.user_seq, b.login_ip, b.connet_time, b.disconnect_time
-	FROM tadpole_user a,
-	    login_history b
-	WHERE
-	    	a.email = #email#
-	    AND a.seq = b.user_seq
-	    AND b.connet_time >= #startTime#
-       	AND b.connet_time <= #endTime#
-	ORDER BY b.connet_time DESC
-]]>
 </select>
 
 <!-- 
@@ -644,15 +632,6 @@ find login history
 	</selectKey>
 </insert>
 
-<select id="userDbResourceTree" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
-	SELECT * FROM user_db_resource
-	WHERE
-		db_seq = #seq#  AND
-		resource_types in ('ERD', 'SQL') AND
-		delYn = 'NO'		
-	ORDER BY resource_types, name
-</select>
-
 <select id="userDbResourceManager" resultClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 SELECT 
 	m.resource_seq as resource_seq
@@ -696,6 +675,8 @@ SELECT
 		AND delyn = 'NO'
 	order by seq
 </select>
+
+
 
 <select id="userDbResource" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource
@@ -788,8 +769,8 @@ SELECT
 	resource data를 저장합니다.
  -->
 <insert id="userDbResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO">
-	INSERT INTO user_db_resource_data(group_seq, user_db_resource_seq, datas)
-	VALUES(#group_seq#, #user_db_resource_seq#, #datas#)
+	INSERT INTO user_db_resource_data(user_seq, group_seq, user_db_resource_seq, datas)
+	VALUES(#user_seq#, #group_seq#, #user_db_resource_seq#, #datas#)
 </insert>
 
 <!-- 

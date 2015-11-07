@@ -272,7 +272,6 @@ public class NewUserDialog extends Dialog {
 				// igonre exception
 			}
 			if(isAdmin || "".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-				approvalYn 		= PublicTadpoleDefine.YES_NO.YES.name();
 				isEmamilConrim 	= PublicTadpoleDefine.YES_NO.YES.name();
 			}
 			
@@ -412,7 +411,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(370, 240);
+		return new Point(370, 242);
 	}
 	
 	/**

@@ -37,7 +37,7 @@ public class MainEditorInput implements IEditorInput {
 	private PublicTadpoleDefine.EDITOR_OPEN_TYPE OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.NONE;
 	
 	private UserDBDAO userDB;
-	private PublicTadpoleDefine.DB_ACTION dbAction = PublicTadpoleDefine.DB_ACTION.TABLES;
+	private PublicTadpoleDefine.OBJECT_TYPE dbAction = PublicTadpoleDefine.OBJECT_TYPE.TABLES;
 	private String defaultStr = ""; //$NON-NLS-1$
 	private UserDBResourceDAO resourceDAO;
 	
@@ -58,7 +58,7 @@ public class MainEditorInput implements IEditorInput {
 	 * @param userDB
 	 * @param defaultStr
 	 */
-	public MainEditorInput(UserDBDAO userDB, String defaultStr, PublicTadpoleDefine.DB_ACTION initAction) {
+	public MainEditorInput(UserDBDAO userDB, String defaultStr, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		this.userDB = userDB;
 		this.defaultStr = defaultStr;
 		this.dbAction = initAction;
@@ -149,7 +149,7 @@ public class MainEditorInput implements IEditorInput {
 		return resourceDAO;
 	}
 	
-	public PublicTadpoleDefine.DB_ACTION getDbAction() {
+	public PublicTadpoleDefine.OBJECT_TYPE getDbAction() {
 		return dbAction;
 	}
 }

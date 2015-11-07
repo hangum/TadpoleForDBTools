@@ -20,6 +20,7 @@ public class Messages extends NLS {
 	public static String DBLockDialog_3;
 	public static String DBLockDialog_4;
 	public static String DBLockDialog_5;
+	public static String OracleObjectCompileUtils_0;
 	public static String ProcedureExecuterManager_0;
 	public static String ProcedureExecuterManager_4;
 	public static String ProcedureExecuterManager_6;

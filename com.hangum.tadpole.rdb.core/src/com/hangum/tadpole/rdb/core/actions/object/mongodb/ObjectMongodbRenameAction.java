@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -44,14 +44,14 @@ public class ObjectMongodbRenameAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.rename"; //$NON-NLS-1$
 	
-	public ObjectMongodbRenameAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectMongodbRenameAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 //		String originalName = selection.getFirstElement().toString();
 		TableDAO table = (TableDAO) selection.getFirstElement();
 		String originalName = table.getName();

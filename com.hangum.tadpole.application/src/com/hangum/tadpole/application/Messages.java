@@ -5,6 +5,10 @@ import org.eclipse.osgi.util.NLS;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.application.messages"; //$NON-NLS-1$
 
+	public static String SystemAdminTermsPage_0;
+	public static String SystemAdminTermsPage_1;
+	public static String SystemAdminTermsPage_3;
+	
 	public static String SystemAdminWizardUseTypePage_0;
 
 	public static String SystemAdminWizardUseType_1;

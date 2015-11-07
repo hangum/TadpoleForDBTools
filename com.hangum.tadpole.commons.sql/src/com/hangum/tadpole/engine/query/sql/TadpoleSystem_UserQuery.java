@@ -240,15 +240,20 @@ public class TadpoleSystem_UserQuery {
 		queryMap.put("email",		strEmail);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
-			Date date = new Date(startTime);
+			Date dateSt = new Date(startTime);
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-			queryMap.put("startTime",  formatter.format(date));
+			queryMap.put("startTime",  formatter.format(dateSt));
 			
-			Date dateendTime = new Date(endTime);
-			queryMap.put("endTime", formatter.format(dateendTime));			
+			Date dateEd = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateEd));			
 		} else {
-			queryMap.put("startTime",  	startTime);
-			queryMap.put("endTime", 	endTime);
+			Date dateSt = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			
+			queryMap.put("startTime",  formatter.format(dateSt));
+			
+			Date dateEd = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateEd));
 		}
 		
 		return (List<UserLoginHistoryDAO>)sqlClient.queryForList("getLoginHistory", queryMap);

@@ -20,7 +20,7 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
  */
 public interface IEditorExtension {
 	
-	public static final String DUMY_DATA = String.format("?%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.RELEASE_DATE);
+	public static final String DUMY_DATA = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
 	/** 개발디비 에디터 정의 */
 	public static final String DEV_DB_URL = "ace-builds/tadpole-editor.html" + DUMY_DATA; //$NON-NLS-1$

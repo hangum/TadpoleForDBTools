@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+
 /**
  * table 정보 
  * 
@@ -128,6 +130,16 @@ public class TableDAO {
 	 */
 	public final void setSysName(String sysName) {
 		this.sysName = sysName;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof TableDAO) {
+			TableDAO userDB = (TableDAO)obj;
+			return userDB.getName() == getName();
+		}
+		
+		return super.equals(obj);
 	}
 
 }

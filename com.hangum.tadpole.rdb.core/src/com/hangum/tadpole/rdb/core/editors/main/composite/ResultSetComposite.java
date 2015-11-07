@@ -12,6 +12,7 @@
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -27,6 +28,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,6 +55,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -60,7 +63,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PartInitException;
@@ -68,22 +70,23 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
-import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
-import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
-import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.util.CSVUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -91,10 +94,12 @@ import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
+import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.global.OpenSingleDataDialogAction;
+import com.hangum.tadpole.rdb.core.actions.global.OpenSingleRowDataDialogAction;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
@@ -104,6 +109,7 @@ import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
@@ -118,9 +124,6 @@ import com.swtdesigner.SWTResourceManager;
  *
  */
 public class ResultSetComposite extends Composite {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3706926974815713584L;
 
 	/**  Logger for this class. */
@@ -162,7 +165,7 @@ public class ResultSetComposite extends Composite {
     /** content download를 위한 더미 composite */
     private Composite compositeDumy;
     
-    private OpenSingleDataDialogAction openSingleDataAction;
+    private OpenSingleRowDataDialogAction openSingleRowDataAction;
     
     /** define result to editor button  */
     private Event eventTableSelect;
@@ -251,7 +254,7 @@ public class ResultSetComposite extends Composite {
 						}
 						break;
 					}
-				}	// for column count								
+				}	// for column count
 			}
 		});
 		
@@ -280,7 +283,7 @@ public class ResultSetComposite extends Composite {
 		
 		Composite compositeBtn = new Composite(this, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(6, false);
+		GridLayout gl_compositeBtn = new GridLayout(8, false);
 		gl_compositeBtn.marginWidth = 1;
 		gl_compositeBtn.marginHeight = 0;
 		compositeBtn.setLayout(gl_compositeBtn);
@@ -289,7 +292,20 @@ public class ResultSetComposite extends Composite {
 		btnResultToEditor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				selectColumnToEditor();
+				TableColumnDAO columnDao = selectColumnToEditor();
+				if(columnDao == null) return;
+				
+				if(!"".equals(columnDao.getCol_value())) { //$NON-NLS-1$
+					if(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO.equals(columnDao.getName())) {
+						appendTextAtPosition(columnDao.getCol_value()); //$NON-NLS-1$
+					} else {
+						if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
+							appendTextAtPosition(columnDao.getCol_value());
+						} else {
+							appendTextAtPosition(String.format(" '%s'", columnDao.getCol_value())); //$NON-NLS-1$
+						}
+					}
+				}
 			}
 		});
 		btnResultToEditor.setText(Messages.ResultSetComposite_2);
@@ -306,15 +322,37 @@ public class ResultSetComposite extends Composite {
 		});
 		btnDetailView.setText(Messages.ResultSetComposite_0);
 		
-		Button btnSQLResultExportCSV = new Button(compositeBtn, SWT.NONE);
-		btnSQLResultExportCSV.addSelectionListener(new SelectionAdapter() {
+		btnColumnDetail = new Button(compositeBtn, SWT.NONE);
+		btnColumnDetail.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				exportResultCSVType();
+				openSinglColumViewDialog();
+			}
+		});
+		btnColumnDetail.setText(Messages.ResultSetComposite_btnColumnDetail_text);
+		
+		comboDownload = new Combo(compositeBtn, SWT.NONE | SWT.READ_ONLY);
+		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
+		comboDownload.add("CSV"); //$NON-NLS-1$
+		comboDownload.add("INSERT INTO statement"); //$NON-NLS-1$
+		comboDownload.select(0);
+		
+		Button btnSQLResultDownload = new Button(compositeBtn, SWT.NONE);
+		btnSQLResultDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
+		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(MessageDialog.openConfirm(getShell(), Messages.ResultSetComposite_4, Messages.ResultSetComposite_5)) {
+					if("CSV".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportResultCSVType();	
+					} else {
+						exportInsertIntoStatement();
+					}
+				}
 			}
 			
 		});
-		btnSQLResultExportCSV.setText(Messages.MainEditor_btnExport_text);
+		btnSQLResultDownload.setText(Messages.ResultSetComposite_11);
 		
 		compositeDumy = new Composite(compositeBtn, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
@@ -330,13 +368,13 @@ public class ResultSetComposite extends Composite {
 	/**
 	 * select table column to editor
 	 */
-	private void selectColumnToEditor() {
-		if(eventTableSelect == null) return;
+	private TableColumnDAO selectColumnToEditor() {
+		if(eventTableSelect == null) return null;
 		final Table tableResult = tvQueryResult.getTable();
-		
     	TableItem[] selection = tableResult.getSelection();
-		if (selection.length != 1) return;
+		if (selection.length != 1) return null;
 		
+		TableColumnDAO columnDao = new TableColumnDAO();
 		TableItem item = tableResult.getSelection()[0];
 		for (int i=0; i<tableResult.getColumnCount(); i++) {
 			
@@ -351,105 +389,141 @@ public class ResultSetComposite extends Composite {
 				
 				// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
 				if(i == 0) {
+					columnDao.setName(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO);
+					columnDao.setType(null);
+					
+					for (int j=1; j<tableResult.getColumnCount(); j++) {
+						Object columnObject = mapColumns.get(j);
+						
+						if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(j))) {
+							String strText = ""; //$NON-NLS-1$
+							
+							// if select value is null can 
+							if(columnObject == null) strText = "0"; //$NON-NLS-1$
+							else strText = columnObject.toString();
+							columnDao.setCol_value(columnDao.getCol_value() + strText + ", ");
+						} else {
+							String strText = ""; //$NON-NLS-1$
+							
+							// if select value is null can 
+							if(columnObject == null) strText = "''"; //$NON-NLS-1$
+							else strText = columnObject.toString();
+							columnDao.setCol_value(columnDao.getCol_value() + "'" + strText + "', ");
+						}
+					}
+					columnDao.setCol_value(StringUtils.removeEnd(columnDao.getCol_value(), ", "));
+
+					break;
 				} else {
 					
 					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
 					Object columnObject = mapColumns.get(i);
 					
-					// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
-					//if (columnObject != null && columnObject instanceof net.sourceforge.jtds.jdbc.ClobImpl ){
-					if (columnObject != null && columnObject instanceof java.sql.Clob ){
-						Clob cl = (Clob) columnObject;
-
-						StringBuffer clobContent = new StringBuffer();
-						String readBuffer = new String();
-
-						// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
-						BufferedReader bufferedReader;
-						try {
-							bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
-							
-							while ((readBuffer = bufferedReader.readLine())!= null)
-								clobContent.append(readBuffer);
-
-							TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), clobContent.toString());
-				            dlg.open();									
-						} catch (Exception e) {
-							logger.error("Clob column echeck", e); //$NON-NLS-1$
-						}
-					}else if (columnObject != null && columnObject instanceof java.sql.Blob ){
-						try {
-							Blob blob = (Blob) columnObject;
-							
-							TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
-							dlg.open();								
-						} catch (Exception e) {
-							logger.error("Blob column echeck", e); //$NON-NLS-1$
-						}
+					Integer intType = rsDAO.getColumnType().get(i);
+					if(intType == null) intType = java.sql.Types.VARCHAR;
+					String strType = RDBTypeToJavaTypeUtils.getRDBType(intType);
+					
+					columnDao.setName(rsDAO.getColumnName().get(i));
+					columnDao.setType(strType);
+					
+					if(columnObject != null) {
+						// 해당컬럼 값이 널이 아니고 clob데이터 인지 확인한다.
+						if (columnObject instanceof java.sql.Clob ){
+							Clob cl = (Clob) columnObject;
 	
-					}else if (columnObject != null && columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
-						byte[] b = (byte[])columnObject;
-						StringBuffer str = new StringBuffer();
-						try {
-							for (byte buf : b){
-								str.append(buf);
+							StringBuffer clobContent = new StringBuffer();
+							String readBuffer = new String();
+	
+							// 버퍼를 이용하여 clob컬럼 자료를 읽어서 팝업 화면에 표시한다.
+							BufferedReader bufferedReader;
+							try {
+								bufferedReader = new java.io.BufferedReader(cl.getCharacterStream());
+								while ((readBuffer = bufferedReader.readLine())!= null) {
+									clobContent.append(readBuffer);
+								}
+	
+								columnDao.setCol_value(clobContent.toString());				
+							} catch (Exception e) {
+								logger.error("Clob column echeck", e); //$NON-NLS-1$
 							}
-							str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
-							TadpoleSimpleMessageDialog dlg = new TadpoleSimpleMessageDialog(null, tableResult.getColumn(i).getText(), str.toString() );
-			                dlg.open();
-						} catch (Exception e) {
-							logger.error("Clob column echeck", e); //$NON-NLS-1$
+						}else if (columnObject instanceof java.sql.Blob ){
+							try {
+								Blob blob = (Blob) columnObject;
+								columnDao = null;
+								
+								TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
+								dlg.open();
+	
+							} catch (Exception e) {
+								logger.error("Blob column echeck", e); //$NON-NLS-1$
+							}
+		
+						}else if (columnObject instanceof byte[] ){// (columnObject.getClass().getCanonicalName().startsWith("byte[]")) ){
+							byte[] b = (byte[])columnObject;
+							StringBuffer str = new StringBuffer();
+							try {
+								for (byte buf : b){
+									str.append(buf);
+								}
+								str.append("\n\nHex : " + new BigInteger(str.toString(), 2).toString(16)); //$NON-NLS-1$
+								
+								columnDao.setCol_value(str.toString());
+							} catch (Exception e) {
+								logger.error("Clob column echeck", e); //$NON-NLS-1$
+							}
+						}else{
+							String strText = ""; //$NON-NLS-1$
+							
+							// if select value is null can 
+							if(columnObject == null) strText = ""; //$NON-NLS-1$
+							else strText = columnObject.toString();
+							
+							columnDao.setCol_value(strText);
 						}
-					}else{
-						String strText = ""; //$NON-NLS-1$
-						
-						// if select value is null can 
-						if(columnObject == null) strText = "null"; //$NON-NLS-1$
-						else {
-							strText = columnObject.toString();
-							strText = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))? (" " + strText + ""): (" '" + strText + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						}
-						
-						appendTextAtPosition(strText);
-					}
+					} 	// end object null
 				}	// end if first column
 			
 				break;
 			}	// for column index
+		}	// end for
+
+		return columnDao;
+	}
+	
+	/**
+	 * export insert into statement
+	 */
+	private void exportInsertIntoStatement() {
+		try {
+			String strTableName = "TempTable"; //$NON-NLS-1$
+			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
+			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
+			
+			String strPath = SQLUtil.makeFileInsertStatment(strTableName, rsDAO);
+			String strZipFile = ZipUtils.pack(strPath);
+			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+			
+			downloadExtFile(strTableName+"_SQL.zip", bytesZip); //$NON-NLS-1$
+		} catch (Exception e) {
+			logger.error("make insertinto", e); //$NON-NLS-1$
 		}
 	}
 	
 	/**
-	 * Export resultset csv
+	 * Export resultset csvMessages.ResultSetComposite_14
 	 * 
 	 */
 	private void exportResultCSVType() {
-		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-		if(dataList.isEmpty()) return;
-		
-		List<String[]> listCsvData = new ArrayList<String[]>();
-		// column 헤더추가.
-		TableColumn[] tcs = tvQueryResult.getTable().getColumns();
-		String[] strArrys = new String[tcs.length-1];
-		for(int i=1; i<tcs.length; i++) {
-			TableColumn tableColumn = tcs[i];
-			strArrys[i-1] = tableColumn.getText();
-		}
-		listCsvData.add(strArrys);
-		
-		for(int i=0; i<dataList.size(); i++) {
-			Map<Integer, Object> mapColumns = dataList.get(i);
-			
-			strArrys = new String[mapColumns.size()-1];
-			for(int j=1; j<mapColumns.size(); j++) {
-				strArrys[j-1] = ""+mapColumns.get(j); //$NON-NLS-1$
-			}
-			listCsvData.add(strArrys);
-		}
-		
 		try {
-			String strCVSContent = CSVFileUtils.makeData(listCsvData);
-			downloadExtFile("SQLResultExport.csv", strCVSContent);//sbExportData.toString()); //$NON-NLS-1$
+			String strTableName = "TempTable"; //$NON-NLS-1$
+			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
+			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
+			
+			String strPath = CSVUtil.makeCSVFile(strTableName, rsDAO);
+			String strZipFile = ZipUtils.pack(strPath);
+			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+			
+			downloadExtFile(strTableName +"_CSV.zip", bytesZip); //$NON-NLS-1$
 		} catch(Exception ee) {
 			logger.error("csv type export error", ee); //$NON-NLS-1$
 		}
@@ -461,11 +535,31 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void openSingleRecordViewDialog() {
 		// selection sevice를 이용할 수 없어 중복되는 코드 생성이 필요해서 작성.
-		openSingleDataAction.selectionChanged(rsDAO, tvQueryResult.getSelection());
-		if (openSingleDataAction.isEnabled()) {
-			openSingleDataAction.run();
+		openSingleRowDataAction.selectionChanged(rsDAO, tvQueryResult.getSelection());
+		if (openSingleRowDataAction.isEnabled()) {
+			openSingleRowDataAction.run();
 		} else {
 			MessageDialog.openWarning(getShell(), Messages.ResultSetComposite_7, Messages.ResultSetComposite_8);
+		}
+	}
+	
+	/**
+	 * column popup dialog
+	 */
+	private void openSinglColumViewDialog() {
+		TableColumnDAO columnDao = selectColumnToEditor();
+		if(columnDao == null) {
+			MessageDialog.openWarning(getShell(), Messages.ResultSetComposite_7, Messages.ResultSetComposite_6);
+			return;
+		}
+			
+		String strType = columnDao.getType();
+		if("JSON".equalsIgnoreCase(strType)) { //$NON-NLS-1$
+			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.ResultSetComposite_16, columnDao.getCol_value());
+			dialog.open();
+		} else {
+			TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.ResultSetComposite_16, columnDao.getCol_value());
+			dialog.open();
 		}
 	}
 	
@@ -473,14 +567,14 @@ public class ResultSetComposite extends Composite {
 	 * tvQueryResult 테이블 뷰어에 메뉴 추가하기 
 	 */
 	private void createResultMenu() {
-		openSingleDataAction = new OpenSingleDataDialogAction();
+		openSingleRowDataAction = new OpenSingleRowDataDialogAction();
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "ResultSet"); //$NON-NLS-1$ //$NON-NLS-2$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(openSingleDataAction);
+				manager.add(openSingleRowDataAction);
 			}
 		});
 
@@ -495,7 +589,7 @@ public class ResultSetComposite extends Composite {
 		tvQueryResult.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				openSingleDataAction.selectionChanged(rsDAO, event.getSelection());
+				openSingleRowDataAction.selectionChanged(rsDAO, event.getSelection());
 			}
 		});
 	}
@@ -510,9 +604,7 @@ public class ResultSetComposite extends Composite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 
 			final TadpoleResultSet trs = rsDAO.getDataList();
-			if(logger.isDebugEnabled()) logger.debug("====> refresh data " + trs.getData().size() +":"+ tableResult.getItemCount()); //$NON-NLS-1$ //$NON-NLS-2$
 			if(trs.getData().size() > tableResult.getItemCount()) {
-				if(logger.isDebugEnabled()) logger.debug("\t\t Item Count is " + tableResult.getItemCount() + ".\t Page Count is " + (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())); //$NON-NLS-1$ //$NON-NLS-2$
 				if(trs.getData().size() > (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())) {
 					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
 				} else {
@@ -532,46 +624,6 @@ public class ResultSetComposite extends Composite {
 	}
 	public ResultMainComposite getRdbResultComposite() {
 		return rdbResultComposite;
-	}
-	
-	/**
-	 * 쿼리가 실행 가능한 상태인지 검사한다.
-	 * 
-	 * - DB lock 상태인지?
-	 * - dml 을 묻는 상태인지?
-	 * - 프러덕, 백업 디비라서 select가 아닌지 묻는지?
-	 * 
-	 * @param reqQuery
-	 * @throws Exception
-	 */
-	private boolean ifExecuteQuery() throws Exception {
-		// security check.
-		if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
-			throw new Exception(Messages.ResultMainComposite_1);
-		}
-		
-		// 실행해도 되는지 묻는다.
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())
-				|| PermissionChecker.isProductBackup(getUserDB())
-		) {
-			boolean isDMLQuestion = false;
-			if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
-				for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
-					if(!SQLUtil.isStatement(strSQL)) {
-						isDMLQuestion = true;
-						break;
-					}
-				}
-			} else {
-				if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
-			}
-		
-			if(isDMLQuestion) if(!MessageDialog.openConfirm(null, Messages.ResultMainComposite_0, Messages.MainEditor_56)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 	
 	/**
@@ -654,16 +706,18 @@ public class ResultSetComposite extends Composite {
 		if(jobQueryManager != null) {
 			if(Job.RUNNING == jobQueryManager.getState()) {
 				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
-				executeErrorProgress(new Exception(Messages.ResultSetComposite_1), Messages.ResultSetComposite_1);
+				executeErrorProgress(reqQuery, new Exception(Messages.ResultSetComposite_1), Messages.ResultSetComposite_1);
 				return false;
 			}
 		}
 
 		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
 		try {
-			if(!ifExecuteQuery()) return false;
+			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) {
+				return false;
+			}
 		} catch(Exception e) {
-			executeErrorProgress(e, e.getMessage());
+			executeErrorProgress(reqQuery, e, e.getMessage());
 			return false;
 		}
 		
@@ -729,12 +783,14 @@ public class ResultSetComposite extends Composite {
 						}
 					} else {
 						
-						if(SQLUtil.isStatement(reqQuery.getSql())) {
+						if(reqQuery.isAutoCommit()) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
-							} else {
+							} else if(reqQuery.isStatement()) {
 								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
 								reqResultDAO.setRows(rsDAO.getDataList().getData().size());
+							} else {
+								ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 							}
 
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
@@ -742,15 +798,12 @@ public class ResultSetComposite extends Composite {
 								startTransactionMode();
 								reqQuery.setAutoCommit(false);
 							} else {
-								TransactionManger.transactionQuery(reqQuery.getSql(), strUserEmail, getUserDB());
+								TransactionManger.calledCommitOrRollback(reqQuery.getSql(), strUserEmail, getUserDB());
 							}
-						} else {
-							ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 						}
 					}
 					
 				} catch(Exception e) {
-					
 					reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
 					reqResultDAO.setMesssage(e.getMessage());
 					
@@ -777,7 +830,8 @@ public class ResultSetComposite extends Composite {
 						if(jobEvent.getResult().isOK()) {
 							executeFinish(reqQuery, reqResultDAO);
 						} else {
-							executeErrorProgress(jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
+							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
+//							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
 						}
 						
 						// 처리를 위해 결과를 담아 둡니다.
@@ -786,11 +840,7 @@ public class ResultSetComposite extends Composite {
 						// 히스토리 화면을 갱신합니다.
 						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 						
-						// 주의) 일반적으로는 포커스가 잘 가지만, 
-						// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
-						getRdbResultComposite().setOrionTextFocus();
-
-						// ace editor에게 작업이 끝났음을 알립니다.
+						// 모든 쿼리가 종료 되었음을 알린다.
 						finallyEndExecuteCommand();
 					}
 				});	// end display.asyncExec
@@ -817,6 +867,8 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
 	private Button btnDetailView;
+	private Combo comboDownload;
+	private Button btnColumnDetail;
 	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.MainEditor_21);
@@ -870,7 +922,7 @@ public class ResultSetComposite extends Composite {
 			execServiceQuery = Executors.newSingleThreadExecutor();
 			resultSet = runSQLSelect(statement, reqQuery);
 			
-			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT, getUserDB(), true, resultSet, intSelectLimitCnt);
+			rsDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt);
 		} catch(Exception e) {
 //			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
@@ -904,7 +956,7 @@ public class ResultSetComposite extends Composite {
 		});
 		
 		
-		/* SELECTㅁ ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
+		/* SELECT ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
     
 		 * Caused by: java.lang.NullPointerException
 			at oracle.jdbc.driver.T4C8Oall.getNumRows(T4C8Oall.java:973)
@@ -969,12 +1021,13 @@ public class ResultSetComposite extends Composite {
 	/**
 	 * error message 추가한다.
 	 * 
+	 * @param requestQuery
 	 * @param throwable
 	 * @param msg
 	 */
-	public void executeErrorProgress(Throwable throwable, final String msg) {
+	public void executeErrorProgress(RequestQuery requestQuery, Throwable throwable, final String msg) {
 		getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		getRdbResultComposite().refreshMessageView(throwable, msg);
+		getRdbResultComposite().refreshMessageView(requestQuery, throwable, msg);
 	}
 	
 	private UserDBDAO getUserDB() {
@@ -994,6 +1047,10 @@ public class ResultSetComposite extends Composite {
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			iMainEditorExtension.queryEndedExecute(rsDAO);
 		}
+
+		// 주의) 일반적으로는 포커스가 잘 가지만, 
+		// progress bar가 열렸을 경우 포커스가 잃어 버리게 되어 포커스를 주어야 합니다.
+		getRdbResultComposite().setOrionTextFocus();
 	}
 	
 	/**
@@ -1036,66 +1093,66 @@ public class ResultSetComposite extends Composite {
 	 * @param executingSQLDAO 실행된 마지막 쿼리
 	 */
 	public void executeFinish(RequestQuery reqQuery, RequestResultDAO executingSQLDAO) {
-		if(SQLUtil.isStatement(reqQuery.getSql())) {			
-
-			// table data를 생성한다.
-			final TadpoleResultSet trs = rsDAO.getDataList();
-			sqlSorter = new SQLResultSorter(-999);
+		if(reqQuery.isStatement()) {
 			
-			boolean isEditable = true;
-			if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
-			SQLResultLabelProvider.createTableColumn(tvQueryResult, rsDAO, sqlSorter, isEditable);
-			
-			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
-			tvQueryResult.setContentProvider(new ArrayContentProvider());
-			
-			// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-			if(trs.getData().size() > GetPreferenceGeneral.getPageCount()) {
-				tvQueryResult.setInput(trs.getData().subList(0, GetPreferenceGeneral.getPageCount()));	
-			} else {
-				tvQueryResult.setInput(trs.getData());
+			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
+				getRdbResultComposite().setQueryPlanView(reqQuery, rsDAO);
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.QUERY_PLAN);
+			} else {	// table data를 생성한다.
+				final TadpoleResultSet trs = rsDAO.getDataList();
+				sqlSorter = new SQLResultSorter(-999);
+				
+				boolean isEditable = true;
+				if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
+				SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
+				
+				tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
+				tvQueryResult.setContentProvider(new ArrayContentProvider());
+				
+				// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
+				if(trs.getData().size() > GetPreferenceGeneral.getPageCount()) {
+					tvQueryResult.setInput(trs.getData().subList(0, GetPreferenceGeneral.getPageCount()));	
+				} else {
+					tvQueryResult.setInput(trs.getData());
+				}
+				tvQueryResult.setSorter(sqlSorter);
+				
+				// 메시지를 출력합니다.
+				float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
+				String strResultMsg = ""; //$NON-NLS-1$
+				if(trs.isEndOfRead()) {
+					strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+				} else {
+					// 데이터가 한계가 넘어 갔습니다.
+					String strMsg = String.format(Messages.MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
+					strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+				}
+				
+				tvQueryResult.getTable().setToolTipText(strResultMsg);
+				lblQueryResultStatus.setText(strResultMsg);
+				lblQueryResultStatus.pack();
+				sqlFilter.setTable(tvQueryResult.getTable());
+				
+				// Pack the columns
+				TableUtil.packTable(tvQueryResult.getTable());
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 			}
-			tvQueryResult.setSorter(sqlSorter);
-			
-			// 메시지를 출력합니다.
-			float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
-			String strResultMsg = ""; //$NON-NLS-1$
-			if(trs.isEndOfRead()) {
-				strResultMsg = String.format("%s %s (%s %s)", trs.getData().size(), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
-			} else {
-				// 데이터가 한계가 넘어 갔습니다.
-				String strMsg = String.format(Messages.MainEditor_34, GetPreferenceGeneral.getSelectLimitCount());
-				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
-			}
-			
-			tvQueryResult.getTable().setToolTipText(strResultMsg);
-			lblQueryResultStatus.setText(strResultMsg);
-			lblQueryResultStatus.pack();
-			sqlFilter.setTable(tvQueryResult.getTable());
-			
-			// Pack the columns
-			TableUtil.packTable(tvQueryResult.getTable());
-			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		} else {
-			getRdbResultComposite().refreshMessageView(null, "success. \n" + executingSQLDAO.getStrSQLText()); //$NON-NLS-1$
+			getRdbResultComposite().refreshMessageView(reqQuery, null, Messages.ResultSetComposite_10 + executingSQLDAO.getStrSQLText());
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.
 			try {
 				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
 						"EDITOR", //$NON-NLS-1$
-						reqQuery.getQueryType().name(),
-						"", //$NON-NLS-1$
+						reqQuery.getSqlDDLType().name(),
+						reqQuery.getSqlObjectName(),
 						reqQuery.getSql());
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}
 		
-			if(reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.DDL |
-					reqQuery.getQueryType() == PublicTadpoleDefine.QUERY_TYPE.UNKNOWN
-					) {
-				refreshExplorerView(getUserDB(), reqQuery.getQueryDDLType());
-			}
+			refreshExplorerView(getUserDB(), reqQuery);
 		}
 	}
 	
@@ -1103,15 +1160,15 @@ public class ResultSetComposite extends Composite {
 	 * CREATE, DROP, ALTER 문이 실행되어 ExplorerViewer view를 리프레쉬합니다.
 	 * 
 	 * @param userDB
-	 * @param schemaDao
+	 * @param reqQuery
 	 */
-	private void refreshExplorerView(final UserDBDAO userDB, final PublicTadpoleDefine.QUERY_DDL_TYPE queryDDLType) {
+	protected void refreshExplorerView(final UserDBDAO userDB, final RequestQuery reqQuery) {
 		rdbResultComposite.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-					ev.refreshCurrentTab(userDB, queryDDLType);
+					ev.refreshCurrentTab(userDB, reqQuery);
 				} catch (PartInitException e) {
 					logger.error("ExplorerView show", e); //$NON-NLS-1$
 				}
@@ -1140,11 +1197,11 @@ public class ResultSetComposite extends Composite {
 	 * @param fileName
 	 * @param newContents
 	 */
-	public void downloadExtFile(String fileName, String newContents) {
+	public void downloadExtFile(String fileName, byte[] newContents) {
 		downloadServiceHandler.setName(fileName);
-		downloadServiceHandler.setByteContent(newContents.getBytes());
+		downloadServiceHandler.setByteContent(newContents);
 		
-		DownloadUtils.provideDownload(compositeDumy, downloadServiceHandler.getId());
+		DownloadUtils.provideDownload(getShell(), downloadServiceHandler.getId());
 	}
 	
 	private void appendTextAtPosition(String cmd) {

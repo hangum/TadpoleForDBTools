@@ -44,7 +44,8 @@ CREATE TABLE `user_db_resource` (
 	`restapi_key`    VARCHAR(50)   NULL     COMMENT 'api key', -- 레스트 api key
 	`description`    VARCHAR(2000) NULL     COMMENT '리소스 설명', -- 설명
 	`create_time`    TIMESTAMP     NOT NULL DEFAULT NOW() COMMENT '생성일시', -- 생성일시
-	`delyn`          CHAR(3)       NOT NULL DEFAULT 'NO' COMMENT '삭제여부' -- 삭제여부
+	`delyn`          CHAR(3)       NOT NULL DEFAULT 'NO' COMMENT '삭제여부', -- 삭제여부
+	`ref_seq`   	INT           NOT NULL DEFAULT -1 COMMENT '리소스 참조 아이디' -- 리소스 참조 아이디
 )
 COMMENT '사용자가 실행하는 쿼리나 일반 텍스트 문서 또는 오브젝트 소스를 등록하여 관리한다.';
 

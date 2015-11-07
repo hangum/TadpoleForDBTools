@@ -184,6 +184,4 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		
 		return dao;
 	}
-	
-	
 }

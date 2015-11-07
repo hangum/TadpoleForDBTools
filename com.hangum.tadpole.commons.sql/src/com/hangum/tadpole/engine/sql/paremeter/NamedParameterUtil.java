@@ -19,6 +19,9 @@ import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
+/**
+ * SQL을 분석해서 사용할 SQL과 SQL bind parameter로 만든다. 
+ */
 public class NamedParameterUtil {
 
 	/**

@@ -86,7 +86,7 @@
       <editor
             class="com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditor"
             default="false"
-            icon="resources/icons/editor/object_editor.png"
+            icon="resources/icons/editor/hammer-icon.png"
             id="com.hangum.tadpole.rdb.core.editor.main.procedure"
             name="%editor.name.8">
       </editor>
@@ -690,6 +690,14 @@
                icon="resources/icons/delete-relation.png"
                id="com.hangum.tadpole.rdb.core.action.deleteResource"
                label="%action.label.22"
+               menubarPath="additions">
+         </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.ResourceHistoryAction"
+               enablesFor="1"
+               icon="resources/icons/history.png"
+               id="com.hangum.tadpole.rdb.core.action.historyResource"
+               label="History"
                menubarPath="additions">
          </action>
          <visibility>

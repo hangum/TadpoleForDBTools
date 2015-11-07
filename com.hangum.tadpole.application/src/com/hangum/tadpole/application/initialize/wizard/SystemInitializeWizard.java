@@ -33,6 +33,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 public class SystemInitializeWizard extends Wizard {
 	private static final Logger logger = Logger.getLogger(SystemInitializeWizard.class);
 	
+//	protected SystemAdminTermsPage termPage;
 	protected SystemAdminWizardUseTypePage systemUseType;
 	protected SystemAdminWizardDefaultUserPage addUserPage;
 
@@ -42,6 +43,9 @@ public class SystemInitializeWizard extends Wizard {
 
 	@Override
 	public void addPages() {
+//		termPage = new SystemAdminTermsPage();
+//		addPage(termPage);
+		
 		systemUseType = new SystemAdminWizardUseTypePage();
 		addPage(systemUseType);
 		
@@ -51,9 +55,11 @@ public class SystemInitializeWizard extends Wizard {
 	
 	@Override
 	public boolean canFinish() {
-		if(PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name().equals(systemUseType.getUseType())) {
-			return true;
-		}
+//		if(termPage.getAggree()) {
+			if(PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name().equals(systemUseType.getUseType())) {
+				return true;
+			}
+//		}
 		
 		return super.canFinish();
 	}
@@ -76,12 +82,12 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.YES_NO.YES.name(),
 						"1005tadPole1206", 	
 						PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-						"Tadpole Default Admin", 
+						"Default Admin", 
 						"en", 
 						PublicTadpoleDefine.YES_NO.YES.name(), 
 						PublicTadpoleDefine.YES_NO.NO.name(), 
 						"",
-						"127.*"); //$NON-NLS-1$ //$NON-NLS-2$
+						"*"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
@@ -99,7 +105,7 @@ public class SystemInitializeWizard extends Wizard {
 				adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
 				adminDao.getPasswd(), 	
 				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-				"Tadpole System Admin", "en", PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), "", "*"); //$NON-NLS-1$ //$NON-NLS-2$
+				"System Admin", "en", PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), "", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);

@@ -21,7 +21,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.editors.group.MongoDBGroupEditor;
@@ -43,14 +43,14 @@ public class ObjectMongodbGroupAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.group";
 	
-	public ObjectMongodbGroupAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectMongodbGroupAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tableDAO = (TableDAO) selection.getFirstElement();
 
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

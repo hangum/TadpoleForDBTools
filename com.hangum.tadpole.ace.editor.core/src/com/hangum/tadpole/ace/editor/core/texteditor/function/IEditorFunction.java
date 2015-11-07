@@ -73,7 +73,10 @@ public interface IEditorFunction  {
     public static final String SET_IS_WARP = EDITOR_SERVICE_MAP + ".setWrap('%s', '%s');";
 	
     /** 쿼리 - 2014.3.1 (hangum) */
-    public static final String SELECTED_TEXT = "return " + EDITOR_SERVICE_MAP + ".getSelectedText('%s');";
+    public static final String GET_SELECTED_TEXT = "return " + EDITOR_SERVICE_MAP + ".getSelectedText('%s');";
+    
+    /** set selected text */
+    public static final String SET_SELECTED_TEXT = EDITOR_SERVICE_MAP + ".setSelectedText();";
     
     /** block text */
     public static final String IS_BLOCK_TEXT = "return " + EDITOR_SERVICE_MAP + ".isBlockText();";

@@ -16,12 +16,12 @@ import java.sql.DriverManager;
 public class MYSQLTest extends AbstractDriverInfo {
 	public static void main(String[] args) throws Exception {
 
-//		String url = "jdbc:mysql://14.63.212.152:13306/tester";
-//		String usr = "tester";
-//		String pwd = "1234";
-		String url = "jdbc:mysql://192.168.32.128:3306/tadpole";
-		String usr = "root";
-		String pwd = "tadpole";
+		String url = "jdbc:mysql://14.63.212.152:13306/tester";
+		String usr = "tester";
+		String pwd = "1234";
+//		String url = "jdbc:mysql://192.168.32.128:3306/tadpole";
+//		String usr = "root";
+//		String pwd = "tadpole";
 
 		Class.forName("com.mysql.jdbc.Driver");
 

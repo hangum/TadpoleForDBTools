@@ -19,8 +19,10 @@ public class Messages extends NLS {
 	public static String AbstractShortCutDialog_32;
 	public static String AbstractShortCutDialog_34;
 	public static String AbstractShortCutDialog_37;
+	public static String AbstractShortCutDialog_38;
 	public static String AbstractShortCutDialog_39;
 	public static String AbstractShortCutDialog_4;
+	public static String AbstractShortCutDialog_40;
 	public static String AbstractShortCutDialog_41;
 	public static String AbstractShortCutDialog_44;
 	public static String AbstractShortCutDialog_6;

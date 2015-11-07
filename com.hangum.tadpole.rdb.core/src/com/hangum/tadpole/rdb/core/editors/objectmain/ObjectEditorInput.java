@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 
@@ -28,11 +28,11 @@ public class ObjectEditorInput extends MainEditorInput {
 		super(userDB);
 	}
 
-	public ObjectEditorInput(UserDBDAO userDB, String lowSQL, DB_ACTION initAction) {
+	public ObjectEditorInput(UserDBDAO userDB, String lowSQL, OBJECT_TYPE initAction) {
 		super(userDB, lowSQL, initAction);
 	}
 	
-	public ObjectEditorInput(UserDBDAO userDB, String objectName, String lowSQL, DB_ACTION initAction) {
+	public ObjectEditorInput(UserDBDAO userDB, String objectName, String lowSQL, OBJECT_TYPE initAction) {
 		super(userDB, lowSQL, initAction);
 		
 		this.objectName = objectName;

@@ -31,18 +31,18 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 	}
 
 	public QueryExecuteResultDTO(
-			PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, 
 			UserDBDAO userDB, 
 			Map<Integer, String> columnName, 
 			Map<Integer, String> columnTableName, 
 			Map<Integer, Integer> columnType, 
 			TadpoleResultSet dataList
 	) {
-		super(statementType, userDB, columnName, columnTableName, columnType, dataList);
+		super(userDB, columnName, columnTableName, columnType, dataList);
 	}
 
-	public QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
-		super(statementType, userDB, isShowRownum, rs, queryResultCount);
+	public QueryExecuteResultDTO(
+			UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
+		super(userDB, isShowRownum, rs, queryResultCount);
 	}
 
 	/**
@@ -73,7 +73,5 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 	public void setStrExceptionMsg(String strExceptionMsg) {
 		this.strExceptionMsg = strExceptionMsg;
 	}
-	
-	
 
 }

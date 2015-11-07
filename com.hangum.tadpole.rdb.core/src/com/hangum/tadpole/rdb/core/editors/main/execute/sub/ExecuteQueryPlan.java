@@ -13,7 +13,6 @@ package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -91,7 +90,8 @@ public class ExecuteQueryPlan {
 				rs = pstmt.executeQuery();
 			}
 
-			rsDAO = new QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.EXECUTE_PLAN, userDBDAO, true, rs, 1000/*, true*/);
+			rsDAO = new QueryExecuteResultDTO(
+					userDBDAO, true, rs, 1000/*, true*/);
 			return rsDAO;
 			
 		} finally {

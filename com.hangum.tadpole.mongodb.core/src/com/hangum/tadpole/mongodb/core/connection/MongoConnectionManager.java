@@ -66,7 +66,7 @@ public class MongoConnectionManager {
 				MongoClient mongoDB = dbManager.get( searchKey );
 				
 				if(mongoDB == null) {
-					MongoClientOptions clintOptions = MongoClientOptions.builder().connectionsPerHost(200).connectTimeout(5000).socketTimeout(5000).build();
+					MongoClientOptions clientOptions = MongoClientOptions.builder().connectionsPerHost(200).connectTimeout(5000).socketTimeout(5000).build();
 					
 					List<MongoCredential> listCredential = new ArrayList<>();
 					if(!"".equals(userDB.getUsers())) { //$NON-NLS-1$
@@ -86,7 +86,7 @@ public class MongoConnectionManager {
 					if(strReplcaSet == null | "".equals(strReplcaSet)) {
 						if(!listCredential.isEmpty()) {
 							ServerAddress sa = new ServerAddress(userDB.getHost(), Integer.parseInt(userDB.getPort()));
-							mongoDB = new MongoClient(sa, listCredential, clintOptions);
+							mongoDB = new MongoClient(sa, listCredential, clientOptions);
 						} else {
 							mongoDB = new MongoClient(new MongoClientURI(userDB.getUrl()));
 						}
@@ -103,9 +103,9 @@ public class MongoConnectionManager {
 						}
 						
 						if(!listCredential.isEmpty()) {
-							mongoDB = new MongoClient(listServerList, listCredential, clintOptions);
+							mongoDB = new MongoClient(listServerList, listCredential, clientOptions);
 						} else {
-							mongoDB = new MongoClient(listServerList, clintOptions);
+							mongoDB = new MongoClient(listServerList, clientOptions);
 						}
 					}
 					

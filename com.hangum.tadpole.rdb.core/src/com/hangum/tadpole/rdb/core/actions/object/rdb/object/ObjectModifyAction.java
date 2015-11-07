@@ -10,29 +10,20 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.sqlscripts.DDLScriptManager;
-import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
-import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -48,16 +39,16 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.modify"; //$NON-NLS-1$
 
-	public ObjectModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title); //$NON-NLS-1$
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 
-		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
+		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 			CreateTableAction cta = new CreateTableAction();
 			
 			// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
@@ -70,13 +61,13 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 			}
 				
 			
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
 			CreateIndexAction cia = new CreateIndexAction();
 			cia.run(userDB, actionType);
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 //			
 //			try {
 //				DDLScriptManager scriptManager = new DDLScriptManager(userDB, actionType);
@@ -95,13 +86,13 @@ public class ObjectModifyAction extends AbstractObjectSelectAction {
 //				ExceptionDetailsErrorDialog.openError(null, "Error", selection.getFirstElement() + " Load scipt error", errStatus); //$NON-NLS-1$
 //			}
 //			
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 //			CreateFunctionAction cia = new CreateFunctionAction();
 //			cia.run(userDB, actionType);
-//		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
+//		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 //			CreateTriggerAction cia = new CreateTriggerAction();
 //			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT) {
 			CreateJavaScriptAction csa = new CreateJavaScriptAction();
 			csa.run(userDB, actionType);
 		}

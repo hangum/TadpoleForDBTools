@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.sqlscripts.scripts;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -25,7 +25,7 @@ public class MSSQLDDLScript extends MSSQL_8_LE_DDLScript {
 	 * @param userDB
 	 * @param actionType
 	 */
-	public MSSQLDDLScript(UserDBDAO userDB, DB_ACTION actionType) {
+	public MSSQLDDLScript(UserDBDAO userDB, OBJECT_TYPE actionType) {
 		super(userDB, actionType);
 	}
 

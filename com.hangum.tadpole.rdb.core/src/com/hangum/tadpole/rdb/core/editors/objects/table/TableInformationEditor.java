@@ -28,6 +28,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * table information editor
@@ -38,7 +39,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  */
 public class TableInformationEditor extends EditorPart {
 	
-	public static final String ID = "com.hangum.tadpole.rdb.core.editors.table.edit";
+	public static final String ID = Messages.TableInformationEditor_0;
 	
 	private TableDAO tableDao;
 	private UserDBDAO userDB;
@@ -69,7 +70,7 @@ public class TableInformationEditor extends EditorPart {
 		
 		DBTableEditorInput qei = (DBTableEditorInput)input;
 		userDB = qei.getUserDB();
-		setPartName(qei.getName() + " data editor");		 //$NON-NLS-1$
+		setPartName(qei.getName() + Messages.TableInformationEditor_1);
 		
 		tableDao = qei.getTableDAO();
 		columnList = qei.getShowTableColumns();

@@ -137,7 +137,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmTable.setText(Messages.TadpoleMongoDBCollectionComposite_0);
-		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.COLLECTIONS.name());
+		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.COLLECTIONS.name());
 		
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeTables);
@@ -320,22 +320,22 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
-		creatAction_Table 	= new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_5);
-		deleteAction_Table 	= new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_6);
-		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_7);
+		creatAction_Table 	= new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_5);
+		deleteAction_Table 	= new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_6);
+		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_7);
 		
-		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_8);
-		insertStmtAction 	= new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_9);
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_8);
+		insertStmtAction 	= new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_9);
 
-		renameColAction 	= new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_10);
-		reIndexColAction 	= new ObjectMongodbReIndexAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_11);
-		mapReduceAction 	= new ObjectMongodbMapReduceAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_12);
-		groupAction			= new ObjectMongodbGroupAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_13);
+		renameColAction 	= new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_10);
+		reIndexColAction 	= new ObjectMongodbReIndexAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_11);
+		mapReduceAction 	= new ObjectMongodbMapReduceAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_12);
+		groupAction			= new ObjectMongodbGroupAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_13);
 		
-		collStatsAction 	= new ObjectMongodbCollStatesAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_14);
-		collCompactAction   = new ObjectMongodbCollCompactAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_15);
+		collStatsAction 	= new ObjectMongodbCollStatesAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_14);
+		collCompactAction   = new ObjectMongodbCollCompactAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_15);
 		
-		collValidateAction = new ObjectMongodbCollValidateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TABLES, Messages.TadpoleMongoDBCollectionComposite_16);
+		collValidateAction = new ObjectMongodbCollValidateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.TadpoleMongoDBCollectionComposite_16);
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -496,5 +496,11 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		reIndexColAction.dispose();
 		mapReduceAction.dispose();
 		groupAction.dispose();
+	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		// TODO Auto-generated method stub
+		
 	}
 }

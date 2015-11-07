@@ -166,7 +166,7 @@ public class TableDirectEditorComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(tltmSave.getEnabled()) {
-					if(!MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_1)) return; //$NON-NLS-1$
+					if(!MessageDialog.openConfirm(null, "Confirm", Messages.TableDirectEditorComposite_1)) return;
 				}
 				
 				refreshEditor();
@@ -287,10 +287,10 @@ public class TableDirectEditorComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 
 				try {
-					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.DB_ACTION.TABLES);
-					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.DB_ACTION.TABLES);
+					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				} catch(Exception ee) {
-					MessageDialog.openError(null, "Confirm", ee.getMessage()); //$NON-NLS-1$
+					MessageDialog.openError(null, "Confirm", ee.getMessage());
 				}
 			}
 		});

@@ -32,7 +32,7 @@ public class RequestResultDAO {
 	Timestamp endDateExecute;
 	int rows;
 	String result = PublicTadpoleDefine.SUCCESS_FAIL.S.toString();
-	String messsage;
+	String messsage = "";
 
 	String userName;
 	String dbName;

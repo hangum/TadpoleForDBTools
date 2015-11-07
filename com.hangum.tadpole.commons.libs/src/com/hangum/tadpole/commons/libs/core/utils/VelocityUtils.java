@@ -44,12 +44,12 @@ public class VelocityUtils {
 			velocityCtx.put(strKey, mapParameter.get(strKey));
 		}
 
-		long stTme = System.currentTimeMillis();
+//		long stTme = System.currentTimeMillis();
 		Velocity.evaluate(velocityCtx, writerReturn, strName, new StringReader(strSQL));			
-		if(logger.isDebugEnabled()) {
-			logger.debug("Name is " + strName + "[totaly time is ] " + (System.currentTimeMillis() - stTme));
-			logger.debug(writerReturn);
-		}
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("Name is " + strName + "[totaly time is ] " + (System.currentTimeMillis() - stTme));
+//			logger.debug(writerReturn);
+//		}
 		
 		return writerReturn.toString();
 	}

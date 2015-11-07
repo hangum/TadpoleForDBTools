@@ -68,7 +68,7 @@ import com.hangum.tadpole.manager.core.Messages;
 public class DBAccessControlDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(DBAccessControlDialog.class);
 	
-	private UserDBDAO useDB;
+	private UserDBDAO userDB;
 	private Text textDBName;
 	private Combo comboUser;
 	
@@ -96,7 +96,7 @@ public class DBAccessControlDialog extends Dialog {
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE| SWT.APPLICATION_MODAL);
 		
 		this.userRoleDB = userRoleDB;
-		this.useDB = userRoleDB.getParent();
+		this.userDB = userRoleDB.getParent();
 	}
 	
 	@Override
@@ -130,7 +130,7 @@ public class DBAccessControlDialog extends Dialog {
 		textDBName = new Text(compositeHead, SWT.BORDER);
 		textDBName.setEditable(false);
 		textDBName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textDBName.setText(useDB.getDisplay_name());
+		textDBName.setText(userDB.getDisplay_name());
 		
 		Label lblUser = new Label(compositeHead, SWT.NONE);
 		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -144,15 +144,13 @@ public class DBAccessControlDialog extends Dialog {
 			}
 		});
 		comboUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		List<TadpoleUserDbRoleDAO> listUser = useDB.getListChildren();
+		List<TadpoleUserDbRoleDAO> listUser = userDB.getListChildren();
 		for (int i=0; i<listUser.size(); i++) {
 			TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO = listUser.get(i);
 			comboUser.add(String.format("%s (%s)", tadpoleUserDbRoleDAO.getName(), tadpoleUserDbRoleDAO.getEmail())); //$NON-NLS-1$
 			comboUser.setData(""+i, tadpoleUserDbRoleDAO); //$NON-NLS-1$
 		}
 		comboUser.select(0);
-		new Label(compositeHead, SWT.NONE);
-		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
@@ -184,6 +182,8 @@ public class DBAccessControlDialog extends Dialog {
 			}
 		});
 		btnSelectAdd.setText(Messages.DBAccessControlDialog_7);
+		btnSelect.setEnabled(false);
+//		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT) btnSelect.setEnabled(true);
 		
 		btnSelectDelete = new Button(compositeSelectBtn, SWT.NONE);
 		btnSelectDelete.addSelectionListener(new SelectionAdapter() {

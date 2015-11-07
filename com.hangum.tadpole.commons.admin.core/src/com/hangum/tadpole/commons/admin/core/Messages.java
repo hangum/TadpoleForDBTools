@@ -6,6 +6,12 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.admin.core.messages"; //$NON-NLS-1$
 	
 
+	public static String AdminSQLAuditAction_0;
+
+
+	public static String AdminSQLAuditAction_2;
+
+
 	public static String AdminSQLAuditEditor_0;
 
 
@@ -132,6 +138,21 @@ public class Messages extends NLS {
 	public static String SendMessageDialog_7;
 	public static String SendMessageDialog_8;
 	public static String SendMessageDialog_9;
+	public static String UserListComposite_1;
+
+
+	public static String UserListComposite_3;
+
+
+	public static String UserListComposite_5;
+
+
+	public static String UserListComposite_6;
+
+
+	public static String UserListComposite_8;
+
+
 	public static String UserLoginHistoryAction_0;
 	public static String UserLoginHistoryDialog_0;
 	public static String UserLoginHistoryDialog_1;

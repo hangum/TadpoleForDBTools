@@ -36,6 +36,7 @@ import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
@@ -150,7 +151,9 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	/**
 	 * table의 Column을 생성한다.
 	 */
-	public static void createTableColumn(final TableViewer tableViewer,
+	public static void createTableColumn(
+										final RequestQuery reqQuery,
+										final TableViewer tableViewer,
 										final ResultSetUtilDTO rsDAO,
 										final SQLResultSorter tableSorter, 
 										final boolean isEditable) {
@@ -196,7 +199,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				});
 
 				// if select statement update
-				if(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT == rsDAO.getStatementType() && isEditable) {
+				if(PublicTadpoleDefine.QUERY_DML_TYPE.SELECT == reqQuery.getSqlDMLType() && isEditable) {
 					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
 				}
 				

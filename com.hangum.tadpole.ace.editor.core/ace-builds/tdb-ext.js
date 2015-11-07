@@ -36,6 +36,7 @@ var editorService = {
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
 	getSelectedText : function(varDelimiter) {},
+	setSelectedText : function() {},
 	
 	/** insert text */
 	insertText : function(varText) {},
@@ -233,18 +234,21 @@ editor.commands.addCommand({
  * @returns {Boolean}
  */
 editorService.isBlockText = function() {
-	var isBlock = false;
-	if("" != editor.getSelectedText())  isBlock = true;
+	if("" != editor.getSelectedText()) {
+		return true;
+	}
 	
-	return isBlock;
+	return false;
 }
+
 
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-   			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, editorService.getSelectedText(";"), editorService.isBlockText());
+    		var selectTxt = editorService.getSelectedText(";");
+   			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, selectTxt, editorService.isBlockText());
     	} catch(e) {
     		console.log(e);
     		alert(shortcutErrMsg);
@@ -391,6 +395,15 @@ editorService.setTabSize = function(varTabSize) {
 /** getAllText */
 editorService.getAllText = function() {
 	return editor.getValue();
+};
+/** set seltected text */
+editorService.setSelectedText = function() {
+	// selected text
+	var selectTxt = editorService.getSelectedText(";");
+	var intQueryLine = editor.getCursorPosition().row;
+	editor.gotoLine(intQueryLine-1);
+	
+	editor.find(selectTxt);
 };
 /**
  * 수행해야할 작업 목록을 가져옵니다.
@@ -608,7 +621,8 @@ editorService.addText = function(varText) {
 	}
 };
 editorService.reNewText = function(varText) {
-	editor.setValue(varText);
+	editor.setValue("");
+	editor.insert(varText);
 };
 /**  help dilaog */
 editorService.helpDialog = function() {

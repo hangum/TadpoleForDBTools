@@ -407,7 +407,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 					UserDBDAO dbDao = TadpoleSystem_UserDBQuery.getUserDBInstance(reqResultDao.getDbSeq());
 					FindEditorAndWriteQueryUtil.run(dbDao, 
 								Utils.convHtmlToLine(strApiOrSQL) + PublicTadpoleDefine.SQL_DELIMITER, 
-							PublicTadpoleDefine.DB_ACTION.TABLES);
+							PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				}
 			} catch (Exception e) {
 				logger.error("find editor and write query", e); //$NON-NLS-1$

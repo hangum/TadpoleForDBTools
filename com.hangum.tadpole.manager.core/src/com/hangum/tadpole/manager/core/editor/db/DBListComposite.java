@@ -71,6 +71,7 @@ import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
+import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
 import com.swtdesigner.SWTResourceManager;
 
@@ -590,7 +591,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if(element instanceof UserDBDAO) {
-			if(columnIndex == 0) return ManagerLabelProvider.getDBImage((UserDBDAO)element);
+			if(columnIndex == 0) return DBIconsUtils.getDBConnectionImage((UserDBDAO)element);
 		} else if(element instanceof ManagerListDTO) {
 			if(columnIndex == 0) return ManagerLabelProvider.getGroupImage();
 		}

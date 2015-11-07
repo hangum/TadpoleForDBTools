@@ -151,6 +151,7 @@ public class TadpoleSystem_UserDBResource {
 		UserDBResourceDataDAO dataDao = new UserDBResourceDataDAO();
 		dataDao.setUser_db_resource_seq(userDBResource.getResource_seq());
 		dataDao.setGroup_seq(System.currentTimeMillis());
+		dataDao.setUser_seq(SessionManager.getUserSeq());
 		
 		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
 		for (String content : arrayContent) {
@@ -256,6 +257,20 @@ public class TadpoleSystem_UserDBResource {
 		}
 	
 		return retData.toString();
+	}
+	
+	/**
+	 * resource data history
+	 * 
+	 * @param userDBResource
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<UserDBResourceDataDAO> getResouceDataHistory(ResourceManagerDAO userDBResource) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDBResourceDataDAO> datas =  (List<UserDBResourceDataDAO>)sqlClient.queryForList("getResouceDataHistory", userDBResource.getResource_seq()); //$NON-NLS-1$
+		return datas;
 	}
 
 }

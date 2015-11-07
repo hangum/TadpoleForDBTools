@@ -15,7 +15,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.CollValidateDialog;
@@ -37,14 +37,14 @@ public class ObjectMongodbCollValidateAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.mongo.collection.validate";
 	
-	public ObjectMongodbCollValidateAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectMongodbCollValidateAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO collDAO = (TableDAO) selection.getFirstElement();
 
 		CollValidateDialog dialog = new CollValidateDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, collDAO.getName());

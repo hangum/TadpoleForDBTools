@@ -14,6 +14,23 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+	public static String ResourceHistoryDialog_0;
+
+	public static String ResourceHistoryDialog_1;
+
+	public static String ResourceHistoryDialog_10;
+
+	public static String ResourceHistoryDialog_2;
+
+	public static String ResourceHistoryDialog_3;
+
+	public static String ResourceHistoryDialog_4;
+
+	public static String ResourceHistoryDialog_5;
+
+	public static String ResourceHistoryDialog_7;
+
+	public static String ResourceHistoryDialog_9;
 	public static String MainEditor_74;
 	public static String AbstractLoginComposite_0;
 	public static String AbstractLoginComposite_2;
@@ -273,6 +290,9 @@ public class Messages extends NLS {
 	public static String GenerateStatmentDMLDialog_8;
 	public static String GenerateStatmentDMLDialog_88;
 	public static String GenerateStatmentDMLDialog_9;
+	public static String GrantCheckerUtils_0;
+	public static String GrantCheckerUtils_1;
+	public static String GrantCheckerUtils_2;
 	public static String ObjectDeleteAction_0;
 	public static String ObjectDeleteAction_1;
 	public static String ObjectDeleteAction_10;
@@ -322,6 +342,8 @@ public class Messages extends NLS {
 	public static String OpenDBRelationAction_2;
 	public static String OpenQueryEditorAction_1;
 	public static String OpenQueryEditorAction_2;
+	public static String OpenSingleColumnDataDialogAction_0;
+	public static String OpenSingleRowDataDialogAction_0;
 	public static String OracleLoginComposite_0;
 	public static String OracleLoginComposite_1;
 	public static String OracleLoginComposite_10;
@@ -367,11 +389,13 @@ public class Messages extends NLS {
 	public static String SQLiteLoginComposite_15;
 	public static String SQLiteLoginComposite_16;
 	public static String SQLiteLoginComposite_17;
+	public static String SQLiteLoginComposite_18;
 	public static String SQLiteLoginComposite_19;
 	public static String SQLiteLoginComposite_2;
 	public static String SQLiteLoginComposite_22;
 	public static String SQLiteLoginComposite_23;
 	public static String SQLiteLoginComposite_24;
+	public static String SQLiteLoginComposite_25;
 	public static String SQLiteLoginComposite_29;
 	public static String SQLiteLoginComposite_3;
 	public static String SQLiteLoginComposite_4;
@@ -519,7 +543,6 @@ public class Messages extends NLS {
 	public static String SQLToStringDialog_3;
 	public static String SQLToStringDialog_4;
 	public static String SQLToStringDialog_6;
-	public static String MainEditor_btnExport_text;
 	public static String MainEditorInput_0;
 	public static String MainEditorInput_3;
 	public static String MainEditorInput_4;
@@ -574,6 +597,10 @@ public class Messages extends NLS {
 	public static String SQLToStringDialog_lblVariable_text;
 	public static String SQLToStringDialog_btnNewButton_text;
 	public static String OracleLoginComposite_lblDatabase_text;
+	public static String OracleObjectCompileAction_11;
+	public static String OracleObjectCompileAction_12;
+	public static String OracleObjectCompileAction_13;
+	public static String OracleObjectCompileAction_5;
 	public static String OthersConnectionMongoDBGroup_0;
 	public static String OthersConnectionMongoDBGroup_1;
 	public static String OthersConnectionMongoDBGroup_2;
@@ -656,6 +683,7 @@ public class Messages extends NLS {
 	public static String OthersConnectionRDBGroup_btnShowTables_text;
 	public static String OthersConnectionRDBWithoutTunnelingGroup_btnShowTables_text;
 	public static String ObjectDeleteAction_synonym;
+	public static String ObjectDropAction_1;
 	public static String ObjectEditor_0;
 	public static String ObjectEditor_1;
 	public static String ObjectEditor_12;
@@ -663,6 +691,7 @@ public class Messages extends NLS {
 	public static String ObjectEditor_2;
 	public static String ObjectEditor_3;
 	public static String ObjectEditor_5;
+	public static String ObjectEditor_7;
 	public static String ObjectRefreshAction_1;
 	public static String RDBDBInfosEditor_1;
 	public static String RDBDBInfosEditor_2;
@@ -713,14 +742,18 @@ public class Messages extends NLS {
 	public static String SQLUpdateDialog_9;
 	public static String SQLUpdateDialog_Error;
 	public static String TableDirectEditorComposite_tltmRefersh_text;
+	public static String TableInformationEditor_0;
+	public static String TableInformationEditor_1;
 	public static String TablesComposite_0;
 	public static String TablesComposite_1;
 	public static String TablesComposite_2;
 	public static String TablesComposite_3;
 	public static String TablesComposite_5;
+	public static String TDBErroDialog_0;
 	public static String TDBErroDialog_2;
 	public static String TDBErroDialog_3;
 	public static String TDBErroDialog_4;
+	public static String TDBInfoDialog_0;
 	public static String RecordViewDialog_0;
 	public static String RecordViewDialog_1;
 	public static String RecordViewDialog_13;
@@ -731,10 +764,17 @@ public class Messages extends NLS {
 	public static String ResultMainComposite_1;
 	public static String ResultMainComposite_2;
 	public static String ResultMainComposite_3;
+	public static String ResultMainComposite_4;
 	public static String ResultSetComposite_0;
 	public static String ResultSetComposite_1;
+	public static String ResultSetComposite_10;
+	public static String ResultSetComposite_11;
+	public static String ResultSetComposite_16;
 	public static String ResultSetComposite_2;
 	public static String ResultSetComposite_3;
+	public static String ResultSetComposite_4;
+	public static String ResultSetComposite_5;
+	public static String ResultSetComposite_6;
 	public static String ResultSetComposite_7;
 	public static String ResultSetComposite_8;
 	public static String ResultSetComposite_btnDmlGenerator_text;
@@ -748,6 +788,8 @@ public class Messages extends NLS {
 	public static String ExecuteProcedureDialog_lblObjectName_text;
 	public static String TablesComposite_btnCsvExport_text;
 	public static String ColumnsComposite_btnDownload_text;
+	public static String ResultSetComposite_btnColumnDetail_text;
+	public static String MessageComposite_lblGoogleSearch_1_text;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

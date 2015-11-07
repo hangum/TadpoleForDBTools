@@ -43,6 +43,8 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
@@ -72,9 +74,9 @@ public class SchemaHistoryEditor extends EditorPart {
 	private DateTime dateTimeStart;
 	private DateTime dateTimeEnd;
 	private Text textDateLeft;
-	private Text textLeftSQL;
+	private TadpoleEditorWidget textLeftSQL;
 	private Text textDateRight;
-	private Text textSQLRight;
+	private TadpoleEditorWidget textSQLRight;
 	
 	public SchemaHistoryEditor() {
 	}
@@ -215,7 +217,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		textDateLeft = new Text(compositeLeft, SWT.BORDER);
 		textDateLeft.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		textLeftSQL = new Text(compositeLeft, SWT.BORDER | SWT.MULTI);
+		textLeftSQL = new TadpoleEditorWidget(compositeLeft, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textLeftSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		Composite compositeRight = new Composite(sashFormDetail, SWT.NONE);
@@ -228,7 +230,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		textDateRight = new Text(compositeRight, SWT.BORDER);
 		textDateRight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		textSQLRight = new Text(compositeRight, SWT.BORDER | SWT.MULTI);
+		textSQLRight = new TadpoleEditorWidget(compositeRight, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textSQLRight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
 		sashFormDetail.setWeights(new int[] {1, 1});

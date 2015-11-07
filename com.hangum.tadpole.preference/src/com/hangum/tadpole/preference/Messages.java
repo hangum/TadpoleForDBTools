@@ -174,6 +174,8 @@ public class Messages extends NLS {
 	public static String GeneralPreferencePage_lblPort_text;
 	public static String GeneralPreferencePage_lblAccount_text;
 	public static String GeneralPreferencePage_lblPassword_text;
+
+	public static String GetAdminPreference_5;
 	public static String PerspectivePreferencePage_0;
 
 	public static String PerspectivePreferencePage_3;

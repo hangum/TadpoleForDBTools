@@ -24,8 +24,8 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.importdb.core.dialog.importdb.editor.MongoDBImportEditor;
-import com.hangum.tadpole.importdb.core.dialog.importdb.editor.MongoDBImportEditorInput;
+import com.hangum.tadpole.importexport.core.editors.mongodb.MongoDBImportEditor;
+import com.hangum.tadpole.importexport.core.editors.mongodb.MongoDBImportEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 
 /**

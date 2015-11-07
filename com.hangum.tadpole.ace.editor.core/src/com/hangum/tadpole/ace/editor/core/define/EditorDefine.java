@@ -50,6 +50,6 @@ public class EditorDefine {
 	public static enum SQL_TO_APPLICATION {Java_StringBuffer, PHP};
 
 	/** tab index name */
-	public enum RESULT_TAB {RESULT_SET, SQL_RECALL, TADPOLE_MESSAGE};
+	public enum RESULT_TAB {RESULT_SET, QUERY_PLAN, SQL_RECALL, TADPOLE_MESSAGE};
 
 }

@@ -16,6 +16,10 @@ package com.hangum.tadpole.db.metadata;
  *
  */
 public class TadpoleMetaData {
+	/** db major version */
+	private int dbMajorVersion = -1;
+	/** db minor version */
+	private int MinorVersion = -1;
 
 	/**
 	 * 이슈정리 : https://github.com/hangum/TadpoleForDBTools/issues/412
@@ -43,6 +47,7 @@ public class TadpoleMetaData {
 	private String identifierQuoteString = "";
 	private STORES_FIELD_TYPE STORE_TYPE = STORES_FIELD_TYPE.NONE;
 	
+
 	/**
 	 * {@link java.sql.DatabaseMetaData#getSQLKeywords()}
 	 */
@@ -58,14 +63,12 @@ public class TadpoleMetaData {
 		this.STORE_TYPE = STORE_TYPE;
 	}
 
-
 	/**
 	 * @return the identifierQuoteString
 	 */
 	public final String getIdentifierQuoteString() {
 		return identifierQuoteString;
 	}
-
 
 	/**
 	 * @param identifierQuoteString the identifierQuoteString to set
@@ -74,14 +77,12 @@ public class TadpoleMetaData {
 		this.identifierQuoteString = identifierQuoteString;
 	}
 
-
 	/**
 	 * @return the sTORE_TYPE
 	 */
 	public final STORES_FIELD_TYPE getSTORE_TYPE() {
 		return STORE_TYPE;
 	}
-
 
 	/**
 	 * @param sTORE_TYPE the sTORE_TYPE to set
@@ -90,7 +91,6 @@ public class TadpoleMetaData {
 		STORE_TYPE = sTORE_TYPE;
 	}
 
-
 	/**
 	 * @return the keywords
 	 */
@@ -98,11 +98,39 @@ public class TadpoleMetaData {
 		return keywords;
 	}
 
-
 	/**
 	 * @param keywords the keywords to set
 	 */
 	public final void setKeywords(String keywords) {
 		this.keywords = keywords;
 	}
+
+	/**
+	 * @return the dbMajorVersion
+	 */
+	public int getDbMajorVersion() {
+		return dbMajorVersion;
+	}
+
+	/**
+	 * @param dbMajorVersion the dbMajorVersion to set
+	 */
+	public void setDbMajorVersion(int dbMajorVersion) {
+		this.dbMajorVersion = dbMajorVersion;
+	}
+
+	/**
+	 * @return the minorVersion
+	 */
+	public int getMinorVersion() {
+		return MinorVersion;
+	}
+
+	/**
+	 * @param minorVersion the minorVersion to set
+	 */
+	public void setMinorVersion(int minorVersion) {
+		MinorVersion = minorVersion;
+	}
+	
 }

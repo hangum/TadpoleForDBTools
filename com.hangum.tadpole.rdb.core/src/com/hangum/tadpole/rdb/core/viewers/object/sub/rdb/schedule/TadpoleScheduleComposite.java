@@ -16,7 +16,8 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 
 public class TadpoleScheduleComposite extends AbstractObjectComposite {
 	
-	TableViewer tvSchedule;
+	private CTabItem tbtmSchedule;
+	private TableViewer tvSchedule;
 	
 	/**
 	 * procedure
@@ -31,12 +32,12 @@ public class TadpoleScheduleComposite extends AbstractObjectComposite {
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem tbtmProcedures = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmProcedures.setText("Schedule");
-		tbtmProcedures.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.SCHEDULE.name());
+		tbtmSchedule = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmSchedule.setText("Schedule");
+		tbtmSchedule.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.SCHEDULE.name());
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
-		tbtmProcedures.setControl(compositePackages);
+		tbtmSchedule.setControl(compositePackages);
 		GridLayout gl_compositePackages = new GridLayout(1, false);
 		gl_compositePackages.verticalSpacing = 2;
 		gl_compositePackages.horizontalSpacing = 2;
@@ -70,7 +71,10 @@ public class TadpoleScheduleComposite extends AbstractObjectComposite {
 		return tvSchedule;
 	}
 
-	public void refreshSchedule(UserDBDAO userDB, boolean boolRefresh) {
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+
 		
 	}
 

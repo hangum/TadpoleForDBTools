@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -21,12 +19,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
@@ -41,7 +38,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	UserDBDAO userDB = null;
 	IStructuredSelection selection;
 
-	private PublicTadpoleDefine.DB_ACTION actionType;
+	private PublicTadpoleDefine.OBJECT_TYPE actionType;
 	
 	public AbstractObjectAction() {
 	}
@@ -52,7 +49,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param actionType view의 작업 타입
 	 * @param userDB
 	 */
-	public AbstractObjectAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType) {
+	public AbstractObjectAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		this.window = window;
 		this.actionType = actionType;
 		
@@ -79,8 +76,11 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param e
 	 */
 	protected void exeMessage(String msgHead, Exception e) {
-		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-		ExceptionDetailsErrorDialog.openError(null, "Error", msgHead + Messages.ObjectDeleteAction_25, errStatus); //$NON-NLS-1$
+//		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//		ExceptionDetailsErrorDialog.openError(null, "Error", msgHead + Messages.ObjectDeleteAction_25, errStatus); //$NON-NLS-1$
+		
+		TDBErroDialog errDialog = new TDBErroDialog(null, msgHead + Messages.ObjectDeleteAction_25, e.getMessage());
+		errDialog.open();
 	}
 	
 	/**
@@ -140,6 +140,18 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * refresh object
+	 * 
+	 * @param actionType
+	 * @param objName
+	 * @param userDB
+	 */
+	protected void refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objName, UserDBDAO userDB) {
+		ExplorerViewer ev = getExplorerView();
+		ev.refreshCurrentTab(actionType, objName, userDB);
+	}
+	
+	/**
 	 * Trigger 최신정보로 갱신
 	 */
 	protected void refreshTrigger() {
@@ -186,7 +198,7 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param selection selection of ExplorerViewer
 	 * @param actionType
 	 */
-	abstract public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType);
+	abstract public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType);
 	
 	@Override
 	public void dispose() {

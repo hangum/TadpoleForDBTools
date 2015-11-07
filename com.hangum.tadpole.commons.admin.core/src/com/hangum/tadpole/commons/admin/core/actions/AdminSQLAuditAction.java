@@ -23,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditor;
 import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditorInput;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -46,8 +47,8 @@ public class AdminSQLAuditAction extends Action implements ISelectionListener, I
 		this.window = window;
 		
 		setId(ID);
-		setText("Admin SQL Audit");
-		setToolTipText("Admin SQL Audit");
+		setText(Messages.AdminSQLAuditAction_0);
+		setToolTipText(Messages.AdminSQLAuditAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -61,7 +62,7 @@ public class AdminSQLAuditAction extends Action implements ISelectionListener, I
 			logger.error("Admin SQL Audit editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Admin SQL Audit Action", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AdminSQLAuditAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 

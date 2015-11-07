@@ -24,6 +24,10 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -37,18 +41,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 /**
  * User login history dialog
@@ -250,7 +248,7 @@ class LoginHistoryLabelProvider  extends LabelProvider implements ITableLabelPro
 		
 		switch(columnIndex) {
 		case 0 : return dao.getLogin_ip();
-		case 1 : return dao.getConnet_time().toString();
+		case 1 : return dao.getConnet_time() == null?dao.getSqliteConnet_time():dao.getConnet_time().toString();
 		case 2 : return dao.getDisconnect_time() == null?"":dao.getDisconnect_time().toString(); //$NON-NLS-1$
 		}
 		

@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -46,15 +46,15 @@ public class ObjectCreatAction extends AbstractObjectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.creat";
 	
-	public ObjectCreatAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public ObjectCreatAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(title);
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
-		if(actionType == PublicTadpoleDefine.DB_ACTION.TABLES) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
+		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 			
 			// others db
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
@@ -78,10 +78,10 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				}
 			}
 			
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.VIEWS) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.INDEXES) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				CreateIndexAction cia = new CreateIndexAction();
 				cia.run(userDB, actionType);
@@ -92,19 +92,19 @@ public class ObjectCreatAction extends AbstractObjectAction {
 					refreshIndexes();
 				}
 			}
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PROCEDURES) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.PACKAGES) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
 			CreatePackageAction cia = new CreatePackageAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.FUNCTIONS) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.TRIGGERS) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 			CreateTriggerAction cia = new CreateTriggerAction();
 			cia.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.DB_ACTION.JAVASCRIPT) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT) {
 			CreateJavaScriptAction csa = new CreateJavaScriptAction();
 			csa.run(userDB, actionType);
 		}

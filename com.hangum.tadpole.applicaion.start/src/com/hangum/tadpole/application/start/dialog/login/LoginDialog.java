@@ -28,6 +28,7 @@ import org.eclipse.rap.addons.d3chart.ColorStream;
 import org.eclipse.rap.addons.d3chart.Colors;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -61,7 +62,6 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
-import com.swtdesigner.SWTResourceManager;
 
 /**
  * Tadpole DB Hub User login dialog.
@@ -81,6 +81,13 @@ public class LoginDialog extends Dialog {
 	
 	private Text textEMail;
 	private Text textPasswd;
+	
+	String strPaypal = "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'> " +
+						"	<input type='hidden' name='cmd' value='_s-xclick'> " +
+						"	<input type='hidden' name='encrypted' value='-----BEGIN PKCS7-----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-----END PKCS7-----'> " +
+						"	<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'> " +
+						"	<img alt='' border='0' src='https://www.paypalobjects.com/ko_KR/i/scr/pixel.gif' width='1' height='1'> " +
+						"	</form>";
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -157,25 +164,25 @@ public class LoginDialog extends Dialog {
 		btnLogin.setText(Messages.LoginDialog_15);
 
 		// ---------------------  Registered database ----------------------------------------------------
-		try {
-			listDBMart = getDBMart();
-			if(!listDBMart.isEmpty()) {
-				Group grpSponser = new Group(container, SWT.NONE);
-				GridLayout gl_grpSponser = new GridLayout(1, false);
-				gl_grpSponser.verticalSpacing = 0;
-				gl_grpSponser.horizontalSpacing = 0;
-				gl_grpSponser.marginHeight = 0;
-				gl_grpSponser.marginWidth = 0;
-				grpSponser.setLayout(gl_grpSponser);
-				grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-				grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-				grpSponser.setText(Messages.LoginDialog_grpSponser_text);
-				
-				makeBarChart(grpSponser, listDBMart);
-			}
-		} catch(Exception e) {
-			logger.error("get initdata", e); //$NON-NLS-1$
-		}
+//		try {
+//			listDBMart = getDBMart();
+//			if(!listDBMart.isEmpty()) {
+//				Group grpSponser = new Group(container, SWT.NONE);
+//				GridLayout gl_grpSponser = new GridLayout(1, false);
+//				gl_grpSponser.verticalSpacing = 0;
+//				gl_grpSponser.horizontalSpacing = 0;
+//				gl_grpSponser.marginHeight = 0;
+//				gl_grpSponser.marginWidth = 0;
+//				grpSponser.setLayout(gl_grpSponser);
+//				grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+//				grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+//				grpSponser.setText(Messages.LoginDialog_grpSponser_text);
+//				
+//				makeBarChart(grpSponser, listDBMart);
+//			}
+//		} catch(Exception e) {
+//			logger.error("get initdata", e); //$NON-NLS-1$
+//		}
 		
 		Group compositeLetter = new Group(container, SWT.NONE);
 		compositeLetter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
@@ -214,12 +221,12 @@ public class LoginDialog extends Dialog {
 		lblUserIndonesia.setText("<a href='https://github.com/hangum/TadpoleForDBTools/wiki/RDB-User-Guide-ID' target='_blank'>(Indonesia)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblUserIndonesia.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblIssues = new Label(compositeLetter, SWT.NONE);
-		lblIssues.setText(Messages.LoginDialog_lblIssues_text);
-		
-		Label lblIssue = new Label(compositeLetter, SWT.NONE);
-		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>https://github.com/hangum/TadpoleForDBTools/issues</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+//		Label lblIssues = new Label(compositeLetter, SWT.NONE);
+//		lblIssues.setText(Messages.LoginDialog_lblIssues_text);
+//		
+//		Label lblIssue = new Label(compositeLetter, SWT.NONE);
+//		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>https://github.com/hangum/TadpoleForDBTools/issues</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+//		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblContact = new Label(compositeLetter, SWT.NONE);
 		lblContact.setText(Messages.LoginDialog_lblContact_text_1);
@@ -232,6 +239,14 @@ public class LoginDialog extends Dialog {
 			lblContactUrl.setText("<a href='mailto:adi.tadpole@gmail.com'>Admin(adi.tadpole@gmail.com)</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		
+		Label lblDonation = new Label(compositeLetter, SWT.NONE);
+//		lblDonation.setText(Messages.LoginDialog_lblDonation_text);
+
+		Browser browser = new Browser(compositeLetter, SWT.NONE);
+		GridData gd_browser = new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1);
+		browser.setLayoutData(gd_browser);
+		browser.setText(strPaypal);
 		
 		textEMail.setFocus();
 		AnalyticCaller.track("login"); //$NON-NLS-1$
@@ -444,7 +459,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		if(listDBMart.isEmpty()) {
-			return new Point(480, 290);
+			return new Point(480, 320);
 		} else {
 			return new Point(480, 460);
 		}

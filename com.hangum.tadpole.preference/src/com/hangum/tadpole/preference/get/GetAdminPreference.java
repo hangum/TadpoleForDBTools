@@ -24,6 +24,8 @@ import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 
 /**
@@ -46,7 +48,7 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 		SMTPDTO dto = new SMTPDTO();
 		
 		HttpSession sStore = RWT.getRequest().getSession();
-		dto = (SMTPDTO)sStore.getAttribute("smtpinfo");
+		dto = (SMTPDTO)sStore.getAttribute("smtpinfo"); //$NON-NLS-1$
 		
 		if(dto == null) {
 			dto = new SMTPDTO();
@@ -69,11 +71,11 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 			dto.setEmail(strEmail);
 			dto.setPasswd(strPwd);
 			
-			if("".equals(strHost) | "".equals(strPort) | "".equals(strEmail) | "".equals(strPwd)) {
-				throw new Exception("SMTP Server가 설정 되어 있지 않습니다. ");
+			if("".equals(strHost) | "".equals(strPort) | "".equals(strEmail) | "".equals(strPwd)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				throw new Exception(Messages.GetAdminPreference_5);
 			}
 			
-			sStore.setAttribute("smtpinfo", dto);
+			sStore.setAttribute("smtpinfo", dto); //$NON-NLS-1$
 //			} catch (Exception e) {
 //				logger.error("get stmt info", e);
 //			}
@@ -86,7 +88,7 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 		SMTPDTO dto = new SMTPDTO();
 		
 		try {
-			UserDAO userDao = TadpoleApplicationContextManager.getSystemAdmin();
+			UserDAO userDao = TadpoleSystem_UserQuery.getSystemAdmin();
 			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
 			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
 			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
@@ -99,7 +101,7 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 			dto.setPasswd(getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
 			
 		} catch (Exception e) {
-			logger.error("get stmt info", e);
+			logger.error("get stmt info", e); //$NON-NLS-1$
 		}
 		
 		return dto;

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
+import java.sql.SQLException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -39,8 +41,11 @@ import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystemCommons;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
+import com.hangum.tadpole.engine.sql.util.OracleObjectCompileUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -49,8 +54,10 @@ import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
+import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.swtdesigner.ResourceManager;
-
 /**
  * Object Editor
  * 
@@ -62,27 +69,26 @@ public class ObjectEditor extends MainEditor {
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.main.procedure"; //$NON-NLS-1$
 	private static final Logger logger = Logger.getLogger(ObjectEditor.class);
 	
-	private String objectName = ""; //$NON-NLS-1$
-	
 	public ObjectEditor() {
 		super();
 	}
 	
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setSite(site);
-		setInput(input);
-		
 		ObjectEditorInput qei = (ObjectEditorInput)input;
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
-
 		strRoleType = userDB.getRole_id();
-		if("".equals(qei.getObjectName())) setPartName(qei.getName()); //$NON-NLS-1$
-		else setPartName(String.format("%s (%s)", qei.getName(), qei.getObjectName())); //$NON-NLS-1$
 		
-		objectName = qei.getObjectName();
+		String strPartName = "";
+		if("".equals(qei.getObjectName())) strPartName = qei.getName(); //$NON-NLS-1$
+		else strPartName = String.format("%s (%s)", qei.getName(), qei.getObjectName()); //$NON-NLS-1$
+
+		setSite(site);
+		setInput(input);
+		setPartName(strPartName);
+//		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
 	}
 
 	@Override
@@ -148,7 +154,7 @@ public class ObjectEditor extends MainEditor {
 		tltmCompile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
+				String strQuery = browserEvaluateToStr(EditorFunctionService.GET_SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
 				
 				EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
 				if( Boolean.parseBoolean( browserEvaluateToStr(EditorFunctionService.IS_BLOCK_TEXT) ) ) {
@@ -212,9 +218,9 @@ public class ObjectEditor extends MainEditor {
 				if(event.getProperty() == PreferenceDefine.EDITOR_CHANGE_EVENT) {
 					final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
 				    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
-				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
+				    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp(); //$NON-NLS-1$
 				    final String varWarpLimit 	= GetPreferenceGeneral.getEditorWarpLimitValue();
-				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
+				    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter(); //$NON-NLS-1$
 				    
 				    browserEvaluate(IEditorFunction.CHANGE_EDITOR_STYLE, 
 							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
@@ -244,6 +250,13 @@ public class ObjectEditor extends MainEditor {
 		if(reqQuery.getExecuteType() == EXECUTE_TYPE.BLOCK) {
 			resultMainComposite.executeCommand(reqQuery);
 		} else {
+			try {
+				if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) return;
+			} catch (Exception e1) {
+				logger.error("if execute query?", e1);
+				return;
+			}
+			
 			if(!MessageDialog.openConfirm(null, Messages.ObjectEditor_0, Messages.ObjectEditor_3)) {
 				setOrionTextFocus();
 				return;
@@ -251,22 +264,38 @@ public class ObjectEditor extends MainEditor {
 			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
-				reqResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
+				reqResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
 			} catch(Exception e) {
-				logger.error("execute ddl", e);
+				logger.error("execute ddl", e); //$NON-NLS-1$
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
 				reqResultDAO.setMesssage(e.getMessage());
 				
 			} finally {
 				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
-					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 					
 					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 						mysqlAfterProcess(reqResultDAO, reqQuery);
+					} else if(getUserDB().getDBDefine() == DBDefine.MSSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+						mssqlAfterProcess(reqResultDAO, reqQuery);
 					}
 					
 				} else {
-					afterProcess(reqResultDAO, Messages.ObjectEditor_2);
+					if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+						String retMsg = "";
+						try {
+							retMsg = oracleAfterProcess(reqResultDAO, reqQuery);
+							if(!"".equals(retMsg)) { //$NON-NLS-1$
+								retMsg = Messages.ObjectEditor_7 + retMsg;
+							}
+						} catch(Exception e) {
+							logger.error("Oracle Object compile", e); //$NON-NLS-1$
+						}
+
+						reqResultDAO.setMesssage(retMsg);
+					}
+					
+					afterProcess(reqQuery, reqResultDAO, Messages.ObjectEditor_2);
 				}
 
 				setDirty(false);
@@ -280,19 +309,67 @@ public class ObjectEditor extends MainEditor {
 	}
 	
 	/**
+	 * oracle object 
+	 * 컴파일 후 - 오브젝트 상태를 표시해 줄수 있도록 합니다. 
+	 * 
+	 * @param reqResultDAO
+	 * @param reqQuery
+	 * @return
+	 */
+	private String oracleAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) throws Exception {
+		String retMsg = ""; //$NON-NLS-1$
+		
+		QUERY_DDL_TYPE ddlType = reqQuery.getSqlDDLType();
+		String strObjectName = reqQuery.getSqlObjectName();
+		if(ddlType == QUERY_DDL_TYPE.PROCEDURE) {
+			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.PROCEDURE, "PROCEDURE", strObjectName.toUpperCase(), userDB); //$NON-NLS-1$
+		} else if(ddlType == QUERY_DDL_TYPE.PACKAGE) {
+			retMsg = OracleObjectCompileUtils.packageCompile(strObjectName, userDB);
+		} else if(ddlType == QUERY_DDL_TYPE.FUNCTION) {
+			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.FUNCTION, "FUNCTION", strObjectName.toUpperCase(), userDB);			 //$NON-NLS-1$
+		} else if(ddlType == QUERY_DDL_TYPE.TRIGGER) {
+			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.TRIGGER, "TRIGGER",  strObjectName.toUpperCase(), userDB);			 //$NON-NLS-1$
+		}
+		
+		return retMsg;
+	}
+
+	/**
 	 * after process
 	 * 
+	 * @param reqQuery
 	 * @param reqResultDAO
 	 * @param title
 	 */
-	private void afterProcess(RequestResultDAO reqResultDAO, String title) {
+	private void afterProcess(RequestQuery reqQuery, RequestResultDAO reqResultDAO, String title) {
 		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
-			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
-		} else {
-			resultMainComposite.refreshMessageView(null, String.format("%s %s", title, reqResultDAO.getStrSQLText())); //$NON-NLS-1$
+		resultMainComposite.refreshMessageView(reqQuery, reqResultDAO.getException(), String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
+		
+		if(PublicTadpoleDefine.SUCCESS_FAIL.S.name().equals(reqResultDAO.getResult())) {
+			refreshExplorerView(getUserDB(), reqQuery);
 		}
+	}
+	
+	/**
+	 * CREATE, DROP, ALTER 문이 실행되어 ExplorerViewer view를 리프레쉬합니다.
+	 * 
+	 * @param userDB
+	 * @param reqQuery
+	 */
+	protected void refreshExplorerView(final UserDBDAO userDB, final RequestQuery reqQuery) {
+		resultMainComposite.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
+					ev.refreshCurrentTab(userDB, reqQuery);
+				} catch (PartInitException e) {
+					logger.error("ExplorerView show", e); //$NON-NLS-1$
+				}
+			}
+			
+		});
 	}
 	
 	/**
@@ -303,24 +380,81 @@ public class ObjectEditor extends MainEditor {
 	 * @param e
 	 */
 	private void mysqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
-		if(StringUtils.contains(reqResultDAO.getMesssage(), "already exists")) { //$NON-NLS-1$
+		if(reqResultDAO.getException() == null) return;
+		
+		String strSQLState = "";
+		int intSQLErrorCode = -1;
+		Throwable cause = reqResultDAO.getException();;
+		if (cause instanceof SQLException) {
+			try {
+				SQLException sqlException = (SQLException)cause;
+				strSQLState = sqlException.getSQLState();
+				intSQLErrorCode =sqlException.getErrorCode();
+				
+				if(logger.isDebugEnabled()) logger.debug("==========> SQLState : " + strSQLState + "\t SQLErrorCode : " + intSQLErrorCode);
+			} catch(Exception e) {
+				logger.error("SQLException to striing", e); //$NON-NLS-1$
+			}
+		}
+		
+		if(strSQLState.equals("42000") && intSQLErrorCode == 1304) { //$NON-NLS-1$
 			
-			String strPrefix = StringUtils.removeEnd(reqResultDAO.getMesssage(), "already exists"); //$NON-NLS-1$
-			String strObjectName = StringUtils.substringBefore(reqResultDAO.getMesssage(), " "); //$NON-NLS-1$
-			String cmd = "DROP " + strPrefix; //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, strObjectName))) {
+			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
+			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
-					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", cmd); //$NON-NLS-1$
-					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 					
-					reqReResultDAO = TadpoleSystemCommons.executSQL(userDB, "DDL", reqQuery.getOriginalSql()); //$NON-NLS-1$
-					afterProcess(reqReResultDAO, Messages.ObjectEditor_2);
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
 				} catch(Exception ee) {
-					afterProcess(reqResultDAO, ""); //$NON-NLS-1$
+					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 				}
 			}
-		}	
+//		1064는 컴파일 에러.
+//		} else if(strSQLState.equals("42000") && intSQLErrorCode == 1064) { //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * mssql after process
+	 * @param reqResultDAO
+	 * @param reqQuery
+	 */
+	private void mssqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
+		if(reqResultDAO.getException() == null) return;
+		String strSQLState = "";
+		int intSQLErrorCode = -1;
+		Throwable cause = reqResultDAO.getException();;
+		if (cause instanceof SQLException) {
+			try {
+				SQLException sqlException = (SQLException)cause;
+				strSQLState = sqlException.getSQLState();
+				intSQLErrorCode =sqlException.getErrorCode();
+				
+				if(logger.isDebugEnabled()) logger.debug("==========> SQLState : " + strSQLState + "\t SQLErrorCode : " + intSQLErrorCode);
+			} catch(Exception e) {
+				logger.error("SQLException to striing", e); //$NON-NLS-1$
+			}
+		}
+		
+		if(strSQLState.equals("S0001") && intSQLErrorCode == 2714) { //$NON-NLS-1$
+			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
+			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+				RequestResultDAO reqReResultDAO = new RequestResultDAO();
+				try {
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+					
+					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+				} catch(Exception ee) {
+					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
+				}
+			}
+		}
+		
 	}
 	
 }

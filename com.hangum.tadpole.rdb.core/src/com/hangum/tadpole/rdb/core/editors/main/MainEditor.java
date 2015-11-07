@@ -50,7 +50,7 @@ import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -64,7 +64,7 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
-import com.hangum.tadpole.rdb.core.dialog.export.SQLToStringDialog;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
@@ -98,7 +98,7 @@ public class MainEditor extends EditorExtension {
 	protected String initDefaultEditorStr = ""; //$NON-NLS-1$
 	
 	/** 현재 editor가 열린 상태. 즉 table, view, index 등의 상태. */
-	protected DB_ACTION dbAction;
+	protected OBJECT_TYPE dbAction;
 	
 	/** resource 정보. */
 	protected UserDBResourceDAO dBResource;
@@ -118,20 +118,22 @@ public class MainEditor extends EditorExtension {
 	
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setSite(site);
-		setInput(input);
-		
 		MainEditorInput qei = (MainEditorInput)input;
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
+		String strPartName = qei.getName();
 		dBResource = qei.getResourceDAO();
-		if(dBResource == null) setPartName(qei.getName());
-		else setPartName(dBResource.getName());
+		if(dBResource != null) strPartName = dBResource.getName();
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
+
+		setSite(site);
+		setInput(input);
+		setPartName(strPartName);
+//		setTitleImage(DBIconsUtils.getDBNormalImage(getUserDB()));
 	}
 	
 	@Override
@@ -208,7 +210,7 @@ public class MainEditor extends EditorExtension {
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
+				String strQuery = browserEvaluateToStr(EditorFunctionService.GET_SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER);
 				
 				EditorDefine.EXECUTE_TYPE executeType = EditorDefine.EXECUTE_TYPE.NONE;
 				if( Boolean.parseBoolean( browserEvaluateToStr(EditorFunctionService.IS_BLOCK_TEXT) ) ) {
@@ -242,7 +244,7 @@ public class MainEditor extends EditorExtension {
 		tltmExplainPlanctrl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String strQuery = browserEvaluateToStr(EditorFunctionService.SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
+				String strQuery = browserEvaluateToStr(EditorFunctionService.GET_SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 				
 				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
 				executeCommand(reqQuery);
@@ -751,7 +753,7 @@ public class MainEditor extends EditorExtension {
 	 * 
 	 * @return
 	 */
-	public DB_ACTION getDbAction() {
+	public OBJECT_TYPE getDbAction() {
 		return dbAction;
 	}
 	
