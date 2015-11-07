@@ -33,6 +33,8 @@ import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.rdb.core.Messages;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Resource history dialog
@@ -127,6 +129,15 @@ public class ResourceHistoryDialog extends Dialog {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		tvHistory = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tvHistory.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				StructuredSelection sss = (StructuredSelection)tvHistory.getSelection();
+				if(sss.isEmpty()) return;
+				
+				UserDBResourceDataDAO userDBResource = (UserDBResourceDataDAO)sss.getFirstElement();
+				textLeft.setText(userDBResource.getDatas());
+			}
+		});
 		Table table = tvHistory.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -150,7 +161,7 @@ public class ResourceHistoryDialog extends Dialog {
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new ResourceHistoryLabelProvider());
 
-		Composite compositeCompare = new Composite(sashForm, SWT.NONE);
+		SashForm compositeCompare = new SashForm(sashForm, SWT.NONE);
 		compositeCompare.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeCompare.setLayout(new GridLayout(2, false));
 		

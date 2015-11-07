@@ -80,7 +80,7 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 		for(int i=0; i<USER_GROUP.length; i++) {
 			comboUserGroup.add(USER_GROUP[i], i);
 		}
-		comboUserGroup.select(0);
+		comboUserGroup.select(1);
 		
 		setControl(container);
 		
