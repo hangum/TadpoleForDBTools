@@ -33,6 +33,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 public class SystemInitializeWizard extends Wizard {
 	private static final Logger logger = Logger.getLogger(SystemInitializeWizard.class);
 	
+	protected SystemAdminTermsPage termPage;
 	protected SystemAdminWizardUseTypePage systemUseType;
 	protected SystemAdminWizardDefaultUserPage addUserPage;
 
@@ -42,6 +43,9 @@ public class SystemInitializeWizard extends Wizard {
 
 	@Override
 	public void addPages() {
+		termPage = new SystemAdminTermsPage();
+		addPage(termPage);
+		
 		systemUseType = new SystemAdminWizardUseTypePage();
 		addPage(systemUseType);
 		
@@ -51,8 +55,10 @@ public class SystemInitializeWizard extends Wizard {
 	
 	@Override
 	public boolean canFinish() {
-		if(PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name().equals(systemUseType.getUseType())) {
-			return true;
+		if(termPage.getAggree()) {
+			if(PublicTadpoleDefine.SYSTEM_USE_GROUP.PERSONAL.name().equals(systemUseType.getUseType())) {
+				return true;
+			}
 		}
 		
 		return super.canFinish();
