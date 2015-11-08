@@ -41,6 +41,7 @@ import com.hangum.tadpole.commons.util.Utils;
 public class SystemAdminWizardDefaultUserPage extends WizardPage {
 	private static final Logger logger = Logger.getLogger(SystemAdminWizardDefaultUserPage.class);
 	
+	private boolean isComplete = false;
 	private Text textEmail;
 	private Text textPasswd;
 	private Text textRePasswd;
@@ -145,7 +146,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 	 * @param strRePass
 	 */
 	private void validateValue(String strEmail, String strPass, String strRePass) {
-		
+		isComplete = false;
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			errorSet(textEmail, Messages.SystemAdminWizardPage_35);
 			return;
@@ -160,6 +161,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 			return;
 		}
 		
+		isComplete = true;
 		setErrorMessage(null);
 		setPageComplete(true);
 	}
@@ -168,6 +170,10 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		ctl.setFocus();
 		setErrorMessage(msg);
 		setPageComplete(false);
+	}
+	
+	public boolean isComplete() {
+		return isComplete;
 	}
 	
 	/**
