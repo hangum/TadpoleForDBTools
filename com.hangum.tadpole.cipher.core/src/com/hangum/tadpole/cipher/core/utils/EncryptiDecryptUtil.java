@@ -25,12 +25,6 @@ public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
 	/** default encrypt password */
 	final static String DEFAULT_ENCRYPT_PASSWORD = ApplicationArgumentUtils.getPasswd();
 	
-	/**
-	 * encryption
-	 * 
-	 * @param text  
-	 * @return
-	 */
 	@Override
 	public String encryption(String text) {
 		if("".equals(text) || null == text) return "";
@@ -39,6 +33,21 @@ public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
 		textEncryptor.setPassword(DEFAULT_ENCRYPT_PASSWORD);
 		
 		return textEncryptor.encrypt(text);
+	}
+	
+	/**
+	 * encryption
+	 * 
+	 * @param text  
+	 * @return
+	 */
+	public String decryption(String encryptPasswd, String text) {
+		if("".equals(text) || null == text) return "";
+		
+		BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+		textEncryptor.setPassword(encryptPasswd);
+		
+		return textEncryptor.decrypt(text);
 	}
 	
 	/**
@@ -56,5 +65,5 @@ public class EncryptiDecryptUtil implements DefaultEncryptDecrypt {
 		
 		return textEncryptor.decrypt(text);
 	}
-	
+
 }
