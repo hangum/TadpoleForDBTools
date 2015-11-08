@@ -245,6 +245,10 @@ public class Messages extends NLS {
 	public static String ExitAction_1;
 	public static String ExitAction_2;
 	public static String ExitAction_3;
+	public static String ExitAction_4;
+	public static String ExitAction_5;
+	public static String ExitAction_6;
+	public static String ExitAction_7;
 	public static String ExplorerViewer_0;
 	public static String ExplorerViewer_1;
 	public static String ExplorerViewer_29;
