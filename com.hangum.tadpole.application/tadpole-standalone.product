@@ -120,41 +120,80 @@
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.rap.addons.d3chart"/>
       <plugin id="org.eclipse.rap.design.example"/>
+      <plugin id="org.eclipse.rap.design.example.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.design.example.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.draw2d"/>
       <plugin id="org.eclipse.rap.draw2d.compatibility"/>
       <plugin id="org.eclipse.rap.filedialog"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.filedialog.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.fileupload"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.fileupload.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.gef"/>
       <plugin id="org.eclipse.rap.jettycustomizer" fragment="true"/>
       <plugin id="org.eclipse.rap.jface"/>
       <plugin id="org.eclipse.rap.jface.databinding"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.jface.databinding.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.jface.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.nebula.jface.gridviewer"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.nebula.widgets.grid"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt"/>
+      <plugin id="org.eclipse.rap.rwt.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt.osgi"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt.osgi.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt.testfixture"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt.testfixture.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.ui"/>
+      <plugin id="org.eclipse.rap.ui.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.ui.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.ui.views"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.ui.views.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.ui.workbench"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_ja" fragment="true"/>
       <plugin id="org.eclipse.rap.ui.workbench.nl_ko" fragment="true"/>
       <plugin id="org.hamcrest.core"/>
       <plugin id="org.junit"/>
    </plugins>
 
    <features>
-      <feature id="com.hangum.tadpole.feature" version="2.0.0.qualifier"/>
+      <feature id="com.hangum.tadpole.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
