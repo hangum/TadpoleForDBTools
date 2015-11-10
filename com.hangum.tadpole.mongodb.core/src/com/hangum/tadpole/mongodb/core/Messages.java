@@ -50,6 +50,7 @@ public class Messages {
 	public String MongoDBTableEditor_0;
 	public String MongoDBTableEditor_1;
 	public String MongoDBTableEditor_2;
+	public String MongoDBTableEditor_6;
 	public String MongoDBTableEditor_23;
 	public String MongoDBTableEditor_3;
 	public String MongoDBTableEditor_31;
@@ -100,6 +101,7 @@ public class Messages {
 	public String CollectionInformationComposite_btnRefresh_text;
 	public String CollectionInformationComposite_tltmRefresh_text;
 	public String ShardingComposite_tltmNewItem_text;
+	public String FindOneDetailComposite_0;
 
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

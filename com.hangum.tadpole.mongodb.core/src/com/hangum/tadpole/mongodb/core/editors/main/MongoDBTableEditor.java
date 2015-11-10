@@ -123,19 +123,19 @@ public class MongoDBTableEditor extends EditorPart {
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
-		textBasicFind = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
+		textBasicFind = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist); //$NON-NLS-1$
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
 		Label lblfield = new Label(compositeBasicHead, SWT.NONE);
 		lblfield.setText(Messages.get().MongoDBTableEditor_1);
 		
-		textBasicField = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
+		textBasicField = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist); //$NON-NLS-1$
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblsort = new Label(compositeBasicHead, SWT.NONE);
 		lblsort.setText(Messages.get().MongoDBTableEditor_2);
 		
-		textBasicSort = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
+		textBasicSort = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist); //$NON-NLS-1$
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);
@@ -214,7 +214,7 @@ public class MongoDBTableEditor extends EditorPart {
 				compositeResult.structureView();//consoleError();
 			}
 		});
-		btnStructureAnalized.setText("Show structure");
+		btnStructureAnalized.setText(Messages.get().MongoDBTableEditor_6); //$NON-NLS-1$
 		
 		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
