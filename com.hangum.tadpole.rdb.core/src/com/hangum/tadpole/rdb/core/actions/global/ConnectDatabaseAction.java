@@ -45,8 +45,8 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.ConnectDatabaseAction_1);
-		setToolTipText(Messages.ConnectDatabaseAction_2);
+		setText(Messages.get().ConnectDatabaseAction_1);
+		setToolTipText(Messages.get().ConnectDatabaseAction_2);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/add_database.png"));
 		
 		window.getSelectionService().addPostSelectionListener(this);

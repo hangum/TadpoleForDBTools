@@ -54,7 +54,7 @@ public class DBLockDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.DBLockDialog_0);
+		newShell.setText(Messages.get().DBLockDialog_0);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class DBLockDialog extends Dialog {
 		
 		Label lblDbPassword = new Label(container, SWT.NONE);
 		lblDbPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDbPassword.setText(Messages.DBLockDialog_1);
+		lblDbPassword.setText(Messages.get().DBLockDialog_1);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.addKeyListener(new KeyAdapter() {
@@ -95,7 +95,7 @@ public class DBLockDialog extends Dialog {
 		String strPassword = textPassword.getText();
 		
 		if(!strPassword.equals(userDB.getPasswd())) {
-			MessageDialog.openError(getShell(), Messages.DBLockDialog_2, Messages.DBLockDialog_3);
+			MessageDialog.openError(getShell(), Messages.get().DBLockDialog_2, Messages.get().DBLockDialog_3);
 			textPassword.setFocus();
 			
 			return;
@@ -109,8 +109,8 @@ public class DBLockDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.DBLockDialog_4, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBLockDialog_5, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().DBLockDialog_4, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().DBLockDialog_5, false);
 	}
 
 	/**

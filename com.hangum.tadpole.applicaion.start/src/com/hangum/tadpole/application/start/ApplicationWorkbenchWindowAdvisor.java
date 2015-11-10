@@ -91,7 +91,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
 //        // Set system exist message.
 //        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
-//    	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
+//    	service.setMessage(Messages.get().ApplicationWorkbenchWindowAdvisor_4);
     	
 //    	checkSupportBrowser();
     	
@@ -116,7 +116,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 ////    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
 //			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
 //    		if(0 == mv.getAllTreeList().size()) {
-//    			if(MessageDialog.openConfirm(null, Messages.ApplicationWorkbenchWindowAdvisor_0, Messages.ApplicationWorkbenchWindowAdvisor_3)) {
+//    			if(MessageDialog.openConfirm(null, Messages.get().ApplicationWorkbenchWindowAdvisor_0, Messages.get().ApplicationWorkbenchWindowAdvisor_3)) {
 //    			ConnectDatabase cd = new ConnectDatabase();
 //    			cd.run();
 //	    		}
@@ -212,10 +212,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			
     			String strAllowIP = userDao.getAllow_ip();
     			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
-    			if(logger.isDebugEnabled())logger.debug(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_23+ RequestInfoUtils.getRequestIP());
+    			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
     			if(!isAllow) {
-    				logger.error(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_26+ RequestInfoUtils.getRequestIP());
-    				MessageDialog.openError(null, Messages.LoginDialog_7, Messages.LoginDialog_28);
+    				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
+    				MessageDialog.openError(null, Messages.get().LoginDialog_7, Messages.get().LoginDialog_28);
     				return;
     			}
     			

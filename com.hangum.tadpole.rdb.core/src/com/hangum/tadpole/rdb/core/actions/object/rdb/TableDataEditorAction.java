@@ -55,7 +55,7 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 		super(window, actionType);
 		
 		setId(ID + actionType);
-		setText(Messages.TableDataEditorAction_1);
+		setText(Messages.get().TableDataEditorAction_1);
 	}
 	
 	@Override
@@ -64,30 +64,30 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 			PublicTadpoleDefine.QUERY_DML_TYPE queryType = QUERY_DML_TYPE.INSERT;
 			if(queryType == QUERY_DML_TYPE.INSERT) {
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
-					throw new Exception(Messages.MainEditor_21);
+					throw new Exception(Messages.get().MainEditor_21);
 				}
 			}
 			queryType = QUERY_DML_TYPE.UPDATE;
 			if(queryType == QUERY_DML_TYPE.UPDATE) {
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
-					throw new Exception(Messages.MainEditor_21);
+					throw new Exception(Messages.get().MainEditor_21);
 				}
 			}
 			queryType = QUERY_DML_TYPE.DELETE;
 			if(queryType == QUERY_DML_TYPE.DELETE) {
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
-					throw new Exception(Messages.MainEditor_21);
+					throw new Exception(Messages.get().MainEditor_21);
 				}
 			}
 		} catch(Exception e) {
-			MessageDialog.openError(getWindow().getShell(), Messages.ObjectDeleteAction_2, e.getMessage());
+			MessageDialog.openError(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, e.getMessage());
 			return;
 		}
 		
 		try {
 			if(!GrantCheckerUtils.ifExecuteQuery(userDB)) return;
 		} catch (Exception e) {
-			MessageDialog.openError(getWindow().getShell(), Messages.ObjectDeleteAction_2, e.getMessage());
+			MessageDialog.openError(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, e.getMessage());
 			return;
 		}
 		
@@ -109,7 +109,7 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 			logger.error("Load the table data", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExplorerViewer_39, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().ExplorerViewer_39, errStatus); //$NON-NLS-1$
 		}
 	}
 

@@ -139,7 +139,7 @@ public class ModifyDBDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
 			if(loginComposite.testConnection(true)) {
-				MessageDialog.openInformation(null, Messages.ModifyDBDialog_0, Messages.ModifyDBDialog_1);
+				MessageDialog.openInformation(null, Messages.get().ModifyDBDialog_0, Messages.get().ModifyDBDialog_1);
 			}
 		}
 	}
@@ -150,9 +150,9 @@ public class ModifyDBDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID, Messages.ModifyDBDialog_2, false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.ModifyDBDialog_3, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ModifyDBDialog_4, false);
+		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID, Messages.get().ModifyDBDialog_2, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ModifyDBDialog_3, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ModifyDBDialog_4, false);
 	}
 
 	/**

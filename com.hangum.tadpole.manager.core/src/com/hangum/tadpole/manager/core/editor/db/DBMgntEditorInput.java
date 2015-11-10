@@ -61,9 +61,9 @@ public class DBMgntEditorInput implements IEditorInput {
 	@Override
 	public String getName() {
 		if(getUserDAO() != null) {
-			return String.format("%s (%s)", Messages.UserManagementEditorInput_2, getUserDAO().getName());
+			return String.format("%s (%s)", Messages.get().UserManagementEditorInput_2, getUserDAO().getName());
 		} else {
-			return Messages.UserManagementEditorInput_2;
+			return Messages.get().UserManagementEditorInput_2;
 		}
 	}
 
@@ -74,7 +74,7 @@ public class DBMgntEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.UserManagementEditorInput_3;
+		return Messages.get().UserManagementEditorInput_3;
 	}
 	
 	public UserDAO getUserDAO() {

@@ -69,7 +69,7 @@ public class ResourceHistoryDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.ResourceHistoryDialog_0);
+		newShell.setText(Messages.get().ResourceHistoryDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -91,14 +91,14 @@ public class ResourceHistoryDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
-		lblTitle.setText(Messages.ResourceHistoryDialog_1);
+		lblTitle.setText(Messages.get().ResourceHistoryDialog_1);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textTitle.setText(resourceManagerDao.getName());
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
-		lblDescription.setText(Messages.ResourceHistoryDialog_2);
+		lblDescription.setText(Messages.get().ResourceHistoryDialog_2);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -111,14 +111,14 @@ public class ResourceHistoryDialog extends Dialog {
 		compositeHeaderUser.setLayout(new GridLayout(4, false));
 		
 		Label lblUser = new Label(compositeHeaderUser, SWT.NONE);
-		lblUser.setText(Messages.ResourceHistoryDialog_3);
+		lblUser.setText(Messages.get().ResourceHistoryDialog_3);
 		
 		textUser = new Text(compositeHeaderUser, SWT.BORDER | SWT.READ_ONLY);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textUser.setText(resourceManagerDao.getUser_name());
 		
 		Label lblCreateTime = new Label(compositeHeaderUser, SWT.NONE);
-		lblCreateTime.setText(Messages.ResourceHistoryDialog_4);
+		lblCreateTime.setText(Messages.get().ResourceHistoryDialog_4);
 		
 		textCreateTime = new Text(compositeHeaderUser, SWT.BORDER | SWT.READ_ONLY);
 		textCreateTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -146,17 +146,17 @@ public class ResourceHistoryDialog extends Dialog {
 		TableViewerColumn tvcDate = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnDate = tvcDate.getColumn();
 		tblclmnDate.setWidth(100);
-		tblclmnDate.setText(Messages.ResourceHistoryDialog_5);
+		tblclmnDate.setText(Messages.get().ResourceHistoryDialog_5);
 		
 		TableViewerColumn tvcUser = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnUser = tvcUser.getColumn();
 		tblclmnUser.setWidth(100);
-		tblclmnUser.setText(Messages.ResourceHistoryDialog_3);
+		tblclmnUser.setText(Messages.get().ResourceHistoryDialog_3);
 		
 		TableViewerColumn tvcSQL = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnSql = tvcSQL.getColumn();
 		tblclmnSql.setWidth(500);
-		tblclmnSql.setText(Messages.ResourceHistoryDialog_7);
+		tblclmnSql.setText(Messages.get().ResourceHistoryDialog_7);
 		
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new ResourceHistoryLabelProvider());
@@ -239,8 +239,8 @@ public class ResourceHistoryDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.ResourceHistoryDialog_9, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ResourceHistoryDialog_10, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ResourceHistoryDialog_9, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ResourceHistoryDialog_10, false);
 	}
 
 	/**

@@ -13,6 +13,7 @@ package com.hangum.tadpole.application.start.dialog.login;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +38,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -79,8 +81,18 @@ public class LoginDialog extends Dialog {
 	/** database list */
 	private List listDBMart = new ArrayList();
 	
+	private Composite compositeLogin;
+	private Label lblEmail;
 	private Text textEMail;
+	private Label lblPassword;
 	private Text textPasswd;
+	private Label lblLanguage;
+	private Combo comboLanguage;
+	
+	private Group compositeLetter;
+	private Label lblSite;
+	private Label lblUserGuide;
+	private Label lblContact;
 	
 	String strPaypal = "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'> " +
 						"	<input type='hidden' name='cmd' value='_s-xclick'> " +
@@ -121,12 +133,12 @@ public class LoginDialog extends Dialog {
 		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		button.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TadpoleOverView.png")); //$NON-NLS-1$
 		
-		Composite compositeLogin = new Composite(container, SWT.NONE);
+		compositeLogin = new Composite(container, SWT.NONE);
 		compositeLogin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeLogin.setLayout(new GridLayout(3, false));
 		
-		Label lblEmail = new Label(compositeLogin, SWT.NONE);
-		lblEmail.setText(Messages.LoginDialog_1);
+		lblEmail = new Label(compositeLogin, SWT.NONE);
+		lblEmail.setText(Messages.get().LoginDialog_1);
 		
 		textEMail = new Text(compositeLogin, SWT.BORDER);
 		textEMail.addKeyListener(new KeyAdapter() {
@@ -140,8 +152,8 @@ public class LoginDialog extends Dialog {
 		});
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblPassword = new Label(compositeLogin, SWT.NONE);
-		lblPassword.setText(Messages.LoginDialog_4);
+		lblPassword = new Label(compositeLogin, SWT.NONE);
+		lblPassword.setText(Messages.get().LoginDialog_4);
 		
 		textPasswd = new Text(compositeLogin, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.addKeyListener(new KeyAdapter() {
@@ -161,7 +173,31 @@ public class LoginDialog extends Dialog {
 				okPressed();
 			}
 		});
-		btnLogin.setText(Messages.LoginDialog_15);
+		btnLogin.setText(Messages.get().LoginDialog_15);
+		
+		lblLanguage = new Label(compositeLogin, SWT.NONE);
+		lblLanguage.setText(Messages.get().LoginDialog_lblLanguage_text);
+		
+		comboLanguage = new Combo(compositeLogin, SWT.READ_ONLY);
+		comboLanguage.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Object objLanguage = comboLanguage.getData(comboLanguage.getText());
+				if(objLanguage == null) {
+					changeUILocale(comboLanguage.getItem(0));
+				} else {
+					changeUILocale(comboLanguage.getText());
+				}
+			}
+		});
+		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage());
+		comboLanguage.add(Locale.KOREAN.getDisplayLanguage());
+
+		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(), Locale.ENGLISH);
+		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(), Locale.KOREAN);
+//		comboLanguage.select(0);
 
 		// ---------------------  Registered database ----------------------------------------------------
 //		try {
@@ -176,7 +212,7 @@ public class LoginDialog extends Dialog {
 //				grpSponser.setLayout(gl_grpSponser);
 //				grpSponser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 //				grpSponser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-//				grpSponser.setText(Messages.LoginDialog_grpSponser_text);
+//				grpSponser.setText(Messages.get().LoginDialog_grpSponser_text);
 //				
 //				makeBarChart(grpSponser, listDBMart);
 //			}
@@ -184,21 +220,21 @@ public class LoginDialog extends Dialog {
 //			logger.error("get initdata", e); //$NON-NLS-1$
 //		}
 		
-		Group compositeLetter = new Group(container, SWT.NONE);
+		compositeLetter = new Group(container, SWT.NONE);
 		compositeLetter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		GridLayout gl_compositeLetter = new GridLayout(2, false);
 		compositeLetter.setLayout(gl_compositeLetter);
-		compositeLetter.setText(Messages.LoginDialog_grpShowInformation_text);
+		compositeLetter.setText(Messages.get().LoginDialog_grpShowInformation_text);
 		
-		Label lblSite = new Label(compositeLetter, SWT.NONE);
-		lblSite.setText(Messages.LoginDialog_lblSite_text);
+		lblSite = new Label(compositeLetter, SWT.NONE);
+		lblSite.setText(Messages.get().LoginDialog_lblSite_text);
 		
 		Label lblNewLabel = new Label(compositeLetter, SWT.NONE);
-		lblNewLabel.setText("<a href='" + Messages.LoginDialog_lblNewLabel_text_1 + "' target='_blank'>" + Messages.LoginDialog_lblNewLabel_text_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		lblNewLabel.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>" + Messages.get().LoginDialog_lblNewLabel_text_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblNewLabel.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblUserGuide = new Label(compositeLetter, SWT.NONE);
-		lblUserGuide.setText(Messages.LoginDialog_lblUserGuide_text);
+		lblUserGuide = new Label(compositeLetter, SWT.NONE);
+		lblUserGuide.setText(Messages.get().LoginDialog_lblUserGuide_text);
 		
 		Composite compositeUserGide = new Composite(compositeLetter, SWT.NONE);
 		compositeUserGide.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -222,14 +258,14 @@ public class LoginDialog extends Dialog {
 		lblUserIndonesia.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 //		Label lblIssues = new Label(compositeLetter, SWT.NONE);
-//		lblIssues.setText(Messages.LoginDialog_lblIssues_text);
+//		lblIssues.setText(Messages.get().LoginDialog_lblIssues_text);
 //		
 //		Label lblIssue = new Label(compositeLetter, SWT.NONE);
 //		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>https://github.com/hangum/TadpoleForDBTools/issues</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 //		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblContact = new Label(compositeLetter, SWT.NONE);
-		lblContact.setText(Messages.LoginDialog_lblContact_text_1);
+		lblContact = new Label(compositeLetter, SWT.NONE);
+		lblContact.setText(Messages.get().LoginDialog_lblContact_text_1);
 		
 		Label lblContactUrl = new Label(compositeLetter, SWT.NONE);
 		try {
@@ -241,11 +277,10 @@ public class LoginDialog extends Dialog {
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblDonation = new Label(compositeLetter, SWT.NONE);
-//		lblDonation.setText(Messages.LoginDialog_lblDonation_text);
+//		lblDonation.setText(Messages.get().LoginDialog_lblDonation_text);
 
 		Browser browser = new Browser(compositeLetter, SWT.NONE);
-		GridData gd_browser = new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1);
-		browser.setLayoutData(gd_browser);
+		browser.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1));
 		browser.setText(strPaypal);
 		
 		textEMail.setFocus();
@@ -281,20 +316,20 @@ public class LoginDialog extends Dialog {
 			
 			// firsttime email confirm
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
-				InputDialog inputDialog=new InputDialog(getShell(), Messages.LoginDialog_10, Messages.LoginDialog_17, "", null); //$NON-NLS-3$
+				InputDialog inputDialog=new InputDialog(getShell(), Messages.get().LoginDialog_10, Messages.get().LoginDialog_17, "", null); //$NON-NLS-3$
 				if(inputDialog.open() == Window.OK) {
 					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
-						throw new Exception(Messages.LoginDialog_19);
+						throw new Exception(Messages.get().LoginDialog_19);
 					} else {
 						TadpoleSystem_UserQuery.updateEmailConfirm(strEmail);
 					}
 				} else {
-					throw new Exception(Messages.LoginDialog_20);
+					throw new Exception(Messages.get().LoginDialog_20);
 				}
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
-				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_27);
+				MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_27);
 				
 				return;
 			}
@@ -302,10 +337,10 @@ public class LoginDialog extends Dialog {
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
 			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
-			if(logger.isDebugEnabled())logger.debug(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_23+ RequestInfoUtils.getRequestIP());
+			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
-				logger.error(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_26+ RequestInfoUtils.getRequestIP());
-				MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_28);
+				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
+				MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_28);
 				return;
 			}
 			
@@ -314,7 +349,7 @@ public class LoginDialog extends Dialog {
 				otpDialog.open(); 
 
 				if(!GoogleAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
-					throw new Exception(Messages.LoginDialog_2);
+					throw new Exception(Messages.get().LoginDialog_2);
 				}
 			} 
 			
@@ -324,7 +359,7 @@ public class LoginDialog extends Dialog {
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 		} catch (Exception e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.LoginDialog_29, e.getMessage());
+			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_29, e.getMessage());
 			
 			textPasswd.setFocus();
 			return;
@@ -350,11 +385,11 @@ public class LoginDialog extends Dialog {
 	private boolean validation(String strEmail, String strPass) {
 		// validation
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_11);
+			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_11);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, Messages.LoginDialog_14);
+			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_14);
 			textPasswd.setFocus();
 			return false;
 		}
@@ -368,13 +403,13 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-//		createButton(parent, IDialogConstants.OK_ID, Messages.LoginDialog_15, true);
+//		createButton(parent, IDialogConstants.OK_ID, Messages.get().LoginDialog_15, true);
 		
-		createButton(parent, ID_NEW_USER, Messages.LoginDialog_button_text_1, false);
+		createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			if(!"".equals(smtpDto.getEmail())) {
-				createButton(parent, ID_FINDPASSWORD, Messages.LoginDialog_lblFindPassword, false);
+				createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
 			}
 		} catch (Exception e) {
 //			logger.error("view findpasswd button", e);
@@ -386,10 +421,52 @@ public class LoginDialog extends Dialog {
 	 * initialize ui
 	 */
 	private void initUI() {
-		if(!RequestInfoUtils.isSupportBrowser()) {
-			String errMsg = Messages.LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.UserInformationDialog_5 + "\n" + Messages.LoginDialog_lblNewLabel_text; //$NON-NLS-2$ //$NON-NLS-3$
-			MessageDialog.openError(getParentShell(), Messages.LoginDialog_7, errMsg);
+		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage();
+		boolean isFound = false;
+		for(String strName : comboLanguage.getItems()) {
+			if(strName.equals(defaultLanguage)) {
+				isFound = true;
+				comboLanguage.setText(strName);
+				changeUILocale(comboLanguage.getText());
+
+				break;
+			}
 		}
+		if(!isFound) {
+			comboLanguage.select(0);
+			changeUILocale(comboLanguage.getText());
+		}
+		
+		if(!RequestInfoUtils.isSupportBrowser()) {
+			String errMsg = Messages.get().LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.get().UserInformationDialog_5 + "\n" + Messages.get().LoginDialog_lblNewLabel_text; //$NON-NLS-2$ //$NON-NLS-3$
+			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, errMsg);
+		}
+	}
+	
+	/**
+	 * change ui locale
+	 * 
+	 * @param strComoboStr
+	 */
+	private void changeUILocale(String strComoboStr) {
+		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
+		if(logger.isDebugEnabled()) {
+			logger.debug("===> select locale is : " + localeSelect);
+		}
+		
+		RWT.getUISession().setLocale(localeSelect);
+		
+		lblEmail.setText(Messages.get().LoginDialog_1);
+		lblPassword.setText(Messages.get().LoginDialog_4);
+		lblLanguage.setText(Messages.get().LoginDialog_lblLanguage_text);
+		
+		compositeLetter.setText(Messages.get().LoginDialog_grpShowInformation_text);
+		lblSite.setText(Messages.get().LoginDialog_lblSite_text);
+		lblUserGuide.setText(Messages.get().LoginDialog_lblUserGuide_text);
+		lblContact.setText(Messages.get().LoginDialog_lblContact_text_1);
+		
+		compositeLetter.layout();
+		compositeLogin.layout();
 	}
 	
 	/**

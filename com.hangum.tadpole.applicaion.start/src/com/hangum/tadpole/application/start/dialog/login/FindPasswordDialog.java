@@ -61,7 +61,7 @@ public class FindPasswordDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.FindPasswordDialog_0);
+		getShell().setText(Messages.get().FindPasswordDialog_0);
 		
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
@@ -72,7 +72,7 @@ public class FindPasswordDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(Messages.FindPasswordDialog_3);
+		lblEmail.setText(Messages.get().FindPasswordDialog_3);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -95,7 +95,7 @@ public class FindPasswordDialog extends Dialog {
 		logger.info("Fogot password dialog" + strEmail);
 
 		if (!checkValidation()) {
-			MessageDialog.openWarning(getShell(), Messages.FindPasswordDialog_1, Messages.FindPasswordDialog_6);
+			MessageDialog.openWarning(getShell(), Messages.get().FindPasswordDialog_1, Messages.get().FindPasswordDialog_6);
 			textEmail.setFocus();
 			return;
 		}

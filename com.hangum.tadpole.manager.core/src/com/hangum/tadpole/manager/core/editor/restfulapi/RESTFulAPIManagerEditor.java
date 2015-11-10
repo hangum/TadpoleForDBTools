@@ -116,7 +116,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
 		
 		ToolItem tltmRefrsh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefrsh.setToolTipText(Messages.RESTFulAPIManagerEditor_1);
+		tltmRefrsh.setToolTipText(Messages.get().RESTFulAPIManagerEditor_1);
 		tltmRefrsh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 		tltmRefrsh.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -126,7 +126,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		});
 		
 		ToolItem tltmAPIExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmAPIExecute.setToolTipText(Messages.RESTFulAPIManagerEditor_3);
+		tltmAPIExecute.setToolTipText(Messages.get().RESTFulAPIManagerEditor_3);
 		tltmAPIExecute.setImage(ResourceManager.getPluginImage(com.hangum.tadpole.manager.core.Activator.PLUGIN_ID, "resources/icons/restful_api.png")); //$NON-NLS-1$
 		tltmAPIExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -219,22 +219,22 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		TreeViewerColumn treeViewerColumn = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnUrl = treeViewerColumn.getColumn();
 		trclmnUrl.setWidth(150);
-		trclmnUrl.setText(Messages.RESTFulAPIManagerEditor_12);
+		trclmnUrl.setText(Messages.get().RESTFulAPIManagerEditor_12);
 		
 		TreeViewerColumn tvcName = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnDBName = tvcName.getColumn();
 		trclmnDBName.setWidth(150);
-		trclmnDBName.setText(Messages.RESTFulAPIManagerEditor_13);
+		trclmnDBName.setText(Messages.get().RESTFulAPIManagerEditor_13);
 		
 		TreeViewerColumn treeViewerColumn_1 = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnName = treeViewerColumn_1.getColumn();
 		trclmnName.setWidth(150);
-		trclmnName.setText(Messages.RESTFulAPIManagerEditor_14);
+		trclmnName.setText(Messages.get().RESTFulAPIManagerEditor_14);
 		
 		TreeViewerColumn treeViewerColumn_2 = new TreeViewerColumn(tvAPIList, SWT.NONE);
 		TreeColumn trclmnDescription = treeViewerColumn_2.getColumn();
 		trclmnDescription.setWidth(300);
-		trclmnDescription.setText(Messages.RESTFulAPIManagerEditor_15);
+		trclmnDescription.setText(Messages.get().RESTFulAPIManagerEditor_15);
 		
 		tvAPIList.setContentProvider(new APIListContentProvider());
 		tvAPIList.setLabelProvider(new APIListLabelProvider());
@@ -243,7 +243,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 /////////////////////////////////////////////////////////////////////////////////////////////
 		Group grpQuery = new Group(parent, SWT.NONE);
 		grpQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpQuery.setText(Messages.RESTFulAPIManagerEditor_16);
+		grpQuery.setText(Messages.get().RESTFulAPIManagerEditor_16);
 		GridLayout gl_grpQuery = new GridLayout(1, false);
 		gl_grpQuery.verticalSpacing = 1;
 		gl_grpQuery.horizontalSpacing = 1;
@@ -260,7 +260,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		compositeDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Label lblNewLabel = new Label(compositeDetail, SWT.NONE);
-		lblNewLabel.setText(Messages.RESTFulAPIManagerEditor_17);
+		lblNewLabel.setText(Messages.get().RESTFulAPIManagerEditor_17);
 
 		comboShare = new ComboViewer(compositeDetail, SWT.NONE | SWT.READ_ONLY);
 		Combo cShare = comboShare.getCombo();
@@ -268,7 +268,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" }); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Label lblNewLabel_1 = new Label(compositeDetail, SWT.NONE);
-		lblNewLabel_1.setText(Messages.RESTFulAPIManagerEditor_20);
+		lblNewLabel_1.setText(Messages.get().RESTFulAPIManagerEditor_20);
 
 		textTitle = new Text(compositeDetail, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -279,7 +279,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				if(rmDAO == null) return;
 				
-				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.RESTFulAPIManagerEditor_21, Messages.RESTFulAPIManagerEditor_22)) return;
+				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().RESTFulAPIManagerEditor_21, Messages.get().RESTFulAPIManagerEditor_22)) return;
 				
 				try {
 					String share_type = comboShare.getCombo().getText();
@@ -307,10 +307,10 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 					TadpoleSystem_UserDBResource.updateResourceHeader(rmDAO);
 					tvAPIList.refresh(rmDAO, true);
 					
-					MessageDialog.openInformation(getSite().getShell(), Messages.RESTFulAPIManagerEditor_26, Messages.RESTFulAPIManagerEditor_27);
+					MessageDialog.openInformation(getSite().getShell(), Messages.get().RESTFulAPIManagerEditor_26, Messages.get().RESTFulAPIManagerEditor_27);
 				} catch (Exception e1) {
 					logger.error("save resource", e1); //$NON-NLS-1$
-					MessageDialog.openError(getSite().getShell(), Messages.RESTFulAPIManagerEditor_2, Messages.RESTFulAPIManagerEditor_30+ e1.getMessage());
+					MessageDialog.openError(getSite().getShell(), Messages.get().RESTFulAPIManagerEditor_2, Messages.get().RESTFulAPIManagerEditor_30+ e1.getMessage());
 				}
 			}
 			
@@ -321,7 +321,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openError(null, "Confirm", Messages.RESTFulAPIManagerEditor_31); //$NON-NLS-1$
+					MessageDialog.openError(null, "Confirm", Messages.get().RESTFulAPIManagerEditor_31); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -332,14 +332,14 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 						String strAPIURI = textAPIURL.getText().trim();
 						
 						if(strAPIURI.equals("")) { //$NON-NLS-1$
-							MessageDialog.openError(getSite().getShell(), Messages.RESTFulAPIManagerEditor_33, Messages.RESTFulAPIManagerEditor_34);
+							MessageDialog.openError(getSite().getShell(), Messages.get().RESTFulAPIManagerEditor_33, Messages.get().RESTFulAPIManagerEditor_34);
 							textAPIURL.setFocus();
 							return false;
 						}
 						
 						// check valid url. url pattern is must be /{parent}/{child}
 						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openError(getSite().getShell(), Messages.RESTFulAPIManagerEditor_35, Messages.RESTFulAPIManagerEditor_36);
+							MessageDialog.openError(getSite().getShell(), Messages.get().RESTFulAPIManagerEditor_35, Messages.get().RESTFulAPIManagerEditor_36);
 							
 							textAPIURL.setFocus();
 							return false;
@@ -350,7 +350,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 				return true;
 			}
 		});
-		btnSave.setText(Messages.RESTFulAPIManagerEditor_37);
+		btnSave.setText(Messages.get().RESTFulAPIManagerEditor_37);
 
 //		Button btnDelete = new Button(composite, SWT.NONE);
 //		btnDelete.addSelectionListener(new SelectionAdapter() {
@@ -380,7 +380,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 //		btnDelete.setText("Delete");
 
 		Label lblDescription = new Label(compositeDetail, SWT.NONE);
-		lblDescription.setText(Messages.RESTFulAPIManagerEditor_38);
+		lblDescription.setText(Messages.get().RESTFulAPIManagerEditor_38);
 
 		textDescription = new Text(compositeDetail, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1);
@@ -389,7 +389,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		
 		Label lblSupportApi = new Label(compositeDetail, SWT.NONE);
 		lblSupportApi.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSupportApi.setText(Messages.RESTFulAPIManagerEditor_39);
+		lblSupportApi.setText(Messages.get().RESTFulAPIManagerEditor_39);
 		
 		comboSupportAPI = new Combo(compositeDetail, SWT.READ_ONLY);
 		comboSupportAPI.add("YES"); //$NON-NLS-1$
@@ -397,7 +397,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		comboSupportAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblApiURI = new Label(compositeDetail, SWT.NONE);
-		lblApiURI.setText(Messages.RESTFulAPIManagerEditor_42);
+		lblApiURI.setText(Messages.get().RESTFulAPIManagerEditor_42);
 		
 		textAPIURL = new Text(compositeDetail, SWT.BORDER);
 		textAPIURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -409,17 +409,17 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 				if(!"".equals(textAPIURL.getText())) { //$NON-NLS-1$
 					String strURL = RESTfulAPIUtils.makeURL(textQuery.getText(), textAPIURL.getText());
 					
-					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), Messages.RESTFulAPIManagerEditor_44, strURL);
+					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), Messages.get().RESTFulAPIManagerEditor_44, strURL);
 					dialog.open();
 				}
 			}
 		});
-		btnShowUrl.setText(Messages.RESTFulAPIManagerEditor_45);
+		btnShowUrl.setText(Messages.get().RESTFulAPIManagerEditor_45);
 		new Label(compositeDetail, SWT.NONE);
 		new Label(compositeDetail, SWT.NONE);
 		
 		Label lblApiKey = new Label(compositeDetail, SWT.NONE);
-		lblApiKey.setText(Messages.RESTFulAPIManagerEditor_46);
+		lblApiKey.setText(Messages.get().RESTFulAPIManagerEditor_46);
 		
 		textAPIKey = new Text(compositeDetail, SWT.BORDER);
 		textAPIKey.setEditable(false);
@@ -437,7 +437,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 				}
 			}
 		});
-		btnApiExecute.setText(Messages.RESTFulAPIManagerEditor_48);
+		btnApiExecute.setText(Messages.get().RESTFulAPIManagerEditor_48);
 
 		textQuery = new Text(compositeDetail, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));

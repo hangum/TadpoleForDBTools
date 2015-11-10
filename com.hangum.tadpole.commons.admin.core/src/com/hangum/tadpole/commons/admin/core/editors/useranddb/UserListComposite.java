@@ -129,7 +129,7 @@ public class UserListComposite extends Composite {
 				initUI();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.AdminUserListComposite_0);
+		tltmRefresh.setToolTipText(Messages.get().AdminUserListComposite_0);
 		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 	
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
@@ -140,12 +140,12 @@ public class UserListComposite extends Composite {
 				addUser();
 			}
 		});
-		tltmAdd.setToolTipText(Messages.AdminUserListComposite_1);
+		tltmAdd.setToolTipText(Messages.get().AdminUserListComposite_1);
 	
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.setImage(GlobalImageUtils.getModify());
 		tltmModify.setEnabled(false);
-		tltmModify.setToolTipText(Messages.AdminUserListComposite_2);
+		tltmModify.setToolTipText(Messages.get().AdminUserListComposite_2);
 		tltmModify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -157,7 +157,7 @@ public class UserListComposite extends Composite {
 		
 		tltmLoginHistory = new ToolItem(toolBar, SWT.NONE);
 		tltmLoginHistory.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/userHistory.png")); //$NON-NLS-1$
-		tltmLoginHistory.setToolTipText(Messages.UserListComposite_1);
+		tltmLoginHistory.setToolTipText(Messages.get().UserListComposite_1);
 		tltmLoginHistory.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -169,7 +169,7 @@ public class UserListComposite extends Composite {
 		
 		tltmDBList = new ToolItem(toolBar, SWT.NONE);
 		tltmDBList.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/db.png")); //$NON-NLS-1$
-		tltmDBList.setToolTipText(Messages.UserListComposite_3);
+		tltmDBList.setToolTipText(Messages.get().UserListComposite_3);
 		tltmDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -181,7 +181,7 @@ public class UserListComposite extends Composite {
 		
 		tltmSQLAudit = new ToolItem(toolBar, SWT.NONE);
 		tltmSQLAudit.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
-		tltmSQLAudit.setToolTipText(Messages.UserListComposite_5);
+		tltmSQLAudit.setToolTipText(Messages.get().UserListComposite_5);
 		tltmSQLAudit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -192,7 +192,7 @@ public class UserListComposite extends Composite {
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText(Messages.AdminUserListComposite_3);
+		lblSearch.setText(Messages.get().AdminUserListComposite_3);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -245,9 +245,9 @@ public class UserListComposite extends Composite {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {Messages.AdminUserListComposite_4, Messages.AdminUserListComposite_5, 
-							Messages.AdminUserListComposite_6, Messages.UserListComposite_6, Messages.AdminUserListComposite_7, Messages.AdminUserListComposite_8, 
-							Messages.AdminUserListComposite_9, Messages.AdminUserListComposite_10, Messages.AdminUserListComposite_11};
+		String[] colNames = {Messages.get().AdminUserListComposite_4, Messages.get().AdminUserListComposite_5, 
+							Messages.get().AdminUserListComposite_6, Messages.get().UserListComposite_6, Messages.get().AdminUserListComposite_7, Messages.get().AdminUserListComposite_8, 
+							Messages.get().AdminUserListComposite_9, Messages.get().AdminUserListComposite_10, Messages.get().AdminUserListComposite_11};
 		int[] colSize = {200, 150, 90, 70, 60, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
@@ -270,7 +270,7 @@ public class UserListComposite extends Composite {
 			userListViewer.setInput(listUserGroup);
 			userListViewer.refresh();
 		} catch(Exception e) {
-			logger.error(Messages.AdminUserListComposite_12, e);
+			logger.error(Messages.get().AdminUserListComposite_12, e);
 		}
 	}
 	
@@ -348,7 +348,7 @@ public class UserListComposite extends Composite {
 				logger.error("SQL Audit open", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.UserListComposite_8, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().UserListComposite_8, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

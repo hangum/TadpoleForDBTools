@@ -25,8 +25,8 @@ public class TbUtils {
 
 	/** table modify type */
 //	public static enum TABLE_MOD_TYPE {NONE, EDITOR};
-	public static String NONE_MSG 	= Messages.TbUtils_0;
-	public static String EDITOR_MSG = Messages.TbUtils_1;
+	public static String NONE_MSG 	= Messages.get().TbUtils_0;
+	public static String EDITOR_MSG = Messages.get().TbUtils_1;
 	
 	/** column modify type */
 	public static enum COLUMN_MOD_TYPE {NONE, INSERT, UPDATE, DELETE};

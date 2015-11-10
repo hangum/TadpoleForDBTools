@@ -71,13 +71,13 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		container.setLayout(new GridLayout(2, false));
 		
 		lblTheme = new Label(container, SWT.NONE);
-		lblTheme.setText(Messages.EditorPreferencePage_lblTheme_text);
+		lblTheme.setText(Messages.get().EditorPreferencePage_lblTheme_text);
 		
 		comboTheme = new Combo(container, SWT.READ_ONLY);
 		comboTheme.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblFontSize = new Label(container, SWT.NONE);
-		lblFontSize.setText(Messages.EditorPreferencePage_0);
+		lblFontSize.setText(Messages.get().EditorPreferencePage_0);
 		
 		comboFontSize = new Combo(container, SWT.READ_ONLY);
 		comboFontSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -95,14 +95,14 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		comboFontSize.setVisibleItemCount(9);
 		
 		btnIsWrap = new Button(container, SWT.CHECK);
-		btnIsWrap.setText(Messages.EditorPreferencePage_1);
+		btnIsWrap.setText(Messages.get().EditorPreferencePage_1);
 		
 		textWrapLimit = new Text(container, SWT.BORDER);
 		textWrapLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnShowGutter = new Button(container, SWT.CHECK);
 		btnShowGutter.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnShowGutter.setText(Messages.EditorPreferencePage_2);
+		btnShowGutter.setText(Messages.get().EditorPreferencePage_2);
 		
 		initDefaultValue();
 		
@@ -121,7 +121,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtIsGutter 	= ""+btnShowGutter.getSelection(); //$NON-NLS-1$
 	
 		if(!NumberUtils.isNumber(txtWrapLimit)) {
-			MessageDialog.openError(getShell(), Messages.SQLFormatterPreferencePage_7, Messages.SQLFormatterPreferencePage_8);
+			MessageDialog.openError(getShell(), Messages.get().SQLFormatterPreferencePage_7, Messages.get().SQLFormatterPreferencePage_8);
 			btnIsWrap.setFocus();
 			return false;
 		}
@@ -139,7 +139,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		} catch(Exception e) {
 			logger.error("Editor preference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.EditorPreferencePage_6, Messages.RDBPreferencePage_5 + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().EditorPreferencePage_6, Messages.get().RDBPreferencePage_5 + e.getMessage());
 			return false;
 		}
 		

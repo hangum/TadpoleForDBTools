@@ -47,8 +47,8 @@ public class AdminUserAction extends Action implements ISelectionListener, IWork
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.UserLoginHistoryAction_0);
-		setToolTipText(Messages.UserLoginHistoryAction_0);
+		setText(Messages.get().UserLoginHistoryAction_0);
+		setToolTipText(Messages.get().UserLoginHistoryAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}

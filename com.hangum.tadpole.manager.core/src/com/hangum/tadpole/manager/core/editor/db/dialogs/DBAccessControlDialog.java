@@ -103,7 +103,7 @@ public class DBAccessControlDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		
-		newShell.setText(Messages.DBAccessControlDialog_0);
+		newShell.setText(Messages.get().DBAccessControlDialog_0);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class DBAccessControlDialog extends Dialog {
 		
 		Label lblDbName = new Label(compositeHead, SWT.NONE);
 		lblDbName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDbName.setText(Messages.DBAccessControlDialog_1);
+		lblDbName.setText(Messages.get().DBAccessControlDialog_1);
 		
 		textDBName = new Text(compositeHead, SWT.BORDER);
 		textDBName.setEditable(false);
@@ -134,7 +134,7 @@ public class DBAccessControlDialog extends Dialog {
 		
 		Label lblUser = new Label(compositeHead, SWT.NONE);
 		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblUser.setText(Messages.DBAccessControlDialog_2);
+		lblUser.setText(Messages.get().DBAccessControlDialog_2);
 		
 		comboUser = new Combo(compositeHead, SWT.READ_ONLY);
 		comboUser.addSelectionListener(new SelectionAdapter() {
@@ -159,12 +159,12 @@ public class DBAccessControlDialog extends Dialog {
 		Group grpAuthority = new Group(compositeBody, SWT.NONE);
 		grpAuthority.setLayout(new GridLayout(2, false));
 		grpAuthority.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpAuthority.setText(Messages.DBAccessControlDialog_5);
+		grpAuthority.setText(Messages.get().DBAccessControlDialog_5);
 		
 		btnSelect = new Button(grpAuthority, SWT.CHECK);
 		btnSelect.setEnabled(false);
 		btnSelect.setSelection(true);
-		btnSelect.setText(Messages.DBAccessControlDialog_6);
+		btnSelect.setText(Messages.get().DBAccessControlDialog_6);
 		
 		Composite compositeSelectBtn = new Composite(grpAuthority, SWT.NONE);
 		compositeSelectBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -181,7 +181,7 @@ public class DBAccessControlDialog extends Dialog {
 				}
 			}
 		});
-		btnSelectAdd.setText(Messages.DBAccessControlDialog_7);
+		btnSelectAdd.setText(Messages.get().DBAccessControlDialog_7);
 		btnSelect.setEnabled(false);
 //		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT) btnSelect.setEnabled(true);
 		
@@ -191,7 +191,7 @@ public class DBAccessControlDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tvSelect.getSelection();
 				if(!iss.isEmpty()) {
-					if(!MessageDialog.openConfirm(getShell(), Messages.DBAccessControlDialog_8, Messages.DBAccessControlDialog_9)) return;
+					if(!MessageDialog.openConfirm(getShell(), Messages.get().DBAccessControlDialog_8, Messages.get().DBAccessControlDialog_9)) return;
 					
 					AccessCtlObjectDAO dao = (AccessCtlObjectDAO)iss.getFirstElement();
 					
@@ -200,7 +200,7 @@ public class DBAccessControlDialog extends Dialog {
 				}
 			}
 		});
-		btnSelectDelete.setText(Messages.DBAccessControlDialog_10);
+		btnSelectDelete.setText(Messages.get().DBAccessControlDialog_10);
 		btnSelectDelete.setEnabled(false);
 		new Label(compositeSelectBtn, SWT.NONE);
 		
@@ -235,17 +235,17 @@ public class DBAccessControlDialog extends Dialog {
 		TableViewerColumn tvColumnName = new TableViewerColumn(tvSelect, SWT.NONE);
 		TableColumn tblclmnTable = tvColumnName.getColumn();
 		tblclmnTable.setWidth(150);
-		tblclmnTable.setText(Messages.DBAccessControlDialog_11);
+		tblclmnTable.setText(Messages.get().DBAccessControlDialog_11);
 		
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvSelect, SWT.NONE);
 		TableColumn tblclmnDoNotUse = tableViewerColumn_2.getColumn();
 		tblclmnDoNotUse.setWidth(60);
-		tblclmnDoNotUse.setText(Messages.DBAccessControlDialog_12);
+		tblclmnDoNotUse.setText(Messages.get().DBAccessControlDialog_12);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvSelect, SWT.NONE);
 		TableColumn tblclmnColumn = tableViewerColumn_1.getColumn();
 		tblclmnColumn.setWidth(500);
-		tblclmnColumn.setText(Messages.DBAccessControlDialog_13);
+		tblclmnColumn.setText(Messages.get().DBAccessControlDialog_13);
 		
 		tvSelect.setContentProvider(new ArrayContentProvider());
 		tvSelect.setLabelProvider(new SelectTableFilterLabelprovider());
@@ -324,7 +324,7 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		if(!MessageDialog.openConfirm(getShell(), Messages.DBAccessControlDialog_8, Messages.DBAccessControlDialog_22)) return;
+		if(!MessageDialog.openConfirm(getShell(), Messages.get().DBAccessControlDialog_8, Messages.get().DBAccessControlDialog_22)) return;
 		
 		DBAccessControlDAO dao = new DBAccessControlDAO();
 		dao.setSeq(dbAccessDetail.getSeq());
@@ -345,8 +345,8 @@ public class DBAccessControlDialog extends Dialog {
 		try {
 			TadpoleSystem_AccessControl.updateDBAccessControl(dao);
 		} catch (Exception e) {
-			logger.error(Messages.DBAccessControlDialog_23, e);
-			MessageDialog.openError(getShell(), Messages.DBAccessControlDialog_24, Messages.DBAccessControlDialog_25 + e.getMessage());
+			logger.error(Messages.get().DBAccessControlDialog_23, e);
+			MessageDialog.openError(getShell(), Messages.get().DBAccessControlDialog_24, Messages.get().DBAccessControlDialog_25 + e.getMessage());
 			return;
 		}
 		
@@ -360,8 +360,8 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.DBAccessControlDialog_26, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBAccessControlDialog_27, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().DBAccessControlDialog_26, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().DBAccessControlDialog_27, false);
 	}
 
 	/**

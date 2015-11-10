@@ -42,8 +42,8 @@ public class GeneralConnecionPoolLabelprovider extends LabelProvider implements 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		DBCPInfoDAO dao = (DBCPInfoDAO)element;
-		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14,
-				Messages.GeneralConnecionPoolLabelprovider_0, Messages.GeneralConnecionPoolLabelprovider_1, Messages.GeneralConnecionPoolLabelprovider_2, Messages.GeneralConnecionPoolLabelprovider_3};
+		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14,
+				Messages.get().GeneralConnecionPoolLabelprovider_0, Messages.get().GeneralConnecionPoolLabelprovider_1, Messages.get().GeneralConnecionPoolLabelprovider_2, Messages.get().GeneralConnecionPoolLabelprovider_3};
 		
 		switch(columnIndex) {
 		case 0: return dao.getDbType();

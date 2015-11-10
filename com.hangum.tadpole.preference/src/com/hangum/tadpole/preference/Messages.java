@@ -11,204 +11,207 @@
 package com.hangum.tadpole.preference;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.rap.rwt.RWT;
 
-public class Messages extends NLS {
+public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.preference.messages"; //$NON-NLS-1$
 	
-	public static String AmazonPreferencePage_0;
+	public String AmazonPreferencePage_0;
 
-	public static String AmazonPreferencePage_1;
+	public String AmazonPreferencePage_1;
 
-	public static String ChangeUsePersonalToGrouprDialog_0;
+	public String ChangeUsePersonalToGrouprDialog_0;
 
-	public static String ChangeUsePersonalToGrouprDialog_1;
+	public String ChangeUsePersonalToGrouprDialog_1;
 
-	public static String ChangeUsePersonalToGrouprDialog_10;
+	public String ChangeUsePersonalToGrouprDialog_10;
 
-	public static String ChangeUsePersonalToGrouprDialog_11;
+	public String ChangeUsePersonalToGrouprDialog_11;
 
-	public static String ChangeUsePersonalToGrouprDialog_13;
+	public String ChangeUsePersonalToGrouprDialog_13;
 
-	public static String ChangeUsePersonalToGrouprDialog_15;
+	public String ChangeUsePersonalToGrouprDialog_15;
 
-	public static String ChangeUsePersonalToGrouprDialog_17;
+	public String ChangeUsePersonalToGrouprDialog_17;
 
-	public static String ChangeUsePersonalToGrouprDialog_19;
+	public String ChangeUsePersonalToGrouprDialog_19;
 
-	public static String ChangeUsePersonalToGrouprDialog_2;
+	public String ChangeUsePersonalToGrouprDialog_2;
 
-	public static String ChangeUsePersonalToGrouprDialog_21;
+	public String ChangeUsePersonalToGrouprDialog_21;
 
-	public static String ChangeUsePersonalToGrouprDialog_23;
+	public String ChangeUsePersonalToGrouprDialog_23;
 
-	public static String ChangeUsePersonalToGrouprDialog_26;
+	public String ChangeUsePersonalToGrouprDialog_26;
 
-	public static String ChangeUsePersonalToGrouprDialog_27;
+	public String ChangeUsePersonalToGrouprDialog_27;
 
-	public static String ChangeUsePersonalToGrouprDialog_28;
+	public String ChangeUsePersonalToGrouprDialog_28;
 
-	public static String ChangeUsePersonalToGrouprDialog_3;
+	public String ChangeUsePersonalToGrouprDialog_3;
 
-	public static String ChangeUsePersonalToGrouprDialog_4;
+	public String ChangeUsePersonalToGrouprDialog_4;
 
-	public static String ChangeUsePersonalToGrouprDialog_5;
+	public String ChangeUsePersonalToGrouprDialog_5;
 
-	public static String ChangeUsePersonalToGrouprDialog_6;
+	public String ChangeUsePersonalToGrouprDialog_6;
 
-	public static String ChangeUsePersonalToGrouprDialog_7;
+	public String ChangeUsePersonalToGrouprDialog_7;
 
-	public static String ChangeUsePersonalToGrouprDialog_9;
+	public String ChangeUsePersonalToGrouprDialog_9;
 
-	public static String DefaultPreferencePage_0;
-	public static String DefaultPreferencePage_1;
-	public static String DefaultPreferencePage_2;
+	public String DefaultPreferencePage_0;
+	public String DefaultPreferencePage_1;
+	public String DefaultPreferencePage_2;
 
-	public static String UserInfoPerference_0;
+	public String UserInfoPerference_0;
 
-	public static String UserInfoPerference_1;
+	public String UserInfoPerference_1;
 
-	public static String UserInfoPerference_10;
+	public String UserInfoPerference_10;
 
-	public static String UserInfoPerference_11;
+	public String UserInfoPerference_11;
 
-	public static String UserInfoPerference_12;
+	public String UserInfoPerference_12;
 
-	public static String UserInfoPerference_13;
+	public String UserInfoPerference_13;
 
-	public static String UserInfoPerference_14;
+	public String UserInfoPerference_14;
 
-	public static String UserInfoPerference_15;
+	public String UserInfoPerference_15;
 
-	public static String UserInfoPerference_16;
+	public String UserInfoPerference_16;
 
-	public static String UserInfoPerference_17;
+	public String UserInfoPerference_17;
 
-	public static String UserInfoPerference_2;
+	public String UserInfoPerference_2;
 
-	public static String UserInfoPerference_3;
+	public String UserInfoPerference_3;
 
-	public static String UserInfoPerference_4;
+	public String UserInfoPerference_4;
 
-	public static String UserInfoPerference_5;
-	public static String UserInfoPerference_6;
+	public String UserInfoPerference_5;
+	public String UserInfoPerference_6;
 
-	public static String UserInfoPerference_7;
-	public static String UserInfoPerference_8;
+	public String UserInfoPerference_7;
+	public String UserInfoPerference_8;
 
-	public static String UserInfoPerference_9;
+	public String UserInfoPerference_9;
 	
-	public static String DefaultPreferencePage_other_labelText;
-	public static String DefaultPreferencePage_stringFieldEditor_stringValue;
-	public static String DefaultPreferencePage_other_labelText_1;
+	public String DefaultPreferencePage_other_labelText;
+	public String DefaultPreferencePage_stringFieldEditor_stringValue;
+	public String DefaultPreferencePage_other_labelText_1;
 
-	public static String GeneralPreferencePage_0;
+	public String GeneralPreferencePage_0;
 
-	public static String GeneralPreferencePage_2;
-	public static String RDBPreferencePage_0;
+	public String GeneralPreferencePage_2;
+	public String RDBPreferencePage_0;
 
-	public static String RDBPreferencePage_3;
+	public String RDBPreferencePage_3;
 
-	public static String RDBPreferencePage_5;
+	public String RDBPreferencePage_5;
 
-	public static String RDBPreferencePage_btnCreatePlanTable_text;
-	public static String GeneralPreferencePage_lblExportDilimit_text;
-	public static String GeneralPreferencePage_text_text;
-	public static String GeneralPreferencePage_lblHomePage_text;
-	public static String GeneralPreferencePage_lblHomePageUse_text;
-	public static String GeneralPreferencePage_btnCheckButton_text;
-	public static String GeneralPreferencePage_lblStandalonePort_text;
+	public String RDBPreferencePage_btnCreatePlanTable_text;
+	public String GeneralPreferencePage_lblExportDilimit_text;
+	public String GeneralPreferencePage_text_text;
+	public String GeneralPreferencePage_lblHomePage_text;
+	public String GeneralPreferencePage_lblHomePageUse_text;
+	public String GeneralPreferencePage_btnCheckButton_text;
+	public String GeneralPreferencePage_lblStandalonePort_text;
 
-	public static String MongoDBPreferencePage_0;
+	public String MongoDBPreferencePage_0;
 
-	public static String MongoDBPreferencePage_1;
+	public String MongoDBPreferencePage_1;
 
-	public static String MongoDBPreferencePage_10;
+	public String MongoDBPreferencePage_10;
 
-	public static String MongoDBPreferencePage_11;
+	public String MongoDBPreferencePage_11;
 
-	public static String MongoDBPreferencePage_12;
+	public String MongoDBPreferencePage_12;
 
-	public static String MongoDBPreferencePage_2;
+	public String MongoDBPreferencePage_2;
 
-	public static String MongoDBPreferencePage_3;
+	public String MongoDBPreferencePage_3;
 
-	public static String MongoDBPreferencePage_4;
+	public String MongoDBPreferencePage_4;
 
-	public static String MongoDBPreferencePage_5;
+	public String MongoDBPreferencePage_5;
 
-	public static String MongoDBPreferencePage_6;
+	public String MongoDBPreferencePage_6;
 
-	public static String MongoDBPreferencePage_7;
+	public String MongoDBPreferencePage_7;
 
-	public static String SecurityCredentialPreference_0;
+	public String SecurityCredentialPreference_0;
 
-	public static String SecurityCredentialPreference_1;
+	public String SecurityCredentialPreference_1;
 
-	public static String SecurityCredentialPreference_2;
+	public String SecurityCredentialPreference_2;
 
-	public static String SecurityCredentialPreference_3;
+	public String SecurityCredentialPreference_3;
 
-	public static String SecurityCredentialPreference_4;
+	public String SecurityCredentialPreference_4;
 
-	public static String SecurityCredentialPreference_5;
+	public String SecurityCredentialPreference_5;
 
-	public static String SQLFormatterPreferencePage_0;
+	public String SQLFormatterPreferencePage_0;
 
-	public static String SQLFormatterPreferencePage_3;
+	public String SQLFormatterPreferencePage_3;
 
-	public static String SQLFormatterPreferencePage_4;
+	public String SQLFormatterPreferencePage_4;
 
-	public static String SQLFormatterPreferencePage_7;
+	public String SQLFormatterPreferencePage_7;
 
-	public static String SQLFormatterPreferencePage_8;
-	public static String RDBPreferencePage_lblNumberColumnAdd_text;
-	public static String SQLFormatterPreferencePage_btnCheckButton_text;
-	public static String SQLFormatterPreferencePage_btnNewLineBefore_text;
-	public static String SQLFormatterPreferencePage_btnRemoveEmptyLine_text;
-	public static String SQLFormatterPreferencePage_btnWordBreak_text;
-	public static String RDBPreferencePage_lblResultViewFont_text;
-	public static String RDBPreferencePage_btnNewButton_text;
-	public static String RDBPreferencePage_lblQueryTimeout_text;
-	public static String GeneralPreferencePage_grpEmailAccount_text;
-	public static String GeneralPreferencePage_lblSmtpServer_text;
-	public static String GeneralPreferencePage_lblPort_text;
-	public static String GeneralPreferencePage_lblAccount_text;
-	public static String GeneralPreferencePage_lblPassword_text;
+	public String SQLFormatterPreferencePage_8;
+	public String RDBPreferencePage_lblNumberColumnAdd_text;
+	public String SQLFormatterPreferencePage_btnCheckButton_text;
+	public String SQLFormatterPreferencePage_btnNewLineBefore_text;
+	public String SQLFormatterPreferencePage_btnRemoveEmptyLine_text;
+	public String SQLFormatterPreferencePage_btnWordBreak_text;
+	public String RDBPreferencePage_lblResultViewFont_text;
+	public String RDBPreferencePage_btnNewButton_text;
+	public String RDBPreferencePage_lblQueryTimeout_text;
+	public String GeneralPreferencePage_grpEmailAccount_text;
+	public String GeneralPreferencePage_lblSmtpServer_text;
+	public String GeneralPreferencePage_lblPort_text;
+	public String GeneralPreferencePage_lblAccount_text;
+	public String GeneralPreferencePage_lblPassword_text;
 
-	public static String GetAdminPreference_5;
-	public static String PerspectivePreferencePage_0;
+	public String GetAdminPreference_5;
+	public String PerspectivePreferencePage_0;
 
-	public static String PerspectivePreferencePage_3;
+	public String PerspectivePreferencePage_3;
 
-	public static String PerspectivePreferencePage_4;
+	public String PerspectivePreferencePage_4;
 
-	public static String PerspectivePreferencePage_6;
+	public String PerspectivePreferencePage_6;
 
-	public static String UserInfoPerference_button_text;
-	public static String UserInfoPerference_grpGoogleAuth_text;
-	public static String UserInfoPerference_btnGoogleOtp_text;
-	public static String UserInfoPerference_lblSecretKey_text;
-	public static String UserInfoPerference_btnGoogleOtp_text_1;
-	public static String UserInfoPerference_lblSecretKey_text_1;
-	public static String UserInfoPerference_lblQrcodeUrl_text;
-	public static String UserInfoPerference_lblOptCode_text;
-	public static String RDBPreferencePage_lblCommitCount_text;
-	public static String RDBPreferencePage_text_text;
-	public static String RDBPreferencePage_lblCharacterShownIn_text;
-	public static String RDBPreferencePage_text_text_1;
-	public static String EditorPreferencePage_0;
+	public String UserInfoPerference_button_text;
+	public String UserInfoPerference_grpGoogleAuth_text;
+	public String UserInfoPerference_btnGoogleOtp_text;
+	public String UserInfoPerference_lblSecretKey_text;
+	public String UserInfoPerference_btnGoogleOtp_text_1;
+	public String UserInfoPerference_lblSecretKey_text_1;
+	public String UserInfoPerference_lblQrcodeUrl_text;
+	public String UserInfoPerference_lblOptCode_text;
+	public String RDBPreferencePage_lblCommitCount_text;
+	public String RDBPreferencePage_text_text;
+	public String RDBPreferencePage_lblCharacterShownIn_text;
+	public String RDBPreferencePage_text_text_1;
+	public String EditorPreferencePage_0;
 
-	public static String EditorPreferencePage_1;
+	public String EditorPreferencePage_1;
 
-	public static String EditorPreferencePage_2;
+	public String EditorPreferencePage_2;
 
-	public static String EditorPreferencePage_6;
+	public String EditorPreferencePage_6;
 
-	public static String EditorPreferencePage_lblTheme_text;
+	public String EditorPreferencePage_lblTheme_text;
 	
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	// static {
+	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	// }
+	public static Messages get() {
+		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
 
 	private Messages() {

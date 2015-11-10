@@ -92,16 +92,16 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
-		preDBInfo.setText(Messages.MSSQLLoginComposite_preDBInfo_text);
+		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
 		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		grpConnectionType.setText(Messages.MSSQLLoginComposite_grpConnectionType_text);
+		grpConnectionType.setText(Messages.get().MSSQLLoginComposite_grpConnectionType_text);
 		
 		Label lblDriverType = new Label(grpConnectionType, SWT.NONE);
-		lblDriverType.setText(Messages.HiveLoginComposite_lblDriverType_text);
+		lblDriverType.setText(Messages.get().HiveLoginComposite_lblDriverType_text);
 		
 		comboDriverType = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboDriverType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -115,13 +115,13 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 //		comboDriverType.setEnabled(false);
 		
 		Label lblHost = new Label(grpConnectionType, SWT.NONE);
-		lblHost.setText(Messages.DBLoginDialog_1);
+		lblHost.setText(Messages.get().DBLoginDialog_1);
 		
 		textHost = new Text(grpConnectionType, SWT.BORDER);
 		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
-		lblNewLabelPort.setText(Messages.DBLoginDialog_5);
+		lblNewLabelPort.setText(Messages.get().DBLoginDialog_5);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -134,44 +134,44 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 				String port 	= StringUtils.trimToEmpty(textPort.getText());
 				
 				if("".equals(host) || "".equals(port)) { //$NON-NLS-1$ //$NON-NLS-2$
-					MessageDialog.openError(null, Messages.DBLoginDialog_10, Messages.DBLoginDialog_11);
+					MessageDialog.openError(null, Messages.get().DBLoginDialog_10, Messages.get().DBLoginDialog_11);
 					return;
 				}
 				
 				try {
 					if(isPing(host, port)) {
-						MessageDialog.openInformation(null, Messages.DBLoginDialog_12, Messages.DBLoginDialog_13);
+						MessageDialog.openInformation(null, Messages.get().DBLoginDialog_12, Messages.get().DBLoginDialog_13);
 					} else {
-						MessageDialog.openError(null, Messages.DBLoginDialog_14, Messages.DBLoginDialog_15);
+						MessageDialog.openError(null, Messages.get().DBLoginDialog_14, Messages.get().DBLoginDialog_15);
 					}
 				} catch(NumberFormatException nfe) {
-					MessageDialog.openError(null, Messages.MySQLLoginComposite_3, Messages.MySQLLoginComposite_4);
+					MessageDialog.openError(null, Messages.get().MySQLLoginComposite_3, Messages.get().MySQLLoginComposite_4);
 				}
 			}
 		});
-		btnPing.setText(Messages.DBLoginDialog_btnPing_text);
+		btnPing.setText(Messages.get().DBLoginDialog_btnPing_text);
 		
 		Label lblNewLabelDatabase = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelDatabase.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
-		lblNewLabelDatabase.setText(Messages.DBLoginDialog_4);
+		lblNewLabelDatabase.setText(Messages.get().DBLoginDialog_4);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setText(Messages.MySQLLoginComposite_lblJdbcOptions_text);
+		lblJdbcOptions.setText(Messages.get().MySQLLoginComposite_lblJdbcOptions_text);
 		
 		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
 		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
-		lblUser.setText(Messages.DBLoginDialog_2);
+		lblUser.setText(Messages.get().DBLoginDialog_2);
 		
 		textUser = new Text(grpConnectionType, SWT.BORDER);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
-		lblPassword.setText(Messages.DBLoginDialog_3);
+		lblPassword.setText(Messages.get().DBLoginDialog_3);
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));

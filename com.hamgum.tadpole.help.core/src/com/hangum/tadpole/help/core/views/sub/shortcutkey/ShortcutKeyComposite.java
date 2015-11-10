@@ -70,12 +70,12 @@ public class ShortcutKeyComposite extends AbstraceShortcutKeyComposite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnDescription = tableViewerColumn.getColumn();
 		tblclmnDescription.setWidth(100);
-		tblclmnDescription.setText(Messages.RDBShortcutHelpDialog_1);
+		tblclmnDescription.setText(Messages.get().RDBShortcutHelpDialog_1);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnKey = tableViewerColumn_1.getColumn();
 		tblclmnKey.setWidth(220);
-		tblclmnKey.setText(Messages.RDBShortcutHelpDialog_2);
+		tblclmnKey.setText(Messages.get().RDBShortcutHelpDialog_2);
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ShortcutLabelProvider());
@@ -93,18 +93,18 @@ public class ShortcutKeyComposite extends AbstraceShortcutKeyComposite {
 	 */
 	private void initData() {
 		super.initShortList();
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_4, 		prefixCtrlShortcut + "+ S") 		);
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_4, 		prefixCtrlShortcut + "+ S") 		);
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
-			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		);
-			listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_44, 	prefixCtrlShortcut  + " + " + prefixAltShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
+			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		);
+			listShortcut.add(new ShortcutHelpDAO(Messages.get().AbstractShortCutDialog_44, 	prefixCtrlShortcut  + " + " + prefixAltShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
-			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$
-			listShortcut.add(new ShortcutHelpDAO(Messages.AbstractShortCutDialog_44, 	"Ctrl + H") ); //$NON-NLS-2$ //$NON-NLS-3$
+			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$
+			listShortcut.add(new ShortcutHelpDAO(Messages.get().AbstractShortCutDialog_44, 	"Ctrl + H") ); //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") ); //$NON-NLS-2$ //$NON-NLS-3$
 		
 		tableViewer.refresh(listShortcut);		
 	}

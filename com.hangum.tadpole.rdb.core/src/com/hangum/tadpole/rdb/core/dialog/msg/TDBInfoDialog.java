@@ -75,7 +75,7 @@ public class TDBInfoDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText(Messages.TDBInfoDialog_0);
+		lblMessage.setText(Messages.get().TDBInfoDialog_0);
 		new Label(container, SWT.NONE);
 		
 		textMessage = new Text(container, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -94,7 +94,7 @@ public class TDBInfoDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.TDBErroDialog_3, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().TDBErroDialog_3, true);
 	}
 
 	/**

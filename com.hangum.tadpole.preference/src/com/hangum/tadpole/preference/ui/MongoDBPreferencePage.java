@@ -63,26 +63,26 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setText(Messages.MongoDBPreferencePage_0);
+		lblNewLabel.setText(Messages.get().MongoDBPreferencePage_0);
 		
 		textLimitCount = new Text(container, SWT.BORDER);
 		textLimitCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setText(Messages.MongoDBPreferencePage_1);
+		lblNewLabel_1.setText(Messages.get().MongoDBPreferencePage_1);
 		
 		textMaxCount = new Text(container, SWT.BORDER);
 		textMaxCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
-		lblNewLabel_2.setText(Messages.MongoDBPreferencePage_2);
+		lblNewLabel_2.setText(Messages.get().MongoDBPreferencePage_2);
 		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnBasicSearch = new Button(composite, SWT.RADIO);
-		btnBasicSearch.setText(Messages.MongoDBPreferencePage_3);
+		btnBasicSearch.setText(Messages.get().MongoDBPreferencePage_3);
 		btnBasicSearch.setData(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC);
 		new Label(composite, SWT.NONE);
 		
@@ -91,18 +91,18 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 //		btnExtendSearch.setData(PreferenceDefine.MONGO_DEFAULT_FIND_EXTEND);
 		
 		Label lblResultPage = new Label(container, SWT.NONE);
-		lblResultPage.setText(Messages.MongoDBPreferencePage_4);
+		lblResultPage.setText(Messages.get().MongoDBPreferencePage_4);
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
 		composite_1.setLayout(new GridLayout(2, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnTreeView = new Button(composite_1, SWT.RADIO);
-		btnTreeView.setText(Messages.MongoDBPreferencePage_5);
+		btnTreeView.setText(Messages.get().MongoDBPreferencePage_5);
 		btnTreeView.setData(PreferenceDefine.MONGO_DEFAULT_RESULT_TREE);
 		
 		btnTableView = new Button(composite_1, SWT.RADIO);
-		btnTableView.setText(Messages.MongoDBPreferencePage_6);
+		btnTableView.setText(Messages.get().MongoDBPreferencePage_6);
 		btnTableView.setData(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE);
 		
 		initDefaultValue();
@@ -124,13 +124,13 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		try {
 			Integer.parseInt(txtLimitCount);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.MongoDBPreferencePage_10);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
 			return false;
 		}
 		try {
 			Integer.parseInt(txtMacCount);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.MongoDBPreferencePage_11);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().MongoDBPreferencePage_11);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -158,7 +158,7 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		} catch(Exception e) {
 			logger.error("MongoDBreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.MongoDBPreferencePage_12, e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().MongoDBPreferencePage_12, e.getMessage());
 			return false;
 		}
 		

@@ -94,7 +94,7 @@ public class ManagerViewer extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		
-		setPartName(Messages.ManagerViewer_0);
+		setPartName(Messages.get().ManagerViewer_0);
 		
 		compositeMainComposite = new Composite(parent, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -228,7 +228,7 @@ public class ManagerViewer extends ViewPart {
 			logger.error("initialize Managerview", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_4, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ManagerViewer_4, errStatus); //$NON-NLS-1$
 		}
 		
 		managerTV.refresh();
@@ -327,7 +327,7 @@ public class ManagerViewer extends ViewPart {
 				logger.error("user_db_erd list", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_6, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ManagerViewer_6, errStatus); //$NON-NLS-1$
 			}
 		}
 	}
@@ -418,7 +418,7 @@ public class ManagerViewer extends ViewPart {
 				logger.error("main editor open", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ManagerViewer_10, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ManagerViewer_10, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

@@ -81,7 +81,7 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	 */
 	public void createContents() {
 		shlEditorShortcutDialog = new Shell(getParent(), SWT.CLOSE | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		shlEditorShortcutDialog.setText(Messages.RDBShortcutHelpDialog_0);
+		shlEditorShortcutDialog.setText(Messages.get().RDBShortcutHelpDialog_0);
 		shlEditorShortcutDialog.setSize(300, 330);
 		shlEditorShortcutDialog.setLayout(new GridLayout(1, false));
 
@@ -107,12 +107,12 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnDescription = tableViewerColumn.getColumn();
 		tblclmnDescription.setWidth(100);
-		tblclmnDescription.setText(Messages.RDBShortcutHelpDialog_1);
+		tblclmnDescription.setText(Messages.get().RDBShortcutHelpDialog_1);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tblclmnKey = tableViewerColumn_1.getColumn();
 		tblclmnKey.setWidth(220);
-		tblclmnKey.setText(Messages.RDBShortcutHelpDialog_2);
+		tblclmnKey.setText(Messages.get().RDBShortcutHelpDialog_2);
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ShortcutLabelProvider());
@@ -128,19 +128,19 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	 * 단축키 데이터
 	 */
 	private void initData() {
-		listShortcut.add(new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_5, 	"F4")); //$NON-NLS-2$
-		listShortcut.add(new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_8, 	prefixCtrlShortcut +"+ I")); //$NON-NLS-2$
+		listShortcut.add(new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_5, 	"F4")); //$NON-NLS-2$
+		listShortcut.add(new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_8, 	prefixCtrlShortcut +"+ I")); //$NON-NLS-2$
 		
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_4, 			prefixCtrlShortcut + "+ S") 		); //$NON-NLS-1$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_4, 			prefixCtrlShortcut + "+ S") 		); //$NON-NLS-1$
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
-			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		); //$NON-NLS-1$
+			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		); //$NON-NLS-1$
 		} else {
-			listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$ //$NON-NLS-1$
+			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$ //$NON-NLS-1$
 		}
 		
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$ //$NON-NLS-1$
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$ //$NON-NLS-1$
-		listShortcut.add( new ShortcutHelpDAO(Messages.RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$ //$NON-NLS-1$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$ //$NON-NLS-1$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
 		super.initShortList();
 		

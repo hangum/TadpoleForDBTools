@@ -42,8 +42,8 @@ public class SendMessageAction extends Action implements ISelectionListener, IWo
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.SendMessageAction_0);
-		setToolTipText(Messages.SendMessageAction_0);
+		setText(Messages.get().SendMessageAction_0);
+		setToolTipText(Messages.get().SendMessageAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sendmessage.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}

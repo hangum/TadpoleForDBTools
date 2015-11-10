@@ -53,7 +53,7 @@ public class PreConnectionInfoGroup extends Group {
 	 */
 	public PreConnectionInfoGroup(Composite parent, int style, List<String> listGroupName) {
 		super(parent, style);
-		setText(Messages.PreDBInfoComposite_this_text);
+		setText(Messages.get().PreDBInfoComposite_this_text);
 		GridLayout gridLayout = new GridLayout(2, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
@@ -62,7 +62,7 @@ public class PreConnectionInfoGroup extends Group {
 		setLayout(gridLayout);
 		
 		Label lblOperationType = new Label(this, SWT.NONE);
-		lblOperationType.setText(Messages.MySQLLoginComposite_lblOperationType_text);
+		lblOperationType.setText(Messages.get().MySQLLoginComposite_lblOperationType_text);
 		
 		comboOperationType = new Combo(this, SWT.READ_ONLY);
 		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -72,13 +72,13 @@ public class PreConnectionInfoGroup extends Group {
 		comboOperationType.select(1);
 		
 		Label lblGroupName = new Label(this, SWT.NONE);
-		lblGroupName.setText(Messages.MySQLLoginComposite_lblGroupName_text);
+		lblGroupName.setText(Messages.get().MySQLLoginComposite_lblGroupName_text);
 		comboGroup = new Combo(this, SWT.NONE);
 		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (String strGroup : listGroupName) comboGroup.add(strGroup);
 		
 		Label lblConnectName = new Label(this, SWT.NONE);
-		lblConnectName.setText(Messages.DBLoginDialog_lblNewLabel_1_text);
+		lblConnectName.setText(Messages.get().DBLoginDialog_lblNewLabel_1_text);
 		
 		textDisplayName = new Text(this, SWT.BORDER);
 		textDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

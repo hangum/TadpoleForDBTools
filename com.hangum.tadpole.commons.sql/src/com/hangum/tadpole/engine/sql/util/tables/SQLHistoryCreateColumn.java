@@ -41,7 +41,7 @@
 //		TableViewerColumn tvcDate = new TableViewerColumn(tv, SWT.NONE);
 //		TableColumn tblclmnDate = tvcDate.getColumn();
 //		tblclmnDate.setWidth(150);
-//		tblclmnDate.setText(Messages.SQLHistoryCreateColumn_0);
+//		tblclmnDate.setText(Messages.get().SQLHistoryCreateColumn_0);
 //		tblclmnDate.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDate, 0));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
 //		
@@ -49,7 +49,7 @@
 //		TableViewerColumn tvcSQL = new TableViewerColumn(tv, SWT.NONE);
 //		TableColumn tblclmnSql = tvcSQL.getColumn();
 //		tblclmnSql.setWidth(300);
-//		tblclmnSql.setText(Messages.SQLHistoryCreateColumn_1);
+//		tblclmnSql.setText(Messages.get().SQLHistoryCreateColumn_1);
 //		tblclmnSql.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnSql, 1));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(300));
 //		
@@ -57,7 +57,7 @@
 //		TableViewerColumn tvcDuration = new TableViewerColumn(tv, SWT.RIGHT);
 //		TableColumn tblclmnDuration = tvcDuration.getColumn();
 //		tblclmnDuration.setWidth(60);
-//		tblclmnDuration.setText(Messages.SQLHistoryCreateColumn_2);
+//		tblclmnDuration.setText(Messages.get().SQLHistoryCreateColumn_2);
 //		tblclmnDuration.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDuration, 2));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(50));
 //		
@@ -65,7 +65,7 @@
 //		TableViewerColumn tvcRows = new TableViewerColumn(tv, SWT.RIGHT);
 //		TableColumn tblclmnRows = tvcRows.getColumn();
 //		tblclmnRows.setWidth(60);
-//		tblclmnRows.setText(Messages.SQLHistoryCreateColumn_3);
+//		tblclmnRows.setText(Messages.get().SQLHistoryCreateColumn_3);
 //		tblclmnRows.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnRows, 3));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(50));
 //		
@@ -73,14 +73,14 @@
 //		TableViewerColumn tvcResult = new TableViewerColumn(tv, SWT.NONE);
 //		TableColumn tblclmnResult = tvcResult.getColumn();
 //		tblclmnResult.setWidth(90);
-//		tblclmnResult.setText(Messages.SQLHistoryCreateColumn_4);
+//		tblclmnResult.setText(Messages.get().SQLHistoryCreateColumn_4);
 //		tblclmnResult.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnResult, 4));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(40));
 //		
 //		TableViewerColumn tvcMessage = new TableViewerColumn(tv, SWT.NONE);
 //		TableColumn tblclmnMessage = tvcMessage.getColumn();
 //		tblclmnMessage.setWidth(250);
-//		tblclmnMessage.setText(Messages.SQLHistoryCreateColumn_5);
+//		tblclmnMessage.setText(Messages.get().SQLHistoryCreateColumn_5);
 //		tblclmnMessage.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnMessage, 5));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(80));
 //		
@@ -92,7 +92,7 @@
 //		TableViewerColumn tvcUser = new TableViewerColumn(tv, SWT.NONE);
 //		TableColumn tblclmnUser = tvcUser.getColumn();
 //		tblclmnUser.setWidth(200);
-//		tblclmnUser.setText(Messages.SQLHistoryCreateColumn_6);
+//		tblclmnUser.setText(Messages.get().SQLHistoryCreateColumn_6);
 //		tblclmnUser.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnUser, 6));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
 //		
@@ -100,7 +100,7 @@
 //		TableViewerColumn tvcDatabase = new TableViewerColumn(tv, SWT.NONE);
 //		TableColumn tblclmnDatabase = tvcDatabase.getColumn();
 //		tblclmnDatabase.setWidth(250);
-//		tblclmnDatabase.setText(Messages.SQLHistoryCreateColumn_7);
+//		tblclmnDatabase.setText(Messages.get().SQLHistoryCreateColumn_7);
 //		tblclmnDatabase.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnDatabase, 7));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
 //		
@@ -108,7 +108,7 @@
 //		TableViewerColumn tvcIp = new TableViewerColumn(tv, SWT.NONE);
 //		TableColumn tblclmnIp = tvcIp.getColumn();
 //		tblclmnIp.setWidth(250);
-//		tblclmnIp.setText(Messages.SQLHistoryCreateColumn_8);
+//		tblclmnIp.setText(Messages.get().SQLHistoryCreateColumn_8);
 //		tblclmnIp.addSelectionListener(getSelectionAdapter(tv, sorterHistory, tblclmnIp, 8));
 //		layoutColumnLayout.addColumnData(new ColumnPixelData(150));
 //	}

@@ -84,7 +84,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		
 		//[information composite start]///////////////////////////////		
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
-		tbtmServerStatus.setText(Messages.RDBDBInfosEditor_1);
+		tbtmServerStatus.setText(Messages.get().RDBDBInfosEditor_1);
 		
 		compositeRDBInformation = new RDBInformationComposite(tabFolder, SWT.NONE, userDB);
 		tbtmServerStatus.setControl(compositeRDBInformation);
@@ -93,7 +93,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		
 		//[table information start]
 		CTabItem tbtmCollectionSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmCollectionSummary.setText(Messages.RDBDBInfosEditor_2);
+		tbtmCollectionSummary.setText(Messages.get().RDBDBInfosEditor_2);
 		
 		tableInformationComposite = new TablesComposite(tabFolder, SWT.NONE, userDB);
 		tbtmCollectionSummary.setControl(tableInformationComposite);
@@ -107,7 +107,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		//[table information end]
 		
 		CTabItem tbtmColumnSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmColumnSummary.setText(Messages.RDBDBInfosEditor_3);
+		tbtmColumnSummary.setText(Messages.get().RDBDBInfosEditor_3);
 		columnInformationComposite = new ColumnsComposite(tabFolder, SWT.NONE, userDB);
 		tbtmColumnSummary.setControl(columnInformationComposite);
 		

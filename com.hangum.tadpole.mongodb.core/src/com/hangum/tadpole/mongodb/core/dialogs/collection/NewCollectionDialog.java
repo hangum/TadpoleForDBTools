@@ -89,17 +89,17 @@ public class NewCollectionDialog extends Dialog {
 		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText(Messages.NewCollectionDialog_0);
+		lblName.setText(Messages.get().NewCollectionDialog_0);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDataStructure = new Label(container, SWT.NONE);
 		lblDataStructure.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		lblDataStructure.setText(Messages.NewCollectionDialog_1);
+		lblDataStructure.setText(Messages.get().NewCollectionDialog_1);
 		
 		textContent = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textContent.setText(JSONUtil.getPretty(Messages.NewCollectionDialog_2));
+		textContent.setText(JSONUtil.getPretty(Messages.get().NewCollectionDialog_2));
 		textContent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textContent.addKeyListener(new KeyAdapter() {
 			@Override
@@ -125,13 +125,13 @@ public class NewCollectionDialog extends Dialog {
 		if("".equals(textName.getText().trim())) { //$NON-NLS-1$
 			
 			textName.setFocus();			
-			MessageDialog.openError(null, Messages.NewCollectionDialog_4, Messages.NewCollectionDialog_5);
+			MessageDialog.openError(null, Messages.get().NewCollectionDialog_4, Messages.get().NewCollectionDialog_5);
 			return;
 			
 		} else if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openError(null, Messages.NewCollectionDialog_4, Messages.NewCollectionDialog_8);
+			MessageDialog.openError(null, Messages.get().NewCollectionDialog_4, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 		
@@ -140,7 +140,7 @@ public class NewCollectionDialog extends Dialog {
 			DBCollection dbColl = MongoDBQuery.findCollection(userDB, textName.getText().trim());
 			if(dbColl == null) {
 				textName.setFocus();			
-				MessageDialog.openError(null, Messages.NewCollectionDialog_4, Messages.NewCollectionDialog_10);
+				MessageDialog.openError(null, Messages.get().NewCollectionDialog_4, Messages.get().NewCollectionDialog_10);
 				return;
 			}
 		} catch (Exception e) {

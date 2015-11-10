@@ -90,14 +90,14 @@ public class SchemaHistoryEditor extends EditorPart {
 		compositeHead.setLayout(new GridLayout(6, false));
 		
 		Label lblDb = new Label(compositeHead, SWT.NONE);
-		lblDb.setText(Messages.SchemaHistoryEditor_1);
+		lblDb.setText(Messages.get().SchemaHistoryEditor_1);
 		
 		comboDisplayName = new Combo(compositeHead, SWT.READ_ONLY);
 		comboDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblWorkType = new Label(compositeHead, SWT.NONE);
 		lblWorkType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblWorkType.setText(Messages.SchemaHistoryEditor_2);
+		lblWorkType.setText(Messages.get().SchemaHistoryEditor_2);
 		
 		comboWorkType = new Combo(compositeHead, SWT.BORDER);
 		comboWorkType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -108,7 +108,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		Label lblObjectType = new Label(compositeHead, SWT.NONE);
 		lblObjectType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblObjectType.setText(Messages.SchemaHistoryEditor_7);
+		lblObjectType.setText(Messages.get().SchemaHistoryEditor_7);
 		
 		comboObjectType = new Combo(compositeHead, SWT.BORDER);
 		comboObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -124,7 +124,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		Label lblObjectId = new Label(compositeHead, SWT.NONE);
 		lblObjectId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblObjectId.setText(Messages.SchemaHistoryEditor_15);
+		lblObjectId.setText(Messages.get().SchemaHistoryEditor_15);
 		
 		textObjectID = new Text(compositeHead, SWT.BORDER);
 		textObjectID.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -139,7 +139,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		composite.setLayout(gl_composite);
 		
 		Label lblStart = new Label(composite, SWT.NONE);
-		lblStart.setText(Messages.SchemaHistoryEditor_16);
+		lblStart.setText(Messages.get().SchemaHistoryEditor_16);
 		
 		dateTimeStart = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN);
 		
@@ -156,7 +156,7 @@ public class SchemaHistoryEditor extends EditorPart {
 			}
 		});
 		btnSearch.setImage(ResourceManager.getPluginImage("com.hangum.tadpole.manager.core", "resources/icons/search.png")); //$NON-NLS-1$ //$NON-NLS-2$
-		btnSearch.setText(Messages.SchemaHistoryEditor_20);
+		btnSearch.setText(Messages.get().SchemaHistoryEditor_20);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -194,7 +194,7 @@ public class SchemaHistoryEditor extends EditorPart {
 			}
 		});
 		btnCompare.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnCompare.setText(Messages.SchemaHistoryEditor_22);
+		btnCompare.setText(Messages.get().SchemaHistoryEditor_22);
 		createTableColumn();
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
@@ -212,7 +212,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		Label lblNewLabel = new Label(compositeLeft, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.SchemaHistoryEditor_23);
+		lblNewLabel.setText(Messages.get().SchemaHistoryEditor_23);
 		
 		textDateLeft = new Text(compositeLeft, SWT.BORDER);
 		textDateLeft.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -225,7 +225,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		Label lblNewLabel_1 = new Label(compositeRight, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_1.setText(Messages.SchemaHistoryEditor_23);
+		lblNewLabel_1.setText(Messages.get().SchemaHistoryEditor_23);
 		
 		textDateRight = new Text(compositeRight, SWT.BORDER);
 		textDateRight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -352,7 +352,7 @@ public class SchemaHistoryEditor extends EditorPart {
 	 * create table columns
 	 */
 	private void createTableColumn() {
-		String[] names = {Messages.SchemaHistoryEditor_35, Messages.SchemaHistoryEditor_36, Messages.SchemaHistoryEditor_37, Messages.SchemaHistoryEditor_38, Messages.SchemaHistoryEditor_39};
+		String[] names = {Messages.get().SchemaHistoryEditor_35, Messages.get().SchemaHistoryEditor_36, Messages.get().SchemaHistoryEditor_37, Messages.get().SchemaHistoryEditor_38, Messages.get().SchemaHistoryEditor_39};
 		int[] sizes = {120, 120, 100, 100, 200};
 				
 		for(int i=0; i<names.length; i++) {

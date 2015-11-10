@@ -67,12 +67,12 @@ public class RDBInformationComposite extends Composite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnName = tableViewerColumn.getColumn();
 		tblclmnName.setWidth(130);
-		tblclmnName.setText(Messages.RDBInformationComposite_0);
+		tblclmnName.setText(Messages.get().RDBInformationComposite_0);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnValue = tableViewerColumn_1.getColumn();
 		tblclmnValue.setWidth(300);
-		tblclmnValue.setText(Messages.RDBInformationComposite_1);
+		tblclmnValue.setText(Messages.get().RDBInformationComposite_1);
 		
 		tvInformation.setContentProvider(new ArrayContentProvider());
 		tvInformation.setLabelProvider(new RDBInformationLabelProvider());
@@ -86,20 +86,20 @@ public class RDBInformationComposite extends Composite {
 	private void initUI() {
 		listInfo = new ArrayList<KeyValueDAO>();
 		
-		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_2, 	userDB.getOperation_type()));
-		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_3, 		userDB.getGroup_name()));
-		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_4, 	userDB.getDisplay_name()));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_2, 	userDB.getOperation_type()));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_3, 		userDB.getGroup_name()));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_4, 	userDB.getDisplay_name()));
 		
-		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_5, 		userDB.getUrl(userDB.getRole_id())));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_5, 		userDB.getUrl(userDB.getRole_id())));
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost(userDB.getRole_id()) + "/" + userDB.getPort(userDB.getRole_id()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_6, 		userDB.getDb(userDB.getRole_id())));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_6, 		userDB.getDb(userDB.getRole_id())));
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers(userDB.getRole_id()))); //$NON-NLS-1$
 		}
 		
-		listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_7, 		userDB.getIs_readOnlyConnect()));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_7, 		userDB.getIs_readOnlyConnect()));
 //		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
 //		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
 //			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
@@ -107,9 +107,9 @@ public class RDBInformationComposite extends Composite {
 //		}
 		// 몽고디비는 없으므로.. 
 		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
-			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_8,		userDB.getIs_autocommit()));
-			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_9, 		userDB.getIs_profile()));
-			listInfo.add(new KeyValueDAO(Messages.RDBInformationComposite_17, 	userDB.getQuestion_dml()));
+			listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_8,		userDB.getIs_autocommit()));
+			listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_9, 		userDB.getIs_profile()));
+			listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_17, 	userDB.getQuestion_dml()));
 		}
 		
 		// google analytic

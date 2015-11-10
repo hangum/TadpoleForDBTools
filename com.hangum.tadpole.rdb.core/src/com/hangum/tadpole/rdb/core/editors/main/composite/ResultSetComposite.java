@@ -193,7 +193,7 @@ public class ResultSetComposite extends Composite {
 		
 		Label lblProgress = new Label(compHead, SWT.NONE);
 		lblProgress.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblProgress.setText(Messages.ResultSetComposite_3);
+		lblProgress.setText(Messages.get().ResultSetComposite_3);
 		
 		progressBarQuery = new ProgressBar(compHead, SWT.NULL);
 //		progressBarQuery.setBackground(SWTResourceManager.getColor(127,255,0));
@@ -206,12 +206,12 @@ public class ResultSetComposite extends Composite {
 				isUserInterrupt = false;
 			}
 		});
-		btnStopQuery.setText(Messages.RDBResultComposite_btnStp_text);
+		btnStopQuery.setText(Messages.get().RDBResultComposite_btnStp_text);
 		btnStopQuery.setEnabled(false);
 		
 		Label lblFilter = new Label(compHead, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.ResultSetComposite_lblFilter_text);
+		lblFilter.setText(Messages.get().ResultSetComposite_lblFilter_text);
 		
 		textFilter = new Text(compHead,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -308,7 +308,7 @@ public class ResultSetComposite extends Composite {
 				}
 			}
 		});
-		btnResultToEditor.setText(Messages.ResultSetComposite_2);
+		btnResultToEditor.setText(Messages.get().ResultSetComposite_2);
 		
 		btnDetailView = new Button(compositeBtn, SWT.NONE);
 		GridData gd_btnDetailView = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -320,7 +320,7 @@ public class ResultSetComposite extends Composite {
 				openSingleRecordViewDialog();
 			}
 		});
-		btnDetailView.setText(Messages.ResultSetComposite_0);
+		btnDetailView.setText(Messages.get().ResultSetComposite_0);
 		
 		btnColumnDetail = new Button(compositeBtn, SWT.NONE);
 		btnColumnDetail.addSelectionListener(new SelectionAdapter() {
@@ -329,7 +329,7 @@ public class ResultSetComposite extends Composite {
 				openSinglColumViewDialog();
 			}
 		});
-		btnColumnDetail.setText(Messages.ResultSetComposite_btnColumnDetail_text);
+		btnColumnDetail.setText(Messages.get().ResultSetComposite_btnColumnDetail_text);
 		
 		comboDownload = new Combo(compositeBtn, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
@@ -342,7 +342,7 @@ public class ResultSetComposite extends Composite {
 		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.ResultSetComposite_4, Messages.ResultSetComposite_5)) {
+				if(MessageDialog.openConfirm(getShell(), Messages.get().ResultSetComposite_4, Messages.get().ResultSetComposite_5)) {
 					if("CSV".equals(comboDownload.getText())) { //$NON-NLS-1$
 						exportResultCSVType();	
 					} else {
@@ -352,7 +352,7 @@ public class ResultSetComposite extends Composite {
 			}
 			
 		});
-		btnSQLResultDownload.setText(Messages.ResultSetComposite_11);
+		btnSQLResultDownload.setText(Messages.get().ResultSetComposite_11);
 		
 		compositeDumy = new Composite(compositeBtn, SWT.NONE);
 		compositeDumy.setLayout(new GridLayout(1, false));
@@ -510,7 +510,7 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * Export resultset csvMessages.ResultSetComposite_14
+	 * Export resultset csvMessages.get().ResultSetComposite_14
 	 * 
 	 */
 	private void exportResultCSVType() {
@@ -539,7 +539,7 @@ public class ResultSetComposite extends Composite {
 		if (openSingleRowDataAction.isEnabled()) {
 			openSingleRowDataAction.run();
 		} else {
-			MessageDialog.openWarning(getShell(), Messages.ResultSetComposite_7, Messages.ResultSetComposite_8);
+			MessageDialog.openWarning(getShell(), Messages.get().ResultSetComposite_7, Messages.get().ResultSetComposite_8);
 		}
 	}
 	
@@ -549,16 +549,16 @@ public class ResultSetComposite extends Composite {
 	private void openSinglColumViewDialog() {
 		TableColumnDAO columnDao = selectColumnToEditor();
 		if(columnDao == null) {
-			MessageDialog.openWarning(getShell(), Messages.ResultSetComposite_7, Messages.ResultSetComposite_6);
+			MessageDialog.openWarning(getShell(), Messages.get().ResultSetComposite_7, Messages.get().ResultSetComposite_6);
 			return;
 		}
 			
 		String strType = columnDao.getType();
 		if("JSON".equalsIgnoreCase(strType)) { //$NON-NLS-1$
-			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.ResultSetComposite_16, columnDao.getCol_value());
+			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.get().ResultSetComposite_16, columnDao.getCol_value());
 			dialog.open();
 		} else {
-			TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.ResultSetComposite_16, columnDao.getCol_value());
+			TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().ResultSetComposite_16, columnDao.getCol_value());
 			dialog.open();
 		}
 	}
@@ -706,7 +706,7 @@ public class ResultSetComposite extends Composite {
 		if(jobQueryManager != null) {
 			if(Job.RUNNING == jobQueryManager.getState()) {
 				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
-				executeErrorProgress(reqQuery, new Exception(Messages.ResultSetComposite_1), Messages.ResultSetComposite_1);
+				executeErrorProgress(reqQuery, new Exception(Messages.get().ResultSetComposite_1), Messages.get().ResultSetComposite_1);
 				return false;
 			}
 		}
@@ -743,7 +743,7 @@ public class ResultSetComposite extends Composite {
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
 		
-		jobQueryManager = new Job(Messages.MainEditor_45) {
+		jobQueryManager = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask(reqQuery.getSql(), IProgressMonitor.UNKNOWN);
@@ -871,7 +871,7 @@ public class ResultSetComposite extends Composite {
 	private Button btnColumnDetail;
 	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
-			throw new Exception(Messages.MainEditor_21);
+			throw new Exception(Messages.get().MainEditor_21);
 		}
 		
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
@@ -1121,11 +1121,11 @@ public class ResultSetComposite extends Composite {
 				float longExecuteTime = (executingSQLDAO.getEndDateExecute().getTime() - executingSQLDAO.getStartDateExecute().getTime()) / 1000f;
 				String strResultMsg = ""; //$NON-NLS-1$
 				if(trs.isEndOfRead()) {
-					strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.MainEditor_33, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+					strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
 				} else {
 					// 데이터가 한계가 넘어 갔습니다.
-					String strMsg = String.format(Messages.MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
-					strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.MainEditor_74); //$NON-NLS-1$
+					String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
+					strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
 				}
 				
 				tvQueryResult.getTable().setToolTipText(strResultMsg);
@@ -1138,7 +1138,7 @@ public class ResultSetComposite extends Composite {
 				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 			}
 		} else {
-			getRdbResultComposite().refreshMessageView(reqQuery, null, Messages.ResultSetComposite_10 + executingSQLDAO.getStrSQLText());
+			getRdbResultComposite().refreshMessageView(reqQuery, null, Messages.get().ResultSetComposite_10 + executingSQLDAO.getStrSQLText());
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.

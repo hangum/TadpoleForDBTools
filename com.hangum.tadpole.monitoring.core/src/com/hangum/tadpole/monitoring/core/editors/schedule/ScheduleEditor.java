@@ -82,7 +82,7 @@ public class ScheduleEditor extends EditorPart {
 		compositeHead.setLayout(new GridLayout(1, false));
 		
 		Label lblInfo = new Label(compositeHead, SWT.NONE);
-		lblInfo.setText(Messages.ScheduleEditor_1);
+		lblInfo.setText(Messages.get().ScheduleEditor_1);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -101,7 +101,7 @@ public class ScheduleEditor extends EditorPart {
 				refreshSchedule();
 			}
 		});
-		tltmRefresh.setText(Messages.ScheduleEditor_2);
+		tltmRefresh.setText(Messages.get().ScheduleEditor_2);
 		
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.setEnabled(false);
@@ -122,7 +122,7 @@ public class ScheduleEditor extends EditorPart {
 				}
 			}
 		});
-		tltmModify.setText(Messages.ScheduleEditor_tltmModify_text);
+		tltmModify.setText(Messages.get().ScheduleEditor_tltmModify_text);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.setEnabled(false);
@@ -134,7 +134,7 @@ public class ScheduleEditor extends EditorPart {
 					
 					ScheduleMainDAO dao = (ScheduleMainDAO)iss.getFirstElement();
 					
-					if(!MessageDialog.openQuestion(null, Messages.ScheduleEditor_3, Messages.ScheduleEditor_4)) return;
+					if(!MessageDialog.openQuestion(null, Messages.get().ScheduleEditor_3, Messages.get().ScheduleEditor_4)) return;
 					try {
 						UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(dao.getDb_seq());
 						ScheduleManager.getInstance().deleteJob(userDB, dao);
@@ -148,7 +148,7 @@ public class ScheduleEditor extends EditorPart {
 				}
 			}
 		});
-		tltmDelete.setText(Messages.ScheduleEditor_6);
+		tltmDelete.setText(Messages.get().ScheduleEditor_6);
 		
 		tableViewerList = new TableViewer(compositeList, SWT.BORDER | SWT.FULL_SELECTION);
 		tableViewerList.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -176,17 +176,17 @@ public class ScheduleEditor extends EditorPart {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnName = tableViewerColumn.getColumn();
 		tblclmnName.setWidth(100);
-		tblclmnName.setText(Messages.ScheduleEditor_8);
+		tblclmnName.setText(Messages.get().ScheduleEditor_8);
 		
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnDescription = tableViewerColumn_2.getColumn();
 		tblclmnDescription.setWidth(100);
-		tblclmnDescription.setText(Messages.ScheduleEditor_9);
+		tblclmnDescription.setText(Messages.get().ScheduleEditor_9);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnCreateDate = tableViewerColumn_1.getColumn();
 		tblclmnCreateDate.setWidth(200);
-		tblclmnCreateDate.setText(Messages.ScheduleEditor_10);
+		tblclmnCreateDate.setText(Messages.get().ScheduleEditor_10);
 		
 		Group compositeResult = new Group(sashForm, SWT.NONE);
 		compositeResult.setLayout(new GridLayout(1, false));
@@ -201,17 +201,17 @@ public class ScheduleEditor extends EditorPart {
 		TableViewerColumn tableViewerColumn_3 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnResult = tableViewerColumn_3.getColumn();
 		tblclmnResult.setWidth(52);
-		tblclmnResult.setText(Messages.ScheduleEditor_11);
+		tblclmnResult.setText(Messages.get().ScheduleEditor_11);
 		
 		TableViewerColumn tableViewerColumn_4 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnMessage = tableViewerColumn_4.getColumn();
 		tblclmnMessage.setWidth(240);
-		tblclmnMessage.setText(Messages.ScheduleEditor_12);
+		tblclmnMessage.setText(Messages.get().ScheduleEditor_12);
 		
 		TableViewerColumn tableViewerColumn_5 = new TableViewerColumn(tvResult, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn_5.getColumn();
 		tblclmnDate.setWidth(140);
-		tblclmnDate.setText(Messages.ScheduleEditor_13);
+		tblclmnDate.setText(Messages.get().ScheduleEditor_13);
 		
 		tableViewerList.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewerList.setLabelProvider(new ScheduleLabelProvider());

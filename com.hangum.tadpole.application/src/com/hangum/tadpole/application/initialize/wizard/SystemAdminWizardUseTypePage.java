@@ -12,6 +12,7 @@ package com.hangum.tadpole.application.initialize.wizard;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,8 +37,8 @@ import com.swtdesigner.ResourceManager;
 public class SystemAdminWizardUseTypePage extends WizardPage {
 	private static final Logger logger = Logger.getLogger(SystemAdminWizardUseTypePage.class);
 	
-	private String[] USER_GROUP = {Messages.SystemAdminWizardUseType_3, Messages.SystemAdminWizardUseType_4};
-	private String[] USER_INFO = {Messages.SystemAdminWizardUseType_6, Messages.SystemAdminWizardUseType_7};
+	private String[] USER_GROUP = {Messages.get().SystemAdminWizardUseType_3, Messages.get().SystemAdminWizardUseType_4};
+	private String[] USER_INFO = {Messages.get().SystemAdminWizardUseType_6, Messages.get().SystemAdminWizardUseType_7};
 	private String[] USER_IMAGE= {"resources/icons/user.png", "resources/icons/user_group.png"}; //$NON-NLS-1$ //$NON-NLS-1$
 	
 	private Label labelInfo;
@@ -48,9 +49,9 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 	 * Create the wizard.
 	 */
 	public SystemAdminWizardUseTypePage() {
-		super(Messages.SystemAdminWizardUseType_1);
-		setTitle(Messages.SystemAdminWizardUseType_1);
-		setDescription(Messages.SystemAdminWizardUseTypePage_0);
+		super(Messages.get().SystemAdminWizardUseType_1);
+		setTitle(Messages.get().SystemAdminWizardUseType_1);
+		setDescription(Messages.get().SystemAdminWizardUseTypePage_0);
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.SystemAdminWizardUseType_5);
+		lblNewLabel.setText(Messages.get().SystemAdminWizardUseType_5);
 		
 		comboUserGroup = new Combo(container, SWT.READ_ONLY);
 		comboUserGroup.addSelectionListener(new SelectionAdapter() {

@@ -67,9 +67,9 @@ public class SQLAuditEditorInput implements IEditorInput {
 	@Override
 	public String getName() {
 		if(getUserDAO() != null) {
-			return String.format("%s (%s)", Messages.ExecutedSQLEditorInput_0, getUserDAO().getName());
+			return String.format("%s (%s)", Messages.get().ExecutedSQLEditorInput_0, getUserDAO().getName());
 		} else {
-			return Messages.ExecutedSQLEditorInput_0;
+			return Messages.get().ExecutedSQLEditorInput_0;
 		}
 	}
 
@@ -80,7 +80,7 @@ public class SQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.ExecutedSQLEditorInput_1;
+		return Messages.get().ExecutedSQLEditorInput_1;
 	}
 	
 	public UserDAO getUserDAO() {

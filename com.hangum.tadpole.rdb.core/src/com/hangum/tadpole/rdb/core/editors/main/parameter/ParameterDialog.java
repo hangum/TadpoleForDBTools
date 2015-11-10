@@ -97,7 +97,7 @@ public class ParameterDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.ParameterDialog_0);
+		newShell.setText(Messages.get().ParameterDialog_0);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 	}
 	
@@ -149,23 +149,23 @@ public class ParameterDialog extends Dialog {
 		TableViewerColumn tvcSeq = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcSeq = tvcSeq.getColumn();
 		tcl_composite.setColumnData(tcSeq, new ColumnPixelData(30, true, true));
-		tcSeq.setText(Messages.ParameterDialog_1);
+		tcSeq.setText(Messages.get().ParameterDialog_1);
 
 		TableViewerColumn tvcName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcName = tvcName.getColumn();
 		tcl_composite.setColumnData(tcName, new ColumnPixelData(80, true, true));
-		tcName.setText(Messages.ParameterDialog_2);
+		tcName.setText(Messages.get().ParameterDialog_2);
 
 		TableViewerColumn tvcType = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcType = tvcType.getColumn();
 		tcl_composite.setColumnData(tcType, new ColumnPixelData(80, true, true));
-		tcType.setText(Messages.ParameterDialog_3);
+		tcType.setText(Messages.get().ParameterDialog_3);
 		tvcType.setEditingSupport(new ParameterEditingSupport(tableViewer, 2, this.userDB));
 
 		TableViewerColumn tvcValue = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcValue = tvcValue.getColumn();
 		tcl_composite.setColumnData(tcValue, new ColumnPixelData(150, true, true));
-		tcValue.setText(Messages.ParameterDialog_4);
+		tcValue.setText(Messages.get().ParameterDialog_4);
 		tvcValue.setEditingSupport(new ParameterEditingSupport(tableViewer, 3, this.userDB));
 	}
 	
@@ -176,8 +176,8 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.ParameterDialog_5, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ParameterDialog_6, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ParameterDialog_5, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ParameterDialog_6, false);
 	}
 
 	/**

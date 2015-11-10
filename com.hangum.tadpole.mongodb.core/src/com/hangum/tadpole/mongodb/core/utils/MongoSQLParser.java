@@ -167,8 +167,8 @@
 //		
 //		TableColumnDAO column = columnInfo.get(expression.getName());
 //		if(column == null) {
-//			logger.error(expression.getName() + Messages.MongoSQLParser_29);
-//			throw new Exception(expression.getName() + Messages.MongoSQLParser_29);
+//			logger.error(expression.getName() + Messages.get().MongoSQLParser_29);
+//			throw new Exception(expression.getName() + Messages.get().MongoSQLParser_29);
 //		}
 //
 //		try {
@@ -213,8 +213,8 @@
 //				} 
 //			}
 //		} catch(Exception e) {
-//			logger.error(expression.getName() + Messages.MongoSQLParser_38 + column.getType() + Messages.MongoSQLParser_39, e);			
-//			throw new Exception(expression.getName() + Messages.MongoSQLParser_38 + column.getType() + Messages.MongoSQLParser_39);
+//			logger.error(expression.getName() + Messages.get().MongoSQLParser_38 + column.getType() + Messages.get().MongoSQLParser_39, e);			
+//			throw new Exception(expression.getName() + Messages.get().MongoSQLParser_38 + column.getType() + Messages.get().MongoSQLParser_39);
 //		}
 //		
 //		// or 연산의 결과를 입력합니다.
@@ -262,8 +262,8 @@
 //		
 //		TableColumnDAO column = columnInfo.get(expression.getName());
 //		if(column == null) {
-//			logger.error(expression.getName() + Messages.MongoSQLParser_50);
-//			throw new Exception(expression.getName() + Messages.MongoSQLParser_50);
+//			logger.error(expression.getName() + Messages.get().MongoSQLParser_50);
+//			throw new Exception(expression.getName() + Messages.get().MongoSQLParser_50);
 //		}
 //		
 //		try {
@@ -310,8 +310,8 @@
 //			}
 //		
 //		} catch(Exception e) {
-//			logger.error(expression.getName() + Messages.MongoSQLParser_38 + column.getType() + Messages.MongoSQLParser_39, e);			
-//			throw new Exception(expression.getName() + Messages.MongoSQLParser_38 + column.getType() + Messages.MongoSQLParser_39);
+//			logger.error(expression.getName() + Messages.get().MongoSQLParser_38 + column.getType() + Messages.get().MongoSQLParser_39, e);			
+//			throw new Exception(expression.getName() + Messages.get().MongoSQLParser_38 + column.getType() + Messages.get().MongoSQLParser_39);
 //		}
 //	}
 //	

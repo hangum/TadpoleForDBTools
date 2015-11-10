@@ -88,7 +88,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 
 		// connection pool list
 		CTabItem tbtmConnectionPool = new CTabItem(tabFolder, SWT.NONE);
-		tbtmConnectionPool.setText(Messages.TransactionConnectionListEditor_0);
+		tbtmConnectionPool.setText(Messages.get().TransactionConnectionListEditor_0);
 		
 		Composite compositeConnectionPool = new Composite(tabFolder, SWT.NONE);
 		tbtmConnectionPool.setControl(compositeConnectionPool);
@@ -103,7 +103,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		
 		// transaction CTabItem widget create
 		CTabItem tbtmTransactionConnection = new CTabItem(tabFolder, SWT.NONE);
-		tbtmTransactionConnection.setText(Messages.TransactionConnectionListEditor_1);
+		tbtmTransactionConnection.setText(Messages.get().TransactionConnectionListEditor_1);
 		
 		Composite compositeTransactionConnection = new Composite(tabFolder, SWT.NONE);
 		tbtmTransactionConnection.setControl(compositeTransactionConnection);
@@ -150,7 +150,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			}
 		});
 		tltmCRefresh.setImage(GlobalImageUtils.getRefresh());
-		tltmCRefresh.setToolTipText(Messages.TransactionConnectionListEditor_2);
+		tltmCRefresh.setToolTipText(Messages.get().TransactionConnectionListEditor_2);
 		
 		tvGeneral = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableCon = tvGeneral.getTable();
@@ -178,8 +178,8 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * general table create columns
 	 */
 	private void createGeneralColumns() {
-		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14, 
-				Messages.GeneralConnecionPoolLabelprovider_0, Messages.GeneralConnecionPoolLabelprovider_1, Messages.GeneralConnecionPoolLabelprovider_2, Messages.GeneralConnecionPoolLabelprovider_3};
+		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, 
+				Messages.get().GeneralConnecionPoolLabelprovider_0, Messages.get().GeneralConnecionPoolLabelprovider_1, Messages.get().GeneralConnecionPoolLabelprovider_2, Messages.get().GeneralConnecionPoolLabelprovider_3};
 		int[] sizes = {80, 200, 100, 100, 100, 100};
 				
 		for(int i=0; i<names.length; i++) {
@@ -221,35 +221,35 @@ public class TransactionConnectionListEditor extends EditorPart {
 				initTransactionUI();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.TransactionConnectionListEditor_2);
+		tltmRefresh.setToolTipText(Messages.get().TransactionConnectionListEditor_2);
 		
 		tltmCommit = new ToolItem(toolBar, SWT.NONE);
 		tltmCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tvTransaction.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, Messages.TransactionConnectionListEditor_4, Messages.TransactionConnectionListEditor_5)) return;
+					if(!MessageDialog.openConfirm(null, Messages.get().TransactionConnectionListEditor_4, Messages.get().TransactionConnectionListEditor_5)) return;
 					
 					executTransaction(true);
 				}
 			}
 		});
 		tltmCommit.setEnabled(false);
-		tltmCommit.setText(Messages.TransactionConnectionListEditor_6);
+		tltmCommit.setText(Messages.get().TransactionConnectionListEditor_6);
 		
 		tltmRollback = new ToolItem(toolBar, SWT.NONE);
 		tltmRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tvTransaction.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, Messages.TransactionConnectionListEditor_4, Messages.TransactionConnectionListEditor_8)) return;
+					if(!MessageDialog.openConfirm(null, Messages.get().TransactionConnectionListEditor_4, Messages.get().TransactionConnectionListEditor_8)) return;
 					
 					executTransaction(false);
 				}
 			}
 		});
 		tltmRollback.setEnabled(false);
-		tltmRollback.setText(Messages.TransactionConnectionListEditor_9);
+		tltmRollback.setText(Messages.get().TransactionConnectionListEditor_9);
 		
 		Composite compositeBody = new Composite(compositeTransactionConnection, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -302,7 +302,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TransactionConnectionListEditor_12, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TransactionConnectionListEditor_12, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -328,7 +328,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * transaction table create columns
 	 */
 	private void createTransactionColumns() {
-		String[] names = {Messages.TransactionConnectionListEditor_13, Messages.TransactionConnectionListEditor_14, Messages.TransactionConnectionListEditor_15, Messages.TransactionConnectionListEditor_16};
+		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, Messages.get().TransactionConnectionListEditor_15, Messages.get().TransactionConnectionListEditor_16};
 		int[] sizes = {80, 200, 200, 200};
 				
 		for(int i=0; i<names.length; i++) {

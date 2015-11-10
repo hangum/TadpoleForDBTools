@@ -70,7 +70,7 @@ public class SQLToStringDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.SQLToStringDialog_2);
+		newShell.setText(Messages.get().SQLToStringDialog_2);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -97,7 +97,7 @@ public class SQLToStringDialog extends Dialog {
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
 		lblType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblType.setText(Messages.SQLToStringDialog_3);
+		lblType.setText(Messages.get().SQLToStringDialog_3);
 		
 		comboLanguageType = new Combo(compositeTitle, SWT.READ_ONLY);
 		comboLanguageType.addSelectionListener(new SelectionAdapter() {
@@ -120,11 +120,11 @@ public class SQLToStringDialog extends Dialog {
 				textConvert.setText(sql);
 			}
 		});
-		btnOriginalText.setText(Messages.SQLToStringDialog_4);
+		btnOriginalText.setText(Messages.get().SQLToStringDialog_4);
 		
 		Label lblVariable = new Label(compositeTitle, SWT.NONE);
 		lblVariable.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblVariable.setText(Messages.SQLToStringDialog_lblVariable_text);
+		lblVariable.setText(Messages.get().SQLToStringDialog_lblVariable_text);
 		
 		textVariable = new Text(compositeTitle, SWT.BORDER);
 		textVariable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -137,7 +137,7 @@ public class SQLToStringDialog extends Dialog {
 				sqlToStr();
 			}
 		});
-		btnConvertSQL.setText(Messages.SQLToStringDialog_btnNewButton_text);
+		btnConvertSQL.setText(Messages.get().SQLToStringDialog_btnNewButton_text);
 		
 		textConvert = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
 		textConvert.addKeyListener(new KeyAdapter() {
@@ -196,7 +196,7 @@ public class SQLToStringDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.SQLToStringDialog_6, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().SQLToStringDialog_6, true);
 	}
 
 	/**

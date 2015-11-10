@@ -77,9 +77,9 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void exeMessage(String msgHead, Exception e) {
 //		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//		ExceptionDetailsErrorDialog.openError(null, "Error", msgHead + Messages.ObjectDeleteAction_25, errStatus); //$NON-NLS-1$
+//		ExceptionDetailsErrorDialog.openError(null, "Error", msgHead + Messages.get().ObjectDeleteAction_25, errStatus); //$NON-NLS-1$
 		
-		TDBErroDialog errDialog = new TDBErroDialog(null, msgHead + Messages.ObjectDeleteAction_25, e.getMessage());
+		TDBErroDialog errDialog = new TDBErroDialog(null, msgHead + Messages.get().ObjectDeleteAction_25, e.getMessage());
 		errDialog.open();
 	}
 	

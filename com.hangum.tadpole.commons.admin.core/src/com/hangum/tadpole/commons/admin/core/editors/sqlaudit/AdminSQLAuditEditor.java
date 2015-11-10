@@ -87,7 +87,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.AdminSQLAuditEditor_0, Messages.AdminSQLAuditEditor_1, Messages.AdminSQLAuditEditor_2, Messages.AdminSQLAuditEditor_3, Messages.AdminSQLAuditEditor_4, Messages.AdminSQLAuditEditor_5, Messages.AdminSQLAuditEditor_6, Messages.AdminSQLAuditEditor_7, Messages.AdminSQLAuditEditor_8}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.get().AdminSQLAuditEditor_0, Messages.get().AdminSQLAuditEditor_1, Messages.get().AdminSQLAuditEditor_2, Messages.get().AdminSQLAuditEditor_3, Messages.get().AdminSQLAuditEditor_4, Messages.get().AdminSQLAuditEditor_5, Messages.get().AdminSQLAuditEditor_6, Messages.get().AdminSQLAuditEditor_7, Messages.get().AdminSQLAuditEditor_8}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -143,7 +143,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tltmStart = new ToolItem(toolBar, SWT.NONE);
-		tltmStart.setToolTipText(Messages.AdminSQLAuditEditor_11);
+		tltmStart.setToolTipText(Messages.get().AdminSQLAuditEditor_11);
 		tltmStart.setImage(GlobalImageUtils.getStart()); //$NON-NLS-1$
 		tltmStart.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -157,7 +157,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		tltmStart.setEnabled(false);
 		
 		tltmStop = new ToolItem(toolBar, SWT.NONE);
-		tltmStop.setToolTipText(Messages.AdminSQLAuditEditor_16);
+		tltmStop.setToolTipText(Messages.get().AdminSQLAuditEditor_16);
 		tltmStop.setImage(GlobalImageUtils.getStop()); //$NON-NLS-1$
 		tltmStop.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -172,10 +172,10 @@ public class AdminSQLAuditEditor extends EditorPart {
 		ToolItem tltmSecondsRefresh = new ToolItem(toolBar, SWT.NONE);
 		tltmSecondsRefresh.setEnabled(false);
 		tltmSecondsRefresh.setSelection(true);
-		tltmSecondsRefresh.setText(Messages.AdminSQLAuditEditor_17);
+		tltmSecondsRefresh.setText(Messages.get().AdminSQLAuditEditor_17);
 		
 		Group compositeHead = new Group(parent, SWT.NONE);
-		compositeHead.setText(Messages.AdminSQLAuditEditor_9);
+		compositeHead.setText(Messages.get().AdminSQLAuditEditor_9);
 		GridLayout gl_compositeHead2 = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead2);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -185,7 +185,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		gd_lblUser.minimumWidth = 65;
 		gd_lblUser.widthHint = 65;
 		lblTypes.setLayoutData(gd_lblUser);
-		lblTypes.setText(Messages.AdminSQLAuditEditor_10);
+		lblTypes.setText(Messages.get().AdminSQLAuditEditor_10);
 		
 		comboTypes = new Combo(compositeHead, SWT.READ_ONLY);
 		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -201,7 +201,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		comboTypes.select(0);
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText(Messages.AdminSQLAuditEditor_12);
+		lblEmail.setText(Messages.get().AdminSQLAuditEditor_12);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -224,7 +224,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		compositeInSearch.setLayout(gl_compositeInSearch);
 				
 		Label lblDate = new Label(compositeInSearch, SWT.NONE);
-		lblDate.setText(Messages.AdminSQLAuditEditor_13);
+		lblDate.setText(Messages.get().AdminSQLAuditEditor_13);
 						
 		dateTimeStart = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 		Label label = new Label(compositeInSearch, SWT.NONE);
@@ -233,7 +233,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		dateTimeEnd = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 												
 		Label lblDuring = new Label(compositeInSearch, SWT.RIGHT);
-		lblDuring.setText(Messages.AdminSQLAuditEditor_14);
+		lblDuring.setText(Messages.get().AdminSQLAuditEditor_14);
 																
 		textMillis = new Text(compositeInSearch, SWT.BORDER | SWT.CENTER);
 		GridData gd_textMillis = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
@@ -250,7 +250,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		});
 																				
 		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
-		lblMilis.setText(Messages.AdminSQLAuditEditor_15);
+		lblMilis.setText(Messages.get().AdminSQLAuditEditor_15);
 		new Label(compositeInSearch, SWT.NONE);
 		
 		Composite compositeSearchDetail = new Composite(compositeHead, SWT.NONE);
@@ -258,11 +258,11 @@ public class AdminSQLAuditEditor extends EditorPart {
 		compositeSearchDetail.setLayout(new GridLayout(3, false));
 		
 		Label lblSQL = new Label(compositeSearchDetail, SWT.NONE);
-		lblSQL.setText(Messages.AdminSQLAuditEditor_3);
+		lblSQL.setText(Messages.get().AdminSQLAuditEditor_3);
 		
 		textSearch = new Text(compositeSearchDetail, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textSearch.setMessage(Messages.AdminSQLAuditEditor_3);
+		textSearch.setMessage(Messages.get().AdminSQLAuditEditor_3);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -280,7 +280,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.AdminSQLAuditEditor_18);
+		btnSearch.setText(Messages.get().AdminSQLAuditEditor_18);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -330,7 +330,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				download();
 			}
 		});
-		btnDownload.setText(Messages.AdminSQLAuditEditor_19);
+		btnDownload.setText(Messages.get().AdminSQLAuditEditor_19);
 
 		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
 		btnShowQueryEditor.addSelectionListener(new SelectionAdapter() {
@@ -339,7 +339,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
-		btnShowQueryEditor.setText(Messages.AdminSQLAuditEditor_20);
+		btnShowQueryEditor.setText(Messages.get().AdminSQLAuditEditor_20);
 
 		initUIData();
 		registerServiceHandler();
@@ -353,7 +353,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	 */
 	private void download() {
 		if(gridHistory.getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.AdminSQLAuditEditor_21, Messages.AdminSQLAuditEditor_22)) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().AdminSQLAuditEditor_21, Messages.get().AdminSQLAuditEditor_22)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -375,7 +375,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("SQLAudit.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(getSite().getShell(), Messages.AdminSQLAuditEditor_21, Messages.AdminSQLAuditEditor_24);
+			MessageDialog.openInformation(getSite().getShell(), Messages.get().AdminSQLAuditEditor_21, Messages.get().AdminSQLAuditEditor_24);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		

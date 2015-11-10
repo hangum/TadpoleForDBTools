@@ -40,7 +40,7 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 	public TableColumnSelectionAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.TableColumnSelectionAction_1);
+		setText(Messages.get().TableColumnSelectionAction_1);
 	}
 
 	@Override

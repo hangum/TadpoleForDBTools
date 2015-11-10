@@ -200,12 +200,12 @@ public class TadpoleSystem_UserDBResource {
 	public static void userDBResourceDuplication(UserDBDAO userDB, UserDBResourceDAO dbResourceDAO) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
 		if(!sqlClient.queryForList("userDBResourceDuplication", dbResourceDAO).isEmpty()) { //$NON-NLS-1$
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserDBResource_6);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserDBResource_6);
 		}
 		
 		if(!dbResourceDAO.getRestapi_uri().equals("")) {
 			if(!sqlClient.queryForList("userDBResourceAPIDuplication", dbResourceDAO).isEmpty()) { //$NON-NLS-1$
-				throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserDBResource_8);
+				throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserDBResource_8);
 			}
 		}
 	}
@@ -219,12 +219,12 @@ public class TadpoleSystem_UserDBResource {
 	public static void userDBResourceDupUpdate(UserDBDAO userDB, ResourceManagerDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());		
 		if(!sqlClient.queryForList("userDBResourceDuplicationUpdate", dao).isEmpty()) { //$NON-NLS-1$
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserDBResource_6);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserDBResource_6);
 		}
 		
 		if(!dao.getRestapi_uri().equals("")) {
 			if(!sqlClient.queryForList("userDBResourceAPIDuplicationUpdate", dao).isEmpty()) { //$NON-NLS-1$
-				throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserDBResource_8);
+				throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserDBResource_8);
 			}
 		}
 	}

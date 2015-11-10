@@ -47,8 +47,8 @@ public class AdminSQLAuditAction extends Action implements ISelectionListener, I
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.AdminSQLAuditAction_0);
-		setToolTipText(Messages.AdminSQLAuditAction_0);
+		setText(Messages.get().AdminSQLAuditAction_0);
+		setToolTipText(Messages.get().AdminSQLAuditAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -62,7 +62,7 @@ public class AdminSQLAuditAction extends Action implements ISelectionListener, I
 			logger.error("Admin SQL Audit editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AdminSQLAuditAction_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AdminSQLAuditAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 

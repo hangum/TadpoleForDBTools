@@ -39,13 +39,13 @@ public class GrantCheckerUtils {
 	public static boolean ifExecuteQuery(UserDBDAO userDB) throws Exception {
 		// security check.
 		if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {
-			throw new Exception(Messages.ResultMainComposite_1);
+			throw new Exception(Messages.get().ResultMainComposite_1);
 		}
 		
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getQuestion_dml())
 				|| PermissionChecker.isProductBackup(userDB)
 		) {
-			MessageDialog dialog = new MessageDialog(null, Messages.ResultMainComposite_0, null, Messages.GrantCheckerUtils_0, MessageDialog.ERROR, new String[] {Messages.GrantCheckerUtils_1, Messages.GrantCheckerUtils_2}, 1);
+			MessageDialog dialog = new MessageDialog(null, Messages.get().ResultMainComposite_0, null, Messages.get().GrantCheckerUtils_0, MessageDialog.ERROR, new String[] {Messages.get().GrantCheckerUtils_1, Messages.get().GrantCheckerUtils_2}, 1);
 			if(dialog.open() == 1) return false;
 		}
 		
@@ -66,7 +66,7 @@ public class GrantCheckerUtils {
 	public static boolean ifExecuteQuery(UserDBDAO userDB, RequestQuery reqQuery) throws Exception {
 		// security check.
 		if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {
-			throw new Exception(Messages.ResultMainComposite_1);
+			throw new Exception(Messages.get().ResultMainComposite_1);
 		}
 		
 		// 실행해도 되는지 묻는다.
@@ -84,7 +84,7 @@ public class GrantCheckerUtils {
 			}
 		
 			if(isDDLQuestion) {
-				MessageDialog dialog = new MessageDialog(null, Messages.ResultMainComposite_0, null, Messages.GrantCheckerUtils_0, MessageDialog.ERROR, new String[] {Messages.GrantCheckerUtils_1, Messages.GrantCheckerUtils_2}, 1);
+				MessageDialog dialog = new MessageDialog(null, Messages.get().ResultMainComposite_0, null, Messages.get().GrantCheckerUtils_0, MessageDialog.ERROR, new String[] {Messages.get().GrantCheckerUtils_1, Messages.get().GrantCheckerUtils_2}, 1);
 				if(dialog.open() == 1) return false;
 			}
 		}

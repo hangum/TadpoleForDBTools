@@ -71,7 +71,7 @@ public class RecordViewDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.RecordViewDialog_0);
+		newShell.setText(Messages.get().RecordViewDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -90,7 +90,7 @@ public class RecordViewDialog extends Dialog {
 				true, false, 1, 1));
 
 		Button btnFirst = new Button(compositeNavigation, SWT.CENTER);
-		btnFirst.setToolTipText(Messages.RecordViewDialog_1);
+		btnFirst.setToolTipText(Messages.get().RecordViewDialog_1);
 		GridData gd_btnFirst = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnFirst.widthHint = 30;
 		btnFirst.setLayoutData(gd_btnFirst);
@@ -103,7 +103,7 @@ public class RecordViewDialog extends Dialog {
 		btnFirst.setText("<<");
 
 		Button btnPrevious = new Button(compositeNavigation, SWT.NONE);
-		btnPrevious.setToolTipText(Messages.RecordViewDialog_2);
+		btnPrevious.setToolTipText(Messages.get().RecordViewDialog_2);
 		GridData gd_btnPrevious = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnPrevious.widthHint = 65;
 		btnPrevious.setLayoutData(gd_btnPrevious);
@@ -116,7 +116,7 @@ public class RecordViewDialog extends Dialog {
 		btnPrevious.setText("<"); //$NON-NLS-1$
 
 		Button btnNext = new Button(compositeNavigation, SWT.NONE);
-		btnNext.setToolTipText(Messages.RecordViewDialog_5);
+		btnNext.setToolTipText(Messages.get().RecordViewDialog_5);
 		GridData gd_btnNext = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnNext.widthHint = 65;
 		btnNext.setLayoutData(gd_btnNext);
@@ -129,7 +129,7 @@ public class RecordViewDialog extends Dialog {
 		btnNext.setText(">"); //$NON-NLS-1$
 
 		Button btnLast = new Button(compositeNavigation, SWT.NONE);
-		btnLast.setToolTipText(Messages.RecordViewDialog_7);
+		btnLast.setToolTipText(Messages.get().RecordViewDialog_7);
 		GridData gd_btnLast = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnLast.widthHint = 30;
 		btnLast.setLayoutData(gd_btnLast);
@@ -224,7 +224,7 @@ public class RecordViewDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.RecordViewDialog_13, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().RecordViewDialog_13, false);
 	}
 
 	@Override

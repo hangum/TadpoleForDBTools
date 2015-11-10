@@ -35,7 +35,7 @@ public class MongoJSNameValidator implements IInputValidator {
 	@Override
 	public String isValid(String newText) {
 		int len = newText.length();
-		if(len < 5) return Messages.FileNameValidator_0;
+		if(len < 5) return Messages.get().FileNameValidator_0;
 		
 		fileName = newText;
 				

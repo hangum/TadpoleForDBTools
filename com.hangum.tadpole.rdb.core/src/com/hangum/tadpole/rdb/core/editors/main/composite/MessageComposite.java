@@ -65,7 +65,7 @@ public class MessageComposite extends Composite {
 		compositeTail.setLayout(new GridLayout(2, false));
 		
 		Label lblGoogleSearchTitle = new Label(compositeTail, SWT.NONE);
-		lblGoogleSearchTitle.setText(Messages.MessageComposite_lblGoogleSearch_1_text);
+		lblGoogleSearchTitle.setText(Messages.get().MessageComposite_lblGoogleSearch_1_text);
 		
 		// text limit
 //		textMessage.setTextLimit(1000);
@@ -76,7 +76,7 @@ public class MessageComposite extends Composite {
 //				gotoGoogleSearch();
 //			}
 //		});
-//		btnClear.setText(Messages.MessageComposite_1);
+//		btnClear.setText(Messages.get().MessageComposite_1);
 		lblGoogleSearch = new Label(compositeTail, SWT.NONE);
 		lblGoogleSearch.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 	}
@@ -94,14 +94,14 @@ public class MessageComposite extends Composite {
 
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if (throwable == null) {
-			strNewMessage = Messages.MessageComposite_2;
+			strNewMessage = Messages.get().MessageComposite_2;
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
 			
 			strSearchError = tadpoleMessageDAO.getStrMessage();
 			
 			textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
 		} else {
-			strNewMessage = Messages.MessageComposite_3;
+			strNewMessage = Messages.get().MessageComposite_3;
 			
 			Throwable cause = throwable.getCause();
 			if(throwable instanceof SQLException) {
@@ -173,8 +173,8 @@ public class MessageComposite extends Composite {
 		String strNewMessage = "";
 		try {
 			StringBuffer sbMsg = new StringBuffer();
-			sbMsg.append(String.format(Messages.MessageComposite_5, sqlException.getSQLState(), sqlException.getErrorCode()));
-			sbMsg.append(String.format(Messages.MessageComposite_4, sqlException.getMessage()));
+			sbMsg.append(String.format(Messages.get().MessageComposite_5, sqlException.getSQLState(), sqlException.getErrorCode()));
+			sbMsg.append(String.format(Messages.get().MessageComposite_4, sqlException.getMessage()));
 
 			strNewMessage = sbMsg.toString();
 		} catch(Exception e) {

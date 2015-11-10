@@ -118,7 +118,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDB.getDisplay_name() + Messages.CsvToRDBImportDialog_3);
+		newShell.setText(userDB.getDisplay_name() + Messages.get().CsvToRDBImportDialog_3);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -147,7 +147,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		
 		Label lblTableName = new Label(compositeHead, SWT.NONE);
 		lblTableName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTableName.setText(Messages.CsvToRDBImportDialog_0);
+		lblTableName.setText(Messages.get().CsvToRDBImportDialog_0);
 		
 		textTableName = new Text(compositeHead, SWT.BORDER);
 		textTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -173,11 +173,11 @@ public class CsvToRDBImportDialog extends Dialog {
 				compositeExecuteType.setEnabled(!btnCopyNew.getSelection());
 			}
 		});
-		btnCopyNew.setText(Messages.CsvToRDBImportDialog_btnCopyNew_text);
+		btnCopyNew.setText(Messages.get().CsvToRDBImportDialog_btnCopyNew_text);
 		
 		Label lblFileName = new Label(compositeHead, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFileName.setText(Messages.CsvToRDBImportDialog_1);
+		lblFileName.setText(Messages.get().CsvToRDBImportDialog_1);
 		
 		fileNameLabel = new Text(compositeHead, SWT.BORDER);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -192,7 +192,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		temp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		*/	
 		fileUpload = new FileUpload(compositeHead, SWT.NONE);
-		fileUpload.setText(Messages.CsvToRDBImportDialog_2);
+		fileUpload.setText(Messages.get().CsvToRDBImportDialog_2);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -200,7 +200,7 @@ public class CsvToRDBImportDialog extends Dialog {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
-				if(!MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_5)) return;
+				if(!MessageDialog.openConfirm(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_5)) return;
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();
@@ -210,7 +210,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		
 		Label lblSeprator = new Label(compositeHead, SWT.NONE);
 		lblSeprator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSeprator.setText(Messages.CsvToRDBImportDialog_6);
+		lblSeprator.setText(Messages.get().CsvToRDBImportDialog_6);
 		
 		Composite composite_3 = new Composite(compositeHead, SWT.NONE);
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -224,7 +224,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		
 		Label lblBatchSize = new Label(composite_3, SWT.NONE);
 		lblBatchSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblBatchSize.setText(Messages.CsvToRDBImportDialog_lblBatchSize_text);
+		lblBatchSize.setText(Messages.get().CsvToRDBImportDialog_lblBatchSize_text);
 		
 		textBatchSize = new Text(composite_3, SWT.BORDER | SWT.RIGHT);
 		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
@@ -233,14 +233,14 @@ public class CsvToRDBImportDialog extends Dialog {
 			textBatchSize.setText("1"); //$NON-NLS-1$
 		}else{
 			textBatchSize.setEditable(true);
-			textBatchSize.setText(Messages.CsvToRDBImportDialog_text_1_text_1);
+			textBatchSize.setText(Messages.get().CsvToRDBImportDialog_text_1_text_1);
 		}
 		textBatchSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblException = new Label(compositeHead, SWT.NONE);
 		lblException.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblException.setText(Messages.CsvToRDBImportDialog_lblException_text);
+		lblException.setText(Messages.get().CsvToRDBImportDialog_lblException_text);
 		
 		Composite composite_4 = new Composite(compositeHead, SWT.NONE);
 		composite_4.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -250,21 +250,21 @@ public class CsvToRDBImportDialog extends Dialog {
 		GridData gd_btnIgnore = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnIgnore.widthHint = 98;
 		btnIgnore.setLayoutData(gd_btnIgnore);
-		btnIgnore.setToolTipText(Messages.CsvToRDBImportDialog_btnIgnore_toolTipText);
-		btnIgnore.setText(Messages.CsvToRDBImportDialog_btnIgnore_text);
+		btnIgnore.setToolTipText(Messages.get().CsvToRDBImportDialog_btnIgnore_toolTipText);
+		btnIgnore.setText(Messages.get().CsvToRDBImportDialog_btnIgnore_text);
 		
 		btnStop = new Button(composite_4, SWT.RADIO);
 		btnStop.setSelection(true);
-		btnStop.setToolTipText(Messages.CsvToRDBImportDialog_btnStop_toolTipText);
+		btnStop.setToolTipText(Messages.get().CsvToRDBImportDialog_btnStop_toolTipText);
 		GridData gd_btnStop = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnStop.widthHint = 95;
 		btnStop.setLayoutData(gd_btnStop);
-		btnStop.setText(Messages.CsvToRDBImportDialog_btnStop_text);
+		btnStop.setText(Messages.get().CsvToRDBImportDialog_btnStop_text);
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblExecuteType = new Label(compositeHead, SWT.NONE);
 		lblExecuteType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblExecuteType.setText(Messages.CsvToRDBImportDialog_lblExecuteType_text);
+		lblExecuteType.setText(Messages.get().CsvToRDBImportDialog_lblExecuteType_text);
 		
 		compositeExecuteType = new Composite(compositeHead, SWT.NONE);
 		compositeExecuteType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -285,7 +285,7 @@ public class CsvToRDBImportDialog extends Dialog {
 				compositeExistsData.setEnabled(true);
 			}
 		});
-		btnInsert.setText(Messages.CsvToRDBImportDialog_btnInsert_text);
+		btnInsert.setText(Messages.get().CsvToRDBImportDialog_btnInsert_text);
 		
 		btnUpdate = new Button(compositeExecuteType, SWT.RADIO);
 		btnUpdate.addSelectionListener(new SelectionAdapter() {
@@ -301,7 +301,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		GridData gd_btnUpdate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnUpdate.widthHint = 89;
 		btnUpdate.setLayoutData(gd_btnUpdate);
-		btnUpdate.setText(Messages.CsvToRDBImportDialog_btnUpdate_text);
+		btnUpdate.setText(Messages.get().CsvToRDBImportDialog_btnUpdate_text);
 		
 		
 		btnDelete = new Button(compositeExecuteType, SWT.RADIO);
@@ -318,7 +318,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		GridData gd_btnDelete = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnDelete.widthHint = 88;
 		btnDelete.setLayoutData(gd_btnDelete);
-		btnDelete.setText(Messages.CsvToRDBImportDialog_btnDelete_text);
+		btnDelete.setText(Messages.get().CsvToRDBImportDialog_btnDelete_text);
 		
 		Button btnSaveLog = new Button(compositeHead, SWT.NONE);
 		btnSaveLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -329,11 +329,11 @@ public class CsvToRDBImportDialog extends Dialog {
 				saveResultLog();
 			}
 		});
-		btnSaveLog.setText(Messages.CsvToRDBImportDialog_btnSaveLog_text);
+		btnSaveLog.setText(Messages.get().CsvToRDBImportDialog_btnSaveLog_text);
 		
 		Label lblExistsData = new Label(compositeHead, SWT.NONE);
 		lblExistsData.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblExistsData.setText(Messages.CsvToRDBImportDialog_lblExistsData_text);
+		lblExistsData.setText(Messages.get().CsvToRDBImportDialog_lblExistsData_text);
 		
 		compositeExistsData = new Composite(compositeHead, SWT.NONE);
 		compositeExistsData.setLayout(new GridLayout(3, false));
@@ -343,17 +343,17 @@ public class CsvToRDBImportDialog extends Dialog {
 		GridData gd_btnTruncate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnTruncate.widthHint = 97;
 		btnTruncate.setLayoutData(gd_btnTruncate);
-		btnTruncate.setText(Messages.CsvToRDBImportDialog_btnTruncate_text);
+		btnTruncate.setText(Messages.get().CsvToRDBImportDialog_btnTruncate_text);
 		
 		btnDeleteAll = new Button(compositeExistsData, SWT.RADIO);
 		GridData gd_btnDeleteAll = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnDeleteAll.widthHint = 91;
 		btnDeleteAll.setLayoutData(gd_btnDeleteAll);
 		btnDeleteAll.setSelection(true);
-		btnDeleteAll.setText(Messages.CsvToRDBImportDialog_btnDeleteAll_text);
+		btnDeleteAll.setText(Messages.get().CsvToRDBImportDialog_btnDeleteAll_text);
 		
 		btnNotDelete = new Button(compositeExistsData, SWT.RADIO);
-		btnNotDelete.setText(Messages.CsvToRDBImportDialog_btnRadioButton_text);
+		btnNotDelete.setText(Messages.get().CsvToRDBImportDialog_btnRadioButton_text);
 		
 		Button btnDownloadSql = new Button(compositeHead, SWT.NONE);
 		btnDownloadSql.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -364,12 +364,12 @@ public class CsvToRDBImportDialog extends Dialog {
 				downloadSQL();
 			}
 		});
-		btnDownloadSql.setText(Messages.CsvToRDBImportDialog_btnDownloadSql_text);
+		btnDownloadSql.setText(Messages.get().CsvToRDBImportDialog_btnDownloadSql_text);
 		btnDownloadSql.setVisible(false);
 		
 		Label lblDisable = new Label(compositeHead, SWT.NONE);
 		lblDisable.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDisable.setText(Messages.CsvToRDBImportDialog_lblDisable_text);
+		lblDisable.setText(Messages.get().CsvToRDBImportDialog_lblDisable_text);
 		
 		compositeDisable = new Composite(compositeHead, SWT.NONE);
 		compositeDisable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -379,21 +379,21 @@ public class CsvToRDBImportDialog extends Dialog {
 		GridData gd_btnTrigger = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnTrigger.widthHint = 81;
 		btnTrigger.setLayoutData(gd_btnTrigger);
-		btnTrigger.setText(Messages.CsvToRDBImportDialog_btnTrigger_text);
+		btnTrigger.setText(Messages.get().CsvToRDBImportDialog_btnTrigger_text);
 		
 		btnPk = new Button(compositeDisable, SWT.CHECK);
 		btnPk.setEnabled(false);
 		GridData gd_btnPk = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnPk.widthHint = 67;
 		btnPk.setLayoutData(gd_btnPk);
-		btnPk.setText(Messages.CsvToRDBImportDialog_btnPk_text);
+		btnPk.setText(Messages.get().CsvToRDBImportDialog_btnPk_text);
 		
 		btnFk = new Button(compositeDisable, SWT.CHECK);
 		btnFk.setEnabled(false);
 		GridData gd_btnFk = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnFk.widthHint = 72;
 		btnFk.setLayoutData(gd_btnFk);
-		btnFk.setText(Messages.CsvToRDBImportDialog_btnFk_text);
+		btnFk.setText(Messages.get().CsvToRDBImportDialog_btnFk_text);
 		
 		Button btnGenrateSql = new Button(compositeHead, SWT.NONE);
 		btnGenrateSql.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -404,12 +404,12 @@ public class CsvToRDBImportDialog extends Dialog {
 				generatePreviewSQL();
 			}
 		});
-		btnGenrateSql.setText(Messages.CsvToRDBImportDialog_11);
+		btnGenrateSql.setText(Messages.get().CsvToRDBImportDialog_11);
 		
 		Group grpSqlTemplate = new Group(container, SWT.NONE);
 		grpSqlTemplate.setLayout(new GridLayout(1, false));
 		grpSqlTemplate.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpSqlTemplate.setText(Messages.CsvToRDBImportDialog_16);
+		grpSqlTemplate.setText(Messages.get().CsvToRDBImportDialog_16);
 		
 		textSQL = new Text(grpSqlTemplate, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -424,7 +424,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	private void saveLog(){
 		try {
 			if("".equals(textSQL.getText())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_LogEmpty);
+				MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_LogEmpty);
 				return;
 			}
 			String filename = PublicTadpoleDefine.TEMP_DIR + userDB.getDisplay_name() + "_SQLImportResult.log"; //$NON-NLS-1$
@@ -529,7 +529,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	}
 	
 	private void downloadSQL(){
-		MessageDialog.openInformation(null, Messages.CsvToRDBImportDialog_7, "not support..."); //$NON-NLS-2$
+		MessageDialog.openInformation(null, Messages.get().CsvToRDBImportDialog_7, "not support..."); //$NON-NLS-2$
 	}
 	
 	private void generatePreviewSQL(){
@@ -572,7 +572,7 @@ public class CsvToRDBImportDialog extends Dialog {
 				if ("i".equals(stmtType)){ //$NON-NLS-1$
 					// 기존 테이블에 insert하는 경우에만 기존자료 삭제 방법에 대해 처리한다.
 					if (this.btnTruncate.getSelection()) { 
-						appendPreviewSQL(Messages.CsvToRDBImportDialog_51 + tableName + ";"); //$NON-NLS-2$
+						appendPreviewSQL(Messages.get().CsvToRDBImportDialog_51 + tableName + ";"); //$NON-NLS-2$
 					}else if (this.btnDeleteAll.getSelection()){
 						appendPreviewSQL("DELETE FROM " + tableName + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
@@ -591,7 +591,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			appendPreviewSQL(strGenerateSQL);
 		} catch (Exception e1) {
 			logger.error("CSV load error", e1); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_10 + e1.getMessage());
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_10 + e1.getMessage());
 		}
 
 	}
@@ -603,19 +603,19 @@ public class CsvToRDBImportDialog extends Dialog {
 	 */
 	private boolean validate() {
 		if("".equals(textTableName.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_19);
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_19);
 			textTableName.setFocus();
 			return false;
 		}
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_21);
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_21);
 			return false;
 		}
 		
 		if("".equals(textSeprator.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_24);
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_24);
 			textSeprator.setFocus();
 			return false;
 		}
@@ -670,10 +670,10 @@ public class CsvToRDBImportDialog extends Dialog {
 			
 			this.appendPreviewSQL(loader.getImportResultLog().toString());
 			
-			MessageDialog.openInformation(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_26 + "\n count is "+ count); //$NON-NLS-1$
+			MessageDialog.openInformation(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_26 + "\n count is "+ count); //$NON-NLS-1$
 		} catch (Exception e1) {
 			logger.error("CSV load error", e1); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_29 + e1.getMessage());
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_29 + e1.getMessage());
 			
 			return;
 		} finally {
@@ -730,7 +730,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		
 		if(buttonId == ID_BTN_INSERT) {
-			if(MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_14)) {
+			if(MessageDialog.openConfirm(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_14)) {
 				insertData();
 			}
 		}
@@ -742,8 +742,8 @@ public class CsvToRDBImportDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, ID_BTN_INSERT, Messages.CsvToRDBImportDialog_8, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.CsvToRDBImportDialog_30, false);
+		createButton(parent, ID_BTN_INSERT, Messages.get().CsvToRDBImportDialog_8, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CsvToRDBImportDialog_30, false);
 	}
 
 	/**

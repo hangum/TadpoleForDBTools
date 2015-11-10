@@ -40,8 +40,8 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.OpenDBRelationAction_1);
-		setToolTipText(Messages.OpenDBRelationAction_2);
+		setText(Messages.get().OpenDBRelationAction_1);
+		setToolTipText(Messages.get().OpenDBRelationAction_2);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/erd.png"));
 		setEnabled(false);
 		

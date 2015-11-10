@@ -92,7 +92,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			logger.error(tableDao.getName() + " compile", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", tableDao.getName() + Messages.OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", tableDao.getName() + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
 		} finally {
 			refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW, tableDao.getName(), userDB);
 		}
@@ -115,7 +115,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			logger.error(objName + " compile", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", objName + Messages.OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", objName + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
 		} finally {
 			refreshObject(actionType, objName, userDB);
 		}
@@ -136,7 +136,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			logger.error(procedureDAO.getName() + " compile", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", procedureDAO.getName() + Messages.OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", procedureDAO.getName() + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
 		} finally {
 			refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE.PACKAGE, procedureDAO.getName(), userDB);
 		}
@@ -149,9 +149,9 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	 */
 	private void showMessage(String result) {
 		if("".equals(result)) { //$NON-NLS-1$
-			MessageDialog.openInformation(null, Messages.OracleObjectCompileAction_11, Messages.OracleObjectCompileAction_12);
+			MessageDialog.openInformation(null, Messages.get().OracleObjectCompileAction_11, Messages.get().OracleObjectCompileAction_12);
 		} else {
-			TDBInfoDialog dialog = new TDBInfoDialog(null, Messages.OracleObjectCompileAction_13, result);
+			TDBInfoDialog dialog = new TDBInfoDialog(null, Messages.get().OracleObjectCompileAction_13, result);
 			dialog.open();
 		}
 	}

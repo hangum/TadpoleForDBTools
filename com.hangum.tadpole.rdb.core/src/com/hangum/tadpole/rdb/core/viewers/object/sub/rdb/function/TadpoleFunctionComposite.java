@@ -99,7 +99,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmFunctions = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmFunctions.setText(Messages.TadpoleFunctionComposite_0);
+		tbtmFunctions.setText(Messages.get().TadpoleFunctionComposite_0);
 		tbtmFunctions.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
@@ -134,7 +134,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 				if(!iss.isEmpty()) {
-					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), OBJECT_TYPE.FUNCTIONS, Messages.TadpoleFunctionComposite_4);
+					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_4);
 					action.run(iss, getUserDB(), OBJECT_TYPE.FUNCTIONS);
 				}	// end iss.isempty
 			}
@@ -150,14 +150,14 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.TadpoleFunctionComposite_1);
-		dropAction_Function = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.TadpoleFunctionComposite_2);
-		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.TadpoleFunctionComposite_3);
+		creatAction_Function = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_1);
+		dropAction_Function = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_2);
+		refreshAction_Function = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_3);
 	
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.TadpoleFunctionComposite_4);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_4);
 
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.TadpoleFunctionComposite_5);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.TadpoleFunctionComposite_6);
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_5);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_6);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -247,7 +247,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_81, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_81, errStatus); //$NON-NLS-1$
 		}
 	}
 	
