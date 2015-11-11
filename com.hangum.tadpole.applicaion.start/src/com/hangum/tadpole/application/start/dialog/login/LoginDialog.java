@@ -450,10 +450,6 @@ public class LoginDialog extends Dialog {
 	 */
 	private void changeUILocale(String strComoboStr) {
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
-		if(logger.isDebugEnabled()) {
-			logger.debug("===> select locale is : " + localeSelect);
-		}
-		
 		RWT.getUISession().setLocale(localeSelect);
 		
 		lblEmail.setText(Messages.get().LoginDialog_1);
