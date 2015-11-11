@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.initialize.wizard;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -146,6 +147,16 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 	 * @param strRePass
 	 */
 	private void validateValue(String strEmail, String strPass, String strRePass) {
+		strEmail = StringUtils.trimToEmpty(strEmail);
+		strPass = StringUtils.trimToEmpty(strPass);
+		strRePass = StringUtils.trimToEmpty(strRePass);
+		
+		strPass = StringUtils.removeEnd(strPass, "\t");
+		strPass = StringUtils.removeEnd(strPass, "\n");
+		
+		strRePass = StringUtils.removeEnd(strRePass, "\t");
+		strRePass = StringUtils.removeEnd(strRePass, "\n");
+		
 		isComplete = false;
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			errorSet(textEmail, Messages.get().SystemAdminWizardPage_35);
