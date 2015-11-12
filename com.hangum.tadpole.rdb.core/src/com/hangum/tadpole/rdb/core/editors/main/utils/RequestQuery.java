@@ -92,7 +92,7 @@ public class RequestQuery {
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;
 		this.sql = SQLUtil.sqlExecutable(originalSql);
-		praseSQL(this.sql);
+		parseSQL(this.sql);
 		
 		this.mode = mode;
 		this.executeType = type;
@@ -107,7 +107,7 @@ public class RequestQuery {
 	 * @param sql
 	 * @return query type
 	 */
-	public void praseSQL(String sql) {
+	public void parseSQL(String sql) {
 		BasicTDBSQLParser parser = new BasicTDBSQLParser();
 		QueryInfoDTO queryInfoDto = parser.parser(sql);
 		setStatement(queryInfoDto.isStatement());
