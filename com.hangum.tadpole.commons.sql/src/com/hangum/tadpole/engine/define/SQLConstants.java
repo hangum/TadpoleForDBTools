@@ -21,7 +21,7 @@ package com.hangum.tadpole.engine.define;
  */
 public class SQLConstants {
 //	public static final String[] ADVANCED_KEYWORDS = { "PACKAGE", "FUNCTION", "TYPE", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "WRAPPED" };
-	public static final String[] MYSQL_KEYWORDS = {"OPTION", "DEFAULT", "FULLTEXT", "PACKAGE", "FUNCTION", "TYPE", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "WRAPPED", "KEY"};
+	public static final String[] MYSQL_KEYWORDS = {"TABLE", "SELECT", "OPTION", "DEFAULT", "FULLTEXT", "PACKAGE", "FUNCTION", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "KEY"};
 
 	public static final String[] SQLITE_KEYWORDS = {
 			"AND", "AS", "ASC", "ATTACH", "AUTOINCREMENT", "BEFORE", "BEGIN", "BETWEEN", "BY", "CASCADE", "CASE",
