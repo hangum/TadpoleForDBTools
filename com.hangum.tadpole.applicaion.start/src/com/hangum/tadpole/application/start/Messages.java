@@ -14,6 +14,7 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.application.start.messages"; //$NON-NLS-1$
+	
 	public String AboutAction_0;
 	public String AboutAction_1;
 	public String AboutAction_2;
@@ -59,6 +60,7 @@ public class Messages {
 	public String LoginDialog_6;
 	public String LoginDialog_7;
 	public String LoginDialog_8;
+	public String LoginDialog_9;
 	public String BugIssueAction_0;
 	public String BugIssueAction_2;
 	public String BugIssueAction_3;

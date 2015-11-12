@@ -34,6 +34,10 @@ public class PublicTadpoleDefine {
 	/** default system encrypt password */
 	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
 	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.me.son";
+	
+	/** COOKIE USER ID */
+	public static final String TDB_COOKIE_USER_ID = "TDB_USER_ID";
+	public static final String TDB_COOKIE_USER_SAVE_CKECK = "TDB_USER_SAVE_CHECK";
 
 	/**
 	 * PLAN Statement ID

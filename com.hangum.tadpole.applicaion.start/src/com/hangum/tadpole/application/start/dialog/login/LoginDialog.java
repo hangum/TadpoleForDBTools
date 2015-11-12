@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -83,6 +87,8 @@ public class LoginDialog extends Dialog {
 	
 	private Composite compositeLogin;
 	private Label lblEmail;
+	
+	private Button btnCheckButton;
 	private Text textEMail;
 	private Label lblPassword;
 	private Text textPasswd;
@@ -94,12 +100,12 @@ public class LoginDialog extends Dialog {
 	private Label lblUserGuide;
 	private Label lblContact;
 	
-	String strPaypal = "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'> " +
-						"	<input type='hidden' name='cmd' value='_s-xclick'> " +
-						"	<input type='hidden' name='encrypted' value='-----BEGIN PKCS7-----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-----END PKCS7-----'> " +
-						"	<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'> " +
-						"	<img alt='' border='0' src='https://www.paypalobjects.com/ko_KR/i/scr/pixel.gif' width='1' height='1'> " +
-						"	</form>";
+	String strPaypal = "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'> " + //$NON-NLS-1$
+						"	<input type='hidden' name='cmd' value='_s-xclick'> " + //$NON-NLS-1$
+						"	<input type='hidden' name='encrypted' value='-----BEGIN PKCS7-----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-----END PKCS7-----'> " + //$NON-NLS-1$
+						"	<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'> " + //$NON-NLS-1$
+						"	<img alt='' border='0' src='https://www.paypalobjects.com/ko_KR/i/scr/pixel.gif' width='1' height='1'> " + //$NON-NLS-1$
+						"	</form>"; //$NON-NLS-1$
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -145,12 +151,15 @@ public class LoginDialog extends Dialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if(e.keyCode == SWT.Selection) {
-					if(!"".equals(textPasswd.getText())) okPressed();
+					if(!"".equals(textPasswd.getText())) okPressed(); //$NON-NLS-1$
 					else textPasswd.setFocus();
 				}
 			}
 		});
-		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		btnCheckButton = new Button(compositeLogin, SWT.CHECK);
+		btnCheckButton.setText(Messages.get().LoginDialog_9); //$NON-NLS-1$
 		
 		lblPassword = new Label(compositeLogin, SWT.NONE);
 		lblPassword.setText(Messages.get().LoginDialog_4);
@@ -197,6 +206,10 @@ public class LoginDialog extends Dialog {
 		
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(), Locale.KOREAN);
+		new Label(compositeLogin, SWT.NONE);
+		new Label(compositeLogin, SWT.NONE);
+		new Label(compositeLogin, SWT.NONE);
+		
 //		comboLanguage.select(0);
 
 		// ---------------------  Registered database ----------------------------------------------------
@@ -316,7 +329,7 @@ public class LoginDialog extends Dialog {
 			
 			// firsttime email confirm
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
-				InputDialog inputDialog=new InputDialog(getShell(), Messages.get().LoginDialog_10, Messages.get().LoginDialog_17, "", null); //$NON-NLS-3$
+				InputDialog inputDialog=new InputDialog(getShell(), Messages.get().LoginDialog_10, Messages.get().LoginDialog_17, "", null); //$NON-NLS-3$ //$NON-NLS-1$
 				if(inputDialog.open() == Window.OK) {
 					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
 						throw new Exception(Messages.get().LoginDialog_19);
@@ -351,7 +364,10 @@ public class LoginDialog extends Dialog {
 				if(!GoogleAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
 					throw new Exception(Messages.get().LoginDialog_2);
 				}
-			} 
+			}
+			
+			// 로그인 유지.
+			registLoginID(userDao.getEmail());
 			
 			SessionManager.addSession(userDao);
 			
@@ -366,6 +382,26 @@ public class LoginDialog extends Dialog {
 		}	
 		
 		super.okPressed();
+	}
+	
+	/**
+	 * register login id
+	 * 
+	 * @param userId
+	 */
+	private void registLoginID(String userId) {
+		HttpServletResponse response = RWT.getResponse();
+		
+		Cookie tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, 
+					Boolean.toString(btnCheckButton.getSelection()));
+		tdbCookie.setMaxAge(60 * 24 * 30);
+		response.addCookie(tdbCookie);
+		
+		if(btnCheckButton.getSelection()) {
+			tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+			tdbCookie.setMaxAge(60 * 24 * 30);
+			response.addCookie(tdbCookie);
+		}
 	}
 		
 	@Override
@@ -408,7 +444,7 @@ public class LoginDialog extends Dialog {
 		createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(!"".equals(smtpDto.getEmail())) {
+			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
 				createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
 			}
 		} catch (Exception e) {
@@ -437,9 +473,42 @@ public class LoginDialog extends Dialog {
 			changeUILocale(comboLanguage.getText());
 		}
 		
+		// find login id
+		findLoginID();
+		
+		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {
-			String errMsg = Messages.get().LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.get().UserInformationDialog_5 + "\n" + Messages.get().LoginDialog_lblNewLabel_text; //$NON-NLS-2$ //$NON-NLS-3$
+			String errMsg = Messages.get().LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.get().UserInformationDialog_5 + "\n" + Messages.get().LoginDialog_lblNewLabel_text;  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, errMsg);
+		}
+	}
+	
+	/**
+	 * find login id
+	 */
+	private void findLoginID() {
+		HttpServletRequest request = RWT.getRequest();
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null) {
+			for (Cookie cookie : cookies) {
+				boolean isFind = false;
+				
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
+					textEMail.setText(cookie.getValue());
+					isFind = true;
+				}
+				
+				if(isFind) break;
+			}
+			for (Cookie cookie : cookies) {
+				boolean isFind = false;
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
+					btnCheckButton.setSelection(Boolean.parseBoolean(cookie.getValue()));
+					isFind = true;
+				}
+				
+				if(isFind) break;
+			}
 		}
 	}
 	
@@ -452,6 +521,7 @@ public class LoginDialog extends Dialog {
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
 		RWT.getUISession().setLocale(localeSelect);
 		
+		btnCheckButton.setText(Messages.get().LoginDialog_9);
 		lblEmail.setText(Messages.get().LoginDialog_1);
 		lblPassword.setText(Messages.get().LoginDialog_4);
 		lblLanguage.setText(Messages.get().LoginDialog_lblLanguage_text);
