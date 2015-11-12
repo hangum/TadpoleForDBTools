@@ -296,7 +296,6 @@ public class LoginDialog extends Dialog {
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1));
 		browser.setText(strPaypal);
 		
-		textEMail.setFocus();
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
 		initUI();
@@ -475,6 +474,11 @@ public class LoginDialog extends Dialog {
 		
 		// find login id
 		findLoginID();
+		if("".equals(textEMail.getText())) {
+			textEMail.setFocus();
+		} else {
+			textPasswd.setFocus();
+		}
 		
 		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {
