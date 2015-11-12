@@ -206,9 +206,7 @@ public class LoginDialog extends Dialog {
 		
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(), Locale.KOREAN);
-		new Label(compositeLogin, SWT.NONE);
-		new Label(compositeLogin, SWT.NONE);
-		new Label(compositeLogin, SWT.NONE);
+		
 		
 //		comboLanguage.select(0);
 
