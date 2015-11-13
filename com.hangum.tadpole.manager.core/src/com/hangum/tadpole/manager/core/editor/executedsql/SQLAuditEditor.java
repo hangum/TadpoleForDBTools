@@ -493,7 +493,12 @@ public class SQLAuditEditor extends EditorPart {
 
 		cal.set(dateTimeEnd.getYear(), dateTimeEnd.getMonth(), dateTimeEnd.getDay(), 23, 59, 59);
 		long endTime = cal.getTimeInMillis();
-		int duringExecute = Integer.parseInt(textMillis.getText());
+		int duringExecute = 0;
+		try {
+			duringExecute = Integer.parseInt(textMillis.getText());
+		} catch(Exception e) {
+			// ignore exception
+		}
 		
 		String strSearchTxt = "%" + StringUtils.trimToEmpty(textSearch.getText()) + "%"; //$NON-NLS-1$ //$NON-NLS-2$
 
