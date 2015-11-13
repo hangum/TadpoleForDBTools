@@ -191,12 +191,7 @@ public class LoginDialog extends Dialog {
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object objLanguage = comboLanguage.getData(comboLanguage.getText());
-				if(objLanguage == null) {
-					changeUILocale(comboLanguage.getItem(0));
-				} else {
-					changeUILocale(comboLanguage.getText());
-				}
+				changeUILocale();
 			}
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage());
@@ -301,6 +296,16 @@ public class LoginDialog extends Dialog {
 		return compositeLogin;
 	}
 	
+	/** change ui locale */
+	private void changeUILocale(){
+		Object objLanguage = comboLanguage.getData(comboLanguage.getText());
+		if(objLanguage == null) {
+			changeUILocale(comboLanguage.getItem(0));
+		} else {
+			changeUILocale(comboLanguage.getText());
+		}
+	}
+	
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == ID_NEW_USER) {
@@ -399,6 +404,10 @@ public class LoginDialog extends Dialog {
 			tdbCookie.setMaxAge(60 * 24 * 30);
 			response.addCookie(tdbCookie);
 		}
+		
+		tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
+		tdbCookie.setMaxAge(60 * 24 * 30);
+		response.addCookie(tdbCookie);
 	}
 		
 	@Override
@@ -471,7 +480,7 @@ public class LoginDialog extends Dialog {
 		}
 		
 		// find login id
-		findLoginID();
+		initCookieData();
 		if("".equals(textEMail.getText())) {
 			textEMail.setFocus();
 		} else {
@@ -486,9 +495,9 @@ public class LoginDialog extends Dialog {
 	}
 	
 	/**
-	 * find login id
+	 * initialize cookie data
 	 */
-	private void findLoginID() {
+	private void initCookieData() {
 		HttpServletRequest request = RWT.getRequest();
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null) {
@@ -506,6 +515,16 @@ public class LoginDialog extends Dialog {
 				boolean isFind = false;
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
 					btnCheckButton.setSelection(Boolean.parseBoolean(cookie.getValue()));
+					isFind = true;
+				}
+				
+				if(isFind) break;
+			}
+			for (Cookie cookie : cookies) {
+				boolean isFind = false;
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+					comboLanguage.setText(cookie.getValue());
+					changeUILocale();
 					isFind = true;
 				}
 				
