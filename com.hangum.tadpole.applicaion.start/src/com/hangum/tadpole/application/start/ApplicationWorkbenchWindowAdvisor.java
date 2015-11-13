@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -89,9 +90,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(true);
     
-//        // Set system exist message.
-//        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
-//    	service.setMessage(Messages.get().ApplicationWorkbenchWindowAdvisor_4);
+        // Set system exist message.
+        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
+    	service.setMessage(Messages.get().ApplicationWorkbenchWindowAdvisor_4);
     	
 //    	checkSupportBrowser();
     	
