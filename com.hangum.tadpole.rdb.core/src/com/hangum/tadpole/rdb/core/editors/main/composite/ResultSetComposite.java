@@ -72,6 +72,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -1151,7 +1152,7 @@ public class ResultSetComposite extends Composite {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}
 		
-			refreshExplorerView(getUserDB(), reqQuery);
+			if(reqQuery.getSqlType() == SQL_TYPE.DDL) refreshExplorerView(getUserDB(), reqQuery);
 		}
 	}
 	

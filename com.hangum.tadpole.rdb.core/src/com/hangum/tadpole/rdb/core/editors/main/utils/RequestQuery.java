@@ -111,31 +111,37 @@ public class RequestQuery {
 		BasicTDBSQLParser parser = new BasicTDBSQLParser();
 		QueryInfoDTO queryInfoDto = parser.parser(sql);
 		setStatement(queryInfoDto.isStatement());
-		
-		if(queryInfoDto.isStatement()) {
+
+		try {
+			Statement statement = CCJSqlParserUtil.parse(sql);
 			setSqlType(SQL_TYPE.DML);
-			sqlDMLType = QUERY_DML_TYPE.UNKNOWN;
-			try {
-				Statement statement = CCJSqlParserUtil.parse(sql);
-				if(statement instanceof Select) {
-					sqlDMLType = QUERY_DML_TYPE.SELECT;
-				} else if(statement instanceof Insert) {
-					sqlDMLType = QUERY_DML_TYPE.INSERT;
-				} else if(statement instanceof Update) {
-					sqlDMLType = QUERY_DML_TYPE.UPDATE;
-				} else if(statement instanceof Delete) {
-					sqlDMLType = QUERY_DML_TYPE.DELETE;
-				}
-			} catch (Throwable e) {
-				logger.error(String.format("sql parse exception. [ %s ]", sql));
+		
+			if(statement instanceof Select) {
+				sqlDMLType = QUERY_DML_TYPE.SELECT;
+			} else if(statement instanceof Insert) {
+				sqlDMLType = QUERY_DML_TYPE.INSERT;
+			} else if(statement instanceof Update) {
+				sqlDMLType = QUERY_DML_TYPE.UPDATE;
+			} else if(statement instanceof Delete) {
+				sqlDMLType = QUERY_DML_TYPE.DELETE;
 			}
-			
-		} else {
-			setSqlType(SQL_TYPE.DDL);
-			sqlDDLType = queryInfoDto.getQueryDDLType();
-			queryStatus = queryInfoDto.getQueryStatus();
-			sqlObjectName = queryInfoDto.getObjectName();
+		} catch (Throwable e) {
+			logger.error(String.format("sql parse exception. [ %s ]", sql));
 		}
+		
+		if(sqlDMLType.equals(QUERY_DML_TYPE.UNKNOWN)) {
+			if(queryInfoDto.isStatement()) {
+				setSqlType(SQL_TYPE.DML);
+				sqlDMLType = QUERY_DML_TYPE.UNKNOWN;
+				
+			} else {
+				setSqlType(SQL_TYPE.DDL);
+				sqlDDLType = queryInfoDto.getQueryDDLType();
+				queryStatus = queryInfoDto.getQueryStatus();
+				sqlObjectName = queryInfoDto.getObjectName();
+			}
+		}
+
 	}
 	
 	/**
