@@ -80,7 +80,7 @@ public class ManagerViewer extends ViewPart {
 	public static String ID = "com.hangum.tadpole.rdb.core.view.connection.manager"; //$NON-NLS-1$
 	
 	private Composite compositeMainComposite;
-	private List<ManagerListDTO> treeList = new ArrayList<ManagerListDTO>();
+	private List<ManagerListDTO> treeDataList = new ArrayList<ManagerListDTO>();
 	private Map<String, ManagerListDTO> mapTreeList = new HashMap<>();
 	private TreeViewer managerTV;
 	
@@ -191,7 +191,7 @@ public class ManagerViewer extends ViewPart {
 		
 		managerTV.setContentProvider(new ManagerContentProvider());
 		managerTV.setLabelProvider(new ManagerLabelProvider());
-		managerTV.setInput(treeList);		
+		managerTV.setInput(treeDataList);		
 		getSite().setSelectionProvider(managerTV);
 		
 		createPopupMenu();
@@ -216,13 +216,23 @@ public class ManagerViewer extends ViewPart {
 	 * 트리 데이터 초기화
 	 */
 	public void init() {
-		treeList.clear();
+		treeDataList.clear();
 		mapTreeList.clear();
 	
 		try {
 			for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
-				treeList.add(new ManagerListDTO(strGroupName));
-			}
+				ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
+				
+				List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName());
+				for (UserDBDAO userDBDAO : userDBS) {
+					managerDTO.addLogin(userDBDAO);
+				}
+				
+				treeDataList.add(managerDTO);
+			}	// end last end
+
+			managerTV.refresh();
+			managerTV.expandToLevel(2);
 			
 		} catch (Exception e) {
 			logger.error("initialize Managerview", e); //$NON-NLS-1$
@@ -257,7 +267,7 @@ public class ManagerViewer extends ViewPart {
 	 * @return
 	 */
 	public List<ManagerListDTO> getAllTreeList() {
-		return treeList;
+		return treeDataList;
 	}
 	
 	/**
@@ -268,7 +278,7 @@ public class ManagerViewer extends ViewPart {
 	 */
 	public void addUserDB(UserDBDAO userDB, boolean defaultOpen) {
 		
-		for(ManagerListDTO dto: treeList) {
+		for(ManagerListDTO dto: treeDataList) {
 			if(dto.getName().equals(userDB.getGroup_name())) {
 				dto.addLogin(userDB);
 				
@@ -283,7 +293,7 @@ public class ManagerViewer extends ViewPart {
 		// 신규 그룹이면...
 		ManagerListDTO managerDto = new ManagerListDTO(userDB.getGroup_name());
 		managerDto.addLogin(userDB);
-		treeList.add(managerDto);	
+		treeDataList.add(managerDto);	
 		
 		if(defaultOpen) {
 			selectAndOpenView(userDB);
@@ -338,7 +348,7 @@ public class ManagerViewer extends ViewPart {
 	 * @param userDBErd
 	 */
 	public void addResource(int dbSeq) {
-		for(ManagerListDTO dto: treeList) {
+		for(ManagerListDTO dto: treeDataList) {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
