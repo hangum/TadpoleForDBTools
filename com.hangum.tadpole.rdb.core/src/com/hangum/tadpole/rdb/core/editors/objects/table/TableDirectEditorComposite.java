@@ -814,10 +814,16 @@ public class TableDirectEditorComposite extends Composite {
 		
 		return insertStmt;
 	}
-	
+	/**
+	 * make quote mark
+	 * 
+	 * @param value
+	 * @return
+	 */
 	private String makeDoubleQuote(String value) {
+		value = StringUtils.replace(value, "'", "''");
+		
 		return "'" + value + "'";
-//		return "\"" + value + "\"";
 	}
 	
 	/**
