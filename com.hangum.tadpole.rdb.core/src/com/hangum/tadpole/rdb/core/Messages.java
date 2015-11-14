@@ -747,7 +747,6 @@ public class Messages {
 	public String SQLUpdateDialog_9;
 	public String SQLUpdateDialog_Error;
 	public String TableDirectEditorComposite_tltmRefersh_text;
-	public String TableInformationEditor_0;
 	public String TableInformationEditor_1;
 	public String TablesComposite_0;
 	public String TablesComposite_1;

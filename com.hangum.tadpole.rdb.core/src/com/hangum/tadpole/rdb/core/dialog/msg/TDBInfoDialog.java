@@ -102,6 +102,6 @@ public class TDBInfoDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 350);
+		return new Point(450, 550);
 	}
 }

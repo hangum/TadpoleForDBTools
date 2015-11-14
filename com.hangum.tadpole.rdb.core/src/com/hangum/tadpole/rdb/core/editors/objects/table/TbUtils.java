@@ -62,18 +62,19 @@ public class TbUtils {
 	public static String MODIFY_DATA = MODIFY_DATA_START + "%s" + MODIFY_DATA_END; //$NON-NLS-1$
 	/** 데이터 항목 수정 */
 	public static String getModifyData(String value) {
-		return String.format(MODIFY_DATA, StringEscapeUtils.escapeHtml(value));
+		return String.format(MODIFY_DATA, StringEscapeUtils.escapeXml(value));
 	}
 	/** is modify data */
 	public static boolean isModifyData(String value) {
 		return value.indexOf("<em style='color:rgb") != -1; //$NON-NLS-1$
 	}
+	
 	/** 원본 데이터를 가지고온다 */
 	public static String getOriginalData(String value) {
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_START, ""); //$NON-NLS-1$
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_END, ""); //$NON-NLS-1$
 		
-		return StringEscapeUtils.unescapeHtml(value);
+		return StringEscapeUtils.unescapeXml(value);
 	}
 
 }

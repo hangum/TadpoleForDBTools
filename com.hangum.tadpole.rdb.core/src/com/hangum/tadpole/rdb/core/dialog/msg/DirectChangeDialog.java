@@ -10,10 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.msg;
 
-import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -22,42 +20,39 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.rdb.core.Messages;
 
 /**
- * tadpole message dialog
+ * dircet change dialg
  * 
  * @author hangum
  *
  */
-public class TDBErroDialog extends TitleAreaDialog {
-	private static final Logger logger = Logger.getLogger(TDBErroDialog.class);
-	private Text textMessage;
-	
-	protected String title;
-	private String message;
-	private Label lblMessage;
+public class DirectChangeDialog extends Dialog {
+	TadpoleEditorWidget textSQL;
+	String strMessage = "";
+	String strQuery = "";
 	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param strQuery 
 	 */
-	public TDBErroDialog(Shell parentShell, String title, String message) {
+	public DirectChangeDialog(Shell parentShell, String strMessage, String strQuery) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
-		this.title = title;
-		this.message = message;
+		this.strMessage = strMessage;
+		this.strQuery = strQuery;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().TDBErroDialog_0);
+		newShell.setText("Update SQL");
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -67,25 +62,31 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setMessage(title, IMessageProvider.ERROR);
+		Composite container = (Composite) super.createDialogArea(parent);
+		GridLayout gridLayout = (GridLayout) container.getLayout();
+		gridLayout.verticalSpacing = 4;
+		gridLayout.horizontalSpacing = 4;
+		gridLayout.marginHeight = 4;
+		gridLayout.marginWidth = 4;
 		
-		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
-		container.setLayout(new GridLayout(2, false));
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		Composite composite = new Composite(container, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		composite.setLayout(new GridLayout(1, false));
 		
-		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText(Messages.get().TDBErroDialog_2);
-		new Label(container, SWT.NONE);
+		Label lblNewLabel = new Label(composite, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblNewLabel.setText(strMessage);
 		
-		textMessage = new Text(container, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		textMessage.setText(message);
-		
-		// google analytic
-		AnalyticCaller.track(this.getClass().getName());
-		
-		return area;
+		textSQL = new TadpoleEditorWidget(composite, SWT.BORDER, EditorDefine.EXT_DEFAULT, strQuery, "");
+		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		return container;
+	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		strQuery = textSQL.getText();
+		super.buttonPressed(buttonId);
 	}
 
 	/**
@@ -94,15 +95,21 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().TDBErroDialog_3, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().TDBErroDialog_4, false);
+		createButton(parent, IDialogConstants.OK_ID, "OK", false);
+		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", true);
 	}
+	
+	public String getSQL() {
+		return strQuery;
+	}
+	
 
 	/**
 	 * Return the initial size of the dialog.
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 550);
+		return new Point(650, 500);
 	}
+
 }
