@@ -441,7 +441,7 @@ public class SQLUtil {
 			}
 			
 		} catch (Throwable e) {
-			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
+			logger.error(String.format("sql parse exception. [ %s ]", sql));
 			queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		}
 		
