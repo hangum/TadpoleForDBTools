@@ -127,44 +127,33 @@ public class TableCommentEditorSupport extends EditingSupport {
 			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
 				stmt = javaConn.prepareStatement(strSQL);
-				stmt.execute();
+				try{
+					stmt.execute();
+				}catch(Exception e){
+					//  org.postgresql.util.PSQLException: No results were returned by the query.
+				}
 
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 				StringBuffer query = new StringBuffer();
 				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment drop error ", e);
-				}
+				stmt.execute();
 
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment add error ", e);
-				}
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 				StringBuffer query = new StringBuffer();
 				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment drop error ", e);
-				}
+				stmt.execute();
 
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment add error ", e);
-				}
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+
 			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 				String strSQL = String.format("ALTER TABLE %s COMMENT %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
 				if(logger.isDebugEnabled()) logger.debug(strSQL);

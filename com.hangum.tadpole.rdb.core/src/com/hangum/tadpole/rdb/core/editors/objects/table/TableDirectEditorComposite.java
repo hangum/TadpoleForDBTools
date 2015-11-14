@@ -59,6 +59,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.DDLScriptManager;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultContentProvider;
@@ -720,13 +721,13 @@ public class TableDirectEditorComposite extends Composite {
 			if(!primaryKeyListIndex.isEmpty()) {
 				for(int i=0; i<primaryKeyListIndex.size(); i++) {
 					int keyIndex = primaryKeyListIndex.get(i);
-					strWhere += primaryKEYIntStrList.get(keyIndex) + " = " + makeDoubleQuote(TbUtils.getOriginalData(orgRs.get(keyIndex+1).toString())); //$NON-NLS-1$ //$NON-NLS-2$
+					strWhere += primaryKEYIntStrList.get(keyIndex) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(orgRs.get(keyIndex+1).toString())); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					if(i < (primaryKeyListIndex.size()-1)) strWhere += " AND "; //$NON-NLS-1$
 				}
 			} else {
 				for(int i=1; i<tmpRs.size(); i++) {
-					strWhere += mapColumns.get(i-1) + " = " + makeDoubleQuote(TbUtils.getOriginalData(orgRs.get(i).toString()) ); //$NON-NLS-1$ //$NON-NLS-2$
+					strWhere += mapColumns.get(i-1) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(orgRs.get(i).toString()) ); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					if(i < (tmpRs.size()-1)) strWhere += " AND "; //$NON-NLS-1$
 				}
@@ -768,7 +769,7 @@ public class TableDirectEditorComposite extends Composite {
 		// 0 번째 컬럼은 데이터 수정 유무이므로 .
 		for(int i=1; i<tmpRs.size(); i++) {
 			if(TbUtils.isModifyData( tmpRs.get(i).toString() )) {
-				updateStmt += mapColumns.get(i-1) + " = " + makeDoubleQuote(TbUtils.getOriginalData(tmpRs.get(i).toString())) + ", "; //$NON-NLS-1$ //$NON-NLS-2$
+				updateStmt += mapColumns.get(i-1) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(tmpRs.get(i).toString())) + ", "; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		updateStmt = StringUtils.chompLast(updateStmt, ", "); //$NON-NLS-1$
@@ -807,23 +808,12 @@ public class TableDirectEditorComposite extends Composite {
 		
 		// 수정된 값을 입력한다.
 		for(int i=1; i<tmpRs.size(); i++) {
-			if(TbUtils.isModifyData( tmpRs.get(i).toString() )) insertStmt += makeDoubleQuote(TbUtils.getOriginalData(tmpRs.get(i).toString())) + ", "; //$NON-NLS-1$ //$NON-NLS-2$
+			if(TbUtils.isModifyData( tmpRs.get(i).toString() )) insertStmt += SQLUtil.makeQuote(TbUtils.getOriginalData(tmpRs.get(i).toString())) + ", "; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		insertStmt = StringUtils.chompLast(insertStmt, ", "); //$NON-NLS-1$
 		insertStmt += ");"; //$NON-NLS-1$
 		
 		return insertStmt;
-	}
-	/**
-	 * make quote mark
-	 * 
-	 * @param value
-	 * @return
-	 */
-	private String makeDoubleQuote(String value) {
-		value = StringUtils.replace(value, "'", "''");
-		
-		return "'" + value + "'";
 	}
 	
 	/**

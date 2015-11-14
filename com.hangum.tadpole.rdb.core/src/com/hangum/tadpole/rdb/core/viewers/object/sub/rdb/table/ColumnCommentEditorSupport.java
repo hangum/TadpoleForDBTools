@@ -147,43 +147,29 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 				query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
 				query.append(",'column' , '").append(columnDAO.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment drop error ", e);
-				}
+				stmt.execute();
 
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'user' ,").append(userDB.getUsers());
-					query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
-					query.append(",'column', '").append(columnDAO.getSysName()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment add error ", e);
-				}
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'user' ,").append(userDB.getUsers());
+				query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
+				query.append(",'column', '").append(columnDAO.getSysName()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , " + tableDAO.getSchema_name());
 				query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
 				query.append(",'column' , '").append(columnDAO.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment drop error ", e);
-				}
+				stmt.execute();
 
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'schema' , " + tableDAO.getSchema_name());
-					query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
-					query.append(",'column', '").append(columnDAO.getSysName()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.error("Comment add error ", e);
-				}
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'schema' , " + tableDAO.getSchema_name());
+				query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
+				query.append(",'column', '").append(columnDAO.getSysName()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+
 			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
 				query.append(" ALTER TABLE  ").append(tableDAO.getSysName()+" CHANGE ")
