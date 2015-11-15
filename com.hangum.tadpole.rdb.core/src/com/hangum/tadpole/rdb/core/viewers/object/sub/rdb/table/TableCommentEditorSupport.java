@@ -12,7 +12,6 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
 import java.sql.PreparedStatement;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -104,15 +103,14 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 			// 기존 코멘트와 다를때만 db에 반영한다.
 			if (!(comment.equals(dao.getComment()))) {
-				applyComment(dao);
 				dao.setComment(comment);
+				applyComment(dao);
 			}
 
 			viewer.update(element, null);
 		} catch (Exception e) {
 			logger.error("setValue error ", e);
 		}
-		viewer.update(element, null);
 	}
 
 	private void applyComment(TableDAO dao) {

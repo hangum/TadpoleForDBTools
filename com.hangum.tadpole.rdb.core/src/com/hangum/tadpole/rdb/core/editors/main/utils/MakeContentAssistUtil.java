@@ -85,7 +85,7 @@ public class MakeContentAssistUtil extends com.hangum.tadpole.db.metadata.MakeCo
 	public List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 				
-		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			showTables = new TajoConnectionManager().tableList(userDB);			
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

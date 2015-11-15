@@ -108,15 +108,14 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 			
 			// 기존 코멘트와 다를때만 db에 반영한다.
 			if (!(comment.equals(dao.getComment()))) {
-				applyComment(dao);
 				dao.setComment(comment);
+				applyComment(dao);
 			}
 
 			viewer.update(element, null);
 		} catch (Exception e) {
 			logger.error("setValue error ", e);
 		}
-		viewer.update(element, null);
 	}
 
 	private void applyComment(TableColumnDAO columnDAO) {
@@ -133,7 +132,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 			StringBuffer query = new StringBuffer();
 
 			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-				query.append(" COMMENT ON COLUMN ").append(tableDAO.getSysName()+".").append(columnDAO.getField()).append(" IS '").append(columnDAO.getComment()).append("'");
+				query.append(" COMMENT ON COLUMN ").append(tableDAO.getSysName()+".").append(columnDAO.getField()).append(" IS ").append(SQLUtil.makeQuote(columnDAO.getComment()));
 				stmt = javaConn.prepareStatement(query.toString());
 				
 				try{
@@ -172,7 +171,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
-				query.append(" ALTER TABLE  ").append(tableDAO.getSysName()+" CHANGE ")
+				query.append(" ALTER TABLE ").append(tableDAO.getSysName()+" CHANGE ")
 					.append(columnDAO.getField() + " " + columnDAO.getField() + " ")
 					.append( columnDAO.getType() + " " + ("NO".equals(columnDAO.getNull())?"NOT NULL":"NULL"));
 				
@@ -184,7 +183,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 					query.append(" DEFAULT '" + columnDAO.getDefault() + "'" );
 				}
 				
-				query.append(" COMMENT '").append(SQLUtil.makeQuote(columnDAO.getComment())).append("'");
+				query.append(" COMMENT ").append(SQLUtil.makeQuote(columnDAO.getComment()));
 				if(logger.isDebugEnabled()) logger.debug(query);
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
