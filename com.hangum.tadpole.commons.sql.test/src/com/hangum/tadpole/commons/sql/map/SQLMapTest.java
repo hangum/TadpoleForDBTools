@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -33,13 +34,15 @@ public class SQLMapTest extends TestCase {
 		java.sql.Connection javaConn = null;
 		
 		try {
-			
-			SqlMapClient client = SQLMap.getInstance( TadpoleSystemInitializer.getUserDB() );
+			final UserDBDAO userDB = TadpoleSystemInitializer.getUserDB();
+			System.out.println(userDB);
+			SqlMapClient client = SQLMap.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
 			Statement stmt = javaConn.createStatement();
 			
 			boolean result =  stmt.execute( "CREATE TABLE   sample_getinstance   (  id INTEGER NOT NULL,   name char(60) default NULL,  PRIMARY KEY (id)  );" );
+			System.out.println("result is " + result);
 			
 			result =  stmt.execute( "DROP TABLE   sample_getinstance;" );	
 		

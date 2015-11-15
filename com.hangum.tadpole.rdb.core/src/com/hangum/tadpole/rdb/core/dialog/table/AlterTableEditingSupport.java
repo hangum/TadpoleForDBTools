@@ -19,8 +19,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 
+import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
+
 /**
- * SampleDAtaEditingSupport
+ * alter table editing support
  * 
  * @author hangum
  */
@@ -43,11 +45,10 @@ public class AlterTableEditingSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-
 		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
 
 		if (columnIndex == AlterTableConsts.DATA_TYPE_IDX) {
-			return new ComboBoxCellEditor(viewer.getTable(), DataTypeDef.getAllTypeNames(dao.getDbdef() ));
+			return new ComboBoxCellEditor(viewer.getTable(), DataTypeDef.getAllTypeNames(dao.getDbdef()), SWT.READ_ONLY);
 		} else if (columnIndex == AlterTableConsts.PRIMARY_KEY_IDX || columnIndex == AlterTableConsts.NULLABLE_IDX) {
 			//return new CheckboxCellEditor(viewer.getTable(), SWT.CHECK);// | SWT.READ_ONLY);
 			return new CheckboxCellEditor(null, SWT.CHECK);// | SWT.READ_ONLY);
@@ -62,13 +63,13 @@ public class AlterTableEditingSupport extends EditingSupport {
 
 		switch (columnIndex){
 		case AlterTableConsts.SEQ_NO_IDX:
-		case AlterTableConsts.COLUMN_ID_IDX:
+//		case AlterTableConsts.COLUMN_ID_IDX:
 			return false;
 		case AlterTableConsts.DATA_SIZE_IDX:
-			return dao.isUseSize();
+//			return dao.isUseSize();
 		case AlterTableConsts.DATA_PRECISION_IDX:
 		case AlterTableConsts.DATA_SCALE_IDX:
-			return dao.isUsePrecision();
+//			return dao.isUsePrecision();
 		default:
 			return true;
 		}
@@ -76,28 +77,28 @@ public class AlterTableEditingSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(Object element) {
-		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
+		AlterTableMetaDataDAO metaDao = (AlterTableMetaDataDAO) element;
 
 		if (columnIndex == AlterTableConsts.SEQ_NO_IDX) {
-			return String.valueOf(dao.getSeqNo());
-		} else if (columnIndex == AlterTableConsts.COLUMN_ID_IDX) {
-			return String.valueOf(dao.getColumnId());
+			return String.valueOf(metaDao.getSeqNo());
+//		} else if (columnIndex == AlterTableConsts.COLUMN_ID_IDX) {
+//			return String.valueOf(dao.getColumnId());
 		} else if (columnIndex == AlterTableConsts.COLUMN_NAME_IDX) {
-			return dao.getColumnName();
+			return metaDao.getColumnName();
 		} else if (columnIndex == AlterTableConsts.DATA_TYPE_IDX) {
-			return DataTypeDef.getIndexByType(dao.getDbdef(), (Integer)dao.getDataType());
+			return DataTypeDef.getIndexByType(metaDao.getDbdef(), Integer.parseInt(""+metaDao.getDataType()) );
 		} else if (columnIndex == AlterTableConsts.DATA_SIZE_IDX) {
-			return String.valueOf(dao.getDataSize());
+			return String.valueOf(metaDao.getDataSize());
 		} else if (columnIndex == AlterTableConsts.DATA_PRECISION_IDX) {
-			return String.valueOf(dao.getDataPrecision());
+			return String.valueOf(metaDao.getDataPrecision());
 		} else if (columnIndex == AlterTableConsts.DATA_SCALE_IDX) {
-			return String.valueOf(dao.getDataScale());
+			return String.valueOf(metaDao.getDataScale());
 		} else if (columnIndex == AlterTableConsts.PRIMARY_KEY_IDX) {
-			return dao.isPrimaryKey();
+			return metaDao.isPrimaryKey();
 		} else if (columnIndex == AlterTableConsts.NULLABLE_IDX) {
-			return dao.isNullable();
+			return metaDao.isNullable();
 		} else if (columnIndex == AlterTableConsts.DEFAULT_VALUE_IDX) {
-			return dao.getDefaultValue();
+			return metaDao.getDefaultValue();
 		}
 
 		return null;
@@ -108,29 +109,67 @@ public class AlterTableEditingSupport extends EditingSupport {
 		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
 		
 		if (columnIndex == AlterTableConsts.SEQ_NO_IDX) {
-			dao.setSeqNo(Integer.parseInt(value.toString()));
-		} else if (columnIndex == AlterTableConsts.COLUMN_ID_IDX) {
-			dao.setColumnId(Integer.parseInt(value.toString()));
+			int changeValue = makeStringToInt(value.toString());
+			if(changeValue == dao.getSeqNo()) return;
+			dao.setSeqNo(changeValue);
+//		} else if (columnIndex == AlterTableConsts.COLUMN_ID_IDX) {
+//			dao.setColumnId(Integer.parseInt(value.toString()));
 		} else if (columnIndex == AlterTableConsts.COLUMN_NAME_IDX) {
+			if(dao.getColumnName().equals(value.toString())) return;
+			
 			dao.setColumnName(value.toString());
 		} else if (columnIndex == AlterTableConsts.DATA_TYPE_IDX) {
-			dao.setDataType(DataTypeDef.getTypeByIndex(dao.getDbdef(), (Integer)value) );
+			int dataType = DataTypeDef.getTypeByIndex(dao.getDbdef(), (Integer)value);
+			if(dao.getDataType() == dataType) return;
+			
+			dao.setDataType(dataType);
 		} else if (columnIndex == AlterTableConsts.DATA_SIZE_IDX) {
-			dao.setDataSize(Integer.parseInt(value.toString()));
+			int changeValue = makeStringToInt(value.toString());
+			if(dao.getDataSize() == changeValue) return;
+			
+			dao.setDataSize(changeValue);
 		} else if (columnIndex == AlterTableConsts.DATA_PRECISION_IDX) {
-			dao.setDataPrecision(Integer.parseInt(value.toString()));
+			int changeValue = makeStringToInt(value.toString());
+			if(dao.getDataPrecision() == changeValue) return;
+			
+			dao.setDataPrecision(changeValue);
 		} else if (columnIndex == AlterTableConsts.DATA_SCALE_IDX) {
-			dao.setDataScale(Integer.parseInt(value.toString()));
+			int changeValue = makeStringToInt(value.toString());
+			if(dao.getDataScale() == changeValue) return;
+			
+			dao.setDataScale(changeValue);
 		} else if (columnIndex == AlterTableConsts.PRIMARY_KEY_IDX) {
-			dao.setPrimaryKey(Boolean.parseBoolean(value.toString()));
+			boolean bool = Boolean.parseBoolean(value.toString());
+			if(dao.isPrimaryKey() == bool) return;
+			
+			dao.setPrimaryKey(bool);
 		} else if (columnIndex == AlterTableConsts.NULLABLE_IDX) {
+			boolean bool = Boolean.parseBoolean(value.toString());
+			if(dao.isNullable() == bool) return;
+			
 			//dao.setNullable(Boolean.parseBoolean(value.toString()));
-			dao.setNullable((Boolean) value );
+			dao.setNullable(bool);
 		} else if (columnIndex == AlterTableConsts.DEFAULT_VALUE_IDX) {
+			if(value.toString().equals(dao.getDefaultValue())) return;
+			
 			dao.setDefaultValue(value.toString());
 		}
+		
+		if(logger.isDebugEnabled()) logger.debug("Changed data message");
+		
+		if(dao.getDataStatus() != DATA_TYPE.INSERT) dao.setDataStatus(DATA_TYPE.MODIFY);
 
-		viewer.update(element, null);
+		viewer.update(dao, null);
 	}
-
+	
+	/**
+	 * make string to integer
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private int makeStringToInt(String value) {
+		if(value.equals("")) value = "0";
+		return Integer.parseInt(value);
+	}
 }

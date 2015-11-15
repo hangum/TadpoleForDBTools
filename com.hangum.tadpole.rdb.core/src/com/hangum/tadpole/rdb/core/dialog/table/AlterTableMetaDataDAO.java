@@ -1,12 +1,29 @@
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.table;
 
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
 
+/**
+ * alter table dao
+ * 
+ * @author hangum
+ *
+ */
 public class AlterTableMetaDataDAO {
 
 	private int seqNo;
+	private String original_columnName;
 	private String columnName;
-	private int columnId;
 	private boolean primaryKey;
 	private int dataType;
 	private String dataTypeName;
@@ -15,6 +32,9 @@ public class AlterTableMetaDataDAO {
 	private int dataScale;
 	private String defaultValue;
 	private boolean nullable;
+	
+	/** 데이터 수정시 수정된 sql 문을 기록하고 있습니다. */
+	private DataTypeDef.DATA_TYPE dataStatus 	= DATA_TYPE.NONE;
 	
 	/* RDBMS종류 */
 	private DBDefine dbdef;
@@ -30,12 +50,18 @@ public class AlterTableMetaDataDAO {
 		this.columnName = columnName;
 	}
 
-	public int getColumnId() {
-		return columnId;
+	/**
+	 * @return the original_columnName
+	 */
+	public String getOriginal_columnName() {
+		return original_columnName;
 	}
 
-	public void setColumnId(int columnId) {
-		this.columnId = columnId;
+	/**
+	 * @param original_columnName the original_columnName to set
+	 */
+	public void setOriginal_columnName(String original_columnName) {
+		this.original_columnName = original_columnName;
 	}
 
 	public boolean isPrimaryKey() {
@@ -132,6 +158,20 @@ public class AlterTableMetaDataDAO {
 
 	public void setUsePrecision(boolean usePrecision) {
 		this.usePrecision = usePrecision;
+	}
+	
+	/**
+	 * @return the dataStatus
+	 */
+	public DataTypeDef.DATA_TYPE getDataStatus() {
+		return dataStatus;
+	}
+
+	/**
+	 * @param dataStatus the dataStatus to set
+	 */
+	public void setDataStatus(DataTypeDef.DATA_TYPE dataStatus) {
+		this.dataStatus = dataStatus;
 	}
 
 }

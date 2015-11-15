@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.table;
 
 import java.util.HashMap;
@@ -6,7 +16,16 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 
+/**
+ * alter define data type
+ * 
+ * @author hangum
+ *
+ */
 public class DataTypeDef {
+	/** 데이터 상태를 표현한다. */
+	public enum DATA_TYPE {NONE, INSERT, MODIFY};
+	
 	/**
 	 * java.sql.Types에 정의된 모든 데이터 타입의 각 dbms별로 type과 명칭으로 연결한다.
 	 */
@@ -64,7 +83,7 @@ public class DataTypeDef {
 			put(CHAR, "CHAR");
 			put(NUMERIC, "NUMERIC");
 			put(DECIMAL, "DECIMAL");
-			put(INTEGER, "INTEGER");
+			put(INTEGER, "INT");
 			put(SMALLINT, "SMALLINT");
 			put(FLOAT, "FLOAT");
 			put(REAL, "REAL");
@@ -289,20 +308,18 @@ public class DataTypeDef {
 			switch (dbDef) {
 			case ORACLE_DEFAULT:
 
-				for (java.util.Map.Entry<Integer, String> entry : oracleNameMap
-						.entrySet()) {
+				for (java.util.Map.Entry<Integer, String> entry : oracleNameMap.entrySet()) {
 					if (typeIndex == index++) {
 						return entry.getKey();
 					}
 				}
 				return java.sql.Types.NULL;
 			default:
-				for (java.util.Map.Entry<Integer, String> entry : defaultNameMap
-						.entrySet()) {
-					index++;
+				for (java.util.Map.Entry<Integer, String> entry : defaultNameMap.entrySet()) {
 					if (typeIndex == index) {
 						return entry.getKey();
 					}
+					index++;
 				}
 				return java.sql.Types.NULL;
 			}
