@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -375,6 +376,13 @@ public class LoginDialog extends Dialog {
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
+		} catch (TadpoleAuthorityException e) {
+			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
+			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_29, e.getMessage());
+			
+			textPasswd.setText("");
+			textPasswd.setFocus();
+			return;
 		} catch (Exception e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_29, e.getMessage());
@@ -392,22 +400,54 @@ public class LoginDialog extends Dialog {
 	 * @param userId
 	 */
 	private void registLoginID(String userId) {
-		HttpServletResponse response = RWT.getResponse();
-		
-		Cookie tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, 
-					Boolean.toString(btnCheckButton.getSelection()));
-		tdbCookie.setMaxAge(60 * 24 * 30);
-		response.addCookie(tdbCookie);
-		
-		if(btnCheckButton.getSelection()) {
-			tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-			tdbCookie.setMaxAge(60 * 24 * 30);
-			response.addCookie(tdbCookie);
+		if(!btnCheckButton.getSelection()) {
+			deleteCookie();
+			return;
 		}
 		
-		tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
-		tdbCookie.setMaxAge(60 * 24 * 30);
-		response.addCookie(tdbCookie);
+		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
+		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
+	}
+	
+	private void deleteCookie() {
+		try {
+			HttpServletResponse response = RWT.getResponse();
+			HttpServletRequest request = RWT.getRequest();
+			Cookie[] cookies = request.getCookies();
+			for (Cookie cookie : cookies) {
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+			}
+
+		} catch(Exception e) {
+			logger.error("regist user info", e);
+		}
+	}
+	
+	private void saveCookie(String key, String value) {
+		try {
+			HttpServletResponse response = RWT.getResponse();
+			Cookie tdbCookie = new Cookie(key, value);
+			tdbCookie.setMaxAge(60 * 60 * 24 * 365);
+			tdbCookie.setPath("/");
+			response.addCookie(tdbCookie);
+		} catch(Exception e) {
+			logger.error("regist user info", e);
+		}
 	}
 		
 	@Override

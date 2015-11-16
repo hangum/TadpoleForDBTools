@@ -83,7 +83,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelect
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLUpdateAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSampleDataAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
-//import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
@@ -144,7 +144,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private AbstractObjectAction tableDataEditorAction;
 	
 	/** table editor action */
-//	private AlterTableAction alterTableAction;
+	private AlterTableAction alterTableAction;
 	
 	// table column
 	private TableColumnSelectionAction tableColumnSelectionAction;
@@ -462,7 +462,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Update"); //$NON-NLS-1$
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
-//		alterTableAction = new AlterTableAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_15);
+		alterTableAction = new AlterTableAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_15);
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_16);
 		
@@ -520,8 +520,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							if(!isUpdateLock()) manager.add(updateStmtAction);
 							if(!isDeleteLock()) manager.add(deleteStmtAction);
 							
-//							manager.add(separator);
-//							manager.add(alterTableAction);
+							manager.add(separator);
+							manager.add(alterTableAction);
 	
 							manager.add(separator);
 							manager.add(viewDDLAction);
@@ -787,7 +787,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction.setUserDB(getUserDB());
 		deleteStmtAction.setUserDB(getUserDB());
 		
-//		alterTableAction.setUserDB(getUserDB());
+		alterTableAction.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
 		tableDataEditorAction.setUserDB(getUserDB());
@@ -858,7 +858,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction.dispose();
 		deleteStmtAction.dispose();
 		
-//		alterTableAction.dispose();
+		alterTableAction.dispose();
 		
 		viewDDLAction.dispose();
 		tableDataEditorAction.dispose();
