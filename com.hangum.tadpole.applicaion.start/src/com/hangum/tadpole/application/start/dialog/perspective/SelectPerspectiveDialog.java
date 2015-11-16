@@ -47,7 +47,7 @@ public class SelectPerspectiveDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.SelectPerspectiveDialog_0);
+		newShell.setText(Messages.get().SelectPerspectiveDialog_0);
 	}
 
 	@Override
@@ -67,22 +67,22 @@ public class SelectPerspectiveDialog extends Dialog {
 
 		Label lblYouDoNot = new Label(container, SWT.WRAP);
 		lblYouDoNot.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true, 1, 1));
-		lblYouDoNot.setText(Messages.SelectPerspectiveDialog_3
+		lblYouDoNot.setText(Messages.get().SelectPerspectiveDialog_3
 				+ "\n\n> Preference >> Perspective"); //$NON-NLS-1$
 
 		Group grpSelectPerspective = new Group(container, SWT.NONE);
 		grpSelectPerspective.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 2, 1));
-		grpSelectPerspective.setText(Messages.SelectPerspectiveDialog_5);
+		grpSelectPerspective.setText(Messages.get().SelectPerspectiveDialog_5);
 		grpSelectPerspective.setLayout(new GridLayout(1, false));
 
 		btnDefault = new Button(grpSelectPerspective, SWT.RADIO);
-		btnDefault.setText(Messages.SelectPerspectiveDialog_6);
+		btnDefault.setText(Messages.get().SelectPerspectiveDialog_6);
 
 		btnManager = new Button(grpSelectPerspective, SWT.RADIO);
-		btnManager.setText(Messages.SelectPerspectiveDialog_7);
+		btnManager.setText(Messages.get().SelectPerspectiveDialog_7);
 
 		btnAdmin = new Button(grpSelectPerspective, SWT.RADIO);
-		btnAdmin.setText(Messages.SelectPerspectiveDialog_8);
+		btnAdmin.setText(Messages.get().SelectPerspectiveDialog_8);
 
 		btnDefault.setSelection(true);
 

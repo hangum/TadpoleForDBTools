@@ -63,55 +63,55 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setText(Messages.DefaultPreferencePage_2);
+		lblNewLabel.setText(Messages.get().DefaultPreferencePage_2);
 		
 		textSessionTime = new Text(container, SWT.BORDER);
 		textSessionTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblExportDilimit = new Label(container, SWT.NONE);
-		lblExportDilimit.setText(Messages.GeneralPreferencePage_lblExportDilimit_text);
+		lblExportDilimit.setText(Messages.get().GeneralPreferencePage_lblExportDilimit_text);
 		
 		textExportDelimit = new Text(container, SWT.BORDER);
-		textExportDelimit.setText(Messages.GeneralPreferencePage_text_text);
+		textExportDelimit.setText(Messages.get().GeneralPreferencePage_text_text);
 		textExportDelimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblHomePage = new Label(container, SWT.NONE);
-		lblHomePage.setText(Messages.GeneralPreferencePage_lblHomePage_text);
+		lblHomePage.setText(Messages.get().GeneralPreferencePage_lblHomePage_text);
 		
 		textHomePage = new Text(container, SWT.BORDER);
 		textHomePage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(container, SWT.NONE);
 		
 		btnCheckButtonHomepage = new Button(container, SWT.CHECK);
-		btnCheckButtonHomepage.setText(Messages.GeneralPreferencePage_btnCheckButton_text);
+		btnCheckButtonHomepage.setText(Messages.get().GeneralPreferencePage_btnCheckButton_text);
 		btnCheckButtonHomepage.setSelection(true);
 		
 		grpEmailAccount = new Group(container, SWT.NONE);
 		grpEmailAccount.setVisible(false);
 		grpEmailAccount.setLayout(new GridLayout(2, false));
 		grpEmailAccount.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		grpEmailAccount.setText(Messages.GeneralPreferencePage_grpEmailAccount_text);
+		grpEmailAccount.setText(Messages.get().GeneralPreferencePage_grpEmailAccount_text);
 		
 		Label lblSmtpServer = new Label(grpEmailAccount, SWT.NONE);
-		lblSmtpServer.setText(Messages.GeneralPreferencePage_lblSmtpServer_text);
+		lblSmtpServer.setText(Messages.get().GeneralPreferencePage_lblSmtpServer_text);
 		
 		textSMTP = new Text(grpEmailAccount, SWT.BORDER);
 		textSMTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPort = new Label(grpEmailAccount, SWT.NONE);
-		lblPort.setText(Messages.GeneralPreferencePage_lblPort_text);
+		lblPort.setText(Messages.get().GeneralPreferencePage_lblPort_text);
 		
 		textPort = new Text(grpEmailAccount, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblAccount = new Label(grpEmailAccount, SWT.NONE);
-		lblAccount.setText(Messages.GeneralPreferencePage_lblAccount_text);
+		lblAccount.setText(Messages.get().GeneralPreferencePage_lblAccount_text);
 		
 		textEmail = new Text(grpEmailAccount, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpEmailAccount, SWT.NONE);
-		lblPassword.setText(Messages.GeneralPreferencePage_lblPassword_text);
+		lblPassword.setText(Messages.get().GeneralPreferencePage_lblPassword_text);
 		
 		textPasswd = new Text(grpEmailAccount, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -142,13 +142,13 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		
 		if(!NumberUtils.isNumber(txtSessionTime)) {
 			textSessionTime.setFocus();
-			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_2 + Messages.GeneralPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtPort)) {
 			textPort.setFocus();
-			MessageDialog.openError(getShell(), "Confirm", "Port is " + Messages.GeneralPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", "Port is " + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -167,7 +167,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		} catch(Exception e) {
 			logger.error("GeneralPreference saveing", e);
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

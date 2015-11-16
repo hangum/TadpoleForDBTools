@@ -174,7 +174,7 @@ public class MainEditor extends EditorExtension {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText(Messages.MainEditor_37);
+		tltmConnectURL.setToolTipText(Messages.get().MainEditor_37);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setText(userDB.getDisplay_name());
 		
@@ -190,12 +190,12 @@ public class MainEditor extends EditorExtension {
 		
 		// fileupload 
 		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
-		tltmOpen.setToolTipText(Messages.MainEditor_35);
+		tltmOpen.setToolTipText(Messages.get().MainEditor_35);
 		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/file-open.png")); //$NON-NLS-1$
 		tltmOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.MainEditor_36);
+				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().MainEditor_36);
 				if(Dialog.OK == dialog.open()) {
 					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
 					appendText(dialog.getStrTxtFile());
@@ -205,7 +205,7 @@ public class MainEditor extends EditorExtension {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, STR_SHORT_CUT_PREFIX));
+		tltmExecute.setToolTipText(String.format(Messages.get().MainEditor_tltmExecute_toolTipText_1, STR_SHORT_CUT_PREFIX));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/play.png")); //$NON-NLS-1$
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -225,7 +225,7 @@ public class MainEditor extends EditorExtension {
 		
 		if(SQLUtil.isSELECTEditor(dbAction)) {
 			ToolItem tltmExecuteAll = new ToolItem(toolBar, SWT.NONE);
-			tltmExecuteAll.setToolTipText(Messages.MainEditor_tltmExecuteAll_text);
+			tltmExecuteAll.setToolTipText(Messages.get().MainEditor_tltmExecuteAll_text);
 			tltmExecuteAll.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/sql-query-all.png")); //$NON-NLS-1$
 			tltmExecuteAll.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -251,7 +251,7 @@ public class MainEditor extends EditorExtension {
 				
 			}
 		});
-		tltmExplainPlanctrl.setToolTipText(String.format(Messages.MainEditor_3, STR_SHORT_CUT_PREFIX));
+		tltmExplainPlanctrl.setToolTipText(String.format(Messages.get().MainEditor_3, STR_SHORT_CUT_PREFIX));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
@@ -268,7 +268,7 @@ public class MainEditor extends EditorExtension {
 				}
 			}
 		});
-		tltmSort.setToolTipText(String.format(Messages.MainEditor_4, STR_SHORT_CUT_PREFIX));
+		tltmSort.setToolTipText(String.format(Messages.get().MainEditor_4, STR_SHORT_CUT_PREFIX));
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmSQLToApplication = new ToolItem(toolBar, SWT.NONE);
@@ -283,7 +283,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-	    tltmSQLToApplication.setToolTipText(Messages.MainEditor_40);
+	    tltmSQLToApplication.setToolTipText(Messages.get().MainEditor_40);
 	    new ToolItem(toolBar, SWT.SEPARATOR);
 		
 //		ToolItem tltmDownload = new ToolItem(toolBar, SWT.NONE);
@@ -291,7 +291,7 @@ public class MainEditor extends EditorExtension {
 //		tltmDownload.addSelectionListener(new SelectionAdapter() {
 //			@Override
 //			public void widgetSelected(SelectionEvent e) {
-//				if(!MessageDialog.openConfirm(null, Messages.MainEditor_38, Messages.MainEditor_39)) return;
+//				if(!MessageDialog.openConfirm(null, Messages.get().MainEditor_38, Messages.get().MainEditor_39)) return;
 //		
 //				try {
 //					String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
@@ -301,12 +301,12 @@ public class MainEditor extends EditorExtension {
 //				}
 //			}
 //		});
-//		tltmDownload.setToolTipText(Messages.MainEditor_42);
+//		tltmDownload.setToolTipText(Messages.get().MainEditor_42);
 //		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tiAutoCommit = new ToolItem(toolBar, SWT.CHECK);
 		tiAutoCommit.setSelection(false);
-		tiAutoCommit.setText(Messages.MainEditor_41);
+		tiAutoCommit.setText(Messages.get().MainEditor_41);
 		tiAutoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -316,7 +316,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText(Messages.MainEditor_44);
+		tiAutoCommitCommit.setText(Messages.get().MainEditor_44);
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -328,7 +328,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText(Messages.MainEditor_48);
+		tiAutoCommitRollback.setText(Messages.get().MainEditor_48);
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -353,13 +353,13 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-		tltmAPI.setToolTipText(Messages.MainEditor_51);
+		tltmAPI.setToolTipText(Messages.get().MainEditor_51);
 		
 		// semicolon
 		new ToolItem(toolBar, SWT.SEPARATOR);
 //		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
 //		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
-//		tltmSemicolon.setToolTipText(Messages.MainEditor_49);
+//		tltmSemicolon.setToolTipText(Messages.get().MainEditor_49);
 		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
@@ -372,7 +372,7 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, STR_SHORT_CUT_PREFIX));
+		tltmHelp.setToolTipText(String.format(Messages.get().MainEditor_27, STR_SHORT_CUT_PREFIX));
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
@@ -556,7 +556,7 @@ public class MainEditor extends EditorExtension {
 			
 			if(!isFirst) {
 				if(TadpoleSQLTransactionManager.isInstance(getUserEMail(), userDB)) {
-					if(MessageDialog.openConfirm(null, Messages.MainEditor_30, Messages.MainEditor_47)) {
+					if(MessageDialog.openConfirm(null, Messages.get().MainEditor_30, Messages.get().MainEditor_47)) {
 						TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
 					} else {
 						TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
@@ -696,7 +696,7 @@ public class MainEditor extends EditorExtension {
 		} catch (Exception e) {
 			logger.error("update file", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}
@@ -726,7 +726,7 @@ public class MainEditor extends EditorExtension {
 			logger.error("save data", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}

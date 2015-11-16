@@ -37,8 +37,8 @@ public class SystemAdminTermsPage extends WizardPage {
 	 */
 	public SystemAdminTermsPage() {
 		super("SystemInitializeWizard"); //$NON-NLS-1$
-		setTitle(Messages.SystemAdminTermsPage_0); //$NON-NLS-1$
-		setDescription(Messages.SystemAdminTermsPage_0); //$NON-NLS-1$
+		setTitle(Messages.get().SystemAdminTermsPage_0); //$NON-NLS-1$
+		setDescription(Messages.get().SystemAdminTermsPage_0); //$NON-NLS-1$
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class SystemAdminTermsPage extends WizardPage {
 		Text textTerms = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textTerms.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		textTerms.setText(Messages.SystemAdminTermsPage_1);
+		textTerms.setText(Messages.get().SystemAdminTermsPage_1);
 		
 		btnAggree = new Button(container, SWT.CHECK);
 		btnAggree.addSelectionListener(new SelectionAdapter() {
@@ -63,7 +63,7 @@ public class SystemAdminTermsPage extends WizardPage {
 				getWizard().getContainer().updateButtons();
 			}
 		});
-		btnAggree.setText(Messages.SystemAdminTermsPage_3); //$NON-NLS-1$
+		btnAggree.setText(Messages.get().SystemAdminTermsPage_3); //$NON-NLS-1$
 		
 		setPageComplete(false);
 		

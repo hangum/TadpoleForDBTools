@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.initialize.wizard;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -51,8 +52,8 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 	 */
 	public SystemAdminWizardDefaultUserPage() {
 		super("SystemInitializeWizard"); //$NON-NLS-1$
-		setTitle(Messages.SystemAdminWizardPage_1);
-		setDescription(Messages.SystemAdminWizardPage_2);
+		setTitle(Messages.get().SystemAdminWizardPage_1);
+		setDescription(Messages.get().SystemAdminWizardPage_2);
 	}
 
 	/**
@@ -66,14 +67,14 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		Group grpAdministratorUserInformation = new Group(container, SWT.NONE);
 		grpAdministratorUserInformation.setLayout(new GridLayout(2, false));
 		grpAdministratorUserInformation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpAdministratorUserInformation.setText(Messages.SystemAdminWizardPage_3);
+		grpAdministratorUserInformation.setText(Messages.get().SystemAdminWizardPage_3);
 		
 		Label lblEmail = new Label(grpAdministratorUserInformation, SWT.NONE);
 		lblEmail.setAlignment(SWT.RIGHT);
 		GridData gd_lblEmail = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_lblEmail.widthHint = 120;
 		lblEmail.setLayoutData(gd_lblEmail);
-		lblEmail.setText(Messages.SystemAdminWizardPage_4);
+		lblEmail.setText(Messages.get().SystemAdminWizardPage_4);
 		
 		textEmail = new Text(grpAdministratorUserInformation, SWT.BORDER);
 		textEmail.addKeyListener(new KeyAdapter() {
@@ -82,7 +83,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 				if(e.keyCode == SWT.TAB) {
 					String strEmail =  textEmail.getText() + e.character;
 					if(!ValidChecker.isValidEmailAddress(strEmail)) {
-						errorSet(textEmail, Messages.SystemAdminWizardPage_35);
+						errorSet(textEmail, Messages.get().SystemAdminWizardPage_35);
 					} else {
 						setErrorMessage(null);
 					}
@@ -95,7 +96,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		Label lblPasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
 		lblPasswd.setAlignment(SWT.RIGHT);
 		lblPasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPasswd.setText(Messages.SystemAdminWizardPage_5);
+		lblPasswd.setText(Messages.get().SystemAdminWizardPage_5);
 		
 		textPasswd = new Text(grpAdministratorUserInformation, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.addKeyListener(new KeyAdapter() {
@@ -115,7 +116,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		Label lblRePasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
 		lblRePasswd.setAlignment(SWT.RIGHT);
 		lblRePasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblRePasswd.setText(Messages.SystemAdminWizardPage_6);
+		lblRePasswd.setText(Messages.get().SystemAdminWizardPage_6);
 		
 		textRePasswd = new Text(grpAdministratorUserInformation, SWT.BORDER | SWT.PASSWORD);
 		textRePasswd.addKeyListener(new KeyAdapter() {
@@ -146,18 +147,28 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 	 * @param strRePass
 	 */
 	private void validateValue(String strEmail, String strPass, String strRePass) {
+		strEmail = StringUtils.trimToEmpty(strEmail);
+		strPass = StringUtils.trimToEmpty(strPass);
+		strRePass = StringUtils.trimToEmpty(strRePass);
+		
+		strPass = StringUtils.removeEnd(strPass, "\t");
+		strPass = StringUtils.removeEnd(strPass, "\n");
+		
+		strRePass = StringUtils.removeEnd(strRePass, "\t");
+		strRePass = StringUtils.removeEnd(strRePass, "\n");
+		
 		isComplete = false;
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			errorSet(textEmail, Messages.SystemAdminWizardPage_35);
+			errorSet(textEmail, Messages.get().SystemAdminWizardPage_35);
 			return;
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
-			errorSet(textEmail, Messages.SystemAdminWizardPage_48);
+			errorSet(textEmail, Messages.get().SystemAdminWizardPage_48);
 			return;
 		} else if(!Utils.isPassword(strPass)) { //$NON-NLS-1$
-			errorSet(textPasswd, Messages.SystemAdminWizardPage_37);
+			errorSet(textPasswd, Messages.get().SystemAdminWizardPage_37);
 			return;
 		} else if(!strPass.equals(strRePass)) { //$NON-NLS-1$
-			errorSet(textRePasswd, Messages.SystemAdminWizardPage_39);
+			errorSet(textRePasswd, Messages.get().SystemAdminWizardPage_39);
 			return;
 		}
 		

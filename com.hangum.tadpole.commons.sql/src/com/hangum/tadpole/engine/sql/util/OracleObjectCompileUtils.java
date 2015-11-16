@@ -142,7 +142,7 @@ public class OracleObjectCompileUtils {
 	 * @return
 	 */
 	private static String prettyMsg(String line, String position, String msg) {
-		return String.format(Messages.OracleObjectCompileUtils_0, line, position, msg);
+		return String.format(Messages.get().OracleObjectCompileUtils_0, line, position, msg);
 	}
 	
 }

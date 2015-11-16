@@ -116,7 +116,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmPackage = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmPackage.setText(Messages.TadpolePackageComposite_0);
+		tbtmPackage.setText(Messages.get().TadpolePackageComposite_0);
 		tbtmPackage.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name());
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
@@ -218,14 +218,14 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	}
 
 	private void createMenu() {
-		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_3);
-		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_4);
-		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_5);
+		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_3);
+		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_4);
+		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_5);
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_6);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_6);
 
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_7);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.TadpolePackageComposite_8);
+		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_7);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_8);
 
 
 		// menu
@@ -297,7 +297,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * package procedure function list
 	 */
 	protected void createProcedureFunctionListColumne(final TableViewer tv) {
-		String[] name = {Messages.TadpolePackageComposite_1, Messages.TadpolePackageComposite_2};
+		String[] name = {Messages.get().TadpolePackageComposite_1, Messages.get().TadpolePackageComposite_2};
 		int[] size = {120, 300};
 
 		for (int i=0; i<name.length; i++) {
@@ -380,7 +380,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showPackage refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_71, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
 		}
 	}
 

@@ -39,7 +39,7 @@ import com.hangum.tadpole.rdb.core.Messages;
  */
 public class TableInformationEditor extends EditorPart {
 	
-	public static final String ID = Messages.TableInformationEditor_0;
+	public static final String ID = "com.hangum.tadpole.rdb.core.editors.table.edit";
 	
 	private TableDAO tableDao;
 	private UserDBDAO userDB;
@@ -70,7 +70,7 @@ public class TableInformationEditor extends EditorPart {
 		
 		DBTableEditorInput qei = (DBTableEditorInput)input;
 		userDB = qei.getUserDB();
-		setPartName(qei.getName() + Messages.TableInformationEditor_1);
+		setPartName(qei.getName() + Messages.get().TableInformationEditor_1);
 		
 		tableDao = qei.getTableDAO();
 		columnList = qei.getShowTableColumns();

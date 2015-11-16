@@ -161,16 +161,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
      * Comment at 2.1 RC3 has error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260) 
      */
     protected void fillMenuBar(IMenuManager menuBar) {
-    	MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_0, IWorkbenchActionConstants.M_FILE);
-    	MenuManager manageMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_1, IWorkbenchActionConstants.M_PROJECT);
+    	MenuManager fileMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_0, IWorkbenchActionConstants.M_FILE);
+    	MenuManager manageMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_1, IWorkbenchActionConstants.M_PROJECT);
     	MenuManager adminMenu = null;
     	
     	boolean isAdmin = PermissionChecker.isAdmin(SessionManager.getRepresentRole());
     	if(isAdmin) {
-    		adminMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_2, IWorkbenchActionConstants.MENU_PREFIX + Messages.ApplicationActionBarAdvisor_3);
+    		adminMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_2, IWorkbenchActionConstants.MENU_PREFIX + Messages.get().ApplicationActionBarAdvisor_3);
         }
-    	MenuManager preferenceMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
-		MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_5, IWorkbenchActionConstants.M_HELP);
+    	MenuManager preferenceMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
+		MenuManager helpMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_5, IWorkbenchActionConstants.M_HELP);
 		
 		menuBar.add(fileMenu);
 		// Add a group marker indicating where action set menus will appear.

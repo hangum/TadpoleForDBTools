@@ -106,7 +106,7 @@ public class SQLToDBImportDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDB.getDisplay_name() + Messages.SQLToDBImportDialog_1);
+		newShell.setText(userDB.getDisplay_name() + Messages.get().SQLToDBImportDialog_1);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -135,7 +135,7 @@ public class SQLToDBImportDialog extends Dialog {
 		
 		Label lblFileName = new Label(compositeHead, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFileName.setText(Messages.CsvToRDBImportDialog_1);
+		lblFileName.setText(Messages.get().CsvToRDBImportDialog_1);
 		
 		fileNameLabel = new Text(compositeHead, SWT.BORDER);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -146,11 +146,11 @@ public class SQLToDBImportDialog extends Dialog {
 		/* fileUpload 주석 후 디자인을 위한 임시 컨트롤 */
 		/*
 		Label lblDumy = new Label(compositeHead, SWT.NONE);
-		lblDumy.setText(Messages.CsvToRDBImportDialog_2);
+		lblDumy.setText(Messages.get().CsvToRDBImportDialog_2);
 		lblDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		*/		
 		fileUpload = new FileUpload(compositeHead, SWT.NONE);
-		fileUpload.setText(Messages.CsvToRDBImportDialog_2);
+		fileUpload.setText(Messages.get().CsvToRDBImportDialog_2);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -158,7 +158,7 @@ public class SQLToDBImportDialog extends Dialog {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
-				if(!MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_5)) return;
+				if(!MessageDialog.openConfirm(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_5)) return;
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();
@@ -168,7 +168,7 @@ public class SQLToDBImportDialog extends Dialog {
 		
 		Label lblSeprator = new Label(compositeHead, SWT.NONE);
 		lblSeprator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSeprator.setText(Messages.SQLToDBImportDialog_lblSeprator_text);
+		lblSeprator.setText(Messages.get().SQLToDBImportDialog_lblSeprator_text);
 		
 		textSeprator = new Text(compositeHead, SWT.BORDER);
 		textSeprator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -176,23 +176,23 @@ public class SQLToDBImportDialog extends Dialog {
 		
 		Label lblBatchSize = new Label(compositeHead, SWT.NONE);
 		lblBatchSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblBatchSize.setText(Messages.SQLToDBImportDialog_0);
+		lblBatchSize.setText(Messages.get().SQLToDBImportDialog_0);
 		
 		textBatchSize = new Text(compositeHead, SWT.BORDER | SWT.RIGHT);		
 		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
-			textBatchSize.setText(Messages.SQLToDBImportDialog_2);
+			textBatchSize.setText(Messages.get().SQLToDBImportDialog_2);
 		}else{
 			textBatchSize.setEditable(true);
-			textBatchSize.setText(Messages.SQLToDBImportDialog_BatchSize);
+			textBatchSize.setText(Messages.get().SQLToDBImportDialog_BatchSize);
 		}
 		textBatchSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblException = new Label(compositeHead, SWT.NONE);
 		lblException.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblException.setText(Messages.SQLToDBImportDialog_Exception);
+		lblException.setText(Messages.get().SQLToDBImportDialog_Exception);
 		
 		Composite composite = new Composite(compositeHead, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -202,14 +202,14 @@ public class SQLToDBImportDialog extends Dialog {
 		GridData gd_btnIgnore = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnIgnore.widthHint = 98;
 		btnIgnore.setLayoutData(gd_btnIgnore);
-		btnIgnore.setText(Messages.SQLToDBImportDialog_Ignore);
+		btnIgnore.setText(Messages.get().SQLToDBImportDialog_Ignore);
 		
 		btnStop = new Button(composite, SWT.RADIO);
 		btnStop.setSelection(true);
 		GridData gd_btnStop = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnStop.widthHint = 92;
 		btnStop.setLayoutData(gd_btnStop);
-		btnStop.setText(Messages.SQLToDBImportDialog_Stop);
+		btnStop.setText(Messages.get().SQLToDBImportDialog_Stop);
 		new Label(compositeHead, SWT.NONE);
 		new Label(compositeHead, SWT.NONE);
 		
@@ -230,11 +230,11 @@ public class SQLToDBImportDialog extends Dialog {
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.CsvToRDBImportDialog_21);
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_21);
 			return ;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_UploadQuestion)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_UploadQuestion)) return;
 		bufferBatchResult = new StringBuffer();
 		
 		try{
@@ -261,14 +261,14 @@ public class SQLToDBImportDialog extends Dialog {
 			ret = runSQLExecuteBatch(Arrays.asList(strArrySQL));
 			
 			if (ret == 0 ) 
-				MessageDialog.openInformation(null, "Confirm", Messages.SQLToDBImportDialog_StoreData); //$NON-NLS-1$
+				MessageDialog.openInformation(null, "Confirm", Messages.get().SQLToDBImportDialog_StoreData); //$NON-NLS-1$
 		} catch (IOException e) {
-			logger.error(Messages.SQLToDBImportDialog_ReadError, e);
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_LoadException + e.getMessage());
+			logger.error(Messages.get().SQLToDBImportDialog_ReadError, e);
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
 			
 		} catch (Exception e) {
-			logger.error(Messages.SQLToDBImportDialog_ImportException, e);
-			MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_LoadException + e.getMessage());
+			logger.error(Messages.get().SQLToDBImportDialog_ImportException, e);
+			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
 		} finally {
 			if(bomInputStream != null) bomInputStream.close();
 		}
@@ -277,7 +277,7 @@ public class SQLToDBImportDialog extends Dialog {
 	private void saveLog(){
 		try {
 			if(bufferBatchResult == null || "".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, Messages.SQLToDBImportDialog_LogEmpty);
+				MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_LogEmpty);
 				return;
 			}
 			String filename = PublicTadpoleDefine.TEMP_DIR + userDB.getDisplay_name() + "_SQLImportResult.log"; //$NON-NLS-1$
@@ -372,7 +372,7 @@ public class SQLToDBImportDialog extends Dialog {
 			conn.setAutoCommit(true);
 			
 			if (result < 0 && !"".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.CsvToRDBImportDialog_4, bufferBatchResult.toString());
+				MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, bufferBatchResult.toString());
 			}
 		} catch (SQLException e) {
 			logger.error("Execute Batch error", e); //$NON-NLS-1$
@@ -465,19 +465,19 @@ public class SQLToDBImportDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button button1 = createButton(parent, ID_BTN_EXPORT, Messages.SQLToDBImportDialog_SaveLog, false);
+		Button button1 = createButton(parent, ID_BTN_EXPORT, Messages.get().SQLToDBImportDialog_SaveLog, false);
 		button1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		Button button2 = createButton(parent, ID_BTN_INSERT, Messages.SQLToDBImportDialog_Insert, false);
+		Button button2 = createButton(parent, ID_BTN_INSERT, Messages.get().SQLToDBImportDialog_Insert, false);
 		button2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.SQLToDBImportDialog_Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SQLToDBImportDialog_Close, false);
 	}
 
 	/**

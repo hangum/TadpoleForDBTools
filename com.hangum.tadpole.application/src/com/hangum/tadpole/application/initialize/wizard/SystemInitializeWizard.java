@@ -38,7 +38,7 @@ public class SystemInitializeWizard extends Wizard {
 	protected SystemAdminWizardDefaultUserPage addUserPage;
 
 	public SystemInitializeWizard() {
-		setWindowTitle(Messages.SystemAdminWizardPage_3);
+		setWindowTitle(Messages.get().SystemAdminWizardPage_3);
 	}
 
 	@Override

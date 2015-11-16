@@ -79,7 +79,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 			logger.error("Generate SQL Statement Error", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLUpdateAction_13, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLUpdateAction_13, errStatus); //$NON-NLS-1$
 		}
 	}
 

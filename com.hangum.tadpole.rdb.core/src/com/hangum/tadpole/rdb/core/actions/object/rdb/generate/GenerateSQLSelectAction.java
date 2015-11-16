@@ -41,7 +41,7 @@ public class GenerateSQLSelectAction extends AbstractObjectSelectAction {
 		super(window, actionType);
 	
 		setId(ID + actionType.toString());
-		setText(Messages.GenerateSQLSelectAction_1 + title);
+		setText(Messages.get().GenerateSQLSelectAction_1 + title);
 		
 		window.getSelectionService().addSelectionListener(this);
 	}

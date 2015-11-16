@@ -57,11 +57,11 @@ public class DeleteDBAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
-			MessageDialog.openError(null, Messages.DeleteDBAction_0, Messages.DeleteDBAction_2);
+			MessageDialog.openError(null, Messages.get().DeleteDBAction_0, Messages.get().DeleteDBAction_2);
 			return;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.DeleteDBAction_0, Messages.DeleteDBAction_3 + userDB.getDisplay_name() + "] " + Messages.DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
+		if(!MessageDialog.openConfirm(null, Messages.get().DeleteDBAction_0, Messages.get().DeleteDBAction_3 + userDB.getDisplay_name() + "] " + Messages.get().DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
 		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		

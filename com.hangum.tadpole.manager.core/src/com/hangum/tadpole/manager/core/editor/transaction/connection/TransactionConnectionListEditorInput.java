@@ -47,7 +47,7 @@ public class TransactionConnectionListEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.TransactionConnectionListEditorInput_0;
+		return Messages.get().TransactionConnectionListEditorInput_0;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class TransactionConnectionListEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.TransactionConnectionListEditorInput_1;
+		return Messages.get().TransactionConnectionListEditorInput_1;
 	}
 
 }

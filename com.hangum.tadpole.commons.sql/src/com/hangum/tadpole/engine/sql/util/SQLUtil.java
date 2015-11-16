@@ -441,11 +441,43 @@ public class SQLUtil {
 			}
 			
 		} catch (Throwable e) {
-			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
+			logger.error(String.format("sql parse exception. [ %s ]", sql));
 			queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		}
 		
 		return queryType;
+	}
+	
+//	/**
+//	 * <pre>
+//	 * 이런식의 쿼리가 넘어 올때 "ALTER TABLE %s COMMENT %s", dao.getSysName(), dao.getComment()"가 입력 값일 경
+//	 * ALTER TABLE 'dao.getSysName()' COMMENT 'dao.getComment()'
+//	 * 로 바꾸어줍니다.
+//	 * </pre>
+//	 * 
+//	 * @param strings
+//	 * @return
+//	 */
+//	public static String makeQuery(String ...strings) {
+//		String sql = strings[0];
+//		
+//		String[] strParam = new String[strings.length-1];
+//		for(int i=1; i<strings.length; i++) {
+//			strParam[i-1] = makeQuote(strings[i]);
+//		}
+//		
+//		return String.format(sql, strParam);
+//	}
+	/**
+	 * make quote mark
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String makeQuote(String value) {
+		value = StringUtils.replace(value, "'", "''");
+		
+		return "'" + value + "'";
 	}
 	
 }

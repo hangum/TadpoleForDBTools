@@ -72,7 +72,7 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 			dto.setPasswd(strPwd);
 			
 			if("".equals(strHost) | "".equals(strPort) | "".equals(strEmail) | "".equals(strPwd)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				throw new Exception(Messages.GetAdminPreference_5);
+				throw new Exception(Messages.get().GetAdminPreference_5);
 			}
 			
 			sStore.setAttribute("smtpinfo", dto); //$NON-NLS-1$

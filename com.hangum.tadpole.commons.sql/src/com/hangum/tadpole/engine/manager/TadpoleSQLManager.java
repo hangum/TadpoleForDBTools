@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.SQLConstants;
@@ -82,11 +83,11 @@ public class TadpoleSQLManager {
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
 
-					DriverManager.setLoginTimeout(10);
-					
-					// oracle 일 경우 로케일을 설정 
+					// oracle 일 경우 설정 
 					try { 
 						if(DBDefine.getDBDefine(dbDao) == DBDefine.ORACLE_DEFAULT) {
+							DriverManager.setLoginTimeout(10);
+							
 							if(dbDao.getLocale() != null && !"".equals(dbDao.getLocale())) {
 								Locale.setDefault(new Locale(dbDao.getLocale()));
 							}
@@ -94,7 +95,6 @@ public class TadpoleSQLManager {
 					} catch(Exception e) {
 						logger.error("set locale error", e);
 					}
-					// oracle 일 경우 locale 설정 
 					
 					// connection pool 을 가져옵니다.
 					sqlMapClient = SQLMap.getInstance(dbDao);
@@ -145,15 +145,24 @@ public class TadpoleSQLManager {
 	 * 각 DB의 metadata를 넘겨줍니다.
 	 * 
 	 * @param searchKey
-	 * @param dbDao
+	 * @param userDB
 	 * @param dbMetadata
 	 * @return
 	 */
-	public static void setMetaData(String searchKey, final UserDBDAO dbDao, DatabaseMetaData tmpDBMetadata) throws Exception {
+	public static void setMetaData(String searchKey, final UserDBDAO userDB, DatabaseMetaData tmpDBMetadata) throws Exception {
+		// 엔진디비는 메타데이터를 저장하지 않는다.
+		if(dbManager.size() == 1) return;
+		
 		TadpoleMetaData tmd = null;
 		
+		// make assist data
+		MakeContentAssistUtil assistUtil = new MakeContentAssistUtil();
+		userDB.setTableListSeparator(assistUtil.getAssistTableList(userDB));
+		userDB.setViewListSeparator(assistUtil.getAssistViewList(userDB));
+		userDB.setFunctionLisstSeparator(assistUtil.getFunctionList(userDB));
+		
 		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다. 
-		switch ( dbDao.getDBDefine() ) {
+		switch ( userDB.getDBDefine() ) {
 			case ORACLE_DEFAULT:		
 				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
 				break;
@@ -173,16 +182,16 @@ public class TadpoleSQLManager {
 		}
 
 		// set keyword
-		if(dbDao.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
-		} else if(dbDao.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbDao.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbDao.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + dbMetadata;
 			tmd.setKeywords(strFullKeywords);
-		} else if(dbDao.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method
-		} else if(dbDao.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				dbDao.getDBDefine() == DBDefine.HIVE2_DEFAULT
+		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT
 		) {
 			// not support this methods
 			tmd.setKeywords("");
@@ -260,7 +269,10 @@ public class TadpoleSQLManager {
 		synchronized (dbManager) {
 			String key = getKey(dbInfo);
 			SqlMapClient sqlMapClient = dbManager.remove(key);
+			TadpoleMetaData metaData = dbMetadata.remove(key);
+			
 			sqlMapClient = null;
+			metaData = null;
 		}
 	}
 	

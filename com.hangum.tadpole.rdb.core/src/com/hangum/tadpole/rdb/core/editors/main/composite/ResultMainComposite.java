@@ -101,7 +101,7 @@ public class ResultMainComposite extends Composite {
 		compositeResultSet.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmResult.setText(Messages.MainEditor_7);
+		tbtmResult.setText(Messages.get().MainEditor_7);
 		tbtmResult.setControl(compositeResultSet);
 		
 		///////////////////// tab sql plan //////////////////////////		
@@ -110,7 +110,7 @@ public class ResultMainComposite extends Composite {
 		compositeQueryPlan.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmQueryPlan = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmQueryPlan.setText(Messages.ResultMainComposite_4);
+		tbtmQueryPlan.setText(Messages.get().ResultMainComposite_4);
 		tbtmQueryPlan.setControl(compositeQueryPlan);
 
 		///////////////////// tab query history //////////////////////////
@@ -119,7 +119,7 @@ public class ResultMainComposite extends Composite {
 		compositeQueryHistory.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmNewItem = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmNewItem.setText(Messages.MainEditor_10);
+		tbtmNewItem.setText(Messages.get().MainEditor_10);
 		tbtmNewItem.setControl(compositeQueryHistory);
 		/////////////////// tab query history ///////////////////////
 		
@@ -128,7 +128,7 @@ public class ResultMainComposite extends Composite {
 		compositeMessage.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmMessage = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmMessage.setText(Messages.MainEditor_0);
+		tbtmMessage.setText(Messages.get().MainEditor_0);
 		tbtmMessage.setControl(compositeMessage);
 		///////////////////// tab Message //////////////////////////		
 	    

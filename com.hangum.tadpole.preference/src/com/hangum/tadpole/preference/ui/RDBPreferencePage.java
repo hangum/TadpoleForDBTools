@@ -73,7 +73,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblNumberColumnAdd = new Label(container, SWT.NONE);
-		lblNumberColumnAdd.setText(Messages.RDBPreferencePage_lblNumberColumnAdd_text);
+		lblNumberColumnAdd.setText(Messages.get().RDBPreferencePage_lblNumberColumnAdd_text);
 		
 		comboRDBNumberComma = new Combo(container, SWT.READ_ONLY);
 		comboRDBNumberComma.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -82,19 +82,19 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		comboRDBNumberComma.select(0);
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setText(Messages.DefaultPreferencePage_0);
+		lblNewLabel.setText(Messages.get().DefaultPreferencePage_0);
 		
 		textSelectLimit = new Text(container, SWT.BORDER);
 		textSelectLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setText(Messages.DefaultPreferencePage_other_labelText_1);
+		lblNewLabel_1.setText(Messages.get().DefaultPreferencePage_other_labelText_1);
 		
 		textResultPage = new Text(container, SWT.BORDER);		
 		textResultPage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblResultViewFont = new Label(container, SWT.NONE);
-		lblResultViewFont.setText(Messages.RDBPreferencePage_lblResultViewFont_text);
+		lblResultViewFont.setText(Messages.get().RDBPreferencePage_lblResultViewFont_text);
 		
 		lblUserFont = new Label(container, SWT.NONE);
 		lblUserFont.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -108,27 +108,27 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 				setFontData();
 			}
 		});
-		btnNewButton.setText(Messages.RDBPreferencePage_btnNewButton_text);
+		btnNewButton.setText(Messages.get().RDBPreferencePage_btnNewButton_text);
 		
 		Label lblQueryTimeout = new Label(container, SWT.NONE);
-		lblQueryTimeout.setText(Messages.RDBPreferencePage_lblQueryTimeout_text);
+		lblQueryTimeout.setText(Messages.get().RDBPreferencePage_lblQueryTimeout_text);
 		
 		textQueryTimeout = new Text(container, SWT.BORDER);
 		textQueryTimeout.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCommitCount = new Label(container, SWT.NONE);
-		lblCommitCount.setText(Messages.RDBPreferencePage_lblCommitCount_text);
+		lblCommitCount.setText(Messages.get().RDBPreferencePage_lblCommitCount_text);
 		
 		textCommitCount = new Text(container, SWT.BORDER);
-		textCommitCount.setText(Messages.RDBPreferencePage_text_text);
+		textCommitCount.setText(Messages.get().RDBPreferencePage_text_text);
 		textCommitCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCharacterShownIn = new Label(container, SWT.NONE);
 		lblCharacterShownIn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCharacterShownIn.setText(Messages.RDBPreferencePage_lblCharacterShownIn_text);
+		lblCharacterShownIn.setText(Messages.get().RDBPreferencePage_lblCharacterShownIn_text);
 		
 		textShowInTheColumn = new Text(container, SWT.BORDER);
-		textShowInTheColumn.setText(Messages.RDBPreferencePage_text_text_1);
+		textShowInTheColumn.setText(Messages.get().RDBPreferencePage_text_text_1);
 		textShowInTheColumn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -136,7 +136,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		label.setText(""); //$NON-NLS-1$
 		
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
-		lblNewLabel_2.setText(Messages.DefaultPreferencePage_other_labelText);
+		lblNewLabel_2.setText(Messages.get().DefaultPreferencePage_other_labelText);
 		
 		textOraclePlan = new Text(container, SWT.BORDER);
 		textOraclePlan.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -150,7 +150,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 				planDialog.open();
 			}
 		});
-		btnCreatePlanTable.setText(Messages.RDBPreferencePage_btnCreatePlanTable_text);
+		btnCreatePlanTable.setText(Messages.get().RDBPreferencePage_btnCreatePlanTable_text);
 		
 		initDefaultValue();
 		
@@ -183,36 +183,36 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		String txtShownInTheColumn = textShowInTheColumn.getText();
 		
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_0 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textSelectLimit.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtResultPage)) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.DefaultPreferencePage_other_labelText_1 + Messages.RDBPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textResultPage.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtQueryTimtout)) {
-			MessageDialog.openError(getShell(), "Confirm", "Query timeout is " + Messages.RDBPreferencePage_0);
+			MessageDialog.openError(getShell(), "Confirm", "Query timeout is " + Messages.get().RDBPreferencePage_0);
 			textQueryTimeout.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtCommitCount)) {
-			MessageDialog.openError(getShell(), "Confirm", "Commit count is " + Messages.RDBPreferencePage_0);
+			MessageDialog.openError(getShell(), "Confirm", "Commit count is " + Messages.get().RDBPreferencePage_0);
 			textCommitCount.setFocus();
 			return false;
 		}
 		
 		if("".equals(txtOraclePlan)) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_3);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().RDBPreferencePage_3);			 //$NON-NLS-1$
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtShownInTheColumn)) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_0);
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().RDBPreferencePage_0);
 			textShowInTheColumn.setFocus();
 			return false;
 		}
@@ -236,7 +236,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		} catch(Exception e) {
 			logger.error("RDBPreference saveing", e);
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Confirm", Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

@@ -97,7 +97,7 @@ public class SingleFileuploadDialog extends Dialog {
 		
 		Label lblFileName = new Label(compositeHead, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFileName.setText(Messages.SingleFileuploadDialog_1);
+		lblFileName.setText(Messages.get().SingleFileuploadDialog_1);
 		
 		fileNameLabel = new Text(compositeHead, SWT.BORDER);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -109,11 +109,11 @@ public class SingleFileuploadDialog extends Dialog {
 		/* fileUpload 주석 후 디자인을 위한 임시 컨트롤 */
 		/*
 		Label lblDumy = new Label(compositeHead, SWT.NONE);
-		lblDumy.setText(Messages.CsvToRDBImportDialog_2);
+		lblDumy.setText(Messages.get().CsvToRDBImportDialog_2);
 		lblDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		*/		
 		fileUpload = new FileUpload(compositeHead, SWT.NONE);
-		fileUpload.setText(Messages.SingleFileuploadDialog_2);
+		fileUpload.setText(Messages.get().SingleFileuploadDialog_2);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -137,7 +137,7 @@ public class SingleFileuploadDialog extends Dialog {
 		try {
 			if(!insert()) return;
 		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.SingleFileuploadDialog_3, e.getMessage());
+			MessageDialog.openError(null, Messages.get().SingleFileuploadDialog_3, e.getMessage());
 			return;
 		}
 		
@@ -154,7 +154,7 @@ public class SingleFileuploadDialog extends Dialog {
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			throw new Exception(Messages.SingleFileuploadDialog_5);
+			throw new Exception(Messages.get().SingleFileuploadDialog_5);
 		}
 		
 		File userUploadFile = arryFiles[arryFiles.length-1];
@@ -173,7 +173,7 @@ public class SingleFileuploadDialog extends Dialog {
 						
 		} catch (Exception e) {
 			logger.error("file read error", e); //$NON-NLS-1$
-			throw new Exception(Messages.SingleFileuploadDialog_7 + e.getMessage());
+			throw new Exception(Messages.get().SingleFileuploadDialog_7 + e.getMessage());
 		}
 		
 		return true;
@@ -227,8 +227,8 @@ public class SingleFileuploadDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.SingleFileuploadDialog_8, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.SingleFileuploadDialog_9, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().SingleFileuploadDialog_8, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SingleFileuploadDialog_9, false);
 	}
 
 	/**

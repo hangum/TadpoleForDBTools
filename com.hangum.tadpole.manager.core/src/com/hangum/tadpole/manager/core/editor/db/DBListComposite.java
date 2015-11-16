@@ -144,7 +144,7 @@ public class DBListComposite extends Composite {
 				initData();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.DBListComposite_0);
+		tltmRefresh.setToolTipText(Messages.get().DBListComposite_0);
 		
 		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -156,7 +156,7 @@ public class DBListComposite extends Composite {
 				configurationDB();	
 			}
 		});
-		tltmConfigurationDB.setToolTipText(Messages.DBListComposite_1);
+		tltmConfigurationDB.setToolTipText(Messages.get().DBListComposite_1);
 		tltmConfigurationDB.setEnabled(false);
 		
 		tltmOtherInformation = new ToolItem(toolBar, SWT.NONE);
@@ -174,7 +174,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmOtherInformation.setEnabled(false);
-		tltmOtherInformation.setToolTipText(Messages.DBListComposite_2);
+		tltmOtherInformation.setToolTipText(Messages.get().DBListComposite_2);
 		
 		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
 
@@ -205,7 +205,7 @@ public class DBListComposite extends Composite {
 						tvDBList.expandToLevel(3);
 					}
 				} catch (Exception e3) {
-					logger.error(Messages.DBListComposite_10, e3);
+					logger.error(Messages.get().DBListComposite_10, e3);
 				}
 				
 //				TadpoleUserDbRoleDAO userRole = dialog.getUserRoleDAO();
@@ -216,7 +216,7 @@ public class DBListComposite extends Composite {
 			
 			}
 		});
-		tltmAddUser.setToolTipText(Messages.DBListComposite_3);
+		tltmAddUser.setToolTipText(Messages.get().DBListComposite_3);
 		
 		tltmDBAccessCtl = new ToolItem(toolBar, SWT.NONE);
 		tltmDBAccessCtl.setImage(GlobalImageUtils.getFiltering());
@@ -231,7 +231,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmDBAccessCtl.setEnabled(false);
-		tltmDBAccessCtl.setToolTipText(Messages.DBListComposite_4);
+		tltmDBAccessCtl.setToolTipText(Messages.get().DBListComposite_4);
 		
 		tltmUserInfo = new ToolItem(toolBar, SWT.NONE);
 		tltmUserInfo.setImage(GlobalImageUtils.getUserInfo());
@@ -242,7 +242,7 @@ public class DBListComposite extends Composite {
 				detailUser();
 			}
 		});
-		tltmUserInfo.setToolTipText(Messages.DBListComposite_5);
+		tltmUserInfo.setToolTipText(Messages.get().DBListComposite_5);
 		
 		tltmUserDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmUserDelete.setImage(GlobalImageUtils.getUserRemove());
@@ -253,7 +253,7 @@ public class DBListComposite extends Composite {
 				deleteUser();
 			}
 		});
-		tltmUserDelete.setToolTipText(Messages.DBListComposite_6);
+		tltmUserDelete.setToolTipText(Messages.get().DBListComposite_6);
 		
 		ToolItem toolItem = new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -266,7 +266,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmQueryHistory.setEnabled(false);
-		tltmQueryHistory.setToolTipText(Messages.DBListComposite_7);
+		tltmQueryHistory.setToolTipText(Messages.get().DBListComposite_7);
 		
 		ToolItem toolItem_2 = new ToolItem(toolBar, SWT.SEPARATOR);
 		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
@@ -278,7 +278,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmSQLEditor.setEnabled(false);
-		tltmSQLEditor.setToolTipText(Messages.DBListComposite_8);
+		tltmSQLEditor.setToolTipText(Messages.get().DBListComposite_8);
 		
 		Label label = new Label(compositeHead, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -287,14 +287,14 @@ public class DBListComposite extends Composite {
 		Label lblUserName = new Label(compositeHead, SWT.NONE);
 		if(userDAO != null) {
 			lblUser.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-			lblUser.setText(Messages.DBListComposite_26);
+			lblUser.setText(Messages.get().DBListComposite_26);
 			
 			lblUserName.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
 			lblUserName.setText(String.format("%s(%s)", userDAO.getName(), userDAO.getEmail())); //$NON-NLS-1$
 		}
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText(Messages.DBListComposite_9);
+		lblSearch.setText(Messages.get().DBListComposite_9);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -337,7 +337,7 @@ public class DBListComposite extends Composite {
 							tvDBList.expandToLevel(3);
 						}
 					} catch (Exception e) {
-						logger.error(Messages.DBListComposite_10, e);
+						logger.error(Messages.get().DBListComposite_10, e);
 					}
 					
 					tltmConfigurationDB.setEnabled(true);
@@ -402,23 +402,23 @@ public class DBListComposite extends Composite {
 		
 		TreeViewerColumn colGroupName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colGroupName.getColumn().setWidth(250);
-		colGroupName.getColumn().setText(Messages.DBListComposite_11);
+		colGroupName.getColumn().setText(Messages.get().DBListComposite_11);
 				
 		TreeViewerColumn colRoleName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colRoleName.getColumn().setWidth(80);
-		colRoleName.getColumn().setText(Messages.DBListComposite_12);
+		colRoleName.getColumn().setText(Messages.get().DBListComposite_12);
 		
 		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colName.getColumn().setWidth(330);
-		colName.getColumn().setText(Messages.DBListComposite_13 + "(" + Messages.DBListComposite_16 + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		colName.getColumn().setText(Messages.get().DBListComposite_13 + "(" + Messages.get().DBListComposite_16 + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colApproval.getColumn().setWidth(70);
-		colApproval.getColumn().setText(Messages.DBListComposite_14);
+		colApproval.getColumn().setText(Messages.get().DBListComposite_14);
 		
 		TreeViewerColumn colVisible = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colVisible.getColumn().setWidth(50);
-		colVisible.getColumn().setText(Messages.DBListComposite_15);
+		colVisible.getColumn().setText(Messages.get().DBListComposite_15);
 		
 		tvDBList.setContentProvider(new DBListContentProvider());
 		tvDBList.setLabelProvider(new DBListLabelProvider());
@@ -476,7 +476,7 @@ public class DBListComposite extends Composite {
 		TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)ss.getFirstElement();
 		if(userDBRole.getParent().getUser_seq() == userDBRole.getUser_seq()) return;
 		
-		if(!MessageDialog.openConfirm(null, Messages.DBListComposite_17, Messages.DBListComposite_18) ) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().DBListComposite_17, Messages.get().DBListComposite_18) ) return;
 
 		try {
 			TadpoleSystem_UserDBQuery.removeUserRoleDB(userDBRole.getSeq());
@@ -488,7 +488,7 @@ public class DBListComposite extends Composite {
 		} catch (Exception e) { 
 			logger.error("delete user exception", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.DBListComposite_19, Messages.DBListComposite_20, errStatus);
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().DBListComposite_19, Messages.get().DBListComposite_20, errStatus);
 		}
 	}
 	
@@ -508,7 +508,7 @@ public class DBListComposite extends Composite {
 				logger.error("Query History open", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
-				ExceptionDetailsErrorDialog.openError(null, Messages.DBListComposite_21, Messages.DBListComposite_22, errStatus);
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().DBListComposite_21, Messages.get().DBListComposite_22, errStatus);
 			}
 		}
 	}
@@ -527,7 +527,7 @@ public class DBListComposite extends Composite {
 			logger.error("SQL Editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
-			ExceptionDetailsErrorDialog.openError(null, Messages.DBListComposite_23, Messages.DBListComposite_24, errStatus);
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().DBListComposite_23, Messages.get().DBListComposite_24, errStatus);
 		}
 	}
 	
@@ -570,7 +570,7 @@ public class DBListComposite extends Composite {
 			tvDBList.expandToLevel(2);
 			
 		} catch (Exception e) {
-			logger.error(Messages.DBListComposite_25, e);
+			logger.error(Messages.get().DBListComposite_25, e);
 		}
 	}
 	

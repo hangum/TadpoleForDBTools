@@ -165,7 +165,7 @@ public class ResourceManageEditor extends EditorPart {
 		toolBar.setLayoutData(gd_toolBar);
 
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setToolTipText(Messages.ResourceManageEditor_0);
+		tltmRefresh.setToolTipText(Messages.get().ResourceManageEditor_0);
 		tltmRefresh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 		
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -205,7 +205,7 @@ public class ResourceManageEditor extends EditorPart {
 
 		Label lblFilter = new Label(compositeFilter, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.ResourceManageEditor_1);
+		lblFilter.setText(Messages.get().ResourceManageEditor_1);
 
 		textFilter = new Text(compositeFilter, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -303,7 +303,7 @@ public class ResourceManageEditor extends EditorPart {
 
 		Group grpQuery = new Group(parent, SWT.NONE);
 		grpQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpQuery.setText(Messages.ResourceManageEditor_12);
+		grpQuery.setText(Messages.get().ResourceManageEditor_12);
 		GridLayout gl_grpQuery = new GridLayout(1, false);
 		gl_grpQuery.verticalSpacing = 1;
 		gl_grpQuery.horizontalSpacing = 1;
@@ -320,7 +320,7 @@ public class ResourceManageEditor extends EditorPart {
 		compositeDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Label lblNewLabel = new Label(compositeDetail, SWT.NONE);
-		lblNewLabel.setText(Messages.ResourceManageEditor_13);
+		lblNewLabel.setText(Messages.get().ResourceManageEditor_13);
 
 		comboShare = new ComboViewer(compositeDetail, SWT.NONE | SWT.READ_ONLY);
 		Combo cShare = comboShare.getCombo();
@@ -328,7 +328,7 @@ public class ResourceManageEditor extends EditorPart {
 		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" }); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Label lblNewLabel_1 = new Label(compositeDetail, SWT.NONE);
-		lblNewLabel_1.setText(Messages.ResourceManageEditor_16);
+		lblNewLabel_1.setText(Messages.get().ResourceManageEditor_16);
 
 		textTitle = new Text(compositeDetail, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -337,7 +337,7 @@ public class ResourceManageEditor extends EditorPart {
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.ResourceManageEditor_17, Messages.ResourceManageEditor_18)) return;
+				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().ResourceManageEditor_17, Messages.get().ResourceManageEditor_18)) return;
 				
 				try {
 					String share_type = comboShare.getCombo().getText();
@@ -365,10 +365,10 @@ public class ResourceManageEditor extends EditorPart {
 					TadpoleSystem_UserDBResource.updateResourceHeader(resourceManagerDao);
 					tableViewer.refresh(resourceManagerDao, true);
 					
-					MessageDialog.openInformation(getSite().getShell(), Messages.ResourceManageEditor_17, Messages.ResourceManageEditor_23);
+					MessageDialog.openInformation(getSite().getShell(), Messages.get().ResourceManageEditor_17, Messages.get().ResourceManageEditor_23);
 				} catch (Exception e1) {
 					logger.error("save resource", e1); //$NON-NLS-1$
-					MessageDialog.openError(getSite().getShell(), Messages.ResourceManageEditor_25, Messages.ResourceManageEditor_26+ e1.getMessage());
+					MessageDialog.openError(getSite().getShell(), Messages.get().ResourceManageEditor_25, Messages.get().ResourceManageEditor_26+ e1.getMessage());
 				}
 			}
 			
@@ -379,7 +379,7 @@ public class ResourceManageEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openError(null, "Confirm", Messages.ResourceManageEditor_27); //$NON-NLS-1$
+					MessageDialog.openError(null, "Confirm", Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -390,14 +390,14 @@ public class ResourceManageEditor extends EditorPart {
 						String strAPIURI = textAPIURL.getText().trim();
 						
 						if(strAPIURI.equals("")) { //$NON-NLS-1$
-							MessageDialog.openError(getSite().getShell(), Messages.ResourceManageEditor_17, Messages.ResourceManageEditor_30);
+							MessageDialog.openError(getSite().getShell(), Messages.get().ResourceManageEditor_17, Messages.get().ResourceManageEditor_30);
 							textAPIURL.setFocus();
 							return false;
 						}
 						
 						// check valid url. url pattern is must be /{parent}/{child}
 						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openError(getSite().getShell(), Messages.ResourceManageEditor_25, Messages.ResourceManageEditor_32);
+							MessageDialog.openError(getSite().getShell(), Messages.get().ResourceManageEditor_25, Messages.get().ResourceManageEditor_32);
 							
 							textAPIURL.setFocus();
 							return false;
@@ -408,7 +408,7 @@ public class ResourceManageEditor extends EditorPart {
 				return true;
 			}
 		});
-		btnSave.setText(Messages.ResourceManageEditor_33);
+		btnSave.setText(Messages.get().ResourceManageEditor_33);
 
 //		Button btnDelete = new Button(composite, SWT.NONE);
 //		btnDelete.addSelectionListener(new SelectionAdapter() {
@@ -438,7 +438,7 @@ public class ResourceManageEditor extends EditorPart {
 //		btnDelete.setText("Delete");
 
 		Label lblDescription = new Label(compositeDetail, SWT.NONE);
-		lblDescription.setText(Messages.ResourceManageEditor_34);
+		lblDescription.setText(Messages.get().ResourceManageEditor_34);
 
 		textDescription = new Text(compositeDetail, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1);
@@ -447,7 +447,7 @@ public class ResourceManageEditor extends EditorPart {
 		
 		Label lblSupportApi = new Label(compositeDetail, SWT.NONE);
 		lblSupportApi.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSupportApi.setText(Messages.ResourceManageEditor_35);
+		lblSupportApi.setText(Messages.get().ResourceManageEditor_35);
 		
 		comboSupportAPI = new Combo(compositeDetail, SWT.READ_ONLY);
 		comboSupportAPI.add("YES"); //$NON-NLS-1$
@@ -455,7 +455,7 @@ public class ResourceManageEditor extends EditorPart {
 		comboSupportAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblApiURI = new Label(compositeDetail, SWT.NONE);
-		lblApiURI.setText(Messages.ResourceManageEditor_38);
+		lblApiURI.setText(Messages.get().ResourceManageEditor_38);
 		
 		textAPIURL = new Text(compositeDetail, SWT.BORDER);
 		textAPIURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -468,17 +468,17 @@ public class ResourceManageEditor extends EditorPart {
 				if(!"".equals(textAPIURL.getText())) { //$NON-NLS-1$
 					String strURL = RESTfulAPIUtils.makeURL(textQuery.getText(), textAPIURL.getText());
 					
-					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), Messages.ResourceManageEditor_40, strURL);
+					TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getSite().getShell(), Messages.get().ResourceManageEditor_40, strURL);
 					dialog.open();
 				}
 			}
 		});
-		btnShowUrl.setText(Messages.ResourceManageEditor_41);
+		btnShowUrl.setText(Messages.get().ResourceManageEditor_41);
 		new Label(compositeDetail, SWT.NONE);
 		new Label(compositeDetail, SWT.NONE);
 		
 		Label lblApiKey = new Label(compositeDetail, SWT.NONE);
-		lblApiKey.setText(Messages.ResourceManageEditor_42);
+		lblApiKey.setText(Messages.get().ResourceManageEditor_42);
 		
 		textAPIKey = new Text(compositeDetail, SWT.BORDER);
 		textAPIKey.setEditable(false);
@@ -494,7 +494,7 @@ public class ResourceManageEditor extends EditorPart {
 				}
 			}
 		});
-		btnApiExecute.setText(Messages.ResourceManageEditor_44);
+		btnApiExecute.setText(Messages.get().ResourceManageEditor_44);
 
 		textQuery = new TadpoleEditorWidget(compositeDetail, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
@@ -575,7 +575,7 @@ public class ResourceManageEditor extends EditorPart {
 			logger.error("refresh list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ResourceManageEditor_45, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ResourceManageEditor_45, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -592,14 +592,14 @@ public class ResourceManageEditor extends EditorPart {
 	private void createTableColumn() {
 
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] {
-		new TableViewColumnDefine("RESOURCE_SEQ", Messages.ResourceManageEditor_3, 50, SWT.RIGHT) //$NON-NLS-1$
-				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.ResourceManageEditor_5, 60, SWT.CENTER) //$NON-NLS-1$
-				, new TableViewColumnDefine("USER_NAME", Messages.ResourceManageEditor_7, 90, SWT.CENTER) //$NON-NLS-1$
-				, new TableViewColumnDefine("RES_TITLE", Messages.ResourceManageEditor_9, 150, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("RESTAPI_URI", Messages.ResourceManageEditor_11, 150, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("SHARED_TYPE", Messages.ResourceManageEditor_15, 70, SWT.CENTER) //$NON-NLS-1$
-				, new TableViewColumnDefine("DESCRIPTION", Messages.ResourceManageEditor_20, 250, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("CREATE_TIME", Messages.ResourceManageEditor_22, 120, SWT.LEFT) //$NON-NLS-1$
+		new TableViewColumnDefine("RESOURCE_SEQ", Messages.get().ResourceManageEditor_3, 50, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.get().ResourceManageEditor_5, 60, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("USER_NAME", Messages.get().ResourceManageEditor_7, 90, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("RES_TITLE", Messages.get().ResourceManageEditor_9, 150, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("RESTAPI_URI", Messages.get().ResourceManageEditor_11, 150, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("SHARED_TYPE", Messages.get().ResourceManageEditor_15, 70, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("DESCRIPTION", Messages.get().ResourceManageEditor_20, 250, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("CREATE_TIME", Messages.get().ResourceManageEditor_22, 120, SWT.LEFT) //$NON-NLS-1$
 		};
 
 		ColumnHeaderCreator.createColumnHeader(tableViewer, tableColumnDef);

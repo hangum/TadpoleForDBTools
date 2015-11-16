@@ -50,8 +50,8 @@ public class SQLAuditAction extends Action implements ISelectionListener, IWorkb
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.ExecutedSQLAction_0);
-		setToolTipText(Messages.ExecutedSQLAction_1);
+		setText(Messages.get().ExecutedSQLAction_0);
+		setToolTipText(Messages.get().ExecutedSQLAction_1);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -65,7 +65,7 @@ public class SQLAuditAction extends Action implements ISelectionListener, IWorkb
 			logger.error("SQL Audit Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ExecutedSQLAction_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().ExecutedSQLAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 

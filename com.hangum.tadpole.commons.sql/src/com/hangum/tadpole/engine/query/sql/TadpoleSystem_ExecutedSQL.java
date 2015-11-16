@@ -95,7 +95,7 @@ public class TadpoleSystem_ExecutedSQL {
 		}
 		
 		queryMap.put("duration", duringExecute);
-		queryMap.put("count", 	1000);
+		queryMap.put("count", 	500);
 		queryMap.put("strSearch", strSearch);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

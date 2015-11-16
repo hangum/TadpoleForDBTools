@@ -91,7 +91,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
-		tbtmServerStatus.setText(Messages.MongoDBInfosEditor_0);
+		tbtmServerStatus.setText(Messages.get().MongoDBInfosEditor_0);
 		
 		compositeServerStatus = new InstanceInformationComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmServerStatus.setControl(compositeServerStatus);
@@ -99,7 +99,7 @@ public class MongoDBInfosEditor extends EditorPart {
 		new Label(compositeServerStatus, SWT.NONE);
 		
 		CTabItem tbtmCollectionSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmCollectionSummary.setText(Messages.MongoDBInfosEditor_1);
+		tbtmCollectionSummary.setText(Messages.get().MongoDBInfosEditor_1);
 		
 		compositeCollectionSummary = new CollectionInformationComposite(tabFolder, SWT.NONE);
 		tbtmCollectionSummary.setControl(compositeCollectionSummary);
@@ -111,20 +111,20 @@ public class MongoDBInfosEditor extends EditorPart {
 		compositeCollectionSummary.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmLocaks = new CTabItem(tabFolder, SWT.NONE);
-		tbtmLocaks.setText(Messages.MongoDBInfosEditor_2);
+		tbtmLocaks.setText(Messages.get().MongoDBInfosEditor_2);
 		
 		LockComposite compositeLock = new LockComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmLocaks.setControl(compositeLock);
 		compositeLock.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmReplicaInformation = new CTabItem(tabFolder, SWT.NONE);
-		tbtmReplicaInformation.setText(Messages.MongoDBInfosEditor_3);		
+		tbtmReplicaInformation.setText(Messages.get().MongoDBInfosEditor_3);		
 		ReplicaSetComposite compositeReplicaSet = new ReplicaSetComposite(tabFolder, SWT.NONE, userDB, commandResult);
 		tbtmReplicaInformation.setControl(compositeReplicaSet);
 		compositeReplicaSet.setLayout(gl_compositeCollectionSummary);
 		
 		CTabItem tbtmShardingInformation = new CTabItem(tabFolder, SWT.NONE);
-		tbtmShardingInformation.setText(Messages.MongoDBInfosEditor_4);
+		tbtmShardingInformation.setText(Messages.get().MongoDBInfosEditor_4);
 		
 		ShardingComposite compositeSharding = new ShardingComposite(tabFolder, SWT.NONE, userDB);
 		tbtmShardingInformation.setControl(compositeSharding);

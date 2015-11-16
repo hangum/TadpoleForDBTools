@@ -118,7 +118,7 @@ public class ObjectEditor extends MainEditor {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText(Messages.MainEditor_37);
+		tltmConnectURL.setToolTipText(Messages.get().MainEditor_37);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setText(userDB.getDisplay_name());
 		
@@ -134,12 +134,12 @@ public class ObjectEditor extends MainEditor {
 		
 		// fileupload 
 		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
-		tltmOpen.setToolTipText(Messages.MainEditor_35);
+		tltmOpen.setToolTipText(Messages.get().MainEditor_35);
 		tltmOpen.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/file-open.png")); //$NON-NLS-1$
 		tltmOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.MainEditor_36);
+				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().MainEditor_36);
 				if(Dialog.OK == dialog.open()) {
 					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
 					appendText(dialog.getStrTxtFile());
@@ -149,7 +149,7 @@ public class ObjectEditor extends MainEditor {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmCompile = new ToolItem(toolBar, SWT.NONE);
-		tltmCompile.setToolTipText(String.format(Messages.ObjectEditor_1, STR_SHORT_CUT_PREFIX));
+		tltmCompile.setToolTipText(String.format(Messages.get().ObjectEditor_1, STR_SHORT_CUT_PREFIX));
 		tltmCompile.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/compile.png")); //$NON-NLS-1$
 		tltmCompile.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -168,7 +168,7 @@ public class ObjectEditor extends MainEditor {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 //		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-//		tltmExecute.setToolTipText(Messages.ObjectEditor_5);
+//		tltmExecute.setToolTipText(Messages.get().ObjectEditor_5);
 //		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/play.png")); //$NON-NLS-1$
 //		tltmExecute.addSelectionListener(new SelectionAdapter() {
 //			@Override
@@ -189,7 +189,7 @@ public class ObjectEditor extends MainEditor {
 //				setFocus();
 //			}
 //		});
-//		tltmHelp.setToolTipText(String.format(Messages.MainEditor_27, STR_SHORT_CUT_PREFIX));
+//		tltmHelp.setToolTipText(String.format(Messages.get().MainEditor_27, STR_SHORT_CUT_PREFIX));
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
@@ -257,7 +257,7 @@ public class ObjectEditor extends MainEditor {
 				return;
 			}
 			
-			if(!MessageDialog.openConfirm(null, Messages.ObjectEditor_0, Messages.ObjectEditor_3)) {
+			if(!MessageDialog.openConfirm(null, Messages.get().ObjectEditor_0, Messages.get().ObjectEditor_3)) {
 				setOrionTextFocus();
 				return;
 			}
@@ -286,7 +286,7 @@ public class ObjectEditor extends MainEditor {
 						try {
 							retMsg = oracleAfterProcess(reqResultDAO, reqQuery);
 							if(!"".equals(retMsg)) { //$NON-NLS-1$
-								retMsg = Messages.ObjectEditor_7 + retMsg;
+								retMsg = Messages.get().ObjectEditor_7 + retMsg;
 							}
 						} catch(Exception e) {
 							logger.error("Oracle Object compile", e); //$NON-NLS-1$
@@ -295,7 +295,7 @@ public class ObjectEditor extends MainEditor {
 						reqResultDAO.setMesssage(retMsg);
 					}
 					
-					afterProcess(reqQuery, reqResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqResultDAO, Messages.get().ObjectEditor_2);
 				}
 
 				setDirty(false);
@@ -400,14 +400,14 @@ public class ObjectEditor extends MainEditor {
 		if(strSQLState.equals("42000") && intSQLErrorCode == 1304) { //$NON-NLS-1$
 			
 			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+			if(MessageDialog.openConfirm(null, Messages.get().ObjectEditor_12, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
 					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
-					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 					
 					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
-					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 				} catch(Exception ee) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 				}
@@ -441,14 +441,14 @@ public class ObjectEditor extends MainEditor {
 		
 		if(strSQLState.equals("S0001") && intSQLErrorCode == 2714) { //$NON-NLS-1$
 			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.ObjectEditor_12, String.format(Messages.ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+			if(MessageDialog.openConfirm(null, Messages.get().ObjectEditor_12, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
 					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
-					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 					
 					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
-					afterProcess(reqQuery, reqReResultDAO, Messages.ObjectEditor_2);
+					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 				} catch(Exception ee) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 				}

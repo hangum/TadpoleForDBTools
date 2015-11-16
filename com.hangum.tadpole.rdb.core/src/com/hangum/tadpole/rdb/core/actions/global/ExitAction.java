@@ -48,8 +48,8 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.ExitAction_0);
-		setToolTipText(Messages.ExitAction_1);
+		setText(Messages.get().ExitAction_0);
+		setToolTipText(Messages.get().ExitAction_1);
 
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png")); //$NON-NLS-1$
 	}
@@ -59,8 +59,8 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		
 		if(ApplicationArgumentUtils.isStandaloneMode()) {
-			MessageDialog dialog = new MessageDialog(shell, Messages.ExitAction_2, null, Messages.ExitAction_4, 
-										MessageDialog.QUESTION, new String[]{Messages.ExitAction_5, Messages.ExitAction_6, Messages.ExitAction_7}, 1);
+			MessageDialog dialog = new MessageDialog(shell, Messages.get().ExitAction_2, null, Messages.get().ExitAction_4, 
+										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().ExitAction_6, Messages.get().ExitAction_7}, 1);
 			int intResult = dialog.open();
 			if(intResult == 0) {
 				serverLogout();
@@ -70,7 +70,7 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 			}
 			
 		} else {
-			if( MessageDialog.openConfirm(shell, Messages.ExitAction_2, Messages.ExitAction_3) ) {
+			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_3) ) {
 				serverLogout();
 			}
 		}

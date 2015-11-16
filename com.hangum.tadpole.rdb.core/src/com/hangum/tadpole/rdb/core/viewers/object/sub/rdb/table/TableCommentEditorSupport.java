@@ -21,6 +21,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -66,24 +67,19 @@ public class TableCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected boolean canEdit(Object element) {
-		// TODO : ORACLE과 MSSQL일때만 처리한다.
-		// 다른 DBMS들은 코멘트를 저장할 수 있는 테이블을 직접 만들어 주면 안될까?
-		// Tadpole_Props 이런식으로...^^;
-		
 		if(column == 1) {
-//			userDB = explorer.getUserDB();
-			logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB));
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || 
-					DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ||
-							DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ||
-							DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
+			) {
 				return true;
-			} else {
-				return false;
 			}
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	@Override
@@ -103,81 +99,64 @@ public class TableCommentEditorSupport extends EditingSupport {
 		String comment = "";
 		try {
 			TableDAO dao = (TableDAO) element;
-
 			comment = (String) (value == null ? "" : value);
 
 			// 기존 코멘트와 다를때만 db에 반영한다.
 			if (!(comment.equals(dao.getComment()))) {
 				dao.setComment(comment);
-				ApplyComment(dao);
+				applyComment(dao);
 			}
 
 			viewer.update(element, null);
 		} catch (Exception e) {
 			logger.error("setValue error ", e);
 		}
-		viewer.update(element, null);
 	}
 
-	private void ApplyComment(TableDAO dao) {
+	private void applyComment(TableDAO dao) {
 		// TODO : DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까? 
 
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
 		try {
-
-			logger.debug("userDB is " + userDB.toString());
-
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-
 			javaConn = client.getDataSource().getConnection();
 
-			StringBuffer query = new StringBuffer();
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
+				stmt = javaConn.prepareStatement(strSQL);
+				try{
+					stmt.execute();
+				}catch(Exception e){
+					//  org.postgresql.util.PSQLException: No results were returned by the query.
+				}
 
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
-				query.append(" COMMENT ON TABLE ").append(dao.getSysName()).append(" IS '").append(dao.getComment()).append("'");
-
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+				StringBuffer query = new StringBuffer();
+				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
-				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
-					logger.error("Comment drop error ", e);
-				}
-
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
-					logger.error("Comment add error ", e);
-				}
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
+				stmt.execute();
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
+				StringBuffer query = new StringBuffer();
 				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
-					logger.error("Comment drop error ", e);
-				}
+				stmt.execute();
 
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
-					logger.error("Comment add error ", e);
-				}
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+
+			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				String strSQL = String.format("ALTER TABLE %s COMMENT %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
+				if(logger.isDebugEnabled()) logger.debug(strSQL);
+				stmt = javaConn.prepareStatement(strSQL);
+				stmt.execute();
 			}
 
 		} catch (Exception e) {

@@ -36,8 +36,8 @@ public class OpenSingleRowDataDialogAction extends Action implements IWorkbenchA
 	
 	public OpenSingleRowDataDialogAction() {
 		setId(ID);
-		setText(Messages.OpenSingleRowDataDialogAction_0);
-		setToolTipText(Messages.OpenSingleRowDataDialogAction_0);
+		setText(Messages.get().OpenSingleRowDataDialogAction_0);
+		setToolTipText(Messages.get().OpenSingleRowDataDialogAction_0);
 		setEnabled(false);
 	}
 	

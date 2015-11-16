@@ -150,7 +150,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
-		tltmExecute.setToolTipText(String.format(Messages.MainEditor_tltmExecute_toolTipText_1, prefixOSShortcut));
+		tltmExecute.setToolTipText(String.format(Messages.get().MainEditor_tltmExecute_toolTipText_1, prefixOSShortcut));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/mongodb/mongo-executable.png"));
 		tltmExecute.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -216,7 +216,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		
 		CTabItem tbtmEvalJavaScript = new CTabItem(tabFolder, SWT.NONE);
-		tbtmEvalJavaScript.setText(Messages.ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1);
+		tbtmEvalJavaScript.setText(Messages.get().ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1);
 		
 		Composite compositeTabJS = new Composite(tabFolder, SWT.NONE);
 		tbtmEvalJavaScript.setControl(compositeTabJS);
@@ -304,7 +304,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 				} catch(Exception e) {
 					logger.error("save javascript", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 					
 					return false;
 				}
@@ -319,7 +319,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 			} catch(Exception e) {
 				logger.error("save javascript", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -508,7 +508,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 					textResultJavaScript.setText("");
 					logger.error("execute javascript", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 				}
 			}
 		}

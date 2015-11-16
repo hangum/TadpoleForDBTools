@@ -56,27 +56,27 @@ public class ExecuteOtherSQL {
 			final String userEmail) throws SQLException, Exception
 	{
 		if(!PermissionChecker.isExecute(userType, userDB, reqQuery.getSql())) {
-			throw new Exception(Messages.MainEditor_21);
+			throw new Exception(Messages.get().MainEditor_21);
 		}
 		if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
-				throw new Exception(Messages.MainEditor_21);
+				throw new Exception(Messages.get().MainEditor_21);
 			}
 		}
 		PublicTadpoleDefine.QUERY_DML_TYPE queryType = reqQuery.getSqlDMLType();
 		if(queryType == QUERY_DML_TYPE.INSERT) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
-				throw new Exception(Messages.MainEditor_21);
+				throw new Exception(Messages.get().MainEditor_21);
 			}
 		}
 		if(queryType == QUERY_DML_TYPE.UPDATE) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
-				throw new Exception(Messages.MainEditor_21);
+				throw new Exception(Messages.get().MainEditor_21);
 			}
 		}
 		if(queryType == QUERY_DML_TYPE.DELETE) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
-				throw new Exception(Messages.MainEditor_21);
+				throw new Exception(Messages.get().MainEditor_21);
 			}
 		}
 		

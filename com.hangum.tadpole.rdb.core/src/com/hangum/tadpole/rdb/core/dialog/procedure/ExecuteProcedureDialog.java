@@ -103,7 +103,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.ExecuteProcedureDialog_0);
+		newShell.setText(Messages.get().ExecuteProcedureDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -126,14 +126,14 @@ public class ExecuteProcedureDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblObjectType = new Label(compositeHead, SWT.NONE);
-		lblObjectType.setText(Messages.ExecuteProcedureDialog_lblObjectType_text);
+		lblObjectType.setText(Messages.get().ExecuteProcedureDialog_lblObjectType_text);
 		
 		textObjectType = new Text(compositeHead, SWT.BORDER);
 		textObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblObjectName = new Label(compositeHead, SWT.NONE);
 		lblObjectName.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		lblObjectName.setText(Messages.ExecuteProcedureDialog_lblObjectName_text);
+		lblObjectName.setText(Messages.get().ExecuteProcedureDialog_lblObjectName_text);
 		
 		textObjectName = new Text(compositeHead, SWT.BORDER);
 		textObjectName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -147,7 +147,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			
 		} catch(Exception e) {
 			logger.error("get in parameter", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.ExecuteProcedureDialog_error, e.getMessage());
+			MessageDialog.openError(null, Messages.get().ExecuteProcedureDialog_error, e.getMessage());
 			
 			super.okPressed();
 		}
@@ -213,7 +213,7 @@ public class ExecuteProcedureDialog extends Dialog {
 				executeProcedure();
 			}
 		});
-		btnExecute.setText(Messages.ExecuteProcedureDialog_1);
+		btnExecute.setText(Messages.get().ExecuteProcedureDialog_1);
 		
 		SashForm sashForm = new SashForm(containerInput, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -226,7 +226,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		gl_grpTables.marginWidth = 2;
 		grpTables.setLayout(gl_grpTables);
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpTables.setText(Messages.ExecuteProcedureDialog_8);
+		grpTables.setText(Messages.get().ExecuteProcedureDialog_8);
 		
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 			Group grpDbmsOutput = new Group(sashForm, SWT.NONE);
@@ -235,7 +235,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			gd_grpDbmsOutput.minimumHeight = 50;
 			gd_grpDbmsOutput.heightHint = 50;
 			grpDbmsOutput.setLayoutData(gd_grpDbmsOutput);
-			grpDbmsOutput.setText(Messages.ExecuteProcedureDialog_grpDbmsOutput_text);
+			grpDbmsOutput.setText(Messages.get().ExecuteProcedureDialog_grpDbmsOutput_text);
 			
 			textDBMSOutput = new Text(grpDbmsOutput, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 			textDBMSOutput.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -353,7 +353,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.ExecuteProcedureDialog_11, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteProcedureDialog_11, false);
 	}
 
 	/**

@@ -58,8 +58,8 @@ public class ERDRefreshAction extends SelectionAction {
 		this.viewer = graphicalViewer;
 		
 		setId(ID);
-		setText(Messages.ERDRefreshAction_0);
-		setToolTipText(Messages.ERDRefreshAction_0);
+		setText(Messages.get().ERDRefreshAction_0);
+		setToolTipText(Messages.get().ERDRefreshAction_0);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 	}
 	
@@ -69,7 +69,7 @@ public class ERDRefreshAction extends SelectionAction {
 	
 	@Override
 	public void run() {
-		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), Messages.ERDRefreshAction_3, Messages.ERDRefreshAction_4)) return;
+		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), Messages.get().ERDRefreshAction_3, Messages.get().ERDRefreshAction_4)) return;
 		
 		DB dbModel = rdbEditor.getDb();
 		

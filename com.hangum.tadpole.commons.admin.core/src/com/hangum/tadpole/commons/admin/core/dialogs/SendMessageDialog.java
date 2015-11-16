@@ -72,7 +72,7 @@ public class SendMessageDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.SendMessageDialog_0);
+		newShell.setText(Messages.get().SendMessageDialog_0);
 	}
 	
 	/**
@@ -89,11 +89,11 @@ public class SendMessageDialog extends Dialog {
 		
 		Label lblType = new Label(compositeHead, SWT.NONE);
 		lblType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblType.setText(Messages.SendMessageDialog_1);
+		lblType.setText(Messages.get().SendMessageDialog_1);
 		
 		comboType = new Combo(compositeHead, SWT.NONE);
 		comboType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboType.add(Messages.SendMessageDialog_2);
+		comboType.add(Messages.get().SendMessageDialog_2);
 		comboType.select(0);
 		
 		Composite compositeBody = new Composite(container, SWT.BORDER);
@@ -101,17 +101,17 @@ public class SendMessageDialog extends Dialog {
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblTitle = new Label(compositeBody, SWT.NONE);
-		lblTitle.setText(Messages.SendMessageDialog_3);
+		lblTitle.setText(Messages.get().SendMessageDialog_3);
 		
 		textTitle = new Text(compositeBody, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblMessage = new Label(compositeBody, SWT.NONE);
-		lblMessage.setText(Messages.SendMessageDialog_4);
+		lblMessage.setText(Messages.get().SendMessageDialog_4);
 		
 		textMessage = new Text(compositeBody, SWT.BORDER | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textMessage.setText(Messages.SendMessageDialog_5);
+		textMessage.setText(Messages.get().SendMessageDialog_5);
 		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
@@ -120,7 +120,7 @@ public class SendMessageDialog extends Dialog {
 		composite.setLayoutData(gd_composite);
 		
 		Label lblSeingHistory = new Label(composite, SWT.NONE);
-		lblSeingHistory.setText(Messages.SendMessageDialog_6);
+		lblSeingHistory.setText(Messages.get().SendMessageDialog_6);
 		
 		textSengingHistory = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textSengingHistory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -135,12 +135,12 @@ public class SendMessageDialog extends Dialog {
 	protected void okPressed() {
 
 		if(StringUtils.isEmpty(textTitle.getText())) {
-			MessageDialog.openError(null, Messages.SendMessageDialog_7, Messages.SendMessageDialog_8);
+			MessageDialog.openError(null, Messages.get().SendMessageDialog_7, Messages.get().SendMessageDialog_8);
 			textTitle.setFocus();
 			return;
 		}
 		if(StringUtils.isEmpty(textMessage.getText())) {
-			MessageDialog.openError(null, Messages.SendMessageDialog_9, Messages.SendMessageDialog_10);
+			MessageDialog.openError(null, Messages.get().SendMessageDialog_9, Messages.get().SendMessageDialog_10);
 			textMessage.setFocus();
 			return;
 		}
@@ -158,12 +158,12 @@ public class SendMessageDialog extends Dialog {
 					List<UserDAO> listUser = TadpoleSystem_UserQuery.getLiveAllUser();
 					SendEmails email = new SendEmails(GetAdminPreference.getSMTPINFO());
 					
-					monitor.beginTask(Messages.SendMessageDialog_12, listUser.size());
+					monitor.beginTask(Messages.get().SendMessageDialog_12, listUser.size());
 					
 					for (int i=0; i<listUser.size(); i++) {
 						UserDAO userDAO = listUser.get(i);
 						
-						monitor.setTaskName(String.format(Messages.SendMessageDialog_13, i, listUser.size(), userDAO.getEmail()));
+						monitor.setTaskName(String.format(Messages.get().SendMessageDialog_13, i, listUser.size(), userDAO.getEmail()));
 						logger.info("admin user sender " + userDAO.getEmail()); //$NON-NLS-1$
 						try {
 							EmailDTO emailDto = new EmailDTO();
@@ -179,12 +179,12 @@ public class SendMessageDialog extends Dialog {
 						} 
 						
 						if(monitor.isCanceled()) {
-							logger.info(Messages.SendMessageDialog_18);
+							logger.info(Messages.get().SendMessageDialog_18);
 							break;
 						}
 					}
 				} catch(Exception e) {
-					logger.error(Messages.SendMessageDialog_19, e);
+					logger.error(Messages.get().SendMessageDialog_19, e);
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
 				} finally {
 					resultMessage("done."); //$NON-NLS-1$
@@ -217,10 +217,10 @@ public class SendMessageDialog extends Dialog {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							MessageDialog.openInformation(shell, Messages.SendMessageDialog_22, Messages.SendMessageDialog_23);
+							MessageDialog.openInformation(shell, Messages.get().SendMessageDialog_22, Messages.get().SendMessageDialog_23);
 						} else {
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(shell, "Error", Messages.SendMessageDialog_11, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(shell, "Error", Messages.get().SendMessageDialog_11, errStatus); //$NON-NLS-1$
 						}
 					}
 				});	// end display.asyncExec
@@ -228,7 +228,7 @@ public class SendMessageDialog extends Dialog {
 			
 		});	// end job
 		
-		job.setName(Messages.SendMessageDialog_11);
+		job.setName(Messages.get().SendMessageDialog_11);
 		job.setUser(true);
 		job.schedule();
 		
@@ -241,8 +241,8 @@ public class SendMessageDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.SendMessageDialog_26, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.SendMessageDialog_27, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().SendMessageDialog_26, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SendMessageDialog_27, false);
 	}
 
 	/**

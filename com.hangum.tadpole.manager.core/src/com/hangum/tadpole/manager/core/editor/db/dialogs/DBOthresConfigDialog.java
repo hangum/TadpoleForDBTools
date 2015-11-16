@@ -63,7 +63,7 @@ public class DBOthresConfigDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.DBOthresConfigDialog_0);
+		newShell.setText(Messages.get().DBOthresConfigDialog_0);
 	}
 
 	/**
@@ -84,17 +84,17 @@ public class DBOthresConfigDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(1, false));
 		
 		Label lblSettingDatabaseOther = new Label(compositeHead, SWT.NONE);
-		lblSettingDatabaseOther.setText(Messages.DBOthresConfigDialog_1);
+		lblSettingDatabaseOther.setText(Messages.get().DBOthresConfigDialog_1);
 		
 		Composite composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		btnVisible = new Button(composite, SWT.CHECK);
-		btnVisible.setText(Messages.DBOthresConfigDialog_2);
+		btnVisible.setText(Messages.get().DBOthresConfigDialog_2);
 		
 		btnDbLock = new Button(composite, SWT.CHECK);
-		btnDbLock.setText(Messages.DBOthresConfigDialog_3);
+		btnDbLock.setText(Messages.get().DBOthresConfigDialog_3);
 		
 		initUI();
 
@@ -106,7 +106,7 @@ public class DBOthresConfigDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		if(MessageDialog.openConfirm(getShell(), Messages.DBOthresConfigDialog_4, Messages.DBOthresConfigDialog_5)) {
+		if(MessageDialog.openConfirm(getShell(), Messages.get().DBOthresConfigDialog_4, Messages.get().DBOthresConfigDialog_5)) {
 			try {
 				userDB.setIs_visible(btnVisible.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 				userDB.setIs_lock(btnDbLock.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
@@ -139,8 +139,8 @@ public class DBOthresConfigDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.DBOthresConfigDialog_7, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.DBOthresConfigDialog_8, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().DBOthresConfigDialog_7, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().DBOthresConfigDialog_8, false);
 	}
 
 	/**

@@ -40,8 +40,8 @@ public class DeleteResourceAction extends Action implements ISelectionListener, 
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.DeleteResourceAction_0);
-		setToolTipText(Messages.DeleteResourceAction_0);
+		setText(Messages.get().DeleteResourceAction_0);
+		setToolTipText(Messages.get().DeleteResourceAction_0);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/delete-relation.png")); //$NON-NLS-1$
 		setEnabled(false);
 		
@@ -51,7 +51,7 @@ public class DeleteResourceAction extends Action implements ISelectionListener, 
 	@Override
 	public void run() {
 		UserDBResourceDAO userResourceDB = (UserDBResourceDAO)iss.getFirstElement();
-		if(!MessageDialog.openConfirm(window.getShell(), Messages.DeleteResourceAction_3, Messages.DeleteResourceAction_4)) return;
+		if(!MessageDialog.openConfirm(window.getShell(), Messages.get().DeleteResourceAction_3, Messages.get().DeleteResourceAction_4)) return;
 		
 		RDBERDDeleteAction erdDelete = new RDBERDDeleteAction();
 		erdDelete.run(userResourceDB);

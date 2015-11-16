@@ -62,7 +62,7 @@ public class SQLUpdateDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.SQLUpdateDialog_1);
+		newShell.setText(Messages.get().SQLUpdateDialog_1);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class SQLUpdateDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 		
 		Label lblPleaseCheckYour = new Label(container, SWT.NONE);
-		lblPleaseCheckYour.setText(Messages.SQLUpdateDialog_2);
+		lblPleaseCheckYour.setText(Messages.get().SQLUpdateDialog_2);
 		
 		textSQL = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -96,7 +96,7 @@ public class SQLUpdateDialog extends Dialog {
 		String strSQL = textSQL.getText();
 		
 		if("".equals(strSQL)) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.SQLUpdateDialog_Error, Messages.SQLUpdateDialog_5);
+			MessageDialog.openError(getShell(), Messages.get().SQLUpdateDialog_Error, Messages.get().SQLUpdateDialog_5);
 			return;
 		}
 		
@@ -105,8 +105,8 @@ public class SQLUpdateDialog extends Dialog {
 		try {
 			ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 		} catch (Exception e) {
-			logger.error(Messages.SQLUpdateDialog_6, e);
-			MessageDialog.openError(getShell(), Messages.SQLUpdateDialog_Error, Messages.SQLUpdateDialog_8 + e.getMessage());
+			logger.error(Messages.get().SQLUpdateDialog_6, e);
+			MessageDialog.openError(getShell(), Messages.get().SQLUpdateDialog_Error, Messages.get().SQLUpdateDialog_8 + e.getMessage());
 			return;
 		}
 		
@@ -119,8 +119,8 @@ public class SQLUpdateDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.SQLUpdateDialog_9, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.SQLUpdateDialog_10, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().SQLUpdateDialog_9, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SQLUpdateDialog_10, false);
 	}
 
 	/**

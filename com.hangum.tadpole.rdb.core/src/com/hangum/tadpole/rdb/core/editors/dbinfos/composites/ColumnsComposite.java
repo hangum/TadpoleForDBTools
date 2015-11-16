@@ -92,7 +92,7 @@ public class ColumnsComposite extends Composite {
 
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.ColumnsComposite_0);
+		lblNewLabel.setText(Messages.get().ColumnsComposite_0);
 
 		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -113,7 +113,7 @@ public class ColumnsComposite extends Composite {
 				initUI();
 			}
 		});
-		btnRefresh.setText(Messages.ColumnsComposite_1);
+		btnRefresh.setText(Messages.get().ColumnsComposite_1);
 
 		tvColumnInform = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvColumnInform.getTable();
@@ -134,7 +134,7 @@ public class ColumnsComposite extends Composite {
 		});
 		btnDownload.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnDownload.setBounds(0, 0, 94, 28);
-		btnDownload.setText(Messages.ColumnsComposite_btnDownload_text);
+		btnDownload.setText(Messages.get().ColumnsComposite_btnDownload_text);
 
 		createTableColumn();
 
@@ -156,7 +156,7 @@ public class ColumnsComposite extends Composite {
 	 */
 	private void download() {
 		if(tvColumnInform.getTable().getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(null, Messages.TablesComposite_2, Messages.TablesComposite_3)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_3)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -184,7 +184,7 @@ public class ColumnsComposite extends Composite {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("ColumnInformation.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(null, Messages.TablesComposite_2, Messages.TablesComposite_5);
+			MessageDialog.openInformation(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_5);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		
@@ -345,7 +345,7 @@ public class ColumnsComposite extends Composite {
 			logger.error("initialize column summary", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 	}
 

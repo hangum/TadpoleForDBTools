@@ -92,7 +92,7 @@ public class ShardingComposite extends Composite {
 				initData();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.CollectionInformationComposite_tltmRefresh_text);
+		tltmRefresh.setToolTipText(Messages.get().CollectionInformationComposite_tltmRefresh_text);
 		
 		Group grpReplicaSet = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpReplicaSet = new GridLayout(1, false);
@@ -102,7 +102,7 @@ public class ShardingComposite extends Composite {
 		gl_grpReplicaSet.marginWidth = 0;
 		grpReplicaSet.setLayout(gl_grpReplicaSet);
 		grpReplicaSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpReplicaSet.setText(Messages.ShardingComposite_0);
+		grpReplicaSet.setText(Messages.get().ShardingComposite_0);
 		
 		try {
 			CommandResult res = MongoDBQuery.getAdminMongoDB(userDB).command("listShards"); //$NON-NLS-1$
@@ -111,7 +111,7 @@ public class ShardingComposite extends Composite {
 			logger.error("listShards", e); //$NON-NLS-1$
 		}
 	    
-		compositeShardList = new FindOneDetailComposite(grpReplicaSet, Messages.ShardingComposite_4, shards, false);
+		compositeShardList = new FindOneDetailComposite(grpReplicaSet, Messages.get().ShardingComposite_4, shards, false);
 		compositeShardList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeLocalLocks = new GridLayout(1, false);
 		gl_compositeLocalLocks.verticalSpacing = 2;
@@ -132,7 +132,7 @@ public class ShardingComposite extends Composite {
 			logger.error("listShards", e); //$NON-NLS-1$
 		}
 		
-		compositeShardList.refresh(Messages.ShardingComposite_4, shards, false);
+		compositeShardList.refresh(Messages.get().ShardingComposite_4, shards, false);
 	}
 
 	@Override

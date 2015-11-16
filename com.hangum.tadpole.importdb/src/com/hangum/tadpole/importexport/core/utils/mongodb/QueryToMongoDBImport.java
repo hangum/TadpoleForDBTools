@@ -60,11 +60,11 @@ public class QueryToMongoDBImport extends DBImport {
 	 */
 	public Job workTableImport() {
 		if("".equals(userQuery.trim())) { //$NON-NLS-1$
-			MessageDialog.openInformation(null, Messages.QueryToMongoDBImport_1, Messages.QueryToMongoDBImport_2);			
+			MessageDialog.openInformation(null, Messages.get().QueryToMongoDBImport_1, Messages.get().QueryToMongoDBImport_2);			
 			return null;		
 		}
 		if("".equals(colName.trim())) {
-			MessageDialog.openInformation(null, Messages.QueryToMongoDBImport_1, Messages.QueryToMongoDBImport_5);			
+			MessageDialog.openInformation(null, Messages.get().QueryToMongoDBImport_1, Messages.get().QueryToMongoDBImport_5);			
 			return null;		
 		}
 		

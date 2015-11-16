@@ -91,7 +91,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		tbtmTriggers = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTriggers.setText(Messages.TadpoleTriggerComposite_0);
+		tbtmTriggers.setText(Messages.get().TadpoleTriggerComposite_0);
 		tbtmTriggers.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
@@ -132,12 +132,12 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_1);
-		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_2);
-		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_3);
+		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_1);
+		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_2);
+		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_4);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.TadpoleTriggerComposite_5);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_4);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_5);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -217,7 +217,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showTrigger refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_76, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_76, errStatus); //$NON-NLS-1$
 		}
 	}
 

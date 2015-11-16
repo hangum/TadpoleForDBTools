@@ -58,20 +58,20 @@ public class PerspectivePreferencePage extends TadpoleDefaulPreferencePage imple
 		
 		Group grpSelectPerspective = new Group(container, SWT.NONE);
 		grpSelectPerspective.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpSelectPerspective.setText(Messages.PerspectivePreferencePage_3);
+		grpSelectPerspective.setText(Messages.get().PerspectivePreferencePage_3);
 		grpSelectPerspective.setLayout(new GridLayout(1, false));
 		
 		btnDefault = new Button(grpSelectPerspective, SWT.RADIO);
-		btnDefault.setText(Messages.PerspectivePreferencePage_4);
+		btnDefault.setText(Messages.get().PerspectivePreferencePage_4);
 		
 		btnManager = new Button(grpSelectPerspective, SWT.RADIO);
-		btnManager.setText(Messages.PerspectivePreferencePage_0);
+		btnManager.setText(Messages.get().PerspectivePreferencePage_0);
 //		if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
 			btnManager.setEnabled(false);
 //		}
 		
 		btnAdmin = new Button(grpSelectPerspective, SWT.RADIO);
-		btnAdmin.setText(Messages.PerspectivePreferencePage_6);
+		btnAdmin.setText(Messages.get().PerspectivePreferencePage_6);
 		if(SessionManager.isAdmin()) {
 			btnAdmin.setEnabled(false);
 		}

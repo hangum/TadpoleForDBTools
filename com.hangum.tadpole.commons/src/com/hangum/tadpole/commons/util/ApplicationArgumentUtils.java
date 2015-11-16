@@ -12,6 +12,7 @@ package com.hangum.tadpole.commons.util;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
@@ -207,7 +208,7 @@ public class ApplicationArgumentUtils {
 	private static String getValue(String key) throws Exception {
 		String[] applicationArgs = getArguments();
 		for(int i=0; i<applicationArgs.length; i++) {
-			String arg = applicationArgs[i];
+			String arg = StringUtils.trimToEmpty(applicationArgs[i]);
 			if( arg.startsWith(key) ) {
 				return applicationArgs[i+1];
 			}
@@ -224,8 +225,9 @@ public class ApplicationArgumentUtils {
 	private static boolean checkString(String checkString) {
 		String[] applicationArgs = getArguments();
 		
-		for (String string : applicationArgs) {
-			if( string.equalsIgnoreCase(checkString) ) return true;
+		for (String strArg : applicationArgs) {
+			strArg = StringUtils.trimToEmpty(strArg);
+			if( strArg.equalsIgnoreCase(checkString) ) return true;
 		}
 		
 		return false;
@@ -251,10 +253,11 @@ public class ApplicationArgumentUtils {
 				logger.info("\t\t --> start OSGI Runtime....................................................");
 				applicationArgs = Platform.getApplicationArgs();
 				
-			/* is single  */
+			/* is single or test  */
 			} else {
 				logger.info("\t\t --> [0] start api server ....................................................");
 				applicationArgs = getWebServerArguments();
+				
 			}
 		} catch(Throwable e) {
 			logger.info("\t\t [exception]--> [1] start api server ....................................................");
@@ -274,7 +277,12 @@ public class ApplicationArgumentUtils {
 		
 		applicationArgs[0] = "-dbServer";
 		applicationArgs[1] = System.getProperty("dbServer");
-		if(applicationArgs[1] == null) logger.error("**** System Initialize exception : Not found Tadpole engine db");
+		if(applicationArgs[1] == null) {
+			applicationArgs[0] = null;
+			logger.error("**** System Initialize exception : Not found Tadpole engine db");
+			
+			return applicationArgs;
+		}
 			
 		applicationArgs[2] = "-passwd";
 		applicationArgs[3] = System.getProperty("passwd");

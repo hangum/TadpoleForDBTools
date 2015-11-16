@@ -57,7 +57,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.TDBErroDialog_0);
+		newShell.setText(Messages.get().TDBErroDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -75,7 +75,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText(Messages.TDBErroDialog_2);
+		lblMessage.setText(Messages.get().TDBErroDialog_2);
 		new Label(container, SWT.NONE);
 		
 		textMessage = new Text(container, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -94,8 +94,8 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.TDBErroDialog_3, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.TDBErroDialog_4, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().TDBErroDialog_3, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().TDBErroDialog_4, false);
 	}
 
 	/**
@@ -103,6 +103,6 @@ public class TDBErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 350);
+		return new Point(450, 550);
 	}
 }

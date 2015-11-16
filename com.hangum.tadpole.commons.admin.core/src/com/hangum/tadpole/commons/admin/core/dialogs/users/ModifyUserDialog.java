@@ -77,7 +77,7 @@ public class ModifyUserDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.ModifyUserDialog_0);
+		newShell.setText(Messages.get().ModifyUserDialog_0);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText(Messages.ModifyUserDialog_1);
+		lblEmail.setText(Messages.get().ModifyUserDialog_1);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setEditable(false);
@@ -99,7 +99,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText(Messages.ModifyUserDialog_2);
+		lblName.setText(Messages.get().ModifyUserDialog_2);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setEditable(false);
@@ -107,14 +107,14 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblAllowIp = new Label(container, SWT.NONE);
 		lblAllowIp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblAllowIp.setText(Messages.ModifyUserDialog_3);
+		lblAllowIp.setText(Messages.get().ModifyUserDialog_3);
 		
 		textAllowIP = new Text(container, SWT.BORDER);
 		textAllowIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblIsRegistDb = new Label(container, SWT.NONE);
 		lblIsRegistDb.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblIsRegistDb.setText(Messages.ModifyUserDialog_lblIsRegistDb_text);
+		lblIsRegistDb.setText(Messages.get().ModifyUserDialog_lblIsRegistDb_text);
 		
 		comboIsRegistDB = new Combo(container, SWT.READ_ONLY);
 		comboIsRegistDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -123,7 +123,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblApproval = new Label(container, SWT.NONE);
 		lblApproval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblApproval.setText(Messages.ModifyUserDialog_4);
+		lblApproval.setText(Messages.get().ModifyUserDialog_4);
 		
 		comboApproval = new Combo(container, SWT.READ_ONLY);
 		comboApproval.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -132,7 +132,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblUserConfirm = new Label(container, SWT.NONE);
 		lblUserConfirm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblUserConfirm.setText(Messages.ModifyUserDialog_5);
+		lblUserConfirm.setText(Messages.get().ModifyUserDialog_5);
 		
 		comboUserConfirm = new Combo(container, SWT.READ_ONLY);
 		comboUserConfirm.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -141,7 +141,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblDelete = new Label(container, SWT.NONE);
 		lblDelete.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDelete.setText(Messages.ModifyUserDialog_6);
+		lblDelete.setText(Messages.get().ModifyUserDialog_6);
 		
 		comboDel = new Combo(container, SWT.READ_ONLY);
 		comboDel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -150,7 +150,7 @@ public class ModifyUserDialog extends Dialog {
 		
 		Label lblCreateDate = new Label(container, SWT.NONE);
 		lblCreateDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCreateDate.setText(Messages.ModifyUserDialog_7);
+		lblCreateDate.setText(Messages.get().ModifyUserDialog_7);
 		
 		textCreateDate = new Text(container, SWT.BORDER);
 		textCreateDate.setEditable(false);
@@ -183,13 +183,13 @@ public class ModifyUserDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(BTN_INITIALIZE_PASSWORD == buttonId) {
-			if(MessageDialog.openConfirm(null, Messages.ModifyUserDialog_8, String.format(Messages.ModifyUserDialog_9, "tadpole"))) { //$NON-NLS-3$
+			if(MessageDialog.openConfirm(null, Messages.get().ModifyUserDialog_8, String.format(Messages.get().ModifyUserDialog_9, "tadpole"))) { //$NON-NLS-3$
 				userDAO.setPasswd("tadpole"); //$NON-NLS-1$
 				try {
 					TadpoleSystem_UserQuery.updateUserPassword(userDAO);
 					SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), userDAO.getPasswd());
 					
-					MessageDialog.openInformation(null, Messages.ModifyUserDialog_8, Messages.ModifyUserDialog_17);
+					MessageDialog.openInformation(null, Messages.get().ModifyUserDialog_8, Messages.get().ModifyUserDialog_17);
 				} catch(Exception e) {
 					logger.error("Changing password", e); //$NON-NLS-1$
 					MessageDialog.openError(getShell(), "Error", e.getMessage());			 //$NON-NLS-1$
@@ -203,7 +203,7 @@ public class ModifyUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if(MessageDialog.openConfirm(getShell(), Messages.ModifyUserDialog_12, Messages.ModifyUserDialog_13)) {
+		if(MessageDialog.openConfirm(getShell(), Messages.get().ModifyUserDialog_12, Messages.get().ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
 			user.setSeq(userDAO.getSeq());
 			user.setAllow_ip(textAllowIP.getText());
@@ -240,9 +240,9 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, BTN_INITIALIZE_PASSWORD, Messages.ModifyUserDialog_19, false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.ModifyUserDialog_11, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ModifyUserDialog_14, false);
+		createButton(parent, BTN_INITIALIZE_PASSWORD, Messages.get().ModifyUserDialog_19, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ModifyUserDialog_11, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ModifyUserDialog_14, false);
 	}
 
 	/**

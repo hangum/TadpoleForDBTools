@@ -52,7 +52,7 @@ public class SQLToRdbImportAction implements IViewActionDelegate {
 			SQLToDBImportDialog dialog = new SQLToDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 			dialog.open();
 		} else {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.MainEditor_21);
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.get().MainEditor_21);
 		}
 	}
 

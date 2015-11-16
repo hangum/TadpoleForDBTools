@@ -91,7 +91,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.FindUserAndDBRoleDialog_0);
+		newShell.setText(Messages.get().FindUserAndDBRoleDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -114,7 +114,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText(Messages.FindUserAndDBRoleDialog_1);
+		lblEmail.setText(Messages.get().FindUserAndDBRoleDialog_1);
 		
 		textUserEMail = new Text(compositeHead, SWT.BORDER);
 		textUserEMail.addKeyListener(new KeyAdapter() {
@@ -134,7 +134,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.FindUserAndDBRoleDialog_2);
+		btnSearch.setText(Messages.get().FindUserAndDBRoleDialog_2);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
@@ -156,7 +156,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		composite.setLayout(new GridLayout(5, false));
 		
 		Label lblRoleType = new Label(composite, SWT.NONE);
-		lblRoleType.setText(Messages.FindUserAndDBRoleDialog_3);
+		lblRoleType.setText(Messages.get().FindUserAndDBRoleDialog_3);
 		
 		comboRoleType = new Combo(composite, SWT.NONE | SWT.READ_ONLY);
 		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -168,7 +168,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		comboRoleType.select(0);
 		
 		Label lblTermsUfUse = new Label(composite, SWT.NONE);
-		lblTermsUfUse.setText(Messages.FindUserAndDBRoleDialog_4);
+		lblTermsUfUse.setText(Messages.get().FindUserAndDBRoleDialog_4);
 		
 		dateTimeStart = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN);
 		
@@ -212,7 +212,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		UserDAO userDAO = (UserDAO)iss.getFirstElement();
 		
 		if("NONE".equals(comboRoleType.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.FindUserAndDBRoleDialog_5, Messages.FindUserAndDBRoleDialog_6);
+			MessageDialog.openError(getShell(), Messages.get().FindUserAndDBRoleDialog_5, Messages.get().FindUserAndDBRoleDialog_6);
 			comboRoleType.setFocus();
 			return;
 		}
@@ -221,7 +221,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		try {
 			boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
 			if(isAddDBRole) {
-				if(!MessageDialog.openConfirm(getShell(), Messages.FindUserAndDBRoleDialog_7, Messages.FindUserDialog_4)) return;
+				if(!MessageDialog.openConfirm(getShell(), Messages.get().FindUserAndDBRoleDialog_7, Messages.get().FindUserDialog_4)) return;
 				
 				Calendar calStart = Calendar.getInstance();
 				calStart.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
@@ -234,15 +234,15 @@ public class FindUserAndDBRoleDialog extends Dialog {
 						new Timestamp(calEnd.getTimeInMillis())
 						);
 				
-				MessageDialog.openInformation(getShell(), Messages.FindUserAndDBRoleDialog_7, Messages.FindUserAndDBRoleDialog_10);
+				MessageDialog.openInformation(getShell(), Messages.get().FindUserAndDBRoleDialog_7, Messages.get().FindUserAndDBRoleDialog_10);
 				
 //				super.okPressed();
 			} else {
-				MessageDialog.openError(getShell(), Messages.FindUserAndDBRoleDialog_7, Messages.FindUserAndDBRoleDialog_12);
+				MessageDialog.openError(getShell(), Messages.get().FindUserAndDBRoleDialog_7, Messages.get().FindUserAndDBRoleDialog_12);
 			}
 		} catch (Exception e) {
-			logger.error(Messages.FindUserAndDBRoleDialog_13, e);
-			MessageDialog.openError(getShell(), Messages.FindUserAndDBRoleDialog_14, Messages.FindUserAndDBRoleDialog_15 + e.getMessage());
+			logger.error(Messages.get().FindUserAndDBRoleDialog_13, e);
+			MessageDialog.openError(getShell(), Messages.get().FindUserAndDBRoleDialog_14, Messages.get().FindUserAndDBRoleDialog_15 + e.getMessage());
 		}
 		
 	}
@@ -269,7 +269,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 * crate columns
 	 */
 	private void createColumns() {
-		String[] colNames = {Messages.FindUserAndDBRoleDialog_16, Messages.FindUserAndDBRoleDialog_17, Messages.FindUserAndDBRoleDialog_18};
+		String[] colNames = {Messages.get().FindUserAndDBRoleDialog_16, Messages.get().FindUserAndDBRoleDialog_17, Messages.get().FindUserAndDBRoleDialog_18};
 		int[] colSize = {150, 150, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
@@ -290,8 +290,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.FindUserAndDBRoleDialog_19, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.FindUserAndDBRoleDialog_20, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().FindUserAndDBRoleDialog_19, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().FindUserAndDBRoleDialog_20, false);
 	}
 
 	/**

@@ -11,6 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.cipher.core.manager,
+ com.hangum.tadpole.cipher.core.utils,
  org.jasypt.commons,
  org.jasypt.contrib.org.apache.commons.codec_1_3,
  org.jasypt.contrib.org.apache.commons.codec_1_3.binary,

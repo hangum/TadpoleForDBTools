@@ -52,8 +52,8 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.UserPermissionAction_3);
-		setToolTipText(Messages.UserPermissionAction_4);
+		setText(Messages.get().UserPermissionAction_3);
+		setToolTipText(Messages.get().UserPermissionAction_4);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/db.png")); //$NON-NLS-1$
 		window.getSelectionService().addPostSelectionListener(this);
 	}
@@ -67,7 +67,7 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 			logger.error("Database Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.UserPermissionAction_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().UserPermissionAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 

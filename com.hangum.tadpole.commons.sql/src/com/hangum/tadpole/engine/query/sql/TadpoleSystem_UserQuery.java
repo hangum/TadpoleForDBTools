@@ -111,7 +111,7 @@ public class TadpoleSystem_UserQuery {
 			
 			return userdb;
 		} else {
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_3);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_3);
 		}
 	}
 	
@@ -159,7 +159,7 @@ public class TadpoleSystem_UserQuery {
 		List<UserDAO> listUser = sqlClient.queryForList("findUser", email); //$NON-NLS-1$
 		
 		if(listUser.size() == 0) {
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_0);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_0);
 		}
 		
 		return listUser.get(0);
@@ -182,15 +182,15 @@ public class TadpoleSystem_UserQuery {
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_5);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_5);
 		} else {
 			try {
 				if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
-					throw new Exception(Messages.TadpoleSystem_UserQuery_5);
+					throw new Exception(Messages.get().TadpoleSystem_UserQuery_5);
 				}
 			} catch(Exception e) {
 				logger.error(String.format("do not login : %s", e.getMessage()));
-				throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_5);
+				throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_5);
 			}
 		}
 	

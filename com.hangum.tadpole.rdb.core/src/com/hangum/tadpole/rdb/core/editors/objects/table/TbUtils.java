@@ -25,8 +25,8 @@ public class TbUtils {
 
 	/** table modify type */
 //	public static enum TABLE_MOD_TYPE {NONE, EDITOR};
-	public static String NONE_MSG 	= Messages.TbUtils_0;
-	public static String EDITOR_MSG = Messages.TbUtils_1;
+	public static String NONE_MSG 	= Messages.get().TbUtils_0;
+	public static String EDITOR_MSG = Messages.get().TbUtils_1;
 	
 	/** column modify type */
 	public static enum COLUMN_MOD_TYPE {NONE, INSERT, UPDATE, DELETE};
@@ -62,18 +62,19 @@ public class TbUtils {
 	public static String MODIFY_DATA = MODIFY_DATA_START + "%s" + MODIFY_DATA_END; //$NON-NLS-1$
 	/** 데이터 항목 수정 */
 	public static String getModifyData(String value) {
-		return String.format(MODIFY_DATA, StringEscapeUtils.escapeHtml(value));
+		return String.format(MODIFY_DATA, StringEscapeUtils.escapeXml(value));
 	}
 	/** is modify data */
 	public static boolean isModifyData(String value) {
 		return value.indexOf("<em style='color:rgb") != -1; //$NON-NLS-1$
 	}
+	
 	/** 원본 데이터를 가지고온다 */
 	public static String getOriginalData(String value) {
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_START, ""); //$NON-NLS-1$
 		value = StringUtils.replace(value, TbUtils.MODIFY_DATA_END, ""); //$NON-NLS-1$
 		
-		return StringEscapeUtils.unescapeHtml(value);
+		return StringEscapeUtils.unescapeXml(value);
 	}
 
 }

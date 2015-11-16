@@ -75,7 +75,7 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.ChangeUsePersonalToGrouprDialog_0);
+		newShell.setText(Messages.get().ChangeUsePersonalToGrouprDialog_0);
 	}
 
 	/**
@@ -89,33 +89,33 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText(Messages.ChangeUsePersonalToGrouprDialog_1);
+		lblEmail.setText(Messages.get().ChangeUsePersonalToGrouprDialog_1);
 		
 		textEMail = new Text(container, SWT.BORDER);
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(container, SWT.NONE);
-		lblPassword.setText(Messages.ChangeUsePersonalToGrouprDialog_2);
+		lblPassword.setText(Messages.get().ChangeUsePersonalToGrouprDialog_2);
 		
 		textPasswd = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblRePassword = new Label(container, SWT.NONE);
-		lblRePassword.setText(Messages.ChangeUsePersonalToGrouprDialog_3);
+		lblRePassword.setText(Messages.get().ChangeUsePersonalToGrouprDialog_3);
 		
 		textRePasswd = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText(Messages.ChangeUsePersonalToGrouprDialog_4);
+		lblName.setText(Messages.get().ChangeUsePersonalToGrouprDialog_4);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblAllowIp = new Label(container, SWT.NONE);
 		lblAllowIp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblAllowIp.setText(Messages.ChangeUsePersonalToGrouprDialog_5);
+		lblAllowIp.setText(Messages.get().ChangeUsePersonalToGrouprDialog_5);
 		
 		textAllowIP = new Text(container, SWT.BORDER);
 		textAllowIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -145,7 +145,7 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 		
 		if(!validation(strEmail, passwd, rePasswd, name, strIp)) return;
 		
-		if(MessageDialog.openConfirm(getShell(), Messages.ChangeUsePersonalToGrouprDialog_6, Messages.ChangeUsePersonalToGrouprDialog_7)) {
+		if(MessageDialog.openConfirm(getShell(), Messages.get().ChangeUsePersonalToGrouprDialog_6, Messages.get().ChangeUsePersonalToGrouprDialog_7)) {
 			UserDAO user = new UserDAO();
 			user.setSeq(userDAO.getSeq());
 			user.setEmail(strEmail);
@@ -157,7 +157,7 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 				TadpoleSystem_UserQuery.updateUserPersonToGroup(user);
 				TadpoleSystemQuery.updateSystemInformation(PublicTadpoleDefine.SYSTEM_USE_GROUP.GROUP.name());
 				
-				MessageDialog.openInformation(getShell(), Messages.ChangeUsePersonalToGrouprDialog_6, Messages.ChangeUsePersonalToGrouprDialog_9);
+				MessageDialog.openInformation(getShell(), Messages.get().ChangeUsePersonalToGrouprDialog_6, Messages.get().ChangeUsePersonalToGrouprDialog_9);
 				TadpoleApplicationContextManager.initSystem();
 				SessionManager.logout();
 				
@@ -188,27 +188,27 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name, String ip) {
 
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10, Messages.ChangeUsePersonalToGrouprDialog_11);
+			MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10, Messages.get().ChangeUsePersonalToGrouprDialog_11);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10, Messages.ChangeUsePersonalToGrouprDialog_13);
+			MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10, Messages.get().ChangeUsePersonalToGrouprDialog_13);
 			textPasswd.setFocus();
 			return false;
 		} else if("".equals(name)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10, Messages.ChangeUsePersonalToGrouprDialog_15);
+			MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10, Messages.get().ChangeUsePersonalToGrouprDialog_15);
 			textName.setFocus();
 			return false;
 		} else if("".equals(ip)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10, Messages.ChangeUsePersonalToGrouprDialog_17);
+			MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10, Messages.get().ChangeUsePersonalToGrouprDialog_17);
 			textAllowIP.setFocus();
 			return false;
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
-			MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10,Messages.ChangeUsePersonalToGrouprDialog_19);
+			MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10,Messages.get().ChangeUsePersonalToGrouprDialog_19);
 			textEMail.setFocus();
 			return false;
 		} else if(!strPass.equals(rePasswd)) {
-			MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10, Messages.ChangeUsePersonalToGrouprDialog_21);
+			MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10, Messages.get().ChangeUsePersonalToGrouprDialog_21);
 			textPasswd.setFocus();
 			return false;
 		}
@@ -216,13 +216,13 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 		try {
 			// 기존 중복 이메일인지 검사합니다.
 			if(!TadpoleSystem_UserQuery.isDuplication(strEmail)) {
-				MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10, Messages.ChangeUsePersonalToGrouprDialog_23);
+				MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10, Messages.get().ChangeUsePersonalToGrouprDialog_23);
 				textEMail.setFocus();
 				return false;
 			}
 		} catch(Exception e) {
 			logger.error("이메일 중복화인", e); //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.ChangeUsePersonalToGrouprDialog_10, Messages.ChangeUsePersonalToGrouprDialog_26 + e.getMessage());
+			MessageDialog.openError(getParentShell(), Messages.get().ChangeUsePersonalToGrouprDialog_10, Messages.get().ChangeUsePersonalToGrouprDialog_26 + e.getMessage());
 			return false;
 		}
 		
@@ -235,8 +235,8 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.ChangeUsePersonalToGrouprDialog_27, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ChangeUsePersonalToGrouprDialog_28, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ChangeUsePersonalToGrouprDialog_27, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ChangeUsePersonalToGrouprDialog_28, false);
 	}
 
 	/**

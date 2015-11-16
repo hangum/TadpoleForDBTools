@@ -87,12 +87,12 @@ class RenameValidator implements IInputValidator {
 
 	public String isValid(String newText) {
 		if(oldName.equals(newText)) {
-			return Messages.ObjectMongodbRenameAction_7;
+			return Messages.get().ObjectMongodbRenameAction_7;
 		}
 	    int len = newText.length();
 	
 	    // Determine if input is too short or too long
-	    if (len < 2) return Messages.ObjectMongodbRenameAction_8;
+	    if (len < 2) return Messages.get().ObjectMongodbRenameAction_8;
 	
 	    return null;
 	}
