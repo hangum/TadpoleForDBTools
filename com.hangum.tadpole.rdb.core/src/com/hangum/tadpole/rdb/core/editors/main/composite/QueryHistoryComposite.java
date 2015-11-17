@@ -273,36 +273,43 @@ public class QueryHistoryComposite extends Composite {
 		// time
 		GridColumn tvcSeq = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcSeq.setWidth(50);
+		tvcSeq.setMoveable(true);
 		tvcSeq.setText("#"); //$NON-NLS-1$
 				
 		// time
 		GridColumn tvcDate = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcDate.setWidth(150);
+		tvcDate.setMoveable(true);
 		tvcDate.setText(Messages.get().QueryHistoryComposite_7);
 		
 		// sql
 		GridColumn tvcSQL = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcSQL.setWidth(300);
+		tvcSeq.setMoveable(true);
 		tvcSQL.setText(Messages.get().QueryHistoryComposite_8);
 		tvcSQL.setWordWrap(true);
 
 		// duration
 		GridColumn tvcDuration = new GridColumn(gridSQLHistory, SWT.RIGHT);
 		tvcDuration.setWidth(60);
+		tvcDuration.setMoveable(true);
 		tvcDuration.setText(Messages.get().QueryHistoryComposite_9);
 		
 		// rows
 		GridColumn tvcRows = new GridColumn(gridSQLHistory, SWT.RIGHT);
 		tvcRows.setWidth(60);
+		tvcRows.setMoveable(true);
 		tvcRows.setText(Messages.get().QueryHistoryComposite_10);
 		
 		// result
 		GridColumn tvcResult = new GridColumn(gridSQLHistory, SWT.NONE);
 		tvcResult.setWidth(90);
+		tvcResult.setMoveable(true);
 		tvcResult.setText(Messages.get().QueryHistoryComposite_11);
 
 		GridColumn tvcMessage = new GridColumn(gridSQLHistory, SWT.NONE);
 		tvcMessage.setWidth(250);
+		tvcMessage.setMoveable(true);
 		tvcMessage.setText(Messages.get().QueryHistoryComposite_12);
 	}
 	

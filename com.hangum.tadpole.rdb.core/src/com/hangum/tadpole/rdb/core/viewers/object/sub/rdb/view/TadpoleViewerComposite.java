@@ -434,6 +434,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			TableViewerColumn tableColumn = new TableViewerColumn(viewColumnViewer, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+			tableColumn.getColumn().setMoveable(true);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tableColumn, i));
 		}
 	}

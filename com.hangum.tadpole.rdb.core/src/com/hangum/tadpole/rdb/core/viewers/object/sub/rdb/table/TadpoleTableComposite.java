@@ -274,6 +274,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
 		tbName.setWidth(170);
+		tbName.setMoveable(true);
 		tbName.setText(Messages.get().TadpoleTableComposite_1);
 		tbName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbName, 0));
 		tvColName.setLabelProvider(new ColumnLabelProvider() {
@@ -337,6 +338,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		TableViewerColumn tvTableComment = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbComment = tvTableComment.getColumn();
 		tbComment.setWidth(200);
+		tbComment.setMoveable(true);
 		tbComment.setText(Messages.get().TadpoleTableComposite_2);
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
 		tvTableComment.setLabelProvider(clpTable);
@@ -358,7 +360,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		createTableMenu();
 
 		// columns
-		tableColumnViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableColumnViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.Move);
 		tableColumnViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
@@ -400,6 +402,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tableColumn, i));
+			tableColumn.getColumn().setMoveable(true);
 			tableColumn.setEditingSupport(new ColumnCommentEditorSupport(tableListViewer, tableColumnViewer, userDB, i));
 		}
 	}

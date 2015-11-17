@@ -34,6 +34,7 @@ public class ColumnHeaderCreator {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, colDef[i].align);
 
 			TableColumn tableColumn = tableViewerColumn.getColumn();
+			tableColumn.setMoveable(true);
 			tableColumn.setText(colDef[i].caption);
 			tableColumn.setData("column", colDef[i].column);
 			tableColumn.setData("merge", colDef[i].merge);
