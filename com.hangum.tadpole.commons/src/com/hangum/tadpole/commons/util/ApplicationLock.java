@@ -18,6 +18,8 @@ import java.nio.channels.FileLock;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+
 /**
  * application lock
  * 
@@ -50,7 +52,7 @@ public class ApplicationLock {
 	 */
 	private ApplicationLock(String key) throws Exception {
 		try {
-			String tmp_dir = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/temp/";
+			String tmp_dir = SystemDefine.getConfigureRoot() + "configuration/tadpole/temp/";
 			File tmpDir = new File(tmp_dir);
 			if(!tmpDir.isDirectory()) {
 				tmpDir.mkdirs();

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.define;
 
+import org.eclipse.core.runtime.Platform;
+
 /**
  * 시스템 정보를 정의합니다.
  * 
@@ -26,6 +28,18 @@ public class SystemDefine {
 	
 	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";
 	public static final String SOURCE_PAGE = INFORMATION;
+	
+	/**
+	 * get configure root
+	 * @return
+	 */
+	public static String getConfigureRoot() {
+		if(isOSGIRuntime()) {
+			return Platform.getInstallLocation().getURL().getFile();
+		} else {
+			return System.getProperty("user.home") + "/";
+		}
+	}
 	
 	/**
 	 * 현재 동작 하는 런타임이 osgi framework인지?
