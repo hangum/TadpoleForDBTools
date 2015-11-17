@@ -24,10 +24,10 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 public class TDBDBDAO {
 	
 	/** This variable is content assist */
-	protected String tableListSeparator = "";
+	protected String tableListSeparator = null;
 	/** This variable is content assit */
-	protected String viewListSeparator = "";
-	protected String functionLisstSeparator = "";
+	protected String viewListSeparator = null;
+	protected String functionLisstSeparator = null;
 	
 	/** table list */
 	protected List<TableDAO> listTable = new ArrayList<TableDAO>();
