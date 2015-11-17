@@ -55,8 +55,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -392,20 +395,24 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * table table column
 	 */
 	protected void createTableColumne() {
-		String[] name = {Messages.get().TadpoleTableComposite_4, Messages.get().TadpoleTableComposite_5, Messages.get().TadpoleTableComposite_6, Messages.get().TadpoleTableComposite_7, Messages.get().TadpoleTableComposite_8, Messages.get().TadpoleTableComposite_9, Messages.get().TadpoleTableComposite_10};
-		int[] size = {120, 90, 100, 50, 50, 50, 50};
+		String[] name 		= {Messages.get().TadpoleTableComposite_4, Messages.get().TadpoleTableComposite_5, Messages.get().TadpoleTableComposite_6, Messages.get().TadpoleTableComposite_7, Messages.get().TadpoleTableComposite_8, Messages.get().TadpoleTableComposite_9, Messages.get().TadpoleTableComposite_10};
+		int[] size 			= {120, 90, 100, 50, 50, 50, 50};
+//		String[] keyOrder 	= {"Field", "Type", "Key", "Comment", "Null", "Default", "Extra"};
 		
 		// table column tooltip
 		ColumnViewerToolTipSupport.enableFor(tableColumnViewer);
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tableColumnViewer, SWT.LEFT);
+//			tableColumn.getColumn().setData(keyOrder[i]);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tableColumn, i));
 			tableColumn.getColumn().setMoveable(true);
+//			tableColumn.getColumn().addListener(SWT.Move, listener);
 			tableColumn.setEditingSupport(new ColumnCommentEditorSupport(tableListViewer, tableColumnViewer, userDB, i));
 		}
 	}
+	
 	/**
 	 * selection adapter
 	 * 
