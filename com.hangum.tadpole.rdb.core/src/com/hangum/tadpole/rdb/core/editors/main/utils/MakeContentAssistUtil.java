@@ -39,12 +39,13 @@ public class MakeContentAssistUtil extends com.hangum.tadpole.db.metadata.MakeCo
 	 * @return
 	 */
 	public String makeContentAssistUtil(final UserDBDAO userDB) {
-		final String strTableList = "".equals(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
-		final String strViewList = "".equals(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
-		final String sstrTmpFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
-		final String strConstList = strTableList + 
-	    							(strViewList.equals("")?"":"|" + strViewList) +
-	    							(sstrTmpFunction.equals("")?"":"|" + sstrTmpFunction);
+		final String strTableList 	=  null == userDB.getTableListSeparator()?getAssistTableList(userDB):userDB.getTableListSeparator();
+		final String strViewList 	=  null == userDB.getViewListSeparator()?getAssistViewList(userDB):userDB.getViewListSeparator();
+		final String sstrTmpFunction = null == userDB.getFunctionLisstSeparator()?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
+		
+		final String strConstList = (strTableList == null?"":strTableList) + 
+	    							(strViewList == null?"":"|" + strViewList) +
+	    							(sstrTmpFunction == null?"":"|" + sstrTmpFunction);
 	    							;
 		    							
        return strConstList;
