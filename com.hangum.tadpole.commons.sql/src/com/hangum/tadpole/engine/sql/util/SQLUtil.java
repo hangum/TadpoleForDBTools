@@ -475,9 +475,10 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String makeQuote(String value) {
-		value = StringUtils.replace(value, "'", "''");
+//		value = StringUtils.replace(value, "'", "''");
+//		return "'" + value + "'";
 		
-		return "'" + value + "'";
+		return StringEscapeUtils.escapeSql(value);
 	}
 	
 }
