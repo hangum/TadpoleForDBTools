@@ -128,7 +128,6 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 		});
 		
 		if(varTableList != '') {
-			// Add table list to Editor's keywordList
 			var keywordList = session.$mode.$highlightRules.$keywordList;
 			if(keywordList != null) session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
 		}
@@ -448,7 +447,8 @@ editorService.getSelectedText = function(varDelimiter) {
 			var strReturnSQL = "";
 			
 			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
-			if(startQueryLine.lastIndexOf(varDelimiter) != -1) {
+			
+			if(!startQueryLine.startsWith("--") && startQueryLine.lastIndexOf(varDelimiter) != -1) {
 				// 선택된 행에 종료 문자가 있다면 
 					// 행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
 					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
@@ -510,7 +510,7 @@ findPreviousLineText = function(varLineNum, varDelimiter) {
 		}
 	}
 	return -1;
-}
+};
 
 /**
  * 선택된 행에 종료 문자가 있다면 
@@ -527,14 +527,19 @@ findPreviousChar = function(varLineNum, varDelimiter) {
 	var intArrayPostion = 0;
 	for(var i=varLineNum; i>=0; i--) {
 		var startQueryLine = editor.session.getLine(i);
-		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-		if(lastIndexOf != -1) {
-			arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
-//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
-			break;
+		
+		//주석 행인지조사한다.
+		if(startQueryLine.startsWith("--")) {
+			arryPreQuery[intArrayPostion] = startQueryLine;			
 		} else {
-//			console.log("\t not found text " + startQueryLine);
-			arryPreQuery[intArrayPostion] = startQueryLine;
+			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
+			if(lastIndexOf != -1) {
+				arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
+	//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+				break;
+			} else {
+				arryPreQuery[intArrayPostion] = startQueryLine;
+			}
 		}
 		
 		intArrayPostion++;
@@ -569,14 +574,18 @@ findNextCharacter = function(varLineNum, varDelimiter) {
 	var intArrayPostion = 0;
 	for(var i=varLineNum; i<intRowCount; i++) {
 		var startQueryLine = editor.session.getLine(i);
-		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-		if(lastIndexOf != -1) {
-			arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
-//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
-			break;
-		} else {
-//			console.log("\t not found text " + startQueryLine);
+		if(startQueryLine.startsWith("--")) {
 			arryPreQuery[intArrayPostion] = startQueryLine;
+		} else {
+			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
+			if(lastIndexOf != -1) {
+				arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
+	//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+				break;
+			} else {
+	//			console.log("\t not found text " + startQueryLine);
+				arryPreQuery[intArrayPostion] = startQueryLine;
+			}			
 		}
 		
 		intArrayPostion++;
