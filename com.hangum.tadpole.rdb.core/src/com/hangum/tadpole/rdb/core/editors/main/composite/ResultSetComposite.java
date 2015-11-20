@@ -407,9 +407,9 @@ public class ResultSetComposite extends Composite {
 							String strText = ""; //$NON-NLS-1$
 							
 							// if select value is null can 
-							if(columnObject == null) strText = "''"; //$NON-NLS-1$
+							if(columnObject == null) strText = ""; //$NON-NLS-1$
 							else strText = columnObject.toString();
-							columnDao.setCol_value(columnDao.getCol_value() + "'" + strText + "', ");
+							columnDao.setCol_value(columnDao.getCol_value() + SQLUtil.makeQuote(strText) + ", ");
 						}
 					}
 					columnDao.setCol_value(StringUtils.removeEnd(columnDao.getCol_value(), ", "));

@@ -293,7 +293,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						}
 					}
 				} catch(Exception e) {
-					logger.error("extension point exception", e); //$NON-NLS-1$
+					logger.error("extension point exception " + e.getMessage()); //$NON-NLS-1$
 				}
 				
 				return baseImage;

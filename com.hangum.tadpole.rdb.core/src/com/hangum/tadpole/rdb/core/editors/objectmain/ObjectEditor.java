@@ -88,7 +88,7 @@ public class ObjectEditor extends MainEditor {
 		setSite(site);
 		setInput(input);
 		setPartName(strPartName);
-//		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
+		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
 	}
 
 	@Override

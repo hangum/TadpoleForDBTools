@@ -82,7 +82,9 @@ var varEditorType = 'TABLES';
 	
 	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
-    
+    var EditSession = ace.require("ace/edit_session").EditSession;
+	var UndoManager = ace.require("./undomanager").UndoManager;
+	editor.resize(true)
 	editor.setShowPrintMargin(false);
 	editor.setHighlightActiveLine(true);
 	
@@ -91,6 +93,7 @@ var varEditorType = 'TABLES';
 	    enableSnippets: true,
 	    enableLiveAutocompletion: true
 	}); 
+	
 //};
 
 /** 
@@ -110,9 +113,6 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 	varEditorType = varType;
 	
 	try {
-		var EditSession = ace.require("ace/edit_session").EditSession;
-		var UndoManager = ace.require("./undomanager").UndoManager;
-		editor.resize(true)
 		var session = new EditSession(varInitText);
 		session.setUndoManager(new UndoManager());
 		session.setMode(varMode);

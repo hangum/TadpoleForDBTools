@@ -13,6 +13,7 @@ package com.hangum.tadpole.engine.sql.util;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
@@ -92,7 +93,7 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String removeComment(String strSQL) {
-//		if(null == strSQL) return "";
+		if(null == strSQL) return "";
 		
 //		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
 //		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
@@ -101,8 +102,10 @@ public class SQLUtil {
 //        Matcher regexMatcher = regex.matcher(strSQL);
 //		
 //		return regexMatcher.replaceAll("");
-//		StringUtil
-		return strSQL;
+//		logger.debug("[original]" + strSQL);
+//		logger.debug("[change]" + strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", ""));
+		
+		return strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
 	}
 	
 	/**
@@ -114,12 +117,10 @@ public class SQLUtil {
 	 */
 	public static boolean isNotAllowed(String strSQL) {
 		boolean isRet = false;
-		strSQL = removeComment(strSQL);
-
-		String cmpSql = StringUtils.trim(strSQL);
+		String cmpSql = StringUtils.trim(removeComment(strSQL));
 		
 		for (String strNAllSQL : NOT_ALLOWED_SQL) {
-			if(StringUtils.startsWith(cmpSql.toLowerCase(), strNAllSQL.toLowerCase())) {
+			if(StringUtils.startsWithIgnoreCase(cmpSql, strNAllSQL)) {
 				return true;
 			}
 		}
