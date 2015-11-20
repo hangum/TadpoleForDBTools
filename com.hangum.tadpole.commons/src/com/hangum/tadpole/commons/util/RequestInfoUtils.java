@@ -10,6 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
@@ -31,6 +35,17 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class RequestInfoUtils {
 	private static final Logger logger = Logger.getLogger(RequestInfoUtils.class);
+	
+	/**
+	 * Return request locale
+	 * 
+	 * @return
+	 */
+	public static String getDisplayLocale() {
+		HttpServletRequest request = RWT.getRequest();
+		Locale locale = request.getLocale();
+		return locale.getDisplayLanguage();
+	}
 	
 	/**
 	 * 올챙이가 동작 할 수 없는 브라우저라면, 사용자 브라우저 를 리턴합니다.

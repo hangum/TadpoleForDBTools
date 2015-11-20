@@ -32,6 +32,7 @@ import org.eclipse.rap.addons.d3chart.ChartItem;
 import org.eclipse.rap.addons.d3chart.ColorStream;
 import org.eclipse.rap.addons.d3chart.Colors;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.widgets.BrowserUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.KeyAdapter;
@@ -509,12 +510,25 @@ public class LoginDialog extends Dialog {
 				isFound = true;
 				comboLanguage.setText(strName);
 				changeUILocale(comboLanguage.getText());
-
 				break;
 			}
 		}
+		
+		// 쿠키에서 사용자 정보를 찾지 못했으면..
 		if(!isFound) {
-			comboLanguage.select(0);
+			// 사용자 브라우저 랭귀지를 가져와서, 올챙이가 지원하는 랭귀지인지 검사해서..
+			String locale = RequestInfoUtils.getDisplayLocale();
+			for(String strLocale : comboLanguage.getItems()) {
+				if(strLocale.equals(locale)) {
+					isFound = true;
+					break;
+				}
+			}
+			// 있으면... 
+			if(isFound) comboLanguage.setText(locale);
+			else comboLanguage.setText(Locale.ENGLISH.getDisplayLanguage());
+			
+			// 랭귀지를 바꾸어 준다.
 			changeUILocale(comboLanguage.getText());
 		}
 		
