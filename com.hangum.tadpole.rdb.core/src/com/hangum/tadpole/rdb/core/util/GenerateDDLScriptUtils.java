@@ -22,6 +22,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
@@ -64,8 +65,7 @@ public class GenerateDDLScriptUtils {
 			
 			
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "FROM "); //$NON-NLS-1$ 
-			if("".equals(tableDAO.getSchema_name())) sbSQL.append(tableDAO.getSysName()); //$NON-NLS-2$
-			else  sbSQL.append(tableDAO.getSchema_name() + "." + tableDAO.getSysName()); //$NON-NLS-2$
+			sbSQL.append(SQLUtil.getTableName(tableDAO));//tableDAO.getSchema_name() + "." + tableDAO.getSysName()); //$NON-NLS-2$
 			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 			
 		} catch(Exception e) {

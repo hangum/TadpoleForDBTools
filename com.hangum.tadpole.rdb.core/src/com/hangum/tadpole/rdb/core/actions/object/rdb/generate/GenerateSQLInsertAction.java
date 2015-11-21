@@ -26,6 +26,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -57,7 +58,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 			try {
 				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
 				
-				sbSQL.append("INSERT INTO " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR + "	("); //$NON-NLS-1$ //$NON-NLS-2$
+				sbSQL.append("INSERT INTO " + SQLUtil.getTableName(tableDAO) + PublicTadpoleDefine.LINE_SEPARATOR + "	("); //$NON-NLS-1$ //$NON-NLS-2$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					TableColumnDAO dao = showTableColumns.get(i);
 					sbSQL.append(dao.getSysName());

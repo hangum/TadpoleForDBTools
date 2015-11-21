@@ -28,6 +28,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
@@ -68,7 +69,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, Messages.get().ObjectDeleteAction_3)) {
-					String strSQL = "drop table " + dao.getSysName(); //$NON-NLS-1$
+					String strSQL = "drop table " + SQLUtil.getTableName(dao);// dao.getSysName(); //$NON-NLS-1$
 					try {
 						if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 							new TajoConnectionManager().executeUpdate(userDB, strSQL);

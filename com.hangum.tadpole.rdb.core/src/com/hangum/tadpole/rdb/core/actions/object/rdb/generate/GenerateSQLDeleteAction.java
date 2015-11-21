@@ -24,6 +24,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -53,7 +54,7 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
 			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
-			sbSQL.append("DELETE FROM " + tableDAO.getSysName() + " "); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append("DELETE FROM " + SQLUtil.getTableName(tableDAO) + " "); //$NON-NLS-1$ //$NON-NLS-2$
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 			int cnt = 0;
 			for (int i=0; i<showTableColumns.size(); i++) {

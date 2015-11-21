@@ -17,6 +17,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenerateDialog;
 
@@ -46,7 +47,7 @@ public class GenerateSampleDataAction extends AbstractObjectSelectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tableDao = (TableDAO)selection.getFirstElement();
 		
-		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(getWindow().getShell(), userDB, tableDao.getName());
+		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(getWindow().getShell(), userDB, SQLUtil.getTableName(tableDao));
 		dialog.open();
 	}
 }

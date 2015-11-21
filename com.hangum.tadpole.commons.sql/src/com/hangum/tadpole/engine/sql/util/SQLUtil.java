@@ -13,7 +13,6 @@ package com.hangum.tadpole.engine.sql.util;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
@@ -27,6 +26,7 @@ import com.hangum.tadpole.commons.util.StringHelper;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
@@ -478,6 +478,18 @@ public class SQLUtil {
 	 */
 	public static String makeQuote(String value) {
 		return String.format("'%s'", StringEscapeUtils.escapeSql(value));
+	}
+	
+	/**
+	 * Table name
+	 * 
+	 * @param tableDAO
+	 * @return
+	 */
+	public static String getTableName(TableDAO tableDAO) {
+		if("".equals(tableDAO.getSchema_name())) return tableDAO.getSysName(); //$NON-NLS-2$
+		
+		return tableDAO.getSchema_name() + "." + tableDAO.getSysName(); //$NON-NLS-2$
 	}
 	
 }

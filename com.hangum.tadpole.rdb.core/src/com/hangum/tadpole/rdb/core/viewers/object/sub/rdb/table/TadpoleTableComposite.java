@@ -302,7 +302,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				return table.getName();
+				if("".equals(table.getSchema_name())) return table.getName();
+				
+				return table.getSchema_name() + "."+ table.getName();
 			}
 		});
 		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
