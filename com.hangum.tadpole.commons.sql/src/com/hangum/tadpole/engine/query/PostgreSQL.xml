@@ -63,7 +63,7 @@
  -->
  <select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
-	relname as "name"
+	b.table_schema || '.' || relname as "name"
 FROM pg_catalog.pg_class a,
     information_schema.tables b
 WHERE 1=1

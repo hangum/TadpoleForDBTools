@@ -152,7 +152,7 @@ public class MakeContentAssistUtil {
 	public List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 				
-		if(userDB.getDBDefine() != DBDefine.TAJO_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			showTables = new ArrayList<TableDAO>();//().tableList(userDB);			
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

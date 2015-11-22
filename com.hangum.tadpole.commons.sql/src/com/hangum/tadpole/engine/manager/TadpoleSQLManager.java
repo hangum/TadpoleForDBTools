@@ -155,12 +155,6 @@ public class TadpoleSQLManager {
 		
 		TadpoleMetaData tmd = null;
 		
-		// make assist data
-		MakeContentAssistUtil assistUtil = new MakeContentAssistUtil();
-		userDB.setTableListSeparator(assistUtil.getAssistTableList(userDB));
-		userDB.setViewListSeparator(assistUtil.getAssistViewList(userDB));
-		userDB.setFunctionLisstSeparator(assistUtil.getFunctionList(userDB));
-		
 		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다. 
 		switch ( userDB.getDBDefine() ) {
 			case ORACLE_DEFAULT:		
@@ -201,8 +195,14 @@ public class TadpoleSQLManager {
 		
 		tmd.setDbMajorVersion(tmpDBMetadata.getDatabaseMajorVersion());
 		tmd.setMinorVersion(tmpDBMetadata.getDatabaseMinorVersion());
-		
 		dbMetadata.put(searchKey, tmd);
+
+		// make assist data
+		MakeContentAssistUtil assistUtil = new MakeContentAssistUtil();
+		userDB.setTableListSeparator(assistUtil.getAssistTableList(userDB));
+		userDB.setViewListSeparator(assistUtil.getAssistViewList(userDB));
+		userDB.setFunctionLisstSeparator(assistUtil.getFunctionList(userDB));
+		
 	}
 	
 	/**

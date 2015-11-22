@@ -465,11 +465,7 @@ public class MainEditor extends EditorExtension {
 	 * browser handler
 	 */
 	protected void addBrowserService() {
-//		if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.PRODUCTION) {
 		browserQueryEditor.setUrl(REAL_DB_URL);
-//	    } else {
-//	    	browserQueryEditor.setUrl(DEV_DB_URL);
-//	    }
 	    	
 		MakeContentAssistUtil constAssistUtil = new MakeContentAssistUtil();
 	    final String strConstList = constAssistUtil.makeContentAssistUtil(userDB);
