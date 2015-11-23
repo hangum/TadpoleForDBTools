@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -32,9 +31,7 @@ import org.eclipse.rap.addons.d3chart.ChartItem;
 import org.eclipse.rap.addons.d3chart.ColorStream;
 import org.eclipse.rap.addons.d3chart.Colors;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.widgets.BrowserUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -286,9 +283,9 @@ public class LoginDialog extends Dialog {
 		Label lblDonation = new Label(compositeLetter, SWT.NONE);
 //		lblDonation.setText(Messages.get().LoginDialog_lblDonation_text);
 
-		Browser browser = new Browser(compositeLetter, SWT.NONE);
-		browser.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1));
-		browser.setText(strPaypal);
+//		Browser browser = new Browser(compositeLetter, SWT.NONE);
+//		browser.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1));
+//		browser.setText(strPaypal);
 		
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
