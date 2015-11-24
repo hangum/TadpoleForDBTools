@@ -71,6 +71,7 @@ WHERE 1=1
     AND b.table_schema NOT IN ('pg_catalog', 'information_schema')
     AND b.table_type = 'BASE TABLE'
     AND a.relname = b.table_name
+GROUP BY name
 ORDER BY name
 </select>
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
@@ -86,6 +87,7 @@ WHERE 1=1
     AND b.table_schema NOT IN ('pg_catalog', 'information_schema')
     AND b.table_type = 'BASE TABLE'
     AND a.relname = b.table_name
+GROUP BY schema_name, realname, name, comment
 ORDER BY name
 </select>
 
@@ -142,13 +144,19 @@ ORDER BY name
 		FROM 
 		    pg_catalog.pg_attribute
 		WHERE 
-		    attrelid = (select oid from pg_catalog.pg_class where relname = #table#) AND 
+		    attrelid = (select a.oid 
+		                    from pg_catalog.pg_class a
+		                        ,pg_catalog.pg_namespace b
+		                    where a.relname = #table#
+		                    and b.nspname =  #schema#
+                            and a.relnamespace = b.oid) AND 
 		    attname= a.column_name AND 
 		    attnum > 0 AND 
 		    NOT attisdropped
 		)	as "comment"			
     FROM information_schema.columns a
     WHERE a.table_name = #table#
+    	AND a.table_schema = #schema#
 	ORDER BY a.ordinal_position
 </select>
 

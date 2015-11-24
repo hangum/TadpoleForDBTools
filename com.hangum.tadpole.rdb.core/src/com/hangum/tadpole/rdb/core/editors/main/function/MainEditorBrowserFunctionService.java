@@ -27,7 +27,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
@@ -128,7 +128,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 			List<TableDAO> listTable = editor.getUserDB().getListTable();
 			if(listTable.isEmpty()) { 
 				if(DBDefine.POSTGRE_DEFAULT != editor.getUserDB().getDBDefine()) { 
-					tableDao = TadpoleTableComposite.getTable(editor.getUserDB(), StringUtils.trim(strObject));
+					tableDao = TadpoleObjectQuery.getTable(editor.getUserDB(), StringUtils.trim(strObject));
 				} else {
 					tableDao = new TableDAO(strObject, "");
 				}

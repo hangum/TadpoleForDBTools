@@ -151,4 +151,54 @@ public class TadpoleObjectQuery {
 		
 		return showTables;
 	}
+	
+	/**
+	 * @param userDB
+	 * @param strObject
+	 * @return
+	 */
+	public static TableDAO getTable(UserDBDAO userDB, String strObject) throws Exception {
+		TableDAO tableDao = null;
+		List<TableDAO> showTables = new ArrayList<TableDAO>();
+		
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			List<TableDAO> tmpShowTables = new TajoConnectionManager().tableList(userDB);
+			
+			for(TableDAO dao : tmpShowTables) {
+				if(dao.getName().equals(strObject)) {
+					showTables.add(dao);
+					break;
+				}
+			}
+		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			List<TableDAO> tmpShowTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			
+			for(TableDAO dao : tmpShowTables) {
+				if(dao.getName().equals(strObject)) {
+					showTables.add(dao);
+					break;
+				}
+			}
+			
+		} else {
+			Map<String, Object> mapParam = new HashMap<String, Object>();
+			mapParam.put("db", 	userDB.getDb()); //$NON-NLS-1$
+			mapParam.put("name", 	strObject); //$NON-NLS-1$
+			
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$			
+		}
+		
+		/** filter 정보가 있으면 처리합니다. */
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
+		
+		if(!showTables.isEmpty()) { 
+			tableDao = showTables.get(0);
+			tableDao.setSysName(SQLUtil.makeIdentifierName(userDB, tableDao.getName()));
+			return tableDao;
+		} else {
+			return null;
+		}
+	}
 }
