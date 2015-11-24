@@ -280,7 +280,7 @@ public class LoginDialog extends Dialog {
 		}
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblDonation = new Label(compositeLetter, SWT.NONE);
+//		Label lblDonation = new Label(compositeLetter, SWT.NONE);
 //		lblDonation.setText(Messages.get().LoginDialog_lblDonation_text);
 
 //		Browser browser = new Browser(compositeLetter, SWT.NONE);
@@ -673,7 +673,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		if(listDBMart.isEmpty()) {
-			return new Point(480, 320);
+			return new Point(480, 300);
 		} else {
 			return new Point(480, 460);
 		}
