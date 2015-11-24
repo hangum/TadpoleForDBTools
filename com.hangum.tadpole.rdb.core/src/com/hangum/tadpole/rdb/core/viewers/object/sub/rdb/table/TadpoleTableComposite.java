@@ -83,7 +83,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelect
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLUpdateAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSampleDataAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
+//import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
@@ -144,7 +144,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private AbstractObjectAction tableDataEditorAction;
 	
 	/** table editor action */
-	private AlterTableAction alterTableAction;
+//	private AlterTableAction alterTableAction;
 	
 	// table column
 	private TableColumnSelectionAction tableColumnSelectionAction;
@@ -204,7 +204,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 //								FindEditorAndWriteQueryUtil.run(userDB, strSQL, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 //							}
 //						} else {
-							List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+							List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 							String strSQL = GenerateDDLScriptUtils.genTableScript(userDB, tableDAO, tmpTableColumns);
 							if(StringUtils.isNotEmpty(strSQL)) {
 								FindEditorAndWriteQueryUtil.run(userDB, strSQL, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
@@ -230,7 +230,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 						if (selectTableName.equals(table.getName())) return;
 						selectTableName = table.getName();
-						showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
+						showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, table);
 					} else {
 						showTableColumns = new ArrayList<>();
 						selectTableName = ""; //$NON-NLS-1$
@@ -471,7 +471,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Update"); //$NON-NLS-1$
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
-		alterTableAction = new AlterTableAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_15);
+//		alterTableAction = new AlterTableAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_15);
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_16);
 		
@@ -529,8 +529,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							if(!isUpdateLock()) manager.add(updateStmtAction);
 							if(!isDeleteLock()) manager.add(deleteStmtAction);
 							
-							manager.add(separator);
-							manager.add(alterTableAction);
+//							manager.add(separator);
+//							manager.add(alterTableAction);
 	
 							manager.add(separator);
 							manager.add(viewDDLAction);
@@ -581,7 +581,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				monitor.beginTask(strBeginMsg, IProgressMonitor.UNKNOWN);
 				
 				try {
-					listTablesDAO = getTableList(userDB);
+					listTablesDAO = TadpoleObjectQuery.getTableList(userDB);
 				} catch(Exception e) {
 					logger.error("Table Referesh", e); //$NON-NLS-1$
 					
@@ -629,62 +629,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
 		job.schedule();
-	}
-	
-	/**
-	 * 보여 주어야할 테이블 목록을 정의합니다.
-	 *
-	 * @param userDB
-	 * @return
-	 * @throws Exception
-	 */
-	private List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
-		List<TableDAO> showTables = null;
-				
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-			showTables = new TajoConnectionManager().tableList(userDB);
-
-			// sql keyword를 설정합니다.
-			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
-				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
-			}
-			
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$			
-		}
-		
-		/** filter 정보가 있으면 처리합니다. */
-		return getTableAfterwork(showTables, userDB);
-	}
-	
-	/**
-	 * Table 정보 처리 후에 
-	 * 
-	 * @param showTables
-	 * @param userDB
-	 * @return
-	 */
-	private List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
-		final StringBuffer strTablelist = new StringBuffer();
-		/** filter 정보가 있으면 처리합니다. */
-		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
-		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(TableDAO td : showTables) {
-			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
-			
-			strTablelist.append(td.getSysName()).append("|"); //$NON-NLS-1$
-		}
-		
-		// setting UserDBDAO 
-		userDB.setListTable(showTables);
-
-		// content assist util
-		MakeContentAssistUtil contentAssistUtil = new MakeContentAssistUtil();
-		contentAssistUtil.makeContentAssistUtil(userDB);
-		
-		return showTables;
 	}
 	
 	/**
@@ -796,7 +740,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction.setUserDB(getUserDB());
 		deleteStmtAction.setUserDB(getUserDB());
 		
-		alterTableAction.setUserDB(getUserDB());
+//		alterTableAction.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
 		tableDataEditorAction.setUserDB(getUserDB());
@@ -867,7 +811,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction.dispose();
 		deleteStmtAction.dispose();
 		
-		alterTableAction.dispose();
+//		alterTableAction.dispose();
 		
 		viewDDLAction.dispose();
 		tableDataEditorAction.dispose();

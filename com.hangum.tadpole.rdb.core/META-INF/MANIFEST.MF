@@ -46,7 +46,8 @@ Export-Package: com.hangum.tadpole.rdb.core,
  com.hangum.tadpole.rdb.core.extensionpoint.definition,
  com.hangum.tadpole.rdb.core.util,
  com.hangum.tadpole.rdb.core.viewers.connections,
- com.hangum.tadpole.rdb.core.viewers.object
+ com.hangum.tadpole.rdb.core.viewers.object,
+ com.hangum.tadpole.rdb.core.viewers.object.sub.rdb
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
  org.eclipse.rap.fileupload;version="3.0.0"

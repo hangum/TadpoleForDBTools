@@ -375,7 +375,7 @@ public class TableDirectEditorComposite extends Composite {
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 			requestQuery += " ctid, "; //$NON-NLS-1$
 		}
-		List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDao);
+		List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDao);
 		for(int i=0 ; i<tmpTableColumns.size(); i++) {
 			TableColumnDAO tabledao = tmpTableColumns.get(i);
 			requestQuery += tabledao.getName();

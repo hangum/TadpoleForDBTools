@@ -56,7 +56,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			StringBuffer sbSQL = new StringBuffer();
 			try {
-				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 				
 				sbSQL.append("INSERT INTO " + SQLUtil.getTableName(tableDAO) + PublicTadpoleDefine.LINE_SEPARATOR + "	("); //$NON-NLS-1$ //$NON-NLS-2$
 				for (int i=0; i<showTableColumns.size(); i++) {

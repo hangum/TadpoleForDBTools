@@ -87,7 +87,7 @@ public class GenerateDDLScriptUtils {
 	 */
 	public static String genTableScript(UserDBDAO userDB, TableDAO tableDAO) {
 		try {
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 			return genTableScript(userDB, tableDAO, showTableColumns);
 		} catch(Exception e) {
 			logger.error(Messages.get().GenerateSQLSelectAction_8, e);

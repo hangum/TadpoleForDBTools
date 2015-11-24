@@ -313,7 +313,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 	private void initData() {
 		try {
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 			List<ExtendTableColumnDAO> newTableColumns = new ArrayList<ExtendTableColumnDAO>();
 
 			ExtendTableColumnDAO newTableDAO = new ExtendTableColumnDAO("*", "", "", textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

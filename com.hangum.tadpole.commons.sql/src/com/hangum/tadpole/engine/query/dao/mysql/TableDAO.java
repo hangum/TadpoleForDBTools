@@ -10,7 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * table 정보 
@@ -40,6 +41,9 @@ public class TableDAO {
 	/** mongoDB */
 	long rows = 0l;
 	long size = 0l;
+	
+	/** table columns */
+	List<TableColumnDAO> listColumn = new ArrayList<TableColumnDAO>();
 	
 	public TableDAO() {
 	}
@@ -142,4 +146,19 @@ public class TableDAO {
 		return super.equals(obj);
 	}
 
+	/**
+	 * @return the listColumn
+	 */
+	public List<TableColumnDAO> getListColumn() {
+		return listColumn;
+	}
+
+	/**
+	 * @param listColumn the listColumn to set
+	 */
+	public void setListColumn(List<TableColumnDAO> listColumn) {
+		this.listColumn = listColumn;
+	}
+
+	
 }

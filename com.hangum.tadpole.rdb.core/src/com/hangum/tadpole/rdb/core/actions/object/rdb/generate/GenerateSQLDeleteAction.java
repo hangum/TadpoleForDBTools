@@ -53,7 +53,7 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 		try {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 			sbSQL.append("DELETE FROM " + SQLUtil.getTableName(tableDAO) + " "); //$NON-NLS-1$ //$NON-NLS-2$
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
 			int cnt = 0;
