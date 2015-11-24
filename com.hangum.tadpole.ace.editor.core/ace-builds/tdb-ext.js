@@ -456,7 +456,7 @@ editorService.getSelectedText = function(varDelimiter) {
 			
 			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
 			
-			if(!startQueryLine.startsWith("--") && startQueryLine.lastIndexOf(varDelimiter) != -1) {
+			if(!stringStartsWith(startQueryLine, "--") && startQueryLine.lastIndexOf(varDelimiter) != -1) {
 				// 선택된 행에 종료 문자가 있다면 
 					// 행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
 					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
@@ -537,7 +537,7 @@ findPreviousChar = function(varLineNum, varDelimiter) {
 		var startQueryLine = editor.session.getLine(i);
 		
 		//주석 행인지조사한다.
-		if(startQueryLine.startsWith("--")) {
+		if(stringStartsWith(startQueryLine, "--")) {
 			arryPreQuery[intArrayPostion] = startQueryLine;			
 		} else {
 			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
@@ -582,7 +582,7 @@ findNextCharacter = function(varLineNum, varDelimiter) {
 	var intArrayPostion = 0;
 	for(var i=varLineNum; i<intRowCount; i++) {
 		var startQueryLine = editor.session.getLine(i);
-		if(startQueryLine.startsWith("--")) {
+		if(stringStartsWith(startQueryLine, "--")) {
 			arryPreQuery[intArrayPostion] = startQueryLine;
 		} else {
 			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
@@ -611,6 +611,11 @@ findNextCharacter = function(varLineNum, varDelimiter) {
 	
 	return strReturnQuery;
 };
+
+// starts with
+function stringStartsWith (string, prefix) {
+    return string.slice(0, prefix.length) == prefix;
+}
 
 /**
  * insert text
