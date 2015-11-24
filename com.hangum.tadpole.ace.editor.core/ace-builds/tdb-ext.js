@@ -112,8 +112,8 @@ var varEditorType = 'TABLES';
 editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
 	varEditorType = varType;
 	
+	var session = new EditSession(varInitText);
 	try {
-		var session = new EditSession(varInitText);
 		session.setUndoManager(new UndoManager());
 		session.setMode(varMode);
 		session.on('change', function() {
@@ -131,19 +131,27 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 			var keywordList = session.$mode.$highlightRules.$keywordList;
 			if(keywordList != null) session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
 		}
-
-		editor.setTheme("ace/theme/" + varTheme);
-		editor.setFontSize(varFontSize + 'px');
-		editor.renderer.setShowGutter(varIsShowGutter === 'true');
-		
-		var boolIsWrap = varIsWrap === 'true';
-		session.setUseWrapMode(boolIsWrap);
-		if(boolIsWrap) session.setWrapLimitRange(varWarpLimit, varWarpLimit);
-		editor.setSession(session);
-		editor.focus();
 	} catch(e) {
 		console.log(e);
 	}
+	
+	try{
+		editor.setTheme("ace/theme/" + varTheme);
+		editor.setFontSize(varFontSize + 'px');
+		editor.renderer.setShowGutter(varIsShowGutter === 'true');
+	} catch(e) {
+		console.log(e);
+	}
+	try {
+		var boolIsWrap = varIsWrap === 'true';
+		session.setUseWrapMode(boolIsWrap);
+		if(boolIsWrap) session.setWrapLimitRange(varWarpLimit, varWarpLimit);
+	} catch(e) {
+		console.log(e);
+	}
+	
+	editor.setSession(session);
+	editor.focus();
 };
 /** 
  * 에디터를 초기화 합니다. 
