@@ -91,7 +91,7 @@ public class ResultTextComposite extends AbstractResultDetailComposite {
 
 	@Override
 	public RESULT_COMP_TYPE getResultType() {
-		return RESULT_COMP_TYPE.TEXT;
+		return RESULT_COMP_TYPE.Text;
 	}
 
 }

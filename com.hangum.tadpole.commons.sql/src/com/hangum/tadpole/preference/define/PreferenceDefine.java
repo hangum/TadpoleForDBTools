@@ -41,6 +41,11 @@ public class PreferenceDefine {
 	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";
 	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "false";
 	
+	/** RDB Result type */ 
+	public static final String RDB_RESULT_TYPE = "RDB_RESULT_TYPE";
+	/** RDB Result type 값 */
+	public static final String RDB_RESULT_TYPE_VALUE = "Table";
+	
 	/** select 제한  갯수 */ 
 	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */

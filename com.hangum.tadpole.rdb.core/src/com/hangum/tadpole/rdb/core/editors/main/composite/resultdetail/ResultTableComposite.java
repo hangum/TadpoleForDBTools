@@ -536,7 +536,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 
 	@Override
 	public RESULT_COMP_TYPE getResultType() {
-		return RESULT_COMP_TYPE.TABLE;
+		return RESULT_COMP_TYPE.Table;
 	}
 	
 }

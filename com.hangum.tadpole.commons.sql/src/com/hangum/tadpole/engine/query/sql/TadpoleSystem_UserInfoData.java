@@ -154,12 +154,18 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtRDBNumberColumnIsComman RDB의 결과테이블이 숫자 컬럼인 경우 ,를 넣을 것인지?
 	 * @param txtFontInfo font information
 	 * @param txtCommitCount commit count
+	 * @param txtResultType 
 	 */
 	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
-			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn) throws TadpoleSQLManagerException, SQLException {
+			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultType) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
+		
+		// 	select 제한  갯수		
+		userInfoData.setName(PreferenceDefine.RDB_RESULT_TYPE);
+		userInfoData.setValue0(txtResultType);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.SELECT_LIMIT_COUNT);

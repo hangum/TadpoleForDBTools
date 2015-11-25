@@ -28,7 +28,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 public abstract class AbstractResultDetailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(AbstractResultDetailComposite.class);
-	public enum RESULT_COMP_TYPE {TABLE, TEXT, JSON};
+	public enum RESULT_COMP_TYPE {Table, Text, JSON};
 	
 	protected Event eventTableSelect;
 	
