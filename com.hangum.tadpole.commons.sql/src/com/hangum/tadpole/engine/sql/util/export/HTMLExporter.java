@@ -65,7 +65,8 @@ public class HTMLExporter {
 			StringBuffer sbTmp = new StringBuffer();
 			sbTmp.append( String.format(strHead, ""+(i+1)) ); //$NON-NLS-1$
 			for(int j=1; j<mapColumns.size(); j++) {
-				sbTmp.append( String.format(strContent, ""+mapColumns.get(j)) ); //$NON-NLS-1$
+				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
+				sbTmp.append( String.format(strContent, strValue) ); //$NON-NLS-1$
 			}
 			sbBody.append(String.format(strGroup, sbTmp.toString()));
 		}
