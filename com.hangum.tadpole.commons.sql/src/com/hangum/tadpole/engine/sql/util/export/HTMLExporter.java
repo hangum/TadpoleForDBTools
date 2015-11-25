@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  */
 public class HTMLExporter {
 	private static final String sbHtml = 
+				"<meta charset='UTF-8'>" +
 				"<style type='text/css'>" +
 				".tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}" +
 				".tg td{font-family:Arial, sans-serif;font-size:12px;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}" +
