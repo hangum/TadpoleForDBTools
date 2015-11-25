@@ -793,6 +793,7 @@ public class Messages {
 	public String ColumnsComposite_btnDownload_text;
 	public String ResultSetComposite_btnColumnDetail_text;
 	public String MessageComposite_lblGoogleSearch_1_text;
+	public String RDBResultComposite_lblResult;
 
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.util;
+package com.hangum.tadpole.engine.sql.util.export;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,9 +21,16 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
-public class CSVUtil {
+/**
+ * CSV 유틸
+ * 
+ * @author hangum
+ *
+ */
+public class CSVExpoterUtil {
+
 	/**
-	 * INSERT 문을 생성합니다.
+	 * csv 파일을 생성하여 파일 위치를 넘겨줍니다.
 	 * 
 	 * @param tableName
 	 * @param rs

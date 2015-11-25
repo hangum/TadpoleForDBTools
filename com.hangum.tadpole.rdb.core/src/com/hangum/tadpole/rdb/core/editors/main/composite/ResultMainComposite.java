@@ -96,8 +96,7 @@ public class ResultMainComposite extends Composite {
 		tabFolderResult.setData(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE.toString(), 3);
 
 		///////////////////// tab resultset //////////////////////////		
-		compositeResultSet = new ResultSetComposite(tabFolderResult, SWT.NONE);
-		compositeResultSet.setRDBResultComposite(this);
+		compositeResultSet = new ResultSetComposite(tabFolderResult, SWT.NONE, this);
 		compositeResultSet.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
