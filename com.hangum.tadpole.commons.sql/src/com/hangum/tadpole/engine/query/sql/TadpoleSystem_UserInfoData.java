@@ -162,7 +162,7 @@ public class TadpoleSystem_UserInfoData {
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
-		// 	select 제한  갯수		
+		// 	result type	
 		userInfoData.setName(PreferenceDefine.RDB_RESULT_TYPE);
 		userInfoData.setValue0(txtResultType);
 		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$

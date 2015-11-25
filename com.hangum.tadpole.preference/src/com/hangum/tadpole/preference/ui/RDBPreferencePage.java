@@ -232,7 +232,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateRDBUserInfoData(
-					txtResultType, txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn);
+					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn, txtResultType);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
