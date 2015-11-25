@@ -30,9 +30,10 @@ import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.engine.sql.util.export.CSVExpoterUtil;
+import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
 import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
+import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.SWTResourceManager;
@@ -75,10 +76,12 @@ public class ResultTailComposite extends Composite {
 
 		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
-		comboDownload.add("CSV"); //$NON-NLS-1$
+		comboDownload.add("CSV Comma"); //$NON-NLS-1$
+		comboDownload.add("CSV Tab"); //$NON-NLS-1$
 		comboDownload.add("HTML"); //$NON-NLS-1$
 		comboDownload.add("JSON"); //$NON-NLS-1$
-		comboDownload.add("INSERT INTO statement"); //$NON-NLS-1$
+		comboDownload.add("INSERT statement"); //$NON-NLS-1$
+//		comboDownload.add("UPDATE statement"); //$NON-NLS-1$
 		comboDownload.select(0);
 		
 		Button btnSQLResultDownload = new Button(compositeDownloadAMsg, SWT.NONE);
@@ -87,14 +90,18 @@ public class ResultTailComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(getShell(), Messages.get().ResultSetComposite_4, Messages.get().ResultSetComposite_5)) {
-					if("CSV".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultCSVType();	
+					if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportResultCSVType(',');
+					} else if("CSV Tab".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportResultCSVType('\t');
 					} else if("HTML".equals(comboDownload.getText())) { //$NON-NLS-1$
 						exportResultHTMLType();
 					} else if("JSON".equals(comboDownload.getText())) { //$NON-NLS-1$
 						exportResultJSONType();
-					} else if("INSERT INTO statement".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportInsertIntoStatement();
+					} else if("INSERT statement".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportInsertStatement();
+//					} else if("UPDATE statement".equals(comboDownload.getText())) { //$NON-NLS-1$
+//						exportUpdateStatement();
 					}
 				}
 			}
@@ -124,41 +131,40 @@ public class ResultTailComposite extends Composite {
 	/**
 	 * export insert into statement
 	 */
-	private void exportInsertIntoStatement() {
+	private void exportInsertStatement() {
 		if(rsDAO == null) return;
-		
+	
 		try {
-			String strTableName = "TempTable"; //$NON-NLS-1$
-			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
-			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
-			
-			String strPath = SQLUtil.makeFileInsertStatment(strTableName, rsDAO);
-			String strZipFile = ZipUtils.pack(strPath);
-			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
-			
-			downloadExtFile(strTableName+"_SQL.zip", bytesZip); //$NON-NLS-1$
-		} catch (Exception e) {
-			logger.error("make insertinto", e); //$NON-NLS-1$
+			downloadFile(SQLExporter.makeFileInsertStatment(findTableName(), rsDAO));
+		} catch(Exception ee) {
+			logger.error("HTML type export error", ee); //$NON-NLS-1$
 		}
 	}
 	
+//	/**
+//	 * export update into statement
+//	 */
+//	private void exportUpdateStatement() {
+//		if(rsDAO == null) return;
+//		
+//		try {
+//			downloadFile(SQLExporter.makeFileUpdateStatment(findTableName(), rsDAO));
+//		} catch(Exception ee) {
+//			logger.error("HTML type export error", ee); //$NON-NLS-1$
+//		}
+//	}
+	
 	/**
 	 * Export resultset csvMessages.get().ResultSetComposite_14
-	 * 
+	 * @param seprator 
 	 */
-	private void exportResultCSVType() {
+	private void exportResultCSVType(char seprator) {
+		if(rsDAO == null) return;
+		
 		try {
-			String strTableName = "TempTable"; //$NON-NLS-1$
-			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
-			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
-			
-			String strPath = CSVExpoterUtil.makeCSVFile(strTableName, rsDAO);
-			String strZipFile = ZipUtils.pack(strPath);
-			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
-			
-			downloadExtFile(strTableName +"_CSV.zip", bytesZip); //$NON-NLS-1$
+			downloadFile(CSVExpoter.makeCSVFile(findTableName(), rsDAO, seprator));
 		} catch(Exception ee) {
-			logger.error("csv type export error", ee); //$NON-NLS-1$
+			logger.error("HTML type export error", ee); //$NON-NLS-1$
 		}
 	}
 	
@@ -166,18 +172,12 @@ public class ResultTailComposite extends Composite {
 	 * export result of html
 	 */
 	private void exportResultHTMLType() {
+		if(rsDAO == null) return;
+		
 		try {
-			String strTableName = "TempTable"; //$NON-NLS-1$
-			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
-			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
-			
-			String strPath = HTMLExporter.makeContentFile(strTableName, rsDAO);
-			String strZipFile = ZipUtils.pack(strPath);
-			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
-			
-			downloadExtFile(strTableName +"_HTML.zip", bytesZip); //$NON-NLS-1$
+			downloadFile(HTMLExporter.makeContentFile(findTableName(), rsDAO));
 		} catch(Exception ee) {
-			logger.error("csv type export error", ee); //$NON-NLS-1$
+			logger.error("HTML type export error", ee); //$NON-NLS-1$
 		}
 	}
 	
@@ -185,19 +185,37 @@ public class ResultTailComposite extends Composite {
 	 * export result of html
 	 */
 	private void exportResultJSONType() {
+		if(rsDAO == null) return;
+		
 		try {
-			String strTableName = "TempTable"; //$NON-NLS-1$
-			if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
-			if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
-			
-			String strPath = JsonExpoter.makeContentFile(strTableName, rsDAO);
-			String strZipFile = ZipUtils.pack(strPath);
-			byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
-			
-			downloadExtFile(strTableName +"_HTML.zip", bytesZip); //$NON-NLS-1$
+			downloadFile(JsonExpoter.makeContentFile(findTableName(), rsDAO));
 		} catch(Exception ee) {
-			logger.error("csv type export error", ee); //$NON-NLS-1$
+			logger.error("JSON type export error", ee); //$NON-NLS-1$
 		}
+	}
+	
+	/**
+	 * find table name
+	 * @return
+	 */
+	private String findTableName() {
+		String strTableName = "TempTable"; //$NON-NLS-1$
+		if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
+		if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
+		
+		return strTableName;
+	}
+
+	/**
+	 * download file
+	 * @param strFileLocation
+	 * @throws Exception
+	 */
+	private void downloadFile(String strFileLocation) throws Exception {
+		String strZipFile = ZipUtils.pack(strFileLocation);
+		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+		
+		downloadExtFile(findTableName() +".zip", bytesZip); //$NON-NLS-1$
 	}
 	
 	/** registery service handler */

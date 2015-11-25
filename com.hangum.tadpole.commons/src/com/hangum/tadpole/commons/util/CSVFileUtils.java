@@ -29,18 +29,23 @@ import au.com.bytecode.opencsv.CSVWriter;
 public class CSVFileUtils {
 	private static final Logger logger = Logger.getLogger(CSVFileUtils.class);
 	
+	public static String makeData(List<String[]> listContent) throws Exception {
+		return makeData(listContent, CSVWriter.DEFAULT_SEPARATOR);
+	}
+			
 	/**
 	 * csv data
+	 * @param seprator 
 	 * 
 	 * @param 
 	 */
-	public static String makeData(List<String[]> listContent) throws Exception {
+	public static String makeData(List<String[]> listContent, char seprator) throws Exception {
 		String strReust = "";
 		
 		StringWriter sw = new StringWriter();
 		CSVWriter writer = null;
 		try {
-			writer = new CSVWriter(sw);
+			writer = new CSVWriter(sw, seprator);
 			writer.writeAll(listContent);
 			
 			strReust = sw.getBuffer().toString();

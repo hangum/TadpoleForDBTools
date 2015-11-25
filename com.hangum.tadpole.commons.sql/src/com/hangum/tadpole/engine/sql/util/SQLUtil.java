@@ -10,25 +10,19 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.commons.util.StringHelper;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -219,67 +213,6 @@ public class SQLUtil {
 //		}
 		
 		return exeSQL;
-	}
-	
-	/**
-	 * INSERT 문을 생성합니다.
-	 * 
-	 * @param tableName
-	 * @param rs
-	 * @return 파일 위치
-	 * 
-	 * @throws Exception
-	 */
-	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".sql";
-		String strFullPath = strTmpDir + strFile;
-		
-		final String INSERT_INTO_STMT = "INSERT INTO " + tableName + " (%s) VALUES (%S);" + PublicTadpoleDefine.LINE_SEPARATOR; 
-		
-		// 컬럼 이름.
-		String strColumns = "";
-		Map<Integer, String> mapTable = rsDAO.getColumnLabelName();
-		for( int i=1 ;i<mapTable.size(); i++ ) {
-			if(i != (mapTable.size()-1)) strColumns += mapTable.get(i) + ",";
-			else strColumns += mapTable.get(i);
-		}
-		
-		// 데이터를 담는다.
-		StringBuffer sbInsertInto = new StringBuffer();
-		int DATA_COUNT = 1000;
-		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
-		String strResult = new String();		
-		for(int i=0; i<dataList.size(); i++) {
-			Map<Integer, Object> mapColumns = dataList.get(i);
-			
-			strResult = "";
-			for(int j=1; j<mapColumns.size(); j++) {
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
-				
-				if(j != (mapTable.size()-1)) strResult += strValue + ",";
-				else strResult += strValue;
-			}
-			sbInsertInto.append(String.format(INSERT_INTO_STMT, strColumns, strResult));
-			
-			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
-				sbInsertInto.setLength(0);
-			}
-		}
-		if(sbInsertInto.length() > 0) {
-			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
-		}
-		
-		return strFullPath;
 	}
 	
 	/**

@@ -27,18 +27,19 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  * @author hangum
  *
  */
-public class CSVExpoterUtil {
+public class CSVExpoter {
 
 	/**
 	 * csv 파일을 생성하여 파일 위치를 넘겨줍니다.
 	 * 
 	 * @param tableName
-	 * @param rs
+	 * @param rsDAO
+	 * @param seprator
 	 * @return 파일 위치
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeCSVFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+	public static String makeCSVFile(String tableName, QueryExecuteResultDTO rsDAO, char seprator) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
@@ -53,7 +54,7 @@ public class CSVExpoterUtil {
 			strArrys[i-1] = mapLabelName.get(i);
 		}
 		listCsvData.add(strArrys);
-		String strTitle = CSVFileUtils.makeData(listCsvData);
+		String strTitle = CSVFileUtils.makeData(listCsvData, seprator);
 		FileUtils.writeStringToFile(new File(strFullPath), strTitle, true);
 		
 		listCsvData.clear();
@@ -69,14 +70,14 @@ public class CSVExpoterUtil {
 			listCsvData.add(strArrys);
 			
 			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData), true);
+				FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), true);
 				listCsvData.clear();
 			}
 		}
 		
 		// 컬럼 이름.
 		if(!listCsvData.isEmpty()) {
-			FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData), true);
+			FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), true);
 		}
 		
 		return strFullPath;
