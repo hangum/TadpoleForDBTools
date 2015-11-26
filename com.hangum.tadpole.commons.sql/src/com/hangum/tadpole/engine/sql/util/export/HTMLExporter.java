@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -67,7 +68,7 @@ public class HTMLExporter {
 			sbTmp.append( String.format(strHead, ""+(i+1)) ); //$NON-NLS-1$
 			for(int j=1; j<mapColumns.size(); j++) {
 				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
-				sbTmp.append( String.format(strContent, strValue) ); //$NON-NLS-1$
+				sbTmp.append( String.format(strContent, StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
 			}
 			sbBody.append(String.format(strGroup, sbTmp.toString()));
 		}
