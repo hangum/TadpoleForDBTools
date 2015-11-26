@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Label;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
 import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
@@ -55,6 +54,7 @@ public class ResultTailComposite extends Composite {
 	private Label lblQueryResultStatus;
 	
 	protected QueryExecuteResultDTO rsDAO;
+//	private Button btnPin;
 	
 	/**
 	 * Create the composite.
@@ -66,13 +66,26 @@ public class ResultTailComposite extends Composite {
 		setLayout(new GridLayout(1, false));
 
 		compositeDownloadAMsg = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeDownloadAMsg = new GridLayout(4, false);
+		GridLayout gl_compositeDownloadAMsg = new GridLayout(5, false);
 		gl_compositeDownloadAMsg.verticalSpacing = 2;
 		gl_compositeDownloadAMsg.horizontalSpacing = 2;
 		gl_compositeDownloadAMsg.marginHeight = 0;
 		gl_compositeDownloadAMsg.marginWidth = 2;
 		compositeDownloadAMsg.setLayout(gl_compositeDownloadAMsg);
 		compositeDownloadAMsg.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		
+//		btnPin = new Button(compositeDownloadAMsg, SWT.TOGGLE);
+//		btnPin.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				String strPin = btnPin.getText();
+//				if("Pin".equals(strPin)) btnPin.setText("Unpin");
+//				else btnPin.setText("Pin");
+//				
+//				layout();
+//			}
+//		});
+//		btnPin.setText("Pin");
 
 		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
@@ -242,6 +255,14 @@ public class ResultTailComposite extends Composite {
 		
 		DownloadUtils.provideDownload(getShell(), downloadServiceHandler.getId());
 	}
+	
+//	/**
+//	 * btn pin selection
+//	 * @return
+//	 */
+//	public boolean getBtnPinSelection() {
+//		return btnPin.getSelection();
+//	}
 	
 	@Override
 	public void dispose() {

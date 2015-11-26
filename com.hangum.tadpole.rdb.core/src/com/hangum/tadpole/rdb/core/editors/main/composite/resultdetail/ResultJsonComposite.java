@@ -51,18 +51,18 @@ public class ResultJsonComposite extends AbstractResultDetailComposite {
 		textJson = new TadpoleEditorWidget(compositeContent, SWT.BORDER, EditorDefine.EXT_JSON, defaultValue, ""); //$NON-NLS-1$
 		textJson.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Composite compositeTail = new Composite(this, SWT.NONE);
-		compositeTail.setLayout(new GridLayout(1, false));
-		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Composite compositeBtn = new Composite(this, SWT.NONE);
+		compositeBtn.setLayout(new GridLayout(1, false));
+		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		compositeDownloadAMsg = new ResultTailComposite(compositeTail, SWT.NONE);
-		compositeDownloadAMsg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+		compositeTail = new ResultTailComposite(compositeBtn, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;
 		gl_compositeResult.horizontalSpacing = 2;
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 2;
-		compositeDownloadAMsg.setLayout(gl_compositeResult);
+		compositeTail.setLayout(gl_compositeResult);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ResultJsonComposite extends AbstractResultDetailComposite {
 			String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
 			strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
 		}
-		compositeDownloadAMsg.execute(strResultMsg, rsDAO);
+		compositeTail.execute(strResultMsg, rsDAO);
 	}
 
 	@Override

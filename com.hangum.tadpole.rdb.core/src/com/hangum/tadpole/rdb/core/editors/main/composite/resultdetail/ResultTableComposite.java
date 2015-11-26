@@ -243,14 +243,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		});
 		btnColumnDetail.setText(Messages.get().ResultSetComposite_btnColumnDetail_text);
 		
-		compositeDownloadAMsg = new ResultTailComposite(compositeBtn, SWT.NONE);
-		compositeDownloadAMsg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+		compositeTail = new ResultTailComposite(compositeBtn, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;
 		gl_compositeResult.horizontalSpacing = 2;
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 2;
-		compositeDownloadAMsg.setLayout(gl_compositeResult);
+		compositeTail.setLayout(gl_compositeResult);
 		
 	}
 
@@ -524,7 +524,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
 		}
 
-		compositeDownloadAMsg.execute(strResultMsg, rsDAO);
+		compositeTail.execute(strResultMsg, rsDAO);
 		
 		tvQueryResult.getTable().setToolTipText(strResultMsg);
 		sqlFilter.setTable(tvQueryResult.getTable());

@@ -15,6 +15,7 @@ import java.sql.Statement;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.swt.widgets.Display;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
@@ -42,6 +43,7 @@ public class ExecuteOtherSQL {
 	
 	/**
 	 * other sql execution
+	 * @param errMsg 
 	 * 
 	 * @param reqQuery
 	 * @param userDB
@@ -50,33 +52,33 @@ public class ExecuteOtherSQL {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public static void runPermissionSQLExecution(final RequestQuery reqQuery, 
+	public static void runPermissionSQLExecution(String errMsg, final RequestQuery reqQuery, 
 			final UserDBDAO userDB,
 			final String userType,
 			final String userEmail) throws SQLException, Exception
 	{
 		if(!PermissionChecker.isExecute(userType, userDB, reqQuery.getSql())) {
-			throw new Exception(Messages.get().MainEditor_21);
+			throw new Exception(errMsg);
 		}
 		if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
-				throw new Exception(Messages.get().MainEditor_21);
+				throw new Exception(errMsg);
 			}
 		}
 		PublicTadpoleDefine.QUERY_DML_TYPE queryType = reqQuery.getSqlDMLType();
 		if(queryType == QUERY_DML_TYPE.INSERT) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
-				throw new Exception(Messages.get().MainEditor_21);
+				throw new Exception(errMsg);
 			}
 		}
 		if(queryType == QUERY_DML_TYPE.UPDATE) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
-				throw new Exception(Messages.get().MainEditor_21);
+				throw new Exception(errMsg);
 			}
 		}
 		if(queryType == QUERY_DML_TYPE.DELETE) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
-				throw new Exception(Messages.get().MainEditor_21);
+				throw new Exception(errMsg);
 			}
 		}
 		

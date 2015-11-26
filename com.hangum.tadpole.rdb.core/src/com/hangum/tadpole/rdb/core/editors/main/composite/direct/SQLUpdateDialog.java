@@ -103,7 +103,7 @@ public class SQLUpdateDialog extends Dialog {
 		RequestQuery reqQuery = new RequestQuery(strSQL, PublicTadpoleDefine.OBJECT_TYPE.TABLES, 
 					EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.BLOCK, true);
 		try {
-			ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
+			ExecuteOtherSQL.runPermissionSQLExecution(Messages.get().MainEditor_21, reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 		} catch (Exception e) {
 			logger.error(Messages.get().SQLUpdateDialog_6, e);
 			MessageDialog.openError(getShell(), Messages.get().SQLUpdateDialog_Error, Messages.get().SQLUpdateDialog_8 + e.getMessage());

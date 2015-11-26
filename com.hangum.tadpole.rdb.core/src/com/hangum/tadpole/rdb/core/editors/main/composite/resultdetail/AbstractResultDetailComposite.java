@@ -39,7 +39,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	protected RequestResultDAO reqResultDAO;
 	
 	/** tail composite */
-	protected ResultTailComposite compositeDownloadAMsg;
+	protected ResultTailComposite compositeTail;
 
 	/**
 	 * Create the composite.
@@ -82,6 +82,10 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	 */
 	public ResultMainComposite getRdbResultComposite() {
 		return rdbResultComposite;
+	}
+	
+	public ResultTailComposite getCompositeTail() {
+		return compositeTail;
 	}
 	
 	@Override
