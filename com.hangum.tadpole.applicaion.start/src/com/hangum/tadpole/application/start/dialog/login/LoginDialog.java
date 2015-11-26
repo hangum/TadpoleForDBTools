@@ -99,6 +99,10 @@ public class LoginDialog extends Dialog {
 	private Label lblUserGuide;
 	private Label lblContact;
 	
+	private Button btnLogin;
+	private Button btnNewUser;
+	private Button btnFindPasswd;
+	
 	String strPaypal = "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'> " + //$NON-NLS-1$
 						"	<input type='hidden' name='cmd' value='_s-xclick'> " + //$NON-NLS-1$
 						"	<input type='hidden' name='encrypted' value='-----BEGIN PKCS7-----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-----END PKCS7-----'> " + //$NON-NLS-1$
@@ -173,7 +177,7 @@ public class LoginDialog extends Dialog {
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnLogin = new Button(compositeLogin, SWT.NONE);
+		btnLogin = new Button(compositeLogin, SWT.NONE);
 		btnLogin.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -484,11 +488,11 @@ public class LoginDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 //		createButton(parent, IDialogConstants.OK_ID, Messages.get().LoginDialog_15, true);
 		
-		createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
+		btnNewUser = createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-				createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
+				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
 			}
 		} catch (Exception e) {
 //			logger.error("view findpasswd button", e);
@@ -592,6 +596,8 @@ public class LoginDialog extends Dialog {
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
 		RWT.getUISession().setLocale(localeSelect);
 		
+		btnLogin.setText(Messages.get().LoginDialog_15);
+		
 		btnCheckButton.setText(Messages.get().LoginDialog_9);
 		lblEmail.setText(Messages.get().LoginDialog_1);
 		lblPassword.setText(Messages.get().LoginDialog_4);
@@ -601,6 +607,11 @@ public class LoginDialog extends Dialog {
 		lblSite.setText(Messages.get().LoginDialog_lblSite_text);
 		lblUserGuide.setText(Messages.get().LoginDialog_lblUserGuide_text);
 		lblContact.setText(Messages.get().LoginDialog_lblContact_text_1);
+		
+		if(btnNewUser != null) btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
+		if(btnFindPasswd != null) {
+			btnFindPasswd.setText(Messages.get().LoginDialog_lblFindPassword);
+		}
 		
 		compositeLetter.layout();
 		compositeLogin.layout();
