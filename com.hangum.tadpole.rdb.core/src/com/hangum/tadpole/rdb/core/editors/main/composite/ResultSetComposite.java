@@ -746,58 +746,55 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void changeResultType() {
-//		Control[] childControls = sashFormResult.getChildren();
-//		for (Control control : childControls) {
-//			if(control instanceof AbstractResultDetailComposite) {
-//				System.out.println("===============result==============================");
-//				AbstractResultDetailComposite retComposite = (AbstractResultDetailComposite)control;
-//				ResultTailComposite tailComposite = retComposite.getCompositeTail();
-//				if(!tailComposite.getBtnPinSelection()) {
-//					tailComposite.dispose();
-//				}
-//			}
-//		}
+		Control[] childControls = sashFormResult.getChildren();
+		int ctlCount = childControls.length;
+		for (int i=0; i<ctlCount; i++) {
+			Control control = childControls[i];
+			if(control instanceof AbstractResultDetailComposite) {
+				AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
+				ResultTailComposite tailComposite = resultComposite.getCompositeTail();
+				if(!tailComposite.getBtnPinSelection()) {
+					resultComposite.dispose();
+				}
+			}
+		}
+		
 		
 		RESULT_COMP_TYPE resultComp = (RESULT_COMP_TYPE)comboResult.getData(comboResult.getText());
-		if(compositeResult.getResultType() == resultComp) {
+			
+		if(resultComp == RESULT_COMP_TYPE.Table) {
+			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
+			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+			GridLayout gl_compositeResult = new GridLayout(1, false);
+			gl_compositeResult.verticalSpacing = 2;
+			gl_compositeResult.horizontalSpacing = 2;
+			gl_compositeResult.marginHeight = 0;
+			gl_compositeResult.marginWidth = 2;
+			compositeResult.setLayout(gl_compositeResult);
 			compositeResult.printUI(reqQuery, rsDAO, reqQuery.getResultDao());
-		} else {
-			if(compositeResult != null) compositeResult.dispose();
-			
-			if(resultComp == RESULT_COMP_TYPE.Table) {
-				compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
-				compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-				GridLayout gl_compositeResult = new GridLayout(1, false);
-				gl_compositeResult.verticalSpacing = 2;
-				gl_compositeResult.horizontalSpacing = 2;
-				gl_compositeResult.marginHeight = 0;
-				gl_compositeResult.marginWidth = 2;
-				compositeResult.setLayout(gl_compositeResult);
-				compositeResult.printUI(reqQuery, rsDAO, reqQuery.getResultDao());
-			} else if(resultComp == RESULT_COMP_TYPE.Text) {
-				compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
-				compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-				GridLayout gl_compositeResult = new GridLayout(1, false);
-				gl_compositeResult.verticalSpacing = 2;
-				gl_compositeResult.horizontalSpacing = 2;
-				gl_compositeResult.marginHeight = 0;
-				gl_compositeResult.marginWidth = 2;
-				compositeResult.setLayout(gl_compositeResult);
-				compositeResult.printUI(reqQuery, rsDAO, reqQuery.getResultDao());
-			} else if(resultComp == RESULT_COMP_TYPE.JSON) {
-				String strDefaultValue = JsonExpoter.makeContent("", rsDAO);
-				compositeResult = new ResultJsonComposite(sashFormResult, SWT.BORDER, rdbResultComposite, strDefaultValue);
-				compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-				GridLayout gl_compositeResult = new GridLayout(1, false);
-				gl_compositeResult.verticalSpacing = 2;
-				gl_compositeResult.horizontalSpacing = 2;
-				gl_compositeResult.marginHeight = 0;
-				gl_compositeResult.marginWidth = 2;
-				compositeResult.setLayout(gl_compositeResult);
-			}
-			
-			sashFormResult.layout();
+		} else if(resultComp == RESULT_COMP_TYPE.Text) {
+			compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
+			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+			GridLayout gl_compositeResult = new GridLayout(1, false);
+			gl_compositeResult.verticalSpacing = 2;
+			gl_compositeResult.horizontalSpacing = 2;
+			gl_compositeResult.marginHeight = 0;
+			gl_compositeResult.marginWidth = 2;
+			compositeResult.setLayout(gl_compositeResult);
+			compositeResult.printUI(reqQuery, rsDAO, reqQuery.getResultDao());
+		} else if(resultComp == RESULT_COMP_TYPE.JSON) {
+			String strDefaultValue = JsonExpoter.makeContent("", rsDAO);
+			compositeResult = new ResultJsonComposite(sashFormResult, SWT.BORDER, rdbResultComposite, strDefaultValue);
+			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+			GridLayout gl_compositeResult = new GridLayout(1, false);
+			gl_compositeResult.verticalSpacing = 2;
+			gl_compositeResult.horizontalSpacing = 2;
+			gl_compositeResult.marginHeight = 0;
+			gl_compositeResult.marginWidth = 2;
+			compositeResult.setLayout(gl_compositeResult);
 		}
+		
+		sashFormResult.layout();
 	}
 	
 	/**

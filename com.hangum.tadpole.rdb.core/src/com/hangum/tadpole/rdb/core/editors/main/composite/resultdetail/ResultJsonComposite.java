@@ -55,7 +55,7 @@ public class ResultJsonComposite extends AbstractResultDetailComposite {
 		compositeBtn.setLayout(new GridLayout(1, false));
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		compositeTail = new ResultTailComposite(compositeBtn, SWT.NONE);
+		compositeTail = new ResultTailComposite(this, compositeBtn, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;

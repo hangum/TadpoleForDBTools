@@ -88,6 +88,48 @@ public abstract class AbstractResultDetailComposite extends Composite {
 		return compositeTail;
 	}
 	
+	/**
+	 * @return the reqQuery
+	 */
+	public RequestQuery getReqQuery() {
+		return reqQuery;
+	}
+
+	/**
+	 * @param reqQuery the reqQuery to set
+	 */
+	public void setReqQuery(RequestQuery reqQuery) {
+		this.reqQuery = reqQuery;
+	}
+
+	/**
+	 * @return the rsDAO
+	 */
+	public QueryExecuteResultDTO getRsDAO() {
+		return rsDAO;
+	}
+
+	/**
+	 * @param rsDAO the rsDAO to set
+	 */
+	public void setRsDAO(QueryExecuteResultDTO rsDAO) {
+		this.rsDAO = rsDAO;
+	}
+
+	/**
+	 * @return the reqResultDAO
+	 */
+	public RequestResultDAO getReqResultDAO() {
+		return reqResultDAO;
+	}
+
+	/**
+	 * @param reqResultDAO the reqResultDAO to set
+	 */
+	public void setReqResultDAO(RequestResultDAO reqResultDAO) {
+		this.reqResultDAO = reqResultDAO;
+	}
+
 	@Override
 	protected void checkSubclass() {
 	}

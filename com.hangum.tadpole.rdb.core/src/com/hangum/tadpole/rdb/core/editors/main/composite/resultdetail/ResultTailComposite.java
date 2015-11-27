@@ -34,7 +34,10 @@ import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
 import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -47,6 +50,8 @@ public class ResultTailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultTailComposite.class);
 	
+	private AbstractResultDetailComposite abstractResultComp;
+	
 	private Composite compositeDownloadAMsg;
 	private Combo comboDownload;
 	private DownloadServiceHandler downloadServiceHandler;
@@ -54,19 +59,23 @@ public class ResultTailComposite extends Composite {
 	private Label lblQueryResultStatus;
 	
 	protected QueryExecuteResultDTO rsDAO;
-//	private Button btnPin;
+	private Button btnPin;
+	private Button btnViewQuery;
 	
 	/**
 	 * Create the composite.
 	 * @param parent
+	 * @param compositeBtn 
 	 * @param style
 	 */
-	public ResultTailComposite(Composite parent, int style) {
-		super(parent, style);
+	public ResultTailComposite(Composite reqAbstractResult, Composite compositeBtn, int style) {
+		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
+		
+		abstractResultComp = (AbstractResultDetailComposite)reqAbstractResult;
 
 		compositeDownloadAMsg = new Composite(this, SWT.NONE);
-		GridLayout gl_compositeDownloadAMsg = new GridLayout(5, false);
+		GridLayout gl_compositeDownloadAMsg = new GridLayout(7, false);
 		gl_compositeDownloadAMsg.verticalSpacing = 2;
 		gl_compositeDownloadAMsg.horizontalSpacing = 2;
 		gl_compositeDownloadAMsg.marginHeight = 0;
@@ -74,18 +83,29 @@ public class ResultTailComposite extends Composite {
 		compositeDownloadAMsg.setLayout(gl_compositeDownloadAMsg);
 		compositeDownloadAMsg.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
-//		btnPin = new Button(compositeDownloadAMsg, SWT.TOGGLE);
-//		btnPin.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				String strPin = btnPin.getText();
-//				if("Pin".equals(strPin)) btnPin.setText("Unpin");
-//				else btnPin.setText("Pin");
-//				
-//				layout();
-//			}
-//		});
-//		btnPin.setText("Pin");
+		btnPin = new Button(compositeDownloadAMsg, SWT.TOGGLE);
+		btnPin.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String strPin = btnPin.getToolTipText();
+				if("Pin".equals(strPin)) btnPin.setToolTipText("Unpin");
+				else btnPin.setToolTipText("Pin");
+				
+				layout();
+			}
+		});
+		btnPin.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/pin.png"));
+		btnPin.setToolTipText("Pin");
+		
+		btnViewQuery = new Button(compositeDownloadAMsg, SWT.NONE);
+		btnViewQuery.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), "View query", abstractResultComp.getReqQuery().getSql());
+				dialog.open();
+			}
+		});
+		btnViewQuery.setText("View query");
 
 		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
@@ -256,13 +276,13 @@ public class ResultTailComposite extends Composite {
 		DownloadUtils.provideDownload(getShell(), downloadServiceHandler.getId());
 	}
 	
-//	/**
-//	 * btn pin selection
-//	 * @return
-//	 */
-//	public boolean getBtnPinSelection() {
-//		return btnPin.getSelection();
-//	}
+	/**
+	 * btn pin selection
+	 * @return
+	 */
+	public boolean getBtnPinSelection() {
+		return btnPin.getSelection();
+	}
 	
 	@Override
 	public void dispose() {
