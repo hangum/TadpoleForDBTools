@@ -189,6 +189,11 @@ public class TadpoleSQLManager {
 		) {
 			// not support this methods
 			tmd.setKeywords("");
+		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
+		) {
+			String strFullKeywords = StringUtils.join(SQLConstants.MSSQL_KEYWORDS, ",") + "," + tmpDBMetadata.getSQLKeywords();
+			tmd.setKeywords(strFullKeywords);
 		} else {
 			tmd.setKeywords(tmpDBMetadata.getSQLKeywords());
 		}
