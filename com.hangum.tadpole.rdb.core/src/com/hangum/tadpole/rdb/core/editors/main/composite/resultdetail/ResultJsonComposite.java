@@ -18,15 +18,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
-import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
-import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
-import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 
 /**
  * json base composite
@@ -40,7 +33,7 @@ public class ResultJsonComposite extends AbstractResultDetailComposite {
 	
 	private TadpoleEditorWidget textJson;
 
-	public ResultJsonComposite(Composite parent, int style, ResultMainComposite rdbResultComposite, String defaultValue) {
+	public ResultJsonComposite(Composite parent, int style, ResultSetComposite rdbResultComposite, String defaultValue) {
 		super(parent, style, rdbResultComposite);
 		setLayout(new GridLayout(1, false));
 		
@@ -71,24 +64,13 @@ public class ResultJsonComposite extends AbstractResultDetailComposite {
 	}
 
 	@Override
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, RequestResultDAO reqResultDAO) {
-		super.printUI(reqQuery, rsDAO, reqResultDAO);
+	public void printUI() {
+		super.printUI();
 		
-		textJson.setText(JsonExpoter.makeContent("", rsDAO));
+		textJson.setText(JsonExpoter.makeContent("", getRsDAO()));
 
-		// result msg
-		float longExecuteTime = (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) / 1000f;
-		// // 데이터가 한계가 넘어 갔습니다.
-		String strResultMsg = ""; //$NON-NLS-1$
-		final TadpoleResultSet trs = rsDAO.getDataList();
-		if(trs.isEndOfRead()) {
-			strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
-		} else {
-			// 데이터가 한계가 넘어 갔습니다.
-			String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
-			strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
-		}
-		compositeTail.execute(strResultMsg, rsDAO);
+		// 메시지를 출력합니다.
+		compositeTail.execute(getTailResultMsg());
 	}
 
 	@Override

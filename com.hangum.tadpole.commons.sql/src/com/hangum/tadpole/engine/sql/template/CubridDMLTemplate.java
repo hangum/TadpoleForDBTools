@@ -22,7 +22,7 @@ public class CubridDMLTemplate extends MySQLDMLTemplate {
 	/**  
 	 * cubrid 을 수행할때 preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
 	 */	
-	public static final String TMP_GET_PARTDATA = "%s limit %s, %s";
+	public static final String TMP_GET_PARTDATA = "SELECT tdb_a.* FROM (%s) tdb_a LIMIT %s, %s";
 	
 	/**
 	 * 쿼리 플렌을 정의 합니다.

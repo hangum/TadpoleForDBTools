@@ -60,7 +60,7 @@ public class ResultSetUtilDTO {
 	/**
 	 * data <columnIndex, data>
 	 */
-	private TadpoleResultSet dataList = new TadpoleResultSet();
+	private TadpoleResultSet dataList = null;//new TadpoleResultSet();
 	
 	public ResultSetUtilDTO() {
 	}
@@ -95,11 +95,12 @@ public class ResultSetUtilDTO {
 	 * @param rs
 	 * @param limitCount
 	 * @param isResultComma
+	 * @param intLastIndex
 	 * @throws Exception
 	 */
 	public ResultSetUtilDTO(
 						final UserDBDAO userDB, 
-						final boolean isShowRownum, final ResultSet rs, final int limitCount) throws Exception {
+						final boolean isShowRownum, final ResultSet rs, final int limitCount, int intLastIndex) throws Exception {
 		this.userDB = userDB;
 		
 		if(rs != null) {
@@ -111,7 +112,7 @@ public class ResultSetUtilDTO {
 			if(isShowRownum && (columnName.size() == 1)) {
 				dataList = new TadpoleResultSet();
 			} else {
-				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount);
+				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount, intLastIndex);
 			}
 			
 			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());

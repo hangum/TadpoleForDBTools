@@ -57,8 +57,6 @@ public class ResultTailComposite extends Composite {
 	private DownloadServiceHandler downloadServiceHandler;
 	
 	private Label lblQueryResultStatus;
-	
-	protected QueryExecuteResultDTO rsDAO;
 	private Button btnPin;
 	private Button btnViewQuery;
 	
@@ -123,6 +121,11 @@ public class ResultTailComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(getShell(), Messages.get().ResultSetComposite_4, Messages.get().ResultSetComposite_5)) {
+					if(getRSDao().getDataList() == null) return;
+					
+					// get last data
+					abstractResultComp.getLastData();
+					
 					if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
 						exportResultCSVType(',');
 					} else if("CSV Tab".equals(comboDownload.getText())) { //$NON-NLS-1$
@@ -153,22 +156,26 @@ public class ResultTailComposite extends Composite {
 		registerServiceHandler();
 	}
 	
-	public void execute(String strResultMsg, QueryExecuteResultDTO rsDAO) {
-		this.rsDAO = rsDAO;
-		
+	public void execute(String strResultMsg) {
 		this.layout();
 		lblQueryResultStatus.setText(strResultMsg);
 		lblQueryResultStatus.pack();
 	}
 	
 	/**
+	 * get query result dto
+	 * @return
+	 */
+	private QueryExecuteResultDTO getRSDao() {
+		return abstractResultComp.getRsDAO();
+	}
+	
+	/**
 	 * export insert into statement
 	 */
 	private void exportInsertStatement() {
-		if(rsDAO == null) return;
-	
 		try {
-			downloadFile(SQLExporter.makeFileInsertStatment(findTableName(), rsDAO));
+			downloadFile(SQLExporter.makeFileInsertStatment(findTableName(), getRSDao()));
 		} catch(Exception ee) {
 			logger.error("HTML type export error", ee); //$NON-NLS-1$
 		}
@@ -178,8 +185,6 @@ public class ResultTailComposite extends Composite {
 //	 * export update into statement
 //	 */
 //	private void exportUpdateStatement() {
-//		if(rsDAO == null) return;
-//		
 //		try {
 //			downloadFile(SQLExporter.makeFileUpdateStatment(findTableName(), rsDAO));
 //		} catch(Exception ee) {
@@ -192,10 +197,8 @@ public class ResultTailComposite extends Composite {
 	 * @param seprator 
 	 */
 	private void exportResultCSVType(char seprator) {
-		if(rsDAO == null) return;
-		
 		try {
-			downloadFile(CSVExpoter.makeCSVFile(findTableName(), rsDAO, seprator));
+			downloadFile(CSVExpoter.makeCSVFile(findTableName(), getRSDao(), seprator));
 		} catch(Exception ee) {
 			logger.error("HTML type export error", ee); //$NON-NLS-1$
 		}
@@ -205,10 +208,8 @@ public class ResultTailComposite extends Composite {
 	 * export result of html
 	 */
 	private void exportResultHTMLType() {
-		if(rsDAO == null) return;
-		
 		try {
-			downloadFile(HTMLExporter.makeContentFile(findTableName(), rsDAO));
+			downloadFile(HTMLExporter.makeContentFile(findTableName(), getRSDao()));
 		} catch(Exception ee) {
 			logger.error("HTML type export error", ee); //$NON-NLS-1$
 		}
@@ -218,10 +219,8 @@ public class ResultTailComposite extends Composite {
 	 * export result of html
 	 */
 	private void exportResultJSONType() {
-		if(rsDAO == null) return;
-		
 		try {
-			downloadFile(JsonExpoter.makeContentFile(findTableName(), rsDAO));
+			downloadFile(JsonExpoter.makeContentFile(findTableName(), getRSDao()));
 		} catch(Exception ee) {
 			logger.error("JSON type export error", ee); //$NON-NLS-1$
 		}
@@ -233,7 +232,7 @@ public class ResultTailComposite extends Composite {
 	 */
 	private String findTableName() {
 		String strTableName = "TempTable"; //$NON-NLS-1$
-		if(!rsDAO.getColumnTableName().isEmpty()) strTableName = rsDAO.getColumnTableName().get(1);
+		if(!getRSDao().getColumnTableName().isEmpty()) strTableName = getRSDao().getColumnTableName().get(1);
 		if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		return strTableName;

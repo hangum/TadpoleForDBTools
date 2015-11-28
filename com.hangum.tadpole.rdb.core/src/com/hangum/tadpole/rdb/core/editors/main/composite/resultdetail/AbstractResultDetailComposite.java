@@ -15,9 +15,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
-import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
+import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * abstract result detail composite
@@ -33,10 +38,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	protected Event eventTableSelect;
 	
 	/** result composite */
-	protected ResultMainComposite rdbResultComposite;
-	protected RequestQuery reqQuery;
-	protected QueryExecuteResultDTO rsDAO;
-	protected RequestResultDAO reqResultDAO;
+	protected ResultSetComposite rdbResultComposite;
 	
 	/** tail composite */
 	protected ResultTailComposite compositeTail;
@@ -46,7 +48,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public AbstractResultDetailComposite(Composite parent, int style, ResultMainComposite rdbResultComposite) {
+	public AbstractResultDetailComposite(Composite parent, int style, ResultSetComposite rdbResultComposite) {
 		super(parent, style);
 		this.rdbResultComposite = rdbResultComposite;
 	}
@@ -66,10 +68,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	 * @param rsDAO 
 	 * @param executingSQLDAO 
 	 */
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, RequestResultDAO reqResultDAO) {
-		this.reqQuery = reqQuery;
-		this.rsDAO = rsDAO;
-		this.reqResultDAO = reqResultDAO;
+	public void printUI() {
 	}
 	
 	public void endQuery() {
@@ -77,10 +76,63 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	}
 	
 	/**
+	 * get last data
+	 */
+	public void getLastData() {
+		// 데이터를 마지막 까지 가져왔는지 비교합니다. // 나머지 데이터를 가져온다.
+		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
+		final String strUserEmail 	= SessionManager.getEMAIL();
+		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
+		
+		try {
+			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
+			boolean isContinue = true;
+			while(isContinue) {
+				QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+				if(newRsDAO.getDataList().getData().isEmpty()) isContinue = false;
+			
+				if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+				oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
+			}
+		
+		} catch(Exception e) {
+			logger.error("continue result set", e);
+		}
+
+	}
+	
+	/**
+	 * 쿼리 결과 메시지를 출력합니다. 
+	 * 
+	 * @return
+	 */
+	public String getTailResultMsg() {
+		if(getRsDAO() == null) return "";
+		final TadpoleResultSet trs = getRsDAO().getDataList();
+		
+		// 메시지를 출력합니다.
+		float longExecuteTime = (getReqResultDAO().getEndDateExecute().getTime() - getReqResultDAO().getStartDateExecute().getTime()) / 1000f;
+		String strResultMsg = ""; //$NON-NLS-1$
+		if(trs.isEndOfRead()) {
+			strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
+		} else {
+			if( (trs.getData().size() % GetPreferenceGeneral.getSelectLimitCount()) == 0) {
+				// 데이터가 한계가 넘어 갔습니다.
+				String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(trs.getData().size()));
+				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
+			} else { 
+				strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
+			}
+		}
+		
+		return strResultMsg;
+	}
+	
+	/**
 	 * get rdb result composite
 	 * @return
 	 */
-	public ResultMainComposite getRdbResultComposite() {
+	public ResultSetComposite getRdbResultComposite() {
 		return rdbResultComposite;
 	}
 	
@@ -92,42 +144,21 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	 * @return the reqQuery
 	 */
 	public RequestQuery getReqQuery() {
-		return reqQuery;
-	}
-
-	/**
-	 * @param reqQuery the reqQuery to set
-	 */
-	public void setReqQuery(RequestQuery reqQuery) {
-		this.reqQuery = reqQuery;
+		return rdbResultComposite.getReqQuery();
 	}
 
 	/**
 	 * @return the rsDAO
 	 */
 	public QueryExecuteResultDTO getRsDAO() {
-		return rsDAO;
-	}
-
-	/**
-	 * @param rsDAO the rsDAO to set
-	 */
-	public void setRsDAO(QueryExecuteResultDTO rsDAO) {
-		this.rsDAO = rsDAO;
+		return rdbResultComposite.getRsDAO();
 	}
 
 	/**
 	 * @return the reqResultDAO
 	 */
 	public RequestResultDAO getReqResultDAO() {
-		return reqResultDAO;
-	}
-
-	/**
-	 * @param reqResultDAO the reqResultDAO to set
-	 */
-	public void setReqResultDAO(RequestResultDAO reqResultDAO) {
-		this.reqResultDAO = reqResultDAO;
+		return rdbResultComposite.getReqQuery().getResultDao();
 	}
 
 	@Override

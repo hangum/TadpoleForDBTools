@@ -27,7 +27,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  * @author hangum
  *
  */
-public class CSVExpoter {
+public class CSVExpoter extends AbstractTDBExporter {
 
 	/**
 	 * csv 파일을 생성하여 파일 위치를 넘겨줍니다.
@@ -59,7 +59,6 @@ public class CSVExpoter {
 		
 		listCsvData.clear();
 		// data
-		int DATA_COUNT = 1000;
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			

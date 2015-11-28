@@ -17,15 +17,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
-import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
-import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 
 /**
  * Text base composite
@@ -38,7 +31,7 @@ public class ResultTextComposite extends AbstractResultDetailComposite {
 	private static final Logger logger = Logger.getLogger(ResultTextComposite.class);
 	private Browser browserResult;
 
-	public ResultTextComposite(Composite parent, int style, ResultMainComposite rdbResultComposite) {
+	public ResultTextComposite(Composite parent, int style, ResultSetComposite rdbResultComposite) {
 		super(parent, style, rdbResultComposite);
 		setLayout(new GridLayout(1, false));
 		
@@ -69,24 +62,13 @@ public class ResultTextComposite extends AbstractResultDetailComposite {
 	}
 
 	@Override
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, RequestResultDAO reqResultDAO) {
-		super.printUI(reqQuery, rsDAO, reqResultDAO);
+	public void printUI() {
+		super.printUI();
 		
-		browserResult.setText(HTMLExporter.makeContent("", rsDAO));
+		browserResult.setText(HTMLExporter.makeContent("", getRsDAO()));
 
-		// result msg
-		float longExecuteTime = (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) / 1000f;
-		// 데이터가 한계가 넘어 갔습니다.
-		String strResultMsg = ""; //$NON-NLS-1$
-		final TadpoleResultSet trs = rsDAO.getDataList();
-		if(trs.isEndOfRead()) {
-			strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
-		} else {
-			// 데이터가 한계가 넘어 갔습니다.
-			String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
-			strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
-		}
-		compositeTail.execute(strResultMsg, rsDAO);
+		// 메시지를 출력합니다.
+		compositeTail.execute(getTailResultMsg());
 	}
 
 	@Override

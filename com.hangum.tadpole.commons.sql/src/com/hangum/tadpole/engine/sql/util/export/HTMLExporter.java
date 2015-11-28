@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -27,7 +28,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  * @author hangum
  *
  */
-public class HTMLExporter {
+public class HTMLExporter extends AbstractTDBExporter {
 	private static final String sbHtml = 
 				"<meta charset='UTF-8'>" +
 				"<style type='text/css'>" +
@@ -86,13 +87,52 @@ public class HTMLExporter {
 	 * @throws Exception
 	 */
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
-		String strContent = makeContent(tableName, rsDAO);
-		
+		// full text
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".html";
 		String strFullPath = strTmpDir + strFile;
 		
-		FileUtils.writeStringToFile(new File(strFullPath), strContent, true);
+		FileUtils.writeStringToFile(new File(strFullPath), sbHtml, true);
+		FileUtils.writeStringToFile(new File(strFullPath), "<table class='tg'>", true);
+		
+		// make content
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		// column .
+		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
+		StringBuffer sbHead = new StringBuffer();
+		sbHead.append( String.format(strHead, "#") );
+		for(int i=1; i<mapLabelName.size(); i++) {
+			sbHead.append( String.format(strHead, mapLabelName.get(i)) );
+		}
+		String strLastColumnName = String.format(strGroup, sbHead.toString());
+		
+		// header
+		FileUtils.writeStringToFile(new File(strFullPath), strLastColumnName, true);
+		
+		// body start
+		StringBuffer sbBody = new StringBuffer("");
+		for(int i=0; i<dataList.size(); i++) {
+			Map<Integer, Object> mapColumns = dataList.get(i);
+			
+			StringBuffer sbTmp = new StringBuffer();
+			sbTmp.append( String.format(strHead, ""+(i+1)) ); //$NON-NLS-1$
+			for(int j=1; j<mapColumns.size(); j++) {
+				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
+				sbTmp.append( String.format(strContent, StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
+			}
+			sbBody.append(String.format(strGroup, sbTmp.toString()));
+			
+			if((i%DATA_COUNT) == 0) {
+				FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), true);
+				sbBody.delete(0, sbBody.length());
+			}
+		}
+		
+		if(sbBody.length() > 0) {
+			FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), true);
+		}
+		
+		FileUtils.writeStringToFile(new File(strFullPath), "</table>", true);
 		
 		return strFullPath;
 	}

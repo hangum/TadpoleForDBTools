@@ -29,7 +29,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  * @author hangum
  *
  */
-public class JsonExpoter {
+public class JsonExpoter extends AbstractTDBExporter {
 	
 	/**
 	 * make content

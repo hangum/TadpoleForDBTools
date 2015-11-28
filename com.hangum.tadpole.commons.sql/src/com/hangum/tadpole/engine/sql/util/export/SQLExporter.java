@@ -29,7 +29,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  * @author hangum
  *
  */
-public class SQLExporter {
+public class SQLExporter extends AbstractTDBExporter {
 //	/**
 //	 * UPDATE 문을 생성합니다.
 //	 * 

@@ -44,9 +44,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
-import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -60,10 +58,11 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.global.OpenSingleRowDataDialogAction;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
-import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
+import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -97,7 +96,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	 * @param style
 	 * @param rdbResultComposite
 	 */
-	public ResultTableComposite(Composite parent, int style, ResultMainComposite rdbResultComposite) {
+	public ResultTableComposite(Composite parent, int style, ResultSetComposite rdbResultComposite) {
 		super(parent, style, rdbResultComposite);
 		setLayout(new GridLayout(1, false));
 		
@@ -156,9 +155,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				final TableItem item = tableResult.getSelection()[0];
 				for (int i=0; i<tableResult.getColumnCount(); i++) {
 					if (item.getBounds(i).contains(event.x, event.y)) {
-						Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
+						Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(tableResult.getSelectionIndex());
 						// execute extension start =============================== 
-						IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+						IMainEditorExtension[] extensions = getRdbResultComposite().getRdbResultComposite().getMainEditor().getMainEditorExtions();
 						for (IMainEditorExtension iMainEditorExtension : extensions) {
 							iMainEditorExtension.resultSetClick(i, mapColumns);
 						}
@@ -181,13 +180,13 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		
 		tableResult.getVerticalBar().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				caclTableData();
+				calcTableData();
 			}
 		});
 		tableResult.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				caclTableData();
+				calcTableData();
 			}
 		});
 		
@@ -268,9 +267,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		for (int i=0; i<tableResult.getColumnCount(); i++) {
 			
 			if (item.getBounds(i).contains(eventTableSelect.x, eventTableSelect.y)) {
-				Map<Integer, Object> mapColumns = rsDAO.getDataList().getData().get(tableResult.getSelectionIndex());
+				Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(tableResult.getSelectionIndex());
 				// execute extension start =============================== 
-				IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
+				IMainEditorExtension[] extensions = getRdbResultComposite().getRdbResultComposite().getMainEditor().getMainEditorExtions();
 				for (IMainEditorExtension iMainEditorExtension : extensions) {
 					iMainEditorExtension.resultSetDoubleClick(i, mapColumns);
 				}
@@ -284,7 +283,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					for (int j=1; j<tableResult.getColumnCount(); j++) {
 						Object columnObject = mapColumns.get(j);
 						
-						if(RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(j))) {
+						if(RDBTypeToJavaTypeUtils.isNumberType(getRsDAO().getColumnType().get(j))) {
 							String strText = ""; //$NON-NLS-1$
 							
 							// if select value is null can 
@@ -308,11 +307,11 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					//결과 그리드의 선택된 행에서 마우스 클릭된 셀에 연결된 컬럼 오브젝트를 조회한다.
 					Object columnObject = mapColumns.get(i);
 					
-					Integer intType = rsDAO.getColumnType().get(i);
+					Integer intType = getRsDAO().getColumnType().get(i);
 					if(intType == null) intType = java.sql.Types.VARCHAR;
 					String strType = RDBTypeToJavaTypeUtils.getRDBType(intType);
 					
-					columnDao.setName(rsDAO.getColumnName().get(i));
+					columnDao.setName(getRsDAO().getColumnName().get(i));
 					columnDao.setType(strType);
 					
 					if(columnObject != null) {
@@ -385,7 +384,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	 */
 	private void openSingleRecordViewDialog() {
 		// selection sevice를 이용할 수 없어 중복되는 코드 생성이 필요해서 작성.
-		openSingleRowDataAction.selectionChanged(rsDAO, tvQueryResult.getSelection());
+		openSingleRowDataAction.selectionChanged(getRsDAO(), tvQueryResult.getSelection());
 		if (openSingleRowDataAction.isEnabled()) {
 			openSingleRowDataAction.run();
 		} else {
@@ -439,7 +438,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		tvQueryResult.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				openSingleRowDataAction.selectionChanged(rsDAO, event.getSelection());
+				openSingleRowDataAction.selectionChanged(getRsDAO(), event.getSelection());
 			}
 		});
 	}
@@ -447,20 +446,41 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	/**
 	 * scroll data에 맞게 데이터를 출력합니다. 
 	 */
-	private void caclTableData() {
-		if(rsDAO == null) return;
+	private void calcTableData() {
+		if(getRsDAO().getDataList() == null) return;
 		
 		final Table tableResult = tvQueryResult.getTable();
 		int tableRowCnt = tableResult.getBounds().height / tableResult.getItemHeight();
+		
 		// 만약에(테이블 위치 인덱스 + 테이블에 표시된로우 수 + 1) 보다 전체 아이템 수가 크면).
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
+			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 
-			final TadpoleResultSet trs = rsDAO.getDataList();
-			if(trs.getData().size() > tableResult.getItemCount()) {
-				if(trs.getData().size() > (tableResult.getItemCount() + GetPreferenceGeneral.getPageCount())) {
-					tvQueryResult.setInput(trs.getData().subList(0, tableResult.getItemCount() + GetPreferenceGeneral.getPageCount()));
+			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+			if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
+				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+				
+				if(oldTadpoleResultSet.getData().size() >= (tableResult.getItemCount())) {
+					// 나머지 데이터를 가져온다.
+					final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
+					final String strUserEmail 	= SessionManager.getEMAIL();
+					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
+					
+					try {
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						
+						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
+					
+						tvQueryResult.setInput(oldTadpoleResultSet.getData());
+						compositeTail.execute(getTailResultMsg());
+						tvQueryResult.getTable().setToolTipText(getTailResultMsg());
+					} catch(Exception e) {
+						logger.error("continue result set", e);
+					}
+					
 				} else {
-					tvQueryResult.setInput(trs.getData());
+					tvQueryResult.setInput(oldTadpoleResultSet.getData());
 				}
 			}
 		}
@@ -475,7 +495,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 	
 	private void appendTextAtPosition(String cmd) {
-		getRdbResultComposite().appendTextAtPosition(cmd);
+		getRdbResultComposite().getRdbResultComposite().appendTextAtPosition(cmd);
 	}
 	
 	@Override
@@ -492,8 +512,11 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 	
 	@Override
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, RequestResultDAO reqResultDAO) {
-		super.printUI(reqQuery, rsDAO, reqResultDAO);
+	public void printUI() {
+		super.printUI();
+		
+		final QueryExecuteResultDTO rsDAO = getRsDAO();
+		final RequestQuery reqQuery = getReqQuery();
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
 		sqlSorter = new SQLResultSorter(-999);
@@ -514,24 +537,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		tvQueryResult.setSorter(sqlSorter);
 		
 		// 메시지를 출력합니다.
-		float longExecuteTime = (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) / 1000f;
-		String strResultMsg = ""; //$NON-NLS-1$
-		if(trs.isEndOfRead()) {
-			strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
-		} else {
-			// 데이터가 한계가 넘어 갔습니다.
-			String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(GetPreferenceGeneral.getSelectLimitCount()));
-			strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
-		}
-
-		compositeTail.execute(strResultMsg, rsDAO);
+		compositeTail.execute(getTailResultMsg());
 		
-		tvQueryResult.getTable().setToolTipText(strResultMsg);
+		tvQueryResult.getTable().setToolTipText(getTailResultMsg());
 		sqlFilter.setTable(tvQueryResult.getTable());
 		
 		// Pack the columns
 		TableUtil.packTable(tvQueryResult.getTable());
-		getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
+		getRdbResultComposite().getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 	}
 
 	@Override

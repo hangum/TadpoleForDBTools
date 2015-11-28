@@ -60,6 +60,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -362,7 +363,7 @@ public class ResultSetComposite extends Composite {
 						
 						// select 문장 실행
 						if(SQLUtil.isStatement(reqQuery.getSql())) { //$NON-NLS-1$
-							rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
+							rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
 							reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 						}
 					} else {
@@ -371,7 +372,7 @@ public class ResultSetComposite extends Composite {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
-								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt);
+								rsDAO = runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
 								reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
@@ -449,12 +450,23 @@ public class ResultSetComposite extends Composite {
 	private boolean isUserInterrupt = false;
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
-	private Label lblNewLabel;
 
-	private QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt) throws Exception {
+	/**
+	 * 실제쿼리를 호출한다.
+	 * 
+	 * @param queryTimeOut
+	 * @param strUserEmail
+	 * @param intSelectLimitCnt
+	 * @param intStartCnt
+	 * @return
+	 * @throws Exception
+	 */
+	public QueryExecuteResultDTO runSelect(final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt) throws Exception {
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), reqQuery.getSql())) {
 			throw new Exception(Messages.get().MainEditor_21);
 		}
+		
+		QueryExecuteResultDTO queryResultDAO = null; 
 		
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
@@ -497,14 +509,21 @@ public class ResultSetComposite extends Composite {
 			// check stop thread
 			esCheckStop = Executors.newSingleThreadExecutor();
 			CheckStopThread cst = new CheckStopThread(statement);
-			cst.setName("Stop thread checker"); //$NON-NLS-1$
+			cst.setName("TDB Query Stop checker"); //$NON-NLS-1$
 			esCheckStop.execute(cst);
 			
 			// execute query
 			execServiceQuery = Executors.newSingleThreadExecutor();
-			resultSet = runSQLSelect(statement, reqQuery);
+			if(intStartCnt == 0) {
+				resultSet = runSQLSelect(statement, reqQuery.getSql());
+			} else {
+				String strSQL = PartQueryUtil.makeSelect(getUserDB(), reqQuery.getSql(), intStartCnt, intSelectLimitCnt);
+				
+				if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
+				resultSet = runSQLSelect(statement, strSQL);
+			}
 			
-			rsDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt);
+			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt, intStartCnt);
 		} catch(Exception e) {
 //			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
@@ -519,20 +538,20 @@ public class ResultSetComposite extends Composite {
 			}
 		}
 		
-		return rsDAO;
+		return queryResultDAO;
 	}
 	
 	/**
 	 * select문을 실행합니다.
 	 * 
-	 * @param requestQuery
+	 * @param strSQL
 	 */
-	private ResultSet runSQLSelect(final Statement statement, final RequestQuery reqQuery) throws Exception {
+	private ResultSet runSQLSelect(final Statement statement, final String strSQL) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
 			public ResultSet call() throws SQLException {
-				statement.execute(reqQuery.getSql());
+				statement.execute(strSQL);
 				return statement.getResultSet();
 			}
 		});
@@ -708,7 +727,7 @@ public class ResultSetComposite extends Composite {
 	private void makeResultType() {
 		RESULT_COMP_TYPE resultComp = (RESULT_COMP_TYPE)comboResult.getData(comboResult.getText());
 		if(resultComp == RESULT_COMP_TYPE.Table) {
-			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
+			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
 			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);
 			gl_compositeResult.verticalSpacing = 2;
@@ -717,7 +736,7 @@ public class ResultSetComposite extends Composite {
 			gl_compositeResult.marginWidth = 2;
 			compositeResult.setLayout(gl_compositeResult);
 		} else if(resultComp == RESULT_COMP_TYPE.Text) {
-			compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
+			compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, this);
 			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);
 			gl_compositeResult.verticalSpacing = 2;
@@ -727,7 +746,7 @@ public class ResultSetComposite extends Composite {
 			compositeResult.setLayout(gl_compositeResult);
 		} else if(resultComp == RESULT_COMP_TYPE.JSON) {
 			String strDefaultValue = JsonExpoter.makeContent("", rsDAO);
-			compositeResult = new ResultJsonComposite(sashFormResult, SWT.BORDER, rdbResultComposite, strDefaultValue);
+			compositeResult = new ResultJsonComposite(sashFormResult, SWT.BORDER, this, strDefaultValue);
 			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);
 			gl_compositeResult.verticalSpacing = 2;
@@ -763,7 +782,7 @@ public class ResultSetComposite extends Composite {
 		RESULT_COMP_TYPE resultComp = (RESULT_COMP_TYPE)comboResult.getData(comboResult.getText());
 			
 		if(resultComp == RESULT_COMP_TYPE.Table) {
-			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
+			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
 			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);
 			gl_compositeResult.verticalSpacing = 2;
@@ -771,9 +790,9 @@ public class ResultSetComposite extends Composite {
 			gl_compositeResult.marginHeight = 0;
 			gl_compositeResult.marginWidth = 2;
 			compositeResult.setLayout(gl_compositeResult);
-			compositeResult.printUI(reqQuery, rsDAO, reqQuery.getResultDao());
+			compositeResult.printUI();
 		} else if(resultComp == RESULT_COMP_TYPE.Text) {
-			compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, rdbResultComposite);
+			compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, this);
 			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);
 			gl_compositeResult.verticalSpacing = 2;
@@ -781,10 +800,10 @@ public class ResultSetComposite extends Composite {
 			gl_compositeResult.marginHeight = 0;
 			gl_compositeResult.marginWidth = 2;
 			compositeResult.setLayout(gl_compositeResult);
-			compositeResult.printUI(reqQuery, rsDAO, reqQuery.getResultDao());
+			compositeResult.printUI();
 		} else if(resultComp == RESULT_COMP_TYPE.JSON) {
 			String strDefaultValue = JsonExpoter.makeContent("", rsDAO);
-			compositeResult = new ResultJsonComposite(sashFormResult, SWT.BORDER, rdbResultComposite, strDefaultValue);
+			compositeResult = new ResultJsonComposite(sashFormResult, SWT.BORDER, this, strDefaultValue);
 			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);
 			gl_compositeResult.verticalSpacing = 2;
@@ -851,6 +870,14 @@ public class ResultSetComposite extends Composite {
 	 */
 	public boolean isSelect() {
 		return isSelect;
+	}
+	
+	public RequestQuery getReqQuery() {
+		return reqQuery;
+	}
+	
+	public QueryExecuteResultDTO getRsDAO() {
+		return rsDAO;
 	}
 
 }

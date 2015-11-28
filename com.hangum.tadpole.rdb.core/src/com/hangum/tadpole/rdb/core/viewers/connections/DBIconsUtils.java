@@ -62,8 +62,7 @@ public class DBIconsUtils {
 	 * @return
 	 */
 	public static Image getDBNormalImage(UserDBDAO userDB) {
-		String strBaseImage = getDBImageUrl(userDB);
-		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, strBaseImage);
+		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, getDBImageUrl(userDB));
 	}
 	
 	/**

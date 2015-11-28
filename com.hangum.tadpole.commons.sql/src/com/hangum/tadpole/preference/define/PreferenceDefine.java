@@ -56,7 +56,7 @@ public class PreferenceDefine {
 	/** 검색 결과 페이지 당 보여주는 갯수 */
 	public static final String SELECT_RESULT_PAGE_PREFERENCE = "SELECT_RESULT_PAGE_PREFERENCE";
 	/** select 결과를 페이지에 출력 디폴트 값 */
-	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 50;
+	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 500;
 //	/** select 결과를 페이지에 출력 최대 값 */
 //	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 400;
 	
