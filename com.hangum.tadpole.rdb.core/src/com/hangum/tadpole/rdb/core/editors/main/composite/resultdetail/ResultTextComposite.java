@@ -18,7 +18,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * Text base composite
@@ -62,8 +64,8 @@ public class ResultTextComposite extends AbstractResultDetailComposite {
 	}
 
 	@Override
-	public void printUI() {
-		super.printUI();
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		super.printUI(reqQuery, rsDAO);
 		
 		browserResult.setText(HTMLExporter.makeContent("", getRsDAO()));
 

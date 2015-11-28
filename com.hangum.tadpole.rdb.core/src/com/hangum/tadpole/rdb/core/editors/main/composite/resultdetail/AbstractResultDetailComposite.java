@@ -35,6 +35,9 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	private static final Logger logger = Logger.getLogger(AbstractResultDetailComposite.class);
 	public enum RESULT_COMP_TYPE {Table, Text, JSON};
 	
+	protected RequestQuery reqQuery;
+	protected QueryExecuteResultDTO rsDAO;
+	
 	protected Event eventTableSelect;
 	
 	/** result composite */
@@ -63,12 +66,12 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	
 	/**
 	 * print ui
-	 * 
-	 * @param reqQuery
 	 * @param rsDAO 
-	 * @param executingSQLDAO 
+	 * @param reqQuery 
 	 */
-	public void printUI() {
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		this.reqQuery = reqQuery;
+		this.rsDAO = rsDAO;
 	}
 	
 	public void endQuery() {
@@ -88,7 +91,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 			boolean isContinue = true;
 			while(isContinue) {
-				QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+				QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 				if(newRsDAO.getDataList().getData().isEmpty()) isContinue = false;
 			
 				if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
@@ -144,21 +147,21 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	 * @return the reqQuery
 	 */
 	public RequestQuery getReqQuery() {
-		return rdbResultComposite.getReqQuery();
+		return reqQuery;
 	}
 
 	/**
 	 * @return the rsDAO
 	 */
 	public QueryExecuteResultDTO getRsDAO() {
-		return rdbResultComposite.getRsDAO();
+		return rsDAO;
 	}
 
 	/**
 	 * @return the reqResultDAO
 	 */
 	public RequestResultDAO getReqResultDAO() {
-		return rdbResultComposite.getReqQuery().getResultDao();
+		return reqQuery.getResultDao();
 	}
 
 	@Override

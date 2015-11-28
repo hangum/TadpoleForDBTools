@@ -19,7 +19,9 @@ import org.eclipse.swt.widgets.Composite;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * json base composite
@@ -64,8 +66,8 @@ public class ResultJsonComposite extends AbstractResultDetailComposite {
 	}
 
 	@Override
-	public void printUI() {
-		super.printUI();
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		super.printUI(reqQuery, rsDAO);
 		
 		textJson.setText(JsonExpoter.makeContent("", getRsDAO()));
 

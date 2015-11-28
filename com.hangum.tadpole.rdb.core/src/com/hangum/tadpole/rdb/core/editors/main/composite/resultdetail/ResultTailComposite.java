@@ -103,7 +103,7 @@ public class ResultTailComposite extends Composite {
 				dialog.open();
 			}
 		});
-		btnViewQuery.setText("View query");
+		btnViewQuery.setText(Messages.get().ResultTailComposite_0);
 
 		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));

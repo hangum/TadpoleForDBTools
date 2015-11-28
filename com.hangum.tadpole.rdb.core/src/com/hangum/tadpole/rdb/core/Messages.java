@@ -14,6 +14,7 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+	public String ResultTailComposite_0;
 	public String ResourceHistoryDialog_0;
 
 	public String ResourceHistoryDialog_1;
@@ -794,6 +795,7 @@ public class Messages {
 	public String ResultSetComposite_btnColumnDetail_text;
 	public String MessageComposite_lblGoogleSearch_1_text;
 	public String RDBResultComposite_lblResult;
+	public String RDBResultComposite_btnOrientation;
 
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

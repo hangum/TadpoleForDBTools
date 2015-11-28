@@ -447,7 +447,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	 * scroll data에 맞게 데이터를 출력합니다. 
 	 */
 	private void calcTableData() {
-		if(getRsDAO().getDataList() == null) return;
+		if(getRsDAO() == null) return;
 		
 		final Table tableResult = tvQueryResult.getTable();
 		int tableRowCnt = tableResult.getBounds().height / tableResult.getItemHeight();
@@ -456,9 +456,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 
-			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+//			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 			if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
-				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+//				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 				
 				if(oldTadpoleResultSet.getData().size() >= (tableResult.getItemCount())) {
 					// 나머지 데이터를 가져온다.
@@ -467,9 +467,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 						
-						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+//						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
 					
 						tvQueryResult.setInput(oldTadpoleResultSet.getData());
@@ -512,11 +512,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 	
 	@Override
-	public void printUI() {
-		super.printUI();
-		
-		final QueryExecuteResultDTO rsDAO = getRsDAO();
-		final RequestQuery reqQuery = getReqQuery();
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		super.printUI(reqQuery, rsDAO);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
 		sqlSorter = new SQLResultSorter(-999);
