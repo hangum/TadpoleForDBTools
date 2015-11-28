@@ -476,7 +476,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 						compositeTail.execute(getTailResultMsg());
 						tvQueryResult.getTable().setToolTipText(getTailResultMsg());
 					} catch(Exception e) {
-						logger.error("continue result set", e);
+						logger.error("continue result set : " + e.getMessage());
 					}
 					
 				} else {
