@@ -193,16 +193,17 @@ public class LoginDialog extends Dialog {
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeUILocale();
+				changeUILocale(comboLanguage.getText());
 			}
 		});
-		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage());
-		comboLanguage.add(Locale.KOREAN.getDisplayLanguage());
+		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
+		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH));
 
+		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
+		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH), Locale.KOREAN);
+		
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(), Locale.ENGLISH);
-		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(), Locale.KOREAN);
 		
 		
 //		comboLanguage.select(0);
@@ -296,16 +297,6 @@ public class LoginDialog extends Dialog {
 		initUI();
 		
 		return compositeLogin;
-	}
-	
-	/** change ui locale */
-	private void changeUILocale(){
-		Object objLanguage = comboLanguage.getData(comboLanguage.getText());
-		if(objLanguage == null) {
-			changeUILocale(comboLanguage.getItem(0));
-		} else {
-			changeUILocale(comboLanguage.getText());
-		}
 	}
 	
 	@Override
@@ -504,7 +495,7 @@ public class LoginDialog extends Dialog {
 	 * initialize ui
 	 */
 	private void initUI() {
-		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage();
+		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage(Locale.ENGLISH);
 		boolean isFound = false;
 		for(String strName : comboLanguage.getItems()) {
 			if(strName.equals(defaultLanguage)) {
@@ -527,7 +518,7 @@ public class LoginDialog extends Dialog {
 			}
 			// 있으면... 
 			if(isFound) comboLanguage.setText(locale);
-			else comboLanguage.setText(Locale.ENGLISH.getDisplayLanguage());
+			else comboLanguage.setText(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
 			
 			// 랭귀지를 바꾸어 준다.
 			changeUILocale(comboLanguage.getText());
@@ -578,7 +569,7 @@ public class LoginDialog extends Dialog {
 				boolean isFind = false;
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
 					comboLanguage.setText(cookie.getValue());
-					changeUILocale();
+					changeUILocale(comboLanguage.getText());
 					isFind = true;
 				}
 				

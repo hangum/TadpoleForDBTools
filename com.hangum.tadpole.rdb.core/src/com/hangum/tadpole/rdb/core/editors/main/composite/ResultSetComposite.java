@@ -212,7 +212,7 @@ public class ResultSetComposite extends Composite {
 		sashFormResult = new SashForm(this, SWT.HORIZONTAL);
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		makeResultType();
+//		makeResultType();
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class ResultSetComposite extends Composite {
 		
 //		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
 		this.rsDAO = new QueryExecuteResultDTO();
-		compositeResult.initUI();
+		if(compositeResult != null) compositeResult.initUI();
 		
 		// selected first tab request quring.
 		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);

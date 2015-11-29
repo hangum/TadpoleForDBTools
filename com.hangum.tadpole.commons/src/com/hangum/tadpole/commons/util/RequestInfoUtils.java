@@ -44,7 +44,7 @@ public class RequestInfoUtils {
 	public static String getDisplayLocale() {
 		HttpServletRequest request = RWT.getRequest();
 		Locale locale = request.getLocale();
-		return locale.getDisplayLanguage();
+		return locale.getDisplayLanguage(Locale.ENGLISH);
 	}
 	
 	/**
