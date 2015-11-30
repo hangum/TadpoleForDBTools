@@ -43,8 +43,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleCompareWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
@@ -73,10 +72,7 @@ public class SchemaHistoryEditor extends EditorPart {
 	
 	private DateTime dateTimeStart;
 	private DateTime dateTimeEnd;
-	private Text textDateLeft;
-	private TadpoleEditorWidget textLeftSQL;
-	private Text textDateRight;
-	private TadpoleEditorWidget textSQLRight;
+	private TadpoleCompareWidget compareWidget;
 	
 	public SchemaHistoryEditor() {
 	}
@@ -172,8 +168,7 @@ public class SchemaHistoryEditor extends EditorPart {
 					if(!ss.isEmpty()) {
 						SchemaHistoryDAO dao = (SchemaHistoryDAO)ss.getFirstElement();
 						String strSQL = getSQL(dao.getSeq());
-						textDateLeft.setText(dao.getCreate_date().toLocaleString());
-						textLeftSQL.setText(strSQL);
+						compareWidget.changeDiff(strSQL, "");
 							
 					}
 				} catch(Exception e) {
@@ -204,36 +199,8 @@ public class SchemaHistoryEditor extends EditorPart {
 		Composite compositeDetail = new Composite(sashForm, SWT.BORDER);
 		compositeDetail.setLayout(new GridLayout(1, false));
 		
-		SashForm sashFormDetail = new SashForm(compositeDetail, SWT.NONE);
-		sashFormDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Composite compositeLeft = new Composite(sashFormDetail, SWT.NONE);
-		compositeLeft.setLayout(new GridLayout(2, false));
-		
-		Label lblNewLabel = new Label(compositeLeft, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.get().SchemaHistoryEditor_23);
-		
-		textDateLeft = new Text(compositeLeft, SWT.BORDER);
-		textDateLeft.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		textLeftSQL = new TadpoleEditorWidget(compositeLeft, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
-		textLeftSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
-		Composite compositeRight = new Composite(sashFormDetail, SWT.NONE);
-		compositeRight.setLayout(new GridLayout(2, false));
-		
-		Label lblNewLabel_1 = new Label(compositeRight, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_1.setText(Messages.get().SchemaHistoryEditor_23);
-		
-		textDateRight = new Text(compositeRight, SWT.BORDER);
-		textDateRight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		textSQLRight = new TadpoleEditorWidget(compositeRight, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
-		textSQLRight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-		sashFormDetail.setWeights(new int[] {1, 1});
+		compareWidget = new TadpoleCompareWidget(compositeDetail, SWT.BORDER);
+		compareWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		sashForm.setWeights(new int[] {4, 6});
 
@@ -249,32 +216,26 @@ public class SchemaHistoryEditor extends EditorPart {
 			Object[] objListSel = ss.toArray();
 			
 			try {
+				String source = "", target = "";
 				for(int i=0; i<objListSel.length; i++) {
 					if(i==2) break;
 					
 					SchemaHistoryDAO dao = (SchemaHistoryDAO)objListSel[i];
 					String strSQL = getSQL(dao.getSeq());
 					if(i==0) {
-						textDateLeft.setText(dao.getCreate_date().toLocaleString());
-						textLeftSQL.setText(strSQL);
+						source = strSQL;
 					} else {
-						textDateRight.setText(dao.getCreate_date().toLocaleString());
-						textSQLRight.setText(strSQL);
+						target = strSQL;
 					}
 				}
+				
+				compareWidget.changeDiff(source, target);
 			} catch(Exception e) {
 				logger.error("Get detail sql", e); //$NON-NLS-1$
 			}
-			if(objListSel.length == 1) {
-				textDateRight.setText(""); //$NON-NLS-1$
-				textSQLRight.setText(""); //$NON-NLS-1$
-			}
 
 		} else {
-			textDateLeft.setText(""); //$NON-NLS-1$
-			textLeftSQL.setText(""); //$NON-NLS-1$
-			textDateRight.setText(""); //$NON-NLS-1$
-			textSQLRight.setText(""); //$NON-NLS-1$
+			compareWidget.changeDiff("", "");
 		}
 	}
 	

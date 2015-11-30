@@ -26,4 +26,7 @@ public interface IEditorExtension {
 	/** 운영디비 에디터 정의 */
 	public static final String REAL_DB_URL = "ace-builds/tadpole-editor.html" + PublicTadpoleDefine.URL_SYSTEM_VERION; //$NON-NLS-1$
 	
+	/** 운영디비 에디터 정의 */
+	public static final String DIFF_URL = "ace-builds/tadpole-diff.html" + PublicTadpoleDefine.URL_SYSTEM_VERION; //$NON-NLS-1$
+	
 }
