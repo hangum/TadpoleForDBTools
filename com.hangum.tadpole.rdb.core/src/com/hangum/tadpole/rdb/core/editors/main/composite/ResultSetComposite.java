@@ -642,7 +642,7 @@ public class ResultSetComposite extends Composite {
 	 */
 	public void executeErrorProgress(RequestQuery requestQuery, Throwable throwable, final String msg) {
 		getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		getRdbResultComposite().refreshMessageView(requestQuery, throwable, msg);
+		getRdbResultComposite().refreshErrorMessageView(requestQuery, throwable, msg);
 	}
 	
 	private UserDBDAO getUserDB() {
@@ -715,7 +715,7 @@ public class ResultSetComposite extends Composite {
 				changeResultType();
 			}
 		} else {
-			getRdbResultComposite().refreshMessageView(reqQuery, null, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
+			getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
 			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
 			// working schema_history 에 history 를 남깁니다.
