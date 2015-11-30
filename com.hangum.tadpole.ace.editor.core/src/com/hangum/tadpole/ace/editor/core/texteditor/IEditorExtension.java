@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.texteditor;
 
-import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * editor의 표준 인터페이스를 정의합니다.
@@ -20,12 +20,10 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
  */
 public interface IEditorExtension {
 	
-	public static final String DUMY_DATA = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
-	
 	/** 개발디비 에디터 정의 */
-	public static final String DEV_DB_URL = "ace-builds/tadpole-editor.html" + DUMY_DATA; //$NON-NLS-1$
+	public static final String DEV_DB_URL = "ace-builds/tadpole-editor.html" + PublicTadpoleDefine.URL_SYSTEM_VERION; //$NON-NLS-1$
 	
 	/** 운영디비 에디터 정의 */
-	public static final String REAL_DB_URL = "ace-builds/tadpole-editor.html" + DUMY_DATA; //$NON-NLS-1$
+	public static final String REAL_DB_URL = "ace-builds/tadpole-editor.html" + PublicTadpoleDefine.URL_SYSTEM_VERION; //$NON-NLS-1$
 	
 }

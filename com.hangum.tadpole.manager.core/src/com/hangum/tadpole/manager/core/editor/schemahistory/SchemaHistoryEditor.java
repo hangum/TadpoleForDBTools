@@ -201,7 +201,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		tableViewer.setLabelProvider(new SchemaHistorLabelProvider());
 		
 		// result composite
-		Composite compositeDetail = new Composite(sashForm, SWT.NONE);
+		Composite compositeDetail = new Composite(sashForm, SWT.BORDER);
 		compositeDetail.setLayout(new GridLayout(1, false));
 		
 		SashForm sashFormDetail = new SashForm(compositeDetail, SWT.NONE);
