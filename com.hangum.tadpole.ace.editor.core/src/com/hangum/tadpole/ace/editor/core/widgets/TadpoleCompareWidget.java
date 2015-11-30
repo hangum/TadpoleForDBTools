@@ -52,7 +52,6 @@ public class TadpoleCompareWidget extends Composite {
 	"</body>" +
 	"</html>";
 			
-	
 	private Browser browserCompare;
 
 	/**
@@ -81,7 +80,6 @@ public class TadpoleCompareWidget extends Composite {
 	
 	@Override
 	protected void checkSubclass() {
-		// Disable the check that prevents subclassing of SWT components
 	}
 
 }

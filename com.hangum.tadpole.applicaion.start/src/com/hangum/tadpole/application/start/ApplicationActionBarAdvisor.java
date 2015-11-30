@@ -32,6 +32,7 @@ import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
+import com.hangum.tadpole.compare.core.actions.OpenCompareAction;
 //import com.hangum.tadpole.compare.core.actions.OpenCompareAction;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -86,7 +87,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** schema history */
     private IAction schemaHistoryAction;
-//    private IAction openCompareAction;
+    private IAction openCompareAction;
     private IAction resourceManageAction;
     
     private IAction preferenceAction;
@@ -139,8 +140,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
     	
-//    	openCompareAction = new OpenCompareAction(window);
-//    	register(openCompareAction);
+    	openCompareAction = new OpenCompareAction(window);
+    	register(openCompareAction);
     	
     	resourceManageAction = new ResourceManagerAction(window);
     	register(resourceManageAction);
@@ -209,7 +210,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		}
 		manageMenu.add(executedSQLAction);
 		manageMenu.add(schemaHistoryAction);
-//		manageMenu.add(openCompareAction);
+		manageMenu.add(openCompareAction);
 		
 		if(isAdmin) {
 			adminMenu.add(adminSendMessageAction);

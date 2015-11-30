@@ -11,9 +11,7 @@
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,13 +61,10 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.security.DBAccessCtlManager;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -88,7 +83,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
-import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -98,8 +92,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparat
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
 /**
