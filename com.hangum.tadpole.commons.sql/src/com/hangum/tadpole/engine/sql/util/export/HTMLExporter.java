@@ -17,8 +17,8 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
+import com.hangum.tadpole.commons.libs.core.define.HTMLDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -29,14 +29,14 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class HTMLExporter extends AbstractTDBExporter {
-	private static final String sbHtml = 
-				"<meta charset='UTF-8'>" +
-				"<style type='text/css'>" +
-				".tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}" +
-				".tg td{font-family:Arial, sans-serif;font-size:12px;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}" +
-				".tg th{font-family:Arial, sans-serif;font-size:12px;font-weight:normal;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}" +
-				".tg .tg-yw4l{vertical-align:top}" +
-				"</style>";
+//	public static final String sbHtml = 
+//				"<meta charset='UTF-8'>" +
+//				"<style type='text/css'>" +
+//				".tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}" +
+//				".tg td{font-family:Arial, sans-serif;font-size:12px;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}" +
+//				".tg th{font-family:Arial, sans-serif;font-size:12px;font-weight:normal;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}" +
+//				".tg .tg-yw4l{vertical-align:top}" +
+//				"</style>";
 	private static String strContetntGroup = "<table class='tg'>%s%s</table>";
 	
 	private static String strGroup = "<tr>%s</tr>";
@@ -75,7 +75,7 @@ public class HTMLExporter extends AbstractTDBExporter {
 		}
 		String strLastBody = String.format(strContetntGroup, strLastColumnName, sbBody);
 		
-		return sbHtml + strLastBody;
+		return HTMLDefine.sbHtml + strLastBody;
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class HTMLExporter extends AbstractTDBExporter {
 		String strFile = tableName + ".html";
 		String strFullPath = strTmpDir + strFile;
 		
-		FileUtils.writeStringToFile(new File(strFullPath), sbHtml, true);
+		FileUtils.writeStringToFile(new File(strFullPath), HTMLDefine.sbHtml, true);
 		FileUtils.writeStringToFile(new File(strFullPath), "<table class='tg'>", true);
 		
 		// make content
