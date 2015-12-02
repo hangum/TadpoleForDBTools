@@ -91,6 +91,7 @@ public class MessageComposite extends Composite {
 	public void addInfoAfterRefresh(UserDBDAO userDB, RequestQuery requestQuery, String msg) {
 		textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
 		textMessage.setText(msg);
+		lblGoogleSearch.setText("");
 	}
 
 	/**

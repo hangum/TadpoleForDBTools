@@ -256,8 +256,8 @@ public class ResultSetComposite extends Composite {
 							reqQuery.setSql(repSQL);
 							
 							if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
-						} else {
-							return false;
+//						} else {
+//							return false;
 						}
 					}
 				} catch(Exception e) {
@@ -277,8 +277,8 @@ public class ResultSetComposite extends Composite {
 								reqQuery.setSql(repSQL);
 								
 								if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
-							} else {
-								return false;
+//							} else {
+//								return false;
 							}
 						}
 					} catch(Exception e) {

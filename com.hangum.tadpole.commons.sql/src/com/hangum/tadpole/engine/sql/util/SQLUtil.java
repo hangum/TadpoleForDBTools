@@ -77,7 +77,7 @@ public class SQLUtil {
 	/** 허용되지 않는 sql 정의 */
 	private static final String[] NOT_ALLOWED_SQL = {
 		/* MSSQL- USE DATABASE명 */
-		"USE"
+//		"USE"
 		};
 	
 	/**
