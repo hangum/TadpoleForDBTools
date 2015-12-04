@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ import com.hangum.tadpole.commons.util.ResultSetUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 import au.com.bytecode.opencsv.CSVWriter;
@@ -126,6 +128,47 @@ public class QueryUtils {
 		}  	// end which db
 		
 		return false;
+	}
+	
+	/**
+	 * execute query
+	 * 
+	 * @param userDB
+	 * @param strQuery
+	 * @return
+	 * @throws Exception
+	 */
+	public static QueryExecuteResultDTO executeQuery(final UserDBDAO userDB, String strSQL, final int intStartCnt, final int intSelectLimitCnt) throws Exception {
+		ResultSet resultSet = null;
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		try {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			javaConn = client.getDataSource().getConnection();
+			statement = javaConn.createStatement();
+			
+			if(intStartCnt == 0) {
+				statement.execute(strSQL);
+				resultSet = statement.getResultSet();
+			} else {
+				strSQL = PartQueryUtil.makeSelect(userDB, strSQL, intStartCnt, intSelectLimitCnt);
+				
+				if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
+				statement.execute(strSQL);
+				resultSet = statement.getResultSet();
+			}
+			return new QueryExecuteResultDTO(userDB, false, resultSet, intSelectLimitCnt, intStartCnt);
+			
+		} catch(Exception e) {
+			logger.error("execute query", e);
+		} finally {
+			if(statement != null) statement.close();
+			if(resultSet != null) resultSet.close();
+			if(javaConn != null) javaConn.close();
+		}
+		
+		return null;
 	}
 	
 	/**
