@@ -143,6 +143,7 @@ public class QueryUtils {
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		
+		strSQL = SQLUtil.sqlExecutable(strSQL);
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
@@ -162,13 +163,13 @@ public class QueryUtils {
 			
 		} catch(Exception e) {
 			logger.error("execute query", e);
+			throw e;
 		} finally {
 			if(statement != null) statement.close();
 			if(resultSet != null) resultSet.close();
 			if(javaConn != null) javaConn.close();
 		}
 		
-		return null;
 	}
 	
 	/**

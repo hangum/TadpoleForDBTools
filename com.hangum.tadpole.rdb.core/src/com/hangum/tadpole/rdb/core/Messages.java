@@ -796,7 +796,7 @@ public class Messages {
 	public String MessageComposite_lblGoogleSearch_1_text;
 	public String RDBResultComposite_lblResult;
 	public String RDBResultComposite_btnOrientation;
-
+	public String TableColumnDeleteAction_1;
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }

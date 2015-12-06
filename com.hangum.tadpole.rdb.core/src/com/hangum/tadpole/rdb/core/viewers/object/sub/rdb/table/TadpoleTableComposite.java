@@ -82,6 +82,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+//import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
@@ -139,7 +140,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 //	private AlterTableAction alterTableAction;
 	
 	// table column
-	private TableColumnSelectionAction tableColumnSelectionAction;
+	private AbstractObjectAction tableColumnSelectionAction;
+//	private AbstractObjectAction TableColumnDeleteAction;
 	
 	private ITableDecorationExtension tableDecorationExtension;
 	
@@ -431,6 +433,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	private void createTableColumnMenu() {
 		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
+//		TableColumnDeleteAction = new TableColumnDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -439,6 +442,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				manager.add(tableColumnSelectionAction);
+//				manager.add(TableColumnDeleteAction);
 			}
 		});
 
@@ -689,6 +693,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// table column
 		tableColumnSelectionAction.setUserDB(getUserDB());
+//		TableColumnDeleteAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -759,6 +764,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableDataEditorAction.dispose();
 		
 		tableColumnSelectionAction.dispose();
+//		TableColumnDeleteAction.dispose();
 	}
 
 	@Override
