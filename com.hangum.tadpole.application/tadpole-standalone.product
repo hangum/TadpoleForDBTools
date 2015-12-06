@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-standalone -useDB all -defaultDB MySQL
+      <programArgs>-nl en -standalone -useDB all -defaultDB MySQL
       </programArgs>
       <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1  -Xverify:none 
 -XX:+UseParallelGC
@@ -22,7 +22,10 @@
    <windowImages/>
 
    <splash
-      location="com.hangum.tadpole.application" />
+      location="com.hangum.tadpole.application"
+      startupProgressRect="5,275,445,15"
+      startupMessageRect="7,252,445,20"
+      startupForegroundColor="00FF00" />
    <launcher name="tadpole-standalone">
       <linux icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.xpm"/>
       <macosx icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.icns"/>
@@ -50,6 +53,7 @@
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.utils"/>
       <plugin id="com.hangum.tadpole.commons.utils.zip"/>
+      <plugin id="com.hangum.tadpole.compare.core"/>
       <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.hive.core"/>
@@ -206,6 +210,7 @@
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils.zip" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.compare.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />
@@ -280,6 +285,10 @@
       <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />
       <plugin id="org.junit" autoStart="true" startLevel="0" />
    </configurations>
+
+   <repositories>
+      <repository location="http://127.0.0.1:8080/tdbupdate" enabled="true" />
+   </repositories>
 
    <preferencesInfo>
       <targetfile overwrite="false"/>

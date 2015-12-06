@@ -94,6 +94,11 @@ public class RequestQuery {
 		this.sql = SQLUtil.sqlExecutable(originalSql);
 		parseSQL(this.sql);
 		
+//		logger.debug("================================================================================================");
+//		logger.debug("[originalSql]" + originalSql);
+//		logger.debug("[sql]" + sql);
+//		logger.debug("================================================================================================");
+		
 		this.mode = mode;
 		this.executeType = type;
 		this.isAutoCommit = isAutoCommit;

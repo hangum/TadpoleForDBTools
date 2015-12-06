@@ -155,12 +155,6 @@ public class TadpoleSQLManager {
 		
 		TadpoleMetaData tmd = null;
 		
-		// make assist data
-		MakeContentAssistUtil assistUtil = new MakeContentAssistUtil();
-		userDB.setTableListSeparator(assistUtil.getAssistTableList(userDB));
-		userDB.setViewListSeparator(assistUtil.getAssistViewList(userDB));
-		userDB.setFunctionLisstSeparator(assistUtil.getFunctionList(userDB));
-		
 		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다. 
 		switch ( userDB.getDBDefine() ) {
 			case ORACLE_DEFAULT:		
@@ -195,14 +189,25 @@ public class TadpoleSQLManager {
 		) {
 			// not support this methods
 			tmd.setKeywords("");
+		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
+		) {
+			String strFullKeywords = StringUtils.join(SQLConstants.MSSQL_KEYWORDS, ",") + "," + tmpDBMetadata.getSQLKeywords();
+			tmd.setKeywords(strFullKeywords);
 		} else {
 			tmd.setKeywords(tmpDBMetadata.getSQLKeywords());
 		}
 		
 		tmd.setDbMajorVersion(tmpDBMetadata.getDatabaseMajorVersion());
 		tmd.setMinorVersion(tmpDBMetadata.getDatabaseMinorVersion());
-		
 		dbMetadata.put(searchKey, tmd);
+
+		// make assist data
+		MakeContentAssistUtil assistUtil = new MakeContentAssistUtil();
+		userDB.setTableListSeparator(assistUtil.getAssistTableList(userDB));
+		userDB.setViewListSeparator(assistUtil.getAssistViewList(userDB));
+		userDB.setFunctionLisstSeparator(assistUtil.getFunctionList(userDB));
+		
 	}
 	
 	/**

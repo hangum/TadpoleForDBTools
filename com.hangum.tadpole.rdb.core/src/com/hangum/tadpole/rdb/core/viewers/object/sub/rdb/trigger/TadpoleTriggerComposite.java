@@ -41,6 +41,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -203,8 +204,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTrigger = sqlClient.queryForList("triggerList", userDB.getDb()); //$NON-NLS-1$
+			showTrigger = DBSystemSchema.getTrigger(userDB);
 
 			triggerTableViewer.setInput(showTrigger);
 			triggerTableViewer.refresh();

@@ -62,13 +62,13 @@ public class AlterTableEditingSupport extends EditingSupport {
 		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
 
 		switch (columnIndex){
-		case AlterTableConsts.SEQ_NO_IDX:
+//		case AlterTableConsts.SEQ_NO_IDX:
 //		case AlterTableConsts.COLUMN_ID_IDX:
-			return false;
+//			return false;
 		case AlterTableConsts.DATA_SIZE_IDX:
 //			return dao.isUseSize();
-		case AlterTableConsts.DATA_PRECISION_IDX:
-		case AlterTableConsts.DATA_SCALE_IDX:
+//		case AlterTableConsts.DATA_PRECISION_IDX:
+//		case AlterTableConsts.DATA_SCALE_IDX:
 //			return dao.isUsePrecision();
 		default:
 			return true;
@@ -79,26 +79,29 @@ public class AlterTableEditingSupport extends EditingSupport {
 	protected Object getValue(Object element) {
 		AlterTableMetaDataDAO metaDao = (AlterTableMetaDataDAO) element;
 
-		if (columnIndex == AlterTableConsts.SEQ_NO_IDX) {
-			return String.valueOf(metaDao.getSeqNo());
+//		if (columnIndex == AlterTableConsts.SEQ_NO_IDX) {
+//			return String.valueOf(metaDao.getSeqNo());
 //		} else if (columnIndex == AlterTableConsts.COLUMN_ID_IDX) {
 //			return String.valueOf(dao.getColumnId());
-		} else if (columnIndex == AlterTableConsts.COLUMN_NAME_IDX) {
+//		} else 
+		if (columnIndex == AlterTableConsts.COLUMN_NAME_IDX) {
 			return metaDao.getColumnName();
 		} else if (columnIndex == AlterTableConsts.DATA_TYPE_IDX) {
 			return DataTypeDef.getIndexByType(metaDao.getDbdef(), Integer.parseInt(""+metaDao.getDataType()) );
 		} else if (columnIndex == AlterTableConsts.DATA_SIZE_IDX) {
 			return String.valueOf(metaDao.getDataSize());
-		} else if (columnIndex == AlterTableConsts.DATA_PRECISION_IDX) {
-			return String.valueOf(metaDao.getDataPrecision());
-		} else if (columnIndex == AlterTableConsts.DATA_SCALE_IDX) {
-			return String.valueOf(metaDao.getDataScale());
+//		} else if (columnIndex == AlterTableConsts.DATA_PRECISION_IDX) {
+//			return String.valueOf(metaDao.getDataPrecision());
+//		} else if (columnIndex == AlterTableConsts.DATA_SCALE_IDX) {
+//			return String.valueOf(metaDao.getDataScale());
 		} else if (columnIndex == AlterTableConsts.PRIMARY_KEY_IDX) {
 			return metaDao.isPrimaryKey();
 		} else if (columnIndex == AlterTableConsts.NULLABLE_IDX) {
 			return metaDao.isNullable();
 		} else if (columnIndex == AlterTableConsts.DEFAULT_VALUE_IDX) {
 			return metaDao.getDefaultValue();
+		} else if (columnIndex == AlterTableConsts.COMMENT_IDX) {
+			return metaDao.getComment();
 		}
 
 		return null;
@@ -108,13 +111,14 @@ public class AlterTableEditingSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
 		
-		if (columnIndex == AlterTableConsts.SEQ_NO_IDX) {
-			int changeValue = makeStringToInt(value.toString());
-			if(changeValue == dao.getSeqNo()) return;
-			dao.setSeqNo(changeValue);
+//		if (columnIndex == AlterTableConsts.SEQ_NO_IDX) {
+//			int changeValue = makeStringToInt(value.toString());
+//			if(changeValue == dao.getSeqNo()) return;
+//			dao.setSeqNo(changeValue);
 //		} else if (columnIndex == AlterTableConsts.COLUMN_ID_IDX) {
 //			dao.setColumnId(Integer.parseInt(value.toString()));
-		} else if (columnIndex == AlterTableConsts.COLUMN_NAME_IDX) {
+//		} else 
+		if (columnIndex == AlterTableConsts.COLUMN_NAME_IDX) {
 			if(dao.getColumnName().equals(value.toString())) return;
 			
 			dao.setColumnName(value.toString());
@@ -128,16 +132,16 @@ public class AlterTableEditingSupport extends EditingSupport {
 			if(dao.getDataSize() == changeValue) return;
 			
 			dao.setDataSize(changeValue);
-		} else if (columnIndex == AlterTableConsts.DATA_PRECISION_IDX) {
-			int changeValue = makeStringToInt(value.toString());
-			if(dao.getDataPrecision() == changeValue) return;
-			
-			dao.setDataPrecision(changeValue);
-		} else if (columnIndex == AlterTableConsts.DATA_SCALE_IDX) {
-			int changeValue = makeStringToInt(value.toString());
-			if(dao.getDataScale() == changeValue) return;
-			
-			dao.setDataScale(changeValue);
+//		} else if (columnIndex == AlterTableConsts.DATA_PRECISION_IDX) {
+//			int changeValue = makeStringToInt(value.toString());
+//			if(dao.getDataPrecision() == changeValue) return;
+//			
+//			dao.setDataPrecision(changeValue);
+//		} else if (columnIndex == AlterTableConsts.DATA_SCALE_IDX) {
+//			int changeValue = makeStringToInt(value.toString());
+//			if(dao.getDataScale() == changeValue) return;
+//			
+//			dao.setDataScale(changeValue);
 		} else if (columnIndex == AlterTableConsts.PRIMARY_KEY_IDX) {
 			boolean bool = Boolean.parseBoolean(value.toString());
 			if(dao.isPrimaryKey() == bool) return;
@@ -153,12 +157,14 @@ public class AlterTableEditingSupport extends EditingSupport {
 			if(value.toString().equals(dao.getDefaultValue())) return;
 			
 			dao.setDefaultValue(value.toString());
+		} else if (columnIndex == AlterTableConsts.COMMENT_IDX) {
+			if(dao.getComment().equals(value.toString())) return;
+			
+			dao.setComment(value.toString());
 		}
-		
 		if(logger.isDebugEnabled()) logger.debug("Changed data message");
 		
 		if(dao.getDataStatus() != DATA_TYPE.INSERT) dao.setDataStatus(DATA_TYPE.MODIFY);
-
 		viewer.update(dao, null);
 	}
 	

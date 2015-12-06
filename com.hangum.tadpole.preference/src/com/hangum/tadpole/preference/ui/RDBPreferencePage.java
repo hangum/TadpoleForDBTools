@@ -53,6 +53,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	
 	private Label lblUserFont;
 	
+	private Combo comboRDBResultType;
 	private Combo comboRDBNumberComma;
 	
 	private Text textQueryTimeout;
@@ -71,6 +72,16 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
+		
+		Label lblResultType = new Label(container, SWT.NONE);
+		lblResultType.setText(Messages.get().RDBPreferencePage_resultType);
+		
+		comboRDBResultType = new Combo(container, SWT.READ_ONLY);
+		comboRDBResultType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboRDBResultType.add("Table");
+		comboRDBResultType.add("Text");
+		comboRDBResultType.add("JSON");
+		comboRDBResultType.select(0);
 		
 		Label lblNumberColumnAdd = new Label(container, SWT.NONE);
 		lblNumberColumnAdd.setText(Messages.get().RDBPreferencePage_lblNumberColumnAdd_text);
@@ -173,6 +184,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	
 	@Override
 	public boolean performOk() {
+		String txtResultType = comboRDBResultType.getText();
 		String txtSelectLimit = textSelectLimit.getText();
 		String txtResultPage = textResultPage.getText();
 		String txtQueryTimtout = textQueryTimeout.getText();
@@ -220,9 +232,10 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateRDBUserInfoData(
-					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn);
+					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn, txtResultType);
 			
 			// session 데이터를 수정한다.
+			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, txtResultPage);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_QUERY_TIMEOUT, txtQueryTimtout);
@@ -267,6 +280,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	 * 초기값을 설정 합니다.
 	 */
 	private void initDefaultValue() {
+		comboRDBResultType.setText(GetPreferenceGeneral.getResultType());
 		textSelectLimit.setText( "" + GetPreferenceGeneral.getSelectLimitCount() ); //$NON-NLS-1$
 		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textQueryTimeout.setText( "" + GetPreferenceGeneral.getQueryTimeOut() );

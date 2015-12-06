@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -33,7 +32,6 @@ import org.eclipse.rap.addons.d3chart.ColorStream;
 import org.eclipse.rap.addons.d3chart.Colors;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -53,6 +51,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
+import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -100,11 +99,14 @@ public class LoginDialog extends Dialog {
 	private Label lblUserGuide;
 	private Label lblContact;
 	
+	private Button btnLogin;
+	private Button btnNewUser;
+	private Button btnFindPasswd;
+	
 	String strPaypal = "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'> " + //$NON-NLS-1$
 						"	<input type='hidden' name='cmd' value='_s-xclick'> " + //$NON-NLS-1$
 						"	<input type='hidden' name='encrypted' value='-----BEGIN PKCS7-----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-----END PKCS7-----'> " + //$NON-NLS-1$
 						"	<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'> " + //$NON-NLS-1$
-						"	<img alt='' border='0' src='https://www.paypalobjects.com/ko_KR/i/scr/pixel.gif' width='1' height='1'> " + //$NON-NLS-1$
 						"	</form>"; //$NON-NLS-1$
 	
 	public LoginDialog(Shell shell) {
@@ -175,7 +177,7 @@ public class LoginDialog extends Dialog {
 		});
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnLogin = new Button(compositeLogin, SWT.NONE);
+		btnLogin = new Button(compositeLogin, SWT.NONE);
 		btnLogin.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -191,16 +193,17 @@ public class LoginDialog extends Dialog {
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeUILocale();
+				changeUILocale(comboLanguage.getText());
 			}
 		});
-		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage());
-		comboLanguage.add(Locale.KOREAN.getDisplayLanguage());
+		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
+		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH));
 
+		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
+		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH), Locale.KOREAN);
+		
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(), Locale.ENGLISH);
-		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(), Locale.KOREAN);
 		
 		
 //		comboLanguage.select(0);
@@ -282,28 +285,18 @@ public class LoginDialog extends Dialog {
 		}
 		lblContactUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblDonation = new Label(compositeLetter, SWT.NONE);
+//		Label lblDonation = new Label(compositeLetter, SWT.NONE);
 //		lblDonation.setText(Messages.get().LoginDialog_lblDonation_text);
 
-		Browser browser = new Browser(compositeLetter, SWT.NONE);
-		browser.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1));
-		browser.setText(strPaypal);
+//		Browser browser = new Browser(compositeLetter, SWT.NONE);
+//		browser.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false, 1, 1));
+//		browser.setText(strPaypal);
 		
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
 		initUI();
 		
 		return compositeLogin;
-	}
-	
-	/** change ui locale */
-	private void changeUILocale(){
-		Object objLanguage = comboLanguage.getData(comboLanguage.getText());
-		if(objLanguage == null) {
-			changeUILocale(comboLanguage.getItem(0));
-		} else {
-			changeUILocale(comboLanguage.getText());
-		}
 	}
 	
 	@Override
@@ -375,6 +368,13 @@ public class LoginDialog extends Dialog {
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
+		} catch (TadpoleAuthorityException e) {
+			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
+			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_29, e.getMessage());
+			
+			textPasswd.setText("");
+			textPasswd.setFocus();
+			return;
 		} catch (Exception e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
 			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_29, e.getMessage());
@@ -392,22 +392,54 @@ public class LoginDialog extends Dialog {
 	 * @param userId
 	 */
 	private void registLoginID(String userId) {
-		HttpServletResponse response = RWT.getResponse();
-		
-		Cookie tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, 
-					Boolean.toString(btnCheckButton.getSelection()));
-		tdbCookie.setMaxAge(60 * 24 * 30);
-		response.addCookie(tdbCookie);
-		
-		if(btnCheckButton.getSelection()) {
-			tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-			tdbCookie.setMaxAge(60 * 24 * 30);
-			response.addCookie(tdbCookie);
+		if(!btnCheckButton.getSelection()) {
+			deleteCookie();
+			return;
 		}
 		
-		tdbCookie = new Cookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
-		tdbCookie.setMaxAge(60 * 24 * 30);
-		response.addCookie(tdbCookie);
+		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
+		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
+	}
+	
+	private void deleteCookie() {
+		try {
+			HttpServletResponse response = RWT.getResponse();
+			HttpServletRequest request = RWT.getRequest();
+			Cookie[] cookies = request.getCookies();
+			for (Cookie cookie : cookies) {
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				}
+			}
+
+		} catch(Exception e) {
+			logger.error("regist user info", e);
+		}
+	}
+	
+	private void saveCookie(String key, String value) {
+		try {
+			HttpServletResponse response = RWT.getResponse();
+			Cookie tdbCookie = new Cookie(key, value);
+			tdbCookie.setMaxAge(60 * 60 * 24 * 365);
+			tdbCookie.setPath("/");
+			response.addCookie(tdbCookie);
+		} catch(Exception e) {
+			logger.error("regist user info", e);
+		}
 	}
 		
 	@Override
@@ -447,11 +479,11 @@ public class LoginDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 //		createButton(parent, IDialogConstants.OK_ID, Messages.get().LoginDialog_15, true);
 		
-		createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
+		btnNewUser = createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-				createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
+				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
 			}
 		} catch (Exception e) {
 //			logger.error("view findpasswd button", e);
@@ -463,19 +495,32 @@ public class LoginDialog extends Dialog {
 	 * initialize ui
 	 */
 	private void initUI() {
-		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage();
+		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage(Locale.ENGLISH);
 		boolean isFound = false;
 		for(String strName : comboLanguage.getItems()) {
 			if(strName.equals(defaultLanguage)) {
 				isFound = true;
 				comboLanguage.setText(strName);
 				changeUILocale(comboLanguage.getText());
-
 				break;
 			}
 		}
+		
+		// 쿠키에서 사용자 정보를 찾지 못했으면..
 		if(!isFound) {
-			comboLanguage.select(0);
+			// 사용자 브라우저 랭귀지를 가져와서, 올챙이가 지원하는 랭귀지인지 검사해서..
+			String locale = RequestInfoUtils.getDisplayLocale();
+			for(String strLocale : comboLanguage.getItems()) {
+				if(strLocale.equals(locale)) {
+					isFound = true;
+					break;
+				}
+			}
+			// 있으면... 
+			if(isFound) comboLanguage.setText(locale);
+			else comboLanguage.setText(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
+			
+			// 랭귀지를 바꾸어 준다.
 			changeUILocale(comboLanguage.getText());
 		}
 		
@@ -524,7 +569,7 @@ public class LoginDialog extends Dialog {
 				boolean isFind = false;
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
 					comboLanguage.setText(cookie.getValue());
-					changeUILocale();
+					changeUILocale(comboLanguage.getText());
 					isFind = true;
 				}
 				
@@ -542,6 +587,8 @@ public class LoginDialog extends Dialog {
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
 		RWT.getUISession().setLocale(localeSelect);
 		
+		btnLogin.setText(Messages.get().LoginDialog_15);
+		
 		btnCheckButton.setText(Messages.get().LoginDialog_9);
 		lblEmail.setText(Messages.get().LoginDialog_1);
 		lblPassword.setText(Messages.get().LoginDialog_4);
@@ -551,6 +598,11 @@ public class LoginDialog extends Dialog {
 		lblSite.setText(Messages.get().LoginDialog_lblSite_text);
 		lblUserGuide.setText(Messages.get().LoginDialog_lblUserGuide_text);
 		lblContact.setText(Messages.get().LoginDialog_lblContact_text_1);
+		
+		if(btnNewUser != null) btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
+		if(btnFindPasswd != null) {
+			btnFindPasswd.setText(Messages.get().LoginDialog_lblFindPassword);
+		}
 		
 		compositeLetter.layout();
 		compositeLogin.layout();
@@ -623,7 +675,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		if(listDBMart.isEmpty()) {
-			return new Point(480, 320);
+			return new Point(480, 300);
 		} else {
 			return new Point(480, 460);
 		}

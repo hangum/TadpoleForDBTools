@@ -26,6 +26,7 @@ import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -39,13 +40,40 @@ public class TadpoleObjectQuery {
 	private static Logger logger = Logger.getLogger(TadpoleObjectQuery.class);
 	
 	/**
-	 * 선택된 Table 정보를 리턴합니다.
+	 * 보여 주어야할 테이블 목록을 정의합니다.
+	 *
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
+		List<TableDAO> showTables = null;
+				
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			showTables = new TajoConnectionManager().tableList(userDB);
+
+			// sql keyword를 설정합니다.
+			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
+				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
+			}
+			
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$			
+		}
+		
+		/** filter 정보가 있으면 처리합니다. */
+		return getTableAfterwork(showTables, userDB);
+	}
+	
+	/**
+	 * 선택된 Table의 컬럼 정보를 리턴합니다.
 	 * 
 	 * @param userDB
 	 * @param tableDao
 	 * @throws Exception
 	 */
-	public static List<TableColumnDAO> makeShowTableColumns(UserDBDAO userDB, TableDAO tableDao) throws Exception {
+	public static List<TableColumnDAO> getTableColumns(UserDBDAO userDB, TableDAO tableDao) throws Exception {
 		List<TableColumnDAO> returnColumns = new ArrayList<TableColumnDAO>();
 		
 		Map<String, String> mapParam = new HashMap<String, String>();
@@ -93,5 +121,84 @@ public class TadpoleObjectQuery {
 		
 		return returnColumns;
 	}
+
 	
+	/**
+	 * Table 정보 처리 후에 
+	 * 
+	 * @param showTables
+	 * @param userDB
+	 * @return
+	 */
+	private static List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
+		final StringBuffer strTablelist = new StringBuffer();
+		/** filter 정보가 있으면 처리합니다. */
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
+		
+		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		for(TableDAO td : showTables) {
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+			
+			strTablelist.append(td.getSysName()).append("|"); //$NON-NLS-1$
+		}
+		
+		// setting UserDBDAO 
+		userDB.setListTable(showTables);
+
+		// content assist util
+		MakeContentAssistUtil contentAssistUtil = new MakeContentAssistUtil();
+		contentAssistUtil.makeContentAssistUtil(userDB);
+		
+		return showTables;
+	}
+	
+	/**
+	 * @param userDB
+	 * @param strObject
+	 * @return
+	 */
+	public static TableDAO getTable(UserDBDAO userDB, String strObject) throws Exception {
+		TableDAO tableDao = null;
+		List<TableDAO> showTables = new ArrayList<TableDAO>();
+		
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			List<TableDAO> tmpShowTables = new TajoConnectionManager().tableList(userDB);
+			
+			for(TableDAO dao : tmpShowTables) {
+				if(dao.getName().equals(strObject)) {
+					showTables.add(dao);
+					break;
+				}
+			}
+		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			List<TableDAO> tmpShowTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			
+			for(TableDAO dao : tmpShowTables) {
+				if(dao.getName().equals(strObject)) {
+					showTables.add(dao);
+					break;
+				}
+			}
+			
+		} else {
+			Map<String, Object> mapParam = new HashMap<String, Object>();
+			mapParam.put("db", 	userDB.getDb()); //$NON-NLS-1$
+			mapParam.put("name", 	strObject); //$NON-NLS-1$
+			
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$			
+		}
+		
+		/** filter 정보가 있으면 처리합니다. */
+		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
+		
+		if(!showTables.isEmpty()) { 
+			tableDao = showTables.get(0);
+			tableDao.setSysName(SQLUtil.makeIdentifierName(userDB, tableDao.getName()));
+			return tableDao;
+		} else {
+			return null;
+		}
+	}
 }

@@ -12,6 +12,7 @@
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.utils"/>
       <plugin id="com.hangum.tadpole.commons.utils.zip"/>
+      <plugin id="com.hangum.tadpole.compare.core"/>
       <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.hive.core"/>
@@ -102,6 +103,7 @@
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils.zip" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.compare.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />

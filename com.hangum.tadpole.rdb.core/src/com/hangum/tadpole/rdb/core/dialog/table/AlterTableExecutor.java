@@ -79,7 +79,6 @@ public class AlterTableExecutor {
 				AlterTableMetaDataDAO dao = new AlterTableMetaDataDAO();
 
 				dao.setDbdef(userDB.getDBDefine());
-				dao.setSeqNo(i);
 				dao.setOriginal_columnName(rsm.getColumnLabel(i));
 				dao.setColumnName(rsm.getColumnLabel(i));
 				dao.setDataType(rsm.getColumnType(i));
@@ -90,8 +89,9 @@ public class AlterTableExecutor {
 					dao.setUseSize(true);
 					dao.setUsePrecision(false);
 				} else if (DataTypeDef.isNumericType(rsm.getColumnType(i))){
-					dao.setDataPrecision(rsm.getPrecision(i));
-					dao.setDataScale(rsm.getScale(i));
+					dao.setDataSize(rsm.getPrecision(i));
+//					dao.setDataPrecision(rsm.getPrecision(i));
+//					dao.setDataScale(rsm.getScale(i));
 					dao.setUseSize(false);
 					dao.setUsePrecision(true);
 				} else {
@@ -117,6 +117,7 @@ public class AlterTableExecutor {
 				}
 				dao.setDefaultValue("");
 				dao.setNullable(1 != rsm.isNullable(i));
+				dao.setComment("");
 
 				listAlterTableColumns.add(dao);
 			}

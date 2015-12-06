@@ -250,7 +250,7 @@ public class MongoDBImportEditor extends EditorPart {
 	 * 화면을 초기화 합니다.
 	 */
 	private void initEditor() {
-		tabFolderQuery.setSelection(1);
+		tabFolderQuery.setSelection(0);
 		
 		try {
 			int visibleItemCount = 0;

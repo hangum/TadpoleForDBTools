@@ -55,7 +55,6 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
-import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.swtdesigner.ResourceManager;
 /**
@@ -344,10 +343,12 @@ public class ObjectEditor extends MainEditor {
 	private void afterProcess(RequestQuery reqQuery, RequestResultDAO reqResultDAO, String title) {
 		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-		resultMainComposite.refreshMessageView(reqQuery, reqResultDAO.getException(), String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
 		
 		if(PublicTadpoleDefine.SUCCESS_FAIL.S.name().equals(reqResultDAO.getResult())) {
+			resultMainComposite.refreshInfoMessageView(reqQuery, String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$
 			refreshExplorerView(getUserDB(), reqQuery);
+		} else {
+			resultMainComposite.refreshErrorMessageView(reqQuery, reqResultDAO.getException(), String.format("%s %s", title, reqResultDAO.getMesssage())); //$NON-NLS-1$			
 		}
 	}
 	

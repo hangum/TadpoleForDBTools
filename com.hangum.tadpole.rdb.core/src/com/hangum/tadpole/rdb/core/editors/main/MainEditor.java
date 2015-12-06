@@ -10,9 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -377,8 +374,7 @@ public class MainEditor extends EditorExtension {
 	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
-	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	    
-	    
+	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	    addBrowserService();
 	    
 	    resultMainComposite = new ResultMainComposite(sashForm, SWT.BORDER);
@@ -466,11 +462,7 @@ public class MainEditor extends EditorExtension {
 	 * browser handler
 	 */
 	protected void addBrowserService() {
-//		if(DBOperationType.valueOf(userDB.getOperation_type()) == DBOperationType.PRODUCTION) {
 		browserQueryEditor.setUrl(REAL_DB_URL);
-//	    } else {
-//	    	browserQueryEditor.setUrl(DEV_DB_URL);
-//	    }
 	    	
 		MakeContentAssistUtil constAssistUtil = new MakeContentAssistUtil();
 	    final String strConstList = constAssistUtil.makeContentAssistUtil(userDB);
@@ -483,12 +475,9 @@ public class MainEditor extends EditorExtension {
 	    registerBrowserFunctions();
 	    
 	    /** 무슨 일인지 이벤트가 두번 탑니다. */
-	    final List<String> listInitialize = new ArrayList<String>();
 		browserQueryEditor.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed( ProgressEvent event ) {
-				if(!listInitialize.isEmpty()) return;
-				listInitialize.add("init_comp"); //$NON-NLS-1$
 				
 				try {
 					browserEvaluate(IEditorFunction.RDB_INITIALIZE, 

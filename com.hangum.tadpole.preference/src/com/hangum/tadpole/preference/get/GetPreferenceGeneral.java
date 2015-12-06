@@ -92,6 +92,13 @@ public class GetPreferenceGeneral {
 	}
 	
 	////////////////// rdb 설정 ////////////////////////////////////////////////////////////////////////////
+	/** rdb result type */
+	public static String getResultType() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_TYPE);
+		if(null == userInfo) return PreferenceDefine.RDB_RESULT_TYPE_VALUE;
+		return userInfo.getValue0();		
+	}
+	
 	/** rdb 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */ 
 	public static int getSelectLimitCount() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT);

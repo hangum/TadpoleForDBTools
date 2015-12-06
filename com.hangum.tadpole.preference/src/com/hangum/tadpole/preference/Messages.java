@@ -110,6 +110,7 @@ public class Messages {
 	public String RDBPreferencePage_3;
 
 	public String RDBPreferencePage_5;
+	public String RDBPreferencePage_resultType;
 
 	public String RDBPreferencePage_btnCreatePlanTable_text;
 	public String GeneralPreferencePage_lblExportDilimit_text;

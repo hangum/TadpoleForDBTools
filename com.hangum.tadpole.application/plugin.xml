@@ -28,7 +28,7 @@
             favicon="icons/TadpoleDBHub.ico"
             id="com.hangum.tadpole.browser.rap.branding"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole DB Hub-v1.6.6(R1)">
+            title="Tadpole DB Hub-v1.6.7(R0)">
       </branding>
    </extension>
    <extension
@@ -48,6 +48,22 @@
          <property
                name="appName"
                value="tadpole-standalone">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="00FF00">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="7,252,445,20">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,275,445,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
          </property>
       </product>
    </extension>

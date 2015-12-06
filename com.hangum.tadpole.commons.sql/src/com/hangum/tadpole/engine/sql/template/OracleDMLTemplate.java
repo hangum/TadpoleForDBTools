@@ -19,7 +19,12 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  *
  */
 public class OracleDMLTemplate extends MySQLDMLTemplate {
-	public static final String TMP_GET_PARTDATA = "select * from (%s) where ROWNUM > %s and ROWNUM <= %s";
+	
+	/* 참조 : http://devhome.tistory.com/22 */
+	public static final String TMP_GET_PARTDATA = "SELECT * FROM (	" +
+												 "    SELECT tdb_a.*, ROWNUM AS tdb_rnum, COUNT(*) OVER() AS tdb_totcnt  " +
+												 "    FROM ( %s ) tdb_a " +
+												 " 	) WHERE tdb_rnum > %s AND tdb_rnum <= %s";
 	
 	/** table - oracle */
 	public static final String TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 

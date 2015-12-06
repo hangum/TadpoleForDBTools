@@ -164,6 +164,7 @@ public abstract class AbstractObjectComposite extends Composite {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+			tableColumn.getColumn().setMoveable(true);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
@@ -186,6 +187,7 @@ public abstract class AbstractObjectComposite extends Composite {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+			tableColumn.getColumn().setMoveable(true);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
@@ -202,6 +204,7 @@ public abstract class AbstractObjectComposite extends Composite {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+			tableColumn.getColumn().setMoveable(true);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}
@@ -219,6 +222,7 @@ public abstract class AbstractObjectComposite extends Composite {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);
 			tableColumn.getColumn().setText(name[i]);
 			tableColumn.getColumn().setWidth(size[i]);
+			tableColumn.getColumn().setMoveable(true);
 //			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tv, comparator, tableColumn.getColumn(), i));
 		}
 	}

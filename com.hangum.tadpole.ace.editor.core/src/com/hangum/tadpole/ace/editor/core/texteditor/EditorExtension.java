@@ -21,7 +21,6 @@ import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionServ
 import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -85,16 +84,16 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	protected String findEditorExt() {
 		String ext = EditorDefine.EXT_DEFAULT;
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_MYSQL;
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_PGSQL;
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
-			ext = EditorDefine.EXT_SQLite;
-//		테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
-//		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
-//			ext = EditorDefine.EXT_MSSQL;
-		}
+//		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
+//			ext = EditorDefine.EXT_MYSQL;
+//		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+//			ext = EditorDefine.EXT_PGSQL;
+//		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+//			ext = EditorDefine.EXT_SQLite;
+////		테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
+////		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+////			ext = EditorDefine.EXT_MSSQL;
+//		}
 		return ext;
 	}
 	

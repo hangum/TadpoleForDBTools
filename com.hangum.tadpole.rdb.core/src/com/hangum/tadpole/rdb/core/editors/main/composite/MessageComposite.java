@@ -80,15 +80,28 @@ public class MessageComposite extends Composite {
 		lblGoogleSearch = new Label(compositeTail, SWT.NONE);
 		lblGoogleSearch.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 	}
+	
+	/**
+	 * refresh info message
+	 * 
+	 * @param userDB
+	 * @param requestQuery
+	 * @param msg
+	 */
+	public void addInfoAfterRefresh(UserDBDAO userDB, RequestQuery requestQuery, String msg) {
+		textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
+		textMessage.setText(msg);
+		lblGoogleSearch.setText("");
+	}
 
 	/**
-	 * table view refresh
+	 * new error message
 	 * 
 	 * @param userDBDAO 
 	 * @param requestQuery
 	 * @param tadpoleMessageDAO
 	 */
-	public void addAfterRefresh(UserDBDAO userDBDAO, RequestQuery requestQuery, TadpoleMessageDAO tadpoleMessageDAO) {
+	public void addErrorAfterRefresh(UserDBDAO userDBDAO, RequestQuery requestQuery, TadpoleMessageDAO tadpoleMessageDAO) {
 		String strNewMessage = " "; //$NON-NLS-1$
 		String strSearchError = userDBDAO.getDbms_type() + " "; //$NON-NLS-1$
 

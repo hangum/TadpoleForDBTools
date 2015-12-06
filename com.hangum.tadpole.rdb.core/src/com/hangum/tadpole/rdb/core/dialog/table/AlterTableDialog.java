@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -33,8 +34,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
@@ -69,6 +72,7 @@ public class AlterTableDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @wbp.parser.constructor
 	 */
 	public AlterTableDialog(Shell parentShell, final UserDBDAO userDB) {
 		super(parentShell);
@@ -169,12 +173,13 @@ public class AlterTableDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AlterTableMetaDataDAO addColumn = new AlterTableMetaDataDAO();
+				addColumn.setDbdef(DBDefine.MYSQL_DEFAULT);
 				addColumn.setColumnName("new_column");
 				addColumn.setDataType(DataTypeDef.INTEGER);
 				addColumn.setDataStatus(DATA_TYPE.INSERT);
 				
 				listAlterTableColumns.add(addColumn);
-				tableViewer.refresh(addColumn);
+				tableViewer.add(addColumn);
 			}
 		});
 		btnAddColumn.setText("Add Column");
@@ -183,11 +188,18 @@ public class AlterTableDialog extends Dialog {
 		btnDeleteColumn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				StructuredSelection ss = (StructuredSelection)tableViewer.getSelection();
+				if(ss.isEmpty()) return;
+				
+				AlterTableMetaDataDAO addColumn = (AlterTableMetaDataDAO)ss.getFirstElement();
+				listAlterTableColumns.remove(addColumn);
+				tableViewer.remove(addColumn);
 			}
 		});
 		btnDeleteColumn.setText("Delete Column");
-		
 		tabFolder.setSelection(0);
+		
+		AnalyticCaller.track(this.getClass().getName());
 
 		return container;
 	}

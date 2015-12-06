@@ -30,8 +30,6 @@ import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.OracleDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.PostgreSQLDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.SQLiteDDLScript;
 
-import net.sf.jsqlparser.schema.Table;
-
 /**
  * DDLScript Mananager
  * 

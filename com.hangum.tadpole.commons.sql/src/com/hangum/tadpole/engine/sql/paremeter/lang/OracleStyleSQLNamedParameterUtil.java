@@ -109,22 +109,25 @@ public class OracleStyleSQLNamedParameterUtil {
                     inDoubleQuote=true;
                 } else if(c==':' && i+1<length &&
                         Character.isJavaIdentifierStart(query.charAt(i+1))) {
-                    int j=i+2;
-                    while(j<length && Character.isJavaIdentifierPart(query.charAt(j))) {
-                        j++;
-                    }
-                    String name=query.substring(i+1,j);
-                    c='?'; // replace the parameter with a question mark
-                    i+=name.length(); // skip past the end if the parameter
-
-                    List<Integer> indexList= paramMapAux.get(name);
-                    if(indexList==null) {
-                        indexList=new LinkedList<Integer>();
-                        paramMapAux.put(name, indexList);
-                    }
-                    indexList.add(index);
-
-                    index++;
+                	
+                	if(query.charAt(i-1) != ':') {
+	                    int j=i+2;
+	                    while(j<length && Character.isJavaIdentifierPart(query.charAt(j))) {
+	                        j++;
+	                    }
+	                    String name=query.substring(i+1,j);
+	                    c='?'; // replace the parameter with a question mark
+	                    i+=name.length(); // skip past the end if the parameter
+	
+	                    List<Integer> indexList= paramMapAux.get(name);
+	                    if(indexList==null) {
+	                        indexList=new LinkedList<Integer>();
+	                        paramMapAux.put(name, indexList);
+	                    }
+	                    indexList.add(index);
+	
+	                    index++;
+                	}
                 }
             }
             parsedQuery.append(c);

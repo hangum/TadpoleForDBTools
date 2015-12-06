@@ -13,6 +13,7 @@ package com.hangum.tadpole.commons.start;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.PingTest;
 
 /**
  * standalone 모드로 시스템이 시작할 때 디폴트 브라우저를 오픈하여 주도록 합니다. 
@@ -28,13 +29,16 @@ public class TadpoleOpenBrowser  implements Runnable {
 		
 		String s1 = System.getProperty("os.name").toLowerCase();
 		Runtime runtime = Runtime.getRuntime();
-		
-		if(logger.isDebugEnabled()) logger.debug("start open browser");
-		
 		try {
 			// TODO 시스템 속도가 느려서 워크벤치가 정상적으로 동작하지 못했을 경우에 대비하여 기다립니다.
 			try { Thread.sleep(3000); } catch(Exception e) {};
+			int stats = PingTest.ping("127.0.0.1", 10081, 3000);
+			if(stats != PingTest.SUCCESS) {
+				try { Thread.sleep(3000); } catch(Exception e) {};
+			}
 			
+			if(logger.isDebugEnabled()) logger.debug("start open browser");
+				
 			// window
 			if (s1.indexOf("windows") >= 0) {
 				runtime.exec(new String[] { "rundll32", "url.dll,FileProtocolHandler", PublicTadpoleDefine.getTadpoleUrl() });

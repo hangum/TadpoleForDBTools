@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.util;
+package com.hangum.tadpole.engine.sql.util.export;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,17 +21,25 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
-public class CSVUtil {
+/**
+ * CSV 유틸
+ * 
+ * @author hangum
+ *
+ */
+public class CSVExpoter extends AbstractTDBExporter {
+
 	/**
-	 * INSERT 문을 생성합니다.
+	 * csv 파일을 생성하여 파일 위치를 넘겨줍니다.
 	 * 
 	 * @param tableName
-	 * @param rs
+	 * @param rsDAO
+	 * @param seprator
 	 * @return 파일 위치
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeCSVFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+	public static String makeCSVFile(String tableName, QueryExecuteResultDTO rsDAO, char seprator) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
@@ -46,12 +54,11 @@ public class CSVUtil {
 			strArrys[i-1] = mapLabelName.get(i);
 		}
 		listCsvData.add(strArrys);
-		String strTitle = CSVFileUtils.makeData(listCsvData);
+		String strTitle = CSVFileUtils.makeData(listCsvData, seprator);
 		FileUtils.writeStringToFile(new File(strFullPath), strTitle, true);
 		
 		listCsvData.clear();
 		// data
-		int DATA_COUNT = 1000;
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
@@ -62,14 +69,14 @@ public class CSVUtil {
 			listCsvData.add(strArrys);
 			
 			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData), true);
+				FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), true);
 				listCsvData.clear();
 			}
 		}
 		
 		// 컬럼 이름.
 		if(!listCsvData.isEmpty()) {
-			FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData), true);
+			FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), true);
 		}
 		
 		return strFullPath;

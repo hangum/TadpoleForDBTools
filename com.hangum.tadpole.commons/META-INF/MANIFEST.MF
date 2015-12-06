@@ -14,7 +14,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  libs/gson-2.2.2.jar,
- libs/ip-filter-core.jar
+ libs/ip-filter-core.jar,
+ libs/diff_match.jar
 Export-Package: com.google.gson,
  com.google.gson.annotations,
  com.google.gson.internal,
@@ -35,6 +36,7 @@ Export-Package: com.google.gson,
  com.hangum.tadpole.commons.util,
  com.hangum.tadpole.commons.util.download,
  com.hangum.tadpole.commons.viewsupport,
- com.swtdesigner
+ com.swtdesigner,
+ name.fraser.neil.plaintext
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"

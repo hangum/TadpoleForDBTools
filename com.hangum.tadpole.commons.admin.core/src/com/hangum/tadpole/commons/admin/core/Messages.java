@@ -220,6 +220,9 @@ public class Messages {
 	public String NewUserDialog_lblQrcodeUrl_text;
 	public String NewUserDialog_lblOtpCdoe_text;
 	public String ModifyUserDialog_lblIsRegistDb_text;
+	
+	public String UserMgntEditorInput_0;
+	public String UserMgntEditorInput_1;
 
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

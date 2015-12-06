@@ -21,15 +21,16 @@ import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
  */
 public class AlterTableMetaDataDAO {
 
-	private int seqNo;
 	private String original_columnName;
 	private String columnName;
 	private boolean primaryKey;
 	private int dataType;
 	private String dataTypeName;
+	
 	private int dataSize;
-	private int dataPrecision;
-	private int dataScale;
+//	private int dataPrecision;
+//	private int dataScale;
+	
 	private String defaultValue;
 	private boolean nullable;
 	
@@ -41,6 +42,7 @@ public class AlterTableMetaDataDAO {
 	/* 데이터 사이즈 사용여부 - CREATE, ALTER할때 컬럼의 데이터 타입에 자료사이즈를 명시적으로 지정해야 하는지 여부. */
 	private boolean useSize;
 	private boolean usePrecision;
+	private String comment;
 	
 	public String getColumnName() {
 		return columnName;
@@ -88,21 +90,21 @@ public class AlterTableMetaDataDAO {
 		this.dataSize = dataSize;
 	}
 
-	public int getDataPrecision() {
-		return dataPrecision;
-	}
-
-	public void setDataPrecision(int dataPrecision) {
-		this.dataPrecision = dataPrecision;
-	}
-
-	public int getDataScale() {
-		return dataScale;
-	}
-
-	public void setDataScale(int dataScale) {
-		this.dataScale = dataScale;
-	}
+//	public int getDataPrecision() {
+//		return dataPrecision;
+//	}
+//
+//	public void setDataPrecision(int dataPrecision) {
+//		this.dataPrecision = dataPrecision;
+//	}
+//
+//	public int getDataScale() {
+//		return dataScale;
+//	}
+//
+//	public void setDataScale(int dataScale) {
+//		this.dataScale = dataScale;
+//	}
 
 	public String getDefaultValue() {
 		return defaultValue;
@@ -120,13 +122,13 @@ public class AlterTableMetaDataDAO {
 		this.nullable = nullable;
 	}
 
-	public int getSeqNo() {
-		return seqNo;
-	}
-
-	public void setSeqNo(int seqNo) {
-		this.seqNo = seqNo;
-	}
+//	public int getSeqNo() {
+//		return seqNo;
+//	}
+//
+//	public void setSeqNo(int seqNo) {
+//		this.seqNo = seqNo;
+//	}
 
 	public String getDataTypeName() {
 		return dataTypeName;
@@ -172,6 +174,20 @@ public class AlterTableMetaDataDAO {
 	 */
 	public void setDataStatus(DataTypeDef.DATA_TYPE dataStatus) {
 		this.dataStatus = dataStatus;
+	}
+
+	/**
+	 * @return the comment
+	 */
+	public String getComment() {
+		return comment;
+	}
+
+	/**
+	 * @param comment the comment to set
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

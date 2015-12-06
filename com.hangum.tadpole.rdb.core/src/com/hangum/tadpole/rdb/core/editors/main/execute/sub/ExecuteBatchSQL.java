@@ -40,6 +40,7 @@ public class ExecuteBatchSQL {
 
 	/**
 	 * select문의 execute 쿼리를 수행합니다.
+	 * @param errMsg 
 	 * 
 	 * @param listQuery
 	 * @param reqQuery
@@ -49,7 +50,7 @@ public class ExecuteBatchSQL {
 	 * @param userEmail
 	 * @throws Exception
 	 */     
-	public static void runSQLExecuteBatch(List<String> listQuery, 
+	public static void runSQLExecuteBatch(String errMsg, List<String> listQuery, 
 			final RequestQuery reqQuery,
 			final UserDBDAO userDB,
 			final String userType,
@@ -57,33 +58,33 @@ public class ExecuteBatchSQL {
 			final String userEmail
 	) throws Exception {
 		if(!PermissionChecker.isExecute(userType, userDB, listQuery)) {
-			throw new Exception(Messages.get().MainEditor_21);
+			throw new Exception(errMsg);
 		}
 		// Check the db access control 
 		for (String strQuery : listQuery) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
-				throw new Exception(Messages.get().MainEditor_21);
+				throw new Exception(errMsg);
 			}
 			
 			PublicTadpoleDefine.QUERY_DML_TYPE queryType = SQLUtil.sqlQueryType(strQuery);
 			if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
-					throw new Exception(Messages.get().MainEditor_21);
+					throw new Exception(errMsg);
 				}
 			}
 			if(queryType == QUERY_DML_TYPE.INSERT) {
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
-					throw new Exception(Messages.get().MainEditor_21);
+					throw new Exception(errMsg);
 				}
 			}
 			if(queryType == QUERY_DML_TYPE.UPDATE) {
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
-					throw new Exception(Messages.get().MainEditor_21);
+					throw new Exception(errMsg);
 				}
 			}
 			if(queryType == QUERY_DML_TYPE.DELETE) {
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
-					throw new Exception(Messages.get().MainEditor_21);
+					throw new Exception(errMsg);
 				}
 			}
 		}

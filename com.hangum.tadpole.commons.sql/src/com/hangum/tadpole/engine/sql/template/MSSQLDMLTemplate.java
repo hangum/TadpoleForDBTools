@@ -21,9 +21,10 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 public class MSSQLDMLTemplate extends AbstractDMLTemplate {
 	/**  
 	 * mssql 을 수행할때 preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
+	 * 
+	 * http://elenoa.tistory.com/384
 	 */	
-	public static final String TMP_GET_PARTDATA = "%s WHERE RowNum BETWEEN %s AND %s";//"select * from ( %s ) _res__ult_ limit %s,%s";
-//	"select * from ( %s ) where ROWNUM > %s and ROWNUM <= %s";
+	public static final String TMP_GET_PARTDATA = "SELECT * FROM ( %s ) WHERE ROWNUM > %s AND ROWNUM <= %s ORDER BY ROWNUM";
 	
 	
 	public static final String TMP_EXPLAIN_EXTENDED = "SET SHOWPLAN_TEXT ";

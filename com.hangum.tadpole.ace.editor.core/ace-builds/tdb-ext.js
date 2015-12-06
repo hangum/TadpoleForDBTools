@@ -82,7 +82,9 @@ var varEditorType = 'TABLES';
 	
 	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
-    
+    var EditSession = ace.require("ace/edit_session").EditSession;
+	var UndoManager = ace.require("./undomanager").UndoManager;
+	editor.resize(true)
 	editor.setShowPrintMargin(false);
 	editor.setHighlightActiveLine(true);
 	
@@ -91,6 +93,7 @@ var varEditorType = 'TABLES';
 	    enableSnippets: true,
 	    enableLiveAutocompletion: true
 	}); 
+	
 //};
 
 /** 
@@ -109,11 +112,8 @@ var varEditorType = 'TABLES';
 editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
 	varEditorType = varType;
 	
+	var session = new EditSession(varInitText);
 	try {
-		var EditSession = ace.require("ace/edit_session").EditSession;
-		var UndoManager = ace.require("./undomanager").UndoManager;
-		editor.resize(true)
-		var session = new EditSession(varInitText);
 		session.setUndoManager(new UndoManager());
 		session.setMode(varMode);
 		session.on('change', function() {
@@ -128,23 +128,30 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 		});
 		
 		if(varTableList != '') {
-			// Add table list to Editor's keywordList
 			var keywordList = session.$mode.$highlightRules.$keywordList;
 			if(keywordList != null) session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
 		}
-
-		editor.setTheme("ace/theme/" + varTheme);
-		editor.setFontSize(varFontSize + 'px');
-		editor.renderer.setShowGutter(varIsShowGutter === 'true');
-		
-		var boolIsWrap = varIsWrap === 'true';
-		session.setUseWrapMode(boolIsWrap);
-		if(boolIsWrap) session.setWrapLimitRange(varWarpLimit, varWarpLimit);
-		editor.setSession(session);
-		editor.focus();
 	} catch(e) {
 		console.log(e);
 	}
+	
+	try{
+		editor.setTheme("ace/theme/" + varTheme);
+		editor.setFontSize(varFontSize + 'px');
+		editor.renderer.setShowGutter(varIsShowGutter === 'true');
+	} catch(e) {
+		console.log(e);
+	}
+	try {
+		var boolIsWrap = varIsWrap === 'true';
+		session.setUseWrapMode(boolIsWrap);
+		if(boolIsWrap) session.setWrapLimitRange(varWarpLimit, varWarpLimit);
+	} catch(e) {
+		console.log(e);
+	}
+	
+	editor.setSession(session);
+	editor.focus();
 };
 /** 
  * 에디터를 초기화 합니다. 
@@ -448,7 +455,8 @@ editorService.getSelectedText = function(varDelimiter) {
 			var strReturnSQL = "";
 			
 			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
-			if(startQueryLine.lastIndexOf(varDelimiter) != -1) {
+			
+			if(!stringStartsWith(startQueryLine, "--") && startQueryLine.lastIndexOf(varDelimiter) != -1) {
 				// 선택된 행에 종료 문자가 있다면 
 					// 행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
 					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
@@ -510,7 +518,7 @@ findPreviousLineText = function(varLineNum, varDelimiter) {
 		}
 	}
 	return -1;
-}
+};
 
 /**
  * 선택된 행에 종료 문자가 있다면 
@@ -527,14 +535,19 @@ findPreviousChar = function(varLineNum, varDelimiter) {
 	var intArrayPostion = 0;
 	for(var i=varLineNum; i>=0; i--) {
 		var startQueryLine = editor.session.getLine(i);
-		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-		if(lastIndexOf != -1) {
-			arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
-//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
-			break;
+		
+		//주석 행인지조사한다.
+		if(stringStartsWith(startQueryLine, "--")) {
+			arryPreQuery[intArrayPostion] = startQueryLine;			
 		} else {
-//			console.log("\t not found text " + startQueryLine);
-			arryPreQuery[intArrayPostion] = startQueryLine;
+			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
+			if(lastIndexOf != -1) {
+				arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
+	//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+				break;
+			} else {
+				arryPreQuery[intArrayPostion] = startQueryLine;
+			}
 		}
 		
 		intArrayPostion++;
@@ -569,14 +582,18 @@ findNextCharacter = function(varLineNum, varDelimiter) {
 	var intArrayPostion = 0;
 	for(var i=varLineNum; i<intRowCount; i++) {
 		var startQueryLine = editor.session.getLine(i);
-		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-		if(lastIndexOf != -1) {
-			arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
-//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
-			break;
-		} else {
-//			console.log("\t not found text " + startQueryLine);
+		if(stringStartsWith(startQueryLine, "--")) {
 			arryPreQuery[intArrayPostion] = startQueryLine;
+		} else {
+			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
+			if(lastIndexOf != -1) {
+				arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
+	//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
+				break;
+			} else {
+	//			console.log("\t not found text " + startQueryLine);
+				arryPreQuery[intArrayPostion] = startQueryLine;
+			}			
 		}
 		
 		intArrayPostion++;
@@ -594,6 +611,11 @@ findNextCharacter = function(varLineNum, varDelimiter) {
 	
 	return strReturnQuery;
 };
+
+// starts with
+function stringStartsWith (string, prefix) {
+    return string.slice(0, prefix.length) == prefix;
+}
 
 /**
  * insert text

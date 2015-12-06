@@ -24,6 +24,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -52,8 +53,8 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 		try {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
-			sbSQL.append("UPDATE " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR + "\tSET "); //$NON-NLS-1$ //$NON-NLS-2$
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
+			sbSQL.append("UPDATE " + SQLUtil.getTableName(tableDAO) + PublicTadpoleDefine.LINE_SEPARATOR + "\tSET "); //$NON-NLS-1$ //$NON-NLS-2$
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getSysName());

@@ -22,6 +22,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -141,5 +142,21 @@ public class DBSystemSchema {
 		}
 		
 		return listProcedure;
+	}
+	
+	/**
+	 * Return trigger information
+	 * 
+	 * @param strObjectName 
+	 */
+	public static List<TriggerDAO> getTrigger(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.SQLite_DEFAULT 
+		) return new ArrayList<TriggerDAO>();
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		return sqlClient.queryForList("triggerList", userDB.getDb()); //$NON-NLS-1$
 	}
 }

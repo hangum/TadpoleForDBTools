@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
@@ -173,7 +174,7 @@ public class TadpoleSystem_UserQuery {
 	 * @param passwd
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static UserDAO login(String email, String passwd) throws TadpoleSQLManagerException, SQLException {
+	public static UserDAO login(String email, String passwd) throws TadpoleAuthorityException, TadpoleSQLManagerException, SQLException {
 		UserDAO login = new UserDAO();
 		login.setEmail(email);
 		login.setPasswd(CipherManager.getInstance().encryption(passwd));
@@ -184,13 +185,8 @@ public class TadpoleSystem_UserQuery {
 		if(null == userInfo) {
 			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_5);
 		} else {
-			try {
-				if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
-					throw new Exception(Messages.get().TadpoleSystem_UserQuery_5);
-				}
-			} catch(Exception e) {
-				logger.error(String.format("do not login : %s", e.getMessage()));
-				throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_5);
+			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+				throw new TadpoleAuthorityException(Messages.get().TadpoleSystem_UserQuery_5);
 			}
 		}
 	

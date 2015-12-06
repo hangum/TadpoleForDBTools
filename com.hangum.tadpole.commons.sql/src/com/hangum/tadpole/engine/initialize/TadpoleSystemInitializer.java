@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
@@ -53,7 +54,7 @@ public class TadpoleSystemInitializer {
 		if (!ApplicationArgumentUtils.isDBServer()) {
 
 			try {
-				DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db/";// //$NON-NLS-1$
+				DEFAULT_DB_FILE_LOCATION = SystemDefine.getConfigureRoot() + "configuration/tadpole/db/";// //$NON-NLS-1$
 				
 				if(ApplicationArgumentUtils.isDBPath()) DEFAULT_DB_FILE_LOCATION = ApplicationArgumentUtils.getDBPath() + File.separator;
 				if (!new File(DEFAULT_DB_FILE_LOCATION).exists()) {
@@ -105,7 +106,7 @@ public class TadpoleSystemInitializer {
 		// Is SQLite?
 		if (!ApplicationArgumentUtils.isDBServer()) {
 			if(!new File(DEFAULT_DB_FILE_LOCATION + DB_NAME).exists()) {
-				logger.info("Createion Engine DB. Type is SQLite.");
+				if(logger.isInfoEnabled()) logger.info("Createion Engine DB. Type is SQLite.");
 				ClassLoader classLoader = TadpoleSystemInitializer.class.getClassLoader();
 				InputStream is = classLoader.getResourceAsStream("com/hangum/tadpole/engine/initialize/TadpoleEngineDBEngine.sqlite");
 				
@@ -190,5 +191,5 @@ public class TadpoleSystemInitializer {
 
 		} // is local db?
 	}
-
+	
 }

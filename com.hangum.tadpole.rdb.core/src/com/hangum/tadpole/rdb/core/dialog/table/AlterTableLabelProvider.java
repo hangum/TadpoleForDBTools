@@ -52,8 +52,8 @@ public class AlterTableLabelProvider extends LabelProvider implements ITableLabe
 		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
 
 		switch (columnIndex) {
-		case AlterTableConsts.SEQ_NO_IDX:
-			return String.valueOf(dao.getSeqNo());
+//		case AlterTableConsts.SEQ_NO_IDX:
+//			return String.valueOf(dao.getSeqNo());
 		case AlterTableConsts.COLUMN_NAME_IDX:
 			return dao.getColumnName();
 //		case AlterTableConsts.COLUMN_ID_IDX:
@@ -62,10 +62,12 @@ public class AlterTableLabelProvider extends LabelProvider implements ITableLabe
 			return DataTypeDef.getTypeName(dao.getDbdef(), dao.getDataType());
 		case AlterTableConsts.DATA_SIZE_IDX:
 			return dao.getDataSize()==0?"":String.valueOf(dao.getDataSize());
-		case AlterTableConsts.DATA_PRECISION_IDX:
-			return dao.getDataPrecision()==0?"":String.valueOf(dao.getDataPrecision());
-		case AlterTableConsts.DATA_SCALE_IDX:
-			return dao.getDataScale()==0?"":String.valueOf(dao.getDataScale());
+//		case AlterTableConsts.DATA_PRECISION_IDX:
+//			return dao.getDataPrecision()==0?"":String.valueOf(dao.getDataPrecision());
+//		case AlterTableConsts.DATA_SCALE_IDX:
+//			return dao.getDataScale()==0?"":String.valueOf(dao.getDataScale());
+		case AlterTableConsts.COMMENT_IDX:
+			return dao.getComment();
 		default:
 			return null;
 		}

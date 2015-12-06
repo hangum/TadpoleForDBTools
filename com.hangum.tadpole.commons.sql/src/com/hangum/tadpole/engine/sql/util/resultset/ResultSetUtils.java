@@ -44,7 +44,7 @@ public class ResultSetUtils {
 	 * @throws SQLException
 	 */
 	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount) throws SQLException {
-		return getResultToList(false, rs, limitCount);
+		return getResultToList(false, rs, limitCount, 0);
 	}
 	
 	/**
@@ -55,15 +55,16 @@ public class ResultSetUtils {
 	 * @param isShowRowNum 첫번째 컬럼의 로우 넘버를 추가할 것인지.
 	 * @param rs ResultSet
 	 * @param limitCount 
+	 * @param intLastIndex
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount) throws SQLException {
+	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex) throws SQLException {
 		TadpoleResultSet returnRS = new TadpoleResultSet();
 		Map<Integer, Object> tmpRow = null;
 		
 		// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-		int rowCnt = 0;
+		int rowCnt = intLastIndex;
 		while(rs.next()) {
 			tmpRow = new HashMap<Integer, Object>();
 			

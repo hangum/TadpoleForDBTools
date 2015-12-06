@@ -164,7 +164,7 @@ public class RESTfulAPIUtils {
 			strArguments = StringUtils.removeEnd(strArguments, "&");
 			 
 		} else {
-			strArguments = "1={FirstParameter}&2={SecondParameter}";
+			strArguments = "";//1={FirstParameter}&2={SecondParameter}";
 		}
 		
 		return strArguments;

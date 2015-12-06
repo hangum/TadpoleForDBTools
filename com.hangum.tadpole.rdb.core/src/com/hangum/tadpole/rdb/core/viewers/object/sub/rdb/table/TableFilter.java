@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * TABLE의 FILTER
@@ -33,7 +34,7 @@ public class TableFilter extends TadpoleViewrFilter {
 		if(searchString == null || searchString.length() == 0) return true;
 		
 		TableDAO dao = (TableDAO)element;
-		if(dao.getName().toUpperCase().matches(searchString.toUpperCase())) return true;
+		if(SQLUtil.getTableName(dao).toUpperCase().matches(searchString.toUpperCase())) return true;
 		
 		return false;
 	}
