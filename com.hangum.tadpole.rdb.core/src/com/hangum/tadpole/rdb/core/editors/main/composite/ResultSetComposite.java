@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -488,7 +489,7 @@ public class ResultSetComposite extends Composite {
 			for (IMainEditorExtension iMainEditorExtension : extensions) {
 				String strCostumSQL = iMainEditorExtension.sqlCostume(strSQL);
 				if(!strCostumSQL.equals(strSQL)) {
-					if(logger.isInfoEnabled()) logger.info("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
+					if(logger.isDebugEnabled()) logger.debug("** extension costume sql is : " + strCostumSQL); //$NON-NLS-1$
 					strSQL = strCostumSQL;
 				}
 			}
@@ -539,7 +540,6 @@ public class ResultSetComposite extends Composite {
 			
 			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt, intStartCnt);
 		} catch(Exception e) {
-//			if(logger.isDebugEnabled()) logger.error("execute query", e); //$NON-NLS-1$
 			throw e;
 		} finally {
 			isCheckRunning = false;
@@ -738,7 +738,13 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void changeResultType() {
+		Map<Integer, Float> mapWidths = new HashMap<Integer, Float>();
+		Map<Integer, Float> mapHeight = new HashMap<Integer, Float>();
+		int intParentWidth = sashFormResult.getBounds().width;
+		int intParentHeight = sashFormResult.getBounds().height;
+		
 		Control[] childControls = sashFormResult.getChildren();
+		int intTmpCount = 0;
 		for (int i=0; i<childControls.length; i++) {
 			Control control = childControls[i];
 			if(control instanceof AbstractResultDetailComposite) {
@@ -746,6 +752,10 @@ public class ResultSetComposite extends Composite {
 				ResultTailComposite tailComposite = resultComposite.getCompositeTail();
 				if(!tailComposite.getBtnPinSelection()) {
 					resultComposite.dispose();
+				} else {
+					mapWidths.put(intTmpCount, ((float)resultComposite.getBounds().width / (float)intParentWidth));
+					mapHeight.put(intTmpCount, ((float)resultComposite.getBounds().height / (float)intParentHeight));
+					intTmpCount++;
 				}
 			}
 		}
@@ -771,6 +781,36 @@ public class ResultSetComposite extends Composite {
 		gl_compositeResult.marginWidth = 2;
 		compositeResult.setLayout(gl_compositeResult);
 		
+		// calculation
+		try {
+			int weights[] = new int[mapWidths.size()+1];
+			if(mapWidths.size() != 0) {
+				for (int i=0; i<mapWidths.size(); i++) {
+					float intCompositeWeights = 0f;
+					if(sashFormResult.getOrientation() == SWT.HORIZONTAL) {
+						intCompositeWeights = mapWidths.get(i) * 100;
+					} else {
+						intCompositeWeights = mapHeight.get(i) * 100;
+					}
+					weights[i] = (int)intCompositeWeights;
+					intTmpCount += weights[i];
+					// 처음 위젯이 생성 되었을 경우무조건 100이므로 반만 위젲을 준다. 
+					if(weights[i] == 100) {
+						weights[i] = 50;
+						intTmpCount = 50;
+					// 100 이 넘어가면 마지막 위젲에서 30로 만큼 위젲을 차지한다.
+					} else if(intTmpCount >= 100) { 
+						weights[i] = 30;
+					}
+				}
+				weights[mapWidths.size()] = 100 - intTmpCount;
+			} else {
+				weights[0] = 100;
+			}
+			sashFormResult.setWeights(weights);
+		} catch(Exception e) {
+			logger.error("calc weights of result composite");
+		}
 		sashFormResult.layout();
 	}
 	
