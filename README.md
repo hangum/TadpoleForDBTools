@@ -23,8 +23,9 @@ It enables you to handle typical DB over the World Wide Web
 * SQL Audit And Export text
 * Generate SQL Statement (Select, Insert, Update, Delete, Table, View, Index, Procedure, Function, Trigger)
 * Generate ER Diagram (Auto Layout)
+* Schema Compare
 
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544319131/home/RDB-ERD-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544341191/home/RDB-SQL-EDITOR.png?height=339&width=400)
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544319131/home/RDB-ERD-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544341191/home/RDB-SQL-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1449463441535/home/schemacompare.png?height=308&width=400)
 
 2.MongoDB Feature
 -
@@ -82,7 +83,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.6/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.7/
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License
