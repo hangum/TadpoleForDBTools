@@ -49,6 +49,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
@@ -432,7 +433,7 @@ public class ResultSetComposite extends Composite {
 							executeFinish(reqQuery);
 						} else {
 							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
-//							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
+							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
 						}
 						
 						// 히스토리 화면을 갱신합니다.
@@ -660,7 +661,11 @@ public class ResultSetComposite extends Composite {
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
 		if(extensions == null) return;
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
-			iMainEditorExtension.queryEndedExecute(rsDAO);
+			try {
+				iMainEditorExtension.queryEndedExecute(rsDAO);
+			} catch(Exception e) {
+				logger.error("sql result extension", e);
+			}
 		}
 
 		// 주의) 일반적으로는 포커스가 잘 가지만, 
