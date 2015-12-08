@@ -11,10 +11,10 @@
 package com.hangum.tadpole.commons.util.download;
 
 
+import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.UrlLauncher;
 import org.eclipse.rap.rwt.service.ServiceManager;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 public class DownloadUtils {
+	private static final Logger logger = Logger.getLogger(DownloadUtils.class);
 
 	/** download url */
 	private static String createDownloadUrl(String id) {
@@ -40,10 +41,10 @@ public class DownloadUtils {
 	 */
 	public static void provideDownload(Composite composite, String id) {
 		String downloadUrl = createDownloadUrl(id);
-		
-		Browser downloadBrowser = new Browser(composite, SWT.NONE);
-		downloadBrowser.setBounds(0, 0, 0, 0);
-		downloadBrowser.setUrl(downloadUrl);
+		if(logger.isDebugEnabled()) logger.debug("#### download external file==[downloadUrl]" + downloadUrl);
+				
+		UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+		launcher.openURL(downloadUrl);
 	}
 	
 }
