@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -25,6 +26,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.DBAccessCtlManager;
+import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
@@ -38,6 +40,38 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class TadpoleObjectQuery {
 	private static Logger logger = Logger.getLogger(TadpoleObjectQuery.class);
+	
+	/**
+	 * Rename table 
+	 * 
+	 * @param userDB
+	 * @param tableDAO
+	 * @param strRenameTable
+	 * @return
+	 */
+	public static RequestResultDAO renameTable(final UserDBDAO userDB, TableDAO tableDAO, String strRenameTable) throws Exception {
+		RequestResultDAO resultDao = null;
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getSysName(), strRenameTable);
+			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
+					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
+		) {
+			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strRenameTable);
+			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), strRenameTable);
+			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+		} else if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
+			String strQuery = String.format("RENAME TABLE %s AS %s", tableDAO.getSysName(), strRenameTable);
+			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+		} else {
+			throw new Exception("Not support rename table.");
+		}
+		
+		return resultDao;
+	}
 	
 	/**
 	 * 보여 주어야할 테이블 목록을 정의합니다.

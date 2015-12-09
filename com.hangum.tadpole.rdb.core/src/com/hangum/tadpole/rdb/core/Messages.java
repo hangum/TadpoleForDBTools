@@ -503,6 +503,7 @@ public class Messages {
 	public String TadpoleTableComposite_15;
 	public String TadpoleTableComposite_16;
 	public String TadpoleTableComposite_17;
+	public String TadpoleTableComposite_18;
 	public String TadpoleTableComposite_2;
 	public String TadpoleTableComposite_3;
 	public String TadpoleTableComposite_4;

@@ -27,8 +27,6 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.rdb.core.Messages;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Button;
 
 /**
  * tadpole message dialog
@@ -43,8 +41,6 @@ public class TDBErroDialog extends TitleAreaDialog {
 	protected String title;
 	private String message;
 	private Label lblMessage;
-	private Combo combo;
-	private Button btnCheckButton;
 	
 	/**
 	 * Create the dialog.
@@ -85,14 +81,6 @@ public class TDBErroDialog extends TitleAreaDialog {
 		textMessage = new Text(container, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
-		
-		combo = new Combo(container, SWT.NONE);
-		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(container, SWT.NONE);
-		
-		btnCheckButton = new Button(container, SWT.CHECK);
-		btnCheckButton.setText("Check Button");
-		new Label(container, SWT.NONE);
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());

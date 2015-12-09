@@ -82,6 +82,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRenameAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
@@ -121,6 +122,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private List<TableColumnDAO> showTableColumns = new ArrayList<>();
 	
 	private AbstractObjectAction creatAction_Table;
+	private AbstractObjectAction renameAction_Table;
 	private AbstractObjectAction dropAction_Table;
 	private AbstractObjectAction refreshAction_Table;
 
@@ -431,6 +433,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	private void createTableMenu() {
 		creatAction_Table = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_11);
+		renameAction_Table= new ObjectRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_18);
 		dropAction_Table = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_12);
 		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_13);
 
@@ -465,6 +468,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							
 							if(!isDDLLock()) {
 								manager.add(creatAction_Table);
+								manager.add(renameAction_Table);
 								manager.add(dropAction_Table);
 								manager.add(separator);
 							}
@@ -478,6 +482,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
 							if(!isDDLLock()) {
 								manager.add(creatAction_Table);
+								manager.add(renameAction_Table);
 								manager.add(dropAction_Table);
 								manager.add(separator);
 							}
@@ -686,6 +691,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	public void initAction() {
 		creatAction_Table.setUserDB(getUserDB());
+		renameAction_Table.setUserDB(getUserDB());
 		dropAction_Table.setUserDB(getUserDB());
 		refreshAction_Table.setUserDB(getUserDB());
 
@@ -760,6 +766,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		super.dispose();
 
 		creatAction_Table.dispose();
+		renameAction_Table.dispose();
 		dropAction_Table.dispose();
 		refreshAction_Table.dispose();
 		generateSampleData.dispose();
