@@ -55,11 +55,11 @@ public class ObjectRenameAction extends AbstractObjectSelectAction {
 		
 		ObjectRenameValidator fv = new ObjectRenameValidator();
 		final Shell activeShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		InputDialog dialog = new InputDialog(activeShell, "Rename Table", dao.getName() + " Rename.", dao.getName(), fv);
+		InputDialog dialog = new InputDialog(activeShell, Messages.get().ObjectRenameAction_0, dao.getName(), dao.getName(), fv);
 		if(dialog.open() == Window.OK) {
 			String newTableNm = dialog.getValue();
 			
-			if(!MessageDialog.openConfirm(null, "Confirm", "Table이름을 " + newTableNm + " 으로 수정하시겠습니까?")) return;
+			if(!MessageDialog.openConfirm(null, Messages.get().ObjectRenameAction_1, String.format(Messages.get().ObjectRenameAction_2, newTableNm))) return;
 			try {
 				TadpoleObjectQuery.renameTable(userDB, dao, newTableNm);
 				refreshTable(newTableNm);

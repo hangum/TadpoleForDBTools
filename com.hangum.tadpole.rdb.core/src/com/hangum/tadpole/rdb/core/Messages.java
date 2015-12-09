@@ -800,6 +800,9 @@ public class Messages {
 	public String TableColumnDeleteAction_1;
 	public String TableColumnDeleteAction_2;
 	public String TableColumnDeleteAction_3;
+	public String ObjectRenameAction_0;
+	public String ObjectRenameAction_1;
+	public String ObjectRenameAction_2;
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }
