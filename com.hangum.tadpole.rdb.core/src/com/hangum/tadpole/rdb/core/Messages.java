@@ -797,6 +797,8 @@ public class Messages {
 	public String RDBResultComposite_lblResult;
 	public String RDBResultComposite_btnOrientation;
 	public String TableColumnDeleteAction_1;
+	public String TableColumnDeleteAction_2;
+	public String TableColumnDeleteAction_3;
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }

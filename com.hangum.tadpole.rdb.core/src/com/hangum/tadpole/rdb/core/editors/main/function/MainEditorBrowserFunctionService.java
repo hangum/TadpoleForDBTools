@@ -27,7 +27,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**

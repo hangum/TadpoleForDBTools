@@ -69,19 +69,22 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, Messages.get().ObjectDeleteAction_3)) {
-					String strSQL = "drop table " + SQLUtil.getTableName(dao);// dao.getSysName(); //$NON-NLS-1$
-					try {
-						if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-							new TajoConnectionManager().executeUpdate(userDB, strSQL);
-						} else {
-							executeSQL(userDB, strSQL);
+					for(Object selObjec : selection.toList()) {
+						TableDAO selTableDao = (TableDAO)selObjec;
+						String strSQL = "drop table " + SQLUtil.getTableName(selTableDao);// dao.getSysName(); //$NON-NLS-1$
+						try {
+							if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+								new TajoConnectionManager().executeUpdate(userDB, strSQL);
+							} else {
+								executeSQL(userDB, strSQL);
+							}
+						} catch(Exception e) {
+							logger.error(Messages.get().ObjectDeleteAction_5, e);
+							exeMessage(Messages.get().ObjectDeleteAction_0, e);
 						}
-						
-						refreshTable();
-					} catch(Exception e) {
-						logger.error(Messages.get().ObjectDeleteAction_5, e);
-						exeMessage(Messages.get().ObjectDeleteAction_0, e);
 					}
+
+					refreshTable();
 				}
 
 			} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {

@@ -92,6 +92,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * Refresh table column
+	 */
+	protected void refreshTableColumn() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshTableColumn();
+	}
+	
+	/**
 	 * View 최신정보로 갱신
 	 */
 	protected void refreshView() {

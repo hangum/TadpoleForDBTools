@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,6 +114,7 @@ public class TadpoleObjectQuery {
 		
 		// if find the keyword is add system quote.
 		for(TableColumnDAO td : returnColumns) {
+			td.setTableDao(tableDao);
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
 		}
 		

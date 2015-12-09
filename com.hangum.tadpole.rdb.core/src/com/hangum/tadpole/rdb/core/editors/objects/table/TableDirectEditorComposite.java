@@ -75,7 +75,7 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 

@@ -28,7 +28,7 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 
 /**
  * generate sql statement     

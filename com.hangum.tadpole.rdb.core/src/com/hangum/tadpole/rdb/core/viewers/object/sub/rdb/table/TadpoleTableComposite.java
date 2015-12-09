@@ -82,7 +82,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
-//import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
@@ -92,7 +92,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -141,7 +141,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	
 	// table column
 	private AbstractObjectAction tableColumnSelectionAction;
-//	private AbstractObjectAction TableColumnDeleteAction;
+	private AbstractObjectAction tableColumnDeleteAction;
 	
 	private ITableDecorationExtension tableDecorationExtension;
 	
@@ -185,7 +185,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
-				
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				if (null != is) {
 					TableDAO tableDAO = (TableDAO) is.getFirstElement();
@@ -214,36 +213,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
-				// 테이블의 컬럼 목록을 출력합니다.
-				try {
-					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-					Object tableDAO = is.getFirstElement();
+				IStructuredSelection is = (IStructuredSelection) tableListViewer.getSelection();
+				Object objDAO = is.getFirstElement();
 
-					if (tableDAO != null) {
-						TableDAO table = (TableDAO) tableDAO;
-
-						if (selectTableName.equals(table.getName())) return;
-						selectTableName = table.getName();
-						showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, table);
-					} else {
-						showTableColumns = new ArrayList<>();
-						selectTableName = ""; //$NON-NLS-1$
-					}
-				} catch (Exception e) {
-					logger.error("get table column", e); //$NON-NLS-1$
-					
-					// initialize table columns
-					showTableColumns.clear();
-
-					// show error message
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
-				} finally {
-					tableColumnViewer.setInput(showTableColumns);
-					tableColumnComparator = new TableColumnComparator();
-					tableColumnViewer.setSorter(tableColumnComparator);
-					tableColumnViewer.refresh();
-					TableUtil.packTable(tableColumnViewer.getTable());
+				if (objDAO != null) {
+					TableDAO tableDao = (TableDAO) objDAO;
+					if (selectTableName.equals(tableDao.getName())) return;
+					refreshTableColumn();
 				}
 			}
 		});
@@ -433,7 +409,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	private void createTableColumnMenu() {
 		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
-//		TableColumnDeleteAction = new TableColumnDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
+		tableColumnDeleteAction = new TableColumnDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -442,7 +418,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				manager.add(tableColumnSelectionAction);
-//				manager.add(TableColumnDeleteAction);
+				manager.add(tableColumnDeleteAction);
 			}
 		});
 
@@ -542,6 +518,42 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
+	}
+	
+	/**
+	 * refresh table column
+	 */
+	public void refreshTableColumn() {
+		// 테이블의 컬럼 목록을 출력합니다.
+		try {
+			IStructuredSelection is = (IStructuredSelection) tableListViewer.getSelection();
+			Object objDAO = is.getFirstElement();
+
+			if (objDAO != null) {
+				TableDAO tableDao = (TableDAO) objDAO;
+
+				selectTableName = tableDao.getName();
+				showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDao);
+			} else {
+				showTableColumns = new ArrayList<>();
+				selectTableName = ""; //$NON-NLS-1$
+			}
+		} catch (Exception e) {
+			logger.error("get table column", e); //$NON-NLS-1$
+			
+			// initialize table columns
+			showTableColumns.clear();
+
+			// show error message
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+		} finally {
+			tableColumnViewer.setInput(showTableColumns);
+			tableColumnComparator = new TableColumnComparator();
+			tableColumnViewer.setSorter(tableColumnComparator);
+			tableColumnViewer.refresh();
+			TableUtil.packTable(tableColumnViewer.getTable());
+		}
 	}
 
 	/**
@@ -693,7 +705,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// table column
 		tableColumnSelectionAction.setUserDB(getUserDB());
-//		TableColumnDeleteAction.setUserDB(getUserDB());
+		tableColumnDeleteAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -764,7 +776,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableDataEditorAction.dispose();
 		
 		tableColumnSelectionAction.dispose();
-//		TableColumnDeleteAction.dispose();
+		tableColumnDeleteAction.dispose();
 	}
 
 	@Override

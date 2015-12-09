@@ -608,6 +608,13 @@ public class ExplorerViewer extends ViewPart {
 	}
 	
 	/**
+	 * select table refresh
+	 */
+	public void refreshTableColumn() {
+		tableComposite.refreshTableColumn();		
+	}
+	
+	/**
 	 * mongodb server side javascript define
 	 */
 	public void refreshJS(boolean boolRefresh, String strObjectName) {

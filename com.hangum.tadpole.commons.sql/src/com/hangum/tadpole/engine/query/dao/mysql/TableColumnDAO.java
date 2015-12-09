@@ -29,6 +29,8 @@ package com.hangum.tadpole.engine.query.dao.mysql;
  *
  */
 public class TableColumnDAO {
+	TableDAO tableDao;
+	
 	String sysName = "";
 	
 	// MySQL, Oracle 사용하는 컬럼.
@@ -234,5 +236,19 @@ public class TableColumnDAO {
 	public void setCol_value(String col_value) {
 		this.col_value = col_value;
 	}
-	
+
+	/**
+	 * @return the tableDao
+	 */
+	public TableDAO getTableDao() {
+		return tableDao;
+	}
+
+	/**
+	 * @param tableDao the tableDao to set
+	 */
+	public void setTableDao(TableDAO tableDao) {
+		this.tableDao = tableDao;
+	}
+
 }
