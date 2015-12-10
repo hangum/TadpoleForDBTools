@@ -92,6 +92,7 @@ public class LoginDialog extends Dialog {
 //						"	</form>"; //$NON-NLS-1$
 	private Composite compositeHead;
 	private Composite compositeTail;
+	private Label lblLabelLblhangum;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -125,6 +126,9 @@ public class LoginDialog extends Dialog {
 		Label lblLoginForm = new Label(compositeHead, SWT.NONE);
 		lblLoginForm.setFont(SWTResourceManager.getFont(".SF NS Text", 15, SWT.NONE));
 		lblLoginForm.setText("Welcome to the Tadpole DB Hub");
+		
+		lblLabelLblhangum = new Label(compositeHead, SWT.NONE);
+		lblLabelLblhangum.setText("     Open source Projects release by hangum");
 		
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
@@ -203,7 +207,7 @@ public class LoginDialog extends Dialog {
 		
 		Label lblHangum = new Label(compositeTail, SWT.NONE);
 		lblHangum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblHangum.setText("Open Source Projects Released By hangum");
+//		lblHangum.setText("Open Source Projects Released By hangum");
 		
 		Label lblHome = new Label(compositeTail, SWT.NONE);
 		lblHome.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -541,6 +545,6 @@ public class LoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(480, 250);
+		return new Point(480, 270);
 	}
 }
