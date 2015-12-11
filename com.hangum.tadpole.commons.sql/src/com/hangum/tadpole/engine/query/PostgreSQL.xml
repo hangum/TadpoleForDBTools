@@ -431,6 +431,13 @@ where 1=1
 </select>
 
 <!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$ 
+</select>
+
+<!-- 
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
