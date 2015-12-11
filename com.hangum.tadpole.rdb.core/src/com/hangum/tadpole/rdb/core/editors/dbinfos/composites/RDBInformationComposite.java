@@ -10,9 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.dbinfos.composites;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -29,9 +32,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.dao.KeyValueDAO;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Button;
 
 /**
  * RDB 디비 summary 정보를 출력하는 composite.
@@ -40,7 +47,7 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
  *
  */
 public class RDBInformationComposite extends Composite {
-	
+	private static final Logger logger = Logger.getLogger(RDBInformationComposite.class);
 	private UserDBDAO userDB;
 	private TableViewer tvInformation;
 	
@@ -77,7 +84,6 @@ public class RDBInformationComposite extends Composite {
 		tvInformation.setContentProvider(new ArrayContentProvider());
 		tvInformation.setLabelProvider(new RDBInformationLabelProvider());
 		initUI();
-		tvInformation.setInput(listInfo);
 	}
 	
 	/**
@@ -85,26 +91,26 @@ public class RDBInformationComposite extends Composite {
 	 */
 	private void initUI() {
 		listInfo = new ArrayList<KeyValueDAO>();
+		// 
+		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+			rdbInfo();
+		}
 		
 		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_2, 	userDB.getOperation_type()));
-		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_3, 		userDB.getGroup_name()));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_3, 	userDB.getGroup_name()));
 		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_4, 	userDB.getDisplay_name()));
 		
-		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_5, 		userDB.getUrl(userDB.getRole_id())));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_5, 	userDB.getUrl(userDB.getRole_id())));
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost(userDB.getRole_id()) + "/" + userDB.getPort(userDB.getRole_id()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_6, 		userDB.getDb(userDB.getRole_id())));
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_6, 	userDB.getDb(userDB.getRole_id())));
 		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers(userDB.getRole_id()))); //$NON-NLS-1$
 		}
 		
-		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_7, 		userDB.getIs_readOnlyConnect()));
-//		listInfo.add(new KeyValueDAO("Table Filter",	userDB.getIs_table_filter())); //$NON-NLS-1$
-//		if("YES".equals(userDB.getIs_table_filter())) { //$NON-NLS-1$
-//			listInfo.add(new KeyValueDAO("\tInclude Filter",	userDB.getTable_filter_include())); //$NON-NLS-1$
-//			listInfo.add(new KeyValueDAO("\tExclude Filter",	userDB.getTable_filter_exclude())); //$NON-NLS-1$
-//		}
+		listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_7, 	userDB.getIs_readOnlyConnect()));
+
 		// 몽고디비는 없으므로.. 
 		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 			listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_8,		userDB.getIs_autocommit()));
@@ -112,13 +118,32 @@ public class RDBInformationComposite extends Composite {
 			listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_17, 	userDB.getQuestion_dml()));
 		}
 		
+		tvInformation.setInput(listInfo);
+		
 		// google analytic
 		AnalyticCaller.track(RDBDBInfosEditor.ID, "RDBInformationComposite"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * add rdb info
+	 */
+	private void rdbInfo() {
+		try {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			Connection conn = sqlClient.getDataSource().getConnection();
+			DatabaseMetaData dmd = conn.getMetaData();
+			
+			listInfo.add(new KeyValueDAO("Database information", dmd.getDatabaseProductName() + " " + dmd.getDatabaseProductVersion()));
+			listInfo.add(new KeyValueDAO("Driver information", dmd.getDriverName() + " " + dmd.getDriverVersion()));
+		} catch(Exception e) {
+			logger.error("RDB info", e);
+		}
 	}
 
 	@Override
 	protected void checkSubclass() {
 	}
+	
 }
 
 /**
