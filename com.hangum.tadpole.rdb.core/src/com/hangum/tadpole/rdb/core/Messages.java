@@ -803,6 +803,12 @@ public class Messages {
 	public String ObjectRenameAction_0;
 	public String ObjectRenameAction_1;
 	public String ObjectRenameAction_2;
+	public String TableColumnAddAction_1;
+	public String TableColumnRenameAction_0;
+	public String TableColumnRenameAction_1;
+	public String ObjectRenameValidator_0;
+	public String TableColumnRenameValidator_0;
+	public String TableColumnRenameAction;
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }
