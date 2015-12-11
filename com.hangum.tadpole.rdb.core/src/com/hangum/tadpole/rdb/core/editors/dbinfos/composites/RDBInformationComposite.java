@@ -37,8 +37,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Button;
 
 /**
  * RDB 디비 summary 정보를 출력하는 composite.
@@ -91,7 +89,7 @@ public class RDBInformationComposite extends Composite {
 	 */
 	private void initUI() {
 		listInfo = new ArrayList<KeyValueDAO>();
-		// 
+		// db information
 		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
 			rdbInfo();
 		}
