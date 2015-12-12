@@ -33,11 +33,11 @@ public class AlterTableLabelProvider extends LabelProvider implements ITableLabe
 		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
 		
 		switch (columnIndex) {
-		case AlterTableConsts.PRIMARY_KEY_IDX:
-			if (dao.isPrimaryKey())
-				return CHECKED;
-			else
-				return UNCHECKED;
+//		case AlterTableConsts.PRIMARY_KEY_IDX:
+//			if (dao.isPrimaryKey())
+//				return CHECKED;
+//			else
+//				return UNCHECKED;
 		case AlterTableConsts.NULLABLE_IDX:
 			if (dao.isNullable())
 				return CHECKED;
@@ -56,6 +56,9 @@ public class AlterTableLabelProvider extends LabelProvider implements ITableLabe
 //			return String.valueOf(dao.getSeqNo());
 		case AlterTableConsts.COLUMN_NAME_IDX:
 			return dao.getColumnName();
+		case AlterTableConsts.PRIMARY_KEY_IDX:
+			if (dao.isPrimaryKey()) return "PRI";
+			else return "";
 //		case AlterTableConsts.COLUMN_ID_IDX:
 //			return String.valueOf(dao.getColumnId());
 		case AlterTableConsts.DATA_TYPE_IDX:

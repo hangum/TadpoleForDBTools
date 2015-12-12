@@ -85,7 +85,7 @@ var varEditorType = 'TABLES';
     var EditSession = ace.require("ace/edit_session").EditSession;
 	var UndoManager = ace.require("./undomanager").UndoManager;
 	editor.resize(true)
-	editor.setShowPrintMargin(false);
+	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
 	
 	editor.setOptions({

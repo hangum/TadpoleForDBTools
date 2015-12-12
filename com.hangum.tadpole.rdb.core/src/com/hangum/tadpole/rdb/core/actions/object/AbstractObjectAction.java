@@ -34,9 +34,9 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  */
 public abstract class AbstractObjectAction extends Action implements ISelectionListener, IWorkbenchAction {
 
-	private IWorkbenchWindow window;				  
-	UserDBDAO userDB = null;
-	IStructuredSelection selection;
+	protected IWorkbenchWindow window;				  
+	protected UserDBDAO userDB = null;
+	protected IStructuredSelection selection;
 
 	private PublicTadpoleDefine.OBJECT_TYPE actionType;
 	

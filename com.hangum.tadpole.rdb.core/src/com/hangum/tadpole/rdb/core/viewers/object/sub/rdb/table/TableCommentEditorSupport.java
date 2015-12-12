@@ -22,6 +22,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -113,64 +114,12 @@ public class TableCommentEditorSupport extends EditingSupport {
 		}
 	}
 
+	/**
+	 * DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까?
+	 * @param dao
+	 */
 	private void applyComment(TableDAO dao) {
-		// TODO : DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까? 
-
-		java.sql.Connection javaConn = null;
-		PreparedStatement stmt = null;
-		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
-
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
-				stmt = javaConn.prepareStatement(strSQL);
-				try{
-					stmt.execute();
-				}catch(Exception e){
-					//  org.postgresql.util.PSQLException: No results were returned by the query.
-				}
-
-			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
-				StringBuffer query = new StringBuffer();
-				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
-				stmt = javaConn.prepareStatement(query.toString());
-				stmt.execute();
-
-				query = new StringBuffer();
-				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
-				stmt = javaConn.prepareStatement(query.toString());
-				stmt.execute();
-			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
-				StringBuffer query = new StringBuffer();
-				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
-				stmt = javaConn.prepareStatement(query.toString());
-				stmt.execute();
-
-				query = new StringBuffer();
-				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
-				stmt = javaConn.prepareStatement(query.toString());
-				stmt.execute();
-
-			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-				String strSQL = String.format("ALTER TABLE %s COMMENT %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
-				if(logger.isDebugEnabled()) logger.debug(strSQL);
-				stmt = javaConn.prepareStatement(strSQL);
-				stmt.execute();
-			}
-
-		} catch (Exception e) {
-			logger.error("Comment change error ", e);
-		} finally {
-			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
-		}
+		TadpoleObjectQuery.updateComment(userDB, dao);
 	}
 
 }

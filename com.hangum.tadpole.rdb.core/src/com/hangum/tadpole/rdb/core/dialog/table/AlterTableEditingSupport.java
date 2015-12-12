@@ -19,7 +19,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 
-import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TableColumnObjectQuery;
 
 /**
  * alter table editing support
@@ -27,20 +31,23 @@ import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
  * @author hangum
  */
 public class AlterTableEditingSupport extends EditingSupport {
-
 	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(AlterTableDialog.class);
 
 	private final TableViewer viewer;
+	private UserDBDAO userDB;
+	private TableDAO tableDAO;
 	private int columnIndex;
 
-	public AlterTableEditingSupport(TableViewer viewer, int columnIndex) {
+	public AlterTableEditingSupport(TableViewer viewer, int columnIndex, UserDBDAO userDB, TableDAO tableDAO) {
 		super(viewer);
 
 		this.viewer = viewer;
 		this.columnIndex = columnIndex;
+		this.userDB = userDB;
+		this.tableDAO = tableDAO; 
 	}
 
 	@Override
@@ -50,7 +57,6 @@ public class AlterTableEditingSupport extends EditingSupport {
 		if (columnIndex == AlterTableConsts.DATA_TYPE_IDX) {
 			return new ComboBoxCellEditor(viewer.getTable(), DataTypeDef.getAllTypeNames(dao.getDbdef()), SWT.READ_ONLY);
 		} else if (columnIndex == AlterTableConsts.PRIMARY_KEY_IDX || columnIndex == AlterTableConsts.NULLABLE_IDX) {
-			//return new CheckboxCellEditor(viewer.getTable(), SWT.CHECK);// | SWT.READ_ONLY);
 			return new CheckboxCellEditor(null, SWT.CHECK);// | SWT.READ_ONLY);
 		} else {
 			return new TextCellEditor(viewer.getTable());
@@ -109,7 +115,7 @@ public class AlterTableEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		AlterTableMetaDataDAO dao = (AlterTableMetaDataDAO) element;
+		AlterTableMetaDataDAO metadataDao = (AlterTableMetaDataDAO) element;
 		
 //		if (columnIndex == AlterTableConsts.SEQ_NO_IDX) {
 //			int changeValue = makeStringToInt(value.toString());
@@ -119,19 +125,44 @@ public class AlterTableEditingSupport extends EditingSupport {
 //			dao.setColumnId(Integer.parseInt(value.toString()));
 //		} else 
 		if (columnIndex == AlterTableConsts.COLUMN_NAME_IDX) {
-			if(dao.getColumnName().equals(value.toString())) return;
-			
-			dao.setColumnName(value.toString());
+			String strNewColumnName = value.toString();
+			if(metadataDao.getColumnName().equals(strNewColumnName)) return;
+			if(!"".equals(strNewColumnName)) { 
+				try {
+					TableColumnObjectQuery.renameColumn(userDB, tableDAO, metadataDao, strNewColumnName);
+					metadataDao.setColumnName(strNewColumnName);
+				} catch (Exception e) {
+					TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, "Column name을 변경하는 중에" + e.getMessage());
+					errDialog.open();
+				}
+				
+			}
 		} else if (columnIndex == AlterTableConsts.DATA_TYPE_IDX) {
-			int dataType = DataTypeDef.getTypeByIndex(dao.getDbdef(), (Integer)value);
-			if(dao.getDataType() == dataType) return;
+			int dataType = DataTypeDef.getTypeByIndex(metadataDao.getDbdef(), (Integer)value);
+			if(metadataDao.getDataType() == dataType) return;
+			String strTypeName = DataTypeDef.getTypeName(userDB.getDBDefine(), dataType);
 			
-			dao.setDataType(dataType);
+			try {
+				AlterTableMetaDataDAO upMeataData = cloneAlterTable(metadataDao);
+				upMeataData.setDataType(dataType);
+				upMeataData.setDataTypeName(strTypeName);
+				if(!DataTypeDef.isSecondArgument(userDB.getDBDefine(), dataType)) {
+					upMeataData.setDataSize(0);
+				}
+				
+				TableColumnObjectQuery.modifyColumnType(userDB, tableDAO, upMeataData);
+				metadataDao = upMeataData;
+				
+			} catch (Exception e) {
+				logger.error("clone object", e);
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, "Column name을 변경하는 중에" + e.getMessage());
+				errDialog.open();
+			}
 		} else if (columnIndex == AlterTableConsts.DATA_SIZE_IDX) {
 			int changeValue = makeStringToInt(value.toString());
-			if(dao.getDataSize() == changeValue) return;
+			if(metadataDao.getDataSize() == changeValue) return;
 			
-			dao.setDataSize(changeValue);
+			metadataDao.setDataSize(changeValue);
 //		} else if (columnIndex == AlterTableConsts.DATA_PRECISION_IDX) {
 //			int changeValue = makeStringToInt(value.toString());
 //			if(dao.getDataPrecision() == changeValue) return;
@@ -144,28 +175,28 @@ public class AlterTableEditingSupport extends EditingSupport {
 //			dao.setDataScale(changeValue);
 		} else if (columnIndex == AlterTableConsts.PRIMARY_KEY_IDX) {
 			boolean bool = Boolean.parseBoolean(value.toString());
-			if(dao.isPrimaryKey() == bool) return;
+			if(metadataDao.isPrimaryKey() == bool) return;
 			
-			dao.setPrimaryKey(bool);
+			metadataDao.setPrimaryKey(bool);
 		} else if (columnIndex == AlterTableConsts.NULLABLE_IDX) {
 			boolean bool = Boolean.parseBoolean(value.toString());
-			if(dao.isNullable() == bool) return;
+			if(metadataDao.isNullable() == bool) return;
 			
 			//dao.setNullable(Boolean.parseBoolean(value.toString()));
-			dao.setNullable(bool);
+			metadataDao.setNullable(bool);
 		} else if (columnIndex == AlterTableConsts.DEFAULT_VALUE_IDX) {
-			if(value.toString().equals(dao.getDefaultValue())) return;
+			if(value.toString().equals(metadataDao.getDefaultValue())) return;
 			
-			dao.setDefaultValue(value.toString());
+			metadataDao.setDefaultValue(value.toString());
 		} else if (columnIndex == AlterTableConsts.COMMENT_IDX) {
-			if(dao.getComment().equals(value.toString())) return;
+			if(metadataDao.getComment().equals(value.toString())) return;
 			
-			dao.setComment(value.toString());
+			metadataDao.setComment(value.toString());
 		}
 		if(logger.isDebugEnabled()) logger.debug("Changed data message");
 		
-		if(dao.getDataStatus() != DATA_TYPE.INSERT) dao.setDataStatus(DATA_TYPE.MODIFY);
-		viewer.update(dao, null);
+//		if(metadataDao.getDataStatus() != DATA_TYPE.INSERT) metadataDao.setDataStatus(DATA_TYPE.MODIFY);
+		viewer.update(metadataDao, null);
 	}
 	
 	/**
@@ -177,5 +208,9 @@ public class AlterTableEditingSupport extends EditingSupport {
 	private int makeStringToInt(String value) {
 		if(value.equals("")) value = "0";
 		return Integer.parseInt(value);
+	}
+	
+	private AlterTableMetaDataDAO cloneAlterTable(AlterTableMetaDataDAO oldObj) throws Exception{
+		return (AlterTableMetaDataDAO)oldObj.clone();
 	}
 }

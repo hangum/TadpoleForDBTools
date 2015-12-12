@@ -44,7 +44,7 @@ public class AlterTableConsts {
 //	public static final int SEQ_NO_SIZE = 30;
 	public static final int COLUMN_NAME_SIZE = 150;
 //	public static final int COLUMN_ID_SIZE = 35;
-	public static final int PRIMARY_KEY_SIZE = 50;
+	public static final int PRIMARY_KEY_SIZE = 30;
 	public static final int DATA_TYPE_SIZE = 150;
 	public static final int DATA_SIZE_SIZE = 35;
 //	public static final int DATA_PRECISION_SIZE = 50;

@@ -56,7 +56,6 @@ public class TableColumnDeleteAction extends AbstractObjectSelectAction {
 		
 		// 테이블 컬럼을 리프레쉬 합니다.
 		refreshTableColumn();
-				
 	}// end method
 	
 }

@@ -16,10 +16,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -144,52 +142,52 @@ public class AlterTableExecutor {
 
 	}
 
-	public boolean alterTableStart(String selectTable, int genCount) {
-
-		java.sql.Connection javaConn = null;
-		PreparedStatement stmt = null;
-		PreparedStatement stmtCount = null;
-		ResultSet rsCount = null;
-
-		Random oRandom = new Random();
-
-		try {
-
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-
-			javaConn = client.getDataSource().getConnection();
-
-			StringBuffer query = new StringBuffer(" INSERT INTO " + selectTable);
-			StringBuffer cols = new StringBuffer();
-			StringBuffer vars = new StringBuffer();
-
-	
-			MessageDialog.openInformation(parentShell, "Information", "Generation Compete.");
-
-			return true;
-
-		} catch (Exception e) {
-			logger.error("SimpleDataGenerate select error", e);
-			MessageDialog.openError(parentShell, "Error", e.getMessage());
-			return false;
-		} finally {
-			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				stmtCount.close();
-			} catch (Exception e) {
-			}
-			try {
-				rsCount.close();
-			} catch (Exception e) {
-			}
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
-		}
-	}
+//	public boolean alterTableStart(String selectTable, int genCount) {
+//
+//		java.sql.Connection javaConn = null;
+//		PreparedStatement stmt = null;
+//		PreparedStatement stmtCount = null;
+//		ResultSet rsCount = null;
+//
+//		Random oRandom = new Random();
+//
+//		try {
+//
+//			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+//
+//			javaConn = client.getDataSource().getConnection();
+//
+//			StringBuffer query = new StringBuffer(" INSERT INTO " + selectTable);
+//			StringBuffer cols = new StringBuffer();
+//			StringBuffer vars = new StringBuffer();
+//
+//	
+//			MessageDialog.openInformation(parentShell, "Information", "Generation Compete.");
+//
+//			return true;
+//
+//		} catch (Exception e) {
+//			logger.error("SimpleDataGenerate select error", e);
+//			MessageDialog.openError(parentShell, "Error", e.getMessage());
+//			return false;
+//		} finally {
+//			try {
+//				stmt.close();
+//			} catch (Exception e) {
+//			}
+//			try {
+//				stmtCount.close();
+//			} catch (Exception e) {
+//			}
+//			try {
+//				rsCount.close();
+//			} catch (Exception e) {
+//			}
+//			try {
+//				javaConn.close();
+//			} catch (Exception e) {
+//			}
+//		}
+//	}
 
 }

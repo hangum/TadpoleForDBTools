@@ -529,8 +529,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		tvQueryResult.setContentProvider(new ArrayContentProvider());
 		
 		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
-		logger.debug("\t####  trs is " + trs);
-		logger.debug("\t######## trs.getData is " + trs.getData());
 		if(trs.getData().size() > GetPreferenceGeneral.getPageCount()) {
 			tvQueryResult.setInput(trs.getData().subList(0, GetPreferenceGeneral.getPageCount()));	
 		} else {

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.utils;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,29 +43,93 @@ public class TadpoleObjectQuery {
 	private static Logger logger = Logger.getLogger(TadpoleObjectQuery.class);
 	
 	/**
+	 * update comment
+	 * 
+	 * @param userDB
+	 * @param dao
+	 */
+	public static void updateComment(final UserDBDAO userDB, TableDAO dao) {
+		java.sql.Connection javaConn = null;
+		PreparedStatement stmt = null;
+		try {
+			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+			javaConn = client.getDataSource().getConnection();
+
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
+				stmt = javaConn.prepareStatement(strSQL);
+				try{
+					stmt.execute();
+				}catch(Exception e){
+					//  org.postgresql.util.PSQLException: No results were returned by the query.
+				}
+
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+				StringBuffer query = new StringBuffer();
+				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
+				StringBuffer query = new StringBuffer();
+				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+
+				query = new StringBuffer();
+				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
+				stmt = javaConn.prepareStatement(query.toString());
+				stmt.execute();
+
+			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				String strSQL = String.format("ALTER TABLE %s COMMENT %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
+				if(logger.isDebugEnabled()) logger.debug(strSQL);
+				stmt = javaConn.prepareStatement(strSQL);
+				stmt.execute();
+			}
+
+		} catch (Exception e) {
+			logger.error("Comment change error ", e);
+		} finally {
+			try {
+				stmt.close();
+			} catch (Exception e) {
+			}
+			try {
+				javaConn.close();
+			} catch (Exception e) {
+			}
+		}
+	}
+	
+	/**
 	 * Rename table 
 	 * 
 	 * @param userDB
 	 * @param tableDAO
-	 * @param strRenameTable
+	 * @param strNewname
 	 * @return
 	 */
-	public static RequestResultDAO renameTable(final UserDBDAO userDB, TableDAO tableDAO, String strRenameTable) throws Exception {
+	public static RequestResultDAO renameTable(final UserDBDAO userDB, TableDAO tableDAO, String strNewname) throws Exception {
 		RequestResultDAO resultDao = null;
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getSysName(), strRenameTable);
+			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
 					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
 					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
 		) {
-			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strRenameTable);
+			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
-			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), strRenameTable);
+			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
-			String strQuery = String.format("RENAME TABLE %s AS %s", tableDAO.getSysName(), strRenameTable);
+			String strQuery = String.format("RENAME TABLE %s AS %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else {
 			throw new Exception("Not support rename table.");

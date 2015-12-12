@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 hangum.
+ * Copyright (c) 2015 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -33,11 +34,6 @@ import com.hangum.tadpole.rdb.core.dialog.table.AlterTableDialog;
  */
 public class AlterTableAction extends AbstractObjectSelectAction {
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4892198101737925406L;
-
-	/**
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(AlterTableAction.class);
@@ -59,9 +55,12 @@ public class AlterTableAction extends AbstractObjectSelectAction {
 		final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			AlterTableDialog dialog = new AlterTableDialog(shell, userDB, tc);
-			dialog.open();
+			if(Dialog.OK == dialog.open()) {
+				refreshTable(tc.getName());
+				refreshTableColumn();
+			}
 		} else {
-			MessageDialog.openInformation(shell, "Confirm", "Not support this function. But soon. wait for our team.");
+			MessageDialog.openInformation(shell, "Confirm", "Not support this database. But soon. wait for our team.");
 		}
 	}
 	

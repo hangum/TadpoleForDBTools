@@ -49,7 +49,7 @@ public class ExecuteDDLCommand {
 	 * @throws Exception
 	 */
 	public static RequestResultDAO executSQL(UserDBDAO userDB, String sql) throws Exception {
-		
+		if(logger.isDebugEnabled()) logger.debug("\t ### "+ sql);
 		RequestResultDAO reqResultDAO = new RequestResultDAO();
 		reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
 		reqResultDAO.setIpAddress(RWT.getRequest().getRemoteAddr());
@@ -60,6 +60,8 @@ public class ExecuteDDLCommand {
 			ParserDDL parser = new ParserDDL();
 			parser.parseQuery(sql, queryInfoDTO);
 			boolean bool = _executSQL(userDB, queryInfoDTO.getQueryDDLType(), queryInfoDTO.getObjectName(), sql);
+			
+			reqResultDAO.setDataChanged(bool);
 		} catch(Exception e) {
 			logger.error("execute sql", e);
 			reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$

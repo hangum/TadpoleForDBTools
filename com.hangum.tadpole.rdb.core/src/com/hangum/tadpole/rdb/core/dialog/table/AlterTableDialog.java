@@ -10,18 +10,21 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.table;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.jface.dialogs.Dialog;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,15 +38,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
-
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Table 수정 다이얼로그.
@@ -51,23 +48,8 @@ import org.eclipse.swt.events.SelectionEvent;
  * @author hangum
  *
  */
-public class AlterTableDialog extends Dialog {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -717632913094073217L;
-
-	private List<AlterTableMetaDataDAO> listAlterTableColumns = new ArrayList<AlterTableMetaDataDAO>();
-	private List<AlterTableMetaDataDAO> listRemove = new ArrayList<>();
-
-	TableViewer tableViewer;
-	
-	private UserDBDAO userDB;
-	private TableDAO tableDao;
-	private Text textTableName;
-	private Text textComment;
-
-	private AlterTableExecutor executor;
+public class AlterTableDialog extends AbstractAlterDialog {
+	private static final Logger logger = Logger.getLogger(AlterTableDialog.class);
 	
 	/**
 	 * Create the dialog.
@@ -75,10 +57,7 @@ public class AlterTableDialog extends Dialog {
 	 * @wbp.parser.constructor
 	 */
 	public AlterTableDialog(Shell parentShell, final UserDBDAO userDB) {
-		super(parentShell);
-		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
-
-		this.userDB = userDB;
+		super(parentShell, userDB);
 	}
 
 	/**
@@ -86,19 +65,10 @@ public class AlterTableDialog extends Dialog {
 	 * @param parentShell
 	 */
 	public AlterTableDialog(Shell parentShell, final UserDBDAO userDB, TableDAO tableDao) {
-		super(parentShell);
+		super(parentShell, userDB);
 		
 		this.userDB = userDB;
 		this.tableDao = tableDao;
-//		this.schemaName = "".equals(this.tableDao.getSchema_name()) ? userDB.getUsers() : this.tableDao.getSchema_name();
-//		this.tableName = "".equals(this.tableDao.getTable_name()) ? this.tableDao.getName() : this.tableDao.getTable_name();
-	}
-
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText("Alter Table");
-		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -122,6 +92,13 @@ public class AlterTableDialog extends Dialog {
 		lblTableName.setText("Table Name");
 		
 		textTableName = new Text(composite, SWT.BORDER);
+		textTableName.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				boolean ischange = changeTableName(tableDao, textTableName.getText());
+				if(!ischange) textTableName.setText(tableDao.getName());
+			}
+		});
 		textTableName.setText(tableDao.getName());
 		textTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -132,6 +109,13 @@ public class AlterTableDialog extends Dialog {
 		GridData gd_textComment = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_textComment.heightHint = 30;
 		textComment.setLayoutData(gd_textComment);
+		textComment.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				boolean ischange = changeTableComment(tableDao, textComment.getText());
+				if(!ischange) textTableName.setText(tableDao.getComment());
+			}
+		});
 		textComment.setText(tableDao.getComment());
 		
 		CTabFolder tabFolder = new CTabFolder(container, SWT.NONE);
@@ -172,14 +156,23 @@ public class AlterTableDialog extends Dialog {
 		btnAddColumn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AlterTableMetaDataDAO addColumn = new AlterTableMetaDataDAO();
-				addColumn.setDbdef(DBDefine.MYSQL_DEFAULT);
-				addColumn.setColumnName("new_column");
-				addColumn.setDataType(DataTypeDef.INTEGER);
-				addColumn.setDataStatus(DATA_TYPE.INSERT);
+				AlterTableInputValidator fv = new AlterTableInputValidator();
+				InputDialog dialog = new InputDialog(getShell(), "Column name", "Add column", "new_column", fv);
+				if(dialog.open() == Window.OK) {
+					String strColumnName = dialog.getValue();
 				
-				listAlterTableColumns.add(addColumn);
-				tableViewer.add(addColumn);
+					AlterTableMetaDataDAO addColumn = new AlterTableMetaDataDAO();
+					addColumn.setDbdef(userDB.getDBDefine());
+					addColumn.setColumnName(strColumnName);
+					addColumn.setDataType(DataTypeDef.INTEGER);
+					addColumn.setDataTypeName(DataTypeDef.getTypeName(userDB.getDBDefine(), DataTypeDef.INTEGER));
+//					addColumn.setDataStatus(DATA_TYPE.INSERT);
+					
+					if(addColumn(addColumn)) {
+						listAlterTableColumns.add(addColumn);
+						tableViewer.refresh(true);
+					}
+				}
 			}
 		});
 		btnAddColumn.setText("Add Column");
@@ -190,10 +183,13 @@ public class AlterTableDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				StructuredSelection ss = (StructuredSelection)tableViewer.getSelection();
 				if(ss.isEmpty()) return;
+				AlterTableMetaDataDAO columnDao = (AlterTableMetaDataDAO)ss.getFirstElement();
+				boolean isDelete = deleteColumn(columnDao);
 				
-				AlterTableMetaDataDAO addColumn = (AlterTableMetaDataDAO)ss.getFirstElement();
-				listAlterTableColumns.remove(addColumn);
-				tableViewer.remove(addColumn);
+				if(isDelete) {
+					listAlterTableColumns.remove(columnDao);
+					tableViewer.remove(columnDao);
+				}
 			}
 		});
 		btnDeleteColumn.setText("Delete Column");
@@ -215,10 +211,9 @@ public class AlterTableDialog extends Dialog {
 			tblclmnColumnName.setWidth(AlterTableConsts.sizes[i]);
 			tblclmnColumnName.setText(AlterTableConsts.names[i]);
 
-			tableViewerColumn.setEditingSupport(new AlterTableEditingSupport(tableViewer, i));
+			if(i != 1) tableViewerColumn.setEditingSupport(new AlterTableEditingSupport(tableViewer, i, userDB, tableDao));
 		}
 	}
-
 
 	/**
 	 * Create contents of the button bar.
@@ -226,8 +221,7 @@ public class AlterTableDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", false);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, "Close", false);
 	}
 
 	/**

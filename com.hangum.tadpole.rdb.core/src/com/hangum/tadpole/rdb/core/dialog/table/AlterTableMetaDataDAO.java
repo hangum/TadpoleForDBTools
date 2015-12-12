@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.core.dialog.table;
 
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
 
 /**
  * alter table dao
@@ -19,7 +18,7 @@ import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef.DATA_TYPE;
  * @author hangum
  *
  */
-public class AlterTableMetaDataDAO {
+public class AlterTableMetaDataDAO implements Cloneable {
 
 	private String original_columnName;
 	private String columnName;
@@ -34,8 +33,8 @@ public class AlterTableMetaDataDAO {
 	private String defaultValue;
 	private boolean nullable;
 	
-	/** 데이터 수정시 수정된 sql 문을 기록하고 있습니다. */
-	private DataTypeDef.DATA_TYPE dataStatus 	= DATA_TYPE.NONE;
+//	/** 데이터 수정시 수정된 sql 문을 기록하고 있습니다. */
+//	private DataTypeDef.DATA_TYPE dataStatus 	= DATA_TYPE.NONE;
 	
 	/* RDBMS종류 */
 	private DBDefine dbdef;
@@ -162,19 +161,19 @@ public class AlterTableMetaDataDAO {
 		this.usePrecision = usePrecision;
 	}
 	
-	/**
-	 * @return the dataStatus
-	 */
-	public DataTypeDef.DATA_TYPE getDataStatus() {
-		return dataStatus;
-	}
-
-	/**
-	 * @param dataStatus the dataStatus to set
-	 */
-	public void setDataStatus(DataTypeDef.DATA_TYPE dataStatus) {
-		this.dataStatus = dataStatus;
-	}
+//	/**
+//	 * @return the dataStatus
+//	 */
+//	public DataTypeDef.DATA_TYPE getDataStatus() {
+//		return dataStatus;
+//	}
+//
+//	/**
+//	 * @param dataStatus the dataStatus to set
+//	 */
+//	public void setDataStatus(DataTypeDef.DATA_TYPE dataStatus) {
+//		this.dataStatus = dataStatus;
+//	}
 
 	/**
 	 * @return the comment
@@ -189,5 +188,9 @@ public class AlterTableMetaDataDAO {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }

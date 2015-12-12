@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -21,6 +20,8 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
+import com.hangum.tadpole.rdb.core.dialog.table.AlterTableMetaDataDAO;
+import com.hangum.tadpole.rdb.core.dialog.table.DataTypeDef;
 
 /**
  * Execute table column object 
@@ -30,6 +31,83 @@ import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
  */
 public class TableColumnObjectQuery {
 	private static Logger logger = Logger.getLogger(TableColumnObjectQuery.class);
+	
+	/**
+	 * modify table column type 
+	 * 
+	 * @param userDB
+	 * @param tableDAO
+	 * @param metaDataDao
+	 * @param strTypeName
+	 * @return
+	 */
+	public static RequestResultDAO modifyColumnType(final UserDBDAO userDB, TableDAO tableDAO, AlterTableMetaDataDAO metaDataDao) throws Exception {
+		RequestResultDAO resultDao = null;
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			// ALTER TABLE 테이블명 MODIFY 컬럼이름 새컬럼타입
+			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s", 
+					tableDAO.getSysName(), metaDataDao.getColumnName(), metaDataDao.getColumnName(), metaDataDao.getDataTypeName());
+			if(DataTypeDef.isSecondArgument(userDB.getDBDefine(), metaDataDao.getDataType())) {
+				if(metaDataDao.getDataSize() == 0) metaDataDao.setDataSize(11);
+				strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s(%s)", 
+					tableDAO.getSysName(), metaDataDao.getColumnName(), metaDataDao.getColumnName(), metaDataDao.getDataTypeName(), metaDataDao.getDataSize());
+			}
+			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+			
+//		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
+//					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+//					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
+//		) {
+//			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), oldColumnName);
+//			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+//		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+//			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), oldColumnName);
+//			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+//		} else if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
+//			String strQuery = String.format("RENAME TABLE %s AS %s", tableDAO.getSysName(), oldColumnName);
+//			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+		} else {
+			throw new Exception("Not support rename table.");
+		}
+		
+		return resultDao;
+	}
+	
+	/**
+	 * Rename table column 
+	 * 
+	 * @param userDB
+	 * @param tableDAO
+	 * @param oldColumnName
+	 * @param newColumnName
+	 * @return
+	 */
+	public static RequestResultDAO renameColumn(final UserDBDAO userDB, TableDAO tableDAO, AlterTableMetaDataDAO metaDataDao, String newColumnName) throws Exception {
+		RequestResultDAO resultDao = null;
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			//ALTER TABLE `dbtype` CHANGE `tesst` `cho` INT(11)  NULL  DEFAULT NULL;
+			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s(%s)", 
+												tableDAO.getSysName(), metaDataDao.getColumnName(), newColumnName, metaDataDao.getDataTypeName(), metaDataDao.getDataSize()
+					);
+			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+//		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
+//					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+//					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
+//		) {
+//			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), oldColumnName);
+//			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+//		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+//			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), oldColumnName);
+//			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+//		} else if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
+//			String strQuery = String.format("RENAME TABLE %s AS %s", tableDAO.getSysName(), oldColumnName);
+//			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+		} else {
+			throw new Exception("Not support rename table.");
+		}
+		
+		return resultDao;
+	}
 	
 	/**
 	 * Delete table column
@@ -47,8 +125,7 @@ public class TableColumnObjectQuery {
 				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
 		) {
 			for(TableColumnDAO tableColumnDao: listTableColumnDao) {
-				String strQuery = String.format("ALTER TABLE %s DROP COLUMN %s", tableColumnDao.getTableDao().getSysName(), tableColumnDao.getField());
-				resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+				resultDao = deleteColumn(userDB, tableColumnDao.getTableDao().getSysName(), tableColumnDao.getField());
 			}
 			
 		} else {
@@ -57,6 +134,29 @@ public class TableColumnObjectQuery {
 		
 		return resultDao;
 	}
-
-
+	
+	/**
+	 * delete column 
+	 * @param userDB
+	 * @param tableName
+	 * @param columnName
+	 * @return
+	 * @throws Exception
+	 */
+	public static RequestResultDAO deleteColumn(final UserDBDAO userDB, String tableName, String columnName) throws Exception {
+		String strQuery = String.format("ALTER TABLE %s DROP COLUMN %s", tableName, columnName);
+		return ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 컬럼을 추가합니다. 
+	 * 
+	 * @param userDB
+	 * @param tableName
+	 * @param metaDataDao
+	 */
+	public static RequestResultDAO addColumn(final UserDBDAO userDB, String tableName, AlterTableMetaDataDAO metaDataDao) throws Exception {
+		String strQuery = String.format("ALTER TABLE %s ADD %s %s %s", tableName, metaDataDao.getColumnName(), metaDataDao.getDataTypeName(), metaDataDao.getDefaultValue());
+		return ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+	}
 }
