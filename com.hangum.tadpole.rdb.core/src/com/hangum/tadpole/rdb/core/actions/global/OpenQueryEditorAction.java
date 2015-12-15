@@ -16,14 +16,18 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -36,6 +40,7 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenQueryEditorAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
+	private UserDBDAO userDB;
 	
 	public OpenQueryEditorAction(IWorkbenchWindow window) {
 		this.window = window;
@@ -51,8 +56,6 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 	
 	@Override
 	public void run() {
-		UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
-		
 		QueryEditorAction qea = new QueryEditorAction();
 		qea.run(userDB);
 	}
@@ -67,19 +70,20 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		IStructuredSelection sel = (IStructuredSelection)selection;
 		if(sel != null) {
-			if( sel.getFirstElement() instanceof UserDBDAO ) {
-				UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-				
+			
+			ManagerViewer ev = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+			Object obj = ((IStructuredSelection)ev.getManagerTV().getSelection()).getFirstElement();
+			if( obj instanceof UserDBDAO ) {
+				userDB = (UserDBDAO)obj;
+			
 				if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
 					if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {				
-						iss = sel;					
 						setEnabled(true);
-						
 						return;
 					}
-				}
-			} 
-		} 
+				} // end if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
+			}  // end if
+		}
 		
 		setEnabled(false);
 	}
