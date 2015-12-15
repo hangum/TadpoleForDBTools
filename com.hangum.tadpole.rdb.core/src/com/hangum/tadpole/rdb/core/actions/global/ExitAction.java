@@ -58,12 +58,7 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	@Override
 	public void run() {
 		final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		if(TadpoleApplicationContextManager.isPersonOperationType()) {
-			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_4) ) {
-				serverLogout();
-				System.exit(0);
-			}
-		} else if(ApplicationArgumentUtils.isStandaloneMode()) {
+		if(ApplicationArgumentUtils.isStandaloneMode()) {
 			MessageDialog dialog = new MessageDialog(shell, Messages.get().ExitAction_2, null, Messages.get().ExitAction_4, 
 										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().ExitAction_6, Messages.get().ExitAction_7}, 1);
 			int intResult = dialog.open();
@@ -73,7 +68,11 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 			} else if(intResult == 1) {
 				serverLogout();
 			}
-			
+		} else if(TadpoleApplicationContextManager.isPersonOperationType()) {
+			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_4) ) {
+				serverLogout();
+				System.exit(0);
+			}
 		} else {
 			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_3) ) {
 				serverLogout();
