@@ -78,13 +78,12 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLSelect
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSQLUpdateAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSampleDataAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.AlterTableAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRenameAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnAddAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
@@ -145,6 +144,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	
 	/** table editor action */
 //	private AbstractObjectAction alterTableAction;
+	private AbstractObjectAction addTableColumnAction;
 	
 	// table column
 	private AbstractObjectAction tableColumnSelectionAction;
@@ -451,6 +451,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
 //		alterTableAction = new AlterTableAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_15);
+		addTableColumnAction = new TableColumnAddAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Add column"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_16);
 		
@@ -488,8 +489,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								manager.add(creatAction_Table);
 								manager.add(separator);
 								manager.add(renameAction_Table);
-//								manager.add(alterTableAction);
 								manager.add(dropAction_Table);
+								manager.add(separator);
+								manager.add(addTableColumnAction);
 								manager.add(separator);
 							}
 						}	
@@ -707,7 +709,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction.setUserDB(getUserDB());
 		deleteStmtAction.setUserDB(getUserDB());
 		
-//		alterTableAction.setUserDB(getUserDB());
+		addTableColumnAction.setUserDB(getUserDB());
 		
 		viewDDLAction.setUserDB(getUserDB());
 		tableDataEditorAction.setUserDB(getUserDB());
@@ -780,7 +782,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		insertStmtAction.dispose();
 		updateStmtAction.dispose();
 		deleteStmtAction.dispose();
-//		alterTableAction.dispose();
+		addTableColumnAction.dispose();
 		
 		viewDDLAction.dispose();
 		tableDataEditorAction.dispose();

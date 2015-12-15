@@ -97,8 +97,14 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		if(rsDAO != null) {
 			if(isPretty & RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
 		}
+		String showValue = "";
+		try {
+			int intShowWidth = Integer.parseInt(getRDBShowInTheColumn());
+			if(intShowWidth != -1) showValue = StringUtils.abbreviate(obj.toString(), 0, intShowWidth);
+			else showValue = obj.toString();
+		} catch(Exception e) {}
 		
-		return obj == null ? PublicTadpoleDefine.DEFINE_NULL_VALUE : StringUtils.abbreviate(obj.toString(), 0, Integer.parseInt(getRDBShowInTheColumn()));
+		return obj == null ? PublicTadpoleDefine.DEFINE_NULL_VALUE : showValue;
 	}
 	
 	/**

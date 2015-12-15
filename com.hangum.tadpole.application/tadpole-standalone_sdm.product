@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" version="2.0.0" useFeatures="false" includeLaunchers="true">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-nl en -standalone -useDB all -defaultDB MySQL
+      </programArgs>
+      <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1  -Xverify:none 
+-XX:+UseParallelGC
+-XX:-UseConcMarkSweepGC 
+-XX:PermSize=32M
+-XX:MaxPermSize=128M  
+-XX:MaxNewSize=128M 
+-XX:NewSize=64M
+      </vmArgs>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <splash
+      location="com.hangum.tadpole.application"
+      startupProgressRect="5,275,445,15"
+      startupMessageRect="7,252,445,20"
+      startupForegroundColor="00FF00" />
+   <launcher name="tadpole-standalone">
+      <linux icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.xpm"/>
+      <macosx icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="/com.hangum.tadpole.application/icons/TadpoleDBHub.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+      <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</linux>
+      <macos include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
+      <solaris include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</solaris>
+      <windows include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</windows>
+   </vm>
+
+   <plugins>
+      <plugin id="com.gaia3d.tadpole.spatial.data.core"/>
+      <plugin id="com.gaia3d.tadpole.spatial.geotools.code"/>
+      <plugin id="com.hangum.tadpole.ace.editor.core"/>
+      <plugin id="com.hangum.tadpole.application"/>
+      <plugin id="com.hangum.tadpole.applicattion.start"/>
+      <plugin id="com.hangum.tadpole.aws.rds.commons.core"/>
+      <plugin id="com.hangum.tadpole.cipher.core"/>
+      <plugin id="com.hangum.tadpole.commons.admin.core"/>
+      <plugin id="com.hangum.tadpole.commons.libs"/>
+      <plugin id="com.hangum.tadpole.commons.utils"/>
+      <plugin id="com.hangum.tadpole.commons.utils.zip"/>
+      <plugin id="com.hangum.tadpole.compare.core"/>
+      <plugin id="com.hangum.tadpole.engine"/>
+      <plugin id="com.hangum.tadpole.help.core"/>
+      <plugin id="com.hangum.tadpole.hive.core"/>
+      <plugin id="com.hangum.tadpole.importexport.db"/>
+      <plugin id="com.hangum.tadpole.manager.core"/>
+      <plugin id="com.hangum.tadpole.mongodb.core"/>
+      <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
+      <plugin id="com.hangum.tadpole.mongodb.erd.core"/>
+      <plugin id="com.hangum.tadpole.mongodb.model"/>
+      <plugin id="com.hangum.tadpole.preference"/>
+      <plugin id="com.hangum.tadpole.rdb.core"/>
+      <plugin id="com.hangum.tadpole.rdb.core.ext"/>
+      <plugin id="com.hangum.tadpole.rdb.erd.core"/>
+      <plugin id="com.hangum.tadpole.rdb.model"/>
+      <plugin id="com.hangum.tadpole.sql.parser"/>
+      <plugin id="com.hangum.tadpole.tajo.core"/>
+      <plugin id="com.ibm.icu.base"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.xml"/>
+      <plugin id="org.apache.commons.fileupload"/>
+      <plugin id="org.apache.commons.io"/>
+      <plugin id="org.apache.felix.gogo.runtime"/>
+      <plugin id="org.apache.felix.gogo.shell"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.observable"/>
+      <plugin id="org.eclipse.core.databinding.property"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.emf.common"/>
+      <plugin id="org.eclipse.emf.ecore"/>
+      <plugin id="org.eclipse.emf.ecore.xmi"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.console"/>
+      <plugin id="org.eclipse.equinox.http.jetty"/>
+      <plugin id="org.eclipse.equinox.http.registry"/>
+      <plugin id="org.eclipse.equinox.http.servlet"/>
+      <plugin id="org.eclipse.equinox.launcher"/>
+      <plugin id="org.eclipse.equinox.launcher.cocoa.macosx" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.cocoa.macosx.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.aix.ppc" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.aix.ppc64" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.hpux.ia64" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc64" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.linux.s390" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.linux.s390x" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.linux.x86" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.linux.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.solaris.sparc" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.gtk.solaris.x86" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.win32.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.jetty.continuation"/>
+      <plugin id="org.eclipse.jetty.http"/>
+      <plugin id="org.eclipse.jetty.io"/>
+      <plugin id="org.eclipse.jetty.security"/>
+      <plugin id="org.eclipse.jetty.server"/>
+      <plugin id="org.eclipse.jetty.servlet"/>
+      <plugin id="org.eclipse.jetty.util"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.rap.addons.d3chart"/>
+      <plugin id="org.eclipse.rap.design.example"/>
+      <plugin id="org.eclipse.rap.design.example.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.draw2d"/>
+      <plugin id="org.eclipse.rap.draw2d.compatibility"/>
+      <plugin id="org.eclipse.rap.filedialog"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.gef"/>
+      <plugin id="org.eclipse.rap.jettycustomizer" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface"/>
+      <plugin id="org.eclipse.rap.jface.databinding"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt"/>
+      <plugin id="org.eclipse.rap.rwt.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui"/>
+      <plugin id="org.eclipse.rap.ui.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_ko" fragment="true"/>
+      <plugin id="org.hamcrest.core"/>
+      <plugin id="org.junit"/>
+   </plugins>
+
+   <features>
+      <feature id="com.hangum.tadpole.feature" version="1.0.0.qualifier"/>
+   </features>
+
+   <configurations>
+      <plugin id="com.gaia3d.tadpole.spatial.data.core" autoStart="true" startLevel="0" />
+      <plugin id="com.gaia3d.tadpole.spatial.geotools.code" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.ace.editor.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.application" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.applicattion.start" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.aws.rds.commons.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.cipher.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.admin.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.utils.zip" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.compare.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.help.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.importexport.db" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.core.test" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.erd.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.mongodb.model" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.preference" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.rdb.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.rdb.core.ext" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.rdb.erd.core" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.rdb.model" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.secret.util" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.sql.parser" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.tajo.core" autoStart="true" startLevel="0" />
+      <plugin id="com.ibm.icu.base" autoStart="true" startLevel="0" />
+      <plugin id="javax.servlet" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.commons.io" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.felix.gogo.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.felix.gogo.shell" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.commands" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.contenttype" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.databinding" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.databinding.observable" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.databinding.property" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.expressions" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.jobs" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.emf.common" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.emf.ecore" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.emf.ecore.xmi" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.console" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.http.jetty" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.http.registry" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.http.servlet" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.launcher" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.preferences" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.registry" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.help" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.continuation" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.http" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.io" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.security" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.server" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.servlet" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.util" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.addons.d3chart" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.design.example" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.draw2d" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.draw2d.compatibility" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.gef" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.jface" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.jface.databinding" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.junit" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.junit.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.rwt" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.rwt.osgi" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.ui" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.ui.views" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />
+      <plugin id="org.junit" autoStart="true" startLevel="0" />
+   </configurations>
+
+   <repositories>
+      <repository location="http://127.0.0.1:8080/tdbupdate" enabled="true" />
+   </repositories>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
+
+</product>

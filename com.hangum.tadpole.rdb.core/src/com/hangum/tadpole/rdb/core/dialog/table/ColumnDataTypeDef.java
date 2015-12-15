@@ -22,11 +22,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
  * @author hangum
  *
  */
-public class DataTypeDef {
-//	/** 데이터 상태를 표현한다. */
-//	public enum DATA_TYPE {NONE, INSERT, MODIFY};
-	public enum DATA_FORM_TYPE {YES, NO, NONE};
-	
+public class ColumnDataTypeDef {
 	/**
 	 * java.sql.Types에 정의된 모든 데이터 타입의 각 dbms별로 type과 명칭으로 연결한다.
 	 */
@@ -270,30 +266,7 @@ public class DataTypeDef {
 		return false;
 	}
 	
-	/**
-	 * 두번째 아규먼트가 올것인지 예를들어 boolean, clob,blob,nclob타입은 뒤가 항상 오지 않는다.
-	 * 그렇지만 다른 아이들은 온다.  
-	 * 
-	 * @param dbDef
-	 * @param type
-	 * @return
-	 */
-	public static boolean isSecondArgument(DBDefine dbDef, int type) {
-		switch(type){
-		case ROWID 		:	
-		case BLOB 		:	
-		case CLOB 		:	
-		case NCLOB 		:	
-		case BOOLEAN 	:
-		case BIT		:
-			
-		case DOUBLE		:
-		case NUMERIC	:
-		case FLOAT		:
-			return false;
-		}
-		return true;
-	}
+//	                                                                                                                              
 	
 	/**
 	 * 콤보박스에 넣어줄 전체 데이터타입의 명칭을 조회하여 리턴한다.
