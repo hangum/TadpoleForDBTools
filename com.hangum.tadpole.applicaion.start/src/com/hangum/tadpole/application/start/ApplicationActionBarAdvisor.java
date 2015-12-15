@@ -196,10 +196,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(saveAsAction);
 		fileMenu.add(new Separator());
 		fileMenu.add(deleteResourceAction);
-		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+//		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 			fileMenu.add(new Separator());
 			fileMenu.add(exitAction);
-		}
+//		}
 		
 		// Manage
 		manageMenu.add(restFulAPIAction);
@@ -274,10 +274,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        
 //        toolbar.add(bugIssueAction);
 //        toolbar.add(aboutAction);
-        if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+//        if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 	    	toolbar.add(new Separator());
 	    	toolbar.add(exitAction);
-        }
+//        }
     }
     
 }
