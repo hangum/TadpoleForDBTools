@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.utils;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableColumn;
@@ -163,24 +164,54 @@ public class TableColumnObjectQuery {
 		if(metaDataDao.isAutoIncrement()) {
 			strQuery += " auto_increment ";
 		} else {
-			strQuery += String.format(" DEFAULT %s ", SQLUtil.makeQuote(metaDataDao.getDefaultValue()));
+			if(!"".equals(StringUtils.trimToEmpty(metaDataDao.getDefaultValue()))) {
+				strQuery += String.format(" DEFAULT %s ", SQLUtil.makeQuote(metaDataDao.getDefaultValue()));
+			}
 		}
 		
 		addColumnResultDAO =  ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$	
 		return addColumnResultDAO;
 	}
 	
-//	/**
-//	 * update collate
-//	 * 
-//	 * @param userDB
-//	 * @param tableDAO
-//	 * @param metaDataDao
-//	 */
-//	public static RequestResultDAO updateCollate(final UserDBDAO userDB, final TableDAO tableDAO, final TableColumnUpdateDAO metaDataDao) throws Exception {
-//		String strQuery = String.format("ALTER TABLE %s MODIFY %s %s collate %s", tableDAO.getSysName(), metaDataDao.getColumnName(), metaDataDao.getDataType(), metaDataDao.getCollation());
-//		return ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
-//	}
+	/**
+	 * update column
+	 * 
+	 * @param userDB
+	 * @param tableDAO
+	 * @param tableColumnDAO 
+	 * @param metaDataDao
+	 * @return
+	 * @throws Exception
+	 */
+	public static RequestResultDAO updateColumn(final UserDBDAO userDB, final TableDAO tableDAO, TableColumnDAO tableColumnDAO, final TableColumnUpdateDAO metaDataDao) throws Exception {
+		RequestResultDAO addColumnResultDAO = null;
+		
+		String strQuery = String.format("ALTER TABLE %s CHANGE COLUMN %s %s %s %s COMMENT %s ", 
+											tableDAO.getSysName(), 
+											tableColumnDAO.getField(),
+											metaDataDao.getColumnName(), 
+											metaDataDao.getDataType(), 
+											metaDataDao.isNotNull()?"NOT NULL":"NULL", 
+											SQLUtil.makeQuote(metaDataDao.getComment())
+				);
+		
+		if(!"".equals(metaDataDao.getCollation())) { 
+			strQuery += String.format(" COLLATE %s ", metaDataDao.getCollation());
+		}
+		if(metaDataDao.isPrimaryKey()) {
+			strQuery += " PRIMARY KEY ";
+		}
+		if(metaDataDao.isAutoIncrement()) {
+			strQuery += " auto_increment ";
+		} else {
+			if(!"".equals(StringUtils.trimToEmpty(metaDataDao.getDefaultValue()))) {
+				strQuery += String.format(" DEFAULT %s ", SQLUtil.makeQuote(metaDataDao.getDefaultValue()));
+			}
+		}
+		
+		addColumnResultDAO =  ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$	
+		return addColumnResultDAO;
+	}
 	
 	/**
 	 * update comment

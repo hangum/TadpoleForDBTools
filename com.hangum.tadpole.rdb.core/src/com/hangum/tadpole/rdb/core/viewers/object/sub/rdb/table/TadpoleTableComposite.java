@@ -84,6 +84,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRenameAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnAddAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
@@ -142,14 +143,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private AbstractObjectAction viewDDLAction;
 	private AbstractObjectAction tableDataEditorAction;
 	
-	/** table editor action */
-//	private AbstractObjectAction alterTableAction;
 	private AbstractObjectAction addTableColumnAction;
 	
 	// table column
 	private AbstractObjectAction tableColumnSelectionAction;
 	private AbstractObjectAction tableColumnDeleteAction;
-//	private AbstractObjectAction tableColumnRenameAction;
+	private AbstractObjectAction tableColumnModifyAction;
 	
 	/**
 	 * Create the composite.
@@ -408,31 +407,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	/**
-	 * create table column menu
-	 */
-	private void createTableColumnMenu() {
-		tableColumnDeleteAction = new TableColumnDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
-		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
-//		tableColumnRenameAction = new TableColumnModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
-		
-		// menu
-		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-//				manager.add(tableColumnRenameAction);
-				manager.add(tableColumnDeleteAction);
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				manager.add(tableColumnSelectionAction);
-			}
-		});
-
-		tableColumnViewer.getTable().setMenu(menuMgr.createContextMenu(tableColumnViewer.getTable()));
-		getSite().registerContextMenu(menuMgr, tableColumnViewer);
-	}
-
-	/**
 	 * create Table menu
 	 */
 	private void createTableMenu() {
@@ -450,7 +424,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Update"); //$NON-NLS-1$
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
-//		alterTableAction = new AlterTableAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_15);
 		addTableColumnAction = new TableColumnAddAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Add column"); //$NON-NLS-1$
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_16);
@@ -491,8 +464,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								manager.add(renameAction_Table);
 								manager.add(dropAction_Table);
 								manager.add(separator);
-								manager.add(addTableColumnAction);
-								manager.add(separator);
+								if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+									manager.add(addTableColumnAction);
+									manager.add(separator);
+								}
 							}
 						}	
 						
@@ -528,6 +503,34 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
+	}
+	
+	/**
+	 * create table column menu
+	 */
+	private void createTableColumnMenu() {
+		tableColumnDeleteAction = new TableColumnDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
+		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
+		tableColumnModifyAction = new TableColumnModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
+		
+		// menu
+		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
+			public void menuAboutToShow(IMenuManager manager) {
+				if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					manager.add(tableColumnModifyAction);
+					manager.add(tableColumnDeleteAction);
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+				}
+				
+				manager.add(tableColumnSelectionAction);
+			}
+		});
+
+		tableColumnViewer.getTable().setMenu(menuMgr.createContextMenu(tableColumnViewer.getTable()));
+		getSite().registerContextMenu(menuMgr, tableColumnViewer);
 	}
 	
 	/**
@@ -717,7 +720,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// table column
 		tableColumnSelectionAction.setUserDB(getUserDB());
 		tableColumnDeleteAction.setUserDB(getUserDB());
-//		tableColumnRenameAction.setUserDB(getUserDB());
+		tableColumnModifyAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -789,7 +792,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		tableColumnSelectionAction.dispose();
 		tableColumnDeleteAction.dispose();
-//		tableColumnRenameAction.dispose();
+		tableColumnModifyAction.dispose();
 	}
 
 	@Override

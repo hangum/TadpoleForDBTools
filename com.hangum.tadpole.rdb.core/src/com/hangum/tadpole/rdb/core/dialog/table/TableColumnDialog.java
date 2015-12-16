@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.table;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -27,7 +28,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.dbms.MySQLUtils;
@@ -46,9 +50,11 @@ import org.eclipse.swt.events.SelectionEvent;
  */
 public class TableColumnDialog extends TitleAreaDialog {
 	private static final Logger logger = Logger.getLogger(TableColumnDialog.class);
+	private PublicTadpoleDefine.DATA_STATUS COMP_STATUS = DATA_STATUS.NEW;
 	
 	private UserDBDAO userDB;
 	private TableDAO tableDAO;
+	private TableColumnDAO tableColumnDAO;
 	
 	private Text textColumnName;
 	private Combo comboType;
@@ -65,16 +71,38 @@ public class TableColumnDialog extends TitleAreaDialog {
 	 */
 	public TableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
-		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDB = userDB;
 		this.tableDAO = tableDAO;
 	}
 
+	/**
+	 * modify table column dialog
+	 * 
+	 * @param shell
+	 * @param userDB
+	 * @param tableDAO
+	 * @param tableColumnDAO
+	 */
+	public TableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO, TableColumnDAO tableColumnDAO) {
+		super(parentShell);
+		COMP_STATUS = DATA_STATUS.MODIFY;
+		
+		this.userDB = userDB;
+		this.tableDAO = tableDAO;
+		this.tableColumnDAO = tableColumnDAO;
+	}
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Table 컬럼 추가");
+		super.setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		if(COMP_STATUS == DATA_STATUS.MODIFY) {
+			newShell.setText(String.format("%s Table 컬럼 수정", tableDAO.getName()));
+		} else {
+			newShell.setText(String.format("%s Table 컬럼 추가", tableDAO.getName()));
+		}
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -84,7 +112,11 @@ public class TableColumnDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitle(String.format("%s 컬럼 추가", tableDAO.getName()));
+		if(COMP_STATUS == DATA_STATUS.MODIFY) {
+			setTitle(String.format("%s 컬럼 수정", tableColumnDAO.getField()));
+		} else {
+			setTitle(String.format("%s 컬럼 추가", tableDAO.getName()));
+		}
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
@@ -172,12 +204,25 @@ public class TableColumnDialog extends TitleAreaDialog {
 	 * initialize ui
 	 */
 	private void initUI() {
-		
+		if(COMP_STATUS == DATA_STATUS.MODIFY) {
+			textColumnName.setText(tableColumnDAO.getField());
+			comboType.setText(tableColumnDAO.getType());
+			textDefault.setText(StringUtils.trimToEmpty(tableColumnDAO.getDefault()));
+			
+			boolean isPK = false;
+			for(String strPK : PublicTadpoleDefine.DB_PRIMARY_KEY) {
+				if(strPK.equals(tableColumnDAO.getPk())) isPK = true; 
+			}
+			btnPrimaryKey.setSelection(isPK);
+			btnNotNull.setSelection("YES".equals(tableColumnDAO.getNull()));
+			btnAutoIncrement.setSelection("auto_increment".equals(tableColumnDAO.getExtra()));
+			comboCollation.setText(StringUtils.trimToEmpty(tableColumnDAO.getCollation_name()));
+			textComment.setText(StringUtils.trimToEmpty(tableColumnDAO.getComment()));
+		}
 	}
 	
 	@Override
 	protected void okPressed() {
-		
 		String strName = textColumnName.getText();
 		String strType = comboType.getText();
 		String strDefault = textDefault.getText();
@@ -186,6 +231,18 @@ public class TableColumnDialog extends TitleAreaDialog {
 		boolean isAutoIncrement = btnAutoIncrement.getSelection();
 		String strCollation = comboCollation.getText();
 		String strComment = textComment.getText();
+		
+		if(StringUtils.trimToEmpty(strName).equals("")) {
+			MessageDialog.openError(null, "Error", "컬럼 이름을 입력해 주십시오.");
+			textColumnName.setFocus();
+			
+			return;
+		} else if(StringUtils.trimToEmpty(strType).equals("")) {
+			MessageDialog.openError(null, "Error", "컬럼 타입을 입력해 주십시오.");
+			textColumnName.setFocus();
+			
+			return;
+		}
 		
 		TableColumnUpdateDAO metaDataDao = new TableColumnUpdateDAO();
 		metaDataDao.setColumnName(strName);
@@ -197,16 +254,31 @@ public class TableColumnDialog extends TitleAreaDialog {
 		metaDataDao.setCollation(strCollation);
 		metaDataDao.setComment(strComment);
 		
-		try {
-			TableColumnObjectQuery.addColumn(userDB, tableDAO, metaDataDao);
-			refreshTableColumn();
-			MessageDialog.openInformation(null, "확인", "컬럼이 추가되었습니다.");
-			textColumnName.setFocus();
-		} catch (Exception e) {
-			logger.error("add column exception", e);
-			
-			TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, "Column name을 추가하는 중에 오류가발생했습니다.\n" + e.getMessage());
-			errDialog.open();
+		if(COMP_STATUS == DATA_STATUS.NEW) {
+			try {
+				TableColumnObjectQuery.addColumn(userDB, tableDAO, metaDataDao);
+				refreshTableColumn();
+				MessageDialog.openInformation(null, "확인", "컬럼이 추가되었습니다.");
+				textColumnName.setFocus();
+			} catch (Exception e) {
+				logger.error("add column exception", e);
+				
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, "Column name을 추가하는 중에 오류가발생했습니다.\n" + e.getMessage());
+				errDialog.open();
+			}
+		} else {
+			try {
+				TableColumnObjectQuery.updateColumn(userDB, tableDAO, tableColumnDAO, metaDataDao);
+				refreshTableColumn();
+				MessageDialog.openInformation(null, "확인", "컬럼이 수정되었습니다.");
+				
+				super.okPressed();
+			} catch (Exception e) {
+				logger.error("add column exception", e);
+				
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, "Column name을 추가하는 중에 오류가발생했습니다.\n" + e.getMessage());
+				errDialog.open();
+			}
 		}
 	}
 	

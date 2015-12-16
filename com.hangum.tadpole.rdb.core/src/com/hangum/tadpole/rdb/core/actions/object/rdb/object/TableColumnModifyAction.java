@@ -21,9 +21,10 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
+import com.hangum.tadpole.rdb.core.dialog.table.TableColumnDialog;
 
 /**
- * Table column rename action
+ * Table column modify action
  * 
  * @author hangum
  *
@@ -47,54 +48,7 @@ public class TableColumnModifyAction extends AbstractObjectSelectAction {
 		TableColumnDAO tableColumnDAO = (TableColumnDAO)selection.getFirstElement();
 		TableDAO tableDAO = tableColumnDAO.getTableDao();
 		
-//		TableColumnRenameValidator fv = new TableColumnRenameValidator(tableColumnDAO.getField());
-//		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-//								Messages.get().TableColumnRenameAction_0, tableColumnDAO.getField(), tableColumnDAO.getField(), fv);
-//		if(dialog.open() == Window.OK) {
-//			String newTableNm = dialog.getValue();
-//			
-//			if(!MessageDialog.openConfirm(null, Messages.get().ObjectRenameAction_1, String.format(Messages.get().TableColumnRenameAction_1, newTableNm))) return;
-//			try {
-//				TableColumnObjectQuery.renameColumn(userDB, tableDAO, tableColumnDAO.getField(), newTableNm);
-//				refreshTableColumn();
-//			} catch (Exception e) {
-//				logger.error("rename column name", e);
-//
-//				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, e.getMessage());
-//				errDialog.open();
-//			}
-//		}
+		TableColumnDialog dialog = new TableColumnDialog(window.getShell(), getUserDB(), tableDAO, tableColumnDAO);
+		dialog.open();
 	}
 }
-
-///**
-// * Object rename validator
-// * @author hangum
-// *
-// */
-//class TableColumnRenameValidator implements IInputValidator {
-//	private static final Logger logger = Logger.getLogger(TableColumnRenameValidator.class);
-//	private String oldName;
-//	private String objectName;
-//	
-//	public TableColumnRenameValidator(String oldName) {
-//		super();
-//		
-//		this.oldName = oldName;
-//	}
-//	
-//	@Override
-//	public String isValid(String newText) {
-//		if(oldName.equals(newText)) {
-//			return Messages.get().TableColumnRenameValidator_0;
-//		}
-//		if(newText.length() < 2) return Messages.get().FileNameValidator_0;
-//		objectName = newText;
-//				
-//		return null;
-//	}
-//	
-//	public String getObjectName() {
-//		return objectName;
-//	}
-//}

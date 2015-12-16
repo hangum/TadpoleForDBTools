@@ -40,6 +40,7 @@ public class TableColumnDAO {
 	String Key= "";
 	String Default= "";
 	String Extra= "";
+	String collation_name = "";
 	
 	// SQLite에서 사용하는 컬럼.
 	String cid= "";
@@ -249,6 +250,20 @@ public class TableColumnDAO {
 	 */
 	public void setTableDao(TableDAO tableDao) {
 		this.tableDao = tableDao;
+	}
+
+	/**
+	 * @return the collation_name
+	 */
+	public String getCollation_name() {
+		return collation_name;
+	}
+
+	/**
+	 * @param collation_name the collation_name to set
+	 */
+	public void setCollation_name(String collation_name) {
+		this.collation_name = collation_name;
 	}
 
 }
