@@ -85,7 +85,7 @@ public class GrantCheckerUtils {
 		
 			if(isDDLQuestion) {
 				MessageDialog dialog = new MessageDialog(null, Messages.get().ResultMainComposite_0, null, Messages.get().GrantCheckerUtils_0, MessageDialog.ERROR, new String[] {Messages.get().GrantCheckerUtils_1, Messages.get().GrantCheckerUtils_2}, 1);
-				if(dialog.open() == 1) return false;
+				if(dialog.open() != MessageDialog.OK) return false;
 			}
 		}
 
