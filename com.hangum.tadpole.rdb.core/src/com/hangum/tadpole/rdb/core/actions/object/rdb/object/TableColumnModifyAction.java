@@ -21,7 +21,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.dialog.table.TableColumnDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.MySQLTableColumnDialog;
 
 /**
  * Table column modify action
@@ -48,7 +48,7 @@ public class TableColumnModifyAction extends AbstractObjectSelectAction {
 		TableColumnDAO tableColumnDAO = (TableColumnDAO)selection.getFirstElement();
 		TableDAO tableDAO = tableColumnDAO.getTableDao();
 		
-		TableColumnDialog dialog = new TableColumnDialog(window.getShell(), getUserDB(), tableDAO, tableColumnDAO);
+		MySQLTableColumnDialog dialog = new MySQLTableColumnDialog(window.getShell(), getUserDB(), tableDAO, tableColumnDAO);
 		dialog.open();
 	}
 }

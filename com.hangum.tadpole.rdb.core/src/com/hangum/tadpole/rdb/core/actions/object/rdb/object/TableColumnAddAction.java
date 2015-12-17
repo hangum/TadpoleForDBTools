@@ -18,8 +18,9 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.dialog.table.TableColumnDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.MySQLTableColumnDialog;
 
 /**
  * Table column rename action
@@ -38,14 +39,14 @@ public class TableColumnAddAction extends AbstractObjectSelectAction {
 	public TableColumnAddAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText("컬럼 추가");
+		setText(Messages.get().TableColumnAddAction_1);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		
-		TableColumnDialog dialog = new TableColumnDialog(window.getShell(), getUserDB(), tableDAO);
+		MySQLTableColumnDialog dialog = new MySQLTableColumnDialog(window.getShell(), getUserDB(), tableDAO);
 		dialog.open();
 	}
 }

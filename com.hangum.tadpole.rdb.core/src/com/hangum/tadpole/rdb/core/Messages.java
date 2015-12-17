@@ -809,6 +809,23 @@ public class Messages {
 	public String ObjectRenameValidator_0;
 	public String TableColumnRenameValidator_0;
 	public String TableColumnRenameAction;
+	public String MySQLTableColumnDialog_0;
+	public String MySQLTableColumnDialog_1;
+	public String MySQLTableColumnDialog_19;
+	public String MySQLTableColumnDialog_2;
+	public String MySQLTableColumnDialog_20;
+	public String MySQLTableColumnDialog_23;
+	public String MySQLTableColumnDialog_24;
+	public String MySQLTableColumnDialog_25;
+	public String MySQLTableColumnDialog_26;
+	public String MySQLTableColumnDialog_27;
+	public String MySQLTableColumnDialog_29;
+	public String MySQLTableColumnDialog_3;
+	public String MySQLTableColumnDialog_31;
+	public String MySQLTableColumnDialog_32;
+	public String MySQLTableColumnDialog_33;
+	public String MySQLTableColumnDialog_4;
+	public String MySQLTableColumnDialog_5;
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }

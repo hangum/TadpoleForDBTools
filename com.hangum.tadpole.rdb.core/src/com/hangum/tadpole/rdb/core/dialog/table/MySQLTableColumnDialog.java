@@ -16,6 +16,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,8 +41,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TableColumnObjectQuery;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * TableColumn dialog
@@ -48,8 +48,8 @@ import org.eclipse.swt.events.SelectionEvent;
  * @author hangum
  *
  */
-public class TableColumnDialog extends TitleAreaDialog {
-	private static final Logger logger = Logger.getLogger(TableColumnDialog.class);
+public class MySQLTableColumnDialog extends TitleAreaDialog {
+	private static final Logger logger = Logger.getLogger(MySQLTableColumnDialog.class);
 	private PublicTadpoleDefine.DATA_STATUS COMP_STATUS = DATA_STATUS.NEW;
 	
 	private UserDBDAO userDB;
@@ -69,7 +69,7 @@ public class TableColumnDialog extends TitleAreaDialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public TableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
+	public MySQLTableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
 		
 		this.userDB = userDB;
@@ -84,7 +84,7 @@ public class TableColumnDialog extends TitleAreaDialog {
 	 * @param tableDAO
 	 * @param tableColumnDAO
 	 */
-	public TableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO, TableColumnDAO tableColumnDAO) {
+	public MySQLTableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO, TableColumnDAO tableColumnDAO) {
 		super(parentShell);
 		COMP_STATUS = DATA_STATUS.MODIFY;
 		
@@ -99,9 +99,9 @@ public class TableColumnDialog extends TitleAreaDialog {
 		super.setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		if(COMP_STATUS == DATA_STATUS.MODIFY) {
-			newShell.setText(String.format("%s Table 컬럼 수정", tableDAO.getName()));
+			newShell.setText(String.format(Messages.get().MySQLTableColumnDialog_0, tableDAO.getName()));
 		} else {
-			newShell.setText(String.format("%s Table 컬럼 추가", tableDAO.getName()));
+			newShell.setText(String.format(Messages.get().MySQLTableColumnDialog_1, tableDAO.getName()));
 		}
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
@@ -113,9 +113,9 @@ public class TableColumnDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		if(COMP_STATUS == DATA_STATUS.MODIFY) {
-			setTitle(String.format("%s 컬럼 수정", tableColumnDAO.getField()));
+			setTitle(String.format(Messages.get().MySQLTableColumnDialog_2, tableColumnDAO.getField()));
 		} else {
-			setTitle(String.format("%s 컬럼 추가", tableDAO.getName()));
+			setTitle(String.format(Messages.get().MySQLTableColumnDialog_3, tableDAO.getName()));
 		}
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
@@ -123,20 +123,20 @@ public class TableColumnDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		Label lblColumnName = new Label(container, SWT.NONE);
-		lblColumnName.setText("Name");
+		lblColumnName.setText(Messages.get().MySQLTableColumnDialog_4);
 		
 		textColumnName = new Text(container, SWT.BORDER);
 		textColumnName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblType = new Label(container, SWT.NONE);
-		lblType.setText("Type");
+		lblType.setText(Messages.get().MySQLTableColumnDialog_5);
 		
 		comboType = new Combo(container, SWT.NONE);
 		comboType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for(String strType : ColumnDataTypeDef.getAllTypeNames(userDB.getDBDefine())) {
 			comboType.add(strType);
 		}
-		comboType.setText("VARCHAR(45)");
+		comboType.setText("VARCHAR(45)"); //$NON-NLS-1$
 		
 		Label lblPrimaryKey = new Label(container, SWT.NONE);
 		lblPrimaryKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -146,37 +146,37 @@ public class TableColumnDialog extends TitleAreaDialog {
 		composite.setLayout(new GridLayout(3, false));
 		
 		btnPrimaryKey = new Button(composite, SWT.CHECK);
-		btnPrimaryKey.setText("Primary Key");
+		btnPrimaryKey.setText("Primary Key"); //$NON-NLS-1$
 		
 		btnNotNull = new Button(composite, SWT.CHECK);
 		btnNotNull.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				textDefault.setText("");
+				textDefault.setText(""); //$NON-NLS-1$
 				textDefault.setFocus();
 			}
 		});
-		btnNotNull.setText("Not Null");
+		btnNotNull.setText("Not Null"); //$NON-NLS-1$
 		
 		btnAutoIncrement = new Button(composite, SWT.CHECK);
 		btnAutoIncrement.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				btnPrimaryKey.setSelection(true);
-				comboType.setText("INT");
+				comboType.setText("INT"); //$NON-NLS-1$
 			}
 		});
-		btnAutoIncrement.setText("Auto Increment");
+		btnAutoIncrement.setText("Auto Increment"); //$NON-NLS-1$
 		
 		Label lblDefault = new Label(container, SWT.NONE);
-		lblDefault.setText("Default");
+		lblDefault.setText("Default"); //$NON-NLS-1$
 		
 		textDefault = new Text(container, SWT.BORDER);
 		textDefault.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textDefault.setText("NULL");
+		textDefault.setText("NULL"); //$NON-NLS-1$
 		
 		Label lblCollation = new Label(container, SWT.NONE);
-		lblCollation.setText("Collation");
+		lblCollation.setText("Collation"); //$NON-NLS-1$
 		
 		comboCollation = new Combo(container, SWT.NONE);
 		comboCollation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -185,7 +185,7 @@ public class TableColumnDialog extends TitleAreaDialog {
 		}
 		
 		Label lblComment = new Label(container, SWT.NONE);
-		lblComment.setText("Comment");
+		lblComment.setText("Comment"); //$NON-NLS-1$
 		
 		textComment = new Text(container, SWT.BORDER | SWT.MULTI);
 		GridData gd_textComment = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -214,8 +214,8 @@ public class TableColumnDialog extends TitleAreaDialog {
 				if(strPK.equals(tableColumnDAO.getPk())) isPK = true; 
 			}
 			btnPrimaryKey.setSelection(isPK);
-			btnNotNull.setSelection("YES".equals(tableColumnDAO.getNull()));
-			btnAutoIncrement.setSelection("auto_increment".equals(tableColumnDAO.getExtra()));
+			btnNotNull.setSelection("YES".equals(tableColumnDAO.getNull())); //$NON-NLS-1$
+			btnAutoIncrement.setSelection("auto_increment".equals(tableColumnDAO.getExtra())); //$NON-NLS-1$
 			comboCollation.setText(StringUtils.trimToEmpty(tableColumnDAO.getCollation_name()));
 			textComment.setText(StringUtils.trimToEmpty(tableColumnDAO.getComment()));
 		}
@@ -232,13 +232,13 @@ public class TableColumnDialog extends TitleAreaDialog {
 		String strCollation = comboCollation.getText();
 		String strComment = textComment.getText();
 		
-		if(StringUtils.trimToEmpty(strName).equals("")) {
-			MessageDialog.openError(null, "Error", "컬럼 이름을 입력해 주십시오.");
+		if(StringUtils.trimToEmpty(strName).equals("")) { //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.get().MySQLTableColumnDialog_19, Messages.get().MySQLTableColumnDialog_20);
 			textColumnName.setFocus();
 			
 			return;
-		} else if(StringUtils.trimToEmpty(strType).equals("")) {
-			MessageDialog.openError(null, "Error", "컬럼 타입을 입력해 주십시오.");
+		} else if(StringUtils.trimToEmpty(strType).equals("")) { //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.get().MySQLTableColumnDialog_19, Messages.get().MySQLTableColumnDialog_23);
 			textColumnName.setFocus();
 			
 			return;
@@ -258,25 +258,25 @@ public class TableColumnDialog extends TitleAreaDialog {
 			try {
 				TableColumnObjectQuery.addColumn(userDB, tableDAO, metaDataDao);
 				refreshTableColumn();
-				MessageDialog.openInformation(null, "확인", "컬럼이 추가되었습니다.");
+				MessageDialog.openInformation(null, Messages.get().MySQLTableColumnDialog_24, Messages.get().MySQLTableColumnDialog_25);
 				textColumnName.setFocus();
 			} catch (Exception e) {
-				logger.error("add column exception", e);
+				logger.error(Messages.get().MySQLTableColumnDialog_26, e);
 				
-				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, "Column name을 추가하는 중에 오류가발생했습니다.\n" + e.getMessage());
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_27 + e.getMessage());
 				errDialog.open();
 			}
 		} else {
 			try {
 				TableColumnObjectQuery.updateColumn(userDB, tableDAO, tableColumnDAO, metaDataDao);
 				refreshTableColumn();
-				MessageDialog.openInformation(null, "확인", "컬럼이 수정되었습니다.");
+				MessageDialog.openInformation(null, Messages.get().MySQLTableColumnDialog_24, Messages.get().MySQLTableColumnDialog_29);
 				
 				super.okPressed();
 			} catch (Exception e) {
-				logger.error("add column exception", e);
+				logger.error("add column exception", e); //$NON-NLS-1$
 				
-				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, "Column name을 추가하는 중에 오류가발생했습니다.\n" + e.getMessage());
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_31 + e.getMessage());
 				errDialog.open();
 			}
 		}
@@ -289,8 +289,8 @@ public class TableColumnDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().MySQLTableColumnDialog_32, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().MySQLTableColumnDialog_33, false);
 	}
 
 	/**
