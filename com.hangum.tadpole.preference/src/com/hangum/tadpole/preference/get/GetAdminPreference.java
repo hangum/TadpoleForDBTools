@@ -39,7 +39,27 @@ import com.hangum.tadpole.preference.define.PreferenceDefine;
  */
 public class GetAdminPreference extends GetPreferenceGeneral {
 	private static final Logger logger = Logger.getLogger(GetAdminPreference.class);
-
+	
+	/**
+	 * 사용자 정보를 저장한다.
+	 * @return
+	 */
+	public static String getNewUserPermit() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		
+		return getValue(mapUserInfoData, PreferenceDefine.ADMIN_NEW_USER_PERMIT, PreferenceDefine.ADMIN_NEW_USER_PERMIT_VALUE);
+	}
+	
+	/**
+	 * update admin data
+	 * @param key
+	 * @param userInfoDao
+	 */
+	public static void updateAdminData(String key, UserInfoDataDAO userInfoDao) {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		mapUserInfoData.put(key, userInfoDao);
+	}
+	
 	/**
 	 * 
 	 * @return

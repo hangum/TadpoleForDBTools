@@ -17,6 +17,13 @@
             id="com.hangum.tadpole.commons.admin.core.edito.sqlaudit"
             name="Admin SQL Audit">
       </editor>
+      <editor
+            class="com.hangum.tadpole.commons.admin.core.editors.system.AdminSystemSettingEditor"
+            default="false"
+            icon="resources/icons/user.png"
+            id="com.hangum.tadpole.admin.editor.admn.system.setting"
+            name="System setting">
+      </editor>
    </extension>
 
 </plugin>

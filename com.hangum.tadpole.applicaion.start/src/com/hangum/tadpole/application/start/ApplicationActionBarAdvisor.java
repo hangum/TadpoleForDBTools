@@ -30,11 +30,10 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
+import com.hangum.tadpole.commons.admin.core.actions.AdminSystemSettingAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
 import com.hangum.tadpole.compare.core.actions.OpenCompareAction;
-//import com.hangum.tadpole.compare.core.actions.OpenCompareAction;
-import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.actions.global.DBManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
@@ -72,6 +71,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction adminSendMessageAction;
     private IAction adminUserAction;
     private IAction adminSQLAuditAction;
+    private IAction adminSystemSettingAction;
     
     /** User permission action */
     private IAction dbMgmtAction;
@@ -136,6 +136,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	adminSQLAuditAction = new AdminSQLAuditAction(window);
     	register(adminSQLAuditAction);
+    	
+    	adminSystemSettingAction = new AdminSystemSettingAction(window);
+    	register(adminSystemSettingAction);
     	    	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
@@ -216,6 +219,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			adminMenu.add(adminSendMessageAction);
 			adminMenu.add(adminUserAction);
 			adminMenu.add(adminSQLAuditAction);
+			adminMenu.add(adminSystemSettingAction);
 		}
 
 		// preference action
