@@ -12,6 +12,8 @@ package com.hangum.tadpole.commons.admin.core.editors.system;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,6 +30,9 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.Messages;
+import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
@@ -42,7 +47,7 @@ import com.hangum.tadpole.preference.get.GetAdminPreference;
  */
 public class AdminSystemSettingEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(AdminSystemSettingEditor.class);
-	public static final String ID = "com.hangum.tadpole.admin.editor.admn.system.setting";
+	public static final String ID = "com.hangum.tadpole.admin.editor.admn.system.setting"; //$NON-NLS-1$
 	private Combo comboNewUserPermit;
 
 	public AdminSystemSettingEditor() {
@@ -62,7 +67,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		
-		Composite compositeHead = new Composite(parent, SWT.NONE);
+		Composite compositeHead = new Composite(parent, SWT.BORDER);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeHead.setLayout(new GridLayout(1, false));
 		
@@ -75,7 +80,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 				saveData();
 			}
 		});
-		tltmSave.setText("Save");
+		tltmSave.setText(Messages.get().AdminSystemSettingEditor_1);
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
@@ -83,7 +88,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText("신규 사용자 어드민 허락 유무");
+		lblNewLabel.setText(Messages.get().AdminSystemSettingEditor_2);
 		
 		comboNewUserPermit = new Combo(compositeBody, SWT.READ_ONLY);
 		comboNewUserPermit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -110,13 +115,16 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * 
 	 */
 	private void saveData() {
+		if(!MessageDialog.openConfirm(null, Messages.get().AdminSystemSettingEditor_3, Messages.get().AdminSystemSettingEditor_4)) return;
+		
 		try {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(PreferenceDefine.ADMIN_NEW_USER_PERMIT, comboNewUserPermit.getText());
 			GetAdminPreference.updateAdminData(PreferenceDefine.ADMIN_NEW_USER_PERMIT, userInfoDao);
-			
-			MessageDialog.openInformation(null, "Confirm", "Saved");
 		} catch (Exception e) {
-			logger.error("save exception", e);
+			logger.error("save exception", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", "", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

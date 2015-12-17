@@ -1,6 +1,5 @@
 package com.hangum.tadpole.commons.admin.core;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
@@ -224,6 +223,14 @@ public class Messages {
 	public String UserMgntEditorInput_0;
 	public String UserMgntEditorInput_1;
 
+	public  String AdminSystemSettingEditor_1;
+	public  String AdminSystemSettingEditor_2;
+	public  String AdminSystemSettingEditor_3;
+	public  String AdminSystemSettingEditor_4;
+	
+	public String AdminSystemSettingAction_0;
+	public String AdminSystemSettingAction_1;
+	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }

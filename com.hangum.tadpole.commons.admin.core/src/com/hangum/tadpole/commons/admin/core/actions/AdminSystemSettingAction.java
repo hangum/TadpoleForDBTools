@@ -22,10 +22,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.commons.admin.core.Activator;
+import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.editors.system.AdminSystemSettingEditor;
 import com.hangum.tadpole.commons.admin.core.editors.system.AdminSystemSettingEditorInput;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.preference.Activator;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -47,8 +48,8 @@ public class AdminSystemSettingAction extends Action implements ISelectionListen
 		this.window = window;
 		
 		setId(ID);
-		setText("Admin system setting");
-		setToolTipText("Admin system setting");
+		setText(Messages.get().AdminSystemSettingAction_0);
+		setToolTipText(Messages.get().AdminSystemSettingAction_1);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
