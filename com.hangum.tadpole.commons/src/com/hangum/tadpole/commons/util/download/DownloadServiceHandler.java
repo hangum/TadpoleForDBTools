@@ -41,6 +41,7 @@ public class DownloadServiceHandler implements ServiceHandler {
 	private void makeHtmlFile(HttpServletResponse resp) {
 		try {
 			resp.setContentType("application/octet-stream");
+//			resp.setCharacterEncoding("UTF-8");
 			resp.setContentLength(getByteContent().length);
 			resp.setHeader("Content-Disposition", "attachment; filename=\"" + getName() + "\";");
 			resp.flushBuffer();

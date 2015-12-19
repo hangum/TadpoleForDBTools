@@ -83,6 +83,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.swtdesigner.ResourceManager;
 
 /**
  * result set composite
@@ -178,33 +179,20 @@ public class ResultSetComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(SWT.VERTICAL == sashFormResult.getOrientation()) {
 					sashFormResult.setOrientation(SWT.HORIZONTAL);	
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));					
 				} else {
 					sashFormResult.setOrientation(SWT.VERTICAL);
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/bottom.png"));
 				}
+				
+				layout();
 			}
 		});
 		btnAddVertical.setText(Messages.get().RDBResultComposite_btnOrientation);
+		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);
 		lblTemp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-//		lblResult = new Label(compHead, SWT.NONE);
-//		lblResult.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-//		lblResult.setText(Messages.get().RDBResultComposite_lblResult);
-//		
-//		comboResult = new Combo(compHead, SWT.READ_ONLY);
-//		comboResult.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				changeResultType();
-//			}
-//		});
-//		comboResult.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		for(RESULT_COMP_TYPE resultType : RESULT_COMP_TYPE.values()) {
-//			comboResult.add(resultType.name());
-//			comboResult.setData(resultType.name(), resultType);
-//		}
-//		comboResult.setText(GetPreferenceGeneral.getResultType());
 		
 		sashFormResult = new SashForm(this, SWT.HORIZONTAL);
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
