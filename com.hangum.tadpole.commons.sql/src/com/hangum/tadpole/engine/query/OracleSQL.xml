@@ -694,6 +694,12 @@ ORDER BY s.module, s.username
 	ALTER SYSTEM KILL SESSION '$spid$' IMMEDIATE
 </select>
 
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$
+</select>
 
 <!-- 
 	table information

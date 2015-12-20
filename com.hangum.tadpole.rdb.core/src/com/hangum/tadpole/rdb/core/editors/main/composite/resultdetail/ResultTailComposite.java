@@ -86,8 +86,13 @@ public class ResultTailComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String strPin = btnPin.getToolTipText();
-				if("Pin".equals(strPin)) btnPin.setToolTipText("Unpin");
-				else btnPin.setToolTipText("Pin");
+				if("Pin".equals(strPin)) {
+					btnPin.setToolTipText("Unpin");
+					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+				} else {
+					btnPin.setToolTipText("Pin");
+					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+				}
 				
 				layout();
 			}

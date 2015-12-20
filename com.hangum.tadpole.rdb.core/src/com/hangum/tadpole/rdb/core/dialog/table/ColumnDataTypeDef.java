@@ -22,10 +22,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
  * @author hangum
  *
  */
-public class DataTypeDef {
-	/** 데이터 상태를 표현한다. */
-	public enum DATA_TYPE {NONE, INSERT, MODIFY};
-	
+public class ColumnDataTypeDef {
 	/**
 	 * java.sql.Types에 정의된 모든 데이터 타입의 각 dbms별로 type과 명칭으로 연결한다.
 	 */
@@ -89,6 +86,51 @@ public class DataTypeDef {
 			put(REAL, "REAL");
 			put(DOUBLE, "DOUBLE");
 			put(VARCHAR, "VARCHAR");
+			put(BOOLEAN, "BOOLEAN");
+			put(DATALINK, "DATALINK");
+			put(DATE, "DATE");
+			put(TIME, "TIME");
+			put(TIMESTAMP, "TIMESTAMP");
+			put(OTHER, "OTHER");
+			put(JAVA_OBJECT, "JAVA_OBJECT");
+			put(DISTINCT, "DISTINCT");
+			put(STRUCT, "STRUCT");
+			put(ARRAY, "ARRAY");
+			put(BLOB, "BLOB");
+			put(CLOB, "CLOB");
+			put(REF, "REF");
+			put(SQLXML, "SQLXML");
+			put(NCLOB, "NCLOB");
+		};
+	};
+	
+	private static final HashMap<Integer, String> mysqlNameMap = new HashMap<Integer, String>() {
+		{
+			put(TINYINT, "TINYINT");
+			put(SMALLINT, "SMALLINT");
+//			put(MEDIUMINT, "MEDIUMINT");
+			
+			put(LONGNVARCHAR, "LONGNVARCHAR");
+			put(NCHAR, "NCHAR");
+			put(NVARCHAR, "NVARCHAR");
+			put(ROWID, "ROWID");
+			put(BIT, "BIT");
+			put(TINYINT, "TINYINT");
+			put(BIGINT, "BIGINT");
+			put(LONGVARBINARY, "LONGVARBINARY");
+			put(VARBINARY, "VARBINARY");
+			put(BINARY, "BINARY");
+			put(LONGVARCHAR, "LONGVARCHAR");
+			//put(NULL, "NULL");
+			put(CHAR, "CHAR");
+			put(NUMERIC, "NUMERIC");
+			put(DECIMAL, "DECIMAL");
+			put(INTEGER, "INTEGER");
+			put(SMALLINT, "SMALLINT");
+			put(FLOAT, "FLOAT");
+			put(REAL, "REAL");
+			put(DOUBLE, "DOUBLE");
+			put(VARCHAR, "VARCHAR2");
 			put(BOOLEAN, "BOOLEAN");
 			put(DATALINK, "DATALINK");
 			put(DATE, "DATE");
@@ -223,6 +265,8 @@ public class DataTypeDef {
 		}
 		return false;
 	}
+	
+//	                                                                                                                              
 	
 	/**
 	 * 콤보박스에 넣어줄 전체 데이터타입의 명칭을 조회하여 리턴한다.

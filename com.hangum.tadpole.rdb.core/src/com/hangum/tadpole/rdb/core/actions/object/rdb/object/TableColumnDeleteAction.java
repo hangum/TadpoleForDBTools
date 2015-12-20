@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -19,10 +18,10 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TableColumnObjectQuery;
 
 /**
  * Delete table column action 
@@ -35,7 +34,6 @@ public class TableColumnDeleteAction extends AbstractObjectSelectAction {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TableColumnDeleteAction.class);
-
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.table.column.delete"; //$NON-NLS-1$
 
 	public TableColumnDeleteAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
@@ -47,17 +45,17 @@ public class TableColumnDeleteAction extends AbstractObjectSelectAction {
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		if(selection.isEmpty()) return;
-		if(!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Confirm", "Do you want to delete column?")) return;
-			
-		Object[] arryObj = selection.toArray();
-		for(int i=0; i<arryObj.length; i++) {
-			Object obj = arryObj[arryObj.length-i-1];
-			TableColumnDAO tcDAO = (TableColumnDAO)obj;
-
-			// 
-			
+		if(!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().SessionListEditor_7, Messages.get().TableColumnDeleteAction_2)) return;
+		
+		try {
+			TableColumnObjectQuery.deleteColumn(userDB, selection.toList());
+		} catch (Exception e) {
+			logger.error("Table delete column", e);
+			MessageDialog.openError(null, Messages.get().TDBErroDialog_0, Messages.get().TableColumnDeleteAction_3+"\n"+e.getMessage());
 		}
 		
+		// 테이블 컬럼을 리프레쉬 합니다.
+		refreshTableColumn();
 	}// end method
 	
 }

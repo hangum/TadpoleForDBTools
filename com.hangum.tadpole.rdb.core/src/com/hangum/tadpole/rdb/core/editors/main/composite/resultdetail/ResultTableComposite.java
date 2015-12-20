@@ -513,6 +513,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	
 	@Override
 	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		if(rsDAO == null) return;
+		if(rsDAO.getDataList() == null) return;
+		
 		super.printUI(reqQuery, rsDAO);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();

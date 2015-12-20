@@ -19,7 +19,7 @@ import com.hangum.tadpole.commons.util.Utils;
  * @author hangum
  *
  */
-public class PreferenceDefine {
+public class PreferenceDefine extends AdminPreferenceDefine {
 	
 	/**시스템이 초기화 되었는지 정의 */
 	public static final String IS_TADPOLE_INITIALIZE = "IS_TADPOLE_INITIALIZE";

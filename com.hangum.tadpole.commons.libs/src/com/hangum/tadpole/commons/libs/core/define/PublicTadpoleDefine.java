@@ -26,6 +26,8 @@ import org.eclipse.rap.rwt.RWT;
 public class PublicTadpoleDefine {
 	/** url system verion information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
+	
+	public static final int systemAdminId = -1;
 
 	/** 시스템 사용 그룹 정의 */
 	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  
@@ -48,12 +50,12 @@ public class PublicTadpoleDefine {
 	public static String STATEMENT_ID = "||TDB_STATEMENT_ID||"; //$NON-NLS-1$
 
 	/** 0번째 테이블 컬럼을 선택한다 */
-	public static String DEFINE_TABLE_COLUMN_BASE_ZERO = "_TDB_BASE_ZERO_";
+	public static String DEFINE_TABLE_COLUMN_BASE_ZERO = "TDB_BASE_ZERO";
 	
 	/**
 	 * 특별 컬럼을 정의 합니다. 
 	 */
-	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "_TDB_HIDE_";
+	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "TDB_HIDE";
 	
 	/**
 	 * 분리자

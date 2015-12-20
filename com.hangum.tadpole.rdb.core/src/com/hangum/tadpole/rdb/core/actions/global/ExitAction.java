@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -57,7 +58,6 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	@Override
 	public void run() {
 		final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		
 		if(ApplicationArgumentUtils.isStandaloneMode()) {
 			MessageDialog dialog = new MessageDialog(shell, Messages.get().ExitAction_2, null, Messages.get().ExitAction_4, 
 										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().ExitAction_6, Messages.get().ExitAction_7}, 1);
@@ -68,7 +68,11 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 			} else if(intResult == 1) {
 				serverLogout();
 			}
-			
+		} else if(TadpoleApplicationContextManager.isPersonOperationType()) {
+			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_4) ) {
+				serverLogout();
+				System.exit(0);
+			}
 		} else {
 			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_3) ) {
 				serverLogout();

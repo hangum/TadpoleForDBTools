@@ -31,6 +31,7 @@ public class RequestResultDAO {
 
 	Timestamp endDateExecute;
 	int rows;
+	boolean dataChanged = false;
 	String result = PublicTadpoleDefine.SUCCESS_FAIL.S.toString();
 	String messsage = "";
 
@@ -217,4 +218,19 @@ public class RequestResultDAO {
 	public void setException(Exception exception) {
 		this.exception = exception;
 	}
+
+	/**
+	 * @return the dataChanged
+	 */
+	public boolean isDataChanged() {
+		return dataChanged;
+	}
+
+	/**
+	 * @param dataChanged the dataChanged to set
+	 */
+	public void setDataChanged(boolean dataChanged) {
+		this.dataChanged = dataChanged;
+	}
+
 }

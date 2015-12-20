@@ -64,7 +64,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			
 			strArrys = new String[mapColumns.size()-1];
 			for(int j=1; j<mapColumns.size(); j++) {
-				strArrys[j-1] = ""+mapColumns.get(j); //$NON-NLS-1$
+				strArrys[j-1] = mapColumns.get(j) == null?"":""+mapColumns.get(j); //$NON-NLS-1$
 			}
 			listCsvData.add(strArrys);
 			

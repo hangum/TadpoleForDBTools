@@ -89,7 +89,8 @@ SELECT TABLE_NAME name	FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0
          column_key "key",
          column_default "default",
          extra,
-         column_comment "comment"
+         column_comment "comment", 
+         collation_name
 	FROM information_schema.columns
 	WHERE table_schema = #db# AND 
 		table_name = #table#
@@ -218,6 +219,12 @@ where 1=1
 order by c.ordinal_position
 </select>
 
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$
+</select>
 
 <!-- 
 	table information

@@ -79,8 +79,8 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		comboRDBResultType = new Combo(container, SWT.READ_ONLY);
 		comboRDBResultType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboRDBResultType.add("Table");
-		comboRDBResultType.add("Text");
-		comboRDBResultType.add("JSON");
+//		comboRDBResultType.add("Text");
+//		comboRDBResultType.add("JSON");
 		comboRDBResultType.select(0);
 		
 		Label lblNumberColumnAdd = new Label(container, SWT.NONE);

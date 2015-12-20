@@ -36,6 +36,22 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class DBSystemSchema {
 	
 	/**
+	 * get table row count
+	 * 
+	 * @param userDB
+	 * @param strTableName
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static int getTableRowCount(final UserDBDAO userDB, final String strTableName)  throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		Integer listView = (Integer)sqlClient.queryForObject("tableRowCount", strTableName);
+		
+		return listView;
+	}
+	
+	/**
 	 * get view List
 	 * 
 	 * @param userDB

@@ -503,6 +503,7 @@ public class Messages {
 	public String TadpoleTableComposite_15;
 	public String TadpoleTableComposite_16;
 	public String TadpoleTableComposite_17;
+	public String TadpoleTableComposite_18;
 	public String TadpoleTableComposite_2;
 	public String TadpoleTableComposite_3;
 	public String TadpoleTableComposite_4;
@@ -797,6 +798,34 @@ public class Messages {
 	public String RDBResultComposite_lblResult;
 	public String RDBResultComposite_btnOrientation;
 	public String TableColumnDeleteAction_1;
+	public String TableColumnDeleteAction_2;
+	public String TableColumnDeleteAction_3;
+	public String ObjectRenameAction_0;
+	public String ObjectRenameAction_1;
+	public String ObjectRenameAction_2;
+	public String TableColumnAddAction_1;
+	public String TableColumnRenameAction_0;
+	public String TableColumnRenameAction_1;
+	public String ObjectRenameValidator_0;
+	public String TableColumnRenameValidator_0;
+	public String TableColumnRenameAction;
+	public String MySQLTableColumnDialog_0;
+	public String MySQLTableColumnDialog_1;
+	public String MySQLTableColumnDialog_19;
+	public String MySQLTableColumnDialog_2;
+	public String MySQLTableColumnDialog_20;
+	public String MySQLTableColumnDialog_23;
+	public String MySQLTableColumnDialog_24;
+	public String MySQLTableColumnDialog_25;
+	public String MySQLTableColumnDialog_26;
+	public String MySQLTableColumnDialog_27;
+	public String MySQLTableColumnDialog_29;
+	public String MySQLTableColumnDialog_3;
+	public String MySQLTableColumnDialog_31;
+	public String MySQLTableColumnDialog_32;
+	public String MySQLTableColumnDialog_33;
+	public String MySQLTableColumnDialog_4;
+	public String MySQLTableColumnDialog_5;
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }

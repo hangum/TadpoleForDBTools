@@ -34,9 +34,9 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  */
 public abstract class AbstractObjectAction extends Action implements ISelectionListener, IWorkbenchAction {
 
-	private IWorkbenchWindow window;				  
-	UserDBDAO userDB = null;
-	IStructuredSelection selection;
+	protected IWorkbenchWindow window;				  
+	protected UserDBDAO userDB = null;
+	protected IStructuredSelection selection;
 
 	private PublicTadpoleDefine.OBJECT_TYPE actionType;
 	
@@ -76,9 +76,6 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * @param e
 	 */
 	protected void exeMessage(String msgHead, Exception e) {
-//		Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//		ExceptionDetailsErrorDialog.openError(null, "Error", msgHead + Messages.get().ObjectDeleteAction_25, errStatus); //$NON-NLS-1$
-		
 		TDBErroDialog errDialog = new TDBErroDialog(null, msgHead + Messages.get().ObjectDeleteAction_25, e.getMessage());
 		errDialog.open();
 	}
@@ -87,8 +84,23 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * table 최신정보로 갱신
 	 */
 	protected void refreshTable() {
+		refreshTable("");		
+	}
+	
+	/**
+	 * table 최신정보로 갱신
+	 */
+	protected void refreshTable(String strTableName) {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshTable(true, "");		
+		if(ev != null) ev.refreshTable(true, strTableName);		
+	}
+	
+	/**
+	 * Refresh table column
+	 */
+	protected void refreshTableColumn() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshTableColumn();
 	}
 	
 	/**

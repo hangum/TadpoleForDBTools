@@ -11,7 +11,6 @@
 package com.hangum.tadpole.commons.util.download;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.service.ServiceHandler;
-
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * 쿼리결과, 히스토리 다운로드 서비스
@@ -42,30 +39,16 @@ public class DownloadServiceHandler implements ServiceHandler {
 	}
 
 	private void makeHtmlFile(HttpServletResponse resp) {
-		OutputStream os = null;
 		try {
-			String contentType = getContentType().equals("") ? "text/plain" : getContentType();
-
-			// Set response headers
-			resp.setContentType(contentType);
+			resp.setContentType("application/octet-stream");
+//			resp.setCharacterEncoding("UTF-8");
 			resp.setContentLength(getByteContent().length);
-			resp.setHeader("Content-Disposition", "attachment; filename=" + "\"" + getName() + "\"" + PublicTadpoleDefine.SQL_DELIMITER);
+			resp.setHeader("Content-Disposition", "attachment; filename=\"" + getName() + "\";");
 			resp.flushBuffer();
-			// Copy documentation to responce's output stream.
-			os = resp.getOutputStream();
-			os.write(getByteContent());
-			os.flush();
+			resp.getOutputStream().write(getByteContent());
 		} catch (Exception e) {
 			logger.error("download make exception", e);
 			throw new IllegalArgumentException("Download failed. Exception: " + e.getLocalizedMessage());
-		} finally {
-			try {
-				if (os != null) {
-					os.close();
-				}
-			} catch (IOException e) {
-				// Ignore
-			}
 		}
 	}
 

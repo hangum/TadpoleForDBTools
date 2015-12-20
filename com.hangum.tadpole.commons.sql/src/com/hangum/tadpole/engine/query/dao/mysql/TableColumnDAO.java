@@ -29,6 +29,8 @@ package com.hangum.tadpole.engine.query.dao.mysql;
  *
  */
 public class TableColumnDAO {
+	TableDAO tableDao;
+	
 	String sysName = "";
 	
 	// MySQL, Oracle 사용하는 컬럼.
@@ -38,6 +40,7 @@ public class TableColumnDAO {
 	String Key= "";
 	String Default= "";
 	String Extra= "";
+	String collation_name = "";
 	
 	// SQLite에서 사용하는 컬럼.
 	String cid= "";
@@ -234,5 +237,33 @@ public class TableColumnDAO {
 	public void setCol_value(String col_value) {
 		this.col_value = col_value;
 	}
-	
+
+	/**
+	 * @return the tableDao
+	 */
+	public TableDAO getTableDao() {
+		return tableDao;
+	}
+
+	/**
+	 * @param tableDao the tableDao to set
+	 */
+	public void setTableDao(TableDAO tableDao) {
+		this.tableDao = tableDao;
+	}
+
+	/**
+	 * @return the collation_name
+	 */
+	public String getCollation_name() {
+		return collation_name;
+	}
+
+	/**
+	 * @param collation_name the collation_name to set
+	 */
+	public void setCollation_name(String collation_name) {
+		this.collation_name = collation_name;
+	}
+
 }

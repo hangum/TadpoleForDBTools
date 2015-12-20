@@ -39,7 +39,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -49,6 +48,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
@@ -63,17 +63,13 @@ import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
-import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite.RESULT_COMP_TYPE;
-import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultJsonComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTailComposite;
-import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTextComposite;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -87,6 +83,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.swtdesigner.ResourceManager;
 
 /**
  * result set composite
@@ -125,8 +122,8 @@ public class ResultSetComposite extends Composite {
 	private ProgressBar progressBarQuery;
 	private Button btnStopQuery;
 	
-	private Label lblResult;
-	private Combo comboResult;
+//	private Label lblResult;
+//	private Combo comboResult;
 	
 	private SashForm sashFormResult;
 	/** 쿼리 결과 컴포짖 */
@@ -182,38 +179,33 @@ public class ResultSetComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(SWT.VERTICAL == sashFormResult.getOrientation()) {
 					sashFormResult.setOrientation(SWT.HORIZONTAL);	
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));					
 				} else {
 					sashFormResult.setOrientation(SWT.VERTICAL);
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/bottom.png"));
 				}
+				
+				layout();
 			}
 		});
 		btnAddVertical.setText(Messages.get().RDBResultComposite_btnOrientation);
+		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);
 		lblTemp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		lblResult = new Label(compHead, SWT.NONE);
-		lblResult.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblResult.setText(Messages.get().RDBResultComposite_lblResult);
-		
-		comboResult = new Combo(compHead, SWT.READ_ONLY);
-		comboResult.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				changeResultType();
-			}
-		});
-		comboResult.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for(RESULT_COMP_TYPE resultType : RESULT_COMP_TYPE.values()) {
-			comboResult.add(resultType.name());
-			comboResult.setData(resultType.name(), resultType);
-		}
-		comboResult.setText(GetPreferenceGeneral.getResultType());
-		
 		sashFormResult = new SashForm(this, SWT.HORIZONTAL);
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-//		makeResultType();
+		compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
+		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+		
+		GridLayout gl_compositeResult = new GridLayout(1, false);
+		gl_compositeResult.verticalSpacing = 2;
+		gl_compositeResult.horizontalSpacing = 2;
+		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginWidth = 2;
+		compositeResult.setLayout(gl_compositeResult);
 	}
 
 	/**
@@ -432,7 +424,7 @@ public class ResultSetComposite extends Composite {
 							executeFinish(reqQuery);
 						} else {
 							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
-//							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
+							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
 						}
 						
 						// 히스토리 화면을 갱신합니다.
@@ -660,7 +652,11 @@ public class ResultSetComposite extends Composite {
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
 		if(extensions == null) return;
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
-			iMainEditorExtension.queryEndedExecute(rsDAO);
+			try {
+				iMainEditorExtension.queryEndedExecute(rsDAO);
+			} catch(Exception e) {
+				logger.error("sql result extension", e);
+			}
 		}
 
 		// 주의) 일반적으로는 포커스가 잘 가지만, 
@@ -738,51 +734,59 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void changeResultType() {
+		if(!compositeResult.getCompositeTail().getBtnPinSelection()) {
+			compositeResult.printUI(reqQuery, rsDAO);
+		} else {
+			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
+			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+			compositeResult.printUI(reqQuery, rsDAO);
+			
+			GridLayout gl_compositeResult = new GridLayout(1, false);
+			gl_compositeResult.verticalSpacing = 2;
+			gl_compositeResult.horizontalSpacing = 2;
+			gl_compositeResult.marginHeight = 0;
+			gl_compositeResult.marginWidth = 2;
+			compositeResult.setLayout(gl_compositeResult);
+		}
+		
+		resultSashLayout();
+	}
+	
+	/**
+	 * refresh sash layout form
+	 * 
+	 */
+	private void resultSashLayout() {
 		Map<Integer, Float> mapWidths = new HashMap<Integer, Float>();
 		Map<Integer, Float> mapHeight = new HashMap<Integer, Float>();
 		int intParentWidth = sashFormResult.getBounds().width;
 		int intParentHeight = sashFormResult.getBounds().height;
-		
-		Control[] childControls = sashFormResult.getChildren();
 		int intTmpCount = 0;
-		for (int i=0; i<childControls.length; i++) {
-			Control control = childControls[i];
-			if(control instanceof AbstractResultDetailComposite) {
-				AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
-				ResultTailComposite tailComposite = resultComposite.getCompositeTail();
-				if(!tailComposite.getBtnPinSelection()) {
-					resultComposite.dispose();
-				} else {
-					mapWidths.put(intTmpCount, ((float)resultComposite.getBounds().width / (float)intParentWidth));
-					mapHeight.put(intTmpCount, ((float)resultComposite.getBounds().height / (float)intParentHeight));
-					intTmpCount++;
+		
+		try {
+			List<AbstractResultDetailComposite> listDisComp = new ArrayList<>();
+			Control[] childControls = sashFormResult.getChildren();
+			for (int i=0; i<childControls.length; i++) {
+				Control control = childControls[i];
+				if(control instanceof AbstractResultDetailComposite) {
+					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
+					ResultTailComposite tailComposite = resultComposite.getCompositeTail();
+					if(!tailComposite.getBtnPinSelection()) {
+						listDisComp.add(resultComposite);
+					} else {
+						mapWidths.put(intTmpCount, ((float)resultComposite.getBounds().width / (float)intParentWidth));
+						mapHeight.put(intTmpCount, ((float)resultComposite.getBounds().height / (float)intParentHeight));
+						intTmpCount++;
+					}
 				}
 			}
-		}
-
-		RESULT_COMP_TYPE resultComp = (RESULT_COMP_TYPE)comboResult.getData(comboResult.getText());
-		if(resultComp == RESULT_COMP_TYPE.Table) {
-			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
-			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-			compositeResult.printUI(reqQuery, rsDAO);
-		} else if(resultComp == RESULT_COMP_TYPE.Text) {
-			compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, this);
-			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-			compositeResult.printUI(reqQuery, rsDAO);
-		} else if(resultComp == RESULT_COMP_TYPE.JSON) {
-			String strDefaultValue = JsonExpoter.makeContent("", rsDAO);
-			compositeResult = new ResultJsonComposite(sashFormResult, SWT.BORDER, this, strDefaultValue);
-			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-		}
-		GridLayout gl_compositeResult = new GridLayout(1, false);
-		gl_compositeResult.verticalSpacing = 2;
-		gl_compositeResult.horizontalSpacing = 2;
-		gl_compositeResult.marginHeight = 0;
-		gl_compositeResult.marginWidth = 2;
-		compositeResult.setLayout(gl_compositeResult);
-		
-		// calculation
-		try {
+			
+			// 삭제한다.
+			int intDispCount = listDisComp.size()-1;
+			for(int i=0; i<intDispCount; i++) {
+				listDisComp.get(i).dispose();
+			}
+			
 			int weights[] = new int[mapWidths.size()+1];
 			if(mapWidths.size() != 0) {
 				for (int i=0; i<mapWidths.size(); i++) {

@@ -122,7 +122,25 @@ public class TadpoleSystem_UserInfoData {
 		// session 에도 암호화 되게 저장합니다. 
 		SessionManager.setUserInfo(key, CipherManager.getInstance().encryption(value));
 	}
-
+	
+	/**
+	 * update admin value
+	 * @param key
+	 * @param value
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static UserInfoDataDAO updateAdminValue(String key, String value)  throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(PublicTadpoleDefine.systemAdminId);
+		
+		userInfoData.setName(key);
+		userInfoData.setValue0(value);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		return userInfoData;
+	}
 
 	/**
 	 * update key, value
@@ -142,7 +160,6 @@ public class TadpoleSystem_UserInfoData {
 		
 		SessionManager.setUserInfo(key, value);
 	}
-	
 
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
