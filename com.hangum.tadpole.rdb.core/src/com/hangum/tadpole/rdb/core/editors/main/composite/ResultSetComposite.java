@@ -179,10 +179,10 @@ public class ResultSetComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(SWT.VERTICAL == sashFormResult.getOrientation()) {
 					sashFormResult.setOrientation(SWT.HORIZONTAL);	
-					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));					
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/bottom.png"));										
 				} else {
 					sashFormResult.setOrientation(SWT.VERTICAL);
-					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/bottom.png"));
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
 				}
 				
 				layout();
