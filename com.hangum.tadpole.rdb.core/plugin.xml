@@ -697,7 +697,7 @@
                enablesFor="1"
                icon="resources/icons/history.png"
                id="com.hangum.tadpole.rdb.core.action.historyResource"
-               label="History"
+               label="%action.label.history"
                menubarPath="additions">
          </action>
          <visibility>
