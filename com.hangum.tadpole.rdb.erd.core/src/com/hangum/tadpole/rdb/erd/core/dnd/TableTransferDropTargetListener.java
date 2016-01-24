@@ -133,8 +133,9 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
 						if(arryTable.length == 0) continue;
 						
-						String tableName = arryTable[0];
-						mapTable.put(tableName, getColumns(tableName));
+						String schemaName = arryTable[0];
+						String tableName = arryTable[1];
+						mapTable.put(tableName, getColumns(schemaName, tableName));
 					}
 					
 				} catch(Exception e) {
@@ -192,7 +193,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
 			if(arryTable.length == 0) continue;
 			
-			String tableName = arryTable[0];
+			String tableName = arryTable[1];
 			String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 			
 			// 이미 editor 상에 테이블 정보를 가져온다.
@@ -210,13 +211,13 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				tableModel.setName(tableName);
 				tableModel.setDb(db);
 				
-				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-					tableModel.setComment("");
-				} else {
-					String tableComment = arryTable[1];
+//				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+//					tableModel.setComment("");
+//				} else {
+					String tableComment = arryTable[2];
 					tableComment = StringUtils.substring(""+tableComment, 0, 10);
 					tableModel.setComment(tableComment);
-				}
+//				}
 				
 				// 테이블의 좌표를 잡아줍니다. 
 				prevRectangle = new Rectangle(nextTableX, 
@@ -275,9 +276,10 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	 * @return
 	 * @throws Exception
 	 */
-	private List<TableColumnDAO> getColumns(String strTBName) throws Exception {
+	private List<TableColumnDAO> getColumns(String strSchema, String strTBName) throws Exception {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("db", userDB.getDb()); //$NON-NLS-1$
+		param.put("schema", strSchema);
 		param.put("table", strTBName);			 //$NON-NLS-1$
 
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
