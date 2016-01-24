@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -48,12 +49,14 @@ public class TableDragListener implements DragSourceListener {
 			
 			for(Object objTable : iss.toList()) {
 				TableDAO td = (TableDAO)objTable;//iss.getFirstElement();
-				if(userDB.getDbms_type().equals(DBDefine.SQLite_DEFAULT)) {
-					sbData.append(td.getName() + PublicTadpoleDefine.DELIMITER + "");
-				} else {
-					sbData.append(td.getName() + PublicTadpoleDefine.DELIMITER + td.getComment());
-				}
-				sbData.append(PublicTadpoleDefine.DELIMITER + PublicTadpoleDefine.DELIMITER_DBL);
+				String strSchemaName = StringUtils.defaultIfEmpty(td.getSchema_name(), " ");
+				String strCommnet = StringUtils.defaultIfEmpty(td.getComment(), " ");
+				
+				sbData.append(strSchemaName + PublicTadpoleDefine.DELIMITER + 
+							  td.getName() + PublicTadpoleDefine.DELIMITER + 
+							  strCommnet + PublicTadpoleDefine.DELIMITER + 
+							  PublicTadpoleDefine.DELIMITER_DBL
+						);
 			}
 			
 			event.data = sbData.toString();
