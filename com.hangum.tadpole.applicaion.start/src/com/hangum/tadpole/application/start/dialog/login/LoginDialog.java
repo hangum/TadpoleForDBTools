@@ -128,7 +128,7 @@ public class LoginDialog extends Dialog {
 		lblLoginForm.setText("Welcome to the Tadpole DB Hub");
 		
 		lblLabelLblhangum = new Label(compositeHead, SWT.NONE);
-		lblLabelLblhangum.setText("             Projects release by hangum");
+		lblLabelLblhangum.setText("             Project release by hangum");
 		
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
