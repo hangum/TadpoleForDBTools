@@ -105,7 +105,8 @@ public enum TadpoleModelUtils {
 				tableModel.setComment("");	
 			} else {
 				String tableComment = table.getComment();
-				tableComment = StringUtils.substring(""+tableComment, 0, 10);
+				if(tableComment == null) tableComment = "";
+				tableComment = StringUtils.substring(tableComment, 0, 10);
 				tableModel.setComment(tableComment);
 			}
 			
@@ -143,7 +144,7 @@ public enum TadpoleModelUtils {
 				
 				String strComment = columnDAO.getComment();
 				if(strComment == null) strComment = "";
-				strComment = StringUtils.substring(""+strComment, 0, 10);
+				strComment = StringUtils.substring(strComment, 0, 10);
 				column.setComment(strComment);
 				
 				column.setTable(tableModel);
