@@ -67,8 +67,10 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectio
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableColumnLabelprovider;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TableFilter;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -90,7 +92,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private TableViewer viewColumnViewer;
 	private ObjectComparator tableColumnComparator;
 	private List<TableColumnDAO> showViewColumns = new ArrayList<>();
-	private TadpoleViewFilter viewFilter;
+	private TableFilter viewFilter;
 	
 	private ObjectCreatAction creatAction_View;
 	private ObjectDropAction deleteAction_View;
@@ -201,7 +203,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		tableTableList.setHeaderVisible(true);
 
 		// sorter
-		viewComparator = new ObjectComparator();
+		viewComparator = new TableComparator();
 		viewListViewer.setSorter(viewComparator);
 		viewComparator.setColumn(0);
 
@@ -226,7 +228,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewListViewer.setContentProvider(new ArrayContentProvider());
 		viewListViewer.setInput(showViews);
 		
-		viewFilter = new TadpoleViewFilter();
+		viewFilter = new TableFilter();
 		viewListViewer.addFilter(viewFilter);
 
 		createMenu();
