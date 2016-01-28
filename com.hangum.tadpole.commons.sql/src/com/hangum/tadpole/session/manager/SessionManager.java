@@ -16,6 +16,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
@@ -267,26 +268,34 @@ public class SessionManager {
 	 * logout 처리를 합니다.
 	 */
 	public static void logout() {
+		HttpServletRequest request = RWT.getRequest();
 		try {
-			HttpSession sStore = RWT.getRequest().getSession();			
+			HttpSession sStore = request.getSession();			
 			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
 			sStore.invalidate();
-			
-			//fixed https://github.com/hangum/TadpoleForDBTools/issues/647
-			String defaultUrl = MessageFormat.format(
-				"{0}://{1}:{2}{3}",
-				new Object[] {	RWT.getRequest().getScheme(), 
-								RWT.getRequest().getLocalName(),
-								Integer.toString(RWT.getRequest().getLocalPort()),
-								RWT.getRequest().getRequestURI() 
-							}
-			);
-	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", defaultUrl);
-	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
-	     	executor.execute("setTimeout('"+browserText+"', 100)" );
 		} catch(Exception e) {
 			// ignore exception
 		}
+		
+		//fixed https://github.com/hangum/TadpoleForDBTools/issues/647
+//		String defaultUrl = MessageFormat.format(
+//			"{0}://{1}:{2}{3}",
+//			new Object[] {	request.getScheme(), 
+//							request.getLocalName(),
+//							Integer.toString(request.getLocalPort()),
+//							request.getRequestURI() 
+//						}
+//		);
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("==request url=> " + request.getRequestURL());
+//			logger.debug("==request query string=> " + request.getQueryString());
+//		}
+		
+		// fixed https://github.com/hangum/TadpoleForDBTools/issues/708
+     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", request.getRequestURL());
+     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
+     	executor.execute("setTimeout('"+browserText+"', 100)" );
+		
 	}
 	
 	/**
