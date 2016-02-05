@@ -13,7 +13,7 @@
  */
 var editorService = {
 	/** initialize editor */
-	RDBinitEditor : function(varMode, varType, varTableList, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
+	RDBinitEditor : function(varMode, varType, varTableList, varInitText, varAutoSave, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
 	MONGODBinitEditor : function(varMode, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
 	/** change editor style */
 	changeEditorStyle : function(varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
@@ -35,7 +35,7 @@ var editorService = {
 
 	setTabSize : function(varTabSize) {},
 	getAllText : function() {},
-	getSelectedText : function(varDelimiter) {},
+	getSelectedText : function() {},
 	setSelectedText : function() {},
 	
 	/** insert text */
@@ -59,8 +59,10 @@ var editorService = {
 	
 	/** dirty chage event */
 	DIRTY_CHANGED 		: "1",
+	CONTENT_ASSIST		: "5",
 		
 	SAVE 				: "15",
+	AUTO_SAVE			: "16",
 	EXECUTE_QUERY 		: "25",
 	EXECUTE_ALL_QUERY 	: "26",
 	EXECUTE_PLAN  		: "30",
@@ -73,8 +75,15 @@ var editorService = {
 //var editor;
 /** 에디터가 저장 할 수 있는 상태인지 */
 var isEdited = false;
+/** 에디터에서 사용하는 쿼리 분리자 */
+var varDelimiter = ";";
 /** open 된 에디터 타입 */
 var varEditorType = 'TABLES';
+/** default key word list */
+var default_keywordList = [];
+/** auto save에서 사용하기 위해 마지막으로 호출한 값을 기록 */
+var strLastContent;
+
 /** initialize editor */
 //{
 	var langTools = ace.require("ace/ext/language_tools");
@@ -91,7 +100,7 @@ var varEditorType = 'TABLES';
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
 	    enableSnippets: true,
-	    enableLiveAutocompletion: true
+	    enableLiveAutocompletion: false
 	}); 
 	
 //};
@@ -102,6 +111,7 @@ var varEditorType = 'TABLES';
  * @param varTableList table list
  * @param varType editorType (sql or procedure )
  * @param varInitText
+ * @param varAutoSave
  * @param varTheme is editor theme
  * @param varFontSize  font size of editor
  * @param varIsWrap Wrap of editor
@@ -109,10 +119,11 @@ var varEditorType = 'TABLES';
  * @param varIsShowGutter Show gutter is editoe
  * 
  */
-editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
+editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitText, varAutoSave, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
 	varEditorType = varType;
 	
 	var session = new EditSession(varInitText);
+	strLastContent = varInitText;
 	try {
 		session.setUndoManager(new UndoManager());
 		session.setMode(varMode);
@@ -127,9 +138,9 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 			}
 		});
 		
-		if(varTableList != '') {
-			var keywordList = session.$mode.$highlightRules.$keywordList;
-			if(keywordList != null) session.$mode.$highlightRules.$keywordList = keywordList.concat(varTableList.split("|"));
+		var tmpCtsList = varTableList.split("|");
+		for(var i=0; i< tmpCtsList.length; i++) {
+			default_keywordList.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
 		}
 	} catch(e) {
 		console.log(e);
@@ -150,9 +161,28 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 		console.log(e);
 	}
 	
+	if(varAutoSave == 'true') autoSave();
+	
 	editor.setSession(session);
 	editor.focus();
 };
+// auto save
+autoSave = function() {
+	var varAllTxt = editorService.getAllText();
+	if(strLastContent != varAllTxt) {
+		try {
+			if('' != varAllTxt) {
+				var boolDoSave = AceEditorBrowserHandler(editorService.AUTO_SAVE, varAllTxt);
+				strLastContent = varAllTxt;
+			}
+		} catch(e) {
+			console.log(e);
+		}
+	}
+	
+	window.setTimeout(autoSave, 30 * 1000);
+}
+
 /** 
  * 에디터를 초기화 합니다. 
  * @param varMode sql type(ex: sqlite, pgsql, javascript) EditorDefine#EXT_SQLite
@@ -160,7 +190,7 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
  * 
  */
 editorService.MONGODBinitEditor = function(varMode, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
-	editorService.RDBinitEditor(varMode, 'NONE', '', varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter);
+	editorService.RDBinitEditor(varMode, 'NONE', '', varInitText, 'false', varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter);
 };
 /*
  * change editor style
@@ -221,6 +251,52 @@ editorService.setFocus = function() {
 
 //==[ Define short key ]======================================================================================================================
 var shortcutErrMsg = 'Oops, an execution error has occured!\nEither click the "SQL" button of the tool bar, or open a new editor window.';
+editor.commands.on("afterExec", function(e) { 
+	if (e.command.name == "insertstring"&&/^[\\.\(.]$/.test(e.args)) {
+		tdbContentAssist();
+    }
+}); 
+editor.commands.addCommand({
+    name: 'contentassist',
+    bindKey: {win: 'Ctrl-Space',  mac: 'Ctrl-Space'},
+    exec: function(editor) {
+    	tdbContentAssist();
+    },
+    readOnly: false
+});
+
+/** content assist */
+tdbContentAssist = function() {
+	try {
+		var arrySQL = caParsePartSQL();
+		var newKeyword = AceEditorBrowserHandler(editorService.CONTENT_ASSIST, arrySQL[0], arrySQL[1]);
+		var completions = [];
+		
+		if("" != newKeyword) {
+			var arryGroupKeyWord = newKeyword.split("||");
+			for(var i=0; i<arryGroupKeyWord.length; i++) {
+				var keyWord = arryGroupKeyWord[i].split("|");
+				completions.push({value: keyWord[0], score: 1, meta: keyWord[1]});
+			}
+		}
+		
+		// 마지막에 디폴트 키워드를 추가한다.
+		for(var i=0; i< default_keywordList.length; i++) {
+			completions.push(default_keywordList[i]);
+		}
+
+		editor.completers = [];
+		editor.completers.push({
+			getCompletions: function(editor, session, pos, prefix, callback) {
+				callback(null, completions);
+			}
+		});
+		editor.execCommand("startAutocomplete");
+	}catch(e) {
+		console.log(e);
+	}
+};
+
 editor.commands.addCommand({
     name: 'save',
     bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
@@ -248,13 +324,12 @@ editorService.isBlockText = function() {
 	return false;
 }
 
-
 editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
     	try {
-    		var selectTxt = editorService.getSelectedText(";");
+    		var selectTxt = editorService.getSelectedText();
    			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, selectTxt, editorService.isBlockText());
     	} catch(e) {
     		console.log(e);
@@ -275,20 +350,9 @@ editor.commands.addCommand({
     			// 현재 행의 텍스트.
     			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
     			if(startQueryLine != "") {
-	
 	    			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
-	    			var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
-	    			var strArryBeforeTxt = strBeforeTxt.split(' ');
-	
-	    			// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
-	    			var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
-	    			var strArryAfterTxt = strAfterTxt.split(' ');
-	    			var strTableName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
-	    			
-	    			// 마지막 문자가 ; 라면 제거해준다.
-	    			strTableName = strTableName.replace(";", "");
-	    			
-	    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, strTableName);
+    				var strObjectName = parseCursorObject();
+	    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, strObjectName);
     			}
     		}
     	} catch(e) {
@@ -309,20 +373,8 @@ editor.commands.addCommand({
     			// 현재 행의 텍스트.
     			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
     			if(startQueryLine != "") {
-	
-	    			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
-	    			var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
-	    			var strArryBeforeTxt = strBeforeTxt.split(' ');
-	
-	    			// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
-	    			var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
-	    			var strArryAfterTxt = strAfterTxt.split(' ');
-
-	    			var strTableName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
-	    			// 마지막 문자가 ; 라면 제거해준다.
-	    			strTableName = strTableName.replace(";", "");
-	    			
-	    			AceEditorBrowserHandler(editorService.GENERATE_SELECT, strTableName);
+	    			var strObjectName = parseCursorObject();
+	    			AceEditorBrowserHandler(editorService.GENERATE_SELECT, strObjectName);
     			}
     		}
     	} catch(e) {
@@ -331,6 +383,26 @@ editor.commands.addCommand({
     },
     readOnly: false
 });
+/**
+ * parse cursor object
+ * @returns
+ */
+parseCursorObject = function() {
+	// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
+	var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+	var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
+	var strArryBeforeTxt = strBeforeTxt.split(' ');
+
+	// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
+	var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
+	var strArryAfterTxt = strAfterTxt.split(' ');
+
+	var strObjectName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
+	// 마지막 문자가 ; 라면 제거해준다.
+	strObjectName = strObjectName.replace(varDelimiter, "");
+	
+	return strObjectName;
+}
 editor.commands.addCommand({
     name: 'executePlan',
     bindKey: {win: 'Ctrl-E',  mac: 'Command-E'},
@@ -406,7 +478,7 @@ editorService.getAllText = function() {
 /** set seltected text */
 editorService.setSelectedText = function() {
 	// selected text
-	var selectTxt = editorService.getSelectedText(";");
+	var selectTxt = editorService.getSelectedText();
 	var intQueryLine = editor.getCursorPosition().row;
 	editor.gotoLine(intQueryLine-1);
 	
@@ -418,10 +490,8 @@ editorService.setSelectedText = function() {
  * 1. 선택된 블럭이 있다면 블럭의 쿼리를 가져옵니다.
  * 2. 구분자가 없다면 쿼리 전체를 가져옵니다.
  * 3. 구분자가 2개이상이라면 구분자를 기준으로 선택된 행의 구분자를 처리합니다.
- * 
- * @param varDelimiter 구분자.
  */
-editorService.getSelectedText = function(varDelimiter) {
+editorService.getSelectedText = function() {
 	var varEditorContent = editor.getValue();
 	if("" == varEditorContent) return "";
 	
@@ -452,164 +522,12 @@ editorService.getSelectedText = function(varDelimiter) {
 			
 		// 선택된 텍스트가 없다면 구분자 만큼 넘겨줍니다.
 		} else {
-			var strReturnSQL = "";
-			
-			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
-			
-			if(!stringStartsWith(startQueryLine, "--") && startQueryLine.lastIndexOf(varDelimiter) != -1) {
-				// 선택된 행에 종료 문자가 있다면 
-					// 행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
-					// 종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
-//				console.log(" [1] 선택된 행에 종료 문자가 있다면 .................. ");
-				
-				// 자신보다 한 행위의 쿼리를 읽어 들입니다.
-				//
-//				console.log("========== 선택된 행에 종료 문자가 있다면===");
-				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
-//				console.log("[findPreviousSQL is " + strReturnSQL);
-
-				strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
-//				console.log("[fully SQL is " + strReturnSQL);
-				
-			} else {
-//				console.log(" [2] 선택된 행에 종료 문자가 없다면 .................. ");
-				// 선택된 행에 종료 문자가 없다면
-				strReturnSQL = findPreviousChar((editor.getCursorPosition().row -1), varDelimiter);
-//				console.log("[findPreviousSQL is " + strReturnSQL);
-				
-				strReturnSQL += startQueryLine + "\n";
-				
-				strReturnSQL += findNextCharacter((editor.getCursorPosition().row +1), varDelimiter);
-//				console.log("[findNextSQL is " + strReturnSQL);
-			}
-			
-			// 만약에 쿼리를 발견하지 못했다면, 자신의 윗행으로 찾아 마지막 종료 문자의 쿼리를 찾습니다.
-			if(strReturnSQL.trim() == "") {
-				var intDelimiterLineNumber = findPreviousLineText(editor.getCursorPosition().row, varDelimiter);
-				if(-1 !== intDelimiterLineNumber) {
-					strReturnSQL = findPreviousChar(intDelimiterLineNumber-1, varDelimiter);
-//					console.log("[findPreviousSQL is " + strReturnSQL);
-	
-					startQueryLine = editor.session.getLine(intDelimiterLineNumber);
-					strReturnSQL += startQueryLine.substring(0, startQueryLine.lastIndexOf(varDelimiter));
-//					console.log("[fully SQL is " + strReturnSQL);
-				}
-			}
-
-			return strReturnSQL;
+			var arrySQL = parsePartSQL();
+			return arrySQL[0];
 		}
 	} catch(e) {
 		console.log(e);
 	}
-};
-
-/**
- * 선택 행의 위쪽으로 분리자가 있는 행의 번호를 리턴합니다.
- * @param varLineNum
- * @param varDelimiter 
- */
-findPreviousLineText = function(varLineNum, varDelimiter) {
-	for(var i=varLineNum; i>=0; i--) {
-		var startQueryLine = editor.session.getLine(i);
-		var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-		if(lastIndexOf != -1) {
-			return i;
-			break;
-		}
-	}
-	return -1;
-};
-
-/**
- * 선택된 행에 종료 문자가 있다면 
- *		행부터 윗 행으로 찾아가면서 종료 문자가 있는지 검사합니다.
- *		종료 문자를 찾지 못했다면 모든 행이 포함될 텍스트 이다.
- * 
- * @param varLineNum
- * @param varDelimiter
- */
-findPreviousChar = function(varLineNum, varDelimiter) {
-	var strReturnQuery = "";
-	
-	var arryPreQuery = new Array();
-	var intArrayPostion = 0;
-	for(var i=varLineNum; i>=0; i--) {
-		var startQueryLine = editor.session.getLine(i);
-		
-		//주석 행인지조사한다.
-		if(stringStartsWith(startQueryLine, "--")) {
-			arryPreQuery[intArrayPostion] = startQueryLine;			
-		} else {
-			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-			if(lastIndexOf != -1) {
-				arryPreQuery[intArrayPostion] = startQueryLine.substring(lastIndexOf+1);
-	//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
-				break;
-			} else {
-				arryPreQuery[intArrayPostion] = startQueryLine;
-			}
-		}
-		
-		intArrayPostion++;
-	}
-	
-	for(i=0; i<arryPreQuery.length; i++) {
-		// 배열은 0부터 시작하므로 -1을 하였습니다.
-		//
-		// 쿼리의 배열을 역순으로 집어 넣어서 역순으로 가져오면서 쿼리를 만들어야 합니다. 
-		// [0] select 
-			// [1]  * from test
-		//
-		strReturnQuery += arryPreQuery[ (arryPreQuery.length-i)-1 ] + "\n";
-	}
-	
-	return strReturnQuery;
-};
-
-/**
- * 행부터 아래로 찾아가면서 종료 문자를 찾는다.
- * 	종료 문자가 없다면 아래의 모든 행이 포함될 텍스트 이다.
- * 
- * @param varLineNum
- * @param varDelimiter
- */
-findNextCharacter = function(varLineNum, varDelimiter) {
-	var strReturnQuery = "";
-	
-	var intRowCount = editor.session.getLength();
-	
-	var arryPreQuery = new Array();
-	var intArrayPostion = 0;
-	for(var i=varLineNum; i<intRowCount; i++) {
-		var startQueryLine = editor.session.getLine(i);
-		if(stringStartsWith(startQueryLine, "--")) {
-			arryPreQuery[intArrayPostion] = startQueryLine;
-		} else {
-			var lastIndexOf = startQueryLine.lastIndexOf(varDelimiter);
-			if(lastIndexOf != -1) {
-				arryPreQuery[intArrayPostion] = startQueryLine.substring(0, lastIndexOf+1);
-	//			console.log('\t\t==> 검색 쿼리.' + arryPreQuery[intArrayPostion]);
-				break;
-			} else {
-	//			console.log("\t not found text " + startQueryLine);
-				arryPreQuery[intArrayPostion] = startQueryLine;
-			}			
-		}
-		
-		intArrayPostion++;
-	}
-	
-	for(i=0; i<arryPreQuery.length; i++) {
-		// 배열은 0부터 시작하므로 -1을 하였습니다.
-		//
-		// 쿼리의 배열을 역순으로 집어 넣어서 역순으로 가져오면서 쿼리를 만들어야 합니다. 
-		// [0] select 
-			// [1]  * from test
-		//
-		strReturnQuery += arryPreQuery[i] + "\n";
-	}
-	
-	return strReturnQuery;
 };
 
 // starts with
@@ -654,3 +572,176 @@ editorService.helpDialog = function() {
 		console.log(e);
 	}
 };
+
+/** content assist parse part sql */
+caParsePartSQL = function() {
+	var varCursor = editor.getCursorPosition();
+	var partQuery = findCursorSQL(varCursor.row, varCursor.column);
+	
+	return partQuery;
+}
+
+/** parse part sql */
+parsePartSQL = function() {
+	var varCursor = editor.getCursorPosition();
+	var partQuery = findCursorSQL(varCursor.row, varCursor.column);
+	
+	// 만약에 쿼리를 발견하지 못했다면, 자신의 윗행으로 찾아 마지막 종료 문자의 쿼리를 찾습니다.
+	if(partQuery[0].trim() == "") {
+		var intDelimiterLineNumber = findPreviousLineText(varCursor.row);
+		if(-1 !== intDelimiterLineNumber) {
+			var searchLien = editor.session.getLine(intDelimiterLineNumber);
+			partQuery = findCursorSQL(intDelimiterLineNumber, searchLien.length);
+		}
+	}
+	
+	return partQuery;
+}
+
+/**
+ * 선택 행의 위쪽으로 분리자가 있는 행의 번호를 리턴합니다.
+ * @param varLineNum
+ */
+findPreviousLineText = function(currentRow) {
+	var startRow = -1
+	while(currentRow > 0) {
+ 		var textTokens = editor.session.getTokens(currentRow).filter(function(t) {
+ 			return t.type === "text";
+ 		});
+	
+ 		for(var i=0; i<textTokens.length; i++) {
+ 			if(stringStartsWith(textTokens[i].value, varDelimiter)) {
+ 				startRow = currentRow;
+ 				break;
+ 			}
+ 		}
+ 		if(startRow >= 0) break;
+ 			
+ 		currentRow--;
+ 	}
+	return startRow;
+}
+
+/**
+ * 
+ * @param varRow
+ * @param varColumn
+ * @returns {String}
+ */
+findCursorSQL = function(varRow, varColumn) {
+    var maxRow = editor.session.getLength();
+ 	var startRow = -1, endRow = -1;
+ 	
+ 	// 처음분리자까지 찾는다.   분리자를 찾지 못하면 0
+ 	var currentRow = varRow-1;
+ 	while(currentRow > 0) {
+ 		var textTokens = editor.session.getTokens(currentRow).filter(function(t) {
+ 			console.log("=[check out tocken]==> [" + t.type + "]:[" + t.value + "]");
+ 			return t.type === "text";
+ 		});
+	
+ 		for(var i=0; i<textTokens.length; i++) {
+ 			if(findDelimiterText(textTokens[i].value)) {
+ 				startRow = currentRow;
+ 				break;
+ 			}
+ 		}
+ 		if(startRow >= 0) break;
+ 			
+ 		currentRow--;
+ 	}
+ 	if(startRow == -1) startRow = 0;
+
+ 	// 마지막 분리자(;)까지의 데이터를 찾는다.
+ 	currentRow = varRow;
+ 	while(currentRow < maxRow) {
+ 		var textTokens = editor.session.getTokens(currentRow).filter(function(t) {
+ 			return t.type === "text";
+ 		});
+
+ 		for(var i=0; i<textTokens.length; i++) {
+ 			if(findDelimiterText(textTokens[i].value)) {
+ 				endRow = currentRow;
+ 				break;
+ 			}
+ 		}
+ 		if(endRow >= 0) break;
+ 		currentRow++;
+ 	}
+ 	if(endRow == -1) endRow = maxRow;
+ 	
+	//////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////
+ 	//////////////////////////////////////////////////////
+	// 처음 행을 가져온다.
+ 	var firstLineQuery = "";
+	var isStartDelemiter = false;
+ 	var tokens = editor.session.getTokens(startRow);
+ 	for(var i=0; i<tokens.length; i++) {
+ 		var token = tokens[i];
+
+ 		if(token.type === "text" && findDelimiterText(token.value)) {
+			isStartDelemiter = true;
+ 		} else if(isStartDelemiter) {
+ 			firstLineQuery += token.value;
+ 		}
+ 	}
+ 	// 처음 행에 분리자가 없는 경우(즉 모든 행 전체가 쿼리인경우)
+ 	if(isStartDelemiter == false && firstLineQuery == "") {
+ 		firstLineQuery = editor.session.getLine(startRow);
+ 	}
+ 	firstLineQuery += "\n";
+
+ 	// 다음행부터 마지막 행까지 가져온다.
+ 	var middleQuery = "";
+ 	for(var start = startRow+1; start<endRow; start++) {
+ 		middleQuery += editor.session.getLine(start) + "\n";
+ 	}
+
+ 	// 마지막 행을 가져
+	var lastLineQuery = "";
+
+	// 처음 행을 가져온다.
+	var tokens = editor.session.getTokens(endRow);
+ 	for(var i=0; i<tokens.length; i++) {
+ 		var token = tokens[i];
+
+ 		if(token.type === "text" && findDelimiterText(token.value)) {
+			break;
+ 		} else {
+ 			lastLineQuery += token.value;
+ 		}
+ 	}
+	
+	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery;
+	console.log("[fully query]" + firstLineQuery + middleQuery + lastLineQuery);
+	
+	console.log("[current]" + varRow + ": " + varColumn);
+	// 커서가 위치한 포인트를 얻는다.
+	var realCurrentLine = varRow - startRow;
+	var arryQuery = fullyQuery.split("\n");
+	// 라인 숫자도 포함 시킨다.
+	var realCurrentPost = realCurrentLine;
+	for(var i=0; i < realCurrentLine; i++) {
+		console.log("=1==> before cursor text is : " + arryQuery[i]);
+		realCurrentPost += arryQuery[i].length;
+	}
+	console.log("==2=> before cursor text is : " + arryQuery[realCurrentLine].substring(0, varColumn));
+	realCurrentPost += (arryQuery[realCurrentLine].substring(0, varColumn)).length;
+	console.log("[cursor position]" + realCurrentPost);
+	
+	var arryReturnSQL = [];
+	arryReturnSQL.push(fullyQuery);
+	arryReturnSQL.push(realCurrentPost);
+	return arryReturnSQL;
+}
+
+/**
+ * 만약에 텍스트에 분리자(;)가 포함되어 있다면 true를 넘긴다.
+ * @param currentTxt
+ * @returns {Boolean}
+ */
+findDelimiterText = function(currentTxt) {
+	if(currentTxt.indexOf(varDelimiter) > -1) return true;
+	else return false;
+}

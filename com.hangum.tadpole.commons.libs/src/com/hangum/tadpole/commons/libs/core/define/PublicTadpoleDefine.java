@@ -28,6 +28,9 @@ public class PublicTadpoleDefine {
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
 	public static final int systemAdminId = -1;
+	
+	/** Default resource name */
+	public static final String DEFAUL_RESOURCE_NAME = "_TDB_DEF_NAME_";
 
 	/** 시스템 사용 그룹 정의 */
 	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  
@@ -207,7 +210,7 @@ public class PublicTadpoleDefine {
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
 	/** save resource type */
-	public static enum RESOURCE_TYPE {ERD, SQL};
+	public static enum RESOURCE_TYPE {ERD, SQL, AUTO_SQL};
 	
 	/** define SQL, ERD shared type */
 	public static enum SHARED_TYPE {PUBLIC, PRIVATE};

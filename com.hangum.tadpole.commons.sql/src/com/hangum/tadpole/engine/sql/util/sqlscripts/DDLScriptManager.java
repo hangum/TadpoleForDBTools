@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -89,7 +90,7 @@ public class DDLScriptManager {
 				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
 			rdbScript = new MySqlDDLScript(userDB, actionType);
 		} else {
-			throw new Exception("Not support Database");
+			throw new Exception(Messages.get().ProcedureExecuterManager_0);
 		}
 	}
 	
@@ -138,7 +139,7 @@ public class DDLScriptManager {
 			
 			retStr = rdbScript.getTriggerScript(trigger);
 		} else {
-			throw new Exception("Not support Database");
+			throw new Exception(Messages.get().ProcedureExecuterManager_0);
 		}
 		
 		// 마지막 ; 문자가 포함되어있을 경우.

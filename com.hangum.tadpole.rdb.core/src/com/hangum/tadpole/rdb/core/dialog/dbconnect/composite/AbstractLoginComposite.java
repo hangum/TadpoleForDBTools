@@ -40,8 +40,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBYesNoErroDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -330,7 +330,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			// mssql 데이터베이스가 연결되지 않으면 등록되면 안됩니다. 하여서 제외합니다.
 			// https://github.com/hangum/TadpoleForDBTools/issues/512 
 			if(!isTest) {// && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
-				TDBErroDialog dialog = new TDBErroDialog(getShell(), 
+				TDBYesNoErroDialog dialog = new TDBYesNoErroDialog(getShell(), 
 						loginInfo.getDb() + " Test", 
 						String.format(Messages.get().AbstractLoginComposite_3, e.getMessage()));
 				if(dialog.open() == IDialogConstants.OK_ID) return true;

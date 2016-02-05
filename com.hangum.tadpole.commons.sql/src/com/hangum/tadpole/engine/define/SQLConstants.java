@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.define;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * Define SQL constants
@@ -20,6 +23,11 @@ package com.hangum.tadpole.engine.define;
  *
  */
 public class SQLConstants {
+	public static final String[] DEFAULT_TABLE_KEYWORDS = {"FROM", "UPDATE", "INTO", "TABLE", "JOIN"};
+	public static final String[] DEFAULT_COLUMN_KEYWORDS = {"SELECT", "WHERE", "SET", "ON", "AND", "OR", "BY", "HAVING"};
+	public static final List<String> listTableKeywords = Arrays.asList(SQLConstants.DEFAULT_TABLE_KEYWORDS);
+	public static final List<String> listColumnKeywords = Arrays.asList(SQLConstants.DEFAULT_COLUMN_KEYWORDS);
+	
 //	public static final String[] ADVANCED_KEYWORDS = { "PACKAGE", "FUNCTION", "TYPE", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "WRAPPED" };
 	public static final String[] MYSQL_KEYWORDS = {"TABLE", "SELECT", "OPTION", "DEFAULT", "FULLTEXT", "PACKAGE", "FUNCTION", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "KEY"};
 	

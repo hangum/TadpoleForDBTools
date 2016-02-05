@@ -41,6 +41,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -238,10 +239,10 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			
 			// updatae constant assist
 			StringBuffer strFunctionlist = new StringBuffer();
-			for (ProcedureFunctionDAO tableDao : showFunction) {
-				strFunctionlist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
+			for (ProcedureFunctionDAO functionDao : showFunction) {
+				strFunctionlist.append(MakeContentAssistUtil.makeObjectPattern(functionDao.getSysName(), "Function")); //$NON-NLS-1$
 			}
-			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), "|"));
+			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), MakeContentAssistUtil.DEL_GROUP));
 
 			selectDataOfTable(strObjectName);
 		} catch (Exception e) {

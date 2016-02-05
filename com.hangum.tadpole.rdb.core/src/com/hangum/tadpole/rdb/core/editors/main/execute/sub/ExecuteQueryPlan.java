@@ -62,7 +62,7 @@ public class ExecuteQueryPlan {
 				
 				return rsDAO;
 				
-			} else if(userDBDAO.getDBDefine() == DBDefine.ORACLE_DEFAULT) {					
+			} else if(userDBDAO.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDBDAO.getDBDefine() == DBDefine.TIBERO_DEFAULT) {					
 				// generation to statement id for query plan. 
 				pstmt = javaConn.prepareStatement("select USERENV('SESSIONID') from dual "); //$NON-NLS-1$
 				rs = pstmt.executeQuery(); 

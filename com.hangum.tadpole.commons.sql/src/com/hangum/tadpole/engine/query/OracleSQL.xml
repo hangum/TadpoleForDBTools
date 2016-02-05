@@ -52,8 +52,9 @@ ORDER BY T.table_name
 	TNAME 		: 테이블 명
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
-  SELECT 
-      T.table_name AS "NAME"
+  SELECT
+  		T.tablespace_name AS "schema_name" 
+      ,T.table_name AS "NAME"
       , S.COMMENTS AS "COMMENT"
     FROM user_tables T 
       LEFT JOIN USER_TAB_COMMENTS S

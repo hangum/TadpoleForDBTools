@@ -104,8 +104,7 @@ public class TadpoleSQLManager {
 					conn = sqlMapClient.getDataSource().getConnection();
 					
 					// don't belive keyword. --;;
-					DatabaseMetaData dbMetadata = conn.getMetaData();
-					setMetaData(searchKey, dbDao, dbMetadata);
+					setMetaData(searchKey, dbDao, conn.getMetaData());
 				}
 				
 			} catch(Exception e) {
@@ -149,30 +148,36 @@ public class TadpoleSQLManager {
 	 * @param dbMetadata
 	 * @return
 	 */
-	public static void setMetaData(String searchKey, final UserDBDAO userDB, DatabaseMetaData tmpDBMetadata) throws Exception {
+	public static void setMetaData(String searchKey, final UserDBDAO userDB, DatabaseMetaData dbMetaData) throws Exception {
 		// 엔진디비는 메타데이터를 저장하지 않는다.
 		if(dbManager.size() == 1) return;
 		
-		TadpoleMetaData tmd = null;
+		String strIdentifierQuoteString = "";
+		try {
+			strIdentifierQuoteString = dbMetaData.getIdentifierQuoteString();
+		} catch(Exception e) {
+			// ignore exception, not support quoteString
+		}
 		
-		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다. 
+		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다.
+		TadpoleMetaData tmd = null;
 		switch ( userDB.getDBDefine() ) {
 			case ORACLE_DEFAULT:		
-				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
 				break;
 			case MSSQL_DEFAULT:			
 			case MSSQL_8_LE_DEFAULT:
 			case MYSQL_DEFAULT:
 			case MARIADB_DEFAULT:
 			case SQLite_DEFAULT:		
-				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
 				break;
 			case POSTGRE_DEFAULT:		
 			case TAJO_DEFAULT: 			
-				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK);
 				break;
 			default:
-				tmd = new TadpoleMetaData("'", TadpoleMetaData.STORES_FIELD_TYPE.NONE);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.NONE);
 		}
 
 		// set keyword
@@ -192,14 +197,14 @@ public class TadpoleSQLManager {
 		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
 		) {
-			String strFullKeywords = StringUtils.join(SQLConstants.MSSQL_KEYWORDS, ",") + "," + tmpDBMetadata.getSQLKeywords();
+			String strFullKeywords = StringUtils.join(SQLConstants.MSSQL_KEYWORDS, ",") + "," + dbMetaData.getSQLKeywords();
 			tmd.setKeywords(strFullKeywords);
 		} else {
-			tmd.setKeywords(tmpDBMetadata.getSQLKeywords());
+			tmd.setKeywords(dbMetaData.getSQLKeywords());
 		}
 		
-		tmd.setDbMajorVersion(tmpDBMetadata.getDatabaseMajorVersion());
-		tmd.setMinorVersion(tmpDBMetadata.getDatabaseMinorVersion());
+		tmd.setDbMajorVersion(dbMetaData.getDatabaseMajorVersion());
+		tmd.setMinorVersion(dbMetaData.getDatabaseMinorVersion());
 		dbMetadata.put(searchKey, tmd);
 
 		// make assist data

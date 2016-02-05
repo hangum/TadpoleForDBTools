@@ -34,6 +34,8 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class MakeContentAssistUtil {
 	private static final Logger logger = Logger.getLogger(MakeContentAssistUtil.class);
+	public static final String DEL_GROUP = "||";
+	public static final String DEL_DEFAULT = "|";
 	
 	/**
 	 * content assist
@@ -41,43 +43,22 @@ public class MakeContentAssistUtil {
 	 * @param userDB
 	 * @return
 	 */
-	public String makeContentAssistUtil(final UserDBDAO userDB) {
+	public String getContentAssist(final UserDBDAO userDB) {
 		final String strTableList = "".equals(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
 		final String strViewList = "".equals(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
-		final String sstrTmpFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
-		final String strConstList = strTableList + 
-	    							(strViewList.equals("")?"":"|" + strViewList) +
-	    							(sstrTmpFunction.equals("")?"":"|" + sstrTmpFunction);
-	    							;
+		final String strTmpFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
+		
+		String strConstList = strTableList;
+		if(!StringUtils.isEmpty(strViewList)) {
+			strConstList += (StringUtils.isEmpty(strConstList)?strViewList:DEL_GROUP + strViewList);
+		}
+		if(!StringUtils.isEmpty(strTmpFunction)) {
+			strConstList += (StringUtils.isEmpty(strConstList)?strTmpFunction:DEL_GROUP + strTmpFunction);
+		}
 		    							
        return strConstList;
 	}
 	
-
-//	/**
-//	 * List of assist table column name
-//	 * 
-//	 * @param tableName
-//	 * @return
-//	 */
-//	public String getAssistColumnList(String tableName) {
-//		String strColumnlist = ""; //$NON-NLS-1$
-//		
-//		try {
-//			TableDAO table = mapTableList.get(tableName);
-//			
-//			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, table);
-//			for (TableColumnDAO tableDao : showTableColumns) {
-//				strColumnlist += tableDao.getSysName() + "|"; //$NON-NLS-1$
-//			}
-//			strColumnlist = StringUtils.removeEnd(strColumnlist, "|"); //$NON-NLS-1$
-//		} catch(Exception e) {
-//			logger.error("MainEditor get the table column list", e); //$NON-NLS-1$
-//		}
-//		
-//		return strColumnlist;
-//	}
-//	
 	/**
 	 * List of assist table name 
 	 * 
@@ -92,13 +73,12 @@ public class MakeContentAssistUtil {
 			else showTables = userDB.getListTable();
 			
 			for (TableDAO tableDao : showTables) {
-				strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
+				strTablelist.append(makeObjectPattern(tableDao.getSysName(), "Table")); //$NON-NLS-1$
 			}
 		} catch(Exception e) {
-			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
+			logger.error("getTable list", e); //$NON-NLS-1$
 		}
-
-		userDB.setTableListSeparator( StringUtils.removeEnd(strTablelist.toString(), "|") ); //$NON-NLS-1$
+		userDB.setTableListSeparator( StringUtils.removeEnd(strTablelist.toString(), DEL_GROUP) ); //$NON-NLS-1$
 		
 		return userDB.getTableListSeparator();
 	}
@@ -109,16 +89,14 @@ public class MakeContentAssistUtil {
 	public String getAssistViewList(final UserDBDAO userDB) {
 		StringBuffer strTablelist = new StringBuffer();
 		try {
-			List<TableDAO> showViews = DBSystemSchema.getViewList(userDB);
-			
-			for (TableDAO tableDao : showViews) {
-				strTablelist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
+			for (TableDAO viewDao : DBSystemSchema.getViewList(userDB)) {
+				strTablelist.append(makeObjectPattern(viewDao.getSysName(), "View")); //$NON-NLS-1$
 			}
 		} catch(Exception e) {
-			logger.error("MainEditor get the table list", e); //$NON-NLS-1$
+			logger.error("getView list", e); //$NON-NLS-1$
 		}
-		userDB.setViewListSeparator( StringUtils.removeEnd(strTablelist.toString(), "|")); //$NON-NLS-1$
-
+		userDB.setViewListSeparator( StringUtils.removeEnd(strTablelist.toString(), DEL_GROUP)); //$NON-NLS-1$
+		
 		return userDB.getViewListSeparator();
 	}
 	
@@ -130,14 +108,13 @@ public class MakeContentAssistUtil {
 		StringBuffer strFunctionlist = new StringBuffer();
 		
 		try {
-			for (ProcedureFunctionDAO tableDao : DBSystemSchema.getFunctionList(userDB)) {
-				strFunctionlist.append(tableDao.getName()).append("|"); //$NON-NLS-1$
+			for (ProcedureFunctionDAO functionDao : DBSystemSchema.getFunctionList(userDB)) {
+				strFunctionlist.append(makeObjectPattern(functionDao.getName(), "Function")); //$NON-NLS-1$
 			}
-			
-			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), "|"));
 		} catch (Exception e) {
-			logger.error("showFunction refresh", e); //$NON-NLS-1$
+			logger.error("getFunction list", e); //$NON-NLS-1$
 		}
+		userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), DEL_GROUP));
 		
 		return userDB.getFunctionLisstSeparator(); //$NON-NLS-1$
 	}
@@ -149,7 +126,7 @@ public class MakeContentAssistUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
+	private List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 				
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
@@ -169,7 +146,7 @@ public class MakeContentAssistUtil {
 	 * @param userDB
 	 * @return
 	 */
-	protected List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
+	public List<TableDAO> getTableAfterwork(List<TableDAO> showTables, final UserDBDAO userDB) {
 		/** filter 정보가 있으면 처리합니다. */
 		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
 		
@@ -179,5 +156,15 @@ public class MakeContentAssistUtil {
 		}
 		
 		return showTables;
+	}
+	
+	/**
+	 * 
+	 * @param objName
+	 * @param objType
+	 * @return
+	 */
+	public static String makeObjectPattern(String objName, String objType) {
+		return objName + DEL_DEFAULT + objType + DEL_GROUP;
 	}
 }

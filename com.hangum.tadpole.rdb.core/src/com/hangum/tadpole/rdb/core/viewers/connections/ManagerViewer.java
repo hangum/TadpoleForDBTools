@@ -310,7 +310,7 @@ public class ManagerViewer extends ViewPart {
 		if(userDB.getListUserDBErd().isEmpty() || isReload) {
 			// user_resource_data 목록을 추가해 줍니다.
 			try {
-				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbErdTree(userDB);
+				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbResourceTree(userDB);
 				if(!listUserDBResources.isEmpty()) {
 					
 					List<UserDBResourceDAO> listRealResource = new ArrayList<UserDBResourceDAO>();

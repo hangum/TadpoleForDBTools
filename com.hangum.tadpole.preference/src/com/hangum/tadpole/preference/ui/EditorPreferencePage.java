@@ -42,6 +42,8 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(EditorPreferencePage.class);
 	
+	private Button btnAutoSave;
+	
 	private Combo comboFontSize;
 	private Button btnShowGutter;
 	private Button btnIsWrap;
@@ -69,6 +71,10 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	public Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
+		
+		btnAutoSave = new Button(container, SWT.CHECK);
+		btnAutoSave.setText("Auto Save");
+		new Label(container, SWT.NONE);
 		
 		lblTheme = new Label(container, SWT.NONE);
 		lblTheme.setText(Messages.get().EditorPreferencePage_lblTheme_text);
@@ -114,6 +120,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	
 	@Override
 	public boolean performOk() {
+		String txtAutoSave	= ""+btnAutoSave.getSelection();
 		String txtTheme 	= comboTheme.getText();
 		String txtFontSize 	= comboFontSize.getText();
 		String txtIsWrap 	= ""+btnIsWrap.getSelection(); //$NON-NLS-1$
@@ -128,6 +135,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		
 		// 테이블에 저장 
 		try {
+			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_AUTOSAVE, txtAutoSave);
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_THEME, txtTheme);
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_FONT_SIZE, txtFontSize);
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_IS_WARP, txtIsWrap);
@@ -150,6 +158,8 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	 * initialize default value
 	 */
 	private void initDefaultValue() {
+		btnAutoSave.setSelection(GetPreferenceGeneral.getEditorAutoSave());
+		
 		// initiaize themes
 		for(String strTheme : PublicTadpoleDefine.getMapTheme().keySet()) {
 			comboTheme.add(strTheme);	

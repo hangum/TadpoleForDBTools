@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-tadpolea-1.7.0" sequenceNumber="272">
+<?pde version="3.8"?><target name="target-tadpolea-1.7.0" sequenceNumber="276">
 <locations>
-<location path="${project_loc:/targetProject}/rap-3.1.0-N-20150914-1435" type="Directory"/>
 <location path="${project_loc:/targetProject}/ext" type="Directory"/>
 <location path="${project_loc:/targetProject}/multiTab" type="Directory"/>
 <location path="${project_loc:/targetProject}/standalone-launcher" type="Directory"/>
@@ -62,5 +61,6 @@
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>
 <repository location="http://download.eclipse.org/releases/mars"/>
 </location>
+<location path="${project_loc:/targetProject}/rap-3.1.0-S-20160202-1753" type="Directory"/>
 </locations>
 </target>

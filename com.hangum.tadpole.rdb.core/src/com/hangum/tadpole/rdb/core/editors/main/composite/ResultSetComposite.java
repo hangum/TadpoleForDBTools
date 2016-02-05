@@ -379,7 +379,11 @@ public class ResultSetComposite extends Composite {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
 								rsDAO = runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
-								reqResultDAO.setRows(rsDAO.getDataList().getData().size());
+								if(rsDAO.getDataList() == null) {
+									reqResultDAO.setRows(0);
+								} else {
+									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
+								}
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {

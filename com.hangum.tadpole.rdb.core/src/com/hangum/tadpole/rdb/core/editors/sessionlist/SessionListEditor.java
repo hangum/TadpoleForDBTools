@@ -320,7 +320,6 @@ public class SessionListEditor extends EditorPart {
 
 			List<?> listSessionList = null;
 			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
-
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
@@ -342,6 +341,23 @@ public class SessionListEditor extends EditorPart {
 				}else{
 					listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
 				}
+			} else if(DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
+				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
+				if (0 >= getSessionGrant){
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
+					return;
+				}
+				
+				try {
+					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
+				}catch (Exception e) {
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
+					return;
+				}
+				
+				listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
 			}else{
 				listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
 			}

@@ -19,8 +19,10 @@ package com.hangum.tadpole.ace.editor.core.texteditor.function;
 public interface IEditorFunction  {
 	
 	public static final int DIRTY_CHANGED 			= 1;
+	public static final int CONTENT_ASSIST			= 5;
 	
 	public static final int SAVE 					= 15;
+	public static final int AUTO_SAVE				= 16;
 	
 	public static final int EXECUTE_QUERY 			= 25;
 	public static final int EXECUTE_PLAN 			= 30;
@@ -46,7 +48,7 @@ public interface IEditorFunction  {
      * @param 추가하려는 키워드
      * @param 초기텍스트
      */
-    public static final String RDB_INITIALIZE = EDITOR_SERVICE_MAP + ".RDBinitEditor('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+    public static final String RDB_INITIALIZE = EDITOR_SERVICE_MAP + ".RDBinitEditor('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
     
     /**
      * MONGODB 에디터를 초기화 합니다. 

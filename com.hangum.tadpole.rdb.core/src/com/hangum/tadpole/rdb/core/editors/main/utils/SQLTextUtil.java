@@ -13,6 +13,8 @@ package com.hangum.tadpole.rdb.core.editors.main.utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.engine.define.SQLConstants;
+
 /**
  * sql text util
  * 
@@ -114,5 +116,79 @@ public class SQLTextUtil {
 	 */
 	public static String delLineChar(String query) {
 		return query.replaceAll("(\r\n|\n|\r)", "");
+	}
+	
+	/**
+	 * 쿼리에서 커서가 위치한 오브젝트를 얻는다.
+	 * 오브젝트는 공백을 기준으로 )(, 로한다.  
+	 * 
+	 * @param strQuery
+	 * @param intPosition
+	 * @return
+	 */
+	public static String findCursorObject(String strQuery, int intPosition) {
+		int startIndex = intPosition - 1;
+		int endIndex = intPosition;
+		
+		String strPosTxt = StringUtils.trimToEmpty(StringUtils.substring(strQuery, startIndex, endIndex));
+		
+		if(logger.isDebugEnabled()) logger.debug("==> postion char : " + strPosTxt);
+		if(StringUtils.isEmpty(strPosTxt)) return "";
+		
+		String strBeforeTxt = strQuery.substring(0, startIndex);
+		String[] strArryBeforeTxt = StringUtils.split(strBeforeTxt, ' ');
+
+		// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
+		String strAfterTxt = strQuery.substring(startIndex);
+		String[] strArryAfterTxt = StringUtils.split(strAfterTxt, ' ');
+
+		String strCursorObj = strArryAfterTxt[0];
+		if(strArryBeforeTxt.length != 0) {
+			strCursorObj = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];	
+		}
+		
+		// 마지막 문자가 ; 라면 제거해준다.
+		strCursorObj = strCursorObj.replace(";", "");
+		strCursorObj = StringUtils.removeStart(strCursorObj, ",");
+		strCursorObj = StringUtils.removeEnd(strCursorObj, ",");
+		
+		strCursorObj = StringUtils.removeStart(strCursorObj, "(");
+		strCursorObj = StringUtils.removeEnd(strCursorObj, ")");
+		
+		return strCursorObj;
+	}
+	
+	/**
+	 * 커서가 위치한 이전의 키워드를 찾는다.
+	 * 
+	 * @param strQuery
+	 * @param intPosition
+	 * @return
+	 */
+	public static String findPrevKeywork(String strQuery, int intPosition) {
+		String strBeforeTxt = strQuery.substring(0, intPosition);
+		String[] strArryBeforeTxt = StringUtils.split(strBeforeTxt, ' ');
+		
+		try {
+		for (int i=1; i<=strArryBeforeTxt.length; i++) {
+			String tmp = strArryBeforeTxt[strArryBeforeTxt.length-i];
+			// 마지막 문자가 ; 라면 제거해준다.
+			tmp = tmp.replace(";", "");
+			tmp = StringUtils.remove(tmp, ",");
+			tmp = StringUtils.remove(tmp, "(");
+			tmp = StringUtils.remove(tmp, ")");
+			tmp = StringUtils.trimToEmpty(tmp);
+			
+			if(SQLConstants.listTableKeywords.contains(tmp.toUpperCase())) {
+				return tmp.toUpperCase();
+			} else if(SQLConstants.listColumnKeywords.contains(tmp.toUpperCase())) {
+				return tmp.toUpperCase();
+			}
+		}
+		} catch(Exception e) {
+			logger.error("preve keyword", e);
+		}
+				
+		return "";
 	}
 }

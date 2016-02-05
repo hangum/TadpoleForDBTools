@@ -19,6 +19,8 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -124,6 +126,20 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
+	 * updateResourceAuto 
+	 * 
+	 * @param dbResource
+	 * @param content
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static void updateResourceAuto(UserDBResourceDAO userDBResource, String contents) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.delete("userDbResourceDataAutoDelete", userDBResource.getResource_seq()); //$NON-NLS-1$
+		
+		insertResourceData(userDBResource, contents);
+	}
+	
+	/**
 	 * update 
 	 * 
 	 * @param dbResource
@@ -135,6 +151,48 @@ public class TadpoleSystem_UserDBResource {
 		sqlClient.update("userDbResourceDataDelete", userDBResource.getResource_seq()); //$NON-NLS-1$
 		
 		insertResourceData(userDBResource, contents);
+	}
+	
+	/**
+	 * auto resource data 
+	 * 
+	 * @param userDB
+	 * @param dBResource
+	 * @param dBResource2 
+	 * @param newContents
+	 */
+	public static UserDBResourceDAO updateAutoResourceDate(UserDBDAO userDB, UserDBResourceDAO dBResourceAuto, UserDBResourceDAO dBResource, String newContents) throws TadpoleSQLManagerException, SQLException {
+		// auto save 도 시작.
+		if(dBResource == null && dBResourceAuto == null) {
+			if(logger.isDebugEnabled()) logger.debug("=[0]===[updateAutoResourceDate][dBResource is null][dBResourceAuto is null]============");
+			UserDBResourceDAO defDao = new UserDBResourceDAO();
+			defDao.setDb_seq(userDB.getSeq());
+			defDao.setName(PublicTadpoleDefine.DEFAUL_RESOURCE_NAME);
+			defDao.setResource_types(RESOURCE_TYPE.AUTO_SQL.name());
+			defDao.setShared_type(PublicTadpoleDefine.SHARED_TYPE.PRIVATE.name());
+			defDao.setRestapi_yesno(PublicTadpoleDefine.YES_NO.NO.name());
+			defDao.setUser_seq(SessionManager.getUserSeq());
+			
+			// 기존에 등록 되어 있는지 검사한다
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+			UserDBResourceDAO retUserDBResource =  (UserDBResourceDAO)sqlClient.insert("userDbResourceInsert", defDao); //$NON-NLS-1$
+			insertResourceData(retUserDBResource, newContents);
+			
+			return retUserDBResource;
+		// auto save 가 한번이라도 있었음.
+		} else if(dBResource == null && dBResourceAuto != null) {
+			if(logger.isDebugEnabled()) logger.debug("=[1]===[updateAutoResourceDate][dBResource is null][dBResourceAuto is not null]============");
+			// 기존에 등록 되어 있는 것을 삭제하고 저장한다.
+			updateResourceAuto(dBResourceAuto, newContents);
+			
+			return dBResourceAuto;
+		} else {
+			if(logger.isDebugEnabled()) logger.debug("=[2]===[updateAutoResourceDate][dBResource is not null]============");
+			// 기존에 등록 되어 있는지 검사한다
+			updateResource(dBResource, newContents);
+			
+			return dBResource;
+		}
 	}
 
 	/**
@@ -167,7 +225,7 @@ public class TadpoleSystem_UserDBResource {
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static List<UserDBResourceDAO> userDbErdTree(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+	public static List<UserDBResourceDAO> userDbResourceTree(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("seq", 		userDB.getSeq()); //$NON-NLS-1$
 		
@@ -227,6 +285,31 @@ public class TadpoleSystem_UserDBResource {
 				throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserDBResource_8);
 			}
 		}
+	}
+	
+	/**
+	 * default db resource data
+	 * 
+	 * @param userDB
+	 * @param userSeq
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static UserDBResourceDAO getDefaultDBResourceData(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("db_seq", 		userDB.getSeq()); //$NON-NLS-1$
+		queryMap.put("user_seq", 	SessionManager.getUserSeq()); //$NON-NLS-1$
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserDBResourceDAO resourcesDao =  (UserDBResourceDAO)sqlClient.queryForObject("userDBResourceDefault", queryMap); //$NON-NLS-1$
+		if(resourcesDao == null) return null;
+		
+		String strResource = getResourceData(resourcesDao);
+		resourcesDao.setDataString(strResource);
+		
+		return resourcesDao;
+		
 	}
 	
 	/**

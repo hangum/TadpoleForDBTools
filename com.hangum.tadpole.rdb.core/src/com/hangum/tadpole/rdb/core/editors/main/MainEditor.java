@@ -65,7 +65,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToStringDia
 import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.function.MainEditorBrowserFunctionService;
-import com.hangum.tadpole.rdb.core.editors.main.utils.MakeContentAssistUtil;
+import com.hangum.tadpole.rdb.core.editors.main.utils.ExtMakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
@@ -85,6 +85,9 @@ public class MainEditor extends EditorExtension {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(MainEditor.class);
 	
+	/** auto save를 위해 마지막 콘텐츠 를 남겨 놓는다. */
+	private String strLastContent = "";
+	
 	/** toolbar auto commit */
 	private ToolItem tiAutoCommit = null, tiAutoCommitCommit = null, tiAutoCommitRollback = null;
 
@@ -99,6 +102,8 @@ public class MainEditor extends EditorExtension {
 	
 	/** resource 정보. */
 	protected UserDBResourceDAO dBResource;
+	/** 자동 저장 auto save */
+	protected UserDBResourceDAO dBResourceAuto;
 	
 	/** save mode */
 	protected boolean isDirty = false;
@@ -118,11 +123,23 @@ public class MainEditor extends EditorExtension {
 		MainEditorInput qei = (MainEditorInput)input;
 		userDB = qei.getUserDB();
 		initDefaultEditorStr = qei.getDefaultStr();
+		strLastContent = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
 
 		String strPartName = qei.getName();
 		dBResource = qei.getResourceDAO();
-		if(dBResource != null) strPartName = dBResource.getName();
+		if(dBResource != null) {
+			strPartName = dBResource.getName();
+		} else {
+			// 기본 저장된 쿼리가 있는지 가져온다.
+			try {
+				dBResourceAuto = TadpoleSystem_UserDBResource.getDefaultDBResourceData(userDB);
+				if(dBResourceAuto != null) initDefaultEditorStr = dBResourceAuto.getDataString() + "\r\n" + initDefaultEditorStr;
+			} catch(Exception e) {
+				logger.error("Get default resource", e);
+			}
+		}
+		strLastContent = initDefaultEditorStr;
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
@@ -351,13 +368,8 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		tltmAPI.setToolTipText(Messages.get().MainEditor_51);
-		
-		// semicolon
 		new ToolItem(toolBar, SWT.SEPARATOR);
-//		ToolItem tltmSemicolon = new ToolItem(toolBar, SWT.NONE);
-//		tltmSemicolon.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/Semicolon.png")); //$NON-NLS-1$
-//		tltmSemicolon.setToolTipText(Messages.get().MainEditor_49);
-		
+			
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
 		tltmHelp.addSelectionListener(new SelectionAdapter() {
@@ -464,9 +476,8 @@ public class MainEditor extends EditorExtension {
 	protected void addBrowserService() {
 		browserQueryEditor.setUrl(REAL_DB_URL);
 	    	
-		MakeContentAssistUtil constAssistUtil = new MakeContentAssistUtil();
-	    final String strConstList = constAssistUtil.makeContentAssistUtil(userDB);
-	    
+	    final String strConstList = findDefaultKeyword();
+	    final String varAutoSave 	= ""+GetPreferenceGeneral.getEditorAutoSave();
 	    final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
 	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
 	    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
@@ -474,15 +485,13 @@ public class MainEditor extends EditorExtension {
 	    final String varIsShowGutter = ""+GetPreferenceGeneral.getEditorShowGutter();
 	    registerBrowserFunctions();
 	    
-	    /** 무슨 일인지 이벤트가 두번 탑니다. */
 		browserQueryEditor.addProgressListener(new ProgressListener() {
 			@Override
 			public void completed( ProgressEvent event ) {
-				
 				try {
 					browserEvaluate(IEditorFunction.RDB_INITIALIZE, 
 							findEditorExt(), dbAction.toString(), strConstList, getInitDefaultEditorStr(),
-							varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
+							varAutoSave, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
 							); //$NON-NLS-1$
 				} catch(Exception ee) {
 					logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
@@ -490,6 +499,35 @@ public class MainEditor extends EditorExtension {
 			}
 			public void changed( ProgressEvent event ) {}			
 		});
+	}
+
+	/**
+	 * getContentAssist
+	 * 
+	 * @param strQuery
+	 * @param intPosition
+	 * @return
+	 */
+	public String getContentAssist(String strQuery, int intPosition) {
+		strQuery = StringUtils.removeEnd(strQuery, ";");
+		if("".equals(StringUtils.trimToEmpty(strQuery))) return "";
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("-[start block] -------------------------------------------------------------");
+			logger.debug("\t[strQuery]" + strQuery );
+			logger.debug("\t[intPosition]" + intPosition );
+		}
+		
+		String newContentAssist = "";
+		try {
+			ExtMakeContentAssistUtil constAssistUtil = new ExtMakeContentAssistUtil();
+			newContentAssist = constAssistUtil.makeContentAssist(getUserDB(), strQuery, intPosition);
+		} catch(Exception e) {
+			logger.error("Content assist", e);
+		} 
+		if(logger.isDebugEnabled()) logger.debug("-[end block] -------------------------------------------------------------");
+		
+		return newContentAssist==null?"":newContentAssist;
 	}
 
 	/**
@@ -627,6 +665,8 @@ public class MainEditor extends EditorExtension {
 				isSaved = updateResourceDate(strContentData);
 			}
 			
+			this.strLastContent = strContentData;
+			
 		} catch(SWTException e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", getUserEMail()), e); //$NON-NLS-1$
 		} finally {
@@ -636,6 +676,31 @@ public class MainEditor extends EditorExtension {
 			}
 			
 			browserEvaluate(IEditorFunction.SET_FOCUS);
+		}
+		
+		return isSaved;
+	}
+	
+	/**
+	 * call auto save
+	 * 
+	 * @param strContentData
+	 * @return
+	 */
+	public boolean calledDoAutoSave(String strContentData) {
+		if(logger.isDebugEnabled()) logger.debug("====== called auto save ==========" + strContentData);
+		// 내용이 공백이거나 이전 내용과 같으면 저장하지 않는다.
+		if("".equals(StringUtils.trimToEmpty(strContentData))) return true;
+		if(StringUtils.trimToEmpty(strLastContent).equals(StringUtils.trimToEmpty(strContentData))) return true;
+
+		boolean isSaved = false;
+		try {
+			isSaved = updateAutoResourceDate(strContentData);
+			strLastContent = strContentData;
+		} catch(SWTException e) {
+			logger.error(RequestInfoUtils.requestInfo("doAutoSave exception", getUserEMail()), e); //$NON-NLS-1$
+		} finally {
+//			browserEvaluate(IEditorFunction.SET_FOCUS);
 		}
 		
 		return isSaved;
@@ -671,7 +736,7 @@ public class MainEditor extends EditorExtension {
 			browserEvaluate(IEditorFunction.SET_FOCUS);
 		}
 	}
-
+	
 	/**
 	 * 데이터를 수정합니다.
 	 * 
@@ -684,6 +749,28 @@ public class MainEditor extends EditorExtension {
 			return true;
 		} catch (Exception e) {
 			logger.error("update file", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			
+			return false;
+		}
+	}
+	
+	/**
+	 * auto update save 
+	 * @param newContents
+	 * @return
+	 */
+	private boolean updateAutoResourceDate(String newContents) {
+		if(logger.isDebugEnabled()) logger.debug("====> called updateAutoResourceDate ");
+		
+		try {
+			dBResourceAuto = TadpoleSystem_UserDBResource.updateAutoResourceDate(getUserDB(), dBResourceAuto, dBResource, newContents);
+			if(dBResource != null) {
+				setDirty(false);
+			}
+			return true;
+		} catch (Exception e) {			logger.error("update file", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
@@ -805,4 +892,5 @@ public class MainEditor extends EditorExtension {
 	public SashForm getSashFormExtension() {
 		return sashFormExtension;
 	}
+
 }

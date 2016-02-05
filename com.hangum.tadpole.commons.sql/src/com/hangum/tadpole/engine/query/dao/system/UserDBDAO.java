@@ -12,7 +12,6 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;

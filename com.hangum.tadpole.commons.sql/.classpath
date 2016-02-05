@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/driver/tibero/tibero5-jdbc.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-java-driver-3.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/sqlite/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/postgreSQL/postgresql-9.4-1204.jdbc41.jar"/>

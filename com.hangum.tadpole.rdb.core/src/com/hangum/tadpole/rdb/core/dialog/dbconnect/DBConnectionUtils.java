@@ -30,6 +30,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposi
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.TajoLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.TiberoLoginComposite;
 
 /**
  * DB Connection utils
@@ -90,7 +91,10 @@ public class DBConnectionUtils {
 			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.TAJO_DEFAULT) {
 			loginComposite = new TajoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		}
+		} else if(dbDefine == DBDefine.TIBERO_DEFAULT) {
+			loginComposite = new TiberoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+		}  
+		
 		loginComposite.setDataActionStatus(dataStatus);
 		
 		return loginComposite;

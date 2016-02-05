@@ -50,6 +50,7 @@ public class DBIconsUtils {
 		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
 		else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) strBaseImage = "resources/icons/hive-add.png";
 		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.jpg";
+		else if(DBDefine.TIBERO_DEFAULT == dbType) strBaseImage = "resources/icons/tibero_add.png";
 		else  strBaseImage = "resources/icons/database-add.png";
 		
 		return strBaseImage;	

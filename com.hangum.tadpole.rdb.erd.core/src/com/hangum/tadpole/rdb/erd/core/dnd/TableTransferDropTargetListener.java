@@ -211,13 +211,9 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				tableModel.setName(tableName);
 				tableModel.setDb(db);
 				
-//				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-//					tableModel.setComment("");
-//				} else {
-					String tableComment = arryTable[2];
-					tableComment = StringUtils.substring(""+tableComment, 0, 10);
-					tableModel.setComment(tableComment);
-//				}
+				String tableComment = StringUtils.trimToEmpty(arryTable[2]);
+				tableComment = StringUtils.substring(tableComment, 0, 10);
+				tableModel.setComment(tableComment);
 				
 				// 테이블의 좌표를 잡아줍니다. 
 				prevRectangle = new Rectangle(nextTableX, 
@@ -244,7 +240,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						
 						String strComment = columnDAO.getComment();
 						if(strComment == null) strComment = "";
-						else strComment = StringUtils.substring(""+strComment, 0, 10);
+						strComment = StringUtils.substring(strComment, 0, 10);
 						column.setComment(strComment);
 						
 						column.setTable(tableModel);

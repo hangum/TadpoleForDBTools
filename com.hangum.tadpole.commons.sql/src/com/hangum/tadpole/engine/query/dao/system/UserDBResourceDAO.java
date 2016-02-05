@@ -46,6 +46,9 @@ public class UserDBResourceDAO {
 	// db object tree 표현을 위해
 	UserDBDAO parent;
 	
+	// 기본 데이터 저장시 사용하는  값입니다. (일반적으로는 사용하지 않습니다)
+	String dataString = "";
+	
 	public UserDBResourceDAO() {
 	}
 
@@ -239,6 +242,20 @@ public class UserDBResourceDAO {
 	 */
 	public void setSqliteCreate_time(String sqliteCreate_time) {
 		this.sqliteCreate_time = sqliteCreate_time;
+	}
+
+	/**
+	 * @return the dataString
+	 */
+	public String getDataString() {
+		return dataString;
+	}
+
+	/**
+	 * @param dataString the dataString to set
+	 */
+	public void setDataString(String dataString) {
+		this.dataString = dataString;
 	}
 
 }
