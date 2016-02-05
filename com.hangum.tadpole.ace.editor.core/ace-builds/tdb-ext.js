@@ -688,9 +688,8 @@ findCursorSQL = function(varRow, varColumn) {
  	}
  	// 처음 행에 분리자가 없는 경우(즉 모든 행 전체가 쿼리인경우)
  	if(isStartDelemiter == false && firstLineQuery == "") {
- 		firstLineQuery = editor.session.getLine(startRow);
+ 		firstLineQuery = editor.session.getLine(startRow) + "\n";
  	}
- 	firstLineQuery += "\n";
 
  	// 다음행부터 마지막 행까지 가져온다.
  	var middleQuery = "";
@@ -713,8 +712,8 @@ findCursorSQL = function(varRow, varColumn) {
  		}
  	}
 	
-	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery;
-//	console.log("[fully query]" + firstLineQuery + middleQuery + lastLineQuery);
+	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery + " ";
+//	console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
 	
 //	console.log("[current]" + varRow + ": " + varColumn);
 	// 커서가 위치한 포인트를 얻는다.
@@ -727,7 +726,7 @@ findCursorSQL = function(varRow, varColumn) {
 		realCurrentPost += arryQuery[i].length;
 	}
 //	console.log("==2=> before cursor text is : " + arryQuery[realCurrentLine].substring(0, varColumn));
-	realCurrentPost += (arryQuery[realCurrentLine].substring(0, varColumn)).length;
+	realCurrentPost += varColumn;//(arryQuery[realCurrentLine].substring(0, varColumn)).length;
 //	console.log("[cursor position]" + realCurrentPost);
 	
 	var arryReturnSQL = [];
