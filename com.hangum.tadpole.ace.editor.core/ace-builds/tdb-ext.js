@@ -636,7 +636,7 @@ findCursorSQL = function(varRow, varColumn) {
  	var currentRow = varRow-1;
  	while(currentRow > 0) {
  		var textTokens = editor.session.getTokens(currentRow).filter(function(t) {
- 			console.log("=[check out tocken]==> [" + t.type + "]:[" + t.value + "]");
+// 			console.log("=[check out tocken]==> [" + t.type + "]:[" + t.value + "]");
  			return t.type === "text";
  		});
 	
@@ -714,21 +714,21 @@ findCursorSQL = function(varRow, varColumn) {
  	}
 	
 	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery;
-	console.log("[fully query]" + firstLineQuery + middleQuery + lastLineQuery);
+//	console.log("[fully query]" + firstLineQuery + middleQuery + lastLineQuery);
 	
-	console.log("[current]" + varRow + ": " + varColumn);
+//	console.log("[current]" + varRow + ": " + varColumn);
 	// 커서가 위치한 포인트를 얻는다.
 	var realCurrentLine = varRow - startRow;
 	var arryQuery = fullyQuery.split("\n");
 	// 라인 숫자도 포함 시킨다.
 	var realCurrentPost = realCurrentLine;
 	for(var i=0; i < realCurrentLine; i++) {
-		console.log("=1==> before cursor text is : " + arryQuery[i]);
+//		console.log("=1==> before cursor text is : " + arryQuery[i]);
 		realCurrentPost += arryQuery[i].length;
 	}
-	console.log("==2=> before cursor text is : " + arryQuery[realCurrentLine].substring(0, varColumn));
+//	console.log("==2=> before cursor text is : " + arryQuery[realCurrentLine].substring(0, varColumn));
 	realCurrentPost += (arryQuery[realCurrentLine].substring(0, varColumn)).length;
-	console.log("[cursor position]" + realCurrentPost);
+//	console.log("[cursor position]" + realCurrentPost);
 	
 	var arryReturnSQL = [];
 	arryReturnSQL.push(fullyQuery);
