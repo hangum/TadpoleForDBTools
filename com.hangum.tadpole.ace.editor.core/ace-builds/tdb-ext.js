@@ -631,8 +631,13 @@ findPreviousLineText = function(currentRow) {
 findCursorSQL = function(varRow, varColumn) {
     var maxRow = editor.session.getLength();
  	var startRow = -1, endRow = -1;
+ 	var realCursorPosition = 0;
  	
- 	// 처음분리자까지 찾는다.   분리자를 찾지 못하면 0
+	console.log("[editor current]" + varRow + ": " + varColumn);
+ 	
+	//////////////////////////////////////////////////////
+	/// 쿼리의 시작과 끝 부분을 계산한다. ////////////////////////
+ 	//////////////////////////////////////////////////////
  	var currentRow = varRow-1;
  	while(currentRow > 0) {
  		var textTokens = editor.session.getTokens(currentRow).filter(function(t) {
@@ -647,7 +652,6 @@ findCursorSQL = function(varRow, varColumn) {
  			}
  		}
  		if(startRow >= 0) break;
- 			
  		currentRow--;
  	}
  	if(startRow == -1) startRow = 0;
@@ -671,9 +675,10 @@ findCursorSQL = function(varRow, varColumn) {
  	if(endRow == -1) endRow = maxRow;
  	
 	//////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////
+	/// 쿼리를 만든다. //////////////////////////////////////
  	//////////////////////////////////////////////////////
-	// 처음 행을 가져온다.
+	
+ 	// 처음 행을 가져온다.
  	var firstLineQuery = "";
 	var isStartDelemiter = false;
  	var tokens = editor.session.getTokens(startRow);
@@ -689,6 +694,9 @@ findCursorSQL = function(varRow, varColumn) {
  	// 처음 행에 분리자가 없는 경우(즉 모든 행 전체가 쿼리인경우)
  	if(isStartDelemiter == false && firstLineQuery == "") {
  		firstLineQuery = editor.session.getLine(startRow) + "\n";
+ 	// 처음 줄이 ;문자만 있을 경우.
+ 	} else if(isStartDelemiter == true && firstLineQuery == "") {
+ 		firstLineQuery = "\n";
  	}
 
  	// 다음행부터 마지막 행까지 가져온다.
@@ -699,8 +707,6 @@ findCursorSQL = function(varRow, varColumn) {
 
  	// 마지막 행을 가져
 	var lastLineQuery = "";
-
-	// 처음 행을 가져온다.
 	var tokens = editor.session.getTokens(endRow);
  	for(var i=0; i<tokens.length; i++) {
  		var token = tokens[i];
@@ -711,27 +717,31 @@ findCursorSQL = function(varRow, varColumn) {
  			lastLineQuery += token.value;
  		}
  	}
-	
 	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery + " ";
-//	console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
-	
-//	console.log("[current]" + varRow + ": " + varColumn);
-	// 커서가 위치한 포인트를 얻는다.
+	console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
+
+	//////////////////////////////////////////////////////
+	/// 쿼리 중에 커서의 위치를 계산한다. ////////////////////////
+ 	//////////////////////////////////////////////////////
 	var realCurrentLine = varRow - startRow;
+	console.log("=0==> realCurrentLine : " + realCurrentLine);
 	var arryQuery = fullyQuery.split("\n");
 	// 라인 숫자도 포함 시킨다.
-	var realCurrentPost = realCurrentLine;
+	var realCursorPosition = realCurrentLine;
 	for(var i=0; i < realCurrentLine; i++) {
-//		console.log("=1==> before cursor text is : " + arryQuery[i]);
-		realCurrentPost += arryQuery[i].length;
+		console.log("=1==> before cursor text is : " + arryQuery[i] + ":" + arryQuery[i].length);
+		realCursorPosition += arryQuery[i].length;
 	}
-//	console.log("==2=> before cursor text is : " + arryQuery[realCurrentLine].substring(0, varColumn));
-	realCurrentPost += varColumn;//(arryQuery[realCurrentLine].substring(0, varColumn)).length;
-//	console.log("[cursor position]" + realCurrentPost);
+	console.log("==2=> before cursor text is : " + varColumn);
+	realCursorPosition += varColumn;//(arryQuery[realCurrentLine].substring(0, varColumn)).length;
+	console.log("[cursor position]" + realCursorPosition);
 	
+	//////////////////////////////////////////////////////
+	/// 결과리턴 ////////////////////////
+ 	//////////////////////////////////////////////////////
 	var arryReturnSQL = [];
 	arryReturnSQL.push(fullyQuery);
-	arryReturnSQL.push(realCurrentPost);
+	arryReturnSQL.push(realCursorPosition);
 	return arryReturnSQL;
 }
 

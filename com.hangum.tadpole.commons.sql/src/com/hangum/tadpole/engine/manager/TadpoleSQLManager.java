@@ -209,10 +209,7 @@ public class TadpoleSQLManager {
 
 		// make assist data
 		MakeContentAssistUtil assistUtil = new MakeContentAssistUtil();
-		userDB.setTableListSeparator(assistUtil.getAssistTableList(userDB));
-		userDB.setViewListSeparator(assistUtil.getAssistViewList(userDB));
-		userDB.setFunctionLisstSeparator(assistUtil.getFunctionList(userDB));
-		
+		assistUtil.defaultSetKeyword(userDB);
 	}
 	
 	/**

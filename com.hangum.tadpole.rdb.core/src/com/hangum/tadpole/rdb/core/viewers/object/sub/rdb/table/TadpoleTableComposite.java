@@ -60,10 +60,8 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -88,7 +86,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnAddActio
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
-import com.hangum.tadpole.rdb.core.editors.main.utils.ExtMakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -615,13 +612,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				
 				try {
 					listTablesDAO = TadpoleObjectQuery.getTableList(userDB);
-					
-					// update content assist
-					StringBuffer strViewList = new StringBuffer();
-					for (TableDAO viewDao : listTablesDAO) {
-						strViewList.append(MakeContentAssistUtil.makeObjectPattern(viewDao.getSysName(), "Table")); //$NON-NLS-1$
-					}
-					userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil.DEL_GROUP)); //$NON-NLS-1$
 				} catch(Exception e) {
 					logger.error("Table Referesh", e); //$NON-NLS-1$
 					

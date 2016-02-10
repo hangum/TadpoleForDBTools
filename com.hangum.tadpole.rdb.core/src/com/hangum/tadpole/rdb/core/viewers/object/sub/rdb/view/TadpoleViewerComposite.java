@@ -49,10 +49,8 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -357,13 +355,6 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_61, errStatus); //$NON-NLS-1$
 		}
 		
-		// update content assist
-		StringBuffer strViewList = new StringBuffer();
-		for (TableDAO viewDao : showViews) {
-			strViewList.append(MakeContentAssistUtil.makeObjectPattern(viewDao.getSysName(), "View")); //$NON-NLS-1$
-		}
-		userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil.DEL_GROUP)); //$NON-NLS-1$
-	
 		viewListViewer.setInput(showViews);
 		viewListViewer.refresh();
 		

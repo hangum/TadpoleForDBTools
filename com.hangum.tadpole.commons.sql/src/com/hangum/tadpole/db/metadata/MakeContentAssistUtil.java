@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
@@ -34,8 +33,22 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  */
 public class MakeContentAssistUtil {
 	private static final Logger logger = Logger.getLogger(MakeContentAssistUtil.class);
-	public static final String DEL_GROUP = "||";
-	public static final String DEL_DEFAULT = "|";
+	/** content assit  keyword define */
+	protected enum CONTENT_ASSIST_KEYWORD_TYPE {TABLE, COLUMN};
+
+	public static final String _PRE_GROUP = "||";
+	public static final String _PRE_DEFAULT = "|";
+	
+	/**
+	 * setting default keyword 
+	 * @param userDB
+	 */
+	public void defaultSetKeyword(UserDBDAO userDB) {
+//		to do 테이블은 디비가 선택되면 처음 호출 되므로 제외하는것이 효율이 좋을듯합니다. 
+//		getAssistTableList(userDB);
+		getAssistViewList(userDB);
+		getFunctionList(userDB);
+	}
 	
 	/**
 	 * content assist
@@ -46,14 +59,14 @@ public class MakeContentAssistUtil {
 	public String getContentAssist(final UserDBDAO userDB) {
 		final String strTableList = "".equals(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
 		final String strViewList = "".equals(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
-		final String strTmpFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
+		final String strFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
 		
 		String strConstList = strTableList;
 		if(!StringUtils.isEmpty(strViewList)) {
-			strConstList += (StringUtils.isEmpty(strConstList)?strViewList:DEL_GROUP + strViewList);
+			strConstList += (StringUtils.isEmpty(strConstList)?strViewList:_PRE_GROUP + strViewList);
 		}
-		if(!StringUtils.isEmpty(strTmpFunction)) {
-			strConstList += (StringUtils.isEmpty(strConstList)?strTmpFunction:DEL_GROUP + strTmpFunction);
+		if(!StringUtils.isEmpty(strFunction)) {
+			strConstList += (StringUtils.isEmpty(strConstList)?strFunction:_PRE_GROUP + strFunction);
 		}
 		    							
        return strConstList;
@@ -73,12 +86,12 @@ public class MakeContentAssistUtil {
 			else showTables = userDB.getListTable();
 			
 			for (TableDAO tableDao : showTables) {
-				strTablelist.append(makeObjectPattern(tableDao.getSysName(), "Table")); //$NON-NLS-1$
+				strTablelist.append(makeObjectPattern(tableDao.getSchema_name(), tableDao.getSysName(), "Table")); //$NON-NLS-1$
 			}
 		} catch(Exception e) {
 			logger.error("getTable list", e); //$NON-NLS-1$
 		}
-		userDB.setTableListSeparator( StringUtils.removeEnd(strTablelist.toString(), DEL_GROUP) ); //$NON-NLS-1$
+		userDB.setTableListSeparator( StringUtils.removeEnd(strTablelist.toString(), _PRE_GROUP) ); //$NON-NLS-1$
 		
 		return userDB.getTableListSeparator();
 	}
@@ -87,15 +100,11 @@ public class MakeContentAssistUtil {
 	 * @return
 	 */
 	public String getAssistViewList(final UserDBDAO userDB) {
-		StringBuffer strTablelist = new StringBuffer();
 		try {
-			for (TableDAO viewDao : DBSystemSchema.getViewList(userDB)) {
-				strTablelist.append(makeObjectPattern(viewDao.getSysName(), "View")); //$NON-NLS-1$
-			}
+			DBSystemSchema.getViewList(userDB);
 		} catch(Exception e) {
 			logger.error("getView list", e); //$NON-NLS-1$
 		}
-		userDB.setViewListSeparator( StringUtils.removeEnd(strTablelist.toString(), DEL_GROUP)); //$NON-NLS-1$
 		
 		return userDB.getViewListSeparator();
 	}
@@ -105,16 +114,11 @@ public class MakeContentAssistUtil {
 	 * @return
 	 */
 	public String getFunctionList(final UserDBDAO userDB) {
-		StringBuffer strFunctionlist = new StringBuffer();
-		
 		try {
-			for (ProcedureFunctionDAO functionDao : DBSystemSchema.getFunctionList(userDB)) {
-				strFunctionlist.append(makeObjectPattern(functionDao.getName(), "Function")); //$NON-NLS-1$
-			}
+			DBSystemSchema.getFunctionList(userDB);
 		} catch (Exception e) {
 			logger.error("getFunction list", e); //$NON-NLS-1$
 		}
-		userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), DEL_GROUP));
 		
 		return userDB.getFunctionLisstSeparator(); //$NON-NLS-1$
 	}
@@ -151,20 +155,29 @@ public class MakeContentAssistUtil {
 		showTables = DBAccessCtlManager.getInstance().getTableFilter(showTables, userDB);
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(TableDAO td : showTables) {
-			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+		StringBuffer strTablelist = new StringBuffer();
+		for (TableDAO tableDao : showTables) {
+			tableDao.setSysName(SQLUtil.makeIdentifierName(userDB, tableDao.getName()));
+			strTablelist.append(makeObjectPattern(tableDao.getSchema_name(), tableDao.getSysName(), "Table")); //$NON-NLS-1$
 		}
+		userDB.setTableListSeparator( StringUtils.removeEnd(strTablelist.toString(), _PRE_GROUP) ); //$NON-NLS-1$
 		
 		return showTables;
 	}
 	
 	/**
 	 * 
-	 * @param objName
-	 * @param objType
+	 * @param objSchemaName  schema name
+	 * @param objName object name
+	 * @param objType object type(table, view, function)
 	 * @return
 	 */
-	public static String makeObjectPattern(String objName, String objType) {
-		return objName + DEL_DEFAULT + objType + DEL_GROUP;
+	public static String makeObjectPattern(String objSchemaName, String objName, String objType) {
+		if("".equals(objSchemaName) | null == objSchemaName) {
+			return String.format("%s|%s||", objName, objType); //$NON-NLS-1$			
+		} else {
+			return String.format("%s.%s|%s||", objSchemaName, objName, objType); //$NON-NLS-1$
+		}
 	}
+
 }
