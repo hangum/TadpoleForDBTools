@@ -51,25 +51,57 @@ public class MakeContentAssistUtil {
 	}
 	
 	/**
+	 *	스키마로 검색했을 경우에 스키마이름이 없는 리스트를 넘겨 주어야 한다.. 
+	 *	content assist 리스트를 넘겨줄때 tester.tablename 으로 넘겨 주는데 스키마명 다음에 . 이 나오면 스키마 명이 두번 출력되기 때문이다. 
+	 * 
+	 * @param userDB
+	 * @param strArryCursor
+	 * @return
+	 */
+	protected String getContentAssist(UserDBDAO userDB, String[] strArryCursor) {
+		String strCntAsstList = getContentAssist(userDB);
+		String strCheck = strArryCursor[0] + StringUtils.substring(strArryCursor[1], 0, 1);
+		
+		if(logger.isDebugEnabled()) logger.debug("=[3]======= [" + strArryCursor[0] + "][" + strArryCursor[1] + "]");
+		if(StringUtils.endsWith(strCheck, ".")) {
+			String strNewCntAsstList = "";
+			
+			String[] listGroup = StringUtils.splitByWholeSeparator(strCntAsstList, _PRE_GROUP);
+			if(listGroup != null) {
+				for (String strDefault : listGroup) {
+					String[] listDefault = StringUtils.split(strDefault, _PRE_DEFAULT);
+					if(listDefault != null & listDefault.length == 2) {
+						if(StringUtils.startsWith(listDefault[0], strCheck))
+							strNewCntAsstList += makeObjectPattern("", StringUtils.removeStart(listDefault[0], strCheck), listDefault[1]);
+					}	// 
+				}
+				
+				return strNewCntAsstList;
+			}
+		} 
+		return strCntAsstList;
+	}
+	
+	/**
 	 * content assist
 	 * 
 	 * @param userDB
 	 * @return
 	 */
-	public String getContentAssist(final UserDBDAO userDB) {
+	protected String getContentAssist(final UserDBDAO userDB) {
 		final String strTableList = "".equals(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
 		final String strViewList = "".equals(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
 		final String strFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
 		
-		String strConstList = strTableList;
+		String strContentAssistList = strTableList;
 		if(!StringUtils.isEmpty(strViewList)) {
-			strConstList += (StringUtils.isEmpty(strConstList)?strViewList:_PRE_GROUP + strViewList);
+			strContentAssistList += (StringUtils.isEmpty(strContentAssistList)?strViewList:_PRE_GROUP + strViewList);
 		}
 		if(!StringUtils.isEmpty(strFunction)) {
-			strConstList += (StringUtils.isEmpty(strConstList)?strFunction:_PRE_GROUP + strFunction);
+			strContentAssistList += (StringUtils.isEmpty(strContentAssistList)?strFunction:_PRE_GROUP + strFunction);
 		}
 		    							
-       return strConstList;
+       return strContentAssistList;
 	}
 	
 	/**

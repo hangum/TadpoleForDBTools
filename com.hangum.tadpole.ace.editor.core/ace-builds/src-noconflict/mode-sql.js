@@ -74,7 +74,7 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var SqlHighlightRules = require("./sql_highlight_rules").SqlHighlightRules;
 var Range = require("../range").Range;
-//add filding 
+//add folding 
 var SQLFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {

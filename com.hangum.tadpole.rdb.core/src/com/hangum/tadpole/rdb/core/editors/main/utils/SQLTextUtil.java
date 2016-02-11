@@ -119,21 +119,33 @@ public class SQLTextUtil {
 	}
 	
 	/**
-	 * 쿼리에서 커서가 위치한 오브젝트를 얻는다.
-	 * 오브젝트는 공백을 기준으로 )(, 로한다.  
+	 * 커서 이전 포인트의 텍스트를 얻는다.
 	 * 
 	 * @param strQuery
 	 * @param intPosition
 	 * @return
 	 */
-	public static String findCursorObject(String strQuery, int intPosition) {
+	public static String[] findPreCursorObjectArry(String strQuery, int intPosition) {
 		int startIndex = intPosition - 1;
 		int endIndex = intPosition;
+		return cusrsotObjectArry(strQuery, intPosition, startIndex, endIndex);
+	}
+	
+	/**
+	 * cursor object arry
+	 * 
+	 * @param strQuery
+	 * @param intPosition
+	 * @param startIndex
+	 * @param endIndex
+	 * @return
+	 */
+	private static String[] cusrsotObjectArry(String strQuery, int intPosition, int startIndex, int endIndex) {
+		String[] arryCursor = {"", ""};
 		
 		String strPosTxt = StringUtils.trimToEmpty(StringUtils.substring(strQuery, startIndex, endIndex));
-		
-		if(logger.isDebugEnabled()) logger.debug("==> postion char : " + strPosTxt);
-		if(StringUtils.isEmpty(strPosTxt)) return "";
+//		if(logger.isDebugEnabled()) logger.debug("==> postion char : " + strPosTxt);
+		if(StringUtils.isEmpty(strPosTxt)) return arryCursor;
 		
 		String strBeforeTxt = strQuery.substring(0, startIndex);
 		String[] strArryBeforeTxt = StringUtils.split(strBeforeTxt, ' ');
@@ -141,21 +153,14 @@ public class SQLTextUtil {
 		// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
 		String strAfterTxt = strQuery.substring(startIndex);
 		String[] strArryAfterTxt = StringUtils.split(strAfterTxt, ' ');
-
-		String strCursorObj = strArryAfterTxt[0];
+		
 		if(strArryBeforeTxt.length != 0) {
-			strCursorObj = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];	
+			arryCursor[0] = removeSpecialChar(strArryBeforeTxt[strArryBeforeTxt.length-1]);
+			arryCursor[1] = removeSpecialChar(strArryAfterTxt[0]);
+		} else {
+			arryCursor[0] = removeSpecialChar(strArryAfterTxt[0]);
 		}
-		
-		// 마지막 문자가 ; 라면 제거해준다.
-		strCursorObj = strCursorObj.replace(";", "");
-		strCursorObj = StringUtils.removeStart(strCursorObj, ",");
-		strCursorObj = StringUtils.removeEnd(strCursorObj, ",");
-		
-		strCursorObj = StringUtils.removeStart(strCursorObj, "(");
-		strCursorObj = StringUtils.removeEnd(strCursorObj, ")");
-		
-		return strCursorObj;
+		return arryCursor;
 	}
 	
 	/**
@@ -173,11 +178,7 @@ public class SQLTextUtil {
 		for (int i=1; i<=strArryBeforeTxt.length; i++) {
 			String tmp = strArryBeforeTxt[strArryBeforeTxt.length-i];
 			// 마지막 문자가 ; 라면 제거해준다.
-			tmp = tmp.replace(";", "");
-			tmp = StringUtils.remove(tmp, ",");
-			tmp = StringUtils.remove(tmp, "(");
-			tmp = StringUtils.remove(tmp, ")");
-			tmp = StringUtils.trimToEmpty(tmp);
+			tmp = removeSpecialChar(tmp);
 			
 			if(SQLConstants.listTableKeywords.contains(tmp.toUpperCase())) {
 				return tmp.toUpperCase();
@@ -190,5 +191,23 @@ public class SQLTextUtil {
 		}
 				
 		return "";
+	}
+	
+	/**
+	 * 마지막 문자의 특수문자 제거해준다.
+	 * @param strWord
+	 * @return
+	 */
+	public static String removeSpecialChar(String strWord) {
+		if(strWord == null) return "";
+		
+		strWord = strWord.replace(";", "");
+		strWord = StringUtils.removeStart(strWord, ",");
+		strWord = StringUtils.removeEnd(strWord, ",");
+		
+		strWord = StringUtils.removeStart(strWord, "(");
+		strWord = StringUtils.removeEnd(strWord, ")");
+		
+		return strWord;
 	}
 }

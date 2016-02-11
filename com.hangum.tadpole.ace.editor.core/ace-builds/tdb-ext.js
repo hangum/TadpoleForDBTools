@@ -138,10 +138,11 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 			}
 		});
 		
-		var tmpCtsList = varTableList.split("|");
-		for(var i=0; i< tmpCtsList.length; i++) {
-			default_keywordList.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
-		}
+		default_keywordList = varTableList; 
+//		var tmpCtsList = varTableList.split("|");
+//		for(var i=0; i< tmpCtsList.length; i++) {
+//			default_keywordList.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
+//		}
 	} catch(e) {
 		console.log(e);
 	}
@@ -276,13 +277,18 @@ tdbContentAssist = function() {
 			var arryGroupKeyWord = newKeyword.split("||");
 			for(var i=0; i<arryGroupKeyWord.length; i++) {
 				var keyWord = arryGroupKeyWord[i].split("|");
-				completions.push({value: keyWord[0], score: 1, meta: keyWord[1]});
+				completions.push({value: keyWord[0], score: 2, meta: keyWord[1]});
 			}
 		}
 		
 		// 마지막에 디폴트 키워드를 추가한다.
-		for(var i=0; i< default_keywordList.length; i++) {
-			completions.push(default_keywordList[i]);
+//		var tmpCtsList = varTableList.split("|");
+//		for(var i=0; i< tmpCtsList.length; i++) {
+//			default_keywordList.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
+//		}
+		var tmpCtsList = default_keywordList.split("|");
+		for(var i=0; i< tmpCtsList.length; i++) {
+			completions.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
 		}
 
 		editor.completers = [];
@@ -633,7 +639,7 @@ findCursorSQL = function(varRow, varColumn) {
  	var startRow = -1, endRow = -1;
  	var realCursorPosition = 0;
  	
-	console.log("[editor current]" + varRow + ": " + varColumn);
+//	console.log("[editor current]" + varRow + ": " + varColumn);
  	
 	//////////////////////////////////////////////////////
 	/// 쿼리의 시작과 끝 부분을 계산한다. ////////////////////////
@@ -718,23 +724,23 @@ findCursorSQL = function(varRow, varColumn) {
  		}
  	}
 	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery + " ";
-	console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
+//	console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
 
 	//////////////////////////////////////////////////////
 	/// 쿼리 중에 커서의 위치를 계산한다. ////////////////////////
  	//////////////////////////////////////////////////////
 	var realCurrentLine = varRow - startRow;
-	console.log("=0==> realCurrentLine : " + realCurrentLine);
+//	console.log("=0==> realCurrentLine : " + realCurrentLine);
 	var arryQuery = fullyQuery.split("\n");
 	// 라인 숫자도 포함 시킨다.
 	var realCursorPosition = realCurrentLine;
 	for(var i=0; i < realCurrentLine; i++) {
-		console.log("=1==> before cursor text is : " + arryQuery[i] + ":" + arryQuery[i].length);
+//		console.log("=1==> before cursor text is : " + arryQuery[i] + ":" + arryQuery[i].length);
 		realCursorPosition += arryQuery[i].length;
 	}
-	console.log("==2=> before cursor text is : " + varColumn);
+//	console.log("==2=> before cursor text is : " + varColumn);
 	realCursorPosition += varColumn;//(arryQuery[realCurrentLine].substring(0, varColumn)).length;
-	console.log("[cursor position]" + realCursorPosition);
+//	console.log("[cursor position]" + realCursorPosition);
 	
 	//////////////////////////////////////////////////////
 	/// 결과리턴 ////////////////////////
