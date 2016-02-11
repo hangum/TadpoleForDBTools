@@ -1,6 +1,7 @@
 /**
  * 	tadpole ace editor extension.
- *  ace example at https://github.com/ajaxorg/ace/wiki/Embedding-API
+ *  ace example : 
+ *  	https://github.com/ajaxorg/ace/wiki/Embedding-API
  *  
  *  Default keyboard shortcuts : 
  *  	https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts
@@ -117,7 +118,6 @@ var strLastContent;
  * @param varIsWrap Wrap of editor
  * @param varWarpLimit Wrap limit of editor
  * @param varIsShowGutter Show gutter is editoe
- * 
  */
 editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitText, varAutoSave, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
 	varEditorType = varType;
@@ -138,11 +138,10 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 			}
 		});
 		
-		default_keywordList = varTableList; 
-//		var tmpCtsList = varTableList.split("|");
-//		for(var i=0; i< tmpCtsList.length; i++) {
-//			default_keywordList.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
-//		}
+		var tmpCtsList = varTableList.split("|");
+		for(var i=0; i< tmpCtsList.length; i++) {
+			default_keywordList.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
+		}
 	} catch(e) {
 		console.log(e);
 	}
@@ -163,11 +162,12 @@ editorService.RDBinitEditor = function(varMode, varType, varTableList, varInitTe
 	}
 	
 	if(varAutoSave == 'true') autoSave();
-	
 	editor.setSession(session);
 	editor.focus();
 };
-// auto save
+/**
+ *  auto save
+ */
 autoSave = function() {
 	var varAllTxt = editorService.getAllText();
 	if(strLastContent != varAllTxt) {
@@ -188,12 +188,12 @@ autoSave = function() {
  * 에디터를 초기화 합니다. 
  * @param varMode sql type(ex: sqlite, pgsql, javascript) EditorDefine#EXT_SQLite
  * @param varInitText
- * 
  */
 editorService.MONGODBinitEditor = function(varMode, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
 	editorService.RDBinitEditor(varMode, 'NONE', '', varInitText, 'false', varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter);
 };
-/*
+
+/**
  * change editor style
  */
 editorService.changeEditorStyle = function(varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {
@@ -271,30 +271,26 @@ tdbContentAssist = function() {
 	try {
 		var arrySQL = caParsePartSQL();
 		var newKeyword = AceEditorBrowserHandler(editorService.CONTENT_ASSIST, arrySQL[0], arrySQL[1]);
-		var completions = [];
+		var newCompletions = [];
 		
 		if("" != newKeyword) {
 			var arryGroupKeyWord = newKeyword.split("||");
 			for(var i=0; i<arryGroupKeyWord.length; i++) {
 				var keyWord = arryGroupKeyWord[i].split("|");
-				completions.push({value: keyWord[0], score: 2, meta: keyWord[1]});
+				newCompletions.push({value: keyWord[0], score: 2, meta: keyWord[1]});
 			}
 		}
 		
 		// 마지막에 디폴트 키워드를 추가한다.
-//		var tmpCtsList = varTableList.split("|");
-//		for(var i=0; i< tmpCtsList.length; i++) {
-//			default_keywordList.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
-//		}
-		var tmpCtsList = default_keywordList.split("|");
-		for(var i=0; i< tmpCtsList.length; i++) {
-			completions.push({value: tmpCtsList[i], score: 0, meta: "Keyword"});
-		}
-
-		editor.completers = [];
+		Array.prototype.push.apply(newCompletions, default_keywordList);
+		
+		// setting default snippet
+		editor.completers = [langTools.snippetCompleter];
+		
+		// 기존 content assist를 초기화한다.
 		editor.completers.push({
 			getCompletions: function(editor, session, pos, prefix, callback) {
-				callback(null, completions);
+				callback(null, newCompletions);
 			}
 		});
 		editor.execCommand("startAutocomplete");
