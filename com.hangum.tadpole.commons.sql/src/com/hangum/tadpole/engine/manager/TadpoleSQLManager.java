@@ -30,8 +30,9 @@ import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.db.metadata.constants.SQLConstantFactory;
+import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.define.SQLConstants;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -179,30 +180,17 @@ public class TadpoleSQLManager {
 			default:
 				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.NONE);
 		}
-
-		// set keyword
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-			// not support keyword http://sqlite.org/lang_keywords.html
-			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + dbMetadata;
-			tmd.setKeywords(strFullKeywords);
-		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
-			// not support this method
-		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT
-		) {
-			// not support this methods
-			tmd.setKeywords("");
-		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
-		) {
-			String strFullKeywords = StringUtils.join(SQLConstants.MSSQL_KEYWORDS, ",") + "," + dbMetaData.getSQLKeywords();
-			tmd.setKeywords(strFullKeywords);
-		} else {
-			tmd.setKeywords(dbMetaData.getSQLKeywords());
-		}
 		
+		SQLConstantFactory factory = new SQLConstantFactory();
+		SQLConstants sqlConstants = factory.getDB(userDB);
+		tmd.setKeywords(
+				StringUtils.replace(
+						sqlConstants.keyword() + "|" + sqlConstants.function() + "|" + sqlConstants.constant() + "|" +sqlConstants.variable(),
+						"|",
+						","
+						)
+				);
+						
 		tmd.setDbMajorVersion(dbMetaData.getDatabaseMajorVersion());
 		tmd.setMinorVersion(dbMetaData.getDatabaseMinorVersion());
 		dbMetadata.put(searchKey, tmd);
@@ -220,10 +208,10 @@ public class TadpoleSQLManager {
 	public static Map<String, SqlMapClient> getDbManager() {
 		return dbManager;
 	}
-	public static Map<String, TadpoleMetaData> getDbMetadata() {
-		return dbMetadata;
-	}
-	
+//	public static Map<String, TadpoleMetaData> getDbMetadata() {
+//		return dbMetadata;
+//	}
+//	
 	/**
 	 * dbcp pool info
 	 * 

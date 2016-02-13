@@ -13,7 +13,7 @@ package com.hangum.tadpole.rdb.core.editors.main.utils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.define.SQLConstants;
+import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 
 /**
  * sql text util

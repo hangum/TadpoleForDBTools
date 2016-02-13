@@ -8,7 +8,9 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.define;
+package com.hangum.tadpole.db.metadata.constants;
+
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * Define mysql, maria db content assist
@@ -18,9 +20,8 @@ package com.hangum.tadpole.engine.define;
  */
 public class MySQLConstants extends SQLConstants {
 
-	@Override
-	public String ext() {
-		return EXT_DEFAULT;
+	public MySQLConstants(UserDBDAO userDB) {
+		super(userDB);
 	}
 
 	@Override
@@ -37,7 +38,7 @@ public class MySQLConstants extends SQLConstants {
 
 	@Override
 	public String constant() {
-		return "by|bool|boolean|bit|blob|decimal|double|enum|float|long|longblob|longtext|medium|mediumblob|mediumint|mediumtext|time|timestamp|tinyblob|tinyint|tinytext|text|bigint|int|int1|int2|int3|int4|int8|integer|float|float4|float8|double|char|varbinary|varchar|varcharacter|precision|date|datetime|year|unsigned|signed|numeric";
+		return "false|true|null|unknown|date|time|timestamp|ODBCdotTable|zerolessFloat";
 	}
 
 	@Override

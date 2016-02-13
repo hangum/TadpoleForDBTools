@@ -30,6 +30,7 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/driver/tibero/tibero5-jdbc.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
+ com.hangum.tadpole.db.metadata.constants,
  com.hangum.tadpole.engine,
  com.hangum.tadpole.engine.connect,
  com.hangum.tadpole.engine.define,

@@ -44,7 +44,7 @@ public class MakeContentAssistUtil {
 	 * @param userDB
 	 */
 	public void defaultSetKeyword(UserDBDAO userDB) {
-//		to do 테이블은 디비가 선택되면 처음 호출 되므로 제외하는것이 효율이 좋을듯합니다. 
+//	TO DO 테이블은 디비가 선택되면 처음 호출 되므로 제외하는것이 효율이 좋을듯합니다. 
 //		getAssistTableList(userDB);
 		getAssistViewList(userDB);
 		getFunctionList(userDB);
@@ -58,27 +58,41 @@ public class MakeContentAssistUtil {
 	 * @param strArryCursor
 	 * @return
 	 */
-	protected String getContentAssist(UserDBDAO userDB, String[] strArryCursor) {
-		String strCntAsstList = getContentAssist(userDB);
-		String strCheck = strArryCursor[0] + StringUtils.substring(strArryCursor[1], 0, 1);
+	protected String getSchemaOrTableContentAssist(UserDBDAO userDB, String[] strArryCursor) {
+		String strCntAsstList 	= getContentAssist(userDB);
+		String strCursorText 	= strArryCursor[0] + strArryCursor[1];
 		
-		if(logger.isDebugEnabled()) logger.debug("=[3]======= [" + strArryCursor[0] + "][" + strArryCursor[1] + "]");
-		if(StringUtils.endsWith(strCheck, ".")) {
-			String strNewCntAsstList = "";
+		if(StringUtils.contains(strCursorText, '.')) {
+			String strSchemaName 		= StringUtils.substringBefore(strCursorText, ".") + ".";
+			String strTableName 		= StringUtils.substringAfter(strCursorText, ".");
+			int intSep = StringUtils.indexOf(strCntAsstList, ".");
 			
-			String[] listGroup = StringUtils.splitByWholeSeparator(strCntAsstList, _PRE_GROUP);
-			if(listGroup != null) {
-				for (String strDefault : listGroup) {
-					String[] listDefault = StringUtils.split(strDefault, _PRE_DEFAULT);
-					if(listDefault != null & listDefault.length == 2) {
-						if(StringUtils.startsWith(listDefault[0], strCheck))
-							strNewCntAsstList += makeObjectPattern("", StringUtils.removeStart(listDefault[0], strCheck), listDefault[1]);
-					}	// 
-				}
-				
-				return strNewCntAsstList;
+			if(logger.isDebugEnabled()) {
+				logger.debug("[0]" + strArryCursor[0]);
+				logger.debug("[1]" + strArryCursor[1]);
+				logger.debug("[1][intSep]" + intSep);
+				logger.debug("[1][strArryCursor[0].length()]" + strArryCursor[0].length());
 			}
-		} 
+			
+			// 텍스트 커서가 뒤에 있으면 테이블 명만 리턴한다.
+			if(strArryCursor[0].length() >= intSep) {
+				String strNewCntAsstList = "";
+				
+				String[] listGroup = StringUtils.splitByWholeSeparator(strCntAsstList, _PRE_GROUP);
+				if(listGroup != null) {
+					for (String strDefault : listGroup) {
+						String[] listDefault = StringUtils.split(strDefault, _PRE_DEFAULT);
+						if(listDefault != null & listDefault.length == 2) {
+							if(StringUtils.startsWithIgnoreCase(listDefault[0], strSchemaName))
+								strNewCntAsstList += makeObjectPattern("", StringUtils.removeStart(listDefault[0], strSchemaName), listDefault[1]);
+						}	// 
+					}
+					
+					return strNewCntAsstList;
+				}
+			}
+		}
+		
 		return strCntAsstList;
 	}
 	

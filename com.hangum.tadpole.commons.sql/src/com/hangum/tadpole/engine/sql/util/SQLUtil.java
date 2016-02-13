@@ -274,9 +274,7 @@ public class SQLUtil {
 				}
 			}
 		}
-		
 //		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
-		
 		return retStr;
 	}
 	
