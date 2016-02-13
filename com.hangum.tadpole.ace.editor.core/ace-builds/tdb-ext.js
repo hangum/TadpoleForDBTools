@@ -85,8 +85,10 @@ var default_keywordList = [];
 /** auto save에서 사용하기 위해 마지막으로 호출한 값을 기록 */
 var strLastContent;
 
+
 /** initialize editor */
 //{
+	var Range = ace.require("ace/range").Range;
 	var langTools = ace.require("ace/ext/language_tools");
 	var editor = ace.edit("editor");
 	
@@ -126,8 +128,6 @@ editorService.RDBinitEditor = function(dBType, editorType, varInitText, varAutoS
 	strLastContent = varInitText;
 	try {
 		session.setUndoManager(new UndoManager());
-//		session.setMode(varMode);
-		
 		if(varEditorType == "json") {
 			session.setMode("ace/mode/json");
 		} else {
@@ -457,15 +457,7 @@ editorService.getAllText = function() {
 	return editor.getValue();
 };
 /** set seltected text */
-editorService.setSelectedText = function() {
-//	var selectTxt = editorService.getSelectedText();
-//	var intQueryLine = editor.getCursorPosition().row;
-//	editor.gotoLine(intQueryLine-1);
-//	
-//	editor.find(selectTxt);
-	
-
-	//
+editorService.setSelectedText = function() {	//
 	// 프로시저 평선 트리거는 에디터 모두를 리턴합니다. 
 	//
 	if(varEditorType == "PROCEDURES" ||
@@ -477,11 +469,8 @@ editorService.setSelectedText = function() {
 		try {
 			// 선택된 텍스트가 있다면 우선적으로 리턴합니다.
 			var varSelectionContent = editor.getSelectedText();
-			if("" != varSelectionContent)  {
-				
-			// 선택된 텍스트가 없다면 구분자 만큼 넘겨줍니다.
-			} else {
-				//
+			if("" == varSelectionContent)  {
+				editor.selection.setRange(new Range(_startRow, _startColumn, _endRow, _endColumn));
 			}
 		} catch(e) {
 			console.log(e);
@@ -632,13 +621,12 @@ findPreviousLineText = function(currentRow) {
  * @param varColumn
  * @returns {String}
  */
-var startRow, startColumn, endRow, endColumn; 
+var _startRow, _startColumn, _endRow, _endColumn;
 findCursorSQL = function(varRow, varColumn) {
     var maxRow = editor.session.getLength();
  	var startRow = -1, endRow = -1;
  	var realCursorPosition = 0;
- 	
-//	console.log("[editor current]" + varRow + ": " + varColumn);
+ 	_startRow=0, _startColumn=0, _endRow=0, _endColumn=0;
  	
 	//////////////////////////////////////////////////////
 	/// 쿼리의 시작과 끝 부분을 계산한다. ////////////////////////
@@ -696,21 +684,27 @@ findCursorSQL = function(varRow, varColumn) {
  			firstLineQuery += token.value;
  		}
  	}
+ 	
+	// 쿼리가 에러일 경우 블록 처리하기 위해 처음 시작 행과 열을 기록한다.
+	_startRow = startRow;
+	_startColumn = editor.session.getLine(startRow).length - firstLineQuery.length;
+// 	console.log("==>[Start position]" + _startRow + "." + _startColumn);
+ 			
  	// 처음 행에 분리자가 없는 경우(즉 모든 행 전체가 쿼리인경우)
  	if(isStartDelemiter == false && firstLineQuery == "") {
  		firstLineQuery = editor.session.getLine(startRow) + "\n";
  	// 처음 줄이 ;문자만 있을 경우.
  	} else if(isStartDelemiter == true && firstLineQuery == "") {
  		firstLineQuery = "\n";
- 	}
-
+ 	} 
+ 	
  	// 다음행부터 마지막 행까지 가져온다.
  	var middleQuery = "";
  	for(var start = startRow+1; start<endRow; start++) {
  		middleQuery += editor.session.getLine(start) + "\n";
  	}
 
- 	// 마지막 행을 가져
+ 	// 마지막 행을 가져온다.
 	var lastLineQuery = "";
 	var tokens = editor.session.getTokens(endRow);
  	for(var i=0; i<tokens.length; i++) {
@@ -722,6 +716,10 @@ findCursorSQL = function(varRow, varColumn) {
  			lastLineQuery += token.value;
  		}
  	}
+ 	// 쿼리의 마지막 행과 열을 기록한다.
+ 	_endRow = endRow, _endColumn = lastLineQuery.length;
+// 	console.log("==>[End position]" + _endRow + "." + _endColumn);
+ 	
 	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery + " ";
 //	console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
 
@@ -773,7 +771,7 @@ ace.define("DynHighlightRules", [], function(require, exports, module) {
 	   }
 	   this.keywordRule = {
 	       regex : "\\w+",
-	       onMatch : function() {return this.$rules;}
+	       onMatch : function() {return "text";}
 	   }
 	
 		var keywords;
