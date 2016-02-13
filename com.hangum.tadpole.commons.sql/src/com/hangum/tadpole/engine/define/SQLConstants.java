@@ -22,11 +22,29 @@ import java.util.List;
  * @since 2015. 4. 21.
  *
  */
-public class SQLConstants {
+public abstract class SQLConstants {
 	public static final String[] DEFAULT_TABLE_KEYWORDS = {"FROM", "UPDATE", "INTO", "TABLE", "JOIN"};
 	public static final String[] DEFAULT_COLUMN_KEYWORDS = {"SELECT", "WHERE", "SET", "ON", "AND", "OR", "BY", "HAVING"};
 	public static final List<String> listTableKeywords = Arrays.asList(SQLConstants.DEFAULT_TABLE_KEYWORDS);
 	public static final List<String> listColumnKeywords = Arrays.asList(SQLConstants.DEFAULT_COLUMN_KEYWORDS);
+	
+	/**
+	 * 에디터에서 사용할 확장자로 sql을 지정. 
+	 */
+	private static String EXT_SQL_PREFIX = "ace/mode/";
+	
+	protected static String EXT_SQLite = EXT_SQL_PREFIX + "sqlite";
+	protected static String EXT_MYSQL 	= EXT_SQL_PREFIX + "mysql";
+	protected static String EXT_PGSQL 	= EXT_SQL_PREFIX + "pgsql";
+	protected static String EXT_MSSQL 	= EXT_SQL_PREFIX + "sqlserver";
+	protected static String EXT_DEFAULT = EXT_SQL_PREFIX + "sql";
+
+	
+	public abstract String ext();
+	public abstract String keyword();
+	public abstract String function();
+	public abstract String constant();
+	public abstract String variable();
 	
 //	public static final String[] ADVANCED_KEYWORDS = { "PACKAGE", "FUNCTION", "TYPE", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "WRAPPED" };
 	public static final String[] MYSQL_KEYWORDS = {"TABLE", "SELECT", "OPTION", "DEFAULT", "FULLTEXT", "PACKAGE", "FUNCTION", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "KEY"};

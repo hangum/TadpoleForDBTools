@@ -48,7 +48,7 @@ public interface IEditorFunction  {
      * @param 추가하려는 키워드
      * @param 초기텍스트
      */
-    public static final String RDB_INITIALIZE = EDITOR_SERVICE_MAP + ".RDBinitEditor('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+    public static final String RDB_INITIALIZE = EDITOR_SERVICE_MAP + ".RDBinitEditor('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
     
     /**
      * MONGODB 에디터를 초기화 합니다. 

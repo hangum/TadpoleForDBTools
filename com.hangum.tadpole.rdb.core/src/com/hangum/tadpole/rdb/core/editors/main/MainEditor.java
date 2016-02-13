@@ -490,7 +490,7 @@ public class MainEditor extends EditorExtension {
 			public void completed( ProgressEvent event ) {
 				try {
 					browserEvaluate(IEditorFunction.RDB_INITIALIZE, 
-							findEditorExt(), dbAction.toString(), strConstList, getInitDefaultEditorStr(),
+							findEditorExt(), dbAction.toString(), getInitDefaultEditorStr(),
 							varAutoSave, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter
 							); //$NON-NLS-1$
 				} catch(Exception ee) {

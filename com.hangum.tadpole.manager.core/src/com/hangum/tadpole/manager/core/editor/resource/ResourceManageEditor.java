@@ -496,7 +496,7 @@ public class ResourceManageEditor extends EditorPart {
 		});
 		btnApiExecute.setText(Messages.get().ResourceManageEditor_44);
 
-		textQuery = new TadpoleEditorWidget(compositeDetail, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
+		textQuery = new TadpoleEditorWidget(compositeDetail, SWT.BORDER, userDB.getDBDefine().getExt(), "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
 
 		createTableColumn();

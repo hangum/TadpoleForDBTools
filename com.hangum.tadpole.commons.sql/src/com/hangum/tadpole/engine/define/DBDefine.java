@@ -228,22 +228,24 @@ public enum DBDefine {
 	 * @return
 	 */
 	public String getExt() {
-		String extension = "tadpole_edit"; //$NON-NLS-1$
+		String extension = ""; //$NON-NLS-1$
 		
 		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
+			extension += "mysql"; //$NON-NLS-1$
 		} else if(this == DBDefine.ORACLE_DEFAULT) {
-			extension += ".oracle"; //$NON-NLS-1$
+			extension += "oracle"; //$NON-NLS-1$
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
-			extension += ".mssql"; //$NON-NLS-1$
+			extension += "mssql"; //$NON-NLS-1$
 		} else if(this == DBDefine.SQLite_DEFAULT) {
-			extension += ".sqlite"; //$NON-NLS-1$
+			extension += "sqlite"; //$NON-NLS-1$
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
+			extension += "mysql"; //$NON-NLS-1$
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
-			extension += ".hql"; //$NON-NLS-1$
+			extension += "hql"; //$NON-NLS-1$
+		} else if(this == DBDefine.POSTGRE_DEFAULT) {
+			extension += "pgsql"; //$NON-NLS-1$
 		} else {
-			extension += ".postgresql"; //$NON-NLS-1$
+			extension += "sql"; //$NON-NLS-1$
 		}
 		
 		return extension;
