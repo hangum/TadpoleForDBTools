@@ -44,6 +44,7 @@ public class PublicTadpoleDefine {
 	
 	/** COOKIE USER ID */
 	public static final String TDB_COOKIE_USER_ID = "TDB_USER_ID";
+	public static final String TDB_COOKIE_USER_PWD = "TDB_USER_PWD";
 	public static final String TDB_COOKIE_USER_SAVE_CKECK = "TDB_USER_SAVE_CHECK";
 	public static final String TDB_COOKIE_USER_LANGUAGE = "TDB_USER_LANGUAGE";
 

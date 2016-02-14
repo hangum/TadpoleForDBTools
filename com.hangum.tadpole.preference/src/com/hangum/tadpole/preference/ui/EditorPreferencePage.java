@@ -73,7 +73,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		container.setLayout(new GridLayout(2, false));
 		
 		btnAutoSave = new Button(container, SWT.CHECK);
-		btnAutoSave.setText("Auto Save");
+		btnAutoSave.setText(Messages.get().EditorPreferencePage_3);
 		new Label(container, SWT.NONE);
 		
 		lblTheme = new Label(container, SWT.NONE);

@@ -10,11 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.preference.messages"; //$NON-NLS-1$
+
+	public String EditorPreferencePage_3;
 	
 	public String AmazonPreferencePage_0;
 
