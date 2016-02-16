@@ -181,15 +181,33 @@ public class TadpoleSQLManager {
 				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.NONE);
 		}
 		
-		SQLConstantFactory factory = new SQLConstantFactory();
-		SQLConstants sqlConstants = factory.getDB(userDB);
-		tmd.setKeywords(
-				StringUtils.replace(
-						sqlConstants.keyword() + "|" + sqlConstants.function() + "|" + sqlConstants.constant() + "|" +sqlConstants.variable(),
-						"|",
-						","
-						)
-				);
+//		SQLConstantFactory factory = new SQLConstantFactory();
+//		SQLConstants sqlConstants = factory.getDB(userDB);
+//		tmd.setKeywords(
+//				StringUtils.replace(
+//						sqlConstants.keyword() + "|" + sqlConstants.function() + "|" + sqlConstants.constant() + "|" +sqlConstants.variable(),
+//						"|",
+//						","
+//						)
+//				);
+		// set keyword
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			// not support keyword http://sqlite.org/lang_keywords.html
+			tmd.setKeywords(StringUtils.join(SQLConstants.QUOTE_SQLITE_KEYWORDS, ","));
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MYSQL_KEYWORDS, ",") + "," + dbMetadata;
+			tmd.setKeywords(strFullKeywords);
+		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+			// not support this method
+			tmd.setKeywords("");
+		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
+		) {
+			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MSSQL_KEYWORDS, ",") + "," + dbMetaData.getSQLKeywords();
+			tmd.setKeywords(strFullKeywords);
+		} else {
+			tmd.setKeywords(dbMetaData.getSQLKeywords());
+		}
 						
 		tmd.setDbMajorVersion(dbMetaData.getDatabaseMajorVersion());
 		tmd.setMinorVersion(dbMetaData.getDatabaseMinorVersion());
