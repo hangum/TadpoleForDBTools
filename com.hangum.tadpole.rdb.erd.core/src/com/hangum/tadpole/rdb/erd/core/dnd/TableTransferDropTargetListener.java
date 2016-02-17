@@ -36,21 +36,19 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.relation.RelationUtil;
+import com.hangum.tadpole.rdb.erd.core.utils.TDBDataHandler;
 import com.hangum.tadpole.rdb.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.Column;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.Table;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Explorer의 테이블 명을 넘겨 받아서 erd에 테이블을 그려줍니다.
@@ -135,7 +133,11 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						
 						String schemaName = arryTable[0];
 						String tableName = arryTable[1];
-						mapTable.put(tableName, getColumns(schemaName, tableName));
+						
+						TableDAO table = new TableDAO();
+						table.setSchema_name(schemaName);
+						table.setName(tableName);
+						mapTable.put(tableName, TDBDataHandler.getColumns(userDB, table));
 					}
 					
 				} catch(Exception e) {
@@ -264,26 +266,4 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 		
 //		super.handleDrop();
 	}
-	
-	/**
-	 * table의 컬럼 정보를 가져옵니다.
-	 * 
-	 * @param strTBName
-	 * @return
-	 * @throws Exception
-	 */
-	private List<TableColumnDAO> getColumns(String strSchema, String strTBName) throws Exception {
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("db", userDB.getDb()); //$NON-NLS-1$
-		param.put("schema", strSchema);
-		param.put("table", strTBName);			 //$NON-NLS-1$
-
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-			return new TajoConnectionManager().tableColumnList(userDB, param);
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
-		}
-	}
-
 }

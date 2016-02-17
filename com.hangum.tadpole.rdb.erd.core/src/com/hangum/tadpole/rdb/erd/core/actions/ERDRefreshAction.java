@@ -30,6 +30,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.relation.RelationUtil;
+import com.hangum.tadpole.rdb.erd.core.utils.TDBDataHandler;
 import com.hangum.tadpole.rdb.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.hangum.tadpole.rdb.model.Column;
@@ -113,7 +114,7 @@ public class ERDRefreshAction extends SelectionAction {
 				mapDBTables.put(tableModel.getName(), tableModel);
 				tableModel.setConstraints(mapOldTables.get(table.getName()));
 				// column add
-				List<TableColumnDAO> columnList = TadpoleModelUtils.INSTANCE.getColumns(userDB, table);
+				List<TableColumnDAO> columnList = TDBDataHandler.getColumns(userDB, table);
 				for (TableColumnDAO columnDAO : columnList) {
 					
 					Column column = factory.createColumn();
