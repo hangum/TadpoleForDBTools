@@ -146,7 +146,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     protected String question_dml = "";
     
     protected ManagerListDTO parent;
-    protected List<UserDBResourceDAO> listUserDBErd = new ArrayList<UserDBResourceDAO>();
+    protected List<UserDBResourceDAO> listUserResource = new ArrayList<UserDBResourceDAO>();
     
     /** 디비의 버전 정보 */
     protected String version;
@@ -306,12 +306,12 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		this.parent = parent;
 	}
 
-	public List<UserDBResourceDAO> getListUserDBErd() {
-		return listUserDBErd;
+	public List<UserDBResourceDAO> getListUserDBResource() {
+		return listUserResource;
 	}
 
-	public void setListUserDBErd(List<UserDBResourceDAO> listUserDBErd) {
-		this.listUserDBErd = listUserDBErd;
+	public void setListUserDBResource(List<UserDBResourceDAO> listUserDBResource) {
+		this.listUserResource = listUserDBResource;
 	}
 	
 	public String getDelYn() {
@@ -653,7 +653,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 				+ ", is_readOnlyConnect=" + is_readOnlyConnect + ", is_autocommit=" + is_autocommit
 				+ ", is_showtables=" + is_showtables + ", is_external_browser=" + is_external_browser
 				+ ", listExternalBrowserdao=" + listExternalBrowserdao + ", question_dml=" + question_dml + ", parent="
-				+ parent + ", listUserDBErd=" + listUserDBErd + ", version=" + version + ", is_visible=" + is_visible
+				+ parent + ", listUserDBErd=" + listUserResource + ", version=" + version + ", is_visible=" + is_visible
 				+ ", is_summary_report=" + is_summary_report + ", is_monitoring=" + is_monitoring + ", is_lock="
 				+ is_lock + ", dbAccessCtl=" + dbAccessCtl + "]";
 	}

@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -67,7 +68,6 @@ import com.swtdesigner.SWTResourceManager;
  */
 public class LoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
-	private String _cookiePath = "/";
 	
 	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
 	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
@@ -339,22 +339,22 @@ public class LoginDialog extends Dialog {
 			for (Cookie cookie : cookies) {
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
 					cookie.setMaxAge(0);
-					cookie.setPath(_cookiePath);
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
 				}
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
 					cookie.setMaxAge(0);
-					cookie.setPath(_cookiePath);
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
 				}
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
 					cookie.setMaxAge(0);
-					cookie.setPath(_cookiePath);
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
 				}
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
 					cookie.setMaxAge(0);
-					cookie.setPath(_cookiePath);
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
 				}
 			}
@@ -369,7 +369,7 @@ public class LoginDialog extends Dialog {
 			HttpServletResponse response = RWT.getResponse();
 			Cookie tdbCookie = new Cookie(key, value);
 			tdbCookie.setMaxAge(60 * 60 * 24 * 365);
-			tdbCookie.setPath(_cookiePath);
+			tdbCookie.setPath(PublicTadpoleDefine._cookiePath);
 			response.addCookie(tdbCookie);
 		} catch(Exception e) {
 			logger.error("regist user info", e);

@@ -19,10 +19,8 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -301,7 +299,7 @@ public class ManagerViewer extends ViewPart {
 	 * @param userDB
 	 */ 
 	public void addUserResouceData(UserDBDAO userDB, boolean isReload) {
-		if(userDB.getListUserDBErd().isEmpty() || isReload) {
+		if(userDB.getListUserDBResource().isEmpty() || isReload) {
 			// user_resource_data 목록을 추가해 줍니다.
 			try {
 				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbResourceTree(userDB);
@@ -322,7 +320,7 @@ public class ManagerViewer extends ViewPart {
 						}
 					}
 					
-					userDB.setListUserDBErd(listRealResource);
+					userDB.setListUserDBResource(listRealResource);
 					managerTV.refresh(userDB);
 					managerTV.expandToLevel(userDB, 3);
 				}
@@ -346,9 +344,9 @@ public class ManagerViewer extends ViewPart {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
-					List<UserDBResourceDAO> listResources = userDB.getListUserDBErd();
+					List<UserDBResourceDAO> listResources = userDB.getListUserDBResource();
 					listResources.clear();
-					userDB.setListUserDBErd(listResources);
+					userDB.setListUserDBResource(listResources);
 					
 					addUserResouceData(userDB, true);
 					
@@ -377,7 +375,7 @@ public class ManagerViewer extends ViewPart {
 		}
 		
 		// 삭제
-		userDBResource.getParent().getListUserDBErd().remove(userDBResource);
+		userDBResource.getParent().getListUserDBResource().remove(userDBResource);
 		managerTV.refresh(userDB);
 	}
 	
