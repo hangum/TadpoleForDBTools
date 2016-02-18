@@ -418,7 +418,7 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String getTableName(TableDAO tableDAO) {
-		if("".equals(tableDAO.getSchema_name())) return tableDAO.getSysName(); //$NON-NLS-2$
+		if("".equals(tableDAO.getSchema_name()) || null == tableDAO.getSchema_name()) return tableDAO.getSysName(); //$NON-NLS-2$
 		
 		return tableDAO.getSchema_name() + "." + tableDAO.getSysName(); //$NON-NLS-2$
 	}

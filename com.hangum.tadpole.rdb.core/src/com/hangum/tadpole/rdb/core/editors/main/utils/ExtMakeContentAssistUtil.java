@@ -148,7 +148,6 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 		}
 		
 		if(logger.isDebugEnabled()) {
-			logger.debug("============================================");
 			logger.debug("query is [" + strQuery + "]");
 			logger.debug("[quote]" + strQuote + " [alias]" + strAlias);
 		}
@@ -168,29 +167,21 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 				return "";
 			}
 			
-			int groupCount = matcher.groupCount();
-			for(int i = 1; i <= groupCount; i++) {
-				String group = matcher.group(i);
-				if(!StringUtils.isEmpty(group)) {
-					String[] allNames = group.split(Pattern.quote(strSeparator));
-					for(String name : allNames) {
-						if(strQuote != null && name.startsWith(strQuote) && name.endsWith(strQuote)) {
-							name = name.substring(1, name.length() - 1);
-						}
-						listName.add(name); 
-					}
-				}
+			if(!listName.isEmpty()) {
+				for(int i = 1; i <= matcher.groupCount(); i++) {
+					listName.add(matcher.group(i));
+				}	
+			} else {
+				if(logger.isDebugEnabled()) logger.debug("=====> Not found object name");
+				return "";
 			}
+			
 		} catch (PatternSyntaxException e) {
-			if(logger.isDebugEnabled()) logger.debug("=====> Not found name pattern");
+			if(logger.isDebugEnabled()) logger.error("=====> find pattern exception");
 			return "";
 		}
 		
-		if(listName.isEmpty()) {
-			if(logger.isDebugEnabled()) logger.debug("=====> Not found name");
-			return "";
-		}
-		
+		// find object column
 		StringBuffer strColumnList = new StringBuffer();
 		for(String tblName : listName) {
 			strColumnList.append(getAssistColumnList(userDB, tblName)).append(_PRE_GROUP);

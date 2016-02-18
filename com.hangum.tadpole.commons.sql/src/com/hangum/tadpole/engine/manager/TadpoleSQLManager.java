@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.manager;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -30,7 +32,6 @@ import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
-import com.hangum.tadpole.db.metadata.constants.SQLConstantFactory;
 import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;

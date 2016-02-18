@@ -109,35 +109,7 @@ public class ManagerViewer extends ViewPart {
 		managerTV = new TreeViewer(compositeMainComposite, SWT.NONE);
 		managerTV.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				
-				//
-				// 더블 클릭을 하였으나, 싱글 클릭이 시간이(?) 걸리므로 작동이 안되는 문제를 수정하기위해..
-				//
-				final SelectionChangedEvent _event = event;
-				Job job = new Job("Select Database Object") {
-					@Override
-					public IStatus run(IProgressMonitor monitor) {
-						monitor.beginTask("Select Database Object", IProgressMonitor.UNKNOWN);
-						
-						try {
-							_selectionChanged((IStructuredSelection)_event.getSelection());
-						} catch(Exception e) {
-							logger.error("Table Referesh", e); //$NON-NLS-1$
-							
-							return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
-						} finally {
-							monitor.done();
-						}
-						
-						/////////////////////////////////////////////////////////////////////////////////////////
-						return Status.OK_STATUS;
-					}
-				};
-				job.setUser(false);
-				job.schedule();
-			}	// select change event 
-			
-			private void _selectionChanged(IStructuredSelection is) {
+				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				if(is.getFirstElement() instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
 					
@@ -148,11 +120,6 @@ public class ManagerViewer extends ViewPart {
 					
 					addUserResouceData(userDB, false);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
-
-					// 
-					// 아래 코드(managerTV.getControl().setFocus();)가 없으면, 오브젝트 탐색기의 event listener가 동작하지 않는다. 
-					// 이유는 글쎄 모르겠어.
-					//
 					managerTV.getControl().setFocus();
 				} else if(is.getFirstElement() instanceof ManagerListDTO) {
 					ManagerListDTO managerDTO = (ManagerListDTO)is.getFirstElement();
@@ -170,7 +137,7 @@ public class ManagerViewer extends ViewPart {
 						}
 					}
 				}
-			}
+			}	// select change event 
 		});
 		managerTV.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
