@@ -75,6 +75,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultTableComposite.class);
 	
+	/** 이미 결과를 마지막까지 그렸는지 유무 */
+	private boolean isLastReadData = false;
+	
 	private Text textFilter;
 	
 	private TableViewer tvQueryResult;
@@ -448,6 +451,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	 */
 	private void calcTableData() {
 		if(getRsDAO() == null) return;
+		if(isLastReadData) return;
 		
 		final Table tableResult = tvQueryResult.getTable();
 		int tableRowCnt = tableResult.getBounds().height / tableResult.getItemHeight();
@@ -456,9 +460,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 
-//			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 			if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
-//				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 				
 				if(oldTadpoleResultSet.getData().size() >= (tableResult.getItemCount())) {
 					// 나머지 데이터를 가져온다.
@@ -468,8 +472,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					
 					try {
 						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
-//						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
 					
 						tvQueryResult.setInput(oldTadpoleResultSet.getData());
@@ -513,6 +518,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	
 	@Override
 	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		isLastReadData = false;
 		if(rsDAO == null) return;
 		if(rsDAO.getDataList() == null) return;
 		
