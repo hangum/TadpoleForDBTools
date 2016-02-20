@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -299,18 +298,17 @@ public class ExplorerViewer extends ViewPart {
 		if (selectElement instanceof UserDBDAO) selectUserDb = (UserDBDAO)selectElement;
 		else 									selectUserDb = ((UserDBResourceDAO)selectElement).getParent();
 		
-		// 디비 선택
-		userDB = selectUserDb;
-
 		// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
 		if (userDB != null) {
 			if (userDB.getSeq() == selectUserDb.getSeq()) {
 				textSearch.setText(selectUserDb.getSchema());
 				filterText();
-				
+				userDB = selectUserDb;		
 				return;
 			}
 		}
+		// 디비 선택
+		userDB = selectUserDb;
 
 		// 존재하는 tadfolder를 삭제한다.
 		for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();

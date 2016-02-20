@@ -59,6 +59,9 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 		if(logger.isDebugEnabled()) logger.debug("\t prevous keyword is : [" + strPrevKeyword + "]");
 		CONTENT_ASSIST_KEYWORD_TYPE prevKeywordType = null;
 		
+		// 쿼리에 공백을 없앤다.
+		strQuery = StringUtils.removeEnd(StringUtils.trimToEmpty(strQuery), ";") + " ";
+		
 		// 이전 키워드가 있다면 마지막이 테이블 키워드 인지, 컬럼 키워드 인지 찾는다.
 		if(!"".equals(strPrevKeyword)) {
 			if(SQLConstants.listTableKeywords.contains(strPrevKeyword)) {
@@ -167,7 +170,7 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 				return "";
 			}
 			
-			if(!listName.isEmpty()) {
+			if(matcher.groupCount() > 0) {
 				for(int i = 1; i <= matcher.groupCount(); i++) {
 					listName.add(matcher.group(i));
 				}	

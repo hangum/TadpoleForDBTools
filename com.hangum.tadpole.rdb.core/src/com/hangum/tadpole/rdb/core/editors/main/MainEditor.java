@@ -509,7 +509,6 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	public String getContentAssist(String strQuery, int intPosition) {
-		strQuery = StringUtils.removeEnd(strQuery, ";");
 		if("".equals(StringUtils.trimToEmpty(strQuery))) return "";
 		
 		if(logger.isDebugEnabled()) {

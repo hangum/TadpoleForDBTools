@@ -326,7 +326,7 @@ public class ManagerViewer extends ViewPart {
 				if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 					PostgresqlConnectionEXT.connectionext(userDB);
 				}
-				managerTV.refresh(userDB);
+				managerTV.refresh(userDB, true);
 				managerTV.expandToLevel(userDB, 1);
 				
 			} catch (Exception e) {
