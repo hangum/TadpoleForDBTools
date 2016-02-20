@@ -55,6 +55,9 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURCE_TYPE;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
@@ -64,6 +67,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
+import com.hangum.tadpole.rdb.core.dialog.commons.MapViewerDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
@@ -108,19 +112,20 @@ public class ManagerViewer extends ViewPart {
 		managerTV.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				if(is.getFirstElement() instanceof UserDBDAO) {
-					final UserDBDAO userDB = (UserDBDAO)is.getFirstElement();
-					
+				Object objSelect = is.getFirstElement();
+				if(objSelect instanceof UserDBDAO) {
+					final UserDBDAO userDB = (UserDBDAO)objSelect;
 					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+
+					addManagerResouceData(userDB, false);
 					
 					// Rice lock icode change event
-					managerTV.refresh(userDB, true);
+//					managerTV.refresh(userDB, true);
 					
-					addUserResouceData(userDB, false);
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
 					managerTV.getControl().setFocus();
-				} else if(is.getFirstElement() instanceof ManagerListDTO) {
-					ManagerListDTO managerDTO = (ManagerListDTO)is.getFirstElement();
+				} else if(objSelect instanceof ManagerListDTO) {
+					ManagerListDTO managerDTO = (ManagerListDTO)objSelect;
 					if(managerDTO.getManagerList().isEmpty()) {
 						try {
 							List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName());
@@ -134,6 +139,9 @@ public class ManagerViewer extends ViewPart {
 							logger.error("get manager list", e);
 						}
 					}
+				} else if(objSelect instanceof DBOtherDAO) {
+					DBOtherDAO dao = (DBOtherDAO)objSelect;
+					
 				}
 			}	// select change event 
 		});
@@ -150,7 +158,7 @@ public class ManagerViewer extends ViewPart {
 					
 					QueryEditorAction qea = new QueryEditorAction();
 					qea.run(userDB);
-				// erd를 클릭하면 erd가 오픈되도록 수정. 
+				// erd를 클릭하면 erd가 오픈되도록 수정.
 				} else if(selElement instanceof UserDBResourceDAO) {
 					final UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
 					
@@ -174,6 +182,10 @@ public class ManagerViewer extends ViewPart {
 						ConnectDatabaseAction cda = new ConnectDatabaseAction(getSite().getWorkbenchWindow());
 						cda.runConnectionDialog(is);
 					}
+				} else if (selElement instanceof DBOtherDAO) {
+					final DBOtherDAO dao = (DBOtherDAO)selElement;
+					MapViewerDialog dialog = new MapViewerDialog(getSite().getWorkbenchWindow().getShell(), dao.getParent().getName(), dao);
+					dialog.open();
 				}
 			}
 		});
@@ -215,8 +227,7 @@ public class ManagerViewer extends ViewPart {
 			for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
 				ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
 				
-				List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName());
-				for (UserDBDAO userDBDAO : userDBS) {
+				for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {
 					managerDTO.addLogin(userDBDAO);
 				}
 				
@@ -298,32 +309,25 @@ public class ManagerViewer extends ViewPart {
 	 * 
 	 * @param userDB
 	 */ 
-	public void addUserResouceData(UserDBDAO userDB, boolean isReload) {
-		if(userDB.getListUserDBResource().isEmpty() || isReload) {
+	public void addManagerResouceData(UserDBDAO userDB, boolean isReload) {
+		if(userDB.getListResource().isEmpty() || isReload) {
 			// user_resource_data 목록을 추가해 줍니다.
 			try {
 				List<UserDBResourceDAO> listUserDBResources = TadpoleSystem_UserDBResource.userDbResourceTree(userDB);
 				if(!listUserDBResources.isEmpty()) {
-					
-					List<UserDBResourceDAO> listRealResource = new ArrayList<UserDBResourceDAO>();
-					for (UserDBResourceDAO userDBResourceDAO : listUserDBResources) {
-						if(PublicTadpoleDefine.SHARED_TYPE.PUBLIC.toString().equals(userDBResourceDAO.getShared_type())) {
-							userDBResourceDAO.setParent(userDB);
-							listRealResource.add(userDBResourceDAO);
-						} else {
-							
-							// 리소스 중에서 개인 리소스만 넣도록 합니다.
-							if(SessionManager.getUserSeq() == userDBResourceDAO.getUser_seq()) {
-								userDBResourceDAO.setParent(userDB);
-								listRealResource.add(userDBResourceDAO);
-							}
-						}
-					}
-					
-					userDB.setListUserDBResource(listRealResource);
-					managerTV.refresh(userDB);
-					managerTV.expandToLevel(userDB, 3);
+					ResourcesDAO resourcesDAO = new ResourcesDAO(userDB);
+					resourcesDAO.setType(DB_RESOURCE_TYPE.USER_RESOURCE);
+					resourcesDAO.setName("Resources");
+					resourcesDAO.setListResource(listUserDBResources);
+					userDB.getListResource().add(resourcesDAO);
 				}
+				
+				// pgsql, oracle, mssql 은 스키마를 추가한다.
+				if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+					PostgresqlConnectionEXT.connectionext(userDB);
+				}
+				managerTV.refresh(userDB);
+				managerTV.expandToLevel(userDB, 1);
 				
 			} catch (Exception e) {
 				logger.error("user_db_erd list", e); //$NON-NLS-1$
@@ -344,11 +348,13 @@ public class ManagerViewer extends ViewPart {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
-					List<UserDBResourceDAO> listResources = userDB.getListUserDBResource();
-					listResources.clear();
-					userDB.setListUserDBResource(listResources);
+					ResourcesDAO dao = userDB.findResource(DB_RESOURCE_TYPE.USER_RESOURCE);
 					
-					addUserResouceData(userDB, true);
+//					List<UserDBResourceDAO> listResources = userDB.getListResource();
+//					listResources.clear();
+//					userDB.getViewResource().setListResource(listResources);
+//					
+//					addManagerResouceData(userDB, true);
 					
 					return;
 				}	// if(userDB.getSeq() == dbSeq) {
@@ -358,7 +364,7 @@ public class ManagerViewer extends ViewPart {
 		}
 	}
 	
-	public void deleteErd(UserDBResourceDAO userDBResource) {
+	public void deleteResource(UserDBResourceDAO userDBResource) {
 		UserDBDAO userDB = userDBResource.getParent();
 		IEditorReference iEditorReference = null;
 		
@@ -375,7 +381,7 @@ public class ManagerViewer extends ViewPart {
 		}
 		
 		// 삭제
-		userDBResource.getParent().getListUserDBResource().remove(userDBResource);
+//		userDBResource.getParent().getdViewResource().getListResource().remove(userDBResource);
 		managerTV.refresh(userDB);
 	}
 	

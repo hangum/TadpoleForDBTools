@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.query.dao.system;
+package com.hangum.tadpole.engine.query.dao.system.userdb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
  * @author hangum
  *
  */
-public class TDBDBDAO {
+public class TDBDBDAO extends ManagerListViewDAO {
 	
 	/** This variable is content assist */
 	protected String tableListSeparator = null;

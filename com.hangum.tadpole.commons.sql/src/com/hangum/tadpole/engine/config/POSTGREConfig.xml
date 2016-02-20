@@ -44,6 +44,7 @@
 		List the SQL Map XML files. They can be loaded from the classpath, as
 		they are here (com.domain.data...)
 	-->
+	<sqlMap resource="com/hangum/tadpole/engine/query/PostgreSQL_ext.xml" />
 	<sqlMap resource="com/hangum/tadpole/engine/query/PostgreSQL.xml" />
 
 </sqlMapConfig>

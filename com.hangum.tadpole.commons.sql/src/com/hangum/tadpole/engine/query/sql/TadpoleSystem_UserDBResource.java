@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -226,11 +227,28 @@ public class TadpoleSystem_UserDBResource {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static List<UserDBResourceDAO> userDbResourceTree(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+		List<UserDBResourceDAO> listRealResource = new ArrayList<UserDBResourceDAO>();
+		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("seq", 		userDB.getSeq()); //$NON-NLS-1$
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (List<UserDBResourceDAO>)sqlClient.queryForList("userDbResourceTree", queryMap); //$NON-NLS-1$
+		List<UserDBResourceDAO> listUserDBResources =  (List<UserDBResourceDAO>)sqlClient.queryForList("userDbResourceTree", queryMap); //$NON-NLS-1$
+		for (UserDBResourceDAO userDBResourceDAO : listUserDBResources) {
+			if(PublicTadpoleDefine.SHARED_TYPE.PUBLIC.toString().equals(userDBResourceDAO.getShared_type())) {
+				userDBResourceDAO.setParent(userDB);
+				listRealResource.add(userDBResourceDAO);
+			} else {
+				
+				// 리소스 중에서 개인 리소스만 넣도록 합니다.
+				if(SessionManager.getUserSeq() == userDBResourceDAO.getUser_seq()) {
+					userDBResourceDAO.setParent(userDB);
+					listRealResource.add(userDBResourceDAO);
+				}
+			}
+		}
+		
+		return listRealResource;
 	}
 	
 	/**

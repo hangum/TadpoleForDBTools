@@ -54,7 +54,7 @@ public class MongoDBERDDeleteAction implements IViewActionDelegate {
 			TadpoleSystem_UserDBResource.delete(userDBErd);
 			
 			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
-			mv.deleteErd(userDBErd);
+			mv.deleteResource(userDBErd);
 		} catch (Exception e) {
 			logger.error(Messages.get().ERDDeleteAction_2, e);
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
