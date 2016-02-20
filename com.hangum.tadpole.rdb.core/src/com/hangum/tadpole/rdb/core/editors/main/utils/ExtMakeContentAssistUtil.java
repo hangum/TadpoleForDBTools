@@ -167,6 +167,7 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 			Pattern aliasPattern = Pattern.compile(structNamePattern, Pattern.CASE_INSENSITIVE);
 			Matcher matcher = aliasPattern.matcher(strQuery);
 			if(!matcher.find()) {
+				if(logger.isDebugEnabled()) logger.debug("=====> Not found match");
 				return "";
 			}
 			
