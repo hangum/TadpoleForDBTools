@@ -222,7 +222,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO tdbDao = (TableDAO)element;
-				return tdbDao.getName();
+				if("".equals(tdbDao.getSchema_name()) | null == tdbDao.getSchema_name()) return tdbDao.getName();
+				else return String.format("%s.%s", tdbDao.getSchema_name(), tdbDao.getName());
 			}
 		});
 		viewListViewer.setContentProvider(new ArrayContentProvider());

@@ -463,6 +463,7 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 			refreshJS(false, strObjectName);
 		}
+		filterText();
 		
 		// google analytic
 		AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
@@ -639,7 +640,7 @@ public class ExplorerViewer extends ViewPart {
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
 			tableComposite.refreshTable(userDB, boolRefresh, strObjectName);
-		}		
+		}
 	}
 	
 	/**
@@ -673,6 +674,8 @@ public class ExplorerViewer extends ViewPart {
 		String strObjectName = reqQuery.getSqlObjectName();
 		
 		refreshCurrentTab(queryDDLType, strObjectName, chgUserDB);
+		// refresh filter
+		filterText();
 	}
 	
 	/**

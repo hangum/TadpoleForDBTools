@@ -83,23 +83,35 @@ public class DBSystemSchema {
 		List<TableDAO> listTblView = new ArrayList<TableDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
-		
-		// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		// 2. keyword 를 만든다.
-		StringBuffer strViewList = new StringBuffer();
-		for(String strView : listView) {
-			TableDAO tblDao = new TableDAO();
-			tblDao.setName(strView);
-			tblDao.setSysName(SQLUtil.makeIdentifierName(userDB, strView));
+		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			List<TableDAO> listView = sqlClient.queryForList("viewList", userDB.getDb());
+			// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+			StringBuffer strViewList = new StringBuffer();
+			for(TableDAO td : listView) {
+				td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+				strViewList.append(MakeContentAssistUtil.makeObjectPattern(td.getSchema_name(), td.getSysName(), "View")); //$NON-NLS-1$
+			}
+			userDB.setTableListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
-			listTblView.add(tblDao);
-
-			strViewList.append(MakeContentAssistUtil.makeObjectPattern(tblDao.getSchema_name(), tblDao.getSysName(), "View")); //$NON-NLS-1$
+			return listView;
+		} else {
+			List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
+			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+			// 2. keyword 를 만든다.
+			StringBuffer strViewList = new StringBuffer();
+			for(String strView : listView) {
+				TableDAO tblDao = new TableDAO();
+				tblDao.setName(strView);
+				tblDao.setSysName(SQLUtil.makeIdentifierName(userDB, strView));
+				
+				listTblView.add(tblDao);
+	
+				strViewList.append(MakeContentAssistUtil.makeObjectPattern(tblDao.getSchema_name(), tblDao.getSysName(), "View")); //$NON-NLS-1$
+			}
+			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
+			
+			return listTblView; 
 		}
-		userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
-		
-		return listTblView; 
 	}
 	
 	/**
@@ -116,6 +128,7 @@ public class DBSystemSchema {
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("db", userDB.getDb()); //$NON-NLS-1$
+		param.put("schema", tableDao.getSchema_name()); //$NON-NLS-1$
 		param.put("table", tableDao.getName()); //$NON-NLS-1$
 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

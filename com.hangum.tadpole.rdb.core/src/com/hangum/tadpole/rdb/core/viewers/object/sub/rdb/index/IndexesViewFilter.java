@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * Indexes의 FILTER
@@ -28,9 +29,8 @@ public class IndexesViewFilter extends TadpoleViewrFilter {
 		if(searchString == null || searchString.length() == 0) return true;
 		
 		InformationSchemaDAO dao  = (InformationSchemaDAO)element;
-		if(dao.getTABLE_NAME().toUpperCase().matches(searchString.toUpperCase())) return true;
+		if(SQLUtil.getIndexName(dao).toUpperCase().matches(searchString.toUpperCase())) return true;
 		
 		return false;
 	}
-
 }

@@ -21,6 +21,8 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -409,6 +411,27 @@ public class SQLUtil {
 	 */
 	public static String makeQuote(String value) {
 		return String.format("'%s'", StringEscapeUtils.escapeSql(value));
+	}
+	
+	/**
+	 * index name
+	 * @param tc
+	 * @return
+	 */
+	public static String getIndexName(InformationSchemaDAO tc) {
+		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getTABLE_NAME();
+		else return String.format("%s.%s", tc.getSchema_name(), tc.getTABLE_NAME());
+	}
+	
+	/**
+	 * get procedure name
+	 * 
+	 * @param tc
+	 * @return
+	 */
+	public static String getProcedureName(ProcedureFunctionDAO tc) {
+		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getName();
+		else return String.format("%s.%s", tc.getSchema_name(), tc.getName());
 	}
 	
 	/**

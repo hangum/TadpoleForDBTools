@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
-public class InformationSchemaDAO {
+public class InformationSchemaDAO extends StructObjectDAO {
 	String TABLE_CATALOG;			
 	String TABLE_SCHEMA;			
 	String TABLE_NAME;			

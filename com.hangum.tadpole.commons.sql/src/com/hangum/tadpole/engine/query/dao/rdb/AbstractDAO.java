@@ -12,6 +12,8 @@ package com.hangum.tadpole.engine.query.dao.rdb;
 
 import java.lang.reflect.Method;
 
+import com.hangum.tadpole.engine.query.dao.mysql.StructObjectDAO;
+
 
 /**
  * 
@@ -19,7 +21,7 @@ import java.lang.reflect.Method;
  * @author nilriri
  * 
  */
-public abstract class AbstractDAO {
+public abstract class AbstractDAO extends StructObjectDAO {
 	
 	/**
 	 * 컬럼명을 인수로 넘겨서 값을 조회한다.
