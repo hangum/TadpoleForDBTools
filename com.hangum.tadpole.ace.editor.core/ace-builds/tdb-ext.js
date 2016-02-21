@@ -174,6 +174,9 @@ editorService.RDBinitEditor = function(dBType, editorType, varInitText, varAutoS
 	
 	if(varAutoSave == 'true') autoSave();
 	editor.setSession(session);
+	
+	// 제일 마지막 행으로 이동한다.
+	editor.gotoLine(editor.session.getLength()+1);
 	editor.focus();
 };
 /**
