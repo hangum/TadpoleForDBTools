@@ -476,7 +476,7 @@ public class MainEditor extends EditorExtension {
 	protected void addBrowserService() {
 		browserQueryEditor.setUrl(REAL_DB_URL);
 	    	
-	    final String strConstList = findDefaultKeyword();
+//	    final String strConstList = findDefaultKeyword();
 	    final String varAutoSave 	= ""+GetPreferenceGeneral.getEditorAutoSave();
 	    final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
 	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();

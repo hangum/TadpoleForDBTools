@@ -12,6 +12,7 @@ package com.hangum.tadpole.db.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -44,6 +46,7 @@ public class MakeContentAssistUtil {
 	 * @param userDB
 	 */
 	public void defaultSetKeyword(UserDBDAO userDB) {
+		getAssistSchemaList(userDB);
 //	TO DO 테이블은 디비가 선택되면 처음 호출 되므로 제외하는것이 효율이 좋을듯합니다. 
 //		getAssistTableList(userDB);
 		getAssistViewList(userDB);
@@ -65,13 +68,14 @@ public class MakeContentAssistUtil {
 		if(StringUtils.contains(strCursorText, '.')) {
 			String strSchemaName 		= StringUtils.substringBefore(strCursorText, ".") + ".";
 			String strTableName 		= StringUtils.substringAfter(strCursorText, ".");
-			int intSep = StringUtils.indexOf(strCntAsstList, ".");
+			int intSep = StringUtils.indexOf(strCursorText, ".");
 			
 			if(logger.isDebugEnabled()) {
 				logger.debug("[0]" + strArryCursor[0]);
 				logger.debug("[1]" + strArryCursor[1]);
 				logger.debug("[1][intSep]" + intSep);
 				logger.debug("[1][strArryCursor[0].length()]" + strArryCursor[0].length());
+				logger.debug("==> [Return table list]" + (strArryCursor[0].length() >= intSep));
 			}
 			
 			// 텍스트 커서가 뒤에 있으면 테이블 명만 리턴한다.
@@ -103,11 +107,15 @@ public class MakeContentAssistUtil {
 	 * @return
 	 */
 	protected String getContentAssist(final UserDBDAO userDB) {
+		final String strSchema = "".equals(userDB.getSchemaListSeparator())?getAssistSchemaList(userDB):userDB.getSchemaListSeparator();
 		final String strTableList = "".equals(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
 		final String strViewList = "".equals(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
 		final String strFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
 		
-		String strContentAssistList = strTableList;
+		String strContentAssistList = strSchema;
+		if(!StringUtils.isEmpty(strTableList)) {
+			strContentAssistList += (StringUtils.isEmpty(strContentAssistList)?strTableList:_PRE_GROUP + strTableList);
+		}
 		if(!StringUtils.isEmpty(strViewList)) {
 			strContentAssistList += (StringUtils.isEmpty(strContentAssistList)?strViewList:_PRE_GROUP + strViewList);
 		}
@@ -116,6 +124,30 @@ public class MakeContentAssistUtil {
 		}
 		    							
        return strContentAssistList;
+	}
+	
+	/**
+	 * List of assis schema name
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public String getAssistSchemaList(final UserDBDAO userDB) {
+		StringBuffer strSchemaList = new StringBuffer();
+		
+		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			try {
+				for (Object object : DBSystemSchema.getSchemas(userDB)) {
+					Map map = (Map)object;
+					strSchemaList.append(makeObjectPattern(null, ""+map.get("schema"), "Schema")); //$NON-NLS-1$
+				}
+				userDB.setSchemaListSeparator( StringUtils.removeEnd(strSchemaList.toString(), _PRE_GROUP) ); //$NON-NLS-1$
+			} catch(Exception e) {
+				logger.error("getSchema list", e);
+			}
+		}
+		
+		return strSchemaList.toString();
 	}
 	
 	/**

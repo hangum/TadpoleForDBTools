@@ -46,9 +46,9 @@ public class DBSystemSchema {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static List getNamespace(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+	public static List getSchemas(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("listNamespace");
+		return sqlClient.queryForList("getSchemas");
 	}
 	
 	/**
@@ -165,7 +165,7 @@ public class DBSystemSchema {
 		StringBuffer strFunctionlist = new StringBuffer();
 		for(ProcedureFunctionDAO pfDao : listFunction) {
 			pfDao.setSysName(SQLUtil.makeIdentifierName(userDB, pfDao.getName()));
-			strFunctionlist.append(MakeContentAssistUtil.makeObjectPattern(null, pfDao.getSysName(), "Function")); //$NON-NLS-1$
+			strFunctionlist.append(MakeContentAssistUtil.makeObjectPattern(pfDao.getSchema_name(), pfDao.getSysName(), "Function")); //$NON-NLS-1$
 		}
 		userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), MakeContentAssistUtil._PRE_GROUP));
 		

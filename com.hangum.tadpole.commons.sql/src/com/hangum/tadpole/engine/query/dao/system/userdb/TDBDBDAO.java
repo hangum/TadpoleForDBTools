@@ -22,7 +22,8 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
  *
  */
 public class TDBDBDAO extends ManagerListViewDAO {
-	
+	/** This variable is schema assist */
+	protected String schemaListSeparator = null;
 	/** This variable is content assist */
 	protected String tableListSeparator = null;
 	/** This variable is content assit */
@@ -33,6 +34,20 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	protected List<TableDAO> listTable = new ArrayList<TableDAO>();
 	
 	public TDBDBDAO() {
+	}
+	
+	/**
+	 * @return the schemaListSeparator
+	 */
+	public String getSchemaListSeparator() {
+		return schemaListSeparator;
+	}
+
+	/**
+	 * @param schemaListSeparator the schemaListSeparator to set
+	 */
+	public void setSchemaListSeparator(String schemaListSeparator) {
+		this.schemaListSeparator = schemaListSeparator;
 	}
 
 	/**

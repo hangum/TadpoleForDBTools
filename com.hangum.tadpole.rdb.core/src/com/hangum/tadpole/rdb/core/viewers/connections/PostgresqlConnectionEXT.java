@@ -35,11 +35,11 @@ public class PostgresqlConnectionEXT {
 	public static void connectionext(UserDBDAO userDB) throws Exception {
 		ResourcesDAO resourcesDAO = new ResourcesDAO(userDB);
 		List listOtherObj = new ArrayList();
-		for (Object object : DBSystemSchema.getNamespace(userDB)) {
+		for (Object object : DBSystemSchema.getSchemas(userDB)) {
 			DBOtherDAO dao = new DBOtherDAO();
 			Map map = (Map)object;
 
-			dao.setName(""+map.get("nspname"));
+			dao.setName(""+map.get("schema"));
 			dao.setComment(""+map.get("description"));
 			dao.setUserObject(map);
 			dao.setParent(resourcesDAO);

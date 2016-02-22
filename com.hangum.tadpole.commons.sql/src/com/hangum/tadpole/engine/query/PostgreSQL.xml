@@ -31,11 +31,11 @@
 <!-- 
 	database schema
  -->
-<select id="listNamespace" resultClass="java.util.HashMap">
+<select id="getSchemas" resultClass="java.util.HashMap">
 	SELECT CASE WHEN nspname LIKE E'pg\\_temp\\_%' THEN 1
 	            WHEN (nspname LIKE E'pg\\_%') THEN 0
 	            ELSE 3 END AS nsptyp,
-	       nsp.nspname, 
+	       nsp.nspname as schema, 
 	       nsp.oid, 
 	       pg_get_userbyid(nspowner) AS namespaceowner, 
 	       nspacl, 
