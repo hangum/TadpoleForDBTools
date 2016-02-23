@@ -69,6 +69,13 @@ public class DBIconsUtils {
 //		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, getDBImageUrl(userDB));
 //	}
 	
+	/**
+	 * 	
+	 * 		https://bugs.eclipse.org/bugs/show_bug.cgi?id=468362
+	 * 
+	 * @param userDB
+	 * @return
+	 */
 	public static Image getEditorImage(UserDBDAO userDB) {
 		return getPluginImage(Activator.PLUGIN_ID, getDBImageUrl(userDB));
 	}

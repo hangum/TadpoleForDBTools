@@ -317,7 +317,7 @@ public class ManagerViewer extends ViewPart {
 				if(!listUserDBResources.isEmpty()) {
 					ResourcesDAO resourcesDAO = new ResourcesDAO(userDB);
 					resourcesDAO.setType(DB_RESOURCE_TYPE.USER_RESOURCE);
-					resourcesDAO.setName("Resources");
+					resourcesDAO.setName(Messages.get().ManagerViewer_Resources);
 					resourcesDAO.setListResource(listUserDBResources);
 					userDB.getListResource().add(resourcesDAO);
 				}

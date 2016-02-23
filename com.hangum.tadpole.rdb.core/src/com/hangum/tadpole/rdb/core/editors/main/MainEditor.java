@@ -149,7 +149,6 @@ public class MainEditor extends EditorExtension {
 		setInput(input);
 		setPartName(strPartName);
 		
-//		https://bugs.eclipse.org/bugs/show_bug.cgi?id=468362
 		setTitleImage(DBIconsUtils.getEditorImage(getUserDB()));
 	}
 	

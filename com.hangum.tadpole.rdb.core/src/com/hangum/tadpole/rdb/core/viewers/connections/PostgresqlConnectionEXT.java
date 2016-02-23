@@ -20,6 +20,7 @@ import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURCE_TYPE;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.query.sql.pgsql.PGSQLSystem;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * postgresql connection ext
@@ -48,7 +49,7 @@ public class PostgresqlConnectionEXT {
 		}
 		
 		resourcesDAO.setType(DB_RESOURCE_TYPE.SCHEMAS);
-		resourcesDAO.setName("Schemas");
+		resourcesDAO.setName(Messages.get().ManagerViewer_Schemas);
 		resourcesDAO.setListResource(listOtherObj);
 		userDB.getListResource().add(resourcesDAO);
 		
@@ -67,7 +68,7 @@ public class PostgresqlConnectionEXT {
 			listOtherObj.add(dao);
 		}
 		resourcesDAO.setType(DB_RESOURCE_TYPE.PG_EXTENSION);
-		resourcesDAO.setName("Extension");
+		resourcesDAO.setName(Messages.get().ManagerViewer_Extension);
 		resourcesDAO.setListResource(listOtherObj);
 		userDB.getListResource().add(resourcesDAO);
 	}
