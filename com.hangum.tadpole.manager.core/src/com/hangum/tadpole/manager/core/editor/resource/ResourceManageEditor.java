@@ -76,7 +76,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
-import com.hangum.tadpole.rdb.core.dialog.resource.ResourceHistoryDialog;
+import com.hangum.tadpole.rdb.core.dialog.resource.ResourceDetailDialog;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
@@ -617,7 +617,7 @@ public class ResourceManageEditor extends EditorPart {
 		
 		ResourceManagerDAO resourceManagerDao = (ResourceManagerDAO) ss.getFirstElement();
 		
-		ResourceHistoryDialog dialog = new ResourceHistoryDialog(getSite().getShell(), resourceManagerDao);
+		ResourceDetailDialog dialog = new ResourceDetailDialog(getSite().getShell(), resourceManagerDao, null);
 		dialog.open();
 	}
 

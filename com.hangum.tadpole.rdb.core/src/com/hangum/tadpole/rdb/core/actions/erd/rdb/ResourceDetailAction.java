@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.rdb.core.dialog.resource.ResourceHistoryDialog;
+import com.hangum.tadpole.rdb.core.dialog.resource.ResourceDetailDialog;
 
 /**
  * Resource history action
@@ -28,15 +28,15 @@ import com.hangum.tadpole.rdb.core.dialog.resource.ResourceHistoryDialog;
  * @author hangum
  *
  */
-public class ResourceHistoryAction implements IViewActionDelegate {
+public class ResourceDetailAction implements IViewActionDelegate {
 
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(ResourceHistoryAction.class);
+	private static final Logger logger = Logger.getLogger(ResourceDetailAction.class);
 	private IStructuredSelection sel;
 	
-	public ResourceHistoryAction() {
+	public ResourceDetailAction() {
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class ResourceHistoryAction implements IViewActionDelegate {
 		managerDao.setCreate_time(resourceDB.getCreate_time() == null?resourceDB.getSqliteCreate_time():resourceDB.getCreate_time().toLocaleString());
 		managerDao.setUser_name(resourceDB.getUsernames());
 		
-		ResourceHistoryDialog dialog = new ResourceHistoryDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), managerDao);
+		ResourceDetailDialog dialog = new ResourceDetailDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), managerDao, resourceDB);
 		dialog.open();
 	}
 

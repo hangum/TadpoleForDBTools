@@ -831,6 +831,12 @@ public class Messages {
 	public String ManagerViewer_Resources;
 	public String ManagerViewer_Extension;
 	public String ManagerViewer_Schemas;
+
+	public String ResourceHistoryDialog_Modify;
+
+	public String ResourceDetailDialog_delete;
+
+	public String ResourceDetailDialog_name_empty;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

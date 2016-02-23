@@ -693,9 +693,9 @@
                menubarPath="additions">
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.ResourceHistoryAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.ResourceDetailAction"
                enablesFor="1"
-               icon="resources/icons/history.png"
+               icon="resources/icons/detail.png"
                id="com.hangum.tadpole.rdb.core.action.historyResource"
                label="%action.label.history"
                menubarPath="additions">

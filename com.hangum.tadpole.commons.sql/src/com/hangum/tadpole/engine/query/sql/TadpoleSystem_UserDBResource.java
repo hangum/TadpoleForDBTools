@@ -127,6 +127,18 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
+	 * update resource_title & description
+	 * 
+	 * @param dbResource
+	 * @param content
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static void userDbResourceHeadUpdate(ResourceManagerDAO userDBResource) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("userDbResourceHeadUpdate", userDBResource); //$NON-NLS-1$
+	}
+	
+	/**
 	 * updateResourceAuto 
 	 * 
 	 * @param dbResource

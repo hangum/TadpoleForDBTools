@@ -669,6 +669,15 @@ SELECT
   order by m.resource_types, m.resource_seq
 </select>
 
+<update id="userDbResourceHeadUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
+	update user_db_resource
+	set 
+		name = #name#
+	   ,description = #description#
+	WHERE
+		resource_seq = #resource_seq#
+</update>
+
 <update id="userDbResourceUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
 	update user_db_resource
 	set shared_type = #shared_type#

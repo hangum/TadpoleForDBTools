@@ -16,9 +16,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -35,16 +38,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleCompareWidget;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.rdb.core.Messages;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Resource history dialog
@@ -52,27 +59,29 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * @author hangum
  *
  */
-public class ResourceHistoryDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(ResourceHistoryDialog.class);
+public class ResourceDetailDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(ResourceDetailDialog.class);
 	
+	private UserDBResourceDAO originalResourceDB;
 	private ResourceManagerDAO resourceManagerDao;
 	private Text textUser;
 	private Text textTitle;
 	private Text textDescription;
 	private Text textCreateTime;
 	private TableViewer tvHistory;
-	private TadpoleEditorWidget textLeft;
-	private TadpoleEditorWidget textRight;
+	private TadpoleCompareWidget compareWidget;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 * @param resourceManagerDao 
+	 * @param resourceDB 
 	 */
-	public ResourceHistoryDialog(Shell parentShell, ResourceManagerDAO resourceManagerDao) {
+	public ResourceDetailDialog(Shell parentShell, ResourceManagerDAO resourceManagerDao, UserDBResourceDAO resourceDB) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
-		
+
+		this.originalResourceDB = resourceDB;
 		this.resourceManagerDao = resourceManagerDao;
 	}
 	
@@ -98,26 +107,61 @@ public class ResourceHistoryDialog extends Dialog {
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(2, false));
+		compositeHead.setLayout(new GridLayout(3, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
 		lblTitle.setText(Messages.get().ResourceHistoryDialog_1);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY);
+		textTitle.setEditable(true);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textTitle.setText(resourceManagerDao.getName());
+		new Label(compositeHead, SWT.NONE);
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
 		lblDescription.setText(Messages.get().ResourceHistoryDialog_2);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textDescription.setEditable(true);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_textDescription.heightHint = 40;
 		textDescription.setLayoutData(gd_textDescription);
 		textDescription.setText(resourceManagerDao.getDescription());
 		
+		Button btnModify = new Button(compositeHead, SWT.NONE);
+		btnModify.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(MessageDialog.openConfirm(getShell(), Messages.get().DBLoginDialog_10, Messages.get().ResourceDetailDialog_delete)) {
+					if("".equals(textTitle.getText().trim())) {
+						MessageDialog.openError(getShell(), Messages.get().DBLoginDialog_10, Messages.get().ResourceDetailDialog_name_empty);
+						textTitle.setFocus();
+						return;
+					}
+					resourceManagerDao.setName(textTitle.getText());
+					resourceManagerDao.setDescription(textDescription.getText());
+					
+					try {
+						TadpoleSystem_UserDBResource.userDbResourceHeadUpdate(resourceManagerDao);
+
+						// tree refresh
+						if(originalResourceDB != null) {
+							originalResourceDB.setName(textTitle.getText());
+							originalResourceDB.setDescription(textDescription.getText());
+							ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
+							mv.refreshResource(originalResourceDB);
+						}
+					} catch(Exception ee) {
+						logger.error("Resource title, desc saveing", ee);
+						MessageDialog.openError(getShell(), Messages.get().DBLoginDialog_10, "Save exception." + ee.getMessage());
+					}
+				}
+			}
+		});
+		btnModify.setText(Messages.get().ResourceHistoryDialog_Modify);
+		
 		Composite compositeHeaderUser = new Composite(compositeHead, SWT.NONE);
-		compositeHeaderUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		compositeHeaderUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		compositeHeaderUser.setLayout(new GridLayout(4, false));
 		
 		Label lblUser = new Label(compositeHeaderUser, SWT.NONE);
@@ -134,7 +178,7 @@ public class ResourceHistoryDialog extends Dialog {
 		textCreateTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textCreateTime.setText(resourceManagerDao.getCreate_time());
 		
-		SashForm sashForm = new SashForm(container, SWT.VERTICAL);
+		SashForm sashForm = new SashForm(container, SWT.BORDER | SWT.VERTICAL);
 		sashForm.setLayout(new GridLayout(1, false));
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -145,7 +189,7 @@ public class ResourceHistoryDialog extends Dialog {
 				if(sss.isEmpty()) return;
 				
 				UserDBResourceDataDAO userDBResource = (UserDBResourceDataDAO)sss.getFirstElement();
-				textLeft.setText(userDBResource.getDatas());
+				compareWidget.changeDiff(userDBResource.getDatas(), "");
 			}
 		});
 		Table table = tvHistory.getTable();
@@ -171,15 +215,18 @@ public class ResourceHistoryDialog extends Dialog {
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new ResourceHistoryLabelProvider());
 
-		SashForm compositeCompare = new SashForm(sashForm, SWT.NONE);
-		compositeCompare.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeCompare.setLayout(new GridLayout(2, false));
+//		SashForm compositeCompare = new SashForm(sashForm, SWT.NONE);
+//		compositeCompare.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//		compositeCompare.setLayout(new GridLayout(2, false));
 		
-		textLeft = new TadpoleEditorWidget(compositeCompare, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
-		textLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		textRight = new TadpoleEditorWidget(compositeCompare, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
-		textRight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compareWidget = new TadpoleCompareWidget(sashForm, SWT.BORDER);
+		compareWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+//		textLeft = new TadpoleEditorWidget(compositeCompare, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
+//		textLeft.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+//
+//		textRight = new TadpoleEditorWidget(compositeCompare, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
+//		textRight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		sashForm.setWeights(new int[] {6, 4});
 		initUIData();
@@ -228,16 +275,19 @@ public class ResourceHistoryDialog extends Dialog {
 		
 		Object[] objListSel = iss.toArray();
 		try {
+			String source = "", target = "";
 			for(int i=0; i<objListSel.length; i++) {
 				if(i==2) break;
 				
 				UserDBResourceDataDAO dao = (UserDBResourceDataDAO)objListSel[i];
 				if(i==0) {
-					textLeft.setText(dao.getDatas());
+					source = dao.getDatas();
 				} else {
-					textRight.setText(dao.getDatas());
+					target = dao.getDatas();
 				}
 			}
+			
+			compareWidget.changeDiff(source, target);
 		} catch(Exception e) {
 			logger.error("Get detail sql", e); //$NON-NLS-1$
 		}
