@@ -183,7 +183,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_AUTOSAVE_VALUE	= "true";
 	
 	public static final String EDITOR_THEME 		= "EDITOR_THEME";
-	public static final String EDITOR_THEME_VALUE	= "Chrome";
+	public static final String EDITOR_THEME_VALUE	= "Crimson Editor";
 	
 	public static final String EDITOR_FONT_SIZE 		= "EDITOR_FONT_SIZE";
 	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";

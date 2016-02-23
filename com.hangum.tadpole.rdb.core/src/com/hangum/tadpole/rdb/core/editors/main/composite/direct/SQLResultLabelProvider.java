@@ -38,7 +38,7 @@ import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * SQLResult의 LabelProvider
@@ -94,11 +94,11 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
 		Object obj = rsResult.get(columnIndex);
 		if(obj == null) {
-			return ResourceManager.getColor(152, 118, 137);
+			return SWTResourceManager.getColor(152, 118, 137);
 			
 		} else if(queryMode == QUERY_MODE.QUERY) {
 			if(getRDBShowInTheColumn() != -1 && obj.toString().length() > getRDBShowInTheColumn()) {
-				return ResourceManager.getColor(152, 118, 137);
+				return SWTResourceManager.getColor(152, 118, 137);
 			}
 		}
 		
@@ -107,7 +107,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 
 	@Override
 	public Color getBackground(Object element, int columnIndex) {
-		if(columnIndex == 0) return ResourceManager.getColor(SWT.COLOR_GRAY);
+		if(columnIndex == 0) return SWTResourceManager.getColor(SWT.COLOR_GRAY);
 		
 		return null;
 	}

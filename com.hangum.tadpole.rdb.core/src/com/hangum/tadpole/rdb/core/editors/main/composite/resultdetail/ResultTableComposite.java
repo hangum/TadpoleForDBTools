@@ -63,7 +63,7 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelP
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * Table result type
@@ -143,7 +143,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if(!"".equals(PREFERENCE_USER_FONT)) { //$NON-NLS-1$
 			try {
 				String[] arryFontInfo = StringUtils.split(PREFERENCE_USER_FONT, "|"); //$NON-NLS-1$
-				tableResult.setFont(ResourceManager.getFont(arryFontInfo[0], Integer.parseInt(arryFontInfo[1]), Integer.parseInt(arryFontInfo[2])));
+				tableResult.setFont(SWTResourceManager.getFont(arryFontInfo[0], Integer.parseInt(arryFontInfo[1]), Integer.parseInt(arryFontInfo[2])));
 			} catch(Exception e) {
 				logger.error("Fail setting the user font", e); //$NON-NLS-1$
 			}

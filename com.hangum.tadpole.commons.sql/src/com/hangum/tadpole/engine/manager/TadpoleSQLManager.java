@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.manager;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
