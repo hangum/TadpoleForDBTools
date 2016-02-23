@@ -681,16 +681,20 @@ findCursorSQL = function(varRow, varColumn) {
  	
 	// 쿼리가 에러일 경우 블록 처리하기 위해 처음 시작 행과 열을 기록한다.
 	_startRow = startRow;
-	_startColumn = editor.session.getLine(startRow).length - firstLineQuery.length;
- 	console.log("==>[Start position]" + _startRow + "." + _startColumn);
- 			
+			
  	// 처음 행에 분리자가 없는 경우(즉 모든 행 전체가 쿼리인경우)
  	if(isStartDelemiter == false && firstLineQuery == "") {
  		firstLineQuery = editor.session.getLine(startRow) + "\n";
+ 		_startColumn = 0;
  	// 처음 줄이 ;문자만 있을 경우.
  	} else if(isStartDelemiter == true && firstLineQuery == "") {
  		firstLineQuery = "\n";
- 	} 
+ 		_startColumn = editor.session.getLine(startRow).length;
+ 	} else {
+ 		firstLineQuery += "\n";
+ 		_startColumn = editor.session.getLine(startRow).length - firstLineQuery.length;
+ 	}
+ 	console.log("==>[Start position]" + _startRow + "." + _startColumn);
  	
  	// 다음행부터 마지막 행까지 가져온다.
  	var middleQuery = "";
