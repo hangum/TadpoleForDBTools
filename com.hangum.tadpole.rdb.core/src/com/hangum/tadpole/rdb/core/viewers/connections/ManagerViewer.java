@@ -339,7 +339,7 @@ public class ManagerViewer extends ViewPart {
 	}
 	
 	/**
-	 * erd가 추가되었을때
+	 * 사용자 리소스가 추가되었을때
 	 * 
 	 * @param userDBErd
 	 */
@@ -348,13 +348,8 @@ public class ManagerViewer extends ViewPart {
 			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
-					ResourcesDAO dao = userDB.findResource(DB_RESOURCE_TYPE.USER_RESOURCE);
-					
-//					List<UserDBResourceDAO> listResources = userDB.getListResource();
-//					listResources.clear();
-//					userDB.getViewResource().setListResource(listResources);
-//					
-//					addManagerResouceData(userDB, true);
+					userDB.getListResource().clear();
+					addManagerResouceData(userDB, true);
 					
 					return;
 				}	// if(userDB.getSeq() == dbSeq) {
@@ -381,31 +376,9 @@ public class ManagerViewer extends ViewPart {
 		}
 		
 		// 삭제
-//		userDBResource.getParent().getdViewResource().getListResource().remove(userDBResource);
+		userDBResource.getParent().findResource(DB_RESOURCE_TYPE.USER_RESOURCE).getListResource().remove(userDBResource);
 		managerTV.refresh(userDB);
 	}
-	
-//	/**
-//	 * 
-//	 * tree list를 삭제합니다
-//	 * 
-//	 * @param dbType
-//	 * @param userDB
-//	 */
-//	public void removeTreeList(String dbType, UserDBDAO userDB) {
-//		for(ManagerListDTO dto: treeList) {
-//			if(dto.getName().equals(dbType)) {
-//				dto.removeDB(userDB);
-//				
-//				treeViewer.refresh();
-//				
-//				// 0번째 항목이 선택되도록
-//				treeViewer.getTree().select(treeViewer.getTree().getItem(0));
-//				
-//				return;
-//			}			
-//		}
-//	}
 	
 	/**
 	 * 트리를 갱신하고 쿼리 창을 엽니다.
