@@ -837,6 +837,8 @@ public class Messages {
 	public String ResourceDetailDialog_delete;
 
 	public String ResourceDetailDialog_name_empty;
+
+	public String ResultTailComposite_ViewQuery;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

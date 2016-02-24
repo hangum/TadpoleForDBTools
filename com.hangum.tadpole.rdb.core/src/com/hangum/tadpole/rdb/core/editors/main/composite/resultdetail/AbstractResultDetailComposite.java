@@ -21,6 +21,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
+import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 

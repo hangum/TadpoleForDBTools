@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail;
+package com.hangum.tadpole.rdb.core.editors.main.composite.tail;
 
 import java.io.File;
 
@@ -41,37 +41,27 @@ import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
- * 결과 화면의 다운로드 부분과 결과 상태를  컴포짖
+ * abstract tail composite
  * 
  * @author hangum
  *
  */
-public class ResultTailComposite extends Composite {
+public abstract class AbstractTailComposite extends Composite {
 	/**  Logger for this class. */
-	private static final Logger logger = Logger.getLogger(ResultTailComposite.class);
+	private static final Logger logger = Logger.getLogger(AbstractTailComposite.class);
 	
-	private AbstractResultDetailComposite abstractResultComp;
+	protected Composite compositeDownloadAMsg;
+	protected Combo comboDownload;
+	protected DownloadServiceHandler downloadServiceHandler;
 	
-	private Composite compositeDownloadAMsg;
-	private Combo comboDownload;
-	private DownloadServiceHandler downloadServiceHandler;
+	protected Label lblQueryResultStatus;
+	protected Button btnPin;
+	protected Button btnViewQuery;
 	
-	private Label lblQueryResultStatus;
-	private Button btnPin;
-	private Button btnViewQuery;
-	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param compositeBtn 
-	 * @param style
-	 */
-	public ResultTailComposite(Composite reqAbstractResult, Composite compositeBtn, int style) {
+	public AbstractTailComposite(Composite compositeBtn, int style) {
 		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
-		abstractResultComp = (AbstractResultDetailComposite)reqAbstractResult;
-
 		compositeDownloadAMsg = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeDownloadAMsg = new GridLayout(7, false);
 		gl_compositeDownloadAMsg.verticalSpacing = 2;
@@ -104,7 +94,7 @@ public class ResultTailComposite extends Composite {
 		btnViewQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), "View query", abstractResultComp.getReqQuery().getSql());
+				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ResultTailComposite_ViewQuery, getSQL());
 				dialog.open();
 			}
 		});
@@ -127,9 +117,6 @@ public class ResultTailComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(getShell(), Messages.get().ResultSetComposite_4, Messages.get().ResultSetComposite_5)) {
 					if(getRSDao().getDataList() == null) return;
-					
-					// get last data
-					abstractResultComp.getLastData();
 					
 					if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
 						exportResultCSVType(',');
@@ -168,17 +155,27 @@ public class ResultTailComposite extends Composite {
 	}
 	
 	/**
+	 * btn pin selection
+	 * @return
+	 */
+	public boolean getBtnPinSelection() {
+		return btnPin.getSelection();
+	}
+	
+	public abstract String getSQL();
+	
+	/**
 	 * get query result dto
 	 * @return
 	 */
-	private QueryExecuteResultDTO getRSDao() {
-		return abstractResultComp.getRsDAO();
-	}
+	public abstract QueryExecuteResultDTO getRSDao();// {
+//		return abstractResultComp.getRsDAO();
+//	}
 	
 	/**
 	 * export insert into statement
 	 */
-	private void exportInsertStatement() {
+	protected void exportInsertStatement() {
 		try {
 			downloadFile(SQLExporter.makeFileInsertStatment(findTableName(), getRSDao()));
 		} catch(Exception ee) {
@@ -189,7 +186,7 @@ public class ResultTailComposite extends Composite {
 //	/**
 //	 * export update into statement
 //	 */
-//	private void exportUpdateStatement() {
+//	protected void exportUpdateStatement() {
 //		try {
 //			downloadFile(SQLExporter.makeFileUpdateStatment(findTableName(), rsDAO));
 //		} catch(Exception ee) {
@@ -201,7 +198,7 @@ public class ResultTailComposite extends Composite {
 	 * Export resultset csvMessages.get().ResultSetComposite_14
 	 * @param seprator 
 	 */
-	private void exportResultCSVType(char seprator) {
+	protected void exportResultCSVType(char seprator) {
 		try {
 			downloadFile(CSVExpoter.makeCSVFile(findTableName(), getRSDao(), seprator));
 		} catch(Exception ee) {
@@ -212,7 +209,7 @@ public class ResultTailComposite extends Composite {
 	/**
 	 * export result of html
 	 */
-	private void exportResultHTMLType() {
+	protected void exportResultHTMLType() {
 		try {
 			downloadFile(HTMLExporter.makeContentFile(findTableName(), getRSDao()));
 		} catch(Exception ee) {
@@ -223,7 +220,7 @@ public class ResultTailComposite extends Composite {
 	/**
 	 * export result of html
 	 */
-	private void exportResultJSONType() {
+	protected void exportResultJSONType() {
 		try {
 			downloadFile(JsonExpoter.makeContentFile(findTableName(), getRSDao()));
 		} catch(Exception ee) {
@@ -235,7 +232,7 @@ public class ResultTailComposite extends Composite {
 	 * find table name
 	 * @return
 	 */
-	private String findTableName() {
+	protected String findTableName() {
 		String strTableName = "TempTable"; //$NON-NLS-1$
 		if(!getRSDao().getColumnTableName().isEmpty()) strTableName = getRSDao().getColumnTableName().get(1);
 		if(strTableName == null | "".equals(strTableName)) strTableName = "TempTable"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -248,7 +245,7 @@ public class ResultTailComposite extends Composite {
 	 * @param strFileLocation
 	 * @throws Exception
 	 */
-	private void downloadFile(String strFileLocation) throws Exception {
+	protected void downloadFile(String strFileLocation) throws Exception {
 		String strZipFile = ZipUtils.pack(strFileLocation);
 		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
 		
@@ -256,13 +253,13 @@ public class ResultTailComposite extends Composite {
 	}
 	
 	/** registery service handler */
-	private void registerServiceHandler() {
+	protected void registerServiceHandler() {
 		downloadServiceHandler = new DownloadServiceHandler();
 		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
 	}
 	
 	/** download service handler call */
-	private void unregisterServiceHandler() {
+	protected void unregisterServiceHandler() {
 		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
 		downloadServiceHandler = null;
 	}
@@ -273,19 +270,11 @@ public class ResultTailComposite extends Composite {
 	 * @param fileName
 	 * @param newContents
 	 */
-	private void downloadExtFile(String fileName, byte[] newContents) {
+	protected void downloadExtFile(String fileName, byte[] newContents) {
 		downloadServiceHandler.setName(fileName);
 		downloadServiceHandler.setByteContent(newContents);
 		
 		DownloadUtils.provideDownload(getShell(), downloadServiceHandler.getId());
-	}
-	
-	/**
-	 * btn pin selection
-	 * @return
-	 */
-	public boolean getBtnPinSelection() {
-		return btnPin.getSelection();
 	}
 	
 	@Override
@@ -297,5 +286,4 @@ public class ResultTailComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 	}
-
 }

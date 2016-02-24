@@ -60,6 +60,7 @@ import com.hangum.tadpole.rdb.core.actions.global.OpenSingleRowDataDialogAction;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
+import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -253,7 +254,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 2;
 		compositeTail.setLayout(gl_compositeResult);
-		
 	}
 
 	/**

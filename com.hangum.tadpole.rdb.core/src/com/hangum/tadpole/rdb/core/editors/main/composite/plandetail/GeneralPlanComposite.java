@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.main.composite.plan;
+package com.hangum.tadpole.rdb.core.editors.main.composite.plandetail;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -26,6 +26,7 @@ import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
+import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
@@ -34,12 +35,13 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
  * @author hangum
  *
  */
-public class GeneralPlanComposite extends Composite {
+public class GeneralPlanComposite extends AbstractPlanComposite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(GeneralPlanComposite.class);
-	private ResultMainComposite resultMainComposite;
+	
 	private TableViewer tvQueryPlan;
 	private SQLResultSorter sqlSorter;
+	
 
 	/**
 	 * Create the composite.
@@ -49,12 +51,14 @@ public class GeneralPlanComposite extends Composite {
 	public GeneralPlanComposite(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
-		
-//		Composite compositeHead = new Composite(this, SWT.NONE);
-//		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		compositeHead.setLayout(new GridLayout(1, false));
-		
 		Composite compositeBody = new Composite(this, SWT.NONE);
+		GridLayout gl_compositeHead = new GridLayout(2, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginHeight = 0;
+		gl_compositeHead.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeHead);
+		
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
@@ -67,28 +71,30 @@ public class GeneralPlanComposite extends Composite {
 //		Composite compositeTail = new Composite(this, SWT.NONE);
 //		compositeTail.setLayout(new GridLayout(1, false));
 //		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Composite compositeBtn = new Composite(compositeBody, SWT.NONE);
+		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		GridLayout gl_compositeBtn = new GridLayout(4, false);
+		gl_compositeBtn.verticalSpacing = 2;
+		gl_compositeBtn.horizontalSpacing = 2;
+		gl_compositeBtn.marginWidth = 0;
+		gl_compositeBtn.marginHeight = 2;
+		compositeBtn.setLayout(gl_compositeBtn);
+		
+		compositeTail = new PlanTailComposite(this, compositeBtn, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+		GridLayout gl_compositeResult = new GridLayout(1, false);
+		gl_compositeResult.verticalSpacing = 2;
+		gl_compositeResult.horizontalSpacing = 2;
+		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginWidth = 2;
+		compositeTail.setLayout(gl_compositeResult);
 	}
 
-	@Override
-	protected void checkSubclass() {
-	}
-
-	/**
-	 * setting parent composite
-	 * 
-	 * @param resultMainComposite
-	 */
-	public void setRDBResultComposite(ResultMainComposite resultMainComposite) {
-		this.resultMainComposite = resultMainComposite;
-	}
-
-	/**
-	 * set query plan data
-	 * 
-	 * @param reqQuery
-	 * @param rsDAO
-	 */
 	public void setQueryPlanData(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		this.reqQuery = reqQuery;
+		this.rsDAO = rsDAO;
+		
 		// table data를 생성한다.
 		final TadpoleResultSet trs = rsDAO.getDataList();
 		sqlSorter = new SQLResultSorter(-999);
@@ -110,5 +116,9 @@ public class GeneralPlanComposite extends Composite {
 	
 		// Pack the columns
 		TableUtil.packTable(tvQueryPlan.getTable());
+	}
+
+	public PlanTailComposite getCompositeTail() {
+		return compositeTail;
 	}
 }
