@@ -28,7 +28,7 @@ public class PublicTadpoleDefine {
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 
 	/** cookie path */
-	public static String _cookiePath = "/tdb";
+	public static String _cookiePath = "/";
 	
 	public static final int systemAdminId = -1;
 	

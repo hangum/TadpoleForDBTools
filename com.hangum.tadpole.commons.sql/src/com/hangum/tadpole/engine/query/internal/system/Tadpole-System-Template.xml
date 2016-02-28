@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  Copyright (c) 2015 hangum.
+  Copyright (c) 2016 hangum.
   All rights reserved. This program and the accompanying materials
   are made available under the terms of the GNU Lesser Public License v2.1
   which accompanies this distribution, and is available at
@@ -18,62 +18,24 @@
 
 <sqlMap namespace="Tadpole-System-Template">
 
-<!--  get monitoring SQL template -->
-<select id="getDefaultMonitoringSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO" parameterClass="java.lang.String">
-	SELECT *  
- 	FROM tadpole_monitoring_template
-	WHERE delyn = 'NO'
-		AND user_seq = -1
-		AND db_type = #db_type# 
+<!-- 
+	list sql template
+ -->
+<select id="listSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleTemplateDAO" parameterClass="java.lang.Integer">
+	SELECT seq, user_seq, category, group_name, name, sql, description, create_time, delyn 
+	FROM tadpole_sql_template
+	WHERE user_seq = #user_sq#
+	ORDER by group_name, name
 </select>
 
-<!--  save monitoring template data -->
-<insert id="saveMonitoringTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO">
-	INSERT INTO tadpole_monitoring_template
-	 (user_seq, db_type, 	db_ver, 		template_type, monitoring_type, 
-	 title, 	description, advice, is_result_save, is_snapshot_save,  
-	 query, 	index_nm, 	condition_type, condition_value, 
-	 exception_index_nm, exception_condition_type, exception_condition_value, 
-	 param_1_column, param_1_init_value, param_2_column, param_2_init_value, 
-	 after_type, kpi_type) 
+<!-- 
+	template insert
+ -->
+<insert id="insertSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleTemplateDAO">
+	INSERT INTO tadpole_sql_template
+		(user_seq, category, group_name, name, content, description) 
 	VALUES 
-	 (#user_seq#, #db_type#, #db_ver#, #template_type#, #monitoring_type#, 
-	 #title#, #description#, #advice#, #is_result_save#, #is_snapshot_save#, 
-	 #query#, #index_nm#, #condition_type#, #condition_value#, 
-	 #exception_index_nm#, #exception_condition_type#, #exception_condition_value#, 
-	 #param_1_column#, #param_1_init_value#, #param_2_column#, #param_2_init_value#, 
-	 #after_type#, #kpi_type#) 
+		( #user_seq#, #category#, #group_name#, #name#, #content#, #description# );
 </insert>
 
-<!-- update monitoring template data -->
-<update id="updateUseTemplateDao" parameterClass="com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO">
-	UPDATE 
-		tadpole_monitoring_template
-	SET 
-		db_type 		= #db_type#,
-		db_ver			= #db_ver#,
-		template_type	= #template_type#, 
-		monitoring_type = #monitoring_type#, 
-		title 			= #title#, 
-		description 	= #description#,
-		advice			= #advice#, 
-		is_result_save	= #is_result_save#, 
-		is_snapshot_save= #is_snapshot_save#, 
-		query 			= #query#, 
-		index_nm 		= #index_nm#, 
-		condition_type	= #condition_type#, 
-		condition_value = #condition_value#, 
-		exception_index_nm = #exception_index_nm#, 
-		exception_condition_type = #exception_condition_type#, 
-		exception_condition_value = #exception_condition_value#, 
-		param_1_column 	= #param_1_column#, 
-		param_1_init_value 	= #param_1_init_value#, 
-		param_2_column		= #param_2_column#, 
-		param_2_init_value 	= #param_2_init_value#, 
-		after_type			= #after_type#,
-		kpi_type			= #kpi_type#
-	WHERE
-		seq = #seq# 
-</update>
-	
 </sqlMap>

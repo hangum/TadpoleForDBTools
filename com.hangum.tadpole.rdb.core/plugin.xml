@@ -26,6 +26,13 @@
             name="%view.name.0"
             restorable="true">
       </view>
+      <view
+            class="com.hangum.tadpole.rdb.core.viewers.sql.template.SQLTemplateView"
+            icon="resources/icons/template/templates.png"
+            id="com.hangum.tadpole.rdb.core.view.sql.template"
+            name="SQL Template"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
