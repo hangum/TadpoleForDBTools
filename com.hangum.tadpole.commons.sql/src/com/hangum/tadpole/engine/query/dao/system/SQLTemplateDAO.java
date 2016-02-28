@@ -20,7 +20,7 @@ import java.util.List;
  * @author hangum
  *
  */
-public class TadpoleTemplateDAO {
+public class SQLTemplateDAO {
 
 	int seq;
 	int user_seq;
@@ -32,9 +32,9 @@ public class TadpoleTemplateDAO {
 	Timestamp create_time;
 	String delyn;
 	
-	List<TadpoleTemplateDAO> children = new ArrayList<TadpoleTemplateDAO>();
+	List<SQLTemplateDAO> children = new ArrayList<SQLTemplateDAO>();
 	
-	public TadpoleTemplateDAO() {
+	public SQLTemplateDAO() {
 	}
 
 	/**
@@ -166,14 +166,14 @@ public class TadpoleTemplateDAO {
 	/**
 	 * @return the children
 	 */
-	public List<TadpoleTemplateDAO> getChildren() {
+	public List<SQLTemplateDAO> getChildren() {
 		return children;
 	}
 
 	/**
 	 * @param children the children to set
 	 */
-	public void setChildren(List<TadpoleTemplateDAO> children) {
+	public void setChildren(List<SQLTemplateDAO> children) {
 		this.children = children;
 	}
 

@@ -10,25 +10,24 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.sql.template;
 
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
-import com.hangum.tadpole.engine.query.dao.system.TadpoleTemplateDAO;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SQLTemplate;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -40,10 +39,13 @@ import com.hangum.tadpole.session.manager.SessionManager;
 public class SQLTemplateDialog extends Dialog {
 	private static Logger logger = Logger.getLogger(SQLTemplateDialog.class);
 	
-	private Combo comboGroupName;
+//	private Combo comboGroupName;
 	private Text textName;
 	private Text textDescription;
 	private Text textSQL;
+	
+	private SQLTemplateDAO oldSQLTemplateDAO;
+	private SQLTemplateDAO sqlTemplateDAO;
 
 	/**
 	 * Create the dialog.
@@ -51,6 +53,21 @@ public class SQLTemplateDialog extends Dialog {
 	 */
 	public SQLTemplateDialog(Shell parentShell) {
 		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+	}
+	
+	public SQLTemplateDialog(Shell parentShell, SQLTemplateDAO oldSQLTemplateDAO) {
+		super(parentShell);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.oldSQLTemplateDAO = oldSQLTemplateDAO;
+	}
+
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("SQL Template Dialog");
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -63,11 +80,11 @@ public class SQLTemplateDialog extends Dialog {
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
 		
-		Label lblGroupname = new Label(container, SWT.NONE);
-		lblGroupname.setText("GroupName");
-		
-		comboGroupName = new Combo(container, SWT.NONE);
-		comboGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		Label lblGroupname = new Label(container, SWT.NONE);
+//		lblGroupname.setText("GroupName");
+//		
+//		comboGroupName = new Combo(container, SWT.NONE);
+//		comboGroupName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setText("Name");
@@ -91,35 +108,72 @@ public class SQLTemplateDialog extends Dialog {
 		GridData gd_textSQL = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_textSQL.minimumHeight = 1;
 		textSQL.setLayoutData(gd_textSQL);
+		
+		textName.setFocus();
+		
+		initUIData();
 
 		return container;
 	}
 	
+	/**
+	 * initialize ui data 
+	 */
+	private void initUIData() {
+		if(oldSQLTemplateDAO != null) {
+			textName.setText(oldSQLTemplateDAO.getName());
+			textDescription.setText(oldSQLTemplateDAO.getDescription());
+			textSQL.setText(oldSQLTemplateDAO.getContent());
+		}
+	}
+	
 	@Override
 	protected void okPressed() {
-		String strGroupName = comboGroupName.getText();
+//		String strGroupName = comboGroupName.getText();
 		String strTextName = textName.getText();
 		String strDescription = textDescription.getText();
 		String strSQL = textSQL.getText();
 		
 		// check validation
-		
-		// 
-		TadpoleTemplateDAO dao = new TadpoleTemplateDAO();
-		dao.setUser_seq(SessionManager.getUserSeq());
-		dao.setCategory("00");
-		dao.setGroup_name(strGroupName);
-		dao.setName(strTextName);
-		dao.setDescription(strDescription);
-		dao.setContent(strSQL);
-		try {
-			TadpoleSystem_SQLTemplate.insertSQLTemplate(dao);
-		} catch (Exception e) {
-			logger.error("SQL template insert", e);
+		if(strTextName.equals("")) {
+			MessageDialog.openError(getShell(), "Error", Messages.get().SQLTemplateDialog_NameEmpty);
+			textName.setFocus();
+			return;
+		} else if(strSQL.equals("")) {
+			MessageDialog.openError(getShell(), "Error", Messages.get().SQLTemplateDialog_SQLEmpty);
+			textSQL.setFocus();
+			return;
 		}
 		
+		if(oldSQLTemplateDAO != null) {
+			oldSQLTemplateDAO.setName(strTextName);
+			oldSQLTemplateDAO.setDescription(strDescription);
+			oldSQLTemplateDAO.setContent(strSQL);
+			try {
+				TadpoleSystem_SQLTemplate.updateSQLTemplate(oldSQLTemplateDAO);
+				
+				super.okPressed();
+			} catch (Exception e) {
+				logger.error("SQL template insert", e);
+			}
+		} else {
+			// 
+			sqlTemplateDAO = new SQLTemplateDAO();
+			sqlTemplateDAO.setUser_seq(SessionManager.getUserSeq());
+			sqlTemplateDAO.setCategory("01");
+			sqlTemplateDAO.setGroup_name("");//strGroupName);
+			sqlTemplateDAO.setName(strTextName);
+			sqlTemplateDAO.setDescription(strDescription);
+			sqlTemplateDAO.setContent(strSQL);
+			try {
+				TadpoleSystem_SQLTemplate.insertSQLTemplate(sqlTemplateDAO);
+				
+				super.okPressed();
+			} catch (Exception e) {
+				logger.error("SQL template insert", e);
+			}
+		}
 		
-		super.okPressed();
 	}
 	
 	/**
@@ -138,6 +192,14 @@ public class SQLTemplateDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(487, 387);
+	}
+	
+	public SQLTemplateDAO getSqlTemplateDAO() {
+		return sqlTemplateDAO;
+	}
+	
+	public SQLTemplateDAO getOldSqlTemplateDAO() {
+		return oldSQLTemplateDAO;
 	}
 
 }

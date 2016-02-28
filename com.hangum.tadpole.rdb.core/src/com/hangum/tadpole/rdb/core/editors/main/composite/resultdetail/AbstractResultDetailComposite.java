@@ -95,7 +95,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 				QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 				if(newRsDAO.getDataList().getData().isEmpty()) isContinue = false;
 			
-				if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+//				if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 				oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
 			}
 		

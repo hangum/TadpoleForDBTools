@@ -89,10 +89,11 @@ public class Perspective implements IPerspectiveFactory {
 
 		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.26f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
-		leftFolder.addView(SQLTemplateView.ID);
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
+		leftUnderFolder.addView(SQLTemplateView.ID);
+		
 		
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
 //		rightFolder.addView(HelpViewPart.ID);
@@ -112,11 +113,11 @@ public class Perspective implements IPerspectiveFactory {
 
 		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.26f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
-		leftFolder.addView(SQLTemplateView.ID);
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
-
+		leftUnderFolder.addView(SQLTemplateView.ID);
+		
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
 //		rightFolder.addView(HelpViewPart.ID);
 
@@ -137,10 +138,10 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout leftFolder = layout.createFolder("id" + ManagerViewer.ID, IPageLayout.LEFT, 0.26f, editorArea);
 		leftFolder.addView(ManagerViewer.ID);
 //		leftFolder.addView(HelpViewPart.ID);
-		leftFolder.addView(SQLTemplateView.ID);
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
+		leftUnderFolder.addView(SQLTemplateView.ID);
 
 		// viewer closealbe false
 //		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);

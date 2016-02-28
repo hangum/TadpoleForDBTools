@@ -36,6 +36,28 @@ import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
  */
 public class EditorUtils {
 	private static final Logger logger = Logger.getLogger(EditorUtils.class);
+	
+	/**
+	 * find SQL editor
+	 * @return
+	 */
+	public static IEditorPart findSQLEditor() {
+		// First check active editor
+		IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		if (activeEditor instanceof MainEditor) {
+			return activeEditor;
+		}
+		
+		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();		
+		for (IEditorReference iEditorReference : editors) {
+			//  에디터를 검색한다.
+			if(MainEditor.ID.equals( iEditorReference.getId() )) {
+				return (MainEditor)iEditorReference.getEditor(false);
+			}
+		}
+		
+		return null;
+	}
 
 	/**
 	 * find SQL editor

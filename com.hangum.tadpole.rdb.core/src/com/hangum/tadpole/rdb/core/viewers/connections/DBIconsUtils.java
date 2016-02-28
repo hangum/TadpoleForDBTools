@@ -166,7 +166,7 @@ public class DBIconsUtils {
 		
 		ImageDescriptor descriptor = JFaceResources.getImageRegistry().getDescriptor(imgKey);
 		if(descriptor == null) {
-			if(logger.isDebugEnabled()) logger.debug(String.format("==[image][new][key] %s]", imgKey));
+//			if(logger.isDebugEnabled()) logger.debug(String.format("==[image][new][key] %s]", imgKey));
 			try {
 				descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, imgURL);
 			    JFaceResources.getImageRegistry().put(pluginId, descriptor);

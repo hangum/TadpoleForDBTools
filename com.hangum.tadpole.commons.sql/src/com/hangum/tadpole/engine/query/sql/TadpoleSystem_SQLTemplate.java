@@ -6,7 +6,7 @@ import java.util.List;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.system.TadpoleTemplateDAO;
+import com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -19,12 +19,13 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class TadpoleSystem_SQLTemplate {
 	
 	/**
+	 * list sql template
 	 * 
 	 * @return
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static List<TadpoleTemplateDAO> listSQLTemplate() throws TadpoleSQLManagerException, SQLException {
+	public static List<SQLTemplateDAO> listSQLTemplate() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("listSQLTemplate", SessionManager.getUserSeq());
 	}
@@ -33,9 +34,33 @@ public class TadpoleSystem_SQLTemplate {
 	 * insert sql templcate
 	 * @param dao
 	 */
-	public static void insertSQLTemplate(TadpoleTemplateDAO dao) throws TadpoleSQLManagerException, SQLException {
+	public static void insertSQLTemplate(SQLTemplateDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("insertSQLTemplate", dao);
+	}
+
+	/**
+	 * update sql template
+	 * 
+	 * @param dao
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static void updateSQLTemplate(SQLTemplateDAO dao) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.insert("updataeSQLTemplate", dao);
+	}
+	
+	/**
+	 * delete sql template
+	 * 
+	 * @param dao
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static void deleteSQLTemplate(SQLTemplateDAO dao) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.delete("deleteSQLTemplate", dao);
 	}
 
 }

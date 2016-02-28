@@ -833,12 +833,14 @@ public class Messages {
 	public String ManagerViewer_Schemas;
 
 	public String ResourceHistoryDialog_Modify;
-
 	public String ResourceDetailDialog_delete;
-
 	public String ResourceDetailDialog_name_empty;
-
 	public String ResultTailComposite_ViewQuery;
+
+	public String SQLTemplateDialog_NameEmpty;
+	public String SQLTemplateDialog_SQLEmpty;
+	public String SQLTemplateView_del_equestion;
+	public String SQLTemplateView_Person;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

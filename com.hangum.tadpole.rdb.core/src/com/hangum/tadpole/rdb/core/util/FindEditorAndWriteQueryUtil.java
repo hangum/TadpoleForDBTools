@@ -44,6 +44,13 @@ public class FindEditorAndWriteQueryUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(FindEditorAndWriteQueryUtil.class);
 	
+	public static void run(String strObject) {
+		IEditorPart editor = EditorUtils.findSQLEditor();
+		if(editor != null) {				
+			appendSQLEditorOpen(editor, strObject);				
+		}	// end reference
+	}
+	
 	/**
 	 * 쿼리 스트링을 에디터로 엽니다.
 	 * 
@@ -73,7 +80,7 @@ public class FindEditorAndWriteQueryUtil {
 				if(editor == null || isNewEditor) {				
 					newSQLEditorOpen(userDB, strScript, initAction);		
 				} else {
-					appendSQLEditorOpen(editor, userDB, strScript);				
+					appendSQLEditorOpen(editor, strScript);				
 				}	// end reference
 			} else {
 				newObjectEditorOpen(userDB, strObjectName, strScript, initAction);
@@ -156,10 +163,9 @@ public class FindEditorAndWriteQueryUtil {
 	 * 같은 디비의 에디터가 열려 있을 경우, 기존 에디터에 더한다.
 	 * 
 	 * @param reference
-	 * @param userDB
 	 * @param lowSQL
 	 */
-	private static void appendSQLEditorOpen(IEditorPart editorPart, UserDBDAO userDB, String lowSQL) {
+	private static void appendSQLEditorOpen(IEditorPart editorPart, String lowSQL) {
 		try {
 			MainEditor editor = (MainEditor)editorPart;
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);

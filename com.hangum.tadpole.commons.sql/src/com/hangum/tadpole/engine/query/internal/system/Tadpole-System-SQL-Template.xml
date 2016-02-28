@@ -16,13 +16,13 @@
     PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
-<sqlMap namespace="Tadpole-System-Template">
+<sqlMap namespace="Tadpole-System-SQL-Template">
 
 <!-- 
 	list sql template
  -->
-<select id="listSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleTemplateDAO" parameterClass="java.lang.Integer">
-	SELECT seq, user_seq, category, group_name, name, sql, description, create_time, delyn 
+<select id="listSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO" parameterClass="java.lang.Integer">
+	SELECT seq, user_seq, category, group_name, name, content, description, create_time, delyn 
 	FROM tadpole_sql_template
 	WHERE user_seq = #user_sq#
 	ORDER by group_name, name
@@ -31,11 +31,31 @@
 <!-- 
 	template insert
  -->
-<insert id="insertSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleTemplateDAO">
+<insert id="insertSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
 	INSERT INTO tadpole_sql_template
 		(user_seq, category, group_name, name, content, description) 
 	VALUES 
 		( #user_seq#, #category#, #group_name#, #name#, #content#, #description# );
 </insert>
+
+<!-- 
+	template update
+ -->
+<update id="updataeSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
+	UPDATE tadpole_sql_template 
+	SET
+		group_name = #group_name# , name = #name#, content = #content#, description = #description# 
+	WHERE 
+		seq = #seq#
+</update>
+
+<!-- 
+	template delete
+ -->
+<delete id="deleteSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
+	DELETE FROM tadpole_sql_template
+	WHERE 
+		seq = #seq# 
+</delete>
 
 </sqlMap>
