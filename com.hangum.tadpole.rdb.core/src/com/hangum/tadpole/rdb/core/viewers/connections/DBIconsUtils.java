@@ -11,7 +11,10 @@
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -40,29 +43,41 @@ public class DBIconsUtils {
 		String strBaseImage = "";
 		
 		DBDefine dbType = DBDefine.getDBDefine(userDB);
-		if(DBDefine.MYSQL_DEFAULT == dbType) 		strBaseImage = "resources/icons/mysql-add.png";
-		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "resources/icons/mariadb-add.png";
-		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "resources/icons/oracle-add.png";
-		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "resources/icons/sqlite-add.png";
-		else if(DBDefine.MSSQL_DEFAULT == dbType || DBDefine.MSSQL_8_LE_DEFAULT == dbType) 	strBaseImage = "resources/icons/mssql-add.png";
-		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "resources/icons/cubrid-add.png";
-		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "resources/icons/postgresSQL-add.png";
-		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "resources/icons/mongodb-add.png";
-		else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) strBaseImage = "resources/icons/hive-add.png";
-		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "resources/icons/tajo-add.jpg";
-		else  strBaseImage = "resources/icons/database-add.png";
+		if(DBDefine.MYSQL_DEFAULT == dbType) 		strBaseImage = "mysql-add.png";
+		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "mariadb-add.png";
+		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "oracle-add.png";
+		else if(DBDefine.SQLite_DEFAULT == dbType) 	strBaseImage = "sqlite-add.png";
+		else if(DBDefine.MSSQL_DEFAULT == dbType || DBDefine.MSSQL_8_LE_DEFAULT == dbType) 	strBaseImage = "mssql-add.png";
+		else if(DBDefine.CUBRID_DEFAULT == dbType) 	strBaseImage = "cubrid-add.png";
+		else if(DBDefine.POSTGRE_DEFAULT == dbType) strBaseImage = "postgresSQL-add.png";
+		else if(DBDefine.MONGODB_DEFAULT == dbType) strBaseImage = "mongodb-add.png";
+		else if(DBDefine.HIVE_DEFAULT == dbType || DBDefine.HIVE2_DEFAULT == dbType) strBaseImage = "hive-add.png";
+		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "tajo-add.jpg";
+		else if(DBDefine.TIBERO_DEFAULT == dbType) strBaseImage = "tibero_add.png";
+		else  strBaseImage = "database-add.png";
 		
-		return strBaseImage;	
+		return "resources/icons/" + strBaseImage;
 	}
 	
+//	/**
+//	 * get db image
+//	 * 
+//	 * @param userDB
+//	 * @return
+//	 */
+//	public static Image getDBNormalImage(UserDBDAO userDB) {
+//		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, getDBImageUrl(userDB));
+//	}
+	
 	/**
-	 * get db image
+	 * 	
+	 * 		https://bugs.eclipse.org/bugs/show_bug.cgi?id=468362
 	 * 
 	 * @param userDB
 	 * @return
 	 */
-	public static Image getDBNormalImage(UserDBDAO userDB) {
-		return ResourceManager.getPluginImage(Activator.PLUGIN_ID, getDBImageUrl(userDB));
+	public static Image getEditorImage(UserDBDAO userDB) {
+		return getPluginImage(Activator.PLUGIN_ID, getDBImageUrl(userDB));
 	}
 	
 	/**
@@ -72,7 +87,7 @@ public class DBIconsUtils {
 	 * @return
 	 */
 	public static Image getProcedureImage(UserDBDAO userDB) {
-		Image baseImage = getDBNormalImage(userDB);
+		Image baseImage = getEditorImage(userDB);
 		try {
 			return getDecorateImage(baseImage, "resources/icons/object_editor_0.28.png", ResourceManager.BOTTOM_RIGHT);
 		} catch(Exception e) {
@@ -87,7 +102,7 @@ public class DBIconsUtils {
 	 * @return
 	 */
 	public static Image getDBConnectionImage(UserDBDAO userDB) {
-		Image baseImage = getDBNormalImage(userDB);
+		Image baseImage = getEditorImage(userDB);
 		
 		try {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
@@ -125,5 +140,44 @@ public class DBIconsUtils {
 		return ResourceManager.decorateImage(baseImage, 
 				ResourceManager.getPluginImage(Activator.PLUGIN_ID, strDecorateImage), 
 				conor);
+	}
+	
+	/**
+	 * get plugin image
+	 * 
+	 * @param pluginId
+	 * @param imgURL
+	 * @return
+	 */
+	public static Image getPluginImage(String pluginId, String imgURL) {
+		ImageDescriptor descriptor = getPluginImageDescriptor(pluginId, imgURL);
+		if(descriptor != null) return descriptor.createImage();
+		else return null;
+	}
+	
+	/**
+	 * 
+	 * @param pluginId
+	 * @param imgURL
+	 * @return
+	 */
+	public static ImageDescriptor getPluginImageDescriptor(String pluginId, String imgURL) {
+		String imgKey = pluginId + imgURL;
+		
+		ImageDescriptor descriptor = JFaceResources.getImageRegistry().getDescriptor(imgKey);
+		if(descriptor == null) {
+//			if(logger.isDebugEnabled()) logger.debug(String.format("==[image][new][key] %s]", imgKey));
+			try {
+				descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, imgURL);
+			    JFaceResources.getImageRegistry().put(pluginId, descriptor);
+			} catch(Exception e) {
+				logger.error("create image exception", e);
+			}
+		    return descriptor;
+		} else {
+			if(logger.isDebugEnabled()) logger.debug(String.format("==[image][registery] %s]", imgKey));
+			
+			return descriptor;
+		}
 	}
 }

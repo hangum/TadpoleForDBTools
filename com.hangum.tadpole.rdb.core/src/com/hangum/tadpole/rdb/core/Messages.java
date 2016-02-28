@@ -14,6 +14,7 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
+
 	public String ResultTailComposite_0;
 	public String ResourceHistoryDialog_0;
 
@@ -826,6 +827,21 @@ public class Messages {
 	public String MySQLTableColumnDialog_33;
 	public String MySQLTableColumnDialog_4;
 	public String MySQLTableColumnDialog_5;
+	
+	public String ManagerViewer_Resources;
+	public String ManagerViewer_Extension;
+	public String ManagerViewer_Schemas;
+
+	public String ResourceHistoryDialog_Modify;
+	public String ResourceDetailDialog_delete;
+	public String ResourceDetailDialog_name_empty;
+	public String ResultTailComposite_ViewQuery;
+
+	public String SQLTemplateDialog_NameEmpty;
+	public String SQLTemplateDialog_SQLEmpty;
+	public String SQLTemplateView_del_equestion;
+	public String SQLTemplateView_Person;
+	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	// }

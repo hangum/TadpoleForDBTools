@@ -20,6 +20,8 @@ import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 
@@ -88,8 +90,9 @@ public class ManagerLabelProvider extends LabelProvider {
 			return getGroupImage();
 
 		} else if(element instanceof UserDBDAO) {
-			return DBIconsUtils.getDBConnectionImage((UserDBDAO)element);			
-		
+			return DBIconsUtils.getDBConnectionImage((UserDBDAO)element);	
+		} else if(element instanceof ResourcesDAO) {
+			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/managerExplorer/resources.png"); //$NON-NLS-1$
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			
@@ -120,6 +123,9 @@ public class ManagerLabelProvider extends LabelProvider {
 			
 		} else if(element instanceof UserDBDAO) {
 			return getDBText((UserDBDAO)element);
+		} else if(element instanceof ResourcesDAO) {
+			ResourcesDAO dto = (ResourcesDAO)element;
+			return dto.getName();
 		} else if(element instanceof UserDBResourceDAO) {
 			UserDBResourceDAO dao = (UserDBResourceDAO)element;
 			String strShareType = "[Pu] ";
@@ -132,6 +138,10 @@ public class ManagerLabelProvider extends LabelProvider {
 			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";
 			
 			return strShareType + dao.getName() + " " + strSupportAPI + strComment;
+		} else if(element instanceof DBOtherDAO) {
+			DBOtherDAO dao = (DBOtherDAO)element;
+			if("".equals(dao.getComment()) | "null".equals(dao.getComment()) | null == dao.getComment()) return dao.getName();
+			else return String.format("%s (%s)", dao.getName(), dao.getComment());
 		}
 		
 		return "## not set ##"; //$NON-NLS-1$

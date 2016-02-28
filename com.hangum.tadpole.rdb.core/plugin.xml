@@ -26,6 +26,13 @@
             name="%view.name.0"
             restorable="true">
       </view>
+      <view
+            class="com.hangum.tadpole.rdb.core.viewers.sql.template.SQLTemplateView"
+            icon="resources/icons/template/templates.png"
+            id="com.hangum.tadpole.rdb.core.view.sql.template"
+            name="SQL Template"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -357,7 +364,7 @@
          <visibility>
             <objectState
                   name="db_type"
-                  value="cubrid,mariadb,mysql,mssql,mssql_8_le,oracle,postgresql,sqlite">
+                  value="cubrid,mariadb,mysql,mssql,mssql_8_le,oracle,postgresql,sqlite,tibero">
             </objectState>
          </visibility>
       </objectContribution>
@@ -693,9 +700,9 @@
                menubarPath="additions">
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.ResourceHistoryAction"
+               class="com.hangum.tadpole.rdb.core.actions.erd.rdb.ResourceDetailAction"
                enablesFor="1"
-               icon="resources/icons/history.png"
+               icon="resources/icons/detail.png"
                id="com.hangum.tadpole.rdb.core.action.historyResource"
                label="%action.label.history"
                menubarPath="additions">

@@ -26,8 +26,14 @@ import org.eclipse.rap.rwt.RWT;
 public class PublicTadpoleDefine {
 	/** url system verion information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
+
+	/** cookie path */
+	public static String _cookiePath = "/";
 	
 	public static final int systemAdminId = -1;
+	
+	/** Default resource name */
+	public static final String DEFAUL_RESOURCE_NAME = "_TDB_DEF_NAME_";
 
 	/** 시스템 사용 그룹 정의 */
 	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  
@@ -41,6 +47,7 @@ public class PublicTadpoleDefine {
 	
 	/** COOKIE USER ID */
 	public static final String TDB_COOKIE_USER_ID = "TDB_USER_ID";
+	public static final String TDB_COOKIE_USER_PWD = "TDB_USER_PWD";
 	public static final String TDB_COOKIE_USER_SAVE_CKECK = "TDB_USER_SAVE_CHECK";
 	public static final String TDB_COOKIE_USER_LANGUAGE = "TDB_USER_LANGUAGE";
 
@@ -207,7 +214,7 @@ public class PublicTadpoleDefine {
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
 	/** save resource type */
-	public static enum RESOURCE_TYPE {ERD, SQL};
+	public static enum RESOURCE_TYPE {ERD, SQL, AUTO_SQL};
 	
 	/** define SQL, ERD shared type */
 	public static enum SHARED_TYPE {PUBLIC, PRIVATE};

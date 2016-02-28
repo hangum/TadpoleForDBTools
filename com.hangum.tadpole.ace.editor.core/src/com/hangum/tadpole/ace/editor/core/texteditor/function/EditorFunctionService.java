@@ -41,9 +41,15 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 //				logger.debug("=#################################################################===Rise dirth change");
 				doDirtyChanged(arguments);
 				break;
+				
+			case CONTENT_ASSIST:
+				return getContentAssist(arguments);
 
 			case SAVE:
 				return doSave(arguments);
+				
+			case AUTO_SAVE:
+				return doAutoSave(arguments);
 				
 			case EXECUTE_QUERY:
 				doExecuteQuery(arguments);
@@ -80,6 +86,14 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 	 * @return
 	 */
 	protected abstract Object doSave(Object[] arguments);
+	
+	/**
+	 * auto save
+	 * 
+	 * @param arguments
+	 * @return
+	 */
+	protected abstract Object doAutoSave(Object[] arguments);
 
 	/**
 	 * ediror dirty change event
@@ -88,6 +102,13 @@ public abstract class EditorFunctionService extends BrowserFunction implements I
 	 * @return
 	 */
 	protected abstract void doDirtyChanged(Object[] arguments);
+	
+	/**
+	 * content assist
+	 * 
+	 * @param arguments
+	 */
+	protected abstract String getContentAssist(Object[] arguments);
 
 	/**
 	 * execute query

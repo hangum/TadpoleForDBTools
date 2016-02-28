@@ -89,7 +89,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 		public static final String SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE = "true";
 		
 		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE 	= "SQL_FORMATTER_WORD_WIDTH_PREFERENCE";
-		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "120";
+		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "200";
 		
 	/** SESSION TIME OUT */
 	public static final String SESSION_DFEAULT_PREFERENCE = "SESSION_DFEAULT_PREFERENCE";
@@ -178,8 +178,12 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 		
 	/** editor info */
 	public static final String EDITOR_CHANGE_EVENT = "_EDITOR_CHANGE_EVENT_";
+	
+	public static final String EDITOR_AUTOSAVE 			= "EDITOR_AUTOSAVE";
+	public static final String EDITOR_AUTOSAVE_VALUE	= "true";
+	
 	public static final String EDITOR_THEME 		= "EDITOR_THEME";
-	public static final String EDITOR_THEME_VALUE	= "Chrome";
+	public static final String EDITOR_THEME_VALUE	= "Crimson Editor";
 	
 	public static final String EDITOR_FONT_SIZE 		= "EDITOR_FONT_SIZE";
 	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";
@@ -188,7 +192,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_IS_WARP_VALUE = "true";
 	
 	public static final String EDITOR_WRAP_LIMIT 		= "EDITOR_WRAP_LIMIT";
-	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "120";
+	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "200";
 	
 	public static final String EDITOR_SHOW_GUTTER = "EDITOR_SHOW_GUTTER";
 	public static final String EDITOR_SHOW_GUTTER_VALUE = "true";

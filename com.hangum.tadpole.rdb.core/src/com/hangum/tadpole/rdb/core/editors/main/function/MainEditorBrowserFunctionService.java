@@ -58,9 +58,31 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		return result;
 	}
 	
+
+	@Override
+	protected Object doAutoSave(Object[] arguments) {
+		boolean result = false;
+		try {
+			String newContents = (String) arguments[1];
+			result = editor.calledDoAutoSave(newContents);
+		} catch(Exception e) {
+			logger.error("do not save", e);
+		}
+		
+		return result;
+	}
+	
 	@Override
 	protected void doDirtyChanged(Object[] arguments) {
 		editor.setDirty(true);
+	}
+	
+	@Override
+	protected String getContentAssist(Object[] arguments) {
+		String strSQL = (String) arguments[1];
+		int intPosition = ((Double)arguments[2]).intValue();
+		
+		return editor.getContentAssist(strSQL, intPosition);
 	}
 	
 	@Override
@@ -109,18 +131,14 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		
 		editor.setFocus();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService#f4DMLOpen(java.lang.Object[])
 	 */
 	@Override
 	protected void f4DMLOpen(Object[] arguments) {
-		String strObject = StringUtils.remove((String) arguments[1], ",");
-		strObject = StringUtils.remove(strObject, "(");
-		strObject = StringUtils.remove(strObject, ")");
-		
+		String strObject = parseLastObject((String) arguments[1]);
 		if(StringUtils.contains(strObject, ".")) strObject = StringUtils.substringAfter(strObject, ".");
-		
 		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
 		
 		try {
@@ -134,7 +152,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 				}
 			} else {
 				for (TableDAO tmpTableDAO : listTable) {
-					if(strObject.equals(tmpTableDAO.getName())) {
+					if(strObject.equalsIgnoreCase(tmpTableDAO.getName())) {
 						tableDao = tmpTableDAO;
 					}
 				}
@@ -156,10 +174,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	@Override
 	protected void generateSelect(Object[] arguments) {
-		String strObject = StringUtils.remove((String) arguments[1], ",");
-		strObject = StringUtils.remove(strObject, "(");
-		strObject = StringUtils.remove(strObject, ")");
-		
+		String strObject = parseLastObject((String) arguments[1]);
 		String strSQL = "select * from " + strObject;
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
 		exeType = EXECUTE_TYPE.BLOCK;
@@ -167,6 +182,15 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
-	
 
+	/**
+	 * parse last object 
+	 */
+	private String parseLastObject(String obj) {
+		String strObject = StringUtils.remove((String)obj, ",");
+		strObject = StringUtils.remove(strObject, "(");
+		strObject = StringUtils.remove(strObject, ")");
+		
+		return strObject;
+	}
 }

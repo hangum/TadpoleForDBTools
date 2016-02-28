@@ -53,7 +53,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -76,7 +75,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.erd.mongodb.MongoDBERDViewAction;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
-import com.hangum.tadpole.rdb.core.dialog.resource.ResourceHistoryDialog;
+import com.hangum.tadpole.rdb.core.dialog.resource.ResourceDetailDialog;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
@@ -496,7 +495,7 @@ public class ResourceManageEditor extends EditorPart {
 		});
 		btnApiExecute.setText(Messages.get().ResourceManageEditor_44);
 
-		textQuery = new TadpoleEditorWidget(compositeDetail, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");
+		textQuery = new TadpoleEditorWidget(compositeDetail, SWT.BORDER, userDB.getDBDefine().getExt(), "", "");
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
 
 		createTableColumn();
@@ -617,7 +616,7 @@ public class ResourceManageEditor extends EditorPart {
 		
 		ResourceManagerDAO resourceManagerDao = (ResourceManagerDAO) ss.getFirstElement();
 		
-		ResourceHistoryDialog dialog = new ResourceHistoryDialog(getSite().getShell(), resourceManagerDao);
+		ResourceDetailDialog dialog = new ResourceDetailDialog(getSite().getShell(), resourceManagerDao, null);
 		dialog.open();
 	}
 

@@ -41,6 +41,8 @@ import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -127,45 +129,7 @@ public class ExplorerViewer extends ViewPart {
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				String strSelectTab = ""+tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getData(AbstractObjectComposite.TAB_DATA_KEY);
-				String strSearchText = textSearch.getText();
-				
-				if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.COLLECTIONS.name())) {
-					mongoCollectionComposite.filter(strSearchText);
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
-					tableComposite.filter(strSearchText);
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
-					synonymComposite.filter(strSearchText);
-//				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SCHEDULE.name())) {
-//					scheduleComposite.filter(strSearchText);
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
-					viewComposite.filter(strSearchText);					
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-					if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
-						mongoIndexComposite.filter(strSearchText);
-					} else {
-						indexComposite.filter(strSearchText);
-					}					
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
-					procedureComposite.filter(strSearchText);
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
-					packageComposite.filter(strSearchText);
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
-					functionCompostite.filter(strSearchText);
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-					triggerComposite.filter(strSearchText);
-				
-				} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-					mongoJavaScriptComposite.filter(strSearchText);
-				}
+				filterText();
 			}
 		});
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -214,7 +178,51 @@ public class ExplorerViewer extends ViewPart {
 				} // end if(event.getProperty()
 			} //
 		}); // end property change
+	}
+	
+	/**
+	 * filter text
+	 */
+	private void filterText() {
+		String strSelectTab = ""+tabFolderObject.getItem(tabFolderObject.getSelectionIndex()).getData(AbstractObjectComposite.TAB_DATA_KEY);
+		String strSearchText = textSearch.getText();
 		
+		if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.COLLECTIONS.name())) {
+			mongoCollectionComposite.filter(strSearchText);
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
+			tableComposite.filter(strSearchText);
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
+			synonymComposite.filter(strSearchText);
+//		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SCHEDULE.name())) {
+//			scheduleComposite.filter(strSearchText);
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
+			viewComposite.filter(strSearchText);					
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
+			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+				mongoIndexComposite.filter(strSearchText);
+			} else {
+				indexComposite.filter(strSearchText);
+			}					
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
+			procedureComposite.filter(strSearchText);
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
+			packageComposite.filter(strSearchText);
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
+			functionCompostite.filter(strSearchText);
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
+			triggerComposite.filter(strSearchText);
+		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
+			mongoJavaScriptComposite.filter(strSearchText);
+		}
 	}
 
 	/**
@@ -258,26 +266,19 @@ public class ExplorerViewer extends ViewPart {
 
 		// Initialize resources
 		if (selectElement instanceof UserDBDAO || selectElement instanceof UserDBResourceDAO) {
-			UserDBDAO selectUserDb = null;
-			if (selectElement instanceof UserDBDAO) selectUserDb = (UserDBDAO)selectElement;
-			else 									selectUserDb = ((UserDBResourceDAO)selectElement).getParent();
-
-			// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
-			if (userDB != null) if (userDB.getSeq() == selectUserDb.getSeq()) return;
-
-			// 디비 선택
-			userDB = selectUserDb;
-
-			// 존재하는 tadfolder를 삭제한다.
-			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
+			selectUserDB(selectElement);
+		} else if(selectElement instanceof ResourcesDAO) {
+			ResourcesDAO dao = (ResourcesDAO)selectElement;
+			selectUserDB(dao.getUserDBDAO());
+		} else if(selectElement instanceof DBOtherDAO) {
+			DBOtherDAO dao = (DBOtherDAO)selectElement;
+			try {
+				UserDBDAO schemaUserDB = (UserDBDAO)dao.getParent().getUserDBDAO().clone();
+				schemaUserDB.setSchema(dao.getName());
 			
-			// is dblock
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) &&
-					!SessionManager.isUnlockDB(selectUserDb)) {
-				userDB = null;
-				createTable();
-			} else {
-				initObjectDetail(DBDefine.getDBDefine(userDB));
+				selectUserDB(schemaUserDB);
+			} catch(Exception e) {
+				logger.error("cloable not support exception", e);
 			}
 		} else {
 			userDB = null;
@@ -285,6 +286,40 @@ public class ExplorerViewer extends ViewPart {
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 			createTable();
+		}
+	}
+	
+	/**
+	 * select user databse
+	 * @param selectElement
+	 */
+	private void selectUserDB(Object selectElement) {
+		UserDBDAO selectUserDb = null;
+		if (selectElement instanceof UserDBDAO) selectUserDb = (UserDBDAO)selectElement;
+		else 									selectUserDb = ((UserDBResourceDAO)selectElement).getParent();
+		
+		// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
+		if (userDB != null) {
+			if (userDB.getSeq() == selectUserDb.getSeq()) {
+				textSearch.setText(selectUserDb.getSchema());
+				filterText();
+				userDB = selectUserDb;		
+				return;
+			}
+		}
+		// 디비 선택
+		userDB = selectUserDb;
+
+		// 존재하는 tadfolder를 삭제한다.
+		for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
+		
+		// is dblock
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) &&
+				!SessionManager.isUnlockDB(selectUserDb)) {
+			userDB = null;
+			createTable();
+		} else {
+			initObjectDetail(DBDefine.getDBDefine(userDB));
 		}
 	}
 	
@@ -428,6 +463,7 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 			refreshJS(false, strObjectName);
 		}
+		filterText();
 		
 		// google analytic
 		AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
@@ -604,7 +640,7 @@ public class ExplorerViewer extends ViewPart {
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
 			tableComposite.refreshTable(userDB, boolRefresh, strObjectName);
-		}		
+		}
 	}
 	
 	/**
@@ -638,6 +674,8 @@ public class ExplorerViewer extends ViewPart {
 		String strObjectName = reqQuery.getSqlObjectName();
 		
 		refreshCurrentTab(queryDDLType, strObjectName, chgUserDB);
+		// refresh filter
+		filterText();
 	}
 	
 	/**

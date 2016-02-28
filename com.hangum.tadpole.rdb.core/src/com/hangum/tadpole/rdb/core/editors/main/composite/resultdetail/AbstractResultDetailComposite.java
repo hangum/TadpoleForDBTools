@@ -21,6 +21,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
+import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -94,7 +95,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 				QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 				if(newRsDAO.getDataList().getData().isEmpty()) isContinue = false;
 			
-				if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+//				if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 				oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
 			}
 		

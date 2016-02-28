@@ -48,6 +48,7 @@ public enum DBDefine {
 	
 	/** USER DB */
 	ORACLE_DEFAULT,
+	TIBERO_DEFAULT,
 	MSSQL_DEFAULT,
 	MSSQL_8_LE_DEFAULT,
 	
@@ -88,6 +89,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
 			
 			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
+			case TIBERO_DEFAULT:	return prefix + "TiberoConfig.xml";
 			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
 			case MSSQL_8_LE_DEFAULT: return prefix + "MSSQLConfig_8_LE.xml";
 			
@@ -117,6 +119,7 @@ public enum DBDefine {
 		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
+		else if(type.equalsIgnoreCase("Tibero")) 		return TIBERO_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("MSSQL")) 		return MSSQL_DEFAULT;
 		else if(type.equalsIgnoreCase("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
@@ -158,6 +161,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
 			
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
+			case TIBERO_DEFAULT:	return "jdbc:tibero:thin:@%s:%s:%s";
 			
 			case MSSQL_DEFAULT:		
 			case MSSQL_8_LE_DEFAULT: return "jdbc:jtds:sqlserver://%s:%s/%s";
@@ -194,6 +198,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: 	return "TadpoleSystem_MYSQL";
 		
 			case ORACLE_DEFAULT:		return "Oracle";
+			case TIBERO_DEFAULT:		return "Tibero";
 			
 			case MSSQL_DEFAULT:			return "MSSQL";
 			case MSSQL_8_LE_DEFAULT:	return "MSSQL_8_LE";
@@ -223,22 +228,24 @@ public enum DBDefine {
 	 * @return
 	 */
 	public String getExt() {
-		String extension = "tadpole_edit"; //$NON-NLS-1$
+		String extension = ""; //$NON-NLS-1$
 		
 		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
+			extension += "mysql"; //$NON-NLS-1$
 		} else if(this == DBDefine.ORACLE_DEFAULT) {
-			extension += ".oracle"; //$NON-NLS-1$
+			extension += "oracle"; //$NON-NLS-1$
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
-			extension += ".mssql"; //$NON-NLS-1$
+			extension += "mssql"; //$NON-NLS-1$
 		} else if(this == DBDefine.SQLite_DEFAULT) {
-			extension += ".sqlite"; //$NON-NLS-1$
+			extension += "sqlite"; //$NON-NLS-1$
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
+			extension += "mysql"; //$NON-NLS-1$
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
-			extension += ".hql"; //$NON-NLS-1$
+			extension += "hql"; //$NON-NLS-1$
+		} else if(this == DBDefine.POSTGRE_DEFAULT) {
+			extension += "pgsql"; //$NON-NLS-1$
 		} else {
-			extension += ".postgresql"; //$NON-NLS-1$
+			extension += "sql"; //$NON-NLS-1$
 		}
 		
 		return extension;
@@ -251,6 +258,7 @@ public enum DBDefine {
 	public String[] getSystemVariableQuery() {
 		switch ( this ) {
 		case ORACLE_DEFAULT:		return DBVariableDefine.ORACLE_VARIABLES;
+		case TIBERO_DEFAULT:		return DBVariableDefine.ORACLE_VARIABLES;
 		
 		case MSSQL_DEFAULT:			return DBVariableDefine.MSSQL_VARIABLES;
 		case MSSQL_8_LE_DEFAULT:	return DBVariableDefine.MSSQL_VARIABLES;
@@ -329,6 +337,7 @@ public enum DBDefine {
 		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
+		supportDb.add(DBDefine.TIBERO_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

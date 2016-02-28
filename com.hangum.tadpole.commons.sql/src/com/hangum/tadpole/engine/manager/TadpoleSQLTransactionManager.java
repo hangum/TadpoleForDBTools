@@ -47,8 +47,6 @@ public class TadpoleSQLTransactionManager {
 		} 
 	}
 	
-	
-	
 	/**
 	 * 사용자가 로그 아웃등으로 나갈때 transaction commit합니다. 
 	 * 

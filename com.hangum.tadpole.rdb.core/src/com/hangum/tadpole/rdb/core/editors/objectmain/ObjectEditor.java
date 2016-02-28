@@ -55,6 +55,7 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
+import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.swtdesigner.ResourceManager;
 /**
@@ -87,7 +88,7 @@ public class ObjectEditor extends MainEditor {
 		setSite(site);
 		setInput(input);
 		setPartName(strPartName);
-//		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
+		setTitleImage(DBIconsUtils.getProcedureImage(getUserDB()));
 	}
 
 	@Override

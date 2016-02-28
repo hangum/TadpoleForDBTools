@@ -29,7 +29,6 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
-import com.hangum.tadpole.rdb.core.editors.main.composite.plan.GeneralPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
@@ -54,7 +53,8 @@ public class ResultMainComposite extends Composite {
 	/** 쿼리 결과 페이지 로케이션 */
 	private ResultSetComposite compositeResultSet;
 	
-	private GeneralPlanComposite compositeQueryPlan;
+	/** 쿼리 플랜 페이지 */
+	private ResultPlanComposite compositeQueryPlan;
 	
 	/** query history */
     private QueryHistoryComposite compositeQueryHistory;
@@ -104,7 +104,7 @@ public class ResultMainComposite extends Composite {
 		tbtmResult.setControl(compositeResultSet);
 		
 		///////////////////// tab sql plan //////////////////////////		
-		compositeQueryPlan = new GeneralPlanComposite(tabFolderResult, SWT.NONE);
+		compositeQueryPlan = new ResultPlanComposite(tabFolderResult, SWT.NONE);
 		compositeQueryPlan.setRDBResultComposite(this);
 		compositeQueryPlan.setLayout(new GridLayout(1, false));
 		

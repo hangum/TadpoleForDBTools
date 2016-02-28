@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
-public class TriggerDAO {
+public class TriggerDAO extends StructObjectDAO {
 	String Trigger;	
 	String Event;
 	String Table_name;	

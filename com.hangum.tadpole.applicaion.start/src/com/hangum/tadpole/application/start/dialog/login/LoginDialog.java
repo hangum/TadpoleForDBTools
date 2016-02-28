@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -128,7 +129,7 @@ public class LoginDialog extends Dialog {
 		lblLoginForm.setText("Welcome to the Tadpole DB Hub");
 		
 		lblLabelLblhangum = new Label(compositeHead, SWT.NONE);
-		lblLabelLblhangum.setText("             Projects release by hangum");
+		lblLabelLblhangum.setText("             Project release by hangum");
 		
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
@@ -289,7 +290,7 @@ public class LoginDialog extends Dialog {
 			}
 			
 			// 로그인 유지.
-			registLoginID(userDao.getEmail());
+			registLoginID(userDao.getEmail(), strPass);
 			
 			SessionManager.addSession(userDao);
 			
@@ -318,7 +319,7 @@ public class LoginDialog extends Dialog {
 	 * 
 	 * @param userId
 	 */
-	private void registLoginID(String userId) {
+	private void registLoginID(String userId, String userPwd) {
 		if(!btnCheckButton.getSelection()) {
 			deleteCookie();
 			return;
@@ -326,6 +327,7 @@ public class LoginDialog extends Dialog {
 		
 		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
 		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
 		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
 	}
 	
@@ -337,17 +339,22 @@ public class LoginDialog extends Dialog {
 			for (Cookie cookie : cookies) {
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
 					cookie.setMaxAge(0);
-					cookie.setPath("/");
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
 				}
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
 					cookie.setMaxAge(0);
-					cookie.setPath("/");
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
+					response.addCookie(cookie);
+				}
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
 				}
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
 					cookie.setMaxAge(0);
-					cookie.setPath("/");
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
 				}
 			}
@@ -362,7 +369,7 @@ public class LoginDialog extends Dialog {
 			HttpServletResponse response = RWT.getResponse();
 			Cookie tdbCookie = new Cookie(key, value);
 			tdbCookie.setMaxAge(60 * 60 * 24 * 365);
-			tdbCookie.setPath("/");
+			tdbCookie.setPath(PublicTadpoleDefine._cookiePath);
 			response.addCookie(tdbCookie);
 		} catch(Exception e) {
 			logger.error("regist user info", e);
@@ -470,34 +477,24 @@ public class LoginDialog extends Dialog {
 		HttpServletRequest request = RWT.getRequest();
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null) {
-			for (Cookie cookie : cookies) {
-				boolean isFind = false;
-				
+			int intCount = 0;
+			for (Cookie cookie : cookies) {				
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
 					textEMail.setText(cookie.getValue());
-					isFind = true;
-				}
-				
-				if(isFind) break;
-			}
-			for (Cookie cookie : cookies) {
-				boolean isFind = false;
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
+					intCount++;
+				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
+					textPasswd.setText(cookie.getValue());
+					intCount++;
+				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
 					btnCheckButton.setSelection(Boolean.parseBoolean(cookie.getValue()));
-					isFind = true;
-				}
-				
-				if(isFind) break;
-			}
-			for (Cookie cookie : cookies) {
-				boolean isFind = false;
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+					intCount++;
+				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
 					comboLanguage.setText(cookie.getValue());
 					changeUILocale(comboLanguage.getText());
-					isFind = true;
+					intCount++;
 				}
 				
-				if(isFind) break;
+				if(intCount == 4) break;
 			}
 		}
 	}

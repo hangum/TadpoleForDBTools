@@ -277,9 +277,18 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				if("".equals(table.getSchema_name())) return table.getName();
+				final DBDefine selectDB = getUserDB().getDBDefine();
+				if(selectDB == DBDefine.ORACLE_DEFAULT || 
+						selectDB == DBDefine.POSTGRE_DEFAULT ||
+						selectDB == DBDefine.MSSQL_DEFAULT) {
+					
+					if("".equals(table.getSchema_name()) | null == table.getSchema_name()) return table.getName();
+					return table.getSchema_name() + "."+ table.getName();
+					
+				} else {
+					return table.getName();
+				}
 				
-				return table.getSchema_name() + "."+ table.getName();
 			}
 		});
 		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));

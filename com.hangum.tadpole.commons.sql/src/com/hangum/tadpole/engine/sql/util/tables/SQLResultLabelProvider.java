@@ -34,7 +34,7 @@ import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * SQLResult의 LabelProvider
@@ -70,7 +70,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 
 	@Override
 	public Color getBackground(Object element, int columnIndex) {
-		if(columnIndex == 0) return ResourceManager.getColor(SWT.COLOR_GRAY);
+		if(columnIndex == 0) return SWTResourceManager.getColor(SWT.COLOR_GRAY);
 		
 		return null;
 	}

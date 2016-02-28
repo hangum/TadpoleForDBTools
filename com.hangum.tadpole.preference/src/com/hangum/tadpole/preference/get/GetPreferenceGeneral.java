@@ -249,6 +249,12 @@ public class GetPreferenceGeneral {
 		}
 
 	///////////////// edito setting ////////////////////////////////////////////////////////////////////////////
+	public static boolean getEditorAutoSave() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_AUTOSAVE);
+		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_AUTOSAVE_VALUE); 
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
+		
 	public static String getEditorTheme() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_THEME);
 		if(null == userInfo) return PreferenceDefine.EDITOR_THEME_VALUE; 

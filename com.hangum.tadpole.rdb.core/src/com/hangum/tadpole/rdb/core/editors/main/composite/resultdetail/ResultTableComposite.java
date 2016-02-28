@@ -60,10 +60,11 @@ import com.hangum.tadpole.rdb.core.actions.global.OpenSingleRowDataDialogAction;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
+import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * Table result type
@@ -74,6 +75,9 @@ import com.swtdesigner.ResourceManager;
 public class ResultTableComposite extends AbstractResultDetailComposite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultTableComposite.class);
+	
+	/** 이미 결과를 마지막까지 그렸는지 유무 */
+	private boolean isLastReadData = false;
 	
 	private Text textFilter;
 	
@@ -140,7 +144,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if(!"".equals(PREFERENCE_USER_FONT)) { //$NON-NLS-1$
 			try {
 				String[] arryFontInfo = StringUtils.split(PREFERENCE_USER_FONT, "|"); //$NON-NLS-1$
-				tableResult.setFont(ResourceManager.getFont(arryFontInfo[0], Integer.parseInt(arryFontInfo[1]), Integer.parseInt(arryFontInfo[2])));
+				tableResult.setFont(SWTResourceManager.getFont(arryFontInfo[0], Integer.parseInt(arryFontInfo[1]), Integer.parseInt(arryFontInfo[2])));
 			} catch(Exception e) {
 				logger.error("Fail setting the user font", e); //$NON-NLS-1$
 			}
@@ -250,7 +254,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 2;
 		compositeTail.setLayout(gl_compositeResult);
-		
 	}
 
 	/**
@@ -448,6 +451,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	 */
 	private void calcTableData() {
 		if(getRsDAO() == null) return;
+		if(isLastReadData) return;
 		
 		final Table tableResult = tvQueryResult.getTable();
 		int tableRowCnt = tableResult.getBounds().height / tableResult.getItemHeight();
@@ -456,9 +460,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 
-//			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 			if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
-//				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
+				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 				
 				if(oldTadpoleResultSet.getData().size() >= (tableResult.getItemCount())) {
 					// 나머지 데이터를 가져온다.
@@ -468,8 +472,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					
 					try {
 						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
-//						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
 					
 						tvQueryResult.setInput(oldTadpoleResultSet.getData());
@@ -513,6 +518,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	
 	@Override
 	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		isLastReadData = false;
 		if(rsDAO == null) return;
 		if(rsDAO.getDataList() == null) return;
 		

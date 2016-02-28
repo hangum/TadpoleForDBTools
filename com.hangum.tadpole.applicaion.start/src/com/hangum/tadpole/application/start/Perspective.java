@@ -35,6 +35,7 @@ import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
 //import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.rdb.core.viewers.sql.template.SQLTemplateView;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -91,12 +92,15 @@ public class Perspective implements IPerspectiveFactory {
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
+		leftUnderFolder.addView(SQLTemplateView.ID);
+		
 		
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
 //		rightFolder.addView(HelpViewPart.ID);
 //
 //		// viewer closealbe false
 //		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);
+		layout.getViewLayout(SQLTemplateView.ID).setCloseable(false);
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
 		openEditor(DBMgmtEditor.ID);
@@ -112,12 +116,14 @@ public class Perspective implements IPerspectiveFactory {
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
-
+		leftUnderFolder.addView(SQLTemplateView.ID);
+		
 //		IFolderLayout rightFolder = layout.createFolder("id" + HelpViewPart.ID, IPageLayout.RIGHT, 0.80f, editorArea);
 //		rightFolder.addView(HelpViewPart.ID);
 
 		// viewer closealbe false
 //		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);
+		layout.getViewLayout(SQLTemplateView.ID).setCloseable(false);
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
 		
@@ -135,9 +141,11 @@ public class Perspective implements IPerspectiveFactory {
 
 		IFolderLayout leftUnderFolder = layout.createFolder("id" + ExplorerViewer.ID, IPageLayout.BOTTOM, 0.26f, "id" + ManagerViewer.ID);
 		leftUnderFolder.addView(ExplorerViewer.ID);
+		leftUnderFolder.addView(SQLTemplateView.ID);
 
 		// viewer closealbe false
 //		layout.getViewLayout(HelpViewPart.ID).setCloseable(false);
+		layout.getViewLayout(SQLTemplateView.ID).setCloseable(false);
 		layout.getViewLayout(ManagerViewer.ID).setCloseable(false);
 		layout.getViewLayout(ExplorerViewer.ID).setCloseable(false);
 	}

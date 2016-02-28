@@ -16,7 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -36,6 +39,19 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class DBSystemSchema {
 	
 	/**
+	 * return namespace
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List getSchemas(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		return sqlClient.queryForList("getSchemas");
+	}
+	
+	/**
 	 * get table row count
 	 * 
 	 * @param userDB
@@ -44,7 +60,7 @@ public class DBSystemSchema {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static int getTableRowCount(final UserDBDAO userDB, final String strTableName)  throws TadpoleSQLManagerException, SQLException {
+	public static int getTableRowCount(final UserDBDAO userDB, final String strTableName) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		Integer listView = (Integer)sqlClient.queryForObject("tableRowCount", strTableName);
 		
@@ -67,18 +83,35 @@ public class DBSystemSchema {
 		List<TableDAO> listTblView = new ArrayList<TableDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
-		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
-		for(String strView : listView) {
-			TableDAO tblDao = new TableDAO();
-			tblDao.setName(strView);
-			tblDao.setSysName(SQLUtil.makeIdentifierName(userDB, strView));
+		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			List<TableDAO> listView = sqlClient.queryForList("viewList", userDB.getDb());
+			// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+			StringBuffer strViewList = new StringBuffer();
+			for(TableDAO td : listView) {
+				td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
+				strViewList.append(MakeContentAssistUtil.makeObjectPattern(td.getSchema_name(), td.getSysName(), "View")); //$NON-NLS-1$
+			}
+			userDB.setTableListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
-			listTblView.add(tblDao);
+			return listView;
+		} else {
+			List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
+			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+			// 2. keyword 를 만든다.
+			StringBuffer strViewList = new StringBuffer();
+			for(String strView : listView) {
+				TableDAO tblDao = new TableDAO();
+				tblDao.setName(strView);
+				tblDao.setSysName(SQLUtil.makeIdentifierName(userDB, strView));
+				
+				listTblView.add(tblDao);
+	
+				strViewList.append(MakeContentAssistUtil.makeObjectPattern(tblDao.getSchema_name(), tblDao.getSysName(), "View")); //$NON-NLS-1$
+			}
+			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
+			
+			return listTblView; 
 		}
-		
-		return listTblView; 
 	}
 	
 	/**
@@ -95,6 +128,7 @@ public class DBSystemSchema {
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("db", userDB.getDb()); //$NON-NLS-1$
+		param.put("schema", tableDao.getSchema_name()); //$NON-NLS-1$
 		param.put("table", tableDao.getName()); //$NON-NLS-1$
 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -126,10 +160,14 @@ public class DBSystemSchema {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		List<ProcedureFunctionDAO> listFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
 		
-		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+		// 2. create to default keyword 
+		StringBuffer strFunctionlist = new StringBuffer();
 		for(ProcedureFunctionDAO pfDao : listFunction) {
 			pfDao.setSysName(SQLUtil.makeIdentifierName(userDB, pfDao.getName()));
+			strFunctionlist.append(MakeContentAssistUtil.makeObjectPattern(pfDao.getSchema_name(), pfDao.getSysName(), "Function")); //$NON-NLS-1$
 		}
+		userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), MakeContentAssistUtil._PRE_GROUP));
 		
 		return listFunction;
 	}

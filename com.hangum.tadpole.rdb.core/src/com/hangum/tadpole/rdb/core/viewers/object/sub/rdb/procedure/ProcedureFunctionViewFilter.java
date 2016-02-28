@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * Procedure Function 의 FILTER
@@ -28,7 +29,7 @@ public class ProcedureFunctionViewFilter extends TadpoleViewrFilter {
 		if(searchString == null || searchString.length() == 0) return true;
 		
 		ProcedureFunctionDAO dao  = (ProcedureFunctionDAO)element;
-		if(dao.getName().toUpperCase().matches(searchString.toUpperCase())) return true;
+		if(SQLUtil.getProcedureName(dao).toUpperCase().matches(searchString.toUpperCase())) return true;
 		
 		return false;
 	}

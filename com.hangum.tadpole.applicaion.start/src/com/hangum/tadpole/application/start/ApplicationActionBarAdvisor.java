@@ -82,7 +82,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     /** executed sql */
     private IAction executedSQLAction;
     
-    /** schedule action */
+//    /** schedule action */
+//    private IAction monitoringManageAction;
 //    private IAction monitoringRealTimeAction;
     
     /** schema history */
@@ -133,6 +134,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	executedSQLAction = new SQLAuditAction(window);
     	register(executedSQLAction);
+    	
+//    	monitoringManageAction = new MonitoringManageAction(window);
+//    	register(monitoringManageAction);
+//    	
+//    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
+//    	register(monitoringRealTimeAction);
     	
     	adminSQLAuditAction = new AdminSQLAuditAction(window);
     	register(adminSQLAuditAction);
@@ -244,6 +251,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(queryOpenAction);
         toolbar.add(dbRelationOpenAction);
         toolbar.add(new Separator());
+        
+//        toolbar.add(monitoringManageAction);
+//        toolbar.add(monitoringRealTimeAction);
+//        toolbar.add(new Separator());
         
 //        toolbar.add(deleteResourceAction);
 //        toolbar.add(new Separator());

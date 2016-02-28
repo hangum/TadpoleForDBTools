@@ -90,7 +90,6 @@ public class ModifyUserDialog extends Dialog {
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblEmail.setText(Messages.get().ModifyUserDialog_1);
 		
 		textEmail = new Text(container, SWT.BORDER);
@@ -98,7 +97,6 @@ public class ModifyUserDialog extends Dialog {
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText(Messages.get().ModifyUserDialog_2);
 		
 		textName = new Text(container, SWT.BORDER);
@@ -106,14 +104,12 @@ public class ModifyUserDialog extends Dialog {
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblAllowIp = new Label(container, SWT.NONE);
-		lblAllowIp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblAllowIp.setText(Messages.get().ModifyUserDialog_3);
 		
 		textAllowIP = new Text(container, SWT.BORDER);
 		textAllowIP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblIsRegistDb = new Label(container, SWT.NONE);
-		lblIsRegistDb.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblIsRegistDb.setText(Messages.get().ModifyUserDialog_lblIsRegistDb_text);
 		
 		comboIsRegistDB = new Combo(container, SWT.READ_ONLY);
@@ -122,7 +118,6 @@ public class ModifyUserDialog extends Dialog {
 		comboIsRegistDB.add("NO"); //$NON-NLS-1$
 		
 		Label lblApproval = new Label(container, SWT.NONE);
-		lblApproval.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblApproval.setText(Messages.get().ModifyUserDialog_4);
 		
 		comboApproval = new Combo(container, SWT.READ_ONLY);
@@ -131,7 +126,6 @@ public class ModifyUserDialog extends Dialog {
 		comboApproval.add("NO"); //$NON-NLS-1$
 		
 		Label lblUserConfirm = new Label(container, SWT.NONE);
-		lblUserConfirm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblUserConfirm.setText(Messages.get().ModifyUserDialog_5);
 		
 		comboUserConfirm = new Combo(container, SWT.READ_ONLY);
@@ -140,7 +134,6 @@ public class ModifyUserDialog extends Dialog {
 		comboUserConfirm.add("NO"); //$NON-NLS-1$
 		
 		Label lblDelete = new Label(container, SWT.NONE);
-		lblDelete.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDelete.setText(Messages.get().ModifyUserDialog_6);
 		
 		comboDel = new Combo(container, SWT.READ_ONLY);
@@ -149,7 +142,6 @@ public class ModifyUserDialog extends Dialog {
 		comboDel.add("NO"); //$NON-NLS-1$
 		
 		Label lblCreateDate = new Label(container, SWT.NONE);
-		lblCreateDate.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCreateDate.setText(Messages.get().ModifyUserDialog_7);
 		
 		textCreateDate = new Text(container, SWT.BORDER);

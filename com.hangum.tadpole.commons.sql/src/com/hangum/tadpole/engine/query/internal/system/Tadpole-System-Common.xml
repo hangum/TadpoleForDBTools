@@ -613,6 +613,19 @@
 		AND	restapi_uri = #restapi_uri#
 		AND restapi_yesno = 'YES'
 </select> 
+
+<!-- 
+	default db resource
+ -->
+<select id="userDBResourceDefault" parameterClass="java.util.Map" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource
+	WHERE
+			name = '_TDB_DEF_NAME_'
+		AND resource_types = 'AUTO_SQL'
+		AND db_seq 		= #db_seq#
+		AND user_seq 	= #user_seq#
+		AND delYn = 'NO'
+</select> 
  
 <insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, name, shared_type, description, restapi_yesno, restapi_uri, restapi_key)
@@ -655,6 +668,15 @@ SELECT
   and m.db_seq = #seq# 
   order by m.resource_types, m.resource_seq
 </select>
+
+<update id="userDbResourceHeadUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
+	update user_db_resource
+	set 
+		name = #name#
+	   ,description = #description#
+	WHERE
+		resource_seq = #resource_seq#
+</update>
 
 <update id="userDbResourceUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
 	update user_db_resource
@@ -772,6 +794,15 @@ SELECT
 	INSERT INTO user_db_resource_data(user_seq, group_seq, user_db_resource_seq, datas)
 	VALUES(#user_seq#, #group_seq#, #user_db_resource_seq#, #datas#)
 </insert>
+
+<!-- 
+	AUTO SAVE 데이터를 삭제한다.
+ -->
+<delete id="userDbResourceDataAutoDelete" parameterClass="java.lang.Integer">
+	DELETE FROM user_db_resource_data
+	WHERE
+		user_db_resource_seq = #seq#
+</delete>
 
 <!-- 
 	resource data를 삭제합니다.

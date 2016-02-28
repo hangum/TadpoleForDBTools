@@ -236,13 +236,6 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			// select tabitem
 			getTabFolderObject().setSelection(tbtmFunctions);
 			
-			// updatae constant assist
-			StringBuffer strFunctionlist = new StringBuffer();
-			for (ProcedureFunctionDAO tableDao : showFunction) {
-				strFunctionlist.append(tableDao.getSysName()).append("|"); //$NON-NLS-1$
-			}
-			userDB.setFunctionLisstSeparator(StringUtils.removeEnd(strFunctionlist.toString(), "|"));
-
 			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$

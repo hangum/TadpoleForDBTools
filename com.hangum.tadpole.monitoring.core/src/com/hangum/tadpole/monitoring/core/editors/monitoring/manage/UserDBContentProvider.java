@@ -31,8 +31,8 @@ public class UserDBContentProvider extends ArrayContentProvider implements ITree
 			ManagerListDTO dto = (ManagerListDTO)parentElement;
 			return dto.getManagerList().toArray();
 		} else if(parentElement instanceof UserDBDAO) {
-			UserDBDAO dto = (UserDBDAO)parentElement;
-			return dto.getListUserDBErd().toArray();
+//			UserDBDAO dto = (UserDBDAO)parentElement;
+//			return dto.getViewResource().getListResource().toArray();
 		}
 		
 		return null;
@@ -58,9 +58,9 @@ public class UserDBContentProvider extends ArrayContentProvider implements ITree
 			ManagerListDTO dto = (ManagerListDTO)element;
 			return dto.getManagerList().size() > 0;
 		} else if(element instanceof UserDBDAO) {
-			UserDBDAO dto = (UserDBDAO)element;
-			if(dto.getListUserDBErd() == null) return false;
-			else return dto.getListUserDBErd().size() > 0;
+//			UserDBDAO dto = (UserDBDAO)element;
+//			if(dto.getViewResource().getListResource() == null) return false;
+//			else return dto.getViewResource().getListResource().size() > 0;
 		}
 
 		return false;

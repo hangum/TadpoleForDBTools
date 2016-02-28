@@ -69,7 +69,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
-import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTailComposite;
+import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -121,9 +121,6 @@ public class ResultSetComposite extends Composite {
 	
 	private ProgressBar progressBarQuery;
 	private Button btnStopQuery;
-	
-//	private Label lblResult;
-//	private Combo comboResult;
 	
 	private SashForm sashFormResult;
 	/** 쿼리 결과 컴포짖 */
@@ -379,7 +376,11 @@ public class ResultSetComposite extends Composite {
 								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
 							} else {
 								rsDAO = runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
-								reqResultDAO.setRows(rsDAO.getDataList().getData().size());
+								if(rsDAO.getDataList() == null) {
+									reqResultDAO.setRows(0);
+								} else {
+									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
+								}
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {

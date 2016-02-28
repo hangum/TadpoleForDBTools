@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 
 /**
  * manager view의 content provider
@@ -28,11 +28,14 @@ public class ManagerContentProvider extends ArrayContentProvider implements ITre
 	public Object[] getChildren(Object parentElement) {
 		
 		if(parentElement instanceof ManagerListDTO) {
-			ManagerListDTO dto = (ManagerListDTO)parentElement;
-			return dto.getManagerList().toArray();
+			ManagerListDTO dao = (ManagerListDTO)parentElement;
+			return dao.getManagerList().toArray();
 		} else if(parentElement instanceof UserDBDAO) {
-			UserDBDAO dto = (UserDBDAO)parentElement;
-			return dto.getListUserDBErd().toArray();
+			UserDBDAO dao = (UserDBDAO)parentElement;
+			return dao.getListResource().toArray();
+		} else if(parentElement instanceof ResourcesDAO) {
+			ResourcesDAO dao = (ResourcesDAO)parentElement;
+			return dao.getListResource().toArray();
 		}
 		
 		return null;
@@ -41,13 +44,13 @@ public class ManagerContentProvider extends ArrayContentProvider implements ITre
 	@Override
 	public Object getParent(Object element) {
 		
-		if(element instanceof UserDBDAO) {
-			UserDBDAO dto = (UserDBDAO)element;
-			return dto.getParent();
-		} else if(element instanceof UserDBResourceDAO) {
-			UserDBResourceDAO dao = (UserDBResourceDAO)element;
-			return dao.getParent();
-		}
+//		if(element instanceof UserDBDAO) {
+//			UserDBDAO dto = (UserDBDAO)element;
+//			return dto.getParent();
+//		} else if(element instanceof UserDBResourceDAO) {
+//			UserDBResourceDAO dao = (UserDBResourceDAO)element;
+//			return dao.getParent();
+//		}
 		
 		return null;
 	}
@@ -59,8 +62,11 @@ public class ManagerContentProvider extends ArrayContentProvider implements ITre
 			return dto.getManagerList().size() > 0;
 		} else if(element instanceof UserDBDAO) {
 			UserDBDAO dto = (UserDBDAO)element;
-			if(dto.getListUserDBErd() == null) return false;
-			else return dto.getListUserDBErd().size() > 0;
+			if(dto.getListResource() == null) return false;
+			else return dto.getListResource().size() > 0;
+		} else if(element instanceof ResourcesDAO) {
+			ResourcesDAO dto = (ResourcesDAO)element;
+			return dto.getListResource().size() > 0;
 		}
 
 		return false;

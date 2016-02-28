@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
-public class ProcedureFunctionDAO {
+public class ProcedureFunctionDAO extends StructObjectDAO {
 	/** 
 	 * 시스템에서 쿼리에 사용할 이름을 정의 .
 	 * 보여줄때는 {@link TableDAO#name}을 사용하고, 쿼리를 사용할때는 . 

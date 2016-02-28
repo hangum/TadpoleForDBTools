@@ -212,8 +212,6 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
 		job.schedule();
-		
-
 	}	
 	
 	@Override
