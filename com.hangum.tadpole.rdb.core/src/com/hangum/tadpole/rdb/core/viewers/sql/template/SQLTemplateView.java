@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,14 +44,14 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SQLTemplate;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * SQL template view
@@ -68,7 +69,7 @@ public class SQLTemplateView extends ViewPart {
 	private ToolItem tltmModify;
 	private ToolItem tltmDelete;
 	private Text textSearch;
-	private Text textSQL;
+	private TadpoleEditorWidget textSQL;
 
 	public SQLTemplateView() {
 	}
@@ -233,7 +234,7 @@ public class SQLTemplateView extends ViewPart {
 		gl_compositeSQL.marginWidth = 0;
 		compositeSQL.setLayout(gl_compositeSQL);
 		
-		textSQL = new Text(compositeSQL, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
+		textSQL = new TadpoleEditorWidget(compositeSQL, SWT.BORDER, EditorDefine.EXT_DEFAULT, "", "");//new Text(compositeSQL, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		sashForm.setWeights(new int[] {7, 3});
 
