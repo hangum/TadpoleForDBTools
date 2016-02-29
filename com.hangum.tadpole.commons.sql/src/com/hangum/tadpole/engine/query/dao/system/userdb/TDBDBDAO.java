@@ -23,7 +23,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
  */
 public class TDBDBDAO extends ManagerListViewDAO {
 	/** This variable is schema assist */
-	protected String schemaListSeparator = null;
+	protected String schemaListSeparator = "";
 	/** This variable is content assist */
 	protected String tableListSeparator = null;
 	/** This variable is content assit */
