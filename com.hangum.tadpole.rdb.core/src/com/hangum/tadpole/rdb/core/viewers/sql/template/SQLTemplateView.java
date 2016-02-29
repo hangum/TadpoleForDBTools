@@ -52,6 +52,7 @@ import com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SQLTemplate;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * SQL template view
@@ -62,9 +63,18 @@ import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 public class SQLTemplateView extends ViewPart {
 	private static Logger logger = Logger.getLogger(SQLTemplateView.class);
 	public static final String ID = "com.hangum.tadpole.rdb.core.view.sql.template";
+	
+	/**
+	 * template type
+	 */
+	public enum SQL_TEMPLATE_TYPE {PUB, PRI};
+	
 	private TreeViewer tvSQLTemplate;
 	private SQLTemplateFilter filter;
-	private SQLTemplateGroupDAO groupPersonDao;
+	
+	private List<SQLTemplateGroupDAO> listGroup = new ArrayList<>();
+	private SQLTemplateGroupDAO grpPublicDao;
+	private SQLTemplateGroupDAO grpPrivateDao;
 	
 	private ToolItem tltmModify;
 	private ToolItem tltmDelete;
@@ -94,20 +104,22 @@ public class SQLTemplateView extends ViewPart {
 		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmRefresh.setToolTipText("Refresh");
 		
+		
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell());
+				SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell(), SQL_TEMPLATE_TYPE.PRI);
 				if(Dialog.OK == dialog.open()) {
-					groupPersonDao.getChildList().add(dialog.getSqlTemplateDAO());
-					tvSQLTemplate.refresh(groupPersonDao);
+					grpPrivateDao.getChildList().add(dialog.getSqlTemplateDAO());
+					tvSQLTemplate.refresh(grpPrivateDao);
 				}
 			}
 		});
 		tltmAdd.setImage(GlobalImageUtils.getAdd());
 		tltmAdd.setToolTipText("Add");
 		
+
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -118,6 +130,7 @@ public class SQLTemplateView extends ViewPart {
 					SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell(), dao);
 					if(Dialog.OK == dialog.open()) {
 						tvSQLTemplate.refresh(dialog.getOldSqlTemplateDAO());
+						textSQL.setText("");
 					}
 				}
 			}
@@ -137,7 +150,7 @@ public class SQLTemplateView extends ViewPart {
 					SQLTemplateDAO dao = (SQLTemplateDAO)ss.getFirstElement();
 					try {
 						TadpoleSystem_SQLTemplate.deleteSQLTemplate(dao);
-						groupPersonDao.getChildList().remove(dao);
+						grpPrivateDao.getChildList().remove(dao);
 						tvSQLTemplate.remove(dao);
 						
 						textSQL.setText("");
@@ -152,6 +165,24 @@ public class SQLTemplateView extends ViewPart {
 		tltmDelete.setImage(GlobalImageUtils.getDelete());
 		tltmDelete.setToolTipText("Delete");
 		tltmDelete.setEnabled(false);
+		
+		// admin menu
+		if(SessionManager.isSystemAdmin()) {
+			new ToolItem(toolBar, SWT.SEPARATOR);
+			ToolItem tltmAdminAdd = new ToolItem(toolBar, SWT.NONE);
+			tltmAdminAdd.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell(), SQL_TEMPLATE_TYPE.PUB);
+					if(Dialog.OK == dialog.open()) {
+						grpPublicDao.getChildList().add(dialog.getSqlTemplateDAO());
+						tvSQLTemplate.refresh(grpPublicDao);
+					}
+				}
+			});
+			tltmAdminAdd.setText("Add public template");
+			tltmAdminAdd.setToolTipText("Add public template");
+		}
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -180,16 +211,27 @@ public class SQLTemplateView extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection ss = (StructuredSelection)event.getSelection();
 				if(ss.getFirstElement() instanceof SQLTemplateDAO) {
-					tltmModify.setEnabled(true);
-					tltmDelete.setEnabled(true);
-					
 					SQLTemplateDAO dao = (SQLTemplateDAO)ss.getFirstElement();
+					if(SQL_TEMPLATE_TYPE.PUB.name().equals(dao.getCategory())) {
+						if(SessionManager.isSystemAdmin()) {
+							enableBtn(true);
+						} else {
+							enableBtn(false);
+						}
+					} else {
+						enableBtn(true);
+					}
+					
 					textSQL.setText(dao.getContent());
 				} else {
-					tltmModify.setEnabled(false);
-					tltmDelete.setEnabled(false);
+					enableBtn(false);
 					textSQL.setText("");
 				}
+			}
+			
+			private void enableBtn(boolean bool) {
+				tltmModify.setEnabled(bool);
+				tltmDelete.setEnabled(bool);
 			}
 		});
 		tvSQLTemplate.addDoubleClickListener(new IDoubleClickListener() {
@@ -265,12 +307,17 @@ public class SQLTemplateView extends ViewPart {
 	 * init data
 	 */
 	private void initData() {
-		List<SQLTemplateGroupDAO> listGroup = new ArrayList<>();
+		listGroup.clear();
 		try {
-			groupPersonDao = new SQLTemplateGroupDAO();
-			groupPersonDao.setName(Messages.get().SQLTemplateView_Person);
-			groupPersonDao.setChildList(TadpoleSystem_SQLTemplate.listSQLTemplate());
-			listGroup.add(groupPersonDao);
+			grpPublicDao = new SQLTemplateGroupDAO();
+			grpPublicDao.setName(Messages.get().SQLTemplateView_PUBLIC_Person);
+			grpPublicDao.setChildList(TadpoleSystem_SQLTemplate.listPublicSQLTemplate());
+			listGroup.add(grpPublicDao);
+
+			grpPrivateDao = new SQLTemplateGroupDAO();
+			grpPrivateDao.setName(Messages.get().SQLTemplateView_Person);
+			grpPrivateDao.setChildList(TadpoleSystem_SQLTemplate.listPrivateSQLTemplate());
+			listGroup.add(grpPrivateDao);
 			
 			tvSQLTemplate.setInput(listGroup);
 			tvSQLTemplate.expandAll();

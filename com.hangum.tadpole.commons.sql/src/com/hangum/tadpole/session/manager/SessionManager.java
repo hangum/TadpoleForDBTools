@@ -185,7 +185,7 @@ public class SessionManager {
 		return (String)sStore.getAttribute(NAME.REPRESENT_ROLE_TYPE.name());
 	}
 	
-	public static boolean isAdmin() {
+	public static boolean isSystemAdmin() {
 		return PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(getRepresentRole()) ? true : false;
 	}
 

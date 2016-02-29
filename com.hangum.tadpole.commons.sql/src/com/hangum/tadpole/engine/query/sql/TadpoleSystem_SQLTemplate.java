@@ -19,17 +19,29 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class TadpoleSystem_SQLTemplate {
 	
 	/**
-	 * list sql template
+	 * list public sql template
 	 * 
 	 * @return
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static List<SQLTemplateDAO> listSQLTemplate() throws TadpoleSQLManagerException, SQLException {
+	public static List<SQLTemplateDAO> listPublicSQLTemplate() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("listSQLTemplate", SessionManager.getUserSeq());
+		return sqlClient.queryForList("listPublicSQLTemplate");
 	}
-
+	
+	/**
+	 * list private sql template
+	 * 
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<SQLTemplateDAO> listPrivateSQLTemplate() throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("listPrivateSQLTemplate", SessionManager.getUserSeq());
+	}
+	
 	/**
 	 * insert sql templcate
 	 * @param dao

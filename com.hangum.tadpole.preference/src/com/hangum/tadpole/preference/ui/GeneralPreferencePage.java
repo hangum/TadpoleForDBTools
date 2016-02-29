@@ -116,7 +116,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		textPasswd = new Text(grpEmailAccount, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		if(SessionManager.isAdmin()) {
+		if(SessionManager.isSystemAdmin()) {
 			grpEmailAccount.setVisible(true);
 		}
 		
