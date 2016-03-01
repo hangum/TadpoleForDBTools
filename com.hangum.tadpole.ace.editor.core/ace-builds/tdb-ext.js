@@ -1214,7 +1214,8 @@ ace.define("DynHighlightRules", [], function(require, exports, module) {
 		} else if(varDBType == 'tajo') {
 			keywords = "as|all|and|any|asymmetric|asc|both|case|cast|create|cross|current_date|current_time|current_timestamp|desc|distinct|end|else|except|full|from|group|having|ilike|in|inner|intersect|into|is|join|leading|left|like|limit|natural|not|on|or|order|outer|over|right|select|some|symmetric|table|then|trailing|union|unique|using|when|where|with|window";
 			builtinConstants = "false|true|null";
-			builtinFunctions = "to_bin|to_char|to_hex|" +
+			builtinFunctions = "explain|" +
+						"to_bin|to_char|to_hex|" +
 						"abs|acos|asic|atan|atan2|cbrt|ceil|cos|degrees|div|exp|floor|mod|pi|pow|radians|random|round|sign|sin|sqrt|tan|" +
 						"add_days|add_months|current_date|current_time|extract|date_part|now|to_char|to_date|to_timestamp|to_timestamp|utc_usec_to|" +
 						"geoip_country_code|geoip_country_code|geoip_in_country|geoip_in_country|" +

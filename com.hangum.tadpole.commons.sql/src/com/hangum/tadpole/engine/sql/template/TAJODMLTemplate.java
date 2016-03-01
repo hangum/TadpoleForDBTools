@@ -27,7 +27,7 @@ public class TAJODMLTemplate extends AbstractDMLTemplate {
 	 */	
 	public static final String TMP_GET_PARTDATA = " %s limit %s,%s";
 	
-	public static final String TMP_EXPLAIN_EXTENDED = "explain  ";
+	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN GLOBAL ";
 	
 	/** table - tajo */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE EXTERNAL TABLE table1 ( "  + PublicTadpoleDefine.LINE_SEPARATOR +

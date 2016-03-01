@@ -17,7 +17,7 @@ Bundle-ClassPath: .,
  libs/dbcp/commons-collections-3.2.1.jar,
  libs/dbcp/commons-dbcp-1.4.jar,
  libs/dbcp/commons-pool-1.5.4.jar,
- libs/tajo-jdbc-0.11.0.jar
+ libs/tajo-jdbc-0.11.1.jar
 Export-Package: com.hangum.tadpole.tajo.core.connections,
  com.hangum.tadpole.tajo.core.connections.manager
 Import-Package: javax.servlet;version="2.5.0",

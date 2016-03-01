@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -150,8 +149,8 @@ public class TadpoleSQLManager {
 	 */
 	public static void setMetaData(String searchKey, final UserDBDAO userDB, DatabaseMetaData dbMetaData) throws Exception {
 		// 엔진디비는 메타데이터를 저장하지 않는다.
-		if(dbManager.size() == 1) return;
-		
+		if(userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_DEFAULT || userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) return;
+				
 		String strIdentifierQuoteString = "";
 		try {
 			strIdentifierQuoteString = dbMetaData.getIdentifierQuoteString();
@@ -211,10 +210,6 @@ public class TadpoleSQLManager {
 		tmd.setDbMajorVersion(dbMetaData.getDatabaseMajorVersion());
 		tmd.setMinorVersion(dbMetaData.getDatabaseMinorVersion());
 		dbMetadata.put(searchKey, tmd);
-
-		// make assist data
-		MakeContentAssistUtil assistUtil = new MakeContentAssistUtil();
-		assistUtil.defaultSetKeyword(userDB);
 	}
 	
 	/**
