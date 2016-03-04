@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,15 +8,14 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.sessionlist;
+package com.hangum.tadpole.tajo.core.editors.sessionlist;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
+import com.hangum.tadpole.tajo.core.Messages;
 
 /**
  * Session list editor input
@@ -43,7 +42,6 @@ public class SessionListEditorInput implements IEditorInput {
 	
 //	@Override
 //	public boolean equals(Object obj) {
-//		if( !(obj instanceof SessionListEditorInput) ) return false;
 //		return ((SessionListEditorInput)obj).getName().equals(getName());
 //	}
 

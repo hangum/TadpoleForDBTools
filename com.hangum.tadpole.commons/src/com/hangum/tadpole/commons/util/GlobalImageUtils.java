@@ -42,6 +42,15 @@ public class GlobalImageUtils {
 	}
 	
 	/**
+	 * killing image
+	 * 
+	 * @return
+	 */
+	public static final Image getKilling() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/kill_process.png");
+	}
+	
+	/**
 	 * stop image
 	 * @return
 	 */

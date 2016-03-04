@@ -60,13 +60,21 @@ public class SessionListAction implements IViewActionDelegate {
 				DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT  ||
 				DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 	||
-				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT
+				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
 		) {
-			
 			try {
 				SessionListEditorInput sleInput = new SessionListEditorInput(userDB);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, SessionListEditor.ID);
+			} catch (PartInitException e) {
+				logger.error("open session list", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+			}
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT) {
+			try {
+				com.hangum.tadpole.tajo.core.editors.sessionlist.SessionListEditorInput sleInput = new com.hangum.tadpole.tajo.core.editors.sessionlist.SessionListEditorInput(userDB);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, com.hangum.tadpole.tajo.core.editors.sessionlist.SessionListEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("open session list", e); //$NON-NLS-1$
 				

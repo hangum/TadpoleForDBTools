@@ -55,7 +55,7 @@ public class ExecuteQueryPlan {
 		try {
 			if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 				TajoConnectionManager manager = new TajoConnectionManager();
-				rsDAO = manager.select(userDB, PartQueryUtil.makeExplainQuery(userDB, reqQuery.getSql()), 1000);
+				rsDAO = manager.executeQueryPlan(userDB, reqQuery.getSql());
 			} else {
 				
 				javaConn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();

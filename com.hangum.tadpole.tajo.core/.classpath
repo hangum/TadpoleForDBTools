@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/ext/hadoop-annotations-2.7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/ext/hadoop-common-2.7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tajo-core-0.11.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/tajo-jdbc-0.11.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/dbcp/commons-collections-3.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/dbcp/commons-dbcp-1.4.jar"/>

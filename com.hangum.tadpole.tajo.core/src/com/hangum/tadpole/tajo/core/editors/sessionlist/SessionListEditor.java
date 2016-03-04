@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,8 +8,9 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.editors.sessionlist;
+package com.hangum.tadpole.tajo.core.editors.sessionlist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -52,21 +53,18 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListLabelProvider;
-import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListTableCompare;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.tajo.core.Activator;
+import com.hangum.tadpole.tajo.core.Messages;
+import com.hangum.tadpole.tajo.core.editors.sessionlist.compare.MySQLSessionListLabelProvider;
+import com.hangum.tadpole.tajo.core.editors.sessionlist.compare.MySQLSessionListTableCompare;
+import com.hangum.tadpole.tajo.core.utils.ObjectComparator;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
 /**
- * DDB Session list editor
+ * Tajo Session list editor
  * 
- * mysql : http://dev.mysql.com/doc/refman/5.1/en/show-processlist.html
- * 
- * @since 2013.04.01
  * @author hangum
  *
  */
@@ -76,7 +74,7 @@ public class SessionListEditor extends EditorPart {
 	 */
 	private static final Logger logger = Logger.getLogger(SessionListEditor.class);
 
-	public static final String ID = "com.hangum.tadpole.rdb.core.editor.sessionlist"; //$NON-NLS-1$
+	public static final String ID = "com.hangum.tadpole.tajo.core.editors.sessionlist"; //$NON-NLS-1$
 	
 	protected final int user_seq = SessionManager.getUserSeq();
 	
@@ -316,51 +314,51 @@ public class SessionListEditor extends EditorPart {
 	 */
 	private void initSessionListData() {
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+//			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
-			List<?> listSessionList = null;
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
-				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
-				if (0 >= getSessionGrant){
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
-					return;
-				}
-				
-				try {
-					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
-				}catch (Exception e) {
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
-					return;
-				}
-				
-				int version = (Integer) sqlClient.queryForObject("getVersion");				 //$NON-NLS-1$
-				if (version <= 9){
-					listSessionList = sqlClient.queryForList("sessionList_9"); //$NON-NLS-1$
-				}else{
-					listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
-				}
-			} else if(DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
-				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
-				if (0 >= getSessionGrant){
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
-					return;
-				}
-				
-				try {
-					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
-				}catch (Exception e) {
-					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
-					return;
-				}
-				
-				listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
-			}else{
-				listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
-			}
+			List<?> listSessionList = new ArrayList<>();
+//			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
+//				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
+//				if (0 >= getSessionGrant){
+//					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
+//					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
+//					return;
+//				}
+//				
+//				try {
+//					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
+//				}catch (Exception e) {
+//					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
+//					return;
+//				}
+//				
+//				int version = (Integer) sqlClient.queryForObject("getVersion");				 //$NON-NLS-1$
+//				if (version <= 9){
+//					listSessionList = sqlClient.queryForList("sessionList_9"); //$NON-NLS-1$
+//				}else{
+//					listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
+//				}
+//			} else if(DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
+//				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
+//				if (0 >= getSessionGrant){
+//					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
+//					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
+//					return;
+//				}
+//				
+//				try {
+//					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
+//				}catch (Exception e) {
+//					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
+//					return;
+//				}
+//				
+//				listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
+//			}else{
+//				listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
+//			}
 			
 			tableViewerSessionList.setInput(listSessionList);
 			tableViewerSessionList.refresh();
