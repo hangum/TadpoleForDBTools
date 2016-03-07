@@ -434,9 +434,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
 		addTableColumnAction = new TableColumnAddAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Add column"); //$NON-NLS-1$
-		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_16);
-		
 		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
@@ -455,7 +453,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							
 							if(!isDDLLock()) {
 								manager.add(creatAction_Table);
-								manager.add(renameAction_Table);
 								manager.add(dropAction_Table);
 								manager.add(separator);
 							}

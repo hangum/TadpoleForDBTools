@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.UnicodeBOMInputStream;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -43,6 +44,18 @@ public class CSVExpoter extends AbstractTDBExporter {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
+		
+		// add bom character
+//	    ByteArrayOutputStream out = new ByteArrayOutputStream();
+//	    //Add BOM characters
+//	    out.write(0xEF);
+//	    out.write(0xBB);
+//	    out.write(0xBF);
+//	    out.write(csvData.getBytes("UTF-8"));
+		
+		FileUtils.writeByteArrayToFile(new File(strFullPath), 
+						(new byte[] {(byte) 0xEF,
+									  (byte) 0xBB, (byte) 0xBF}), true);
 		
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		

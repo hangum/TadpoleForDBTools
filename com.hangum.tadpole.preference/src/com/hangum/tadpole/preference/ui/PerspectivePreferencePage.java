@@ -72,7 +72,7 @@ public class PerspectivePreferencePage extends TadpoleDefaulPreferencePage imple
 		
 		btnAdmin = new Button(grpSelectPerspective, SWT.RADIO);
 		btnAdmin.setText(Messages.get().PerspectivePreferencePage_6);
-		if(SessionManager.isAdmin()) {
+		if(SessionManager.isSystemAdmin()) {
 			btnAdmin.setEnabled(false);
 		}
 		

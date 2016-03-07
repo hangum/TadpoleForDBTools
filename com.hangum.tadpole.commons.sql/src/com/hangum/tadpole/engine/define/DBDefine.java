@@ -244,6 +244,10 @@ public enum DBDefine {
 			extension += "hql"; //$NON-NLS-1$
 		} else if(this == DBDefine.POSTGRE_DEFAULT) {
 			extension += "pgsql"; //$NON-NLS-1$
+		} else if(this == DBDefine.CUBRID_DEFAULT) {
+			extension += "cubrid"; //$NON-NLS-1$
+		} else if(this == DBDefine.TAJO_DEFAULT) {
+			extension += "tajo"; //$NON-NLS-1$
 		} else {
 			extension += "sql"; //$NON-NLS-1$
 		}

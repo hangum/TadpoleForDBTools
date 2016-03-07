@@ -212,7 +212,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			}
 		}
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	/**

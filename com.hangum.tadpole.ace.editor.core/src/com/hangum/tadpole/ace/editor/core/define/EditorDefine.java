@@ -17,17 +17,7 @@ package com.hangum.tadpole.ace.editor.core.define;
  *
  */
 public class EditorDefine {
-//	/**
-//	 * 에디터에서 사용할 확장자로 sql을 지정. 
-//	 */
-//	private static String EXT_SQL_PREFIX = "ace/mode/";
-//	
-//	public static String EXT_SQLite = EXT_SQL_PREFIX + "sqlite";
-//	public static String EXT_MYSQL 	= EXT_SQL_PREFIX + "mysql";
-//	public static String EXT_PGSQL 	= EXT_SQL_PREFIX + "pgsql";
-//	public static String EXT_MSSQL 	= EXT_SQL_PREFIX + "sqlserver";
-//
-//	// dose not define
+	/** dose not define */
 	public static String EXT_DEFAULT = "sql";
 	
 	/**

@@ -261,6 +261,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			}
 		}
 		
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	/**

@@ -175,7 +175,7 @@ public class SessionListEditor extends EditorPart {
 		
 		final ToolItem tltmKillProcess = new ToolItem(toolBar, SWT.NONE);
 		tltmKillProcess.setToolTipText(Messages.get().SessionListEditor_3);
-		tltmKillProcess.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/kill_process.png")); //$NON-NLS-1$
+		tltmKillProcess.setImage(GlobalImageUtils.getKilling());
 		tltmKillProcess.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

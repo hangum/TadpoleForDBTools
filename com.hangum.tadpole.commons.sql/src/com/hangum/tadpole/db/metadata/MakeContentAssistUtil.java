@@ -18,13 +18,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * make content assist util
@@ -32,25 +30,25 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class MakeContentAssistUtil {
+public abstract class MakeContentAssistUtil {
 	private static final Logger logger = Logger.getLogger(MakeContentAssistUtil.class);
 	/** content assit  keyword define */
 	protected enum CONTENT_ASSIST_KEYWORD_TYPE {TABLE, COLUMN};
 
 	public static final String _PRE_GROUP = "||";
 	public static final String _PRE_DEFAULT = "|";
-	
-	/**
-	 * setting default keyword 
-	 * @param userDB
-	 */
-	public void defaultSetKeyword(UserDBDAO userDB) {
-		getAssistSchemaList(userDB);
-//	TO DO 테이블은 디비가 선택되면 처음 호출 되므로 제외하는것이 효율이 좋을듯합니다. 
-//		getAssistTableList(userDB);
-		getAssistViewList(userDB);
-		getFunctionList(userDB);
-	}
+//	
+//	/**
+//	 * setting default keyword 
+//	 * @param userDB
+//	 */
+//	public void defaultSetKeyword(UserDBDAO userDB) {
+//		getAssistSchemaList(userDB);
+////	TO DO 테이블은 디비가 선택되면 처음 호출 되므로 제외하는것이 효율이 좋을듯합니다. 
+////		getAssistTableList(userDB);
+//		getAssistViewList(userDB);
+//		getFunctionList(userDB);
+//	}
 	
 	/**
 	 *	스키마로 검색했을 경우에 스키마이름이 없는 리스트를 넘겨 주어야 한다.. 
@@ -200,26 +198,28 @@ public class MakeContentAssistUtil {
 		return userDB.getFunctionLisstSeparator(); //$NON-NLS-1$
 	}
 	
-	/**
-	 * 보여 주어야할 테이블 목록을 정의합니다.
-	 *
-	 * @param userDB
-	 * @return
-	 * @throws Exception
-	 */
-	private List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
-		List<TableDAO> showTables = null;
-				
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-			showTables = new ArrayList<TableDAO>();//().tableList(userDB);			
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
-		}
-		
-		/** filter 정보가 있으면 처리합니다. */
-		return getTableAfterwork(showTables, userDB);
-	}
+//	/**
+//	 * 보여 주어야할 테이블 목록을 정의합니다.
+//	 *
+//	 * @param userDB
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	private List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
+//		List<TableDAO> showTables = null;
+//				
+//		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+//			showTables = new ArrayList<TableDAO>();//().tableList(userDB);			
+//		} else {
+//			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+//			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
+//		}
+//		
+//		/** filter 정보가 있으면 처리합니다. */
+//		return getTableAfterwork(showTables, userDB);
+//	}
+	public abstract List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception;
+	
 	/**
 	 * Table 정보 처리 후에 
 	 * 

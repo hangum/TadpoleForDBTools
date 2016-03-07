@@ -21,6 +21,7 @@ import com.hangum.tadpole.engine.sql.template.MySQLDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.OracleDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.PostgreDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.TAJODMLTemplate;
 
 /**
  * 각 DBMS에 맞는 쿼리문을 생성합니다.
@@ -88,8 +89,11 @@ public class PartQueryUtil {
 			resultQuery = query;
 		} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine()) {
 			resultQuery = HIVEDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+		} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			resultQuery = TAJODMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
-			resultQuery = PostgreDMLTemplate.TMP_EXPLAIN_EXTENDED + query;			
+			resultQuery = PostgreDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			
 		} else {
 			throw new Exception("Not Support DBMS Query Plan.");
 		}

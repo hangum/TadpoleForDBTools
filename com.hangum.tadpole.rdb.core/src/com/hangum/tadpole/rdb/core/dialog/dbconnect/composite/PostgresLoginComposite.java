@@ -212,7 +212,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			}
 		}
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	@Override

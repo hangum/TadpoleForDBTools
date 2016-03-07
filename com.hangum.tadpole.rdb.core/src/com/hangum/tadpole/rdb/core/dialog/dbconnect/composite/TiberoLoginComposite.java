@@ -212,7 +212,7 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 			}
 		}
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	/**

@@ -17,21 +17,13 @@ public class Messages {
 
 	public String ResultTailComposite_0;
 	public String ResourceHistoryDialog_0;
-
 	public String ResourceHistoryDialog_1;
-
 	public String ResourceHistoryDialog_10;
-
 	public String ResourceHistoryDialog_2;
-
 	public String ResourceHistoryDialog_3;
-
 	public String ResourceHistoryDialog_4;
-
 	public String ResourceHistoryDialog_5;
-
 	public String ResourceHistoryDialog_7;
-
 	public String ResourceHistoryDialog_9;
 	public String MainEditor_74;
 	public String AbstractLoginComposite_0;
@@ -841,6 +833,7 @@ public class Messages {
 	public String SQLTemplateDialog_SQLEmpty;
 	public String SQLTemplateView_del_equestion;
 	public String SQLTemplateView_Person;
+	public String SQLTemplateView_PUBLIC_Person;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

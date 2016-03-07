@@ -600,7 +600,8 @@ public class ResultSetComposite extends Composite {
 						
 						try {
 							if(logger.isDebugEnabled()) logger.debug("********* User stop operation is [statement close] " + stmt.isClosed()); //$NON-NLS-1$
-							if(!stmt.isClosed()) execServiceQuery.shutdown();
+							if(!stmt.isClosed()) execServiceQuery.shutdownNow();
+							
 						} catch(Exception ee) {
 							logger.error("Execute stop", ee); //$NON-NLS-1$
 						}
@@ -621,7 +622,8 @@ public class ResultSetComposite extends Composite {
 				}   // end while
 			} catch(Exception e) {
 				logger.error("isCheckThread exception", e); //$NON-NLS-1$
-				isCheckRunning = false;
+			} finally {
+				isCheckRunning = false;				
 			}
 		} 	// end run
 	}	// end method

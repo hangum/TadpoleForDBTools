@@ -83,17 +83,6 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 * @return
 	 */
 	protected String findEditorExt() {
-//		String ext = EditorDefine.EXT_DEFAULT;
-//		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
-//			ext = EditorDefine.EXT_MYSQL;
-//		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
-//			ext = EditorDefine.EXT_PGSQL;
-//		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
-//			ext = EditorDefine.EXT_SQLite;
-//		테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
-//		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
-//			ext = EditorDefine.EXT_MSSQL;
-//		}
 		return userDB.getDBDefine().getExt();
 	}
 	/**

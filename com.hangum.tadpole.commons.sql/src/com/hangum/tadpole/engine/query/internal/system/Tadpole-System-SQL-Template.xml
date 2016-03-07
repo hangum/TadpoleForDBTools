@@ -19,14 +19,30 @@
 <sqlMap namespace="Tadpole-System-SQL-Template">
 
 <!-- 
-	list sql template
+	list private sql template
  -->
-<select id="listSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO" parameterClass="java.lang.Integer">
+<select id="listPrivateSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO" parameterClass="java.lang.Integer">
 	SELECT seq, user_seq, category, group_name, name, content, description, create_time, delyn 
 	FROM tadpole_sql_template
-	WHERE user_seq = #user_sq#
+	WHERE 
+			user_seq = #user_sq#
+		AND category = 'PRI'
+		AND delyn = 'NO'
 	ORDER by group_name, name
 </select>
+
+<!-- 
+	list public sql template
+ -->
+<select id="listPublicSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
+	SELECT seq, user_seq, category, group_name, name, content, description, create_time, delyn 
+	FROM tadpole_sql_template
+	WHERE 
+			category = 'PUB'
+		AND delyn = 'NO'
+	ORDER by group_name, name
+</select>
+
 
 <!-- 
 	template insert

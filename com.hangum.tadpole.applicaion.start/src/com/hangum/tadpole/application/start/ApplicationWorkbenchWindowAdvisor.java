@@ -32,6 +32,8 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.application.start.dialog.update.NewVersionChecker;
+import com.hangum.tadpole.application.start.dialog.update.NewVersionObject;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
@@ -95,12 +97,28 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	service.setMessage(Messages.get().ApplicationWorkbenchWindowAdvisor_4);
     	
 //    	checkSupportBrowser();
-    	
         login();
+    }
+    
+    /**
+     * new version checker
+     */
+    private void newVersionChecker() {
+    	boolean isNew = NewVersionChecker.getInstance().check();
+    	if(isNew) {
+    		NewVersionObject obj = NewVersionChecker.getInstance().getNewVersionObj();
+    		
+    	
+    	}
     }
     
     @Override
     public void postWindowOpen() {
+    	
+    	if(SessionManager.isSystemAdmin()) {
+    		newVersionChecker();
+    	}
+    	
     	// fullscreen
 //    	getWindowConfigurer().getWindow().getShell().setMaximized(true);
     	
@@ -206,7 +224,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     private void login() {
     	// 이미 로그인 되어 있다.
     	if(0 != SessionManager.getUserSeq()) return;
-
+    	
     	try {
     		if(TadpoleApplicationContextManager.isPersonOperationType()) {
     			UserDAO userDao = TadpoleSystem_UserQuery.findUser(PublicTadpoleDefine.SYSTEM_DEFAULT_USER);

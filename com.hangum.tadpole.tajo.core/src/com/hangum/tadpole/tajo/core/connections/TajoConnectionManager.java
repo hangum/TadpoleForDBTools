@@ -26,6 +26,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.surface.ConnectionInterfact;
+import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 
@@ -92,6 +93,24 @@ public class TajoConnectionManager implements ConnectionInterfact {
 		}
 	}
 	
+	/**
+	 * execute query plan
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public QueryExecuteResultDTO executeQueryPlan(UserDBDAO userDB, String strQuery) throws Exception {
+		return select(userDB, PartQueryUtil.makeExplainQuery(userDB, strQuery), 1000);
+	}
+	
+	/**
+	 * execute update
+	 * 
+	 * @param userDB
+	 * @param string
+	 * @param name
+	 * @throws Exception
+	 */
 	public void executeUpdate(UserDBDAO userDB, String string, String name) throws Exception {
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -104,39 +123,6 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			statement.executeUpdate(String.format(string, quoteString + name + quoteString));
 		} finally {
 			try { if(statement != null) statement.close(); } catch(Exception e) {}
-			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
-		}
-	}
-	
-	/**
-	 * select
-	 * 
-	 * @param userDB
-	 * @param requestQuery
-	 * @param limitCount
-	 * 
-	 * @throws Exception
-	 */
-	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount) throws Exception {
-		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
-		
-		java.sql.Connection javaConn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		try {
-			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
-			pstmt = javaConn.prepareStatement(requestQuery);
-			rs = pstmt.executeQuery();
-			
-			return new QueryExecuteResultDTO(userDB, true, rs, limitCount);
-		} catch(Exception e) {
-			logger.error("Tajo select", e);
-			throw e;
-			
-		} finally {
-			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
-			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
 	}
@@ -183,13 +169,14 @@ public class TajoConnectionManager implements ConnectionInterfact {
 
 	    	while(rs.next()) {
 	    		String strTBName = rs.getString("TABLE_NAME");
+	    		String strComment = rs.getString("REMARKS");
 //	    		logger.debug( rs.getString("TABLE_CAT") );
 //	    		logger.debug( rs.getString("TABLE_SCHEM") );
 //	    		logger.debug( rs.getString("TABLE_NAME") );
 //	    		logger.debug( rs.getString("TABLE_TYPE") );
 //	    		logger.debug( rs.getString("REMARKS") );
 	    		
-	    		TableDAO tdao = new TableDAO(strTBName, "");
+	    		TableDAO tdao = new TableDAO(strTBName, strComment);
 	    		showTables.add(tdao);
 	    	}
 	    	
@@ -240,6 +227,39 @@ public class TajoConnectionManager implements ConnectionInterfact {
 		}
 		
 		return showTableColumns;
+	}
+	
+	/**
+	 * select
+	 * 
+	 * @param userDB
+	 * @param requestQuery
+	 * @param limitCount
+	 * 
+	 * @throws Exception
+	 */
+	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
+		
+		java.sql.Connection javaConn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
+			pstmt = javaConn.prepareStatement(requestQuery);
+			rs = pstmt.executeQuery();
+			
+			return new QueryExecuteResultDTO(userDB, true, rs, limitCount);
+		} catch(Exception e) {
+			logger.error("Tajo select", e);
+			throw e;
+			
+		} finally {
+			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+		}
 	}
 
 }

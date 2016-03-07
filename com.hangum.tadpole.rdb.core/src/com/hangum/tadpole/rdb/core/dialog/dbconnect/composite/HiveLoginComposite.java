@@ -231,7 +231,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		// Initialize otherConnectionComposite
 		othersConnectionInfo.callBackUIInit(textHost.getText());
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	/**

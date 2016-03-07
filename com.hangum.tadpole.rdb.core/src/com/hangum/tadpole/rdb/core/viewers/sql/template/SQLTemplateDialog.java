@@ -28,6 +28,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SQLTemplate;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.viewers.sql.template.SQLTemplateView.SQL_TEMPLATE_TYPE;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -38,6 +39,8 @@ import com.hangum.tadpole.session.manager.SessionManager;
  */
 public class SQLTemplateDialog extends Dialog {
 	private static Logger logger = Logger.getLogger(SQLTemplateDialog.class);
+	
+	private SQL_TEMPLATE_TYPE sqlTemplateType;
 	
 //	private Combo comboGroupName;
 	private Text textName;
@@ -50,10 +53,13 @@ public class SQLTemplateDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param SQLTemplateType sql template type
 	 */
-	public SQLTemplateDialog(Shell parentShell) {
+	public SQLTemplateDialog(Shell parentShell, SQL_TEMPLATE_TYPE SQLTemplateType) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		this.sqlTemplateType = SQLTemplateType;
 	}
 	
 	public SQLTemplateDialog(Shell parentShell, SQLTemplateDAO oldSQLTemplateDAO) {
@@ -160,7 +166,7 @@ public class SQLTemplateDialog extends Dialog {
 			// 
 			sqlTemplateDAO = new SQLTemplateDAO();
 			sqlTemplateDAO.setUser_seq(SessionManager.getUserSeq());
-			sqlTemplateDAO.setCategory("01");
+			sqlTemplateDAO.setCategory(sqlTemplateType.toString());
 			sqlTemplateDAO.setGroup_name("");//strGroupName);
 			sqlTemplateDAO.setName(strTextName);
 			sqlTemplateDAO.setDescription(strDescription);

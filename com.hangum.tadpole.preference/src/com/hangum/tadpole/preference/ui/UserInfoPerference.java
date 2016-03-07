@@ -229,7 +229,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		if(!SessionManager.isAdmin()) {
+		if(!SessionManager.isSystemAdmin()) {
 			Button buttonWithdrawal = new Button(container, SWT.NONE);
 			buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
 				@Override
