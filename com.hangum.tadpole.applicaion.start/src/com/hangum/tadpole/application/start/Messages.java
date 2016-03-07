@@ -117,9 +117,17 @@ public class Messages {
 	public String UserInformationDialog_label_text;
 	public String LoginDialog_lblDonation_text;
 	public String LoginDialog_lblLanguage_text;
-	//	static {
-	//	NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	//}
+	
+	public String NewVersionViewDialog_0;
+	public String NewVersionViewDialog_1;
+	public String NewVersionViewDialog_2;
+	public String NewVersionViewDialog_4;
+	public String NewVersionViewDialog_5;
+	public String NewVersionViewDialog_6;
+	public String NewVersionViewDialog_7;
+	public String NewVersionViewDialog_8;
+	public String NewVersionViewDialog_9;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

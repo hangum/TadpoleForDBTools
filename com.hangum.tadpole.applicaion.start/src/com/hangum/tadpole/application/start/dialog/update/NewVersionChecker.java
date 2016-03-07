@@ -28,7 +28,7 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
  */
 public class NewVersionChecker {
 	private static final Logger logger = Logger.getLogger(NewVersionChecker.class);
-	public static final String CHECK_URI = "https://github.com/hangum/TadpoleForDBTools/tree/master/com.hangum.tadpole.applicaion.start/src/com/hangum/tadpole/application/start/dialog/update/versionInfo.json";
+	public static final String CHECK_URI = "https://raw.githubusercontent.com/hangum/TadpoleForDBTools/master/com.hangum.tadpole.applicaion.start/src/com/hangum/tadpole/application/start/dialog/update/versionInfo.json";
 	
 	private long lastCheckTimeMillis = 0l;
 	private NewVersionObject newVersionObj;
@@ -49,10 +49,18 @@ public class NewVersionChecker {
 		
 		// 60분에 한번씩 check 하여 값을 돌려준다.
 		long currentTimeMillis = System.currentTimeMillis();
-		long diffTimeMills = (currentTimeMillis - lastCheckTimeMillis) * 1000 / 60 / 60;
-		if(logger.isDebugEnabled()) logger.debug("diff mills " + diffTimeMills);
+		long diffTimeMills = (currentTimeMillis - lastCheckTimeMillis) / 1000l;
 		
-		if(diffTimeMills > 0 || newVersionObj == null) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("currentTimeMillis mills " + currentTimeMillis);
+			logger.debug("lastCheckTimeMillis mills " + lastCheckTimeMillis);
+			logger.debug("diff mills " + diffTimeMills);
+		}
+		
+		// 1시간에 한번씩 검사한다.
+		if(diffTimeMills > (60 * 60) || newVersionObj == null) {
+			lastCheckTimeMillis = currentTimeMillis;
+			
 			return getVersionInfoData();
 		}
 		return false;
@@ -67,8 +75,15 @@ public class NewVersionChecker {
 		InputStream is = null;
 		try {
 			is = new URL(CHECK_URI).openConnection().getInputStream();
+			String strJson = IOUtils.toString(is);
+			if(logger.isDebugEnabled()) {
+				logger.debug("==[start]===================================");
+				logger.debug(strJson);
+				logger.debug("==[end]===================================");
+			}
 			Gson gson = new Gson();
-			newVersionObj = gson.fromJson(IOUtils.toString(is), NewVersionObject.class);
+			newVersionObj = gson.fromJson(strJson, NewVersionObject.class);
+			if(newVersionObj == null) return false;
 			
 			String[] arryCurVer = StringUtils.split(SystemDefine.MAJOR_VERSION, ".");
 			String[] arryNewVer = StringUtils.split(newVersionObj.getMajorVer(), ".");

@@ -34,6 +34,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.dialog.update.NewVersionChecker;
 import com.hangum.tadpole.application.start.dialog.update.NewVersionObject;
+import com.hangum.tadpole.application.start.dialog.update.NewVersionViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
@@ -106,9 +107,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     private void newVersionChecker() {
     	boolean isNew = NewVersionChecker.getInstance().check();
     	if(isNew) {
-    		NewVersionObject obj = NewVersionChecker.getInstance().getNewVersionObj();
-    		
-    	
+    		NewVersionObject newVersionObj = NewVersionChecker.getInstance().getNewVersionObj();
+    		NewVersionViewDialog dialog = new NewVersionViewDialog(null, newVersionObj);
+    		dialog.open();
     	}
     }
     
