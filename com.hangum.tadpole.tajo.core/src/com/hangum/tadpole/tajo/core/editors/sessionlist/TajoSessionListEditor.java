@@ -11,9 +11,17 @@
 package com.hangum.tadpole.tajo.core.editors.sessionlist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
+import org.apache.tajo.client.TajoClientImpl;
+import org.apache.tajo.conf.TajoConf;
+import org.apache.tajo.service.ServiceTrackerFactory;
+import org.apache.tajo.worker.TajoWorker;
+import org.apache.tajo.worker.TajoWorkerClientService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -56,11 +64,11 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.Activator;
 import com.hangum.tadpole.tajo.core.Messages;
+import com.hangum.tadpole.tajo.core.connections.TajoQueryExecutor;
 import com.hangum.tadpole.tajo.core.editors.sessionlist.compare.MySQLSessionListLabelProvider;
 import com.hangum.tadpole.tajo.core.editors.sessionlist.compare.MySQLSessionListTableCompare;
 import com.hangum.tadpole.tajo.core.utils.ObjectComparator;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.swtdesigner.ResourceManager;
 
 /**
  * Tajo Session list editor
@@ -68,11 +76,11 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class SessionListEditor extends EditorPart {
+public class TajoSessionListEditor extends EditorPart {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(SessionListEditor.class);
+	private static final Logger logger = Logger.getLogger(TajoSessionListEditor.class);
 
 	public static final String ID = "com.hangum.tadpole.tajo.core.editors.sessionlist"; //$NON-NLS-1$
 	
@@ -92,7 +100,7 @@ public class SessionListEditor extends EditorPart {
 	private ObjectComparator comparator;
 	private Text textQuery;
 
-	public SessionListEditor() {
+	public TajoSessionListEditor() {
 		super();
 	}
 
@@ -109,7 +117,7 @@ public class SessionListEditor extends EditorPart {
 		setSite(site);
 		setInput(input);
 		
-		SessionListEditorInput qei = (SessionListEditorInput)input;
+		TajoSessionListEditorInput qei = (TajoSessionListEditorInput)input;
 		this.userDB = qei.getUserDB();
 		setPartName(qei.getName());
 	}
@@ -312,11 +320,49 @@ public class SessionListEditor extends EditorPart {
 	/**
 	 * editor init data
 	 */
+	Map<String, Object> resultObj = null;
 	private void initSessionListData() {
+		List<?> listSessionList = new ArrayList<>();
+		
 		try {
-//			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-
-			List<?> listSessionList = new ArrayList<>();
+			TajoQueryExecutor executor = TajoQueryExecutor.getInstance();
+			if(resultObj == null) {
+				Map<String, String> request = new HashMap<String, String>();
+				request.put("action", "runQuery");
+				request.put("query", "select * from sampletable2");
+				request.put("database", "default");
+				
+				resultObj = executor.service(request);
+				System.out.println(resultObj.get("queryRunnerId"));
+			} else {
+				
+				Map<String, String> request = new HashMap<String, String>();
+				request.put("action", "getQueryProgress");
+				request.put("queryRunnerId", ""+resultObj.get("queryRunnerId"));
+				
+				Map<String, Object>  resultObj2 = executor.service(request);
+				System.out.println("==progress==" +resultObj2.get("progress"));
+				System.out.println("startTime==" +resultObj2.get("startTime"));
+				System.out.println("finishTime==" +resultObj2.get("finishTime"));
+				System.out.println("runningTime==" +resultObj2.get("runningTime"));
+				
+				AtomicInteger ai = (AtomicInteger)resultObj2.get("progress");
+				if(ai.doubleValue() == 100) {
+					Map<String, String> request2 = new HashMap<String, String>();
+					request2.put("action", "getQueryResult");
+					request2.put("queryRunnerId", ""+resultObj.get("queryRunnerId"));
+					resultObj = executor.service(request);
+					
+					System.out.println("=====[show result]==============================================");
+					System.out.println("resultSize==>" + resultObj.get("resultSize"));
+					System.out.println("resultData==>" + resultObj.get("resultData"));
+					System.out.println("resultColumns==>" + resultObj.get("resultColumns"));
+					System.out.println("runningTime==>" + resultObj.get("runningTime"));
+					
+					resultObj = null;
+				}
+			}
+			
 //			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
 //				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 //				if (0 >= getSessionGrant){
@@ -374,8 +420,10 @@ public class SessionListEditor extends EditorPart {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] name = {Messages.get().SessionListEditor_21, Messages.get().SessionListEditor_22, Messages.get().SessionListEditor_23, Messages.get().SessionListEditor_24, Messages.get().SessionListEditor_25, Messages.get().SessionListEditor_26, Messages.get().SessionListEditor_27, Messages.get().SessionListEditor_28};
-		int[] size = {70, 70, 150, 70, 70, 100, 50, 200};
+		String[] name = {Messages.get().SessionListEditor_21, Messages.get().SessionListEditor_22, Messages.get().SessionListEditor_23, 
+				Messages.get().SessionListEditor_24, Messages.get().SessionListEditor_25, Messages.get().SessionListEditor_26, 
+				Messages.get().SessionListEditor_27};
+		int[] size = {70, 70, 150, 70, 70, 100, 200};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tableViewerSessionList, SWT.LEFT);

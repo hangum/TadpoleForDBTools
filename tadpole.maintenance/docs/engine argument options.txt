@@ -1,0 +1,62 @@
+#-------------------------------------------------------------------------------
+# Copyright (c) 2013 hangum.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the GNU Lesser Public License v2.1
+# which accompanies this distribution, and is available at
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+# 
+# Contributors:
+#     hangum - initial API and implementation
+#-------------------------------------------------------------------------------
+
+-console -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog  -passwd tadpole.jong
+-dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
+ -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db
+ 
+ Admin setting
+ -newUserPermit : 신규 유저등록시 어드민의 허락이 필요한지 유무. 허락이 필요하면 YES, 옵션이 없으면 NO 입니다. 
+ 					-newUserPermit YES|NO
+
+Program Argument
+  -standalone 	: 독립 실행모드인지 (ex: 서버 종료 모드, 시작시 브라우저 자동 노출)
+  -debuglog 	: log4j 로그레벨이 debug모드. 아니면 info
+  -dbPath		: local db(sqlite)일 경우 path 
+  -dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
+  				: 엔진디비를 지정한 디비 정보를 사용합니다. 디폴트는 내부 sqlite 디비를 사용합니다. 
+  
+ /* 더이상 사용하지 않는다. -forceSystemInitialize : 시스테의 초기테이블 데이터 생성을 항상 점검합니다.  일반적으로 한번만 합니다.  검사는 프리퍼런스에 하구요. */
+
+  -resourcesDir  : resource directory 를 설정합니다.    
+ 				  전체 리소스는 리소스 루트에 각 사용자 리소스느는 id뒤에 놓습니다.
+ 				  폴더가 설정되어지 있지 않다면 .exe가 있거나 혹은 context root 디렉토리의 패런트  아래에 놓습니다. 
+
+ -passwd : 엔진에서 사용할 패스워드.
+ -useDB		: 올챙이 시스템에서 지원하는 디비중에서 이용하고자하는 디비를 기록합니다. 모두다 사용할 경우 all 혹은 option을 적지않습니다.
+			: 현재 지원되는디비는 다음과 같습니다.  아래의 값들 중에 return 다음 값들을 ,로 구분하여 입력합니다.
+			: ex : -useDB Oracle,MSSQL,MySQL
+			  	/**
+		  			case ORACLE_DEFAULT:		return "Oracle";
+					case MSSQL_DEFAULT:			return "MSSQL";
+					case MYSQL_DEFAULT:			return "MySQL";
+					case MARIADB_DEFAULT:		return "MariaDB";
+					case SQLite_DEFAULT:		return "SQLite";
+					case CUBRID_DEFAULT:		return "Cubrid";
+					case POSTGRE_DEFAULT:		return "PostgreSQL";
+					case MONGODB_DEFAULT :  	return "MongoDB";
+					case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
+					case HIVE_DEFAULT: 			return "Hive";
+				*/
+ -defaultDB     : 디비 입력시 선택디비 나열:
+  				: ex : -defaultDB MySQL
+ -test			: 테스트 데이터를 로드할것인지 (ex: 로그인시 관리자, 개발자 계정 보이기, 예제 데이터 베이스 정보 노출)
+ -testDB		:  예제 데이터 베이스 정보 노출
+ 
+ 				
+VM Argument
+  -Dfile.encoding=UTF-8
+  -Dorg.osgi.service.http.port=10081					: standalone 모드일경우 서버의 포트.
+  -Declipse.ignoreApp=true 
+  -Dosgi.noShutdown=true 
+  -Dorg.eclipse.jetty.server.Request.maxFormKeys=100000	: standalone 모드 일 경우 http request객체 처리(http 공격을 받을때 일 경우)
+  -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1 : standalone 모드 일 경우 http request 객체의 사이즈를 무한대로 받을수 있도록 합니다.
+  -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer : jetty server multi tab enable

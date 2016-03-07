@@ -16,7 +16,6 @@ import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.objects.table.DBTableEditorInput;
 
 /**
  * Session list editor input
@@ -43,8 +42,8 @@ public class SessionListEditorInput implements IEditorInput {
 	
 //	@Override
 //	public boolean equals(Object obj) {
-//		if( !(obj instanceof SessionListEditorInput) ) return false;
-//		return ((SessionListEditorInput)obj).getName().equals(getName());
+//		if( !(obj instanceof TajoSessionListEditorInput) ) return false;
+//		return ((TajoSessionListEditorInput)obj).getName().equals(getName());
 //	}
 
 	@Override

@@ -261,6 +261,8 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	protected void init() {
 		textAccesskey.setText(GetAmazonPreference.getAccessValue());
 		textSecretKey.setText(GetAmazonPreference.getSecretValue());
+		
+		textAccesskey.setFocus();
 	}
 
 	@Override

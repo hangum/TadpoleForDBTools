@@ -68,11 +68,13 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 			} else if(intResult == 1) {
 				serverLogout();
 			}
-		} else if(TadpoleApplicationContextManager.isPersonOperationType()) {
-			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_4) ) {
-				serverLogout();
-				System.exit(0);
-			}
+			
+//		// tomcat 에서 실행했는지 어떻게 검사하지?
+//		} else if(!ApplicationArgumentUtils.isStandaloneMode() && TadpoleApplicationContextManager.isPersonOperationType()) {
+//			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_4) ) {
+//				serverLogout();
+//				System.exit(0);
+//			}
 		} else {
 			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_3) ) {
 				serverLogout();

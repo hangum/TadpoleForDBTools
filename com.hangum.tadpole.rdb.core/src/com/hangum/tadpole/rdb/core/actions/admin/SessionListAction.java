@@ -29,6 +29,8 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListEditor;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListEditorInput;
+import com.hangum.tadpole.tajo.core.editors.sessionlist.TajoSessionListEditor;
+import com.hangum.tadpole.tajo.core.editors.sessionlist.TajoSessionListEditorInput;
 
 /**
  * Session List Action
@@ -73,8 +75,8 @@ public class SessionListAction implements IViewActionDelegate {
 			}
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT) {
 			try {
-				com.hangum.tadpole.tajo.core.editors.sessionlist.SessionListEditorInput sleInput = new com.hangum.tadpole.tajo.core.editors.sessionlist.SessionListEditorInput(userDB);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, com.hangum.tadpole.tajo.core.editors.sessionlist.SessionListEditor.ID);
+				TajoSessionListEditorInput sleInput = new TajoSessionListEditorInput(userDB);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, TajoSessionListEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("open session list", e); //$NON-NLS-1$
 				

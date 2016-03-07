@@ -229,7 +229,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			}
 		}
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 
 	/**

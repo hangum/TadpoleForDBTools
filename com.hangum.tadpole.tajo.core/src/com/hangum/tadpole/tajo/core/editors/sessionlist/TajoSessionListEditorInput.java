@@ -23,10 +23,10 @@ import com.hangum.tadpole.tajo.core.Messages;
  * @author hangum
  *
  */
-public class SessionListEditorInput implements IEditorInput {
+public class TajoSessionListEditorInput implements IEditorInput {
 	private UserDBDAO userDB;
 
-	public SessionListEditorInput(UserDBDAO userDB) {
+	public TajoSessionListEditorInput(UserDBDAO userDB) {
 		this.userDB = userDB;
 	}
 
@@ -42,7 +42,7 @@ public class SessionListEditorInput implements IEditorInput {
 	
 //	@Override
 //	public boolean equals(Object obj) {
-//		return ((SessionListEditorInput)obj).getName().equals(getName());
+//		return ((TajoSessionListEditorInput)obj).getName().equals(getName());
 //	}
 
 	@Override

@@ -1212,7 +1212,7 @@ ace.define("DynHighlightRules", [], function(require, exports, module) {
 //		} else if(varDBType == 'hql') {
 //			
 		} else if(varDBType == 'tajo') {
-			keywords = "as|all|and|any|asymmetric|asc|both|case|cast|create|cross|current_date|current_time|current_timestamp|desc|distinct|end|else|except|full|from|group|having|ilike|in|inner|intersect|into|is|join|leading|left|like|limit|natural|not|on|or|order|outer|over|right|select|some|symmetric|table|then|trailing|union|unique|using|when|where|with|window";
+			keywords = "as|all|and|any|asymmetric|asc|both|case|cast|create|external|cross|current_date|current_time|current_timestamp|desc|distinct|end|else|except|full|from|group|having|ilike|in|inner|intersect|into|is|join|leading|left|like|limit|natural|not|on|or|order|outer|over|right|select|some|symmetric|table|then|trailing|union|unique|using|when|where|with|window";
 			builtinConstants = "false|true|null";
 			builtinFunctions = "explain|" +
 						"to_bin|to_char|to_hex|" +

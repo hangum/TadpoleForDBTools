@@ -221,7 +221,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			}
 		}
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	/**

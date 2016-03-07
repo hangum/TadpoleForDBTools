@@ -26,7 +26,6 @@ public class Messages {
 	public String SessionListEditor_25;
 	public String SessionListEditor_26;
 	public String SessionListEditor_27;
-	public String SessionListEditor_28;
 	public String SessionListEditor_3;
 	public String SessionListEditor_4;
 	public String SessionListEditor_6;

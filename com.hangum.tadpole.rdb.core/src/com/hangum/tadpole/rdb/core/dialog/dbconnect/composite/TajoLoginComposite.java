@@ -230,7 +230,7 @@ public class TajoLoginComposite extends AbstractLoginComposite {
 		// Initialize otherConnectionComposite
 		othersConnectionInfo.callBackUIInit(textHost.getText());
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	/**

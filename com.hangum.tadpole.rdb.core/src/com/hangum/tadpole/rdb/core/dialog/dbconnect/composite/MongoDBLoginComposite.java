@@ -239,7 +239,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		//
 		othersConnectionInfo.callBackUIInit(textHost.getText(), textPort.getText());
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();//textHost.setFocus();
 	}
 	
 	@Override
