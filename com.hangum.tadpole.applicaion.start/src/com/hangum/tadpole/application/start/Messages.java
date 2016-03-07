@@ -14,6 +14,9 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.application.start.messages"; //$NON-NLS-1$
+
+	public String NewVersionCheckAction_0;
+	public String NewVersionCheckAction_2;
 	
 	public String AboutAction_0;
 	public String AboutAction_1;
@@ -121,13 +124,13 @@ public class Messages {
 	public String NewVersionViewDialog_0;
 	public String NewVersionViewDialog_1;
 	public String NewVersionViewDialog_2;
-	public String NewVersionViewDialog_4;
 	public String NewVersionViewDialog_5;
 	public String NewVersionViewDialog_6;
 	public String NewVersionViewDialog_7;
 	public String NewVersionViewDialog_8;
 	public String NewVersionViewDialog_9;
-	
+	public String NewVersionViewDialog_NewVersion;
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

@@ -69,21 +69,17 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 		lblCurrentVersion.setText(Messages.get().NewVersionViewDialog_2); //$NON-NLS-1$
 		
 		Label lblCurrentversionvalue = new Label(container, SWT.NONE);
-		lblCurrentversionvalue.setText(newVersionObj.getMajorVer() + " " + newVersionObj.getSubVer()); //$NON-NLS-1$
+		lblCurrentversionvalue.setText(SystemDefine.MAJOR_VERSION + " " + SystemDefine.SUB_VERSION + " - " + SystemDefine.RELEASE_DATE);
+		new Label(container, SWT.NONE);
 		
-		Label lblReleaseData = new Label(container, SWT.NONE);
-		lblReleaseData.setText(Messages.get().NewVersionViewDialog_4); //$NON-NLS-1$
+		Label labelRight = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
+		labelRight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblReleasedatavalue = new Label(container, SWT.NONE);
-		lblReleasedatavalue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblReleasedatavalue.setText(newVersionObj.getDate());
+		Label lblNewVersion = new Label(container, SWT.NONE);
+		lblNewVersion.setText(Messages.get().NewVersionViewDialog_NewVersion);
 		
-		Label lblDownloadUrl = new Label(container, SWT.NONE);
-		lblDownloadUrl.setText(Messages.get().NewVersionViewDialog_5); //$NON-NLS-1$
-		
-		Label lblDownloadurlvalue = new Label(container, SWT.NONE);
-		lblDownloadurlvalue.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblDownloadurlvalue.setText(String.format(Messages.get().NewVersionViewDialog_6, newVersionObj.getDownloadUrl())); //$NON-NLS-1$
+		Label lblNewversionvalue = new Label(container, SWT.NONE);
+		lblNewversionvalue.setText(newVersionObj.getMajorVer() + " " + newVersionObj.getSubVer() + " - " + newVersionObj.getDate());
 		
 		Label lblInformationUrl = new Label(container, SWT.NONE);
 		lblInformationUrl.setText(Messages.get().NewVersionViewDialog_7); //$NON-NLS-1$
@@ -92,6 +88,13 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 		lblInformationurlvalue.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblInformationurlvalue.setText(String.format(Messages.get().NewVersionViewDialog_8, newVersionObj.getInfoUrl())); //$NON-NLS-1$
 
+		Label lblDownloadUrl = new Label(container, SWT.NONE);
+		lblDownloadUrl.setText(Messages.get().NewVersionViewDialog_5); //$NON-NLS-1$
+		
+		Label lblDownloadurlvalue = new Label(container, SWT.NONE);
+		lblDownloadurlvalue.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblDownloadurlvalue.setText(String.format(Messages.get().NewVersionViewDialog_6, newVersionObj.getDownloadUrl())); //$NON-NLS-1$
+		
 		return area;
 	}
 
@@ -109,6 +112,6 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(552, 243);
+		return new Point(502, 270);
 	}
 }

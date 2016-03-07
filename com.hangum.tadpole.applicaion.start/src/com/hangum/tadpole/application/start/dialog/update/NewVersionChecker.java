@@ -57,10 +57,9 @@ public class NewVersionChecker {
 			logger.debug("diff mills " + diffTimeMills);
 		}
 		
-		// 1시간에 한번씩 검사한다.
-		if(diffTimeMills > (60 * 60) || newVersionObj == null) {
+		// 24시간에 한번씩 검사한다.
+		if(diffTimeMills > (60 * 60 * 24) || newVersionObj == null) {
 			lastCheckTimeMillis = currentTimeMillis;
-			
 			return getVersionInfoData();
 		}
 		return false;
@@ -71,7 +70,7 @@ public class NewVersionChecker {
 	 * 
 	 * @return
 	 */
-	private boolean getVersionInfoData() {
+	public boolean getVersionInfoData() {
 		InputStream is = null;
 		try {
 			is = new URL(CHECK_URI).openConnection().getInputStream();
