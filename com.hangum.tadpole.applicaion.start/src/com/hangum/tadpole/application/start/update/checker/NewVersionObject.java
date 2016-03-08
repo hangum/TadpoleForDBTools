@@ -8,107 +8,134 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.start.dialog.update;
+package com.hangum.tadpole.application.start.update.checker;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * new version object 
+ * new version object
  * 
  * @author hangum
  *
  */
 public class NewVersionObject {
-	String name;
-	String majorVer;
-	String subVer;
-	String date;
-	String download_url;
-	String info_url;
+	@SerializedName("name")
+	@Expose
+	private String name;
+	@SerializedName("majorVer")
+	@Expose
+	private String majorVer;
+	@SerializedName("subVer")
+	@Expose
+	private String subVer;
+	@SerializedName("date")
+	@Expose
+	private String date;
+	@SerializedName("download_url")
+	@Expose
+	private String downloadUrl;
+	@SerializedName("info_url")
+	@Expose
+	private String infoUrl;
 
 	public NewVersionObject() {
 	}
-
+	
 	/**
-	 * @return the name
+	 * 
+	 * @return The name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @param name the name to set
+	 * 
+	 * @param name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @return the majorVer
+	 * 
+	 * @return The majorVer
 	 */
 	public String getMajorVer() {
 		return majorVer;
 	}
 
 	/**
-	 * @param majorVer the majorVer to set
+	 * 
+	 * @param majorVer
 	 */
 	public void setMajorVer(String majorVer) {
 		this.majorVer = majorVer;
 	}
 
 	/**
-	 * @return the subVer
+	 * 
+	 * @return The subVer
 	 */
 	public String getSubVer() {
 		return subVer;
 	}
 
 	/**
-	 * @param subVer the subVer to set
+	 * 
+	 * @param subVer
 	 */
 	public void setSubVer(String subVer) {
 		this.subVer = subVer;
 	}
 
 	/**
-	 * @return the date
+	 * 
+	 * @return The date
 	 */
 	public String getDate() {
 		return date;
 	}
 
 	/**
-	 * @param date the date to set
+	 * 
+	 * @param date
+	 *            The date
 	 */
 	public void setDate(String date) {
 		this.date = date;
 	}
 
 	/**
-	 * @return the download_url
+	 * 
+	 * @return The downloadUrl
 	 */
-	public String getDownload_url() {
-		return download_url;
+	public String getDownloadUrl() {
+		return downloadUrl;
 	}
 
 	/**
-	 * @param download_url the download_url to set
+	 * 
+	 * @param downloadUrl
 	 */
-	public void setDownload_url(String download_url) {
-		this.download_url = download_url;
+	public void setDownloadUrl(String downloadUrl) {
+		this.downloadUrl = downloadUrl;
 	}
 
 	/**
-	 * @return the info_url
+	 * 
+	 * @return The infoUrl
 	 */
-	public String getInfo_url() {
-		return info_url;
+	public String getInfoUrl() {
+		return infoUrl;
 	}
 
 	/**
-	 * @param info_url the info_url to set
+	 * 
+	 * @param infoUrl
 	 */
-	public void setInfo_url(String info_url) {
-		this.info_url = info_url;
+	public void setInfoUrl(String infoUrl) {
+		this.infoUrl = infoUrl;
 	}
-	
 }
