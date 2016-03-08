@@ -28,7 +28,8 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
  */
 public class NewVersionChecker {
 	private static final Logger logger = Logger.getLogger(NewVersionChecker.class);
-	public static final String CHECK_URI = "https://raw.githubusercontent.com/hangum/TadpoleForDBTools/master/com.hangum.tadpole.applicaion.start/src/com/hangum/tadpole/application/start/dialog/update/versionInfo.json";
+	public static final String CHECK_URI = 
+			"https://raw.githubusercontent.com/hangum/TadpoleForDBTools/master/com.hangum.tadpole.applicaion.start/src/com/hangum/tadpole/application/start/update/checker/versionInfo.json";
 	
 	private long lastCheckTimeMillis = 0l;
 	private NewVersionObject newVersionObj;
