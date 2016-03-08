@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.start.dialog.update;
+package com.hangum.tadpole.application.start.update.checker;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

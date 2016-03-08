@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.start.dialog.update;
+package com.hangum.tadpole.application.start.update.checker;
 
 import java.io.InputStream;
 import java.net.URL;

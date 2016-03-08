@@ -16,9 +16,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
-import com.hangum.tadpole.application.start.dialog.update.NewVersionChecker;
-import com.hangum.tadpole.application.start.dialog.update.NewVersionObject;
-import com.hangum.tadpole.application.start.dialog.update.NewVersionViewDialog;
+import com.hangum.tadpole.application.start.update.checker.NewVersionChecker;
+import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
+import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
 import com.swtdesigner.ResourceManager;
 
 /**
