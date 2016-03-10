@@ -182,9 +182,15 @@ public class TadpoleObjectQuery {
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
 		else 												strTableName = tableDao.getName();
 		
-		mapParam.put("schema", tableDao.getSchema_name());
-		mapParam.put("table", strTableName);
 
+		if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+			mapParam.put("user_name", StringUtils.substringBefore(strTableName, "."));
+			mapParam.put("table_name", StringUtils.substringAfter(strTableName, "."));
+		} else {
+			mapParam.put("schema", tableDao.getSchema_name());
+			mapParam.put("table", strTableName);
+		}
+		
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
@@ -283,7 +289,14 @@ public class TadpoleObjectQuery {
 					break;
 				}
 			}
+		} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			Map<String, Object> mapParam = new HashMap<String, Object>();
 			
+			mapParam.put("user_name", 	StringUtils.substringBefore(strObject, ".")); //$NON-NLS-1$
+			mapParam.put("table_name", 	StringUtils.substringAfter(strObject, ".")); //$NON-NLS-1$
+			
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$
 		} else {
 			Map<String, Object> mapParam = new HashMap<String, Object>();
 			mapParam.put("db", 	userDB.getDb()); //$NON-NLS-1$

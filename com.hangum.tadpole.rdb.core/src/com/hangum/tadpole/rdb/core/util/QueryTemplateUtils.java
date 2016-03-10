@@ -138,6 +138,20 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
+		} else if(DBDefine.ALTIBASE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+//			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
+//				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_TABLE_STMT;
+//			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+//				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_VIEW_STMT;
+//			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+//				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_INDEX_STMT;
+//			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
+//				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
+//			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
+//				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_FUNCTION_STMT;
+//			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
+//				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_TRIGGER_STMT;
+//			}
 		}
 		
 		return defaultStr;

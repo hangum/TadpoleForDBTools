@@ -27,7 +27,8 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/driver/mongodb/mongo-java-driver-3.2.0.jar,
  libs/driver/mariadb/mariadb-java-client-1.2.3.jar,
  libs/driver/mysql/mysql-connector-java-5.1.37-bin.jar,
- libs/driver/tibero/tibero5-jdbc.jar
+ libs/driver/tibero/tibero5-jdbc.jar,
+ libs/driver/altibase/Altibase.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.db.metadata.constants,
