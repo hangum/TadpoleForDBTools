@@ -364,7 +364,7 @@
          <visibility>
             <objectState
                   name="db_type"
-                  value="cubrid,mariadb,mysql,mssql,mssql_8_le,oracle,postgresql,sqlite,tibero">
+                  value="cubrid,mariadb,mysql,mssql,mssql_8_le,oracle,postgresql,sqlite,tibero,altibase">
             </objectState>
          </visibility>
       </objectContribution>

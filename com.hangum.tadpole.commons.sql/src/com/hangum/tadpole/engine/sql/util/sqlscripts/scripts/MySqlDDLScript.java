@@ -63,8 +63,6 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	public String getViewScript(String strName) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		StringBuilder result = new StringBuilder("");
-
 		Map srcList = (HashMap)client.queryForObject("getViewScript", strName);
 		String strSource = ""+srcList.get("Create View");
 		strSource = StringUtils.substringAfterLast(strSource, "VIEW");
