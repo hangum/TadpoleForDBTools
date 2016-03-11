@@ -130,7 +130,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_14, Messages.get().ObjectDeleteAction_16)) {
 					
 					try {
-						if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT) {
+						if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -187,7 +187,11 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			ProcedureFunctionDAO functionDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_29, Messages.get().ObjectDeleteAction_30)) {
 				try {
-					executeSQL(userDB, "drop function " + functionDAO.getName()); //$NON-NLS-1$
+					if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+						executeSQL(userDB, "drop function " + functionDAO.getDefiner() + "." + functionDAO.getName());
+					} else {
+						executeSQL(userDB, "drop function " + functionDAO.getName()); //$NON-NLS-1$
+					}
 					
 					refreshFunction();
 				} catch(Exception e) {

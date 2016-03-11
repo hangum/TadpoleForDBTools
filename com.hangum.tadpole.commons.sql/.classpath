@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mysql/mysql-connector-java-5.1.37-bin.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mariadb/mariadb-java-client-1.2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/tibero/tibero5-jdbc.jar"/>

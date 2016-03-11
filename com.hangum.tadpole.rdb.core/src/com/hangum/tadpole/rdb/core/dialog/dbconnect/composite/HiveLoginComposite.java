@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -45,7 +46,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	/**
 	 * Logger for this class
 	 */
-//	private static final Logger logger = Logger.getLogger(HiveLoginComposite.class);
+	private static final Logger logger = Logger.getLogger(HiveLoginComposite.class);
 	
 	protected Combo comboDriverType;
 	
@@ -158,12 +159,6 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
-		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setText(Messages.get().MySQLLoginComposite_lblJdbcOptions_text);
-		
-		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
-		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
-		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.get().DBLoginDialog_2);
 		
@@ -175,6 +170,16 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		new Label(grpConnectionType, SWT.NONE);
+		
+		Label label = new Label(grpConnectionType, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setText(Messages.get().MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		othersConnectionInfo = new OthersConnectionBigDataGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

@@ -57,6 +57,7 @@ public enum DBDefine {
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
 	POSTGRE_DEFAULT,
+	ALTIBASE_DEFAULT,
 	
 	/** hive */
 	HIVE_DEFAULT,
@@ -102,6 +103,7 @@ public enum DBDefine {
 			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
 			case HIVE2_DEFAULT:			return prefix + "HIVE2Config.xml";
 			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
+			case ALTIBASE_DEFAULT:	    return prefix + "AltibaseConfig.xml";
 			default:
 				return "undefine db";
 		}
@@ -137,6 +139,7 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("Apache Hive2")) 	return HIVE2_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("Apache Tajo")) 	return TAJO_DEFAULT;
+		else if(type.equalsIgnoreCase("Altibase"))       return ALTIBASE_DEFAULT;
 		else return null;
 	}
 	
@@ -187,6 +190,9 @@ public enum DBDefine {
 			
 			case TAJO_DEFAULT:		return "jdbc:tajo://%s:%s/%s";
 			
+			/* Altibase JDBC connection string: jdbc:Altibase://ipaddr.port/dbname */
+			case ALTIBASE_DEFAULT:   return "jdbc:Altibase://%s:%s/%s"; 
+			
 			default:
 				return "undefine db";
 		}
@@ -218,6 +224,7 @@ public enum DBDefine {
 			case HIVE2_DEFAULT: 			return "Apache Hive2";
 			
 			case TAJO_DEFAULT: 			return "Apache Tajo";
+			case ALTIBASE_DEFAULT:      return "Altibase";
 			default:
 				return "undefine db";
 		}
@@ -248,6 +255,8 @@ public enum DBDefine {
 			extension += "cubrid"; //$NON-NLS-1$
 		} else if(this == DBDefine.TAJO_DEFAULT) {
 			extension += "tajo"; //$NON-NLS-1$
+		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
+			extension += "altibase";
 		} else {
 			extension += "sql"; //$NON-NLS-1$
 		}
@@ -279,6 +288,7 @@ public enum DBDefine {
 		case HIVE2_DEFAULT: 		return DBVariableDefine.HIVE2_VARIABLE;
 		
 		case TAJO_DEFAULT: 			return DBVariableDefine.TAJO_VARIABLE;
+		case ALTIBASE_DEFAULT:      return DBVariableDefine.ALTIBASE_VARIABLE;
 		default:
 			return new String[]{};
 		}
@@ -328,6 +338,7 @@ public enum DBDefine {
 	private static List<DBDefine> allUserUseDB() {
 		List<DBDefine> supportDb = new ArrayList<DBDefine>();
 
+		supportDb.add(ALTIBASE_DEFAULT);
 		supportDb.add(HIVE_DEFAULT);
 		supportDb.add(AMAZONRDS_DEFAULT);
 		supportDb.add(TAJO_DEFAULT);
@@ -341,7 +352,7 @@ public enum DBDefine {
 		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
-		supportDb.add(DBDefine.TIBERO_DEFAULT);
+		supportDb.add(TIBERO_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

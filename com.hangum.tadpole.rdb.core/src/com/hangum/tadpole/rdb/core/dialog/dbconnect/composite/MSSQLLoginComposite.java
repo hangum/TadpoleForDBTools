@@ -147,12 +147,6 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
-		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setText(Messages.get().MySQLLoginComposite_lblJdbcOptions_text);
-		
-		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
-		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
-		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.get().DBLoginDialog_2);
 		
@@ -164,6 +158,16 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		new Label(grpConnectionType, SWT.NONE);
+		
+		Label label = new Label(grpConnectionType, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
+		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
+		lblJdbcOptions.setText(Messages.get().MySQLLoginComposite_lblJdbcOptions_text);
+		
+		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
+		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

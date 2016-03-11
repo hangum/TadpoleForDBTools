@@ -25,6 +25,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
+import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AltibaseDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.MSSQL_8_LE_DDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.MySqlDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.OracleDDLScript;
@@ -87,8 +88,11 @@ public class DDLScriptManager {
 				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
+				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
+		) {
 			rdbScript = new MySqlDDLScript(userDB, actionType);
+		} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			rdbScript = new AltibaseDDLScript(userDB, actionType);
 		} else {
 			throw new Exception(Messages.get().ProcedureExecuterManager_0);
 		}

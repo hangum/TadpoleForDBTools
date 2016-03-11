@@ -123,7 +123,7 @@ public class DBLoginDialog extends Dialog {
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
 		comboDBList.setBackground(SWTResourceManager.getColor(255, 250, 205));
-		comboDBList.setVisibleItemCount(11);
+		comboDBList.setVisibleItemCount(13);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
@@ -278,6 +278,6 @@ public class DBLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(530, 480);
+		return new Point(530, 500);
 	}
 }

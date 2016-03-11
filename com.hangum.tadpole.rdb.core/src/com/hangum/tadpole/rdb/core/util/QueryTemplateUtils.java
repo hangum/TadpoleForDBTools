@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.util;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.template.AltibaseDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.CubridDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.HIVEDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.MSSQLDMLTemplate;
@@ -137,6 +138,20 @@ public class QueryTemplateUtils {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_FUNCTION_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
+			}
+		} else if(DBDefine.ALTIBASE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
+				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_TABLE_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_VIEW_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_INDEX_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
+				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
+				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_FUNCTION_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
+				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 		}
 		

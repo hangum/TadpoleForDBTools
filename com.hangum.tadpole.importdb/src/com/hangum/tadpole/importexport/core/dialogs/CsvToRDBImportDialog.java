@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -484,7 +485,14 @@ public class CsvToRDBImportDialog extends Dialog {
 			}
 
 			if (btnPk.getSelection()){
-				disableObjectResults = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
+				if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+					Map<String, String> parameters = new HashMap<String, String>(2);
+					parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
+					parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
+					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
+				} else {
+					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
+				}
 			}
 			
 			return true;
@@ -501,7 +509,17 @@ public class CsvToRDBImportDialog extends Dialog {
 		String columns = ""; //$NON-NLS-1$
 		try{
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showIndexColumns = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
+			if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+				Map<String, String> parameters = new HashMap<String, String>(2);
+				parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
+				parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
+
+				showIndexColumns = sqlClient.queryForList("primarykeyListInTable", parameters);
+			} else {
+				showIndexColumns = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
+			}
+			
+			
 			for (HashMap dao: showIndexColumns){
 				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
 					/* cid, name, type, notnull, dflt_value, pk */

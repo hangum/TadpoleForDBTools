@@ -22,6 +22,6 @@ public class AdminPreferenceDefine {
 	 * admin 설정
 	 */
 	public static final String ADMIN_NEW_USER_PERMIT = "ADMIN_NEW_USER_PERMIT";
-	public static final String ADMIN_NEW_USER_PERMIT_VALUE = "NO";
+	public static final String ADMIN_NEW_USER_PERMIT_VALUE = "YES";
 
 }

@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.sessionlist;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,7 +61,6 @@ import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSess
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.swtdesigner.ResourceManager;
 
 /**
  * DDB Session list editor
@@ -298,6 +299,12 @@ public class SessionListEditor extends EditorPart {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			if (DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 				client.queryForObject("killProcess", Integer.parseInt(sl.getId())); //$NON-NLS-1$
+			} else if (DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT){
+				 Map<String, String> parameters = new HashMap<String, String>(2);
+				 parameters.put("dbname", sl.getDb());
+				 parameters.put("session_id", sl.getId());
+				 
+				 client.queryForObject("killProcess", parameters);
 			} else {
 				client.queryForObject("killProcess", sl.getId()); //$NON-NLS-1$
 			}

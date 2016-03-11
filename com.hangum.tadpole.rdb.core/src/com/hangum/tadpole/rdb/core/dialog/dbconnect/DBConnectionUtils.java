@@ -20,6 +20,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSRDSLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AltibaseLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposite;
@@ -93,7 +94,9 @@ public class DBConnectionUtils {
 			loginComposite = new TajoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
 		} else if(dbDefine == DBDefine.TIBERO_DEFAULT) {
 			loginComposite = new TiberoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
-		}  
+		} else if(dbDefine == DBDefine.ALTIBASE_DEFAULT) {
+			loginComposite = new AltibaseLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+		}
 		
 		loginComposite.setDataActionStatus(dataStatus);
 		

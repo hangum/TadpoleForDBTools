@@ -62,7 +62,8 @@ public class SessionListAction implements IViewActionDelegate {
 				DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT  ||
 				DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 	||
-				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
+				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ||
+				DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT
 		) {
 			try {
 				SessionListEditorInput sleInput = new SessionListEditorInput(userDB);
