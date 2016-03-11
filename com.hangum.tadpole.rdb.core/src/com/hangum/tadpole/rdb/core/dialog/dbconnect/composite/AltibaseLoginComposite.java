@@ -37,7 +37,8 @@ public class AltibaseLoginComposite extends MySQLLoginComposite
 	private static final String AltibaseDefaultPort = "20300";
 	private static final String AltibaseDefaultAddress = "localhost";
 	private static final String AltibaseDefaultDBName = "mydb";
-	private static final String AltibaseDefaultUserName = "system";
+	private static final String AltibaseDefaultUserName = "sys";
+	private static final String AltibaseDefaultPassword = "manager";
 	
 	/**
 	 * Create the composite.
@@ -85,7 +86,7 @@ public class AltibaseLoginComposite extends MySQLLoginComposite
 			textPort.setText(AltibaseDefaultPort);
 			textDatabase.setText(AltibaseDefaultDBName);
 			textUser.setText(AltibaseDefaultUserName);
-			textPassword.setText("");
+			textPassword.setText(AltibaseDefaultPassword);
 			
 		} 
 		else 
