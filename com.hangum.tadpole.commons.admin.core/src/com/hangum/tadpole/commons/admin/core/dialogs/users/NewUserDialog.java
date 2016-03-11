@@ -261,7 +261,7 @@ public class NewUserDialog extends Dialog {
 			/**
 			 * 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
 			 */
-			String approvalYn = "NO".equalsIgnoreCase(GetAdminPreference.getNewUserPermit())?"YES":"NO";//ApplicationArgumentUtils.getNewUserPermit()?PublicTadpoleDefine.YES_NO.NO.name():PublicTadpoleDefine.YES_NO.YES.name();
+			String approvalYn = GetAdminPreference.getNewUserPermit();
 			String isEmamilConrim = PublicTadpoleDefine.YES_NO.NO.name();
 			
 			SMTPDTO smtpDto = new SMTPDTO();
