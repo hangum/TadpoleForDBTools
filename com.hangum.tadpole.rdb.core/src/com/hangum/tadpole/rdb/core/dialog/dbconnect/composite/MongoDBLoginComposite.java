@@ -155,6 +155,22 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
+		Label lblUser = new Label(grpConnectionType, SWT.NONE);
+		lblUser.setText(Messages.get().DBLoginDialog_2);
+		
+		textUser = new Text(grpConnectionType, SWT.BORDER);
+		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
+		lblPassword.setText(Messages.get().DBLoginDialog_3);
+		
+		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
+		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		new Label(grpConnectionType, SWT.NONE);
+		
+		Label label = new Label(grpConnectionType, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
 		lblJdbcOptions.setText(Messages.get().MySQLLoginComposite_lblJdbcOptions_text);
 		
@@ -170,18 +186,6 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		for(String val : DBLocaleUtils.getMySQLList()) comboLocale.add(val);
 		comboLocale.setVisibleItemCount(12);
 		comboLocale.select(0);
-		
-		Label lblUser = new Label(grpConnectionType, SWT.NONE);
-		lblUser.setText(Messages.get().DBLoginDialog_2);
-		
-		textUser = new Text(grpConnectionType, SWT.BORDER);
-		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
-		lblPassword.setText(Messages.get().DBLoginDialog_3);
-		
-		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
-		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
