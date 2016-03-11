@@ -85,7 +85,7 @@ public abstract class MakeContentAssistUtil {
 						String[] listDefault = StringUtils.split(strDefault, _PRE_DEFAULT);
 						if(listDefault != null & listDefault.length == 2) {
 							if(StringUtils.startsWithIgnoreCase(listDefault[0], strSchemaName))
-								strNewCntAsstList += makeObjectPattern("", StringUtils.removeStart(listDefault[0], strSchemaName), listDefault[1]);
+								strNewCntAsstList += makeObjectPattern("", StringUtils.removeStartIgnoreCase(listDefault[0], strSchemaName), listDefault[1]);
 						}	// 
 					}
 					
