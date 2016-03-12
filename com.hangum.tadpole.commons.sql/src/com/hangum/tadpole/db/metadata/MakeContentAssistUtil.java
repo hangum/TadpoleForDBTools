@@ -37,18 +37,6 @@ public abstract class MakeContentAssistUtil {
 
 	public static final String _PRE_GROUP = "||";
 	public static final String _PRE_DEFAULT = "|";
-//	
-//	/**
-//	 * setting default keyword 
-//	 * @param userDB
-//	 */
-//	public void defaultSetKeyword(UserDBDAO userDB) {
-//		getAssistSchemaList(userDB);
-////	TO DO 테이블은 디비가 선택되면 처음 호출 되므로 제외하는것이 효율이 좋을듯합니다. 
-////		getAssistTableList(userDB);
-//		getAssistViewList(userDB);
-//		getFunctionList(userDB);
-//	}
 	
 	/**
 	 *	스키마로 검색했을 경우에 스키마이름이 없는 리스트를 넘겨 주어야 한다.. 
@@ -64,7 +52,7 @@ public abstract class MakeContentAssistUtil {
 		
 		if(StringUtils.contains(strCursorText, '.')) {
 			String strSchemaName 		= StringUtils.substringBefore(strCursorText, ".") + ".";
-			String strTableName 		= StringUtils.substringAfter(strCursorText, ".");
+//			String strTableName 		= StringUtils.substringAfter(strCursorText, ".");
 			int intSep = StringUtils.indexOf(strCursorText, ".");
 			
 			if(logger.isDebugEnabled()) {
@@ -80,17 +68,17 @@ public abstract class MakeContentAssistUtil {
 				String strNewCntAsstList = "";
 				
 				String[] listGroup = StringUtils.splitByWholeSeparator(strCntAsstList, _PRE_GROUP);
-				if(listGroup != null) {
-					for (String strDefault : listGroup) {
-						String[] listDefault = StringUtils.split(strDefault, _PRE_DEFAULT);
-						if(listDefault != null & listDefault.length == 2) {
-							if(StringUtils.startsWithIgnoreCase(listDefault[0], strSchemaName))
-								strNewCntAsstList += makeObjectPattern("", StringUtils.removeStartIgnoreCase(listDefault[0], strSchemaName), listDefault[1]);
-						}	// 
-					}
-					
-					return strNewCntAsstList;
+				if(listGroup == null) return strNewCntAsstList;
+				
+				for (String strDefault : listGroup) {
+					String[] listDefault = StringUtils.split(strDefault, _PRE_DEFAULT);
+					if(listDefault != null & listDefault.length == 2) {
+						if(StringUtils.startsWithIgnoreCase(listDefault[0], strSchemaName))
+							strNewCntAsstList += makeObjectPattern("", StringUtils.removeStartIgnoreCase(listDefault[0], strSchemaName), listDefault[1]);
+					}	// 
 				}
+				
+				return strNewCntAsstList;
 			}
 		}
 		
@@ -197,27 +185,7 @@ public abstract class MakeContentAssistUtil {
 		
 		return userDB.getFunctionLisstSeparator(); //$NON-NLS-1$
 	}
-	
-//	/**
-//	 * 보여 주어야할 테이블 목록을 정의합니다.
-//	 *
-//	 * @param userDB
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	private List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
-//		List<TableDAO> showTables = null;
-//				
-//		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-//			showTables = new ArrayList<TableDAO>();//().tableList(userDB);			
-//		} else {
-//			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-//			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
-//		}
-//		
-//		/** filter 정보가 있으면 처리합니다. */
-//		return getTableAfterwork(showTables, userDB);
-//	}
+
 	public abstract List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception;
 	
 	/**
