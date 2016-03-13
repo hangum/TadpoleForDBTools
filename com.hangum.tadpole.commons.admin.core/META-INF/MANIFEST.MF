@@ -14,8 +14,13 @@ Require-Bundle: org.eclipse.core.runtime,
  com.hangum.tadpole.manager.core;bundle-version="2.0.0",
  org.eclipse.rap.nebula.jface.gridviewer;bundle-version="3.1.0",
  org.eclipse.rap.nebula.widgets.grid;bundle-version="3.1.0",
- com.hangum.tadpole.rdb.core;bundle-version="2.0.0"
+ com.hangum.tadpole.rdb.core;bundle-version="2.0.0",
+ org.eclipse.rap.fileupload;bundle-version="3.1.0",
+ org.apache.commons.io;bundle-version="2.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.commons.admin.core.actions,
  com.hangum.tadpole.commons.admin.core.dialogs.users
+Import-Package: javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0",
+ org.eclipse.rap.fileupload;version="3.1.0"

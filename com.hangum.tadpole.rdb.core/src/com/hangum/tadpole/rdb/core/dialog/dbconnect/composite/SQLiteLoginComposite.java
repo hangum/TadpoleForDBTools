@@ -396,5 +396,17 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		return true;
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		try {
+			if(pushSession != null) pushSession.stop();
+			pushSession = null;
+		} catch(Exception e) {
+			// ignore exception
+		}
+	}
 
 }

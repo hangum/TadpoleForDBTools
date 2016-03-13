@@ -26,7 +26,7 @@ import org.eclipse.rap.rwt.RWT;
 public class PublicTadpoleDefine {
 	/** url system verion information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
-
+	
 	/** cookie path */
 	public static String _cookiePath = "/";
 	
