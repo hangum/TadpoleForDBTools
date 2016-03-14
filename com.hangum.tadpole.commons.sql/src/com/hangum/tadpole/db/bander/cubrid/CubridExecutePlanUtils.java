@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.util.bander.cubrid;
+package com.hangum.tadpole.db.bander.cubrid;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

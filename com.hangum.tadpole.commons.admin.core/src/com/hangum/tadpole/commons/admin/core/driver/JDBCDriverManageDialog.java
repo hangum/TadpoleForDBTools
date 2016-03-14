@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.initialize.JDBCDriverLoader;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**
@@ -130,7 +131,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				return dbDefine.getDBToString();
 			}
 		});
-		lvDB.setInput(DBDefine.userDBValues());
+		lvDB.setInput(DBDefine.getDriver());
 		
 		Composite compositeBody = new Composite(sashForm, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(3, false));
@@ -224,9 +225,7 @@ public class JDBCDriverManageDialog extends Dialog {
 		});
 		btnRefresh.setText("Refresh");
 		
-
 		sashForm.setWeights(new int[] {3, 7});
-		
 		initManager();
 
 		return container;
@@ -275,19 +274,29 @@ public class JDBCDriverManageDialog extends Dialog {
 					if(logger.isDebugEnabled()) logger.debug("===> " + file.getFileName()); //$NON-NLS-1$
 				}
 				
+				String strFile = jdbc_dir;
 				File[] arryFiles = receiver.getTargetFiles();
 				for (File file : arryFiles) {
 					try {
 						FileUtils.moveFileToDirectory(file, new File(jdbc_dir), true);
+						
+						strFile += file.getName();
 					} catch (Exception e) {
 						logger.error("driver move", e);
 //						MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Upload failed", "File upload fail.  " + e.getMessage());
 					}
 				}
 
+				final String strTmpPaht = strFile;
 				lvDriverFile.getList().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						initDBFileList();
+						
+						try {
+							JDBCDriverLoader.addJarFile(strTmpPaht);
+						} catch (Exception e) {
+							logger.error("jar loading", e);
+						}
 					}
 				});
 			}			

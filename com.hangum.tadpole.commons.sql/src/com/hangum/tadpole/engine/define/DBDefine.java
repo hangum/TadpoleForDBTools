@@ -334,6 +334,17 @@ public enum DBDefine {
 	}
 	
 	/**
+	 * get driver list
+	 * 
+	 * @return
+	 */
+	public static List<DBDefine> getDriver() {
+		List<DBDefine> listSupportDb = userDBValues();
+		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
+		return listSupportDb;
+	}
+	
+	/**
 	 * 사용자가 사용할 수 있는 모든 디비.
 	 * @return
 	 */

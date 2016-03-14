@@ -232,6 +232,8 @@ public class Messages {
 	
 	public String AdminSystemSettingAction_0;
 	public String AdminSystemSettingAction_1;
+
+	public String JDBCDriverManagerAction_0;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
