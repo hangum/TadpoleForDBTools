@@ -36,11 +36,13 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.driver.JDBCDriverManageDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * Admin System setting editor
@@ -52,6 +54,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(AdminSystemSettingEditor.class);
 	public static final String ID = "com.hangum.tadpole.admin.editor.admn.system.setting"; //$NON-NLS-1$
 	private Combo comboNewUserPermit;
+	private Text textResourceHome;
 
 	public AdminSystemSettingEditor() {
 		super();
@@ -103,8 +106,16 @@ public class AdminSystemSettingEditor extends EditorPart {
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		Label lblResourceHome = new Label(compositeBody, SWT.NONE);
+		lblResourceHome.setText("Resource Home");
+		
+		textResourceHome = new Text(compositeBody, SWT.BORDER);
+		textResourceHome.setEnabled(false);
+		textResourceHome.setEditable(false);
+		textResourceHome.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textResourceHome.setText(ApplicationArgumentUtils.getResourcesDir());
+		
 		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText(Messages.get().AdminSystemSettingEditor_2);
 		
 		comboNewUserPermit = new Combo(compositeBody, SWT.READ_ONLY);
