@@ -8,7 +8,7 @@
 -->
 
 <!-- 
-  Initialized by sun.han for Altibase(http://www.altibase.com) - March 2016.
+  Initialized by sun.han - March 2016.
 -->
 
 <!DOCTYPE sqlMap      
@@ -106,26 +106,26 @@
                                         'precision', '('||col.precision||')',
                                         '') AS "type", 
            decode(col.is_nullable, 'F', 'NO', 'YES') AS "null", 
-           decode(const.constraint_type, 
-                  0, 'FK',
-	          1, 'UNIQUE',
-	          3, 'PK',
-	          4, 'NULL',
-                  '') AS "key",
+           const.key AS "key",
            col.default_val AS "default",
            ''              AS "extra", 
 	   comm.comments   AS "comment"
     FROM (SELECT /*+index(col, sys_columns_index2) ordered*/ user.user_id, tbl.table_id, col.column_id,
-                 user.user_name, tbl.table_name, col.column_name, col.data_type, col.precision, col.scale, col.is_nullable, col.default_val
+                 user.user_name, tbl.table_name, col.column_name, col.data_type, col.precision, col.scale, col.is_nullable, col.default_val, col.column_order
           FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_columns_ col
-          WHERE user.user_name = #user_name#
-            AND tbl.table_name = #table_name#
+          WHERE user.user_name = #user#
+            AND tbl.table_name = #table#
             AND tbl.user_id = user.user_id
             AND tbl.table_id = col.table_id) col 
          left outer join x$$datatype datatype on col.data_type = datatype.data_type
-         left outer join system_.sys_constraint_columns_ const_col on col.table_id = const_col.table_id and col.column_id = const_col.column_id
-         left outer join system_.sys_constraints_ const on const_col.constraint_id = const.constraint_id
+         left outer join (select a.user_id, a.table_id, b.column_id, group_concat(decode(a.constraint_type, 0, 'FK', 1, 'UNIQUE', 3, 'PK', 4, 'NULL', ''), ', ') AS key
+                          from system_.sys_constraints_ a, 
+                               system_.sys_constraint_columns_ b
+                          where a.constraint_id = b.constraint_id
+                            and a.user_id != 1
+                          group by a.user_id, a.table_id, b.column_id) const on col.column_id = const.column_id
          left outer join system_.sys_comments_ comm on col.user_name = comm.user_name and col.table_name = comm.table_name and col.column_name = comm.column_name
+    ORDER BY col.column_order
 ]]>
 </select>
 
@@ -161,21 +161,24 @@
  -->
 <select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
 <![CDATA[
-	SELECT 
-	    const.constraint_name AS "constraint_name",
-	    user.user_name || '.' || tbl.table_name AS "table_name",
-	    col.column_name AS "column_name",
-	    (SELECT u.user_name || '.' || table_name FROM system_.sys_tables_ t, system_.sys_users_ u WHERE u.user_id = t.user_id AND t.table_id = const.referenced_table_id) AS "referenced_table_name",
-	    (SELECT column_name FROM system_.sys_columns_ WHERE column_id = idx.column_id) AS "referenced_column_name" 
-	FROM system_.sys_users_ user, 
-	     system_.sys_tables_ tbl,
-	     (SELECT * FROM system_.sys_constraint_columns_ a, system_.sys_constraints_ b WHERE a.constraint_id = b.constraint_id) const LEFT OUTER JOIN system_.sys_columns_ col ON const.column_id = col.column_id,
-	     system_.sys_index_columns_ idx
-	WHERE user.user_name <> 'SYSTEM_'
-	  AND user.user_id = tbl.user_id
-	  AND tbl.table_id = col.table_id
-	  AND const.referenced_index_id = idx.index_id
-	ORDER BY tbl.table_name, const.constraint_name
+	SELECT /*+index(const, sys_constraints_index7) index(const_col, sys_constraint_columns_index1) ordered*/
+	       const.constraint_name AS "constraint_name",
+	       user.user_name || '.' || tbl.table_name AS "table_name",
+	       col.column_name AS "column_name",
+	       ref_user.user_name || '.' || ref_tbl.table_name AS "referenced_table_name",
+	       ref_col.column_name AS "referenced_column_name" 
+	FROM system_.sys_constraints_ const, system_.sys_users_ user, system_.sys_constraint_columns_ const_col, system_.sys_columns_ col, 
+	     system_.sys_tables_ tbl, system_.sys_tables_ ref_tbl, system_.sys_users_ ref_user, system_.sys_index_columns_ idx_col, system_.sys_columns_ ref_col
+	WHERE const.constraint_type = 0
+	  AND const.user_id = user.user_id
+	  AND const.constraint_id = const_col.constraint_id
+	  AND const.table_id = tbl.table_id
+	  AND const_col.column_id = col.column_id
+	  AND const.referenced_table_id = ref_tbl.table_id
+	  AND ref_tbl.user_id = ref_user.user_id
+	  AND const.referenced_index_id = idx_col.index_id
+	  AND const_col.constraint_col_order = idx_col.index_col_order
+	  AND idx_col.column_id = ref_col.column_id
 ]]>
 </select>
 	
@@ -184,12 +187,11 @@
  -->
 <select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
 <![CDATA[
-    SELECT user.user_name || '.' || tbl.table_name AS "name"
-    FROM system_.sys_tables_ tbl, system_.sys_users_ user
-    WHERE tbl.table_type='V'
+    SELECT /*+index(tbl, sys_tables_index1) ordered*/ user.user_name || '.' || tbl.table_name AS "name"
+    FROM system_.sys_tables_ tbl, system_.sys_users_ user 
+    WHERE tbl.table_type = 'V'
       AND tbl.user_id = user.user_id
-      AND user.user_name <> 'SYSTEM_'
-    ORDER BY tbl.table_name, user.user_name
+      AND tbl.user_id != 1
 ]]>
 </select>
 	
@@ -198,16 +200,14 @@
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
  <![CDATA[
-    SELECT user.user_name || '.' || tbl.table_name AS "table_name",
+    SELECT /*+index(tbl, sys_tables_index1) ordered*/ user.user_name || '.' || tbl.table_name AS "table_name",
            idx.index_name AS "index_name",
-           CASE2(idx.index_type=1, 'BTREE', idx.index_type=2, 'RTREE') AS "index_type"
-    FROM system_.sys_users_ user,
-         system_.sys_tables_ tbl, 
-         system_.sys_indices_ idx
-    WHERE user.user_id = tbl.user_id 
+           decode(idx.index_type, 1, 'BTREE', 2, 'RTREE', '') AS "index_type"
+    FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_indices_ idx
+    WHERE tbl.table_type = 'T'
+      AND tbl.user_id = user.user_id
+      AND tbl.user_id != 1
       AND tbl.table_id = idx.table_id
-      AND user.user_name <> 'SYSTEM_'
-    ORDER BY table_name, index_name
 ]]>
 </select>
 
@@ -218,10 +218,10 @@
  <![CDATA[
 	SELECT 
 		'def' AS "TABLE_CATALOG", 
-		(SELECT db_name FROM v$$database LIMIT 1) AS "TABLE_SCHEMA",
+		db.db_name AS "TABLE_SCHEMA",
 		tbl.table_name AS "TABLE_NAME", 
 		DECODE(idx.is_unique, 'F', 0, 'T', 1) AS "NON_UNIQUE", 
-		(SELECT db_name FROM v$$database LIMIT 1) AS "INDEX_SCHEMA",
+		db.db_name AS "INDEX_SCHEMA",
 		idx.index_name AS "INDEX_NAME", 
 		idxcol.index_col_order AS "SEQ_IN_INDEX", 
 		col.column_name AS "COLUMN_NAME", 
@@ -237,14 +237,15 @@
 	    system_.sys_tables_ tbl,
 	    system_.sys_indices_ idx,
 	    system_.sys_index_columns_ idxcol,
-	    system_.sys_columns_ col 
+	    system_.sys_columns_ col,
+            x$$membase db
     WHERE
           idxcol.index_id = idx.index_id
       AND idxcol.column_id = col.column_id
       AND tbl.table_id = idx.table_id
       AND user.user_id = tbl.user_id
       AND idx.index_name = #index_name#
-    ORDER BY tbl.table_name, col.column_name
+      AND db.space_id = 0
 ]]>
 </select>
  
@@ -253,7 +254,8 @@
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 <![CDATA[
-	SELECT (SELECT db_name FROM v$$database LIMIT 1) AS "Db", 
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ 
+             db.db_name AS "Db", 
 	     proc.proc_name AS "name", 
 	     'PROCEDURE' AS "Type",
 	     user.user_name AS "Definer",  
@@ -263,12 +265,14 @@
 	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "Comment",
 	     '' AS "character_set_client",
 	     '' AS "collation_connection", 
-	     (SELECT nls_characterset FROM v$$nls_parameters LIMIT 1) AS "Database Collation"
+	     db.nls_characterset AS "Database Collation"
 	FROM system_.sys_procedures_ proc,
-	     system_.sys_users_ user
-	WHERE proc.object_type=0 AND proc.user_id = user.user_id 
-	  AND user.user_name <> 'SYSTEM_'
-	ORDER BY proc.proc_name
+	     system_.sys_users_ user,
+             x$$membase db
+	WHERE proc.object_type = 0 
+          AND proc.user_id = user.user_id 
+	  AND user.user_id != 1
+          AND db.space_id = 0
 ]]>
 </select>
 
@@ -277,7 +281,8 @@
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 <![CDATA[
-	SELECT (SELECT db_name FROM v$$database LIMIT 1) AS "Db", 
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ 
+             db.db_name AS "Db", 
 	     proc.proc_name AS "name", 
 	     'PROCEDURE' AS "Type",
 	     user.user_name AS "Definer",  
@@ -287,13 +292,14 @@
 	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "Comment",
 	     '' AS "character_set_client",
 	     '' AS "collation_connection", 
-	     (SELECT nls_characterset FROM v$$nls_parameters LIMIT 1) AS "Database Collation"
+	     db.nls_characterset AS "Database Collation"
 	FROM system_.sys_procedures_ proc,
-	     system_.sys_users_ user
-	WHERE proc.object_type=1 
-	  AND proc.user_id = user.user_id
-	  AND user.user_name <> 'SYSTEM_'
-	ORDER BY proc.proc_name
+	     system_.sys_users_ user,
+             x$$membase db
+	WHERE proc.object_type = 1 
+          AND proc.user_id = user.user_id 
+	  AND user.user_id != 1
+          AND db.space_id = 0
 ]]>
 </select>
 
@@ -311,33 +317,39 @@
 	       user.user_name AS "definer", 
 	       '' AS "character_set_client",
 	       '' AS "collation_connection",
-	       (SELECT db_name FROM v$$database LIMIT 1)  AS "database",
-	       (SELECT nls_characterset FROM v$$nls_parameters LIMIT 1) AS "collection",
+	       db.db_name AS "database",
+	       db.nls_characterset AS "collection",
 	       DECODE(trig.is_enable,0,'DISABLE','ENABLE')  AS "status"
 	FROM system_.sys_users_ user,
 	     system_.sys_triggers_ trig,
-	     system_.sys_tables_ tbl
+	     system_.sys_tables_ tbl,
+             x$$membase db
 	WHERE user.user_id = trig.user_id
 	  AND trig.table_id = tbl.table_id
+          AND db.space_id = 0
 </select>
 
 <!-- 
 	SESSION LIST
  -->
 <select id="sessionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
-	SELECT 
+	SELECT /*+ordered*/
 	    TO_CHAR(sess.id) AS "id",
 	    user.user_name AS "user",
 	    sess.comm_name AS "host",
-	    (SELECT db_name FROM v$$database LIMIT 1) AS "db", 
+	    db.db_name AS "db", 
 	    sess.client_app_info AS "command",
-	    decode(sess.login_time, 0, '-', to_char(to_date('1970010101', 'yyyymmddhh') + sess.login_time / (1*24*60*60), 'DD-MM-YYYY HH24:MI:SS')) AS "time", 
+	    decode(sess.login_time, 0, '-', to_char(to_date('1970010101', 'YYYYMMDDHH') + sess.login_time / (1*24*60*60), 'DD-MM-YYYY HH24:MI:SS')) AS "time", 
 	    sess.task_state AS "state", 
 	    SUBSTR(stmt.query, 1, 1000) AS "info"
-	FROM system_.sys_users_ user,
-         v$$session sess LEFT OUTER JOIN v$$statement stmt ON sess.current_stmt_id = stmt.id
-	WHERE user.user_id = sess.db_userid
-	ORDER BY sess.id
+	FROM x$$session sess, 
+             x$$statement stmt,
+             system_.sys_users_ user,
+             x$$membase db
+	WHERE sess.current_stmt_id = stmt.id
+          AND sess.id = stmt.session_id
+          AND user.user_id = sess.db_userid
+          AND db.space_id = 0
 </select>
 
 <!-- 
@@ -370,7 +382,7 @@
 	table명을 받아서 pk 컬럼 목록을 리턴한다.
  -->
 <select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
-	SELECT
+	SELECT /*+index(ccol, sys_constraint_columns_index1)*/
 	    col.column_name AS "column_name",
 	    col.column_order AS "column_order"
 	FROM system_.sys_users_ user, 
@@ -385,7 +397,6 @@
 	  AND ccol.column_id = col.column_id
 	  AND user.user_name = '$user_name$'
 	  AND tbl.table_name = '$table_name$'
-	ORDER BY col.column_order
 </select>
 
 
@@ -394,24 +405,47 @@
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 <![CDATA[
-	SELECT 
+ SELECT 
     	tbl.table_name AS "table_name",
     	''             AS "engine", 
-    	info.fixed_used_mem/info.mem_slot_size AS "table_rows",
+    	tbl.table_rows AS "table_rows",
     	''                   AS "auto_increment", 
     	comm.comments        AS "table_comment",
-    	nls.nls_characterset AS "table_collation",
+    	db.nls_characterset AS "table_collation",
     	TO_CHAR(tbl.created, 'DD-MM-YYYY HH24:MI:SS') AS "create_time",
-    	round((mem.fixed_used_mem+mem.var_used_mem)/1024/1024,2) AS "sizeofmb"
-	FROM system_.sys_tables_ tbl LEFT OUTER JOIN system_.sys_comments_ comm ON (comm.column_name is null AND tbl.table_name = comm.table_name), 
-     	  system_.sys_users_ user,
-     	  x$$table_info info,
-     	  v$$nls_parameters nls,
-     	  v$$memtbl_info mem
+    	tbl.sizeofmb AS "sizeofmb"
+FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/
+             tbl.table_id,
+             user.user_name,
+    	     tbl.table_name,
+             info.fixed_used_mem/info.mem_slot_size AS table_rows,
+             tbl.created,
+             round((mem.fixed_used_mem+mem.var_used_mem)/1024/1024,2) AS sizeofmb
+	FROM system_.sys_tables_ tbl,
+             x$$table_info info,
+             v$$memtbl_info mem,
+             system_.sys_users_ user
 	WHERE tbl.user_id = user.user_id
   	  AND tbl.table_oid = info.table_oid
   	  AND tbl.table_oid = mem.table_oid
-	ORDER BY table_name
+       UNION ALL
+       SELECT /*+index(tbl, sys_tables_index1) ordered*/
+             tbl.table_id,
+             user.user_name,
+    	     tbl.table_name,
+             info.disk_page_cnt AS table_rows,
+             tbl.created,
+             round(disk.disk_page_cnt*8/1024,2) AS sizeofmb
+	FROM system_.sys_tables_ tbl,
+             x$$table_info info,
+             v$$disktbl_info disk,
+             system_.sys_users_ user
+	WHERE tbl.user_id = user.user_id
+  	  AND tbl.table_oid = info.table_oid
+  	  AND tbl.table_oid = disk.table_oid) tbl
+      LEFT OUTER JOIN system_.sys_comments_ comm ON (comm.column_name is null AND tbl.user_name = comm.user_name and tbl.table_name = comm.table_name), 
+      x$$membase db
+WHERE db.space_id = 0
 ]]> 
 </select>
 
@@ -420,66 +454,40 @@
  -->
 <select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 <![CDATA[
-	SELECT
-	    user.user_name || '.' || tbl.table_name AS "table_name",
-	    tblcomm.comments AS "table_comm", 
-	    col.column_name AS "column_name",
-	    datatype.type_name || '(' || 
-	      decode(col.precision,
-	        0, decode(col.data_type,
-	           1, col.precision,
-	          12, col.precision,
-	          -8, col.precision, 
-	          -9, col.precision, 
-	          60, col.precision,
-	          61, col.precision,  
-	          datatype.column_size 
-	        )
-	        ,col.precision
-	      ) || ')' AS "data_type"
-	    , decode(col.precision,
-	        0, decode(col.data_type,
-	           1, col.precision,
-	          12, col.precision,
-	          -8, col.precision, 
-	          -9, col.precision, 
-	          60, col.precision,
-	          61, col.precision,  
-	          datatype.column_size 
-	        ), col.precision) AS "PRECISION"
-	    , col.scale AS "SCALE"
-	    ,decode(col.IS_NULLABLE
-	      ,'F', 'NO'
-	      ,'YES'
-	    ) AS "NULLABLE",
-	    DECODE(const.constraint_type, 
-	            0, 'FK',
-	            1, 'UNIQUE',
-	            3, 'PK',
-	            4, 'NULL'
-	    ) AS "KEY",
-	    col.default_val AS "DEFAULT",
-	    '' AS extra, 
-	    '' AS "COMMENT"
-	FROM system_.sys_users_ user,
-	     system_.sys_tables_ tbl LEFT OUTER JOIN system_.sys_comments_ tblcomm on tblcomm.column_name is null AND tbl.table_name = tblcomm.table_name,
-	    system_.sys_columns_ col
-	      LEFT OUTER JOIN 
-	      ( SELECT
-	            *
-	        FROM system_.sys_constraint_columns_ a,
-	             system_.sys_constraints_ b
-	        WHERE b.constraint_type = 3 
-	          AND b.constraint_id = a.constraint_id
-	      ) const
-	      ON col.column_id = const.column_id,
-	    x$$datatype datatype
-	WHERE user.user_id = tbl.user_id
-	  AND tbl.table_id = col.table_id 
-	  AND col.data_type = datatype.data_type
-	  AND user.user_name <> 'SYSTEM_'
-	ORDER BY 
-	    tbl.table_name, col.column_order
+    SELECT col.user_name || '.' || col.table_name AS "table_name",
+           tblcomm.comments AS "table_comm", 
+           col.column_name AS "column_name",
+           datatype.type_name || decode(datatype.create_param, 
+                                        'precision,scale', '('||col.precision||','||col.scale||')',
+                                        'precision', '('||col.precision||')',
+                                        '') AS "data_type", 
+           decode(datatype.create_param, 
+                  'precision,scale', col.precision,
+                  'precision', col.precision,
+                  null) AS "precision", 
+           decode(datatype.create_param, 
+                  'precision,scale', col.scale,
+                  null) AS "scale", 
+           decode(col.is_nullable, 'F', 'NO', 'YES') AS "null", 
+           const.key AS "key",
+           col.default_val AS "default",
+           ''              AS "extra", 
+	   comm.comments   AS "comment"
+    FROM (SELECT /*+index(tbl, sys_tables_index1) index(col, sys_columns_index2) ordered*/ user.user_id, tbl.table_id, col.column_id,
+                 user.user_name, tbl.table_name, col.column_name, col.data_type, col.precision, col.scale, col.is_nullable, col.default_val
+          FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_columns_ col
+          WHERE tbl.user_id = user.user_id
+            AND tbl.table_id = col.table_id
+            AND user.user_id != 1) col 
+         left outer join x$$datatype datatype on col.data_type = datatype.data_type
+         left outer join (select a.user_id, a.table_id, b.column_id, group_concat(decode(a.constraint_type, 0, 'FK', 1, 'UNIQUE', 3, 'PK', 4, 'NULL', ''), ', ') AS key
+                          from system_.sys_constraints_ a, 
+                               system_.sys_constraint_columns_ b
+                          where a.constraint_id = b.constraint_id
+                            and a.user_id != 1
+                          group by a.user_id, a.table_id, b.column_id) const on col.column_id = const.column_id
+         left outer join system_.sys_comments_ tblcomm on col.user_name = tblcomm.user_name and col.table_name = tblcomm.table_name and tblcomm.column_name is null
+         left outer join system_.sys_comments_ comm on col.user_name = comm.user_name and col.table_name = comm.table_name and col.column_name = comm.column_name
 ]]>
 </select>
 
@@ -497,83 +505,65 @@ Altibase does not provide any DDL scripts for tables with a query. - March 2016
 	View DDL Script
  -->
 <select id="getViewScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
-	SELECT v.table_name AS "View", 
-	       vparse.parse AS "Create View", 
+	SELECT /*+index(v, sys_tables_index1) ordered*/ min(user.user_name) || '.' || v.table_name AS "View", 
+	       group_concat(vparse.parse) AS "Create View", 
 	       ''           AS "caracter_set_client", 
 	       ''           AS "collation_connection" 
-	FROM   system_.sys_users_ user, 
-	       system_.sys_tables_ v, 
-	       (SELECT view_id, 
-	               group_concat(parse) parse 
-	        FROM   (SELECT view_id, parse FROM system_.sys_view_parse_ ORDER BY view_id, seq_no) 
-	        GROUP  BY view_id) vparse 
+	FROM   system_.sys_tables_ v, 
+               system_.sys_view_parse_ vparse,
+               system_.sys_users_ user
 	WHERE  USER.user_id = v.user_id 
 	       AND v.table_type = 'V' 
 	       AND v.table_id = vparse.view_id 
 	       AND USER.user_name = '$object_definer$' 
-	       AND v.table_name = '$object_name$' 
+	       AND v.table_name = '$object_name$'
+        GROUP BY v.table_name
 </select>
 
 <!-- 
 	Function DDL Script
  -->
 <select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
-	SELECT proc.proc_name AS "Function", 
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ min(user.user_name) || '.' || proc.proc_name AS "Function", 
 	       ''             AS "sql_mode", 
-	       p.parse        AS "Create Function", 
+	       group_concat(parse.parse) AS "Create Function", 
 	       ''             AS "character_set_client", 
-	       ''             AS "collation_connection", 
-	       (SELECT nls_characterset 
-	        FROM   v$$nls_parameters 
-	        LIMIT  1)     AS "Database Collation" 
-	FROM   (SELECT u.user_name, 
-	               pr.proc_oid, 
-	               pr.proc_name,
-	               pr.object_type
-	        FROM   system_.sys_users_ u, 
-	               system_.sys_procedures_ pr 
-	        WHERE  u.user_id = pr.user_id) proc, 
-	       (SELECT user_id, 
-	               proc_oid, 
-	               group_concat(parse) parse 
-	        FROM   (SELECT user_id, proc_oid, parse FROM system_.sys_proc_parse_ ORDER BY proc_oid, seq_no)  
-	        GROUP  BY user_id, 
-	                  proc_oid) p 
-	WHERE  proc.proc_oid = p.proc_oid 
-	       AND proc.object_type = 1
-	       AND proc.user_name = '$object_definer$' 
-	       AND proc.proc_name = '$object_name$' 
+	       ''             AS "collation_connection",
+               min(db.nls_characterset) AS "Database Collation" 
+	FROM system_.sys_procedures_ proc,
+             system_.sys_users_ user,
+             system_.sys_proc_parse_ parse,
+             x$$membase db
+	WHERE proc.proc_oid = parse.proc_oid 
+          AND proc.user_id = user.user_id
+          AND proc.object_type = 1
+          AND db.space_id = 0
+          AND user.user_name = '$object_definer$' 
+          AND proc.proc_name = '$object_name$' 
+        GROUP BY proc.proc_name
 </select>
 
 <!-- 
 	Procedure DDL Script
  -->
 <select id="getProcedureScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
-	SELECT proc.proc_name AS "Procedure", 
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ min(user.user_name) || '.' || proc.proc_name AS "Procedure", 
 	       ''             AS "sql_mode", 
-	       p.parse        AS "Create Procedure", 
+	       group_concat(parse.parse) AS "Create Procedure", 
 	       ''             AS "character_set_client", 
-	       ''             AS "collation_connection", 
-	       (SELECT nls_characterset 
-	        FROM   v$$nls_parameters 
-	        LIMIT  1)     AS "Database Collation" 
-	FROM   (SELECT u.user_name, 
-	               pr.proc_oid, 
-	               pr.proc_name,
-	               pr.object_type 
-	        FROM   system_.sys_users_ u, 
-	               system_.sys_procedures_ pr 
-	        WHERE  u.user_id = pr.user_id) proc, 
-	       (SELECT user_id, 
-	               proc_oid, 
-	               group_concat(parse) parse 
-	        FROM   (SELECT user_id, proc_oid, parse FROM system_.sys_proc_parse_ ORDER BY proc_oid, seq_no)  
-	        GROUP  BY user_id, 
-	                  proc_oid) p 
-	WHERE  proc.proc_oid = p.proc_oid 
-	       AND proc.object_type = 0
-	       AND proc.user_name = '$object_definer$' 
-	       AND proc.proc_name = '$object_name$' 
+	       ''             AS "collation_connection",
+               min(db.nls_characterset) AS "Database Collation" 
+	FROM system_.sys_procedures_ proc,
+             system_.sys_users_ user,
+             system_.sys_proc_parse_ parse,
+             x$$membase db
+	WHERE proc.proc_oid = parse.proc_oid 
+          AND proc.user_id = user.user_id
+          AND proc.object_type = 0
+          AND db.space_id = 0
+          AND user.user_name = '$object_definer$' 
+          AND proc.proc_name = '$object_name$' 
+        GROUP BY proc.proc_name
 </select>
 
 
@@ -582,103 +572,87 @@ Altibase does not provide any DDL scripts for tables with a query. - March 2016
  -->
 <select id="getTriggerScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 <![CDATA[
-	SELECT trig.trigger_name                              AS "Trigger", 
+	SELECT /*+index(trigstr, sys_trigger_strings_oid_seqno_idx) ordered*/ 
+	       trig.trigger_name                              AS "Trigger", 
 	       ''                                             AS "sql_mode", 
-	       trigstr.substring                              AS 
-	       "SQL Original Statement", 
+	       group_concat(trigstr.substring)                AS "SQL Original Statement", 
 	       ''                                             AS "character_set_client", 
 	       ''                                             AS "collation_connection", 
-	       (SELECT nls_characterset 
-	        FROM   v$$nls_parameters 
-	        LIMIT  1)                                     AS "Database Collation", 
-	       To_char(trig.created, 'DD-MM-YYYY HH24:MI:SS') AS "Created" 
+ 	       min(db.nls_characterset)                       AS "Database Collation", 
+	       To_char(min(trig.created), 'DD-MM-YYYY HH24:MI:SS') AS "Created" 
 	FROM   system_.sys_triggers_ trig, 
-	       (SELECT trigger_oid, 
-	               group_concat(substring) substring 
-	        FROM   (SELECT trigger_oid, 
-	                       substring 
-	                FROM   system_.sys_trigger_strings_ 
-	                ORDER  BY trigger_oid, 
-	                          seqno) 
-	        GROUP  BY trigger_oid) trigstr 
+               system_.sys_trigger_strings_ trigstr,
+               x$$membase db
 	WHERE  trig.trigger_oid = trigstr.trigger_oid 
-	       AND trig.trigger_name = '$object_name$' 
+	   AND trig.trigger_name = '$object_name$' 
+           AND db.space_id = 0
+	GROUP BY trigger_name
 ]]>
 </select>
 
 <select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
 <![CDATA[
-	SELECT param.para_order                     AS "order", 
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/
+               param.para_order                     AS "order", 
 	       param.para_name                      AS "name", 
 	       datatype.type_name                   AS "rdbtype", 
 	       decode(param.inout_type, 0, 'IN', 
 	                                1, 'OUT', 
 	                                2, 'INOUT') AS "type", 
 	       param.precision                      AS "data_length", 
-	       datatype.type_name || '(' || 
-	         decode(param.precision,
-	           0, decode(param.data_type,
-	           1, param.precision,
-	          12, param.precision,
-	          -8, param.precision, 
-	          -9, param.precision, 
-	          60, param.precision,
-	          61, param.precision,  
-	          datatype.column_size 
-	        )
-	        ,param.precision
-	       ) || ')'                     AS "dtd_identifier", 
-	       param.precision              AS "numeric_precision", 
-	       param.scale                  AS "numeric_scale", 
+               datatype.type_name || decode(datatype.create_param, 
+                                            'precision,scale', '('||param.precision||','||param.scale||')',
+                                            'precision', '('||param.precision||')',
+                                            '') AS "dtd_identifier", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.precision,
+                      'precision', param.precision,
+                      null) AS "numeric_precision", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.scale,
+                      null) AS "numeric_scale", 
 	       param.default_val            AS "value" 
-	FROM   system_.sys_users_ user, 
-	       system_.sys_procedures_ proc, 
-	       system_.sys_proc_paras_ param, 
-	       x$$datatype datatype 
+	FROM   system_.sys_procedures_ proc, 
+               system_.sys_users_ user, 
+	       system_.sys_proc_paras_ param left outer join x$datatype datatype on param.data_type = datatype.data_type 
 	WHERE  USER.user_id = PROC.user_id 
 	       AND PROC.proc_oid = param.proc_oid 
-	       AND param.data_type = datatype.data_type 
 	       AND (param.inout_type = 0 OR param.inout_type = 2)
 	       AND USER.user_name = '$user_name$' 
-	       AND PROC.proc_name = '$proc_name$' 
+	       AND PROC.proc_name = '$proc_name$'
 ]]>
 </select> 
    
 <select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 <![CDATA[
-	SELECT param.para_order                     AS "order", 
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/
+               param.para_order                     AS "order", 
 	       param.para_name                      AS "name", 
 	       datatype.type_name                   AS "rdbtype", 
 	       decode(param.inout_type, 0, 'IN', 
 	                                1, 'OUT', 
 	                                2, 'INOUT') AS "type", 
 	       param.precision                      AS "data_length", 
-	       datatype.type_name || '(' || 
-	         decode(param.precision,
-	           0, decode(param.data_type,
-	           1, param.precision,
-	          12, param.precision,
-	          -8, param.precision, 
-	          -9, param.precision, 
-	          60, param.precision,
-	          61, param.precision,  
-	          datatype.column_size 
-	        )
-	        ,param.precision
-	       ) || ')'                     AS "dtd_identifier", 
-	       param.precision              AS "numeric_precision", 
-	       param.scale                  AS "numeric_scale", 
+               datatype.type_name || decode(datatype.create_param, 
+                                            'precision,scale', '('||param.precision||','||param.scale||')',
+                                            'precision', '('||param.precision||')',
+                                            '') AS "dtd_identifier", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.precision,
+                      'precision', param.precision,
+                      null) AS "numeric_precision", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.scale,
+                      null) AS "numeric_scale", 
 	       param.default_val            AS "value" 
-	FROM   system_.sys_users_ user, 
-	       system_.sys_procedures_ proc, 
-	       system_.sys_proc_paras_ param, 
-	       x$$datatype datatype 
+	FROM   system_.sys_procedures_ proc, 
+               system_.sys_users_ user, 
+	       system_.sys_proc_paras_ param left outer join x$datatype datatype on param.data_type = datatype.data_type 
 	WHERE  USER.user_id = PROC.user_id 
 	       AND PROC.proc_oid = param.proc_oid 
-	       AND param.data_type = datatype.data_type 
 	       AND (param.inout_type = 1 OR param.inout_type = 2)
 	       AND USER.user_name = '$user_name$' 
-	       AND PROC.proc_name = '$proc_name$' 
+	       AND PROC.proc_name = '$proc_name$'
 ]]>
 </select>    
 </sqlMap>

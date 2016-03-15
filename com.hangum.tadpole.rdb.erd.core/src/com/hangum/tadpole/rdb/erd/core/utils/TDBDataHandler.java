@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -38,11 +40,15 @@ public class TDBDataHandler {
 	 */
 	public static List<TableColumnDAO> getColumns(final UserDBDAO userDB, final TableDAO table) throws Exception {
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("db", userDB.getDb());
-		param.put("schema", table.getSchema_name());
+		
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			param.put("db", userDB.getDb());
 			param.put("table", table.getSysName());
+		} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			param.put("user", StringUtils.substringBefore(table.getName(), "."));
+			param.put("table", StringUtils.substringAfter(table.getName(), "."));
 		} else {
+			param.put("db", userDB.getDb());
 			param.put("table", table.getName());
 		}
 
