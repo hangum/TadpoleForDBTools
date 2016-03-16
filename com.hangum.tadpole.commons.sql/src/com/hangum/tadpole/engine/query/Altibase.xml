@@ -118,7 +118,10 @@
             AND tbl.user_id = user.user_id
             AND tbl.table_id = col.table_id) col 
          left outer join x$$datatype datatype on col.data_type = datatype.data_type
-         left outer join (select a.user_id, a.table_id, b.column_id, group_concat(decode(a.constraint_type, 0, 'FK', 1, 'UNIQUE', 3, 'PK', 4, 'NULL', ''), ', ') AS key
+         left outer join (select a.user_id, 
+                                 a.table_id, 
+                                 b.column_id, 
+                                 case2(count(a.constraint_type) > 1, 'MUL', group_concat(decode(a.constraint_type, 0, 'FK', 1, 'UNIQUE', 3, 'PK', 4, 'NULL', ''))) AS key
                           from system_.sys_constraints_ a, 
                                system_.sys_constraint_columns_ b
                           where a.constraint_id = b.constraint_id

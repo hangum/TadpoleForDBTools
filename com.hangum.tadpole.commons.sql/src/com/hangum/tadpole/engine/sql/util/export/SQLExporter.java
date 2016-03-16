@@ -95,7 +95,7 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + PublicTadpoleDefine.DIR_SEPARATOR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
 		

@@ -15,6 +15,8 @@ import java.io.File;
 import org.zeroturnaround.zip.NameMapper;
 import org.zeroturnaround.zip.ZipUtil;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * zip file
  * 
@@ -40,7 +42,7 @@ public class ZipUtils {
 	 * @throws Exception
 	 */
 	public static String pack(String base_dir, String zipFile) throws Exception {
-		String zipFullPath = System.getProperty("java.io.tmpdir") + zipFile + ".zip";
+		String zipFullPath = System.getProperty("java.io.tmpdir") + PublicTadpoleDefine.DIR_SEPARATOR + zipFile + ".zip";
 		ZipUtil.pack(new File(base_dir), new File(zipFullPath), new NameMapper() {
 			public String map(String name) {
 				return "/" + name;

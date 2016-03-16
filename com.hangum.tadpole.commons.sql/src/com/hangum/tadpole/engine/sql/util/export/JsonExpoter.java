@@ -67,7 +67,7 @@ public class JsonExpoter extends AbstractTDBExporter {
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
 		String strContent = makeContent(tableName, rsDAO);
 		
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + PublicTadpoleDefine.DIR_SEPARATOR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".json";
 		String strFullPath = strTmpDir + strFile;
 		

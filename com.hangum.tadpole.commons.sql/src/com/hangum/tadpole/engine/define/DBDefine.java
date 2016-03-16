@@ -257,6 +257,8 @@ public enum DBDefine {
 			extension += "tajo"; //$NON-NLS-1$
 		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
 			extension += "altibase";
+		} else if(this == DBDefine.MONGODB_DEFAULT) {
+			extension += "mongo";
 		} else {
 			extension += "sql"; //$NON-NLS-1$
 		}

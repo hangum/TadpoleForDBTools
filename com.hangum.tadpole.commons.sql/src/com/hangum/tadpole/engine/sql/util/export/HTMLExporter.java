@@ -88,7 +88,7 @@ public class HTMLExporter extends AbstractTDBExporter {
 	 */
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
 		// full text
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + PublicTadpoleDefine.DIR_SEPARATOR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".html";
 		String strFullPath = strTmpDir + strFile;
 		

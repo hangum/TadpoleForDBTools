@@ -41,7 +41,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeCSVFile(String tableName, QueryExecuteResultDTO rsDAO, char seprator) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + PublicTadpoleDefine.DIR_SEPARATOR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
 		
