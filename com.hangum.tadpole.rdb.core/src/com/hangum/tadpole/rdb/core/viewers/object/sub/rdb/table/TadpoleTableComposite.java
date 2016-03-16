@@ -650,7 +650,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								Throwable cause = throwable.getCause().getCause();
 								if(cause instanceof ClassNotFoundException) {
 									// admin 이 드라이버를 업로드 해야한다.
-									String msg = String.format(Messages.get().TadpoleTableComposite_driverMsg, throwable.getMessage());
+									String msg = String.format(Messages.get().TadpoleTableComposite_driverMsg, userDB.getDbms_type(), throwable.getMessage());
 									MessageDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_Drivernotfound, msg);
 									
 								} else {
