@@ -127,9 +127,15 @@ public class DBSystemSchema {
 		List<TableColumnDAO> showViewColumns = new ArrayList<TableColumnDAO>();
 		
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("db", userDB.getDb()); //$NON-NLS-1$
-		param.put("schema", tableDao.getSchema_name()); //$NON-NLS-1$
-		param.put("table", tableDao.getName()); //$NON-NLS-1$
+		if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+			param.put("user", StringUtils.substringBefore(tableDao.getName(), "."));
+			param.put("table", StringUtils.substringAfter(tableDao.getName(), "."));
+		} else {
+			param.put("db", userDB.getDb()); //$NON-NLS-1$
+			param.put("schema", tableDao.getSchema_name()); //$NON-NLS-1$
+			param.put("table", tableDao.getName()); //$NON-NLS-1$
+		}
+
 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		showViewColumns = sqlClient.queryForList("tableColumnList", param); //$NON-NLS-1$
