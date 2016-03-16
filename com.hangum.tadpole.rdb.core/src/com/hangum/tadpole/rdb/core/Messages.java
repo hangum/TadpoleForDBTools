@@ -834,6 +834,10 @@ public class Messages {
 	public String SQLTemplateView_del_equestion;
 	public String SQLTemplateView_Person;
 	public String SQLTemplateView_PUBLIC_Person;
+
+	public String TadpoleTableComposite_Drivernotfound;
+
+	public String TadpoleTableComposite_driverMsg;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
