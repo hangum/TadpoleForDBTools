@@ -341,6 +341,8 @@ public enum DBDefine {
 	public static List<DBDefine> getDriver() {
 		List<DBDefine> listSupportDb = userDBValues();
 		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
+		listSupportDb.remove(DBDefine.TAJO_DEFAULT);
+		listSupportDb.remove(DBDefine.HIVE_DEFAULT);
 		return listSupportDb;
 	}
 	

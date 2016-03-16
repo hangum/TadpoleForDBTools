@@ -42,11 +42,14 @@ public class ConnectionPoolManager {
 		}
 	}
 	
-	public static ConnectionPoolManager instance = new ConnectionPoolManager();
+	public static ConnectionPoolManager instance = null;//new ConnectionPoolManager();
 	private static Map<String, DataSource> mapDataSource = new HashMap<String, DataSource>();
 	private ConnectionPoolManager() {}
 	
 	public static ConnectionPoolManager getInstance(final UserDBDAO userDB) {
+		if(instance == null) {
+			instance = new ConnectionPoolManager();
+		}
 		return instance;
 	}
 	

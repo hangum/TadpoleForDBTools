@@ -379,7 +379,7 @@ public class TableDirectEditorComposite extends Composite {
 		for(int i=0 ; i<tmpTableColumns.size(); i++) {
 			TableColumnDAO tabledao = tmpTableColumns.get(i);
 			requestQuery += tabledao.getName();
-			if(i < (columnList.size()-1)) requestQuery += ","; //$NON-NLS-1$
+			if(i < (tmpTableColumns.size()-1)) requestQuery += ","; //$NON-NLS-1$
 		}
 		
 		requestQuery += " FROM " + tableDao.getSysName(); //$NON-NLS-1$
