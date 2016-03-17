@@ -468,7 +468,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							if(!isDDLLock()) {
 								manager.add(creatAction_Table);
 								manager.add(separator);
-								manager.add(renameAction_Table);
+								if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+									manager.add(renameAction_Table);
+								}
 								manager.add(dropAction_Table);
 								manager.add(separator);
 								if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
@@ -496,8 +498,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							if(!isUpdateLock()) manager.add(updateStmtAction);
 							if(!isDeleteLock()) manager.add(deleteStmtAction);
 							
-							manager.add(separator);
-							manager.add(viewDDLAction);
+							if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+								manager.add(separator);
+								manager.add(viewDDLAction);
+							}
 							if(!(isInsertLock() | isUpdateLock() | isDeleteLock())) {
 								manager.add(separator);
 								manager.add(tableDataEditorAction);

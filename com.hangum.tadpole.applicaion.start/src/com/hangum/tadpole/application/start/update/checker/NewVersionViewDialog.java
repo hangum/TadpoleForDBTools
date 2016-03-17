@@ -23,8 +23,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.application.start.Messages;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * new version view diloag
@@ -34,6 +39,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
  */
 public class NewVersionViewDialog extends TitleAreaDialog {
 	private NewVersionObject newVersionObj;
+	private Button btnDonotShow;
 
 	/**
 	 * Create the dialog.
@@ -94,8 +100,27 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 		Label lblDownloadurlvalue = new Label(container, SWT.NONE);
 		lblDownloadurlvalue.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblDownloadurlvalue.setText(String.format(Messages.get().NewVersionViewDialog_6, newVersionObj.getDownloadUrl())); //$NON-NLS-1$
+		new Label(container, SWT.NONE);
+		
+		btnDonotShow = new Button(container, SWT.CHECK);
+		btnDonotShow.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_UPDATE_CHECK, ""+btnDonotShow.getSelection());
+			}
+		});
+		btnDonotShow.setText(Messages.get().NewVersionViewDialog_DoesnotCheck);
+		
+		initUI();
 		
 		return area;
+	}
+	
+	/**
+	 * Initialize UI
+	 */
+	private void initUI() {
+		btnDonotShow.setSelection(CookieUtils.isUpdateChecker());
 	}
 
 	/**
@@ -112,6 +137,6 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(502, 270);
+		return new Point(502, 290);
 	}
 }

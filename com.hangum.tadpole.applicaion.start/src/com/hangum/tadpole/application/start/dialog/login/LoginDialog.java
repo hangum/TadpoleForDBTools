@@ -49,6 +49,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -321,61 +322,16 @@ public class LoginDialog extends Dialog {
 	 */
 	private void registLoginID(String userId, String userPwd) {
 		if(!btnCheckButton.getSelection()) {
-			deleteCookie();
+			CookieUtils.deleteLoginCookie();
 			return;
 		}
 		
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
 	}
 	
-	private void deleteCookie() {
-		try {
-			HttpServletResponse response = RWT.getResponse();
-			HttpServletRequest request = RWT.getRequest();
-			Cookie[] cookies = request.getCookies();
-			for (Cookie cookie : cookies) {
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-			}
-
-		} catch(Exception e) {
-			logger.error("regist user info", e);
-		}
-	}
-	
-	private void saveCookie(String key, String value) {
-		try {
-			HttpServletResponse response = RWT.getResponse();
-			Cookie tdbCookie = new Cookie(key, value);
-			tdbCookie.setMaxAge(60 * 60 * 24 * 365);
-			tdbCookie.setPath(PublicTadpoleDefine._cookiePath);
-			response.addCookie(tdbCookie);
-		} catch(Exception e) {
-			logger.error("regist user info", e);
-		}
-	}
-		
 	@Override
 	public boolean close() {
 		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)
@@ -476,6 +432,7 @@ public class LoginDialog extends Dialog {
 	private void initCookieData() {
 		HttpServletRequest request = RWT.getRequest();
 		Cookie[] cookies = request.getCookies();
+		
 		if(cookies != null) {
 			int intCount = 0;
 			for (Cookie cookie : cookies) {				

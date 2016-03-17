@@ -130,6 +130,7 @@ public class Messages {
 	public String NewVersionViewDialog_8;
 	public String NewVersionViewDialog_9;
 	public String NewVersionViewDialog_NewVersion;
+	public String NewVersionViewDialog_DoesnotCheck;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

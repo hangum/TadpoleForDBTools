@@ -43,9 +43,10 @@ public class PublicTadpoleDefine {
 	
 	/** default system encrypt password */
 	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
-	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.me.son";
+	public static final String SYSTEM_DEFAULT_PASSWORD = "Heeseong.2me.son";
 	
 	/** COOKIE USER ID */
+	public static final String TDB_COOKIE_UPDATE_CHECK = "TDB_COOKIE_UPDATE_CHECK";
 	public static final String TDB_COOKIE_USER_ID = "TDB_USER_ID";
 	public static final String TDB_COOKIE_USER_PWD = "TDB_USER_PWD";
 	public static final String TDB_COOKIE_USER_SAVE_CKECK = "TDB_USER_SAVE_CHECK";
@@ -77,8 +78,12 @@ public class PublicTadpoleDefine {
 	/** DIR SEPARATOR */
 	public static char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
 	
-	/** temmp dir */
-	public static String TEMP_DIR = System.getProperty("java.io.tmpdir");
+	/** temmp dir 
+		임시 디렉토리 생성에 오류 있음. 확인 필요.
+		java.io.IOException: Directory '/tmpTempTable1458208430419' could not be created 오류 발생.
+		환경 설정에 문제인지(prefix 혹은 디렉토리 미지정).. 아니면 코드상의 오류(DIRECTORY-SEPERATOR 가 빠진 문제)인지 확인 필요
+	*/
+	public static String TEMP_DIR = System.getProperty("java.io.tmpdir") + PublicTadpoleDefine.DIR_SEPARATOR;
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$

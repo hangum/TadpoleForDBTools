@@ -838,6 +838,8 @@ public class Messages {
 	public String TadpoleTableComposite_Drivernotfound;
 
 	public String TadpoleTableComposite_driverMsg;
+
+	public String MainEditor_DoesnotSupport;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

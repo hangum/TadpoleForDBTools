@@ -176,9 +176,10 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 				
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(viewDDLAction);
-				
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				manager.add(executeAction_Procedure);
+				if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+					manager.add(executeAction_Procedure);
+				}
 				
 				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));

@@ -137,6 +137,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						TableDAO table = new TableDAO();
 						table.setSchema_name(schemaName);
 						table.setName(tableName);
+						table.setSysName(tableName);
 						mapTable.put(tableName, TDBDataHandler.getColumns(userDB, table));
 					}
 					

@@ -37,6 +37,7 @@ import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
 import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
@@ -105,12 +106,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * new version checker
      */
     private void newVersionChecker() {
-    	boolean isNew = NewVersionChecker.getInstance().check();
-    	if(isNew) {
-    		NewVersionObject newVersionObj = NewVersionChecker.getInstance().getNewVersionObj();
-    		NewVersionViewDialog dialog = new NewVersionViewDialog(null, newVersionObj);
-    		dialog.open();
-    	}
+		if(!CookieUtils.isUpdateChecker()) {
+	    	boolean isNew = NewVersionChecker.getInstance().check();
+	    	if(isNew) {
+	    		NewVersionObject newVersionObj = NewVersionChecker.getInstance().getNewVersionObj();
+	    		NewVersionViewDialog dialog = new NewVersionViewDialog(null, newVersionObj);
+	    		dialog.open();
+    		}	// is nuew
+    	}	// is update checker
     }
     
     @Override
@@ -122,8 +125,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     	
     	// fullscreen
 //    	getWindowConfigurer().getWindow().getShell().setMaximized(true);
-    	
-//    	
 //    	
 //    	 쪽지 기능의 역할에 비해 리소스를 너무 많이 먹는 것으로 판단되어 기능을 막습니다.
 //    	더 의미를 찾을때까지요. - 14.08.25
