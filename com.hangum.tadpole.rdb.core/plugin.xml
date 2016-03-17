@@ -30,7 +30,7 @@
             class="com.hangum.tadpole.rdb.core.viewers.sql.template.SQLTemplateView"
             icon="resources/icons/template/templates.png"
             id="com.hangum.tadpole.rdb.core.view.sql.template"
-            name="SQL Template"
+            name="%view.name.SQLTemplate"
             restorable="true">
       </view>
    </extension>
