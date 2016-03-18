@@ -83,7 +83,7 @@ public class SessionListAction implements IViewActionDelegate {
 //				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 //			}
 		} else {
-			MessageDialog.openWarning(null, "Information", "Not support database.");
+			MessageDialog.openWarning(null, Messages.get().Information, Messages.get().NotSupportDatabase);
 		}
 	}
 

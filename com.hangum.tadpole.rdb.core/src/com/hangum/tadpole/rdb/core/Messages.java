@@ -836,14 +836,60 @@ public class Messages {
 	public String SQLTemplateView_PUBLIC_Person;
 
 	public String TadpoleTableComposite_Drivernotfound;
-
 	public String TadpoleTableComposite_driverMsg;
-
-	public String MainEditor_DoesnotSupport;
 	
-	// static {
-	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	// }
+	public String MainEditor_DoesnotSupport;
+	public String SQLTemplateView_Refresh;
+	public String SQLTemplateView_Add;
+	public String SQLTemplateView_Modify;
+	public String SQLTemplateView_Confirm;
+
+	public String SQLTemplateView_Delete;
+
+	public String SQLTemplateView_Addpublictemplate;
+
+	public String SQLTemplateView_Group;
+
+	public String SQLTemplateView_Name;
+
+	public String SQLTemplateView_Description;
+
+	public String SQLTemplateView_SQL;
+
+	public String SQLTemplate;
+
+	public String JDBCDriverSetting;
+
+	public String JDBCDriverSetting_DriverList;
+
+	public String JDBCDriverSetting_Path;
+
+	public String JDBCDriverSetting_FileList;
+
+	public String Confirm;
+
+	public String JDBCDriverSetting_deleteMsg;
+
+	public String Error;
+
+	public String JDBCDriverSetting_Delete;
+
+	public String JDBCDriverSetting_JARUpload;
+
+	public String Refresh;
+
+	public String Close;
+
+	public String DoYouWnatDownload;
+
+	public String DatabaseInformation;
+
+	public String DriverInformation;
+
+	public String Information;
+
+	public String NotSupportDatabase;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

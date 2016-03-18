@@ -14,7 +14,6 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -73,6 +72,7 @@ public class LoginDialog extends Dialog {
 	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
 	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
+	private Label lblLoginForm;
 	private Composite compositeLogin;
 	private Label lblEmail;
 	
@@ -125,12 +125,13 @@ public class LoginDialog extends Dialog {
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		compositeHead.setLayout(new GridLayout(1, false));
 		
-		Label lblLoginForm = new Label(compositeHead, SWT.NONE);
+		lblLoginForm = new Label(compositeHead, SWT.NONE);
+		lblLoginForm.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblLoginForm.setFont(SWTResourceManager.getFont(".SF NS Text", 15, SWT.NONE));
-		lblLoginForm.setText("Welcome to the Tadpole DB Hub");
+		lblLoginForm.setText(Messages.get().LoginDialog_WelcomeMsg);
 		
 		lblLabelLblhangum = new Label(compositeHead, SWT.NONE);
-		lblLabelLblhangum.setText("             Project release by hangum");
+//		lblLabelLblhangum.setText(Messages.get().LoginDialog_ProjectRelease);
 		
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
@@ -464,6 +465,9 @@ public class LoginDialog extends Dialog {
 	private void changeUILocale(String strComoboStr) {
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
 		RWT.getUISession().setLocale(localeSelect);
+		
+		lblLoginForm.setText(Messages.get().LoginDialog_WelcomeMsg);
+//		lblLabelLblhangum.setText(Messages.get().LoginDialog_ProjectRelease);
 		
 		btnLogin.setText(Messages.get().LoginDialog_15);
 		

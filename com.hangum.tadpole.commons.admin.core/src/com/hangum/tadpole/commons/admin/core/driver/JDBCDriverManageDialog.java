@@ -83,7 +83,7 @@ public class JDBCDriverManageDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("JDBC Driver setting");
+		newShell.setText(Messages.get().JDBCDriverSetting);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class JDBCDriverManageDialog extends Dialog {
 		compositeLeft.setLayout(new GridLayout(1, false));
 		
 		Label lblDriverList = new Label(compositeLeft, SWT.NONE);
-		lblDriverList.setText("Driver List");
+		lblDriverList.setText(Messages.get().JDBCDriverSetting_DriverList);
 		
 		lvDB = new ListViewer(compositeLeft, SWT.BORDER | SWT.V_SCROLL);
 		lvDB.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -140,13 +140,13 @@ public class JDBCDriverManageDialog extends Dialog {
 		lblDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
 		Label lblPath = new Label(compositeBody, SWT.NONE);
-		lblPath.setText("Path");
+		lblPath.setText(Messages.get().JDBCDriverSetting_Path);
 		
 		lblRealFullPath = new Label(compositeBody, SWT.NONE);
 		lblRealFullPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblFileList = new Label(compositeBody, SWT.NONE);
-		lblFileList.setText("File List");
+		lblFileList.setText(Messages.get().JDBCDriverSetting_FileList);
 		new Label(compositeBody, SWT.NONE);
 		new Label(compositeBody, SWT.NONE);
 		
@@ -180,7 +180,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				if(ss.isEmpty()) return;
 				
 				String strFile = (String)ss.getFirstElement();
-				if(!MessageDialog.openConfirm(getShell(), "Confirm", "Do you want to delete?")) return;
+				if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().JDBCDriverSetting_deleteMsg)) return;
 				if(logger.isDebugEnabled()) logger.debug("File delete : " + jdbc_dir + strFile);
 				
 				try {
@@ -189,18 +189,18 @@ public class JDBCDriverManageDialog extends Dialog {
 					initDBFileList();
 				} catch (IOException e1) {
 					logger.error("File delete", e1);
-					MessageDialog.openError(getShell(), "Error", "File deleteing: " + e1.getMessage());
+					MessageDialog.openError(getShell(), Messages.get().Error, "File deleteing: " + e1.getMessage());
 				}
 				
 			}
 		});
-		btnDelete.setText("Delete");
+		btnDelete.setText(Messages.get().JDBCDriverSetting_Delete);
 		
 		final String url = startUploadReceiver();
 		pushSession = new ServerPushSession();
 		
 		fileUpload = new FileUpload(compositeBodyBtn, SWT.NONE);
-		fileUpload.setText("JAR Upload");
+		fileUpload.setText(Messages.get().JDBCDriverSetting_JARUpload);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -209,7 +209,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				if(!MessageDialog.openConfirm(null, Messages.get().SQLiteLoginComposite_16, Messages.get().SQLiteLoginComposite_17)) return;
 				
-				logger.debug("=[file name]==> " + fileName);
+				if(logger.isDebugEnabled()) logger.debug("=[file name]==> " + fileName);
 				
 				pushSession.start();
 				fileUpload.submit(url);
@@ -223,7 +223,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				initDBFileList();
 			}
 		});
-		btnRefresh.setText("Refresh");
+		btnRefresh.setText(Messages.get().Refresh);
 		
 		sashForm.setWeights(new int[] {3, 7});
 		initManager();
@@ -311,7 +311,7 @@ public class JDBCDriverManageDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Close", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
 
 	/**

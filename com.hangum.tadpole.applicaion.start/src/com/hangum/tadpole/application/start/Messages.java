@@ -120,6 +120,8 @@ public class Messages {
 	public String UserInformationDialog_label_text;
 	public String LoginDialog_lblDonation_text;
 	public String LoginDialog_lblLanguage_text;
+	public String LoginDialog_WelcomeMsg;
+	public String LoginDialog_ProjectRelease;
 	
 	public String NewVersionViewDialog_0;
 	public String NewVersionViewDialog_1;
