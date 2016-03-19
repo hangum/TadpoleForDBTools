@@ -776,9 +776,9 @@ public class MainEditor extends EditorExtension {
 					setDirty(false);
 				}
 				return true;
-			} catch (Exception e) {			logger.error("update file", e); //$NON-NLS-1$
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			} catch (Exception e) {
+				logger.error("Autosave exception", e);
+				// igoner error message
 				
 				return false;
 			}
