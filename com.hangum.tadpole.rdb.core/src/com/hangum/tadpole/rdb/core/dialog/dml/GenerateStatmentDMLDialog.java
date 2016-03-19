@@ -131,7 +131,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		lblTableName = new Label(compositeTable, SWT.NONE);
 		lblTableName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTableName.setText(SQLUtil.getTableName(tableDAO));
+		lblTableName.setText(SQLUtil.getTableName(userDB, tableDAO));
 
 		Label lblAs = new Label(compositeTable, SWT.NONE);
 		lblAs.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -371,7 +371,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		if(StringUtils.isEmpty(StringUtils.trim(sbColumn.toString()))) sbColumn.append(" * " ); //$NON-NLS-1$
 		
 		resultSQL.append(sbColumn.toString());
-		resultSQL.append(" FROM " + SQLUtil.getTableName(tableDAO) + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append(" FROM " + SQLUtil.getTableName(userDB, tableDAO) + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 		cnt = 0;
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
@@ -402,7 +402,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("UPDATE " + SQLUtil.getTableName(tableDAO) + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append("UPDATE " + SQLUtil.getTableName(userDB, tableDAO) + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
@@ -464,7 +464,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("INSERT INTO " + SQLUtil.getTableName(tableDAO) + " ( " ); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append("INSERT INTO " + SQLUtil.getTableName(userDB, tableDAO) + " ( " ); //$NON-NLS-1$ //$NON-NLS-2$
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
@@ -531,7 +531,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("DELETE FROM  " + SQLUtil.getTableName(tableDAO)); //$NON-NLS-1$
+		resultSQL.append("DELETE FROM  " + SQLUtil.getTableName(userDB, tableDAO)); //$NON-NLS-1$
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
 

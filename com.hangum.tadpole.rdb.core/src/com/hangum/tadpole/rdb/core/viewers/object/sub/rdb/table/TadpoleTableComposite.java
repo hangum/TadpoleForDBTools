@@ -341,7 +341,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new TableDragListener(userDB, tableListViewer));
 
 		// filter
-		tableFilter = new TableFilter();
+		tableFilter = new TableFilter(userDB);
 		tableListViewer.addFilter(tableFilter);
 		
 		createTableMenu();

@@ -65,7 +65,7 @@ public class GenerateDDLScriptUtils {
 			
 			
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "FROM "); //$NON-NLS-1$ 
-			sbSQL.append(SQLUtil.getTableName(tableDAO));//tableDAO.getSchema_name() + "." + tableDAO.getSysName()); //$NON-NLS-2$
+			sbSQL.append(SQLUtil.getTableName(userDB, tableDAO));
 			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 			
 		} catch(Exception e) {

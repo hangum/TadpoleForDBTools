@@ -54,7 +54,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 			TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 			
 			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
-			sbSQL.append("UPDATE " + SQLUtil.getTableName(tableDAO) + PublicTadpoleDefine.LINE_SEPARATOR + "\tSET "); //$NON-NLS-1$ //$NON-NLS-2$
+			sbSQL.append("UPDATE " + SQLUtil.getTableName(userDB, tableDAO) + PublicTadpoleDefine.LINE_SEPARATOR + "\tSET "); //$NON-NLS-1$ //$NON-NLS-2$
 			for (int i=0; i<showTableColumns.size(); i++) {
 				TableColumnDAO dao = showTableColumns.get(i);
 				sbSQL.append(dao.getSysName());

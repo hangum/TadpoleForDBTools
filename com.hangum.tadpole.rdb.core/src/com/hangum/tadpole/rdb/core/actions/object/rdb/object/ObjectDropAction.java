@@ -71,7 +71,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, Messages.get().ObjectDeleteAction_3)) {
 					for(Object selObjec : selection.toList()) {
 						TableDAO selTableDao = (TableDAO)selObjec;
-						String strSQL = "drop table " + SQLUtil.getTableName(selTableDao);// dao.getSysName(); //$NON-NLS-1$
+						String strSQL = "drop table " + SQLUtil.getTableName(userDB, selTableDao);// dao.getSysName(); //$NON-NLS-1$
 						try {
 							if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 								new TajoConnectionManager().executeUpdate(userDB, strSQL);

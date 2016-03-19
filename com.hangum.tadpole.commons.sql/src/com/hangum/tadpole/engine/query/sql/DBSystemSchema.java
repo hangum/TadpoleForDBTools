@@ -211,8 +211,7 @@ public class DBSystemSchema {
 	public static List<TriggerDAO> getTrigger(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.SQLite_DEFAULT 
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
 		) return new ArrayList<TriggerDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

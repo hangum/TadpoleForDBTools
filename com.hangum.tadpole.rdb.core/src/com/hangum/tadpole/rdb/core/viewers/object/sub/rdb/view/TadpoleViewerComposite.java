@@ -229,7 +229,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewListViewer.setContentProvider(new ArrayContentProvider());
 		viewListViewer.setInput(showViews);
 		
-		viewFilter = new TableFilter();
+		viewFilter = new TableFilter(userDB);
 		viewListViewer.addFilter(viewFilter);
 
 		createMenu();

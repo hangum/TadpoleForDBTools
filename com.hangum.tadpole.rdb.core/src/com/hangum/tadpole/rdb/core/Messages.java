@@ -889,6 +889,12 @@ public class Messages {
 	public String Information;
 
 	public String NotSupportDatabase;
+
+	public String ExecuteQuery;
+
+	public String OK;
+
+	public String CANCEL;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

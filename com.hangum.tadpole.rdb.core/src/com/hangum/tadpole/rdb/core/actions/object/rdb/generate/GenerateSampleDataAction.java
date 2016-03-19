@@ -47,7 +47,7 @@ public class GenerateSampleDataAction extends AbstractObjectSelectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tableDao = (TableDAO)selection.getFirstElement();
 		
-		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(getWindow().getShell(), userDB, SQLUtil.getTableName(tableDao));
+		SampleDataGenerateDialog dialog = new SampleDataGenerateDialog(getWindow().getShell(), userDB, SQLUtil.getTableName(userDB, tableDao));
 		dialog.open();
 	}
 }

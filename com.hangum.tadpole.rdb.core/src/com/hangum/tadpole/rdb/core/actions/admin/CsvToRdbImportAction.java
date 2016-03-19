@@ -44,7 +44,7 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
 		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.get().MainEditor_DoesnotSupport);
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_DoesnotSupport);
 		} else {
 			boolean isPossible = false;
 			if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
@@ -56,7 +56,7 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 				CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 				dialog.open();
 			} else {
-				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.get().MainEditor_21);
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_21);
 			}
 		}
 	}

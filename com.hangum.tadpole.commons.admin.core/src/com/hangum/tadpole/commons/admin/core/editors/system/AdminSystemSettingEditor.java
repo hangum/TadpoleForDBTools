@@ -34,7 +34,9 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.driver.JDBCDriverManageDialog;
+import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditor;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
@@ -129,6 +131,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 //		compositeTail.setLayout(new GridLayout(1, false));
 		
 		initUI();
+		
+		AnalyticCaller.track(ID);
 	}
 
 	/**

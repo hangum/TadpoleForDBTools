@@ -763,20 +763,28 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private boolean updateAutoResourceDate(String newContents) {
-		if(logger.isDebugEnabled()) logger.debug("====> called updateAutoResourceDate ");
 		
-		try {
-			dBResourceAuto = TadpoleSystem_UserDBResource.updateAutoResourceDate(getUserDB(), dBResourceAuto, dBResource, newContents);
-			if(dBResource != null) {
-				setDirty(false);
-			}
-			return true;
-		} catch (Exception e) {			logger.error("update file", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+		// table, view만 auto save 된다.
+		if(dbAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES | 
+				dbAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+				
+			if(logger.isDebugEnabled()) logger.debug("====> called updateAutoResourceDate ");
 			
-			return false;
+			try {
+				dBResourceAuto = TadpoleSystem_UserDBResource.updateAutoResourceDate(getUserDB(), dBResourceAuto, dBResource, newContents);
+				if(dBResource != null) {
+					setDirty(false);
+				}
+				return true;
+			} catch (Exception e) {			logger.error("update file", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+				
+				return false;
+			}
 		}
+		
+		return true;
 	}
 	
 	/**
