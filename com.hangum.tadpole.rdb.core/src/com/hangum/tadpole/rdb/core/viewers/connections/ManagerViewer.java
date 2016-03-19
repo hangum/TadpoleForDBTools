@@ -120,7 +120,7 @@ public class ManagerViewer extends ViewPart {
 					addManagerResouceData(userDB, false);
 					
 					// Rice lock icode change event
-//					managerTV.refresh(userDB, true);
+					managerTV.refresh(userDB, true);
 					
 					AnalyticCaller.track(ManagerViewer.ID, userDB.getDbms_type());
 					managerTV.getControl().setFocus();
@@ -285,10 +285,7 @@ public class ManagerViewer extends ViewPart {
 			if(dto.getName().equals(userDB.getGroup_name())) {
 				dto.addLogin(userDB);
 				
-				if(defaultOpen) {
-					selectAndOpenView(userDB);
-					managerTV.expandToLevel(userDB, 2);
-				}
+				selectAndOpenView(dto, userDB, defaultOpen);
 				return;
 			}	// end if(dto.getname()....		
 		}	// end for
@@ -297,11 +294,7 @@ public class ManagerViewer extends ViewPart {
 		ManagerListDTO managerDto = new ManagerListDTO(userDB.getGroup_name());
 		managerDto.addLogin(userDB);
 		treeDataList.add(managerDto);	
-		
-		if(defaultOpen) {
-			selectAndOpenView(userDB);
-			managerTV.expandToLevel(userDB, 2);
-		}
+		selectAndOpenView(managerDto, userDB, defaultOpen);
 	}
 	
 	/**
@@ -391,16 +384,19 @@ public class ManagerViewer extends ViewPart {
 	
 	/**
 	 * 트리를 갱신하고 쿼리 창을 엽니다.
-	 * 
-	 * @param dto
+	 * @param managerDto 
+	 * @param userDB
+	 * @param defaultOpen 
 	 */
-	public void selectAndOpenView(UserDBDAO dto) {
+	public void selectAndOpenView(ManagerListDTO managerDto, UserDBDAO userDB, boolean defaultOpen) {
 		managerTV.refresh();
-		managerTV.setSelection(new StructuredSelection(dto), true);
+		managerTV.expandToLevel(managerDto, 2);
+		managerTV.setSelection(new StructuredSelection(userDB), true);
 		
+		if(!defaultOpen) return;
 		// mongodb 일경우 열지 않는다.
-		if(DBDefine.getDBDefine(dto) != DBDefine.MONGODB_DEFAULT) {
-			MainEditorInput mei = new MainEditorInput(dto);		
+		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+			MainEditorInput mei = new MainEditorInput(userDB);		
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {
 				page.openEditor(mei, MainEditor.ID);
