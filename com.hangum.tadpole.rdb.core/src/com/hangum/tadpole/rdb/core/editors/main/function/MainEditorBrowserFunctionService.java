@@ -188,8 +188,13 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	 */
 	private String parseLastObject(String obj) {
 		String strObject = StringUtils.remove((String)obj, ",");
-		strObject = StringUtils.remove(strObject, "(");
-		strObject = StringUtils.remove(strObject, ")");
+		if(StringUtils.contains(strObject, '(')) {
+			strObject = StringUtils.substringBefore(strObject, "(");	
+		}
+		
+		if(StringUtils.contains(strObject, ')')) {
+			strObject = StringUtils.substringAfter(strObject, ")");	
+		}
 		
 		return strObject;
 	}

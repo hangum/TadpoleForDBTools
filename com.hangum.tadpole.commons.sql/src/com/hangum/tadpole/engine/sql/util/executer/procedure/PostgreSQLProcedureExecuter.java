@@ -60,8 +60,8 @@ public class PostgreSQLProcedureExecuter extends ProcedureExecutor {
 		for(int i=0; i<inParams.length; i++) {
 			String name = StringUtils.trimToEmpty(inParams[i]);
 			
-			if(i == (inParams.length-1)) sbQuery.append(String.format(":%s", name+i));
-			else sbQuery.append(String.format(":%s, ", name+i));
+			if(i == (inParams.length-1)) sbQuery.append(String.format(":%s", name));
+			else sbQuery.append(String.format(":%s, ", name));
 		}
 		sbQuery.append(");");
 

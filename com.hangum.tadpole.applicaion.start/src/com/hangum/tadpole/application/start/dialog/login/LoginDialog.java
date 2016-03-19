@@ -131,7 +131,7 @@ public class LoginDialog extends Dialog {
 		lblLoginForm.setText(Messages.get().LoginDialog_WelcomeMsg);
 		
 		lblLabelLblhangum = new Label(compositeHead, SWT.NONE);
-//		lblLabelLblhangum.setText(Messages.get().LoginDialog_ProjectRelease);
+		lblLabelLblhangum.setText(String.format(Messages.get().LoginDialog_ProjectRelease, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE));
 		
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
@@ -210,7 +210,7 @@ public class LoginDialog extends Dialog {
 		
 		Label lblHangum = new Label(compositeTail, SWT.NONE);
 		lblHangum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		lblHangum.setText("Open Source Projects Released By hangum");
+		lblHangum.setText("License is GNU Lesser General Public License v.3");
 		
 		Label lblHome = new Label(compositeTail, SWT.NONE);
 		lblHome.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -467,8 +467,7 @@ public class LoginDialog extends Dialog {
 		RWT.getUISession().setLocale(localeSelect);
 		
 		lblLoginForm.setText(Messages.get().LoginDialog_WelcomeMsg);
-//		lblLabelLblhangum.setText(Messages.get().LoginDialog_ProjectRelease);
-		
+		lblLabelLblhangum.setText(String.format(Messages.get().LoginDialog_ProjectRelease, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE));
 		btnLogin.setText(Messages.get().LoginDialog_15);
 		
 		btnCheckButton.setText(Messages.get().LoginDialog_9);
