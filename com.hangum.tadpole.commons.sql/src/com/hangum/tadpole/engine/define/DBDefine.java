@@ -237,16 +237,16 @@ public enum DBDefine {
 	public String getExt() {
 		String extension = ""; //$NON-NLS-1$
 		
-		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
+		if(this == DBDefine.MYSQL_DEFAULT) {
 			extension += "mysql"; //$NON-NLS-1$
+		} else if(this == DBDefine.MARIADB_DEFAULT) {
+			extension += "mariadb"; //$NON-NLS-1$
 		} else if(this == DBDefine.ORACLE_DEFAULT) {
 			extension += "oracle"; //$NON-NLS-1$
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
 			extension += "mssql"; //$NON-NLS-1$
 		} else if(this == DBDefine.SQLite_DEFAULT) {
 			extension += "sqlite"; //$NON-NLS-1$
-		} else if(this == DBDefine.CUBRID_DEFAULT) {
-			extension += "mysql"; //$NON-NLS-1$
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			extension += "hql"; //$NON-NLS-1$
 		} else if(this == DBDefine.POSTGRE_DEFAULT) {
