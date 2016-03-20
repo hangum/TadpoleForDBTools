@@ -102,3 +102,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.hangum.tadpole.engine.TadpoleEngineActivator
 Import-Package: javax.servlet;version="2.4.0",
  javax.servlet.http;version="2.4.0"
+Eclipse-BundleShape: dir

@@ -15,9 +15,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -143,16 +145,16 @@ public class TadpoleSystemInitializer {
 		File jdbcLocationDir = new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
 		if(!jdbcLocationDir.exists()) {
 			try {
-				logger.info("============== Copy to JDBC Driver : " + ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+				logger.info("######### TDB JDBC Driver local Path : " + ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
 				jdbcLocationDir.mkdirs();
 				
-				Bundle engineBundle = TadpoleEngineActivator.getDefault().getBundle();
-				Path libsPath = new Path("/libs/driver");
+				File fileEngine = FileLocator.getBundleFile(TadpoleEngineActivator.getDefault().getBundle());
+				String filePath = fileEngine.getAbsolutePath() + "/libs/driver";
+				logger.info("##### TDB JDBC URI: " + filePath);
 				
-				URL fileUrl = FileLocator.toFileURL(FileLocator.find(engineBundle, libsPath, null));
-				FileUtils.copyDirectory(new File(fileUrl.toURI()), new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR));
+				FileUtils.copyDirectory(new File(filePath), new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR));
 			} catch(Exception e) {
-				logger.error("InitJDBC file", e);
+				logger.error("Initialize JDBC driver file", e);
 			}
 		}
 		
