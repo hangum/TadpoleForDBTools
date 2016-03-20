@@ -71,6 +71,9 @@ public class JDBCDriverManageDialog extends Dialog {
 	private ListViewer lvDriverFile;
 	
 	private String jdbc_dir = "";
+	
+	/** Is JAR upload? */
+	private boolean isUploaded = false;
 
 	/**
 	 * Create the dialog.
@@ -297,6 +300,7 @@ public class JDBCDriverManageDialog extends Dialog {
 						
 						try {
 							JDBCDriverLoader.addJarFile(strTmpPaht);
+							setUploaded(true);
 						} catch (Exception e) {
 							logger.error("jar loading", e);
 						}
@@ -335,6 +339,23 @@ public class JDBCDriverManageDialog extends Dialog {
 		}
 		
 		return super.close();
+	}
+	
+	/**
+	 * is upload
+	 * @return
+	 */
+	public boolean isUploaded() {
+		return isUploaded;
+	}
+	
+	/**
+	 * Set jar upload
+	 * 
+	 * @param isUploaded
+	 */
+	public void setUploaded(boolean isUploaded) {
+		this.isUploaded = isUploaded;
 	}
 
 }

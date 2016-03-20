@@ -98,7 +98,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(getSite().getShell());
 				if(Dialog.OK ==  dialog.open()) {
-					MessageDialog.openInformation(getSite().getShell(), "Information", Messages.get().jdbcdriver);
+					if(dialog.isUploaded()) MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().jdbcdriver);
 				}
 			}
 		});
