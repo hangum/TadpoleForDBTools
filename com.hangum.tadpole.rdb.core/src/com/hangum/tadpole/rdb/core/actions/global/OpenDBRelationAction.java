@@ -19,9 +19,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
-import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -77,10 +74,8 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 				userDB = (UserDBDAO)obj;
 			
 				if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
-					if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {				
-						setEnabled(true);
-						return;
-					}
+					setEnabled(true);
+					return;
 				} // end if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
 			}  // end if
 		} 
