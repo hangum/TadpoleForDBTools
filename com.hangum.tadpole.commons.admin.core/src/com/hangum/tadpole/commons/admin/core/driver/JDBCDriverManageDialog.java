@@ -44,10 +44,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.initialize.JDBCDriverLoader;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -67,7 +69,7 @@ public class JDBCDriverManageDialog extends Dialog {
 	private ServerPushSession pushSession;
 
 	private ListViewer lvDB;
-	private Label lblRealFullPath;
+	private Text lblRealFullPath;
 	private ListViewer lvDriverFile;
 	
 	private String jdbc_dir = "";
@@ -88,6 +90,7 @@ public class JDBCDriverManageDialog extends Dialog {
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.get().JDBCDriverSetting);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -146,11 +149,11 @@ public class JDBCDriverManageDialog extends Dialog {
 		Label lblPath = new Label(compositeBody, SWT.NONE);
 		lblPath.setText(Messages.get().JDBCDriverSetting_Path);
 		
-		lblRealFullPath = new Label(compositeBody, SWT.NONE);
+		lblRealFullPath = new Text(compositeBody, SWT.NONE | SWT.READ_ONLY);
 		lblRealFullPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblFileList = new Label(compositeBody, SWT.NONE);
-		lblFileList.setText(Messages.get().JDBCDriverSetting_FileList);
+		Label txtFileList = new Label(compositeBody, SWT.NONE);
+		txtFileList.setText(Messages.get().JDBCDriverSetting_FileList);
 		new Label(compositeBody, SWT.NONE);
 		new Label(compositeBody, SWT.NONE);
 		
@@ -326,7 +329,7 @@ public class JDBCDriverManageDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(460, 520);
+		return new Point(500, 560);
 	}
 	
 	@Override
