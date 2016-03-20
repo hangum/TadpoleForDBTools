@@ -19,6 +19,7 @@ import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.application.start.update.checker.NewVersionChecker;
 import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
 import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -45,7 +46,8 @@ public class NewVersionCheckAction extends Action {
 	    		NewVersionViewDialog dialog = new NewVersionViewDialog(null, newVersionObj);
 	    		dialog.open();
 			} else {
-				MessageDialog.openInformation(null, Messages.get().NewVersionCheckAction_0, Messages.get().NewVersionCheckAction_2);
+				MessageDialog.openInformation(null, Messages.get().NewVersionCheckAction_0, 
+						String.format(Messages.get().NewVersionCheckAction_2, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE));
 			}
 		}
 	}

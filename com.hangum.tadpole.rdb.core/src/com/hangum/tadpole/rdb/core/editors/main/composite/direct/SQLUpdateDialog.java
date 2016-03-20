@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -63,6 +64,7 @@ public class SQLUpdateDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.get().SQLUpdateDialog_1);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**

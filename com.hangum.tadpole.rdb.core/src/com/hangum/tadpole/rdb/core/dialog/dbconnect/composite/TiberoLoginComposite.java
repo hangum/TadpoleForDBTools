@@ -191,11 +191,11 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("192.168.29.141");
+			textHost.setText("192.168.29.172");
 			textPort.setText("8629");
 			textDatabase.setText("tibero");
 			textUser.setText("sys");
-			textPassword.setText("tibero");
+			textPassword.setText("tadpole");
 			
 		} else {
 			textPort.setText(Messages.get().OracleLoginComposite_4);

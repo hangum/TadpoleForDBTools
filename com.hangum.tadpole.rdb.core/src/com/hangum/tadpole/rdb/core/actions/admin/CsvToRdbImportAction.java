@@ -19,6 +19,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.core.dialogs.CsvToRDBImportDialog;
@@ -42,17 +43,21 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		boolean isPossible = false;
-		if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
-		else {
-			if(!PermissionChecker.isProductBackup(userDB)) isPossible = true;
-		}
-		
-		if(isPossible) {
-			CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
-			dialog.open();
+		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_DoesnotSupport);
 		} else {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.get().MainEditor_21);
+			boolean isPossible = false;
+			if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
+			else {
+				if(!PermissionChecker.isProductBackup(userDB)) isPossible = true;
+			}
+				
+			if(isPossible) {
+				CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+				dialog.open();
+			} else {
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_21);
+			}
 		}
 	}
 

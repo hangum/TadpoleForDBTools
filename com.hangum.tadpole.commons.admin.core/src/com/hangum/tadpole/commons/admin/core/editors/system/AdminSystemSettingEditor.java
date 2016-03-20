@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,12 +33,18 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
+import com.hangum.tadpole.commons.admin.core.driver.JDBCDriverManageDialog;
+import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditor;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * Admin System setting editor
@@ -49,6 +56,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(AdminSystemSettingEditor.class);
 	public static final String ID = "com.hangum.tadpole.admin.editor.admn.system.setting"; //$NON-NLS-1$
 	private Combo comboNewUserPermit;
+	private Text textResourceHome;
 
 	public AdminSystemSettingEditor() {
 		super();
@@ -80,14 +88,36 @@ public class AdminSystemSettingEditor extends EditorPart {
 				saveData();
 			}
 		});
-		tltmSave.setText(Messages.get().AdminSystemSettingEditor_1);
+		tltmSave.setToolTipText(Messages.get().AdminSystemSettingEditor_1);
+		tltmSave.setImage(GlobalImageUtils.getSave());
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmJdbcDriverManage = new ToolItem(toolBar, SWT.NONE);
+		tltmJdbcDriverManage.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(getSite().getShell());
+				if(Dialog.OK ==  dialog.open()) {
+					if(dialog.isUploaded()) MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().jdbcdriver);
+				}
+			}
+		});
+		tltmJdbcDriverManage.setText("JDBC Driver Manage");
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		Label lblResourceHome = new Label(compositeBody, SWT.NONE);
+		lblResourceHome.setText("Resource Home");
+		
+		textResourceHome = new Text(compositeBody, SWT.BORDER);
+		textResourceHome.setEnabled(false);
+		textResourceHome.setEditable(false);
+		textResourceHome.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textResourceHome.setText(ApplicationArgumentUtils.getResourcesDir());
+		
 		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText(Messages.get().AdminSystemSettingEditor_2);
 		
 		comboNewUserPermit = new Combo(compositeBody, SWT.READ_ONLY);
@@ -101,6 +131,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 //		compositeTail.setLayout(new GridLayout(1, false));
 		
 		initUI();
+		
+		AnalyticCaller.track(ID);
 	}
 
 	/**

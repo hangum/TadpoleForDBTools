@@ -14,8 +14,6 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-import oracle.jdbc.OracleTypes;
-
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -68,7 +66,7 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("BINARY", java.sql.Types.BINARY);
 		mapTypes.put("VARBINARY", java.sql.Types.VARBINARY);
 		mapTypes.put("NUMBER", java.sql.Types.DECIMAL);
-		mapTypes.put("SYS_REFCURSOR", OracleTypes.CURSOR);
+//		mapTypes.put("SYS_REFCURSOR", OracleTypes.CURSOR);
 
 		// pgsql JSON type
 		mapTypes.put("JSON", 1111);

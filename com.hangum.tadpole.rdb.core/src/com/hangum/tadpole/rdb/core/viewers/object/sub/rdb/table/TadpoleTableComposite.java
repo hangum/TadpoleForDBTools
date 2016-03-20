@@ -25,6 +25,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -340,7 +341,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new TableDragListener(userDB, tableListViewer));
 
 		// filter
-		tableFilter = new TableFilter();
+		tableFilter = new TableFilter(userDB);
 		tableListViewer.addFilter(tableFilter);
 		
 		createTableMenu();
@@ -467,7 +468,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							if(!isDDLLock()) {
 								manager.add(creatAction_Table);
 								manager.add(separator);
-								manager.add(renameAction_Table);
+								if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+									manager.add(renameAction_Table);
+								}
 								manager.add(dropAction_Table);
 								manager.add(separator);
 								if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
@@ -495,8 +498,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							if(!isUpdateLock()) manager.add(updateStmtAction);
 							if(!isDeleteLock()) manager.add(deleteStmtAction);
 							
-							manager.add(separator);
-							manager.add(viewDDLAction);
+							if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+								manager.add(separator);
+								manager.add(viewDDLAction);
+							}
 							if(!(isInsertLock() | isUpdateLock() | isDeleteLock())) {
 								manager.add(separator);
 								manager.add(tableDataEditorAction);
@@ -643,11 +648,25 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 							tableListViewer.setInput(listTablesDAO);
 							tableListViewer.refresh();
 							TableUtil.packTable(tableListViewer.getTable());
-
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_3, Messages.get().ExplorerViewer_86, errStatus);
-						}
-					}
+							
+							try {
+								Throwable throwable = jobEvent.getResult().getException();
+								Throwable cause = throwable.getCause().getCause();
+								if(cause instanceof ClassNotFoundException) {
+									// admin 이 드라이버를 업로드 해야한다.
+									String msg = String.format(Messages.get().TadpoleTableComposite_driverMsg, userDB.getDbms_type(), throwable.getMessage());
+									MessageDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_Drivernotfound, msg);
+									
+								} else {
+									Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
+									ExceptionDetailsErrorDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_3, Messages.get().ExplorerViewer_86, errStatus);
+								}
+							} catch(Exception e) {
+								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
+								ExceptionDetailsErrorDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_3, Messages.get().ExplorerViewer_86, errStatus);
+							}
+						}	// end else if
+					}	// end run
 				});	// end display.asyncExec
 			}	// end done
 			

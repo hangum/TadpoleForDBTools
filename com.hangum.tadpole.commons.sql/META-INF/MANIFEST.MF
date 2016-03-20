@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole DB Hub commons SQL
+Bundle-Name: Tadpole DB Hub Engine
 Bundle-SymbolicName: com.hangum.tadpole.engine;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: hangum.com
@@ -16,20 +16,13 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0";resolution:=optional,
 Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/apache/dbcp/commons-dbcp-1.4.jar,
  libs/apache/dbcp/commons-pool-1.6.jar,
- .,
- libs/driver/oracle/ojdbc6.jar,
- libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar,
- libs/driver/mssql/jtds-1.3.1.jar,
  libs/dbutils/commons-dbutils-1.6.jar,
- libs/driver/oracle/orai18n.jar,
- libs/driver/postgreSQL/postgresql-9.4-1204.jdbc41.jar,
- libs/driver/sqlite/sqlite-jdbc-3.7.2.jar,
- libs/driver/mongodb/mongo-java-driver-3.2.0.jar,
- libs/driver/mariadb/mariadb-java-client-1.2.3.jar,
- libs/driver/mysql/mysql-connector-java-5.1.37-bin.jar,
- libs/driver/tibero/tibero5-jdbc.jar,
- libs/driver/altibase/Altibase.jar
+ .,
+ libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar,
+ libs/driver/mongo/mongo-java-driver-3.2.0.jar
 Export-Package: 
+ com.hangum.tadpole.db.bander.cubrid,
+ com.hangum.tadpole.db.bander.oracle,
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.db.metadata.constants,
  com.hangum.tadpole.engine,
@@ -99,8 +92,6 @@ Export-Package:
  com.mongodb.operation,
  com.mongodb.selector,
  com.mongodb.util,
- cubrid.jdbc.driver,
- oracle.sql,
  org.bson,
  org.bson.io,
  org.bson.types,
@@ -109,3 +100,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.hangum.tadpole.engine.TadpoleEngineActivator
 Import-Package: javax.servlet;version="2.4.0",
  javax.servlet.http;version="2.4.0"
+Eclipse-BundleShape: dir

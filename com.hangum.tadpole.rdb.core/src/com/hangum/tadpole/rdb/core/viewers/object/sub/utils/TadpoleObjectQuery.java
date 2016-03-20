@@ -184,8 +184,8 @@ public class TadpoleObjectQuery {
 		
 
 		if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
-			mapParam.put("user_name", StringUtils.substringBefore(strTableName, "."));
-			mapParam.put("table_name", StringUtils.substringAfter(strTableName, "."));
+			mapParam.put("user", StringUtils.substringBefore(strTableName, "."));
+			mapParam.put("table", StringUtils.substringAfter(strTableName, "."));
 		} else {
 			mapParam.put("schema", tableDao.getSchema_name());
 			mapParam.put("table", strTableName);

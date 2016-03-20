@@ -5,6 +5,8 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.admin.core.messages"; //$NON-NLS-1$
 
+	public String jdbcdriver;
+
 	public String AdminSQLAuditAction_0;
 
 	public String AdminSQLAuditAction_2;
@@ -230,6 +232,10 @@ public class Messages {
 	
 	public String AdminSystemSettingAction_0;
 	public String AdminSystemSettingAction_1;
+
+	public String JDBCDriverManagerAction_0;
+
+	public String Information;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

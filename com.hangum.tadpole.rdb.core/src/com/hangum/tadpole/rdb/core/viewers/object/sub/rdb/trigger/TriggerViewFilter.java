@@ -28,7 +28,7 @@ public class TriggerViewFilter extends TadpoleViewrFilter {
 		if(searchString == null || searchString.length() == 0) return true;
 		
 		TriggerDAO dao  = (TriggerDAO)element;
-		if(dao.getTrigger().matches(searchString)) return true;
+		if(dao.getTrigger().toUpperCase().matches(searchString.toUpperCase())) return true;
 		
 		return false;
 	}

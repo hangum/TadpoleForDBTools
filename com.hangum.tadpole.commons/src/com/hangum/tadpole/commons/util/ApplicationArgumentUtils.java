@@ -26,6 +26,10 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
  *
  */
 public class ApplicationArgumentUtils {
+	
+	/** jdbc dir */
+	public static String JDBC_RESOURCE_DIR = ApplicationArgumentUtils.getResourcesDir() + "driver" + PublicTadpoleDefine.DIR_SEPARATOR;
+	
 	/**
 	 * Logger for this class
 	 */

@@ -40,10 +40,10 @@ SELECT sysdate	FROM dual
 <select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
   SELECT 
       T.table_name AS "NAME"
-    FROM user_tables T 
-      LEFT JOIN USER_TAB_COMMENTS S
-            ON S.TABLE_NAME = T.TABLE_NAME
-ORDER BY T.table_name
+  FROM ALL_TABLES T  
+      LEFT JOIN USER_TAB_COMMENTS S ON S.TABLE_NAME = T.TABLE_NAME
+  WHERE T.OWNER = 'PUBLIC'
+  ORDER BY T.table_name
 </select>
 
 <!-- 
@@ -56,9 +56,10 @@ ORDER BY T.table_name
   SELECT 
       T.table_name AS "NAME"
       , S.COMMENTS AS "COMMENT"
-    FROM user_tables T 
+    FROM ALL_TABLES T  
       LEFT JOIN USER_TAB_COMMENTS S
             ON S.TABLE_NAME = T.TABLE_NAME
+WHERE T.OWNER = 'PUBLIC'
 ORDER BY T.table_name
 </select>
 
@@ -69,11 +70,12 @@ ORDER BY T.table_name
   	SELECT 
       T.table_name AS "NAME"
       , S.COMMENTS AS "COMMENT"
-    FROM user_tables T 
+    FROM ALL_TABLES T  
       LEFT JOIN USER_TAB_COMMENTS S
             ON S.TABLE_NAME = T.TABLE_NAME
     WHERE
-    	T.table_name = #name#
+    	T.OWNER = 'PUBLIC'
+    	AND T.table_name = #name#
 	ORDER BY T.table_name
 </select>
 
@@ -107,7 +109,7 @@ ORDER BY T.table_name
            WHERE C.TABLE_NAME = D.TABLE_NAME AND C.COLUMN_NAME = D.COLUMN_NAME 
         ) AS "KEY",
        C.DATA_DEFAULT AS "DEFAULT", '' AS EXTRA, S.COMMENTS AS "COMMENT"
-   FROM USER_TAB_COLUMNS C
+   FROM ALL_TAB_COLUMNS C
         LEFT JOIN USER_COL_COMMENTS S ON S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
     WHERE C.TABLE_NAME = #table# 
     ORDER BY C.COLUMN_ID

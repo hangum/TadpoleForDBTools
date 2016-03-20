@@ -58,7 +58,9 @@ public class QueryTemplateUtils {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.ORACLE_DEFAULT ==  DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB) |
+				DBDefine.TIBERO_DEFAULT ==  DBDefine.getDBDefine(userDB)
+				) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {

@@ -29,8 +29,6 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListEditor;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.SessionListEditorInput;
-import com.hangum.tadpole.tajo.core.editors.sessionlist.TajoSessionListEditor;
-import com.hangum.tadpole.tajo.core.editors.sessionlist.TajoSessionListEditorInput;
 
 /**
  * Session List Action
@@ -74,18 +72,18 @@ public class SessionListAction implements IViewActionDelegate {
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT) {
-			try {
-				TajoSessionListEditorInput sleInput = new TajoSessionListEditorInput(userDB);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, TajoSessionListEditor.ID);
-			} catch (PartInitException e) {
-				logger.error("open session list", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-			}
+//		} else if(DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT) {
+//			try {
+//				TajoSessionListEditorInput sleInput = new TajoSessionListEditorInput(userDB);
+//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, TajoSessionListEditor.ID);
+//			} catch (PartInitException e) {
+//				logger.error("open session list", e); //$NON-NLS-1$
+//				
+//				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+//			}
 		} else {
-			MessageDialog.openWarning(null, "Information", "Not support database.");
+			MessageDialog.openWarning(null, Messages.get().Information, Messages.get().NotSupportDatabase);
 		}
 	}
 

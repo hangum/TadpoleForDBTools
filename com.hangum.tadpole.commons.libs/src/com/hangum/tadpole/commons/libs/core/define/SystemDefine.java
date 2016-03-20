@@ -22,8 +22,8 @@ public class SystemDefine {
 	
 	public static final String NAME = "Tadpole DB Hub";
 	public static final String MAJOR_VERSION = "1.7.0";
-	public static final String SUB_VERSION = "Build(B5)";
-	public static final String RELEASE_DATE = "2016.03.8";
+	public static final String SUB_VERSION = "Build(R0)";
+	public static final String RELEASE_DATE = "2016.03.20";
 	public static final String INFORMATION = "http://hangum.github.io/TadpoleForDBTools/";
 	
 	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";
@@ -37,7 +37,7 @@ public class SystemDefine {
 		if(isOSGIRuntime()) {
 			return Platform.getInstallLocation().getURL().getFile();
 		} else {
-			return System.getProperty("user.home") + "/";
+			return System.getProperty("user.home") + PublicTadpoleDefine.DIR_SEPARATOR;
 		}
 	}
 	

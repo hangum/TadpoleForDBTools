@@ -220,7 +220,10 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			executeSQLResourceDao.setStartDateExecute(requestResultDAO.getStartDateExecute());
 			executeSQLResourceDao.setEndDateExecute(requestResultDAO.getEndDateExecute());
-			long duration = requestResultDAO.getEndDateExecute().getTime() - requestResultDAO.getStartDateExecute().getTime();
+			long duration = 0l;
+			try {
+				duration = requestResultDAO.getEndDateExecute().getTime() - requestResultDAO.getStartDateExecute().getTime();
+			} catch(Exception e){}
 			executeSQLResourceDao.setDuration(Integer.parseInt(""+duration));
 			
 			executeSQLResourceDao.setRow(requestResultDAO.getRows());

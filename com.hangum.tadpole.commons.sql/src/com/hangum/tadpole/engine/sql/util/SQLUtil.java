@@ -436,11 +436,11 @@ public class SQLUtil {
 	
 	/**
 	 * Table name
-	 * 
+	 * @param userDB 
 	 * @param tableDAO
 	 * @return
 	 */
-	public static String getTableName(TableDAO tableDAO) {
+	public static String getTableName(UserDBDAO userDB, TableDAO tableDAO) {
 		if("".equals(tableDAO.getSchema_name()) || null == tableDAO.getSchema_name()) return tableDAO.getSysName(); //$NON-NLS-2$
 		
 		return tableDAO.getSchema_name() + "." + tableDAO.getSysName(); //$NON-NLS-2$

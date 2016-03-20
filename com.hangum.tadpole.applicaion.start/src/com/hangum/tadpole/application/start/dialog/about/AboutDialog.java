@@ -87,7 +87,7 @@ public class AboutDialog extends Dialog {
 
 		// Thanks, stariki
 		Text txtVersion = new Text(composite_1, SWT.NONE) ;
-		txtVersion.setText(Messages.get().AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
+		txtVersion.setText(Messages.get().AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
 		txtVersion.setEditable(false);
 
 		Text txtRleaseDate = new Text(composite_1, SWT.NONE) ;
@@ -98,15 +98,15 @@ public class AboutDialog extends Dialog {
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel0.setText(Messages.get().AboutDialog_5);//Messages.get().AboutAction_4);
+		lblNewLabel0.setText(Messages.get().AboutDialog_5);
 
 		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
 		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText(Messages.get().AboutDialog_6);//Messages.get().AboutAction_4);
+		lblNewLabel2.setText(Messages.get().AboutDialog_6);
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel3.setText(Messages.get().AboutDialog_7);//Messages.get().AboutAction_4);
+		lblNewLabel3.setText(Messages.get().AboutDialog_7);
 		
 		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
 		lblLicenseLgpl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

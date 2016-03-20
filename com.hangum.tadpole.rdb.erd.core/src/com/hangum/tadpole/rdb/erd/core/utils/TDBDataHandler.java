@@ -10,15 +10,23 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.erd.core.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.DBAccessCtlManager;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -29,28 +37,74 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class TDBDataHandler {
+	private static final Logger logger = Logger.getLogger(TDBDataHandler.class);
+	
 	/**
-	 * table의 컬럼 정보를 가져옵니다.
+	 * 선택된 Table의 컬럼 정보를 리턴합니다.
 	 * 
-	 * @param strTBName
-	 * @return
+	 * @param userDB
+	 * @param tableDao
 	 * @throws Exception
 	 */
-	public static List<TableColumnDAO> getColumns(final UserDBDAO userDB, final TableDAO table) throws Exception {
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("db", userDB.getDb());
-		param.put("schema", table.getSchema_name());
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-			param.put("table", table.getSysName());
-		} else {
-			param.put("table", table.getName());
-		}
+	public static List<TableColumnDAO> getColumns(UserDBDAO userDB, TableDAO tableDao) throws Exception {
+		List<TableColumnDAO> returnColumns = new ArrayList<TableColumnDAO>();
+		
+		Map<String, String> mapParam = new HashMap<String, String>();
+		mapParam.put("db", userDB.getDb());
+		String strTableName = "";
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
+		else 												strTableName = tableDao.getName();
+		
 
-		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			return new TajoConnectionManager().tableColumnList(userDB, param);
+		if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+			mapParam.put("user", StringUtils.substringBefore(strTableName, "."));
+			mapParam.put("table", StringUtils.substringAfter(strTableName, "."));
+		} else {
+			mapParam.put("schema", tableDao.getSchema_name());
+			mapParam.put("table", strTableName);
+		}
+		
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			if("".equals(mapParam.get("schema")) || null == mapParam.get("schema")) {
+				mapParam.put("schema", "public");
+			}
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableColumnList", param);
+			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		}
+		
+		if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()){
+			try{
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
+				for (SQLiteForeignKeyListDAO fkeydao : foreignKeyList){
+					for (TableColumnDAO dao : returnColumns){
+						if (dao.getName().equals(fkeydao.getFrom() ) ){
+							if (PublicTadpoleDefine.isPK(dao.getKey())){
+								dao.setKey("MUL");
+							}else{
+								dao.setKey("FK");
+							}
+						}	 
+					}
+				}
+			}catch(Exception e){
+				logger.error("not found foreignkey for " + tableDao.getName());
+			}
+		}
+		
+		// if find the keyword is add system quote.
+		for(TableColumnDAO td : returnColumns) {
+			td.setTableDao(tableDao);
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
+		}
+		
+		returnColumns = DBAccessCtlManager.getInstance().getColumnFilter(tableDao, returnColumns, userDB);
+		
+		return returnColumns;
 	}
 }

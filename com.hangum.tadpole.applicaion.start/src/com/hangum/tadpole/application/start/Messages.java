@@ -120,6 +120,8 @@ public class Messages {
 	public String UserInformationDialog_label_text;
 	public String LoginDialog_lblDonation_text;
 	public String LoginDialog_lblLanguage_text;
+	public String LoginDialog_WelcomeMsg;
+	public String LoginDialog_ProjectRelease;
 	
 	public String NewVersionViewDialog_0;
 	public String NewVersionViewDialog_1;
@@ -130,6 +132,7 @@ public class Messages {
 	public String NewVersionViewDialog_8;
 	public String NewVersionViewDialog_9;
 	public String NewVersionViewDialog_NewVersion;
+	public String NewVersionViewDialog_DoesnotCheck;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -14,7 +14,6 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -49,6 +48,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -72,6 +72,7 @@ public class LoginDialog extends Dialog {
 	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
 	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
+	private Label lblLoginForm;
 	private Composite compositeLogin;
 	private Label lblEmail;
 	
@@ -124,12 +125,13 @@ public class LoginDialog extends Dialog {
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		compositeHead.setLayout(new GridLayout(1, false));
 		
-		Label lblLoginForm = new Label(compositeHead, SWT.NONE);
+		lblLoginForm = new Label(compositeHead, SWT.NONE);
+		lblLoginForm.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblLoginForm.setFont(SWTResourceManager.getFont(".SF NS Text", 15, SWT.NONE));
-		lblLoginForm.setText("Welcome to the Tadpole DB Hub");
+		lblLoginForm.setText(Messages.get().LoginDialog_WelcomeMsg);
 		
 		lblLabelLblhangum = new Label(compositeHead, SWT.NONE);
-		lblLabelLblhangum.setText("             Project release by hangum");
+		lblLabelLblhangum.setText(String.format(Messages.get().LoginDialog_ProjectRelease, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE));
 		
 		Composite compositeLeftBtn = new Composite(container, SWT.NONE);
 		compositeLeftBtn.setLayout(new GridLayout(1, false));
@@ -208,7 +210,7 @@ public class LoginDialog extends Dialog {
 		
 		Label lblHangum = new Label(compositeTail, SWT.NONE);
 		lblHangum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		lblHangum.setText("Open Source Projects Released By hangum");
+		lblHangum.setText("License is GNU Lesser General Public License v.3");
 		
 		Label lblHome = new Label(compositeTail, SWT.NONE);
 		lblHome.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -321,61 +323,16 @@ public class LoginDialog extends Dialog {
 	 */
 	private void registLoginID(String userId, String userPwd) {
 		if(!btnCheckButton.getSelection()) {
-			deleteCookie();
+			CookieUtils.deleteLoginCookie();
 			return;
 		}
 		
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
-		saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
 	}
 	
-	private void deleteCookie() {
-		try {
-			HttpServletResponse response = RWT.getResponse();
-			HttpServletRequest request = RWT.getRequest();
-			Cookie[] cookies = request.getCookies();
-			for (Cookie cookie : cookies) {
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setPath(PublicTadpoleDefine._cookiePath);
-					response.addCookie(cookie);
-				}
-			}
-
-		} catch(Exception e) {
-			logger.error("regist user info", e);
-		}
-	}
-	
-	private void saveCookie(String key, String value) {
-		try {
-			HttpServletResponse response = RWT.getResponse();
-			Cookie tdbCookie = new Cookie(key, value);
-			tdbCookie.setMaxAge(60 * 60 * 24 * 365);
-			tdbCookie.setPath(PublicTadpoleDefine._cookiePath);
-			response.addCookie(tdbCookie);
-		} catch(Exception e) {
-			logger.error("regist user info", e);
-		}
-	}
-		
 	@Override
 	public boolean close() {
 		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)
@@ -476,6 +433,7 @@ public class LoginDialog extends Dialog {
 	private void initCookieData() {
 		HttpServletRequest request = RWT.getRequest();
 		Cookie[] cookies = request.getCookies();
+		
 		if(cookies != null) {
 			int intCount = 0;
 			for (Cookie cookie : cookies) {				
@@ -508,6 +466,8 @@ public class LoginDialog extends Dialog {
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
 		RWT.getUISession().setLocale(localeSelect);
 		
+		lblLoginForm.setText(Messages.get().LoginDialog_WelcomeMsg);
+		lblLabelLblhangum.setText(String.format(Messages.get().LoginDialog_ProjectRelease, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE));
 		btnLogin.setText(Messages.get().LoginDialog_15);
 		
 		btnCheckButton.setText(Messages.get().LoginDialog_9);

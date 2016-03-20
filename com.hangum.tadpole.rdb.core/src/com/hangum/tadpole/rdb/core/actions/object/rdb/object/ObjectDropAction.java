@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,10 +28,12 @@ import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
@@ -71,7 +76,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, Messages.get().ObjectDeleteAction_3)) {
 					for(Object selObjec : selection.toList()) {
 						TableDAO selTableDao = (TableDAO)selObjec;
-						String strSQL = "drop table " + SQLUtil.getTableName(selTableDao);// dao.getSysName(); //$NON-NLS-1$
+						String strSQL = "drop table " + SQLUtil.getTableName(userDB, selTableDao);// dao.getSysName(); //$NON-NLS-1$
 						try {
 							if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 								new TajoConnectionManager().executeUpdate(userDB, strSQL);
@@ -157,14 +162,36 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 			ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_23, Messages.get().ObjectDeleteAction_24)) {
+				
 				try {
-					executeSQL(userDB, "drop procedure " + procedureDAO.getName()); //$NON-NLS-1$
+					if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+						StringBuffer sbQuery = new StringBuffer("drop function " + procedureDAO.getName() + "(");
+						
+						ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
+						pm.isExecuted(procedureDAO, userDB);
+						List<InOutParameterDAO> inList = pm.getExecuter().getInParameters();
+						InOutParameterDAO inOutParameterDAO = inList.get(0);
+						String[] inParams = StringUtils.split(inOutParameterDAO.getRdbType(), ",");
+						for(int i=0; i<inParams.length; i++) {
+							String name = StringUtils.trimToEmpty(inParams[i]);
+							
+							if(i == (inParams.length-1)) sbQuery.append(String.format("%s", name));
+							else sbQuery.append(String.format("%s, ", name));
+						}
+						sbQuery.append(")");
+						if(logger.isDebugEnabled()) logger.debug("=[PROCEDURES]===> " + sbQuery);
+						
+						executeSQL(userDB, sbQuery.toString()); //$NON-NLS-1$
+					} else {
+						executeSQL(userDB, "drop procedure " + procedureDAO.getName()); //$NON-NLS-1$
+					}
 					
 					refreshProcedure();
 				} catch(Exception e) {
 					logger.error(Messages.get().ObjectDeleteAction_26, e);
 					exeMessage(Messages.get().ObjectDeleteAction_10, e);
 				}
+			
 			}
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
 			ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
@@ -189,6 +216,24 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				try {
 					if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 						executeSQL(userDB, "drop function " + functionDAO.getDefiner() + "." + functionDAO.getName());
+					} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+						StringBuffer sbQuery = new StringBuffer("drop function " + functionDAO.getName() + "(");
+						
+						ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, functionDAO);
+						pm.isExecuted(functionDAO, userDB);
+						List<InOutParameterDAO> inList = pm.getExecuter().getInParameters();
+						InOutParameterDAO inOutParameterDAO = inList.get(0);
+						String[] inParams = StringUtils.split(inOutParameterDAO.getRdbType(), ",");
+						for(int i=0; i<inParams.length; i++) {
+							String name = StringUtils.trimToEmpty(inParams[i]);
+							
+							if(i == (inParams.length-1)) sbQuery.append(String.format("%s", name));
+							else sbQuery.append(String.format("%s, ", name));
+						}
+						sbQuery.append(")");
+						if(logger.isDebugEnabled()) logger.debug("=[FUNCTIONS]===> " + sbQuery);
+						
+						executeSQL(userDB, sbQuery.toString()); //$NON-NLS-1$
 					} else {
 						executeSQL(userDB, "drop function " + functionDAO.getName()); //$NON-NLS-1$
 					}
@@ -203,7 +248,11 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			TriggerDAO triggerDAO = (TriggerDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().ObjectDeleteAction_35, Messages.get().ObjectDeleteAction_36)) {
 				try {
-					executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger()); //$NON-NLS-1$
+					if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger() + " on " + triggerDAO.getTable_name()); //$NON-NLS-1$
+					} else {
+						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger()); //$NON-NLS-1$
+					}
 					
 					refreshTrigger();
 				} catch(Exception e) {

@@ -126,6 +126,7 @@
 		    AND a.seq = b.user_seq
 		    AND strftime('%Y-%m-%d %H:%M:%S', b.connet_time) BETWEEN #startTime# AND #endTime#
 		ORDER BY b.connet_time DESC
+		LIMIT 1000
 	]]>
 	</select>	
 </sqlMap>

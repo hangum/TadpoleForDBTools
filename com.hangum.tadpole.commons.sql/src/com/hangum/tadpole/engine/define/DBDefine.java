@@ -237,16 +237,16 @@ public enum DBDefine {
 	public String getExt() {
 		String extension = ""; //$NON-NLS-1$
 		
-		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
+		if(this == DBDefine.MYSQL_DEFAULT) {
 			extension += "mysql"; //$NON-NLS-1$
+		} else if(this == DBDefine.MARIADB_DEFAULT) {
+			extension += "mariadb"; //$NON-NLS-1$
 		} else if(this == DBDefine.ORACLE_DEFAULT) {
 			extension += "oracle"; //$NON-NLS-1$
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
 			extension += "mssql"; //$NON-NLS-1$
 		} else if(this == DBDefine.SQLite_DEFAULT) {
 			extension += "sqlite"; //$NON-NLS-1$
-		} else if(this == DBDefine.CUBRID_DEFAULT) {
-			extension += "mysql"; //$NON-NLS-1$
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			extension += "hql"; //$NON-NLS-1$
 		} else if(this == DBDefine.POSTGRE_DEFAULT) {
@@ -257,6 +257,8 @@ public enum DBDefine {
 			extension += "tajo"; //$NON-NLS-1$
 		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
 			extension += "altibase";
+		} else if(this == DBDefine.MONGODB_DEFAULT) {
+			extension += "mongo";
 		} else {
 			extension += "sql"; //$NON-NLS-1$
 		}
@@ -332,6 +334,19 @@ public enum DBDefine {
 	}
 	
 	/**
+	 * get driver list
+	 * 
+	 * @return
+	 */
+	public static List<DBDefine> getDriver() {
+		List<DBDefine> listSupportDb = userDBValues();
+		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
+		listSupportDb.remove(DBDefine.TAJO_DEFAULT);
+		listSupportDb.remove(DBDefine.HIVE_DEFAULT);
+		return listSupportDb;
+	}
+	
+	/**
 	 * 사용자가 사용할 수 있는 모든 디비.
 	 * @return
 	 */
@@ -352,7 +367,7 @@ public enum DBDefine {
 		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
-		supportDb.add(TIBERO_DEFAULT);
+//		supportDb.add(TIBERO_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

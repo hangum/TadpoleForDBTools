@@ -131,8 +131,8 @@ public class RDBInformationComposite extends Composite {
 			Connection conn = sqlClient.getDataSource().getConnection();
 			DatabaseMetaData dmd = conn.getMetaData();
 			
-			listInfo.add(new KeyValueDAO("Database information", dmd.getDatabaseProductName() + " " + dmd.getDatabaseProductVersion()));
-			listInfo.add(new KeyValueDAO("Driver information", dmd.getDriverName() + " " + dmd.getDriverVersion()));
+			listInfo.add(new KeyValueDAO(Messages.get().DatabaseInformation, dmd.getDatabaseProductName() + " " + dmd.getDatabaseProductVersion()));
+			listInfo.add(new KeyValueDAO(Messages.get().DriverInformation, dmd.getDriverName() + " " + dmd.getDriverVersion()));
 		} catch(Exception e) {
 			logger.error("RDB info", e);
 		}

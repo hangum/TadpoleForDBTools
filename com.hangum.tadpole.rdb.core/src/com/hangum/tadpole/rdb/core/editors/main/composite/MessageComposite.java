@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -109,7 +110,6 @@ public class MessageComposite extends Composite {
 		if (throwable == null) {
 			strNewMessage = Messages.get().MessageComposite_2;
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
-			
 			strSearchError = tadpoleMessageDAO.getStrMessage();
 			
 			textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
@@ -125,8 +125,12 @@ public class MessageComposite extends Composite {
 				strSearchError += sqlExceptionToSearchMsg((SQLException)cause, tadpoleMessageDAO);
 			} else {
 				strNewMessage += tadpoleMessageDAO.getStrMessage();
-				
 				strSearchError += tadpoleMessageDAO.getStrMessage();
+			}
+			
+			// sqlite 는 상태,에러코드가 없다.--;;
+			if(userDBDAO.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				strSearchError = throwable.getMessage();
 			}
 			
 			textMessage.setBackground(SWTResourceManager.getColor(255, 228, 225));

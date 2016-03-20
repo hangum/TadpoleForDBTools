@@ -230,16 +230,19 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 		
 		String strSchemaName = "";
 		String strTableName = tableName;
-		if(StringUtils.contains(tableName, '.')) {
-			String[] arrTblInfo = StringUtils.split(tableName, ".");
-			strSchemaName = arrTblInfo[0];
-			strTableName = arrTblInfo[1];
+		if(DBDefine.getDBDefine(userDB) != DBDefine.ALTIBASE_DEFAULT) {
+			if(StringUtils.contains(tableName, '.')) {
+				String[] arrTblInfo = StringUtils.split(tableName, ".");
+				strSchemaName = arrTblInfo[0];
+				strTableName = arrTblInfo[1];
+			}
 		}
 		
 		try {
 			TableDAO table = new TableDAO(strTableName, "");
 			table.setSysName(strTableName);
 			table.setSchema_name(strSchemaName);
+			table.setName(strTableName);
 			
 			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, table);
 			for (TableColumnDAO tableDao : showTableColumns) {

@@ -36,6 +36,21 @@ public class TadpoleApplicationContextManager {
 	private static final Logger logger = Logger.getLogger(TadpoleApplicationContextManager.class);
 	
 	/**
+	 * is system initialize
+	 * 
+	 * @return
+	 */
+	public static boolean isSystemInitialize() {
+		ApplicationContext context = RWT.getApplicationContext();
+		if(context.getAttribute("isSystemInitialize") == null) {
+			context.setAttribute("isSystemInitialize", true);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * admin system env
 	 * 
 	 * @return

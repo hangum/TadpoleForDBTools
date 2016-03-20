@@ -673,6 +673,14 @@ public class ExplorerViewer extends ViewPart {
 		QUERY_DDL_TYPE queryDDLType = reqQuery.getSqlDDLType();
 		String strObjectName = reqQuery.getSqlObjectName();
 		
+		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			if(queryDDLType == QUERY_DDL_TYPE.FUNCTION) {
+				refreshCurrentTab(QUERY_DDL_TYPE.PROCEDURE, strObjectName, chgUserDB);
+			} else if(queryDDLType == QUERY_DDL_TYPE.PROCEDURE) {
+				refreshCurrentTab(QUERY_DDL_TYPE.FUNCTION, strObjectName, chgUserDB);
+			}
+		}
+		
 		refreshCurrentTab(queryDDLType, strObjectName, chgUserDB);
 		// refresh filter
 		filterText();

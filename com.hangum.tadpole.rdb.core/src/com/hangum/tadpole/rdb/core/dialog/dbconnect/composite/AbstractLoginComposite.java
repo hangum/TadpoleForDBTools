@@ -323,6 +323,18 @@ public abstract class AbstractLoginComposite extends Composite {
 			
 			return true;
 		} catch (Exception e) {
+			String errMsg = e.getMessage();
+			
+			// driver 가 없을때 메시지 추가.
+			try {
+				Throwable cause = e.getCause().getCause();
+				if(cause instanceof ClassNotFoundException) {
+					errMsg = String.format(Messages.get().TadpoleTableComposite_driverMsg, userDB.getDbms_type(), e.getMessage());
+				}
+			} catch(Exception ee) {
+				// igonre exception
+			}
+			
 			logger.error("DB Connecting... [url]"+ loginInfo.getUrl(), e); //$NON-NLS-1$
 			// If UserDBDao is not invalid, remove UserDBDao at internal cache
 			TadpoleSQLManager.removeInstance(loginInfo);
@@ -331,14 +343,12 @@ public abstract class AbstractLoginComposite extends Composite {
 			// https://github.com/hangum/TadpoleForDBTools/issues/512 
 			if(!isTest) {// && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
 				TDBYesNoErroDialog dialog = new TDBYesNoErroDialog(getShell(), 
-						loginInfo.getDb() + " Test", 
-						String.format(Messages.get().AbstractLoginComposite_3, e.getMessage()));
+													loginInfo.getDb() + " Test", 
+													String.format(Messages.get().AbstractLoginComposite_3, errMsg));
 				if(dialog.open() == IDialogConstants.OK_ID) return true;
 			
 			} else {
-				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), 
-						loginInfo.getDb() + " Test", 
-						e.getMessage());
+				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), loginInfo.getDb() + " Test", errMsg);
 				dialog.open();
 			}
 			

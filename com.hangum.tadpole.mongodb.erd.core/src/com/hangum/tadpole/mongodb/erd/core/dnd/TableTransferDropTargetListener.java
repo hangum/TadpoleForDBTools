@@ -58,6 +58,8 @@ import com.hangum.tadpole.mongodb.model.Table;
 public class TableTransferDropTargetListener extends AbstractTransferDropTargetListener {
 	private static final Logger logger = Logger.getLogger(TableTransferDropTargetListener.class);
 	private MongodbFactory tadpoleFactory = MongodbFactory.eINSTANCE;
+	/** object view에서 넘어오는 테이블 네임 인텍스, 0번은 스키마 이름(rdb에서만 사용하는.) */
+	private int IDX_TABLE_NAME = 1;
 	
 	private TadpoleMongoDBERDEditor mongoEditor = null;
 	private TableTransferFactory transferFactory = new TableTransferFactory();
@@ -130,7 +132,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
 						if(arryTable.length == 0) continue;
 						
-						String tableName = arryTable[0];
+						String tableName = arryTable[IDX_TABLE_NAME];
 						mapTable.put(tableName, getColumns(tableName));
 					}
 					
@@ -191,7 +193,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
 			if(arryTable.length == 0) continue;
 			
-			String tableName = arryTable[0];
+			String tableName = arryTable[IDX_TABLE_NAME];
 			String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 			
 			// 이미 editor 상에 테이블 정보를 가져온다.
