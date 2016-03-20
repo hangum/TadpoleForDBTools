@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tadpole DB Hub commons SQL
+Bundle-Name: Tadpole DB Hub Engine
 Bundle-SymbolicName: com.hangum.tadpole.engine;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: hangum.com
@@ -19,7 +19,9 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/dbutils/commons-dbutils-1.6.jar,
  .,
  libs/driver/mongodb/mongo-java-driver-3.2.0.jar,
- libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar
+ libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar,
+ libs/driver/sqlite/sqlite-jdbc-3.7.2.jar,
+ libs/driver/mysql/mysql-connector-java-5.1.37-bin.jar
 Export-Package: 
  com.hangum.tadpole.db.bander.cubrid,
  com.hangum.tadpole.db.bander.oracle,

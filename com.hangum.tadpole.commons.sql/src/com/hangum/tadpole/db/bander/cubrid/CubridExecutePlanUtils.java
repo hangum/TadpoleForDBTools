@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 
@@ -67,9 +68,11 @@ public class CubridExecutePlanUtils {
 		PreparedStatement pstmt = null;
 
 		try {
-			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-			conn = DriverManager.getConnection(userDB.getUrl(), userDB.getUsers(), userDB.getPasswd());
-			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.		
+//			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
+//			conn = DriverManager.getConnection(userDB.getUrl(), userDB.getUsers(), userDB.getPasswd());
+//			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.
+			conn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
+			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.
 
 			sql = StringUtils.trim(sql).substring(6);
 			if(logger.isDebugEnabled()) logger.debug("[qubrid modifying query]" + sql);
@@ -80,7 +83,7 @@ public class CubridExecutePlanUtils {
 			rs = pstmt.executeQuery();
 			
 			String plan = ((CUBRIDStatement) pstmt).getQueryplan(); // 수행한 질의 플랜 정보를 가져오는 메소드.
-			conn.commit();
+//			conn.commit();
 			
 			if(logger.isDebugEnabled()) logger.debug("cubrid plan text : " + plan);
 			
