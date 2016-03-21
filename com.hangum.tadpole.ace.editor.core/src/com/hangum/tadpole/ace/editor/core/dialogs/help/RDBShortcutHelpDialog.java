@@ -138,7 +138,7 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$ //$NON-NLS-1$
 		}
 		
-		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ enter") 	); //$NON-NLS-2$ //$NON-NLS-1$
+		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ Enter|F9|F5") 	); //$NON-NLS-2$ //$NON-NLS-1$
 		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_11, 	prefixCtrlShortcut + "+ E") 		); //$NON-NLS-2$ //$NON-NLS-1$
 		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_13, 	prefixCtrlShortcut + " + " + prefixShiftShortcut + "+ F") );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 

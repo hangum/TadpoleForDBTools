@@ -312,16 +312,35 @@ editor.commands.addCommand({
     name: 'executeQuery',
     bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
     exec: function(editor) {
-    	try {
-    		var selectTxt = editorService.getSelectedText();
-   			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, selectTxt, editorService.isBlockText());
-    	} catch(e) {
-    		console.log(e);
-    		alert(shortcutErrMsg);
-    	}
+    	executeQuery();
     },
     readOnly: false
 });
+editor.commands.addCommand({
+    name: 'executeQuery2',
+    bindKey: {win: 'F9',  mac: 'F9'},
+    exec: function(editor) {
+    	executeQuery();
+    },
+    readOnly: false
+});
+editor.commands.addCommand({
+    name: 'executeQuery3',
+    bindKey: {win: 'F5',  mac: 'F5'},
+    exec: function(editor) {
+    	executeQuery();
+    },
+    readOnly: false
+});
+executeQuery = function() {
+	try {
+		var selectTxt = editorService.getSelectedText();
+			AceEditorBrowserHandler(editorService.EXECUTE_QUERY, selectTxt, editorService.isBlockText());
+	} catch(e) {
+		console.log(e);
+		alert(shortcutErrMsg);
+	}
+};
 editor.commands.addCommand({
     name: 'executeObjectViewer',
     bindKey: {win: 'F4',  mac: 'F4'},
