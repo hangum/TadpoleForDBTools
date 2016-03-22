@@ -234,7 +234,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if(MessageDialog.openConfirm(null, "Confirm", Messages.get().UserInfoPerference_9)) { //$NON-NLS-1$
+					if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().UserInfoPerference_9)) { //$NON-NLS-1$
 						try {
 							TadpoleSystem_UserRole.withdrawal(SessionManager.getUserSeq());
 							

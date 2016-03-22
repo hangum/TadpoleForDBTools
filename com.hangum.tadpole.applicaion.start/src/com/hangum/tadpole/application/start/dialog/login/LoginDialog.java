@@ -384,10 +384,10 @@ public class LoginDialog extends Dialog {
 	 */
 	private void initUI() {
 		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage(Locale.ENGLISH);
-		boolean isFound = false;
+		boolean isExist = false;
 		for(String strName : comboLanguage.getItems()) {
 			if(strName.equals(defaultLanguage)) {
-				isFound = true;
+				isExist = true;
 				comboLanguage.setText(strName);
 				changeUILocale(comboLanguage.getText());
 				break;
@@ -395,17 +395,17 @@ public class LoginDialog extends Dialog {
 		}
 		
 		// 쿠키에서 사용자 정보를 찾지 못했으면..
-		if(!isFound) {
+		if(!isExist) {
 			// 사용자 브라우저 랭귀지를 가져와서, 올챙이가 지원하는 랭귀지인지 검사해서..
 			String locale = RequestInfoUtils.getDisplayLocale();
 			for(String strLocale : comboLanguage.getItems()) {
 				if(strLocale.equals(locale)) {
-					isFound = true;
+					isExist = true;
 					break;
 				}
 			}
 			// 있으면... 
-			if(isFound) comboLanguage.setText(locale);
+			if(isExist) comboLanguage.setText(locale);
 			else comboLanguage.setText(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
 			
 			// 랭귀지를 바꾸어 준다.

@@ -133,7 +133,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		} catch(Exception e) {
 			logger.error("api security credential saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

@@ -195,36 +195,36 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		String txtShownInTheColumn = textShowInTheColumn.getText();
 		
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textSelectLimit.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtResultPage)) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textResultPage.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtQueryTimtout)) {
-			MessageDialog.openError(getShell(), "Confirm", "Query timeout is " + Messages.get().RDBPreferencePage_0);
+			MessageDialog.openError(getShell(), Messages.get().Confirm, "Query timeout is " + Messages.get().RDBPreferencePage_0);
 			textQueryTimeout.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtCommitCount)) {
-			MessageDialog.openError(getShell(), "Confirm", "Commit count is " + Messages.get().RDBPreferencePage_0);
+			MessageDialog.openError(getShell(), Messages.get().Confirm, "Commit count is " + Messages.get().RDBPreferencePage_0);
 			textCommitCount.setFocus();
 			return false;
 		}
 		
 		if("".equals(txtOraclePlan)) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().RDBPreferencePage_3);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_3);			 //$NON-NLS-1$
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtShownInTheColumn)) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().RDBPreferencePage_0);
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_0);
 			textShowInTheColumn.setFocus();
 			return false;
 		}
@@ -249,7 +249,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		} catch(Exception e) {
 			logger.error("RDBPreference saveing", e);
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

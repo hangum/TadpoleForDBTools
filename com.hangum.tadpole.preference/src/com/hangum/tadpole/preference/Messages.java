@@ -208,6 +208,10 @@ public class Messages {
 	public String EditorPreferencePage_6;
 
 	public String EditorPreferencePage_lblTheme_text;
+
+	public String LoginDialog_lblLanguage_text;
+
+	public String Confirm;
 	
 	// static {
 	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);

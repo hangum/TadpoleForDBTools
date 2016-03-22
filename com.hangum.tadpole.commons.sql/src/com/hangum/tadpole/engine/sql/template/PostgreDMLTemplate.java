@@ -23,6 +23,9 @@ public class PostgreDMLTemplate extends MySQLDMLTemplate {
 
 	/** plan_table */	
 	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN (ANALYZE on, VERBOSE on, COSTS on, BUFFERS on, TIMING on) ";
+	
+	/** plan_table */	
+	public static final String TMP_EXPLAIN_EXTENDED_JSON = "EXPLAIN (ANALYZE on, VERBOSE on, COSTS on, BUFFERS on, TIMING on, FORMAT JSON) ";
 
 	/** table */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE emp ( " + PublicTadpoleDefine.LINE_SEPARATOR + 

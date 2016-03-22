@@ -106,7 +106,7 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 		} catch(Exception e) {
 			logger.error("GeneralPreference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		
