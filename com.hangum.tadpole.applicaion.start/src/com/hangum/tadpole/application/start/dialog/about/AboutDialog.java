@@ -87,7 +87,7 @@ public class AboutDialog extends Dialog {
 
 		// Thanks, stariki
 		Text txtVersion = new Text(composite_1, SWT.NONE) ;
-		txtVersion.setText(Messages.get().AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
+		txtVersion.setText(Messages.get().AboutAction_3 + " V" + SystemDefine.MAJOR_VERSION + " " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
 		txtVersion.setEditable(false);
 
 		Text txtRleaseDate = new Text(composite_1, SWT.NONE) ;
