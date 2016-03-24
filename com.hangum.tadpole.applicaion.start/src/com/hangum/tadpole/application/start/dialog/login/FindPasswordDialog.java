@@ -70,7 +70,7 @@ public class FindPasswordDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(Messages.get().FindPasswordDialog_3);
+		lblEmail.setText(Messages.get().LoginDialog_1);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -93,7 +93,7 @@ public class FindPasswordDialog extends Dialog {
 		logger.info("Fogot password dialog" + strEmail);
 
 		if (!checkValidation()) {
-			MessageDialog.openWarning(getShell(), Messages.get().FindPasswordDialog_1, Messages.get().FindPasswordDialog_6);
+			MessageDialog.openWarning(getShell(), Messages.get().Confirm, Messages.get().FindPasswordDialog_6);
 			textEmail.setFocus();
 			return;
 		}

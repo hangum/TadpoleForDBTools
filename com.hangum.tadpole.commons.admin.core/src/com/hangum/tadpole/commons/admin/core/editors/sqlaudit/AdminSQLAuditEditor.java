@@ -87,7 +87,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.get().AdminSQLAuditEditor_0, Messages.get().AdminSQLAuditEditor_1, Messages.get().AdminSQLAuditEditor_2, Messages.get().AdminSQLAuditEditor_3, Messages.get().AdminSQLAuditEditor_4, Messages.get().AdminSQLAuditEditor_5, Messages.get().AdminSQLAuditEditor_6, Messages.get().AdminSQLAuditEditor_7, Messages.get().AdminSQLAuditEditor_8}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().AdminSQLAuditEditor_2, Messages.get().AdminSQLAuditEditor_3, Messages.get().AdminSQLAuditEditor_4, Messages.get().AdminSQLAuditEditor_5, Messages.get().AdminSQLAuditEditor_6, Messages.get().AdminSQLAuditEditor_7, Messages.get().AdminSQLAuditEditor_8}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -175,7 +175,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		tltmSecondsRefresh.setText(Messages.get().AdminSQLAuditEditor_17);
 		
 		Group compositeHead = new Group(parent, SWT.NONE);
-		compositeHead.setText(Messages.get().AdminSQLAuditEditor_9);
+		compositeHead.setText(Messages.get().Search);
 		GridLayout gl_compositeHead2 = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead2);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -201,7 +201,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		comboTypes.select(0);
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText(Messages.get().AdminSQLAuditEditor_12);
+		lblEmail.setText(Messages.get().email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -280,7 +280,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.get().AdminSQLAuditEditor_18);
+		btnSearch.setText(Messages.get().Search);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -353,7 +353,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	 */
 	private void download() {
 		if(gridHistory.getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().AdminSQLAuditEditor_21, Messages.get().AdminSQLAuditEditor_22)) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().AdminSQLAuditEditor_22)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -375,7 +375,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("SQLAudit.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(getSite().getShell(), Messages.get().AdminSQLAuditEditor_21, Messages.get().AdminSQLAuditEditor_24);
+			MessageDialog.openInformation(getSite().getShell(), Messages.get().Confirm, Messages.get().AdminSQLAuditEditor_24);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		

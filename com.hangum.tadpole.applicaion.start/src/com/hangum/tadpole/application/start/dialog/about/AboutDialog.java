@@ -125,7 +125,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().AboutDialog_9, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
 	}
 
 	/**

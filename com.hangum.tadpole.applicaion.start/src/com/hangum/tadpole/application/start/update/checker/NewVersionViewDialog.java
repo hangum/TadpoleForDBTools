@@ -129,7 +129,7 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().NewVersionViewDialog_9, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true); //$NON-NLS-1$
 	}
 
 	/**

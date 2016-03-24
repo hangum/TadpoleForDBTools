@@ -60,7 +60,7 @@ public class UserMgntEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.get().UserMgntEditorInput_1;
+		return Messages.get().UserMgntEditorInput_0;
 	}
 
 }

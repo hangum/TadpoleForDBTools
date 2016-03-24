@@ -105,7 +105,7 @@ public class UserLoginHistoryDialog extends Dialog {
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText(Messages.get().UserLoginHistoryDialog_1);
+		lblEmail.setText(Messages.get().email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.addKeyListener(new KeyAdapter() {
@@ -123,7 +123,7 @@ public class UserLoginHistoryDialog extends Dialog {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.get().UserLoginHistoryDialog_2);
+		btnSearch.setText(Messages.get().Search);
 		
 		Label lblDate = new Label(compositeHead, SWT.NONE);
 		lblDate.setText("로그인 시간");
@@ -148,7 +148,7 @@ public class UserLoginHistoryDialog extends Dialog {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnIp = tableViewerColumn.getColumn();
 		tblclmnIp.setWidth(100);
-		tblclmnIp.setText(Messages.get().UserLoginHistoryDialog_3);
+		tblclmnIp.setText(Messages.get().IP);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnConnectionTime = tableViewerColumn_1.getColumn();
@@ -191,7 +191,7 @@ public class UserLoginHistoryDialog extends Dialog {
 			listLoginHistory.clear();
 			tvHistory.setInput(listLoginHistory);
 			
-			MessageDialog.openError(getShell(), Messages.get().UserLoginHistoryDialog_7, Messages.get().UserLoginHistoryDialog_8);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().UserLoginHistoryDialog_8);
 			return;
 		}
 		

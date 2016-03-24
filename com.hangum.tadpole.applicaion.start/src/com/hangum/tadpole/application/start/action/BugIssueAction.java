@@ -31,7 +31,7 @@ public class BugIssueAction extends Action {
 		super(Messages.get().BugIssueAction_0);
 		setId(this.getClass().getName());
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(BrowserActivator.APPLICTION_ID, "resources/icons/bugAndIssue.png")); //$NON-NLS-1$
-		setToolTipText(Messages.get().BugIssueAction_2);
+		setToolTipText(Messages.get().BugIssueAction_0);
 		
 		this.window = window;
 	}

@@ -90,14 +90,14 @@ public class ModifyUserDialog extends Dialog {
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(Messages.get().ModifyUserDialog_1);
+		lblEmail.setText(Messages.get().email);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setEditable(false);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText(Messages.get().ModifyUserDialog_2);
+		lblName.setText(Messages.get().Name);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setEditable(false);
@@ -175,13 +175,13 @@ public class ModifyUserDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(BTN_INITIALIZE_PASSWORD == buttonId) {
-			if(MessageDialog.openConfirm(null, Messages.get().ModifyUserDialog_8, String.format(Messages.get().ModifyUserDialog_9, "tadpole"))) { //$NON-NLS-3$
+			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ModifyUserDialog_9, "tadpole"))) { //$NON-NLS-3$
 				userDAO.setPasswd("tadpole"); //$NON-NLS-1$
 				try {
 					TadpoleSystem_UserQuery.updateUserPassword(userDAO);
 					SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), userDAO.getPasswd());
 					
-					MessageDialog.openInformation(null, Messages.get().ModifyUserDialog_8, Messages.get().ModifyUserDialog_17);
+					MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().ModifyUserDialog_17);
 				} catch(Exception e) {
 					logger.error("Changing password", e); //$NON-NLS-1$
 					MessageDialog.openError(getShell(), "Error", e.getMessage());			 //$NON-NLS-1$
@@ -195,7 +195,7 @@ public class ModifyUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if(MessageDialog.openConfirm(getShell(), Messages.get().ModifyUserDialog_12, Messages.get().ModifyUserDialog_13)) {
+		if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
 			user.setSeq(userDAO.getSeq());
 			user.setAllow_ip(textAllowIP.getText());
@@ -233,8 +233,8 @@ public class ModifyUserDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, BTN_INITIALIZE_PASSWORD, Messages.get().ModifyUserDialog_19, false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ModifyUserDialog_11, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ModifyUserDialog_14, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Modify, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
 	}
 
 	/**

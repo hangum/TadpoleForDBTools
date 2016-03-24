@@ -88,7 +88,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 				saveData();
 			}
 		});
-		tltmSave.setToolTipText(Messages.get().AdminSystemSettingEditor_1);
+		tltmSave.setToolTipText(Messages.get().Save);
 		tltmSave.setImage(GlobalImageUtils.getSave());
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		

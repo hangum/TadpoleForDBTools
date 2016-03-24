@@ -129,7 +129,7 @@ public class UserListComposite extends Composite {
 				initUI();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().AdminUserListComposite_0);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 	
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
@@ -140,12 +140,12 @@ public class UserListComposite extends Composite {
 				addUser();
 			}
 		});
-		tltmAdd.setToolTipText(Messages.get().AdminUserListComposite_1);
+		tltmAdd.setToolTipText(Messages.get().Add);
 	
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.setImage(GlobalImageUtils.getModify());
 		tltmModify.setEnabled(false);
-		tltmModify.setToolTipText(Messages.get().AdminUserListComposite_2);
+		tltmModify.setToolTipText(Messages.get().Modify);
 		tltmModify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -192,7 +192,7 @@ public class UserListComposite extends Composite {
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText(Messages.get().AdminUserListComposite_3);
+		lblSearch.setText(Messages.get().Search);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -245,9 +245,9 @@ public class UserListComposite extends Composite {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {Messages.get().AdminUserListComposite_4, Messages.get().AdminUserListComposite_5, 
+		String[] colNames = {Messages.get().email, Messages.get().Name, 
 							Messages.get().AdminUserListComposite_6, Messages.get().UserListComposite_6, Messages.get().AdminUserListComposite_7, Messages.get().AdminUserListComposite_8, 
-							Messages.get().AdminUserListComposite_9, Messages.get().AdminUserListComposite_10, Messages.get().AdminUserListComposite_11};
+							Messages.get().AdminUserListComposite_9, Messages.get().Delete, Messages.get().AdminUserListComposite_11};
 		int[] colSize = {200, 150, 90, 70, 60, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
