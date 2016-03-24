@@ -38,9 +38,7 @@ public class Messages {
 	public String RDBShortcutHelpDialog_5;
 	public String RDBShortcutHelpDialog_8;
 	public String RDBShortcutHelpDialog_9;
-	//	static {
-	//	NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	//}
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
