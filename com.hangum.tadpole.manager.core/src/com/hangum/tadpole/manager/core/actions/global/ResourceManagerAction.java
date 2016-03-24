@@ -51,7 +51,7 @@ public class ResourceManagerAction extends Action implements ISelectionListener,
 		
 		setId(ID);
 		setText(Messages.get().ResourceManagerAction_0);
-		setToolTipText(Messages.get().ResourceManagerAction_1);
+		setToolTipText(Messages.get().ResourceManagerAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/resources.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}

@@ -201,19 +201,19 @@ public class UserManagerDialog extends Dialog {
 			boolean isReadOnly = btnReadOnly.getSelection();
 			
 			if("".equals(id)) { //$NON-NLS-1$
-				MessageDialog.openError(null, "Error", Messages.get().UserManagerDialog_11); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_11); //$NON-NLS-1$
 				textID.setFocus();
 				return;
 			} else if("".equals(passwd)) { //$NON-NLS-1$
-				MessageDialog.openError(null, "Error", Messages.get().UserManagerDialog_14); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_14); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			} else if("".equals(passwd2)) { //$NON-NLS-1$
-				MessageDialog.openError(null, "Error", Messages.get().UserManagerDialog_17); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_17); //$NON-NLS-1$
 				textRePassword.setFocus();
 				return;
 			} else if(!passwd.equals(passwd2)) {
-				MessageDialog.openError(null, "Error", Messages.get().UserManagerDialog_19); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_19); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			}
@@ -250,7 +250,7 @@ public class UserManagerDialog extends Dialog {
 					}
 				}
 			} else {
-				MessageDialog.openError(null, "Confirm", "삭제 할 사용자를 선택하여 주세요.");
+				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().DeleteMsg);
 			}
 		} else if(buttonId == IDialogConstants.CANCEL_ID) {
 			super.cancelPressed();
@@ -264,10 +264,10 @@ public class UserManagerDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, DELETE_ID, Messages.get().UserManagerDialog_4, false);
+		createButton(parent, DELETE_ID, Messages.get().Delete, false);
 		createButton(parent, APPEND_USER_ID, "Add User", true);
 //		createButton(parent, IDialogConstants.OK_ID, Messages.get().UserManagerDialog_6, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().UserManagerDialog_7, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**

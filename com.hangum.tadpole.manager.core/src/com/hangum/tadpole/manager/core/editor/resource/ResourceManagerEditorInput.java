@@ -47,7 +47,7 @@ public class ResourceManagerEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.get().ResourceManagerEditorInput_0;
+		return Messages.get().ResourceManagerAction_0;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class ResourceManagerEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.get().ResourceManagerEditorInput_1;
+		return Messages.get().ResourceManagerAction_0;
 	}
 
 }

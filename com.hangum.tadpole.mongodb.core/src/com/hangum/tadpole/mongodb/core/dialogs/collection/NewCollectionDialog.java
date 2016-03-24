@@ -125,13 +125,13 @@ public class NewCollectionDialog extends Dialog {
 		if("".equals(textName.getText().trim())) { //$NON-NLS-1$
 			
 			textName.setFocus();			
-			MessageDialog.openError(null, Messages.get().NewCollectionDialog_4, Messages.get().NewCollectionDialog_5);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_5);
 			return;
 			
 		} else if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openError(null, Messages.get().NewCollectionDialog_4, Messages.get().NewCollectionDialog_8);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 		
@@ -140,7 +140,7 @@ public class NewCollectionDialog extends Dialog {
 			DBCollection dbColl = MongoDBQuery.findCollection(userDB, textName.getText().trim());
 			if(dbColl == null) {
 				textName.setFocus();			
-				MessageDialog.openError(null, Messages.get().NewCollectionDialog_4, Messages.get().NewCollectionDialog_10);
+				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_10);
 				return;
 			}
 		} catch (Exception e) {

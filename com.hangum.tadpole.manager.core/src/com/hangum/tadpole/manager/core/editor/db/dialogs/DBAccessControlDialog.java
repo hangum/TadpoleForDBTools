@@ -125,7 +125,7 @@ public class DBAccessControlDialog extends Dialog {
 		
 		Label lblDbName = new Label(compositeHead, SWT.NONE);
 		lblDbName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDbName.setText(Messages.get().DBAccessControlDialog_1);
+		lblDbName.setText(Messages.get().DBName);
 		
 		textDBName = new Text(compositeHead, SWT.BORDER);
 		textDBName.setEditable(false);
@@ -134,7 +134,7 @@ public class DBAccessControlDialog extends Dialog {
 		
 		Label lblUser = new Label(compositeHead, SWT.NONE);
 		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblUser.setText(Messages.get().DBAccessControlDialog_2);
+		lblUser.setText(Messages.get().User);
 		
 		comboUser = new Combo(compositeHead, SWT.READ_ONLY);
 		comboUser.addSelectionListener(new SelectionAdapter() {
@@ -164,7 +164,7 @@ public class DBAccessControlDialog extends Dialog {
 		btnSelect = new Button(grpAuthority, SWT.CHECK);
 		btnSelect.setEnabled(false);
 		btnSelect.setSelection(true);
-		btnSelect.setText(Messages.get().DBAccessControlDialog_6);
+		btnSelect.setText(Messages.get().SELECT);
 		
 		Composite compositeSelectBtn = new Composite(grpAuthority, SWT.NONE);
 		compositeSelectBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -181,7 +181,7 @@ public class DBAccessControlDialog extends Dialog {
 				}
 			}
 		});
-		btnSelectAdd.setText(Messages.get().DBAccessControlDialog_7);
+		btnSelectAdd.setText(Messages.get().Add);
 		btnSelect.setEnabled(false);
 //		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT) btnSelect.setEnabled(true);
 		
@@ -191,7 +191,7 @@ public class DBAccessControlDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tvSelect.getSelection();
 				if(!iss.isEmpty()) {
-					if(!MessageDialog.openConfirm(getShell(), Messages.get().DBAccessControlDialog_8, Messages.get().DBAccessControlDialog_9)) return;
+					if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().DBAccessControlDialog_9)) return;
 					
 					AccessCtlObjectDAO dao = (AccessCtlObjectDAO)iss.getFirstElement();
 					
@@ -200,7 +200,7 @@ public class DBAccessControlDialog extends Dialog {
 				}
 			}
 		});
-		btnSelectDelete.setText(Messages.get().DBAccessControlDialog_10);
+		btnSelectDelete.setText(Messages.get().Delete);
 		btnSelectDelete.setEnabled(false);
 		new Label(compositeSelectBtn, SWT.NONE);
 		
@@ -235,7 +235,7 @@ public class DBAccessControlDialog extends Dialog {
 		TableViewerColumn tvColumnName = new TableViewerColumn(tvSelect, SWT.NONE);
 		TableColumn tblclmnTable = tvColumnName.getColumn();
 		tblclmnTable.setWidth(150);
-		tblclmnTable.setText(Messages.get().DBAccessControlDialog_11);
+		tblclmnTable.setText(Messages.get().Table);
 		
 		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvSelect, SWT.NONE);
 		TableColumn tblclmnDoNotUse = tableViewerColumn_2.getColumn();
@@ -245,7 +245,7 @@ public class DBAccessControlDialog extends Dialog {
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvSelect, SWT.NONE);
 		TableColumn tblclmnColumn = tableViewerColumn_1.getColumn();
 		tblclmnColumn.setWidth(500);
-		tblclmnColumn.setText(Messages.get().DBAccessControlDialog_13);
+		tblclmnColumn.setText(Messages.get().Column);
 		
 		tvSelect.setContentProvider(new ArrayContentProvider());
 		tvSelect.setLabelProvider(new SelectTableFilterLabelprovider());
@@ -324,7 +324,7 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		if(!MessageDialog.openConfirm(getShell(), Messages.get().DBAccessControlDialog_8, Messages.get().DBAccessControlDialog_22)) return;
+		if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().DBAccessControlDialog_22)) return;
 		
 		DBAccessControlDAO dao = new DBAccessControlDAO();
 		dao.setSeq(dbAccessDetail.getSeq());
@@ -345,8 +345,8 @@ public class DBAccessControlDialog extends Dialog {
 		try {
 			TadpoleSystem_AccessControl.updateDBAccessControl(dao);
 		} catch (Exception e) {
-			logger.error(Messages.get().DBAccessControlDialog_23, e);
-			MessageDialog.openError(getShell(), Messages.get().DBAccessControlDialog_24, Messages.get().DBAccessControlDialog_25 + e.getMessage());
+			logger.error("Update dbAccessContorl error", e);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DBAccessControlDialog_25 + e.getMessage());
 			return;
 		}
 		
@@ -360,8 +360,8 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().DBAccessControlDialog_26, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().DBAccessControlDialog_27, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 
 	/**

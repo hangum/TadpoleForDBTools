@@ -144,7 +144,7 @@ public class DBListComposite extends Composite {
 				initData();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().DBListComposite_0);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		
 		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -266,7 +266,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmQueryHistory.setEnabled(false);
-		tltmQueryHistory.setToolTipText(Messages.get().DBListComposite_7);
+		tltmQueryHistory.setToolTipText(Messages.get().QueryHistory);
 		
 		ToolItem toolItem_2 = new ToolItem(toolBar, SWT.SEPARATOR);
 		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
@@ -294,7 +294,7 @@ public class DBListComposite extends Composite {
 		}
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText(Messages.get().DBListComposite_9);
+		lblSearch.setText(Messages.get().Search);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -406,15 +406,15 @@ public class DBListComposite extends Composite {
 				
 		TreeViewerColumn colRoleName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colRoleName.getColumn().setWidth(80);
-		colRoleName.getColumn().setText(Messages.get().DBListComposite_12);
+		colRoleName.getColumn().setText(Messages.get().Role);
 		
 		TreeViewerColumn colName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colName.getColumn().setWidth(330);
-		colName.getColumn().setText(Messages.get().DBListComposite_13 + "(" + Messages.get().DBListComposite_16 + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		colName.getColumn().setText(Messages.get().DBInfo + "(" + Messages.get().DBListComposite_16 + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		TreeViewerColumn colApproval = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colApproval.getColumn().setWidth(70);
-		colApproval.getColumn().setText(Messages.get().DBListComposite_14);
+		colApproval.getColumn().setText(Messages.get().User);
 		
 		TreeViewerColumn colVisible = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colVisible.getColumn().setWidth(50);
@@ -476,7 +476,7 @@ public class DBListComposite extends Composite {
 		TadpoleUserDbRoleDAO userDBRole = (TadpoleUserDbRoleDAO)ss.getFirstElement();
 		if(userDBRole.getParent().getUser_seq() == userDBRole.getUser_seq()) return;
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().DBListComposite_17, Messages.get().DBListComposite_18) ) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().DBListComposite_18) ) return;
 
 		try {
 			TadpoleSystem_UserDBQuery.removeUserRoleDB(userDBRole.getSeq());
@@ -488,7 +488,7 @@ public class DBListComposite extends Composite {
 		} catch (Exception e) { 
 			logger.error("delete user exception", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().DBListComposite_19, Messages.get().DBListComposite_20, errStatus);
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, Messages.get().DBListComposite_6, errStatus);
 		}
 	}
 	
@@ -508,7 +508,7 @@ public class DBListComposite extends Composite {
 				logger.error("Query History open", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().DBListComposite_21, Messages.get().DBListComposite_22, errStatus);
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().QueryHistory, errStatus);
 			}
 		}
 	}
@@ -527,7 +527,7 @@ public class DBListComposite extends Composite {
 			logger.error("SQL Editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e);
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().DBListComposite_23, Messages.get().DBListComposite_24, errStatus);
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().DBListComposite_24, errStatus);
 		}
 	}
 	

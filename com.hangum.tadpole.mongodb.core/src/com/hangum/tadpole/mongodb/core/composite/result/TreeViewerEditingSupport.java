@@ -88,7 +88,7 @@ public class TreeViewerEditingSupport extends EditingSupport {
 			MongoDBQuery.updateDocument(userDB, collectionName, dto.getDbObject(), fullyKey, value.toString());
 			
 		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.get().TreeViewerEditingSupport_2, Messages.get().TreeViewerEditingSupport_3 +  dto.getType() + Messages.get().TreeViewerEditingSupport_4);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().TreeViewerEditingSupport_3 +  dto.getType() + Messages.get().TreeViewerEditingSupport_4);
 			return;
 		}
 		

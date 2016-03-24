@@ -49,7 +49,7 @@ public class SchemaHistoryEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.get().SchemaHistoryEditorInput_0;
+		return Messages.get().SchemaHistoryAction_0;
 	}
 
 	@Override
@@ -59,6 +59,6 @@ public class SchemaHistoryEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.get().SchemaHistoryEditorInput_1;
+		return Messages.get().SchemaHistoryAction_0;
 	}
 }

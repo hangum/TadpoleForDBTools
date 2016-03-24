@@ -123,7 +123,7 @@ public class CollectionInformationComposite extends Composite {
 				initData(userDB);
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().CollectionInformationComposite_tltmRefresh_text);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 
 		Composite compositeHead = new Composite(this, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -136,7 +136,7 @@ public class CollectionInformationComposite extends Composite {
 		
 		Label lblName = new Label(compositeHead, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblName.setText(Messages.get().CollectionInformationComposite_0);
+		lblName.setText(Messages.get().Filter);
 		
 		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

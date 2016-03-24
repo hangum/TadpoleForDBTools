@@ -96,14 +96,14 @@ public class DetailUserAndDBRoleDialog extends Dialog {
 		composite.setLayout(new GridLayout(5, false));
 		
 		Label lblEmail = new Label(composite, SWT.NONE);
-		lblEmail.setText(Messages.get().DetailUserAndDBRoleDialog_1);
+		lblEmail.setText(Messages.get().Email);
 		
 		textEMail = new Text(composite, SWT.BORDER);
 		textEMail.setEditable(false);
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblRoleType = new Label(composite, SWT.NONE);
-		lblRoleType.setText(Messages.get().DetailUserAndDBRoleDialog_2);
+		lblRoleType.setText(Messages.get().RoleType);
 		
 		comboRoleType = new Combo(composite, SWT.NONE | SWT.READ_ONLY);
 		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -115,7 +115,7 @@ public class DetailUserAndDBRoleDialog extends Dialog {
 		comboRoleType.select(0);
 		
 		Label lblTermsUfUse = new Label(composite, SWT.NONE);
-		lblTermsUfUse.setText(Messages.get().DetailUserAndDBRoleDialog_4);
+		lblTermsUfUse.setText(Messages.get().Term);
 		
 		dateTimeStart = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN);
 		
@@ -157,14 +157,14 @@ public class DetailUserAndDBRoleDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("NONE".equals(comboRoleType.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().DetailUserAndDBRoleDialog_7, Messages.get().DetailUserAndDBRoleDialog_8);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DetailUserAndDBRoleDialog_8);
 			comboRoleType.setFocus();
 			return;
 		}
 		
 		// 사용자가 해당 디비에 추가 될수 있는지 검사합니다. 
 		try {
-			if(!MessageDialog.openConfirm(getShell(), Messages.get().DetailUserAndDBRoleDialog_9, Messages.get().FindUserDialog_4)) return;
+			if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().FindUserDialog_4)) return;
 			
 			Calendar calStart = Calendar.getInstance();
 			calStart.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
@@ -178,11 +178,11 @@ public class DetailUserAndDBRoleDialog extends Dialog {
 			userDBRole.setTerms_of_use_endtime(new Timestamp(calEnd.getTimeInMillis()));
 			TadpoleSystem_UserRole.updateTadpoleUserDBRole(userDBRole);
 			
-			MessageDialog.openInformation(getShell(), Messages.get().DetailUserAndDBRoleDialog_9, Messages.get().DetailUserAndDBRoleDialog_11);
+			MessageDialog.openInformation(getShell(), Messages.get().Confirm, Messages.get().DetailUserAndDBRoleDialog_11);
 			
 		} catch (Exception e) {
 			logger.error("Is DB add role error.", e); //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().DetailUserAndDBRoleDialog_7, Messages.get().DetailUserAndDBRoleDialog_14 + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DetailUserAndDBRoleDialog_14 + e.getMessage());
 			
 			return;
 		}
@@ -197,8 +197,8 @@ public class DetailUserAndDBRoleDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().DetailUserAndDBRoleDialog_15, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().DetailUserAndDBRoleDialog_16, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Update, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
 	/**

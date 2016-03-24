@@ -114,7 +114,7 @@ public class NewDocumentDialog extends Dialog {
 		if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openError(null, Messages.get().NewDocumentDialog_3, Messages.get().NewDocumentDialog_4);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 
@@ -152,8 +152,8 @@ public class NewDocumentDialog extends Dialog {
 			}
 		});
 		
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().NewDocumentDialog_2, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().NewDocumentDialog_5, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Insert, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**

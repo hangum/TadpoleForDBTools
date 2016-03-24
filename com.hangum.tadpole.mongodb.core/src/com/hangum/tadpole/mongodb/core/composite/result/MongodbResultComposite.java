@@ -300,7 +300,7 @@ public class MongodbResultComposite extends Composite {
 		
 		Label lblFilter = new Label(compositeBodyTable, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.get().MongodbResultComposite_11);
+		lblFilter.setText(Messages.get().Filter);
 		
 		textFilter = new Text(compositeBodyTable, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.addKeyListener(new KeyAdapter() {
@@ -458,7 +458,7 @@ public class MongodbResultComposite extends Composite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
 		TableColumn tblclmnDate = tableViewerColumn.getColumn();
 		tblclmnDate.setWidth(140);
-		tblclmnDate.setText(Messages.get().MongodbResultComposite_18);
+		tblclmnDate.setText(Messages.get().Date);
 		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 0));
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
@@ -933,9 +933,9 @@ public class MongodbResultComposite extends Composite {
 	private void deleteDocumentTree() {
 		IStructuredSelection iss = (IStructuredSelection)treeViewerMongo.getSelection();
 		if(iss.isEmpty()) {
-			MessageDialog.openError(null, Messages.get().MongodbResultComposite_9, Messages.get().MongodbResultComposite_10);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_10);
 			return;
-		} else if(MessageDialog.openConfirm(null, Messages.get().MongodbResultComposite_9, Messages.get().MongodbResultComposite_12)) {
+		} else if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_12)) {
 			
 			MongodbTreeViewDTO dto = (MongodbTreeViewDTO)iss.getFirstElement();
 			if(logger.isDebugEnabled()) logger.info("[delete object id is]" + dto.getDbObject().toString()); //$NON-NLS-1$
@@ -957,9 +957,9 @@ public class MongodbResultComposite extends Composite {
 	private void deleteDocumentTable() {
 		IStructuredSelection iss = (IStructuredSelection)resultTableViewer.getSelection();
 		if(iss.isEmpty()) {
-			MessageDialog.openError(null, Messages.get().MongodbResultComposite_9, Messages.get().MongodbResultComposite_10);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_10);
 			return;
-		} else if(MessageDialog.openConfirm(null, Messages.get().MongodbResultComposite_9, Messages.get().MongodbResultComposite_12)) {
+		} else if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_12)) {
 			HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)iss.getFirstElement();
 			Object dbObject = rsResult.get(MongoDBDefine.PRIMARY_ID_KEY);
 			

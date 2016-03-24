@@ -104,7 +104,7 @@ public class SQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.get().ExecutedSQLEditor_2, Messages.get().ExecutedSQLEditor_3, Messages.get().ExecutedSQLEditor_4, Messages.get().ExecutedSQLEditor_5, Messages.get().ExecutedSQLEditor_6, Messages.get().ExecutedSQLEditor_7, Messages.get().ExecutedSQLEditor_8, Messages.get().ExecutedSQLEditor_9, Messages.get().ExecutedSQLEditor_10}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().Date, Messages.get().ExecutedSQLEditor_5, Messages.get().ExecutedSQLEditor_6, Messages.get().ExecutedSQLEditor_7, Messages.get().ResultType, Messages.get().ExecutedSQLEditor_9, Messages.get().IP}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -203,7 +203,7 @@ public class SQLAuditEditor extends EditorPart {
 		////////////////////////////////////////////////////////////////////////////////////////////////
 
 		Group compositeHead = new Group(parent, SWT.NONE);
-		compositeHead.setText(Messages.get().ExecutedSQLEditor_11);
+		compositeHead.setText(Messages.get().Search);
 		GridLayout gl_compositeHead2 = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead2);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -213,7 +213,7 @@ public class SQLAuditEditor extends EditorPart {
 		gd_lblDatabase.widthHint = 65;
 		gd_lblDatabase.minimumWidth = 65;
 		lblDatabase.setLayoutData(gd_lblDatabase);
-		lblDatabase.setText(Messages.get().ExecutedSQLEditor_12);
+		lblDatabase.setText(Messages.get().Database);
 
 		comboDatabase = new Combo(compositeHead, SWT.READ_ONLY);
 		GridData gd_comboDisplayName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -226,7 +226,7 @@ public class SQLAuditEditor extends EditorPart {
 		gd_lblUser.minimumWidth = 65;
 		gd_lblUser.widthHint = 65;
 		lblTypes.setLayoutData(gd_lblUser);
-		lblTypes.setText(Messages.get().ExecutedSQLEditor_13);
+		lblTypes.setText(Messages.get().Type);
 		
 		comboTypes = new Combo(compositeHead, SWT.READ_ONLY);
 		GridData gd_comboUserName = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -239,7 +239,7 @@ public class SQLAuditEditor extends EditorPart {
 		comboTypes.select(0);
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText(Messages.get().ExecutedSQLEditor_14);
+		lblEmail.setText(Messages.get().Email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -264,7 +264,7 @@ public class SQLAuditEditor extends EditorPart {
 		compositeInSearch.setLayout(gl_compositeInSearch);
 				
 		Label lblDate = new Label(compositeInSearch, SWT.NONE);
-		lblDate.setText(Messages.get().ExecutedSQLEditor_15);
+		lblDate.setText(Messages.get().Term);
 						
 		dateTimeStart = new DateTime(compositeInSearch, SWT.BORDER | SWT.DROP_DOWN);
 		Label labelTerm = new Label(compositeInSearch, SWT.NONE);
@@ -290,7 +290,7 @@ public class SQLAuditEditor extends EditorPart {
 		});
 		
 		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
-		lblMilis.setText(Messages.get().ExecutedSQLEditor_19);
+		lblMilis.setText(Messages.get().Message);
 		new Label(compositeInSearch, SWT.NONE);
 		
 		Composite compositeSearchDetail = new Composite(compositeHead, SWT.NONE);
@@ -320,7 +320,7 @@ public class SQLAuditEditor extends EditorPart {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.get().ExecutedSQLEditor_11);
+		btnSearch.setText(Messages.get().Search);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -370,7 +370,7 @@ public class SQLAuditEditor extends EditorPart {
 				download();
 			}
 		});
-		btnDownload.setText(Messages.get().ExecutedSQLEditor_25);
+		btnDownload.setText(Messages.get().SQL);
 
 		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
 		btnShowQueryEditor.addSelectionListener(new SelectionAdapter() {
@@ -379,7 +379,7 @@ public class SQLAuditEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
-		btnShowQueryEditor.setText(Messages.get().ExecutedSQLEditor_26);
+		btnShowQueryEditor.setText(Messages.get().Sec);
 
 		initUIData();
 		registerServiceHandler();
@@ -393,7 +393,7 @@ public class SQLAuditEditor extends EditorPart {
 	 */
 	private void download() {
 		if(gridHistory.getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().ExecutedSQLEditor_27, Messages.get().ExecutedSQLEditor_28)) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().ExecutedSQLEditor_28)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -415,7 +415,7 @@ public class SQLAuditEditor extends EditorPart {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("SQLAudit.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(getSite().getShell(), Messages.get().ExecutedSQLEditor_27, Messages.get().ExecutedSQLEditor_31);
+			MessageDialog.openInformation(getSite().getShell(), Messages.get().Confirm, Messages.get().ExecutedSQLEditor_31);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		

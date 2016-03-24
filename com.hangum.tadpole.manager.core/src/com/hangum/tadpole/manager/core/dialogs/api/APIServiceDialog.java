@@ -113,27 +113,27 @@ public class APIServiceDialog extends Dialog {
 		compositeTitle.setLayout(new GridLayout(2, false));
 		
 		Label lblApiName = new Label(compositeTitle, SWT.NONE);
-		lblApiName.setText(Messages.get().APIServiceDialog_0);
+		lblApiName.setText(Messages.get().APIName);
 		
 		textAPIName = new Text(compositeTitle, SWT.BORDER);
 		textAPIName.setEditable(false);
 		textAPIName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblApiUrl = new Label(compositeTitle, SWT.NONE);
-		lblApiUrl.setText(Messages.get().APIServiceDialog_1);
+		lblApiUrl.setText(Messages.get().APIURL);
 		
 		textApiURL = new Text(compositeTitle, SWT.BORDER);
 		textApiURL.setEditable(false);
 		textApiURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblArgument = new Label(compositeTitle, SWT.NONE);
-		lblArgument.setText(Messages.get().APIServiceDialog_2);
+		lblArgument.setText(Messages.get().Argument);
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
-		lblType.setText(Messages.get().APIServiceDialog_3);
+		lblType.setText(Messages.get().ResultType);
 		
 		comboResultType = new Combo(compositeTitle, SWT.READ_ONLY);
 		comboResultType.addSelectionListener(new SelectionAdapter() {
@@ -160,7 +160,7 @@ public class APIServiceDialog extends Dialog {
 		compositeDetailCSV.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnAddHeader = new Button(compositeDetailCSV, SWT.CHECK);
-		btnAddHeader.setText(Messages.get().APIServiceDialog_4);
+		btnAddHeader.setText(Messages.get().AddHeader);
 		
 		Label lblDelimiter = new Label(compositeDetailCSV, SWT.NONE);
 		lblDelimiter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -173,7 +173,7 @@ public class APIServiceDialog extends Dialog {
 		Group grpResultSet = new Group(container, SWT.NONE);
 		grpResultSet.setLayout(new GridLayout(1, false));
 		grpResultSet.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpResultSet.setText(Messages.get().APIServiceDialog_6);
+		grpResultSet.setText(Messages.get().Result);
 		
 		textResult = new Text(grpResultSet, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -327,9 +327,9 @@ public class APIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().APIServiceDialog_8, false);
-		createButton(parent, DOWNLOAD_BTN_ID, Messages.get().APIServiceDialog_9, false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().APIServiceDialog_10, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, DOWNLOAD_BTN_ID, Messages.get().Download, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().RUN, true);
 	}
 	
 	/**

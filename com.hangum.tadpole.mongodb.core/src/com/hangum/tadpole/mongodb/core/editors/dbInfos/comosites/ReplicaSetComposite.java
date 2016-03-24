@@ -86,7 +86,7 @@ public class ReplicaSetComposite extends Composite {
 				initData();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().CollectionInformationComposite_tltmRefresh_text);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 
 		Composite compositeServerStatus = new Composite(this, SWT.NONE);
 		compositeServerStatus.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

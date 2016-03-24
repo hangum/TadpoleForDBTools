@@ -53,7 +53,7 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 		
 		setId(ID);
 		setText(Messages.get().UserPermissionAction_3);
-		setToolTipText(Messages.get().UserPermissionAction_4);
+		setToolTipText(Messages.get().Type);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/db.png")); //$NON-NLS-1$
 		window.getSelectionService().addPostSelectionListener(this);
 	}
