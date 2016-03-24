@@ -158,7 +158,7 @@ public class SQLToDBImportDialog extends Dialog {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
-				if(!MessageDialog.openConfirm(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_5)) return;
+				if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_5)) return;
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();
@@ -230,11 +230,11 @@ public class SQLToDBImportDialog extends Dialog {
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().CsvToRDBImportDialog_21);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_21);
 			return ;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_UploadQuestion)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_UploadQuestion)) return;
 		bufferBatchResult = new StringBuffer();
 		
 		try{
@@ -264,11 +264,11 @@ public class SQLToDBImportDialog extends Dialog {
 				MessageDialog.openInformation(null, "Confirm", Messages.get().SQLToDBImportDialog_StoreData); //$NON-NLS-1$
 		} catch (IOException e) {
 			logger.error(Messages.get().SQLToDBImportDialog_ReadError, e);
-			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
 			
 		} catch (Exception e) {
 			logger.error(Messages.get().SQLToDBImportDialog_ImportException, e);
-			MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
 		} finally {
 			if(bomInputStream != null) bomInputStream.close();
 		}
@@ -277,7 +277,7 @@ public class SQLToDBImportDialog extends Dialog {
 	private void saveLog(){
 		try {
 			if(bufferBatchResult == null || "".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, Messages.get().SQLToDBImportDialog_LogEmpty);
+				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_LogEmpty);
 				return;
 			}
 			String filename = PublicTadpoleDefine.TEMP_DIR + userDB.getDisplay_name() + "_SQLImportResult.log"; //$NON-NLS-1$
@@ -372,7 +372,7 @@ public class SQLToDBImportDialog extends Dialog {
 			conn.setAutoCommit(true);
 			
 			if (result < 0 && !"".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().CsvToRDBImportDialog_4, bufferBatchResult.toString());
+				MessageDialog.openError(null, Messages.get().Confirm, bufferBatchResult.toString());
 			}
 		} catch (SQLException e) {
 			logger.error("Execute Batch error", e); //$NON-NLS-1$
@@ -477,7 +477,7 @@ public class SQLToDBImportDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SQLToDBImportDialog_Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
 	/**

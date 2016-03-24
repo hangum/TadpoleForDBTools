@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Tadpole DB Hub commons libs
 Bundle-SymbolicName: com.hangum.tadpole.commons.libs
 Bundle-Version: 2.0.0
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  libs/apache/commons/commons-lang-2.4.jar,

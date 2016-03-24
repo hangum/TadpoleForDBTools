@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub SQL parser and formatter core
 Bundle-SymbolicName: com.hangum.tadpole.sql.parser
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.sql.Activator
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.core.runtime,
  com.hangum.tadpole.commons.libs;bundle-version="2.0.0",
  com.hangum.tadpole.preference;bundle-version="2.0.0",

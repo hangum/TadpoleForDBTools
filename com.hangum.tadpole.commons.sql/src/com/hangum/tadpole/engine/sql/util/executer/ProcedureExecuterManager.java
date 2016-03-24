@@ -94,11 +94,11 @@ public class ProcedureExecuterManager {
 	 */
 	public boolean isExecuted(ProcedureFunctionDAO procedureDAO, UserDBDAO selectUseDB) {
 		if(!isSupport()) {
-			MessageDialog.openError(null, Messages.get().ProcedureExecuterManager_error, Messages.get().ProcedureExecuterManager_0);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().ProcedureExecuterManager_0);
 			return false;
 		}
 		if(!procedureDAO.isValid()) {
-			MessageDialog.openError(null, Messages.get().ProcedureExecuterManager_error, Messages.get().ProcedureExecuterManager_4);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().ProcedureExecuterManager_4);
 			return false;
 		}
 		
@@ -110,7 +110,7 @@ public class ProcedureExecuterManager {
 				dbVersion = Double.parseDouble( StringUtils.substring(dbInfo.getProductversion(), 0, 3) );
 			
 				if (dbVersion < 5.5){
-					MessageDialog.openError(null, Messages.get().ProcedureExecuterManager_error, Messages.get().ProcedureExecuterManager_6);
+					MessageDialog.openError(null, Messages.get().Error, Messages.get().ProcedureExecuterManager_6);
 					return false;
 				}
 			} catch (Exception e) {
@@ -125,7 +125,7 @@ public class ProcedureExecuterManager {
 			ProcedureExecutor procedureExecutor = getExecuter();
 			procedureExecutor.getInParameters();
 		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.get().ProcedureExecuterManager_error, e.getMessage());
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
 			return false;
 		}
 		

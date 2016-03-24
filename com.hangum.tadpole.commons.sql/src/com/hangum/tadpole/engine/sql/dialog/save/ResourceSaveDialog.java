@@ -219,11 +219,11 @@ public class ResourceSaveDialog extends Dialog {
 		if(buttonId == BTN_SHOW_URL) {
 			String strApiURI = textAPIURI.getText();
 			if(strApiURI.equals("")) { //$NON-NLS-1$
-				MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_8);
+				MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().ResourceSaveDialog_8);
 				textAPIURI.setFocus();
 				return;
 			} else if(RESOURCE_TYPE.ERD == resourceType) {
-				MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_10);
+				MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().ResourceSaveDialog_10);
 				return;
 			}
 			
@@ -242,8 +242,8 @@ public class ResourceSaveDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, BTN_SHOW_URL, Messages.get().ResourceSaveDialog_12, true);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ResourceSaveDialog_13, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ResourceSaveDialog_14, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
 	}
 
 	/**
@@ -263,7 +263,7 @@ public class ResourceSaveDialog extends Dialog {
 	private boolean isValid() {
 		int len = StringUtils.trimToEmpty(textName.getText()).length();
 		if(len < 3) {
-			MessageDialog.openError(null, Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_16);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().ResourceSaveDialog_16);
 			textName.setFocus();
 			return false;
 		}
@@ -274,14 +274,14 @@ public class ResourceSaveDialog extends Dialog {
 				String strAPIURI = textAPIURI.getText().trim();
 				
 				if(strAPIURI.equals("")) { //$NON-NLS-1$
-					MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_19);
+					MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().ResourceSaveDialog_19);
 					textAPIURI.setFocus();
 					return false;
 				}
 				
 				// check valid url. url pattern is must be /{parent}/{child}
 				if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
-					MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_20, Messages.get().ResourceSaveDialog_21);
+					MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().ResourceSaveDialog_21);
 					
 					textAPIURI.setFocus();
 					return false;

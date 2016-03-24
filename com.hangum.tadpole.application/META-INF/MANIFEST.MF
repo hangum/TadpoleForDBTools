@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub
 Bundle-SymbolicName: com.hangum.tadpole.application;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.application.Activator
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.servlet;version="2.4.0",

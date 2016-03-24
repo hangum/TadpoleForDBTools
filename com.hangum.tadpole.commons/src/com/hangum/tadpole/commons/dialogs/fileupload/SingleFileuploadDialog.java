@@ -113,7 +113,7 @@ public class SingleFileuploadDialog extends Dialog {
 		lblDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		*/		
 		fileUpload = new FileUpload(compositeHead, SWT.NONE);
-		fileUpload.setText(Messages.get().SingleFileuploadDialog_2);
+		fileUpload.setText(Messages.get().FileUploadDialog_fileSelect);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -137,7 +137,7 @@ public class SingleFileuploadDialog extends Dialog {
 		try {
 			if(!insert()) return;
 		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.get().SingleFileuploadDialog_3, e.getMessage());
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
 			return;
 		}
 		
@@ -227,8 +227,8 @@ public class SingleFileuploadDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().SingleFileuploadDialog_8, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SingleFileuploadDialog_9, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Confirm, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
 	}
 
 	/**

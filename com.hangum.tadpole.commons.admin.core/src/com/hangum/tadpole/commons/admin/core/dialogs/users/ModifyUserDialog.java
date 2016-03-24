@@ -31,6 +31,7 @@ import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -69,7 +70,6 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	public ModifyUserDialog(Shell parentShell, UserDAO userDAO) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDAO = userDAO;
 	}
@@ -78,6 +78,8 @@ public class ModifyUserDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.get().ModifyUserDialog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 	}
 
 	/**

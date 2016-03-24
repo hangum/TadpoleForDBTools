@@ -284,12 +284,12 @@ public class MongoDBImportEditor extends EditorPart {
 			if(tableColumnListComposite.getSelectListTables().isEmpty()) return;
 		} else if(tabFolderQuery.getSelectionIndex() == 1) {			
 			if("".equals(textCollectionName.getText().trim())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().MongoDBImportEditor_14, Messages.get().QueryToMongoDBImport_5);
+				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().QueryToMongoDBImport_5);
 				return;
 			}
 			
 			if("".equals(textQuery.getText().trim())) { //$NON-NLS-1$
-				MessageDialog.openInformation(null, Messages.get().QueryToMongoDBImport_1, Messages.get().QueryToMongoDBImport_2);			
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().QueryToMongoDBImport_2);			
 				return;		
 			}
 		}

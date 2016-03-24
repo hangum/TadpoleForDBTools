@@ -4,7 +4,7 @@ Bundle-Name: Amazon RDS
 Bundle-SymbolicName: com.hangum.tadpole.aws.rds.commons.core
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.aws.rds.commons.core.Activator
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="2.1.0",
  com.hangum.tadpole.commons.utils;bundle-version="2.0.0",

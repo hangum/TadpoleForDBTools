@@ -96,7 +96,7 @@ public class Messages {
 
 	public String UserLoginHistoryAction_0;
 	public String UserLoginHistoryDialog_0;
-	public String UserLoginHistoryDialog_10;
+//	public String UserLoginHistoryDialog_10;
 	public String UserLoginHistoryDialog_4;
 	public String UserLoginHistoryDialog_5;
 	public String UserLoginHistoryDialog_8;
@@ -123,7 +123,7 @@ public class Messages {
 	public String ModifyUserDialog_9;
 
 	public String NewUserDialog_0;
-	public String NewUserDialog_1;
+//	public String NewUserDialog_1;
 	public String NewUserDialog_10;
 	public String NewUserDialog_11;
 	public String NewUserDialog_12;
@@ -192,6 +192,8 @@ public class Messages {
 	public String Delete;
 
 	public String IP;
+
+	public String Close;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

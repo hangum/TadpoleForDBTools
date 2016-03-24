@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Tadpole Application Start
 Bundle-SymbolicName: com.hangum.tadpole.applicattion.start;singleton:=true
 Bundle-Version: 2.0.0.qualifier
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  com.hangum.tadpole.commons.utils;bundle-version="1.0.0",

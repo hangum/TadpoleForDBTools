@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub mongodb test
 Bundle-SymbolicName: com.hangum.tadpole.mongodb.core.test
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.mongodb.core.test.Activator
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.tadpole.rdb.core;bundle-version="1.0.0",

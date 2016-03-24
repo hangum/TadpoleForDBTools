@@ -215,7 +215,7 @@ public class UserLoginHistoryDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().UserLoginHistoryDialog_10, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
 
 	/**

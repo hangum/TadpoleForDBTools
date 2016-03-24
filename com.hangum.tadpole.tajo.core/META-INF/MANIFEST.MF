@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub - Apache Tajo Core
 Bundle-SymbolicName: com.hangum.tadpole.tajo.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.tajo.core.Activator
-Bundle-Vendor: HANGUM
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.rap.ui;bundle-version="2.1.0",
  org.eclipse.core.runtime,
  com.hangum.tadpole.engine;bundle-version="1.0.0",
