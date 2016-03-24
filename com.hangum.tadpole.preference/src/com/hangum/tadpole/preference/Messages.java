@@ -25,7 +25,7 @@ public class Messages {
 
 	public String ChangeUsePersonalToGrouprDialog_1;
 
-	public String ChangeUsePersonalToGrouprDialog_10;
+	public String Error;
 
 	public String ChangeUsePersonalToGrouprDialog_11;
 
@@ -45,9 +45,9 @@ public class Messages {
 
 	public String ChangeUsePersonalToGrouprDialog_26;
 
-	public String ChangeUsePersonalToGrouprDialog_27;
+	public String Save;
 
-	public String ChangeUsePersonalToGrouprDialog_28;
+	public String Cancel;
 
 	public String ChangeUsePersonalToGrouprDialog_3;
 
@@ -55,27 +55,20 @@ public class Messages {
 
 	public String ChangeUsePersonalToGrouprDialog_5;
 
-	public String ChangeUsePersonalToGrouprDialog_6;
+//	public String ChangeUsePersonalToGrouprDialog_6;
 
 	public String ChangeUsePersonalToGrouprDialog_7;
 
 	public String ChangeUsePersonalToGrouprDialog_9;
 
 	public String DefaultPreferencePage_0;
-	public String DefaultPreferencePage_1;
 	public String DefaultPreferencePage_2;
 
-	public String UserInfoPerference_0;
-
-	public String UserInfoPerference_1;
+//	public String UserInfoPerference_0;
 
 	public String UserInfoPerference_10;
 
 	public String UserInfoPerference_11;
-
-	public String UserInfoPerference_12;
-
-	public String UserInfoPerference_13;
 
 	public String UserInfoPerference_14;
 
@@ -95,12 +88,10 @@ public class Messages {
 	public String UserInfoPerference_6;
 
 	public String UserInfoPerference_7;
-	public String UserInfoPerference_8;
 
 	public String UserInfoPerference_9;
 	
 	public String DefaultPreferencePage_other_labelText;
-	public String DefaultPreferencePage_stringFieldEditor_stringValue;
 	public String DefaultPreferencePage_other_labelText_1;
 
 	public String GeneralPreferencePage_0;
@@ -117,9 +108,7 @@ public class Messages {
 	public String GeneralPreferencePage_lblExportDilimit_text;
 	public String GeneralPreferencePage_text_text;
 	public String GeneralPreferencePage_lblHomePage_text;
-	public String GeneralPreferencePage_lblHomePageUse_text;
 	public String GeneralPreferencePage_btnCheckButton_text;
-	public String GeneralPreferencePage_lblStandalonePort_text;
 
 	public String MongoDBPreferencePage_0;
 
@@ -128,8 +117,6 @@ public class Messages {
 	public String MongoDBPreferencePage_10;
 
 	public String MongoDBPreferencePage_11;
-
-	public String MongoDBPreferencePage_12;
 
 	public String MongoDBPreferencePage_2;
 
@@ -140,8 +127,6 @@ public class Messages {
 	public String MongoDBPreferencePage_5;
 
 	public String MongoDBPreferencePage_6;
-
-	public String MongoDBPreferencePage_7;
 
 	public String SecurityCredentialPreference_0;
 
@@ -161,7 +146,7 @@ public class Messages {
 
 	public String SQLFormatterPreferencePage_4;
 
-	public String SQLFormatterPreferencePage_7;
+//	public String SQLFormatterPreferencePage_7;
 
 	public String SQLFormatterPreferencePage_8;
 	public String RDBPreferencePage_lblNumberColumnAdd_text;
@@ -189,12 +174,9 @@ public class Messages {
 
 	public String UserInfoPerference_button_text;
 	public String UserInfoPerference_grpGoogleAuth_text;
-	public String UserInfoPerference_btnGoogleOtp_text;
-	public String UserInfoPerference_lblSecretKey_text;
 	public String UserInfoPerference_btnGoogleOtp_text_1;
 	public String UserInfoPerference_lblSecretKey_text_1;
 	public String UserInfoPerference_lblQrcodeUrl_text;
-	public String UserInfoPerference_lblOptCode_text;
 	public String RDBPreferencePage_lblCommitCount_text;
 	public String RDBPreferencePage_text_text;
 	public String RDBPreferencePage_lblCharacterShownIn_text;
@@ -205,17 +187,12 @@ public class Messages {
 
 	public String EditorPreferencePage_2;
 
-	public String EditorPreferencePage_6;
-
 	public String EditorPreferencePage_lblTheme_text;
 
 	public String LoginDialog_lblLanguage_text;
 
 	public String Confirm;
 	
-	// static {
-	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	// }
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

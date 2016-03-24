@@ -86,13 +86,13 @@ public class AddSQLDialog extends Dialog {
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDesc = new Label(container, SWT.NONE);
-		lblDesc.setText(Messages.get().AddSQLDialog_1);
+		lblDesc.setText(Messages.get().Description);
 		
 		textDesc = new Text(container, SWT.BORDER);
 		textDesc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSql = new Label(container, SWT.NONE);
-		lblSql.setText(Messages.get().AddSQLDialog_2);
+		lblSql.setText(Messages.get().SQL);
 		
 		textSQL = new Text(container, SWT.BORDER | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -117,13 +117,13 @@ public class AddSQLDialog extends Dialog {
 		String txtSQL = StringUtils.trimToEmpty(textSQL.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openError(null, Messages.get().AddSQLDialog_3, Messages.get().AddSQLDialog_4);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddSQLDialog_4);
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(StringUtils.isEmpty(txtSQL)) {
-			MessageDialog.openError(null, Messages.get().AddSQLDialog_3, Messages.get().AddSQLDialog_6);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddSQLDialog_6);
 			textSQL.setFocus();
 			return;
 		}
@@ -145,8 +145,8 @@ public class AddSQLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().AddSQLDialog_7, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().AddSQLDialog_8, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**

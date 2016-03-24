@@ -130,7 +130,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		String strTextWidth = textWidth.getText();
 		
 		if(!NumberUtils.isNumber(textWidth.getText())) {
-			MessageDialog.openError(getShell(), Messages.get().SQLFormatterPreferencePage_7, Messages.get().SQLFormatterPreferencePage_8);
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().SQLFormatterPreferencePage_8);
 			textWidth.setFocus();
 			return false;
 		}
@@ -158,7 +158,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		} catch(Exception e) {
 			logger.error("SQLFormatter preference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.get().SQLFormatterPreferencePage_7, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

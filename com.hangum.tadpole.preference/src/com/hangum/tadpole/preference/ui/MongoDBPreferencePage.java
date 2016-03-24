@@ -158,7 +158,7 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		} catch(Exception e) {
 			logger.error("MongoDBreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.get().MongoDBPreferencePage_12, e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().Confirm, e.getMessage());
 			return false;
 		}
 		

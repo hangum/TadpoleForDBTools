@@ -288,17 +288,17 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String otpSecretKey = textSecretKey.getText();
 			
 			if(StringUtils.length(pass) < 5) {
-				MessageDialog.openError(getShell(), Messages.get().UserInfoPerference_0, Messages.get().UserInfoPerference_14);
+				MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().UserInfoPerference_14);
 				textPassword.setFocus();
 				return false;
 			}
 			
 			if(pass.equals("")) { //$NON-NLS-1$
-				MessageDialog.openError(getShell(), Messages.get().UserInfoPerference_0, Messages.get().UserInfoPerference_17);
+				MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().UserInfoPerference_17);
 				textPassword.setFocus();
 				return false;
 			} else if(!pass.equals(rePass)) {
-				MessageDialog.openError(getShell(), Messages.get().UserInfoPerference_0, Messages.get().UserInfoPerference_6);
+				MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().UserInfoPerference_6);
 				textPassword.setFocus();
 				return false;
 			} else if(btnGetOptCode.getSelection()) {

@@ -128,7 +128,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtIsGutter 	= ""+btnShowGutter.getSelection(); //$NON-NLS-1$
 	
 		if(!NumberUtils.isNumber(txtWrapLimit)) {
-			MessageDialog.openError(getShell(), Messages.get().SQLFormatterPreferencePage_7, Messages.get().SQLFormatterPreferencePage_8);
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().SQLFormatterPreferencePage_8);
 			btnIsWrap.setFocus();
 			return false;
 		}
@@ -147,7 +147,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		} catch(Exception e) {
 			logger.error("Editor preference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.get().EditorPreferencePage_6, Messages.get().RDBPreferencePage_5 + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage());
 			return false;
 		}
 		
