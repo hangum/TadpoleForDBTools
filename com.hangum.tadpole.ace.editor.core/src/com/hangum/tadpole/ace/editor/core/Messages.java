@@ -1,6 +1,5 @@
 package com.hangum.tadpole.ace.editor.core;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
@@ -29,7 +28,6 @@ public class Messages {
 	public String AbstractShortCutDialog_6;
 	public String AbstractShortCutDialog_8;
 	public String MongoDBShortcutHelpDialog_0;
-	public String MongoDBShortcutHelpDialog_2;
 	public String RDBShortcutHelpDialog_0;
 	public String RDBShortcutHelpDialog_1;
 	public String RDBShortcutHelpDialog_11;
@@ -38,7 +36,6 @@ public class Messages {
 	public String RDBShortcutHelpDialog_3;
 	public String RDBShortcutHelpDialog_4;
 	public String RDBShortcutHelpDialog_5;
-	public String RDBShortcutHelpDialog_7;
 	public String RDBShortcutHelpDialog_8;
 	public String RDBShortcutHelpDialog_9;
 	//	static {

@@ -51,7 +51,7 @@ public class MongoDBShortcutHelpDialog extends RDBShortcutHelpDialog {
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
 			listShortcut.add( new ShortcutHelpDAO(Messages.get().MongoDBShortcutHelpDialog_0, 	"Ctrl + Space|Option + Space ") 		); //$NON-NLS-2$
 		} else {
-			listShortcut.add( new ShortcutHelpDAO(Messages.get().MongoDBShortcutHelpDialog_2, 	"Ctrl + Space") 		); //$NON-NLS-2$
+			listShortcut.add( new ShortcutHelpDAO(Messages.get().MongoDBShortcutHelpDialog_0, 	"Ctrl + Space") 		); //$NON-NLS-2$
 		}
 		
 		tableViewer.refresh(listShortcut);		
