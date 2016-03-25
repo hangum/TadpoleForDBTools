@@ -241,7 +241,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showFunction refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_81, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_81, errStatus); //$NON-NLS-1$
 		}
 	}
 	

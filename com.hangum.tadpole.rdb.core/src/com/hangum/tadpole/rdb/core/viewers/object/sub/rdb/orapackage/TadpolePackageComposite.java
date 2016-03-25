@@ -176,7 +176,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});		
@@ -380,7 +380,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showPackage refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
 		}
 	}
 

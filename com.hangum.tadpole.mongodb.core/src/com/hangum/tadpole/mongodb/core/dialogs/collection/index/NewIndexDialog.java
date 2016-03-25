@@ -174,7 +174,7 @@ public class NewIndexDialog extends Dialog {
 			logger.error("get collection list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -188,7 +188,7 @@ public class NewIndexDialog extends Dialog {
 			logger.error("get collection column", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 		treeColumnViewer.setInput(listCollFields);
 		treeColumnViewer.refresh();
@@ -263,7 +263,7 @@ public class NewIndexDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb create index", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			return;
 		}			

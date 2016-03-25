@@ -68,7 +68,7 @@ public class Application implements EntryPoint {
 		} catch(Exception e) {
 			logger.error("System initialize error", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
 			
 			System.exit(0);
 		}

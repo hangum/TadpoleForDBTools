@@ -101,7 +101,7 @@ public class DeleteDBAction implements IViewActionDelegate {
 			logger.error("disconnection exception", e);			 //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

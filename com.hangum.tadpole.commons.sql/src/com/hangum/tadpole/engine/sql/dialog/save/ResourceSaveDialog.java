@@ -204,7 +204,7 @@ public class ResourceSaveDialog extends Dialog {
 			TadpoleSystem_UserDBResource.userDBResourceDuplication(userDB, retResourceDao);
 		} catch (Exception e) {
 			logger.error("SQL Editor File validator", e); //$NON-NLS-1$
-			MessageDialog.openError(null, "Error", e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage()); //$NON-NLS-1$
 			return;
 		}
 		

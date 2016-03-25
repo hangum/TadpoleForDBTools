@@ -28,6 +28,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.mongodb.DBObject;
 
@@ -109,7 +110,7 @@ public class FindResultViewerDialog extends Dialog {
 		} catch(Exception e) {
 			logger.error("Show Cursor", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Show Cursor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Show Cursor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		// google analytic

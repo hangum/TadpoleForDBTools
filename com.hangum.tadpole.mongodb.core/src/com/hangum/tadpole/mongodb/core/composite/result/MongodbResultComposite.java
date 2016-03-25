@@ -946,7 +946,7 @@ public class MongodbResultComposite extends Composite {
 			} catch (Exception e) {
 				logger.error(collectionName + " collection document remove object id is" + dto.getDbObject(), e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -969,7 +969,7 @@ public class MongodbResultComposite extends Composite {
 			} catch (Exception e) {
 				logger.error(collectionName + " collection document remove object id is" + dbObject, e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

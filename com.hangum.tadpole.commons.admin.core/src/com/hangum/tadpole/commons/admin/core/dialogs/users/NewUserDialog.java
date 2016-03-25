@@ -253,7 +253,7 @@ public class NewUserDialog extends Dialog {
 				return;
 			}
 			if(!GoogleAuthManager.getInstance().isValidate(secretKey, NumberUtils.toInt(textOTPCode.getText()))) {
-				MessageDialog.openError(getShell(), "Error", Messages.get().NewUserDialog_42); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().NewUserDialog_42); //$NON-NLS-1$
 				textOTPCode.setFocus();
 				return;
 			}

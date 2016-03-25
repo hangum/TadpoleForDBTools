@@ -187,7 +187,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
@@ -359,7 +359,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult()
 									.getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				}); // end display.asyncExec

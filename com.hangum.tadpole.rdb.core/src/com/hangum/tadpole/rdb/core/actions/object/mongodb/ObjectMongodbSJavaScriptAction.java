@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 
 /**
@@ -64,14 +65,14 @@ public class ObjectMongodbSJavaScriptAction extends AbstractObjectAction {
 				logger.error("Mongodb javascirpt", e);
 
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "JavaScript Open Exception", errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "JavaScript Open Exception", errStatus); //$NON-NLS-1$
 			}
 
 		} catch (Exception e) {
 			logger.error("get table column", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}
 	

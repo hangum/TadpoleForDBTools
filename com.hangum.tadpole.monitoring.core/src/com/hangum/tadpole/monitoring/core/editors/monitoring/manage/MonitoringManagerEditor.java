@@ -495,7 +495,7 @@ public class MonitoringManagerEditor extends EditorPart {
 			logger.error("initialize Managerview", e);
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Can't load database.", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, "Can't load database.", errStatus); //$NON-NLS-1$
 		}
 
 		treeVUserDB.refresh();
@@ -585,7 +585,7 @@ public class MonitoringManagerEditor extends EditorPart {
 //				logger.error("main editor open", e); //$NON-NLS-1$
 //
 //				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Can't open resource. ", errStatus); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, "Can't open resource. ", errStatus); //$NON-NLS-1$
 //			}
 		}
 	}

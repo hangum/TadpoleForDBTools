@@ -110,7 +110,7 @@ public class FindPasswordDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("password initialize and send email ", e);
 			
-			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n\t" + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().Error, "Rise Exception:\n\t" + e.getMessage());
 		}
 		
 		

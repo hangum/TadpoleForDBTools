@@ -357,7 +357,7 @@ public class ResourceManageEditor extends EditorPart {
 						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, resourceManagerDao);
 					} catch (Exception ee) {
 						logger.error("Resource validate", ee); //$NON-NLS-1$
-						MessageDialog.openError(null, "Error", ee.getMessage()); //$NON-NLS-1$
+						MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
 						return;
 					}
 					
@@ -574,7 +574,7 @@ public class ResourceManageEditor extends EditorPart {
 			logger.error("refresh list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ResourceManageEditor_45, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ResourceManageEditor_45, errStatus); //$NON-NLS-1$
 		}
 	}
 	

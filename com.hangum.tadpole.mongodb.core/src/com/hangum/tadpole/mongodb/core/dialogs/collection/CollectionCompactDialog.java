@@ -33,6 +33,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 
 /**
@@ -134,12 +135,12 @@ public class CollectionCompactDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if(!NumberUtils.isNumber(textPaddingFactor.getText())) {
-			MessageDialog.openError(null, "Error", "padding factor is number.");
+			MessageDialog.openError(null, Messages.get().Error, "padding factor is number.");
 			textPaddingFactor.setFocus();
 			return;
 		}
 		if(!NumberUtils.isNumber(textPaddingBytes.getText())) {
-			MessageDialog.openError(null, "Error", "padding Bytes is number.");
+			MessageDialog.openError(null, Messages.get().Error, "padding Bytes is number.");
 			textPaddingBytes.setFocus();
 			return;
 		}
@@ -157,7 +158,7 @@ public class CollectionCompactDialog extends Dialog {
 			} catch (Exception e) {
 				logger.error("mongodb compact" + collName, e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Collection compact Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Collection compact Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				return;
 			}

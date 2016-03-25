@@ -232,7 +232,7 @@ public class APIServiceDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Error", Messages.get().APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

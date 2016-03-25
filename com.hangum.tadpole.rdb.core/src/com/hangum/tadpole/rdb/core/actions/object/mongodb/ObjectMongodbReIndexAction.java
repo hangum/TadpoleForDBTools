@@ -59,7 +59,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 				logger.error("mongodb rename", e); //$NON-NLS-1$
 
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}

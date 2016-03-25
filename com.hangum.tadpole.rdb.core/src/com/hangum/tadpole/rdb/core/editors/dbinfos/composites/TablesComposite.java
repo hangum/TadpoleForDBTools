@@ -205,7 +205,7 @@ public class TablesComposite extends Composite {
 			logger.error("initialize session list", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 		
 		// google analytic

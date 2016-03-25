@@ -304,7 +304,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 				} catch(Exception e) {
 					logger.error("save javascript", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 					
 					return false;
 				}
@@ -319,7 +319,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 			} catch(Exception e) {
 				logger.error("save javascript", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -508,7 +508,7 @@ public class ServerSideJavaScriptEditor extends EditorExtension {
 					textResultJavaScript.setText("");
 					logger.error("execute javascript", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 				}
 			}
 		}

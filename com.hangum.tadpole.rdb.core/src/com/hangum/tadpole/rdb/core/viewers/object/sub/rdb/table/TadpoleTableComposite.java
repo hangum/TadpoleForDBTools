@@ -570,7 +570,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 			// show error message
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		} finally {
 			tableColumnViewer.setInput(showTableColumns);
 			tableColumnComparator = new TableColumnComparator();

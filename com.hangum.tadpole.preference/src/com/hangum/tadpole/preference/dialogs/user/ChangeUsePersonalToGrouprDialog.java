@@ -165,7 +165,7 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 				logger.error("data update", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", "User Info update", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, "User Info update", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				return;
 			}

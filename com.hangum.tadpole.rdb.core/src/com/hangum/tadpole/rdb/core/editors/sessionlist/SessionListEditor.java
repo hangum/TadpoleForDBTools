@@ -314,7 +314,7 @@ public class SessionListEditor extends EditorPart {
 			logger.error("killprocess exception", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}	
 	}
 	
@@ -330,7 +330,7 @@ public class SessionListEditor extends EditorPart {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -338,7 +338,7 @@ public class SessionListEditor extends EditorPart {
 					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
 				}catch (Exception e) {
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -352,7 +352,7 @@ public class SessionListEditor extends EditorPart {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -360,7 +360,7 @@ public class SessionListEditor extends EditorPart {
 					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
 				}catch (Exception e) {
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -375,7 +375,7 @@ public class SessionListEditor extends EditorPart {
 			logger.error("initialize session list", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 	}
 	

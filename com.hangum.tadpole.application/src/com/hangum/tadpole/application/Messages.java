@@ -31,6 +31,8 @@ public class Messages {
 	public String SystemAdminWizardPage_5;
 	public String SystemAdminWizardPage_6;
 
+	public String Error;
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

@@ -131,7 +131,7 @@ public class AutoLayoutAction extends SelectionAction {
 			logger.error(Messages.get().AutoLayoutAction_2, e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.get().AutoLayoutAction_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, Messages.get().AutoLayoutAction_2, errStatus); //$NON-NLS-1$
 
 		}
 	}

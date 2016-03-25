@@ -34,6 +34,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Template;
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 
 /**
@@ -419,12 +420,12 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTitle.getText())) {
-			MessageDialog.openError(null, "Error", "Title은 공백이 될 수 없습니다.");
+			MessageDialog.openError(null, Messages.get().Error, "Title은 공백이 될 수 없습니다.");
 			textTitle.setFocus();
 			return;
 		}
 		if("".equals(textQuery.getText())) {
-			MessageDialog.openError(null, "Error", "Query은 공백이 될 수 없습니다.");
+			MessageDialog.openError(null, Messages.get().Error, "Query은 공백이 될 수 없습니다.");
 			textQuery.setFocus();
 			return;
 		}
@@ -475,7 +476,7 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("save monitoring index", e);
 			
-			MessageDialog.openError(null, "Error", e.getMessage());
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
 		}
 	}
 	

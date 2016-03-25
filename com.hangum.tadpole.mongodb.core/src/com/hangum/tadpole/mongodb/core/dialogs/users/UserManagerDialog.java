@@ -186,7 +186,7 @@ public class UserManagerDialog extends Dialog {
 			logger.error("mongodb user list", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Get User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Get User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		} finally {
 			if(userCursor != null) userCursor.close();
 		}
@@ -226,7 +226,7 @@ public class UserManagerDialog extends Dialog {
 				logger.error("mongodb add user", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Add User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Add User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 
 				return;
 			}
@@ -246,7 +246,7 @@ public class UserManagerDialog extends Dialog {
 						logger.error("mongodb delete user", e1); //$NON-NLS-1$
 						
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, "Error", "Delete User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+						ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Delete User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 			} else {

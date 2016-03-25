@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -26,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
-import org.eclipse.swt.widgets.Button;
+import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * table column filter dialog
@@ -132,13 +133,13 @@ public class TableColumnFilterDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTableName.getText())) {
-			MessageDialog.openError(getShell(), "Error", "Check table name.");
+			MessageDialog.openError(getShell(), Messages.get().Error, "Check table name.");
 			textTableName.setFocus();
 			return;
 		}
 		
 		if("".equals(textColumnNames.getText())) {
-			MessageDialog.openError(getShell(), "Error", "Check column name.");
+			MessageDialog.openError(getShell(), Messages.get().Error, "Check column name.");
 			textColumnNames.setFocus();
 			return;
 		}

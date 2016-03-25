@@ -29,6 +29,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.DBObject;
@@ -99,7 +100,7 @@ public class CollValidateDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb collection validate", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "collection validate Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "collection validate Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

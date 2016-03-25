@@ -377,12 +377,12 @@ public class AddMonitoringDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTitle.getText())) {
-			MessageDialog.openError(null, "Error", "Title column is not empay.");
+			MessageDialog.openError(null, Messages.get().Error, "Title column is not empay.");
 			textTitle.setFocus();
 			return;
 		}
 		if("".equals(textQuery.getText())) {
-			MessageDialog.openError(null, "Error", "Query column is not empty");
+			MessageDialog.openError(null, Messages.get().Error, "Query column is not empty");
 			textQuery.setFocus();
 			return;
 		}
@@ -430,7 +430,7 @@ public class AddMonitoringDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("save monitoring index", e);
 			
-			MessageDialog.openError(null, "Error", e.getMessage());
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
 		}
 	}
 	

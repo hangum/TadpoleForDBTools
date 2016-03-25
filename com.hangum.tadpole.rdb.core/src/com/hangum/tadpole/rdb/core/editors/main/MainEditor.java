@@ -751,7 +751,7 @@ public class MainEditor extends EditorExtension {
 		} catch (Exception e) {
 			logger.error("update file", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}
@@ -811,7 +811,7 @@ public class MainEditor extends EditorExtension {
 			logger.error("save data", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}
@@ -879,7 +879,7 @@ public class MainEditor extends EditorExtension {
 //
 //			public void uploadFailed(FileUploadEvent event) {
 ////				MessageDi( "upload failed: " + event.getException() ); //$NON-NLS-1$
-//				MessageDialog.openError(null, "Error", "Download fail. \n" + event.getException().getMessage());
+//				MessageDialog.openError(null, Messages.get().Error, "Download fail. \n" + event.getException().getMessage());
 //			}
 //
 //			public void uploadFinished(FileUploadEvent event) {

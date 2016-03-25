@@ -302,7 +302,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().Refresh, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().Refresh, errStatus); //$NON-NLS-1$
 		}
 	}
 	

@@ -42,6 +42,7 @@ public class Messages {
 	public String TadpoleEditor_9;
 	public String TadpoleModelUtils_2;
 	public String Confirm;
+	public String Error;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

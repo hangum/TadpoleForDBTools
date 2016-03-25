@@ -271,7 +271,7 @@ public class MongoDBImportEditor extends EditorPart {
 			logger.error(Messages.get().MongoDBImportEditor_8, e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MongoDBImportEditor_8, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MongoDBImportEditor_8, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -331,7 +331,7 @@ public class MongoDBImportEditor extends EditorPart {
 						if(jobEvent.getResult().isOK()) {
 							MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MongoDBImportEditor_11); //$NON-NLS-1$
 						} else {				
-							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MongoDBImportEditor_12, jobEvent.getResult()); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MongoDBImportEditor_12, jobEvent.getResult()); //$NON-NLS-1$
 						}						
 					}					
 				});	// end display.asyncExec

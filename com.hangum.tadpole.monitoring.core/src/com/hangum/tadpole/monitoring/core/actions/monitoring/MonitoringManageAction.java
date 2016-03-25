@@ -25,6 +25,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.monitoring.core.Activator;
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerEditor;
 import com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerInput;
 import com.swtdesigner.ResourceManager;
@@ -64,7 +65,7 @@ public class MonitoringManageAction extends Action implements ISelectionListener
 			logger.error("Monitoring Manage editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Monitoring Manage editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Monitoring Manage editor", errStatus); //$NON-NLS-1$
 		}
 	}
 

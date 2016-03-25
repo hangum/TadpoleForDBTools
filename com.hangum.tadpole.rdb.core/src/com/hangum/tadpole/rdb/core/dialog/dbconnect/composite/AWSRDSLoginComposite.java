@@ -234,7 +234,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 			logger.error("Get AmazonRDS information", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getShell(), "Error", "Get AmazonRDS information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, "Get AmazonRDS information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

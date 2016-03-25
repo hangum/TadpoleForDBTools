@@ -163,7 +163,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							logger.error("Generate select statement", e);
 							
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
 						}
 					}
 				}
@@ -188,7 +188,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				} catch (Exception e) {
 					logger.error("get table list", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_29, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_29, errStatus); //$NON-NLS-1$
 				} finally {
 					viewColumnViewer.setInput(showViewColumns);
 					tableColumnComparator = new TableColumnComparator();
@@ -353,7 +353,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_61, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_61, errStatus); //$NON-NLS-1$
 		}
 		
 		viewListViewer.setInput(showViews);

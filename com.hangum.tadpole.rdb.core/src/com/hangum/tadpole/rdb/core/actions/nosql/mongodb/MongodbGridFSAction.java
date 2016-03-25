@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.ext.editors.gridfs.GridFSEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.gridfs.GridFsEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * mongodb GridFS action
@@ -58,7 +59,7 @@ public class MongodbGridFSAction implements IViewActionDelegate {
 			logger.error("Mongodb gridfs", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "GridFS Open Exception", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "GridFS Open Exception", errStatus); //$NON-NLS-1$
 		}
 	}
 

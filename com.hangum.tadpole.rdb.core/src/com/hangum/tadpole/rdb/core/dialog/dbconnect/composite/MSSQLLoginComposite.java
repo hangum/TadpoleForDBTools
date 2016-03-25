@@ -276,7 +276,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			} catch (Exception e) {
 				logger.error(Messages.get().Error, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.get().SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -299,7 +299,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 				} catch (Exception e) {
 					logger.error("MSSQL Connection", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.get().MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
 					
 					return false;
 				}				
@@ -310,7 +310,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			} catch (Exception e) {
 				logger.error("MSSQL", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.get().MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
