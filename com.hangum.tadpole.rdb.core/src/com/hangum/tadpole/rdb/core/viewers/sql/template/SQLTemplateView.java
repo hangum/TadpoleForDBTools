@@ -102,7 +102,7 @@ public class SQLTemplateView extends ViewPart {
 			}
 		});
 		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
-		tltmRefresh.setToolTipText(Messages.get().SQLTemplateView_Refresh);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		
 		
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
@@ -117,7 +117,7 @@ public class SQLTemplateView extends ViewPart {
 			}
 		});
 		tltmAdd.setImage(GlobalImageUtils.getAdd());
-		tltmAdd.setToolTipText(Messages.get().SQLTemplateView_Add);
+		tltmAdd.setToolTipText(Messages.get().Add);
 		
 
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
@@ -136,14 +136,14 @@ public class SQLTemplateView extends ViewPart {
 			}
 		});
 		tltmModify.setImage(GlobalImageUtils.getModify());
-		tltmModify.setToolTipText(Messages.get().SQLTemplateView_Modify);
+		tltmModify.setToolTipText(Messages.get().Modified);
 		tltmModify.setEnabled(false);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().SQLTemplateView_Confirm, Messages.get().SQLTemplateView_del_equestion)) return;
+				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().SQLTemplateView_del_equestion)) return;
 				
 				StructuredSelection ss = (StructuredSelection)tvSQLTemplate.getSelection();
 				if(ss.getFirstElement() instanceof SQLTemplateDAO) {
@@ -163,7 +163,7 @@ public class SQLTemplateView extends ViewPart {
 			}
 		});
 		tltmDelete.setImage(GlobalImageUtils.getDelete());
-		tltmDelete.setToolTipText(Messages.get().SQLTemplateView_Delete);
+		tltmDelete.setToolTipText(Messages.get().Delete);
 		tltmDelete.setEnabled(false);
 		
 		// admin menu
@@ -251,22 +251,22 @@ public class SQLTemplateView extends ViewPart {
 		TreeViewerColumn treeViewerColumn = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnUrl = treeViewerColumn.getColumn();
 		trclmnUrl.setWidth(70);
-		trclmnUrl.setText(Messages.get().SQLTemplateView_Group);
+		trclmnUrl.setText(Messages.get().GroupName);
 		
 		TreeViewerColumn tvcName = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnDBName = tvcName.getColumn();
 		trclmnDBName.setWidth(100);
-		trclmnDBName.setText(Messages.get().SQLTemplateView_Name);
+		trclmnDBName.setText(Messages.get().Name);
 		
 		TreeViewerColumn treeViewerColumn_2 = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnDescription = treeViewerColumn_2.getColumn();
 		trclmnDescription.setWidth(200);
-		trclmnDescription.setText(Messages.get().SQLTemplateView_Description);
+		trclmnDescription.setText(Messages.get().Description);
 		
 		TreeViewerColumn treeViewerColumn_1 = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnName = treeViewerColumn_1.getColumn();
 		trclmnName.setWidth(300);
-		trclmnName.setText(Messages.get().SQLTemplateView_SQL);
+		trclmnName.setText(Messages.get().SQL);
 		
 		Composite compositeSQL = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_compositeSQL = new GridLayout(1, false);

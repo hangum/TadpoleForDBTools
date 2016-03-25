@@ -51,7 +51,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		String originalName = selection.getFirstElement().toString();
 
-		if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Confirm", Messages.get().ObjectMongodbReIndexAction_2)) { //$NON-NLS-1$
+		if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectMongodbReIndexAction_2)) { //$NON-NLS-1$
 			try {
 				MongoDBQuery.reIndexCollection(userDB, originalName);
 

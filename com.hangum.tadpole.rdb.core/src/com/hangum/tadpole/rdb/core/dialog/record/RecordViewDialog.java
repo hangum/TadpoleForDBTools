@@ -224,7 +224,7 @@ public class RecordViewDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().RecordViewDialog_13, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
 
 	@Override

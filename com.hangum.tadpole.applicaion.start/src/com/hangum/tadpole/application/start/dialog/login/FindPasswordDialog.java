@@ -106,7 +106,7 @@ public class FindPasswordDialog extends Dialog {
 		try {
 			TadpoleSystem_UserQuery.updateUserPasswordWithID(userDao);
 			sendEmailAccessKey(strEmail, strTmpPassword);
-			MessageDialog.openInformation(getShell(), "Confirm", "Send you temporary password. Check your email.");
+			MessageDialog.openInformation(getShell(), Messages.get().Confirm, "Send you temporary password. Check your email.");
 		} catch (Exception e) {
 			logger.error("password initialize and send email ", e);
 			

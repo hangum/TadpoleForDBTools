@@ -136,7 +136,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTable.setText(Messages.get().TadpoleMongoDBCollectionComposite_0);
+		tbtmTable.setText(Messages.get().Collections);
 		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.COLLECTIONS.name());
 		
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
@@ -298,7 +298,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * @param treeColumnViewer2
 	 */
 	private void createTableMongoColumne() {
-		String[] columnName = {Messages.get().TadpoleMongoDBCollectionComposite_1, Messages.get().TadpoleMongoDBCollectionComposite_2, Messages.get().TadpoleMongoDBCollectionComposite_3};
+		String[] columnName = {Messages.get().Field, Messages.get().TadpoleMongoDBCollectionComposite_2, Messages.get().TadpoleMongoDBCollectionComposite_3};
 		int[] columnSize = {110, 100, 100};
 		
 		try {
@@ -422,7 +422,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			return;
 		}
 
-		final String jobName = Messages.get().TadpoleMongoDBCollectionComposite_18;
+		final String jobName = Messages.get().Refresh;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {

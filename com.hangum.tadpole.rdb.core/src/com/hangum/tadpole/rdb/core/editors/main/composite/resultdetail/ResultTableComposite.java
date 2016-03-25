@@ -124,7 +124,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		
 		Label lblFilter = new Label(compositeHead, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.get().ResultSetComposite_lblFilter_text);
+		lblFilter.setText(Messages.get().Filter);
 		
 		textFilter = new Text(compositeHead,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -391,7 +391,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if (openSingleRowDataAction.isEnabled()) {
 			openSingleRowDataAction.run();
 		} else {
-			MessageDialog.openWarning(getShell(), Messages.get().ResultSetComposite_7, Messages.get().ResultSetComposite_8);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetComposite_8);
 		}
 	}
 	
@@ -401,7 +401,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	private void openSinglColumViewDialog() {
 		TableColumnDAO columnDao = selectColumnToEditor();
 		if(columnDao == null) {
-			MessageDialog.openWarning(getShell(), Messages.get().ResultSetComposite_7, Messages.get().ResultSetComposite_6);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetComposite_6);
 			return;
 		}
 			

@@ -94,11 +94,11 @@ public abstract class AbstractTailComposite extends Composite {
 		btnViewQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ResultTailComposite_ViewQuery, getSQL());
+				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ViewQuery, getSQL());
 				dialog.open();
 			}
 		});
-		btnViewQuery.setText(Messages.get().ResultTailComposite_0);
+		btnViewQuery.setText(Messages.get().ViewQuery);
 
 		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
@@ -115,7 +115,7 @@ public abstract class AbstractTailComposite extends Composite {
 		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.get().ResultSetComposite_4, Messages.get().ResultSetComposite_5)) {
+				if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResultSetComposite_5)) {
 					if(getRSDao().getDataList() == null) return;
 					
 					if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
@@ -135,7 +135,7 @@ public abstract class AbstractTailComposite extends Composite {
 			}
 			
 		});
-		btnSQLResultDownload.setText(Messages.get().ResultSetComposite_11);
+		btnSQLResultDownload.setText(Messages.get().Download);
 		
 		Label label = new Label(compositeDownloadAMsg, SWT.NONE);
 		label.setText("");

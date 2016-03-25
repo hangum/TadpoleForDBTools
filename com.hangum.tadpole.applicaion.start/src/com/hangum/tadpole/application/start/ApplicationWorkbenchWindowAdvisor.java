@@ -255,7 +255,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     	} catch (Exception e) {
     		logger.error("System login fail", e); //$NON-NLS-1$
-    		MessageDialog.openError(null, "Confirm", "System login fail.  Please contact admin"); //$NON-NLS-1$ //$NON-NLS-2$
+    		MessageDialog.openError(null, Messages.get().Confirm, "System login fail.  Please contact admin"); //$NON-NLS-1$ //$NON-NLS-2$
     	}
     	
     }

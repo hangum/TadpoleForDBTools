@@ -123,7 +123,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		Label lblColumnName = new Label(container, SWT.NONE);
-		lblColumnName.setText(Messages.get().MySQLTableColumnDialog_4);
+		lblColumnName.setText(Messages.get().Name);
 		
 		textColumnName = new Text(container, SWT.BORDER);
 		textColumnName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -233,12 +233,12 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 		String strComment = textComment.getText();
 		
 		if(StringUtils.trimToEmpty(strName).equals("")) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().MySQLTableColumnDialog_19, Messages.get().MySQLTableColumnDialog_20);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().MySQLTableColumnDialog_20);
 			textColumnName.setFocus();
 			
 			return;
 		} else if(StringUtils.trimToEmpty(strType).equals("")) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().MySQLTableColumnDialog_19, Messages.get().MySQLTableColumnDialog_23);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().MySQLTableColumnDialog_23);
 			textColumnName.setFocus();
 			
 			return;
@@ -258,10 +258,10 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 			try {
 				TableColumnObjectQuery.addColumn(userDB, tableDAO, metaDataDao);
 				refreshTableColumn();
-				MessageDialog.openInformation(null, Messages.get().MySQLTableColumnDialog_24, Messages.get().MySQLTableColumnDialog_25);
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().Type);
 				textColumnName.setFocus();
 			} catch (Exception e) {
-				logger.error(Messages.get().MySQLTableColumnDialog_26, e);
+				logger.error("add colum exception", e);
 				
 				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_27 + e.getMessage());
 				errDialog.open();
@@ -270,7 +270,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 			try {
 				TableColumnObjectQuery.updateColumn(userDB, tableDAO, tableColumnDAO, metaDataDao);
 				refreshTableColumn();
-				MessageDialog.openInformation(null, Messages.get().MySQLTableColumnDialog_24, Messages.get().MySQLTableColumnDialog_29);
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MySQLTableColumnDialog_29);
 				
 				super.okPressed();
 			} catch (Exception e) {
@@ -289,8 +289,8 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().MySQLTableColumnDialog_32, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().MySQLTableColumnDialog_33, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 
 	/**

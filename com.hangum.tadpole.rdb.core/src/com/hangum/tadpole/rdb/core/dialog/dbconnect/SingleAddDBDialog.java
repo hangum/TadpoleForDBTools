@@ -31,6 +31,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 
@@ -128,7 +129,7 @@ public class SingleAddDBDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
 			if(loginComposite.testConnection(true)) {
-				MessageDialog.openInformation(null, "Confirm", "Connection Successful.");
+				MessageDialog.openInformation(null, Messages.get().Confirm, "Connection Successful.");
 			}
 		}
 	}

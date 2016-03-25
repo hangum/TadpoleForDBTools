@@ -69,7 +69,7 @@ public class GenerateDDLScriptUtils {
 			sbSQL.append(PublicTadpoleDefine.SQL_DELIMITER);
 			
 		} catch(Exception e) {
-			logger.error(Messages.get().GenerateSQLSelectAction_8, e);
+			logger.error("Generate select statement", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
@@ -90,7 +90,7 @@ public class GenerateDDLScriptUtils {
 			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 			return genTableScript(userDB, tableDAO, showTableColumns);
 		} catch(Exception e) {
-			logger.error(Messages.get().GenerateSQLSelectAction_8, e);
+			logger.error("Generate select statement", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$

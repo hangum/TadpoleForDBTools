@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.Activator;
+import com.hangum.tadpole.importexport.core.Messages;
 import com.hangum.tadpole.importexport.core.editors.mongodb.composite.ModTableDAO;
 import com.hangum.tadpole.importexport.core.utils.SQLQueryUtil;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -57,7 +58,7 @@ public class RDBTableToMongoDBImport extends DBImport {
 	 */
 	public Job workTableImport() {
 		if(0 == listModeTable.size()) {
-			MessageDialog.openInformation(null, "Confirm", "Please select table");
+			MessageDialog.openInformation(null, Messages.get().Confirm, "Please select table");
 			return null;
 		}
 		

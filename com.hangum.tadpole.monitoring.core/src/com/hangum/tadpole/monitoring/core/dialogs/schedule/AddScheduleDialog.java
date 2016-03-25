@@ -462,7 +462,7 @@ class SQLOrderEditingSupport extends EditingSupport {
 		ScheduleDAO dao = (ScheduleDAO)element;
 		
 		if(!NumberUtils.isNumber(value.toString())) {
-			MessageDialog.openError(null, "Confirm", "Is not number value.");
+			MessageDialog.openError(null, Messages.get().Confirm, "Is not number value.");
 			return;
 		}
 		

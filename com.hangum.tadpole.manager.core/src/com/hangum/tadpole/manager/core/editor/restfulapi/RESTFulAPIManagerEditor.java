@@ -321,7 +321,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openError(null, "Confirm", Messages.get().RESTFulAPIManagerEditor_31); //$NON-NLS-1$
+					MessageDialog.openError(null, Messages.get().Confirm, Messages.get().RESTFulAPIManagerEditor_31); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -358,7 +358,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 //			public void widgetSelected(SelectionEvent e) {
 //				if (tableViewer.getSelection().isEmpty()) return;
 //
-//				if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you wont to delete?")) return;
+//				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, "Do you wont to delete?")) return;
 //				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 //				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
 //

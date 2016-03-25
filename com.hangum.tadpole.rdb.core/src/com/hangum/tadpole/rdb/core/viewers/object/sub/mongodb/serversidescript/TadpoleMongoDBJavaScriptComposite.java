@@ -166,7 +166,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * @param indexComparator
 	 */
 	private void createMongoDBIndexesColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {Messages.get().TadpoleMongoDBJavaScriptComposite_3, Messages.get().TadpoleMongoDBJavaScriptComposite_4};
+		String[] name = {Messages.get().Name, Messages.get().TadpoleMongoDBJavaScriptComposite_4};
 		int[] size = {120, 200};
 
 		for (int i=0; i<name.length; i++) {
@@ -184,7 +184,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_5);
 		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_6);
-		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_7);
+		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().Refresh);
 		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_8);
 
 		// menu

@@ -367,7 +367,7 @@ public enum DBDefine {
 		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
-//		supportDb.add(TIBERO_DEFAULT);
+		supportDb.add(TIBERO_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

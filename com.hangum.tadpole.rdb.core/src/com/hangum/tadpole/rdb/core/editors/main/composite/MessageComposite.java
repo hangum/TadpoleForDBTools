@@ -108,13 +108,13 @@ public class MessageComposite extends Composite {
 
 		Throwable throwable = tadpoleMessageDAO.getThrowable();
 		if (throwable == null) {
-			strNewMessage = Messages.get().MessageComposite_2;
+			strNewMessage = Messages.get().SystemMessage;
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
 			strSearchError = tadpoleMessageDAO.getStrMessage();
 			
 			textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
 		} else {
-			strNewMessage = Messages.get().MessageComposite_3;
+			strNewMessage = Messages.get().ErrorMessage;
 			
 			Throwable cause = throwable.getCause();
 			if(throwable instanceof SQLException) {

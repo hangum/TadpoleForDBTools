@@ -165,7 +165,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						if(jobEvent.getResult().isOK()) {
 							paintingModel(nextTableX, nextTableY, arryTables, mapTable);
 						} else {
-							MessageDialog.openError(null, "confirm", jobEvent.getResult().getMessage());
+							MessageDialog.openError(null, Messages.get().Confirm, jobEvent.getResult().getMessage());
 						}
 					}
 				});	// end display.asyncExec

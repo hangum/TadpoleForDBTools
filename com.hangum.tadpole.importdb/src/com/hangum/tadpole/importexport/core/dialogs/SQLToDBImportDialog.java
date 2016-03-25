@@ -261,7 +261,7 @@ public class SQLToDBImportDialog extends Dialog {
 			ret = runSQLExecuteBatch(Arrays.asList(strArrySQL));
 			
 			if (ret == 0 ) 
-				MessageDialog.openInformation(null, "Confirm", Messages.get().SQLToDBImportDialog_StoreData); //$NON-NLS-1$
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_StoreData); //$NON-NLS-1$
 		} catch (IOException e) {
 			logger.error(Messages.get().SQLToDBImportDialog_ReadError, e);
 			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());

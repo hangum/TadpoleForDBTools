@@ -175,7 +175,7 @@ public class ResultSetViewDialog extends Dialog {
 			ShowSnapshotDialog dialog = new ShowSnapshotDialog(null, dao);
 			dialog.open();
 		} else if(buttonId == intBtnUserConfirmID) {
-//			if(MessageDialog.openConfirm(null, "Confirm", "사용자 확인으로 처리 하시겠습니까?")) {
+//			if(MessageDialog.openConfirm(null, Messages.get().Confirm, "사용자 확인으로 처리 하시겠습니까?")) {
 //				try {
 //					TadpoleSystem_monitoring.updateUserConfirmMsg(dao.getMonitoring_seq(), dao.getMonitoring_index_seq(), textUserConfirmMsg.getText());
 //					

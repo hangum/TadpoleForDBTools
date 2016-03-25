@@ -159,7 +159,7 @@ public class ParameterDialog extends Dialog {
 		TableViewerColumn tvcType = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcType = tvcType.getColumn();
 		tcl_composite.setColumnData(tcType, new ColumnPixelData(80, true, true));
-		tcType.setText(Messages.get().ParameterDialog_3);
+		tcType.setText(Messages.get().DataType);
 		tvcType.setEditingSupport(new ParameterEditingSupport(tableViewer, 2, this.userDB));
 
 		TableViewerColumn tvcValue = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -176,8 +176,8 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ParameterDialog_5, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ParameterDialog_6, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteQuery, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
 	/**

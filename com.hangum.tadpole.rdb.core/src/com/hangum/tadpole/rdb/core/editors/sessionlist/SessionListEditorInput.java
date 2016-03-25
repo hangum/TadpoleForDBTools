@@ -53,7 +53,7 @@ public class SessionListEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.get().SessionListEditorInput_0 + userDB.getDb() +  "]"; //$NON-NLS-2$
+		return Messages.get().SessionListEditorInput_0 + "[" + userDB.getDb() +  "]"; //$NON-NLS-2$
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class SessionListEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.get().SessionListEditorInput_2 + userDB.getDb() +  "]"; //$NON-NLS-2$
+		return Messages.get().SessionListEditorInput_0 + "[" + userDB.getDb() +  "]"; //$NON-NLS-2$
 	}
 
 	public UserDBDAO getUserDB() {

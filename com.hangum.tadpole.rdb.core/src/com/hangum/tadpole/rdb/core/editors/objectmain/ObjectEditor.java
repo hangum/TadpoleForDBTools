@@ -118,7 +118,7 @@ public class ObjectEditor extends MainEditor {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText(Messages.get().MainEditor_37);
+		tltmConnectURL.setToolTipText(Messages.get().DatabaseInformation);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setText(userDB.getDisplay_name());
 		
@@ -149,7 +149,7 @@ public class ObjectEditor extends MainEditor {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmCompile = new ToolItem(toolBar, SWT.NONE);
-		tltmCompile.setToolTipText(String.format(Messages.get().ObjectEditor_1, STR_SHORT_CUT_PREFIX));
+		tltmCompile.setToolTipText(String.format(Messages.get().Compile, STR_SHORT_CUT_PREFIX));
 		tltmCompile.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/compile.png")); //$NON-NLS-1$
 		tltmCompile.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -257,7 +257,7 @@ public class ObjectEditor extends MainEditor {
 				return;
 			}
 			
-			if(!MessageDialog.openConfirm(null, Messages.get().ObjectEditor_0, Messages.get().ObjectEditor_3)) {
+			if(!MessageDialog.openConfirm(null, Messages.get().Error, Messages.get().ObjectEditor_3)) {
 				setOrionTextFocus();
 				return;
 			}
@@ -402,7 +402,7 @@ public class ObjectEditor extends MainEditor {
 		if(strSQLState.equals("42000") && intSQLErrorCode == 1304) { //$NON-NLS-1$
 			
 			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.get().ObjectEditor_12, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
 					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
@@ -443,7 +443,7 @@ public class ObjectEditor extends MainEditor {
 		
 		if(strSQLState.equals("S0001") && intSQLErrorCode == 2714) { //$NON-NLS-1$
 			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.get().ObjectEditor_12, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
 					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$

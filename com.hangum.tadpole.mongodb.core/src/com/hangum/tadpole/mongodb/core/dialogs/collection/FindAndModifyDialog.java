@@ -37,6 +37,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
@@ -210,7 +211,7 @@ public class FindAndModifyDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if(!MessageDialog.openConfirm(null, "Confirm", "Are you want to execute?")) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "Are you want to execute?")) return;
 		DBObject objQuery = null;
 		DBObject objFields = null;
 		DBObject objSort = null;

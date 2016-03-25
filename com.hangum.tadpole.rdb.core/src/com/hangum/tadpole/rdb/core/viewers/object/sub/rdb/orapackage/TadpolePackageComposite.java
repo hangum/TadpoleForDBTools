@@ -116,7 +116,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmPackage = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmPackage.setText(Messages.get().TadpolePackageComposite_0);
+		tbtmPackage.setText(Messages.get().Package);
 		tbtmPackage.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name());
 
 		Composite compositePackages = new Composite(tabFolderObject, SWT.NONE);
@@ -220,9 +220,9 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_3);
 		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_4);
-		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_5);
+		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().Refresh);
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_6);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().ViewDDL);
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_7);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_8);
@@ -297,7 +297,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * package procedure function list
 	 */
 	protected void createProcedureFunctionListColumne(final TableViewer tv) {
-		String[] name = {Messages.get().TadpolePackageComposite_1, Messages.get().TadpolePackageComposite_2};
+		String[] name = {Messages.get().Name, Messages.get().Type};
 		int[] size = {120, 300};
 
 		for (int i=0; i<name.length; i++) {

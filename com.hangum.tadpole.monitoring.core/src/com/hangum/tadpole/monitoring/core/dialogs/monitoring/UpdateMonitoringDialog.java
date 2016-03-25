@@ -20,6 +20,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringMainDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 
 /**
@@ -321,7 +322,7 @@ public class UpdateMonitoringDialog extends Dialog {
 			return;
 		}
 		
-		if(!MessageDialog.openConfirm(null, "Confirm", "수정하시겠습니까?")) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "수정하시겠습니까?")) return;
 
 		 MonitoringMainDAO mainDao = new MonitoringMainDAO();
 		 mainDao.setSeq(monitoringIndexDao.getMonitoring_seq());

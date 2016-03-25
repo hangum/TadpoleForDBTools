@@ -190,7 +190,7 @@ public class MainEditor extends EditorExtension {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText(Messages.get().MainEditor_37);
+		tltmConnectURL.setToolTipText(Messages.get().DatabaseInformation);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setText(userDB.getDisplay_name());
 		
@@ -332,7 +332,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText(Messages.get().MainEditor_44);
+		tiAutoCommitCommit.setText(Messages.get().Comment);
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -344,7 +344,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText(Messages.get().MainEditor_48);
+		tiAutoCommitRollback.setText(Messages.get().Rollback);
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -584,7 +584,7 @@ public class MainEditor extends EditorExtension {
 			
 			if(!isFirst) {
 				if(TadpoleSQLTransactionManager.isInstance(getUserEMail(), userDB)) {
-					if(MessageDialog.openConfirm(null, Messages.get().MainEditor_30, Messages.get().MainEditor_47)) {
+					if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MainEditor_47)) {
 						TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
 					} else {
 						TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);

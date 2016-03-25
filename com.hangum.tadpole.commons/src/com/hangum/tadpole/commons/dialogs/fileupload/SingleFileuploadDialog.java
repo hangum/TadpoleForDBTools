@@ -121,7 +121,7 @@ public class SingleFileuploadDialog extends Dialog {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
-//				if(!MessageDialog.openConfirm(null, "Confirm", "Do you want file upload?")) return;
+//				if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "Do you want file upload?")) return;
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();

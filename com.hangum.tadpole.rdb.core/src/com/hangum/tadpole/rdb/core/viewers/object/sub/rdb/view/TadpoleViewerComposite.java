@@ -115,7 +115,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmViews = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmViews.setText(Messages.get().TadpoleViewerComposite_0);
+		tbtmViews.setText(Messages.get().Views);
 		tbtmViews.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.VIEWS.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
@@ -160,7 +160,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							//
 							FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS);
 						} catch(Exception e) {
-							logger.error(Messages.get().GenerateSQLSelectAction_8, e);
+							logger.error("Generate select statement", e);
 							
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
@@ -210,7 +210,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(viewListViewer, SWT.NONE);
 		TableColumn tblclmnTableName = tableViewerColumn.getColumn();
 		tblclmnTableName.setWidth(200);
-		tblclmnTableName.setText(Messages.get().TadpoleViewerComposite_5);
+		tblclmnTableName.setText(Messages.get().Name);
 		tblclmnTableName.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			
@@ -289,10 +289,10 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_1);
 		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_2);
-		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_3);
+		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().Refresh);
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, "View");
 
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_4);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().ViewDDL);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_6);
 		
 		// menu
@@ -421,7 +421,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * view column
 	 */
 	protected void createViewColumne() {
-		String[] name = {Messages.get().AbstractObjectComposite_26, Messages.get().AbstractObjectComposite_27, Messages.get().AbstractObjectComposite_28, Messages.get().AbstractObjectComposite_29, Messages.get().AbstractObjectComposite_30, Messages.get().AbstractObjectComposite_31, Messages.get().AbstractObjectComposite_32};
+		String[] name = {Messages.get().Field, Messages.get().Type, Messages.get().Key, Messages.get().Comment, Messages.get().Null, Messages.get().Default, Messages.get().Extra};
 		int[] size = {120, 70, 50, 100, 50, 50, 50};
 
 		ColumnViewerToolTipSupport.enableFor(viewColumnViewer);

@@ -106,7 +106,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmIndex.setText(Messages.get().TadpoleIndexesComposite_0);
+		tbtmIndex.setText(Messages.get().Indexes);
 		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
@@ -238,7 +238,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * index column list
 	 */
 	protected void createIndexColumne(final TableViewer tv) {
-		String[] name = {Messages.get().TadpoleIndexesComposite_4, Messages.get().TadpoleIndexesComposite_5, Messages.get().TadpoleIndexesComposite_6};
+		String[] name = {Messages.get().SEQ, Messages.get().Column, Messages.get().Order};
 		int[] size = {60, 300, 50};
 
 		for (int i=0; i<name.length; i++) {
@@ -255,7 +255,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_1);
 		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_2);
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_3);
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().Refresh);
 		
 //		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_7);
 

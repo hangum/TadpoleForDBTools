@@ -80,14 +80,14 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 				}
 			}
 		} catch(Exception e) {
-			MessageDialog.openError(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, e.getMessage());
+			MessageDialog.openError(getWindow().getShell(), Messages.get().Error, e.getMessage());
 			return;
 		}
 		
 		try {
 			if(!GrantCheckerUtils.ifExecuteQuery(userDB)) return;
 		} catch (Exception e) {
-			MessageDialog.openError(getWindow().getShell(), Messages.get().ObjectDeleteAction_2, e.getMessage());
+			MessageDialog.openError(getWindow().getShell(), Messages.get().Error, e.getMessage());
 			return;
 		}
 		

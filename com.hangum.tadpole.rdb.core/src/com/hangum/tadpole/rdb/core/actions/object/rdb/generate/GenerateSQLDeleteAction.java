@@ -69,7 +69,7 @@ public class GenerateSQLDeleteAction extends GenerateSQLSelectAction {
 			
 			FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 		} catch(Exception e) {
-			logger.error(Messages.get().GenerateSQLDeleteAction_10, e);
+			logger.error("Generate SQL Statement Error", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLDeleteAction_0, errStatus); //$NON-NLS-1$

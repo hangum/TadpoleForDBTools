@@ -110,7 +110,7 @@ public class ResourceDetailDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(3, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
-		lblTitle.setText(Messages.get().ResourceHistoryDialog_1);
+		lblTitle.setText(Messages.get().Title);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY);
 		textTitle.setEditable(true);
@@ -119,7 +119,7 @@ public class ResourceDetailDialog extends Dialog {
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
-		lblDescription.setText(Messages.get().ResourceHistoryDialog_2);
+		lblDescription.setText(Messages.get().Description);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDescription.setEditable(true);
@@ -132,9 +132,9 @@ public class ResourceDetailDialog extends Dialog {
 		btnModify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.get().DBLoginDialog_10, Messages.get().ResourceDetailDialog_delete)) {
+				if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResourceDetailDialog_delete)) {
 					if("".equals(textTitle.getText().trim())) {
-						MessageDialog.openError(getShell(), Messages.get().DBLoginDialog_10, Messages.get().ResourceDetailDialog_name_empty);
+						MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().ResourceDetailDialog_name_empty);
 						textTitle.setFocus();
 						return;
 					}
@@ -153,26 +153,26 @@ public class ResourceDetailDialog extends Dialog {
 						}
 					} catch(Exception ee) {
 						logger.error("Resource title, desc saveing", ee);
-						MessageDialog.openError(getShell(), Messages.get().DBLoginDialog_10, "Save exception." + ee.getMessage());
+						MessageDialog.openError(getShell(), Messages.get().Confirm, "Save exception." + ee.getMessage());
 					}
 				}
 			}
 		});
-		btnModify.setText(Messages.get().ResourceHistoryDialog_Modify);
+		btnModify.setText(Messages.get().Modified);
 		
 		Composite compositeHeaderUser = new Composite(compositeHead, SWT.NONE);
 		compositeHeaderUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		compositeHeaderUser.setLayout(new GridLayout(4, false));
 		
 		Label lblUser = new Label(compositeHeaderUser, SWT.NONE);
-		lblUser.setText(Messages.get().ResourceHistoryDialog_3);
+		lblUser.setText(Messages.get().User);
 		
 		textUser = new Text(compositeHeaderUser, SWT.BORDER | SWT.READ_ONLY);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textUser.setText(resourceManagerDao.getUser_name());
 		
 		Label lblCreateTime = new Label(compositeHeaderUser, SWT.NONE);
-		lblCreateTime.setText(Messages.get().ResourceHistoryDialog_4);
+		lblCreateTime.setText(Messages.get().CreatTime);
 		
 		textCreateTime = new Text(compositeHeaderUser, SWT.BORDER | SWT.READ_ONLY);
 		textCreateTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -200,17 +200,17 @@ public class ResourceDetailDialog extends Dialog {
 		TableViewerColumn tvcDate = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnDate = tvcDate.getColumn();
 		tblclmnDate.setWidth(100);
-		tblclmnDate.setText(Messages.get().ResourceHistoryDialog_5);
+		tblclmnDate.setText(Messages.get().Date);
 		
 		TableViewerColumn tvcUser = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnUser = tvcUser.getColumn();
 		tblclmnUser.setWidth(100);
-		tblclmnUser.setText(Messages.get().ResourceHistoryDialog_3);
+		tblclmnUser.setText(Messages.get().User);
 		
 		TableViewerColumn tvcSQL = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnSql = tvcSQL.getColumn();
 		tblclmnSql.setWidth(500);
-		tblclmnSql.setText(Messages.get().ResourceHistoryDialog_7);
+		tblclmnSql.setText(Messages.get().SQL);
 		
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new ResourceHistoryLabelProvider());
@@ -299,8 +299,8 @@ public class ResourceDetailDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ResourceHistoryDialog_9, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ResourceHistoryDialog_10, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Compare, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
 	/**

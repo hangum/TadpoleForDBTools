@@ -297,7 +297,7 @@ public class MongoDBImportEditor extends EditorPart {
 		// job make
 		final UserDBDAO sourceDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
 		Job job = null;		
-		if(MessageDialog.openConfirm(null, "Confirm", Messages.get().MongoDBImportEditor_1)) {	 //$NON-NLS-1$
+		if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongoDBImportEditor_1)) {	 //$NON-NLS-1$
 			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
 				DBImport dbImport = null;
@@ -312,7 +312,7 @@ public class MongoDBImportEditor extends EditorPart {
 				
 			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
 				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
-					MessageDialog.openInformation(null, "Confirm", "Not support MongoDB.");
+					MessageDialog.openInformation(null, Messages.get().Confirm, "Not support MongoDB.");
 					return;
 				} else {
 					QueryToMongoDBImport importData = new QueryToMongoDBImport(sourceDBDAO, targetDBDAO, textCollectionName.getText(), textQuery.getText(), btnExistOnDelete.getSelection());
@@ -329,7 +329,7 @@ public class MongoDBImportEditor extends EditorPart {
 				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							MessageDialog.openInformation(null, "Confirm", Messages.get().MongoDBImportEditor_11); //$NON-NLS-1$
+							MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MongoDBImportEditor_11); //$NON-NLS-1$
 						} else {				
 							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MongoDBImportEditor_12, jobEvent.getResult()); //$NON-NLS-1$
 						}						

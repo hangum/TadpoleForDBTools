@@ -35,6 +35,7 @@ import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringMainDAO;
 import com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Template;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.utils.MonitoringDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -425,7 +426,7 @@ public class AddMonitoringDialog extends Dialog {
 
 		try {
 			TadpoleSystem_monitoring.saveMonitoring(mainDao, indexDao);
-			MessageDialog.openInformation(null, "Confirm", "Save data.");
+			MessageDialog.openInformation(null, Messages.get().Confirm, "Save data.");
 		} catch (Exception e) {
 			logger.error("save monitoring index", e);
 			

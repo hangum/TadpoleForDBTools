@@ -87,7 +87,7 @@ public class ResultPlanComposite extends Composite {
 				layout();
 			}
 		});
-		btnAddVertical.setText(Messages.get().RDBResultComposite_btnOrientation);
+		btnAddVertical.setText(Messages.get().ChangeRotation);
 		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
 		
 		sashFormResult = new SashForm(this, SWT.HORIZONTAL);

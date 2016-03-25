@@ -167,7 +167,7 @@ public class ResultSetComposite extends Composite {
 				isUserInterrupt = false;
 			}
 		});
-		btnStopQuery.setText(Messages.get().RDBResultComposite_btnStp_text);
+		btnStopQuery.setText(Messages.get().QueryStop);
 		btnStopQuery.setEnabled(false);
 		
 		btnAddVertical = new Button(compHead, SWT.NONE);
@@ -185,7 +185,7 @@ public class ResultSetComposite extends Composite {
 				layout();
 			}
 		});
-		btnAddVertical.setText(Messages.get().RDBResultComposite_btnOrientation);
+		btnAddVertical.setText(Messages.get().ChangeRotation);
 		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);

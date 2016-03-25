@@ -187,7 +187,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				if(ss.isEmpty()) return;
 				
 				String strFile = (String)ss.getFirstElement();
-				if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().JDBCDriverSetting_deleteMsg)) return;
+				if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().Delete)) return;
 				if(logger.isDebugEnabled()) logger.debug("File delete : " + jdbc_dir + strFile);
 				
 				try {
@@ -214,7 +214,7 @@ public class JDBCDriverManageDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
-				if(!MessageDialog.openConfirm(null, Messages.get().SQLiteLoginComposite_16, Messages.get().SQLiteLoginComposite_17)) return;
+				if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SQLiteLoginComposite_17)) return;
 				
 				if(logger.isDebugEnabled()) logger.debug("=[file name]==> " + fileName);
 				

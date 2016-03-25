@@ -58,7 +58,7 @@ public class AutoLayoutAction extends SelectionAction {
 
 	@Override
 	protected void init() {
-		setText(Messages.get().AutoLayoutAction_1);
+		setText(Messages.get().AutoLayoutAction_0);
 		setToolTipText(Messages.get().AutoLayoutAction_0);
 		setId(ID);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/layout_info.png"));

@@ -148,7 +148,7 @@ public class SessionListEditor extends EditorPart {
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tltmStart = new ToolItem(toolBar, SWT.NONE);
-		tltmStart.setToolTipText(Messages.get().SessionListEditor_1);
+		tltmStart.setToolTipText(Messages.get().Start);
 		tltmStart.setImage(GlobalImageUtils.getStart()); //$NON-NLS-1$
 		tltmStart.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -162,7 +162,7 @@ public class SessionListEditor extends EditorPart {
 		tltmStart.setEnabled(false);
 		
 		tltmStop = new ToolItem(toolBar, SWT.NONE);
-		tltmStop.setToolTipText(Messages.get().SessionListEditor_2);
+		tltmStop.setToolTipText(Messages.get().Stop);
 		tltmStop.setImage(GlobalImageUtils.getStop()); //$NON-NLS-1$
 		tltmStop.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -189,7 +189,7 @@ public class SessionListEditor extends EditorPart {
 				if(isPossible) {
 					killProcess();
 				} else {
-					MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.get().MainEditor_21);
+					MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Confirm, Messages.get().MainEditor_21);
 				}
 			}
 		});
@@ -230,7 +230,7 @@ public class SessionListEditor extends EditorPart {
 		
 		Group compositeQuery = new Group(sashForm, SWT.NONE);
 		compositeQuery.setLayout(new GridLayout(1, false));
-		compositeQuery.setText(Messages.get().SessionListEditor_6);
+		compositeQuery.setText(Messages.get().Query);
 		
 		textQuery = new Text(compositeQuery, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -293,7 +293,7 @@ public class SessionListEditor extends EditorPart {
 		StructuredSelection ss = (StructuredSelection)tableViewerSessionList.getSelection();
 		SessionListDAO sl = (SessionListDAO)ss.getFirstElement();
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().SessionListEditor_7, Messages.get().SessionListEditor_8)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SessionListEditor_8)) return;
 		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
@@ -383,7 +383,7 @@ public class SessionListEditor extends EditorPart {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] name = {Messages.get().SessionListEditor_21, Messages.get().SessionListEditor_22, Messages.get().SessionListEditor_23, Messages.get().SessionListEditor_24, Messages.get().SessionListEditor_25, Messages.get().SessionListEditor_26, Messages.get().SessionListEditor_27, Messages.get().SessionListEditor_28};
+		String[] name = {Messages.get().PID, Messages.get().User, Messages.get().Host, Messages.get().Database, Messages.get().Command, Messages.get().Time, Messages.get().State, Messages.get().Info};
 		int[] size = {70, 70, 150, 70, 70, 100, 50, 200};
 
 		for (int i=0; i<name.length; i++) {

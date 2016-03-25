@@ -235,7 +235,7 @@ public class UserManagerDialog extends Dialog {
 			Object selElement = is.getFirstElement();
 			
 			if(selElement instanceof UserDTO) {
-				if(MessageDialog.openConfirm(null, "Confirm", Messages.get().UserManagerDialog_22)) { //$NON-NLS-1$
+				if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().UserManagerDialog_22)) { //$NON-NLS-1$
 					UserDTO user = (UserDTO)selElement;
 					try {
 						MongoDBQuery.deleteUser(userDB, user.getId());
