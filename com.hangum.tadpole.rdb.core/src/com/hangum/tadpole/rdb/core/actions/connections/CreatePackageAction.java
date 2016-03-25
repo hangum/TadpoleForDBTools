@@ -34,8 +34,8 @@ public class CreatePackageAction extends AbstractQueryAction {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
 		FindEditorAndWriteQueryUtil.run(userDB, 
-				QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.PROCEDURES), 
-				PublicTadpoleDefine.DB_ACTION.PROCEDURES);
+				QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES), 
+				PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES);
 	}
 	
 

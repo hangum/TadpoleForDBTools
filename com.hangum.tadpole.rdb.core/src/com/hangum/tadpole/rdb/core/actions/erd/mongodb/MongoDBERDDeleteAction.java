@@ -43,10 +43,10 @@ public class MongoDBERDDeleteAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBResourceDAO userDB = (UserDBResourceDAO)sel.getFirstElement();
 		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
-			MessageDialog.openError(null, Messages.DeleteDBAction_0, Messages.DeleteDBAction_2);
+			MessageDialog.openError(null, Messages.get().DeleteDBAction_0, Messages.get().DeleteDBAction_2);
 			return;
 		}
-		if(MessageDialog.openConfirm(null, Messages.ERDDeleteAction_0, Messages.ERDDeleteAction_1)) run(userDB);
+		if(MessageDialog.openConfirm(null, Messages.get().ERDDeleteAction_0, Messages.get().ERDDeleteAction_1)) run(userDB);
 	}
 	
 	public void run(UserDBResourceDAO userDBErd) {
@@ -54,11 +54,11 @@ public class MongoDBERDDeleteAction implements IViewActionDelegate {
 			TadpoleSystem_UserDBResource.delete(userDBErd);
 			
 			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
-			mv.deleteErd(userDBErd);
+			mv.deleteResource(userDBErd);
 		} catch (Exception e) {
-			logger.error(Messages.ERDDeleteAction_2, e);
+			logger.error(Messages.get().ERDDeleteAction_2, e);
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.ERDDeleteAction_3, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().ERDDeleteAction_3, errStatus); //$NON-NLS-1$
 		}
 	}
 

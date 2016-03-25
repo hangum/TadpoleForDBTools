@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.utils;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -31,20 +32,7 @@ public class TadpoleEditorUtils {
 	 * @return
 	 */
 	public static String getGrantText(String initContent) {
-		if(null == initContent | "".equals(initContent)) return "";
-		
-		String strInitContent = initContent;
-		try {
-			strInitContent = StringUtils.replace(initContent, "\r\n", "\\n");
-			strInitContent = StringUtils.replace(strInitContent, PublicTadpoleDefine.LINE_SEPARATOR, "\\n");
-			strInitContent = StringUtils.replace(strInitContent, "\'", "\\\'");
-			strInitContent = StringUtils.replace(strInitContent, "\"", "\\\"");
-			
-		} catch(Exception e) {
-			logger.error("Tadpole Editor grant utils", e);
-		}
-		
-		return strInitContent;
+		return StringEscapeUtils.escapeJavaScript(initContent);
 	}
 	
 	/**
@@ -55,8 +43,6 @@ public class TadpoleEditorUtils {
 	public static String[] makeGrantArgs(String ... args) {
 		String[] grantsARgs = new String[args.length];
 		for(int i=0; i<args.length; i++) {
-//			if(logger.isDebugEnabled()) logger.debug(getGrantText(args[i]));
-			
 			grantsARgs[i] = getGrantText(args[i]);
 		}
 		

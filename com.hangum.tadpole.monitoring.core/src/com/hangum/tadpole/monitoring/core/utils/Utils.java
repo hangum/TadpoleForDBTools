@@ -159,7 +159,7 @@ public class Utils {
 	        
 	        return sbStr.toString();
 //		} catch (ParseException e) {
-//			MessageDialog.openError(null, Messages.AddScheduleDialog_20, Messages.AddScheduleDialog_12);
+//			MessageDialog.openError(null, Messages.get().AddScheduleDialog_20, Messages.get().AddScheduleDialog_12);
 //			textCronExp.setFocus();
 //		}
 	}

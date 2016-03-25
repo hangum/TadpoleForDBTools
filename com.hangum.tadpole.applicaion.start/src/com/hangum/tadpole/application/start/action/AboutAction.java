@@ -26,7 +26,7 @@ public class AboutAction extends Action {
 	private final IWorkbenchWindow window;
 	
 	public AboutAction(IWorkbenchWindow window) {
-		super(Messages.AboutAction_0);
+		super(Messages.get().AboutAction_0);
 		setId(this.getClass().getName());
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(BrowserActivator.APPLICTION_ID, "resources/icons/about.png"));
 		setToolTipText("About Tadpole DB Hub");

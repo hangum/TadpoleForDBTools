@@ -19,9 +19,10 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.importdb.core.dialog.importdb.sql.SQLToDBImportDialog;
+import com.hangum.tadpole.importexport.core.dialogs.SQLToDBImportDialog;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**
@@ -41,18 +42,21 @@ public class SQLToRdbImportAction implements IViewActionDelegate {
 	@Override
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		
-		boolean isPossible = false;
-		if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
-		else {
-			if(!PermissionChecker.isProductBackup(userDB)) isPossible = true;
-		}
-		
-		if(isPossible) {
-			SQLToDBImportDialog dialog = new SQLToDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
-			dialog.open();
+		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.get().MainEditor_DoesnotSupport);
 		} else {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.MainEditor_21);
+			boolean isPossible = false;
+			if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
+			else {
+				if(!PermissionChecker.isProductBackup(userDB)) isPossible = true;
+			}
+			
+			if(isPossible) {
+				SQLToDBImportDialog dialog = new SQLToDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+				dialog.open();
+			} else {
+				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Confirm", Messages.get().MainEditor_21);
+			}
 		}
 	}
 

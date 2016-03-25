@@ -122,7 +122,25 @@ public class TadpoleSystem_UserInfoData {
 		// session 에도 암호화 되게 저장합니다. 
 		SessionManager.setUserInfo(key, CipherManager.getInstance().encryption(value));
 	}
-
+	
+	/**
+	 * update admin value
+	 * @param key
+	 * @param value
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static UserInfoDataDAO updateAdminValue(String key, String value)  throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
+		userInfoData.setUser_seq(PublicTadpoleDefine.systemAdminId);
+		
+		userInfoData.setName(key);
+		userInfoData.setValue0(value);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		
+		return userInfoData;
+	}
 
 	/**
 	 * update key, value
@@ -142,7 +160,6 @@ public class TadpoleSystem_UserInfoData {
 		
 		SessionManager.setUserInfo(key, value);
 	}
-	
 
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
@@ -154,12 +171,18 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtRDBNumberColumnIsComman RDB의 결과테이블이 숫자 컬럼인 경우 ,를 넣을 것인지?
 	 * @param txtFontInfo font information
 	 * @param txtCommitCount commit count
+	 * @param txtResultType 
 	 */
 	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
-			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn) throws TadpoleSQLManagerException, SQLException {
+			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultType) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
 		userInfoData.setUser_seq(SessionManager.getUserSeq());
+		
+		// 	result type	
+		userInfoData.setName(PreferenceDefine.RDB_RESULT_TYPE);
+		userInfoData.setValue0(txtResultType);
+		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		// 	select 제한  갯수		
 		userInfoData.setName(PreferenceDefine.SELECT_LIMIT_COUNT);
@@ -466,5 +489,4 @@ public class TadpoleSystem_UserInfoData {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
 	}
-	
 }

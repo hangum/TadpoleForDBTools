@@ -21,16 +21,17 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 
 /**
  * insert action
@@ -44,20 +45,20 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	private static final Logger logger = Logger.getLogger(GenerateSQLInsertAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.GenerateSQLInsertAction"; //$NON-NLS-1$
 
-	public GenerateSQLInsertAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public GenerateSQLInsertAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType, title);
 	}
 	
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		
 		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			StringBuffer sbSQL = new StringBuffer();
 			try {
-				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 				
-				sbSQL.append("INSERT INTO " + tableDAO.getSysName() + PublicTadpoleDefine.LINE_SEPARATOR + " ("); //$NON-NLS-1$ //$NON-NLS-2$
+				sbSQL.append("INSERT INTO " + SQLUtil.getTableName(userDB, tableDAO) + PublicTadpoleDefine.LINE_SEPARATOR + "	("); //$NON-NLS-1$ //$NON-NLS-2$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					TableColumnDAO dao = showTableColumns.get(i);
 					sbSQL.append(dao.getSysName());
@@ -66,7 +67,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 					if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
 					else sbSQL.append(") "); //$NON-NLS-1$
 				}
-				sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "VALUES " + PublicTadpoleDefine.LINE_SEPARATOR + " ( "); //$NON-NLS-1$
+				sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "VALUES " + PublicTadpoleDefine.LINE_SEPARATOR + "	( "); //$NON-NLS-1$
 				for (int i=0; i<showTableColumns.size(); i++) {
 					if(i < (showTableColumns.size()-1)) sbSQL.append("?, ");  //$NON-NLS-1$
 					else sbSQL.append("? )"); //$NON-NLS-1$
@@ -74,10 +75,10 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				
 				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), actionType);
 			} catch(Exception e) {
-				logger.error(Messages.GenerateSQLInsertAction_9, e);
+				logger.error(Messages.get().GenerateSQLInsertAction_9, e);
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
 			}
 		// mongo db
 		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {

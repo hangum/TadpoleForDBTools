@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -34,6 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 
@@ -67,10 +67,16 @@ public class RecordViewDialog extends Dialog {
 		this.resultSet = dto.getDataList().getData();
 		this.loc = resultSet.indexOf(selection);
 	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText(Messages.get().RecordViewDialog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
+	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.RecordViewDialog_0);
 		container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.verticalSpacing = 3;
@@ -84,7 +90,7 @@ public class RecordViewDialog extends Dialog {
 				true, false, 1, 1));
 
 		Button btnFirst = new Button(compositeNavigation, SWT.CENTER);
-		btnFirst.setToolTipText(Messages.RecordViewDialog_1);
+		btnFirst.setToolTipText(Messages.get().RecordViewDialog_1);
 		GridData gd_btnFirst = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnFirst.widthHint = 30;
 		btnFirst.setLayoutData(gd_btnFirst);
@@ -97,7 +103,7 @@ public class RecordViewDialog extends Dialog {
 		btnFirst.setText("<<");
 
 		Button btnPrevious = new Button(compositeNavigation, SWT.NONE);
-		btnPrevious.setToolTipText(Messages.RecordViewDialog_2);
+		btnPrevious.setToolTipText(Messages.get().RecordViewDialog_2);
 		GridData gd_btnPrevious = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnPrevious.widthHint = 65;
 		btnPrevious.setLayoutData(gd_btnPrevious);
@@ -110,7 +116,7 @@ public class RecordViewDialog extends Dialog {
 		btnPrevious.setText("<"); //$NON-NLS-1$
 
 		Button btnNext = new Button(compositeNavigation, SWT.NONE);
-		btnNext.setToolTipText(Messages.RecordViewDialog_5);
+		btnNext.setToolTipText(Messages.get().RecordViewDialog_5);
 		GridData gd_btnNext = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnNext.widthHint = 65;
 		btnNext.setLayoutData(gd_btnNext);
@@ -123,7 +129,7 @@ public class RecordViewDialog extends Dialog {
 		btnNext.setText(">"); //$NON-NLS-1$
 
 		Button btnLast = new Button(compositeNavigation, SWT.NONE);
-		btnLast.setToolTipText(Messages.RecordViewDialog_7);
+		btnLast.setToolTipText(Messages.get().RecordViewDialog_7);
 		GridData gd_btnLast = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnLast.widthHint = 30;
 		btnLast.setLayoutData(gd_btnLast);
@@ -218,7 +224,7 @@ public class RecordViewDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.RecordViewDialog_13, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().RecordViewDialog_13, false);
 	}
 
 	@Override

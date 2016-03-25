@@ -61,7 +61,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 	 */
 	public OthersConnectionGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
-		setText(Messages.OthersConnectionRDBGroup_0);
+		setText(Messages.get().OthersConnectionRDBGroup_0);
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
@@ -71,12 +71,12 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
 		btnReadOnlyConnection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		btnReadOnlyConnection.setText(Messages.OthersConnectionRDBGroup_1);
+		btnReadOnlyConnection.setText(Messages.get().OthersConnectionRDBGroup_1);
 		
 		btnAutoCommit = new Button(this, SWT.CHECK);
 		btnAutoCommit.setSelection(true);
 		btnAutoCommit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		btnAutoCommit.setText(Messages.OthersConnectionRDBGroup_2);
+		btnAutoCommit.setText(Messages.get().OthersConnectionRDBGroup_2);
 		
 //		Button btnTableFilters = new Button(this, SWT.NONE);
 //		btnTableFilters.addSelectionListener(new SelectionAdapter() {
@@ -92,7 +92,7 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 //				}
 //			}
 //		});
-//		btnTableFilters.setText(Messages.OthersConnectionRDBGroup_3);
+//		btnTableFilters.setText(Messages.get().OthersConnectionRDBGroup_3);
 		
 		btnExternalBrowser = new Button(this, SWT.NONE);
 		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {
@@ -105,31 +105,31 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 				}
 			}
 		});
-		btnExternalBrowser.setText(Messages.OthersConnectionRDBGroup_4);
+		btnExternalBrowser.setText(Messages.get().OthersConnectionRDBGroup_4);
 		
 		btnProfiler = new Button(this, SWT.CHECK);
-		btnProfiler.setText(Messages.OthersConnectionRDBGroup_5);
+		btnProfiler.setText(Messages.get().OthersConnectionRDBGroup_5);
 		btnProfiler.setSelection(true);
 		
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
-		btnShowTables.setText(Messages.OthersConnectionRDBGroup_btnShowTables_text);
+		btnShowTables.setText(Messages.get().OthersConnectionRDBGroup_btnShowTables_text);
 		
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
-		btnExecuteQuestionDml.setText(Messages.OthersConnectionRDBGroup_6);
+		btnExecuteQuestionDml.setText(Messages.get().OthersConnectionRDBGroup_6);
 		
 //		btnIsVisible = new Button(this, SWT.CHECK);
 //		btnIsVisible.setSelection(true);
-//		btnIsVisible.setText(Messages.OthersConnectionRDBGroup_btnIsVisible_text);
+//		btnIsVisible.setText(Messages.get().OthersConnectionRDBGroup_btnIsVisible_text);
 		
 //		btnSendMonitoring = new Button(this, SWT.CHECK);
 //		btnSendMonitoring.setEnabled(false);
 //		btnSendMonitoring.setSelection(false);
-//		btnSendMonitoring.setText(Messages.OthersConnectionRDBGroup_btnSendMonitoring_text);
+//		btnSendMonitoring.setText(Messages.get().OthersConnectionRDBGroup_btnSendMonitoring_text);
 		
 //		btnIsMonitoring = new Button(this, SWT.CHECK);
 //		btnIsMonitoring.setSelection(true);
-//		btnIsMonitoring.setText(Messages.OthersConnectionGroup_btnIsMonitoring_text);
+//		btnIsMonitoring.setText(Messages.get().OthersConnectionGroup_btnIsMonitoring_text);
 //		new Label(this, SWT.NONE);
 //		new Label(this, SWT.NONE);
 		

@@ -15,6 +15,8 @@ import org.eclipse.jface.viewers.Viewer;
 
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
  * TABLE의 FILTER
@@ -27,13 +29,18 @@ public class TableFilter extends TadpoleViewrFilter {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TableFilter.class);
+	private UserDBDAO userDB;
+	
+	public TableFilter(UserDBDAO userDB) {
+		this.userDB = userDB;
+	}
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if(searchString == null || searchString.length() == 0) return true;
 		
 		TableDAO dao = (TableDAO)element;
-		if(dao.getName().toUpperCase().matches(searchString.toUpperCase())) return true;
+		if(SQLUtil.getTableName(userDB, dao).toUpperCase().matches(searchString.toUpperCase())) return true;
 		
 		return false;
 	}

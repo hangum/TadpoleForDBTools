@@ -48,11 +48,20 @@ ORDER BY T.table_name
 <!-- 
 	db의 모든 table 이름, 코멘트.
 	
+	SELECT
+  		T.tablespace_name AS "schema_name" 
+      ,T.table_name AS "NAME"
+      , S.COMMENTS AS "COMMENT"
+    FROM user_tables T 
+      LEFT JOIN USER_TAB_COMMENTS S
+            ON S.TABLE_NAME = T.TABLE_NAME
+ORDER BY T.table_name
+	
 	컬럼 설명
 	TNAME 		: 테이블 명
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
-  SELECT 
+  SELECT
       T.table_name AS "NAME"
       , S.COMMENTS AS "COMMENT"
     FROM user_tables T 
@@ -694,6 +703,12 @@ ORDER BY s.module, s.username
 	ALTER SYSTEM KILL SESSION '$spid$' IMMEDIATE
 </select>
 
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$
+</select>
 
 <!-- 
 	table information

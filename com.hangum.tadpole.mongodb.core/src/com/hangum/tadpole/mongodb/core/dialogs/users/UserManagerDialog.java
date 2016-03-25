@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
@@ -101,19 +102,19 @@ public class UserManagerDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblId = new Label(container, SWT.NONE);
-		lblId.setText(Messages.UserManagerDialog_0);
+		lblId.setText(Messages.get().UserManagerDialog_0);
 		
 		textID = new Text(container, SWT.BORDER);
 		textID.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(container, SWT.NONE);
-		lblPassword.setText(Messages.UserManagerDialog_1);
+		lblPassword.setText(Messages.get().UserManagerDialog_1);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblRePassword = new Label(container, SWT.NONE);
-		lblRePassword.setText(Messages.UserManagerDialog_2);
+		lblRePassword.setText(Messages.get().UserManagerDialog_2);
 		
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -121,7 +122,7 @@ public class UserManagerDialog extends Dialog {
 		
 		btnReadOnly = new Button(container, SWT.CHECK);
 		btnReadOnly.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		btnReadOnly.setText(Messages.UserManagerDialog_3);
+		btnReadOnly.setText(Messages.get().UserManagerDialog_3);
 		
 		composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -129,7 +130,7 @@ public class UserManagerDialog extends Dialog {
 		
 		Group grpUserList = new Group(composite, SWT.NONE);
 		grpUserList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpUserList.setText(Messages.UserManagerDialog_5);
+		grpUserList.setText(Messages.get().UserManagerDialog_5);
 		grpUserList.setLayout(new GridLayout(1, false));
 		
 		tableViewerUser = new TableViewer(grpUserList, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
@@ -141,12 +142,12 @@ public class UserManagerDialog extends Dialog {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerUser, SWT.NONE);
 		TableColumn tblclmnId = tableViewerColumn.getColumn();
 		tblclmnId.setWidth(162);
-		tblclmnId.setText(Messages.UserManagerDialog_0);
+		tblclmnId.setText(Messages.get().UserManagerDialog_0);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerUser, SWT.NONE);
 		TableColumn tblclmnReadOnly = tableViewerColumn_1.getColumn();
 		tblclmnReadOnly.setWidth(100);
-		tblclmnReadOnly.setText(Messages.UserManagerDialog_3);
+		tblclmnReadOnly.setText(Messages.get().UserManagerDialog_3);
 		
 		tableViewerUser.setContentProvider(new ArrayContentProvider());
 		tableViewerUser.setLabelProvider(new UserListLabelProvider());
@@ -200,19 +201,19 @@ public class UserManagerDialog extends Dialog {
 			boolean isReadOnly = btnReadOnly.getSelection();
 			
 			if("".equals(id)) { //$NON-NLS-1$
-				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_11); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_11); //$NON-NLS-1$
 				textID.setFocus();
 				return;
 			} else if("".equals(passwd)) { //$NON-NLS-1$
-				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_14); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_14); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			} else if("".equals(passwd2)) { //$NON-NLS-1$
-				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_17); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_17); //$NON-NLS-1$
 				textRePassword.setFocus();
 				return;
 			} else if(!passwd.equals(passwd2)) {
-				MessageDialog.openError(null, "Error", Messages.UserManagerDialog_19); //$NON-NLS-1$
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_19); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			}
@@ -234,7 +235,7 @@ public class UserManagerDialog extends Dialog {
 			Object selElement = is.getFirstElement();
 			
 			if(selElement instanceof UserDTO) {
-				if(MessageDialog.openConfirm(null, "Confirm", Messages.UserManagerDialog_22)) { //$NON-NLS-1$
+				if(MessageDialog.openConfirm(null, "Confirm", Messages.get().UserManagerDialog_22)) { //$NON-NLS-1$
 					UserDTO user = (UserDTO)selElement;
 					try {
 						MongoDBQuery.deleteUser(userDB, user.getId());
@@ -249,7 +250,7 @@ public class UserManagerDialog extends Dialog {
 					}
 				}
 			} else {
-				MessageDialog.openError(null, "Confirm", "삭제 할 사용자를 선택하여 주세요.");
+				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().DeleteMsg);
 			}
 		} else if(buttonId == IDialogConstants.CANCEL_ID) {
 			super.cancelPressed();
@@ -263,10 +264,10 @@ public class UserManagerDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, DELETE_ID, Messages.UserManagerDialog_4, false);
+		createButton(parent, DELETE_ID, Messages.get().Delete, false);
 		createButton(parent, APPEND_USER_ID, "Add User", true);
-//		createButton(parent, IDialogConstants.OK_ID, Messages.UserManagerDialog_6, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.UserManagerDialog_7, false);
+//		createButton(parent, IDialogConstants.OK_ID, Messages.get().UserManagerDialog_6, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**
@@ -281,6 +282,7 @@ public class UserManagerDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Add User Dialog"); //$NON-NLS-1$
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 }

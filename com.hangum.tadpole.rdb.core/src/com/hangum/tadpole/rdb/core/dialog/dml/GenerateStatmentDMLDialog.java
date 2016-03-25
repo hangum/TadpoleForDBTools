@@ -42,13 +42,14 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
@@ -97,7 +98,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(tableDAO.getName() + Messages.GenerateStatmentDMLDialog_1);
+		newShell.setText(tableDAO.getName() + Messages.get().GenerateStatmentDMLDialog_1);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -129,7 +131,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		lblTableName = new Label(compositeTable, SWT.NONE);
 		lblTableName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTableName.setText(tableDAO.getName());
+		lblTableName.setText(SQLUtil.getTableName(userDB, tableDAO));
 
 		Label lblAs = new Label(compositeTable, SWT.NONE);
 		lblAs.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -192,29 +194,29 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		TableViewerColumn tvColumnName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcColumnName = tvColumnName.getColumn();
 		tcColumnName.setWidth(130);
-		tcColumnName.setText(Messages.GenerateStatmentDMLDialog_8);
+		tcColumnName.setText(Messages.get().GenerateStatmentDMLDialog_8);
 		tvColumnName.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 0, this));
 
 		TableViewerColumn tvColumnDataType = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcDataType = tvColumnDataType.getColumn();
 		tcDataType.setWidth(85);
-		tcDataType.setText(Messages.GenerateStatmentDMLDialog_9);
+		tcDataType.setText(Messages.get().GenerateStatmentDMLDialog_9);
 
 		TableViewerColumn tvColumnKey = new TableViewerColumn(tableViewer, SWT.CENTER);
 		TableColumn tcKey = tvColumnKey.getColumn();
 		tcKey.setWidth(50);
-		tcKey.setText(Messages.GenerateStatmentDMLDialog_10);
+		tcKey.setText(Messages.get().GenerateStatmentDMLDialog_10);
 
 		TableViewerColumn tvColumnAlias = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcAlias = tvColumnAlias.getColumn();
 		tcAlias.setWidth(100);
-		tcAlias.setText(Messages.GenerateStatmentDMLDialog_11);
+		tcAlias.setText(Messages.get().GenerateStatmentDMLDialog_11);
 		tvColumnAlias.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 3, this));
 		
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt =  tvColumnCmt.getColumn();
 		tcCmt.setWidth(300);
-		tcCmt.setText(Messages.GenerateStatmentDMLDialog_12);
+		tcCmt.setText(Messages.get().GenerateStatmentDMLDialog_12);
 
 		Composite composite_3 = new Composite(compositeBody, SWT.NONE);
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -240,10 +242,10 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				queryGenetation();
 			}
 		});
-		btnAllCheck.setText(Messages.GenerateStatmentDMLDialog_14);
+		btnAllCheck.setText(Messages.get().GenerateStatmentDMLDialog_14);
 
 		chkComment = new Button(composite_3, SWT.CHECK);
-		chkComment.setText(Messages.GenerateStatmentDMLDialog_15);
+		chkComment.setText(Messages.get().GenerateStatmentDMLDialog_15);
 		assignSelectionAdapter(chkComment);
 		
 		Composite previewComposite = new Composite(compositeBody, SWT.BORDER);
@@ -311,7 +313,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 	private void initData() {
 		try {
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.makeShowTableColumns(userDB, tableDAO);
+			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 			List<ExtendTableColumnDAO> newTableColumns = new ArrayList<ExtendTableColumnDAO>();
 
 			ExtendTableColumnDAO newTableDAO = new ExtendTableColumnDAO("*", "", "", textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -369,7 +371,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		if(StringUtils.isEmpty(StringUtils.trim(sbColumn.toString()))) sbColumn.append(" * " ); //$NON-NLS-1$
 		
 		resultSQL.append(sbColumn.toString());
-		resultSQL.append("  FROM " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append(" FROM " + SQLUtil.getTableName(userDB, tableDAO) + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 		cnt = 0;
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
@@ -400,7 +402,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("UPDATE " + this.tableDAO.getSysName() + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append("UPDATE " + SQLUtil.getTableName(userDB, tableDAO) + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
@@ -462,7 +464,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("INSERT INTO " + tableDAO.getSysName() + " ( " ); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append("INSERT INTO " + SQLUtil.getTableName(userDB, tableDAO) + " ( " ); //$NON-NLS-1$ //$NON-NLS-2$
 
 		ExtendTableColumnDAO firstDao = (ExtendTableColumnDAO) tableViewer.getElementAt(0);
 		if (firstDao.isCheck()) {
@@ -486,7 +488,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				}
 			}
 		}
-		resultSQL.append(")" + PublicTadpoleDefine.LINE_SEPARATOR + " VALUES ( "); //$NON-NLS-1$ //$NON-NLS-2$
+		resultSQL.append(")" + PublicTadpoleDefine.LINE_SEPARATOR + "VALUES ( "); //$NON-NLS-1$ //$NON-NLS-2$
 		cnt = 0;
 
 		if (firstDao.isCheck()) {
@@ -529,11 +531,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 		int cnt = 0;
 
-		resultSQL.append("DELETE FROM  " + tableDAO.getSysName()); //$NON-NLS-1$
+		resultSQL.append("DELETE FROM  " + SQLUtil.getTableName(userDB, tableDAO)); //$NON-NLS-1$
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
 
-				if (cnt == 0) resultSQL.append(" WHERE "); //$NON-NLS-1$
+				if (cnt == 0) resultSQL.append("WHERE "); //$NON-NLS-1$
 				else resultSQL.append("\t AND "); //$NON-NLS-1$
 				
 				resultSQL.append(allDao.getSysName()).append(" = ? "); //$NON-NLS-1$
@@ -572,10 +574,10 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		if(isEditorAdd) {
-			createButton(parent, IDialogConstants.OK_ID, Messages.GenerateStatmentDMLDialog_2, false);
-			createButton(parent, IDialogConstants.CANCEL_ID, Messages.GenerateStatmentDMLDialog_88, false);
+			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
+			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().GenerateStatmentDMLDialog_88, false);
 		} else {
-			createButton(parent, IDialogConstants.CANCEL_ID, Messages.GenerateStatmentDMLDialog_88, false);	
+			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().GenerateStatmentDMLDialog_88, false);	
 		}
 		
 	}

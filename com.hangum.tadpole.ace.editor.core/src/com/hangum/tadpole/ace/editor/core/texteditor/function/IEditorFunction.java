@@ -19,8 +19,10 @@ package com.hangum.tadpole.ace.editor.core.texteditor.function;
 public interface IEditorFunction  {
 	
 	public static final int DIRTY_CHANGED 			= 1;
+	public static final int CONTENT_ASSIST			= 5;
 	
 	public static final int SAVE 					= 15;
+	public static final int AUTO_SAVE				= 16;
 	
 	public static final int EXECUTE_QUERY 			= 25;
 	public static final int EXECUTE_PLAN 			= 30;
@@ -39,17 +41,44 @@ public interface IEditorFunction  {
     public static final String EDITOR_SERVICE_HANDLER = "AceEditorBrowserHandler";
     
     /**
-     * 에디터를 초기화 합니다. 
+     * RDB 에디터를 초기화 합니다. 
      * 
      * @param 확장자
      * @param editor type
      * @param 추가하려는 키워드
      * @param 초기텍스트
      */
-    public static final String INITIALIZE = EDITOR_SERVICE_MAP + ".initEditor('%s', '%s', '%s', '%s');";
+    public static final String RDB_INITIALIZE = EDITOR_SERVICE_MAP + ".RDBinitEditor('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
     
+    /**
+     * MONGODB 에디터를 초기화 합니다. 
+     * 
+     * @param 확장자
+     * @param editor type
+     * @param 추가하려는 키워드
+     * @param 초기텍스트
+     */
+    public static final String MONGO_INITIALIZE = EDITOR_SERVICE_MAP + ".MONGODBinitEditor('%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+    
+    /**
+     * Change editor style
+     */
+    public static final String CHANGE_EDITOR_STYLE = EDITOR_SERVICE_MAP + ".changeEditorStyle('%s', '%s', '%s', '%s', '%s');";
+    
+    /** define theme */
+    public static final String SET_THEME = EDITOR_SERVICE_MAP + ".setTheme('%s');";
+
+	/** define fontsize */
+    public static final String SET_FONT_SIZE = EDITOR_SERVICE_MAP + ".setFontSize('%s');";
+	
+	/** define wrap */
+    public static final String SET_IS_WARP = EDITOR_SERVICE_MAP + ".setWrap('%s', '%s');";
+	
     /** 쿼리 - 2014.3.1 (hangum) */
-    public static final String SELECTED_TEXT = "return " + EDITOR_SERVICE_MAP + ".getSelectedText('%s');";
+    public static final String GET_SELECTED_TEXT = "return " + EDITOR_SERVICE_MAP + ".getSelectedText('%s');";
+    
+    /** set selected text */
+    public static final String SET_SELECTED_TEXT = EDITOR_SERVICE_MAP + ".setSelectedText();";
     
     /** block text */
     public static final String IS_BLOCK_TEXT = "return " + EDITOR_SERVICE_MAP + ".isBlockText();";

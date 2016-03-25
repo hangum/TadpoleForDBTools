@@ -127,7 +127,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 					if(db == null) {
 						// 모든 table 정보를 가져온다.
 						if(isAllTable) {
-							db = TadpoleModelUtils.INSTANCE.getDBAllTable(userDB);
+							db = TadpoleModelUtils.INSTANCE.getDBAllTable(monitor, userDB);
 						// 부분 테이블 정보를 처리한다.
 						} else {
 							MongodbFactory factory = MongodbFactory.eINSTANCE;
@@ -151,6 +151,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 		};
 		
 		// job의 event를 처리해 줍니다.
+		final TadpoleMongoDBERDEditor mongoEditor = this;
 		job.addJobChangeListener(new JobChangeAdapter() {
 			
 			public void done(IJobChangeEvent event) {
@@ -160,7 +161,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 						if(!jobEvent.getResult().isOK()) {
 							Exception e = new Exception(jobEvent.getResult().getException());
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
 							
 							// 오류가 발생했을때는 기본 정보로 
 							MongodbFactory factory = MongodbFactory.eINSTANCE;
@@ -176,7 +177,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 						getGraphicalViewer().setContents(db);
 						
 						// dnd
-						getGraphicalViewer().addDropTargetListener(new TableTransferDropTargetListener(getGraphicalViewer(), userDB, db));
+						getGraphicalViewer().addDropTargetListener(new TableTransferDropTargetListener(mongoEditor, getGraphicalViewer(), userDB, db));
 					}
 					
 				});	// end display.asyncExec
@@ -377,7 +378,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 				logger.error("Load ERD Resource", e); //$NON-NLS-1$
 		        
 		        Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_0, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_0, errStatus); //$NON-NLS-1$
 			}
 			
 			setPartName(isAllTable?"All " + userDBErd.getName():userDBErd.getName());
@@ -428,10 +429,10 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 					PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					
 				} catch (Exception e) {
-					logger.error(Messages.TadpoleEditor_9, e);
+					logger.error("new save error", e);
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_3, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_3, errStatus); //$NON-NLS-1$
 				}
 			}
 			
@@ -442,10 +443,10 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 				TadpoleSystem_UserDBResource.updateResource(userDBErd, createResourceToString());
 				getCommandStack().markSaveLocation();
 			} catch(Exception e) {
-				logger.error(Messages.TadpoleEditor_12, e);
+				logger.error("Resource data", e);
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.TadpoleEditor_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_1, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

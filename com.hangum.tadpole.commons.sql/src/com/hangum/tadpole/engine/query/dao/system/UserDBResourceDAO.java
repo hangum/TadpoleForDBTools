@@ -11,7 +11,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
@@ -37,11 +37,17 @@ public class UserDBResourceDAO {
 	String restapi_key = "";
 	
 	// 기타 부가 정보. 
-	Date create_time;
+	Timestamp create_time;
+	String sqliteCreate_time;
 	String delYn;
+	
+	String usernames = "";
 	
 	// db object tree 표현을 위해
 	UserDBDAO parent;
+	
+	// 기본 데이터 저장시 사용하는  값입니다. (일반적으로는 사용하지 않습니다)
+	String dataString = "";
 	
 	public UserDBResourceDAO() {
 	}
@@ -147,14 +153,14 @@ public class UserDBResourceDAO {
 	/**
 	 * @return the create_time
 	 */
-	public Date getCreate_time() {
+	public Timestamp getCreate_time() {
 		return create_time;
 	}
 
 	/**
 	 * @param create_time the create_time to set
 	 */
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
 	}
 
@@ -208,6 +214,48 @@ public class UserDBResourceDAO {
 
 	public void setRestapi_uri(String restapi_uri) {
 		this.restapi_uri = restapi_uri;
+	}
+
+	/**
+	 * @return the usernames
+	 */
+	public String getUsernames() {
+		return usernames;
+	}
+
+	/**
+	 * @param usernames the usernames to set
+	 */
+	public void setUsernames(String usernames) {
+		this.usernames = usernames;
+	}
+
+	/**
+	 * @return the sqliteCreate_time
+	 */
+	public String getSqliteCreate_time() {
+		return sqliteCreate_time;
+	}
+
+	/**
+	 * @param sqliteCreate_time the sqliteCreate_time to set
+	 */
+	public void setSqliteCreate_time(String sqliteCreate_time) {
+		this.sqliteCreate_time = sqliteCreate_time;
+	}
+
+	/**
+	 * @return the dataString
+	 */
+	public String getDataString() {
+		return dataString;
+	}
+
+	/**
+	 * @param dataString the dataString to set
+	 */
+	public void setDataString(String dataString) {
+		this.dataString = dataString;
 	}
 
 }

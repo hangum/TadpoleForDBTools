@@ -48,6 +48,7 @@ public enum DBDefine {
 	
 	/** USER DB */
 	ORACLE_DEFAULT,
+	TIBERO_DEFAULT,
 	MSSQL_DEFAULT,
 	MSSQL_8_LE_DEFAULT,
 	
@@ -56,6 +57,7 @@ public enum DBDefine {
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
 	POSTGRE_DEFAULT,
+	ALTIBASE_DEFAULT,
 	
 	/** hive */
 	HIVE_DEFAULT,
@@ -88,6 +90,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
 			
 			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
+			case TIBERO_DEFAULT:	return prefix + "TiberoConfig.xml";
 			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
 			case MSSQL_8_LE_DEFAULT: return prefix + "MSSQLConfig_8_LE.xml";
 			
@@ -100,6 +103,7 @@ public enum DBDefine {
 			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
 			case HIVE2_DEFAULT:			return prefix + "HIVE2Config.xml";
 			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
+			case ALTIBASE_DEFAULT:	    return prefix + "AltibaseConfig.xml";
 			default:
 				return "undefine db";
 		}
@@ -117,6 +121,7 @@ public enum DBDefine {
 		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
+		else if(type.equalsIgnoreCase("Tibero")) 		return TIBERO_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("MSSQL")) 		return MSSQL_DEFAULT;
 		else if(type.equalsIgnoreCase("MSSQL_8_LE"))	return MSSQL_8_LE_DEFAULT;
@@ -134,6 +139,7 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("Apache Hive2")) 	return HIVE2_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("Apache Tajo")) 	return TAJO_DEFAULT;
+		else if(type.equalsIgnoreCase("Altibase"))       return ALTIBASE_DEFAULT;
 		else return null;
 	}
 	
@@ -158,6 +164,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
 			
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
+			case TIBERO_DEFAULT:	return "jdbc:tibero:thin:@%s:%s:%s";
 			
 			case MSSQL_DEFAULT:		
 			case MSSQL_8_LE_DEFAULT: return "jdbc:jtds:sqlserver://%s:%s/%s";
@@ -183,6 +190,9 @@ public enum DBDefine {
 			
 			case TAJO_DEFAULT:		return "jdbc:tajo://%s:%s/%s";
 			
+			/* Altibase JDBC connection string: jdbc:Altibase://ipaddr.port/dbname */
+			case ALTIBASE_DEFAULT:   return "jdbc:Altibase://%s:%s/%s"; 
+			
 			default:
 				return "undefine db";
 		}
@@ -194,6 +204,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: 	return "TadpoleSystem_MYSQL";
 		
 			case ORACLE_DEFAULT:		return "Oracle";
+			case TIBERO_DEFAULT:		return "Tibero";
 			
 			case MSSQL_DEFAULT:			return "MSSQL";
 			case MSSQL_8_LE_DEFAULT:	return "MSSQL_8_LE";
@@ -213,6 +224,7 @@ public enum DBDefine {
 			case HIVE2_DEFAULT: 			return "Apache Hive2";
 			
 			case TAJO_DEFAULT: 			return "Apache Tajo";
+			case ALTIBASE_DEFAULT:      return "Altibase";
 			default:
 				return "undefine db";
 		}
@@ -223,22 +235,32 @@ public enum DBDefine {
 	 * @return
 	 */
 	public String getExt() {
-		String extension = "tadpole_edit"; //$NON-NLS-1$
+		String extension = ""; //$NON-NLS-1$
 		
-		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
+		if(this == DBDefine.MYSQL_DEFAULT) {
+			extension += "mysql"; //$NON-NLS-1$
+		} else if(this == DBDefine.MARIADB_DEFAULT) {
+			extension += "mariadb"; //$NON-NLS-1$
 		} else if(this == DBDefine.ORACLE_DEFAULT) {
-			extension += ".oracle"; //$NON-NLS-1$
+			extension += "oracle"; //$NON-NLS-1$
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
-			extension += ".mssql"; //$NON-NLS-1$
+			extension += "mssql"; //$NON-NLS-1$
 		} else if(this == DBDefine.SQLite_DEFAULT) {
-			extension += ".sqlite"; //$NON-NLS-1$
-		} else if(this == DBDefine.CUBRID_DEFAULT) {
-			extension += ".mysql"; //$NON-NLS-1$
+			extension += "sqlite"; //$NON-NLS-1$
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
-			extension += ".hql"; //$NON-NLS-1$
+			extension += "hql"; //$NON-NLS-1$
+		} else if(this == DBDefine.POSTGRE_DEFAULT) {
+			extension += "pgsql"; //$NON-NLS-1$
+		} else if(this == DBDefine.CUBRID_DEFAULT) {
+			extension += "cubrid"; //$NON-NLS-1$
+		} else if(this == DBDefine.TAJO_DEFAULT) {
+			extension += "tajo"; //$NON-NLS-1$
+		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
+			extension += "altibase";
+		} else if(this == DBDefine.MONGODB_DEFAULT) {
+			extension += "mongo";
 		} else {
-			extension += ".postgresql"; //$NON-NLS-1$
+			extension += "sql"; //$NON-NLS-1$
 		}
 		
 		return extension;
@@ -251,6 +273,7 @@ public enum DBDefine {
 	public String[] getSystemVariableQuery() {
 		switch ( this ) {
 		case ORACLE_DEFAULT:		return DBVariableDefine.ORACLE_VARIABLES;
+		case TIBERO_DEFAULT:		return DBVariableDefine.ORACLE_VARIABLES;
 		
 		case MSSQL_DEFAULT:			return DBVariableDefine.MSSQL_VARIABLES;
 		case MSSQL_8_LE_DEFAULT:	return DBVariableDefine.MSSQL_VARIABLES;
@@ -267,6 +290,7 @@ public enum DBDefine {
 		case HIVE2_DEFAULT: 		return DBVariableDefine.HIVE2_VARIABLE;
 		
 		case TAJO_DEFAULT: 			return DBVariableDefine.TAJO_VARIABLE;
+		case ALTIBASE_DEFAULT:      return DBVariableDefine.ALTIBASE_VARIABLE;
 		default:
 			return new String[]{};
 		}
@@ -310,12 +334,26 @@ public enum DBDefine {
 	}
 	
 	/**
+	 * get driver list
+	 * 
+	 * @return
+	 */
+	public static List<DBDefine> getDriver() {
+		List<DBDefine> listSupportDb = userDBValues();
+		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
+		listSupportDb.remove(DBDefine.TAJO_DEFAULT);
+		listSupportDb.remove(DBDefine.HIVE_DEFAULT);
+		return listSupportDb;
+	}
+	
+	/**
 	 * 사용자가 사용할 수 있는 모든 디비.
 	 * @return
 	 */
 	private static List<DBDefine> allUserUseDB() {
 		List<DBDefine> supportDb = new ArrayList<DBDefine>();
 
+		supportDb.add(ALTIBASE_DEFAULT);
 		supportDb.add(HIVE_DEFAULT);
 		supportDb.add(AMAZONRDS_DEFAULT);
 		supportDb.add(TAJO_DEFAULT);
@@ -329,6 +367,7 @@ public enum DBDefine {
 		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
+//		supportDb.add(TIBERO_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

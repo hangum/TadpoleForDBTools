@@ -10,27 +10,23 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.erd.core.utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.mongodb.erd.core.relation.RelationUtil;
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbFactory;
 import com.hangum.tadpole.mongodb.model.Table;
-import com.mongodb.DBAddress;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
 
 /**
  * db의 모델을 생성합니다.
@@ -57,17 +53,18 @@ public enum TadpoleModelUtils {
 	
 	/** 다음 테이블의 간격 */
 	public static final int GAP_HIGHT =  50;
-	public static final int GAP_WIDTH =  400;
+	public static final int GAP_WIDTH =  300;
 		
 	private MongodbFactory tadpoleFactory = MongodbFactory.eINSTANCE;
 	
 	/**
 	 * logindb의  모든 테이블 정보를 리턴합니다.
 	 * 
+	 * @param monitor
 	 * @param userDB
 	 * @return
 	 */
-	public DB getDBAllTable(UserDBDAO userDB) throws Exception {
+	public DB getDBAllTable(final IProgressMonitor monitor, UserDBDAO userDB) throws Exception {
 		this.userDB = userDB;
 		DB db = tadpoleFactory.createDB();
 		db.setDbType(userDB.getDbms_type());
@@ -86,7 +83,10 @@ public enum TadpoleModelUtils {
 		int nextTableX = START_TABLE_WIDTH;
 		int nextTableY = START_TABLE_HIGHT;
 		
-		for(TableDAO table : tables) {
+		for(int i=0; i<tables.size(); i++) {
+			monitor.subTask(String.format("Working %s/%s", i, tables.size()));
+			
+			final TableDAO table = tables.get(i);
 			Table tableModel = tadpoleFactory.createTable();
 			tableModel.setDb(db);
 			tableModel.setName(table.getName());

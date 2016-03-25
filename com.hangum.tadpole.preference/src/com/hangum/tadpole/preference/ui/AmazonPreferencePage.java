@@ -57,13 +57,13 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 		containerMain.setLayout(new GridLayout(2, false));
 		
 		Label lblAccessKey = new Label(containerMain, SWT.NONE);
-		lblAccessKey.setText(Messages.AmazonPreferencePage_0);
+		lblAccessKey.setText(Messages.get().AmazonPreferencePage_0);
 		
 		textAccessKey = new Text(containerMain, SWT.BORDER);
 		textAccessKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSecretKey = new Label(containerMain, SWT.NONE);
-		lblSecretKey.setText(Messages.AmazonPreferencePage_1);
+		lblSecretKey.setText(Messages.get().AmazonPreferencePage_1);
 		
 		textSecretKey = new Text(containerMain, SWT.BORDER | SWT.PASSWORD);
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -106,7 +106,7 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 		} catch(Exception e) {
 			logger.error("GeneralPreference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

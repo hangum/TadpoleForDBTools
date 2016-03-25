@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub RDB model core
 Bundle-SymbolicName: com.hangum.tadpole.rdb.model;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-ClassPath: .
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.hangum.tadpole.rdb.model,

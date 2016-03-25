@@ -10,18 +10,30 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.define;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.rap.rwt.RWT;
 
 /**
- * 올챙이 전역 정의 
+ * 전역 변수 정의 
  * 
  * @author hangum
  *
  */
 public class PublicTadpoleDefine {
+	/** url system verion information */
+	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
+	
+	/** cookie path */
+	public static String _cookiePath = "/";
+	
+	public static final int systemAdminId = -1;
+	
+	/** Default resource name */
+	public static final String DEFAUL_RESOURCE_NAME = "_TDB_DEF_NAME_";
 
 	/** 시스템 사용 그룹 정의 */
 	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  
@@ -31,17 +43,27 @@ public class PublicTadpoleDefine {
 	
 	/** default system encrypt password */
 	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
-	public static final String SYSTEM_DEFAULT_PASSWORD = "heechan.me.son";
+	public static final String SYSTEM_DEFAULT_PASSWORD = "Heeseong.2me.son";
+	
+	/** COOKIE USER ID */
+	public static final String TDB_COOKIE_UPDATE_CHECK = "TDB_COOKIE_UPDATE_CHECK";
+	public static final String TDB_COOKIE_USER_ID = "TDB_USER_ID";
+	public static final String TDB_COOKIE_USER_PWD = "TDB_USER_PWD";
+	public static final String TDB_COOKIE_USER_SAVE_CKECK = "TDB_USER_SAVE_CHECK";
+	public static final String TDB_COOKIE_USER_LANGUAGE = "TDB_USER_LANGUAGE";
 
 	/**
 	 * PLAN Statement ID
 	 */
-	public static String STATEMENT_ID = "||TADPOLE-STATEMENT_ID||"; //$NON-NLS-1$
+	public static String STATEMENT_ID = "||TDB_STATEMENT_ID||"; //$NON-NLS-1$
+
+	/** 0번째 테이블 컬럼을 선택한다 */
+	public static String DEFINE_TABLE_COLUMN_BASE_ZERO = "TDB_BASE_ZERO";
 	
 	/**
 	 * 특별 컬럼을 정의 합니다. 
 	 */
-	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "TADPOLE_HIDE_";
+	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "TDB_HIDE";
 	
 	/**
 	 * 분리자
@@ -56,8 +78,12 @@ public class PublicTadpoleDefine {
 	/** DIR SEPARATOR */
 	public static char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
 	
-	/** temmp dir */
-	public static String TEMP_DIR = System.getProperty("java.io.tmpdir");
+	/** temmp dir 
+		임시 디렉토리 생성에 오류 있음. 확인 필요.
+		java.io.IOException: Directory '/tmpTempTable1458208430419' could not be created 오류 발생.
+		환경 설정에 문제인지(prefix 혹은 디렉토리 미지정).. 아니면 코드상의 오류(DIRECTORY-SEPERATOR 가 빠진 문제)인지 확인 필요
+	*/
+	public static String TEMP_DIR = System.getProperty("java.io.tmpdir") + PublicTadpoleDefine.DIR_SEPARATOR;
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
@@ -84,9 +110,6 @@ public class PublicTadpoleDefine {
 	/** user login type */
 	public static enum INPUT_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};
 	
-	/** 쿼리 실행 결과  */
-	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
-
 	/** yes, no */
 	public static enum YES_NO {YES, NO}; 
 	
@@ -126,6 +149,41 @@ public class PublicTadpoleDefine {
 	}
 	
 	/**
+	 * ace editor theme list
+		https://docs.c9.io/docs/syntax-highlighting-themes
+	*/
+	private static Map<String, String> mapTheme = new HashMap<String, String>();
+	public static Map<String, String> getMapTheme() {
+		if(mapTheme.isEmpty()) {
+			mapTheme.put("Chrome", 			"chrome");
+			mapTheme.put("Clouds", 			"clouds");
+			mapTheme.put("Clouds Midnight", "clouds_midnight");
+			mapTheme.put("Cobalt", 			"cobalt");
+			mapTheme.put("Crimson Editor", 	"crimson_editor");
+			mapTheme.put("Dawn", 			"dawn");
+			mapTheme.put("Eclipse", 		"eclipse");
+			mapTheme.put("Idle Fingers", 	"idle_fingers");
+			mapTheme.put("Kr Theme", 		"kr_theme");
+			mapTheme.put("Merbivore", 		"merbivore");
+			mapTheme.put("Merbivore Soft", 	"merbivore_soft");
+			mapTheme.put("Mono Industrial", "mono_industrial");
+			mapTheme.put("Monokai", 		"monokai");
+			mapTheme.put("Pastel On Dark", 	"pastel_on_dark");
+			mapTheme.put("Solarized Dark", 	"solarized_dark");
+			mapTheme.put("Solarized Light", "solarized_light");
+			mapTheme.put("TextMate", 		"textmate");
+			mapTheme.put("Tomorrow", 		"tomorrow");
+			mapTheme.put("Tomorrow Night", 	"tomorrow_night");
+			mapTheme.put("Tomorrow Night Blue", 	"tomorrow_night_blue");
+			mapTheme.put("Tomorrow Night Bright", 	"tomorrow_night_bright");
+			mapTheme.put("Tomorrow Night Eighties", "tomorrow_night_eighties");
+			mapTheme.put("Twilight", 				"twilight");
+			mapTheme.put("Vibrant Inkv", 			"vibrant_inkv");
+		}
+		return mapTheme;
+	}
+	
+	/**
 	 * db operation type
 	 * 
 	 * @author hangum
@@ -161,19 +219,22 @@ public class PublicTadpoleDefine {
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
 	/** save resource type */
-	public static enum RESOURCE_TYPE { ERD, SQL };
+	public static enum RESOURCE_TYPE {ERD, SQL, AUTO_SQL};
 	
 	/** define SQL, ERD shared type */
 	public static enum SHARED_TYPE {PUBLIC, PRIVATE};
 	
 	/** executed sql history type */
 	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION, API};
+
+	/** 쿼리 실행 결과  */
+	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};
 	
-	/** SQL STATEMENT TYPE */
-	public static enum SQL_STATEMENTS_TYPE {SELECT, INSERT, UPDATE, DELETE, DROP, EXECUTE_PLAN, PROCEDURE};
-	
+	/** 데이터 수정 상태를 가르킵니다 */
+	public static enum DATA_STATUS {NEW, MODIFY, DEL};
+
 	/** objec explorer에서 정의한 action */
-	public static enum DB_ACTION {
+	public static enum OBJECT_TYPE {
 		TABLES, 
 		VIEWS, 
 		SYNONYM,
@@ -184,20 +245,19 @@ public class PublicTadpoleDefine {
 		TRIGGERS,
 		COLLECTIONS,
 		JAVASCRIPT,
-		PACKAGES
+		PACKAGES,
+		SCHEDULE
 	};
-	
-	/** 다이얼로그등의 데이터 수정 상태를 가르킵니다 */
-	public static enum DATA_STATUS {NEW, MODIFY, DEL};
-	
+
+	/** sql type - http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands */
+	public static enum SQL_TYPE {DDL, DML};//, DCL, TCL};
+
 	/** query type */
-	public static enum QUERY_TYPE {SELECT, INSERT, UPDATE, DELETE, DDL, UNKNOWN};
+	public static enum QUERY_DML_TYPE {SELECT, EXPLAIN_PLAN, INSERT, UPDATE, DELETE, UNKNOWN};
 	
-	/** query ddl type, 현재 jsqlparser에서는 이 세가지 타입만을 지원합니다 */
-	public static enum QUERY_DDL_TYPE {TABLE, VIEW, INDEX, PROCEDURE, UNKNOWN};
-	
-	/** 디비들의 키 이름을 정의합니다 */
-//	public static enum DB_KEY {PRI, PK, FK, MUL, UNI};
+	/** query ddl type */
+	public static enum QUERY_DDL_STATUS {CREATE, ALTER, DROP, UNKNOWN};
+	public static enum QUERY_DDL_TYPE 	{TABLE, VIEW, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, UNKNOWN};
 	
 	public static String[] DB_PRIMARY_KEY = {
 											"PRI", 
@@ -214,8 +274,6 @@ public class PublicTadpoleDefine {
 											"MUL",
 											"PRIMARY KEY,FOREIGN KEY"	// pgsql
 										};
-	
-	
 	
 	/**
 	 * is primary key
@@ -261,7 +319,7 @@ public class PublicTadpoleDefine {
 	 * @return
 	 */
 	public static boolean isKEY(String key) {
-		return isKEY(key, YES_NO.NO.toString());
+		return isKEY(key, YES_NO.NO.name());
 	}
 	public static boolean isKEY(String key, String isNull) {
 		boolean isReturn = true;

@@ -119,7 +119,7 @@ public class IntroEditor extends EditorPart {
 		
 //		Group grpDonor = new Group(parent, SWT.BORDER);
 //		grpDonor.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-//		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.IntroEditor_0);
+//		grpDonor.setText(com.hangum.tadpole.rdb.core.Messages.get().IntroEditor_0);
 //		GridLayout gl_grpDonor = new GridLayout(2, false);
 //		gl_grpDonor.verticalSpacing = 2;
 //		gl_grpDonor.marginHeight = 2;
@@ -144,7 +144,7 @@ public class IntroEditor extends EditorPart {
 ////		// image text
 ////		CLabel labelCubrid = new CLabel(grpDonor, SWT.NONE);
 ////		labelCubrid.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-////		labelCubrid.setText(Messages.IntroEditor_label_text);
+////		labelCubrid.setText(Messages.get().IntroEditor_label_text);
 //		
 ////		CLabel labelOsci = new CLabel(grpDonor, SWT.NONE);
 ////		labelOsci.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

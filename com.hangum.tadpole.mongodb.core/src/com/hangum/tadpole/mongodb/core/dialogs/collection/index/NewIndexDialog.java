@@ -230,7 +230,7 @@ public class NewIndexDialog extends Dialog {
 		
 		if("".equals(textIndexName.getText().trim())) { //$NON-NLS-1$				
 			textIndexName.setFocus();
-			MessageDialog.openError(null, Messages.NewDocumentDialog_3, "Please enter Index name");
+			MessageDialog.openError(null, Messages.get().Confirm, "Please enter Index name");
 			return;
 		}
 		

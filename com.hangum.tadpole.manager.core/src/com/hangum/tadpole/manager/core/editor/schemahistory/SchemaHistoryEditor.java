@@ -43,6 +43,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+import com.hangum.tadpole.ace.editor.core.widgets.TadpoleCompareWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
@@ -71,10 +72,7 @@ public class SchemaHistoryEditor extends EditorPart {
 	
 	private DateTime dateTimeStart;
 	private DateTime dateTimeEnd;
-	private Text textDateLeft;
-	private Text textLeftSQL;
-	private Text textDateRight;
-	private Text textSQLRight;
+	private TadpoleCompareWidget compareWidget;
 	
 	public SchemaHistoryEditor() {
 	}
@@ -88,14 +86,14 @@ public class SchemaHistoryEditor extends EditorPart {
 		compositeHead.setLayout(new GridLayout(6, false));
 		
 		Label lblDb = new Label(compositeHead, SWT.NONE);
-		lblDb.setText(Messages.SchemaHistoryEditor_1);
+		lblDb.setText(Messages.get().Database);
 		
 		comboDisplayName = new Combo(compositeHead, SWT.READ_ONLY);
 		comboDisplayName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblWorkType = new Label(compositeHead, SWT.NONE);
 		lblWorkType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblWorkType.setText(Messages.SchemaHistoryEditor_2);
+		lblWorkType.setText(Messages.get().SchemaHistoryEditor_2);
 		
 		comboWorkType = new Combo(compositeHead, SWT.BORDER);
 		comboWorkType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -106,7 +104,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		Label lblObjectType = new Label(compositeHead, SWT.NONE);
 		lblObjectType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblObjectType.setText(Messages.SchemaHistoryEditor_7);
+		lblObjectType.setText(Messages.get().SchemaHistoryEditor_7);
 		
 		comboObjectType = new Combo(compositeHead, SWT.BORDER);
 		comboObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -122,7 +120,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		
 		Label lblObjectId = new Label(compositeHead, SWT.NONE);
 		lblObjectId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblObjectId.setText(Messages.SchemaHistoryEditor_15);
+		lblObjectId.setText(Messages.get().SchemaHistoryEditor_15);
 		
 		textObjectID = new Text(compositeHead, SWT.BORDER);
 		textObjectID.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -137,7 +135,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		composite.setLayout(gl_composite);
 		
 		Label lblStart = new Label(composite, SWT.NONE);
-		lblStart.setText(Messages.SchemaHistoryEditor_16);
+		lblStart.setText(Messages.get().Date);
 		
 		dateTimeStart = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN);
 		
@@ -154,7 +152,7 @@ public class SchemaHistoryEditor extends EditorPart {
 			}
 		});
 		btnSearch.setImage(ResourceManager.getPluginImage("com.hangum.tadpole.manager.core", "resources/icons/search.png")); //$NON-NLS-1$ //$NON-NLS-2$
-		btnSearch.setText(Messages.SchemaHistoryEditor_20);
+		btnSearch.setText(Messages.get().Search);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -170,8 +168,7 @@ public class SchemaHistoryEditor extends EditorPart {
 					if(!ss.isEmpty()) {
 						SchemaHistoryDAO dao = (SchemaHistoryDAO)ss.getFirstElement();
 						String strSQL = getSQL(dao.getSeq());
-						textDateLeft.setText(dao.getCreate_date().toLocaleString());
-						textLeftSQL.setText(strSQL);
+						compareWidget.changeDiff(strSQL, "");
 							
 					}
 				} catch(Exception e) {
@@ -192,46 +189,18 @@ public class SchemaHistoryEditor extends EditorPart {
 			}
 		});
 		btnCompare.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnCompare.setText(Messages.SchemaHistoryEditor_22);
+		btnCompare.setText(Messages.get().SchemaHistoryEditor_22);
 		createTableColumn();
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new SchemaHistorLabelProvider());
 		
 		// result composite
-		Composite compositeDetail = new Composite(sashForm, SWT.NONE);
+		Composite compositeDetail = new Composite(sashForm, SWT.BORDER);
 		compositeDetail.setLayout(new GridLayout(1, false));
 		
-		SashForm sashFormDetail = new SashForm(compositeDetail, SWT.NONE);
-		sashFormDetail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Composite compositeLeft = new Composite(sashFormDetail, SWT.NONE);
-		compositeLeft.setLayout(new GridLayout(2, false));
-		
-		Label lblNewLabel = new Label(compositeLeft, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.SchemaHistoryEditor_23);
-		
-		textDateLeft = new Text(compositeLeft, SWT.BORDER);
-		textDateLeft.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		textLeftSQL = new Text(compositeLeft, SWT.BORDER | SWT.MULTI);
-		textLeftSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		
-		Composite compositeRight = new Composite(sashFormDetail, SWT.NONE);
-		compositeRight.setLayout(new GridLayout(2, false));
-		
-		Label lblNewLabel_1 = new Label(compositeRight, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_1.setText(Messages.SchemaHistoryEditor_23);
-		
-		textDateRight = new Text(compositeRight, SWT.BORDER);
-		textDateRight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		textSQLRight = new Text(compositeRight, SWT.BORDER | SWT.MULTI);
-		textSQLRight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-		sashFormDetail.setWeights(new int[] {1, 1});
+		compareWidget = new TadpoleCompareWidget(compositeDetail, SWT.BORDER);
+		compareWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		sashForm.setWeights(new int[] {4, 6});
 
@@ -247,32 +216,26 @@ public class SchemaHistoryEditor extends EditorPart {
 			Object[] objListSel = ss.toArray();
 			
 			try {
+				String source = "", target = "";
 				for(int i=0; i<objListSel.length; i++) {
 					if(i==2) break;
 					
 					SchemaHistoryDAO dao = (SchemaHistoryDAO)objListSel[i];
 					String strSQL = getSQL(dao.getSeq());
 					if(i==0) {
-						textDateLeft.setText(dao.getCreate_date().toLocaleString());
-						textLeftSQL.setText(strSQL);
+						source = strSQL;
 					} else {
-						textDateRight.setText(dao.getCreate_date().toLocaleString());
-						textSQLRight.setText(strSQL);
+						target = strSQL;
 					}
 				}
+				
+				compareWidget.changeDiff(source, target);
 			} catch(Exception e) {
 				logger.error("Get detail sql", e); //$NON-NLS-1$
 			}
-			if(objListSel.length == 1) {
-				textDateRight.setText(""); //$NON-NLS-1$
-				textSQLRight.setText(""); //$NON-NLS-1$
-			}
 
 		} else {
-			textDateLeft.setText(""); //$NON-NLS-1$
-			textLeftSQL.setText(""); //$NON-NLS-1$
-			textDateRight.setText(""); //$NON-NLS-1$
-			textSQLRight.setText(""); //$NON-NLS-1$
+			compareWidget.changeDiff("", "");
 		}
 	}
 	
@@ -322,7 +285,7 @@ public class SchemaHistoryEditor extends EditorPart {
 	 */
 	private void initUI() {
 		try {
-			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getUserDB();
+			List<UserDBDAO> listUserDBDAO = TadpoleSystem_UserDBQuery.getSessionUserDB();
 			for (UserDBDAO userDBDAO : listUserDBDAO) {
 				if(userDBDAO.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 					comboDisplayName.add(userDBDAO.getDisplay_name());
@@ -350,7 +313,7 @@ public class SchemaHistoryEditor extends EditorPart {
 	 * create table columns
 	 */
 	private void createTableColumn() {
-		String[] names = {Messages.SchemaHistoryEditor_35, Messages.SchemaHistoryEditor_36, Messages.SchemaHistoryEditor_37, Messages.SchemaHistoryEditor_38, Messages.SchemaHistoryEditor_39};
+		String[] names = {Messages.get().SchemaHistoryEditor_35, Messages.get().SchemaHistoryEditor_36, Messages.get().SchemaHistoryEditor_37, Messages.get().SchemaHistoryEditor_38, Messages.get().Date};
 		int[] sizes = {120, 120, 100, 100, 200};
 				
 		for(int i=0; i<names.length; i++) {

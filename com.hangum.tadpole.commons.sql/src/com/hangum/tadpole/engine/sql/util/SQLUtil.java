@@ -10,10 +10,21 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util;
 
-import java.sql.ResultSet;
-import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -21,16 +32,6 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
-import com.hangum.tadpole.db.metadata.TadpoleMetaData;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
 
 /**
  * <pre>
@@ -48,6 +49,9 @@ public class SQLUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLUtil.class);
 	
+	/** REGEXP pattern flag */
+	private static final int PATTERN_FLAG = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL;
+	
 	/**
 	 * pattern statement 
 	 * 
@@ -56,22 +60,26 @@ public class SQLUtil {
 	 * 		PRAGMA는 sqlite의 시스템 쿼리 얻는 거.
 	 * </PRE>
 	 */
-	private static final String PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*|^PRAGMA.*";
-	private static final Pattern PATTERN_STATEMENT_QUERY = Pattern.compile(PATTERN_STATEMENT, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*|^EXEC.*";
+	private static final String ORACLE_PATTERN_STATEMENT = "";
+	private static final String MYSQL_PATTERN_STATEMENT = "|^CALL.*";
+	private static final String PGSQL_PATTERN_STATEMENT = "";
+	private static final String SQLITE_PATTERN_STATEMENT = "";
+	private static final String CUBRID_PATTERN_STATEMENT = "";
 	
-	private static final String PATTERN_EXECUTE = "^GRANT.*|^REVOKE.*|^ALTER.*|^DROP.*|^RENAME.*|^TRUNCATE.*|^COMMENT.*";
-	private static final String PATTERN_EXECUTE_UPDATE = "^INSERT.*|^UPDATE.*|^DELETET.*|^MERGE.*|^COMMIT.*|^ROLLBACK.*|^SAVEPOINT.*";
-	private static final String PATTERN_EXECUTE_CREATE = "^CREATE.*|^DECLARE.*";
-	private static final Pattern PATTERN_EXECUTE_QUERY = Pattern.compile(PATTERN_EXECUTE /*+ PATTERN_EXECUTE_UPDATE*/ + "|" + PATTERN_EXECUTE_CREATE, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-	
-
-//	private static final String PATTERN_COMMENT = "/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/";
-//	private static final String PATTERN_COMMENT2 = "(--.*)|(//.*)";
+	private static final String BASE_PATTERN_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*" 
+							+ MSSQL_PATTERN_STATEMENT
+							+ ORACLE_PATTERN_STATEMENT
+							+ MYSQL_PATTERN_STATEMENT
+							+ PGSQL_PATTERN_STATEMENT
+							+ SQLITE_PATTERN_STATEMENT
+							+ CUBRID_PATTERN_STATEMENT;
+	private static final Pattern PATTERN_DML_BASIC = Pattern.compile(BASE_PATTERN_STATEMENT, PATTERN_FLAG);
 	
 	/** 허용되지 않는 sql 정의 */
 	private static final String[] NOT_ALLOWED_SQL = {
 		/* MSSQL- USE DATABASE명 */
-		"USE"
+//		"USE"
 		};
 	
 	/**
@@ -86,10 +94,14 @@ public class SQLUtil {
 //		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
 //		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
 		
-		Pattern regex = Pattern.compile("(?:--[^;]*?$)|(--[^\r\n])|(?:/\\*[^;]*?\\*/)", Pattern.DOTALL | Pattern.MULTILINE);
-        Matcher regexMatcher = regex.matcher(strSQL);
+//		Pattern regex = Pattern.compile("(?:--[^;]*?$)|(--[^\r\n])|(?:/\\*[^;]*?\\*/)", Pattern.DOTALL | Pattern.MULTILINE);
+//        Matcher regexMatcher = regex.matcher(strSQL);
+//		
+//		return regexMatcher.replaceAll("");
+//		logger.debug("[original]" + strSQL);
+//		logger.debug("[change]" + strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", ""));
 		
-		return regexMatcher.replaceAll("");
+		return strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
 	}
 	
 	/**
@@ -101,12 +113,10 @@ public class SQLUtil {
 	 */
 	public static boolean isNotAllowed(String strSQL) {
 		boolean isRet = false;
-		strSQL = removeComment(strSQL);
-
-		String cmpSql = StringUtils.trim(strSQL);
+		String cmpSql = StringUtils.trim(removeComment(strSQL));
 		
 		for (String strNAllSQL : NOT_ALLOWED_SQL) {
-			if(StringUtils.startsWith(cmpSql.toLowerCase(), strNAllSQL.toLowerCase())) {
+			if(StringUtils.startsWithIgnoreCase(cmpSql, strNAllSQL)) {
 				return true;
 			}
 		}
@@ -114,20 +124,20 @@ public class SQLUtil {
 		return isRet;
 	}
 	
-	/**
-	 * execute query
-	 * 
-	 * @param strSQL
-	 * @return
-	 */
-	public static boolean isExecute(String strSQL) {
-		strSQL = removeComment(strSQL);
-		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
-			return true;
-		}
-		
-		return false;
-	}
+//	/**
+//	 * execute query
+//	 * 
+//	 * @param strSQL
+//	 * @return
+//	 */
+//	public static boolean isExecute(String strSQL) {
+//		strSQL = removeComment(strSQL);
+//		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
+//			return true;
+//		}
+//		
+//		return false;
+//	}
 	
 	
 	/**
@@ -138,7 +148,7 @@ public class SQLUtil {
 	 */
 	public static boolean isStatement(String strSQL) {
 		strSQL = removeComment(strSQL);
-		if((PATTERN_STATEMENT_QUERY.matcher(strSQL)).matches()) {
+		if((PATTERN_DML_BASIC.matcher(strSQL)).matches()) {
 			return true;
 //		} else {
 //			try {
@@ -172,37 +182,6 @@ public class SQLUtil {
 //		
 //		return false;
 //	}
-	
-	/**
-	 * INSERT 문을 생성합니다.
-	 * 
-	 * @param tableName
-	 * @param rs
-	 * @return
-	 * @throws Exception
-	 */
-	public static String makeInsertStatment(String tableName, ResultSet rs) throws Exception {
-		StringBuffer result = new StringBuffer("INSERT INTO " + tableName + "(");
-		
-		Map<Integer, String> mapTable = ResultSetUtils.getColumnName(rs);
-		for( int i=0 ;i<mapTable.size(); i++ ) {
-			if( i != (mapTable.size()-1) ) result.append( mapTable.get(i) + ",");
-			else result.append( mapTable.get(i));
-		}
-		
-		result.append(") VALUES(");
-		
-		for( int i=0 ;i<mapTable.size(); i++ ) {
-			if( i != (mapTable.size()-1) ) result.append("?,");
-			else result.append('?');
-		}
-		
-		result.append(')');			
-		
-		if(logger.isDebugEnabled()) logger.debug("[make insert statment is " + result.toString());
-		
-		return result.toString();
-	}
 	
 	/**
 	 * 쿼리를 jdbc에서 실행 가능한 쿼리로 보정합니다.
@@ -239,43 +218,50 @@ public class SQLUtil {
 	}
 	
 	/**
-	 * 쿼리에 사용 할 Table name을 만듭니다.
+	 * 쿼리에 사용 할 Table, column name을 만듭니다.
 	 * 
 	 * @param userDB
-	 * @param tableName
+	 * @param name
 	 * @return
 	 */
-	public static String makeIdentifierName(UserDBDAO userDB, String tableName) {
+	public static String makeIdentifierName(UserDBDAO userDB, String name) {
 		boolean isChanged = false;
-		String retStr = tableName;
+		String retStr = name;
 		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
 		
 		if(tmd == null) return retStr;
+
+		// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;; 
+		if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+			if(StringUtils.contains(name, "\"")) {
+				return name = String.format("[%s]", name);
+			}
+		}
 		
 		switch(tmd.getSTORE_TYPE()) {
 //		case NONE: 
 //			retStr = tableName;
 //			break;
 		case BLANK: 
-			if(tableName.matches(".*\\s.*")) {
+			if(name.matches(".*\\s.*")) {
 				isChanged = true;
-				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}
 			break;
 		case LOWCASE_BLANK:
-			if(tableName.matches(".*[a-z\\s].*")) {
+			if(name.matches(".*[a-z\\s].*")) {
 				isChanged = true;
-				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}
 			break;
 		case UPPERCASE_BLANK:
-			if(tableName.matches(".*[A-Z\\s].*")) {
+			if(name.matches(".*[A-Z\\s].*")) {
 				isChanged = true;
-				retStr = makeFullyTableName(tableName, tmd.getIdentifierQuoteString());
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}
 			break;
 		}
-			
+		
 		// Is keywords?
 		// schema.tableName
 		if(!isChanged) {
@@ -290,9 +276,7 @@ public class SQLUtil {
 				}
 			}
 		}
-		
 //		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
-		
 		return retStr;
 	}
 	
@@ -357,11 +341,11 @@ public class SQLUtil {
 	 * @param dbAction
 	 * @return
 	 */
-	public static boolean isSELECTEditor(DB_ACTION dbAction) {
-		if(dbAction == DB_ACTION.TABLES ||
-				dbAction == DB_ACTION.VIEWS ||
-				dbAction == DB_ACTION.SYNONYM ||
-				dbAction == DB_ACTION.INDEXES) {
+	public static boolean isSELECTEditor(OBJECT_TYPE dbAction) {
+		if(dbAction == OBJECT_TYPE.TABLES ||
+				dbAction == OBJECT_TYPE.VIEWS ||
+				dbAction == OBJECT_TYPE.SYNONYM ||
+				dbAction == OBJECT_TYPE.INDEXES) {
 			return true;
 		}
 		
@@ -374,29 +358,92 @@ public class SQLUtil {
 	 * @param sql
 	 * @return query type
 	 */
-	public static PublicTadpoleDefine.QUERY_TYPE sqlQueryType(String sql) {
-		PublicTadpoleDefine.QUERY_TYPE queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+	public static PublicTadpoleDefine.QUERY_DML_TYPE sqlQueryType(String sql) {
+		PublicTadpoleDefine.QUERY_DML_TYPE queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		
 		try {
 			Statement statement = CCJSqlParserUtil.parse(sql);
 			if(statement instanceof Select) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.SELECT;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.SELECT;
 			} else if(statement instanceof Insert) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.INSERT;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.INSERT;
 			} else if(statement instanceof Update) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.UPDATE;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UPDATE;
 			} else if(statement instanceof Delete) {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.DELETE;
-			} else {
-				queryType = PublicTadpoleDefine.QUERY_TYPE.DDL;
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.DELETE;
+//			} else {
+//				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.DDL;
 			}
 			
 		} catch (Throwable e) {
-			logger.error(String.format("sql parse exception. [ %s ]", sql),  e);
-			queryType = PublicTadpoleDefine.QUERY_TYPE.UNKNOWN;
+			logger.error(String.format("sql parse exception. [ %s ]", sql));
+			queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		}
 		
 		return queryType;
+	}
+	
+//	/**
+//	 * <pre>
+//	 * 이런식의 쿼리가 넘어 올때 "ALTER TABLE %s COMMENT %s", dao.getSysName(), dao.getComment()"가 입력 값일 경
+//	 * ALTER TABLE 'dao.getSysName()' COMMENT 'dao.getComment()'
+//	 * 로 바꾸어줍니다.
+//	 * </pre>
+//	 * 
+//	 * @param strings
+//	 * @return
+//	 */
+//	public static String makeQuery(String ...strings) {
+//		String sql = strings[0];
+//		
+//		String[] strParam = new String[strings.length-1];
+//		for(int i=1; i<strings.length; i++) {
+//			strParam[i-1] = makeQuote(strings[i]);
+//		}
+//		
+//		return String.format(sql, strParam);
+//	}
+	/**
+	 * make quote mark
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String makeQuote(String value) {
+		return String.format("'%s'", StringEscapeUtils.escapeSql(value));
+	}
+	
+	/**
+	 * index name
+	 * @param tc
+	 * @return
+	 */
+	public static String getIndexName(InformationSchemaDAO tc) {
+		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getTABLE_NAME();
+		else return String.format("%s.%s", tc.getSchema_name(), tc.getTABLE_NAME());
+	}
+	
+	/**
+	 * get procedure name
+	 * 
+	 * @param tc
+	 * @return
+	 */
+	public static String getProcedureName(ProcedureFunctionDAO tc) {
+		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getName();
+		else return String.format("%s.%s", tc.getSchema_name(), tc.getName());
+	}
+	
+	/**
+	 * Table name
+	 * @param userDB 
+	 * @param tableDAO
+	 * @return
+	 */
+	public static String getTableName(UserDBDAO userDB, TableDAO tableDAO) {
+		if("".equals(tableDAO.getSchema_name()) || null == tableDAO.getSchema_name()) return tableDAO.getSysName(); //$NON-NLS-2$
+		
+		return tableDAO.getSchema_name() + "." + tableDAO.getSysName(); //$NON-NLS-2$
 	}
 	
 }

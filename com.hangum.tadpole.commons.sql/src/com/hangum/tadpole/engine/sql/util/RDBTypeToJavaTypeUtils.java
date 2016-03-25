@@ -14,8 +14,6 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-import oracle.jdbc.OracleTypes;
-
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -68,7 +66,10 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("BINARY", java.sql.Types.BINARY);
 		mapTypes.put("VARBINARY", java.sql.Types.VARBINARY);
 		mapTypes.put("NUMBER", java.sql.Types.DECIMAL);
-		mapTypes.put("SYS_REFCURSOR", OracleTypes.CURSOR);
+//		mapTypes.put("SYS_REFCURSOR", OracleTypes.CURSOR);
+
+		// pgsql JSON type
+		mapTypes.put("JSON", 1111);
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class RDBTypeToJavaTypeUtils {
 	public static Integer getJavaType(String rdbType) {
 		Integer javaType = mapTypes.get(rdbType);
 		if (javaType == null) {
-			logger.info("SQL type to Java type not found is" + rdbType);
+//			logger.info("SQL type to Java type not found is" + rdbType);
 			return java.sql.Types.VARCHAR;
 		}
 
@@ -95,8 +96,10 @@ public class RDBTypeToJavaTypeUtils {
 	 */
 	public static String getRDBType(int javaType) {
 		for (String key :mapTypes.keySet()){
-			if (mapTypes.get(key).equals(javaType))
+//			logger.debug("==> "+ key +":" + mapTypes.get(key) + ":" + javaType);
+			if (mapTypes.get(key).equals(javaType)) {
 				return key;
+			}
 		}
 		return "";
 	}
@@ -125,7 +128,12 @@ public class RDBTypeToJavaTypeUtils {
 	}
 
 	public static boolean isNumberType(String rdbType) {
-		return isNumberType(mapTypes.get(rdbType));
+		if(rdbType == null) return false;
+		
+		Integer intType = mapTypes.get(rdbType.toUpperCase());
+		if(intType == null) return false;
+		
+		return isNumberType(intType);
 	}
 
 	/**

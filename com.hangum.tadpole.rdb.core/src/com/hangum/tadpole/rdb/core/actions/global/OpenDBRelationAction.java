@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -23,6 +24,7 @@ import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.erd.rdb.RDBERDViewAction;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -35,13 +37,14 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.DBRelationOpenAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
+	private UserDBDAO userDB;
 	
 	public OpenDBRelationAction(IWorkbenchWindow window) {
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.OpenDBRelationAction_1);
-		setToolTipText(Messages.OpenDBRelationAction_2);
+		setText(Messages.get().OpenDBRelationAction_1);
+		setToolTipText(Messages.get().OpenDBRelationAction_2);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/erd.png"));
 		setEnabled(false);
 		
@@ -50,8 +53,6 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 	
 	@Override
 	public void run() {
-		UserDBDAO userDB = (UserDBDAO)iss.getFirstElement();
-		
 		RDBERDViewAction qea = new RDBERDViewAction();
 		qea.run(userDB);
 	}
@@ -65,23 +66,21 @@ public class OpenDBRelationAction extends Action implements ISelectionListener, 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		IStructuredSelection sel = (IStructuredSelection)selection;
-		iss = sel;
-		boolean isSelect = false;
 		
 		if(sel != null) {
-			if( sel.getFirstElement() instanceof UserDBDAO ) {
-				UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-				if(TadpoleSecurityManager.getInstance().isLockStatus(userDB)) {
-					if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
-						isSelect = true;
-					}
-				} else {
-					isSelect = true;
-				}
-			}
+			ManagerViewer ev = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+			Object obj = ((IStructuredSelection)ev.getManagerTV().getSelection()).getFirstElement();
+			if( obj instanceof UserDBDAO ) {
+				userDB = (UserDBDAO)obj;
+			
+				if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
+					setEnabled(true);
+					return;
+				} // end if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
+			}  // end if
 		} 
 		
-		setEnabled(isSelect);
+		setEnabled(false);
 	}
 
 }

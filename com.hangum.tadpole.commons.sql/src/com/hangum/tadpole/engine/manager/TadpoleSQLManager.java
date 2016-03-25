@@ -29,8 +29,8 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.define.SQLConstants;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -68,44 +68,42 @@ public class TadpoleSQLManager {
 	 * 
 	 * </pre>
 	 * 
-	 * @param dbInfo
+	 * @param dbDao
 	 * @return
 	 * @throws Exception
 	 */
-	public static SqlMapClient getInstance(final UserDBDAO dbInfo) throws TadpoleSQLManagerException {
+	public static SqlMapClient getInstance(final UserDBDAO dbDao) throws TadpoleSQLManagerException {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
 //		synchronized (dbManager) {
-			String searchKey = getKey(dbInfo);
+			String searchKey = getKey(dbDao);
 			try {
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
 
-					DriverManager.setLoginTimeout(10);
-					
-					// oracle 일 경우 로케일을 설정 
+					// oracle 일 경우 설정 
 					try { 
-						if(DBDefine.getDBDefine(dbInfo) == DBDefine.ORACLE_DEFAULT) {
-							if(dbInfo.getLocale() != null && !"".equals(dbInfo.getLocale())) {
-								Locale.setDefault(new Locale(dbInfo.getLocale()));
+						if(DBDefine.getDBDefine(dbDao) == DBDefine.ORACLE_DEFAULT) {
+							DriverManager.setLoginTimeout(10);
+							
+							if(dbDao.getLocale() != null && !"".equals(dbDao.getLocale())) {
+								Locale.setDefault(new Locale(dbDao.getLocale()));
 							}
 						}
 					} catch(Exception e) {
 						logger.error("set locale error", e);
 					}
-					// oracle 일 경우 locale 설정 
 					
 					// connection pool 을 가져옵니다.
-					sqlMapClient = SQLMap.getInstance(dbInfo);
+					sqlMapClient = SQLMap.getInstance(dbDao);
 					dbManager.put(searchKey, sqlMapClient);
 					
 					// metadata를 가져와서 저장해 놓습니다.
 					conn = sqlMapClient.getDataSource().getConnection();
 					
 					// don't belive keyword. --;;
-					DatabaseMetaData dbMetadata = conn.getMetaData();
-					setMetaData(searchKey, dbInfo, dbMetadata.getSQLKeywords());
+					setMetaData(searchKey, dbDao, conn.getMetaData());
 				}
 				
 			} catch(Exception e) {
@@ -115,7 +113,7 @@ public class TadpoleSQLManager {
 //				} catch(Exception ee) {
 //					logger.error("request error", ee);
 //				}
-				logger.error("===\n get DB Instance \n seq is " + dbInfo.getSeq() + "\n" , e);
+				logger.error("===\n get DB Instance \n seq is " + dbDao.getSeq() + "\n" , e);
 				
 				dbManager.remove(searchKey);
 				
@@ -144,47 +142,73 @@ public class TadpoleSQLManager {
 	/**
 	 * 각 DB의 metadata를 넘겨줍니다.
 	 * 
+	 * @param searchKey
+	 * @param userDB
+	 * @param dbMetadata
 	 * @return
 	 */
-	public static void setMetaData(String searchKey, final UserDBDAO dbInfo, String sqlKeywords) throws Exception {
-		TadpoleMetaData tmd = null;
+	public static void setMetaData(String searchKey, final UserDBDAO userDB, DatabaseMetaData dbMetaData) throws Exception {
+		// 엔진디비는 메타데이터를 저장하지 않는다.
+		if(userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_DEFAULT || userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) return;
+				
+		String strIdentifierQuoteString = "";
+		try {
+			strIdentifierQuoteString = dbMetaData.getIdentifierQuoteString();
+		} catch(Exception e) {
+			// ignore exception, not support quoteString
+		}
 		
-		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다. 
-		switch ( dbInfo.getDBDefine() ) {
+		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다.
+		TadpoleMetaData tmd = null;
+		switch ( userDB.getDBDefine() ) {
 			case ORACLE_DEFAULT:		
-				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
 				break;
 			case MSSQL_DEFAULT:			
-			case MSSQL_8_LE_DEFAULT:	
+			case MSSQL_8_LE_DEFAULT:
+			case MYSQL_DEFAULT:
+			case MARIADB_DEFAULT:
 			case SQLite_DEFAULT:		
-				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
 				break;
 			case POSTGRE_DEFAULT:		
 			case TAJO_DEFAULT: 			
-				tmd = new TadpoleMetaData("\"", TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK);
 				break;
 			default:
-				tmd = new TadpoleMetaData("'", TadpoleMetaData.STORES_FIELD_TYPE.NONE);
-		}
-
-		// set keyword
-		if(dbInfo.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-			// not support keyword http://sqlite.org/lang_keywords.html
-			tmd.setKeywords(StringUtils.join(SQLConstants.SQLITE_KEYWORDS, ","));
-		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT | dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			String strFullKeywords = StringUtils.join(SQLConstants.MYSQL_KEYWORDS, ",") + "," + sqlKeywords;
-			tmd.setKeywords(strFullKeywords);
-		} else if(dbInfo.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
-			// not support this method
-		} else if(dbInfo.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				dbInfo.getDBDefine() == DBDefine.HIVE2_DEFAULT
-		) {
-			// not support this methods
-			tmd.setKeywords("");
-		} else {
-			tmd.setKeywords(sqlKeywords);
+				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.NONE);
 		}
 		
+//		SQLConstantFactory factory = new SQLConstantFactory();
+//		SQLConstants sqlConstants = factory.getDB(userDB);
+//		tmd.setKeywords(
+//				StringUtils.replace(
+//						sqlConstants.keyword() + "|" + sqlConstants.function() + "|" + sqlConstants.constant() + "|" +sqlConstants.variable(),
+//						"|",
+//						","
+//						)
+//				);
+		// set keyword
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			// not support keyword http://sqlite.org/lang_keywords.html
+			tmd.setKeywords(StringUtils.join(SQLConstants.QUOTE_SQLITE_KEYWORDS, ","));
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MYSQL_KEYWORDS, ",") + "," + dbMetadata;
+			tmd.setKeywords(strFullKeywords);
+		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+			// not support this method
+			tmd.setKeywords("");
+		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
+		) {
+			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MSSQL_KEYWORDS, ",") + "," + dbMetaData.getSQLKeywords();
+			tmd.setKeywords(strFullKeywords);
+		} else {
+			tmd.setKeywords(dbMetaData.getSQLKeywords());
+		}
+						
+		tmd.setDbMajorVersion(dbMetaData.getDatabaseMajorVersion());
+		tmd.setMinorVersion(dbMetaData.getDatabaseMinorVersion());
 		dbMetadata.put(searchKey, tmd);
 	}
 	
@@ -196,10 +220,10 @@ public class TadpoleSQLManager {
 	public static Map<String, SqlMapClient> getDbManager() {
 		return dbManager;
 	}
-	public static Map<String, TadpoleMetaData> getDbMetadata() {
-		return dbMetadata;
-	}
-	
+//	public static Map<String, TadpoleMetaData> getDbMetadata() {
+//		return dbMetadata;
+//	}
+//	
 	/**
 	 * dbcp pool info
 	 * 
@@ -252,7 +276,10 @@ public class TadpoleSQLManager {
 		synchronized (dbManager) {
 			String key = getKey(dbInfo);
 			SqlMapClient sqlMapClient = dbManager.remove(key);
+			TadpoleMetaData metaData = dbMetadata.remove(key);
+			
 			sqlMapClient = null;
+			metaData = null;
 		}
 	}
 	

@@ -10,10 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.core.editors.main;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -39,7 +35,6 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
@@ -124,23 +119,23 @@ public class MongoDBTableEditor extends EditorPart {
 		
 		Label lblfind = new Label(compositeBasicHead, SWT.NONE);
 		lblfind.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2));
-		lblfind.setText(Messages.MongoDBTableEditor_0);
+		lblfind.setText(Messages.get().MongoDBTableEditor_0);
 		
 		String strAssist = CollectionUtils.getAssistList(userDB, initColName);
 		
-		textBasicFind = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
+		textBasicFind = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist); //$NON-NLS-1$
 		textBasicFind.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
 		Label lblfield = new Label(compositeBasicHead, SWT.NONE);
-		lblfield.setText(Messages.MongoDBTableEditor_1);
+		lblfield.setText(Messages.get().MongoDBTableEditor_1);
 		
-		textBasicField = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
+		textBasicField = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist); //$NON-NLS-1$
 		textBasicField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblsort = new Label(compositeBasicHead, SWT.NONE);
-		lblsort.setText(Messages.MongoDBTableEditor_2);
+		lblsort.setText(Messages.get().MongoDBTableEditor_2);
 		
-		textBasicSort = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist);
+		textBasicSort = new TadpoleEditorWidget(compositeBasicHead, SWT.BORDER, EditorDefine.EXT_JSON, "", strAssist); //$NON-NLS-1$
 		textBasicSort.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBasicSearch = new Composite(compositeBasic, SWT.NONE);
@@ -201,7 +196,7 @@ public class MongoDBTableEditor extends EditorPart {
 				compositeResult.consoleExecutePlan();
 			}
 		});
-		btnExecutePlan.setText(Messages.MongoDBTableEditor_3);
+		btnExecutePlan.setText(Messages.get().MongoDBTableEditor_3);
 		
 //		Button btnBasicLastCommandConsole = new Button(compositeBasicSearch, SWT.NONE);
 //		btnBasicLastCommandConsole.addSelectionListener(new SelectionAdapter() {
@@ -210,7 +205,7 @@ public class MongoDBTableEditor extends EditorPart {
 //				compositeResult.consoleError();
 //			}
 //		});
-//		btnBasicLastCommandConsole.setText(Messages.MongoDBTableEditor_4);
+//		btnBasicLastCommandConsole.setText(Messages.get().MongoDBTableEditor_4);
 		
 		Button btnStructureAnalized = new Button(compositeBasicSearch, SWT.NONE);
 		btnStructureAnalized.addSelectionListener(new SelectionAdapter() {
@@ -219,7 +214,7 @@ public class MongoDBTableEditor extends EditorPart {
 				compositeResult.structureView();//consoleError();
 			}
 		});
-		btnStructureAnalized.setText("Show structure");
+		btnStructureAnalized.setText(Messages.get().MongoDBTableEditor_6); //$NON-NLS-1$
 		
 		Label label_2 = new Label(compositeBasicSearch, SWT.NONE);
 		GridData gd_label_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -236,7 +231,7 @@ public class MongoDBTableEditor extends EditorPart {
 				findBasic();
 			}
 		});
-		btnBasicSearch.setText(Messages.MongoDBTableEditor_5);//String.format(Messages.MongoDBTableEditor_5, prefixOSShortcut));
+		btnBasicSearch.setText(Messages.get().Search);
 		
 		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, true);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

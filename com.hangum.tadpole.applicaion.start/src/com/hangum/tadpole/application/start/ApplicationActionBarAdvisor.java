@@ -29,16 +29,20 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
+import com.hangum.tadpole.application.start.action.NewVersionCheckAction;
+import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
+import com.hangum.tadpole.commons.admin.core.actions.AdminSystemSettingAction;
+import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
+import com.hangum.tadpole.commons.admin.core.actions.JDBCDriverManagerAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
-import com.hangum.tadpole.commons.admin.core.actions.UserLoginHistoryAction;
-import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
+import com.hangum.tadpole.compare.core.actions.OpenCompareAction;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.manager.core.actions.global.ExecutedSQLAction;
+import com.hangum.tadpole.manager.core.actions.global.DBManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
+import com.hangum.tadpole.manager.core.actions.global.SQLAuditAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
-import com.hangum.tadpole.manager.core.actions.global.UserPermissionAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -66,11 +70,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction restFulAPIAction;
     
     /** send message */
-    private IAction sendMessageAction;
-    private IAction userLoginHistoryAction;
+    private IAction adminSendMessageAction;
+    private IAction adminUserAction;
+    private IAction adminSQLAuditAction;
+    private IAction adminSystemSettingAction;
     
     /** User permission action */
-    private IAction userPermissionAction;
+    private IAction dbMgmtAction;
     
     /** transaction connection */
     private IAction transactionConnectionAction;
@@ -78,18 +84,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     /** executed sql */
     private IAction executedSQLAction;
     
-    /** schedule action */
+//    /** schedule action */
+//    private IAction monitoringManageAction;
 //    private IAction monitoringRealTimeAction;
     
-    /** schema history */
+    private IAction jDBCDriverManagerAction;
     private IAction schemaHistoryAction;
-    
+    private IAction openCompareAction;
     private IAction resourceManageAction;
     
     private IAction preferenceAction;
     private IAction aboutAction;
     private IAction bugIssueAction;
-    
+    private IAction newVersionCheckAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -115,23 +122,41 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	deleteResourceAction = new DeleteResourceAction(window);
     	register(deleteResourceAction);
     	
-    	sendMessageAction = new SendMessageAction(window);
-    	register(sendMessageAction);
+    	adminSendMessageAction = new SendMessageAction(window);
+    	register(adminSendMessageAction);
     	
-    	userLoginHistoryAction = new UserLoginHistoryAction(window);
-    	register(userLoginHistoryAction);
+    	adminUserAction = new AdminUserAction(window);
+    	register(adminUserAction);
     	
-    	userPermissionAction = new UserPermissionAction(window);
-    	register(userPermissionAction);
+    	dbMgmtAction = new DBManagerAction(window);
+    	register(dbMgmtAction);
     	
     	transactionConnectionAction = new TransactionConnectionManagerAction(window);
     	register(transactionConnectionAction);
     	
-    	executedSQLAction = new ExecutedSQLAction(window);
+    	executedSQLAction = new SQLAuditAction(window);
     	register(executedSQLAction);
+    	
+//    	monitoringManageAction = new MonitoringManageAction(window);
+//    	register(monitoringManageAction);
+//    	
+//    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
+//    	register(monitoringRealTimeAction);
+    	
+    	jDBCDriverManagerAction = new JDBCDriverManagerAction(window);
+    	register(jDBCDriverManagerAction);
+    	
+    	adminSQLAuditAction = new AdminSQLAuditAction(window);
+    	register(adminSQLAuditAction);
+    	
+    	adminSystemSettingAction = new AdminSystemSettingAction(window);
+    	register(adminSystemSettingAction);
     	    	
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
+    	
+    	openCompareAction = new OpenCompareAction(window);
+    	register(openCompareAction);
     	
     	resourceManageAction = new ResourceManagerAction(window);
     	register(resourceManageAction);
@@ -150,23 +175,25 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         bugIssueAction = new BugIssueAction(window);
         register(bugIssueAction);
-        
+       
+        newVersionCheckAction = new NewVersionCheckAction(window);
+        register(newVersionCheckAction);
     }
     
     /**
      * Comment at 2.1 RC3 has error(https://bugs.eclipse.org/bugs/show_bug.cgi?id=410260) 
      */
     protected void fillMenuBar(IMenuManager menuBar) {
-    	MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_0, IWorkbenchActionConstants.M_FILE);
-    	MenuManager manageMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_1, IWorkbenchActionConstants.M_PROJECT);
+    	MenuManager fileMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_0, IWorkbenchActionConstants.M_FILE);
+    	MenuManager manageMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_1, IWorkbenchActionConstants.M_PROJECT);
     	MenuManager adminMenu = null;
     	
     	boolean isAdmin = PermissionChecker.isAdmin(SessionManager.getRepresentRole());
     	if(isAdmin) {
-    		adminMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_2, IWorkbenchActionConstants.MENU_PREFIX + Messages.ApplicationActionBarAdvisor_3);
+    		adminMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_2, IWorkbenchActionConstants.MENU_PREFIX + Messages.get().ApplicationActionBarAdvisor_3);
         }
-    	MenuManager preferenceMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
-		MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_5, IWorkbenchActionConstants.M_HELP);
+    	MenuManager preferenceMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
+		MenuManager helpMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_5, IWorkbenchActionConstants.M_HELP);
 		
 		menuBar.add(fileMenu);
 		// Add a group marker indicating where action set menus will appear.
@@ -186,22 +213,29 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(saveAsAction);
 		fileMenu.add(new Separator());
 		fileMenu.add(deleteResourceAction);
-		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+//		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 			fileMenu.add(new Separator());
 			fileMenu.add(exitAction);
-		}
+//		}
 		
 		// Manage
 		manageMenu.add(restFulAPIAction);
 		manageMenu.add(transactionConnectionAction);
 		manageMenu.add(resourceManageAction);
-		manageMenu.add(userPermissionAction);
+		if("YES".equals(SessionManager.getIsRegistDB())) {
+			manageMenu.add(dbMgmtAction);
+		}
 		manageMenu.add(executedSQLAction);
 		manageMenu.add(schemaHistoryAction);
+		manageMenu.add(openCompareAction);
 		
 		if(isAdmin) {
-			adminMenu.add(sendMessageAction);
-			adminMenu.add(userLoginHistoryAction);
+			adminMenu.add(adminSystemSettingAction);
+			adminMenu.add(adminSendMessageAction);
+			adminMenu.add(adminUserAction);
+			adminMenu.add(adminSQLAuditAction);
+			adminMenu.add(new Separator());
+			adminMenu.add(jDBCDriverManagerAction);
 		}
 
 		// preference action
@@ -209,6 +243,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		
 		// Help
 		helpMenu.add(bugIssueAction);
+		helpMenu.add(newVersionCheckAction);
 		helpMenu.add(aboutAction);
     }
     
@@ -216,10 +251,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main")); //$NON-NLS-1$
         
-//        if(PermissionChecker.isDBAShow(SessionManager.getRepresentRole())) {
-	        toolbar.add(connectAction);
-	        toolbar.add(new Separator());
-//        }
+        toolbar.add(connectAction);
+        toolbar.add(new Separator());
         
         toolbar.add(saveAction);
         toolbar.add(saveAsAction);
@@ -228,6 +261,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(queryOpenAction);
         toolbar.add(dbRelationOpenAction);
         toolbar.add(new Separator());
+        
+//        toolbar.add(monitoringManageAction);
+//        toolbar.add(monitoringRealTimeAction);
+//        toolbar.add(new Separator());
         
 //        toolbar.add(deleteResourceAction);
 //        toolbar.add(new Separator());
@@ -262,10 +299,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        
 //        toolbar.add(bugIssueAction);
 //        toolbar.add(aboutAction);
-        if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+//        if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 	    	toolbar.add(new Separator());
 	    	toolbar.add(exitAction);
-        }
+//        }
     }
     
 }

@@ -16,8 +16,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
@@ -27,6 +31,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -34,17 +39,15 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
-import com.hangum.tadpole.mongodb.core.utils.MongoDBTableColumn;
 import com.hangum.tadpole.mongodb.erd.core.Messages;
+import com.hangum.tadpole.mongodb.erd.core.editor.TadpoleMongoDBERDEditor;
 import com.hangum.tadpole.mongodb.erd.core.relation.RelationUtil;
+import com.hangum.tadpole.mongodb.erd.core.utils.TadpoleModelUtils;
 import com.hangum.tadpole.mongodb.erd.stanalone.Activator;
 import com.hangum.tadpole.mongodb.model.Column;
 import com.hangum.tadpole.mongodb.model.DB;
 import com.hangum.tadpole.mongodb.model.MongodbFactory;
 import com.hangum.tadpole.mongodb.model.Table;
-import com.mongodb.DBAddress;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
 
 /**
  * Explorer의 테이블 명을 넘겨 받아서 erd에 테이블을 그려줍니다.
@@ -55,7 +58,10 @@ import com.mongodb.Mongo;
 public class TableTransferDropTargetListener extends AbstractTransferDropTargetListener {
 	private static final Logger logger = Logger.getLogger(TableTransferDropTargetListener.class);
 	private MongodbFactory tadpoleFactory = MongodbFactory.eINSTANCE;
+	/** object view에서 넘어오는 테이블 네임 인텍스, 0번은 스키마 이름(rdb에서만 사용하는.) */
+	private int IDX_TABLE_NAME = 1;
 	
+	private TadpoleMongoDBERDEditor mongoEditor = null;
 	private TableTransferFactory transferFactory = new TableTransferFactory();
 	private UserDBDAO userDB;
 	private DB db;
@@ -64,9 +70,10 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 		super(viewer, xfer);
 	}
 	
-	public TableTransferDropTargetListener(EditPartViewer viewer, UserDBDAO userDB, DB db) {
+	public TableTransferDropTargetListener(TadpoleMongoDBERDEditor mongoEditor, EditPartViewer viewer, UserDBDAO userDB, DB db) {
 		super(viewer, TextTransfer.getInstance());
 		
+		this.mongoEditor = mongoEditor;
 		this.userDB = userDB;
 		this.db = db;
 	}
@@ -97,7 +104,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 
 			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
 			if(userDB.getSeq() != sourceDBSeq) {
-				MessageDialog.openError(null, "Error", Messages.TableTransferDropTargetListener_1); //$NON-NLS-1$
+				MessageDialog.openError(null, "Error", Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
 				return;
 			}
 		} catch(Exception e) {
@@ -106,13 +113,87 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 			return;
 		}
 		
-		String strFullData = StringUtils.substringAfter(strDragSource, PublicTadpoleDefine.DELIMITER);
-		String [] arryTables = StringUtils.splitByWholeSeparator(strFullData, PublicTadpoleDefine.DELIMITER_DBL);
+		final int nextTableX = getDropLocation().x;
+		final int nextTableY = getDropLocation().y;
+		
+		final String strFullData = StringUtils.substringAfter(strDragSource, PublicTadpoleDefine.DELIMITER);
+		final String [] arryTables = StringUtils.splitByWholeSeparator(strFullData, PublicTadpoleDefine.DELIMITER_DBL);
+		final Map<String, List<CollectionFieldDAO>> mapTable = new HashMap<>();
+		
+		Job job = new Job("Painting model") {
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Painting table object", IProgressMonitor.UNKNOWN);
+		
+				try {
+					for (int i=0; i<arryTables.length; i++) {
+						String strTable = arryTables[i];
+						monitor.subTask(String.format("Working %s/%s", i, arryTables.length));
+						String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
+						if(arryTable.length == 0) continue;
+						
+						String tableName = arryTable[IDX_TABLE_NAME];
+						mapTable.put(tableName, getColumns(tableName));
+					}
+					
+				} catch(Exception e) {
+					logger.error("ERD Initialize excepiton", e);
+					
+					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+				} finally {
+					monitor.done();
+				}
+						
+				/////////////////////////////////////////////////////////////////////////////////////////
+				return Status.OK_STATUS;
+			}
+		};
+	
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				final IJobChangeEvent jobEvent = event;
+				Display display = mongoEditor.getEditorSite().getShell().getDisplay();
+				display.syncExec(new Runnable() {
+					public void run() {
+				
+						if(jobEvent.getResult().isOK()) {
+							paintingModel(nextTableX, nextTableY, arryTables, mapTable);
+						} else {
+							MessageDialog.openError(null, "confirm", jobEvent.getResult().getMessage());
+						}
+					}
+				});	// end display.asyncExec
+			}	// end done
+			
+		});	// end job
+		
+		job.setName(userDB.getDisplay_name());
+		job.setUser(true);
+		job.schedule();
+		
+//		super.handleDrop();
+	}
+	
+
+	/**
+	 * painting model 
+	 * 
+	 * @param nextTableX
+	 * @param nextTableY
+	 * @param arryTables
+	 * @param mapTable
+	 */
+	private void paintingModel(int nextTableX, int nextTableY, String [] arryTables, Map<String, List<CollectionFieldDAO>> mapTable) {
+		Rectangle prevRectangle = null;
+		
+		int originalX = nextTableX;
+		int intCount = 1;
 		for (String strTable : arryTables) {
 			String[] arryTable = StringUtils.splitByWholeSeparator(strTable, PublicTadpoleDefine.DELIMITER);
 			if(arryTable.length == 0) continue;
 			
-			String tableName = arryTable[0];
+			String tableName = arryTable[IDX_TABLE_NAME];
 			String refTableNames = "'" + tableName + "',"; //$NON-NLS-1$ //$NON-NLS-2$
 			
 			// 이미 editor 상에 테이블 정보를 가져온다.
@@ -129,11 +210,27 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				Table tableModel = tadpoleFactory.createTable();
 				tableModel.setName(tableName);
 				tableModel.setDb(db);
-				tableModel.setConstraints(new Rectangle(getDropLocation().x, getDropLocation().y, -1, -1));
+				
+				if(prevRectangle == null) {
+					prevRectangle = new Rectangle(nextTableX, 
+							nextTableY, 
+							TadpoleModelUtils.END_TABLE_WIDTH, 
+							TadpoleModelUtils.END_TABLE_HIGHT); 
+				} else {
+					// 테이블의 좌표를 잡아줍니다. 
+					prevRectangle = new Rectangle(nextTableX, 
+												nextTableY, 
+												TadpoleModelUtils.END_TABLE_WIDTH, 
+												TadpoleModelUtils.END_TABLE_HIGHT);
+				}
+				tableModel.setConstraints(prevRectangle);
+				// 다음 좌표를 계산합니다.
+				nextTableX = originalX + (TadpoleModelUtils.GAP_WIDTH * intCount);
+				intCount++;
 				
 				try {
 					// 컬럼 모델 생성
-					for (CollectionFieldDAO columnDAO : getColumns(tableName)) {										
+					for (CollectionFieldDAO columnDAO : mapTable.get(tableName)) {										
 						Column column = tadpoleFactory.createColumn();					
 						column.setField(columnDAO.getField());
 						column.setKey(columnDAO.getKey());
@@ -151,7 +248,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 					logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
 				}
 				
 				transferFactory.setTable(tableModel);
@@ -159,8 +256,6 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				transferFactory.setTable(mapDBTables.get(tableName));
 			}
 		}
-		
-		super.handleDrop();
 	}
 	
 	/**

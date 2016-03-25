@@ -12,11 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -27,14 +23,10 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -45,7 +37,6 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
  * @author hangum
  *
  */
-@SuppressWarnings("serial")
 public class ResultMainComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultMainComposite.class);
@@ -61,6 +52,9 @@ public class ResultMainComposite extends Composite {
 
 	/** 쿼리 결과 페이지 로케이션 */
 	private ResultSetComposite compositeResultSet;
+	
+	/** 쿼리 플랜 페이지 */
+	private ResultPlanComposite compositeQueryPlan;
 	
 	/** query history */
     private QueryHistoryComposite compositeQueryHistory;
@@ -97,17 +91,26 @@ public class ResultMainComposite extends Composite {
 		
 		// Set tab index
 		tabFolderResult.setData(EditorDefine.RESULT_TAB.RESULT_SET.toString(), 		0);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB.SQL_RECALL.toString(), 		1);
-		tabFolderResult.setData(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE.toString(), 2);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.QUERY_PLAN.toString(), 		1);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.SQL_RECALL.toString(), 		2);
+		tabFolderResult.setData(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE.toString(), 3);
 
 		///////////////////// tab resultset //////////////////////////		
-		compositeResultSet = new ResultSetComposite(tabFolderResult, SWT.NONE);
-		compositeResultSet.setRDBResultComposite(this);
+		compositeResultSet = new ResultSetComposite(tabFolderResult, SWT.NONE, this);
 		compositeResultSet.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmResult = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmResult.setText(Messages.MainEditor_7);
+		tbtmResult.setText(Messages.get().MainEditor_7);
 		tbtmResult.setControl(compositeResultSet);
+		
+		///////////////////// tab sql plan //////////////////////////		
+		compositeQueryPlan = new ResultPlanComposite(tabFolderResult, SWT.NONE);
+		compositeQueryPlan.setRDBResultComposite(this);
+		compositeQueryPlan.setLayout(new GridLayout(1, false));
+		
+		CTabItem tbtmQueryPlan = new CTabItem(tabFolderResult, SWT.NONE);
+		tbtmQueryPlan.setText(Messages.get().ResultMainComposite_4);
+		tbtmQueryPlan.setControl(compositeQueryPlan);
 
 		///////////////////// tab query history //////////////////////////
 		compositeQueryHistory = new QueryHistoryComposite(tabFolderResult, SWT.NONE);
@@ -115,7 +118,7 @@ public class ResultMainComposite extends Composite {
 		compositeQueryHistory.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmNewItem = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmNewItem.setText(Messages.MainEditor_10);
+		tbtmNewItem.setText(Messages.get().MainEditor_10);
 		tbtmNewItem.setControl(compositeQueryHistory);
 		/////////////////// tab query history ///////////////////////
 		
@@ -124,11 +127,11 @@ public class ResultMainComposite extends Composite {
 		compositeMessage.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmMessage = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmMessage.setText(Messages.MainEditor_0);
+		tbtmMessage.setText(Messages.get().MainEditor_0);
 		tbtmMessage.setControl(compositeMessage);
 		///////////////////// tab Message //////////////////////////		
 	    
-		tabFolderResult.setSelection(1);
+		tabFolderResult.setSelection(2);
 	}
 	
 	/**
@@ -154,53 +157,11 @@ public class ResultMainComposite extends Composite {
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
-		if(logger.isDebugEnabled()) logger.debug("==> executeQuery user query is " + reqQuery.getOriginalSql()); //$NON-NLS-1$
+		this.reqQuery = reqQuery;
 		
-		// selected first tab request quring.
-//		resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
-		
-		try {
-			// 요청쿼리가 없다면 무시합니다. 
-			if(StringUtils.isEmpty(reqQuery.getSql())) return;
-			this.reqQuery = reqQuery;
-
-			// security check.
-			if(!TadpoleSecurityManager.getInstance().isLock(getUserDB())) {
-				throw new Exception(Messages.ResultMainComposite_1);
-			}
-			
-			// 실행해도 되는지 묻는다.
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getQuestion_dml())
-					|| PermissionChecker.isProductBackup(getUserDB())
-			) {
-				boolean isDMLQuestion = false;
-				if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {						
-					for (String strSQL : reqQuery.getOriginalSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {							
-						if(!SQLUtil.isStatement(strSQL)) {
-							isDMLQuestion = true;
-							break;
-						}
-					}
-				} else {
-					if(!SQLUtil.isStatement(reqQuery.getSql())) isDMLQuestion = true;
-				}
-			
-				if(isDMLQuestion) if(!MessageDialog.openConfirm(null, "Confirm", Messages.MainEditor_56)) {
-					this.mainEditor.setFocus();
-					return;
-				}
-			}
-
-			// 실제 쿼리 실행.
-			compositeResultSet.executeCommand(reqQuery);
-			
-		} catch(Exception e) {
-			logger.error("execute query", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Executing Query", Messages.ResultMainComposite_3, errStatus); //$NON-NLS-1$
-		} finally {
-			// 에디터가 작업이 끝났음을 알립니다.
-//			browserEvaluate(EditorFunctionService.EXECUTE_DONE);
+		boolean isExecuteQuery = compositeResultSet.executeCommand(reqQuery);
+		if(!isExecuteQuery) {
+			setOrionTextFocus();
 		}
 	}
 	
@@ -248,8 +209,27 @@ public class ResultMainComposite extends Composite {
 	 * @param throwable
 	 * @param msg
 	 */
-	public void refreshMessageView(Throwable throwable, String msg) {
-		compositeMessage.addAfterRefresh(new TadpoleMessageDAO(new Date(), msg, throwable));		
+	public void refreshErrorMessageView(RequestQuery requestQuery, Throwable throwable, String msg) {
+		compositeMessage.addErrorAfterRefresh(getUserDB(), requestQuery, new TadpoleMessageDAO(new Date(), msg, throwable));		
+	}
+	
+	/**
+	 * 
+	 * @param requestQuery
+	 * @param msg
+	 */
+	public void refreshInfoMessageView(RequestQuery requestQuery, String msg) {
+		compositeMessage.addInfoAfterRefresh(getUserDB(), requestQuery, msg);
+	}
+	
+	/**
+	 * set query plan view
+	 * 
+	 * @param reqQuery
+	 * @param rsDAO
+	 */
+	public void setQueryPlanView(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+		compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
 	}
 
 	public IWorkbenchPartSite getSite() {

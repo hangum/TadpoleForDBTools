@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
-import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
@@ -88,7 +88,7 @@ public class QueryHistoryComposite extends Composite {
 		
 		Composite compositeRecallBtn = new Composite(this, SWT.NONE);
 		compositeRecallBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeRecallBtn = new GridLayout(8, false);
+		GridLayout gl_compositeRecallBtn = new GridLayout(6, false);
 		gl_compositeRecallBtn.marginWidth = 1;
 		gl_compositeRecallBtn.marginHeight = 0;
 		compositeRecallBtn.setLayout(gl_compositeRecallBtn);
@@ -102,11 +102,11 @@ public class QueryHistoryComposite extends Composite {
 				if(gridItems.length != 0) {
 					appendText(Utils.convHtmlToLine(gridItems[0].getText(2)));
 				} else {
-					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
+					MessageDialog.openInformation(null, Messages.get().MainEditor_2, Messages.get().MainEditor_29);
 				}
 			}
 		});
-		btnExportHistory.setText(Messages.MainEditor_12);
+		btnExportHistory.setText(Messages.get().MainEditor_12);
 		
 		Button btnDetailView = new Button(compositeRecallBtn, SWT.NONE);
 		btnDetailView.addSelectionListener(new SelectionAdapter() {
@@ -114,31 +114,15 @@ public class QueryHistoryComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems.length != 0) {
-					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getShell(), Messages.MainEditor_11, 
+					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getShell(), Messages.get().MainEditor_11, 
 							gridItems[0].getText(1), Utils.convHtmlToLine(gridItems[0].getText(2)) );
 					dlg.open();
 				} else {
-					MessageDialog.openInformation(null, Messages.MainEditor_2, Messages.MainEditor_29);
+					MessageDialog.openInformation(null, Messages.get().MainEditor_2, Messages.get().MainEditor_29);
 				}
 			}
 		});
-		btnDetailView.setText(Messages.MainEditor_btnDetailView_text);
-		
-//		Button btnSetEditor = new Button(compositeRecallBtn, SWT.NONE);
-//		btnSetEditor.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-//		btnSetEditor.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				StringBuffer sbExportData = new StringBuffer();
-//				
-//				for(SQLHistoryDAO dao : listSQLHistory) {
-//					sbExportData.append( dao.getStrSQLText() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
-//				}
-//				
-////				downloadExtFile(getRdbResultComposite().getUserDB().getDisplay_name() + "_RecallSQLExport.txt", sbExportData.toString()); //$NON-NLS-1$
-//			}
-//		});
-//		btnSetEditor.setText(Messages.MainEditor_17);
+		btnDetailView.setText(Messages.get().MainEditor_btnDetailView_text);
 		
 		// table clear
 		Button btnHistoyClear = new Button(compositeRecallBtn, SWT.NONE);
@@ -149,7 +133,7 @@ public class QueryHistoryComposite extends Composite {
 				clearGrid();
 			}
 		});
-		btnHistoyClear.setText(Messages.MainEditor_btnClear_text);
+		btnHistoyClear.setText(Messages.get().MainEditor_btnClear_text);
 		
 		Label labelDumyRecal = new Label(compositeRecallBtn, SWT.NONE);
 		labelDumyRecal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -172,7 +156,7 @@ public class QueryHistoryComposite extends Composite {
 				refreshSqlHistory();
 			}
 		});
-		btnRefresh.setText(Messages.MainEditor_24);
+		btnRefresh.setText(Messages.get().MainEditor_24);
 	}
 	
 	/**
@@ -197,14 +181,14 @@ public class QueryHistoryComposite extends Composite {
 	/**
 	 * 쿼리 후 실행결과를 히스토리화면과 프로파일에 저장합니다.
 	 */
-	public void afterQueryInit(SQLHistoryDAO sqlHistoryDAO) {
+	public void afterQueryInit(RequestResultDAO reqResultDAO) {
 		try {
 			TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
 							getRdbResultComposite().getUserDB(), 
 							PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
-							sqlHistoryDAO);
+							reqResultDAO);
 		
-			addRowData(sqlHistoryDAO);
+			addRowData(reqResultDAO);
 		} catch(Exception e) {
 			logger.error("save the user query", e); //$NON-NLS-1$
 		}
@@ -217,12 +201,12 @@ public class QueryHistoryComposite extends Composite {
 	 */
 	public void findHistoryData() {
 		try {
-			List<SQLHistoryDAO> listSQLHistory  = TadpoleSystem_ExecutedSQL.getExecuteQueryHistory(
+			List<RequestResultDAO> listSQLHistory  = TadpoleSystem_ExecutedSQL.getExecuteQueryHistory(
 										getRdbResultComposite().getUserSeq(), 
 										getRdbResultComposite().getUserDB().getSeq(), 
 										textHistoryFilter.getText().trim());
-			for (SQLHistoryDAO sqlHistoryDAO : listSQLHistory) {
-				addRowData(sqlHistoryDAO);
+			for (RequestResultDAO reqResultDAO : listSQLHistory) {
+				addRowData(reqResultDAO);
 			}
 		} catch(Exception ee) {
 			logger.error("Executed SQL History call", ee); //$NON-NLS-1$
@@ -232,12 +216,12 @@ public class QueryHistoryComposite extends Composite {
 	/**
 	 * add grid row
 	 * 
-	 * @param sqlHistoryDAO
+	 * @param reqResultDAO
 	 */
-	private void addRowData(SQLHistoryDAO sqlHistoryDAO) {
+	private void addRowData(RequestResultDAO reqResultDAO) {
 		GridItem item = new GridItem(gridSQLHistory, SWT.V_SCROLL | SWT.H_SCROLL);
 		
-		String strSQL = StringUtils.strip(sqlHistoryDAO.getStrSQLText());
+		String strSQL = StringUtils.strip(reqResultDAO.getStrSQLText());
 		int intLine = StringUtils.countMatches(strSQL, "\n"); //$NON-NLS-1$
 		if(intLine >= 1) {
 			int height = (intLine+1) * 24;
@@ -246,18 +230,18 @@ public class QueryHistoryComposite extends Composite {
 		}
 		
 		item.setText(0, ""+gridSQLHistory.getRootItemCount()); //$NON-NLS-1$
-		item.setText(1, Utils.dateToStr(sqlHistoryDAO.getStartDateExecute()));
+		item.setText(1, Utils.dateToStr(reqResultDAO.getStartDateExecute()));
 		item.setText(2, Utils.convLineToHtml(strSQL));
 		item.setToolTipText(2, strSQL);
 		
-		item.setText(3, ""+( (sqlHistoryDAO.getEndDateExecute().getTime() - sqlHistoryDAO.getStartDateExecute().getTime()) / 1000f)); //$NON-NLS-1$
-		item.setText(4, ""+sqlHistoryDAO.getRows()); //$NON-NLS-1$
-		item.setText(5, sqlHistoryDAO.getResult());
+		item.setText(3, ""+( (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) / 1000f)); //$NON-NLS-1$
+		item.setText(4, ""+reqResultDAO.getRows()); //$NON-NLS-1$
+		item.setText(5, reqResultDAO.getResult());
 		
-		item.setText(6, Utils.convLineToHtml(sqlHistoryDAO.getMesssage()));
-		item.setToolTipText(6, sqlHistoryDAO.getMesssage());
+		item.setText(6, Utils.convLineToHtml(reqResultDAO.getMesssage()));
+		item.setToolTipText(6, reqResultDAO.getMesssage());
 		
-		if("F".equals(sqlHistoryDAO.getResult())) { //$NON-NLS-1$
+		if("F".equals(reqResultDAO.getResult())) { //$NON-NLS-1$
 			item.setBackground(SWTResourceManager.getColor(240, 180, 167));
 		}
 	}
@@ -289,37 +273,44 @@ public class QueryHistoryComposite extends Composite {
 		// time
 		GridColumn tvcSeq = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcSeq.setWidth(50);
+		tvcSeq.setMoveable(true);
 		tvcSeq.setText("#"); //$NON-NLS-1$
 				
 		// time
 		GridColumn tvcDate = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcDate.setWidth(150);
-		tvcDate.setText(Messages.QueryHistoryComposite_7);
+		tvcDate.setMoveable(true);
+		tvcDate.setText(Messages.get().QueryHistoryComposite_7);
 		
 		// sql
 		GridColumn tvcSQL = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcSQL.setWidth(300);
-		tvcSQL.setText(Messages.QueryHistoryComposite_8);
+		tvcSeq.setMoveable(true);
+		tvcSQL.setText(Messages.get().QueryHistoryComposite_8);
 		tvcSQL.setWordWrap(true);
 
 		// duration
 		GridColumn tvcDuration = new GridColumn(gridSQLHistory, SWT.RIGHT);
 		tvcDuration.setWidth(60);
-		tvcDuration.setText(Messages.QueryHistoryComposite_9);
+		tvcDuration.setMoveable(true);
+		tvcDuration.setText(Messages.get().QueryHistoryComposite_9);
 		
 		// rows
 		GridColumn tvcRows = new GridColumn(gridSQLHistory, SWT.RIGHT);
 		tvcRows.setWidth(60);
-		tvcRows.setText(Messages.QueryHistoryComposite_10);
+		tvcRows.setMoveable(true);
+		tvcRows.setText(Messages.get().QueryHistoryComposite_10);
 		
 		// result
 		GridColumn tvcResult = new GridColumn(gridSQLHistory, SWT.NONE);
 		tvcResult.setWidth(90);
-		tvcResult.setText(Messages.QueryHistoryComposite_11);
+		tvcResult.setMoveable(true);
+		tvcResult.setText(Messages.get().QueryHistoryComposite_11);
 
 		GridColumn tvcMessage = new GridColumn(gridSQLHistory, SWT.NONE);
 		tvcMessage.setWidth(250);
-		tvcMessage.setText(Messages.QueryHistoryComposite_12);
+		tvcMessage.setMoveable(true);
+		tvcMessage.setText(Messages.get().QueryHistoryComposite_12);
 	}
 	
 }

@@ -16,19 +16,20 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.internal.OpenPreferencesAction;
 
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.ResourceManager;
 
 public class PreferenceAction extends Action implements  IWorkbenchAction {
 	private final IWorkbenchWindow window;
-	public static final String ID = "com.hangum.db.browser.rap.core.actions.global.preference";
+	public static final String ID = "com.hangum.db.browser.rap.core.actions.global.preference"; //$NON-NLS-1$
 
 	public PreferenceAction(IWorkbenchWindow window) {
 		this.window = window;
 
 		setId(ID);
-		setText("Preferences");
-		setToolTipText("Preferences");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/preferences.png"));
+		setText(Messages.get().PreferenceAction_1);
+		setToolTipText(Messages.get().PreferenceAction_2);
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/preferences.png")); //$NON-NLS-1$
 	}
 
 	@Override

@@ -65,7 +65,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblUse = new Label(container, SWT.NONE);
-		lblUse.setText(Messages.SecurityCredentialPreference_0);
+		lblUse.setText(Messages.get().SecurityCredentialPreference_0);
 		
 		comboIsUse = new Combo(container, SWT.READ_ONLY);
 		comboIsUse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -75,14 +75,14 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		comboIsUse.select(0);
 		
 		Label lblAccesskey = new Label(container, SWT.NONE);
-		lblAccesskey.setText(Messages.SecurityCredentialPreference_1);
+		lblAccesskey.setText(Messages.get().SecurityCredentialPreference_1);
 		
 		textAccessKey = new Text(container, SWT.BORDER);
 		textAccessKey.setEditable(false);
 		textAccessKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSecretKey = new Label(container, SWT.NONE);
-		lblSecretKey.setText(Messages.SecurityCredentialPreference_2);
+		lblSecretKey.setText(Messages.get().SecurityCredentialPreference_2);
 		
 		textSecretKey = new Text(container, SWT.BORDER);
 		textSecretKey.setEditable(false);
@@ -94,13 +94,13 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				if(!MessageDialog.openConfirm(getShell(), Messages.SecurityCredentialPreference_3, Messages.SecurityCredentialPreference_4)) return;
+				if(!MessageDialog.openConfirm(getShell(), Messages.get().SecurityCredentialPreference_3, Messages.get().SecurityCredentialPreference_4)) return;
 				
 				textAccessKey.setText(Utils.getUniqueID());
 				textSecretKey.setText(Utils.getUniqueID());
 			}
 		});
-		btnGenerateKey.setText(Messages.SecurityCredentialPreference_5);
+		btnGenerateKey.setText(Messages.get().SecurityCredentialPreference_5);
 		
 		initDefaultValue();
 		
@@ -133,7 +133,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		} catch(Exception e) {
 			logger.error("api security credential saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

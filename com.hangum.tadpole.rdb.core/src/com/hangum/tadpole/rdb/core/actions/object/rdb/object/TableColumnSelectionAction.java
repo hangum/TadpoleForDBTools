@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -37,14 +37,14 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.table.column.selection"; //$NON-NLS-1$
 
-	public TableColumnSelectionAction(IWorkbenchWindow window, PublicTadpoleDefine.DB_ACTION actionType, String title) {
+	public TableColumnSelectionAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.TableColumnSelectionAction_1);
+		setText(Messages.get().TableColumnSelectionAction_1);
 	}
 
 	@Override
-	public void run(IStructuredSelection selection, UserDBDAO userDB, DB_ACTION actionType) {
+	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		if(selection.isEmpty()) return;
 		
 		String strColumnName = "";
@@ -55,12 +55,6 @@ public class TableColumnSelectionAction extends AbstractObjectSelectAction {
 			TableColumnDAO tcDAO = (TableColumnDAO)obj;
 			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
 		}
-		
-//		String strColumnName = "";
-//		for(Object obj : selection.toArray()) {
-//			TableColumnDAO tcDAO = (TableColumnDAO)obj;
-//			strColumnName += tcDAO.getField() + ", "; //$NON-NLS-1$
-//		}
 		strColumnName = StringUtils.removeEnd(strColumnName, ", "); //$NON-NLS-1$
 		
 		FindEditorAndWriteQueryUtil.runAtPosition(strColumnName);

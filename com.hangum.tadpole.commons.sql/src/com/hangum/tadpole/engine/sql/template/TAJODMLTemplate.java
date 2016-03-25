@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.template;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * Define TAJO DML
@@ -26,13 +27,13 @@ public class TAJODMLTemplate extends AbstractDMLTemplate {
 	 */	
 	public static final String TMP_GET_PARTDATA = " %s limit %s,%s";
 	
-	public static final String TMP_EXPLAIN_EXTENDED = "explain  ";
+	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN GLOBAL ";
 	
-	/** table - mysql */
-	/*
-	 create external table table1 (id int, name text, score float, type text) using csv with ('csvfile.delimiter'='|') location 'file:/home/x/table1';
-	 */
-	public static final String  TMP_CREATE_TABLE_STMT = "create external table table1 (id int, name text, score float, type text) using csv with ('csvfile.delimiter'='|') location 'file:/home/x/table1';";
-	
-	
+	/** table - tajo */
+	public static final String  TMP_CREATE_TABLE_STMT = "CREATE EXTERNAL TABLE table1 ( "  + PublicTadpoleDefine.LINE_SEPARATOR +
+														"	id INT, " + PublicTadpoleDefine.LINE_SEPARATOR +
+														"	name TEXT, " + PublicTadpoleDefine.LINE_SEPARATOR +
+														"	score FLOAT, " + PublicTadpoleDefine.LINE_SEPARATOR +
+														"	type TEXT " + PublicTadpoleDefine.LINE_SEPARATOR +
+														") USING CSV WITH ('csvfile.delimiter'='|') LOCATION 'file:/home/x/table1';";
 }

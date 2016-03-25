@@ -10,11 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.application;
 
+import java.util.Locale;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.EntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -35,6 +38,11 @@ public class Application implements EntryPoint {
 
 	public int createUI() {
 		Display display = PlatformUI.createDisplay();
+
+		Locale locale = RWT.getLocale();
+		Locale.setDefault(locale);
+		RWT.getUISession().setLocale(locale);
+		RWT.setLocale(locale);
 		
 		systemInitialize();
 	
@@ -50,7 +58,7 @@ public class Application implements EntryPoint {
 		try {
 			boolean isInitialize = TadpoleSystemInitializer.initSystem();
 			if(!isInitialize) {
-				logger.info("Initialize System default setting.");
+				if(logger.isInfoEnabled()) logger.info("Initialize System default setting.");
 				
 				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
 				if(Dialog.OK != dialog.open()) {
@@ -60,7 +68,7 @@ public class Application implements EntryPoint {
 		} catch(Exception e) {
 			logger.error("System initialize error", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
 			
 			System.exit(0);
 		}

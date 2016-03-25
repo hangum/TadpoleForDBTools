@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -20,6 +21,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -35,10 +37,10 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -49,7 +51,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TriggerComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * trigger composite
@@ -63,6 +64,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleTriggerComposite.class);
 	
+	private CTabItem tbtmTriggers;
 	private TableViewer triggerTableViewer;
 	private TriggerComparator triggerComparator;
 	private List<TriggerDAO> showTrigger;
@@ -87,9 +89,9 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
-		CTabItem tbtmTriggers = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTriggers.setText(Messages.TadpoleTriggerComposite_0);
-		tbtmTriggers.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.TRIGGERS.name());
+		tbtmTriggers = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmTriggers.setText(Messages.get().TadpoleTriggerComposite_0);
+		tbtmTriggers.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTriggers.setControl(compositeIndexes);
@@ -129,12 +131,12 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
-		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_1);
-		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_2);
-		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_3);
+		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_1);
+		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_2);
+		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_4);
-		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.TRIGGERS, Messages.TadpoleTriggerComposite_5);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_4);
+		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_5);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -193,24 +195,27 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	
 	/**
 	 * trigger 정보를 최신으로 갱신 합니다.
+	 * @param strObjectName 
 	 */
-	public void refreshTrigger(final UserDBDAO userDB, boolean boolRefresh) {
+	public void refreshTrigger(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(showTrigger != null) return;
 		this.userDB = userDB;
 		
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTrigger = sqlClient.queryForList("triggerList", userDB.getDb()); //$NON-NLS-1$
+			showTrigger = DBSystemSchema.getTrigger(userDB);
 
 			triggerTableViewer.setInput(showTrigger);
 			triggerTableViewer.refresh();
 			
 			TableUtil.packTable(triggerTableViewer.getTable());
 
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmTriggers);
+			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
 			logger.error("showTrigger refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_76, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_76, errStatus); //$NON-NLS-1$
 		}
 	}
 
@@ -236,5 +241,21 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		refreshAction_Trigger.dispose();
 		viewDDLAction.dispose();	
 		objectCompileAction.dispose();
+	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if("".equals(strObjectName) || strObjectName == null) return;
+		
+		getTableViewer().getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<showTrigger.size(); i++) {
+			TriggerDAO tableDao = (TriggerDAO)getTableViewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+				getTableViewer().setSelection(new StructuredSelection(getTableViewer().getElementAt(i)), true);
+				break;
+			}
+		}
 	}
 }

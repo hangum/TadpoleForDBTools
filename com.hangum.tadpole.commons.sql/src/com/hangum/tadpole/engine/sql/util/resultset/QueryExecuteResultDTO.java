@@ -11,7 +11,6 @@
 package com.hangum.tadpole.engine.sql.util.resultset;
 
 import java.sql.ResultSet;
-import java.util.Map;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_EXECUTE_STATUS;
@@ -31,18 +30,18 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 	}
 
 	public QueryExecuteResultDTO(
-			PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, 
 			UserDBDAO userDB, 
-			Map<Integer, String> columnName, 
-			Map<Integer, String> columnTableName, 
-			Map<Integer, Integer> columnType, 
-			TadpoleResultSet dataList
-	) {
-		super(statementType, userDB, columnName, columnTableName, columnType, dataList);
+			boolean isShowRownum, 
+			ResultSet resultSet, 
+			int intSelectLimitCnt, 
+			int intLastIndex
+	) throws Exception {
+		super(userDB, isShowRownum, resultSet, intSelectLimitCnt, intLastIndex);
 	}
 
-	public QueryExecuteResultDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE statementType, UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
-		super(statementType, userDB, isShowRownum, rs, queryResultCount);
+	public QueryExecuteResultDTO(
+			UserDBDAO userDB, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
+		super(userDB, isShowRownum, rs, queryResultCount, 0);
 	}
 
 	/**
@@ -73,7 +72,5 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 	public void setStrExceptionMsg(String strExceptionMsg) {
 		this.strExceptionMsg = strExceptionMsg;
 	}
-	
-	
 
 }

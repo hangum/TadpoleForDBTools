@@ -45,8 +45,8 @@ public class ERDViewStyleAction extends SelectionAction {
 		this.viewer = graphicalViewer;
 		
 		setId(ID);
-		setText(Messages.ERDViewStyleAction_0);
-		setToolTipText(Messages.ERDViewStyleAction_0);
+		setText(Messages.get().ERDViewStyleAction_0);
+		setToolTipText(Messages.get().ERDViewStyleAction_0);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/viewStyle.png")); //$NON-NLS-1$
 	}
 	

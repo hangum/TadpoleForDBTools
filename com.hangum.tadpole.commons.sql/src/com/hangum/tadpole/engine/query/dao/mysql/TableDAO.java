@@ -10,13 +10,16 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * table 정보 
  * 
  * @author hangum
  *
  */
-public class TableDAO {
+public class TableDAO extends StructObjectDAO {
 	/** 
 	 * 시스템에서 쿼리에 사용할 이름을 정의 .
 	 * 보여줄때는 {@link TableDAO#name}을 사용하고, 쿼리를 사용할때는 . 
@@ -30,7 +33,6 @@ public class TableDAO {
 	
 	/* postgresql, MSSQL Server schema support */
 	String table_name = "";
-	String schema_name = "";
 	
 	/** hive */
 	String tab_name = "";
@@ -38,6 +40,9 @@ public class TableDAO {
 	/** mongoDB */
 	long rows = 0l;
 	long size = 0l;
+	
+	/** table columns */
+	List<TableColumnDAO> listColumn = new ArrayList<TableColumnDAO>();
 	
 	public TableDAO() {
 	}
@@ -67,20 +72,7 @@ public class TableDAO {
 	 */
 	public void setTable_name(String table_name) {
 		this.table_name = table_name;
-	}
-
-	/**
-	 * @return the schema_name
-	 */
-	public String getSchema_name() {
-		return schema_name;
-	}
-
-	/**
-	 * @param schema_name the schema_name to set
-	 */
-	public void setSchema_name(String schema_name) {
-		this.schema_name = schema_name;
+		setName(table_name);
 	}
 
 	public String getComment() {
@@ -129,5 +121,28 @@ public class TableDAO {
 	public final void setSysName(String sysName) {
 		this.sysName = sysName;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof TableDAO) {
+			TableDAO userDB = (TableDAO)obj;
+			return userDB.getName() == getName();
+		}
+		
+		return super.equals(obj);
+	}
 
+	/**
+	 * @return the listColumn
+	 */
+	public List<TableColumnDAO> getListColumn() {
+		return listColumn;
+	}
+
+	/**
+	 * @param listColumn the listColumn to set
+	 */
+	public void setListColumn(List<TableColumnDAO> listColumn) {
+		this.listColumn = listColumn;
+	}
 }

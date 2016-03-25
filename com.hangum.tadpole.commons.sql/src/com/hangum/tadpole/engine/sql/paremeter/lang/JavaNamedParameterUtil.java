@@ -18,6 +18,12 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
+/**
+ * java named parameter(?)
+ * 
+ * @author hangum
+ *
+ */
 public class JavaNamedParameterUtil {
 	private static final Logger logger = Logger.getLogger(JavaNamedParameterUtil.class);
 	

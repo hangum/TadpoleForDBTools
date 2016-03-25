@@ -50,8 +50,8 @@ public class RestfulAPIManagerAction extends Action implements ISelectionListene
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.RestfulAPIManagerAction_0);
-		setToolTipText(Messages.RestfulAPIManagerAction_1);
+		setText(Messages.get().RestfulAPIManagerAction_0);
+		setToolTipText(Messages.get().RestfulAPIManagerAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/restful_api.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}

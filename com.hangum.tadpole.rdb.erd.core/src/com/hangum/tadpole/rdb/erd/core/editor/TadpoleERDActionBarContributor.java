@@ -27,7 +27,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 
-import com.hangum.tadpole.rdb.erd.core.actions.ERDRefreshAction;
 import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleAction;
 import com.hangum.tadpole.rdb.erd.core.actions.ERDViewStyleRetargetAction;
 
@@ -50,8 +49,8 @@ public class TadpoleERDActionBarContributor extends ActionBarContributor {
 		addRetargetAction(new ZoomOutRetargetAction());
 		
 		// Show/hide grid
-//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY, GEFMessages.get().ToggleRulerVisibility_Label, IAction.AS_CHECK_BOX));
-//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY, GEFMessages.get().ToggleSnapToGeometry_Label, IAction.AS_CHECK_BOX));
+//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY, GEFMessages.get().get().ToggleRulerVisibility_Label, IAction.AS_CHECK_BOX));
+//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY, GEFMessages.get().get().ToggleSnapToGeometry_Label, IAction.AS_CHECK_BOX));
 		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY, "Grid", IAction.AS_CHECK_BOX));
 		
 		// aligment action

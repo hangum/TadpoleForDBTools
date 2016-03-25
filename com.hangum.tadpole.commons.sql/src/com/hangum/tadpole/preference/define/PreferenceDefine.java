@@ -19,7 +19,7 @@ import com.hangum.tadpole.commons.util.Utils;
  * @author hangum
  *
  */
-public class PreferenceDefine {
+public class PreferenceDefine extends AdminPreferenceDefine {
 	
 	/**시스템이 초기화 되었는지 정의 */
 	public static final String IS_TADPOLE_INITIALIZE = "IS_TADPOLE_INITIALIZE";
@@ -41,6 +41,11 @@ public class PreferenceDefine {
 	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";
 	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "false";
 	
+	/** RDB Result type */ 
+	public static final String RDB_RESULT_TYPE = "RDB_RESULT_TYPE";
+	/** RDB Result type 값 */
+	public static final String RDB_RESULT_TYPE_VALUE = "Table";
+	
 	/** select 제한  갯수 */ 
 	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */
@@ -51,7 +56,7 @@ public class PreferenceDefine {
 	/** 검색 결과 페이지 당 보여주는 갯수 */
 	public static final String SELECT_RESULT_PAGE_PREFERENCE = "SELECT_RESULT_PAGE_PREFERENCE";
 	/** select 결과를 페이지에 출력 디폴트 값 */
-	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 50;
+	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 500;
 //	/** select 결과를 페이지에 출력 최대 값 */
 //	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 400;
 	
@@ -84,7 +89,7 @@ public class PreferenceDefine {
 		public static final String SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE = "true";
 		
 		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE 	= "SQL_FORMATTER_WORD_WIDTH_PREFERENCE";
-		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "80";
+		public static final String SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE = "200";
 		
 	/** SESSION TIME OUT */
 	public static final String SESSION_DFEAULT_PREFERENCE = "SESSION_DFEAULT_PREFERENCE";
@@ -152,7 +157,7 @@ public class PreferenceDefine {
 	
 	/** RDB의 결과 화면에서 컬럼에서 보여지는 캐릭터 숫자. */
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN = "RDB_CHARACTER_SHOW_IN_THE_COLUMN";
-	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "100";
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "-1";
 	
 	/** define Amazon key */ 
 	public static final String AMAZON_ACCESS_NAME = "AMAZON_ACCESS_NAME";
@@ -170,4 +175,26 @@ public class PreferenceDefine {
 		
 		public static final String SECURITY_CREDENTIAL_SECRET_KEY 		= "SECURITY_CREDENTIAL_SECRET_KEY";
 		public static final String SECURITY_CREDENTIAL_SECRET_KEY_VALUE = Utils.getUniqueID();
+		
+	/** editor info */
+	public static final String EDITOR_CHANGE_EVENT = "_EDITOR_CHANGE_EVENT_";
+	
+	public static final String EDITOR_AUTOSAVE 			= "EDITOR_AUTOSAVE";
+	public static final String EDITOR_AUTOSAVE_VALUE	= "true";
+	
+	public static final String EDITOR_THEME 		= "EDITOR_THEME";
+	public static final String EDITOR_THEME_VALUE	= "Crimson Editor";
+	
+	public static final String EDITOR_FONT_SIZE 		= "EDITOR_FONT_SIZE";
+	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";
+	
+	public static final String EDITOR_IS_WARP 		= "EDITOR_IS_WARP";
+	public static final String EDITOR_IS_WARP_VALUE = "true";
+	
+	public static final String EDITOR_WRAP_LIMIT 		= "EDITOR_WRAP_LIMIT";
+	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "200";
+	
+	public static final String EDITOR_SHOW_GUTTER = "EDITOR_SHOW_GUTTER";
+	public static final String EDITOR_SHOW_GUTTER_VALUE = "true";
+		
 }

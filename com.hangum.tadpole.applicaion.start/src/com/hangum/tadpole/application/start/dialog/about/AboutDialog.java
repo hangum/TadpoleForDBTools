@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -48,7 +49,8 @@ public class AboutDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.AboutDialog_0);
+		newShell.setText(Messages.get().AboutDialog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -76,7 +78,7 @@ public class AboutDialog extends Dialog {
 		gd_lblNewLabelImage.minimumHeight = 184;
 		gd_lblNewLabelImage.minimumWidth = 300;
 		lblNewLabelImage.setLayoutData(gd_lblNewLabelImage);
-//		lblNewLabel_1.setText(Messages.AboutDialog_lblNewLabel_1_text);
+//		lblNewLabel_1.setText(Messages.get().AboutDialog_lblNewLabel_1_text);
 		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools.png")); //$NON-NLS-1$
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
@@ -85,34 +87,34 @@ public class AboutDialog extends Dialog {
 
 		// Thanks, stariki
 		Text txtVersion = new Text(composite_1, SWT.NONE) ;
-		txtVersion.setText(Messages.AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " SR " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
+		txtVersion.setText(Messages.get().AboutAction_3 + " V" + SystemDefine.MAJOR_VERSION + " " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
 		txtVersion.setEditable(false);
 
 		Text txtRleaseDate = new Text(composite_1, SWT.NONE) ;
-		txtRleaseDate.setText(Messages.AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE); //$NON-NLS-1$
+		txtRleaseDate.setText(Messages.get().AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE); //$NON-NLS-1$
 		txtRleaseDate.setEditable(false);
 		
 		Label label = new Label(composite_1, SWT.NONE);
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel0.setText(Messages.AboutDialog_5);//Messages.AboutAction_4);
+		lblNewLabel0.setText(Messages.get().AboutDialog_5);
 
 		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
 		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText(Messages.AboutDialog_6);//Messages.AboutAction_4);
+		lblNewLabel2.setText(Messages.get().AboutDialog_6);
 		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel3.setText(Messages.AboutDialog_7);//Messages.AboutAction_4);
+		lblNewLabel3.setText(Messages.get().AboutDialog_7);
 		
 		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
 		lblLicenseLgpl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblLicenseLgpl.setText(Messages.AboutDialog_8);
+		lblLicenseLgpl.setText(Messages.get().AboutDialog_8);
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel4.setText(Messages.AboutAction_5);
+		lblNewLabel4.setText(Messages.get().AboutAction_5);
 
 		return container;
 	}
@@ -123,7 +125,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.AboutDialog_9, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
 	}
 
 	/**

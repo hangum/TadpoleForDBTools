@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -39,18 +38,18 @@ public abstract class ProcedureExecutor {
 	 */
 	private static final Logger logger = Logger.getLogger(ProcedureExecutor.class);
 	
-//	/** Result Max row count */
-//	protected int queryResultCount 	= GetPreferenceGeneral.getQueryResultCount();
-	
 	protected UserDBDAO userDB;
-	protected List<InOutParameterDAO> listInParamValues;
-	protected List<InOutParameterDAO> listOutParamValues;
+	protected List<InOutParameterDAO> listInParamValues = new ArrayList<InOutParameterDAO>();
+	protected List<InOutParameterDAO> listOutParamValues = new ArrayList<InOutParameterDAO>();
 	
 	protected ProcedureFunctionDAO procedureDAO;
 	
 	/** result dao */
 	protected List<ResultSetUtilDTO> resultDAO = new ArrayList<ResultSetUtilDTO>();
-
+	
+	/** dbms output - only oracle */
+	protected String strOutput = "";
+	
 	/**
 	 * procedure executor
 	 * 
@@ -95,22 +94,23 @@ public abstract class ProcedureExecutor {
 	 * @return
 	 * @throws Exception
 	 */
-	protected String getMakeExecuteScript() throws Exception {
+	public String getMakeExecuteScript() throws Exception {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("select " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
 			}else{
-				sbQuery.append("select " + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getName() + "(");
 			}
 			
-			int intParamSize = getParametersCount();
-			for (int i = 0; i < intParamSize; i++) {
-				if (i == 0) sbQuery.append("?");
-				else 		sbQuery.append(",?");
+			List<InOutParameterDAO> inList = getInParameters();
+			for(int i=0; i<inList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = inList.get(i);
+				if(i == (inList.size()-1)) sbQuery.append(String.format(":%s ", inOutParameterDAO.getName()));
+				else sbQuery.append(String.format(":%s, ", inOutParameterDAO.getName()));
 			}
-			sbQuery.append(") as result from dual ");
-		}else{
+			sbQuery.append(") from dual");
+		} else {
 			if(!"".equals(procedureDAO.getPackagename())){
 				sbQuery.append("{call " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
 			}else{
@@ -169,7 +169,9 @@ public abstract class ProcedureExecutor {
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
 		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000);
 
-		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, userDB, mapColumns, mapTableColum, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(
+//				PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, 
+				userDB, mapColumns, mapTableColum, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -209,7 +211,7 @@ public abstract class ProcedureExecutor {
 		mapColumnTable.put(4, "dumy");
 		mapColumnTable.put(5, "dumy");
 		
-		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, userDB, mapColumns, mapColumnTable, mapColumnType, sourceDataList);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(userDB, mapColumns, mapColumnTable, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -238,5 +240,19 @@ public abstract class ProcedureExecutor {
 	 * @return
 	 */
 	public abstract boolean exec(List<InOutParameterDAO> parameterList) throws Exception ;
+	
+	/**
+	 * @return the strOutput
+	 */
+	public String getStrOutput() {
+		return strOutput;
+	}
+
+	/**
+	 * @param strOutput the strOutput to set
+	 */
+	public void setStrOutput(String strOutput) {
+		this.strOutput = strOutput;
+	}
 
 }

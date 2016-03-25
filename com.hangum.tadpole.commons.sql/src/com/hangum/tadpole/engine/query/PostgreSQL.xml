@@ -29,6 +29,40 @@
 </select>
 
 <!-- 
+	database schema
+ -->
+<select id="getSchemas" resultClass="java.util.HashMap">
+	SELECT CASE WHEN nspname LIKE E'pg\\_temp\\_%' THEN 1
+	            WHEN (nspname LIKE E'pg\\_%') THEN 0
+	            ELSE 3 END AS nsptyp,
+	       nsp.nspname as schema, 
+	       nsp.oid, 
+	       pg_get_userbyid(nspowner) AS namespaceowner, 
+	       nspacl, 
+	       description, 
+	       has_schema_privilege(nsp.oid, 'CREATE') as cancreate,
+	    (SELECT array_agg(label) FROM pg_seclabels sl1 WHERE sl1.objoid=nsp.oid) AS labels,
+	    (SELECT array_agg(provider) FROM pg_seclabels sl2 WHERE sl2.objoid=nsp.oid) AS providers
+	FROM pg_namespace nsp
+	  LEFT OUTER JOIN pg_description des ON (des.objoid=nsp.oid AND des.classoid='pg_namespace'::regclass)
+	WHERE 
+	    NOT (
+	        (nspname = 'pg_catalog' AND EXISTS 
+	            (SELECT 1 FROM pg_class WHERE relname = 'pg_class' AND relnamespace = nsp.oid LIMIT 1)) OR
+	        (nspname = 'pgagent' AND EXISTS 
+	            (SELECT 1 FROM pg_class WHERE relname = 'pga_job' AND relnamespace = nsp.oid LIMIT 1)) OR
+	        (nspname = 'information_schema' AND EXISTS 
+	            (SELECT 1 FROM pg_class WHERE relname = 'tables' AND relnamespace = nsp.oid LIMIT 1)) OR
+	        (nspname LIKE '_%' AND EXISTS 
+	            (SELECT 1 FROM pg_proc WHERE proname='slonyversion' AND pronamespace = nsp.oid LIMIT 1))
+	    )  
+	    AND nspname NOT LIKE E'pg\\_temp\\_%'
+	    AND nspname NOT LIKE E'pg\\_toast_temp\\_%' 
+	    AND nspname NOT LIKE 'pg_toast'
+	ORDER BY 1, nspname
+</select>
+
+<!-- 
 	table 이름
 	테이블 코멘트 부분 처리를 못해서... 
 	AND relname ~ '^(emp)$' 부분에 AND relname ~ '^(a.table_name)$' 가 들어가야 합니다. 
@@ -63,7 +97,7 @@
  -->
  <select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
-	relname as "name"
+	b.table_schema || '.' || relname as "name"
 FROM pg_catalog.pg_class a,
     information_schema.tables b
 WHERE 1=1
@@ -71,6 +105,7 @@ WHERE 1=1
     AND b.table_schema NOT IN ('pg_catalog', 'information_schema')
     AND b.table_type = 'BASE TABLE'
     AND a.relname = b.table_name
+GROUP BY name
 ORDER BY name
 </select>
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
@@ -86,6 +121,7 @@ WHERE 1=1
     AND b.table_schema NOT IN ('pg_catalog', 'information_schema')
     AND b.table_type = 'BASE TABLE'
     AND a.relname = b.table_name
+GROUP BY schema_name, realname, name, comment
 ORDER BY name
 </select>
 
@@ -100,7 +136,7 @@ ORDER BY name
     AND relname IN (
       SELECT a.table_name
         FROM information_schema.tables a
-        WHERE a.table_schema = 'public' 
+        WHERE a.table_schema NOT IN ('pg_catalog', 'information_schema') 
           AND a.table_type = 'BASE TABLE' )
     AND relname = #name#
   ORDER BY name
@@ -142,13 +178,19 @@ ORDER BY name
 		FROM 
 		    pg_catalog.pg_attribute
 		WHERE 
-		    attrelid = (select oid from pg_catalog.pg_class where relname = #table#) AND 
+		    attrelid = (select a.oid 
+		                    from pg_catalog.pg_class a
+		                        ,pg_catalog.pg_namespace b
+		                    where a.relname = #table#
+		                    and b.nspname =  #schema#
+                            and a.relnamespace = b.oid) AND 
 		    attname= a.column_name AND 
 		    attnum > 0 AND 
 		    NOT attisdropped
 		)	as "comment"			
     FROM information_schema.columns a
     WHERE a.table_name = #table#
+    	AND a.table_schema = #schema#
 	ORDER BY a.ordinal_position
 </select>
 
@@ -192,11 +234,12 @@ FROM
 	컬럼 설명
 	oebjt_name		: view 이름
  -->
-<select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
-	SELECT table_name 
+<select id="viewList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	SELECT table_name, table_schema as schema_name
 	FROM information_schema.tables 
-	where table_schema = 'public' and 
-		table_type = 'VIEW'
+	WHERE  
+		    table_type = 'VIEW'
+		AND table_schema NOT IN ('pg_catalog', 'information_schema')
 	ORDER BY table_name
 </select>
 	
@@ -220,6 +263,7 @@ FROM
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
 	select
+		 n.nspname as "schema_name",
 	     t.relname  as "table_name",
 	     c.relname  as "index_name"
 	from
@@ -291,13 +335,17 @@ FROM
 	prorettype = 2279 : procedure return type trigger
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT  proname "name" 
+	SELECT  
+			nspname "schema_name",
+			proname "name", 
+			'PROCEDURE' as type 
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
 	ON      pronamespace = n.oid 
-	WHERE   nspname = 'public'
-	and pronargs = 0
-	and prorettype = 2278; 
+	WHERE    
+			nspname NOT IN ('pg_catalog', 'information_schema')
+		AND pronargs = 0
+		AND prorettype = 2278; 
 </select>
 
 <!-- 
@@ -319,13 +367,24 @@ FROM
 	collation				:
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT  proname "name" 
+	SELECT  nspname "schema_name",
+			proname "name", 'FUNCTION' as type 
 	FROM    pg_catalog.pg_namespace n 
 	JOIN    pg_catalog.pg_proc p 
 	ON      pronamespace = n.oid 
-	WHERE   nspname = 'public'
-	and pronargs > 0; 
+	WHERE   
+			nspname NOT IN ('pg_catalog', 'information_schema')
+		AND pronargs > 0; 
 </select>
+
+<!-- <select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT  prosrc
+	FROM    pg_catalog.pg_namespace n
+	JOIN    pg_catalog.pg_proc p
+	ON      pronamespace = n.oid
+	WHERE   nspname = 'public'
+	and proname like '$object_name$';
+</select> -->
 
 <!-- 
 	show 내역
@@ -410,6 +469,13 @@ from pg_class t
     inner join pg_attribute a on a.attrelid = t.oid and a.attnum = ANY(ix.indkey)
 where 1=1
   and lower(t.relname) = lower(#table_name#)
+</select>
+
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$ 
 </select>
 
 <!-- 
@@ -600,6 +666,22 @@ and t.tgisinternal = false
  FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
  WHERE   nspname = 'public'   
  and proname = #object_name#
+</select>
+
+<!-- 
+
+ -->        
+<select id="getProcedureInParamter"  resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+	SELECT  proname as name, 
+			proargnames as arguments,
+	        oidvectortypes(proargtypes) as rdbType, 
+	        t.typname as return_type,
+	        prosrc as source
+	FROM    pg_catalog.pg_namespace n
+	JOIN    pg_catalog.pg_proc p   ON    pronamespace = n.oid     
+	JOIN    pg_type t ON p.prorettype = t.oid  
+	WHERE   nspname = 'public'  
+		AND proname = #object_name#;
 </select>
  
 <!-- 

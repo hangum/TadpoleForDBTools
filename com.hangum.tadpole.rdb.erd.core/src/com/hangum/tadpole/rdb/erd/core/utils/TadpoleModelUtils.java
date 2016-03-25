@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -44,8 +45,6 @@ public enum TadpoleModelUtils {
 	
 	private static final Logger logger = Logger.getLogger(TadpoleModelUtils.class);
 	
-//	private UserDBDAO userDB;
-	
 	/** 한 행에 테이블을 표시하는 갯수 */
 	public static final int ROW_COUNT = 5;
 	
@@ -58,7 +57,7 @@ public enum TadpoleModelUtils {
 	
 	/** 다음 테이블의 간격 */
 	public static final int GAP_HIGHT =  50;
-	public static final int GAP_WIDTH =  400;
+	public static final int GAP_WIDTH =  350;
 		
 	private RdbFactory factory = RdbFactory.eINSTANCE;
 	
@@ -71,10 +70,11 @@ public enum TadpoleModelUtils {
 	/**
 	 * logindb의  모든 테이블 정보를 리턴합니다.
 	 * 
+	 * @param monitor
 	 * @param userDB
 	 * @return
 	 */
-	public DB getDBAllTable(final UserDBDAO userDB) throws Exception {
+	public DB getDBAllTable(final IProgressMonitor monitor, final UserDBDAO userDB) throws Exception {
 
 		DB db = factory.createDB();
 		db.setDbType(userDB.getDbms_type());
@@ -93,16 +93,20 @@ public enum TadpoleModelUtils {
 		int nextTableX = START_TABLE_WIDTH;
 		int nextTableY = START_TABLE_HIGHT;
 		
-		for(TableDAO table : tables) {
+		for(int i=0; i<tables.size(); i++) {
+			monitor.subTask(String.format("Working %s/%s", i, tables.size()));
+			
+			final TableDAO tableDao = tables.get(i);
 			Table tableModel = factory.createTable();
 			tableModel.setDb(db);
-			tableModel.setName(table.getName());
+			tableModel.setName(tableDao.getName());
 			
 			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 				tableModel.setComment("");	
 			} else {
-				String tableComment = table.getComment();
-				tableComment = StringUtils.substring(""+tableComment, 0, 10);
+				String tableComment = tableDao.getComment();
+				if(tableComment == null) tableComment = "";
+				tableComment = StringUtils.substring(tableComment, 0, 10);
 				tableModel.setComment(tableComment);
 			}
 			
@@ -127,7 +131,7 @@ public enum TadpoleModelUtils {
 			tableModel.setConstraints(prevRectangle);
 			
 			// column add
-			List<TableColumnDAO> columnList = getColumns(userDB, table);
+			List<TableColumnDAO> columnList = TDBDataHandler.getColumns(userDB, tableDao);
 			for (TableColumnDAO columnDAO : columnList) {
 				
 				Column column = factory.createColumn();
@@ -140,7 +144,7 @@ public enum TadpoleModelUtils {
 				
 				String strComment = columnDAO.getComment();
 				if(strComment == null) strComment = "";
-				strComment = StringUtils.substring(""+strComment, 0, 10);
+				strComment = StringUtils.substring(strComment, 0, 10);
 				column.setComment(strComment);
 				
 				column.setTable(tableModel);
@@ -230,30 +234,4 @@ public enum TadpoleModelUtils {
 		
 		return listWantTables;
 	}
-	
-	
-	/**
-	 * table의 컬럼 정보를 가져옵니다.
-	 * 
-	 * @param strTBName
-	 * @return
-	 * @throws Exception
-	 */
-	public List<TableColumnDAO> getColumns(final UserDBDAO userDB, final TableDAO table) throws Exception {
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("db", userDB.getDb());
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-			param.put("table", table.getSysName());
-		} else {
-			param.put("table", table.getName());
-		}
-
-		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-			return new TajoConnectionManager().tableColumnList(userDB, param);
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			return sqlClient.queryForList("tableColumnList", param);
-		}
-	}
-	
 }

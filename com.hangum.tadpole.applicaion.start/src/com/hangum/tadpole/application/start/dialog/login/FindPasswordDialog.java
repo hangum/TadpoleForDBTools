@@ -24,17 +24,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.template.TemporaryPasswordMailBodyTemplate;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
-import com.swtdesigner.ResourceManager;
 
 /**
  * find password
@@ -55,12 +54,12 @@ public class FindPasswordDialog extends Dialog {
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Fogot password");
-		newShell.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/Tadpole15-15.png")); //$NON-NLS-1$
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(Messages.FindPasswordDialog_0);
+		getShell().setText(Messages.get().FindPasswordDialog_0);
 		
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
@@ -71,7 +70,7 @@ public class FindPasswordDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(Messages.FindPasswordDialog_3);
+		lblEmail.setText(Messages.get().LoginDialog_1);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -94,7 +93,7 @@ public class FindPasswordDialog extends Dialog {
 		logger.info("Fogot password dialog" + strEmail);
 
 		if (!checkValidation()) {
-			MessageDialog.openWarning(getShell(), Messages.FindPasswordDialog_1, Messages.FindPasswordDialog_6);
+			MessageDialog.openWarning(getShell(), Messages.get().Confirm, Messages.get().FindPasswordDialog_6);
 			textEmail.setFocus();
 			return;
 		}

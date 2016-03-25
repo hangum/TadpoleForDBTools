@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.admin.core.dialogs;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,6 +24,10 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -30,20 +35,18 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 /**
  * User login history dialog
@@ -56,8 +59,11 @@ import org.eclipse.swt.events.KeyEvent;
  */
 public class UserLoginHistoryDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(UserLoginHistoryDialog.class);
+	private UserDAO userDao;
 	
 	private Text textEmail;
+	private DateTime dateTimeStart;
+	private DateTime dateTimeEnd;
 	private TableViewer tvHistory;
 	
 	private List<UserLoginHistoryDAO> listLoginHistory = new ArrayList<>();
@@ -65,16 +71,19 @@ public class UserLoginHistoryDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param userDao 
 	 */
-	public UserLoginHistoryDialog(Shell parentShell) {
+	public UserLoginHistoryDialog(Shell parentShell, UserDAO userDao) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
+		
+		this.userDao = userDao;
 	}
 	
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.UserLoginHistoryDialog_0);
+		newShell.setText(Messages.get().UserLoginHistoryDialog_0);
 	}
 
 	/**
@@ -92,11 +101,11 @@ public class UserLoginHistoryDialog extends Dialog {
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(3, false));
+		compositeHead.setLayout(new GridLayout(5, false));
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEmail.setText(Messages.UserLoginHistoryDialog_1);
+		lblEmail.setText(Messages.get().email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.addKeyListener(new KeyAdapter() {
@@ -105,16 +114,26 @@ public class UserLoginHistoryDialog extends Dialog {
 				if(e.keyCode == SWT.Selection) search();
 			}
 		});
-		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		Button btnSearch = new Button(compositeHead, SWT.NONE);
+		btnSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.UserLoginHistoryDialog_2);
+		btnSearch.setText(Messages.get().Search);
+		
+		Label lblDate = new Label(compositeHead, SWT.NONE);
+		lblDate.setText("로그인 시간");
+						
+		dateTimeStart = new DateTime(compositeHead, SWT.BORDER | SWT.DROP_DOWN);
+		Label label = new Label(compositeHead, SWT.NONE);
+		label.setText("~"); //$NON-NLS-1$
+								
+		dateTimeEnd = new DateTime(compositeHead, SWT.BORDER | SWT.DROP_DOWN);
+		new Label(compositeHead, SWT.NONE);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -129,20 +148,22 @@ public class UserLoginHistoryDialog extends Dialog {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnIp = tableViewerColumn.getColumn();
 		tblclmnIp.setWidth(100);
-		tblclmnIp.setText(Messages.UserLoginHistoryDialog_3);
+		tblclmnIp.setText(Messages.get().IP);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnConnectionTime = tableViewerColumn_1.getColumn();
 		tblclmnConnectionTime.setWidth(200);
-		tblclmnConnectionTime.setText(Messages.UserLoginHistoryDialog_4);
+		tblclmnConnectionTime.setText(Messages.get().UserLoginHistoryDialog_4);
 		
-		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvHistory, SWT.NONE);
-		TableColumn tblclmnLogoutTime = tableViewerColumn_2.getColumn();
-		tblclmnLogoutTime.setWidth(200);
-		tblclmnLogoutTime.setText(Messages.UserLoginHistoryDialog_5);
+//		TableViewerColumn tableViewerColumn_2 = new TableViewerColumn(tvHistory, SWT.NONE);
+//		TableColumn tblclmnLogoutTime = tableViewerColumn_2.getColumn();
+//		tblclmnLogoutTime.setWidth(200);
+//		tblclmnLogoutTime.setText(Messages.get().UserLoginHistoryDialog_5);
 		
 		tvHistory.setContentProvider(new ArrayContentProvider());
 		tvHistory.setLabelProvider(new LoginHistoryLabelProvider());
+		
+		initUI();
 		
 		textEmail.setFocus();
 		
@@ -152,18 +173,36 @@ public class UserLoginHistoryDialog extends Dialog {
 		return container;
 	}
 	
+	/** 
+	 * initialize ui
+	 */
+	private void initUI() {
+		// Range of date
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		textEmail.setText(userDao.getEmail());
+	}
+	
 	private void search() {
 		String strEmail = textEmail.getText();
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			listLoginHistory.clear();
 			tvHistory.setInput(listLoginHistory);
 			
-			MessageDialog.openError(getShell(), Messages.UserLoginHistoryDialog_7, Messages.UserLoginHistoryDialog_8);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().UserLoginHistoryDialog_8);
 			return;
 		}
 		
 		try {
-			listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail);
+			Calendar cal = Calendar.getInstance();
+			cal.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
+			long startTime = cal.getTimeInMillis();
+			cal.set(dateTimeEnd.getYear(), dateTimeEnd.getMonth(), dateTimeEnd.getDay(), 23, 59, 59);
+			long endTime = cal.getTimeInMillis();
+			
+			listLoginHistory = TadpoleSystem_UserQuery.getLoginHistory(strEmail, startTime, endTime);
 			tvHistory.setInput(listLoginHistory);
 		} catch (Exception e) {
 			logger.error("find login history", e); //$NON-NLS-1$
@@ -176,7 +215,7 @@ public class UserLoginHistoryDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.UserLoginHistoryDialog_10, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
 
 	/**
@@ -209,7 +248,7 @@ class LoginHistoryLabelProvider  extends LabelProvider implements ITableLabelPro
 		
 		switch(columnIndex) {
 		case 0 : return dao.getLogin_ip();
-		case 1 : return dao.getConnet_time().toString();
+		case 1 : return dao.getConnet_time() == null?dao.getSqliteConnet_time():dao.getConnet_time().toString();
 		case 2 : return dao.getDisconnect_time() == null?"":dao.getDisconnect_time().toString(); //$NON-NLS-1$
 		}
 		

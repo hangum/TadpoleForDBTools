@@ -17,6 +17,27 @@
     "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="Tadpole-System-MySQL">
+	<select id="userDbResourceTree" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
+		SELECT concat( b.name, '(', b.email, ')') as usernames, a.* 
+		FROM user_db_resource a,
+			tadpole_user b
+		WHERE
+			a.user_seq = b.seq AND
+			a.db_seq = #seq#  AND
+			a.resource_types in ('ERD', 'SQL') AND
+			a.delYn = 'NO'		
+		ORDER BY a.resource_types, a.name
+	</select>
+
+	<select id="getResouceDataHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO" parameterClass="java.lang.Long">
+		SELECT concat( b.name, '(', b.email, ')') as usernames, a.* 
+		FROM user_db_resource_data a,
+		    tadpole_user b
+		WHERE
+		        a.user_seq = b.seq
+			AND	user_db_resource_seq = #resource_seq#
+		order by a.seq
+	</select>
 
 	<!--
 		============================================================================================================================ 
@@ -62,6 +83,25 @@
 		    AND a.is_visible = 'YES'
 		    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
 	]]>	
+	</select>
+	
+	<!-- 
+	find login history
+	 -->
+	<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" 
+														parameterClass="java.util.Map">
+	<![CDATA[
+		SELECT b.seq, b.user_seq, b.login_ip, b.connet_time, b.disconnect_time
+		FROM tadpole_user a,
+		    login_history b
+		WHERE
+		    	a.email = #email#
+		    AND a.seq = b.user_seq
+		    AND b.connet_time >= #startTime#
+	       	AND b.connet_time <= #endTime#
+		ORDER BY b.connet_time DESC
+		LIMIT 1000
+	]]>
 	</select>
 	
 </sqlMap>

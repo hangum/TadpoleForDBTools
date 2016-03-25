@@ -42,6 +42,7 @@ SELECT getdate()
 <select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
     tbl.name AS name
+    , s.name as schema_name
   FROM
     sys.tables AS tbl
     inner join sys.schemas as s on s.schema_id = tbl.schema_id
@@ -236,7 +237,7 @@ SELECT
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 select 
 	p.routine_schema + '.' + p.routine_name as name
-	,'P' as type
+	,'PROCEDURE' as type
 	,routine_catalog as db
 	,p.created as created
 	,p.last_altered as last_altered
@@ -253,7 +254,7 @@ order by p.routine_schema, p.routine_name
 <select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 select 
 	p.routine_schema + '.' + p.routine_name as name
-	,'P' as type
+	,'FUNCTION' as type
 	,routine_catalog as db
 	,p.created as created
 	,p.last_altered as last_altered
@@ -315,6 +316,12 @@ where 1=1
 	order by c.key_ordinal
 </select>
 
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$
+</select>
 
 <!-- 
 	table information

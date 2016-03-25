@@ -95,7 +95,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	private void createWidget(final CTabFolder tabFolderObject) {
 		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
 		tbtmIndex.setText("Javascript"); //$NON-NLS-1$
-		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.JAVASCRIPT.name());
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
@@ -130,7 +130,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 						logger.error("Mongodb javascirpt", e); //$NON-NLS-1$
 						
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, "Error", Messages.TadpoleMongoDBJavaScriptComposite_2, errStatus); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().TadpoleMongoDBJavaScriptComposite_2, errStatus); //$NON-NLS-1$
 					}
 
 				} catch (Exception e) {
@@ -166,7 +166,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * @param indexComparator
 	 */
 	private void createMongoDBIndexesColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {Messages.TadpoleMongoDBJavaScriptComposite_3, Messages.TadpoleMongoDBJavaScriptComposite_4};
+		String[] name = {Messages.get().TadpoleMongoDBJavaScriptComposite_3, Messages.get().TadpoleMongoDBJavaScriptComposite_4};
 		int[] size = {120, 200};
 
 		for (int i=0; i<name.length; i++) {
@@ -182,10 +182,10 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_5);
-		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_6);
-		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_7);
-		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.JAVASCRIPT, Messages.TadpoleMongoDBJavaScriptComposite_8);
+		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_5);
+		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_6);
+		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_7);
+		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_8);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -243,7 +243,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("javascript refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
 		}
 	}
 
@@ -278,5 +278,11 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		deleteActionJS.dispose();
 		refreshActionJS.dispose();
 		serverJavaScript.dispose();
+	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		// TODO Auto-generated method stub
+		
 	}
 }

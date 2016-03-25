@@ -38,7 +38,7 @@ import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * SQLResult의 LabelProvider
@@ -56,7 +56,6 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	private boolean isPretty = false;
 	private ResultSetUtilDTO rsDAO;
 	
-	
 	public SQLResultLabelProvider() {
 	}
 
@@ -69,19 +68,50 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		this.isPretty = isPretty;
 		this.rsDAO = rsDAO;
 	}
+	
+//	@Override
+//	public Font getFont(Object element, int columnIndex) {
+//		if(tvQueryResult == null) return null;
+//		
+//		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
+//		Object obj = rsResult.get(columnIndex);
+//		if(obj == null) {
+//			Font font = tvQueryResult.getTable().getFont();
+//			if(font != null) return ResourceManager.getItalicFont(font);
+//			
+//		} else if(queryMode == QUERY_MODE.QUERY) {
+//			if(obj.toString().length() > getRDBShowInTheColumn()) {
+//				Font font = tvQueryResult.getTable().getFont();
+//				if(font != null) return ResourceManager.getItalicFont(font);
+//			}
+//		}
+//		
+//		return null;
+//	}
 
 	@Override
 	public Color getForeground(Object element, int columnIndex) {
+		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
+		Object obj = rsResult.get(columnIndex);
+		if(obj == null) {
+			return SWTResourceManager.getColor(152, 118, 137);
+			
+		} else if(queryMode == QUERY_MODE.QUERY) {
+			if(getRDBShowInTheColumn() != -1 && obj.toString().length() > getRDBShowInTheColumn()) {
+				return SWTResourceManager.getColor(152, 118, 137);
+			}
+		}
+		
 		return null;
 	}
 
 	@Override
 	public Color getBackground(Object element, int columnIndex) {
-		if(columnIndex == 0) return ResourceManager.getColor(SWT.COLOR_GRAY);
+		if(columnIndex == 0) return SWTResourceManager.getColor(SWT.COLOR_GRAY);
 		
 		return null;
 	}
-
+	
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
 	}
@@ -90,10 +120,11 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * RDB Character shown in the column
 	 * @return
 	 */
-	public static String getRDBShowInTheColumn() {
+	private static Integer getRDBShowInTheColumn() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
-		if(null == userInfo) return PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE;
-		return userInfo.getValue0();
+		if(null == userInfo) return Integer.parseInt(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE);
+		
+		return Integer.parseInt(userInfo.getValue0());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,8 +139,11 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		if(obj == null) {
 			return PublicTadpoleDefine.DEFINE_NULL_VALUE;
 		} else {
+			if(getRDBShowInTheColumn() == -1) {
+				return obj.toString();
+			} 
 			return queryMode == QUERY_MODE.QUERY ? 
-					StringUtils.abbreviate(obj.toString(), 0, Integer.parseInt(getRDBShowInTheColumn())) :
+					StringUtils.abbreviate(obj.toString(), 0, getRDBShowInTheColumn()) :
 					obj.toString();
 		}
 	}
@@ -117,7 +151,9 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	/**
 	 * table의 Column을 생성한다.
 	 */
-	public static void createTableColumn(final TableViewer tableViewer,
+	public static void createTableColumn(
+										final RequestQuery reqQuery,
+										final TableViewer tableViewer,
 										final ResultSetUtilDTO rsDAO,
 										final SQLResultSorter tableSorter, 
 										final boolean isEditable) {
@@ -128,13 +164,13 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			table.getColumn(0).dispose();
 		}
 		
-		if(rsDAO.getColumnLabelName() == null) return;
+		if(rsDAO.getColumnName() == null) return;
 			
 		try {			
-			for(int i=0; i<rsDAO.getColumnLabelName().size(); i++) {
+			for(int i=0; i<rsDAO.getColumnName().size(); i++) {
 				final int index = i;
 				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))?SWT.RIGHT:SWT.LEFT;
-				String strColumnName = rsDAO.getColumnLabelName().get(i);
+				String strColumnName = rsDAO.getColumnName().get(i);
 		
 				/** 표시 되면 안되는 컬럼을 제거 합니다 */
 				if(StringUtils.startsWithIgnoreCase(strColumnName, PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) continue;
@@ -163,7 +199,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				});
 
 				// if select statement update
-				if(PublicTadpoleDefine.SQL_STATEMENTS_TYPE.SELECT == rsDAO.getStatementType() && isEditable) {
+				if(PublicTadpoleDefine.QUERY_DML_TYPE.SELECT == reqQuery.getSqlDMLType() && isEditable) {
 					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
 				}
 				
@@ -180,7 +216,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * @param value
 	 * @return
 	 */
-	public static String addComma(Object value) {
+	private static String addComma(Object value) {
 		if(value==null) return PublicTadpoleDefine.DEFINE_NULL_VALUE;
 		
 		try{
@@ -192,4 +228,5 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 
 		return value.toString();
 	}
+
 }

@@ -33,6 +33,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -113,7 +114,7 @@ public class NewDocumentDialog extends Dialog {
 		if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openError(null, Messages.NewDocumentDialog_3, Messages.NewDocumentDialog_4);
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 
@@ -133,7 +134,8 @@ public class NewDocumentDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.NewDocumentDialog_0);
+		newShell.setText(Messages.get().NewDocumentDialog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -142,7 +144,7 @@ public class NewDocumentDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {		
-		Button button = createButton(parent, FORMAT_BTN_ID, Messages.NewDocumentDialog_1, false);
+		Button button = createButton(parent, FORMAT_BTN_ID, Messages.get().NewDocumentDialog_1, false);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -150,8 +152,8 @@ public class NewDocumentDialog extends Dialog {
 			}
 		});
 		
-		createButton(parent, IDialogConstants.OK_ID, Messages.NewDocumentDialog_2, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.NewDocumentDialog_5, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Insert, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**

@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -24,6 +25,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -49,7 +51,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
@@ -71,6 +72,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleIndexesComposite.class);
 	
+	private CTabItem tbtmIndex;
 	/** select table name */
 	private String selectIndexName = ""; //$NON-NLS-1$
 
@@ -88,7 +90,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Index;
 	private ObjectDropAction dropAction_Index;
 	private ObjectRefreshAction refreshAction_Index;
-	private GenerateViewDDLAction viewDDLAction;
+//	private GenerateViewDDLAction viewDDLAction;
 
 	/**
 	 * indexes info
@@ -103,9 +105,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
-		CTabItem tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmIndex.setText(Messages.TadpoleIndexesComposite_0);
-		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.DB_ACTION.INDEXES.name());
+		tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmIndex.setText(Messages.get().TadpoleIndexesComposite_0);
+		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
 		tbtmIndex.setControl(compositeIndexes);
@@ -236,7 +238,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * index column list
 	 */
 	protected void createIndexColumne(final TableViewer tv) {
-		String[] name = {Messages.TadpoleIndexesComposite_4, Messages.TadpoleIndexesComposite_5, Messages.TadpoleIndexesComposite_6};
+		String[] name = {Messages.get().TadpoleIndexesComposite_4, Messages.get().TadpoleIndexesComposite_5, Messages.get().TadpoleIndexesComposite_6};
 		int[] size = {60, 300, 50};
 
 		for (int i=0; i<name.length; i++) {
@@ -251,11 +253,11 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
-		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_1);
-		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_2);
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_3);
+		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_1);
+		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_2);
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_3);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.DB_ACTION.INDEXES, Messages.TadpoleIndexesComposite_7);
+//		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_7);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -272,8 +274,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 					
 					manager.add(refreshAction_Index);
 					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(viewDDLAction);
+//					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+//					manager.add(viewDDLAction);
 				}
 			}
 		});
@@ -294,13 +296,14 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		dropAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
 		
-		viewDDLAction.setUserDB(getUserDB());
+//		viewDDLAction.setUserDB(getUserDB());
 	}
 	
 	/**
 	 * index 정보를 최신으로 갱신 합니다.
+	 * @param strObjectName 
 	 */
-	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh) {
+	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(listIndexes != null) return;
 		
 		this.userDB = userDB;
@@ -313,10 +316,14 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			
 			TableUtil.packTable(indexTableViewer.getTable());
 
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmIndex);
+			
+			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
 			logger.error("index refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.ExplorerViewer_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
 		}
 	}
 
@@ -350,6 +357,22 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		creatAction_Index.dispose();
 		dropAction_Index.dispose();
 		refreshAction_Index.dispose();
-		viewDDLAction.dispose();
+//		viewDDLAction.dispose();
+	}
+
+	@Override
+	public void selectDataOfTable(String strObjectName) {
+		if("".equals(strObjectName) || strObjectName == null) return;
+		
+		getTableViewer().getTable().setFocus();
+		
+		// find select object and viewer select
+		for(int i=0; i<listIndexes.size(); i++) {
+			InformationSchemaDAO tableDao = (InformationSchemaDAO)getTableViewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getINDEX_NAME())) {
+				getTableViewer().setSelection(new StructuredSelection(getTableViewer().getElementAt(i)), true);
+				break;
+			}
+		}		
 	}
 }

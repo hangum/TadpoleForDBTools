@@ -14,7 +14,10 @@ public class UserLoginHistoryDAO {
 	int user_seq;
 	String login_ip;
 	Timestamp connet_time;
-	Timestamp disconnect_time; 
+	Timestamp disconnect_time;
+	
+	String sqliteConnet_time;
+	String sqliteDisconnect_time;
 	
 	public UserLoginHistoryDAO() {
 	}
@@ -88,6 +91,34 @@ public class UserLoginHistoryDAO {
 	public void setDisconnect_time(Timestamp disconnect_time) {
 		this.disconnect_time = disconnect_time;
 	}
-	
 
+	/**
+	 * @return the sqliteConnet_time
+	 */
+	public String getSqliteConnet_time() {
+		return sqliteConnet_time;
+	}
+
+	/**
+	 * @param sqliteConnet_time the sqliteConnet_time to set
+	 */
+	public void setSqliteConnet_time(String sqliteConnet_time) {
+		this.sqliteConnet_time = sqliteConnet_time;
+	}
+
+	/**
+	 * @return the sqliteDisconnect_time
+	 */
+	public String getSqliteDisconnect_time() {
+		return sqliteDisconnect_time;
+	}
+
+	/**
+	 * @param sqliteDisconnect_time the sqliteDisconnect_time to set
+	 */
+	public void setSqliteDisconnect_time(String sqliteDisconnect_time) {
+		this.sqliteDisconnect_time = sqliteDisconnect_time;
+	}
+
+	
 }

@@ -92,4 +92,14 @@ public class JavaScriptBrowserFunctionService extends EditorFunctionService {
 	protected void generateSelect(Object[] argument) {
 		if(logger.isDebugEnabled()) logger.debug("======= generateSelect*** === ***");
 	}
+
+	@Override
+	protected String getContentAssist(Object[] arguments) {
+		return "";
+	}
+
+	@Override
+	protected Object doAutoSave(Object[] arguments) {
+		return null;
+	}
 }

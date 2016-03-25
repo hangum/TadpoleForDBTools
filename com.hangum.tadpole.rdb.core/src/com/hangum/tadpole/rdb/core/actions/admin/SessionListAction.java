@@ -58,10 +58,11 @@ public class SessionListAction implements IViewActionDelegate {
 		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT  ||
+				DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 	||
-				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
+				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ||
+				DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT
 		) {
-			
 			try {
 				SessionListEditorInput sleInput = new SessionListEditorInput(userDB);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, SessionListEditor.ID);
@@ -69,10 +70,20 @@ public class SessionListAction implements IViewActionDelegate {
 				logger.error("open session list", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
+//		} else if(DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT) {
+//			try {
+//				TajoSessionListEditorInput sleInput = new TajoSessionListEditorInput(userDB);
+//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, TajoSessionListEditor.ID);
+//			} catch (PartInitException e) {
+//				logger.error("open session list", e); //$NON-NLS-1$
+//				
+//				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+//			}
 		} else {
-			MessageDialog.openWarning(null, "Information", "Not support database.");
+			MessageDialog.openWarning(null, Messages.get().Information, Messages.get().NotSupportDatabase);
 		}
 	}
 

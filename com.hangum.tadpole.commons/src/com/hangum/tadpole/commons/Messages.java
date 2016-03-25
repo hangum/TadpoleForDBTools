@@ -1,23 +1,21 @@
 package com.hangum.tadpole.commons;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.rap.rwt.RWT;
 
-public class Messages extends NLS {
+public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.messages"; //$NON-NLS-1$
-	public static String FileUploadDialog_0;
-	public static String FileUploadDialog_1;
-	public static String FileUploadDialog_3;
-	public static String FileUploadDialog_4;
-	public static String FileUploadDialog_6;
-	public static String FileUploadDialog_8;
-	public static String ExceptionDetailsErrorDialog_0;
-	public static String ExceptionDetailsErrorDialog_1;
-	public static String ExceptionDetailsErrorDialog_2;
-	public static String ExceptionDetailsErrorDialog_3;
-	public static String ExceptionDetailsErrorDialog_5;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	public String FileUploadDialog_fileSelect;
+	public String ExceptionDetailsErrorDialog_3;
+	public String ExceptionDetailsErrorDialog_5;
+	public String SingleFileuploadDialog_1;
+	public String Error;
+	public String SingleFileuploadDialog_5;
+	public String SingleFileuploadDialog_7;
+	public String Confirm;
+	public String Cancle;
+
+	public static Messages get() {
+		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
 
 	private Messages() {

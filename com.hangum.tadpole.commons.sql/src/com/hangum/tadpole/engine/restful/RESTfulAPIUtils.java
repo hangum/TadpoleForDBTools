@@ -68,6 +68,8 @@ public class RESTfulAPIUtils {
 	 * @throws UnsupportedEncodingException
 	 */
 	public static Map<String, String> maekArgumentTOMap(String strArgument) throws RESTFULUnsupportedEncodingException {
+		if(StringUtils.split(strArgument, "&") == null) return new HashMap<String, String>();
+		
 		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument);
 		Map<String, String> params = new HashMap<String, String>();
 		
@@ -162,7 +164,7 @@ public class RESTfulAPIUtils {
 			strArguments = StringUtils.removeEnd(strArguments, "&");
 			 
 		} else {
-			strArguments = "1={FirstParameter}&2={SecondParameter}";
+			strArguments = "";//1={FirstParameter}&2={SecondParameter}";
 		}
 		
 		return strArguments;

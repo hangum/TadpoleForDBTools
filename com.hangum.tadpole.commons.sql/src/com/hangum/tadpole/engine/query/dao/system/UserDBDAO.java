@@ -10,16 +10,16 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.TDBDBDAO;
 
 /**
  * <pre>
@@ -38,6 +38,10 @@ import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlD
  *
  */
 public class UserDBDAO extends TDBDBDAO implements Cloneable {	
+	/** 
+	 * pgsql, oracle, mssql은 인스턴스 아래에 schema가 있습니다. 
+	 */
+	protected String schema = "";
 	
 	// TadpoleUserDbRoleDAO start ======================================
 	protected int role_seq;
@@ -75,13 +79,8 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	protected int seq = -999;
 	protected int user_seq = -1;
 	
-//	/** 외부 시스템 seq 현재는 amamzon rds seq*/
-//	protected int ext_seq = -999;
-    
 	protected String group_name = "";
-	
 	protected String operation_type = "";
-    
 	protected String dbms_type;
 	protected String url;
 	protected String url_user_parameter = "";
@@ -89,7 +88,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	protected List<TadpoleUserDbRoleDAO> listChildren = new ArrayList<TadpoleUserDbRoleDAO>();
 	
 	public String getUrl(String userType) {
-		return PermissionChecker.isShow(userType)?getUrl():"jdbc:*************************";
+		return PermissionChecker.isShow(userType)?getUrl():"jdbc:********************";
 	}
 	
 	protected String db;
@@ -118,7 +117,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		return PermissionChecker.isShow(userType)?getUsers():"********";
 	}
 	
-	protected Date create_time;
+	protected Timestamp create_time;
 	protected String delYn;
 	
 	protected String ext1 = "";
@@ -144,9 +143,6 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     
     // 운영서버일 경우 DML 문 실행시 YES, NO 묻기
     protected String question_dml = "";
-    
-    protected ManagerListDTO parent;
-    protected List<UserDBResourceDAO> listUserDBErd = new ArrayList<UserDBResourceDAO>();
     
     /** 디비의 버전 정보 */
     protected String version;
@@ -290,30 +286,14 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		this.passwd = passwd;
 	}
 
-	public Date getCreate_time() {
+	public Timestamp getCreate_time() {
 		return create_time;
 	}
 
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
 	}
     
-	public ManagerListDTO getParent() {
-		return parent;
-	}
-	
-	public void setParent(ManagerListDTO parent) {
-		this.parent = parent;
-	}
-
-	public List<UserDBResourceDAO> getListUserDBErd() {
-		return listUserDBErd;
-	}
-
-	public void setListUserDBErd(List<UserDBResourceDAO> listUserDBErd) {
-		this.listUserDBErd = listUserDBErd;
-	}
-	
 	public String getDelYn() {
 		return delYn;
 	}
@@ -619,33 +599,36 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		this.dbAccessCtl = dbAccessCtl;
 	}
 	
+	/**
+	 * @return the schema
+	 */
+	public String getSchema() {
+		return schema;
+	}
+
+	/**
+	 * @param schema the schema to set
+	 */
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
-	public String toString() {
-		return "UserDBDAO [role_seq=" + role_seq + ", role_id=" + role_id + ", seq=" + seq + ", user_seq=" + user_seq
-				+ ", group_name=" + group_name + ", operation_type=" + operation_type + ", dbms_type=" + dbms_type
-				+ ", url=" + url + ", url_user_parameter=" + url_user_parameter + ", listChildren=" + listChildren
-				+ ", db=" + db + ", display_name=" + display_name + ", host=" + host + ", port=" + port + ", locale="
-				+ locale + ", passwd=" + passwd + ", users=" + users + ", create_time=" + create_time + ", delYn="
-				+ delYn + ", ext1=" + ext1 + ", ext2=" + ext2 + ", ext3=" + ext3 + ", ext4=" + ext4 + ", ext5=" + ext5
-				+ ", ext6=" + ext6 + ", ext7=" + ext7 + ", ext8=" + ext8 + ", ext9=" + ext9 + ", ext10=" + ext10
-				+ ", is_profile=" + is_profile + ", profile_select_mill=" + profile_select_mill
-				+ ", is_readOnlyConnect=" + is_readOnlyConnect + ", is_autocommit=" + is_autocommit
-				+ ", is_showtables=" + is_showtables + ", is_external_browser=" + is_external_browser
-				+ ", listExternalBrowserdao=" + listExternalBrowserdao + ", question_dml=" + question_dml + ", parent="
-				+ parent + ", listUserDBErd=" + listUserDBErd + ", version=" + version + ", is_visible=" + is_visible
-				+ ", is_summary_report=" + is_summary_report + ", is_monitoring=" + is_monitoring + ", is_lock="
-				+ is_lock + ", dbAccessCtl=" + dbAccessCtl + "]";
+	public boolean equals(Object obj) {
+		if(obj instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)obj;
+			return userDB.getSeq() == getSeq();
+		}
+		
+		return super.equals(obj);
 	}
 
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="target-tadpolea-1.7.0" sequenceNumber="277">
+<locations>
+<location path="${project_loc:/targetProject}/ext" type="Directory"/>
+<location path="${project_loc:/targetProject}/multiTab" type="Directory"/>
+<location path="${project_loc:/targetProject}/standalone-launcher" type="Directory"/>
+<location path="${project_loc:/targetProject}/addons" type="Directory"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.babel.nls_rt.rap_fr.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_th.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_pt.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_hi.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ja.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_uk.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_es.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_en_CA.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_fi.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ko.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_en_AU.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ro.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ar.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_eu.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_zh.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_mn.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_da.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_bg.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_sr.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_de.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_cs.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_nl.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_et.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_iw.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_sl.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_it.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ca.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ku.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_fa.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_sv.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_el.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_hu.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_lt.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_pl.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_pt_BR.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_zh_TW.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_no.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ml.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_en_AA.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_tr.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_sk.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_id.feature.group" version="4.5.0.v20151128060001"/>
+<unit id="org.eclipse.babel.nls_rt.rap_ru.feature.group" version="4.5.0.v20151128060001"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.13.1/mars/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rap.gef.feature.feature.group" version="0.1.0.20151228-1339"/>
+<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/"/>
+</location>
+<location path="${project_loc:/targetProject}/test" type="Directory"/>
+<location path="${project_loc:/targetProject}/eclipse-4.3-delta-pack" type="Directory"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>
+<repository location="http://download.eclipse.org/releases/mars"/>
+</location>
+<location path="${project_loc:/targetProject}/rap-3.1.0-N-20150914-1435" type="Directory"/>
+</locations>
+</target>

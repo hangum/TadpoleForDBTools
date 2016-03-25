@@ -69,6 +69,7 @@
 <select id="getAllUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	SELECT * 
 	FROM tadpole_user 
+	ORDER BY create_time DESC
 </select>
 
 <!--
@@ -79,6 +80,9 @@
 	FROM tadpole_user 
 	WHERE 
 		delyn = 'NO'
+	AND approval_yn = 'YES'
+	AND is_email_certification = 'YES'	
+	ORDER BY create_time DESC
 </select>
 
 <!--
@@ -98,8 +102,9 @@
 	SELECT *
 	FROM tadpole_user 
 	WHERE 
-		email like #email#
+		(email like #email# OR name like #email#)
 		AND delyn = 'NO'
+	ORDER BY create_time DESC
 </select>
 
 <!-- 
@@ -110,6 +115,7 @@
 	FROM tadpole_user 
 	WHERE 
 		email = #email#
+	ORDER BY create_time DESC
 </select>
 
 <!-- 
@@ -171,19 +177,6 @@
 	INSERT INTO login_history(user_seq, login_ip) 
 	VALUES (#user_seq#, #login_ip#);
 </insert>
-
-<!-- 
-	find login history
- -->
-<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" parameterClass="java.lang.String">
-	SELECT b.*
-	FROM tadpole_user a,
-	    login_history b
-	WHERE
-	    	a.email = #email#
-	    AND a.seq = b.user_seq
-	ORDER BY b.connet_time DESC
-</select>
 
 <!-- 
 	When lost password, check security hint
@@ -253,6 +246,7 @@
 	SET
 		allow_ip = #allow_ip#,
 		delYn = #delYn#,
+		is_regist_db = #is_regist_db#,
 		approval_yn = #approval_yn#,
 		is_email_certification = #is_email_certification#
 	WHERE seq = #seq#
@@ -323,6 +317,7 @@
 		tadpole_user b
 	WHERE 
 			a.delyn = 'NO'
+		AND dbms_type != 'SQLite'
 		AND a.user_seq = b.seq
 		AND b.delyn = 'NO'
 	GROUP BY dbms_type
@@ -618,6 +613,19 @@
 		AND	restapi_uri = #restapi_uri#
 		AND restapi_yesno = 'YES'
 </select> 
+
+<!-- 
+	default db resource
+ -->
+<select id="userDBResourceDefault" parameterClass="java.util.Map" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
+	SELECT * FROM user_db_resource
+	WHERE
+			name = '_TDB_DEF_NAME_'
+		AND resource_types = 'AUTO_SQL'
+		AND db_seq 		= #db_seq#
+		AND user_seq 	= #user_seq#
+		AND delYn = 'NO'
+</select> 
  
 <insert id="userDbResourceInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	INSERT INTO user_db_resource(resource_types, user_seq, db_seq, name, shared_type, description, restapi_yesno, restapi_uri, restapi_key)
@@ -636,15 +644,6 @@
 			delYn = 'NO'
 	</selectKey>
 </insert>
-
-<select id="userDbResourceTree" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
-	SELECT * FROM user_db_resource
-	WHERE
-		db_seq = #seq#  AND
-		resource_types in ('ERD', 'SQL') AND
-		delYn = 'NO'		
-	ORDER BY resource_types, name
-</select>
 
 <select id="userDbResourceManager" resultClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
 SELECT 
@@ -670,6 +669,15 @@ SELECT
   order by m.resource_types, m.resource_seq
 </select>
 
+<update id="userDbResourceHeadUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
+	update user_db_resource
+	set 
+		name = #name#
+	   ,description = #description#
+	WHERE
+		resource_seq = #resource_seq#
+</update>
+
 <update id="userDbResourceUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
 	update user_db_resource
 	set shared_type = #shared_type#
@@ -689,6 +697,8 @@ SELECT
 		AND delyn = 'NO'
 	order by seq
 </select>
+
+
 
 <select id="userDbResource" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO">
 	SELECT * FROM user_db_resource
@@ -781,9 +791,18 @@ SELECT
 	resource data를 저장합니다.
  -->
 <insert id="userDbResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO">
-	INSERT INTO user_db_resource_data(group_seq, user_db_resource_seq, datas)
-	VALUES(#group_seq#, #user_db_resource_seq#, #datas#)
+	INSERT INTO user_db_resource_data(user_seq, group_seq, user_db_resource_seq, datas)
+	VALUES(#user_seq#, #group_seq#, #user_db_resource_seq#, #datas#)
 </insert>
+
+<!-- 
+	AUTO SAVE 데이터를 삭제한다.
+ -->
+<delete id="userDbResourceDataAutoDelete" parameterClass="java.lang.Integer">
+	DELETE FROM user_db_resource_data
+	WHERE
+		user_db_resource_seq = #seq#
+</delete>
 
 <!-- 
 	resource data를 삭제합니다.
@@ -936,19 +955,21 @@ SELECT
 	  a.db_seq in ($db_seq$) AND 
 	 </isNotNull>
  <![CDATA[
-	  a.delyn = 'NO' AND
-	  a.seq = b.executed_sql_resource_seq AND
-	  a.startdateexecute >= #startTime# AND  
-      a.enddateexecute <= #endTime# AND
-      a.duration >= #duration# AND
-      b.datas like #strSearch# AND 
-      a.db_seq = db.seq AND
-      a.types = #type#
+	  		a.delyn = 'NO' 
+	  AND a.seq = b.executed_sql_resource_seq 
+	  AND a.startdateexecute >= #startTime# 
+      AND a.enddateexecute <= #endTime# 
+      AND a.duration >= #duration# 
+      AND b.datas like #strSearch#  
+      AND a.db_seq = db.seq
+]]>	       
+      <isNotNull property="type">
+      	AND a.types = #type#
+      </isNotNull>	
 	order by a.create_time desc
 	limit #count#
-]]>	
-</select>
 
+</select>
 
 <!-- 
 	쿼리의 실행 히스토리를 얻습니다.
@@ -974,24 +995,29 @@ SELECT
 		 executed_sql_resource_data b,
 		 tadpole_user u,
 		 tadpole_db db
-	where 1=1 AND
+	where 1=1 
 	 <isNotNull property="db_seq">
-	  a.db_seq in ($db_seq$) AND 
+	  AND  a.db_seq in ($db_seq$) 
 	 </isNotNull>
  <![CDATA[
-	  a.delyn = 'NO' AND
-	  u.email like #email# AND
-	  a.seq = b.executed_sql_resource_seq AND
-	  a.startdateexecute >= #startTime# AND  
-      a.enddateexecute <= #endTime# AND
-      a.duration >= #duration# AND
-      a.user_seq = u.seq AND
-      b.datas like #strSearch# AND 
-      a.db_seq = db.seq AND
-      a.types = #type#
+	  AND a.delyn = 'NO' 
+	  AND u.email like #email#
+	  AND a.seq = b.executed_sql_resource_seq 
+	  AND a.startdateexecute >= #startTime#   
+      AND a.enddateexecute <= #endTime# 
+      AND a.duration >= #duration# 
+      AND a.user_seq = u.seq 
+      AND b.datas like #strSearch#  
+      AND a.db_seq = db.seq 
+]]>	
+      
+       <isNotNull property="type">
+      	AND a.types = #type#
+      </isNotNull>
+      	
 	order by a.create_time desc
 	limit #count#
-]]>	
+
 </select>
 
 <!-- 
@@ -1008,7 +1034,7 @@ SELECT
 	  a.delyn = 'NO' AND
 	  a.seq = b.executed_sql_resource_seq AND
 	  b.datas like #filter#
-	order by a.create_time 
+	order by a.create_time desc
 	limit #count#	
 </select>
 

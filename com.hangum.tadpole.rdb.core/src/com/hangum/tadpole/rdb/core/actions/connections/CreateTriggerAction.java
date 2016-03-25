@@ -34,8 +34,8 @@ public class CreateTriggerAction extends AbstractQueryAction {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
 		FindEditorAndWriteQueryUtil.run(userDB, 
-				QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.TRIGGERS),
-				PublicTadpoleDefine.DB_ACTION.TRIGGERS);
+				QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS),
+				PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS);
 	}
 	
 }

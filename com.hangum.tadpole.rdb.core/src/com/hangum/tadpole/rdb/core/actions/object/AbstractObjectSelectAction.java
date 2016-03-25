@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
@@ -27,7 +27,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  */
 public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 
-	public AbstractObjectSelectAction(IWorkbenchWindow window, DB_ACTION actionType) {
+	public AbstractObjectSelectAction(IWorkbenchWindow window, OBJECT_TYPE actionType) {
 		super(window, actionType);
 	}
 

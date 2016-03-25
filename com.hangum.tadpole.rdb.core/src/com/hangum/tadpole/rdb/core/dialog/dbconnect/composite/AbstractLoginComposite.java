@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -39,6 +40,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBYesNoErroDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -140,14 +143,14 @@ public abstract class AbstractLoginComposite extends Composite {
 		
 		// 기존 데이터 업데이트
 		if(getDataActionStatus() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, "Confirm", Messages.SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			if(!MessageDialog.openConfirm(null, "Confirm", Messages.get().SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
 				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
-				logger.error(Messages.SQLiteLoginComposite_8, e);
+				logger.error(Messages.get().SQLiteLoginComposite_8, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.get().SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -157,9 +160,9 @@ public abstract class AbstractLoginComposite extends Composite {
 			try {
 				TadpoleSystem_UserDBQuery.newUserDB(userDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
-				logger.error(Messages.AbstractLoginComposite_0, e);
+				logger.error(Messages.get().AbstractLoginComposite_0, e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(), "Error", Messages.get().MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -232,7 +235,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	protected boolean isValidateDatabase(final UserDBDAO userDB, boolean isTest) {
 		if(!checkDatabase(userDB, isTest)) return false;
-		if(!isAlreadExistDB(userDB)) return false;
+		if(!isTest) if(!isAlreadExistDB(userDB)) return false;
 		
 		return true;
 	}
@@ -252,7 +255,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
 				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getUserSeq(), userDBDao, oldUserDB)) {
-					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
+					MessageDialog.openError(null, Messages.get().DBLoginDialog_23, Messages.get().AbstractLoginComposite_4);
 					return false;
 				}
 				
@@ -260,7 +263,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
 				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getUserSeq(), userDBDao)) {
-					MessageDialog.openError(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_4);
+					MessageDialog.openError(null, Messages.get().DBLoginDialog_23, Messages.get().AbstractLoginComposite_4);
 					
 					return false;
 				}
@@ -269,7 +272,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getUserSeq(), userDBDao)){
 					
 					// 중복 디비 등록시 사용자의 의견을 묻습니다.
-					if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_23, Messages.AbstractLoginComposite_2)) {
+					if(MessageDialog.openConfirm(null, Messages.get().DBLoginDialog_23, Messages.get().AbstractLoginComposite_2)) {
 						return true;
 					} 
 					
@@ -279,7 +282,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			
 		} catch(Exception e) {
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_26, Messages.DBLoginDialog_27 + "\n" + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.get().DBLoginDialog_26, Messages.get().DBLoginDialog_27 + "\n" + e.getMessage()); //$NON-NLS-1$
 			
 			return false;
 		}
@@ -320,6 +323,18 @@ public abstract class AbstractLoginComposite extends Composite {
 			
 			return true;
 		} catch (Exception e) {
+			String errMsg = e.getMessage();
+			
+			// driver 가 없을때 메시지 추가.
+			try {
+				Throwable cause = e.getCause().getCause();
+				if(cause instanceof ClassNotFoundException) {
+					errMsg = String.format(Messages.get().TadpoleTableComposite_driverMsg, userDB.getDbms_type(), e.getMessage());
+				}
+			} catch(Exception ee) {
+				// igonre exception
+			}
+			
 			logger.error("DB Connecting... [url]"+ loginInfo.getUrl(), e); //$NON-NLS-1$
 			// If UserDBDao is not invalid, remove UserDBDao at internal cache
 			TadpoleSQLManager.removeInstance(loginInfo);
@@ -327,9 +342,14 @@ public abstract class AbstractLoginComposite extends Composite {
 			// mssql 데이터베이스가 연결되지 않으면 등록되면 안됩니다. 하여서 제외합니다.
 			// https://github.com/hangum/TadpoleForDBTools/issues/512 
 			if(!isTest) {// && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
-				if(MessageDialog.openConfirm(null, Messages.DBLoginDialog_26, Messages.AbstractLoginComposite_3  + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR + e.getMessage())) return true;
+				TDBYesNoErroDialog dialog = new TDBYesNoErroDialog(getShell(), 
+													loginInfo.getDb() + " Test", 
+													String.format(Messages.get().AbstractLoginComposite_3, errMsg));
+				if(dialog.open() == IDialogConstants.OK_ID) return true;
+			
 			} else {
-				MessageDialog.openError(null, "Confirm", Messages.AbstractLoginComposite_1 + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR + e.getMessage());
+				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), loginInfo.getDb() + " Test", errMsg);
+				dialog.open();
 			}
 			
 			return false;
@@ -345,7 +365,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	protected boolean checkTextCtl(Text text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
+			MessageDialog.openError(null, Messages.get().DBLoginDialog_10, msg + Messages.get().MySQLLoginComposite_10);
 			text.setFocus();
 			
 			return false;
@@ -363,7 +383,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	protected boolean checkTextCtl(Combo text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.DBLoginDialog_10, msg + Messages.MySQLLoginComposite_10);
+			MessageDialog.openError(null, Messages.get().DBLoginDialog_10, msg + Messages.get().MySQLLoginComposite_10);
 			text.setFocus();
 			
 			return false;

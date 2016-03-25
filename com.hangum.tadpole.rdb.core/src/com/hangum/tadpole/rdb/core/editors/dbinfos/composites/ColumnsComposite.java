@@ -18,8 +18,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -31,10 +33,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.Utils;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO;
@@ -61,6 +69,10 @@ public class ColumnsComposite extends Composite {
 
 	private DefaultTableColumnFilter columnFilter;
 	private Text textFilter;
+	
+	/** download servcie handler. */
+	private Composite compositeTail;
+	private DownloadServiceHandler downloadServiceHandler;
 
 	/**
 	 * Create the composite.
@@ -80,7 +92,7 @@ public class ColumnsComposite extends Composite {
 
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.ColumnsComposite_0);
+		lblNewLabel.setText(Messages.get().ColumnsComposite_0);
 
 		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -101,13 +113,28 @@ public class ColumnsComposite extends Composite {
 				initUI();
 			}
 		});
-		btnRefresh.setText(Messages.ColumnsComposite_1);
+		btnRefresh.setText(Messages.get().ColumnsComposite_1);
 
 		tvColumnInform = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvColumnInform.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		compositeTail = new Composite(this, SWT.NONE);
+		compositeTail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		compositeTail.setLayout(new GridLayout(1, false));
+		
+		Button btnDownload = new Button(compositeTail, SWT.NONE);
+		btnDownload.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				download();
+			}
+		});
+		btnDownload.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnDownload.setBounds(0, 0, 94, 28);
+		btnDownload.setText(Messages.get().ColumnsComposite_btnDownload_text);
 
 		createTableColumn();
 
@@ -115,7 +142,77 @@ public class ColumnsComposite extends Composite {
 		tvColumnInform.addFilter(columnFilter);
 
 		initUI();
+		registerServiceHandler();
 	}
+	
+	/** download service handler call */
+	private void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
+	}
+	
+	/**
+	 * download
+	 */
+	private void download() {
+		if(tvColumnInform.getTable().getItemCount() == 0) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_3)) return;
+			
+		List<String[]> listCsvData = new ArrayList<String[]>();
+		
+		// add header
+		Table tbl = tvColumnInform.getTable();
+		TableColumn[] tcs = tbl.getColumns();
+		String[] strArryHeader = new String[tcs.length];
+		for (int i=0; i<strArryHeader.length; i++) {
+			strArryHeader[i] = tcs[i].getText();
+		}
+		listCsvData.add(strArryHeader);
+	
+		String[] strArryData = new String[tcs.length];
+		for (int i=0; i<tbl.getItemCount(); i++ ) {
+			strArryData = new String[tbl.getColumnCount()];
+			
+			TableItem gi = tbl.getItem(i);
+			for(int intCnt = 0; intCnt<tcs.length; intCnt++) {
+				strArryData[intCnt] = Utils.convHtmlToLine(gi.getText(intCnt));
+			}
+			listCsvData.add(strArryData);
+		}
+		
+		try {
+			String strCVSContent = CSVFileUtils.makeData(listCsvData);
+			downloadExtFile("ColumnInformation.csv", strCVSContent); //$NON-NLS-1$
+			
+			MessageDialog.openInformation(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_5);
+		} catch (Exception e) {
+			logger.error("Save CSV Data", e); //$NON-NLS-1$
+		}		
+	}
+
+	/**
+	 * download external file
+	 * 
+	 * @param fileName
+	 * @param newContents
+	 */
+	public void downloadExtFile(String fileName, String newContents) {
+		downloadServiceHandler.setName(fileName);
+		downloadServiceHandler.setByteContent(newContents.getBytes());
+		
+		DownloadUtils.provideDownload(compositeTail, downloadServiceHandler.getId());
+	}
+	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	public void dispose() {
+		unregisterServiceHandler();
+		super.dispose();
+	};
 
 	/**
 	 * table column head를 생성합니다.
@@ -248,7 +345,7 @@ public class ColumnsComposite extends Composite {
 			logger.error("initialize column summary", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 	}
 

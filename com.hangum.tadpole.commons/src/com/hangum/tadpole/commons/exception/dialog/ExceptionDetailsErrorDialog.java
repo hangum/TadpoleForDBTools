@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
 /**
  * A dialog to display one or more errors to the user, as contained in an
@@ -170,6 +171,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText(title);
+        shell.setImage(GlobalImageUtils.getTadpoleIcon());
     }
 
     /*
@@ -177,7 +179,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      */
     protected void createButtonsForButtonBar(Composite parent) {
         // create OK and Details buttons
-        createButton(parent, IDialogConstants.OK_ID, Messages.ExceptionDetailsErrorDialog_2, true);
+        createButton(parent, IDialogConstants.OK_ID, Messages.get().Confirm, true);
         createDetailsButton(parent);
     }
 
@@ -188,7 +190,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      */
 	protected void createDetailsButton(Composite parent) {
 		if (shouldShowDetailsButton()) {
-            detailsButton = createButton(parent, IDialogConstants.DETAILS_ID, Messages.ExceptionDetailsErrorDialog_3, false);
+            detailsButton = createButton(parent, IDialogConstants.DETAILS_ID, Messages.get().ExceptionDetailsErrorDialog_3, false);
         }
 	}
 
@@ -490,10 +492,10 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
         if (listCreated) {
             text.dispose();
             listCreated = false;
-            detailsButton.setText(Messages.ExceptionDetailsErrorDialog_3);
+            detailsButton.setText(Messages.get().ExceptionDetailsErrorDialog_3);
         } else {
             text = createDropDownList((Composite) getContents());
-            detailsButton.setText(Messages.ExceptionDetailsErrorDialog_5);
+            detailsButton.setText(Messages.get().ExceptionDetailsErrorDialog_5);
         }
         Point newSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
         getShell()

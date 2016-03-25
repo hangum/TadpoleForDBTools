@@ -11,17 +11,20 @@
 package com.hangum.tadpole.engine.sql.util.executer.procedure;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.OracleDbmsOutputUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -77,16 +80,24 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 		java.sql.CallableStatement cstmt = null;
 		java.sql.PreparedStatement pstmt = null;
 
+		OracleDbmsOutputUtil dbmsOutput = null;
 		try {
 			if(listOutParamValues == null) getOutParameters();
 
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
+			try {
+				dbmsOutput = new OracleDbmsOutputUtil( javaConn );
+				dbmsOutput.enable(1000000);
+			} catch(SQLException e) { 
+				logger.error("dbmsoutput exception", e); 
+			}
+			 
 			// make the script
 			String strExecuteScript = getMakeExecuteScript();
 			
-			if (strExecuteScript.startsWith("select")){
+			if (StringUtils.startsWithIgnoreCase(strExecuteScript, "SELECT")){
 				// function execute...
 				
 				pstmt = javaConn.prepareStatement(strExecuteScript);
@@ -175,6 +186,8 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 					setResultNoCursor(new TadpoleResultSet(sourceDataList));
 				}
 			}
+			try { dbmsOutput.show(); } catch(SQLException e) { logger.error("dbmsoutput exception", e); }
+			setStrOutput(dbmsOutput.getOutput());
 			
 			return true;
 		} catch (Exception e) {
@@ -183,6 +196,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 		} finally {
 			try { if(pstmt != null) pstmt.close(); } catch (Exception e) {  }
 			try { if(cstmt != null) cstmt.close(); } catch (Exception e) {  }
+			try { if(dbmsOutput != null) dbmsOutput.close(); } catch (Exception e) {  }
 			try { if(javaConn != null) javaConn.close(); } catch (Exception e) { }
 		}
 	}

@@ -21,7 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.commons.dialogs.message.dao.SQLHistoryDAO;
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.swtdesigner.SWTResourceManager;
 
@@ -40,8 +40,8 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		if(element instanceof SQLHistoryDAO) {
-			SQLHistoryDAO historyDAO = (SQLHistoryDAO)element;
+		if(element instanceof RequestResultDAO) {
+			RequestResultDAO historyDAO = (RequestResultDAO)element;
 			
 			switch(columnIndex) {
 				case 0: return dateToStr(historyDAO.getStartDateExecute());
@@ -94,8 +94,8 @@ public class SQLHistoryLabelProvider extends LabelProvider implements ITableLabe
 	 */
 	@Override
 	public Color getBackground(Object element, int columnIndex) {
-		if(element instanceof SQLHistoryDAO) {
-			SQLHistoryDAO historyDAO = (SQLHistoryDAO)element;
+		if(element instanceof RequestResultDAO) {
+			RequestResultDAO historyDAO = (RequestResultDAO)element;
 			String strResult = historyDAO.getResult();
 			if("F".equals(strResult)) {
 				return SWTResourceManager.getColor(240, 180, 167);

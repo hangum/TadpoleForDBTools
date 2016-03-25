@@ -10,636 +10,335 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core;
 
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.rap.rwt.RWT;
 
-public class Messages extends NLS {
+public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.manager.core.messages"; //$NON-NLS-1$
 
-	public static String AdminUserListComposite_0;
+	public String APIName;
 
-	public static String AdminUserListComposite_1;
+	public String APIURL;
 
-	public static String AdminUserListComposite_10;
+	public String RUN;
 
-	public static String AdminUserListComposite_11;
+	public String APIServiceDialog_11;
 
-	public static String AdminUserListComposite_12;
+	public String Argument;
 
-	public static String AdminUserListComposite_2;
+	public String ResultType;
 
-	public static String AdminUserListComposite_3;
+	public String AddHeader;
 
-	public static String AdminUserListComposite_4;
+	public String APIServiceDialog_5;
 
-	public static String AdminUserListComposite_5;
+	public String Result;
 
-	public static String AdminUserListComposite_6;
+	public String APIServiceDialog_7;
 
-	public static String AdminUserListComposite_7;
+	public String Close;
 
-	public static String AdminUserListComposite_8;
+	public String Download;
 
-	public static String AdminUserListComposite_9;
+	public String DBAccessControlDialog_0;
 
-	public static String APIServiceDialog_0;
+	public String DBName;
 
-	public static String APIServiceDialog_1;
+	public String Delete;
 
-	public static String APIServiceDialog_10;
+	public String Table;
 
-	public static String APIServiceDialog_11;
+	public String DBAccessControlDialog_12;
 
-	public static String APIServiceDialog_2;
+	public String Column;
 
-	public static String APIServiceDialog_3;
+	public String User;
 
-	public static String APIServiceDialog_4;
+	public String DBAccessControlDialog_22;
 
-	public static String APIServiceDialog_5;
+	public String Error;
 
-	public static String APIServiceDialog_6;
+	public String DBAccessControlDialog_25;
 
-	public static String APIServiceDialog_7;
+	public String Save;
 
-	public static String APIServiceDialog_8;
+	public String CANCEL;
 
-	public static String APIServiceDialog_9;
+	public String DBAccessControlDialog_5;
 
-	public static String DBAccessControlDialog_0;
+	public String SELECT;
 
-	public static String DBAccessControlDialog_1;
+	public String Add;
 
-	public static String DBAccessControlDialog_10;
+	public String Confirm;
 
-	public static String DBAccessControlDialog_11;
+	public String DBAccessControlDialog_9;
 
-	public static String DBAccessControlDialog_12;
+	public String Refresh;
 
-	public static String DBAccessControlDialog_13;
+	public String DBListComposite_1;
 
-	public static String DBAccessControlDialog_2;
+	public String DBListComposite_10;
 
-	public static String DBAccessControlDialog_22;
+	public String DBListComposite_11;
 
-	public static String DBAccessControlDialog_23;
+	public String Role;
 
-	public static String DBAccessControlDialog_24;
+	public String DBInfo;
 
-	public static String DBAccessControlDialog_25;
+	public String DBListComposite_15;
 
-	public static String DBAccessControlDialog_26;
+	public String DBListComposite_16;
 
-	public static String DBAccessControlDialog_27;
+	public String DBListComposite_18;
 
-	public static String DBAccessControlDialog_5;
+	public String QueryHistory;
 
-	public static String DBAccessControlDialog_6;
+	public String DBListComposite_24;
 
-	public static String DBAccessControlDialog_7;
+	public String DBListComposite_25;
 
-	public static String DBAccessControlDialog_8;
+	public String DBListComposite_26;
 
-	public static String DBAccessControlDialog_9;
+	public String DBListComposite_3;
 
-	public static String DBListComposite_0;
+	public String DBListComposite_4;
 
-	public static String DBListComposite_1;
+	public String DBListComposite_5;
 
-	public static String DBListComposite_10;
+	public String DBListComposite_6;
 
-	public static String DBListComposite_11;
+	public String DBListComposite_8;
 
-	public static String DBListComposite_12;
+	public String Search;
 
-	public static String DBListComposite_13;
+	public String DBOthresConfigDialog_0;
 
-	public static String DBListComposite_14;
+	public String DBOthresConfigDialog_2;
 
-	public static String DBListComposite_15;
+	public String DBOthresConfigDialog_3;
 
-	public static String DBListComposite_16;
+	public String DBOthresConfigDialog_5;
 
-	public static String DBListComposite_17;
+	public String DetailUserAndDBRoleDialog_0;
 
-	public static String DBListComposite_18;
+	public String Email;
 
-	public static String DBListComposite_19;
+	public String DetailUserAndDBRoleDialog_11;
 
-	public static String DBListComposite_2;
+	public String DetailUserAndDBRoleDialog_14;
 
-	public static String DBListComposite_20;
+	public String Update;
 
-	public static String DBListComposite_21;
+	public String DetailUserAndDBRoleDialog_8;
 
-	public static String DBListComposite_22;
+	public String SQLAudit;
 
-	public static String DBListComposite_23;
+	public String ExecutedSQLAction_2;
 
-	public static String DBListComposite_24;
+	public String IP;
 
-	public static String DBListComposite_25;
+	public String Type;
 
-	public static String DBListComposite_3;
+	public String Term;
 
-	public static String DBListComposite_4;
+	public String ExecutedSQLEditor_17;
 
-	public static String DBListComposite_5;
+	public String Message;
 
-	public static String DBListComposite_6;
+	public String SQL;
 
-	public static String DBListComposite_7;
+	public String Sec;
 
-	public static String DBListComposite_8;
+	public String ExecutedSQLEditor_28;
 
-	public static String DBListComposite_9;
+	public String ExecutedSQLEditor_31;
 
-	public static String DBOthresConfigDialog_0;
+	public String ExecutedSQLEditor_5;
 
-	public static String DBOthresConfigDialog_1;
+	public String ExecutedSQLEditor_6;
 
-	public static String DBOthresConfigDialog_2;
+	public String ExecutedSQLEditor_7;
 
-	public static String DBOthresConfigDialog_3;
+	public String ExecutedSQLEditor_9;
 
-	public static String DBOthresConfigDialog_4;
+	public String FindUserAndDBRoleDialog_0;
 
-	public static String DBOthresConfigDialog_5;
+	public String FindUserAndDBRoleDialog_1;
 
-	public static String DBOthresConfigDialog_7;
+	public String FindUserAndDBRoleDialog_10;
 
-	public static String DBOthresConfigDialog_8;
+	public String FindUserAndDBRoleDialog_12;
 
-	public static String DetailUserAndDBRoleDialog_0;
+	public String RoleType;
 
-	public static String DetailUserAndDBRoleDialog_1;
+	public String FindUserAndDBRoleDialog_15;
 
-	public static String DetailUserAndDBRoleDialog_11;
+	public String Name;
 
-	public static String DetailUserAndDBRoleDialog_14;
+	public String CreateTime;
 
-	public static String DetailUserAndDBRoleDialog_15;
+	public String FindUserAndDBRoleDialog_3;
 
-	public static String DetailUserAndDBRoleDialog_16;
+	public String FindUserAndDBRoleDialog_6;
 
-	public static String DetailUserAndDBRoleDialog_2;
+	public String FindUserDialog_4;
 
-	public static String DetailUserAndDBRoleDialog_4;
+	public String FindUserDialog_6;
 
-	public static String DetailUserAndDBRoleDialog_7;
+	public String GeneralConnecionPoolLabelprovider_0;
 
-	public static String DetailUserAndDBRoleDialog_8;
+	public String GeneralConnecionPoolLabelprovider_1;
 
-	public static String DetailUserAndDBRoleDialog_9;
+	public String GeneralConnecionPoolLabelprovider_2;
 
-	public static String ExecutedSQLAction_0;
+	public String GeneralConnecionPoolLabelprovider_3;
 
-	public static String ExecutedSQLAction_1;
+	public String SchemaHistoryAction_0;
 
-	public static String ExecutedSQLAction_2;
+	public String Database;
 
-	public static String ExecutedSQLEditor_10;
+	public String SchemaHistoryEditor_15;
 
-	public static String ExecutedSQLEditor_11;
+	public String Date;
 
-	public static String ExecutedSQLEditor_12;
+	public String SchemaHistoryEditor_2;
 
-	public static String ExecutedSQLEditor_13;
+	public String SchemaHistoryEditor_22;
 
-	public static String ExecutedSQLEditor_14;
+	public String SchemaHistoryEditor_35;
 
-	public static String ExecutedSQLEditor_15;
+	public String SchemaHistoryEditor_36;
 
-	public static String ExecutedSQLEditor_17;
+	public String SchemaHistoryEditor_37;
 
-	public static String ExecutedSQLEditor_19;
+	public String SchemaHistoryEditor_38;
 
-	public static String ExecutedSQLEditor_2;
+	public String SchemaHistoryEditor_7;
 
-	public static String ExecutedSQLEditor_25;
+	public String SQLAuditEditor_0;
 
-	public static String ExecutedSQLEditor_26;
+	public String SQLAuditEditor_1;
 
-	public static String ExecutedSQLEditor_27;
+	public String SQLAuditEditor_2;
 
-	public static String ExecutedSQLEditor_28;
+	public String SystemDBDataManager_8;
 
-	public static String ExecutedSQLEditor_3;
+	public String Filter;
 
-	public static String ExecutedSQLEditor_31;
+	public String ResourceManageEditor_18;
 
-	public static String ExecutedSQLEditor_4;
+	public String CreateDate;
 
-	public static String ExecutedSQLEditor_5;
+	public String ResourceManageEditor_26;
 
-	public static String ExecutedSQLEditor_6;
+	public String ResourceManageEditor_27;
 
-	public static String ExecutedSQLEditor_7;
+	public String ResourceManageEditor_3;
 
-	public static String ExecutedSQLEditor_8;
+	public String ResourceManageEditor_30;
 
-	public static String ExecutedSQLEditor_9;
+	public String ResourceManageEditor_32;
 
-	public static String ExecutedSQLEditorInput_0;
+	public String ResourceManageEditor_35;
 
-	public static String ExecutedSQLEditorInput_1;
+	public String ResourceManageEditor_38;
 
-	public static String FindUserAndDBRoleDialog_0;
+	public String ResourceManageEditor_40;
 
-	public static String FindUserAndDBRoleDialog_1;
+	public String ResourceManageEditor_41;
 
-	public static String FindUserAndDBRoleDialog_10;
+	public String ResourceManageEditor_42;
 
-	public static String FindUserAndDBRoleDialog_12;
+	public String ResourceManageEditor_44;
 
-	public static String FindUserAndDBRoleDialog_13;
+	public String ResourceManageEditor_45;
 
-	public static String FindUserAndDBRoleDialog_14;
+	public String ResourceManageEditor_5;
 
-	public static String FindUserAndDBRoleDialog_15;
+	public String ResourceManagerAction_0;
 
-	public static String FindUserAndDBRoleDialog_16;
+	public String RestfulAPIManagerAction_0;
 
-	public static String FindUserAndDBRoleDialog_17;
+	public String URL;
 
-	public static String FindUserAndDBRoleDialog_18;
+	public String Description;
 
-	public static String FindUserAndDBRoleDialog_19;
+	public String DetailItem;
 
-	public static String FindUserAndDBRoleDialog_2;
+	public String Share;
 
-	public static String FindUserAndDBRoleDialog_20;
+	public String Title;
 
-	public static String FindUserAndDBRoleDialog_3;
+	public String RESTFulAPIManagerEditor_22;
 
-	public static String FindUserAndDBRoleDialog_4;
+	public String RESTFulAPIManagerEditor_27;
 
-	public static String FindUserAndDBRoleDialog_5;
+	public String RESTFulAPIManagerEditor_3;
 
-	public static String FindUserAndDBRoleDialog_6;
+	public String RESTFulAPIManagerEditor_30;
 
-	public static String FindUserAndDBRoleDialog_7;
+	public String RESTFulAPIManagerEditor_31;
 
-	public static String FindUserDialog_4;
+	public String RESTFulAPIManagerEditor_34;
 
-	public static String FindUserDialog_6;
+	public String RESTFulAPIManagerEditor_36;
 
-	public static String GeneralConnecionPoolLabelprovider_0;
+	public String RESTFulAPIManagerEditor_39;
 
-	public static String GeneralConnecionPoolLabelprovider_1;
+	public String RESTFulAPIManagerEditor_44;
 
-	public static String GeneralConnecionPoolLabelprovider_2;
+	public String RESTFulAPIManagerEditor_45;
 
-	public static String GeneralConnecionPoolLabelprovider_3;
+	public String RESTFulAPIManagerEditor_46;
 
-	public static String ModifyUserDialog_0;
+	public String RESTFulAPIManagerEditor_48;
 
-	public static String ModifyUserDialog_1;
+	public String TransactionConnectionListEditor_0;
 
-	public static String ModifyUserDialog_11;
+	public String TransactionConnectionListEditor_1;
 
-	public static String ModifyUserDialog_12;
+	public String TransactionConnectionListEditor_13;
 
-	public static String ModifyUserDialog_13;
+	public String TransactionConnectionListEditor_14;
 
-	public static String ModifyUserDialog_14;
+	public String TransactionConnectionListEditor_16;
 
-	public static String ModifyUserDialog_2;
+	public String TransactionConnectionListEditor_2;
 
-	public static String ModifyUserDialog_3;
+	public String TransactionConnectionListEditor_5;
 
-	public static String ModifyUserDialog_4;
+	public String TransactionConnectionListEditor_6;
 
-	public static String ModifyUserDialog_5;
+	public String TransactionConnectionListEditor_8;
 
-	public static String ModifyUserDialog_6;
+	public String TransactionConnectionListEditor_9;
 
-	public static String ModifyUserDialog_7;
+	public String TransactionConnectionListEditorInput_0;
 
-	public static String NewUserDialog_0;
-	public static String NewUserDialog_1;
-	public static String NewUserDialog_10;
-	public static String NewUserDialog_11;
-	public static String NewUserDialog_12;
-	public static String NewUserDialog_13;
+	public String TransactionConnectionManagerAction_0;
 
-	public static String NewUserDialog_14;
-	public static String NewUserDialog_15;
+	public String UserAPIServiceDialog_0;
 
-	public static String NewUserDialog_16;
-	public static String NewUserDialog_17;
+	public String APIKey;
 
-	public static String NewUserDialog_18;
-	public static String NewUserDialog_19;
-	public static String NewUserDialog_2;
-	public static String NewUserDialog_20;
+	public String UserAPIServiceDialog_10;
 
-	public static String NewUserDialog_21;
+	public String UserAPIServiceDialog_12;
 
-	public static String NewUserDialog_24;
+	public String UserAPIServiceDialog_5;
 
-	public static String NewUserDialog_29;
+	public String UserAPIServiceDialog_6;
 
-	public static String NewUserDialog_3;
+	public String UserPermissionAction_2;
 
-	public static String NewUserDialog_31;
+	public String UserPermissionAction_3;
 
-	public static String NewUserDialog_32;
+	public String DBListComposite_2;
 
-	public static String NewUserDialog_34;
-	public static String NewUserDialog_4;
+	public String ResourceManageEditor_23;
 
-	public static String NewUserDialog_40;
-
-	public static String NewUserDialog_42;
-
-	public static String NewUserDialog_5;
-
-	public static String NewUserDialog_6;
-	public static String NewUserDialog_7;
-	public static String NewUserDialog_8;
-	public static String NewUserDialog_9;
-	public static String NewUserDialog_lblUserType_text;
-	public static String NewUserDialog_btnManager_text;
-	public static String NewUserDialog_btnManager_text_1;
-	public static String NewUserDialog_btnUser_text;
-	public static String NewUserDialog_lblLanguage_text;
-
-	public static String SchemaHistoryAction_0;
-
-	public static String SchemaHistoryAction_1;
-
-	public static String SchemaHistoryAction_2;
-
-	public static String SchemaHistoryEditor_1;
-
-	public static String SchemaHistoryEditor_15;
-
-	public static String SchemaHistoryEditor_16;
-
-	public static String SchemaHistoryEditor_2;
-
-	public static String SchemaHistoryEditor_20;
-
-	public static String SchemaHistoryEditor_22;
-
-	public static String SchemaHistoryEditor_23;
-
-	public static String SchemaHistoryEditor_35;
-
-	public static String SchemaHistoryEditor_36;
-
-	public static String SchemaHistoryEditor_37;
-
-	public static String SchemaHistoryEditor_38;
-
-	public static String SchemaHistoryEditor_39;
-
-	public static String SchemaHistoryEditor_7;
-
-	public static String SchemaHistoryEditorInput_0;
-
-	public static String SchemaHistoryEditorInput_1;
-
-	public static String SystemDBDataManager_8;
-	public static String NewUserDialog_lblGoogleOpt_text;
-	public static String NewUserDialog_btnCheckButton_text;
-	public static String NewUserDialog_lblAccessKey_text;
-	public static String NewUserDialog_grpGoogleOtp_text;
-	public static String NewUserDialog_lblAccessKey_1_text;
-	public static String NewUserDialog_lblQrcodeUrl_text;
-	public static String NewUserDialog_lblOtpCdoe_text;
-
-	public static String ResourceManageEditor_0;
-
-	public static String ResourceManageEditor_1;
-
-	public static String ResourceManageEditor_11;
-
-	public static String ResourceManageEditor_12;
-
-	public static String ResourceManageEditor_13;
-
-	public static String ResourceManageEditor_15;
-
-	public static String ResourceManageEditor_16;
-
-	public static String ResourceManageEditor_17;
-
-	public static String ResourceManageEditor_18;
-
-	public static String ResourceManageEditor_20;
-
-	public static String ResourceManageEditor_22;
-
-	public static String ResourceManageEditor_23;
-
-	public static String ResourceManageEditor_25;
-
-	public static String ResourceManageEditor_26;
-
-	public static String ResourceManageEditor_27;
-
-	public static String ResourceManageEditor_3;
-
-	public static String ResourceManageEditor_30;
-
-	public static String ResourceManageEditor_32;
-
-	public static String ResourceManageEditor_33;
-
-	public static String ResourceManageEditor_34;
-
-	public static String ResourceManageEditor_35;
-
-	public static String ResourceManageEditor_38;
-
-	public static String ResourceManageEditor_40;
-
-	public static String ResourceManageEditor_41;
-
-	public static String ResourceManageEditor_42;
-
-	public static String ResourceManageEditor_44;
-
-	public static String ResourceManageEditor_45;
-
-	public static String ResourceManageEditor_5;
-
-	public static String ResourceManageEditor_7;
-
-	public static String ResourceManageEditor_9;
-
-	public static String ResourceManagerAction_0;
-
-	public static String ResourceManagerAction_1;
-
-	public static String ResourceManagerEditorInput_0;
-
-	public static String ResourceManagerEditorInput_1;
-
-	public static String RestfulAPIManagerAction_0;
-
-	public static String RestfulAPIManagerAction_1;
-
-	public static String RESTFulAPIManagerEditor_1;
-
-	public static String RESTFulAPIManagerEditor_12;
-
-	public static String RESTFulAPIManagerEditor_13;
-
-	public static String RESTFulAPIManagerEditor_14;
-
-	public static String RESTFulAPIManagerEditor_15;
-
-	public static String RESTFulAPIManagerEditor_16;
-
-	public static String RESTFulAPIManagerEditor_17;
-
-	public static String RESTFulAPIManagerEditor_2;
-
-	public static String RESTFulAPIManagerEditor_20;
-
-	public static String RESTFulAPIManagerEditor_21;
-
-	public static String RESTFulAPIManagerEditor_22;
-
-	public static String RESTFulAPIManagerEditor_26;
-
-	public static String RESTFulAPIManagerEditor_27;
-
-	public static String RESTFulAPIManagerEditor_3;
-
-	public static String RESTFulAPIManagerEditor_30;
-
-	public static String RESTFulAPIManagerEditor_31;
-
-	public static String RESTFulAPIManagerEditor_33;
-
-	public static String RESTFulAPIManagerEditor_34;
-
-	public static String RESTFulAPIManagerEditor_35;
-
-	public static String RESTFulAPIManagerEditor_36;
-
-	public static String RESTFulAPIManagerEditor_37;
-
-	public static String RESTFulAPIManagerEditor_38;
-
-	public static String RESTFulAPIManagerEditor_39;
-
-	public static String RESTFulAPIManagerEditor_42;
-
-	public static String RESTFulAPIManagerEditor_44;
-
-	public static String RESTFulAPIManagerEditor_45;
-
-	public static String RESTFulAPIManagerEditor_46;
-
-	public static String RESTFulAPIManagerEditor_48;
-
-	public static String TransactionConnectionListEditor_0;
-
-	public static String TransactionConnectionListEditor_1;
-
-	public static String TransactionConnectionListEditor_12;
-
-	public static String TransactionConnectionListEditor_13;
-
-	public static String TransactionConnectionListEditor_14;
-
-	public static String TransactionConnectionListEditor_15;
-
-	public static String TransactionConnectionListEditor_16;
-
-	public static String TransactionConnectionListEditor_2;
-
-	public static String TransactionConnectionListEditor_4;
-
-	public static String TransactionConnectionListEditor_5;
-
-	public static String TransactionConnectionListEditor_6;
-
-	public static String TransactionConnectionListEditor_8;
-
-	public static String TransactionConnectionListEditor_9;
-
-	public static String TransactionConnectionListEditorInput_0;
-
-	public static String TransactionConnectionListEditorInput_1;
-
-	public static String TransactionConnectionManagerAction_0;
-
-	public static String TransactionConnectionManagerAction_1;
-
-	public static String UserAPIServiceDialog_0;
-
-	public static String UserAPIServiceDialog_1;
-
-	public static String UserAPIServiceDialog_10;
-
-	public static String UserAPIServiceDialog_12;
-
-	public static String UserAPIServiceDialog_2;
-
-	public static String UserAPIServiceDialog_25;
-
-	public static String UserAPIServiceDialog_26;
-
-	public static String UserAPIServiceDialog_27;
-
-	public static String UserAPIServiceDialog_3;
-
-	public static String UserAPIServiceDialog_4;
-
-	public static String UserAPIServiceDialog_5;
-
-	public static String UserAPIServiceDialog_6;
-
-	public static String UserAPIServiceDialog_9;
-
-	public static String UserListComposite_0;
-
-	public static String UserListComposite_1;
-
-	public static String UserListComposite_16;
-
-	public static String UserListComposite_17;
-
-	public static String UserListComposite_18;
-
-	public static String UserListComposite_2;
-
-	public static String UserListComposite_3;
-
-	public static String UserListComposite_4;
-
-	public static String UserListComposite_5;
-
-	public static String UserManagementEditor_1;
-
-	public static String UserManagementEditor_2;
-
-	public static String UserManagementEditorInput_0;
-
-	public static String UserManagementEditorInput_1;
-
-	public static String UserManagementEditorInput_2;
-
-	public static String UserManagementEditorInput_3;
-
-	public static String UserPermissionAction_0;
-
-	public static String UserPermissionAction_1;
-
-	public static String UserPermissionAction_2;
-
-	public static String UserPermissionAction_3;
-
-	public static String UserPermissionAction_4;
-	
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	public static Messages get() {
+		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
 
 	private Messages() {

@@ -22,9 +22,13 @@ public class UserDBResourceDataDAO {
 	int seq;
 	long group_seq;  
 	int user_db_resource_seq;
-	String datas;
+	int user_seq;
+	String datas = "";
 	String delyn;
 	Timestamp create_time;
+	String sqliteCreate_time;
+	
+	String usernames;
 	
 	public UserDBResourceDataDAO() {
 	}
@@ -92,6 +96,48 @@ public class UserDBResourceDataDAO {
 	 */
 	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
+	}
+
+	/**
+	 * @return the user_seq
+	 */
+	public int getUser_seq() {
+		return user_seq;
+	}
+
+	/**
+	 * @param user_seq the user_seq to set
+	 */
+	public void setUser_seq(int user_seq) {
+		this.user_seq = user_seq;
+	}
+
+	/**
+	 * @return the usernames
+	 */
+	public String getUsernames() {
+		return usernames;
+	}
+
+	/**
+	 * @param usernames the usernames to set
+	 */
+	public void setUsernames(String usernames) {
+		this.usernames = usernames;
+	}
+
+	/**
+	 * @return the sqliteCreate_time
+	 */
+	public String getSqliteCreate_time() {
+		return sqliteCreate_time;
+	}
+
+	/**
+	 * @param sqliteCreate_time the sqliteCreate_time to set
+	 */
+	public void setSqliteCreate_time(String sqliteCreate_time) {
+		this.sqliteCreate_time = sqliteCreate_time;
 	}
 
 	

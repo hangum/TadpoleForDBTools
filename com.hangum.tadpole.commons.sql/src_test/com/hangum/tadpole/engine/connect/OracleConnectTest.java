@@ -17,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.Properties;
 
-import oracle.jdbc.internal.OracleResultSetMetaData;
-
 /**
  * oracle connect test 
  * 
@@ -44,9 +42,9 @@ public class OracleConnectTest extends AbstractDriverInfo {
 			ResultSet result = preStatement.executeQuery();
 			
 			ResultSetMetaData rsm = result.getMetaData();
-			OracleResultSetMetaData orsm = (OracleResultSetMetaData)rsm;
-			System.out.println("Table name is " + rsm.getTableName(1) + "." + " column is " + rsm.getColumnName(1)) ;
-			System.out.println("Table name is " + orsm.getTableName(1) + "." + orsm.getCatalogName(1)) ;
+//			OracleResultSetMetaData orsm = (OracleResultSetMetaData)rsm;
+//			System.out.println("Table name is " + rsm.getTableName(1) + "." + " column is " + rsm.getColumnName(1)) ;
+//			System.out.println("Table name is " + orsm.getTableName(1) + "." + orsm.getCatalogName(1)) ;
 			
 	
 //			while (result.next()) {

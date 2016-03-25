@@ -209,7 +209,7 @@ SELECT
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT s.name,
-		s.type,
+		s.type as 'PROCEDURE',
 	   #db_name# as db,
 	   crdate as created
     FROM     sysobjects s
@@ -222,7 +222,7 @@ SELECT
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT s.name,
-		s.type,
+		s.type as 'FUNCTION',
 	   #db_name# as db,
 	   crdate as created
     FROM     sysobjects s
@@ -275,6 +275,13 @@ SELECT
 	  and t.xtype = 'U'
 	  and d.keyno > 0
 	  and t.id = object_id('$table_name$')
+</select>
+
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$
 </select>
 
 <!-- 

@@ -92,6 +92,13 @@ public class GetPreferenceGeneral {
 	}
 	
 	////////////////// rdb 설정 ////////////////////////////////////////////////////////////////////////////
+	/** rdb result type */
+	public static String getResultType() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_TYPE);
+		if(null == userInfo) return PreferenceDefine.RDB_RESULT_TYPE_VALUE;
+		return userInfo.getValue0();		
+	}
+	
 	/** rdb 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */ 
 	public static int getSelectLimitCount() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT);
@@ -240,5 +247,42 @@ public class GetPreferenceGeneral {
 			if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.SYNC_EIDOTR_STATS_VALUE); 
 			return Boolean.parseBoolean(userInfo.getValue0());
 		}
+
+	///////////////// edito setting ////////////////////////////////////////////////////////////////////////////
+	public static boolean getEditorAutoSave() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_AUTOSAVE);
+		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_AUTOSAVE_VALUE); 
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
 		
+	public static String getEditorTheme() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_THEME);
+		if(null == userInfo) return PreferenceDefine.EDITOR_THEME_VALUE; 
+		return userInfo.getValue0();
+	}
+	
+	public static String getEditorFontSize() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_FONT_SIZE);
+		if(null == userInfo) return PreferenceDefine.EDITOR_FONT_SIZE_VALUE; 
+		return userInfo.getValue0();
+	}
+	
+	public static boolean getEditorIsWarp() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_IS_WARP);
+		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_IS_WARP_VALUE); 
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
+	
+	public static String getEditorWarpLimitValue() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_WRAP_LIMIT);
+		if(null == userInfo) return PreferenceDefine.EDITOR_WRAP_LIMIT_VALUE; 
+		return userInfo.getValue0();
+	}
+	
+	public static boolean getEditorShowGutter() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_SHOW_GUTTER);
+		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_SHOW_GUTTER_VALUE); 
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
+	
 }

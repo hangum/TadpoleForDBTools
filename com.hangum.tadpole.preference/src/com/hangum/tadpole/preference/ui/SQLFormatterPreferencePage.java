@@ -73,7 +73,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblTabSize = new Label(container, SWT.NONE);
-		lblTabSize.setText(Messages.SQLFormatterPreferencePage_0);
+		lblTabSize.setText(Messages.get().SQLFormatterPreferencePage_0);
 		
 		comboTabsize = new Combo(container, SWT.READ_ONLY);
 		comboTabsize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -83,27 +83,27 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		
 		btnNoInsertNewDecode = new Button(container, SWT.CHECK);
 		btnNoInsertNewDecode.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnNoInsertNewDecode.setText(Messages.SQLFormatterPreferencePage_3);
+		btnNoInsertNewDecode.setText(Messages.get().SQLFormatterPreferencePage_3);
 		
 		btnNoInsertNewIn = new Button(container, SWT.CHECK);
 		btnNoInsertNewIn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnNoInsertNewIn.setText(Messages.SQLFormatterPreferencePage_4);
+		btnNoInsertNewIn.setText(Messages.get().SQLFormatterPreferencePage_4);
 		
 		
 		btnNewLineBefeoreAndOr = new Button(container, SWT.CHECK);
 		btnNewLineBefeoreAndOr.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnNewLineBefeoreAndOr.setText(Messages.SQLFormatterPreferencePage_btnCheckButton_text);
+		btnNewLineBefeoreAndOr.setText(Messages.get().SQLFormatterPreferencePage_btnCheckButton_text);
 		
 		btnNewLineBeforeComma = new Button(container, SWT.CHECK);
 		btnNewLineBeforeComma.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnNewLineBeforeComma.setText(Messages.SQLFormatterPreferencePage_btnNewLineBefore_text);
+		btnNewLineBeforeComma.setText(Messages.get().SQLFormatterPreferencePage_btnNewLineBefore_text);
 		
 		btnRemoveEmptyLine = new Button(container, SWT.CHECK);
 		btnRemoveEmptyLine.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnRemoveEmptyLine.setText(Messages.SQLFormatterPreferencePage_btnRemoveEmptyLine_text);
+		btnRemoveEmptyLine.setText(Messages.get().SQLFormatterPreferencePage_btnRemoveEmptyLine_text);
 		
 		btnWordBreak = new Button(container, SWT.CHECK);
-		btnWordBreak.setText(Messages.SQLFormatterPreferencePage_btnWordBreak_text);
+		btnWordBreak.setText(Messages.get().SQLFormatterPreferencePage_btnWordBreak_text);
 		
 		textWidth = new Text(container, SWT.BORDER);
 		textWidth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -122,15 +122,15 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		String txtNoInsertDecode = ""+btnNoInsertNewDecode.getSelection(); //$NON-NLS-1$
 		String txtNoInsertIn = ""+btnNoInsertNewIn.getSelection(); //$NON-NLS-1$
 		
-		String txtNewLineBefeoreAndOr = ""+btnNewLineBefeoreAndOr.getSelection();
-		String txtNewLineBefeoreComma = ""+btnNewLineBeforeComma.getSelection();
-		String txtRemoveEmptyLine = ""+btnRemoveEmptyLine.getSelection();
+		String txtNewLineBefeoreAndOr = ""+btnNewLineBefeoreAndOr.getSelection(); //$NON-NLS-1$
+		String txtNewLineBefeoreComma = ""+btnNewLineBeforeComma.getSelection(); //$NON-NLS-1$
+		String txtRemoveEmptyLine = ""+btnRemoveEmptyLine.getSelection(); //$NON-NLS-1$
 		
-		String txtWordbreak = ""+btnWordBreak.getSelection();
+		String txtWordbreak = ""+btnWordBreak.getSelection(); //$NON-NLS-1$
 		String strTextWidth = textWidth.getText();
 		
 		if(!NumberUtils.isNumber(textWidth.getText())) {
-			MessageDialog.openError(getShell(), "Confirm", "Please enter number."); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().SQLFormatterPreferencePage_8);
 			textWidth.setFocus();
 			return false;
 		}
@@ -156,9 +156,9 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 			SessionManager.setUserInfo(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE, strTextWidth);	
 			
 		} catch(Exception e) {
-			logger.error("SQLFormatter preference saveing", e);
+			logger.error("SQLFormatter preference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

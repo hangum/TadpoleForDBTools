@@ -25,7 +25,9 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -61,7 +63,8 @@ public class SQLUpdateDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Execute SQL Dialog");
+		newShell.setText(Messages.get().SQLUpdateDialog_1);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -78,7 +81,7 @@ public class SQLUpdateDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 		
 		Label lblPleaseCheckYour = new Label(container, SWT.NONE);
-		lblPleaseCheckYour.setText("Please check your statement.");
+		lblPleaseCheckYour.setText(Messages.get().SQLUpdateDialog_2);
 		
 		textSQL = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -94,18 +97,18 @@ public class SQLUpdateDialog extends Dialog {
 	protected void okPressed() {
 		String strSQL = textSQL.getText();
 		
-		if("".equals(strSQL)) {
-			MessageDialog.openError(getShell(), "Error", "SQL is empty.");
+		if("".equals(strSQL)) { //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().SQLUpdateDialog_Error, Messages.get().SQLUpdateDialog_5);
 			return;
 		}
 		
-		RequestQuery reqQuery = new RequestQuery(strSQL, PublicTadpoleDefine.DB_ACTION.TABLES, 
+		RequestQuery reqQuery = new RequestQuery(strSQL, PublicTadpoleDefine.OBJECT_TYPE.TABLES, 
 					EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.BLOCK, true);
 		try {
-			ExecuteOtherSQL.runPermissionSQLExecution(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
+			ExecuteOtherSQL.runPermissionSQLExecution(Messages.get().MainEditor_21, reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 		} catch (Exception e) {
-			logger.error("SQL Execute error", e);
-			MessageDialog.openError(getShell(), "Error", "Rise Exception:\n\n" + e.getMessage());
+			logger.error(Messages.get().SQLUpdateDialog_6, e);
+			MessageDialog.openError(getShell(), Messages.get().SQLUpdateDialog_Error, Messages.get().SQLUpdateDialog_8 + e.getMessage());
 			return;
 		}
 		
@@ -118,8 +121,8 @@ public class SQLUpdateDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Update", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Close", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().SQLUpdateDialog_9, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SQLUpdateDialog_10, false);
 	}
 
 	/**

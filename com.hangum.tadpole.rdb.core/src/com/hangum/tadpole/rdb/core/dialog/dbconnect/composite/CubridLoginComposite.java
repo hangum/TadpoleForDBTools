@@ -92,7 +92,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			}
 		}
 		
-		textHost.setFocus();
+		preDBInfo.getTextDisplayName().setFocus();
 	}
 	
 	@Override

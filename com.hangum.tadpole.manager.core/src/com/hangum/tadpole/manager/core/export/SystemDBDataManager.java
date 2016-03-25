@@ -87,7 +87,7 @@ public class SystemDBDataManager {
 		
 		String[] strUserdb =  StringUtils.split(strSource, PublicTadpoleDefine.LINE_SEPARATOR);
 		if(!StringUtils.startsWith(strUserdb[0], SystemDefine.NAME)) {
-			throw new RuntimeException(Messages.SystemDBDataManager_8);
+			throw new RuntimeException(Messages.get().SystemDBDataManager_8);
 		}
 		
 		// int 가 1인 이유는 시스템 버전 정보를 빼서입니다.

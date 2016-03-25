@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.ExitConfirmation;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -31,8 +32,12 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.application.start.update.checker.NewVersionChecker;
+import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
+import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
@@ -41,8 +46,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.actions.connections.ConnectDatabase;
-import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -91,21 +94,37 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         getWindowConfigurer().setShellStyle(SWT.NO_TRIM);
         getWindowConfigurer().setShowMenuBar(true);
     
-//        // Set system exist message.
-//        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
-//    	service.setMessage(Messages.ApplicationWorkbenchWindowAdvisor_4);
+        // Set system exist message.
+        ExitConfirmation service = RWT.getClient().getService( ExitConfirmation.class );
+    	service.setMessage(Messages.get().ApplicationWorkbenchWindowAdvisor_4);
     	
 //    	checkSupportBrowser();
-    	
         login();
+    }
+    
+    /**
+     * new version checker
+     */
+    private void newVersionChecker() {
+		if(!CookieUtils.isUpdateChecker()) {
+	    	boolean isNew = NewVersionChecker.getInstance().check();
+	    	if(isNew) {
+	    		NewVersionObject newVersionObj = NewVersionChecker.getInstance().getNewVersionObj();
+	    		NewVersionViewDialog dialog = new NewVersionViewDialog(null, newVersionObj);
+	    		dialog.open();
+    		}	// is nuew
+    	}	// is update checker
     }
     
     @Override
     public void postWindowOpen() {
+    	
+    	if(SessionManager.isSystemAdmin()) {
+    		newVersionChecker();
+    	}
+    	
     	// fullscreen
 //    	getWindowConfigurer().getWindow().getShell().setMaximized(true);
-    	
-//    	
 //    	
 //    	 쪽지 기능의 역할에 비해 리소스를 너무 많이 먹는 것으로 판단되어 기능을 막습니다.
 //    	더 의미를 찾을때까지요. - 14.08.25
@@ -114,18 +133,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //    	mainUICallback();
 
     	// If login after does not DB exist, DB connect Dialog open.
-    	try {
-//    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
-			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-    		if(0 == mv.getAllTreeList().size()) {
-    			if(MessageDialog.openConfirm(null, Messages.ApplicationWorkbenchWindowAdvisor_0, Messages.ApplicationWorkbenchWindowAdvisor_3)) {
-    			ConnectDatabase cd = new ConnectDatabase();
-    			cd.run();
-	    		}
-    		}
-    	} catch(Exception e) {
-    		logger.error("Is DB list?", e); //$NON-NLS-1$
-    	}
+//    	try {
+////    		// fix https://github.com/hangum/TadpoleForDBTools/issues/221
+//			ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+//    		if(0 == mv.getAllTreeList().size()) {
+//    			if(MessageDialog.openConfirm(null, Messages.get().ApplicationWorkbenchWindowAdvisor_0, Messages.get().ApplicationWorkbenchWindowAdvisor_3)) {
+//    			ConnectDatabase cd = new ConnectDatabase();
+//    			cd.run();
+//	    		}
+//    		}
+//    	} catch(Exception e) {
+//    		logger.error("Is DB list?", e); //$NON-NLS-1$
+//    	}
     	
     }
     
@@ -207,17 +226,17 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     private void login() {
     	// 이미 로그인 되어 있다.
     	if(0 != SessionManager.getUserSeq()) return;
-
+    	
     	try {
     		if(TadpoleApplicationContextManager.isPersonOperationType()) {
     			UserDAO userDao = TadpoleSystem_UserQuery.findUser(PublicTadpoleDefine.SYSTEM_DEFAULT_USER);
     			
     			String strAllowIP = userDao.getAllow_ip();
     			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
-    			if(logger.isDebugEnabled())logger.debug(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_23+ RequestInfoUtils.getRequestIP());
+    			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
     			if(!isAllow) {
-    				logger.error(Messages.LoginDialog_21 + userDao.getEmail() + Messages.LoginDialog_22 + strAllowIP + Messages.LoginDialog_26+ RequestInfoUtils.getRequestIP());
-    				MessageDialog.openError(null, Messages.LoginDialog_7, Messages.LoginDialog_28);
+    				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
+    				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().LoginDialog_28);
     				return;
     			}
     			

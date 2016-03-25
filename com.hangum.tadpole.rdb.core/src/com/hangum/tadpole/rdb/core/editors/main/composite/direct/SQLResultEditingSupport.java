@@ -98,7 +98,7 @@ public class SQLResultEditingSupport extends EditingSupport {
 		// 입력 값이 올바른지 검사합니다.
 		String colType = RDBTypeToJavaTypeUtils.getRDBType(rsDAO.getColumnType().get(intColumnIndex));
 		if(!DataTypeValidate.isValid(rsDAO.getUserDB(), colType, value.toString())) {
-			MessageDialog.openError(getViewer().getControl().getShell(), Messages.TextViewerEditingSupport_0, Messages.TextViewerEditingSupport_2 + " is " + colType + "."); 
+			MessageDialog.openError(getViewer().getControl().getShell(), Messages.get().TextViewerEditingSupport_0, Messages.get().TextViewerEditingSupport_2 + " is " + colType + "."); 
 			return;
 		} 
 
@@ -120,7 +120,7 @@ public class SQLResultEditingSupport extends EditingSupport {
 		} catch(Exception e) {
 			strFormatStatement = strUpdateStatement;
 		}
-		logger.debug("Update SQL Statement is " + strFormatStatement);
+		if(logger.isDebugEnabled()) logger.debug("Update SQL Statement is " + strFormatStatement);
 		
 		SQLUpdateDialog dialog = new SQLUpdateDialog(getViewer().getControl().getShell(), rsDAO.getUserDB(),  strFormatStatement);
 		if(Dialog.OK == dialog.open()) {

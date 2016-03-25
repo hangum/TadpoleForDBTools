@@ -1,16 +1,16 @@
 Tadpole DB Hub
 ==
+[![Join the chat at https://gitter.im/TadpoleDBHub](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TadpoleDBHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
-![screenshot](https://e99af464-a-62cb3a1a-s-sites.googlegroups.com/site/tadpolefordb/home/TadpoleDBHub_overview.png?height=309&width=400)
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1458767844689/home/TadpoleDBHub_main.jpg?height=309&width=400)
 
 1.RDB Feature
 -
 * Intuitive web interface (Safari, Chrome, IE 10, Firefox)
 * User Management (Admin, Manager, User)
-* Support Apache Hive, Apache Tajo, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
+* Support Altibase, Apache Hive, Apache Tajo, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
 * Download query result
 * SQL Syntax Highlighting
@@ -23,8 +23,9 @@ It enables you to handle typical DB over the World Wide Web
 * SQL Audit And Export text
 * Generate SQL Statement (Select, Insert, Update, Delete, Table, View, Index, Procedure, Function, Trigger)
 * Generate ER Diagram (Auto Layout)
+* Schema Compare
 
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544319131/home/RDB-ERD-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544341191/home/RDB-SQL-EDITOR.png?height=339&width=400)
+![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544319131/home/RDB-ERD-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544341191/home/RDB-SQL-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1449463441535/home/schemacompare.png?height=308&width=400)
 
 2.MongoDB Feature
 -
@@ -76,13 +77,14 @@ Site
 *  http://tadpoledb.com
 
 Chrome web store
-*  https://chrome.google.com/webstore/detail/tadpoledbcom/nhfaneohnnijkdpgmiddcgbcgpjgdjnc?utm_source=gmail
+*  https://chrome.google.com/webstore/detail/tadpole-db-hub-db-client/nlelclofeoahhcfgfkcpbmhflfdimbie
 
 Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* https://sourceforge.net/projects/tadpoledbhub/files/1.6.x/1.6.4/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.0/
+* docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License
 -

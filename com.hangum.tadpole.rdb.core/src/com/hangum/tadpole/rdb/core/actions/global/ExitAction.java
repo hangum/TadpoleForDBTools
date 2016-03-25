@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -22,6 +23,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -46,34 +49,49 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.ExitAction_0);
-		setToolTipText(Messages.ExitAction_1);
+		setText(Messages.get().ExitAction_0);
+		setToolTipText(Messages.get().ExitAction_1);
 
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png")); //$NON-NLS-1$
 	}
 
 	@Override
 	public void run() {
-		
-		if( MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ExitAction_2, Messages.ExitAction_3) ) {
-			
-			// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
-			IEditorReference[] references = page.getEditorReferences();
-			for (IEditorReference iEditorReference : references) {
-				page.closeEditor(iEditorReference.getEditor(false), true);
+		final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if(ApplicationArgumentUtils.isStandaloneMode()) {
+			MessageDialog dialog = new MessageDialog(shell, Messages.get().ExitAction_2, null, Messages.get().ExitAction_4, 
+										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().ExitAction_6, Messages.get().ExitAction_7}, 1);
+			int intResult = dialog.open();
+			if(intResult == 0) {
+				serverLogout();
+				System.exit(0);
+			} else if(intResult == 1) {
+				serverLogout();
 			}
 			
-//			// standalone 모드일경우에는 프로그램 종료한다.
-//			if(ApplicationArgumentUtils.isStandaloneMode()) {
-//				beforeLogoutAction();
+//		// tomcat 에서 실행했는지 어떻게 검사하지?
+//		} else if(!ApplicationArgumentUtils.isStandaloneMode() && TadpoleApplicationContextManager.isPersonOperationType()) {
+//			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_4) ) {
+//				serverLogout();
 //				System.exit(0);
-//			// 서버모드 일 경우 프로그램 로그아웃한다.
-//			} else {
-				beforeLogoutAction();
-				SessionManager.logout();
 //			}
+		} else {
+			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_3) ) {
+				serverLogout();
+			}
 		}
+	}
+	
+	private void serverLogout() {
+		// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
+		IEditorReference[] references = page.getEditorReferences();
+		for (IEditorReference iEditorReference : references) {
+			page.closeEditor(iEditorReference.getEditor(false), true);
+		}
+		
+		beforeLogoutAction();
+		SessionManager.logout();
 	}
 	
 	/**

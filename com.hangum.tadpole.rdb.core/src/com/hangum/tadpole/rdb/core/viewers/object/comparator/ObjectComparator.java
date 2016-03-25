@@ -22,7 +22,7 @@ import com.hangum.tadpole.commons.libs.core.utils.NullSafeComparator;
  * @author hangum
  *
  */
-public  class ObjectComparator extends ViewerSorter  {
+public class ObjectComparator extends ViewerSorter  {
 	protected int propertyIndex;
 	protected static final int DESCENDING = 1;
 	protected static final int ASCENDING = -1;

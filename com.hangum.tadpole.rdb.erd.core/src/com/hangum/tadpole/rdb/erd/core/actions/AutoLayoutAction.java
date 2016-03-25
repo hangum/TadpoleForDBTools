@@ -58,8 +58,8 @@ public class AutoLayoutAction extends SelectionAction {
 
 	@Override
 	protected void init() {
-		setText(Messages.AutoLayoutAction_1);
-		setToolTipText(Messages.AutoLayoutAction_0);
+		setText(Messages.get().AutoLayoutAction_1);
+		setToolTipText(Messages.get().AutoLayoutAction_0);
 		setId(ID);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/layout_info.png"));
 		
@@ -130,10 +130,10 @@ public class AutoLayoutAction extends SelectionAction {
 	
 			getViewer().getEditDomain().getCommandStack().execute(commands);
 		} catch(Exception e) {
-			logger.error(Messages.AutoLayoutAction_2, e);
+			logger.error(Messages.get().AutoLayoutAction_2, e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.AutoLayoutAction_3, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.get().AutoLayoutAction_3, errStatus); //$NON-NLS-1$
 
 		}
 	}

@@ -38,7 +38,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 public class OracleDDLScript extends AbstractRDBDDLScript {
 	private static final Logger logger = Logger.getLogger(OracleDDLScript.class);
 	
-	public OracleDDLScript(UserDBDAO userDB, PublicTadpoleDefine.DB_ACTION actionType) {
+	public OracleDDLScript(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		super(userDB, actionType);
 	}
 
@@ -52,7 +52,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* DROP TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
+//		result.append("/* DROP TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
 		result.append("CREATE TABLE " + tableDAO.getName() + "( \n");
 		for (int i=0; i<srcList.size(); i++){
 			HashMap<String, Object> source =  srcList.get(i);
@@ -142,7 +142,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 	public String getViewScript(String strName) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		StringBuilder result = new StringBuilder("");
-		result.append("/* DROP VIEW " + strName + "; */ \n\n");
+//		result.append("/* DROP VIEW " + strName + "; */ \n\n");
 
 		List<String> srcViewHeadList = client.queryForList("getViewScript.head", strName);				
 		for (int i=0; i<srcViewHeadList.size(); i++){
@@ -166,7 +166,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		StringBuilder result = new StringBuilder("");	
 		List<Map<String, String>> srcScriptList = (List<Map<String, String>>) client.queryForList("getIndexScript", indexDAO.getINDEX_NAME());
 		
-		result.append("/* DROP INDEX " + indexDAO.getINDEX_NAME() + "; */ \n\n");
+//		result.append("/* DROP INDEX " + indexDAO.getINDEX_NAME() + "; */ \n\n");
 		result.append("CREATE ");
 		
 		Map<String, String> indexMap = new HashMap<String, String>();
@@ -231,7 +231,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		if(logger.isDebugEnabled()) logger.debug("\n Function DDL Generation...");
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* DROP FUNCTION " + functionDAO.getName() + "; */ \n\n");
+//		result.append("/* DROP FUNCTION " + functionDAO.getName() + "; */ \n\n");
 		result.append("CREATE OR REPLACE ");
 
 		List<String> srcScriptList = client.queryForList("getFunctionScript", functionDAO.getName());				
@@ -255,7 +255,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 					
 		List<String> srcScriptList = null;
 		if (StringUtils.contains(objType, "PROCEDURE")){
-			result.append("/* DROP PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
+//			result.append("/* DROP PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
 			result.append("CREATE OR REPLACE ");
 			srcScriptList = client.queryForList("getProcedureScript", procedureDAO.getName());				
 			for (int i=0; i<srcScriptList.size(); i++){
@@ -294,7 +294,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		if(logger.isDebugEnabled()) logger.debug("\n Trigger DDL Generation...");
 		
 		StringBuilder result = new StringBuilder("");
-		result.append("/* DROP TRIGGER " + objectName + "; */ \n\n");
+//		result.append("/* DROP TRIGGER " + objectName + "; */ \n\n");
 		result.append("CREATE OR REPLACE ");
 
 		List<String> srcScriptList = client.queryForList("getTriggerScript", objectName);				

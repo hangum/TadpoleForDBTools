@@ -14,13 +14,21 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.osgi.framework.Bundle;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.engine.TadpoleEngineActivator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -48,12 +56,14 @@ public class TadpoleSystemInitializer {
 	 */
 	static {
 		String dbServerPath = "";
+		
+		// jdbc driver 파일을 옮긴다.
 
 		// 로컬 디비를 사용 할 경우.
 		if (!ApplicationArgumentUtils.isDBServer()) {
 
 			try {
-				DEFAULT_DB_FILE_LOCATION = Platform.getInstallLocation().getURL().getFile() + "configuration/tadpole/db/";// //$NON-NLS-1$
+				DEFAULT_DB_FILE_LOCATION = SystemDefine.getConfigureRoot() + "configuration/tadpole/db/";// //$NON-NLS-1$
 				
 				if(ApplicationArgumentUtils.isDBPath()) DEFAULT_DB_FILE_LOCATION = ApplicationArgumentUtils.getDBPath() + File.separator;
 				if (!new File(DEFAULT_DB_FILE_LOCATION).exists()) {
@@ -102,27 +112,58 @@ public class TadpoleSystemInitializer {
 	 */
 	public static boolean initSystem() throws Exception {
 		
+		// move to driver file
+		if(!TadpoleApplicationContextManager.isSystemInitialize()) initJDBCDriver();
+		
 		// Is SQLite?
 		if (!ApplicationArgumentUtils.isDBServer()) {
 			if(!new File(DEFAULT_DB_FILE_LOCATION + DB_NAME).exists()) {
-				logger.info("Createion Engine DB. Type is SQLite.");
+				if(logger.isInfoEnabled()) logger.info("Createion Engine DB. Type is SQLite.");
 				ClassLoader classLoader = TadpoleSystemInitializer.class.getClassLoader();
 				InputStream is = classLoader.getResourceAsStream("com/hangum/tadpole/engine/initialize/TadpoleEngineDBEngine.sqlite");
 				
-				int size = is.available();
-				byte[] dataByte = new byte[size];
-				is.read(dataByte, 0, size);
-				is.close();
+				byte[] dataByte = new byte[1024];
+				int len = 0;
 				
 				FileOutputStream fos = new FileOutputStream(DEFAULT_DB_FILE_LOCATION + DB_NAME);
-				fos.write(dataByte);
-				fos.flush();
+				while((len = is.read(dataByte)) > 0) {
+					fos.write(dataByte, 0, len);
+				}
 				
+				fos.close();
 				is.close();
 			}
 		}
 		
 		return TadpoleApplicationContextManager.getSystemAdmin() == null?false:true;
+	}
+	
+	/**
+	 * initialize jdbc driver
+	 */
+	private static void initJDBCDriver() {
+		File jdbcLocationDir = new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+		if(!jdbcLocationDir.exists()) {
+			try {
+				logger.info("######### TDB JDBC Driver local Path : " + ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+				jdbcLocationDir.mkdirs();
+				
+				File fileEngine = FileLocator.getBundleFile(TadpoleEngineActivator.getDefault().getBundle());
+				String filePath = fileEngine.getAbsolutePath() + "/libs/driver";
+				logger.info("##### TDB JDBC URI: " + filePath);
+				
+				FileUtils.copyDirectory(new File(filePath), new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR));
+			} catch(Exception e) {
+				logger.error("Initialize JDBC driver file", e);
+			}
+		}
+		
+		// driver loading
+		try {
+			JDBCDriverLoader.addJARDir(ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+		} catch(Exception e) {
+			logger.error("JDBC driver loading", e);
+		}
 	}
 
 	/**
@@ -190,5 +231,5 @@ public class TadpoleSystemInitializer {
 
 		} // is local db?
 	}
-
+	
 }

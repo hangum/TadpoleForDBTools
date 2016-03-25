@@ -80,19 +80,19 @@ public class AddSQLDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblSubTitle = new Label(container, SWT.NONE);
-		lblSubTitle.setText(Messages.AddSQLDialog_0);
+		lblSubTitle.setText(Messages.get().AddSQLDialog_0);
 		
 		textTitle = new Text(container, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDesc = new Label(container, SWT.NONE);
-		lblDesc.setText(Messages.AddSQLDialog_1);
+		lblDesc.setText(Messages.get().Description);
 		
 		textDesc = new Text(container, SWT.BORDER);
 		textDesc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSql = new Label(container, SWT.NONE);
-		lblSql.setText(Messages.AddSQLDialog_2);
+		lblSql.setText(Messages.get().SQL);
 		
 		textSQL = new Text(container, SWT.BORDER | SWT.MULTI);
 		textSQL.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -117,13 +117,13 @@ public class AddSQLDialog extends Dialog {
 		String txtSQL = StringUtils.trimToEmpty(textSQL.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openError(null, Messages.AddSQLDialog_3, Messages.AddSQLDialog_4);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddSQLDialog_4);
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(StringUtils.isEmpty(txtSQL)) {
-			MessageDialog.openError(null, Messages.AddSQLDialog_3, Messages.AddSQLDialog_6);
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddSQLDialog_6);
 			textSQL.setFocus();
 			return;
 		}
@@ -145,8 +145,8 @@ public class AddSQLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.AddSQLDialog_7, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.AddSQLDialog_8, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**

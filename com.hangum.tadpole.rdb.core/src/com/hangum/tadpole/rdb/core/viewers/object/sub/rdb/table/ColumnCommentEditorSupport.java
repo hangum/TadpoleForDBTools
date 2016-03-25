@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
-import java.sql.PreparedStatement;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -19,11 +17,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TableColumnObjectQuery;
 
 /**
  * column comment editor
@@ -32,15 +29,6 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class ColumnCommentEditorSupport extends EditingSupport {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6292003867430114514L;
-
-	/**
-	 * Logger for this class
-	 */
 	private static final Logger logger = Logger.getLogger(ColumnCommentEditorSupport.class);
 
 	private final TableViewer tableviewer;
@@ -71,19 +59,18 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	@Override
 	protected boolean canEdit(Object element) {
 		if(column == 3) {
-			if(logger.isDebugEnabled()) logger.debug("DBMS Type is " + DBDefine.getDBDefine(userDB));
-			
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || 
-					DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT || 
-					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ||
-					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
+			) {
 				return true;
-			} else {
-				return false;
 			}
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 
 	@Override
@@ -100,121 +87,24 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
+		IStructuredSelection is = (IStructuredSelection) tableviewer.getSelection();
+		final TableDAO tableDAO = (TableDAO)is.getFirstElement();
+		
 		String comment = "";
 		try {
-			if(logger.isDebugEnabled()) logger.debug("element.getClass().toString() is " + element.getClass().toString());
-
-			TableColumnDAO dao = (TableColumnDAO) element;
-
+			TableColumnDAO columnDAO = (TableColumnDAO) element;
 			comment = (String) (value == null ? "" : value);
-			
-			if(logger.isDebugEnabled()) logger.debug("dao column name is " + dao.getField());
+			if(logger.isDebugEnabled()) logger.debug("dao column name is " + columnDAO.getField());
 			
 			// 기존 코멘트와 다를때만 db에 반영한다.
-			if (!(comment.equals(dao.getComment()))) {
-				dao.setComment(comment);
-				ApplyComment(dao);
+			if (!(comment.equals(columnDAO.getComment()))) {
+				columnDAO.setComment(comment);
+				TableColumnObjectQuery.updateComment(userDB, tableDAO, columnDAO);
 			}
 
 			viewer.update(element, null);
 		} catch (Exception e) {
 			logger.error("setValue error ", e);
-		}
-		viewer.update(element, null);
-	}
-
-	private void ApplyComment(TableColumnDAO dao) {
-		// TODO : DBMS별 처리를 위해 별도의 Class로 분리해야 하지 않을까? 
-
-		java.sql.Connection javaConn = null;
-		PreparedStatement stmt = null;
-		try {
-
-			if(logger.isDebugEnabled()) logger.debug("userDB is " + userDB.toString());
-
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-
-			javaConn = client.getDataSource().getConnection();
-
-			IStructuredSelection is = (IStructuredSelection) tableviewer.getSelection();
-			
-			TableDAO tableDAO = (TableDAO)is.getFirstElement();
-
-			StringBuffer query = new StringBuffer();
-
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
-				
-				query.append(" COMMENT ON COLUMN ").append(tableDAO.getSysName()+".").append(dao.getField()).append(" IS '").append(dao.getComment()).append("'");
-
-				if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
-				
-				stmt = javaConn.prepareStatement(query.toString());
-				
-				try{
-					stmt.execute();
-				}catch(Exception e){
-					//  org.postgresql.util.PSQLException: No results were returned by the query.
-				}
-
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
-				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers());
-				query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
-				query.append(",'column' , '").append(dao.getSysName()).append("'");
-				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
-					logger.error("Comment drop error ", e);
-				}
-
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers());
-					query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
-					query.append(",'column', '").append(dao.getSysName()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
-					logger.error("Comment add error ", e);
-				}
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
-				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , " + tableDAO.getSchema_name());
-				query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
-				query.append(",'column' , '").append(dao.getSysName()).append("'");
-				stmt = javaConn.prepareStatement(query.toString());
-				try {
-					stmt.execute();
-				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
-					logger.error("Comment drop error ", e);
-				}
-
-				try {
-					query = new StringBuffer();
-					query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , " + tableDAO.getSchema_name());
-					query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
-					query.append(",'column', '").append(dao.getSysName()).append("'");
-					stmt = javaConn.prepareStatement(query.toString());
-					stmt.execute();
-				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
-					logger.error("Comment add error ", e);
-				}
-			}
-
-		} catch (Exception e) {
-			logger.error("Comment change error ", e);
-		} finally {
-			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
 		}
 	}
 

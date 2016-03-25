@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
 /**
  * OTP Code Dialog
@@ -50,7 +51,8 @@ public class OTPLoginDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.OTPLoginDialog_0);
+		newShell.setText(Messages.get().OTPLoginDialog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -86,7 +88,7 @@ public class OTPLoginDialog extends Dialog {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
 		if(!NumberUtils.isNumber(strOTPCode)) {
 			textOTPCode.setFocus();
-			MessageDialog.openError(getShell(), "Error", Messages.OTPLoginDialog_3); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), "Error", Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
 			return;
 		}
 		

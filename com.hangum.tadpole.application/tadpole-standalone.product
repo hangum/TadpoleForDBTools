@@ -3,23 +3,31 @@
 
 <product name="tadpole-standalone" id="com.hangum.tadpole.application.product" application="org.eclipse.ui.ide.workbench" version="2.0.0" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-GAON -standalone -useDB all -defaultDB MySQL
+      <programArgs>-nl en -standalone -useDB all -defaultDB MySQL
       </programArgs>
-      <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1
+      <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1  -Xverify:none 
+-XX:+UseParallelGC
+-XX:-UseConcMarkSweepGC 
+-XX:PermSize=32M
+-XX:MaxPermSize=128M  
+-XX:MaxNewSize=128M 
+-XX:NewSize=64M
       </vmArgs>
    </launcherArgs>
 
    <windowImages/>
 
    <splash
-      location="com.hangum.tadpole.application" />
+      location="com.hangum.tadpole.application"
+      startupProgressRect="5,275,445,15"
+      startupMessageRect="7,252,445,20"
+      startupForegroundColor="00FF00" />
    <launcher name="tadpole-standalone">
-      <linux icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.ico"/>
+      <linux icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.xpm"/>
       <macosx icon="/com.hangum.tadpole.application/icons/TadpoleDBHub.icns"/>
       <solaris/>
       <win useIco="true">
@@ -28,14 +36,12 @@
       </win>
    </launcher>
 
-
    <vm>
       <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</linux>
       <macos include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
       <solaris include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</solaris>
       <windows include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</windows>
    </vm>
-
 
    <plugins>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
@@ -46,10 +52,12 @@
       <plugin id="com.hangum.tadpole.commons.admin.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.utils"/>
+      <plugin id="com.hangum.tadpole.commons.utils.zip"/>
+      <plugin id="com.hangum.tadpole.compare.core"/>
       <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.hive.core"/>
-      <plugin id="com.hangum.tadpole.importdb"/>
+      <plugin id="com.hangum.tadpole.importexport.db"/>
       <plugin id="com.hangum.tadpole.manager.core"/>
       <plugin id="com.hangum.tadpole.mongodb.core"/>
       <plugin id="com.hangum.tadpole.mongodb.core.ext"/>
@@ -116,28 +124,80 @@
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.rap.addons.d3chart"/>
       <plugin id="org.eclipse.rap.design.example"/>
+      <plugin id="org.eclipse.rap.design.example.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.design.example.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.draw2d"/>
       <plugin id="org.eclipse.rap.draw2d.compatibility"/>
       <plugin id="org.eclipse.rap.filedialog"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.filedialog.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.fileupload"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.fileupload.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.gef"/>
       <plugin id="org.eclipse.rap.jettycustomizer" fragment="true"/>
       <plugin id="org.eclipse.rap.jface"/>
       <plugin id="org.eclipse.rap.jface.databinding"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.databinding.nl_ko" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.jface.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.nebula.jface.gridviewer"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.jface.gridviewer.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.nebula.widgets.grid"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.nebula.widgets.grid.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt"/>
+      <plugin id="org.eclipse.rap.rwt.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt.osgi"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.osgi.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.rwt.testfixture"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.rwt.testfixture.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.ui"/>
+      <plugin id="org.eclipse.rap.ui.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.ui.views"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.views.nl_ko" fragment="true"/>
       <plugin id="org.eclipse.rap.ui.workbench"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_en_AA" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_es" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_ja" fragment="true"/>
+      <plugin id="org.eclipse.rap.ui.workbench.nl_ko" fragment="true"/>
       <plugin id="org.hamcrest.core"/>
       <plugin id="org.junit"/>
    </plugins>
 
    <features>
-      <feature id="com.hangum.tadpole.feature" version="2.0.0.qualifier"/>
+      <feature id="com.hangum.tadpole.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
@@ -149,10 +209,12 @@
       <plugin id="com.hangum.tadpole.commons.admin.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.libs" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.commons.utils" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.commons.utils.zip" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.compare.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.engine" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.help.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.hive.core" autoStart="true" startLevel="0" />
-      <plugin id="com.hangum.tadpole.importdb" autoStart="true" startLevel="0" />
+      <plugin id="com.hangum.tadpole.importexport.db" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.manager.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core" autoStart="true" startLevel="0" />
       <plugin id="com.hangum.tadpole.mongodb.core.ext" autoStart="true" startLevel="0" />
@@ -223,6 +285,10 @@
       <plugin id="org.eclipse.rap.ui.workbench" autoStart="true" startLevel="0" />
       <plugin id="org.junit" autoStart="true" startLevel="0" />
    </configurations>
+
+   <repositories>
+      <repository location="http://127.0.0.1:8080/tdbupdate" enabled="true" />
+   </repositories>
 
    <preferencesInfo>
       <targetfile overwrite="false"/>

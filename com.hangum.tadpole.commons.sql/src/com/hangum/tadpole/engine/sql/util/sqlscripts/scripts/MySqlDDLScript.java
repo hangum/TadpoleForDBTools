@@ -13,8 +13,12 @@ package com.hangum.tadpole.engine.sql.util.sqlscripts.scripts;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DB_ACTION;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -32,12 +36,12 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class MySqlDDLScript extends AbstractRDBDDLScript {
-
+	private static final Logger logger = Logger.getLogger(MySqlDDLScript.class);
 	/**
 	 * @param userDB
 	 * @param actionType
 	 */
-	public MySqlDDLScript(UserDBDAO userDB, DB_ACTION actionType) {
+	public MySqlDDLScript(UserDBDAO userDB, OBJECT_TYPE actionType) {
 		super(userDB, actionType);
 	}
 
@@ -48,19 +52,8 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	public String getTableScript(TableDAO tableDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		List<HashMap> srcList = client.queryForList("getTableScript", tableDAO.getName());
-		
-		StringBuilder result = new StringBuilder("");
-		for (int i=0; i<srcList.size(); i++){
-			HashMap<String, Object> source =  srcList.get(i);
-			
-			for (String key : source.keySet()){
-				result.append(key + "\t:\t");
-				result.append(source.get(key)+"\n\n");
-			}
-		}
-			
-		return result.toString();
+		Map srcList = (HashMap)client.queryForObject("getTableScript", tableDAO.getName());
+		return ""+srcList.get("Create Table");
 	}
 
 	/* (non-Javadoc)
@@ -70,19 +63,11 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	public String getViewScript(String strName) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		StringBuilder result = new StringBuilder("");
-
-		List<HashMap> srcList = client.queryForList("getViewScript", strName);				
-		for (int i=0; i<srcList.size(); i++){
-			HashMap<String, Object> source =  srcList.get(i);
-			
-			for (String key : source.keySet()){
-				result.append(key + "\t:\t");
-				result.append(source.get(key)+"\n\n");
-			}
-		}
+		Map srcList = (HashMap)client.queryForObject("getViewScript", strName);
+		String strSource = ""+srcList.get("Create View");
+		strSource = StringUtils.substringAfterLast(strSource, "VIEW");
 		
-		return result.toString();
+		return "CREATE VIEW " + strSource;
 	}
 
 	/* (non-Javadoc)
@@ -103,17 +88,11 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		
 		StringBuilder result = new StringBuilder("");
 
-		List<HashMap> srcList = client.queryForList("getFunctionScript", functionDAO.getName());				
-		for (int i=0; i<srcList.size(); i++){
-			HashMap<String, Object> source =  srcList.get(i);
-			
-			for (String key : source.keySet()){
-				result.append(key + "\t:\t");
-				result.append(source.get(key)+"\n\n");
-			}
-		}
+		Map srcList = (HashMap)client.queryForObject("getFunctionScript", functionDAO.getName());
+		String strSource = ""+srcList.get("Create Function");
+		strSource = StringUtils.substringAfterLast(strSource, "FUNCTION");
 		
-		return result.toString();
+		return "CREATE FUNCTION " + strSource;
 	}
 
 	/* (non-Javadoc)
@@ -122,19 +101,11 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	@Override
 	public String getProcedureScript(ProcedureFunctionDAO procedureDAO)	throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		Map srcList = (HashMap)client.queryForObject("getProcedureScript", procedureDAO.getName());
+		String strSource = ""+srcList.get("Create Procedure");
+		strSource = StringUtils.substringAfterLast(strSource, "PROCEDURE");
 		
-		StringBuilder result = new StringBuilder("");
-
-		List<HashMap> srcList = client.queryForList("getProcedureScript", procedureDAO.getName());				
-		for (int i=0; i<srcList.size(); i++){
-			HashMap<String, Object> source =  srcList.get(i);
-			for (String key : source.keySet()){
-				result.append(key + "\t:\t");
-				result.append(source.get(key)+"\n\n");
-			}
-		}
-		
-		return result.toString();
+		return "CREATE PROCEDURE " + strSource;
 	}
 	
 	/* (non-Javadoc)
@@ -146,16 +117,11 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		
 		StringBuilder result = new StringBuilder("");
 
-		List<HashMap> srcList = client.queryForList("getTriggerScript", triggerDAO.getTrigger());				
-		for (int i=0; i<srcList.size(); i++){
-			HashMap<String, Object> source =  srcList.get(i);
-			for (String key : source.keySet()){
-				result.append(key + "\t:\t");
-				result.append(source.get(key)+"\n\n");
-			}
-		}
+		Map srcList = (HashMap)client.queryForObject("getTriggerScript", triggerDAO.getTrigger());	
+		String strSource = ""+srcList.get("SQL Original Statement");
+		strSource = StringUtils.substringAfterLast(strSource, "TRIGGER");
 		
-		return result.toString();
+		return "CREATE TRIGGER " + strSource;
 	}
 
 	@Override

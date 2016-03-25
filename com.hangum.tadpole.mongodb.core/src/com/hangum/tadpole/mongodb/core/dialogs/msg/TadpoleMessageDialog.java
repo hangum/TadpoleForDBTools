@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.mongodb.core.Messages;
 
@@ -63,6 +64,7 @@ public class TadpoleMessageDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(title);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -77,14 +79,14 @@ public class TadpoleMessageDialog extends Dialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		lblDate = new Label(container, SWT.NONE);
-		lblDate.setText(Messages.TadpoleMessageDialog_1);
+		lblDate.setText(Messages.get().Date);
 		
 		text = new Text(container, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		text.setText(head);
 		
 		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText(Messages.TadpoleMessageDialog_2);
+		lblMessage.setText(Messages.get().Message);
 		new Label(container, SWT.NONE);
 		
 		textMessage = new TadpoleEditorWidget(container, SWT.BORDER, EditorDefine.EXT_JSON, "", "");
@@ -112,7 +114,7 @@ public class TadpoleMessageDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.TadpoleMessageDialog_3, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true);
 	}
 
 	/**

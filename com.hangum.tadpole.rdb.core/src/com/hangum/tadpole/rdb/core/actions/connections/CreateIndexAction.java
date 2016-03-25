@@ -32,7 +32,7 @@ public class CreateIndexAction extends AbstractQueryAction {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.INDEXES), PublicTadpoleDefine.DB_ACTION.INDEXES);
+		FindEditorAndWriteQueryUtil.run(userDB, QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.OBJECT_TYPE.INDEXES), PublicTadpoleDefine.OBJECT_TYPE.INDEXES);
 	}
 	
 }

@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.objects.table;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -57,8 +58,9 @@ public class TextViewerEditingSupport extends EditingSupport {
 	@Override
 	protected Object getValue(Object element) {
 		HashMap<Integer, String> data = (HashMap<Integer, String>)element;
-		
-		return TbUtils.getOriginalData(data.get(columnIndex)==null?"":data.get(columnIndex));
+		String strData = TbUtils.getOriginalData(data.get(columnIndex)==null?"":data.get(columnIndex));
+
+		return strData;
 	}
 
 	@Override
@@ -67,12 +69,16 @@ public class TextViewerEditingSupport extends EditingSupport {
 		HashMap<Integer, String> oldDataMap = (HashMap<Integer, String>)data.clone();
 		
 		String oldData = data.get(columnIndex)==null?"":data.get(columnIndex);
-		if(oldData.equals(value.toString())) return;
+		if(logger.isDebugEnabled()) {
+			logger.debug("original data :" + oldData + ":" + value.toString() + ":" + StringEscapeUtils.escapeXml(oldData));
+		}
+		String compareValue = StringEscapeUtils.escapeXml(value.toString());
+		if(oldData.equals(compareValue)) return;
 
 		// 입력 값이 올바른지 검사합니다.
 		String colType = tableDataTypeList.get(columnIndex-1);
 		if(!DataTypeValidate.isValid(editPart.getUserDB(), colType, value.toString())) {
-			MessageDialog.openError(null, Messages.TextViewerEditingSupport_0, Messages.TextViewerEditingSupport_1 + " '" + value + "'. " + Messages.TextViewerEditingSupport_2 + " is " + colType + ".");// + " " + Messages.TextViewerEditingSupport_3); 
+			MessageDialog.openError(null, Messages.get().TextViewerEditingSupport_0, Messages.get().TextViewerEditingSupport_1 + " '" + value + "'. " + Messages.get().TextViewerEditingSupport_2 + " is " + colType + ".");// + " " + Messages.get().TextViewerEditingSupport_3); 
 			return;
 		} 
 		// insert가 아닌 경우에는 

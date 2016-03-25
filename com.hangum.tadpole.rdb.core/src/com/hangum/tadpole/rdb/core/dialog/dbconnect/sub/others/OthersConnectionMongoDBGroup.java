@@ -63,7 +63,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 	public OthersConnectionMongoDBGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
 		
-		setText(Messages.OthersConnectionMongoDBGroup_0);
+		setText(Messages.get().OthersConnectionMongoDBGroup_0);
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
@@ -72,7 +72,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		setLayout(gridLayout);
 		
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
-		btnReadOnlyConnection.setText(Messages.OthersConnectionMongoDBGroup_1);
+		btnReadOnlyConnection.setText(Messages.get().OthersConnectionMongoDBGroup_1);
 		
 //		btnTableFilters = new Button(this, SWT.NONE);
 //		btnTableFilters.addSelectionListener(new SelectionAdapter() {
@@ -88,7 +88,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 //				}
 //			}
 //		});
-//		btnTableFilters.setText(Messages.OthersConnectionMongoDBGroup_2);
+//		btnTableFilters.setText(Messages.get().OthersConnectionMongoDBGroup_2);
 		
 		btnExternalBrowser = new Button(this, SWT.NONE);
 		btnExternalBrowser.addSelectionListener(new SelectionAdapter() {
@@ -101,19 +101,19 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 				}
 			}
 		});
-		btnExternalBrowser.setText(Messages.OthersConnectionMongoDBGroup_btnExternalBrowser_text);
+		btnExternalBrowser.setText(Messages.get().OthersConnectionMongoDBGroup_btnExternalBrowser_text);
 		
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
-		btnShowTables.setText(Messages.OthersConnectionMongoDBGroup_btnShowTables_text);
+		btnShowTables.setText(Messages.get().OthersConnectionMongoDBGroup_btnShowTables_text);
 		
 //		btnIsVisible = new Button(this, SWT.CHECK);
 //		btnIsVisible.setSelection(true);
-//		btnIsVisible.setText(Messages.OthersConnectionMongoDBGroup_btnIsVisible_text);
+//		btnIsVisible.setText(Messages.get().OthersConnectionMongoDBGroup_btnIsVisible_text);
 		
 //		btnSendMonitoring = new Button(this, SWT.CHECK);
 //		btnSendMonitoring.setEnabled(false);
-//		btnSendMonitoring.setText(Messages.OthersConnectionMongoDBGroup_btnSendMonitoring_text);
+//		btnSendMonitoring.setText(Messages.get().OthersConnectionMongoDBGroup_btnSendMonitoring_text);
 	}
 	
 	/**

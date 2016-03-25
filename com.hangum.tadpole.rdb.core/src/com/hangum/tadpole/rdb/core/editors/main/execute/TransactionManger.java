@@ -46,7 +46,7 @@ public class TransactionManger {
 	 * @param query
 	 * @return
 	 */
-	public static boolean transactionQuery(String query, String userEmail, UserDBDAO userDB) {
+	public static boolean calledCommitOrRollback(String query, String userEmail, UserDBDAO userDB) {
 		if(StringUtils.startsWithIgnoreCase(query, COMMIT_STATEMENT)) {
 			TadpoleSQLTransactionManager.commit(userEmail, userDB);
 			return true;

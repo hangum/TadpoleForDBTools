@@ -32,7 +32,7 @@ public class CreateJavaScriptAction extends AbstractQueryAction {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		FindEditorAndWriteQueryUtil.run(userDB, "", PublicTadpoleDefine.DB_ACTION.JAVASCRIPT);
+		FindEditorAndWriteQueryUtil.run(userDB, "", PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT);
 	}
 	
 }

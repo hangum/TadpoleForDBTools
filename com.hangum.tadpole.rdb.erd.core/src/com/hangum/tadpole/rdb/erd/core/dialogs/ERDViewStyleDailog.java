@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.model.Style;
 
@@ -58,7 +59,8 @@ public class ERDViewStyleDailog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.ERDViewStyleDailog_0);
+		newShell.setText(Messages.get().ERDViewStyleDailog_0);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -77,39 +79,39 @@ public class ERDViewStyleDailog extends Dialog {
 		grpTableTitle = new Group(container, SWT.NONE);
 		grpTableTitle.setLayout(new GridLayout(3, false));
 		grpTableTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpTableTitle.setText(Messages.ERDViewStyleDailog_1);
+		grpTableTitle.setText(Messages.get().ERDViewStyleDailog_1);
 		
 		btnTableName = new Button(grpTableTitle, SWT.RADIO);
-		btnTableName.setText(Messages.ERDViewStyleDailog_2);
+		btnTableName.setText(Messages.get().ERDViewStyleDailog_2);
 		btnTableName.setData("name"); //$NON-NLS-1$
 		
 		btnTableComment = new Button(grpTableTitle, SWT.RADIO);
-		btnTableComment.setText(Messages.ERDViewStyleDailog_4);
+		btnTableComment.setText(Messages.get().ERDViewStyleDailog_4);
 		btnTableComment.setData("comment"); //$NON-NLS-1$
 		
 		btnTableNameComment = new Button(grpTableTitle, SWT.RADIO);
-		btnTableNameComment.setText(Messages.ERDViewStyleDailog_6);
+		btnTableNameComment.setText(Messages.get().ERDViewStyleDailog_6);
 		btnTableNameComment.setData("nameComment"); //$NON-NLS-1$
 		
 		Group grpColumn = new Group(container, SWT.NONE);
 		grpColumn.setLayout(new GridLayout(1, false));
 		grpColumn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpColumn.setText(Messages.ERDViewStyleDailog_8);
+		grpColumn.setText(Messages.get().ERDViewStyleDailog_8);
 		
 		btnPrimaryKey = new Button(grpColumn, SWT.CHECK);
-		btnPrimaryKey.setText(Messages.ERDViewStyleDailog_9);
+		btnPrimaryKey.setText(Messages.get().ERDViewStyleDailog_9);
 		
 		btnColumnName = new Button(grpColumn, SWT.CHECK);
-		btnColumnName.setText(Messages.ERDViewStyleDailog_10);
+		btnColumnName.setText(Messages.get().ERDViewStyleDailog_10);
 		
 		btnColumnComent = new Button(grpColumn, SWT.CHECK);
-		btnColumnComent.setText(Messages.ERDViewStyleDailog_11);
+		btnColumnComent.setText(Messages.get().ERDViewStyleDailog_11);
 		
 		btnColumnType = new Button(grpColumn, SWT.CHECK);
-		btnColumnType.setText(Messages.ERDViewStyleDailog_12);
+		btnColumnType.setText(Messages.get().ERDViewStyleDailog_12);
 		
 		btnNullCheck = new Button(grpColumn, SWT.CHECK);
-		btnNullCheck.setText(Messages.ERDViewStyleDailog_13);
+		btnNullCheck.setText(Messages.get().ERDViewStyleDailog_13);
 		
 		initUI();
 
@@ -163,8 +165,8 @@ public class ERDViewStyleDailog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.ERDViewStyleDailog_3, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.ERDViewStyleDailog_32, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ERDViewStyleDailog_3, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ERDViewStyleDailog_32, false);
 	}
 
 	/**

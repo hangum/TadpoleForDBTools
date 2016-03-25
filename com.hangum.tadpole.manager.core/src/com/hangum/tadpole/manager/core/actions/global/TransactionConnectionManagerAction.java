@@ -48,8 +48,8 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.TransactionConnectionManagerAction_0);
-		setToolTipText(Messages.TransactionConnectionManagerAction_1);
+		setText(Messages.get().TransactionConnectionManagerAction_0);
+		setToolTipText(Messages.get().TransactionConnectionManagerAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/transaction_db_status.png"));
 		setEnabled(true);
 	}

@@ -11,14 +11,21 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -105,7 +112,7 @@ public class TadpoleSystem_UserQuery {
 			
 			return userdb;
 		} else {
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_3);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_3);
 		}
 	}
 	
@@ -153,7 +160,7 @@ public class TadpoleSystem_UserQuery {
 		List<UserDAO> listUser = sqlClient.queryForList("findUser", email); //$NON-NLS-1$
 		
 		if(listUser.size() == 0) {
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_0);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_0);
 		}
 		
 		return listUser.get(0);
@@ -167,7 +174,7 @@ public class TadpoleSystem_UserQuery {
 	 * @param passwd
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static UserDAO login(String email, String passwd) throws TadpoleSQLManagerException, SQLException {
+	public static UserDAO login(String email, String passwd) throws TadpoleAuthorityException, TadpoleSQLManagerException, SQLException {
 		UserDAO login = new UserDAO();
 		login.setEmail(email);
 		login.setPasswd(CipherManager.getInstance().encryption(passwd));
@@ -176,15 +183,10 @@ public class TadpoleSystem_UserQuery {
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
-			throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_5);
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_5);
 		} else {
-			try {
-				if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
-					throw new Exception(Messages.TadpoleSystem_UserQuery_5);
-				}
-			} catch(Exception e) {
-				logger.error(String.format("do not login : %s", e.getMessage()));
-				throw new TadpoleRuntimeException(Messages.TadpoleSystem_UserQuery_5);
+			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+				throw new TadpoleAuthorityException(Messages.get().TadpoleSystem_UserQuery_5);
 			}
 		}
 	
@@ -222,11 +224,35 @@ public class TadpoleSystem_UserQuery {
 	
 	/**
 	 * get login history
+	 * 
 	 * @param strEmail
+	 * @param startTime
+	 * @param endTime
 	 */
-	public static List<UserLoginHistoryDAO> getLoginHistory(String strEmail) throws TadpoleSQLManagerException, SQLException {
+	public static List<UserLoginHistoryDAO> getLoginHistory(String strEmail, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (List<UserLoginHistoryDAO>)sqlClient.queryForList("getLoginHistory", strEmail);
+		
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("email",		strEmail);
+		
+		if(ApplicationArgumentUtils.isDBServer()) {
+			Date dateSt = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			queryMap.put("startTime",  formatter.format(dateSt));
+			
+			Date dateEd = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateEd));			
+		} else {
+			Date dateSt = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			
+			queryMap.put("startTime",  formatter.format(dateSt));
+			
+			Date dateEd = new Date(endTime);
+			queryMap.put("endTime", formatter.format(dateEd));
+		}
+		
+		return (List<UserLoginHistoryDAO>)sqlClient.queryForList("getLoginHistory", queryMap);
 	}
 	
 	/**

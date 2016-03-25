@@ -39,8 +39,8 @@ public class TadpoleERDActionBarContributor extends ActionBarContributor {
 		addRetargetAction(new ZoomOutRetargetAction());
 		
 		// Show/hide grid
-//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY, GEFMessages.get().ToggleRulerVisibility_Label, IAction.AS_CHECK_BOX));
-//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY, GEFMessages.get().ToggleSnapToGeometry_Label, IAction.AS_CHECK_BOX));
+//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_RULER_VISIBILITY, GEFMessages.get().get().ToggleRulerVisibility_Label, IAction.AS_CHECK_BOX));
+//		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY, GEFMessages.get().get().ToggleSnapToGeometry_Label, IAction.AS_CHECK_BOX));
 		addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY, "Grid", IAction.AS_CHECK_BOX));
 		
 		// aligment action

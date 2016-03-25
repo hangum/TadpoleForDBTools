@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.postgresql.PGResultSetMetaData;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -44,7 +43,7 @@ public class ResultSetUtils {
 	 * @throws SQLException
 	 */
 	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount) throws SQLException {
-		return getResultToList(false, rs, limitCount);
+		return getResultToList(false, rs, limitCount, 0);
 	}
 	
 	/**
@@ -55,15 +54,16 @@ public class ResultSetUtils {
 	 * @param isShowRowNum 첫번째 컬럼의 로우 넘버를 추가할 것인지.
 	 * @param rs ResultSet
 	 * @param limitCount 
+	 * @param intLastIndex
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount) throws SQLException {
+	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex) throws SQLException {
 		TadpoleResultSet returnRS = new TadpoleResultSet();
 		Map<Integer, Object> tmpRow = null;
 		
 		// 결과를 프리퍼런스에서 처리한 맥스 결과 만큼만 거져옵니다.
-		int rowCnt = 0;
+		int rowCnt = intLastIndex;
 		while(rs.next()) {
 			tmpRow = new HashMap<Integer, Object>();
 			
@@ -79,9 +79,10 @@ public class ResultSetUtils {
 				try {
 					Object obj = rs.getObject(intColIndex);
 //					int type = rs.getMetaData().getColumnType(intColIndex);
-					if(obj instanceof oracle.sql.STRUCT) {
-						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
-					} else if(obj instanceof Blob) {
+//					if(obj instanceof oracle.sql.STRUCT) {
+//						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
+//					} else
+					if(obj instanceof Blob) {
 						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 					} else {
 						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
@@ -158,7 +159,14 @@ public class ResultSetUtils {
 //			logger.debug("\t ColumnDisplaySize  :  " 	+ rsm.getColumnDisplaySize(i+1));
 //			logger.debug("\t ColumnType  		:  " 	+ rsm.getColumnType(i+1));
 //			logger.debug("\t ColumnTypeName 	:  " 	+ rsm.getColumnTypeName(i+1));
-			mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
+			//
+			// mysql json 타입의 자바 변수가 1로 매칭 되어 있어서, 이것을 pgsql의 json 타입의 값인 1111로 매칭합니다.
+			//							- 2015.10.21 mysql 5.7
+			if(StringUtils.equalsIgnoreCase("json", rsm.getColumnTypeName(i+1))) {
+				mapColumnType.put(i+intStartIndex, 1111);
+			} else {
+				mapColumnType.put(i+intStartIndex, rsm.getColumnType(i+1));
+			}
 //			logger.debug("\t Column Label " + rsm.getColumnLabel(i+1) );
 			
 //			logger.debug("\t Precision 			:  " 	+ rsm.getPrecision(i+1));
@@ -338,12 +346,13 @@ public class ResultSetUtils {
 		
 		ResultSetMetaData rsm = rs.getMetaData();
 		for(int i=0; i<rsm.getColumnCount(); i++) {
-			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
-				mapColumnName.put(i+intStartIndex, pgsqlMeta.getBaseTableName(i+1));
-				
-//				if(logger.isDebugEnabled()) logger.debug("Table name is " + pgsqlMeta.getBaseTableName(i+1));
-			} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+//			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+//				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
+//				mapColumnName.put(i+intStartIndex, pgsqlMeta.getBaseTableName(i+1));
+//				
+////				if(logger.isDebugEnabled()) logger.debug("Table name is " + pgsqlMeta.getBaseTableName(i+1));
+//			} else
+			if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
 				mapColumnName.put(i+intStartIndex, "Apache Hive is not support this method.");
 			} else {
 				if(rsm.getSchemaName(i+1) == null || "".equals(rsm.getSchemaName(i+1))) {
@@ -387,73 +396,73 @@ public class ResultSetUtils {
 		// 첫번째 컬럼 순번을 위해 삽입.
 		mapTableColumn.put(0, new HashMap());
 			
-		try {
-			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
-				for(int i=0;i<rsm.getColumnCount(); i++) {
-					int columnSeq = i+1;
-					Map<String, String> metaData = new HashMap<String, String>();
-					metaData.put("schema", pgsqlMeta.getBaseSchemaName(columnSeq));
-					metaData.put("table", pgsqlMeta.getBaseTableName(columnSeq));
-					metaData.put("column", pgsqlMeta.getBaseColumnName(columnSeq));
-					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
-					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
-					
-//					if(logger.isDebugEnabled()) {
-//						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
-//					}
-					
-					mapTableColumn.put(i+1, metaData);
-				}
-				
-//			/**
-//			 * table name alia
-//			 * 
-//			 */
-//			} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-//							userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
-//			) {
-////				com.mysql.jdbc.ResultSetMetaData mysqlMeta = (com.mysql.jdbc.ResultSetMetaData)rsm;
-//				org.mariadb.jdbc.MySQLResultSetMetaData mysqlMeta = (org.mariadb.jdbc.MySQLResultSetMetaData)rsm;
+//		try {
+//			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+//				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
 //				for(int i=0;i<rsm.getColumnCount(); i++) {
 //					int columnSeq = i+1;
 //					Map<String, String> metaData = new HashMap<String, String>();
-//					if(logger.isDebugEnabled()) {
-//						logger.debug("\tschema :" + mysqlMeta.getCatalogName(columnSeq) + "\ttable:" + mysqlMeta.getTableName(columnSeq) + "\tcolumn:" + mysqlMeta.getColumnName(columnSeq));
-//					}
+//					metaData.put("schema", pgsqlMeta.getBaseSchemaName(columnSeq));
+//					metaData.put("table", pgsqlMeta.getBaseTableName(columnSeq));
+//					metaData.put("column", pgsqlMeta.getBaseColumnName(columnSeq));
+//					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
+//					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
 //					
-//					metaData.put("schema", mysqlMeta.getCatalogName(columnSeq));
-//					metaData.put("table", mysqlMeta.getTableName(columnSeq));
-//					metaData.put("column", mysqlMeta.getColumnName(columnSeq));
+////					if(logger.isDebugEnabled()) {
+////						logger.debug("\tschema :" + pgsqlMeta.getBaseSchemaName(columnSeq) + "\ttable:" + pgsqlMeta.getBaseTableName(columnSeq) + "\tcolumn:" + pgsqlMeta.getBaseColumnName(columnSeq));
+////					}
 //					
 //					mapTableColumn.put(i+1, metaData);
 //				}
-				
-			} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT 
-							|| userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
-							|| userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT							
-					) {
-				for(int i=0;i<rsm.getColumnCount(); i++) {
-					int columnSeq = i+1;
-					Map<String, String> metaData = new HashMap<String, String>();
-					metaData.put("schema", 	rsm.getSchemaName(columnSeq));
-					metaData.put("table", 	rsm.getTableName(columnSeq));
-					metaData.put("column", 	rsm.getColumnName(columnSeq));
-					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
-					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
-					
-//					if(logger.isDebugEnabled()) {
-//						logger.debug("\tschema :" + rsm.getSchemaName(columnSeq) + "\ttable:" + rsm.getTableName(columnSeq) + "\tcolumn:" + rsm.getColumnName(columnSeq)
-//						 + "\ttype : " + rsm.getColumnType(columnSeq) + "\ttypename : " + rsm.getColumnTypeName(columnSeq))
-//						;
-//					}
-					
-					mapTableColumn.put(i+1, metaData);
-				}
-			}
-		} catch(Exception e) {
-			logger.error("resultset metadata exception", e);
-		}
+//				
+////			/**
+////			 * table name alia
+////			 * 
+////			 */
+////			} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+////							userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
+////			) {
+//////				com.mysql.jdbc.ResultSetMetaData mysqlMeta = (com.mysql.jdbc.ResultSetMetaData)rsm;
+////				org.mariadb.jdbc.MySQLResultSetMetaData mysqlMeta = (org.mariadb.jdbc.MySQLResultSetMetaData)rsm;
+////				for(int i=0;i<rsm.getColumnCount(); i++) {
+////					int columnSeq = i+1;
+////					Map<String, String> metaData = new HashMap<String, String>();
+////					if(logger.isDebugEnabled()) {
+////						logger.debug("\tschema :" + mysqlMeta.getCatalogName(columnSeq) + "\ttable:" + mysqlMeta.getTableName(columnSeq) + "\tcolumn:" + mysqlMeta.getColumnName(columnSeq));
+////					}
+////					
+////					metaData.put("schema", mysqlMeta.getCatalogName(columnSeq));
+////					metaData.put("table", mysqlMeta.getTableName(columnSeq));
+////					metaData.put("column", mysqlMeta.getColumnName(columnSeq));
+////					
+////					mapTableColumn.put(i+1, metaData);
+////				}
+//				
+//			} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT 
+//						|| userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
+//						|| userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT							
+//				) {
+//				for(int i=0;i<rsm.getColumnCount(); i++) {
+//					int columnSeq = i+1;
+//					Map<String, String> metaData = new HashMap<String, String>();
+//					metaData.put("schema", 	rsm.getSchemaName(columnSeq));
+//					metaData.put("table", 	rsm.getTableName(columnSeq));
+//					metaData.put("column", 	rsm.getColumnName(columnSeq));
+//					metaData.put("type", 	""+rsm.getColumnType(columnSeq));
+//					metaData.put("typeName", 	""+rsm.getColumnTypeName(columnSeq));
+//					
+////					if(logger.isDebugEnabled()) {
+////						logger.debug("\tschema :" + rsm.getSchemaName(columnSeq) + "\ttable:" + rsm.getTableName(columnSeq) + "\tcolumn:" + rsm.getColumnName(columnSeq)
+////						 + "\ttype : " + rsm.getColumnType(columnSeq) + "\ttypename : " + rsm.getColumnTypeName(columnSeq))
+////						;
+////					}
+//					
+//					mapTableColumn.put(i+1, metaData);
+//				}
+//			}
+//		} catch(Exception e) {
+//			logger.error("resultset metadata exception", e);
+//		}
 		
 		return mapTableColumn;
 	}

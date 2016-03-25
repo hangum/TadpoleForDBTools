@@ -4,13 +4,14 @@ Bundle-Name: Tadpole Cihper Core
 Bundle-SymbolicName: com.hangum.tadpole.cipher.core
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.cipher.core.Activator
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.core.runtime,
  com.hangum.tadpole.commons.libs;bundle-version="2.0.0",
  com.hangum.tadpole.commons.utils;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.cipher.core.manager,
+ com.hangum.tadpole.cipher.core.utils,
  org.jasypt.commons,
  org.jasypt.contrib.org.apache.commons.codec_1_3,
  org.jasypt.contrib.org.apache.commons.codec_1_3.binary,

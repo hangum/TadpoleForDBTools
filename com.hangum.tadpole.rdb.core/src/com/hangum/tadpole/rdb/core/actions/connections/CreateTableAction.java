@@ -34,8 +34,8 @@ public class CreateTableAction extends AbstractQueryAction {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
 		FindEditorAndWriteQueryUtil.run(userDB, 
-				QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.DB_ACTION.TABLES),
-				PublicTadpoleDefine.DB_ACTION.TABLES);
+				QueryTemplateUtils.getQuery(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES),
+				PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 	}
 	
 

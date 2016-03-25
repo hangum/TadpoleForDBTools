@@ -25,6 +25,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnsComposite;
@@ -84,40 +85,42 @@ public class RDBDBInfosEditor extends EditorPart {
 		
 		//[information composite start]///////////////////////////////		
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
-		tbtmServerStatus.setText(Messages.RDBDBInfosEditor_1);
+		tbtmServerStatus.setText(Messages.get().RDBDBInfosEditor_1);
 		
 		compositeRDBInformation = new RDBInformationComposite(tabFolder, SWT.NONE, userDB);
 		tbtmServerStatus.setControl(compositeRDBInformation);
 		compositeRDBInformation.setLayout(gl_compositeRDBInformation);
 		//[information composite end]/////////////////////////////////
 		
-		//[table information start]
-		CTabItem tbtmCollectionSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmCollectionSummary.setText(Messages.RDBDBInfosEditor_2);
+		if(userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) {
+			//[table information start]
+			CTabItem tbtmCollectionSummary = new CTabItem(tabFolder, SWT.NONE);
+			tbtmCollectionSummary.setText(Messages.get().RDBDBInfosEditor_2);
+			
+			tableInformationComposite = new TablesComposite(tabFolder, SWT.NONE, userDB);
+			tbtmCollectionSummary.setControl(tableInformationComposite);
+			
+			GridLayout gl_compositeTableInformation = new GridLayout(1, false);
+			gl_compositeTableInformation.verticalSpacing = 2;
+			gl_compositeTableInformation.horizontalSpacing = 2;
+			gl_compositeTableInformation.marginHeight = 2;
+			gl_compositeTableInformation.marginWidth = 2;
+			tableInformationComposite.setLayout(gl_compositeTableInformation);
+			//[table information end]
+			
+			CTabItem tbtmColumnSummary = new CTabItem(tabFolder, SWT.NONE);
+			tbtmColumnSummary.setText(Messages.get().RDBDBInfosEditor_3);
+			columnInformationComposite = new ColumnsComposite(tabFolder, SWT.NONE, userDB);
+			tbtmColumnSummary.setControl(columnInformationComposite);
+			
+			GridLayout gl_compositeColumnInformation = new GridLayout(1, false);
+			gl_compositeColumnInformation.verticalSpacing = 2;
+			gl_compositeColumnInformation.horizontalSpacing = 2;
+			gl_compositeColumnInformation.marginHeight = 2;
+			gl_compositeColumnInformation.marginWidth = 2;
+			columnInformationComposite.setLayout(gl_compositeColumnInformation);
+		}
 		
-		tableInformationComposite = new TablesComposite(tabFolder, SWT.NONE, userDB);
-		tbtmCollectionSummary.setControl(tableInformationComposite);
-		
-		GridLayout gl_compositeTableInformation = new GridLayout(1, false);
-		gl_compositeTableInformation.verticalSpacing = 2;
-		gl_compositeTableInformation.horizontalSpacing = 2;
-		gl_compositeTableInformation.marginHeight = 2;
-		gl_compositeTableInformation.marginWidth = 2;
-		tableInformationComposite.setLayout(gl_compositeTableInformation);
-		//[table information end]
-		
-		CTabItem tbtmColumnSummary = new CTabItem(tabFolder, SWT.NONE);
-		tbtmColumnSummary.setText(Messages.RDBDBInfosEditor_3);
-		columnInformationComposite = new ColumnsComposite(tabFolder, SWT.NONE, userDB);
-		tbtmColumnSummary.setControl(columnInformationComposite);
-		
-		GridLayout gl_compositeColumnInformation = new GridLayout(1, false);
-		gl_compositeColumnInformation.verticalSpacing = 2;
-		gl_compositeColumnInformation.horizontalSpacing = 2;
-		gl_compositeColumnInformation.marginHeight = 2;
-		gl_compositeColumnInformation.marginWidth = 2;
-		columnInformationComposite.setLayout(gl_compositeColumnInformation);
-
 		tabFolder.setSelection(0);
 		
 		// google analytic

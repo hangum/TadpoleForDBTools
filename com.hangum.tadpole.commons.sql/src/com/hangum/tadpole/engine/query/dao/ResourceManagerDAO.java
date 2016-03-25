@@ -31,7 +31,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 	long resource_seq;
 	String resource_types;
 	long user_seq;
-	String user_name;
+	String user_name = "";
 	long db_seq;
 	String display_name;
 	
