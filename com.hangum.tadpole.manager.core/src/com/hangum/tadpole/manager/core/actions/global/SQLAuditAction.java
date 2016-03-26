@@ -50,8 +50,8 @@ public class SQLAuditAction extends Action implements ISelectionListener, IWorkb
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.get().APIName);
-		setToolTipText(Messages.get().APIName);
+		setText(Messages.get().SQLAudit);
+		setToolTipText(Messages.get().SQLAudit);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sqlaudit.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}

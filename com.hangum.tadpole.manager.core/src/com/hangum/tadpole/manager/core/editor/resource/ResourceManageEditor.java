@@ -378,7 +378,7 @@ public class ResourceManageEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openError(null, Messages.get().Confirm, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
+					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -389,14 +389,14 @@ public class ResourceManageEditor extends EditorPart {
 						String strAPIURI = textAPIURL.getText().trim();
 						
 						if(strAPIURI.equals("")) { //$NON-NLS-1$
-							MessageDialog.openError(getSite().getShell(), Messages.get().Confirm, Messages.get().ResourceManageEditor_30);
+							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_30);
 							textAPIURL.setFocus();
 							return false;
 						}
 						
 						// check valid url. url pattern is must be /{parent}/{child}
 						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ResourceManageEditor_32);
+							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_32);
 							
 							textAPIURL.setFocus();
 							return false;

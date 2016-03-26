@@ -111,6 +111,7 @@ public class SQLTemplateView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell(), SQL_TEMPLATE_TYPE.PRI);
 				if(Dialog.OK == dialog.open()) {
+					grpPublicDao.getChildList().add(dialog.getSqlTemplateDAO());
 					grpPrivateDao.getChildList().add(dialog.getSqlTemplateDAO());
 					tvSQLTemplate.refresh(grpPrivateDao);
 				}

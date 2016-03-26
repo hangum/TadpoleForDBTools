@@ -70,7 +70,7 @@ public class ERDRefreshAction extends SelectionAction {
 	
 	@Override
 	public void run() {
-		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), Messages.get().ERDRefreshAction_3, Messages.get().ERDRefreshAction_4)) return;
+		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), Messages.get().Confirm, Messages.get().ERDRefreshAction_4)) return;
 		
 		DB dbModel = rdbEditor.getDb();
 		

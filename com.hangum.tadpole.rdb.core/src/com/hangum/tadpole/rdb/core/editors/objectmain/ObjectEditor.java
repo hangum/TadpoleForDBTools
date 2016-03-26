@@ -257,7 +257,7 @@ public class ObjectEditor extends MainEditor {
 				return;
 			}
 			
-			if(!MessageDialog.openConfirm(null, Messages.get().Error, Messages.get().ObjectEditor_3)) {
+			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().ObjectEditor_3)) {
 				setOrionTextFocus();
 				return;
 			}

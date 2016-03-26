@@ -96,12 +96,8 @@ public class TableColumnEditor extends EditingSupport {
 		if(element instanceof TableColumnDAO) {
 			TableColumnDAO table = (TableColumnDAO)element;
 			
-			
-			
 		} else if(element instanceof TableDAO) {
 			TableDAO table = (TableDAO)element;
-		
-			
 		}
 		
 		tableViewer.update(element, null);

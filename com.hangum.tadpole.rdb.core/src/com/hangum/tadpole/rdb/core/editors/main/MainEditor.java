@@ -332,7 +332,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText(Messages.get().Comment);
+		tiAutoCommitCommit.setText(Messages.get().Commit);
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

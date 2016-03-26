@@ -132,12 +132,13 @@ public class ResourceDetailDialog extends Dialog {
 		btnModify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if("".equals(textTitle.getText().trim())) {
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceDetailDialog_name_empty);
+					textTitle.setFocus();
+					return;
+				}
+				
 				if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResourceDetailDialog_delete)) {
-					if("".equals(textTitle.getText().trim())) {
-						MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().ResourceDetailDialog_name_empty);
-						textTitle.setFocus();
-						return;
-					}
 					resourceManagerDao.setName(textTitle.getText());
 					resourceManagerDao.setDescription(textDescription.getText());
 					

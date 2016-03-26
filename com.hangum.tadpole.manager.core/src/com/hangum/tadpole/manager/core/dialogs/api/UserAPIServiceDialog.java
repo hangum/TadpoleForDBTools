@@ -193,7 +193,7 @@ public class UserAPIServiceDialog extends Dialog {
 		try {
 			String strAPIKEY = textAPIKey.getText();
 			if(strAPIKEY.equals("")) { //$NON-NLS-1$
-				MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().UserAPIServiceDialog_10);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserAPIServiceDialog_10);
 				textAPIKey.setFocus();
 				
 				return;

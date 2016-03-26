@@ -133,13 +133,13 @@ public class TableColumnFilterDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTableName.getText())) {
-			MessageDialog.openError(getShell(), Messages.get().Error, "Check table name.");
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Check table name.");
 			textTableName.setFocus();
 			return;
 		}
 		
 		if("".equals(textColumnNames.getText())) {
-			MessageDialog.openError(getShell(), Messages.get().Error, "Check column name.");
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Check column name.");
 			textColumnNames.setFocus();
 			return;
 		}

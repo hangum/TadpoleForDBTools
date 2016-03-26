@@ -298,7 +298,7 @@ public class SQLAuditEditor extends EditorPart {
 		compositeSearchDetail.setLayout(new GridLayout(3, false));
 		
 		Label lblSQL = new Label(compositeSearchDetail, SWT.NONE);
-		lblSQL.setText(Messages.get().SQL);
+		lblSQL.setText(Messages.get().Search);
 		
 		textSearch = new Text(compositeSearchDetail, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -370,7 +370,7 @@ public class SQLAuditEditor extends EditorPart {
 				download();
 			}
 		});
-		btnDownload.setText(Messages.get().SQL);
+		btnDownload.setText(Messages.get().Download);
 
 		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
 		btnShowQueryEditor.addSelectionListener(new SelectionAdapter() {
@@ -379,7 +379,7 @@ public class SQLAuditEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
-		btnShowQueryEditor.setText(Messages.get().Sec);
+		btnShowQueryEditor.setText(Messages.get().ExecutedSQLEditor_26);
 
 		initUIData();
 		registerServiceHandler();

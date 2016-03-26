@@ -88,7 +88,7 @@ public class OTPLoginDialog extends Dialog {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
 		if(!NumberUtils.isNumber(strOTPCode)) {
 			textOTPCode.setFocus();
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
 			return;
 		}
 		

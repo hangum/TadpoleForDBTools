@@ -60,8 +60,8 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 				sbSQL.append(dao.getSysName());
 				
 				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-				if(i < (showTableColumns.size()-1)) sbSQL.append("= ?,  ");  //$NON-NLS-1$
-				else sbSQL.append("=? "); //$NON-NLS-1$
+				if(i < (showTableColumns.size()-1)) sbSQL.append("= ?, ");  //$NON-NLS-1$
+				else sbSQL.append("= ? "); //$NON-NLS-1$
 			}
 
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$

@@ -189,7 +189,7 @@ public class SessionListEditor extends EditorPart {
 				if(isPossible) {
 					killProcess();
 				} else {
-					MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Confirm, Messages.get().MainEditor_21);
+					MessageDialog.openWarning(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Warning, Messages.get().MainEditor_21);
 				}
 			}
 		});

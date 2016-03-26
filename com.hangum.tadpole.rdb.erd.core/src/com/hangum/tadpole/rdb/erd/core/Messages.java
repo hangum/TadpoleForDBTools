@@ -18,7 +18,6 @@ public class Messages {
 	public String AutoLayoutAction_2;
 	public String AutoLayoutAction_3;
 	public String ERDRefreshAction_0;
-	public String ERDRefreshAction_3;
 	public String ERDRefreshAction_4;
 	public String ERDViewStyleAction_0;
 	public String ERDViewStyleDailog_0;

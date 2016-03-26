@@ -134,11 +134,11 @@ public class SQLTemplateDialog extends Dialog {
 		
 		// check validation
 		if(strTextName.equals("")) {
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLTemplateDialog_NameEmpty);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLTemplateDialog_NameEmpty);
 			textName.setFocus();
 			return;
 		} else if(strSQL.equals("")) {
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLTemplateDialog_SQLEmpty);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLTemplateDialog_SQLEmpty);
 			textSQL.setFocus();
 			return;
 		}

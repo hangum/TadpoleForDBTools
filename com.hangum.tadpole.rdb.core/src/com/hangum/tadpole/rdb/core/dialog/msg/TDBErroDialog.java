@@ -78,7 +78,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 		lblMessage.setText(Messages.get().TDBErroDialog_2);
 		new Label(container, SWT.NONE);
 		
-		textMessage = new Text(container, SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		textMessage.setText(message);
 		
