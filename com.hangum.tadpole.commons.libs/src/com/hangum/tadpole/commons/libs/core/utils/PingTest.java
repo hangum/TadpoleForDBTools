@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.commons.util;
+package com.hangum.tadpole.commons.libs.core.utils;
 
 import java.net.InetAddress;
 import java.net.Socket;

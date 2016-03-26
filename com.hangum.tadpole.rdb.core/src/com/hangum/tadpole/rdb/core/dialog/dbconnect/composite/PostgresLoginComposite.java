@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -89,7 +88,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
-		lblNewLabelPort.setText(Messages.get().DBLoginDialog_5);
+		lblNewLabelPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -98,23 +97,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		btnPing.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String host 	= StringUtils.trimToEmpty(textHost.getText());
-				String port 	= StringUtils.trimToEmpty(textPort.getText());
-				
-				if("".equals(host) || "".equals(port)) { //$NON-NLS-1$ //$NON-NLS-2$
-					MessageDialog.openError(null, Messages.get().Confirm, Messages.get().DBLoginDialog_11);
-					return;
-				}
-				
-				try {
-					if(isPing(host, port)) {
-						MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().Password);
-					} else {
-						MessageDialog.openError(null, Messages.get().Confirm, Messages.get().Port);
-					}
-				} catch(NumberFormatException nfe) {
-					MessageDialog.openError(null, Messages.get().Error, Messages.get().MySQLLoginComposite_4);
-				}
+				pingTest(textHost.getText(), textPort.getText());
 			}
 		});
 		btnPing.setText(Messages.get().PingTest);
@@ -133,7 +116,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
-		lblPassword.setText(Messages.get().DBLoginDialog_3);
+		lblPassword.setText(Messages.get().Password);
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));

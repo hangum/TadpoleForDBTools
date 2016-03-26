@@ -22,14 +22,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
-import com.hangum.tadpole.commons.util.PingTest;
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -119,6 +117,31 @@ public abstract class AbstractLoginComposite extends Composite {
 		this.dataActionStatus = dalog_status;
 	}
 	
+	/**
+	 * ping test
+	 * 
+	 * @param host
+	 * @param port
+	 */
+	protected void pingTest(String host, String port) {
+		host 	= StringUtils.trimToEmpty(host);
+		port 	= StringUtils.trimToEmpty(port);
+		
+		if("".equals(host) || "".equals(port)) { //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog.openWarning(null, Messages.get().Warning, String.format(Messages.get().DBLoginDialog_11, Messages.get().Host, Messages.get().Port));
+			return;
+		}
+		
+		try {
+			if(ValidChecker.isPing(host, port)) {
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().DBLoginDialog_13);
+			} else {
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().DBLoginDialog_15);
+			}
+		} catch(NumberFormatException nfe) {
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MySQLLoginComposite_4);
+		}
+	}
 
 	/**
 	 * 
@@ -205,25 +228,6 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	public UserDBDAO getDBDTO() {
 		return userDB;
-	}
-	
-	/**
-	 * host, port에 ping
-	 * 
-	 * @param host
-	 * @param port
-	 * @return
-	 * @deprecated 서버에따라 핑 서비스를 막아 놓는 경우도 있어, 막아 놓습니다.
-	 */
-	public boolean isPing(String host, String port) throws NumberFormatException {
-		
-//		TODO system 네트웍 속도가 느릴경우(?) 핑이 늦게와서 좀 늘려... 방법이 없을까? - hangum
-		int stats = PingTest.ping(host, Integer.parseInt(port), 2500);
-		if(PingTest.SUCCESS == stats) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 	
 	/**
@@ -354,42 +358,6 @@ public abstract class AbstractLoginComposite extends Composite {
 			
 			return false;
 		}
-	}
-	
-	/**
-	 * text message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean checkTextCtl(Text text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Confirm, msg + Messages.get().MySQLLoginComposite_10);
-			text.setFocus();
-			
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * combo message
-	 * 
-	 * @param text
-	 * @param msg
-	 * @return
-	 */
-	protected boolean checkTextCtl(Combo text, String msg) {
-		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Confirm, msg + Messages.get().MySQLLoginComposite_10);
-			text.setFocus();
-			
-			return false;
-		}
-		
-		return true;
 	}
 
 	/**

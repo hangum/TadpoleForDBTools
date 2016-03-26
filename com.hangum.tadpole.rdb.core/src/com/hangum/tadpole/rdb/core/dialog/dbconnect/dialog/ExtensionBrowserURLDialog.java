@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -54,12 +55,10 @@ import com.hangum.tadpole.rdb.core.Messages;
  *
  */
 public class ExtensionBrowserURLDialog extends Dialog {
-	
 	/**
 	 * list default external dao
 	 */
 	private List<ExternalBrowserInfoDAO> listExterBroswer = new ArrayList<ExternalBrowserInfoDAO>();
-
 
 	private Button btnEnable;
 	private TableViewer tableViewer;
@@ -68,7 +67,6 @@ public class ExtensionBrowserURLDialog extends Dialog {
 	private Text textName;
 	private Text textURL;
 	private Text textComment;
-
 
 	/**
 	 * Create the dialog.
@@ -98,7 +96,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		btnEnable = new Button(container, SWT.CHECK);
 		btnEnable.setSelection(true);
-		btnEnable.setText("Enable"); //$NON-NLS-1$
+		btnEnable.setText(Messages.get().IsEnable);
 		
 		Group grpList = new Group(container, SWT.NONE);
 		grpList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -121,12 +119,12 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		table.setLinesVisible(true);
 		
 		TableColumn tblclmnUsed = new TableColumn(table, SWT.NONE);
-		tblclmnUsed.setWidth(30);
+		tblclmnUsed.setWidth(70);
 		tblclmnUsed.setText(Messages.get().IsUse);
 		
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
 		tblclmnName.setWidth(100);
-		tblclmnName.setText(Messages.get().ExtensionBrowserURLDialog_3);
+		tblclmnName.setText(Messages.get().Name);
 		
 		TableColumn tblclmnUrl = new TableColumn(table, SWT.NONE);
 		tblclmnUrl.setWidth(200);
@@ -167,7 +165,6 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(grpAdd, SWT.NONE);
-		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDescription.setText(Messages.get().Description);
 		
 		textComment = new Text(grpAdd, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -229,23 +226,14 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		String strUrl = StringUtils.trimToEmpty(textURL.getText());
 		String strCmt = StringUtils.trimToEmpty(textComment.getText());
 		
-		if("".equals(strName)) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().ExtensionBrowserURLDialog_18); //$NON-NLS-1$
-			textName.setFocus();
-			return;
-		}
-		
-		if("".equals(strUrl)) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().ExtensionBrowserURLDialog_21); //$NON-NLS-1$
-			textURL.setFocus();
-			return;
-		}
+		if(!ValidChecker.checkTextCtl(textName, Messages.get().Name)) return;
+		if(!ValidChecker.checkTextCtl(textURL, Messages.get().URL)) return;
 		
 		// url데이터가 이미 존재하는지 검사합니다.
 		List<ExternalBrowserInfoDAO> listCheckExterBroswer = (List)tableViewer.getInput();
 		for (ExternalBrowserInfoDAO externalBrowserInfoDAO : listCheckExterBroswer) {
 			if(strUrl.equals(externalBrowserInfoDAO.getUrl())) {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().Name); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().Name); //$NON-NLS-1$
 				return;
 			}
 		}

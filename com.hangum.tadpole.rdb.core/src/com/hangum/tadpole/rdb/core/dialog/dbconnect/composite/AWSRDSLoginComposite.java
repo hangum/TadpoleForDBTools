@@ -42,6 +42,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.aws.rds.commons.core.utils.AmazonRDSUtsils;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
@@ -189,7 +190,7 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 	private void addDatabase() {
 		StructuredSelection ss = (StructuredSelection)tvRDS.getSelection();
 		if(ss.isEmpty()) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().AWSRDSLoginComposite_8);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AWSRDSLoginComposite_8);
 		} else {
 			AWSRDSUserDBDAO amazonRDSDto = (AWSRDSUserDBDAO)ss.getFirstElement();
 			
@@ -213,8 +214,8 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		String strSecretkey = textSecretKey.getText().trim();
 		String strRegionName = comboRegionName.getText().trim();
 		
-		if(!checkTextCtl(textAccesskey, Messages.get().AssesKey)) return;
-		if(!checkTextCtl(textSecretKey, Messages.get().SecretKey)) return;
+		if(!ValidChecker.checkTextCtl(textAccesskey, Messages.get().AssesKey)) return;
+		if(!ValidChecker.checkTextCtl(textSecretKey, Messages.get().SecretKey)) return;
 		
 		try {
 			Map<String, UserDBDAO> mapRegisteredDB = TadpoleSystem_UserDBQuery.getUserDBByHost();
@@ -282,11 +283,11 @@ public class AWSRDSLoginComposite extends AbstractLoginComposite {
 		String strSecretkey = textSecretKey.getText().trim();
 		
 		if("".equals(strAccesskey)) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().AWSRDSLoginComposite_7);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AWSRDSLoginComposite_7);
 			textAccesskey.setFocus();
 			return false;
 		} else if("".equals(strSecretkey)) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().AWSRDSLoginComposite_20);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AWSRDSLoginComposite_20);
 			textSecretKey.setFocus();
 			return false;
 		}

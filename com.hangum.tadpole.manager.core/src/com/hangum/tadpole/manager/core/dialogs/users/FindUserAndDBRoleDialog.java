@@ -156,7 +156,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		composite.setLayout(new GridLayout(5, false));
 		
 		Label lblRoleType = new Label(composite, SWT.NONE);
-		lblRoleType.setText(Messages.get().FindUserAndDBRoleDialog_3);
+		lblRoleType.setText(Messages.get().RoleType);
 		
 		comboRoleType = new Combo(composite, SWT.NONE | SWT.READ_ONLY);
 		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));

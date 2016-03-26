@@ -214,13 +214,13 @@ public class NewUserDialog extends Dialog {
 			getShell().setSize(370, 240);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
-			MessageDialog.openError(getParentShell(), Messages.get().Confirm, Messages.get().NewUserDialog_7);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_7);
 			return;
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
 			getShell().setSize(370, 240);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
-			MessageDialog.openError(getParentShell(), Messages.get().Confirm, Messages.get().NewUserDialog_15);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_15);
 			return;
 		}
 		getShell().setSize(380, 370);
@@ -248,12 +248,12 @@ public class NewUserDialog extends Dialog {
 		if(!validation(strEmail, passwd, rePasswd, name)) return;
 		if(btnGetOptCode.getSelection()) {
 			if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-				MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().NewUserDialog_40);
+				MessageDialog.openWarning(getShell(), Messages.get().Error, Messages.get().NewUserDialog_40);
 				textOTPCode.setFocus();
 				return;
 			}
 			if(!GoogleAuthManager.getInstance().isValidate(secretKey, NumberUtils.toInt(textOTPCode.getText()))) {
-				MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().NewUserDialog_42); //$NON-NLS-1$
+				MessageDialog.openWarning(getShell(), Messages.get().Error, Messages.get().NewUserDialog_42); //$NON-NLS-1$
 				textOTPCode.setFocus();
 				return;
 			}
@@ -354,29 +354,33 @@ public class NewUserDialog extends Dialog {
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
 
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_7);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_7);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_10);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_10);
 			textPasswd.setFocus();
 			return false;
 		} else if("".equals(name)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_13);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_13);
 			textName.setFocus();
 			return false;
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
-			MessageDialog.openError(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_15);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_15);
 			textEMail.setFocus();
 			return false;
 		} else if(StringUtils.length(strPass) < 5) {
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().NewUserDialog_25);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().NewUserDialog_25);
 			textPasswd.setFocus();
+			return false;
+		} else if("".equals(rePasswd)) {
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_10);
+			textRePasswd.setFocus();
 			return false;
 		}
 		
 		if(!strPass.equals(rePasswd)) {
-			MessageDialog.openError(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_17);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_17);
 			textPasswd.setFocus();
 			return false;
 		}
@@ -384,12 +388,12 @@ public class NewUserDialog extends Dialog {
 		try {
 			// 기존 중복 이메일인지 검사합니다.
 			if(!TadpoleSystem_UserQuery.isDuplication(strEmail)) {
-				MessageDialog.openError(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_9);
+				MessageDialog.openError(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_9);
 				textEMail.setFocus();
 				return false;
 			}
 		} catch(Exception e) {
-			logger.error(Messages.get().NewUserDialog_11, e);
+			logger.error("new user", e);
 			MessageDialog.openError(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_12 + e.getMessage());
 			return false;
 		}

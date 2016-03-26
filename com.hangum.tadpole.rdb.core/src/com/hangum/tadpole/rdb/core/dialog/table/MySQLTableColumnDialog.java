@@ -129,7 +129,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 		textColumnName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblType = new Label(container, SWT.NONE);
-		lblType.setText(Messages.get().MySQLTableColumnDialog_5);
+		lblType.setText(Messages.get().Type);
 		
 		comboType = new Combo(container, SWT.NONE);
 		comboType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

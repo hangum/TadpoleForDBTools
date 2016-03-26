@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,6 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -107,7 +107,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
-		lblNewLabelPort.setText(Messages.get().DBLoginDialog_5);
+		lblNewLabelPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -116,23 +116,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		btnPing.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String host 	= StringUtils.trimToEmpty(textHost.getText());
-				String port 	= StringUtils.trimToEmpty(textPort.getText());
-				
-				if("".equals(host) || "".equals(port)) { //$NON-NLS-1$ //$NON-NLS-2$
-					MessageDialog.openError(null, Messages.get().Confirm, Messages.get().DBLoginDialog_11);
-					return;
-				}
-				
-				try {
-					if(isPing(host, port)) {
-						MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().Password);
-					} else {
-						MessageDialog.openError(null, Messages.get().Confirm, Messages.get().Port);
-					}
-				} catch(NumberFormatException nfe) {
-					MessageDialog.openError(null, Messages.get().Error, Messages.get().MySQLLoginComposite_4);
-				}
+				pingTest(textHost.getText(), textPort.getText());
 			}
 		});
 		btnPing.setText(Messages.get().PingTest);
@@ -162,7 +146,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
-		lblPassword.setText(Messages.get().DBLoginDialog_3);
+		lblPassword.setText(Messages.get().Password);
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -248,12 +232,12 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public boolean isValidateInput(boolean isTest) {
-		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
+		if(!ValidChecker.checkTextCtl(preDBInfo.getComboGroup(), Messages.get().GroupName)) return false;
+		if(!ValidChecker.checkTextCtl(preDBInfo.getTextDisplayName(), Messages.get().DisplayName)) return false;
 		
-		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$		
+		if(!ValidChecker.checkTextCtl(textHost, Messages.get().Host)) return false;
+		if(!ValidChecker.checkNumberCtl(textPort, Messages.get().Port)) return false;
+		if(!ValidChecker.checkTextCtl(textDatabase, Messages.get().Database)) return false;	
 		
 		return true;
 	}

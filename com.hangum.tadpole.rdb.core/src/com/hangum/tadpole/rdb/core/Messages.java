@@ -77,19 +77,12 @@ public class Messages {
 	public String Host;
 	public String DBLoginDialog_11;
 	public String Password;
-	public String DBLoginDialog_16;
-	public String DBLoginDialog_17;
-	public String DBLoginDialog_18;
-	public String DBLoginDialog_19;
-	public String DBLoginDialog_20;
 	public String DBLoginDialog_27;
-	public String DBLoginDialog_3;
 	public String DBLoginDialog_42;
 	public String DBLoginDialog_43;
 	public String DBLoginDialog_44;
 	public String DBLoginDialog_45;
 	public String DBLoginDialog_47;
-	public String DBLoginDialog_5;
 	public String DBLoginDialog_9;
 	public String GenerateSQLSelectAction_0;
 	public String GenerateSQLSelectAction_1;
@@ -149,10 +142,7 @@ public class Messages {
 	public String Add;
 	public String Delete;
 	public String Save;
-	public String ExtensionBrowserURLDialog_18;
 	public String IsUse;
-	public String ExtensionBrowserURLDialog_21;
-	public String ExtensionBrowserURLDialog_3;
 	public String URL;
 	public String GenerateSQLDeleteAction_0;
 	public String GenerateSQLInsertAction_0;
@@ -187,10 +177,6 @@ public class Messages {
 	public String ERDView;
 	public String EditSQL;
 	public String OpenSingleRowDataDialogAction_0;
-	public String OracleLoginComposite_1;
-	public String OracleLoginComposite_2;
-	public String OracleLoginComposite_3;
-	public String OracleLoginComposite_4;
 	public String QueryHistoryComposite_10;
 	public String Result;
 	public String Message;
@@ -233,7 +219,6 @@ public class Messages {
 	public String TadpoleMongoDBCollectionComposite_5;
 	public String TadpoleMongoDBCollectionComposite_6;
 	public String TadpoleMongoDBCollectionComposite_7;
-	public String TadpoleMongoDBCollectionComposite_8;
 	public String TadpoleMongoDBCollectionComposite_9;
 	public String TadpoleMongoDBIndexesComposite_0;
 	public String TadpoleMongoDBIndexesComposite_10;
@@ -284,7 +269,6 @@ public class Messages {
 	public String TadpoleViewerComposite_2;
 	public String TadpoleViewerComposite_6;
 	public String FileNameValidator_0;
-	public String MySQLLoginComposite_10;
 	public String MySQLLoginComposite_2;
 	public String MySQLLoginComposite_4;
 	public String SQLToStringDialog_2;
@@ -443,7 +427,6 @@ public class Messages {
 	public String MySQLTableColumnDialog_29;
 	public String MySQLTableColumnDialog_3;
 	public String MySQLTableColumnDialog_31;
-	public String MySQLTableColumnDialog_5;
 	public String ManagerViewer_Resources;
 	public String Extensions;
 	public String Schemas;
@@ -466,7 +449,6 @@ public class Messages {
 	public String JDBCDriverSetting_FileList;
 	public String Confirm;
 	public String Error;
-	public String JDBCDriverSetting_Delete;
 	public String JDBCDriverSetting_JARUpload;
 	public String Refresh;
 	public String Close;
@@ -479,6 +461,11 @@ public class Messages {
 	public String OK;
 	public String CANCEL;
 	public String Column;
+
+	public String DBLoginDialog_13;
+	public String DBLoginDialog_15;
+
+	public String IsEnable;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

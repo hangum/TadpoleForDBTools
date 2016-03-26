@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -112,7 +113,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		fileNameLabel = new Text(grpConnectionType, SWT.BORDER);
 		fileNameLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		fileNameLabel.setEnabled(false);
 		fileNameLabel.setEditable(false);
 		fileNameLabel.setText(INITIAL_TEXT);
 		
@@ -271,7 +271,6 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 */
 	@Override
 	public boolean isValidateInput(boolean isTest) {
-//		logger.debug(rootResourceDir);
 		
 		// 데이터베이스 용 디렉토리가 없으면 생성합니다.
 		File fileRootResource = new File(ROOT_RESOURCE_DIR);
@@ -279,26 +278,22 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			fileRootResource.mkdirs();
 		}
 		
-		if("".equals(StringUtils.trimToEmpty(preDBInfo.getComboGroup().getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().GroupName + Messages.get().MySQLLoginComposite_10);
-			return false;
-		} else if("".equals(StringUtils.trimToEmpty(preDBInfo.getTextDisplayName().getText()))) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().SQLiteLoginComposite_12 );
-			return false;
-		}
+		if(!ValidChecker.checkTextCtl(preDBInfo.getComboGroup(), Messages.get().GroupName)) return false;
+		if(!ValidChecker.checkTextCtl(preDBInfo.getTextDisplayName(), Messages.get().DisplayName)) return false;
+		
 		if(oldUserDB != null) return true;
 		
 		if(chkBtnFileUpload.getSelection()) {
 			File[] arryFiles = receiver.getTargetFiles();
 			if(arryFiles.length == 0) {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().SQLiteLoginComposite_23);
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SQLiteLoginComposite_23);
 				return false;
 			}
 			File userDBFile = arryFiles[arryFiles.length-1];
 			
 			File targetFile = new File(ROOT_RESOURCE_DIR + userDBFile.getName());
 			if(targetFile.exists()) {
-				boolean isUpload = MessageDialog.openConfirm(null, Messages.get().Error, Messages.get().SQLiteLoginComposite_24);
+				boolean isUpload = MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SQLiteLoginComposite_24);
 				if(!isUpload) {
 					chkBtnFileUpload.setFocus();
 					return false;
@@ -307,7 +302,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		} else if(chkBtnFileLocationDb.getSelection()) {
 			File targetFile = new File(textFileLocationDB.getText());
 			if(!targetFile.exists()) {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().SQLiteLoginComposite_25);
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SQLiteLoginComposite_25);
 				textFileLocationDB.setFocus();
 				return false;
 			}
@@ -316,12 +311,12 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 			String strFile = StringUtils.trimToEmpty(textCreationDB.getText());
 			
 			if("".equals(strFile) ) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().SQLiteLoginComposite_7);
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SQLiteLoginComposite_7);
 				textCreationDB.setFocus();
 				return false;
 			} 
 			if(new File(ROOT_RESOURCE_DIR + textCreationDB.getText()).exists()) {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().SQLiteLoginComposite_24);
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SQLiteLoginComposite_24);
 				textCreationDB.setFocus();
 				return false;
 			}

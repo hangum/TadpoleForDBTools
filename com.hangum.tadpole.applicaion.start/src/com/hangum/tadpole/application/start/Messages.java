@@ -48,7 +48,6 @@ public class Messages {
 	public String LoginDialog_27;
 	public String LoginDialog_28;
 	public String LoginDialog_30;
-	public String LoginDialog_lblFindPassword;
 	public String LoginDialog_4;
 	
 	public String LoginDialog_9;
@@ -94,6 +93,18 @@ public class Messages {
 	public String Confirm;
 	public String Error;
 	public String Close;
+
+	public String FindPassword;
+
+	public String SEND;
+
+	public String SendMsg;
+
+	public String SendMsgErr;
+
+	public String AboutAction_TDB;
+
+	public String Warning;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

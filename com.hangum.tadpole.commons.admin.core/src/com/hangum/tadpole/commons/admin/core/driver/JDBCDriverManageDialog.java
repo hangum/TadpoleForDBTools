@@ -201,7 +201,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				
 			}
 		});
-		btnDelete.setText(Messages.get().JDBCDriverSetting_Delete);
+		btnDelete.setText(Messages.get().Delete);
 		
 		final String url = startUploadReceiver();
 		pushSession = new ServerPushSession();

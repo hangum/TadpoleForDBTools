@@ -53,7 +53,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Fogot password");
+		newShell.setText(Messages.get().FindPassword);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -90,7 +90,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strEmail = StringUtils.trimToEmpty(textEmail.getText());
-		logger.info("Fogot password dialog" + strEmail);
+		logger.info("Find password dialog" + strEmail);
 
 		if (!checkValidation()) {
 			MessageDialog.openWarning(getShell(), Messages.get().Confirm, Messages.get().FindPasswordDialog_6);
@@ -106,11 +106,12 @@ public class FindPasswordDialog extends Dialog {
 		try {
 			TadpoleSystem_UserQuery.updateUserPasswordWithID(userDao);
 			sendEmailAccessKey(strEmail, strTmpPassword);
-			MessageDialog.openInformation(getShell(), Messages.get().Confirm, "Send you temporary password. Check your email.");
+			MessageDialog.openInformation(getShell(), Messages.get().Confirm, Messages.get().SendMsg);
 		} catch (Exception e) {
 			logger.error("password initialize and send email ", e);
 			
-			MessageDialog.openError(getShell(), Messages.get().Error, "Rise Exception:\n\t" + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().Error, 
+					String.format(Messages.get().SendMsgErr, GetAdminPreference.getSMTPINFO().getEmail(),  e.getMessage()));
 		}
 		
 		
@@ -123,8 +124,8 @@ public class FindPasswordDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().SEND, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 	
 	/**
@@ -133,23 +134,21 @@ public class FindPasswordDialog extends Dialog {
 	 * @param email
 	 * @param strConfirmKey
 	 */
-	private void sendEmailAccessKey(String email, String strConfirmKey) {
-		try {
-			// manager 에게 메일을 보낸다.
-			EmailDTO emailDao = new EmailDTO();
-			emailDao.setSubject("Temporay password."); //$NON-NLS-1$
-			// 
-			// 그룹, 사용자, 권한.
-			// 
-			TemporaryPasswordMailBodyTemplate mailContent = new TemporaryPasswordMailBodyTemplate();
-			String strContent = mailContent.getContent(email, strConfirmKey);
-			emailDao.setContent(strContent);
-			emailDao.setTo(email);
-			
-			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
-			sendEmail.sendMail(emailDao);
-		} catch(Exception e) {
-			logger.error("Error send email", e); //$NON-NLS-1$
-		}
+	private void sendEmailAccessKey(String email, String strConfirmKey) throws Exception {
+
+		// manager 에게 메일을 보낸다.
+		EmailDTO emailDao = new EmailDTO();
+		emailDao.setSubject("Temporay password."); //$NON-NLS-1$
+		// 
+		// 그룹, 사용자, 권한.
+		// 
+		TemporaryPasswordMailBodyTemplate mailContent = new TemporaryPasswordMailBodyTemplate();
+		String strContent = mailContent.getContent(email, strConfirmKey);
+		emailDao.setContent(strContent);
+		emailDao.setTo(email);
+		
+		SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
+		sendEmail.sendMail(emailDao);
+
 	}
 }

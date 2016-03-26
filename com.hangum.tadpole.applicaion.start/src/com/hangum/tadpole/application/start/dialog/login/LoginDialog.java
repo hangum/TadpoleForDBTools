@@ -267,7 +267,7 @@ public class LoginDialog extends Dialog {
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
-				MessageDialog.openError(getParentShell(), Messages.get().Confirm, Messages.get().LoginDialog_27);
+				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_27);
 				
 				return;
 			}
@@ -278,7 +278,7 @@ public class LoginDialog extends Dialog {
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-				MessageDialog.openError(getParentShell(), Messages.get().Confirm, Messages.get().LoginDialog_28);
+				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_28);
 				return;
 			}
 			
@@ -350,11 +350,11 @@ public class LoginDialog extends Dialog {
 	private boolean validation(String strEmail, String strPass) {
 		// validation
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().Confirm, Messages.get().LoginDialog_11);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_11);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().Confirm, Messages.get().LoginDialog_14);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_14);
 			textPasswd.setFocus();
 			return false;
 		}
@@ -372,7 +372,7 @@ public class LoginDialog extends Dialog {
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
+				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().FindPassword, false);
 			}
 		} catch (Exception e) {
 //			ignore exception
@@ -423,7 +423,7 @@ public class LoginDialog extends Dialog {
 		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {
 			String errMsg = Messages.get().LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.get().UserInformationDialog_5 + "\n" + Messages.get().LoginDialog_lblNewLabel_text;  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-			MessageDialog.openError(getParentShell(), Messages.get().Confirm, errMsg);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, errMsg);
 		}
 	}
 	
@@ -477,7 +477,7 @@ public class LoginDialog extends Dialog {
 		
 		if(btnNewUser != null) btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
 		if(btnFindPasswd != null) {
-			btnFindPasswd.setText(Messages.get().LoginDialog_lblFindPassword);
+			btnFindPasswd.setText(Messages.get().FindPassword);
 		}
 		
 		compositeLogin.layout();

@@ -78,7 +78,6 @@ public class AboutDialog extends Dialog {
 		gd_lblNewLabelImage.minimumHeight = 184;
 		gd_lblNewLabelImage.minimumWidth = 300;
 		lblNewLabelImage.setLayoutData(gd_lblNewLabelImage);
-//		lblNewLabel_1.setText(Messages.get().AboutDialog_lblNewLabel_1_text);
 		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools.png")); //$NON-NLS-1$
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
@@ -125,7 +124,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true);
 	}
 
 	/**

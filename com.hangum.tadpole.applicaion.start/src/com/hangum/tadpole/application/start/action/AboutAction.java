@@ -29,7 +29,7 @@ public class AboutAction extends Action {
 		super(Messages.get().AboutAction_0);
 		setId(this.getClass().getName());
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(BrowserActivator.APPLICTION_ID, "resources/icons/about.png"));
-		setToolTipText("About Tadpole DB Hub");
+		setToolTipText(Messages.get().AboutAction_TDB);
 		
 		this.window = window;
 	}

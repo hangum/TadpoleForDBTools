@@ -13,7 +13,7 @@ package com.hangum.tadpole.commons.start;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.util.PingTest;
+import com.hangum.tadpole.commons.libs.core.utils.PingTest;
 
 /**
  * standalone 모드로 시스템이 시작할 때 디폴트 브라우저를 오픈하여 주도록 합니다. 

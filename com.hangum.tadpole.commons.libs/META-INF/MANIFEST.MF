@@ -108,3 +108,4 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.junit;resolution:=optional
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"
+Bundle-Activator: com.hangum.tadpole.commons.libs.core.Activator

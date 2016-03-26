@@ -56,7 +56,7 @@ public class ExtensionBrowserAction implements IViewActionDelegate {
 				List<ExternalBrowserInfoDAO> listExternalBrowser = TadpoleSystem_ExternalBrowser.getExternalBrowser(userDB);
 				
 				if(listExternalBrowser.isEmpty()) {
-					MessageDialog.openError(null, Messages.get().Error, Messages.get().ExtensionBrowserAction_1);					 //$NON-NLS-1$
+					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ExtensionBrowserAction_1);					 //$NON-NLS-1$
 				} else {
 					ExternalBrowserInput exi = new ExternalBrowserInput(userDB, listExternalBrowser);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

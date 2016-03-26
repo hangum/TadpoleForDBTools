@@ -57,13 +57,9 @@ public class Messages {
 
 	public String Error;
 
-	public String DBAccessControlDialog_25;
-
 	public String Save;
 
 	public String CANCEL;
-
-	public String DBAccessControlDialog_5;
 
 	public String SELECT;
 
@@ -153,13 +149,7 @@ public class Messages {
 
 	public String ExecutedSQLEditor_31;
 
-	public String ExecutedSQLEditor_5;
-
-	public String ExecutedSQLEditor_6;
-
 	public String ExecutedSQLEditor_7;
-
-	public String ExecutedSQLEditor_9;
 
 	public String FindUserAndDBRoleDialog_0;
 
@@ -176,8 +166,6 @@ public class Messages {
 	public String Name;
 
 	public String CreateTime;
-
-	public String FindUserAndDBRoleDialog_3;
 
 	public String FindUserAndDBRoleDialog_6;
 
@@ -233,8 +221,6 @@ public class Messages {
 
 	public String ResourceManageEditor_27;
 
-	public String ResourceManageEditor_3;
-
 	public String ResourceManageEditor_30;
 
 	public String ResourceManageEditor_32;
@@ -252,8 +238,6 @@ public class Messages {
 	public String ResourceManageEditor_44;
 
 	public String ResourceManageEditor_45;
-
-	public String ResourceManageEditor_5;
 
 	public String ResourceManagerAction_0;
 
@@ -303,8 +287,6 @@ public class Messages {
 
 	public String TransactionConnectionListEditor_16;
 
-	public String TransactionConnectionListEditor_2;
-
 	public String TransactionConnectionListEditor_5;
 
 	public String TransactionConnectionListEditor_6;
@@ -336,6 +318,10 @@ public class Messages {
 	public String DBListComposite_2;
 
 	public String ResourceManageEditor_23;
+
+	public String Authority;
+
+	public String ID;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -87,7 +87,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().AdminSQLAuditEditor_2, Messages.get().AdminSQLAuditEditor_3, Messages.get().AdminSQLAuditEditor_4, Messages.get().AdminSQLAuditEditor_5, Messages.get().AdminSQLAuditEditor_6, Messages.get().AdminSQLAuditEditor_7, Messages.get().AdminSQLAuditEditor_8}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().AdminSQLAuditEditor_2, Messages.get().AdminSQLAuditEditor_3, Messages.get().AdminSQLAuditEditor_4, Messages.get().AdminSQLAuditEditor_5, Messages.get().AdminSQLAuditEditor_6, Messages.get().AdminSQLAuditEditor_7, Messages.get().IP}; //$NON-NLS-1$
 
 	private Button btnSearch;
 

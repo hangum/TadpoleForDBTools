@@ -227,7 +227,7 @@ public class ModifyUserDialog extends Dialog {
 			return;
 		}		
 	}
-
+	
 	/**
 	 * Create contents of the button bar.
 	 * @param parent

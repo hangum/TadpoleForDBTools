@@ -591,8 +591,8 @@ public class ResourceManageEditor extends EditorPart {
 	private void createTableColumn() {
 
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] {
-		new TableViewColumnDefine("RESOURCE_SEQ", Messages.get().ResourceManageEditor_3, 50, SWT.RIGHT) //$NON-NLS-1$
-				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.get().ResourceManageEditor_5, 60, SWT.CENTER) //$NON-NLS-1$
+		new TableViewColumnDefine("RESOURCE_SEQ", Messages.get().ID, 50, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.get().Type, 60, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("USER_NAME", Messages.get().User, 90, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("RES_TITLE", Messages.get().Title, 150, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("RESTAPI_URI", Messages.get().APIURL, 150, SWT.LEFT) //$NON-NLS-1$

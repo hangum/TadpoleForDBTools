@@ -147,7 +147,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * 
 	 */
 	private void saveData() {
-		if(!MessageDialog.openConfirm(null, Messages.get().AdminSystemSettingEditor_3, Messages.get().AdminSystemSettingEditor_4)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().AdminSystemSettingEditor_4)) return;
 		
 		try {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(PreferenceDefine.ADMIN_NEW_USER_PERMIT, comboNewUserPermit.getText());
