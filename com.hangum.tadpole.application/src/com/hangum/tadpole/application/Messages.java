@@ -20,7 +20,6 @@ public class Messages {
 
 	public String SystemAdminWizardPage_1;
 	public String SystemAdminWizardPage_2;
-	public String SystemAdminWizardPage_26;
 	
 	public String SystemAdminWizardPage_3;
 	public String SystemAdminWizardPage_35;
