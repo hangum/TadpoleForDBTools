@@ -63,7 +63,6 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;

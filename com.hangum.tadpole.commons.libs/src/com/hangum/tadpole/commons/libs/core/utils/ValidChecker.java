@@ -15,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Text;
@@ -36,14 +37,7 @@ public class ValidChecker {
 	 * @return
 	 */
 	public static boolean isValidEmailAddress(String email) {
-		boolean result = true;
-		try {
-			InternetAddress emailAddr = new InternetAddress(email);
-			emailAddr.validate();
-		} catch (AddressException ex) {
-			result = false;
-		}
-		return result;
+		return EmailValidator.getInstance().isValid(email);
 	}
 	
 	/**
