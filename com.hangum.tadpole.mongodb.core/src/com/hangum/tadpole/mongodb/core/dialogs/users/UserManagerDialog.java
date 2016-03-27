@@ -201,19 +201,19 @@ public class UserManagerDialog extends Dialog {
 			boolean isReadOnly = btnReadOnly.getSelection();
 			
 			if("".equals(id)) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_11); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_11); //$NON-NLS-1$
 				textID.setFocus();
 				return;
 			} else if("".equals(passwd)) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_14); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_14); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			} else if("".equals(passwd2)) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_17); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_17); //$NON-NLS-1$
 				textRePassword.setFocus();
 				return;
 			} else if(!passwd.equals(passwd2)) {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().UserManagerDialog_19); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_19); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			}
@@ -250,7 +250,7 @@ public class UserManagerDialog extends Dialog {
 					}
 				}
 			} else {
-				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().DeleteMsg);
+				MessageDialog.openError(null, Messages.get().Error, Messages.get().DeleteMsg);
 			}
 		} else if(buttonId == IDialogConstants.CANCEL_ID) {
 			super.cancelPressed();

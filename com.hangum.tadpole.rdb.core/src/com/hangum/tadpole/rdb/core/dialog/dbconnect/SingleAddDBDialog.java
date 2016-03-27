@@ -140,9 +140,9 @@ public class SingleAddDBDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID, "Test Connection", false);
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false);
+		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID,  Messages.get().TestConnection, false);
+		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Add, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  Messages.get().CANCEL, false);
 	}
 
 	/**

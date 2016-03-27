@@ -98,7 +98,7 @@ public class SQLUpdateDialog extends Dialog {
 		String strSQL = textSQL.getText();
 		
 		if("".equals(strSQL)) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLUpdateDialog_5);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLUpdateDialog_5);
 			return;
 		}
 		

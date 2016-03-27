@@ -933,7 +933,7 @@ public class MongodbResultComposite extends Composite {
 	private void deleteDocumentTree() {
 		IStructuredSelection iss = (IStructuredSelection)treeViewerMongo.getSelection();
 		if(iss.isEmpty()) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_10);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MongodbResultComposite_10);
 			return;
 		} else if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_12)) {
 			
@@ -957,7 +957,7 @@ public class MongodbResultComposite extends Composite {
 	private void deleteDocumentTable() {
 		IStructuredSelection iss = (IStructuredSelection)resultTableViewer.getSelection();
 		if(iss.isEmpty()) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_10);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MongodbResultComposite_10);
 			return;
 		} else if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_12)) {
 			HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)iss.getFirstElement();

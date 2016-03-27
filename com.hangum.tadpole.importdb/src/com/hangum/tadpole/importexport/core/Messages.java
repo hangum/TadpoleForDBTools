@@ -87,6 +87,7 @@ public class Messages {
 	public String CsvToRDBImportDialog_btnStop_toolTipText;
 	public String CsvToRDBImportDialog_btnRadioButton_text;
 	public String Error;
+	public String Warning;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

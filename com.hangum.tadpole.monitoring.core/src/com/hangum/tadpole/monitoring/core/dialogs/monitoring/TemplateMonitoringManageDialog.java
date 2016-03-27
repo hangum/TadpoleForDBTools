@@ -420,12 +420,12 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTitle.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, "Title은 공백이 될 수 없습니다.");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Please input the Title");//Title은 공백이 될 수 없습니다.");
 			textTitle.setFocus();
 			return;
 		}
 		if("".equals(textQuery.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, "Query은 공백이 될 수 없습니다.");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Please input the Query");//Query은 공백이 될 수 없습니다.");
 			textQuery.setFocus();
 			return;
 		}

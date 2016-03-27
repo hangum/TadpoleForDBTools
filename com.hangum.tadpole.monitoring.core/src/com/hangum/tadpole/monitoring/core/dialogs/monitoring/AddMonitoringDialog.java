@@ -377,12 +377,12 @@ public class AddMonitoringDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTitle.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, "Title column is not empay.");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Title column is not empay.");
 			textTitle.setFocus();
 			return;
 		}
 		if("".equals(textQuery.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, "Query column is not empty");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Query column is not empty");
 			textQuery.setFocus();
 			return;
 		}

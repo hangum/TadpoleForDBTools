@@ -233,12 +233,12 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 		String strComment = textComment.getText();
 		
 		if(StringUtils.trimToEmpty(strName).equals("")) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().MySQLTableColumnDialog_20);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MySQLTableColumnDialog_20);
 			textColumnName.setFocus();
 			
 			return;
 		} else if(StringUtils.trimToEmpty(strType).equals("")) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().MySQLTableColumnDialog_23);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MySQLTableColumnDialog_23);
 			textColumnName.setFocus();
 			
 			return;

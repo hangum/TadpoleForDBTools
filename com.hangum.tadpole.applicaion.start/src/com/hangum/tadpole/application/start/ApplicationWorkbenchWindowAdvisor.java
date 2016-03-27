@@ -236,7 +236,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
     			if(!isAllow) {
     				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-    				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().LoginDialog_28);
+    				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().LoginDialog_28);
     				return;
     			}
     			

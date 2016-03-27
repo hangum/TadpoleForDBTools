@@ -130,7 +130,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		String strTextWidth = textWidth.getText();
 		
 		if(!NumberUtils.isNumber(textWidth.getText())) {
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().SQLFormatterPreferencePage_8);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
 			textWidth.setFocus();
 			return false;
 		}

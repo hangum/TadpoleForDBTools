@@ -135,12 +135,12 @@ public class CollectionCompactDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if(!NumberUtils.isNumber(textPaddingFactor.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, "padding factor is number.");
+			MessageDialog.openWarning(null, Messages.get().Warning, "padding factor is number.");
 			textPaddingFactor.setFocus();
 			return;
 		}
 		if(!NumberUtils.isNumber(textPaddingBytes.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, "padding Bytes is number.");
+			MessageDialog.openWarning(null, Messages.get().Warning, "padding Bytes is number.");
 			textPaddingBytes.setFocus();
 			return;
 		}
@@ -173,8 +173,8 @@ public class CollectionCompactDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "CANCEL", false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**

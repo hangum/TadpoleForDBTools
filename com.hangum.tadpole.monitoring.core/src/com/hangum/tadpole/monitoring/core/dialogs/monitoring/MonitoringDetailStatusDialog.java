@@ -239,12 +239,12 @@ public class MonitoringDetailStatusDialog extends Dialog {
 			try {
 				InputDialog inputDialog=new InputDialog(getShell(), "User Confirm Message", "User Confirm Message", "", null);
 				if(Window.OK == inputDialog.open()) {
-					if(MessageDialog.openConfirm(null, Messages.get().Confirm, "사용자 확인으로 처리 하시겠습니까?")) {
+					if(MessageDialog.openConfirm(null, Messages.get().Confirm, "Do you want to checked the data?")) { //"사용자 확인으로 처리 하시겠습니까?"
 						String inputMsg = inputDialog.getValue();
 						
 						TadpoleSystem_monitoring.updateUserConfirmMsg(dao.getSeq(), inputMsg);
 						
-						MessageDialog.openInformation(null, Messages.get().Confirm, "처리되었습니다.");
+						MessageDialog.openInformation(null, Messages.get().Confirm, "Data saved");// "처리되었습니다.");
 					}
 				}
 				
@@ -252,7 +252,7 @@ public class MonitoringDetailStatusDialog extends Dialog {
 				logger.error("Update user confirm", e);
 			}
 		} else {
-			MessageDialog.openError(null, Messages.get().Confirm, "데이터를 선택해 주세요.");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Please selected data.");
 		}
 	}
 	
@@ -262,11 +262,11 @@ public class MonitoringDetailStatusDialog extends Dialog {
 			try {
 				InputDialog inputDialog=new InputDialog(getShell(), "User Confirm Message", "User Confirm Message", "", null);
 				if(Window.OK == inputDialog.open()) {
-					if(MessageDialog.openConfirm(null, Messages.get().Confirm, "사용자 확인으로 처리 하시겠습니까?")) {
+					if(MessageDialog.openConfirm(null, Messages.get().Confirm, "Do you want to checked the data?")) { //"사용자 확인으로 처리 하시겠습니까?"
 						String inputMsg = inputDialog.getValue();
 						
 						TadpoleSystem_monitoring.updateUserConfirmMsg(dao.getMonitoring_seq(), dao.getMonitoring_index_seq(), inputMsg);
-						MessageDialog.openInformation(null, Messages.get().Confirm, "처리되었습니다.");
+						MessageDialog.openInformation(null, Messages.get().Confirm, "Data saved");// "처리되었습니다.");
 					}
 				}
 				

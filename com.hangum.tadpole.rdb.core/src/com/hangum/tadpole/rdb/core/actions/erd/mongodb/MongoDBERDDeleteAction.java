@@ -43,7 +43,7 @@ public class MongoDBERDDeleteAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBResourceDAO userDB = (UserDBResourceDAO)sel.getFirstElement();
 		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().DeleteDBAction_2);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().DeleteDBAction_2);
 			return;
 		}
 		if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().ERDDeleteAction_1)) run(userDB);

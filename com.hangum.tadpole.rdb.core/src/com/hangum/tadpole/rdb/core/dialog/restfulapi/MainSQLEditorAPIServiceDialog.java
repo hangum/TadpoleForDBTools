@@ -139,6 +139,8 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		} catch(Exception e) {
 			logger.error("Template Exception", e); //$NON-NLS-1$
 			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().MainSQLEditorAPIServiceDialog_7);
+			
+			return;
 		}
 	}
 

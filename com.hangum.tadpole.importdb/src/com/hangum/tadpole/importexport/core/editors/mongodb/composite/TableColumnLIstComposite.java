@@ -150,7 +150,7 @@ public class TableColumnLIstComposite extends Composite {
 	
 	public void init(UserDBDAO userDB) {
 		if(userDB == null) {
-			MessageDialog.openError(null, "Data Import", Messages.get().TableColumnLIstComposite_1); //$NON-NLS-1$
+			MessageDialog.openWarning(null, "Data Import", Messages.get().TableColumnLIstComposite_1); //$NON-NLS-1$
 			
 			return;
 		}

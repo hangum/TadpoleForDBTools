@@ -121,11 +121,6 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				
 				// Set input value
 				for (InOutParameterDAO inOutParameterDAO : parameterList) {
-	//				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
-	//				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
-	//					MessageDialog.openError(null, Messages.get().Error, inOutParameterDAO.getName() + " parameters are required.");
-	//					return false;
-	//				}
 					cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
 				}
 	

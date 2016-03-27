@@ -230,7 +230,7 @@ public class NewIndexDialog extends Dialog {
 		
 		if("".equals(textIndexName.getText().trim())) { //$NON-NLS-1$				
 			textIndexName.setFocus();
-			MessageDialog.openError(null, Messages.get().Confirm, "Please enter Index name");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Please enter Index name");
 			return;
 		}
 		
@@ -320,8 +320,8 @@ public class NewIndexDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {		
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Add, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false); //$NON-NLS-1$
 	}
 
 	@Override

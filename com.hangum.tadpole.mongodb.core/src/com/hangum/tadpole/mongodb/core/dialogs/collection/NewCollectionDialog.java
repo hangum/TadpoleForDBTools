@@ -125,13 +125,13 @@ public class NewCollectionDialog extends Dialog {
 		if("".equals(textName.getText().trim())) { //$NON-NLS-1$
 			
 			textName.setFocus();			
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_5);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_5);
 			return;
 			
 		} else if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_8);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 		
@@ -140,7 +140,7 @@ public class NewCollectionDialog extends Dialog {
 			DBCollection dbColl = MongoDBQuery.findCollection(userDB, textName.getText().trim());
 			if(dbColl == null) {
 				textName.setFocus();			
-				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_10);
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_10);
 				return;
 			}
 		} catch (Exception e) {
@@ -173,8 +173,8 @@ public class NewCollectionDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);	 //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID,  Messages.get().OK, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);	 //$NON-NLS-1$
 	}
 
 	/**

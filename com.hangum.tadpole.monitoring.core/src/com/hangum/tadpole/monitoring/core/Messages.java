@@ -36,6 +36,7 @@ public class Messages {
 	public String ScheduleEditor_8;
 	public String ScheduleEditor_9;
 	public String ScheduleEditor_tltmModify_text;
+	public String Warning;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

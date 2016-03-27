@@ -43,7 +43,7 @@ public class SQLToRdbImportAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
-			MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Confirm, Messages.get().MainEditor_DoesnotSupport);
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_DoesnotSupport);
 		} else {
 			boolean isPossible = false;
 			if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
@@ -55,7 +55,7 @@ public class SQLToRdbImportAction implements IViewActionDelegate {
 				SQLToDBImportDialog dialog = new SQLToDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 				dialog.open();
 			} else {
-				MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Confirm, Messages.get().MainEditor_21);
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_21);
 			}
 		}
 	}

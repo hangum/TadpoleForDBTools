@@ -190,7 +190,7 @@ public class UserLoginHistoryDialog extends Dialog {
 			listLoginHistory.clear();
 			tvHistory.setInput(listLoginHistory);
 			
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().UserLoginHistoryDialog_8);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserLoginHistoryDialog_8);
 			return;
 		}
 		

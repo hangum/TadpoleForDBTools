@@ -104,7 +104,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 
 			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
 			if(userDB.getSeq() != sourceDBSeq) {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
 				return;
 			}
 		} catch(Exception e) {

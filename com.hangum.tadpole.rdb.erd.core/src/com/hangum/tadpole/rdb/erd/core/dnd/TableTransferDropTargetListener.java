@@ -103,7 +103,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 
 			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
 			if(userDB.getSeq() != sourceDBSeq) {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
 				return;
 			}
 		} catch(Exception e) {
@@ -165,7 +165,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						if(jobEvent.getResult().isOK()) {
 							paintingModel(nextTableX, nextTableY, arryTables, mapTable);
 						} else {
-							MessageDialog.openError(null, Messages.get().Confirm, jobEvent.getResult().getMessage());
+							MessageDialog.openError(null, Messages.get().Error, jobEvent.getResult().getMessage());
 						}
 					}
 				});	// end display.asyncExec

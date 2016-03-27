@@ -288,26 +288,26 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String otpSecretKey = textSecretKey.getText();
 			
 			if(StringUtils.length(pass) < 5) {
-				MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().UserInfoPerference_14);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_14);
 				textPassword.setFocus();
 				return false;
 			}
 			
 			if(pass.equals("")) { //$NON-NLS-1$
-				MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().UserInfoPerference_17);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_17);
 				textPassword.setFocus();
 				return false;
 			} else if(!pass.equals(rePass)) {
-				MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().UserInfoPerference_6);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_6);
 				textPassword.setFocus();
 				return false;
 			} else if(btnGetOptCode.getSelection()) {
 				if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-					MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().UserInfoPerference_15); //$NON-NLS-1$
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_15); //$NON-NLS-1$
 					textOTPCode.setFocus();
 					return false;
 				} else if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
-					MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().UserInfoPerference_16); //$NON-NLS-1$
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_16); //$NON-NLS-1$
 					textOTPCode.setFocus();
 					return false;
 				}

@@ -466,6 +466,8 @@ public class Messages {
 	public String DBLoginDialog_15;
 
 	public String IsEnable;
+
+	public String TestConnection;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

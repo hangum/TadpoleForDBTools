@@ -214,13 +214,13 @@ public class NewUserDialog extends Dialog {
 			getShell().setSize(370, 240);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
-			MessageDialog.openWarning(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_7);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_7);
 			return;
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
 			getShell().setSize(370, 240);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
-			MessageDialog.openWarning(getParentShell(), Messages.get().Error, Messages.get().NewUserDialog_15);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_15);
 			return;
 		}
 		getShell().setSize(380, 370);
@@ -248,12 +248,12 @@ public class NewUserDialog extends Dialog {
 		if(!validation(strEmail, passwd, rePasswd, name)) return;
 		if(btnGetOptCode.getSelection()) {
 			if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-				MessageDialog.openWarning(getShell(), Messages.get().Error, Messages.get().NewUserDialog_40);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().NewUserDialog_40);
 				textOTPCode.setFocus();
 				return;
 			}
 			if(!GoogleAuthManager.getInstance().isValidate(secretKey, NumberUtils.toInt(textOTPCode.getText()))) {
-				MessageDialog.openWarning(getShell(), Messages.get().Error, Messages.get().NewUserDialog_42); //$NON-NLS-1$
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().NewUserDialog_42); //$NON-NLS-1$
 				textOTPCode.setFocus();
 				return;
 			}
@@ -388,7 +388,7 @@ public class NewUserDialog extends Dialog {
 		try {
 			// 기존 중복 이메일인지 검사합니다.
 			if(!TadpoleSystem_UserQuery.isDuplication(strEmail)) {
-				MessageDialog.openError(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_9);
+				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_9);
 				textEMail.setFocus();
 				return false;
 			}

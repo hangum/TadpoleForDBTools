@@ -189,13 +189,13 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		
 		if(!NumberUtils.isNumber(txtSessionTime)) {
 			textSessionTime.setFocus();
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtPort)) {
 			textPort.setFocus();
-			MessageDialog.openError(getShell(), Messages.get().Confirm, "Port is " + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Error, "Port is " + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		

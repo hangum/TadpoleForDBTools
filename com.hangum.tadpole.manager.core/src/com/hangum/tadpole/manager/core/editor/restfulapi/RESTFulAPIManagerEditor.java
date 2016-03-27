@@ -295,7 +295,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, rmDAO);
 					} catch (Exception ee) {
 						logger.error("Resource validate", ee); //$NON-NLS-1$
-						MessageDialog.openWarning(null, Messages.get().Warning, ee.getMessage()); //$NON-NLS-1$
+						MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
 						return;
 					}
 					

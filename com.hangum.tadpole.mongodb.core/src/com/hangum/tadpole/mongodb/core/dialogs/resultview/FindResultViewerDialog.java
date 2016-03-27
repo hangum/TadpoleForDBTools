@@ -125,7 +125,7 @@ public class FindResultViewerDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Close, true);
 	}
 
 	/**

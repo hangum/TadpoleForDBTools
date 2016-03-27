@@ -128,7 +128,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtIsGutter 	= ""+btnShowGutter.getSelection(); //$NON-NLS-1$
 	
 		if(!NumberUtils.isNumber(txtWrapLimit)) {
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().SQLFormatterPreferencePage_8);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLFormatterPreferencePage_8);
 			btnIsWrap.setFocus();
 			return false;
 		}

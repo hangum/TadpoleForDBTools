@@ -192,6 +192,10 @@ public class Messages {
 	public String LoginDialog_lblLanguage_text;
 
 	public String Confirm;
+
+	public String Close;
+
+	public String Warning;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

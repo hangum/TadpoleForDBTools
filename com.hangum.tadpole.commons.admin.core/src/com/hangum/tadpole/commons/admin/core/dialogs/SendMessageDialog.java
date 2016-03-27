@@ -135,12 +135,12 @@ public class SendMessageDialog extends Dialog {
 	protected void okPressed() {
 
 		if(StringUtils.isEmpty(textTitle.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().SendMessageDialog_8);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_8);
 			textTitle.setFocus();
 			return;
 		}
 		if(StringUtils.isEmpty(textMessage.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().SendMessageDialog_10);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_10);
 			textMessage.setFocus();
 			return;
 		}

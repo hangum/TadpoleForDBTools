@@ -114,7 +114,7 @@ public class NewDocumentDialog extends Dialog {
 		if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().NewCollectionDialog_8);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 
