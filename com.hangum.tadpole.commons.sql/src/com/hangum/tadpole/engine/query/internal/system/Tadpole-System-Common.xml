@@ -575,7 +575,7 @@
 	VALUES (#db_seq#, #is_used#, #name#, #url#, #comment#)
 </insert>
 
-<select id="getExternalBrowser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" resultClass="com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO">
+<select id="getExternalBrowser" parameterClass="java.lang.Integer" resultClass="com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO">
 	SELECT * FROM external_browser_info 
 	WHERE 
 		db_seq = #seq#

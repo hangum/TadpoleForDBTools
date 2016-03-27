@@ -15,7 +15,7 @@ public class ExternalBrowserInfoDAO {
 	String name;
 	String url;
 	String comment = "";
-
+	
 	public ExternalBrowserInfoDAO() {
 	}
 
