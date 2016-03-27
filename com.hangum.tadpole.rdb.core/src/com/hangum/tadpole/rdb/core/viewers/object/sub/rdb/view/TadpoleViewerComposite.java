@@ -100,7 +100,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	private GenerateViewDDLAction viewDDLAction;
 	private OracleObjectCompileAction objectCompileAction;
 	
-	private TableColumnSelectionAction tableColumnSelectionAction;
+//	private TableColumnSelectionAction tableColumnSelectionAction;
 	
 	/**
 	 * 
@@ -258,30 +258,30 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewColumnViewer.setContentProvider(new ArrayContentProvider());
 		viewColumnViewer.setLabelProvider(new TableColumnLabelprovider());
 		
-		createTableColumnMenu();
+//		createTableColumnMenu();
 
 		sashForm.setWeights(new int[] { 1, 1 });
 	}
 	
-	/**
-	 * create table column menu
-	 */
-	private void createTableColumnMenu() {
-		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, "View"); //$NON-NLS-1$
-		
-		// menu
-		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(tableColumnSelectionAction);
-			}
-		});
-		
-		viewColumnViewer.getTable().setMenu(menuMgr.createContextMenu(viewColumnViewer.getTable()));
-		getSite().registerContextMenu(menuMgr, viewColumnViewer);
-	}
+//	/**
+//	 * create table column menu
+//	 */
+//	private void createTableColumnMenu() {
+//		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, "View"); //$NON-NLS-1$
+//		
+//		// menu
+//		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+//		menuMgr.setRemoveAllWhenShown(true);
+//		menuMgr.addMenuListener(new IMenuListener() {
+//			@Override
+//			public void menuAboutToShow(IMenuManager manager) {
+//				manager.add(tableColumnSelectionAction);
+//			}
+//		});
+//		
+//		viewColumnViewer.getTable().setMenu(menuMgr.createContextMenu(viewColumnViewer.getTable()));
+//		getSite().registerContextMenu(menuMgr, viewColumnViewer);
+//	}
 	
 	/**
 	 * create menu
@@ -387,7 +387,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		objectCompileAction.setUserDB(getUserDB());
 		
 		// table column
-		tableColumnSelectionAction.setUserDB(getUserDB());
+//		tableColumnSelectionAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -413,7 +413,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewDDLAction.dispose();
 		objectCompileAction.dispose();
 		
-		tableColumnSelectionAction.dispose();
+//		tableColumnSelectionAction.dispose();
 	}
 	
 

@@ -109,12 +109,7 @@ public class SQLTemplateView extends ViewPart {
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell(), SQL_TEMPLATE_TYPE.PRI);
-				if(Dialog.OK == dialog.open()) {
-					grpPublicDao.getChildList().add(dialog.getSqlTemplateDAO());
-					grpPrivateDao.getChildList().add(dialog.getSqlTemplateDAO());
-					tvSQLTemplate.refresh(grpPrivateDao);
-				}
+				addTemplate(SQL_TEMPLATE_TYPE.PRI);
 			}
 		});
 		tltmAdd.setImage(GlobalImageUtils.getAdd());
@@ -158,9 +153,7 @@ public class SQLTemplateView extends ViewPart {
 					} catch (Exception e1) {
 						logger.error("Delete SQL template", e1);
 					}
-					
 				}
-				
 			}
 		});
 		tltmDelete.setImage(GlobalImageUtils.getDelete());
@@ -174,11 +167,7 @@ public class SQLTemplateView extends ViewPart {
 			tltmAdminAdd.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell(), SQL_TEMPLATE_TYPE.PUB);
-					if(Dialog.OK == dialog.open()) {
-						grpPublicDao.getChildList().add(dialog.getSqlTemplateDAO());
-						tvSQLTemplate.refresh(grpPublicDao);
-					}
+					addTemplate(SQL_TEMPLATE_TYPE.PUB);
 				}
 			});
 			tltmAdminAdd.setText(Messages.get().SQLTemplateView_Addpublictemplate);
@@ -187,7 +176,6 @@ public class SQLTemplateView extends ViewPart {
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
 		
 		Composite compositeBody = new Composite(sashForm, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -251,7 +239,7 @@ public class SQLTemplateView extends ViewPart {
 		
 		TreeViewerColumn treeViewerColumn = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnUrl = treeViewerColumn.getColumn();
-		trclmnUrl.setWidth(70);
+		trclmnUrl.setWidth(55);
 		trclmnUrl.setText(Messages.get().GroupName);
 		
 		TreeViewerColumn tvcName = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
@@ -261,7 +249,7 @@ public class SQLTemplateView extends ViewPart {
 		
 		TreeViewerColumn treeViewerColumn_2 = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnDescription = treeViewerColumn_2.getColumn();
-		trclmnDescription.setWidth(200);
+		trclmnDescription.setWidth(100);
 		trclmnDescription.setText(Messages.get().Description);
 		
 		TreeViewerColumn treeViewerColumn_1 = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
@@ -294,6 +282,28 @@ public class SQLTemplateView extends ViewPart {
 		tvSQLTemplate.addFilter(filter);
 		
 		AnalyticCaller.track(SQLTemplateView.ID);
+	}
+	
+	/**
+	 * add template
+	 * 
+	 * @param type
+	 */
+	private void addTemplate(SQL_TEMPLATE_TYPE type) {
+		SQLTemplateDialog dialog = new SQLTemplateDialog(getSite().getShell(), type);
+		if(Dialog.OK == dialog.open()) {
+			SQLTemplateDAO addDao = dialog.getSqlTemplateDAO();
+			
+			if(SQL_TEMPLATE_TYPE.PRI == type) {
+				grpPrivateDao.getChildList().add(addDao);
+			} else {
+				grpPublicDao.getChildList().add(addDao);
+			}
+			
+			tvSQLTemplate.refresh();
+			tvSQLTemplate.setSelection(new StructuredSelection(addDao), true);
+		}
+
 	}
 	
 	/**
