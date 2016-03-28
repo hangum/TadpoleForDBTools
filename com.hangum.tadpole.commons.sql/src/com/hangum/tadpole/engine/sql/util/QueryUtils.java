@@ -143,7 +143,7 @@ public class QueryUtils {
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		
-		strSQL = SQLUtil.sqlExecutable(strSQL);
+		strSQL = SQLUtil.sqlExecutable(userDB, strSQL);
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();

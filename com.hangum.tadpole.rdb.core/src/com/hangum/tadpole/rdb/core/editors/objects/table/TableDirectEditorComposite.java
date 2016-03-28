@@ -588,7 +588,7 @@ public class TableDirectEditorComposite extends Composite {
 		
 		querys = SQLTextUtil.delLineChar(changedSQL).split(";"); //$NON-NLS-1$
 		try {
-			RequestQuery reqQuery = new RequestQuery(changedSQL, OBJECT_TYPE.TABLES, QUERY_MODE.QUERY, EXECUTE_TYPE.ALL, true);
+			RequestQuery reqQuery = new RequestQuery(userDB, changedSQL, OBJECT_TYPE.TABLES, QUERY_MODE.QUERY, EXECUTE_TYPE.ALL, true);
 			ExecuteBatchSQL.runSQLExecuteBatch(Messages.get().MainEditor_21, Arrays.asList(querys), reqQuery, userDB, userDB.getRole_id(), 1000, SessionManager.getEMAIL());
 			
 			// 정상적으로 모든 결과 처리 완료.

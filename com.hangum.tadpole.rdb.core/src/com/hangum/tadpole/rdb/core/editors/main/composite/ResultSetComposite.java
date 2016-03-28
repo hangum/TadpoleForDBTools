@@ -328,6 +328,7 @@ public class ResultSetComposite extends Composite {
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
+		final UserDBDAO tmpUserDB 	= getUserDB();
 		
 		final String errMsg = Messages.get().MainEditor_21;
 		
@@ -346,7 +347,7 @@ public class ResultSetComposite extends Composite {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
-							String strExeSQL = SQLUtil.sqlExecutable(strSQL);
+							String strExeSQL = SQLUtil.sqlExecutable(tmpUserDB, strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(SQLUtil.isStatement(strExeSQL)) {

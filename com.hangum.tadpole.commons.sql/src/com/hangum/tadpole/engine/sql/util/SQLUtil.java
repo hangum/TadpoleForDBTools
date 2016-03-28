@@ -186,10 +186,11 @@ public class SQLUtil {
 	/**
 	 * 쿼리를 jdbc에서 실행 가능한 쿼리로 보정합니다.
 	 * 
+	 * @param userDB
 	 * @param exeSQL
 	 * @return
 	 */
-	public static String sqlExecutable(String exeSQL) {
+	public static String sqlExecutable(UserDBDAO userDB, String exeSQL) {
 		
 //		tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
 //		try {
@@ -202,9 +203,12 @@ public class SQLUtil {
 			 *  mysql의 경우 주석문자 즉, -- 바로 다음 문자가 --와 붙어 있으면 주석으로 인식하지 않아 오류가 발생합니다. --comment 이면 주석으로 인식하지 않습니다.(다른 디비(mssql, oralce, pgsql)은 주석으로 인식합니다)
 			 *  고칠가 고민하지만, 실제 쿼리에서도 동일하게 오류로 처리할 것이기에 주석을 지우지 않고 놔둡니다. - 2013.11.11- (hangum)
 			 */
-//			
-			// 모든 쿼리에 공백 주석 제거
-			exeSQL = removeComment(exeSQL);
+
+			// oracle 은 힌트가 주석 문법을 쓰므로.
+			if(userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT) {
+				// 모든 쿼리에 공백 주석 제거
+				exeSQL = removeComment(exeSQL);
+			}
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
 			exeSQL = StringUtils.removeEnd(exeSQL, "/");
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
