@@ -318,8 +318,8 @@ public class ResultSetComposite extends Composite {
 		this.rsDAO = new QueryExecuteResultDTO();
 		if(compositeResult != null) compositeResult.initUI();
 		
-		// selected first tab request quring.
-		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
+//		// selected first tab request quring.
+//		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		// 쿼리를 실행 합니다. 
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
@@ -761,14 +761,12 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void resultSashLayout() {
-		Map<Integer, Float> mapWidths = new HashMap<Integer, Float>();
-		Map<Integer, Float> mapHeight = new HashMap<Integer, Float>();
-		int intParentWidth = sashFormResult.getBounds().width;
-		int intParentHeight = sashFormResult.getBounds().height;
+		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
 		int intTmpCount = 0;
 		
 		try {
-			List<AbstractResultDetailComposite> listDisComp = new ArrayList<>();
+			List<AbstractResultDetailComposite> listDisposeComposite = new ArrayList<>();
 			Control[] childControls = sashFormResult.getChildren();
 			for (int i=0; i<childControls.length; i++) {
 				Control control = childControls[i];
@@ -776,19 +774,19 @@ public class ResultSetComposite extends Composite {
 					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
 					ResultTailComposite tailComposite = resultComposite.getCompositeTail();
 					if(!tailComposite.getBtnPinSelection()) {
-						listDisComp.add(resultComposite);
+						listDisposeComposite.add(resultComposite);
 					} else {
-						mapWidths.put(intTmpCount, ((float)resultComposite.getBounds().width / (float)intParentWidth));
-						mapHeight.put(intTmpCount, ((float)resultComposite.getBounds().height / (float)intParentHeight));
+						mapWidths.put(intTmpCount, resultComposite.getBounds().width);//((float)resultComposite.getBounds().width / (float)intParentWidth));
+						mapHeight.put(intTmpCount, resultComposite.getBounds().height);//((float)resultComposite.getBounds().height / (float)intParentHeight));
 						intTmpCount++;
 					}
 				}
 			}
 			
 			// 삭제한다.
-			int intDispCount = listDisComp.size()-1;
+			int intDispCount = listDisposeComposite.size()-1;
 			for(int i=0; i<intDispCount; i++) {
-				listDisComp.get(i).dispose();
+				listDisposeComposite.get(i).dispose();
 			}
 			
 			int weights[] = new int[mapWidths.size()+1];

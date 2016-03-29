@@ -50,6 +50,7 @@ public abstract class AbstractTailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(AbstractTailComposite.class);
 	
+	private Composite compositeParent;
 	protected Composite compositeDownloadAMsg;
 	protected Combo comboDownload;
 	protected DownloadServiceHandler downloadServiceHandler;
@@ -62,6 +63,7 @@ public abstract class AbstractTailComposite extends Composite {
 		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
+		compositeParent = compositeBtn;
 		compositeDownloadAMsg = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeDownloadAMsg = new GridLayout(7, false);
 		gl_compositeDownloadAMsg.verticalSpacing = 2;
@@ -83,7 +85,6 @@ public abstract class AbstractTailComposite extends Composite {
 					btnPin.setToolTipText("Pin");
 					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 				}
-				
 				layout();
 			}
 		});

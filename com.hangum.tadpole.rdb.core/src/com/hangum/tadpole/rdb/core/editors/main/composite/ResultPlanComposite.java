@@ -132,10 +132,10 @@ public class ResultPlanComposite extends Composite {
 	 * 
 	 */
 	private void resultSashLayout() {
-		Map<Integer, Float> mapWidths = new HashMap<Integer, Float>();
-		Map<Integer, Float> mapHeight = new HashMap<Integer, Float>();
-		int intParentWidth = sashFormResult.getBounds().width;
-		int intParentHeight = sashFormResult.getBounds().height;
+		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
+//		int intParentWidth = sashFormResult.getBounds().width;
+//		int intParentHeight = sashFormResult.getBounds().height;
 		int intTmpCount = 0;
 		
 		try {
@@ -149,8 +149,8 @@ public class ResultPlanComposite extends Composite {
 					if(!tailComposite.getBtnPinSelection()) {
 						listDisComp.add(resultComposite);
 					} else {
-						mapWidths.put(intTmpCount, ((float)resultComposite.getBounds().width / (float)intParentWidth));
-						mapHeight.put(intTmpCount, ((float)resultComposite.getBounds().height / (float)intParentHeight));
+						mapWidths.put(intTmpCount, resultComposite.getBounds().width);
+						mapHeight.put(intTmpCount, resultComposite.getBounds().height);
 						intTmpCount++;
 					}
 				}

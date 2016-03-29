@@ -205,7 +205,7 @@ public class SQLUtil {
 			 */
 
 			// oracle 은 힌트가 주석 문법을 쓰므로.
-			if(userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT) {
+			if(userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() != DBDefine.TIBERO_DEFAULT) {
 				// 모든 쿼리에 공백 주석 제거
 				exeSQL = removeComment(exeSQL);
 			}
