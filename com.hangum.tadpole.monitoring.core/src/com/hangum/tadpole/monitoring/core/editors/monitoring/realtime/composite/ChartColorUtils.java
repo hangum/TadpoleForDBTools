@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.RGB;
 public class ChartColorUtils {
 	
 	/**
-	 * https://github.com/ralfstx/rap-d3charts/blob/master/bundles/org.eclipse.rap.addons.d3chart/src/org/eclipse/rap/addons/d3chart/Colors.java
+	 * https://github.com/ralfstx/rap-d3charts/blob/master/bundles/org.eclipse.rap.addons.d3chart/src/org/eclipse/rap/addons/d3chart/ColorsSWTUtils.java
 	 */
 	private static final RGB[] CAT20_COLORS = {
 	    new RGB( 0x1f, 0x77, 0xb4 ),
