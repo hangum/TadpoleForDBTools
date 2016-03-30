@@ -369,7 +369,7 @@ public class NewUserDialog extends Dialog {
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_15);
 			textEMail.setFocus();
 			return false;
-		} else if(StringUtils.length(strPass) < 5) {
+		} else if(!ValidChecker.isSimplePasswordChecker(strPass)) {
 			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().NewUserDialog_25);
 			textPasswd.setFocus();
 			return false;

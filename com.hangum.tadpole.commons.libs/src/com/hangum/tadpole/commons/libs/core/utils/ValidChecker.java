@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -29,6 +32,33 @@ import com.hangum.tadpole.commons.libs.core.Messages;
  *
  */
 public class ValidChecker {
+	
+
+	/**
+	 * 
+	 * 
+	 * @param passwd
+	 * @return
+	 */
+	public static boolean isSimplePasswordChecker(String passwd) {
+		if(StringUtils.length(passwd) < 5) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * validate passwd
+	 * 
+	 * @param passwd
+	 * @return
+	 */
+	public static boolean isPasswordChecker(String passwd) {
+		Pattern p = Pattern.compile("^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$"); //$NON-NLS-1$
+		Matcher m = p.matcher(passwd);
+		return m.matches();
+	}
+	
 
 	/**
 	 * email valid checker
