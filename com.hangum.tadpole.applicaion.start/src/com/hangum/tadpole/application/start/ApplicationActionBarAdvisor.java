@@ -43,12 +43,12 @@ import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SQLAuditAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
-import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringManageAction;
 import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringRealTimeAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenDBRelationAction;
+import com.hangum.tadpole.rdb.core.actions.global.OpenObjectQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.OpenQueryEditorAction;
 import com.hangum.tadpole.rdb.core.actions.global.PreferenceAction;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -66,6 +66,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     private IAction connectAction;
     private IAction queryOpenAction;
+    private IAction openObjectQueryEditorAction;
     private IAction dbRelationOpenAction;
     private IAction deleteResourceAction;
     
@@ -117,6 +118,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	queryOpenAction = new OpenQueryEditorAction(window);
     	register(queryOpenAction);
+    	
+    	openObjectQueryEditorAction = new OpenObjectQueryEditorAction(window);
+    	register(openObjectQueryEditorAction);
     	
     	dbRelationOpenAction = new OpenDBRelationAction(window);
     	register(dbRelationOpenAction);
@@ -261,6 +265,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(new Separator());        
         
         toolbar.add(queryOpenAction);
+        toolbar.add(openObjectQueryEditorAction);
         toolbar.add(dbRelationOpenAction);
         toolbar.add(new Separator());
         
