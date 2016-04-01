@@ -16,6 +16,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/guava/guava-18.0.jar,
+ lib/quartz/c3p0-0.9.1.1.jar,
  lib/quartz/log4j-1.2.16.jar,
  lib/quartz/quartz-2.2.1.jar,
  lib/quartz/quartz-jobs-2.2.1.jar,

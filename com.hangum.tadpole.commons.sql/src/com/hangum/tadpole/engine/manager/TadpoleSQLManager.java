@@ -192,7 +192,10 @@ public class TadpoleSQLManager {
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tmd.setKeywords(StringUtils.join(SQLConstants.QUOTE_SQLITE_KEYWORDS, ","));
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | 
+					userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | 
+					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MYSQL_KEYWORDS, ",") + "," + dbMetadata;
 			tmd.setKeywords(strFullKeywords);
 		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
