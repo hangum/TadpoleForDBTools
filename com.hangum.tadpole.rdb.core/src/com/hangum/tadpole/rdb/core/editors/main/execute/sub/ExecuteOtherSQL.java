@@ -123,21 +123,6 @@ public class ExecuteOtherSQL {
 					if(StringUtils.startsWith(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
 						reqQuery.setSql(StringUtils.replaceOnce(reqQuery.getSql(), "(", " (")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-					final String checkSQL = reqQuery.getSql().trim().toUpperCase();
-					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE OR") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PROCEDURE") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE FUNCTION") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE PACKAGE") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TRIGGER") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER OR") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PROCEDURE") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER FUNCTION") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER PACKAGE") || //$NON-NLS-1$
-						StringUtils.startsWithIgnoreCase(checkSQL, "ALTER TRIGGER") //$NON-NLS-1$
-					) { //$NON-NLS-1$
-						reqQuery.setSql(reqQuery.getSql() + PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
-					}
 				}
 				
 				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
