@@ -81,11 +81,14 @@ public abstract class AbstractTailComposite extends Composite {
 				if("Pin".equals(strPin)) {
 					btnPin.setToolTipText("Unpin");
 					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+					layout();
 				} else {
-					btnPin.setToolTipText("Pin");
-					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+					Composite parentComposite = compositeParent.getParent().getParent();
+					Composite resultMainComposite = parentComposite.getParent();
+					parentComposite.dispose();
+					
+					resultMainComposite.layout();
 				}
-				layout();
 			}
 		});
 		btnPin.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/pin.png"));
@@ -160,6 +163,7 @@ public abstract class AbstractTailComposite extends Composite {
 	 * @return
 	 */
 	public boolean getBtnPinSelection() {
+		if(btnPin.isDisposed()) return true;
 		return btnPin.getSelection();
 	}
 	

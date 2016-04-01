@@ -510,6 +510,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 
 	@Override
 	public void initUI() {
+		if(this.isDisposed()) return;
+		
 		this.layout();
 		
 		this.sqlFilter.setFilter(""); //$NON-NLS-1$

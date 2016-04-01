@@ -776,8 +776,8 @@ public class ResultSetComposite extends Composite {
 					if(!tailComposite.getBtnPinSelection()) {
 						listDisposeComposite.add(resultComposite);
 					} else {
-						mapWidths.put(intTmpCount, resultComposite.getBounds().width);//((float)resultComposite.getBounds().width / (float)intParentWidth));
-						mapHeight.put(intTmpCount, resultComposite.getBounds().height);//((float)resultComposite.getBounds().height / (float)intParentHeight));
+						mapWidths.put(intTmpCount, resultComposite.getBounds().width);
+						mapHeight.put(intTmpCount, resultComposite.getBounds().height);
 						intTmpCount++;
 					}
 				}
