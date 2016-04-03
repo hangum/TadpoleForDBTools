@@ -25,9 +25,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.swtdesigner.ResourceManager;
 
@@ -47,8 +45,8 @@ public class OpenObjectQueryEditorAction extends Action implements ISelectionLis
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.get().EditSQL);
-		setToolTipText(Messages.get().EditSQL);
+		setText(Messages.get().CompileObjectEditorOpen);
+		setToolTipText(Messages.get().CompileObjectEditorOpen);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/object_editor.png"));
 		setEnabled(false);
 		

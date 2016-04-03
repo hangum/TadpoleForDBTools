@@ -314,7 +314,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				manager.add(viewDDLAction);
 				
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT){
+				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT){
 					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 					manager.add(objectCompileAction);
 				}

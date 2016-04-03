@@ -376,7 +376,7 @@ public class ExplorerViewer extends ViewPart {
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, mongoCollectionComposite.getCollectionListViewer()));
 			
-		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
+		} else if (dbDefine == DBDefine.ORACLE_DEFAULT | dbDefine == DBDefine.TIBERO_DEFAULT) {
 			createTable();
 			createView();
 			createSynonym();

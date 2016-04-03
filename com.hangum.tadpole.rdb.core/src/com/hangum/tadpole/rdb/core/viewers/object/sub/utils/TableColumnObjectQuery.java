@@ -105,7 +105,7 @@ public class TableColumnObjectQuery {
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT |
 				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT |
 				userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
-				userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+				userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT |
 				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
 		) {
 			for(TableColumnDAO tableColumnDao: listTableColumnDao) {
@@ -219,7 +219,7 @@ public class TableColumnObjectQuery {
 
 		StringBuffer query = new StringBuffer();
 
-		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			String strQuery = String.format("COMMENT ON COLUMN %s.%s IS %s", tableDAO.getSysName(), columnDAO.getField(), SQLUtil.makeQuote(columnDAO.getComment()));
 			
 			try{

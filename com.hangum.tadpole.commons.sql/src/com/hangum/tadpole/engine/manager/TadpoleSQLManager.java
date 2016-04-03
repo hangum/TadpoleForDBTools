@@ -84,7 +84,8 @@ public class TadpoleSQLManager {
 
 					// oracle 일 경우 설정 
 					try { 
-						if(DBDefine.getDBDefine(dbDao) == DBDefine.ORACLE_DEFAULT) {
+						if(dbDao.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+								dbDao.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 							DriverManager.setLoginTimeout(10);
 							
 							if(dbDao.getLocale() != null && !"".equals(dbDao.getLocale())) {
@@ -161,7 +162,8 @@ public class TadpoleSQLManager {
 		// https://github.com/hangum/TadpoleForDBTools/issues/412 디비의 메타데이터가 틀려서 설정하였습니다.
 		TadpoleMetaData tmd = null;
 		switch ( userDB.getDBDefine() ) {
-			case ORACLE_DEFAULT:		
+			case ORACLE_DEFAULT:
+			case TIBERO_DEFAULT:
 				tmd = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK);
 				break;
 			case MSSQL_DEFAULT:			

@@ -56,7 +56,7 @@ public class TadpoleObjectQuery {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
 				stmt = javaConn.prepareStatement(strSQL);
 				try{
@@ -122,6 +122,7 @@ public class TadpoleObjectQuery {
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
 					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT |
 					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
 		) {
 			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strNewname);
