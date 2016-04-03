@@ -42,7 +42,7 @@ SELECT sysdate	FROM dual
       T.table_name AS "NAME"
   FROM ALL_TABLES T  
       LEFT JOIN USER_TAB_COMMENTS S ON S.TABLE_NAME = T.TABLE_NAME
-  WHERE T.OWNER = 'PUBLIC'
+  WHERE T.OWNER = user
   ORDER BY T.table_name
 </select>
 
@@ -59,7 +59,7 @@ SELECT sysdate	FROM dual
     FROM ALL_TABLES T  
       LEFT JOIN USER_TAB_COMMENTS S
             ON S.TABLE_NAME = T.TABLE_NAME
-WHERE T.OWNER = 'PUBLIC'
+WHERE T.OWNER = user
 ORDER BY T.table_name
 </select>
 
@@ -74,7 +74,7 @@ ORDER BY T.table_name
       LEFT JOIN USER_TAB_COMMENTS S
             ON S.TABLE_NAME = T.TABLE_NAME
     WHERE
-    	T.OWNER = 'PUBLIC'
+    	T.OWNER = user
     	AND T.table_name = #name#
 	ORDER BY T.table_name
 </select>
@@ -108,7 +108,8 @@ ORDER BY T.table_name
              AND  P.CONSTRAINT_TYPE IN ('P', 'R', 'U')
            WHERE C.TABLE_NAME = D.TABLE_NAME AND C.COLUMN_NAME = D.COLUMN_NAME 
         ) AS "KEY",
-       C.DATA_DEFAULT AS "DEFAULT", '' AS EXTRA, S.COMMENTS AS "COMMENT"
+       null AS "DEFAULT", 
+       '' AS EXTRA, S.COMMENTS AS "COMMENT"
    FROM ALL_TAB_COLUMNS C
         LEFT JOIN USER_COL_COMMENTS S ON S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
     WHERE C.TABLE_NAME = #table# 
@@ -228,16 +229,16 @@ ORDER BY 1
  -->
 <select id="synonymList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO">
 	SELECT s.synonym_name
-	      ,s.table_owner
-	      ,s.table_name
-	      ,s.db_link
+	      ,s.org_object_owner as table_owner
+	      ,s.org_object_name as table_name
+	      ,null as db_link
 	      ,c.comments
 	      ,o.object_type
 	  FROM user_synonyms s
 	       LEFT JOIN all_tab_comments c
-	          ON s.table_owner = c.owner AND s.table_name = c.table_name
+	          ON s.org_object_owner = c.owner AND s.org_object_name = c.table_name
 	       INNER JOIN all_objects o
-	          ON o.owner = s.table_owner AND o.object_name = s.table_name
+	          ON o.owner = s.org_object_owner AND o.object_name = s.org_object_name
 	  WHERE 1=1
 	    AND o.object_type IN ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION')
 </select>
@@ -272,30 +273,30 @@ ORDER BY 1
             AND D.OWNER = C.OWNER
            	AND C.TABLE_NAME = D.TABLE_NAME 
            	AND C.COLUMN_NAME = D.COLUMN_NAME  ) AS "KEY",
-       C.DATA_DEFAULT AS "DEFAULT_VALUE",
+       NULL AS "DEFAULT_VALUE",
        '' AS EXTRA, 
        S.COMMENTS AS "COMMENTS"
    FROM ALL_TAB_COLUMNS C
         LEFT JOIN ALL_COL_COMMENTS S ON S.OWNER = C.OWNER AND S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
-    WHERE C.OWNER = #owner#
-       AND C.TABLE_NAME = #table# 
+    WHERE C.OWNER = UPPER(#owner#)
+       AND C.TABLE_NAME = UPPER(#table#) 
    	UNION ALL
-	SELECT SEQUENCE
+	SELECT POSITION AS SEQUENCE
 	        ,OWNER
 	        ,OBJECT_NAME
 	        ,ARGUMENT_NAME
 	        ,DECODE (DATA_TYPE, 'REF CURSOR', 'SYS_REFCURSOR', DATA_TYPE) DATA_TYPE
 	        ,NULL
 	        ,IN_OUT
-	        ,DEFAULT_VALUE
+	        ,NULL DEFAULT_VALUE
 	        ,NULL
 	        ,PACKAGE_NAME
 	    FROM ALL_ARGUMENTS
 	   WHERE OBJECT_ID = (SELECT OBJECT_ID
-	                        FROM SYS.USER_OBJECTS
+	                        FROM USER_OBJECTS
 	                       WHERE 1=1
-	                       AND OWNER = #owner#
-	                       AND OBJECT_NAME = #table# 
+	                       AND OWNER = UPPER(#owner#)
+	                       AND OBJECT_NAME = UPPER(#table#) 
 	                       AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION'))
   UNION ALL
   SELECT ROWNUM
@@ -349,16 +350,16 @@ ORDER BY 1
         ,i.index_name
         ,i.uniqueness
         ,i.table_owner
-        ,i.compression
+        ,null as compression
         ,i.tablespace_name
         ,i.logging
-        ,i.pct_free
+        ,null pct_free
         ,i.ini_trans
-        ,i.max_trans
+        ,null as max_trans
         ,i.initial_extent
         ,i.min_extents
         ,i.max_extents
-        ,i.pct_increase
+        ,null pct_increase
         ,i.buffer_pool
         ,CASE
             WHEN c.constraint_type = 'P' THEN 'PK'
@@ -367,7 +368,7 @@ ORDER BY 1
          END
             AS index_type
         ,c.status
-        ,#table_schema# AS table_schema
+        ,user AS table_schema
     FROM    user_indexes i
          LEFT JOIN
             user_constraints c
@@ -383,7 +384,7 @@ ORDER BY i.table_name, i.index_name
          m.column_name,
          m.column_position as seq_in_index,
          m.column_length,
-         m.char_length,
+         null as char_length,
          m.descend as "comment",
          i.uniqueness,
          i.table_owner,
@@ -450,7 +451,7 @@ ORDER BY s.object_type DESC, s.object_name
 	       IN_OUT, OBJECT_ID, SEQUENCE
 	FROM   ALL_ARGUMENTS
 	WHERE  OBJECT_ID = (SELECT OBJECT_ID
-	         FROM SYS.USER_OBJECTS 
+	         FROM USER_OBJECTS 
 	         WHERE OBJECT_NAME ='PKG_UTIL'
 	         AND OBJECT_TYPE IN ('PACKAGE', 'PROCEDURE', 'FUNCTION'))
 	ORDER BY OBJECT_NAME, OVERLOAD, SEQUENCE
@@ -462,14 +463,16 @@ select
 	,s.procedure_name as name
 	,(
 		select case 
-		when instr(upper(replace(text,chr(9),' ')), ' FUNCTION ') > 0 then 'FUNCTION'
-		         when  instr(upper(replace(text,chr(9),' ')), ' PROCEDURE ') > 0 then 'PROCEDURE'
+		when instr(upper(replace(text,chr(9),' ')), 'FUNCTION') > 0 then 'FUNCTION'
+		         when  instr(upper(replace(text,chr(9),' ')), 'PROCEDURE') > 0 then 'PROCEDURE'
 		         else 'unknow' end
 		  from user_source
 		where 1=1
 		and  name = s.object_name
-		and  upper(replace(text,chr(9),' ')) like '% '|| s.procedure_name ||'%'
-		and rownum &lt;= 1
+		and  upper(replace(text,chr(9),' ')) like '%'|| s.procedure_name ||'%'
+		and  (upper(replace(text,chr(9),' ')) like '%FUNCTION%' OR upper(replace(text,chr(9),' ')) like '%PROCEDURE%')
+		and  Trim(text) NOT like '--%'
+		and  rownum &lt;= 1
 	) as type
  from user_procedures s
  where 1=1
@@ -655,10 +658,10 @@ SELECT TO_NUMBER(SUBSTR (version, 1, INSTR (version, '.') - 1)) AS version
 	        ,SUBSTR (Q.SQL_TEXT, 1, 30) || '...' AS COMMAND
 	        ,S.LOGON_TIME AS TIME
 	        ,S.STATE AS STATE
-	        ,S.MODULE || ' - ' || S.STATUS ||' : '||CHR(9)||CHR(13)||CHR(13)||  Q.SQL_FULLTEXT AS INFO
+	        ,S.MODULE || ' - ' || S.STATUS ||' : '||CHR(9)||CHR(13)||CHR(13)||  Q.SQL_TEXT AS INFO
 	    FROM V$$SESSION s
 	         LEFT JOIN v$$PROCESS P
-	            ON P.ADDR = S.PADDR
+	            ON P.pid = S.sid
 	         LEFT JOIN V$$SQL Q
 	            ON Q.SQL_ID IN DECODE(S.SQL_ID, NULL, S.PREV_SQL_ID, S.SQL_ID) 
 	   WHERE 1=1
@@ -708,16 +711,16 @@ select cols.table_name as table_name
             end  ) as data_type
             ,cols.data_default as data_default
             ,coms.comments as column_comment
-            ,cols.data_type_mod as data_type_mod
+            ,NULL as data_type_mod
             ,cols.char_used as char_used
             ,decode (cols.density, null, 'No', 'Yes') as histogram
             ,cols.num_distinct as num_distinct
             ,cols.num_nulls as num_nulls
             ,round (cols.density, 5) as density
             ,cols.last_analyzed as last_analyzed
-        from sys.user_tab_cols cols
-            left join sys.user_col_comments coms on coms.table_name = cols.table_name and coms.column_name = cols.column_name 
-            left join sys.user_tab_comments tbls on tbls.table_name = cols.table_name
+        from user_tab_cols cols
+            left join user_col_comments coms on coms.table_name = cols.table_name and coms.column_name = cols.column_name 
+            left join user_tab_comments tbls on tbls.table_name = cols.table_name
        where 1 = 1 and cols.hidden_column = 'NO'
     order by cols.table_name, cols.column_id
 </select>
@@ -731,8 +734,8 @@ select cols.table_name as table_name
 SELECT C.TABLE_NAME
      , C.COLUMN_NAME
      , C.DATA_TYPE
-     , C.DATA_TYPE_MOD
-     , C.DATA_TYPE_OWNER
+     , NULL AS DATA_TYPE_MOD
+     , NULL AS DATA_TYPE_OWNER
      , DECODE(C.DATA_TYPE, 'CHAR', C.CHAR_LENGTH,
                          'VARCHAR', C.CHAR_LENGTH,
                          'VARCHAR2', C.CHAR_LENGTH,
@@ -745,8 +748,8 @@ SELECT C.TABLE_NAME
       , C.NULLABLE
       , C.CHAR_USED
       , USER OWNER
-      , C.DATA_DEFAULT
-FROM SYS.USER_TAB_COLUMNS C
+      , NULL AS DATA_DEFAULT
+FROM USER_TAB_COLUMNS C
 WHERE 1=1
 AND C.TABLE_NAME = UPPER(#table_name#)
 ORDER BY C.TABLE_NAME, C.COLUMN_ID
@@ -760,7 +763,7 @@ ORDER BY C.TABLE_NAME, C.COLUMN_ID
  
 <select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
   SELECT C.CONSTRAINT_NAME, CC.COLUMN_NAME
-    FROM SYS.DBA_CONS_COLUMNS CC, SYS.DBA_CONSTRAINTS C
+    FROM DBA_CONS_COLUMNS CC, DBA_CONSTRAINTS C
    WHERE     C.OWNER = CC.OWNER
          AND C.CONSTRAINT_NAME = CC.CONSTRAINT_NAME
          AND C.TABLE_NAME = CC.TABLE_NAME
@@ -785,7 +788,7 @@ SELECT    'COMMENT ON TABLE '
        || C.COMMENTS
        || ''';'
           AS COMMENT_TEXT
-  FROM SYS.DBA_TAB_COMMENTS C
+  FROM DBA_TAB_COMMENTS C
  WHERE     C.OWNER = USER
        AND C.COMMENTS IS NOT NULL
        AND C.TABLE_NAME = UPPER(#table_name#)
@@ -799,7 +802,7 @@ SELECT    'COMMENT ON COLUMN '
        || ' IS '''
        || C.COMMENTS
        || ''';'
-  FROM SYS.DBA_COL_COMMENTS C
+  FROM DBA_COL_COMMENTS C
  WHERE     C.OWNER = USER
        AND C.COMMENTS IS NOT NULL
        AND C.TABLE_NAME = UPPER(#table_name#)
@@ -823,7 +826,7 @@ SELECT    'COMMENT ON COLUMN '
             ELSE
                ', ' || COLUMN_NAME || ' ) AS '
          END AS SOURCE_TEXT
-    FROM SYS.USER_TAB_COLUMNS C
+    FROM USER_TAB_COLUMNS C
    WHERE 1 = 1 
    AND TABLE_NAME = UPPER(#view_name#)
 ORDER BY TABLE_NAME, COLUMN_ID
@@ -836,7 +839,7 @@ ORDER BY TABLE_NAME, COLUMN_ID
  
 <select id="getViewScript.body" resultClass="java.lang.String" parameterClass="java.lang.String">
   SELECT V.TEXT AS SOURCE_TEXT
-    FROM SYS.USER_VIEWS V
+    FROM USER_VIEWS V
    WHERE 1 = 1 
      AND V.VIEW_NAME = UPPER(#view_name#)
 ORDER BY VIEW_NAME
@@ -985,14 +988,14 @@ ORDER BY IC.COLUMN_POSITION
         ,DECODE (ua.data_type, 'REF CURSOR', 'SYS_REFCURSOR', ua.data_type) AS rdbtype
         ,ua.in_out AS type
         ,ua.data_length AS length
-        ,ua.default_value as value
+        ,null as value
     FROM user_arguments ua
    WHERE 1=1
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('IN','IN/OUT')
    AND ua.argument_name > ' '
    and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
-ORDER BY ua.object_name, ua.overload, ua.sequence
+ORDER BY ua.object_name, ua.overload, ua.position
   
 </select>    
 
@@ -1014,7 +1017,7 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
    AND ua.in_out in ('OUT', 'IN/OUT')
    AND ua.argument_name > ' '
    and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
-ORDER BY ua.object_name, ua.overload, ua.sequence
+ORDER BY ua.object_name, ua.overload, ua.position
   
 </select>    
 

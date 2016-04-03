@@ -228,7 +228,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpTables.setText(Messages.get().ExecuteProcedureDialog_8);
 		
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			Group grpDbmsOutput = new Group(sashForm, SWT.NONE);
 			grpDbmsOutput.setLayout(new GridLayout(1, false));
 			GridData gd_grpDbmsOutput = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -283,7 +283,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		try {
 			boolean ret = procedureExecutor.exec(parameterInList);
 			if(ret) {
-				if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+				if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 					textDBMSOutput.setText(procedureExecutor.getStrOutput());
 				}
 				

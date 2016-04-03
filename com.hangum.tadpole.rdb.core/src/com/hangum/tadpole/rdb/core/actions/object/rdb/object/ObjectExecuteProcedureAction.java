@@ -66,7 +66,7 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT && actionType == OBJECT_TYPE.FUNCTIONS) {
+		} else if((userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT )&& actionType == OBJECT_TYPE.FUNCTIONS) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
 			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
 			pm.isExecuted(procedureDAO, userDB);

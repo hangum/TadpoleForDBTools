@@ -279,9 +279,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
 				final DBDefine selectDB = getUserDB().getDBDefine();
-				if(selectDB == DBDefine.ORACLE_DEFAULT || 
-						selectDB == DBDefine.POSTGRE_DEFAULT ||
-						selectDB == DBDefine.MSSQL_DEFAULT) {
+				if(selectDB == DBDefine.ORACLE_DEFAULT | 
+						selectDB == DBDefine.POSTGRE_DEFAULT |
+						selectDB == DBDefine.MSSQL_DEFAULT |
+						selectDB == DBDefine.TIBERO_DEFAULT) {
 					
 					if("".equals(table.getSchema_name()) | null == table.getSchema_name()) return table.getName();
 					return table.getSchema_name() + "."+ table.getName();
@@ -484,7 +485,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						manager.add(separator);
 						
 						// 현재는 oracle db만 데이터 수정 모드..
-						if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+						if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 							manager.add(generateSampleData);
 							manager.add(separator);
 						}

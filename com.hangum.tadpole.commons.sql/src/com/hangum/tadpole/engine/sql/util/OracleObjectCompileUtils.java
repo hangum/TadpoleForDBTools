@@ -15,6 +15,7 @@ import java.sql.Statement;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.Messages;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -70,7 +71,23 @@ public class OracleObjectCompileUtils {
 	 * @param userDB
 	 */
 	public static String otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objType, String objName, UserDBDAO userDB) throws Exception {
-		String sqlQuery = "ALTER "+objType+" " + userDB.getUsers() + "." + objName.trim().toUpperCase() + " COMPILE DEBUG "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		// 티베로가 컴파일시 DEBUG옵션을 지원하지 않는것이 있음.
+		return otherObjectCompile(actionType, objType, objName, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
+	}
+	
+	/**
+	 * other object compile
+	 * 
+	 * @param actionType 
+	 * @param objType
+	 * @param objName
+	 * @param userDB
+	 */
+	public static String otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objType, String objName, UserDBDAO userDB, boolean isDebug) throws Exception {
+		String withDebugOption = "";
+		if(isDebug) withDebugOption = "DEBUG";
+		
+		String sqlQuery = "ALTER "+objType+" " + userDB.getUsers() + "." + objName.trim().toUpperCase() + " COMPILE " + withDebugOption; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -82,7 +99,7 @@ public class OracleObjectCompileUtils {
 			statement = javaConn.createStatement();
 			statement.execute(sqlQuery);
 			
-			sqlQuery = "Select * From sys.user_Errors where name='"+ objName +"' and type = '"+objType+"' order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			sqlQuery = "Select * From user_Errors where name='"+ objName +"' and type = '"+objType+"' order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			rs = statement.executeQuery(sqlQuery);
 			StringBuffer result = new StringBuffer();
 			while (rs.next()) {
@@ -104,8 +121,20 @@ public class OracleObjectCompileUtils {
 	 * @param userDB
 	 */
 	public static String packageCompile(String objectName, UserDBDAO userDB) throws Exception {
-		String sqlQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + objectName.trim().toUpperCase() + " COMPILE DEBUG SPECIFICATION "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		String sqlBodyQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + objectName.trim().toUpperCase() + " COMPILE DEBUG BODY "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return packageCompile(objectName, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
+	}
+	/**
+	 * package compile
+	 * 
+	 * @param objectName
+	 * @param userDB
+	 */
+	public static String packageCompile(String objectName, UserDBDAO userDB, boolean isDebug) throws Exception {
+		String withDebugOption = "";
+		if(isDebug) withDebugOption = "DEBUG";
+		
+		String sqlQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + objectName.trim().toUpperCase() + " COMPILE "+withDebugOption+" SPECIFICATION "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String sqlBodyQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + objectName.trim().toUpperCase() + " COMPILE "+withDebugOption+" BODY "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -118,7 +147,7 @@ public class OracleObjectCompileUtils {
 			statement.execute(sqlQuery);
 			statement.execute(sqlBodyQuery);
 			
-			sqlQuery = "Select * From sys.user_Errors where name='"+ objectName.trim().toUpperCase() +"' and type in ('PACKAGE', 'PACKAGE BODY') order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$
+			sqlQuery = "Select * From user_Errors where name='"+ objectName.trim().toUpperCase() +"' and type in ('PACKAGE', 'PACKAGE BODY') order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$
 			rs = statement.executeQuery(sqlQuery);
 			StringBuffer result = new StringBuffer();
 			while (rs.next()) {

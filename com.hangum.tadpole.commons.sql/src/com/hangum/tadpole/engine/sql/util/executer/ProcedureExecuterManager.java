@@ -55,7 +55,7 @@ public class ProcedureExecuterManager {
 	 * @throws Exception
 	 */
 	public ProcedureExecutor getExecuter() throws Exception {
-		if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT ) {
+		if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT ) {
 			return new OracleProcedureExecuter(procedureDAO, userDB);
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT ||
 				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
