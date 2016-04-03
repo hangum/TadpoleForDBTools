@@ -84,7 +84,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		compositeTitle.setLayout(new GridLayout(2, false));
 		
 		Label lblArgument = new Label(compositeTitle, SWT.NONE);
-		lblArgument.setText(Messages.get().MainSQLEditorAPIServiceDialog_1);
+		lblArgument.setText(Messages.get().Argument);
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -138,7 +138,9 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 			
 		} catch(Exception e) {
 			logger.error("Template Exception", e); //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().MainSQLEditorAPIServiceDialog_6, Messages.get().MainSQLEditorAPIServiceDialog_7);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().MainSQLEditorAPIServiceDialog_7);
+			
+			return;
 		}
 	}
 
@@ -148,8 +150,8 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().MainSQLEditorAPIServiceDialog_9, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().MainSQLEditorAPIServiceDialog_8, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().RUN, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 	
 	/**

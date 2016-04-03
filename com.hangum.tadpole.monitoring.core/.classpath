@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/quartz/c3p0-0.9.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/quartz/log4j-1.2.16.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/quartz/quartz-2.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/quartz/quartz-jobs-2.2.1.jar"/>

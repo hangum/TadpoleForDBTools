@@ -326,7 +326,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		TableColumn tbComment = tvTableComment.getColumn();
 		tbComment.setWidth(200);
 		tbComment.setMoveable(true);
-		tbComment.setText(Messages.get().TadpoleTableComposite_2);
+		tbComment.setText(Messages.get().Comment);
 		tbComment.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbComment, 1));
 		tvTableComment.setLabelProvider(clpTable);
 		tvTableComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
@@ -379,7 +379,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * table table column
 	 */
 	protected void createTableColumne() {
-		String[] name 		= {Messages.get().TadpoleTableComposite_4, Messages.get().TadpoleTableComposite_5, Messages.get().TadpoleTableComposite_6, Messages.get().TadpoleTableComposite_7, Messages.get().TadpoleTableComposite_8, Messages.get().TadpoleTableComposite_9, Messages.get().TadpoleTableComposite_10};
+		String[] name 		= {Messages.get().Field, Messages.get().Type, Messages.get().Key, Messages.get().Comment, Messages.get().TadpoleTableComposite_8, Messages.get().Default, Messages.get().TadpoleTableComposite_10};
 		int[] size 			= {120, 90, 100, 50, 50, 50, 50};
 		
 		// table column tooltip
@@ -423,7 +423,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		creatAction_Table = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_11);
 		renameAction_Table= new ObjectRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_18);
 		dropAction_Table = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_12);
-		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_13);
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().Refresh);
 
 		// generation sample data
 		generateSampleData = new GenerateSampleDataAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_14);
@@ -435,7 +435,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
 		addTableColumnAction = new TableColumnAddAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Add column"); //$NON-NLS-1$
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_16);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().ViewDDL);
 		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
@@ -570,7 +570,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 			// show error message
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		} finally {
 			tableColumnViewer.setInput(showTableColumns);
 			tableColumnComparator = new TableColumnComparator();

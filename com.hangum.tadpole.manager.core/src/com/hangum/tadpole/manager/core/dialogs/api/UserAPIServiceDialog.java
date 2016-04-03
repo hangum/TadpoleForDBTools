@@ -193,7 +193,7 @@ public class UserAPIServiceDialog extends Dialog {
 		try {
 			String strAPIKEY = textAPIKey.getText();
 			if(strAPIKEY.equals("")) { //$NON-NLS-1$
-				MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().UserAPIServiceDialog_10);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserAPIServiceDialog_10);
 				textAPIKey.setFocus();
 				
 				return;
@@ -218,7 +218,7 @@ public class UserAPIServiceDialog extends Dialog {
 				// 분리자 만큼 실행한다.
 				for (String strTmpSQL : strSQLs.split(PublicTadpoleDefine.SQL_DELIMITER)) {
 					if(StringUtils.trim(strTmpSQL).equals("")) continue;
-					NamedParameterDAO dao = NamedParameterUtil.parseParameterUtils(strTmpSQL, strArgument);
+					NamedParameterDAO dao = NamedParameterUtil.parseParameterUtils(userDB, strTmpSQL, strArgument);
 					if(QueryUtils.RESULT_TYPE.JSON.name().equalsIgnoreCase(comboResultType.getText())) {
 						strReturnResult += getSelect(userDB, dao.getStrSQL(), dao.getListParam()) + ","; //$NON-NLS-1$
 					} else {
@@ -236,7 +236,7 @@ public class UserAPIServiceDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Error", Messages.get().APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

@@ -104,7 +104,6 @@ public class UserLoginHistoryDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(5, false));
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblEmail.setText(Messages.get().email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
@@ -191,7 +190,7 @@ public class UserLoginHistoryDialog extends Dialog {
 			listLoginHistory.clear();
 			tvHistory.setInput(listLoginHistory);
 			
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().UserLoginHistoryDialog_8);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserLoginHistoryDialog_8);
 			return;
 		}
 		

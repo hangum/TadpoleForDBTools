@@ -318,19 +318,19 @@ public class AddScheduleDialog extends Dialog {
 		String txtCronExp = StringUtils.trim(textCronExp.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddScheduleDialog_15);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AddScheduleDialog_15);
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(!CronExpression.isValidExpression(txtCronExp)) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddScheduleDialog_17);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AddScheduleDialog_17);
 			textCronExp.setFocus();
 			return;
 		}
 		
 		if(listSchedule.size() == 0) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddScheduleDialog_19);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AddScheduleDialog_19);
 			return;
 		}
 
@@ -462,7 +462,7 @@ class SQLOrderEditingSupport extends EditingSupport {
 		ScheduleDAO dao = (ScheduleDAO)element;
 		
 		if(!NumberUtils.isNumber(value.toString())) {
-			MessageDialog.openError(null, "Confirm", "Is not number value.");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Is not number value.");
 			return;
 		}
 		

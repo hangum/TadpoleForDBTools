@@ -128,7 +128,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
@@ -154,7 +154,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		tableTableColumn.setLinesVisible(true);
 
 		TableViewerColumn tableColumn = new TableViewerColumn(tableColumnViewer, SWT.LEFT);
-		tableColumn.getColumn().setText(Messages.get().TadpoleMongoDBIndexesComposite_1);
+		tableColumn.getColumn().setText(Messages.get().Name);
 		tableColumn.getColumn().setWidth(130);
 		tableColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -207,7 +207,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleMongoDBIndexesComposite_11);
 		deleteAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleMongoDBIndexesComposite_12);
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleMongoDBIndexesComposite_13);
+		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().Refresh);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -260,7 +260,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("index refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
 		}
 	}
 

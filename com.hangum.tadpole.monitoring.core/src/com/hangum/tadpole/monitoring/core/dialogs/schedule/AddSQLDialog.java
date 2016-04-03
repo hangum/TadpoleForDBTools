@@ -117,13 +117,13 @@ public class AddSQLDialog extends Dialog {
 		String txtSQL = StringUtils.trimToEmpty(textSQL.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddSQLDialog_4);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AddSQLDialog_4);
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(StringUtils.isEmpty(txtSQL)) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().AddSQLDialog_6);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AddSQLDialog_6);
 			textSQL.setFocus();
 			return;
 		}

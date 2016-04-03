@@ -95,7 +95,7 @@ public class DBLockDialog extends Dialog {
 		String strPassword = textPassword.getText();
 		
 		if(!strPassword.equals(userDB.getPasswd())) {
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DBLockDialog_3);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DBLockDialog_3);
 			textPassword.setFocus();
 			
 			return;

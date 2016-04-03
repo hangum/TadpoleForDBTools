@@ -22,6 +22,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.DDLScriptManager;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 
@@ -106,7 +107,7 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 			FindEditorAndWriteQueryUtil.run(userDB, strObjectName, strScript, true, actionType);
 		} catch (Exception e) {
 			logger.error("view ddl", e);
-			MessageDialog.openError(null, "Confirm", e.getMessage());
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
 		}
 	}
 

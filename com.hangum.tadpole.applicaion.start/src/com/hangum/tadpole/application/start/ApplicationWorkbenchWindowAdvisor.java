@@ -45,8 +45,10 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
+import com.hangum.tadpole.summary.report.DBSummaryReporter;
 
 /**
  * Configures the initial size and appearance of a workbench window.
@@ -67,14 +69,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     public void preWindowOpen() {
-//    	try {
-//    		logger.info("Schedule and Summary Report start.........");
-//			DBSummaryReporter.executer();
-			
-//    		ScheduleManager.getInstance();
-//		} catch(Exception e) {
-//			logger.error("Schedule", e);
-//		}
+    	try {
+    		logger.info("Schedule and Summary Report start.........");
+			DBSummaryReporter.executer();
+    		ScheduleManager.getInstance();
+		} catch(Exception e) {
+			logger.error("Schedule", e);
+		}
     	
 //    	not support rap yet.
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;
@@ -236,7 +237,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
     			if(!isAllow) {
     				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-    				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().LoginDialog_28);
+    				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().LoginDialog_28);
     				return;
     			}
     			
@@ -255,7 +256,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     	} catch (Exception e) {
     		logger.error("System login fail", e); //$NON-NLS-1$
-    		MessageDialog.openError(null, "Confirm", "System login fail.  Please contact admin"); //$NON-NLS-1$ //$NON-NLS-2$
+    		MessageDialog.openError(null, Messages.get().Confirm, "System login fail.  Please contact admin"); //$NON-NLS-1$ //$NON-NLS-2$
     	}
     	
     }

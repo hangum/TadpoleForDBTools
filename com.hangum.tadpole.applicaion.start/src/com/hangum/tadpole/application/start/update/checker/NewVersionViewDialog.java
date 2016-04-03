@@ -54,7 +54,7 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
+		newShell.setText(SystemDefine.NAME);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 

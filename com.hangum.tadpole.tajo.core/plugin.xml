@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="com.hangum.tadpole.tajo.core.editors.sessionlist.TajoSessionListEditor"
-            default="false"
-            icon="resources/icons/session-list.png"
-            id="com.hangum.tadpole.tajo.core.editors.sessionlist"
-            name="Session List">
-      </editor>
-   </extension>
 
 </plugin>

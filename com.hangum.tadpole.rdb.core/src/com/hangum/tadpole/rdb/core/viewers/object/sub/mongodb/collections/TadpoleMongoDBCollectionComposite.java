@@ -136,7 +136,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		CTabItem tbtmTable = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTable.setText(Messages.get().TadpoleMongoDBCollectionComposite_0);
+		tbtmTable.setText(Messages.get().Collections);
 		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.COLLECTIONS.name());
 		
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
@@ -172,7 +172,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 						logger.error("Load the table data", e); //$NON-NLS-1$
 
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", Messages.get().ExplorerViewer_39, errStatus); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, Messages.get().ExplorerViewer_39, errStatus); //$NON-NLS-1$
 					}
 				}
 			}
@@ -206,7 +206,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
@@ -298,7 +298,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * @param treeColumnViewer2
 	 */
 	private void createTableMongoColumne() {
-		String[] columnName = {Messages.get().TadpoleMongoDBCollectionComposite_1, Messages.get().TadpoleMongoDBCollectionComposite_2, Messages.get().TadpoleMongoDBCollectionComposite_3};
+		String[] columnName = {Messages.get().Field, Messages.get().TadpoleMongoDBCollectionComposite_2, Messages.get().TadpoleMongoDBCollectionComposite_3};
 		int[] columnSize = {110, 100, 100};
 		
 		try {
@@ -324,7 +324,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		deleteAction_Table 	= new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_6);
 		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_7);
 		
-		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_8);
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().Refresh);
 		insertStmtAction 	= new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_9);
 
 		renameColAction 	= new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_10);
@@ -422,7 +422,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			return;
 		}
 
-		final String jobName = Messages.get().TadpoleMongoDBCollectionComposite_18;
+		final String jobName = Messages.get().Refresh;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
@@ -463,7 +463,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 							TableUtil.packTable(tableListViewer.getTable());
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				});	// end display.asyncExec

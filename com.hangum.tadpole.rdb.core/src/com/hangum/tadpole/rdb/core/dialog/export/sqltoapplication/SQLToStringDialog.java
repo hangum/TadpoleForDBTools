@@ -97,7 +97,7 @@ public class SQLToStringDialog extends Dialog {
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
 		lblType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblType.setText(Messages.get().SQLToStringDialog_3);
+		lblType.setText(Messages.get().Language);
 		
 		comboLanguageType = new Combo(compositeTitle, SWT.READ_ONLY);
 		comboLanguageType.addSelectionListener(new SelectionAdapter() {
@@ -124,7 +124,7 @@ public class SQLToStringDialog extends Dialog {
 		
 		Label lblVariable = new Label(compositeTitle, SWT.NONE);
 		lblVariable.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblVariable.setText(Messages.get().SQLToStringDialog_lblVariable_text);
+		lblVariable.setText(Messages.get().Variable);
 		
 		textVariable = new Text(compositeTitle, SWT.BORDER);
 		textVariable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -196,7 +196,7 @@ public class SQLToStringDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().SQLToStringDialog_6, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true);
 	}
 
 	/**

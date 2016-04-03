@@ -37,6 +37,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
@@ -210,7 +211,7 @@ public class FindAndModifyDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if(!MessageDialog.openConfirm(null, "Confirm", "Are you want to execute?")) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "Are you want to execute?")) return;
 		DBObject objQuery = null;
 		DBObject objFields = null;
 		DBObject objSort = null;
@@ -220,7 +221,7 @@ public class FindAndModifyDialog extends Dialog {
 			objQuery = "".equals(textQuery.getText())?null:(DBObject)JSON.parse(textQuery.getText());
 		} catch(Exception e) {
 			textQuery.setFocus();
-			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Query} is error.");
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Query} is error.");
 			return;
 		}
 		
@@ -228,7 +229,7 @@ public class FindAndModifyDialog extends Dialog {
 			objFields = "".equals(textFields.getText())?null:(DBObject)JSON.parse(textFields.getText());
 		} catch(Exception e) {
 			textFields.setFocus();
-			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Field} is error.");
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Field} is error.");
 			return;
 		}
 		
@@ -236,7 +237,7 @@ public class FindAndModifyDialog extends Dialog {
 			objSort = "".equals(textSort.getText())?null:(DBObject)JSON.parse(textSort.getText());
 		} catch(Exception e) {
 			textSort.setFocus();
-			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Sort} is error.");
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Sort} is error.");
 			return;
 		}
 		
@@ -244,7 +245,7 @@ public class FindAndModifyDialog extends Dialog {
 			objUpdate = "".equals(textUpdate.getText())?null:(DBObject)JSON.parse(textUpdate.getText());
 		} catch(Exception e) {
 			textUpdate.setFocus();
-			MessageDialog.openError(null, "Error", e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Update} is error.");
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR + "{Update} is error.");
 			return;
 		}
 		
@@ -259,7 +260,7 @@ public class FindAndModifyDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb FindAndModify", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "FindAndModify Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "FindAndModify Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

@@ -75,10 +75,10 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				
 				FindEditorAndWriteQueryUtil.run(userDB, sbSQL.toString(), actionType);
 			} catch(Exception e) {
-				logger.error(Messages.get().GenerateSQLInsertAction_9, e);
+				logger.error("Generate SQL Statement", e);
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
 			}
 		// mongo db
 		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {

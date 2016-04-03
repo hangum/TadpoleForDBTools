@@ -118,7 +118,7 @@ public class DBLoginDialog extends Dialog {
 
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.get().DBLoginDialog_35);
+		lblNewLabel.setText(Messages.get().Database);
 		lblNewLabel.setFont(SWTResourceManager.getBoldFont(PlatformUI.getWorkbench().getDisplay().getSystemFont()));
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -147,7 +147,7 @@ public class DBLoginDialog extends Dialog {
 				// 초기 값이 잘못되어 ui가 잘못 생성되는것을 방지하기위한 코드.
 				if(-1 == comboDBList.getSelectionIndex()) comboDBList.select(0);;
 			} catch(Exception e) {
-				logger.error(Messages.get().DBLoginDialog_38, e);
+				logger.error("find default db", e);
 			}
 		} else {
 			comboDBList.select(0);
@@ -235,13 +235,13 @@ public class DBLoginDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		if(TEST_CONNECTION_ID == buttonId) {
 			if(loginComposite.testConnection(true)) {
-				MessageDialog.openInformation(null, "Confirm", Messages.get().DBLoginDialog_42); //$NON-NLS-1$
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().DBLoginDialog_42); //$NON-NLS-1$
 			}
 		} else if(ADD_NEW_CONNECTION_ID == buttonId) {
 			if(addDB()) {
 				PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.ADD_DB, ""+retuserDb.getSeq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				
-				MessageDialog.openInformation(null, "Confirm", Messages.get().DBLoginDialog_47); //$NON-NLS-1$
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().DBLoginDialog_47); //$NON-NLS-1$
 			}
 		}
 	}
@@ -262,7 +262,7 @@ public class DBLoginDialog extends Dialog {
 		createButton(parent, ADD_NEW_CONNECTION_ID, Messages.get().DBLoginDialog_45, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().DBLoginDialog_44, true);
 		
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().DBLoginDialog_7, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 	/**
 	 * group name

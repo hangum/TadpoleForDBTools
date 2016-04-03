@@ -70,7 +70,7 @@ public class SessionListAction implements IViewActionDelegate {
 				logger.error("open session list", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
 //		} else if(DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT) {
 //			try {
@@ -80,7 +80,7 @@ public class SessionListAction implements IViewActionDelegate {
 //				logger.error("open session list", e); //$NON-NLS-1$
 //				
 //				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 //			}
 		} else {
 			MessageDialog.openWarning(null, Messages.get().Information, Messages.get().NotSupportDatabase);

@@ -78,7 +78,7 @@ public class TextViewerEditingSupport extends EditingSupport {
 		// 입력 값이 올바른지 검사합니다.
 		String colType = tableDataTypeList.get(columnIndex-1);
 		if(!DataTypeValidate.isValid(editPart.getUserDB(), colType, value.toString())) {
-			MessageDialog.openError(null, Messages.get().TextViewerEditingSupport_0, Messages.get().TextViewerEditingSupport_1 + " '" + value + "'. " + Messages.get().TextViewerEditingSupport_2 + " is " + colType + ".");// + " " + Messages.get().TextViewerEditingSupport_3); 
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().InputValue + " '" + value + "'. " + Messages.get().TextViewerEditingSupport_2 + " is " + colType + ".");// + " " + Messages.get().TextViewerEditingSupport_3); 
 			return;
 		} 
 		// insert가 아닌 경우에는 

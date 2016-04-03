@@ -135,12 +135,12 @@ public class SendMessageDialog extends Dialog {
 	protected void okPressed() {
 
 		if(StringUtils.isEmpty(textTitle.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().SendMessageDialog_8);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_8);
 			textTitle.setFocus();
 			return;
 		}
 		if(StringUtils.isEmpty(textMessage.getText())) {
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().SendMessageDialog_10);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_10);
 			textMessage.setFocus();
 			return;
 		}
@@ -220,7 +220,7 @@ public class SendMessageDialog extends Dialog {
 							MessageDialog.openInformation(shell, Messages.get().Confirm, Messages.get().SendMessageDialog_23);
 						} else {
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(shell, "Error", Messages.get().SendMessageDialog_11, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(shell, Messages.get().Error, Messages.get().SendMessageDialog_11, errStatus); //$NON-NLS-1$
 						}
 					}
 				});	// end display.asyncExec

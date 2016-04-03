@@ -425,7 +425,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	private void saveLog(){
 		try {
 			if("".equals(textSQL.getText())) { //$NON-NLS-1$
-				MessageDialog.openError(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_LogEmpty);
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SQLToDBImportDialog_LogEmpty);
 				return;
 			}
 			String filename = PublicTadpoleDefine.TEMP_DIR + userDB.getDisplay_name() + "_SQLImportResult.log"; //$NON-NLS-1$
@@ -621,19 +621,19 @@ public class CsvToRDBImportDialog extends Dialog {
 	 */
 	private boolean validate() {
 		if("".equals(textTableName.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_19);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().CsvToRDBImportDialog_19);
 			textTableName.setFocus();
 			return false;
 		}
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_21);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().CsvToRDBImportDialog_21);
 			return false;
 		}
 		
 		if("".equals(textSeprator.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_24);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().CsvToRDBImportDialog_24);
 			textSeprator.setFocus();
 			return false;
 		}

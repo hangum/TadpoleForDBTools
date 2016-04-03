@@ -40,7 +40,7 @@ public class TableColumnModifyAction extends AbstractObjectSelectAction {
 	public TableColumnModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.get().TableColumnRenameAction); //$NON-NLS-1$
+		setText(Messages.get().ModifyColumn); //$NON-NLS-1$
 	}
 
 	@Override

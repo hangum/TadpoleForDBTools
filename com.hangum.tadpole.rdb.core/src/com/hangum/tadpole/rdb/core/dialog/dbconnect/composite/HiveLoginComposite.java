@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,6 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -99,10 +99,10 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		grpConnectionType.setText(Messages.get().MSSQLLoginComposite_grpConnectionType_text);
+		grpConnectionType.setText(Messages.get().DatabaseInformation);
 		
 		Label lblDriverType = new Label(grpConnectionType, SWT.NONE);
-		lblDriverType.setText(Messages.get().HiveLoginComposite_lblDriverType_text);
+		lblDriverType.setText(Messages.get().DriverType);
 		
 		comboDriverType = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboDriverType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -116,13 +116,13 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 //		comboDriverType.setEnabled(false);
 		
 		Label lblHost = new Label(grpConnectionType, SWT.NONE);
-		lblHost.setText(Messages.get().DBLoginDialog_1);
+		lblHost.setText(Messages.get().Host);
 		
 		textHost = new Text(grpConnectionType, SWT.BORDER);
 		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
-		lblNewLabelPort.setText(Messages.get().DBLoginDialog_5);
+		lblNewLabelPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -131,42 +131,26 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		btnPing.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String host 	= StringUtils.trimToEmpty(textHost.getText());
-				String port 	= StringUtils.trimToEmpty(textPort.getText());
-				
-				if("".equals(host) || "".equals(port)) { //$NON-NLS-1$ //$NON-NLS-2$
-					MessageDialog.openError(null, Messages.get().DBLoginDialog_10, Messages.get().DBLoginDialog_11);
-					return;
-				}
-				
-				try {
-					if(isPing(host, port)) {
-						MessageDialog.openInformation(null, Messages.get().DBLoginDialog_12, Messages.get().DBLoginDialog_13);
-					} else {
-						MessageDialog.openError(null, Messages.get().DBLoginDialog_14, Messages.get().DBLoginDialog_15);
-					}
-				} catch(NumberFormatException nfe) {
-					MessageDialog.openError(null, Messages.get().MySQLLoginComposite_3, Messages.get().MySQLLoginComposite_4);
-				}
+				pingTest(textHost.getText(), textPort.getText());
 			}
 		});
-		btnPing.setText(Messages.get().DBLoginDialog_btnPing_text);
+		btnPing.setText(Messages.get().PingTest);
 		
 		Label lblNewLabelDatabase = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelDatabase.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1));
-		lblNewLabelDatabase.setText(Messages.get().DBLoginDialog_4);
+		lblNewLabelDatabase.setText(Messages.get().Database);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
-		lblUser.setText(Messages.get().DBLoginDialog_2);
+		lblUser.setText(Messages.get().User);
 		
 		textUser = new Text(grpConnectionType, SWT.BORDER);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
-		lblPassword.setText(Messages.get().DBLoginDialog_3);
+		lblPassword.setText(Messages.get().Password);
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -176,7 +160,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
-		lblJdbcOptions.setText(Messages.get().MySQLLoginComposite_lblJdbcOptions_text);
+		lblJdbcOptions.setText(Messages.get().JDBCOptions);
 		
 		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
 		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -208,14 +192,14 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("127.0.0.1");
-			textPort.setText("10002");
-			textDatabase.setText("default");
-			textUser.setText("");
-			textPassword.setText("");
+			textHost.setText("127.0.0.1"); //$NON-NLS-1$
+			textPort.setText("10002"); //$NON-NLS-1$
+			textDatabase.setText("default"); //$NON-NLS-1$
+			textUser.setText(""); //$NON-NLS-1$
+			textPassword.setText(""); //$NON-NLS-1$
 			
 		} else {
-			textPort.setText("10002");
+			textPort.setText("10002"); //$NON-NLS-1$
 		}
 		
 		 Combo comboGroup = preDBInfo.getComboGroup();
@@ -245,12 +229,12 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	 * @return
 	 */
 	public boolean isValidateInput(boolean isTest) {
-		if(!checkTextCtl(preDBInfo.getComboGroup(), "Group")) return false;
-		if(!checkTextCtl(preDBInfo.getTextDisplayName(), "Display Name")) return false; //$NON-NLS-1$
+		if(!ValidChecker.checkTextCtl(preDBInfo.getComboGroup(), Messages.get().GroupName)) return false;
+		if(!ValidChecker.checkTextCtl(preDBInfo.getTextDisplayName(), Messages.get().DisplayName)) return false;
 		
-		if(!checkTextCtl(textHost, "Host")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textPort, "Port")) return false; //$NON-NLS-1$
-		if(!checkTextCtl(textDatabase, "Database")) return false; //$NON-NLS-1$
+		if(!ValidChecker.checkTextCtl(textHost, Messages.get().Host)) return false;
+		if(!ValidChecker.checkNumberCtl(textPort, Messages.get().Port)) return false;
+		if(!ValidChecker.checkTextCtl(textDatabase, Messages.get().Database)) return false;
 		
 		return true;
 	}

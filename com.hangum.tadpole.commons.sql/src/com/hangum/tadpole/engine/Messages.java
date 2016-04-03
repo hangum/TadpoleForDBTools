@@ -25,15 +25,15 @@ public class Messages {
 	public String ProcedureExecuterManager_4;
 	public String ProcedureExecuterManager_6;
 
-	public String ResourceSaveDialog_0;
-	public String ResourceSaveDialog_1;
+	public String Name;
+	public String SharedType;
 	public String ResourceSaveDialog_10;
 	public String ResourceSaveDialog_11;
-	public String ResourceSaveDialog_12;
+	public String ShowURL;
 	public String Save;
 	public String ResourceSaveDialog_16;
 	public String ResourceSaveDialog_19;
-	public String ResourceSaveDialog_2;
+	public String Description;
 	public String ResourceSaveDialog_21;
 	public String ResourceSaveDialog_3;
 	public String ResourceSaveDialog_8;
@@ -43,8 +43,10 @@ public class Messages {
 	public String TadpoleSystem_UserQuery_0;
 	public String TadpoleSystem_UserQuery_3;
 	public String TadpoleSystem_UserQuery_5;
-	public String ResourceSaveDialog_lblApiName_text;
-	public String ResourceSaveDialog_lblUseApi_text;
+	public String APIURL;
+	public String IsUseAPI;
+	public String Warning;
+	public String Information;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

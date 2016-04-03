@@ -126,14 +126,14 @@ public class ExecuteProcedureDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblObjectType = new Label(compositeHead, SWT.NONE);
-		lblObjectType.setText(Messages.get().ExecuteProcedureDialog_lblObjectType_text);
+		lblObjectType.setText(Messages.get().ObjectType);
 		
 		textObjectType = new Text(compositeHead, SWT.BORDER);
 		textObjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblObjectName = new Label(compositeHead, SWT.NONE);
 		lblObjectName.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		lblObjectName.setText(Messages.get().ExecuteProcedureDialog_lblObjectName_text);
+		lblObjectName.setText(Messages.get().ObjectName);
 		
 		textObjectName = new Text(compositeHead, SWT.BORDER);
 		textObjectName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -147,7 +147,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			
 		} catch(Exception e) {
 			logger.error("get in parameter", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().ExecuteProcedureDialog_error, e.getMessage());
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
 			
 			super.okPressed();
 		}
@@ -213,7 +213,7 @@ public class ExecuteProcedureDialog extends Dialog {
 				executeProcedure();
 			}
 		});
-		btnExecute.setText(Messages.get().ExecuteProcedureDialog_1);
+		btnExecute.setText(Messages.get().Execute);
 		
 		SashForm sashForm = new SashForm(containerInput, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -235,7 +235,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			gd_grpDbmsOutput.minimumHeight = 50;
 			gd_grpDbmsOutput.heightHint = 50;
 			grpDbmsOutput.setLayoutData(gd_grpDbmsOutput);
-			grpDbmsOutput.setText(Messages.get().ExecuteProcedureDialog_grpDbmsOutput_text);
+			grpDbmsOutput.setText(Messages.get().DBMSOutput);
 			
 			textDBMSOutput = new Text(grpDbmsOutput, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 			textDBMSOutput.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -353,7 +353,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteProcedureDialog_11, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
 
 	/**

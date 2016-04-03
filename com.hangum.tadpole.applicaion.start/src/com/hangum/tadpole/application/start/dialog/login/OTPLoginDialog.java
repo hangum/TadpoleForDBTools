@@ -88,7 +88,7 @@ public class OTPLoginDialog extends Dialog {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
 		if(!NumberUtils.isNumber(strOTPCode)) {
 			textOTPCode.setFocus();
-			MessageDialog.openError(getShell(), "Error", Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
 			return;
 		}
 		
@@ -103,7 +103,7 @@ public class OTPLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true); //$NON-NLS-1$
 	}
 
 	/**

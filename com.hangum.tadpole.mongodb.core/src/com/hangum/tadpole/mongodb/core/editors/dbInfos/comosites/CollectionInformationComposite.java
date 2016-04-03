@@ -194,7 +194,7 @@ public class CollectionInformationComposite extends Composite {
 						logger.error("Load the table data", e); //$NON-NLS-1$
 						
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, "Error", "An error has occurred.", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+						ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "An error has occurred.", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 				
@@ -337,7 +337,7 @@ public class CollectionInformationComposite extends Composite {
 			logger.error("mongodb collection infomtion init", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "MongoDB Information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "MongoDB Information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

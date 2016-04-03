@@ -44,8 +44,8 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.get().OpenQueryEditorAction_1);
-		setToolTipText(Messages.get().OpenQueryEditorAction_2);
+		setText(Messages.get().EditSQL);
+		setToolTipText(Messages.get().EditSQL);
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/sql-query.png"));
 		setEnabled(false);
 		

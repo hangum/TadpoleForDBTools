@@ -174,7 +174,7 @@ public class NewIndexDialog extends Dialog {
 			logger.error("get collection list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -188,7 +188,7 @@ public class NewIndexDialog extends Dialog {
 			logger.error("get collection column", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(tabFolder.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 		treeColumnViewer.setInput(listCollFields);
 		treeColumnViewer.refresh();
@@ -230,7 +230,7 @@ public class NewIndexDialog extends Dialog {
 		
 		if("".equals(textIndexName.getText().trim())) { //$NON-NLS-1$				
 			textIndexName.setFocus();
-			MessageDialog.openError(null, Messages.get().Confirm, "Please enter Index name");
+			MessageDialog.openWarning(null, Messages.get().Warning, "Please enter Index name");
 			return;
 		}
 		
@@ -263,7 +263,7 @@ public class NewIndexDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb create index", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Create index Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			return;
 		}			
@@ -320,8 +320,8 @@ public class NewIndexDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {		
-		createButton(parent, IDialogConstants.OK_ID, "OK", true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Add, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false); //$NON-NLS-1$
 	}
 
 	@Override

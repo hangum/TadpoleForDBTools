@@ -185,7 +185,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 							try {
 								Exception e = new Exception(jobEvent.getResult().getException());
 								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-								ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+								ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
 							} catch(Exception e) {
 								logger.error("https://github.com/hangum/TadpoleForDBTools/issues/169 검증오류...", e);
 							}
@@ -424,7 +424,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 				logger.error("Load ERD Resource", e); //$NON-NLS-1$
 		        
 		        Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_0, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().TadpoleEditor_0, errStatus); //$NON-NLS-1$
 			}
 			
 			setPartName(isAllTable?"All " + userDBErd.getName():userDBErd.getName());
@@ -523,7 +523,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 					logger.error(Messages.get().TadpoleEditor_9, e);
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_3, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().TadpoleEditor_3, errStatus); //$NON-NLS-1$
 				}
 			}
 			
@@ -537,7 +537,7 @@ public class TadpoleRDBEditor extends GraphicalEditor {//WithFlyoutPalette {
 				logger.error(Messages.get().TadpoleEditor_12, e);
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().TadpoleEditor_1, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

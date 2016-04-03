@@ -49,7 +49,7 @@ public class PostgresqlConnectionEXT {
 		}
 		
 		resourcesDAO.setType(DB_RESOURCE_TYPE.SCHEMAS);
-		resourcesDAO.setName(Messages.get().ManagerViewer_Schemas);
+		resourcesDAO.setName(Messages.get().Schemas);
 		resourcesDAO.setListResource(listOtherObj);
 		userDB.getListResource().add(resourcesDAO);
 		
@@ -68,7 +68,7 @@ public class PostgresqlConnectionEXT {
 			listOtherObj.add(dao);
 		}
 		resourcesDAO.setType(DB_RESOURCE_TYPE.PG_EXTENSION);
-		resourcesDAO.setName(Messages.get().ManagerViewer_Extension);
+		resourcesDAO.setName(Messages.get().Extensions);
 		resourcesDAO.setListResource(listOtherObj);
 		userDB.getListResource().add(resourcesDAO);
 	}

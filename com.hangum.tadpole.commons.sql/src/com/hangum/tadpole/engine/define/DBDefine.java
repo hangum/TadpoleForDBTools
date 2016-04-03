@@ -257,6 +257,8 @@ public enum DBDefine {
 			extension += "tajo"; //$NON-NLS-1$
 		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
 			extension += "altibase";
+		} else if(this == DBDefine.TIBERO_DEFAULT) {
+			extension += "tibero";
 		} else if(this == DBDefine.MONGODB_DEFAULT) {
 			extension += "mongo";
 		} else {
@@ -367,7 +369,7 @@ public enum DBDefine {
 		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
-//		supportDb.add(TIBERO_DEFAULT);
+		supportDb.add(TIBERO_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

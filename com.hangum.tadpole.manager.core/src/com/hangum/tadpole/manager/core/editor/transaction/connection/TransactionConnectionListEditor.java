@@ -150,7 +150,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			}
 		});
 		tltmCRefresh.setImage(GlobalImageUtils.getRefresh());
-		tltmCRefresh.setToolTipText(Messages.get().TransactionConnectionListEditor_2);
+		tltmCRefresh.setToolTipText(Messages.get().Refresh);
 		
 		tvGeneral = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableCon = tvGeneral.getTable();
@@ -221,7 +221,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 				initTransactionUI();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().TransactionConnectionListEditor_2);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		
 		tltmCommit = new ToolItem(toolBar, SWT.NONE);
 		tltmCommit.addSelectionListener(new SelectionAdapter() {
@@ -302,7 +302,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().Refresh, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().Refresh, errStatus); //$NON-NLS-1$
 		}
 	}
 	

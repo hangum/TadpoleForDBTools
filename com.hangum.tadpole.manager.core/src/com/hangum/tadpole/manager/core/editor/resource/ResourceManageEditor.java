@@ -357,7 +357,7 @@ public class ResourceManageEditor extends EditorPart {
 						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, resourceManagerDao);
 					} catch (Exception ee) {
 						logger.error("Resource validate", ee); //$NON-NLS-1$
-						MessageDialog.openError(null, "Error", ee.getMessage()); //$NON-NLS-1$
+						MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
 						return;
 					}
 					
@@ -378,7 +378,7 @@ public class ResourceManageEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openError(null, "Confirm", Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
+					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -389,14 +389,14 @@ public class ResourceManageEditor extends EditorPart {
 						String strAPIURI = textAPIURL.getText().trim();
 						
 						if(strAPIURI.equals("")) { //$NON-NLS-1$
-							MessageDialog.openError(getSite().getShell(), Messages.get().Confirm, Messages.get().ResourceManageEditor_30);
+							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_30);
 							textAPIURL.setFocus();
 							return false;
 						}
 						
 						// check valid url. url pattern is must be /{parent}/{child}
 						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ResourceManageEditor_32);
+							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_32);
 							
 							textAPIURL.setFocus();
 							return false;
@@ -415,7 +415,7 @@ public class ResourceManageEditor extends EditorPart {
 //			public void widgetSelected(SelectionEvent e) {
 //				if (tableViewer.getSelection().isEmpty()) return;
 //
-//				if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you wont to delete?")) return;
+//				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, "Do you wont to delete?")) return;
 //				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 //				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
 //
@@ -574,7 +574,7 @@ public class ResourceManageEditor extends EditorPart {
 			logger.error("refresh list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ResourceManageEditor_45, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ResourceManageEditor_45, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -591,8 +591,8 @@ public class ResourceManageEditor extends EditorPart {
 	private void createTableColumn() {
 
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] {
-		new TableViewColumnDefine("RESOURCE_SEQ", Messages.get().ResourceManageEditor_3, 50, SWT.RIGHT) //$NON-NLS-1$
-				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.get().ResourceManageEditor_5, 60, SWT.CENTER) //$NON-NLS-1$
+		new TableViewColumnDefine("RESOURCE_SEQ", Messages.get().ID, 50, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.get().Type, 60, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("USER_NAME", Messages.get().User, 90, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("RES_TITLE", Messages.get().Title, 150, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("RESTAPI_URI", Messages.get().APIURL, 150, SWT.LEFT) //$NON-NLS-1$

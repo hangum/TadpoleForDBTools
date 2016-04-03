@@ -190,7 +190,7 @@ public class MainEditor extends EditorExtension {
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
 		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
-		tltmConnectURL.setToolTipText(Messages.get().MainEditor_37);
+		tltmConnectURL.setToolTipText(Messages.get().DatabaseInformation);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setText(userDB.getDisplay_name());
 		
@@ -233,7 +233,7 @@ public class MainEditor extends EditorExtension {
 					executeType = EditorDefine.EXECUTE_TYPE.BLOCK;
 				}
 				
-				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, executeType, isAutoCommit());
+				RequestQuery reqQuery = new RequestQuery(userDB, strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, executeType, isAutoCommit());
 				executeCommand(reqQuery);
 			}
 		});
@@ -248,7 +248,7 @@ public class MainEditor extends EditorExtension {
 				public void widgetSelected(SelectionEvent e) {
 					String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 					
-					RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.ALL, isAutoCommit());
+					RequestQuery reqQuery = new RequestQuery(userDB, strQuery, dbAction, EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.ALL, isAutoCommit());
 					executeCommand(reqQuery);
 				}
 			});
@@ -262,7 +262,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.GET_SELECTED_TEXT, PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 				
-				RequestQuery reqQuery = new RequestQuery(strQuery, dbAction, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
+				RequestQuery reqQuery = new RequestQuery(userDB, strQuery, dbAction, EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, isAutoCommit());
 				executeCommand(reqQuery);
 				
 			}
@@ -332,7 +332,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);
-		tiAutoCommitCommit.setText(Messages.get().MainEditor_44);
+		tiAutoCommitCommit.setText(Messages.get().Commit);
 		tiAutoCommitCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -344,7 +344,7 @@ public class MainEditor extends EditorExtension {
 		
 		tiAutoCommitRollback = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitRollback.setSelection(false);
-		tiAutoCommitRollback.setText(Messages.get().MainEditor_48);
+		tiAutoCommitRollback.setText(Messages.get().Rollback);
 		tiAutoCommitRollback.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -584,7 +584,7 @@ public class MainEditor extends EditorExtension {
 			
 			if(!isFirst) {
 				if(TadpoleSQLTransactionManager.isInstance(getUserEMail(), userDB)) {
-					if(MessageDialog.openConfirm(null, Messages.get().MainEditor_30, Messages.get().MainEditor_47)) {
+					if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MainEditor_47)) {
 						TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
 					} else {
 						TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
@@ -751,7 +751,7 @@ public class MainEditor extends EditorExtension {
 		} catch (Exception e) {
 			logger.error("update file", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}
@@ -811,7 +811,7 @@ public class MainEditor extends EditorExtension {
 			logger.error("save data", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}
@@ -853,7 +853,7 @@ public class MainEditor extends EditorExtension {
 
 	@Override
 	protected void registerBrowserFunctions() {
-		editorService = new MainEditorBrowserFunctionService(browserQueryEditor, EditorFunctionService.EDITOR_SERVICE_HANDLER, this);
+		editorService = new MainEditorBrowserFunctionService(userDB, browserQueryEditor, EditorFunctionService.EDITOR_SERVICE_HANDLER, this);
 	}
 	
 	/**
@@ -879,7 +879,7 @@ public class MainEditor extends EditorExtension {
 //
 //			public void uploadFailed(FileUploadEvent event) {
 ////				MessageDi( "upload failed: " + event.getException() ); //$NON-NLS-1$
-//				MessageDialog.openError(null, "Error", "Download fail. \n" + event.getException().getMessage());
+//				MessageDialog.openError(null, Messages.get().Error, "Download fail. \n" + event.getException().getMessage());
 //			}
 //
 //			public void uploadFinished(FileUploadEvent event) {

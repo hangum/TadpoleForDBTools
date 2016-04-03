@@ -65,7 +65,7 @@ public class RestfulAPIManagerAction extends Action implements ISelectionListene
 			logger.error("RESTFulAPI Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "RESTFulAPI Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "RESTFulAPI Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

@@ -45,13 +45,9 @@ public class Messages {
 
 	public String AdminSQLAuditEditor_7;
 
-	public String AdminSQLAuditEditor_8;
-
 	public String Refresh;
 
 	public String Add;
-
-	public String AdminUserListComposite_10;
 
 	public String AdminUserListComposite_11;
 
@@ -125,7 +121,6 @@ public class Messages {
 	public String NewUserDialog_0;
 //	public String NewUserDialog_1;
 	public String NewUserDialog_10;
-	public String NewUserDialog_11;
 	public String NewUserDialog_12;
 	public String NewUserDialog_13;
 
@@ -169,7 +164,6 @@ public class Messages {
 
 	public  String Save;
 	public  String AdminSystemSettingEditor_2;
-	public  String AdminSystemSettingEditor_3;
 	public  String AdminSystemSettingEditor_4;
 	
 	public String AdminSystemSettingAction_0;
@@ -194,6 +188,8 @@ public class Messages {
 	public String IP;
 
 	public String Close;
+
+	public String Warning;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

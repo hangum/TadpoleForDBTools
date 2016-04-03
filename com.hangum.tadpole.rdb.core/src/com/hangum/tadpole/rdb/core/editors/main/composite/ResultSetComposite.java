@@ -167,7 +167,7 @@ public class ResultSetComposite extends Composite {
 				isUserInterrupt = false;
 			}
 		});
-		btnStopQuery.setText(Messages.get().RDBResultComposite_btnStp_text);
+		btnStopQuery.setText(Messages.get().QueryStop);
 		btnStopQuery.setEnabled(false);
 		
 		btnAddVertical = new Button(compHead, SWT.NONE);
@@ -185,7 +185,7 @@ public class ResultSetComposite extends Composite {
 				layout();
 			}
 		});
-		btnAddVertical.setText(Messages.get().RDBResultComposite_btnOrientation);
+		btnAddVertical.setText(Messages.get().ChangeRotation);
 		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);
@@ -318,8 +318,8 @@ public class ResultSetComposite extends Composite {
 		this.rsDAO = new QueryExecuteResultDTO();
 		if(compositeResult != null) compositeResult.initUI();
 		
-		// selected first tab request quring.
-		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
+//		// selected first tab request quring.
+//		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		// 쿼리를 실행 합니다. 
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
@@ -328,6 +328,7 @@ public class ResultSetComposite extends Composite {
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
+		final UserDBDAO tmpUserDB 	= getUserDB();
 		
 		final String errMsg = Messages.get().MainEditor_21;
 		
@@ -346,7 +347,7 @@ public class ResultSetComposite extends Composite {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
-							String strExeSQL = SQLUtil.sqlExecutable(strSQL);
+							String strExeSQL = SQLUtil.sqlExecutable(tmpUserDB, strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(SQLUtil.isStatement(strExeSQL)) {
@@ -760,14 +761,12 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void resultSashLayout() {
-		Map<Integer, Float> mapWidths = new HashMap<Integer, Float>();
-		Map<Integer, Float> mapHeight = new HashMap<Integer, Float>();
-		int intParentWidth = sashFormResult.getBounds().width;
-		int intParentHeight = sashFormResult.getBounds().height;
+		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
 		int intTmpCount = 0;
 		
 		try {
-			List<AbstractResultDetailComposite> listDisComp = new ArrayList<>();
+			List<AbstractResultDetailComposite> listDisposeComposite = new ArrayList<>();
 			Control[] childControls = sashFormResult.getChildren();
 			for (int i=0; i<childControls.length; i++) {
 				Control control = childControls[i];
@@ -775,19 +774,19 @@ public class ResultSetComposite extends Composite {
 					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
 					ResultTailComposite tailComposite = resultComposite.getCompositeTail();
 					if(!tailComposite.getBtnPinSelection()) {
-						listDisComp.add(resultComposite);
+						listDisposeComposite.add(resultComposite);
 					} else {
-						mapWidths.put(intTmpCount, ((float)resultComposite.getBounds().width / (float)intParentWidth));
-						mapHeight.put(intTmpCount, ((float)resultComposite.getBounds().height / (float)intParentHeight));
+						mapWidths.put(intTmpCount, resultComposite.getBounds().width);
+						mapHeight.put(intTmpCount, resultComposite.getBounds().height);
 						intTmpCount++;
 					}
 				}
 			}
 			
 			// 삭제한다.
-			int intDispCount = listDisComp.size()-1;
+			int intDispCount = listDisposeComposite.size()-1;
 			for(int i=0; i<intDispCount; i++) {
-				listDisComp.get(i).dispose();
+				listDisposeComposite.get(i).dispose();
 			}
 			
 			int weights[] = new int[mapWidths.size()+1];

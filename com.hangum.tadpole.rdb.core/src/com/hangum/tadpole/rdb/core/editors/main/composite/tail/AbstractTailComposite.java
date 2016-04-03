@@ -50,6 +50,7 @@ public abstract class AbstractTailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(AbstractTailComposite.class);
 	
+	private Composite compositeParent;
 	protected Composite compositeDownloadAMsg;
 	protected Combo comboDownload;
 	protected DownloadServiceHandler downloadServiceHandler;
@@ -62,6 +63,7 @@ public abstract class AbstractTailComposite extends Composite {
 		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
+		compositeParent = compositeBtn;
 		compositeDownloadAMsg = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeDownloadAMsg = new GridLayout(7, false);
 		gl_compositeDownloadAMsg.verticalSpacing = 2;
@@ -79,12 +81,14 @@ public abstract class AbstractTailComposite extends Composite {
 				if("Pin".equals(strPin)) {
 					btnPin.setToolTipText("Unpin");
 					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+					layout();
 				} else {
-					btnPin.setToolTipText("Pin");
-					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+					Composite parentComposite = compositeParent.getParent().getParent();
+					Composite resultMainComposite = parentComposite.getParent();
+					parentComposite.dispose();
+					
+					resultMainComposite.layout();
 				}
-				
-				layout();
 			}
 		});
 		btnPin.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/pin.png"));
@@ -94,11 +98,11 @@ public abstract class AbstractTailComposite extends Composite {
 		btnViewQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ResultTailComposite_ViewQuery, getSQL());
+				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ViewQuery, getSQL());
 				dialog.open();
 			}
 		});
-		btnViewQuery.setText(Messages.get().ResultTailComposite_0);
+		btnViewQuery.setText(Messages.get().ViewQuery);
 
 		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
@@ -115,7 +119,7 @@ public abstract class AbstractTailComposite extends Composite {
 		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.get().ResultSetComposite_4, Messages.get().ResultSetComposite_5)) {
+				if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResultSetComposite_5)) {
 					if(getRSDao().getDataList() == null) return;
 					
 					if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
@@ -135,7 +139,7 @@ public abstract class AbstractTailComposite extends Composite {
 			}
 			
 		});
-		btnSQLResultDownload.setText(Messages.get().ResultSetComposite_11);
+		btnSQLResultDownload.setText(Messages.get().Download);
 		
 		Label label = new Label(compositeDownloadAMsg, SWT.NONE);
 		label.setText("");
@@ -159,6 +163,7 @@ public abstract class AbstractTailComposite extends Composite {
 	 * @return
 	 */
 	public boolean getBtnPinSelection() {
+		if(btnPin.isDisposed()) return true;
 		return btnPin.getSelection();
 	}
 	

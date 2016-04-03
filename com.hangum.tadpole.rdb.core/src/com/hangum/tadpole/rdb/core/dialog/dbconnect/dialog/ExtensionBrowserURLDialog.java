@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -54,12 +55,10 @@ import com.hangum.tadpole.rdb.core.Messages;
  *
  */
 public class ExtensionBrowserURLDialog extends Dialog {
-	
 	/**
 	 * list default external dao
 	 */
 	private List<ExternalBrowserInfoDAO> listExterBroswer = new ArrayList<ExternalBrowserInfoDAO>();
-
 
 	private Button btnEnable;
 	private TableViewer tableViewer;
@@ -68,7 +67,6 @@ public class ExtensionBrowserURLDialog extends Dialog {
 	private Text textName;
 	private Text textURL;
 	private Text textComment;
-
 
 	/**
 	 * Create the dialog.
@@ -98,11 +96,11 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		btnEnable = new Button(container, SWT.CHECK);
 		btnEnable.setSelection(true);
-		btnEnable.setText("Enable"); //$NON-NLS-1$
+		btnEnable.setText(Messages.get().IsEnable);
 		
 		Group grpList = new Group(container, SWT.NONE);
 		grpList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpList.setText(Messages.get().ExtensionBrowserURLDialog_1);
+		grpList.setText(Messages.get().List);
 		grpList.setLayout(new GridLayout(1, false));
 		
 		tableViewer = new TableViewer(grpList, SWT.BORDER | SWT.FULL_SELECTION);
@@ -121,20 +119,20 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		table.setLinesVisible(true);
 		
 		TableColumn tblclmnUsed = new TableColumn(table, SWT.NONE);
-		tblclmnUsed.setWidth(30);
-		tblclmnUsed.setText(Messages.get().ExtensionBrowserURLDialog_2);
+		tblclmnUsed.setWidth(70);
+		tblclmnUsed.setText(Messages.get().IsUse);
 		
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
 		tblclmnName.setWidth(100);
-		tblclmnName.setText(Messages.get().ExtensionBrowserURLDialog_3);
+		tblclmnName.setText(Messages.get().Name);
 		
 		TableColumn tblclmnUrl = new TableColumn(table, SWT.NONE);
 		tblclmnUrl.setWidth(200);
-		tblclmnUrl.setText(Messages.get().ExtensionBrowserURLDialog_4);
+		tblclmnUrl.setText(Messages.get().URL);
 		
 		TableColumn tblclmnComment = new TableColumn(table, SWT.NONE);
 		tblclmnComment.setWidth(100);
-		tblclmnComment.setText(Messages.get().ExtensionBrowserURLDialog_5);
+		tblclmnComment.setText(Messages.get().Description);
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ExtensionBrowserLableProvider());
@@ -142,11 +140,11 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		Group grpAdd = new Group(grpList, SWT.NONE);
 		grpAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		grpAdd.setText(Messages.get().ExtensionBrowserURLDialog_6);
+		grpAdd.setText(Messages.get().Add);
 		grpAdd.setLayout(new GridLayout(2, false));
 		
 		Label lblUse = new Label(grpAdd, SWT.NONE);
-		lblUse.setText(Messages.get().ExtensionBrowserURLDialog_7);
+		lblUse.setText(Messages.get().IsUse);
 		
 		comboUsed = new Combo(grpAdd, SWT.READ_ONLY);
 		comboUsed.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -155,20 +153,19 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		comboUsed.select(0);
 		
 		Label lblName = new Label(grpAdd, SWT.NONE);
-		lblName.setText(Messages.get().ExtensionBrowserURLDialog_8);
+		lblName.setText(Messages.get().Name);
 		
 		textName = new Text(grpAdd, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblUrl = new Label(grpAdd, SWT.NONE);
-		lblUrl.setText(Messages.get().ExtensionBrowserURLDialog_9);
+		lblUrl.setText(Messages.get().URL);
 		
 		textURL = new Text(grpAdd, SWT.BORDER);
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(grpAdd, SWT.NONE);
-		lblDescription.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDescription.setText(Messages.get().ExtensionBrowserURLDialog_10);
+		lblDescription.setText(Messages.get().Description);
 		
 		textComment = new Text(grpAdd, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -188,7 +185,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 				addExtensionBrowserData();
 			}
 		});
-		btnAdd.setText(Messages.get().ExtensionBrowserURLDialog_11);
+		btnAdd.setText(Messages.get().Add);
 		
 		Button btnDelete = new Button(composite, SWT.NONE);
 		btnDelete.addSelectionListener(new SelectionAdapter() {
@@ -197,7 +194,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 				deleteExtensionBrowserData();
 			}
 		});
-		btnDelete.setText(Messages.get().ExtensionBrowserURLDialog_12);
+		btnDelete.setText(Messages.get().Delete);
 
 		return container;
 	}
@@ -229,23 +226,14 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		String strUrl = StringUtils.trimToEmpty(textURL.getText());
 		String strCmt = StringUtils.trimToEmpty(textComment.getText());
 		
-		if("".equals(strName)) { //$NON-NLS-1$
-			MessageDialog.openError(null, "Error", Messages.get().ExtensionBrowserURLDialog_18); //$NON-NLS-1$
-			textName.setFocus();
-			return;
-		}
-		
-		if("".equals(strUrl)) { //$NON-NLS-1$
-			MessageDialog.openError(null, "Error", Messages.get().ExtensionBrowserURLDialog_21); //$NON-NLS-1$
-			textURL.setFocus();
-			return;
-		}
+		if(!ValidChecker.checkTextCtl(textName, Messages.get().Name)) return;
+		if(!ValidChecker.checkTextCtl(textURL, Messages.get().URL)) return;
 		
 		// url데이터가 이미 존재하는지 검사합니다.
 		List<ExternalBrowserInfoDAO> listCheckExterBroswer = (List)tableViewer.getInput();
 		for (ExternalBrowserInfoDAO externalBrowserInfoDAO : listCheckExterBroswer) {
 			if(strUrl.equals(externalBrowserInfoDAO.getUrl())) {
-				MessageDialog.openError(null, "Error", Messages.get().ExtensionBrowserURLDialog_23); //$NON-NLS-1$
+				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().Name); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -278,8 +266,8 @@ public class ExtensionBrowserURLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExtensionBrowserURLDialog_13, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ExtensionBrowserURLDialog_14, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 	
 	@Override

@@ -156,7 +156,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		composite.setLayout(new GridLayout(5, false));
 		
 		Label lblRoleType = new Label(composite, SWT.NONE);
-		lblRoleType.setText(Messages.get().FindUserAndDBRoleDialog_3);
+		lblRoleType.setText(Messages.get().RoleType);
 		
 		comboRoleType = new Combo(composite, SWT.NONE | SWT.READ_ONLY);
 		comboRoleType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -212,7 +212,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		UserDAO userDAO = (UserDAO)iss.getFirstElement();
 		
 		if("NONE".equals(comboRoleType.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().FindUserAndDBRoleDialog_6);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().FindUserAndDBRoleDialog_6);
 			comboRoleType.setFocus();
 			return;
 		}
@@ -238,7 +238,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				
 //				super.okPressed();
 			} else {
-				MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().FindUserAndDBRoleDialog_12);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().FindUserAndDBRoleDialog_12);
 			}
 		} catch (Exception e) {
 			logger.error(Messages.get().RoleType, e);

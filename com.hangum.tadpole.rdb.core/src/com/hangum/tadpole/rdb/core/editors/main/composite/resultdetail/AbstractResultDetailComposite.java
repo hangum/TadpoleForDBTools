@@ -118,14 +118,14 @@ public abstract class AbstractResultDetailComposite extends Composite {
 		float longExecuteTime = (getReqResultDAO().getEndDateExecute().getTime() - getReqResultDAO().getStartDateExecute().getTime()) / 1000f;
 		String strResultMsg = ""; //$NON-NLS-1$
 		if(trs.isEndOfRead()) {
-			strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
+			strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().Rows, longExecuteTime, Messages.get().Sec); //$NON-NLS-1$
 		} else {
 			if( (trs.getData().size() % GetPreferenceGeneral.getSelectLimitCount()) == 0) {
 				// 데이터가 한계가 넘어 갔습니다.
 				String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(trs.getData().size()));
-				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
+				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().Sec); //$NON-NLS-1$
 			} else { 
-				strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().MainEditor_33, longExecuteTime, Messages.get().MainEditor_74); //$NON-NLS-1$
+				strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().Rows, longExecuteTime, Messages.get().Sec); //$NON-NLS-1$
 			}
 		}
 		

@@ -106,7 +106,7 @@ public class ExplorerViewer extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		setPartName(Messages.get().ExplorerViewer_0);
+		setPartName(Messages.get().ObjectExplorer);
 		
 		GridLayout gl_parent = new GridLayout(1, false);
 		gl_parent.marginWidth = 1;

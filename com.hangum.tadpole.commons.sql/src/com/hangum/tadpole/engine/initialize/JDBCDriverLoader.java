@@ -47,7 +47,7 @@ public class JDBCDriverLoader {
 	 * @throws Exception
 	 */
 	public static void addJARDir(String strDir) throws Exception {
-		if(logger.isDebugEnabled()) logger.debug("--> JAR path : " + strDir);
+//		if(logger.isDebugEnabled()) logger.debug("--> JAR path : " + strDir);
 			
 		File fileDir = new File(strDir);
 		if(fileDir.isDirectory()) {

@@ -24,6 +24,7 @@ import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -38,10 +39,13 @@ import com.hangum.tadpole.sql.format.SQLFormater;
  */
 public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	private static final Logger logger = Logger.getLogger(MainEditorBrowserFunctionService.class);
+	protected UserDBDAO userDB;
 	protected MainEditor editor;
 
-	public MainEditorBrowserFunctionService(Browser browser, String name, MainEditor editor) {
+	public MainEditorBrowserFunctionService(UserDBDAO userDB, Browser browser, String name, MainEditor editor) {
 		super(browser, name, editor);
+		
+		this.userDB = userDB;
 		this.editor = editor;
 	}
 	
@@ -91,7 +95,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
 		if((Boolean) arguments[2]) exeType = EXECUTE_TYPE.BLOCK;
 		
-		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
+		RequestQuery rq = new RequestQuery(userDB, strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 	
@@ -101,7 +105,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void doExecutePlan(Object[] arguments) {
 		String strSQL = (String) arguments[1];
-		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
+		RequestQuery rq = new RequestQuery(userDB, strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 	
@@ -179,7 +183,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
 		exeType = EXECUTE_TYPE.BLOCK;
 		
-		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
+		RequestQuery rq = new RequestQuery(userDB, strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 

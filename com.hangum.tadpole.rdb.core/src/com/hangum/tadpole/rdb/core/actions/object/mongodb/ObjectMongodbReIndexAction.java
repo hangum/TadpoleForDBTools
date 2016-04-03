@@ -51,7 +51,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		String originalName = selection.getFirstElement().toString();
 
-		if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Confirm", Messages.get().ObjectMongodbReIndexAction_2)) { //$NON-NLS-1$
+		if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectMongodbReIndexAction_2)) { //$NON-NLS-1$
 			try {
 				MongoDBQuery.reIndexCollection(userDB, originalName);
 
@@ -59,7 +59,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 				logger.error("mongodb rename", e); //$NON-NLS-1$
 
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}

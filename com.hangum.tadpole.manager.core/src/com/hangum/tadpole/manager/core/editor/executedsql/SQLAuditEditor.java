@@ -104,7 +104,7 @@ public class SQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().Date, Messages.get().ExecutedSQLEditor_5, Messages.get().ExecutedSQLEditor_6, Messages.get().ExecutedSQLEditor_7, Messages.get().ResultType, Messages.get().ExecutedSQLEditor_9, Messages.get().IP}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().Date, Messages.get().SQL, Messages.get().Sec, Messages.get().ExecutedSQLEditor_7, Messages.get().ResultType, Messages.get().Message, Messages.get().IP}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -298,11 +298,11 @@ public class SQLAuditEditor extends EditorPart {
 		compositeSearchDetail.setLayout(new GridLayout(3, false));
 		
 		Label lblSQL = new Label(compositeSearchDetail, SWT.NONE);
-		lblSQL.setText(Messages.get().ExecutedSQLEditor_5);
+		lblSQL.setText(Messages.get().Search);
 		
 		textSearch = new Text(compositeSearchDetail, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textSearch.setMessage(Messages.get().ExecutedSQLEditor_5);
+		textSearch.setMessage(Messages.get().SQL);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -370,7 +370,7 @@ public class SQLAuditEditor extends EditorPart {
 				download();
 			}
 		});
-		btnDownload.setText(Messages.get().SQL);
+		btnDownload.setText(Messages.get().Download);
 
 		btnShowQueryEditor = new Button(compositeTail, SWT.NONE);
 		btnShowQueryEditor.addSelectionListener(new SelectionAdapter() {
@@ -379,7 +379,7 @@ public class SQLAuditEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
-		btnShowQueryEditor.setText(Messages.get().Sec);
+		btnShowQueryEditor.setText(Messages.get().ExecutedSQLEditor_26);
 
 		initUIData();
 		registerServiceHandler();

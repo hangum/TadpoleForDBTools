@@ -98,7 +98,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(tableDAO.getName() + Messages.get().GenerateStatmentDMLDialog_1);
+		newShell.setText(tableDAO.getName() + Messages.get().TableInformation);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -194,29 +194,29 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		TableViewerColumn tvColumnName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcColumnName = tvColumnName.getColumn();
 		tcColumnName.setWidth(130);
-		tcColumnName.setText(Messages.get().GenerateStatmentDMLDialog_8);
+		tcColumnName.setText(Messages.get().ColumnName);
 		tvColumnName.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 0, this));
 
 		TableViewerColumn tvColumnDataType = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcDataType = tvColumnDataType.getColumn();
 		tcDataType.setWidth(85);
-		tcDataType.setText(Messages.get().GenerateStatmentDMLDialog_9);
+		tcDataType.setText(Messages.get().DataType);
 
 		TableViewerColumn tvColumnKey = new TableViewerColumn(tableViewer, SWT.CENTER);
 		TableColumn tcKey = tvColumnKey.getColumn();
 		tcKey.setWidth(50);
-		tcKey.setText(Messages.get().GenerateStatmentDMLDialog_10);
+		tcKey.setText(Messages.get().Key);
 
 		TableViewerColumn tvColumnAlias = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcAlias = tvColumnAlias.getColumn();
 		tcAlias.setWidth(100);
-		tcAlias.setText(Messages.get().GenerateStatmentDMLDialog_11);
+		tcAlias.setText(Messages.get().Alias);
 		tvColumnAlias.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 3, this));
 		
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt =  tvColumnCmt.getColumn();
 		tcCmt.setWidth(300);
-		tcCmt.setText(Messages.get().GenerateStatmentDMLDialog_12);
+		tcCmt.setText(Messages.get().Description);
 
 		Composite composite_3 = new Composite(compositeBody, SWT.NONE);
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -242,7 +242,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				queryGenetation();
 			}
 		});
-		btnAllCheck.setText(Messages.get().GenerateStatmentDMLDialog_14);
+		btnAllCheck.setText(Messages.get().AllColumn);
 
 		chkComment = new Button(composite_3, SWT.CHECK);
 		chkComment.setText(Messages.get().GenerateStatmentDMLDialog_15);
@@ -575,9 +575,9 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		if(isEditorAdd) {
 			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
-			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().GenerateStatmentDMLDialog_88, false);
+			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 		} else {
-			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().GenerateStatmentDMLDialog_88, false);	
+			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);	
 		}
 		
 	}

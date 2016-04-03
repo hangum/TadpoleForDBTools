@@ -116,7 +116,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmSynonym = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmSynonym.setText(Messages.get().TadpoleSynonymComposite_0);
+		tbtmSynonym.setText(Messages.get().Synonym);
 		tbtmSynonym.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
@@ -187,7 +187,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
@@ -231,9 +231,9 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
 		new TableViewColumnDefine("SYNONYM_NAME", Messages.get().TadpoleSynonymComposite_5, 100, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("TABLE_OWNER", Messages.get().TadpoleSynonymComposite_7, 60, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("OBJECT_TYPE", Messages.get().TadpoleSynonymComposite_9, 70, SWT.CENTER) // //$NON-NLS-1$
+				, new TableViewColumnDefine("OBJECT_TYPE", Messages.get().Type, 70, SWT.CENTER) // //$NON-NLS-1$
 				, new TableViewColumnDefine("TABLE_NAME", Messages.get().TadpoleSynonymComposite_11, 100, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("COMMENTS", Messages.get().TadpoleSynonymComposite_13, 100, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("COMMENTS", Messages.get().Comment, 100, SWT.LEFT) // //$NON-NLS-1$
 		};
 
 		ColumnHeaderCreator.createColumnHeader(synonymListViewer, tableColumnDef);
@@ -245,9 +245,9 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 	private void createSynonymDetailColumne() {
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
-		new TableViewColumnDefine("COLUMN_ID", Messages.get().TadpoleSynonymComposite_15, 50, SWT.RIGHT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("COLUMN_NAME", Messages.get().TadpoleSynonymComposite_17, 100, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("DATA_TYPE", Messages.get().TadpoleSynonymComposite_19, 80, SWT.CENTER) // //$NON-NLS-1$
+		new TableViewColumnDefine("COLUMN_ID", Messages.get().SEQ, 50, SWT.RIGHT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("COLUMN_NAME", Messages.get().Name, 100, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("DATA_TYPE", Messages.get().DataType, 80, SWT.CENTER) // //$NON-NLS-1$
 				, new TableViewColumnDefine("NULLABLE", Messages.get().TadpoleSynonymComposite_21, 60, SWT.CENTER) // //$NON-NLS-1$
 				, new TableViewColumnDefine("KEY", Messages.get().TadpoleSynonymComposite_23, 50, SWT.CENTER) // //$NON-NLS-1$
 				, new TableViewColumnDefine("COMMENTS", Messages.get().TadpoleSynonymComposite_25, 100, SWT.LEFT) // //$NON-NLS-1$
@@ -359,7 +359,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult()
 									.getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				}); // end display.asyncExec

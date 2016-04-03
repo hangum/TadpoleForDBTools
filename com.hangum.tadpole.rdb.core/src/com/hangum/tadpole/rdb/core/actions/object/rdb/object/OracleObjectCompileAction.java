@@ -92,7 +92,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			logger.error(tableDao.getName() + " compile", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", tableDao.getName() + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, tableDao.getName() + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
 		} finally {
 			refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE.VIEW, tableDao.getName(), userDB);
 		}
@@ -115,7 +115,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			logger.error(objName + " compile", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", objName + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, objName + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
 		} finally {
 			refreshObject(actionType, objName, userDB);
 		}
@@ -136,7 +136,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 			logger.error(procedureDAO.getName() + " compile", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", procedureDAO.getName() + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, procedureDAO.getName() + Messages.get().OracleObjectCompileAction_5, errStatus); //$NON-NLS-1$
 		} finally {
 			refreshObject(PublicTadpoleDefine.QUERY_DDL_TYPE.PACKAGE, procedureDAO.getName(), userDB);
 		}

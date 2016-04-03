@@ -86,13 +86,13 @@ public class SQLTemplateDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText(Messages.get().SQLTemplateView_Name);
+		lblName.setText(Messages.get().Name);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(container, SWT.NONE);
-		lblDescription.setText(Messages.get().SQLTemplateView_Description);
+		lblDescription.setText(Messages.get().Description);
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -101,7 +101,7 @@ public class SQLTemplateDialog extends Dialog {
 		textDescription.setLayoutData(gd_textDescription);
 		
 		Label lblSql = new Label(container, SWT.NONE);
-		lblSql.setText(Messages.get().SQLTemplateView_SQL);
+		lblSql.setText(Messages.get().SQL);
 		
 		textSQL = new Text(container, SWT.BORDER | SWT.MULTI);
 		GridData gd_textSQL = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -134,11 +134,11 @@ public class SQLTemplateDialog extends Dialog {
 		
 		// check validation
 		if(strTextName.equals("")) {
-			MessageDialog.openError(getShell(), Messages.get().TDBErroDialog_0, Messages.get().SQLTemplateDialog_NameEmpty);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLTemplateDialog_NameEmpty);
 			textName.setFocus();
 			return;
 		} else if(strSQL.equals("")) {
-			MessageDialog.openError(getShell(), Messages.get().TDBErroDialog_0, Messages.get().SQLTemplateDialog_SQLEmpty);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLTemplateDialog_SQLEmpty);
 			textSQL.setFocus();
 			return;
 		}
@@ -180,8 +180,8 @@ public class SQLTemplateDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().TDBErroDialog_3, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().TDBErroDialog_4, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 
 	/**

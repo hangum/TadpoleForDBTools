@@ -933,7 +933,7 @@ public class MongodbResultComposite extends Composite {
 	private void deleteDocumentTree() {
 		IStructuredSelection iss = (IStructuredSelection)treeViewerMongo.getSelection();
 		if(iss.isEmpty()) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_10);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MongodbResultComposite_10);
 			return;
 		} else if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_12)) {
 			
@@ -946,7 +946,7 @@ public class MongodbResultComposite extends Composite {
 			} catch (Exception e) {
 				logger.error(collectionName + " collection document remove object id is" + dto.getDbObject(), e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -957,7 +957,7 @@ public class MongodbResultComposite extends Composite {
 	private void deleteDocumentTable() {
 		IStructuredSelection iss = (IStructuredSelection)resultTableViewer.getSelection();
 		if(iss.isEmpty()) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_10);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MongodbResultComposite_10);
 			return;
 		} else if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongodbResultComposite_12)) {
 			HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)iss.getFirstElement();
@@ -969,7 +969,7 @@ public class MongodbResultComposite extends Composite {
 			} catch (Exception e) {
 				logger.error(collectionName + " collection document remove object id is" + dbObject, e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, "Error", "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Document remove", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

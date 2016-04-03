@@ -109,7 +109,7 @@ public class ResultMainComposite extends Composite {
 		compositeQueryPlan.setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmQueryPlan = new CTabItem(tabFolderResult, SWT.NONE);
-		tbtmQueryPlan.setText(Messages.get().ResultMainComposite_4);
+		tbtmQueryPlan.setText(Messages.get().QueryPlan);
 		tbtmQueryPlan.setControl(compositeQueryPlan);
 
 		///////////////////// tab query history //////////////////////////

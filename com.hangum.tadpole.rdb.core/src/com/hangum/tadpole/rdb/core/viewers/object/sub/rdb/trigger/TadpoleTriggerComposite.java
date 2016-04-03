@@ -90,7 +90,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	
 	private void createWidget(final CTabFolder tabFolderObject) {		
 		tbtmTriggers = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmTriggers.setText(Messages.get().TadpoleTriggerComposite_0);
+		tbtmTriggers.setText(Messages.get().Triggers);
 		tbtmTriggers.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name());
 
 		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
@@ -133,9 +133,9 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_1);
 		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_2);
-		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_3);
+		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().Refresh);
 		
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_4);
+		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().ViewDDL);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_5);
 
 		// menu
@@ -215,7 +215,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showTrigger refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_76, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_76, errStatus); //$NON-NLS-1$
 		}
 	}
 

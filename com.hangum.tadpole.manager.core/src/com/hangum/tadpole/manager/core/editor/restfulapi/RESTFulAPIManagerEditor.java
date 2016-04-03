@@ -239,7 +239,6 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		tvAPIList.setContentProvider(new APIListContentProvider());
 		tvAPIList.setLabelProvider(new APIListLabelProvider());
 		
-		
 /////////////////////////////////////////////////////////////////////////////////////////////
 		Group grpQuery = new Group(parent, SWT.NONE);
 		grpQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -296,7 +295,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, rmDAO);
 					} catch (Exception ee) {
 						logger.error("Resource validate", ee); //$NON-NLS-1$
-						MessageDialog.openError(null, "Error", ee.getMessage()); //$NON-NLS-1$
+						MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
 						return;
 					}
 					
@@ -321,7 +320,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openError(null, "Confirm", Messages.get().RESTFulAPIManagerEditor_31); //$NON-NLS-1$
+					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().RESTFulAPIManagerEditor_31); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -332,14 +331,14 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 						String strAPIURI = textAPIURL.getText().trim();
 						
 						if(strAPIURI.equals("")) { //$NON-NLS-1$
-							MessageDialog.openError(getSite().getShell(), Messages.get().Confirm, Messages.get().RESTFulAPIManagerEditor_34);
+							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().RESTFulAPIManagerEditor_34);
 							textAPIURL.setFocus();
 							return false;
 						}
 						
 						// check valid url. url pattern is must be /{parent}/{child}
 						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().RESTFulAPIManagerEditor_36);
+							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().RESTFulAPIManagerEditor_36);
 							
 							textAPIURL.setFocus();
 							return false;
@@ -358,7 +357,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 //			public void widgetSelected(SelectionEvent e) {
 //				if (tableViewer.getSelection().isEmpty()) return;
 //
-//				if(!MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Do you wont to delete?")) return;
+//				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, "Do you wont to delete?")) return;
 //				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 //				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
 //
@@ -470,7 +469,6 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 					else mapFirstApi.put(strTreeKey, new RESTFulAPIDAO(strTreeKey));
 				}
 			}
-			
 			
 			// 두 번째 항목을 찾는다.
 			for (ResourceManagerDAO resourceManagerDAO : listAPIList) {

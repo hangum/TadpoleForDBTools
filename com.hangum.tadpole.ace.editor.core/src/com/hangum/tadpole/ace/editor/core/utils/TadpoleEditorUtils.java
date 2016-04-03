@@ -11,10 +11,7 @@
 package com.hangum.tadpole.ace.editor.core.utils;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * Tadpole Editor Utils

@@ -159,7 +159,7 @@ public class DBAccessControlDialog extends Dialog {
 		Group grpAuthority = new Group(compositeBody, SWT.NONE);
 		grpAuthority.setLayout(new GridLayout(2, false));
 		grpAuthority.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpAuthority.setText(Messages.get().DBAccessControlDialog_5);
+		grpAuthority.setText(Messages.get().Authority);
 		
 		btnSelect = new Button(grpAuthority, SWT.CHECK);
 		btnSelect.setEnabled(false);
@@ -346,7 +346,7 @@ public class DBAccessControlDialog extends Dialog {
 			TadpoleSystem_AccessControl.updateDBAccessControl(dao);
 		} catch (Exception e) {
 			logger.error("Update dbAccessContorl error", e);
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DBAccessControlDialog_25 + e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().Authority + e.getMessage());
 			return;
 		}
 		

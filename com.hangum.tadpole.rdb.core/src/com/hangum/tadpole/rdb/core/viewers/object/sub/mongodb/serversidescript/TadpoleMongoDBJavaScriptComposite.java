@@ -130,14 +130,14 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 						logger.error("Mongodb javascirpt", e); //$NON-NLS-1$
 						
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().TadpoleMongoDBJavaScriptComposite_2, errStatus); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().TadpoleMongoDBJavaScriptComposite_2, errStatus); //$NON-NLS-1$
 					}
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), "Error", e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
@@ -166,7 +166,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * @param indexComparator
 	 */
 	private void createMongoDBIndexesColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {Messages.get().TadpoleMongoDBJavaScriptComposite_3, Messages.get().TadpoleMongoDBJavaScriptComposite_4};
+		String[] name = {Messages.get().Name, Messages.get().TadpoleMongoDBJavaScriptComposite_4};
 		int[] size = {120, 200};
 
 		for (int i=0; i<name.length; i++) {
@@ -184,7 +184,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_5);
 		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_6);
-		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_7);
+		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().Refresh);
 		serverJavaScript = new ObjectMongodbSJavaScriptAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_8);
 
 		// menu
@@ -243,7 +243,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("javascript refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
 		}
 	}
 

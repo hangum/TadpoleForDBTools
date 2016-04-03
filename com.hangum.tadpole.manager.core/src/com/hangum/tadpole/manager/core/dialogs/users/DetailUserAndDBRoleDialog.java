@@ -157,7 +157,7 @@ public class DetailUserAndDBRoleDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("NONE".equals(comboRoleType.getText())) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DetailUserAndDBRoleDialog_8);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DetailUserAndDBRoleDialog_8);
 			comboRoleType.setFocus();
 			return;
 		}
