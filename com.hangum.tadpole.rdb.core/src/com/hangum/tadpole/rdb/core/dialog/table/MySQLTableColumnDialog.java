@@ -258,7 +258,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 			try {
 				TableColumnObjectQuery.addColumn(userDB, tableDAO, metaDataDao);
 				refreshTableColumn();
-				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().Type);
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MySQLTableColumnDialog_25);
 				
 				textColumnName.setText("");
 				textColumnName.setFocus();
