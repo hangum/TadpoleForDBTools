@@ -207,7 +207,10 @@ public class SQLUtil {
 			exeSQL = StringUtils.trimToEmpty(exeSQL);
 		
 			// oracle 은 힌트가 주석 문법을 쓰므로.
-			if(userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() != DBDefine.TIBERO_DEFAULT) {
+			if(userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT | 
+					userDB.getDBDefine() != DBDefine.TIBERO_DEFAULT |
+					userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT
+			) {
 				// 모든 쿼리에 공백 주석 제거
 				exeSQL = removeComment(exeSQL);
 				exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
