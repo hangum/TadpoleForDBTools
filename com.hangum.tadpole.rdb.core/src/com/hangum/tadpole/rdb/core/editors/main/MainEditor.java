@@ -135,7 +135,9 @@ public class MainEditor extends EditorExtension {
 			// 기본 저장된 쿼리가 있는지 가져온다.
 			try {
 				dBResourceAuto = TadpoleSystem_UserDBResource.getDefaultDBResourceData(userDB);
-				if(dBResourceAuto != null) initDefaultEditorStr = dBResourceAuto.getDataString() + "\r\n" + initDefaultEditorStr;
+				if(dBResourceAuto != null) {
+					if(!StringUtils.isEmpty(dBResourceAuto.getDataString())) initDefaultEditorStr = dBResourceAuto.getDataString() + Messages.get().AutoRecoverMsg + initDefaultEditorStr;
+				}
 			} catch(Exception e) {
 				logger.error("Get default resource", e);
 			}
@@ -665,10 +667,15 @@ public class MainEditor extends EditorExtension {
 			} else {
 				isSaved = updateResourceDate(strContentData);
 			}
-			
+
 			this.strLastContent = strContentData;
+
+			// auto save 항목을 지운다.
+			if(dBResourceAuto != null) {
+				TadpoleSystem_UserDBResource.updateResourceAuto(dBResourceAuto, "");
+			}
 			
-		} catch(SWTException e) {
+		} catch(Exception e) {
 			logger.error(RequestInfoUtils.requestInfo("doSave exception", getUserEMail()), e); //$NON-NLS-1$
 		} finally {
 			if(isSaved) {

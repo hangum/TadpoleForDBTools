@@ -470,6 +470,8 @@ public class Messages {
 	public String TestConnection;
 
 	public String MySQLTableColumnDialog_25;
+
+	public String AutoRecoverMsg;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
