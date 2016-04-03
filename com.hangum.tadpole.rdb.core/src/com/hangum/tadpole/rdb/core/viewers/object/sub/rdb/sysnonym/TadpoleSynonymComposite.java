@@ -68,6 +68,7 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvid
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.SynonymColumnComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -95,6 +96,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	// column info
 	private TableViewer synonymColumnViewer;
 	private List<OracleSynonymColumnDAO> showSynonymColumns;
+	private SynonymColumnComparator synonymColumnComparator;
 
 	private AbstractObjectAction dropAction_Synonym;
 	private AbstractObjectAction refreshAction_Synonym;
@@ -164,9 +166,6 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 					if (synonymDAO != null) {
 						OracleSynonymDAO synonym = (OracleSynonymDAO) synonymDAO;
-
-						if (selectSynonymName.equals(synonym.getSynonym_name()))
-							return;
 						selectSynonymName = synonym.getSynonym_name();
 
 						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -177,8 +176,9 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 						showSynonymColumns = sqlClient.queryForList("synonymColumnList", mapParam); //$NON-NLS-1$
 
-					} else
+					} else {
 						showSynonymColumns = null;
+					}
 
 					synonymColumnViewer.setInput(showSynonymColumns);
 					synonymColumnViewer.refresh();
@@ -197,6 +197,13 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		tableTableList.setHeaderVisible(true);
 
 		createSynonymMenu();
+		createSysnonymListColumne();
+
+		synonymListViewer.setInput(showSynonyms);
+		synonymListViewer.refresh();
+
+		synonymFilter = new DefaultTableColumnFilter();
+		synonymListViewer.addFilter(synonymFilter);
 
 		// columns
 		synonymColumnViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
@@ -213,16 +220,13 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		Table tableTableColumn = synonymColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
-
-		createSysnonymListColumne();
+		
 		createSynonymDetailColumne();
-
-		synonymListViewer.setInput(showSynonyms);
-		synonymListViewer.refresh();
-
-		synonymFilter = new DefaultTableColumnFilter();
-		synonymListViewer.addFilter(synonymFilter);
-
+		
+		synonymColumnComparator = new SynonymColumnComparator();
+		synonymColumnViewer.setSorter(synonymColumnComparator);
+		synonymColumnComparator.setColumn(0);
+		
 		sashForm.setWeights(new int[] { 1, 1 });
 	}
 
@@ -253,7 +257,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 				, new TableViewColumnDefine("COMMENTS", Messages.get().TadpoleSynonymComposite_25, 100, SWT.LEFT) // //$NON-NLS-1$
 		};
 
-		ColumnHeaderCreator.createColumnHeader(synonymColumnViewer, tableColumnDef);
+		ColumnHeaderCreator.createColumnHeader(synonymColumnViewer, synonymColumnComparator, tableColumnDef);
 
 		synonymColumnViewer.setContentProvider(new ArrayContentProvider());
 		synonymColumnViewer.setLabelProvider(new DefaultLabelProvider(synonymColumnViewer));

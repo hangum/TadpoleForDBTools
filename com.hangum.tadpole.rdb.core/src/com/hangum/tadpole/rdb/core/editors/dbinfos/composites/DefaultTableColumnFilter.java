@@ -8,8 +8,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
 
 public class DefaultTableColumnFilter extends ViewerFilter {
-	private String searchString;
-	private AbstractDAO dao = null;
+	protected String searchString;
+	protected AbstractDAO dao = null;
 
 	public void setSearchString(String s) {
 		this.searchString = ".*" + s.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
