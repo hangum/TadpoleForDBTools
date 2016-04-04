@@ -443,25 +443,25 @@ public class ExplorerViewer extends ViewPart {
 	private void refershSelectObject(String strSelectItemText, String strObjectName) {
 
 		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
-			refreshTable(false, strObjectName);
+			refreshTable(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 			refreshView(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
-			refreshSynonym(false, strObjectName);
+			refreshSynonym(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
 			refreshIndexes(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
 			refreshProcedure(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
-			refreshPackage(false, strObjectName);
+			refreshPackage(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
-			refreshFunction(false, strObjectName);
+			refreshFunction(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
 			refreshTrigger(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SCHEDULE.name())) {
 			refreshSchedule(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-			refreshJS(false, strObjectName);
+			refreshJS(true, strObjectName);
 		}
 		filterText();
 		
@@ -672,14 +672,6 @@ public class ExplorerViewer extends ViewPart {
 		
 		QUERY_DDL_TYPE queryDDLType = reqQuery.getSqlDDLType();
 		String strObjectName = reqQuery.getSqlObjectName();
-		
-		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-			if(queryDDLType == QUERY_DDL_TYPE.FUNCTION) {
-				refreshCurrentTab(QUERY_DDL_TYPE.PROCEDURE, strObjectName, chgUserDB);
-			} else if(queryDDLType == QUERY_DDL_TYPE.PROCEDURE) {
-				refreshCurrentTab(QUERY_DDL_TYPE.FUNCTION, strObjectName, chgUserDB);
-			}
-		}
 		
 		refreshCurrentTab(queryDDLType, strObjectName, chgUserDB);
 		// refresh filter

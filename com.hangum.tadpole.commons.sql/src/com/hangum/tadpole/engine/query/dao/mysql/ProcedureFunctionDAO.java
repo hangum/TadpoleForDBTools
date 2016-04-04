@@ -50,7 +50,7 @@ public class ProcedureFunctionDAO extends StructObjectDAO {
 	}
 
 	public boolean isValid() {
-		return "VALID".equals(Status) || Status == null || "".equals(Status);
+		return "VALID".equalsIgnoreCase(Status) || Status == null || "".equals(Status);
 	}
 
 	public void setStatus(String status) {
