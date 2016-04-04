@@ -61,6 +61,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -715,8 +716,21 @@ public class ResultSetComposite extends Composite {
 				changeResultType();
 			}
 		} else {
-			getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
-			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+			
+			if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
+				String strDefaultMsg = Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText();
+				String retMsg = ObjectCompileUtil.validateObject(getUserDB(), reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
+				if(!"".equals(retMsg)) { //$NON-NLS-1$
+					strDefaultMsg = Messages.get().ObjectEditor_7 + retMsg;
+				}
+				
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, strDefaultMsg);
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+				refreshExplorerView(getUserDB(), reqQuery);
+			} else {
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+			}
 			
 			// working schema_history 에 history 를 남깁니다.
 			try {
@@ -728,8 +742,6 @@ public class ResultSetComposite extends Composite {
 			} catch(Exception e) {
 				logger.error("save schemahistory", e); //$NON-NLS-1$
 			}
-		
-			if(reqQuery.getSqlType() == SQL_TYPE.DDL) refreshExplorerView(getUserDB(), reqQuery);
 		}
 	}
 		

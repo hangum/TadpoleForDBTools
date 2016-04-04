@@ -193,35 +193,33 @@ public class SQLUtil {
 	public static String sqlExecutable(UserDBDAO userDB, String exeSQL) {
 		
 //		tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
-//		try {
-//			
+			
 //			https://github.com/hangum/TadpoleForDBTools/issues/140 오류로 불럭지정하였습니다.
 //			TO DO 특정 쿼리에서는 주석이 있으면 오류인데..DB에서 쿼리를 실행받는 다양한 조건을 고려할 필요가 있습니다. 
-			
-			// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
-			/*
-			 *  mysql의 경우 주석문자 즉, -- 바로 다음 문자가 --와 붙어 있으면 주석으로 인식하지 않아 오류가 발생합니다. --comment 이면 주석으로 인식하지 않습니다.(다른 디비(mssql, oralce, pgsql)은 주석으로 인식합니다)
-			 *  고칠가 고민하지만, 실제 쿼리에서도 동일하게 오류로 처리할 것이기에 주석을 지우지 않고 놔둡니다. - 2013.11.11- (hangum)
-			 */
-
-			exeSQL = StringUtils.trimToEmpty(exeSQL);
 		
-			// oracle 은 힌트가 주석 문법을 쓰므로.
-			if(userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT | 
-					userDB.getDBDefine() != DBDefine.TIBERO_DEFAULT |
-					userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT
-			) {
-				// 모든 쿼리에 공백 주석 제거
-				exeSQL = removeComment(exeSQL);
-				exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
-			}
-			exeSQL = StringUtils.trimToEmpty(exeSQL);
-			exeSQL = StringUtils.removeEnd(exeSQL, "/");
+		// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
+		/*
+		 *  mysql의 경우 주석문자 즉, -- 바로 다음 문자가 --와 붙어 있으면 주석으로 인식하지 않아 오류가 발생합니다. --comment 이면 주석으로 인식하지 않습니다.(다른 디비(mssql, oralce, pgsql)은 주석으로 인식합니다)
+		 *  고칠가 고민하지만, 실제 쿼리에서도 동일하게 오류로 처리할 것이기에 주석을 지우지 않고 놔둡니다. - 2013.11.11- (hangum)
+		 */
 
-			
-//		} catch(Exception e) {
-//			logger.error("query execute", e);
-//		}
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+
+		// 주석제거.
+		// oracle, tibero, altibase은 힌트가 주석 문법을 쓰므로 주석을 삭제하지 않는다.
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | 
+				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT |
+				userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT
+		) {
+			// ignore code
+		} else {
+			exeSQL = removeComment(exeSQL);
+		}
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		exeSQL = StringUtils.removeEnd(exeSQL, "/");
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		//TO DO 오라클 프로시저등의 오브젝트는 마지막 딜리미터(;)가 없으면 오류입니다. 하여서 이 코드는 문제입니다.
+		exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 		
 		return exeSQL;
 	}
