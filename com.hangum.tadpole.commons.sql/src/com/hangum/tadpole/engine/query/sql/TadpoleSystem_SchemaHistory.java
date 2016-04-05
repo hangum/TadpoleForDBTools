@@ -99,9 +99,9 @@ public class TadpoleSystem_SchemaHistory {
 	 * 
 	 * @param user_seq
 	 * @param userDB
-	 * @param strWorkType
-	 * @param strObjecType
-	 * @param strObjectId
+	 * @param strWorkType TABLE, VIEW, PROCEDURE, FUNCTION, TRIGGER...
+	 * @param strObjecType CREATE, ALTER, DROP
+	 * @param strObjectId 객체 명
 	 * @param strSQL
 	 */
 	public static SchemaHistoryDAO save(int user_seq, UserDBDAO userDB, 
@@ -109,28 +109,6 @@ public class TadpoleSystem_SchemaHistory {
 		SchemaHistoryDAO schemaDao = new SchemaHistoryDAO(); 
 		
 		try {
-			//
-			//
-//			//
-//			String strWorkSQL = strSQL.replaceAll("(\r\n|\n|\r)", ""); // 개행문자 제거.
-//			strWorkSQL = strWorkSQL.replaceAll("\\p{Space}", " ");	// 중간에 공백 제거.
-//			if(logger.isDebugEnabled()) logger.debug("[start sql]\t" + strWorkSQL);
-//			
-//			String[] arrSQL = StringUtils.split(strWorkSQL);
-//			if(arrSQL.length <= 5) return schemaDao;
-//			String strWorkType = arrSQL[0];
-//			
-//			// object type
-//			String strObjecType = arrSQL[1];
-//			
-//			// objectId
-//			String strObjectId = StringUtils.remove(arrSQL[2], "(");
-//						
-//			if(StringUtils.equalsIgnoreCase("or", strObjecType)) {
-//				strObjecType = arrSQL[3];
-//				strObjectId = StringUtils.remove(arrSQL[4], "(");
-//			} 
-			
 			schemaDao = new SchemaHistoryDAO();
 			schemaDao.setDb_seq(userDB.getSeq());
 			schemaDao.setUser_seq(user_seq);
