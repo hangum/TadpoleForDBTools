@@ -108,8 +108,9 @@ ORDER BY T.table_name
              AND  P.CONSTRAINT_TYPE IN ('P', 'R', 'U')
            WHERE C.TABLE_NAME = D.TABLE_NAME AND C.COLUMN_NAME = D.COLUMN_NAME 
         ) AS "KEY",
-       null AS "DEFAULT", 
-       '' AS EXTRA, S.COMMENTS AS "COMMENT"
+       C.DATA_DEFAULT AS "DEFAULT", 
+       null AS EXTRA, 
+       S.COMMENTS AS "COMMENT"
    FROM ALL_TAB_COLUMNS C
         LEFT JOIN USER_COL_COMMENTS S ON S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
     WHERE C.TABLE_NAME = #table# 
@@ -273,7 +274,7 @@ ORDER BY 1
             AND D.OWNER = C.OWNER
            	AND C.TABLE_NAME = D.TABLE_NAME 
            	AND C.COLUMN_NAME = D.COLUMN_NAME  ) AS "KEY",
-       NULL AS "DEFAULT_VALUE",
+       c.data_default AS "DEFAULT_VALUE",
        '' AS EXTRA, 
        S.COMMENTS AS "COMMENTS"
    FROM ALL_TAB_COLUMNS C
@@ -344,6 +345,7 @@ ORDER BY 1
     constraint_type		:
     status				:
     #table_schema# AS table_schema
+    //TODO:user_idx_partitions 과 left join 하여 max_trans를 참조할 수 있을까?
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
   SELECT i.table_name
@@ -353,7 +355,7 @@ ORDER BY 1
         ,null as compression
         ,i.tablespace_name
         ,i.logging
-        ,null pct_free
+        ,i.pct_free as pct_free
         ,i.ini_trans
         ,null as max_trans
         ,i.initial_extent
@@ -691,38 +693,66 @@ SELECT TO_NUMBER(SUBSTR (version, 1, INSTR (version, '.') - 1)) AS version
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
-	select table_name, num_rows, table_lock
-	from user_tables
+	SELECT TABLE_NAME
+      ,TABLESPACE_NAME
+      ,PCT_FREE
+      ,INI_TRANS
+      ,LOGGING
+      ,NUM_ROWS
+      ,BLOCKS
+      ,AVG_ROW_LEN
+      ,DEGREE
+      ,SAMPLE_SIZE
+      ,LAST_ANALYZED
+      ,PARTITIONED
+      ,BUFFER_POOL
+      ,ROW_MOVEMENT
+      ,DURATION
+      ,COMPRESSION
+      ,DROPPED
+      ,READ_ONLY
+      ,TEMPORARY
+      ,MAX_EXTENTS
+      ,IOT_TYPE
+      ,INITIAL_EXTENT
+      ,NEXT_EXTENT
+      ,MIN_EXTENTS
+  FROM USER_TABLES T
 </select>
 
 <!-- 
 	column information
  -->
 <select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
-select cols.table_name as table_name
-           , tbls.comments as table_comment
-            ,cols.column_name as column_name
-            ,cols.nullable as nullable
-            ,cols.data_type || 
-            (case when cols.data_type =  'NUMBER' then '('|| cols.data_precision ||','|| cols.data_scale ||')'
-            when cols.data_type = 'DATA' then null 
-            when cols.data_type in ( 'CHAR', 'VARCHAR', 'VARCHAR2'  ,'NCHAR'  ,'NVARCHAR' ,'NVARCHAR2'  ) then '(' || to_char(cols.char_length) || ')'
-            else  '(' || to_char(cols.data_length) ||')' 
-            end  ) as data_type
-            ,cols.data_default as data_default
-            ,coms.comments as column_comment
-            ,NULL as data_type_mod
-            ,cols.char_used as char_used
-            ,decode (cols.density, null, 'No', 'Yes') as histogram
-            ,cols.num_distinct as num_distinct
-            ,cols.num_nulls as num_nulls
-            ,round (cols.density, 5) as density
-            ,cols.last_analyzed as last_analyzed
-        from user_tab_cols cols
-            left join user_col_comments coms on coms.table_name = cols.table_name and coms.column_name = cols.column_name 
-            left join user_tab_comments tbls on tbls.table_name = cols.table_name
-       where 1 = 1 and cols.hidden_column = 'NO'
-    order by cols.table_name, cols.column_id
+ select cols.table_name as table_name,
+        tbls.comments as table_comment,
+        cols.column_name as column_name,
+        cols.nullable as nullable,
+        cols.data_type || (case when cols.data_type = 'NUMBER' then '(' || cols.data_precision || ',' || cols.data_scale || ')' when cols.data_type = 'DATA' then null when cols.data_type in('CHAR',
+        'VARCHAR',
+        'VARCHAR2',
+        'NCHAR',
+        'NVARCHAR',
+        'NVARCHAR2') then '(' || to_char(cols.char_length) || ')' else '(' || to_char(cols.data_length) || ')' end ) as data_type,
+        cols.data_default as data_default,
+        coms.comments as column_comment,
+        NULL as data_type_mod,
+        cols.char_used as char_used,
+        decode(st.density, null, 'No', 'Yes') as histogram,
+        st.num_distinct as num_distinct,
+        st.num_nulls as num_nulls,
+        round(st.density,
+        5) as density,
+        st.last_analyzed as last_analyzed
+ from user_tab_columns cols 
+   left join user_col_comments coms on coms.table_name = cols.table_name
+    and coms.column_name = cols.column_name 
+    left join user_tab_comments tbls on tbls.table_name = cols.table_name
+    left join user_tab_col_statistics st on st.table_name = cols.table_name 
+    and st.column_name = cols.column_name
+  where 1 = 1
+  order by cols.table_name,
+        cols.column_id;       
 </select>
 
 <!-- 
@@ -748,7 +778,7 @@ SELECT C.TABLE_NAME
       , C.NULLABLE
       , C.CHAR_USED
       , USER OWNER
-      , NULL AS DATA_DEFAULT
+      , C.DATA_DEFAULT
 FROM USER_TAB_COLUMNS C
 WHERE 1=1
 AND C.TABLE_NAME = UPPER(#table_name#)

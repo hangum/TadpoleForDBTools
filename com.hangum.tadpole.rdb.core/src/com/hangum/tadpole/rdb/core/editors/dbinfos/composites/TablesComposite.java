@@ -162,10 +162,11 @@ public class TablesComposite extends Composite {
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
-			String[] name = {"Name", "Rows", "Lock"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			int[] size = {120, 70, 70};
-			int[] align = {SWT.LEFT, SWT.RIGHT, SWT.LEFT};
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
+			String[] name = {"Table Name","Tablespace Name","Pct Free","Ini Trans","Logging","Num Rows","Blocks","Avg Row Len","Degree","Sample Size","Last Analyzed","Partitioned","Buffer Pool","Row Movement","Duration","Compression","Dropped","Read Only","Temporary","Max Extents","Iot Type","Initial Extent","Next Extent","Min Extents"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			int[] size = {120, 120, 90, 90, 52 , 90, 90, 90, 80 , 90, 120, 52 , 68 , 72 , 100, 72 , 52 , 52 , 40 , 90, 88 , 90, 90, 90};
+			int[] align = {SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT};
+			
 			
 			createColumn(name, size, align);
 		} else {
@@ -320,11 +321,32 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 6: return ""+resultMap.get("CREATE_TIME"); //$NON-NLS-1$ //$NON-NLS-2$
 			case 7: return ""+resultMap.get("TABLE_COMMENT"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
 			switch(columnIndex) {
-			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
-			case 1: return NumberFormatUtils.commaFormat(""+resultMap.get("NUM_ROWS")); //$NON-NLS-1$ //$NON-NLS-2$
-			case 2: return ""+resultMap.get("TABLE_LOCK"); //$NON-NLS-1$ //$NON-NLS-2$
+			case 0 : return "" + resultMap.get("TABLE_NAME"      ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 1 : return "" + resultMap.get("TABLESPACE_NAME" ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 2 : return NumberFormatUtils.commaFormat("" + resultMap.get("PCT_FREE"        )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 3 : return NumberFormatUtils.commaFormat("" + resultMap.get("INI_TRANS"       )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 4 : return "" + resultMap.get("LOGGING"         ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 5 : return NumberFormatUtils.commaFormat("" + resultMap.get("NUM_ROWS"        )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 6 : return NumberFormatUtils.commaFormat("" + resultMap.get("BLOCKS"          )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 7 : return NumberFormatUtils.commaFormat("" + resultMap.get("AVG_ROW_LEN"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 8 : return NumberFormatUtils.commaFormat("" + resultMap.get("DEGREE"          )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 9 : return NumberFormatUtils.commaFormat("" + resultMap.get("SAMPLE_SIZE"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 10: return "" + resultMap.get("LAST_ANALYZED"   ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 11: return "" + resultMap.get("PARTITIONED"     ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 12: return "" + resultMap.get("BUFFER_POOL"     ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 13: return "" + resultMap.get("ROW_MOVEMENT"    ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 14: return "" + resultMap.get("DURATION"        ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 15: return "" + resultMap.get("COMPRESSION"     ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 16: return "" + resultMap.get("DROPPED"         ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 17: return "" + resultMap.get("READ_ONLY"       ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 18: return "" + resultMap.get("TEMPORARY"       ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 19: return NumberFormatUtils.commaFormat("" + resultMap.get("MAX_EXTENTS"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 20: return "" + resultMap.get("IOT_TYPE"        ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 21: return NumberFormatUtils.commaFormat("" + resultMap.get("INITIAL_EXTENT"  )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 22: return NumberFormatUtils.commaFormat("" + resultMap.get("NEXT_EXTENT"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 23: return NumberFormatUtils.commaFormat("" + resultMap.get("MIN_EXTENTS"     )); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else {
 			switch(columnIndex) {

@@ -714,8 +714,31 @@ ORDER BY s.module, s.username
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
-	select table_name, num_rows, table_lock
-	from user_tables
+	SELECT TABLE_NAME
+      ,TABLESPACE_NAME
+      ,PCT_FREE
+      ,INI_TRANS
+      ,LOGGING
+      ,NUM_ROWS
+      ,BLOCKS
+      ,AVG_ROW_LEN
+      ,DEGREE
+      ,SAMPLE_SIZE
+      ,LAST_ANALYZED
+      ,PARTITIONED
+      ,BUFFER_POOL
+      ,ROW_MOVEMENT
+      ,DURATION
+      ,COMPRESSION
+      ,DROPPED
+      ,READ_ONLY
+      ,TEMPORARY
+      ,MAX_EXTENTS
+      ,IOT_TYPE
+      ,INITIAL_EXTENT
+      ,NEXT_EXTENT
+      ,MIN_EXTENTS
+  FROM USER_TABLES T
 </select>
 
 <!-- 
