@@ -258,7 +258,7 @@ public class ColumnsComposite extends Composite {
 					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
-		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
