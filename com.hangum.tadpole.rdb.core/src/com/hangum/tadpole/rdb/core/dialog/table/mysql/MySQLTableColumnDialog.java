@@ -283,7 +283,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 			} catch (Exception e) {
 				logger.error("add column exception", e); //$NON-NLS-1$
 				
-				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_31 + e.getMessage());
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_31 + e.getMessage());
 				errDialog.open();
 			}
 		}

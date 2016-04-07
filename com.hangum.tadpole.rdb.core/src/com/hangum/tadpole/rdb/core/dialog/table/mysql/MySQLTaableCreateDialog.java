@@ -92,13 +92,13 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		Label lblTableName = new Label(container, SWT.NONE);
-		lblTableName.setText(Messages.get().get().TableName);
+		lblTableName.setText(Messages.get().TableName);
 		
 		textTableName = new Text(container, SWT.BORDER);
 		textTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblTableEncoding = new Label(container, SWT.NONE);
-		lblTableEncoding.setText(Messages.get().get().TableEncoding);
+		lblTableEncoding.setText(Messages.get().TableEncoding);
 		
 		comboTableEncoding = new Combo(container, SWT.NONE | SWT.READ_ONLY);
 		comboTableEncoding.addSelectionListener(new SelectionAdapter() {
@@ -110,13 +110,13 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 		comboTableEncoding.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblTableCollation = new Label(container, SWT.NONE | SWT.READ_ONLY);
-		lblTableCollation.setText(Messages.get().get().TableCollation);
+		lblTableCollation.setText(Messages.get().TableCollation);
 		
 		comboTableCollation = new Combo(container, SWT.NONE | SWT.READ_ONLY);
 		comboTableCollation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblTableType = new Label(container, SWT.NONE);
-		lblTableType.setText(Messages.get().get().TableType);
+		lblTableType.setText(Messages.get().TableType);
 		
 		comboTableType = new Combo(container, SWT.NONE | SWT.READ_ONLY);
 		comboTableType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -241,7 +241,7 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 			} catch (Exception e) {
 				logger.error("table create exception", e); //$NON-NLS-1$
 
-				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().get().ObjectDeleteAction_25, Messages.get().get().TableCreationError + e.getMessage());
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().TableCreationError + e.getMessage());
 				errDialog.open();
 				
 				textTableName.setFocus();

@@ -10,23 +10,38 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.table.mysql;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.rdb.core.Messages;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Combo;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * mysql table relation
@@ -36,6 +51,10 @@ import org.eclipse.swt.widgets.Combo;
  */
 public class MySQLTableRelationDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(MySQLTableRelationDialog.class);
+	public static final String TEMP_REFERENCE_SQL = "ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s) ON DELETE %s ON UPDATE %s";
+	
+	private UserDBDAO userDB;
+	private TableDAO tableDAO;
 	
 	private Text textRefName;
 	private Combo comboOriColumn;
@@ -48,8 +67,20 @@ public class MySQLTableRelationDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public MySQLTableRelationDialog(Shell parentShell) {
+	public MySQLTableRelationDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
+		
+		this.userDB = userDB;
+		this.tableDAO = tableDAO; 
+	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		super.setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
+		newShell.setText(Messages.get().TadpoleTableComposite_Relation);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -93,6 +124,12 @@ public class MySQLTableRelationDialog extends Dialog {
 		lblTableName.setText("Table Name");
 		
 		comboRefTableName = new Combo(grpReference, SWT.READ_ONLY);
+		comboRefTableName.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				changeReferenceTable();
+			}
+		});
 		comboRefTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblColumnName = new Label(grpReference, SWT.NONE);
@@ -133,20 +170,110 @@ public class MySQLTableRelationDialog extends Dialog {
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 		
+		textRefName.setFocus();
+		
 		return container;
+	}
+	
+	/**
+	 * Initialize combo column
+	 * 
+	 * @param comboColumn
+	 * @param tableDAO
+	 */
+	private void initComboColumn(Combo comboColumn, TableDAO tableDAO) {
+		comboColumn.removeAll();
+		
+		try {
+			List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
+			for (TableColumnDAO tableColumnDAO : tmpTableColumns) {
+				String strTitle = "";
+				if("".equals(tableColumnDAO.getComment())) {
+					strTitle = String.format("%s (%s)", tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey());
+				} else {
+					strTitle = String.format("%s (%s) %s", tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), tableColumnDAO.getComment());
+				}
+				comboColumn.add(strTitle);
+				comboColumn.setData(strTitle, tableColumnDAO);
+			}
+			comboColumn.select(0);
+		} catch(Exception e) {
+			logger.error("initialize column combo", e);
+		}
+	}
+	
+	/**
+	 * change reference table
+	 */
+	private void changeReferenceTable() {
+		TableDAO selectTableDAO = (TableDAO)comboRefTableName.getData(comboRefTableName.getText());
+		initComboColumn(comboRefColumnName, selectTableDAO);
 	}
 	
 	/**
 	 * initialize UI
 	 */
 	private void initUI() {
-		
+		try {
+			initComboColumn(comboOriColumn, tableDAO);
+			
+			// table 목록
+			List<TableDAO> listTablesDAO = TadpoleObjectQuery.getTableList(userDB);
+			for (TableDAO tmpTableDAO : listTablesDAO) {
+				if(!tableDAO.getName().equals(tmpTableDAO.getName())) {
+					String strTitle = "";
+					if("".equals(tmpTableDAO.getComment())) {
+						strTitle = tmpTableDAO.getName();
+					} else {
+						strTitle = String.format("%s (%s)", tmpTableDAO.getName(), tmpTableDAO.getComment());
+					}
+					comboRefTableName.add(strTitle);
+					comboRefTableName.setData(strTitle, tmpTableDAO);
+				}
+			}
+			comboRefTableName.select(0);
+			
+			// setting reference table column
+			changeReferenceTable();
+		} catch (Exception e) {
+			logger.error("init relation", e);
+		}
 	}
 	
 	@Override
 	protected void okPressed() {
-		// TODO Auto-generated method stub
-		super.okPressed();
+		// ALTER TABLE `actor` ADD CONSTRAINT `bacdef` FOREIGN KEY (`actor_id`) REFERENCES `city` (`city_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+		// ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s) ON DELETE %s ON UPDATE %s;
+		String strReferenceName = StringUtils.trimToEmpty(textRefName.getText());
+		
+		if(StringUtils.isEmpty(strReferenceName)) {
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Please input the reference name");
+			
+			textRefName.setFocus();
+			return ;
+		}
+		String strOriColumn = ((TableColumnDAO)comboOriColumn.getData(comboOriColumn.getText())).getField();
+		String strRefTable = ((TableDAO)comboRefTableName.getData(comboRefTableName.getText())).getName();
+		String strRefColumn = ((TableColumnDAO)comboRefColumnName.getData(comboRefColumnName.getText())).getField();
+		String strCreateIndex = String.format(TEMP_REFERENCE_SQL, tableDAO.getName(), strReferenceName, strOriColumn,
+					strRefTable, strRefColumn,
+					comboOnUpdate.getText(), comboOnDelete.getText()
+				);
+		try {
+			ExecuteDDLCommand.executSQL(userDB, strCreateIndex);
+			
+			ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
+			if(ev != null) ev.refreshTable(true, tableDAO.getName());
+	
+			super.okPressed();
+		} catch (Exception e) {
+			logger.error("table create exception", e); //$NON-NLS-1$
+
+			TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().TableCreationError + e.getMessage());
+			errDialog.open();
+			
+			textRefName.setFocus();
+		}
 	}
 
 	/**

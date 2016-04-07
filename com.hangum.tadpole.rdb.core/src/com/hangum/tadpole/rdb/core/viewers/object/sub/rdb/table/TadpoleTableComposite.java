@@ -87,6 +87,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnCreateAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableRelationAction;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -129,6 +130,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 	private AbstractObjectAction creatAction_Table;
 	private AbstractObjectAction renameAction_Table;
+	private AbstractObjectAction tableRelationAction;
 	private AbstractObjectAction dropAction_Table;
 	private AbstractObjectAction refreshAction_Table;
 
@@ -423,6 +425,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private void createTableMenu() {
 		creatAction_Table = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_11);
 		renameAction_Table= new ObjectRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_18);
+		tableRelationAction = new TableRelationAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_Relation);
 		dropAction_Table = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_12);
 		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().Refresh);
 
@@ -471,6 +474,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								manager.add(separator);
 								if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
 									manager.add(renameAction_Table);
+									
+									if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT |
+											userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) 
+									{ 
+										manager.add(tableRelationAction);
+									}
+											
 								}
 								manager.add(dropAction_Table);
 								manager.add(separator);
@@ -726,6 +736,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void initAction() {
 		creatAction_Table.setUserDB(getUserDB());
 		renameAction_Table.setUserDB(getUserDB());
+		tableRelationAction.setUserDB(getUserDB());
 		dropAction_Table.setUserDB(getUserDB());
 		refreshAction_Table.setUserDB(getUserDB());
 
@@ -802,6 +813,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		creatAction_Table.dispose();
 		renameAction_Table.dispose();
+		tableRelationAction.dispose();
 		dropAction_Table.dispose();
 		refreshAction_Table.dispose();
 		generateSampleData.dispose();
