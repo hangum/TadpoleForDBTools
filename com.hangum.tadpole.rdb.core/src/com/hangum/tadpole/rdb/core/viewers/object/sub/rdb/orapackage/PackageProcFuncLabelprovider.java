@@ -36,6 +36,7 @@ public class PackageProcFuncLabelprovider extends LabelProvider implements ITabl
 			switch(columnIndex) {
 			case 0: return tc.getType();
 			case 1: return tc.getName();
+			case 2: return tc.getOverload() +"";
 			}
 		return null;
 	}

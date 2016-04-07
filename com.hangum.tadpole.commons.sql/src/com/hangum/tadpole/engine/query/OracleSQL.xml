@@ -477,9 +477,11 @@ select
 		and  upper(replace(text,chr(9),' ')) like '% '|| s.procedure_name ||'%'
 		and rownum &lt;= 1
 	) as type
+	,nvl(s.overload,0) as overload
  from user_procedures s
  where 1=1
   and s.object_name = upper(#package#)
+  and s.procedure_name > ' '
  order by 3, 2
 </select>
 
@@ -1040,7 +1042,10 @@ ORDER BY IC.COLUMN_POSITION
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('IN','IN/OUT')
    AND ua.argument_name > ' '
-   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
 ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    
@@ -1062,7 +1067,10 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('OUT', 'IN/OUT')
    AND ua.argument_name > ' '
-   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
 ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    

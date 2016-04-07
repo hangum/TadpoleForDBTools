@@ -463,19 +463,8 @@ ORDER BY s.object_type DESC, s.object_name
 select 
 	s.object_name as packagename
 	,s.procedure_name as name
-	,(
-		select case 
-		when instr(upper(replace(text,chr(9),' ')), 'FUNCTION') > 0 then 'FUNCTION'
-		         when  instr(upper(replace(text,chr(9),' ')), 'PROCEDURE') > 0 then 'PROCEDURE'
-		         else 'unknow' end
-		  from user_source
-		where 1=1
-		and  name = s.object_name
-		and  upper(replace(text,chr(9),' ')) like '%'|| s.procedure_name ||'%'
-		and  (upper(replace(text,chr(9),' ')) like '%FUNCTION%' OR upper(replace(text,chr(9),' ')) like '%PROCEDURE%')
-		and  Trim(text) NOT like '--%'
-		and  rownum &lt;= 1
-	) as type
+	,(case when s.functionable = 'YES' then 'FUNCTION' else 'PROCEDURE' end) as type
+	,s.member_no as overload
  from user_procedures s
  where 1=1
   and s.object_name = upper(#package#)
@@ -1024,7 +1013,10 @@ ORDER BY IC.COLUMN_POSITION
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('IN','IN/OUT')
    AND ua.argument_name > ' '
-   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
 ORDER BY ua.object_name, ua.overload, ua.position
   
 </select>    
@@ -1046,7 +1038,10 @@ ORDER BY ua.object_name, ua.overload, ua.position
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('OUT', 'IN/OUT')
    AND ua.argument_name > ' '
-   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
 ORDER BY ua.object_name, ua.overload, ua.position
   
 </select>    
