@@ -25,7 +25,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public abstract class SQLConstants {
-	public static final String[] DEFAULT_TABLE_KEYWORDS = {"FROM", "UPDATE", "INTO", "TABLE", "JOIN"};
+	public static final String[] DEFAULT_TABLE_KEYWORDS = {"FROM", "UPDATE", "INTO", "TABLE", "JOIN", "DESC"};
 	public static final String[] DEFAULT_COLUMN_KEYWORDS = {"SELECT", "WHERE", "SET", "ON", "AND", "OR", "BY", "HAVING"};
 	public static final List<String> listTableKeywords = Arrays.asList(SQLConstants.DEFAULT_TABLE_KEYWORDS);
 	public static final List<String> listColumnKeywords = Arrays.asList(SQLConstants.DEFAULT_COLUMN_KEYWORDS);
