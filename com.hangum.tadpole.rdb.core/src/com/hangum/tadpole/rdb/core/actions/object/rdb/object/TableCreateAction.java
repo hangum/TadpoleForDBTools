@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -16,39 +16,37 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTableColumnDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTaableCreateDialog;
 
 /**
- * Table column modify action
+ * Table create action
  * 
  * @author hangum
  *
  */
-public class TableColumnModifyAction extends AbstractObjectSelectAction {
+public class TableCreateAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TableColumnModifyAction.class);
+	private static final Logger logger = Logger.getLogger(TableCreateAction.class);
 
-	public final static String ID = "com.hangum.db.browser.rap.core.actions.tablecolumn.modify"; //$NON-NLS-1$
+	public final static String ID = "com.hangum.db.browser.rap.core.actions.table.create"; //$NON-NLS-1$
 
-	public TableColumnModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
+	public TableCreateAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.get().ModifyColumn); //$NON-NLS-1$
+		setText(Messages.get().AddTable);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-		TableColumnDAO tableColumnDAO = (TableColumnDAO)selection.getFirstElement();
-		TableDAO tableDAO = tableColumnDAO.getTableDao();
+		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		
-		MySQLTableColumnDialog dialog = new MySQLTableColumnDialog(window.getShell(), getUserDB(), tableDAO, tableColumnDAO);
+		MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), getUserDB());
 		dialog.open();
 	}
 }

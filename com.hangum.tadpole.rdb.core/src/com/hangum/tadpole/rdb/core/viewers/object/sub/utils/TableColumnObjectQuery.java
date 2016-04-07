@@ -22,7 +22,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.rdb.core.dialog.table.TableColumnUpdateDAO;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.TableColumnUpdateDAO;
 
 /**
  * Execute table column object 
@@ -204,7 +204,7 @@ public class TableColumnObjectQuery {
 			}
 		}
 		
-		addColumnResultDAO =  ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$	
+		addColumnResultDAO = ExecuteDDLCommand.executSQL(userDB, strQuery);	
 		return addColumnResultDAO;
 	}
 	

@@ -15,6 +15,8 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
 
+	public String AddTable;
+
 	public String ViewQuery;
 	public String ResourceHistoryDialog_0;
 	public String Title;
@@ -476,6 +478,20 @@ public class Messages {
 	public String CompileObjectEditorOpen;
 
 	public String GenerateSampleData;
+
+	public String MySQLTaableCreateDialog;
+
+	public String TableCreationNameAlter;
+
+	public String TableCreationWantToCreate;
+
+	public String TableCreationError;
+
+	public String TableEncoding;
+
+	public String TableCollation;
+
+	public String TableType;
 
 	
 	public static Messages get() {

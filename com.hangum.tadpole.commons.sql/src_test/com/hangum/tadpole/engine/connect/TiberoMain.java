@@ -10,8 +10,8 @@ public class TiberoMain {
 		System.out.println("========= start object ==================");
 		try {
 			Class.forName("com.tmax.tibero.jdbc.TbDriver");
-	        Connection conn = DriverManager.getConnection("jdbc:tibero:thin:@192.168.29.141:8629:tibero",
-	                                        "sys", "tibero");
+	        Connection conn = DriverManager.getConnection("jdbc:tibero:thin:@192.168.29.173:8629:tibero",
+	                                        "sys", "tadpole");
 	        
 	        Statement         stmt  = conn.createStatement();
 	        ResultSet rs = stmt.executeQuery("SELECT * FROM TEST_TIBERO");

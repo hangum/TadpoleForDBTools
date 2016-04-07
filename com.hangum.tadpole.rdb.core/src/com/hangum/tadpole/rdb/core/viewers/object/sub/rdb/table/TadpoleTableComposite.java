@@ -83,7 +83,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRenameAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnAddAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnCreateAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnModifyAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
@@ -435,7 +435,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Update"); //$NON-NLS-1$
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
-		addTableColumnAction = new TableColumnAddAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Add column"); //$NON-NLS-1$
+		addTableColumnAction = new TableColumnCreateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Add column"); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().ViewDDL);
 		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
@@ -684,15 +684,15 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 //	 * @param userDB
 //	 * @param listDAO
 //	 */
-//	public static List<TableDAO> filter(UserDBDAO userDB, List<TableDAO> listDAO) {
+//	public static List<TableCreateDAO> filter(UserDBDAO userDB, List<TableCreateDAO> listDAO) {
 //		
 //		if("YES".equals(userDB.getIs_table_filter())){
-//			List<TableDAO> tmpShowTables = new ArrayList<TableDAO>();
+//			List<TableCreateDAO> tmpShowTables = new ArrayList<TableCreateDAO>();
 //			String includeFilter = userDB.getTable_filter_include();
 //			if("".equals(includeFilter)) {
 //				tmpShowTables.addAll(listDAO);					
 //			} else {
-//				for (TableDAO tableDao : listDAO) {
+//				for (TableCreateDAO tableDao : listDAO) {
 //					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_include(), ",");
 //					for (String strFilter : strArryFilters) {
 //						if(tableDao.getName().matches(strFilter)) {
@@ -704,7 +704,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 //			
 //			String excludeFilter = userDB.getTable_filter_exclude();
 //			if(!"".equals(excludeFilter)) {
-//				for (TableDAO tableDao : tmpShowTables) {
+//				for (TableCreateDAO tableDao : tmpShowTables) {
 //					String[] strArryFilters = StringUtils.split(userDB.getTable_filter_exclude(), ",");
 //					for (String strFilter : strArryFilters) {
 //						if(tableDao.getName().matches(strFilter)) {

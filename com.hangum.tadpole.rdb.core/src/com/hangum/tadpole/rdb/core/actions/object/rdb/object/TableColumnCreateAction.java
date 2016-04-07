@@ -20,7 +20,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.dialog.table.MySQLTableColumnDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTableColumnDialog;
 
 /**
  * Table column rename action
@@ -28,15 +28,15 @@ import com.hangum.tadpole.rdb.core.dialog.table.MySQLTableColumnDialog;
  * @author hangum
  *
  */
-public class TableColumnAddAction extends AbstractObjectSelectAction {
+public class TableColumnCreateAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TableColumnAddAction.class);
+	private static final Logger logger = Logger.getLogger(TableColumnCreateAction.class);
 
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.tablecolumn.add"; //$NON-NLS-1$
 
-	public TableColumnAddAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
+	public TableColumnCreateAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(Messages.get().AddColumn);

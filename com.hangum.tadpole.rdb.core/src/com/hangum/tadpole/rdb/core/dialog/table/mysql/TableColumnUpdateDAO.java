@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.table;
+package com.hangum.tadpole.rdb.core.dialog.table.mysql;
 
 /**
  * table column dao
