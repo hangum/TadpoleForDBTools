@@ -38,7 +38,7 @@ public class NamedParameterUtil {
 	public static NamedParameterDAO parseParameterUtils(UserDBDAO userDB, String strLastSQL, String strParameter) throws RESTFULUnsupportedEncodingException, RESTFulArgumentNotMatchException {
 		NamedParameterDAO returnDao = new NamedParameterDAO();
 		
-		strLastSQL = SQLUtil.sqlExecutable(userDB, strLastSQL);
+		strLastSQL = SQLUtil.makeExecutableSQL(userDB, strLastSQL);
 		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
 		String strOracleStyleSQL = oracleNamedParamUtil.parse(strLastSQL);
 		

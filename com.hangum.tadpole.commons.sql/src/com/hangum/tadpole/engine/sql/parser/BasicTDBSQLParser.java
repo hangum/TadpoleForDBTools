@@ -12,6 +12,7 @@ package com.hangum.tadpole.engine.sql.parser;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
@@ -19,6 +20,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.engine.sql.parser.ddl.ParserDDL;
 import com.hangum.tadpole.engine.sql.parser.define.ParserDefine;
 import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -47,6 +49,8 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	
 	@Override
 	public QueryInfoDTO parser(String sql) {
+		String strCheckSQL = SQLUtil.removeComment(sql);
+		strCheckSQL = StringUtils.trimToEmpty(strCheckSQL);
 		QueryInfoDTO queryInfoDTO = new QueryInfoDTO();
 		
 		// if isStatement
@@ -60,7 +64,7 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 				, ParserDefine.PATTERN_FLAG
 			);
 		
-		if(PATTERN_DML_BASIC.matcher(sql).matches()) {
+		if(PATTERN_DML_BASIC.matcher(strCheckSQL).matches()) {
 			queryInfoDTO.setStatement(true);
 			queryInfoDTO.setSqlType(SQL_TYPE.DML);
 			

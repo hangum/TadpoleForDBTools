@@ -90,17 +90,6 @@ public class SQLUtil {
 	 */
 	public static String removeComment(String strSQL) {
 		if(null == strSQL) return "";
-		
-//		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
-//		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
-		
-//		Pattern regex = Pattern.compile("(?:--[^;]*?$)|(--[^\r\n])|(?:/\\*[^;]*?\\*/)", Pattern.DOTALL | Pattern.MULTILINE);
-//        Matcher regexMatcher = regex.matcher(strSQL);
-//		
-//		return regexMatcher.replaceAll("");
-//		logger.debug("[original]" + strSQL);
-//		logger.debug("[change]" + strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", ""));
-		
 		return strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
 	}
 	
@@ -123,22 +112,6 @@ public class SQLUtil {
 		
 		return isRet;
 	}
-	
-//	/**
-//	 * execute query
-//	 * 
-//	 * @param strSQL
-//	 * @return
-//	 */
-//	public static boolean isExecute(String strSQL) {
-//		strSQL = removeComment(strSQL);
-//		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
-//			return true;
-//		}
-//		
-//		return false;
-//	}
-	
 	
 	/**
 	 * 쿼리의 패턴이 <code>PATTERN_STATEMENT</code>인지?
@@ -168,20 +141,24 @@ public class SQLUtil {
 		return false;
 	}
 	
-//	/**
-//	 * 영문인지 검사합니다.
-//	 * @param strValue
-//	 * @return
-//	 */
-//	public static boolean isEnglish(String strValue) {
-//		if(strValue == null || strValue.length() == 0) return false;
-//		
-//		char charVal = strValue.charAt(0);
-//		if(charVal >= 65 && charVal <= 90) return true; 	// 소문자
-//		if(charVal >= 97 && charVal <= 122) return true; 	// 대문자 
-//		
-//		return false;
-//	}
+	/**
+	 * sql 관련 없는 모든 코드를 삭제한다.
+	 * 
+	 * @param userDB
+	 * @param exeSQL
+	 * @return
+	 */
+	public static String removeComentAndOthers(UserDBDAO userDB, String exeSQL) {
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		exeSQL = removeComment(exeSQL);
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		exeSQL = StringUtils.removeEnd(exeSQL, "/");
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		//TO DO 오라클 프로시저등의 오브젝트는 마지막 딜리미터(;)가 없으면 오류입니다. 하여서 이 코드는 문제입니다.
+		exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
+		
+		return exeSQL;
+	}
 	
 	/**
 	 * 쿼리를 jdbc에서 실행 가능한 쿼리로 보정합니다.
@@ -190,7 +167,7 @@ public class SQLUtil {
 	 * @param exeSQL
 	 * @return
 	 */
-	public static String sqlExecutable(UserDBDAO userDB, String exeSQL) {
+	public static String makeExecutableSQL(UserDBDAO userDB, String exeSQL) {
 		
 //		tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
 			
@@ -390,26 +367,6 @@ public class SQLUtil {
 		return queryType;
 	}
 	
-//	/**
-//	 * <pre>
-//	 * 이런식의 쿼리가 넘어 올때 "ALTER TABLE %s COMMENT %s", dao.getSysName(), dao.getComment()"가 입력 값일 경
-//	 * ALTER TABLE 'dao.getSysName()' COMMENT 'dao.getComment()'
-//	 * 로 바꾸어줍니다.
-//	 * </pre>
-//	 * 
-//	 * @param strings
-//	 * @return
-//	 */
-//	public static String makeQuery(String ...strings) {
-//		String sql = strings[0];
-//		
-//		String[] strParam = new String[strings.length-1];
-//		for(int i=1; i<strings.length; i++) {
-//			strParam[i-1] = makeQuote(strings[i]);
-//		}
-//		
-//		return String.format(sql, strParam);
-//	}
 	/**
 	 * make quote mark
 	 * 

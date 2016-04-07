@@ -348,7 +348,7 @@ public class ResultSetComposite extends Composite {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
-							String strExeSQL = SQLUtil.sqlExecutable(tmpUserDB, strSQL);
+							String strExeSQL = SQLUtil.makeExecutableSQL(tmpUserDB, strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(SQLUtil.isStatement(strExeSQL)) {

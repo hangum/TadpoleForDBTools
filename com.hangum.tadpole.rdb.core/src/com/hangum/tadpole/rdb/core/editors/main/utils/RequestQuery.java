@@ -95,7 +95,7 @@ public class RequestQuery {
 		
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;
-		this.sql = SQLUtil.sqlExecutable(userDB, originalSql);
+		this.sql = SQLUtil.makeExecutableSQL(userDB, originalSql);
 		parseSQL(this.sql);
 		
 //		logger.debug("================================================================================================");

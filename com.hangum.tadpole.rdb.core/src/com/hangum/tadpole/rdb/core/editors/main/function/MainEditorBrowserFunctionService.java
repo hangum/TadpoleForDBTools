@@ -28,6 +28,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
 
@@ -145,32 +146,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		if(StringUtils.contains(strObject, ".")) strObject = StringUtils.substringAfter(strObject, ".");
 		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
 		
-		try {
-			TableDAO tableDao = null;
-			List<TableDAO> listTable = editor.getUserDB().getListTable();
-			if(listTable.isEmpty()) { 
-				if(DBDefine.POSTGRE_DEFAULT != editor.getUserDB().getDBDefine()) { 
-					tableDao = TadpoleObjectQuery.getTable(editor.getUserDB(), StringUtils.trim(strObject));
-				} else {
-					tableDao = new TableDAO(strObject, "");
-				}
-			} else {
-				for (TableDAO tmpTableDAO : listTable) {
-					if(strObject.equalsIgnoreCase(tmpTableDAO.getName())) {
-						tableDao = tmpTableDAO;
-					}
-				}
-			}
-			
-			if(tableDao != null) {
-				GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, 
-									editor.getUserDB(), tableDao);
-				dialog.open();
-			}
-			
-		} catch (Exception e) {
-			logger.error("f4 function", e);
-		}
+		DialogUtil.popupDMLDialog(editor.getUserDB(), strObject);
 	}
 
 	/* (non-Javadoc)
