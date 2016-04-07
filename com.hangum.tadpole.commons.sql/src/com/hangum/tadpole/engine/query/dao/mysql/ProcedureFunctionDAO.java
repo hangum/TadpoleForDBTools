@@ -33,7 +33,7 @@ public class ProcedureFunctionDAO extends StructObjectDAO {
 	String Collation;
 	String Status;
 	String packagename;
-	String overload; //TODO:함수 오버로딩 여부에 대한 예외사항 추가.
+	int overload; //TODO:함수 오버로딩 여부에 대한 예외사항 추가.
 	
 	/**
 	 * @return the packagename
@@ -155,6 +155,14 @@ public class ProcedureFunctionDAO extends StructObjectDAO {
 
 	public void setCollation(String collation) {
 		Collation = collation;
+	}
+
+	public int getOverload() {
+		return overload;
+	}
+
+	public void setOverload(int overload) {
+		this.overload = overload;
 	}
 
 	/**

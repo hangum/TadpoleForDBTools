@@ -94,7 +94,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	private ObjectDropAction dropAction_Package;
 	private ObjectRefreshAction refreshAction_Package;
 	private GenerateViewDDLAction viewDDLAction;
-	private ObjectExecuteProcedureAction executeAction_Procedure;
+	private ObjectExecuteProcedureAction executeAction_Package;
 	private OracleObjectCompileAction objectCompileAction;
 
 	// column info
@@ -223,8 +223,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().Refresh);
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().ViewDDL);
-
-		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_7);
+		executeAction_Package = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES , Messages.get().TadpolePackageComposite_7);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_8);
 
 
@@ -259,7 +258,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		subMenuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(executeAction_Procedure);
+				manager.add(executeAction_Package);
 			}
 		});
 
@@ -297,8 +296,8 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * package procedure function list
 	 */
 	protected void createProcedureFunctionListColumne(final TableViewer tv) {
-		String[] name = {Messages.get().Name, Messages.get().Type};
-		int[] size = {120, 300};
+		String[] name = {Messages.get().Type, Messages.get().Name, Messages.get().Overload};
+		int[] size = {120, 300, 120};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn packageProcFuncColumn = new TableViewerColumn(tv, SWT.LEFT);
@@ -349,7 +348,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		creatAction_Package.setUserDB(getUserDB());
 		dropAction_Package.setUserDB(getUserDB());
 		refreshAction_Package.setUserDB(getUserDB());
-		executeAction_Procedure.setUserDB(getUserDB());
+		executeAction_Package.setUserDB(getUserDB());
 
 		viewDDLAction.setUserDB(getUserDB());
 		objectCompileAction.setUserDB(getUserDB());
@@ -389,11 +388,11 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * 
 	 * @return
 	 */
-	public TableViewer getTableViewer() {
+	public TableViewer getPackageTableViewer() {
 		return packageTableViewer;
 	}
 
-	public TableViewer getTableviewer() {
+	public TableViewer getProcFuncTableViewer() {
 		return this.packageProcFuncViewer;
 	}
 
@@ -410,7 +409,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		dropAction_Package.dispose();
 		refreshAction_Package.dispose();
 		viewDDLAction.dispose();
-		executeAction_Procedure.dispose();
+		executeAction_Package.dispose();
 		objectCompileAction.dispose();
 	}
 
@@ -418,13 +417,13 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	public void selectDataOfTable(String strObjectName) {
 		if("".equals(strObjectName) || strObjectName == null) return;
 		
-		getTableviewer().getTable().setFocus();
+		getProcFuncTableViewer().getTable().setFocus();
 		
 		// find select object and viewer select
 		for(int i=0; i<showPackage.size(); i++) {
-			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getTableviewer().getElementAt(i);
+			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getProcFuncTableViewer().getElementAt(i);
 			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
-				getTableviewer().setSelection(new StructuredSelection(getTableviewer().getElementAt(i)), true);
+				getProcFuncTableViewer().setSelection(new StructuredSelection(getProcFuncTableViewer().getElementAt(i)), true);
 				break;
 			}
 		}

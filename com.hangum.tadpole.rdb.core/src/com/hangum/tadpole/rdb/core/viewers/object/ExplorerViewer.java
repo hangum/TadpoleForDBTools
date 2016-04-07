@@ -394,8 +394,8 @@ public class ExplorerViewer extends ViewPart {
 				synonymComposite.getTableviewer(),
 				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
-				packageComposite.getTableViewer(), 
-				packageComposite.getTableViewer(),
+				packageComposite.getPackageTableViewer(), 
+				packageComposite.getProcFuncTableViewer(),
 				functionCompostite.getTableviewer(), 
 				triggerComposite.getTableViewer(),
 //				scheduleComposite.getTableViewer()

@@ -49,8 +49,6 @@ public class TiberoDDLScript extends OracleDDLScript {
 		if(logger.isDebugEnabled()) logger.debug("\n Function DDL Generation...");
 		
 		StringBuilder result = new StringBuilder("");
-//		result.append("/* DROP FUNCTION " + functionDAO.getName() + "; */ \n\n");
-		//result.append("CREATE OR REPLACE ");
 
 		List<String> srcScriptList = client.queryForList("getFunctionScript", functionDAO.getName());				
 		for (int i=0; i<srcScriptList.size(); i++){
@@ -73,8 +71,6 @@ public class TiberoDDLScript extends OracleDDLScript {
 					
 		List<String> srcScriptList = null;
 		if (StringUtils.contains(objType, "PROCEDURE")){
-//			result.append("/* DROP PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
-			//result.append("CREATE OR REPLACE ");
 			srcScriptList = client.queryForList("getProcedureScript", procedureDAO.getName());				
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
@@ -83,13 +79,11 @@ public class TiberoDDLScript extends OracleDDLScript {
 			result.append("/* STATEMENT PACKAGE BODY " + procedureDAO.getName() + "; */ \n\n");
 			result.append("/* STATEMENT PACKAGE " + procedureDAO.getName() + "; */ \n\n");
 			
-			//result.append("CREATE OR REPLACE ");
 			srcScriptList = client.queryForList("getPackageScript.head", procedureDAO.getName());				
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
 			}
 			result.append("/ \n\n ");
-			//result.append("CREATE OR REPLACE ");
 			srcScriptList = client.queryForList("getPackageScript.body", procedureDAO.getName());				
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
@@ -112,8 +106,6 @@ public class TiberoDDLScript extends OracleDDLScript {
 		if(logger.isDebugEnabled()) logger.debug("\n Trigger DDL Generation...");
 		
 		StringBuilder result = new StringBuilder("");
-//		result.append("/* DROP TRIGGER " + objectName + "; */ \n\n");
-		//result.append("CREATE OR REPLACE ");
 
 		List<String> srcScriptList = client.queryForList("getTriggerScript", objectName);				
 		for (int i=0; i<srcScriptList.size(); i++){
@@ -121,32 +113,6 @@ public class TiberoDDLScript extends OracleDDLScript {
 		}
 		
 		return result.toString();				
-	}
-
-	@Override
-	public List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
-		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("package_name", procedureDAO.getPackagename());
-		map.put("object_name", procedureDAO.getName());	
-
-		if(logger.isDebugEnabled()) {
-			logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
-			logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
-			logger.debug("\n procedureDAO=" + procedureDAO);
-		}
-		
-		return client.queryForList("getProcedureInParamter", map);
-	}
-
-	@Override
-	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
-		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("package_name", procedureDAO.getPackagename());
-		map.put("object_name", procedureDAO.getName());	
-		
-		return client.queryForList("getProcedureOutParamter", map );
 	}
 
 }

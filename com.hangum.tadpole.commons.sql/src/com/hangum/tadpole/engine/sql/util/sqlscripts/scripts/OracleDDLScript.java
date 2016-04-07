@@ -311,10 +311,12 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("package_name", procedureDAO.getPackagename());
 		map.put("object_name", procedureDAO.getName());	
+		map.put("overload", procedureDAO.getOverload()+"");	
 
 		if(logger.isDebugEnabled()) {
-			logger.debug("\n getProcedureInParamter=" + map.get("package_name"));
-			logger.debug("\n getProcedureInParamter=" + map.get("object_name"));
+			logger.debug("\n getProcedureInParamter.package=" + map.get("package_name"));
+			logger.debug("\n getProcedureInParamter.object=" + map.get("object_name"));
+			logger.debug("\n getProcedureInParamter.overload=" + map.get("overload"));
 			logger.debug("\n procedureDAO=" + procedureDAO);
 		}
 		
@@ -327,6 +329,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("package_name", procedureDAO.getPackagename());
 		map.put("object_name", procedureDAO.getName());	
+		map.put("overload", procedureDAO.getOverload()+"");	
 		
 		return client.queryForList("getProcedureOutParamter", map );
 	}
