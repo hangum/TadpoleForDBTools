@@ -228,7 +228,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		lblBatchSize.setText(Messages.get().CsvToRDBImportDialog_lblBatchSize_text);
 		
 		textBatchSize = new Text(composite_3, SWT.BORDER | SWT.RIGHT);
-		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
 			textBatchSize.setText("1"); //$NON-NLS-1$
@@ -485,7 +485,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			}
 
 			if (btnPk.getSelection()){
-				if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+				if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 					Map<String, String> parameters = new HashMap<String, String>(2);
 					parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 					parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
@@ -509,7 +509,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		String columns = ""; //$NON-NLS-1$
 		try{
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+			if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 				Map<String, String> parameters = new HashMap<String, String>(2);
 				parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 				parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
@@ -521,7 +521,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			
 			
 			for (HashMap dao: showIndexColumns){
-				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
 					/* cid, name, type, notnull, dflt_value, pk */
 					if ("1".equals(dao.get("pk").toString())) { //$NON-NLS-1$ //$NON-NLS-2$
 						result.put(dao.get("name").toString(), (Integer) dao.get("cid") + 1);	 //$NON-NLS-1$ //$NON-NLS-2$

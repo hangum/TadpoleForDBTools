@@ -55,13 +55,13 @@ public class SessionListAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT  ||
-				DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT 	||
-				DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT
+		if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT  ||
+				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT 	||
+				userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT
 		) {
 			try {
 				SessionListEditorInput sleInput = new SessionListEditorInput(userDB);
@@ -72,7 +72,7 @@ public class SessionListAction implements IViewActionDelegate {
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
-//		} else if(DBDefine.getDBDefine(userDB) == DBDefine.TAJO_DEFAULT) {
+//		} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 //			try {
 //				TajoSessionListEditorInput sleInput = new TajoSessionListEditorInput(userDB);
 //				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, TajoSessionListEditor.ID);

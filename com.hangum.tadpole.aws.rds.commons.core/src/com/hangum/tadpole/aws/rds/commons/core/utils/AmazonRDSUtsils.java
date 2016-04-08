@@ -101,7 +101,7 @@ public class AmazonRDSUtsils {
 				rdsUserDB.setIs_showtables(PublicTadpoleDefine.YES_NO.YES.name());
 				rdsUserDB.setIs_summary_report(PublicTadpoleDefine.YES_NO.YES.name());
 				
-				rdsUserDB.setDbms_type(strDBMStype);//DBDefine.getDBDefine(strDBMStype).getDBToString());
+				rdsUserDB.setDbms_type(strDBMStype);
 				rdsUserDB.setDisplay_name(rdsDbInstance.getDBInstanceIdentifier() + "." + rdsDbInstance.getAvailabilityZone());
 				rdsUserDB.setOperation_type(PublicTadpoleDefine.DBOperationType.DEVELOP.toString());
 				rdsUserDB.setDb(rdsDbInstance.getDBName());

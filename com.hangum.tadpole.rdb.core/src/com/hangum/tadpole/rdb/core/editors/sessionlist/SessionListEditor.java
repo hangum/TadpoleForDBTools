@@ -297,9 +297,9 @@ public class SessionListEditor extends EditorPart {
 		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			if (DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 				client.queryForObject("killProcess", Integer.parseInt(sl.getId())); //$NON-NLS-1$
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT){
+			} else if (userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT){
 				 Map<String, String> parameters = new HashMap<String, String>(2);
 				 parameters.put("dbname", sl.getDb());
 				 parameters.put("session_id", sl.getId());
@@ -326,7 +326,7 @@ public class SessionListEditor extends EditorPart {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
 			List<?> listSessionList = null;
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
@@ -348,7 +348,7 @@ public class SessionListEditor extends EditorPart {
 				}else{
 					listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
 				}
-			} else if(DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
+			} else if(userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$

@@ -127,7 +127,7 @@ public class DBSystemSchema {
 		List<TableColumnDAO> showViewColumns = new ArrayList<TableColumnDAO>();
 		
 		Map<String, String> param = new HashMap<String, String>();
-		if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 			param.put("user", StringUtils.substringBefore(tableDao.getName(), "."));
 			param.put("table", StringUtils.substringAfter(tableDao.getName(), "."));
 		} else {

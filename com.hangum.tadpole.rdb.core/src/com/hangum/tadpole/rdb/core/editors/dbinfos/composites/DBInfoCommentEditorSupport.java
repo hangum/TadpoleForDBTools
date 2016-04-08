@@ -67,11 +67,11 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 		if (column == 1 || column == 3) {
 			if (logger.isDebugEnabled()) logger.debug("DBMS Type is " + userDB.getDBDefine());
 
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | 
-					DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT | 
-					DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT | 
-					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT | 
-					DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | 
+					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT | 
+					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT | 
+					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | 
+					userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 				return true;
 			} else {
 				return false;
@@ -160,7 +160,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 
 				query.append(" COMMENT ON COLUMN ").append(dao.getTable_name() + ".").append(dao.getColumn_name()).append(" IS '").append(dao.getColumn_comment()).append("'");
 
@@ -170,7 +170,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers());
 				query.append(",'table' , '").append(dao.getTable_name()).append("'");
 				query.append(",'column' , '").append(dao.getColumn_name()).append("'");
@@ -194,7 +194,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				}
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT) {
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo ");
 				query.append(",'table' , '").append(dao.getTable_name()).append("'");
 				query.append(",'column' , '").append(dao.getColumn_name()).append("'");
@@ -248,13 +248,13 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT||DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 				query.append(" COMMENT ON TABLE ").append(dao.getTable_name()).append(" IS '").append(dao.getTable_comment()).append("'");
 
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_8_LE_DEFAULT) {
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
@@ -273,7 +273,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				}
-			} else if (DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT) {
+			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo,'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {

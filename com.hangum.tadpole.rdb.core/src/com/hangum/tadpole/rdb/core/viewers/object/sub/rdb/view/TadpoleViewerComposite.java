@@ -17,8 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -44,7 +42,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -286,6 +283,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
+		if(getUserDB() == null) return;
+		
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_1);
 		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_2);
 		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().Refresh);
@@ -296,30 +295,23 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					if(!isDDLLock()) {
-						manager.add(creatAction_View);
-						manager.add(deleteAction_View);
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					}
-				}
-//				manager.add(modifyAction_View);
-				manager.add(refreshAction_View);
-					
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				manager.add(viewDDLAction);
-				
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT){
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(objectCompileAction);
-				}
+		if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+			if(!isDDLLock()) {
+				menuMgr.add(creatAction_View);
+				menuMgr.add(deleteAction_View);
+				menuMgr.add(new Separator());
 			}
-		});
+		}
+//		manager.add(modifyAction_View);
+		menuMgr.add(refreshAction_View);
+			
+		menuMgr.add(new Separator());
+		menuMgr.add(viewDDLAction);
+		
+		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT | getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			menuMgr.add(new Separator());
+			menuMgr.add(objectCompileAction);
+		}
 
 		viewListViewer.getTable().setMenu(menuMgr.createContextMenu(viewListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, viewListViewer);
@@ -377,6 +369,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewColumnViewer.setInput(showViewColumns);
 		viewColumnViewer.refresh();
 		
+		if(getUserDB() == null) return;
 		creatAction_View.setUserDB(getUserDB());
 		deleteAction_View.setUserDB(getUserDB());
 		refreshAction_View.setUserDB(getUserDB());		
@@ -406,13 +399,13 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_View.dispose();
-		deleteAction_View.dispose();
-		refreshAction_View.dispose();
-		viewDDLAction.dispose();
-		objectCompileAction.dispose();
+		if(creatAction_View != null) creatAction_View.dispose();
+		if(deleteAction_View != null) deleteAction_View.dispose();
+		if(refreshAction_View != null) refreshAction_View.dispose();
+		if(viewDDLAction != null) viewDDLAction.dispose();
+		if(objectCompileAction != null) objectCompileAction.dispose();
 		
-//		tableColumnSelectionAction.dispose();
+//		if(tableColumnSelectionAction != null) tableColumnSelectionAction.dispose();
 	}
 	
 

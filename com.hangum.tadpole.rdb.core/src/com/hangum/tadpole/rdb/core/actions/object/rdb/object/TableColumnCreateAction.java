@@ -39,7 +39,7 @@ public class TableColumnCreateAction extends AbstractObjectSelectAction {
 	public TableColumnCreateAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.get().AddColumn);
+		setText(title);
 	}
 
 	@Override

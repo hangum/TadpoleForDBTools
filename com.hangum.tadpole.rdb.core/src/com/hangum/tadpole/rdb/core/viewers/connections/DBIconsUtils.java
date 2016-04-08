@@ -42,7 +42,7 @@ public class DBIconsUtils {
 	public static String getDBImageUrl(UserDBDAO userDB) {
 		String strBaseImage = "";
 		
-		DBDefine dbType = DBDefine.getDBDefine(userDB);
+		DBDefine dbType = userDB.getDBDefine();
 		if(DBDefine.MYSQL_DEFAULT == dbType) 		strBaseImage = "mysql-add.png";
 		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "mariadb-add.png";
 		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "oracle-add.png";

@@ -15,8 +15,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -33,7 +31,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
@@ -182,6 +179,8 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
+		if(getUserDB() == null) return;
+		
 		creatActionJS = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_5);
 		deleteActionJS = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().TadpoleMongoDBJavaScriptComposite_6);
 		refreshActionJS = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT, Messages.get().Refresh);
@@ -189,18 +188,12 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(creatActionJS);
-				manager.add(deleteActionJS);
-				manager.add(refreshActionJS);
-				
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				manager.add(serverJavaScript);
-			}
-		});
+		menuMgr.add(creatActionJS);
+		menuMgr.add(deleteActionJS);
+		menuMgr.add(refreshActionJS);
+		
+		menuMgr.add(new Separator());
+		menuMgr.add(serverJavaScript);
 
 		tableViewer.getTable().setMenu(menuMgr.createContextMenu(tableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableViewer);
@@ -213,6 +206,7 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 		if (listJavaScript != null) listJavaScript.clear();
 		refreshViewer();
 
+		if(getUserDB() == null) return;
 		creatActionJS.setUserDB(getUserDB());
 		deleteActionJS.setUserDB(getUserDB());
 		refreshActionJS.setUserDB(getUserDB());
@@ -274,15 +268,13 @@ public class TadpoleMongoDBJavaScriptComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatActionJS.dispose();
-		deleteActionJS.dispose();
-		refreshActionJS.dispose();
-		serverJavaScript.dispose();
+		if(creatActionJS != null) creatActionJS.dispose();
+		if(deleteActionJS != null) deleteActionJS.dispose();
+		if(refreshActionJS != null) refreshActionJS.dispose();
+		if(serverJavaScript != null) serverJavaScript.dispose();
 	}
 
 	@Override
 	public void selectDataOfTable(String strObjectName) {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -64,15 +64,15 @@ public class RelationUtil {
 		try {
 				
 			// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-			if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
 				calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 				
-			} else if(DBDefine.CUBRID_DEFAULT  == DBDefine.getDBDefine(userDB)) {
+			} else if(DBDefine.CUBRID_DEFAULT  == userDB.getDBDefine()) {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 			
-			} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) | DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine() | DBDefine.HIVE2_DEFAULT == userDB.getDBDefine()) {
 				// ignore relation code
-			} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 				// ignore relation code
 			} else {
 				calRelation(userDB, mapDBTables, db, getReferenceTable(userDB, refTableNames));
@@ -94,13 +94,13 @@ public class RelationUtil {
 
 		try {
 			// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-			if(DBDefine.SQLite_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
 				calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
-			} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			} else if(DBDefine.CUBRID_DEFAULT == userDB.getDBDefine()) {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
-			} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) | DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine() | DBDefine.HIVE2_DEFAULT == userDB.getDBDefine()) {
 				// ignore relation code
-			} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 				// ignore relation code
 			} else {
 				calRelation(userDB, mapDBTables, db, getReferenceTable(userDB));

@@ -16,8 +16,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -34,7 +32,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 
@@ -149,6 +146,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	}
 
 	private void createMenu() {
+		if(getUserDB() == null) return;
 		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().TadpoleProcedureComposite_1);
 		dropAction_Procedure = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().TadpoleProcedureComposite_3);
 		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().Refresh);
@@ -160,31 +158,25 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					if(!isDDLLock()) {
-						manager.add(creatAction_Procedure);
-						manager.add(dropAction_Procedure);
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					}
-				}
-				manager.add(refreshAction_Procedure);
-
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				manager.add(viewDDLAction);
-				if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(executeAction_Procedure);
-				}
-				if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT){
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(objectCompileAction);
-				}
+		if (PermissionChecker.isShow(getUserRoleType(), userDB)) {
+			if(!isDDLLock()) {
+				menuMgr.add(creatAction_Procedure);
+				menuMgr.add(dropAction_Procedure);
+				menuMgr.add(new Separator());
 			}
-		});
+		}
+		menuMgr.add(refreshAction_Procedure);
+
+		menuMgr.add(new Separator());
+		menuMgr.add(viewDDLAction);
+		if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+			menuMgr.add(new Separator());
+			menuMgr.add(executeAction_Procedure);
+		}
+		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			menuMgr.add(new Separator());
+			menuMgr.add(objectCompileAction);
+		}
 
 		procedureTableViewer.getTable().setMenu(menuMgr.createContextMenu(procedureTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, procedureTableViewer);
@@ -209,6 +201,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		procedureTableViewer.setInput(showProcedure);
 		procedureTableViewer.refresh();
 
+		if(getUserDB() == null) return;
 		creatAction_Procedure.setUserDB(getUserDB());
 		dropAction_Procedure.setUserDB(getUserDB());
 		refreshAction_Procedure.setUserDB(getUserDB());
@@ -265,12 +258,12 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Procedure.dispose();
-		dropAction_Procedure.dispose();
-		refreshAction_Procedure.dispose();
-		viewDDLAction.dispose();
-		executeAction_Procedure.dispose();
-		objectCompileAction.dispose();
+		if(creatAction_Procedure != null) creatAction_Procedure.dispose();
+		if(dropAction_Procedure != null) dropAction_Procedure.dispose();
+		if(refreshAction_Procedure != null) refreshAction_Procedure.dispose();
+		if(viewDDLAction != null) viewDDLAction.dispose();
+		if(executeAction_Procedure != null) executeAction_Procedure.dispose();
+		if(objectCompileAction != null) objectCompileAction.dispose();
 	}
 
 	@Override

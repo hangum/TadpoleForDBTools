@@ -498,6 +498,8 @@ public class Messages {
 	public String PleaseTableName;
 
 	public String TadpoleTableComposite_Relation;
+
+	public String DropSynonym;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

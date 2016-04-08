@@ -90,7 +90,7 @@ public class RDBInformationComposite extends Composite {
 	private void initUI() {
 		listInfo = new ArrayList<KeyValueDAO>();
 		// db information
-		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			rdbInfo();
 		}
 		
@@ -99,18 +99,18 @@ public class RDBInformationComposite extends Composite {
 		listInfo.add(new KeyValueDAO(Messages.get().DisplayName, 	userDB.getDisplay_name()));
 		
 		listInfo.add(new KeyValueDAO(Messages.get().JDBCURL, 	userDB.getUrl(userDB.getRole_id())));
-		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost(userDB.getRole_id()) + "/" + userDB.getPort(userDB.getRole_id()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		listInfo.add(new KeyValueDAO(Messages.get().Database, 	userDB.getDb(userDB.getRole_id())));
-		if(DBDefine.getDBDefine(userDB) != DBDefine.SQLite_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.SQLite_DEFAULT) {
 			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers(userDB.getRole_id()))); //$NON-NLS-1$
 		}
 		
 		listInfo.add(new KeyValueDAO(Messages.get().AutoCommit, 	userDB.getIs_readOnlyConnect()));
 
 		// 몽고디비는 없으므로.. 
-		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			listInfo.add(new KeyValueDAO(Messages.get().AutoCommit,		userDB.getIs_autocommit()));
 			listInfo.add(new KeyValueDAO(Messages.get().Profile, 		userDB.getIs_profile()));
 			listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_17, 	userDB.getQuestion_dml()));

@@ -54,7 +54,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFuncti
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.schedule.TadpoleScheduleComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynonymComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
@@ -92,8 +91,6 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleTableComposite 		tableComposite 		= null;
 	// oracle
 	private TadpoleSynonymComposite 	synonymComposite 	= null;
-	private TadpoleScheduleComposite    scheduleComposite 	= null;
-	
 	
 	// mongodb
 	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
@@ -202,7 +199,7 @@ public class ExplorerViewer extends ViewPart {
 			viewComposite.filter(strSearchText);					
 		
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+			if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 				mongoIndexComposite.filter(strSearchText);
 			} else {
 				indexComposite.filter(strSearchText);
@@ -251,7 +248,6 @@ public class ExplorerViewer extends ViewPart {
 		if(null != tableComposite) tableComposite.dispose(); 
 		if(null != viewComposite) viewComposite.dispose(); 
 		if(null != synonymComposite) synonymComposite.dispose();
-		if(null != scheduleComposite) scheduleComposite.dispose();
 		if(null != indexComposite) indexComposite.dispose(); 
 		if(null != procedureComposite) procedureComposite.dispose(); 
 		if(null != packageComposite) packageComposite.dispose(); 
@@ -319,7 +315,7 @@ public class ExplorerViewer extends ViewPart {
 			userDB = null;
 			createTable();
 		} else {
-			initObjectDetail(DBDefine.getDBDefine(userDB));
+			initObjectDetail(userDB.getDBDefine());
 		}
 	}
 	
@@ -566,14 +562,6 @@ public class ExplorerViewer extends ViewPart {
 		synonymComposite = new TadpoleSynonymComposite(getSite(), tabFolderObject, userDB);
 		synonymComposite.initAction();
 	}
-	
-	/**
-	 * define oracle schedule
-	 */
-	private void createSchedule() {
-		scheduleComposite = new TadpoleScheduleComposite(getSite(), tabFolderObject, userDB);
-		scheduleComposite.initAction();
-	}
 
 	/**
 	 * Synonym 정보를 최신으로 리프레쉬합니다.
@@ -593,7 +581,7 @@ public class ExplorerViewer extends ViewPart {
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshIndexes(boolean boolRefresh, String strObjectName) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
 		} else {
 			indexComposite.refreshIndexes(getUserDB(), boolRefresh, strObjectName);
@@ -636,7 +624,7 @@ public class ExplorerViewer extends ViewPart {
 	 * table 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshTable(boolean boolRefresh, String strObjectName) {
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {		
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {		
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
 			tableComposite.refreshTable(userDB, boolRefresh, strObjectName);

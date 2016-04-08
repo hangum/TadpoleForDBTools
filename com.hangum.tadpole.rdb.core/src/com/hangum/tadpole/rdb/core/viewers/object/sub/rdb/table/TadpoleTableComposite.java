@@ -21,8 +21,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -56,7 +54,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -423,6 +420,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * create Table menu
 	 */
 	private void createTableMenu() {
+		if (getUserDB() == null) return;
+		
 		creatAction_Table = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_11);
 		renameAction_Table= new ObjectRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_18);
 		tableRelationAction = new TableRelationAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_Relation);
@@ -438,90 +437,80 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		updateStmtAction = new GenerateSQLUpdateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Update"); //$NON-NLS-1$
 		deleteStmtAction = new GenerateSQLDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Delete"); //$NON-NLS-1$
 		
-		addTableColumnAction = new TableColumnCreateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Add column"); //$NON-NLS-1$
+		addTableColumnAction = new TableColumnCreateAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().AddColumn); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().ViewDDL);
 		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
-
+		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				Separator separator = new Separator(IWorkbenchActionConstants.MB_ADDITIONS);
-				if (userDB != null) {
-					// hive & tajo
-					if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || 
-							userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || 
-									userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							
-							if(!isDDLLock()) {
-								manager.add(creatAction_Table);
-								manager.add(dropAction_Table);
-								manager.add(separator);
-							}
-						}	
+		if(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+				getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || 
+						getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+				
+				if(!isDDLLock()) {
+					menuMgr.add(creatAction_Table);
+					menuMgr.add(dropAction_Table);
+					menuMgr.add(new Separator());
+				}
+			}	
+			
+			menuMgr.add(refreshAction_Table);
+			menuMgr.add(new Separator());
+			menuMgr.add(selectStmtAction);
+		// others rdb
+		} else {
+			menuMgr.add(refreshAction_Table);
+			menuMgr.add(new Separator());
+			
+			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+				if(!isDDLLock()) {
+					menuMgr.add(creatAction_Table);
+					menuMgr.add(new Separator());
+					if (getUserDB().getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+						menuMgr.add(renameAction_Table);
 						
-						manager.add(refreshAction_Table);
-						manager.add(separator);
-						manager.add(selectStmtAction);
-					// others rdb
-					} else {
-						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							if(!isDDLLock()) {
-								manager.add(creatAction_Table);
-								manager.add(separator);
-								if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
-									manager.add(renameAction_Table);
-									
-									if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT |
-											userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) 
-									{ 
-										manager.add(tableRelationAction);
-									}
-											
-								}
-								manager.add(dropAction_Table);
-								manager.add(separator);
-								if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-									manager.add(addTableColumnAction);
-									manager.add(separator);
-								}
-							}
-						}	
-						
-						manager.add(refreshAction_Table);
-						manager.add(separator);
-						
-						// 현재는 oracle db만 데이터 수정 모드..
-						if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
-							manager.add(generateSampleData);
-							manager.add(separator);
+						if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT |
+								getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) 
+						{ 
+							menuMgr.add(tableRelationAction);
 						}
-						
-						manager.add(generateDMLAction);
-						manager.add(separator);
-						manager.add(selectStmtAction);
-						
-						if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-							if(!isInsertLock()) manager.add(insertStmtAction);
-							if(!isUpdateLock()) manager.add(updateStmtAction);
-							if(!isDeleteLock()) manager.add(deleteStmtAction);
-							
-							if (userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
-								manager.add(separator);
-								manager.add(viewDDLAction);
-							}
-							if(!(isInsertLock() | isUpdateLock() | isDeleteLock())) {
-								manager.add(separator);
-								manager.add(tableDataEditorAction);
-							}
-						}
-					}	// if rdb
-				}	// if hive and tajo
+								
+					}
+					menuMgr.add(dropAction_Table);
+					menuMgr.add(new Separator());
+					if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+						menuMgr.add(addTableColumnAction);
+						menuMgr.add(new Separator());
+					}
+				}
+
+				// 현재는 oracle db만 데이터 수정 모드..
+				if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT | getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+					menuMgr.add(generateSampleData);
+					menuMgr.add(new Separator());
+				}
+			}	
+			
+			menuMgr.add(generateDMLAction);
+			menuMgr.add(new Separator());
+			menuMgr.add(selectStmtAction);
+			
+			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+				if(!isInsertLock()) menuMgr.add(insertStmtAction);
+				if(!isUpdateLock()) menuMgr.add(updateStmtAction);
+				if(!isDeleteLock()) menuMgr.add(deleteStmtAction);
+				
+				if (getUserDB().getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+					menuMgr.add(new Separator());
+					menuMgr.add(viewDDLAction);
+				}
+				if(!(isInsertLock() | isUpdateLock() | isDeleteLock())) {
+					menuMgr.add(new Separator());
+					menuMgr.add(tableDataEditorAction);
+				}
 			}
-		});
+		}	// if rdb
 
 		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
@@ -531,25 +520,20 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * create table column menu
 	 */
 	private void createTableColumnMenu() {
+		if(getUserDB() == null) return;
+		
 		tableColumnDeleteAction = new TableColumnDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		tableColumnModifyAction = new TableColumnModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-					manager.add(tableColumnModifyAction);
-					manager.add(tableColumnDeleteAction);
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				}
-				
-				manager.add(tableColumnSelectionAction);
-			}
-		});
+		if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			menuMgr.add(tableColumnModifyAction);
+			menuMgr.add(tableColumnDeleteAction);
+			menuMgr.add(new Separator());
+		}
+		menuMgr.add(tableColumnSelectionAction);
 
 		tableColumnViewer.getTable().setMenu(menuMgr.createContextMenu(tableColumnViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableColumnViewer);
@@ -734,6 +718,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
+		if(getUserDB() == null) return;
+		
 		creatAction_Table.setUserDB(getUserDB());
 		renameAction_Table.setUserDB(getUserDB());
 		tableRelationAction.setUserDB(getUserDB());
@@ -811,26 +797,26 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 
-		creatAction_Table.dispose();
-		renameAction_Table.dispose();
-		tableRelationAction.dispose();
-		dropAction_Table.dispose();
-		refreshAction_Table.dispose();
-		generateSampleData.dispose();
-		generateDMLAction.dispose();
+		if(creatAction_Table != null) creatAction_Table.dispose();
+		if(renameAction_Table != null) renameAction_Table.dispose();
+		if(tableRelationAction != null) tableRelationAction.dispose();
+		if(dropAction_Table != null) dropAction_Table.dispose();
+		if(refreshAction_Table != null) refreshAction_Table.dispose();
+		if(generateSampleData != null) generateSampleData.dispose();
+		if(generateDMLAction != null) generateDMLAction.dispose();
 
-		selectStmtAction.dispose();
-		insertStmtAction.dispose();
-		updateStmtAction.dispose();
-		deleteStmtAction.dispose();
-		addTableColumnAction.dispose();
+		if(selectStmtAction != null) selectStmtAction.dispose();
+		if(insertStmtAction != null) insertStmtAction.dispose();
+		if(updateStmtAction != null) updateStmtAction.dispose();
+		if(deleteStmtAction != null) deleteStmtAction.dispose();
+		if(addTableColumnAction != null) addTableColumnAction.dispose();
 		
-		viewDDLAction.dispose();
-		tableDataEditorAction.dispose();
+		if(viewDDLAction != null) viewDDLAction.dispose();
+		if(tableDataEditorAction != null) tableDataEditorAction.dispose();
 		
-		tableColumnSelectionAction.dispose();
-		tableColumnDeleteAction.dispose();
-		tableColumnModifyAction.dispose();
+		if(tableColumnSelectionAction != null) tableColumnSelectionAction.dispose();
+		if(tableColumnDeleteAction != null) tableColumnDeleteAction.dispose();
+		if(tableColumnModifyAction != null) tableColumnModifyAction.dispose();
 	}
 
 	@Override

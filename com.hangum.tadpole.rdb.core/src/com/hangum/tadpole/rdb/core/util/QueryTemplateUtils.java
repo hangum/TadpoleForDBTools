@@ -40,8 +40,8 @@ public class QueryTemplateUtils {
 	 */
 	public static String getQuery(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		String defaultStr = "";
-		if(DBDefine.MYSQL_DEFAULT == DBDefine.getDBDefine(userDB) || 
-				DBDefine.MARIADB_DEFAULT == DBDefine.getDBDefine(userDB)
+		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || 
+				DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()
 		) {
 			
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
@@ -58,8 +58,8 @@ public class QueryTemplateUtils {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB) |
-				DBDefine.TIBERO_DEFAULT ==  DBDefine.getDBDefine(userDB)
+		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() |
+				DBDefine.TIBERO_DEFAULT ==  userDB.getDBDefine()
 				) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -76,7 +76,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.SQLite_DEFAULT ==  DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.SQLite_DEFAULT ==  userDB.getDBDefine()) {
 			
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -88,7 +88,7 @@ public class QueryTemplateUtils {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.CUBRID_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.CUBRID_DEFAULT == userDB.getDBDefine()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
@@ -102,7 +102,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.POSTGRE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
@@ -116,17 +116,17 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.HIVE_DEFAULT == DBDefine.getDBDefine(userDB) || 
-				DBDefine.HIVE2_DEFAULT == DBDefine.getDBDefine(userDB)
+		} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine() || 
+				DBDefine.HIVE2_DEFAULT == userDB.getDBDefine()
 				) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  HIVEDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 				defaultStr =  HIVEDMLTemplate.TMP_CREATE_VIEW_STMT;
 			}
-		} else if(DBDefine.TAJO_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
 			defaultStr =  TAJODMLTemplate.TMP_CREATE_TABLE_STMT;
-		} else if(DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 		
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -141,7 +141,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.ALTIBASE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		} else if(DBDefine.ALTIBASE_DEFAULT == userDB.getDBDefine()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {

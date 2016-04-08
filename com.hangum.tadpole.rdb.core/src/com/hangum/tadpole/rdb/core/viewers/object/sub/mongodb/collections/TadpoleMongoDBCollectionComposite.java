@@ -19,8 +19,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -47,7 +45,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
@@ -320,6 +317,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	 * create menu
 	 */
 	private void createMenu() {
+		if(getUserDB() == null) return;
+		
 		creatAction_Table 	= new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_5);
 		deleteAction_Table 	= new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_6);
 		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_7);
@@ -339,37 +338,29 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				if (userDB != null) {
-					manager.add(creatAction_Table);
-					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-						manager.add(deleteAction_Table);
-						manager.add(collFindAndModifyAction);
-						manager.add(collValidateAction);
-					}
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(refreshAction_Table);
+		menuMgr.add(creatAction_Table);
+		if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+			menuMgr.add(deleteAction_Table);
+			menuMgr.add(collFindAndModifyAction);
+			menuMgr.add(collValidateAction);
+		}
+		menuMgr.add(new Separator());
+		menuMgr.add(refreshAction_Table);
 
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(insertStmtAction);
-					manager.add(collStatsAction);
-					
-					if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-						manager.add(collCompactAction);
-						manager.add(renameColAction);
-						manager.add(reIndexColAction);
-					}
-					
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(mapReduceAction);
-					manager.add(groupAction);
-				}
-			}
-		});
+		menuMgr.add(new Separator());
+		menuMgr.add(insertStmtAction);
+		menuMgr.add(collStatsAction);
+		
+		if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+			menuMgr.add(new Separator());
+			menuMgr.add(collCompactAction);
+			menuMgr.add(renameColAction);
+			menuMgr.add(reIndexColAction);
+		}
+		
+		menuMgr.add(new Separator());
+		menuMgr.add(mapReduceAction);
+		menuMgr.add(groupAction);
 
 		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
@@ -381,6 +372,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	}
 
 	public void initAction() {
+		if(getUserDB() == null) return;
+		
 		creatAction_Table.setUserDB(getUserDB());
 		deleteAction_Table.setUserDB(getUserDB());
 		collFindAndModifyAction.setUserDB(getUserDB());
@@ -489,14 +482,20 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Table.dispose();
-		deleteAction_Table.dispose();
-		refreshAction_Table.dispose();
-		insertStmtAction.dispose();
-		renameColAction.dispose();
-		reIndexColAction.dispose();
-		mapReduceAction.dispose();
-		groupAction.dispose();
+		if(creatAction_Table != null) creatAction_Table.dispose();
+		if(deleteAction_Table != null) deleteAction_Table.dispose();
+		if(collFindAndModifyAction != null) collFindAndModifyAction.dispose();
+		if(collValidateAction != null) collValidateAction.dispose();
+		
+		if(refreshAction_Table != null) refreshAction_Table.dispose();
+		if(insertStmtAction != null) insertStmtAction.dispose();
+		
+		if(collStatsAction != null) collStatsAction.dispose();
+		if(collCompactAction != null) collCompactAction.dispose();
+		if(renameColAction != null) renameColAction.dispose();
+		if(reIndexColAction != null) reIndexColAction.dispose();
+		if(mapReduceAction != null) mapReduceAction.dispose();
+		if(groupAction != null) groupAction.dispose();
 	}
 
 	@Override
