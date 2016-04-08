@@ -98,12 +98,14 @@ SELECT
 
 <!-- 
 	table, view의 컬럼 정보
+	c.xtype in (/*decimal*/106,/*numeric*/108,/*float*/62,/*varbinary*/165,/*binary*/173,/*nvarchar*/231,/*varchar*/167,/*char*/175)
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 SELECT  b.name field, 
-        c.name + CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
-                 ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' 
-        END type, 
+        c.name + 
+        CASE WHEN c.xtype in (106,108,62,165,173,231,167,175) then
+        CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
+        ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' END ELSE '' END as type, 
         CASE WHEN b.isnullable = 0  then 'NO' 
              ELSE 'YES' 
         END notnull, 
@@ -352,7 +354,8 @@ select
     ,a.name
     , b.name  as column_name
     , p.value as column_comment
-    , c.name +  case  when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')'  end as data_type
+    , c.name + case when c.xtype in (106,108,62,165,173,231,167,175) then
+        case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' end else '' end as data_type
     , case  when b.isnullable = 0 then 'NO' else 'YES'  end as nullable
     , (case when d.keyno > 0 and f.keyno > 0 then 'MUL'
 		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
@@ -377,9 +380,9 @@ from sys.tables  as tbl
 		'[' + s.table_schema + '.' + t.name + ']' as TABLE_NAME
 	    , c.name as COLUMN_NAME
 		, d.name as DATA_TYPE
-		, c.max_length as DATA_LENGTH
-		, c.precision as DATA_PRECISION
-		, c.scale as DATA_SCALE
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.max_length else '' end as DATA_LENGTH
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.precision else '' end as DATA_PRECISION
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.scale else '' end as DATA_SCALE		
 		, (case when c.is_nullable = 0 then 'NO' else 'YES' end) as NULLABLE 
 		, USER as OWNER
 		, convert(varchar, v.definition) as DATA_DEFAULT
