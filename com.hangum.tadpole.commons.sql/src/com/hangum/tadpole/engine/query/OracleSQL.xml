@@ -463,7 +463,7 @@ ORDER BY s.object_type DESC, s.object_name
 
  -->
 <select id="packageBodyList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-select 
+select distinct 
 	s.object_name as packagename
 	,s.procedure_name as name
 	,(
@@ -477,8 +477,9 @@ select
 		and  upper(replace(text,chr(9),' ')) like '% '|| s.procedure_name ||'%'
 		and rownum &lt;= 1
 	) as type
-	,nvl(s.overload,0) as overload
+    , nvl(p.overload, 0) as overload 
  from user_procedures s
+       left join user_arguments p on p.object_name = s.procedure_name and p.package_name = s.object_name
  where 1=1
   and s.object_name = upper(#package#)
   and s.procedure_name > ' '
@@ -733,7 +734,7 @@ ORDER BY s.module, s.username
       ,DURATION
       ,COMPRESSION
       ,DROPPED
-      ,READ_ONLY
+      ,'' as READ_ONLY
       ,TEMPORARY
       ,MAX_EXTENTS
       ,IOT_TYPE

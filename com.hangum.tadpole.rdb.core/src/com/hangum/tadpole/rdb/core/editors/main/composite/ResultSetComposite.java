@@ -61,6 +61,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -347,7 +348,7 @@ public class ResultSetComposite extends Composite {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
-							String strExeSQL = SQLUtil.sqlExecutable(tmpUserDB, strSQL);
+							String strExeSQL = SQLUtil.makeExecutableSQL(tmpUserDB, strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(SQLUtil.isStatement(strExeSQL)) {
@@ -715,21 +716,42 @@ public class ResultSetComposite extends Composite {
 				changeResultType();
 			}
 		} else {
-			getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
-			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
-			// working schema_history 에 history 를 남깁니다.
-			try {
-				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
-						"EDITOR", //$NON-NLS-1$
-						reqQuery.getSqlDDLType().name(),
-						reqQuery.getSqlObjectName(),
-						reqQuery.getSql());
-			} catch(Exception e) {
-				logger.error("save schemahistory", e); //$NON-NLS-1$
+			if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
+				String strDefaultMsg = Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText();
+				String retMsg = ObjectCompileUtil.validateObject(getUserDB(), reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
+				if(!"".equals(retMsg)) { //$NON-NLS-1$
+					strDefaultMsg = Messages.get().ObjectEditor_7 + retMsg;
+				}
+				
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, strDefaultMsg);
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+				refreshExplorerView(getUserDB(), reqQuery);
+			} else {
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			}
-		
-			if(reqQuery.getSqlType() == SQL_TYPE.DDL) refreshExplorerView(getUserDB(), reqQuery);
+			
+			if(reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE |
+					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP |
+					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
+			) {
+//				// working schema_history 에 history 를 남깁니다.
+//				aram strWorkType TABLE, VIEW, PROCEDURE, FUNCTION, TRIGGER...
+//				 * @param strObjecType CREATE, ALTER, DROP
+//				 * @param strObjectId 객체 명
+//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
+				try {
+					TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
+							getUserDB(),
+							reqQuery.getQueryStatus().name(), //$NON-NLS-1$
+							reqQuery.getSqlDDLType().name(),
+							reqQuery.getSqlObjectName(),
+							reqQuery.getSql());
+				} catch(Exception e) {
+					logger.error("save schemahistory", e); //$NON-NLS-1$
+				}
+			}
 		}
 	}
 		

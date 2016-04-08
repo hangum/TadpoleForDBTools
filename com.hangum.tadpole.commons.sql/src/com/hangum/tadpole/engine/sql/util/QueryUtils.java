@@ -36,7 +36,6 @@ import org.w3c.dom.Element;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.ResultSetUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -74,7 +73,6 @@ public class QueryUtils {
 		
 		// is tajo
 		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
-//			new TajoConnectionManager().executeUpdate(userDB, strQuery);
 			logger.error("Not support TAJO.");
 		} else { 
 			
@@ -120,6 +118,8 @@ public class QueryUtils {
 	 * 
 	 * @param userDB
 	 * @param strQuery
+	 * @param intStartCnt
+	 * @param intSelectLimitCnt
 	 * @return
 	 * @throws Exception
 	 */
@@ -128,7 +128,7 @@ public class QueryUtils {
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		
-		strSQL = SQLUtil.sqlExecutable(userDB, strSQL);
+		strSQL = SQLUtil.makeExecutableSQL(userDB, strSQL);
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();

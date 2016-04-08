@@ -188,11 +188,11 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			textUser.setText("sa"); //$NON-NLS-1$
 			textPassword.setText("tadpole"); //$NON-NLS-1$
 			
-			textJDBCOptions.setText(";loginTimeout=5;socketTimeout=5"); //$NON-NLS-1$
+//			textJDBCOptions.setText(";loginTimeout=5;socketTimeout=5"); //$NON-NLS-1$
 			
 		} else {
 			textPort.setText("1433"); //$NON-NLS-1$
-			textJDBCOptions.setText(";loginTimeout=5;socketTimeout=5"); //$NON-NLS-1$
+//			textJDBCOptions.setText(";loginTimeout=5;socketTimeout=5"); //$NON-NLS-1$
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();

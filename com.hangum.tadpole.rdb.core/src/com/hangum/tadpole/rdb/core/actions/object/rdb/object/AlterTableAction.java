@@ -50,7 +50,7 @@
 //
 //	@Override
 //	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-//		TableDAO tc = (TableDAO)selection.getFirstElement();
+//		TableCreateDAO tc = (TableCreateDAO)selection.getFirstElement();
 //		
 //		final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 //		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -18,35 +18,34 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.dialog.table.MySQLTableColumnDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTableRelationDialog;
 
 /**
- * Table column rename action
+ * Table rename action
  * 
  * @author hangum
  *
  */
-public class TableColumnAddAction extends AbstractObjectSelectAction {
+public class TableRelationAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TableColumnAddAction.class);
+	private static final Logger logger = Logger.getLogger(TableRelationAction.class);
 
-	public final static String ID = "com.hangum.db.browser.rap.core.actions.tablecolumn.add"; //$NON-NLS-1$
+	public final static String ID = "com.hangum.db.browser.rap.core.actions.table.relation"; //$NON-NLS-1$
 
-	public TableColumnAddAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
+	public TableRelationAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.get().AddColumn);
+		setText(title); //$NON-NLS-1$
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
+		TableDAO dao = (TableDAO)selection.getFirstElement();
 		
-		MySQLTableColumnDialog dialog = new MySQLTableColumnDialog(window.getShell(), getUserDB(), tableDAO);
+		MySQLTableRelationDialog dialog = new MySQLTableRelationDialog(null, userDB, dao);
 		dialog.open();
 	}
 }

@@ -237,6 +237,16 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 				strTableName = arrTblInfo[1];
 			}
 		}
+
+		// 테이블 컬럼 리스트를 가져오기 위해 테이블 이름을 디비에서 저장되어 있는 대소문자 기준으로 가져옵니다. 
+		TadpoleMetaData tadpoleMetaData = TadpoleSQLManager.getDbMetadata(userDB);
+		if(tadpoleMetaData.getSTORE_TYPE() == TadpoleMetaData.STORES_FIELD_TYPE.LOWCASE_BLANK) {
+			strSchemaName = StringUtils.upperCase(strSchemaName);
+			strTableName = StringUtils.upperCase(strTableName);
+		} else if(tadpoleMetaData.getSTORE_TYPE() == TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK) {
+			strSchemaName = StringUtils.lowerCase(strSchemaName);
+			strTableName = StringUtils.lowerCase(strTableName);
+		}
 		
 		try {
 			TableDAO table = new TableDAO(strTableName, "");

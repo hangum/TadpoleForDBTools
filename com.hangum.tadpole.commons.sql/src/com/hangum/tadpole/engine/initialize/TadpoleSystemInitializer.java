@@ -142,17 +142,19 @@ public class TadpoleSystemInitializer {
 	 * initialize jdbc driver
 	 */
 	private static void initJDBCDriver() {
-		File jdbcLocationDir = new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+		final String strJDBCDir = ApplicationArgumentUtils.JDBC_RESOURCE_DIR;
+		File jdbcLocationDir = new File(strJDBCDir);
+		logger.info("######### TDB JDBC Driver local Path : " + strJDBCDir);
 		if(!jdbcLocationDir.exists()) {
+			logger.info("\t##### Copying initialize JDBC Driver........");
 			try {
-				logger.info("######### TDB JDBC Driver local Path : " + ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
 				jdbcLocationDir.mkdirs();
 				
 				File fileEngine = FileLocator.getBundleFile(TadpoleEngineActivator.getDefault().getBundle());
 				String filePath = fileEngine.getAbsolutePath() + "/libs/driver";
 				logger.info("##### TDB JDBC URI: " + filePath);
 				
-				FileUtils.copyDirectory(new File(filePath), new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR));
+				FileUtils.copyDirectory(new File(filePath), new File(strJDBCDir));
 			} catch(Exception e) {
 				logger.error("Initialize JDBC driver file", e);
 			}
@@ -160,7 +162,7 @@ public class TadpoleSystemInitializer {
 		
 		// driver loading
 		try {
-			JDBCDriverLoader.addJARDir(ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+			JDBCDriverLoader.addJARDir(strJDBCDir);
 		} catch(Exception e) {
 			logger.error("JDBC driver loading", e);
 		}

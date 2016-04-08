@@ -43,6 +43,7 @@ public class ParserDDL {
 			
 			Matcher matcher = Pattern.compile(ddl.getRegExp(), ParserDefine.PATTERN_FLAG).matcher(sql);
 			if(matcher.find()) {
+//				if(logger.isDebugEnabled()) logger.debug("=> finding: " + ddl.getRegExp());
 				queryInfoDTO.setQueryDDLType(ddl.getDdlType());
 				queryInfoDTO.setQueryStatus(ddl.getDdlStatus());
 				queryInfoDTO.setObjectName(getObjectName(matcher, sql));

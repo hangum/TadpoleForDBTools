@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.table;
+package com.hangum.tadpole.rdb.core.dialog.table.mysql;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
@@ -68,6 +69,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @wbp.parser.constructor
 	 */
 	public MySQLTableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
@@ -197,6 +199,9 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 		
 		textColumnName.setFocus();
 
+		// google analytic
+		AnalyticCaller.track(this.getClass().getName());
+		
 		return area;
 	}
 	
@@ -278,7 +283,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 			} catch (Exception e) {
 				logger.error("add column exception", e); //$NON-NLS-1$
 				
-				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_31 + e.getMessage());
+				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_31 + e.getMessage());
 				errDialog.open();
 			}
 		}

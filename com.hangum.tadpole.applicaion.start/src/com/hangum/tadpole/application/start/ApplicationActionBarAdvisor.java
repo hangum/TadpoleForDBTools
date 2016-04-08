@@ -89,7 +89,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** schedule action */
 //    private IAction monitoringManageAction;
-    private IAction monitoringRealTimeAction;
+//    private IAction monitoringRealTimeAction;
     
     private IAction jDBCDriverManagerAction;
     private IAction schemaHistoryAction;
@@ -146,8 +146,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //    	monitoringManageAction = new MonitoringManageAction(window);
 //    	register(monitoringManageAction);
     	
-    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
-    	register(monitoringRealTimeAction);
+//    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
+//    	register(monitoringRealTimeAction);
     	
     	jDBCDriverManagerAction = new JDBCDriverManagerAction(window);
     	register(jDBCDriverManagerAction);
@@ -270,8 +270,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(new Separator());
         
 //        toolbar.add(monitoringManageAction);
-        toolbar.add(monitoringRealTimeAction);
-        toolbar.add(new Separator());
+//        toolbar.add(monitoringRealTimeAction);
+//        toolbar.add(new Separator());
         
 //        toolbar.add(deleteResourceAction);
 //        toolbar.add(new Separator());

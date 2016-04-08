@@ -31,6 +31,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTaableCreateDialog;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -66,6 +67,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 					TableDAO tc = (TableDAO)selection.getFirstElement();
 					if(tc == null) cta.run(userDB, actionType);
 					else cta.run(userDB, tc.getComment(), actionType);
+				} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), getUserDB());
+					dialog.open();
 				} else {				
 					cta.run(userDB, actionType);
 				}

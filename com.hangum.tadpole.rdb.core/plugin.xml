@@ -274,12 +274,24 @@
                </objectClass>
             </enablement>
          </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.connections.ObjecCompileAction"
+               icon="resources/icons/object_editor.png"
+               id="com.hangum.tadpole.rdb.core.action.query.object.compile.editor"
+               label="%action.label.openObjectCompile"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
     
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction"
                enablesFor="1"
                icon="resources/icons/sql-query.png"
-               id="com.hangum.tadpole.rdb.core.action.query"
+               id="com.hangum.tadpole.rdb.core.action.query.editor"
                label="%action.label.8"
                menubarPath="additions">
             <enablement>

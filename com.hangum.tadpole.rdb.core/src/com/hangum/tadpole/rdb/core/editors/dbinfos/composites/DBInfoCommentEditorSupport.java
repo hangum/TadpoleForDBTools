@@ -156,7 +156,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 			// IStructuredSelection is = (IStructuredSelection)
 			// viewer.getSelection();
 
-			// TableDAO tableDAO = (TableDAO) is.getFirstElement();
+			// TableCreateDAO tableDAO = (TableCreateDAO) is.getFirstElement();
 
 			StringBuffer query = new StringBuffer();
 

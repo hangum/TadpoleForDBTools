@@ -10,11 +10,13 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_STATUS;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
@@ -93,14 +95,13 @@ public class RequestQuery {
 		
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;
-		this.sql = SQLUtil.sqlExecutable(userDB, originalSql);
+		this.sql = SQLUtil.makeExecutableSQL(userDB, originalSql);
 		parseSQL(this.sql);
 		
 //		logger.debug("================================================================================================");
 //		logger.debug("[originalSql]" + originalSql);
 //		logger.debug("[sql]" + sql);
 //		logger.debug("================================================================================================");
-		
 		this.mode = mode;
 		this.executeType = type;
 		this.isAutoCommit = isAutoCommit;
@@ -144,6 +145,17 @@ public class RequestQuery {
 				sqlDDLType = queryInfoDto.getQueryDDLType();
 				queryStatus = queryInfoDto.getQueryStatus();
 				sqlObjectName = queryInfoDto.getObjectName();
+				
+				//
+				// CREATE, ALTER , 
+				// 프로시저, 펑션, 트리거, 패키지, 시노늄은 마직에 ; 문자가 있어야 정상 실행 됩니다. - 좀더 확인 필요 hangum
+				//
+				if(queryStatus == QUERY_DDL_STATUS.CREATE | queryStatus == QUERY_DDL_STATUS.ALTER)
+				if(sqlDDLType == QUERY_DDL_TYPE.PROCEDURE | sqlDDLType == QUERY_DDL_TYPE.FUNCTION | sqlDDLType == QUERY_DDL_TYPE.TRIGGER | sqlDDLType == QUERY_DDL_TYPE.PACKAGE | sqlDDLType == QUERY_DDL_TYPE.SYNONYM) {
+					if(!StringUtils.endsWith(this.sql, PublicTadpoleDefine.SQL_DELIMITER)) {
+						this.sql += PublicTadpoleDefine.SQL_DELIMITER;
+					}
+				}
 			}
 		}
 

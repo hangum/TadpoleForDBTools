@@ -34,6 +34,12 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	 */
 	public static final String TMP_EXPLAIN_EXTENDED_JSON = "explain format=json ";
 	
+	public static final String TMP_DIALOG_CREATE_TABLE 
+			= "CREATE TABLE %s (id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT) " + PublicTadpoleDefine.LINE_SEPARATOR +
+				" DEFAULT CHARACTER SET %s " + PublicTadpoleDefine.LINE_SEPARATOR +
+				" DEFAULT COLLATE %s " + PublicTadpoleDefine.LINE_SEPARATOR +
+				" ENGINE = %s";
+	
 	/** table - mysql */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 
 						 "	id INT(11) default NULL auto_increment, " + PublicTadpoleDefine.LINE_SEPARATOR +

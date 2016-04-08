@@ -69,6 +69,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.ExtMakeContentAssistUtil;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
+import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.sql.format.SQLFormater;
@@ -612,8 +613,14 @@ public class MainEditor extends EditorExtension {
 	public void executeCommand(final RequestQuery reqQuery) {
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
-
-		resultMainComposite.executeCommand(reqQuery);
+		
+		String strCheckSQL = SQLUtil.removeComentAndOthers(userDB, reqQuery.getSql());
+		if(StringUtils.startsWithIgnoreCase(strCheckSQL, "desc ")) {
+			String strObject = StringUtils.removeStartIgnoreCase(strCheckSQL, "desc ");
+			DialogUtil.popupDMLDialog(getUserDB(), strObject);
+		} else {
+			resultMainComposite.executeCommand(reqQuery);
+		}
 
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, "executeCommand"); //$NON-NLS-1$

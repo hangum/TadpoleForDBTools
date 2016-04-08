@@ -265,7 +265,7 @@
 	     TO_CHAR(proc.last_ddl_time, 'DD-MM-YYYY HH24:MI:SS') AS "Modified",
 	     TO_CHAR(proc.created, 'DD-MM-YYYY HH24:MI:SS') AS "Created",
 	     '' AS "Security_type",
-	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "Comment",
+	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "status",
 	     '' AS "character_set_client",
 	     '' AS "collation_connection", 
 	     db.nls_characterset AS "Database Collation"
@@ -292,7 +292,7 @@
 	     TO_CHAR(proc.last_ddl_time, 'DD-MM-YYYY HH24:MI:SS') AS "Modified",
 	     TO_CHAR(proc.created, 'DD-MM-YYYY HH24:MI:SS') AS "Created",
 	     '' AS "Security_type",
-	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "Comment",
+	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "status",
 	     '' AS "character_set_client",
 	     '' AS "collation_connection", 
 	     db.nls_characterset AS "Database Collation"

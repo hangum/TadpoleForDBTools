@@ -13,9 +13,14 @@ package com.hangum.tadpole.rdb.core.editors.main.composite.tail;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.internal.protocol.Message;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -25,6 +30,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -106,11 +112,16 @@ public abstract class AbstractTailComposite extends Composite {
 
 		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
 		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
+		comboDownload.add("CSV Comma(Add Header)"); //$NON-NLS-1$
 		comboDownload.add("CSV Comma"); //$NON-NLS-1$
+		
+		comboDownload.add("CSV Tab(Add Header)"); //$NON-NLS-1$
 		comboDownload.add("CSV Tab"); //$NON-NLS-1$
+		
 		comboDownload.add("HTML"); //$NON-NLS-1$
 		comboDownload.add("JSON"); //$NON-NLS-1$
 		comboDownload.add("INSERT statement"); //$NON-NLS-1$
+		comboDownload.setVisibleItemCount(7);
 //		comboDownload.add("UPDATE statement"); //$NON-NLS-1$
 		comboDownload.select(0);
 		
@@ -122,10 +133,14 @@ public abstract class AbstractTailComposite extends Composite {
 				if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResultSetComposite_5)) {
 					if(getRSDao().getDataList() == null) return;
 					
-					if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultCSVType(',');
+					if("CSV Comma(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportResultCSVType(true, ',');
+					} else if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportResultCSVType(false, ',');
+					} else if("CSV Tab(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
+						exportResultCSVType(false, '\t');
 					} else if("CSV Tab".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultCSVType('\t');
+						exportResultCSVType(true, '\t');
 					} else if("HTML".equals(comboDownload.getText())) { //$NON-NLS-1$
 						exportResultHTMLType();
 					} else if("JSON".equals(comboDownload.getText())) { //$NON-NLS-1$
@@ -181,10 +196,14 @@ public abstract class AbstractTailComposite extends Composite {
 	 * export insert into statement
 	 */
 	protected void exportInsertStatement() {
-		try {
-			downloadFile(SQLExporter.makeFileInsertStatment(findTableName(), getRSDao()));
-		} catch(Exception ee) {
-			logger.error("HTML type export error", ee); //$NON-NLS-1$
+		InputDialog inputDialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().TableName, //$NON-NLS-1$
+				Messages.get().PleaseTableName, findTableName(), new TableNameValidator());
+		if (inputDialog.open() == Window.OK) {
+			try {
+				downloadFile(inputDialog.getValue(), SQLExporter.makeFileInsertStatment(inputDialog.getValue(), getRSDao()));
+			} catch(Exception ee) {
+				logger.error("HTML type export error", ee); //$NON-NLS-1$
+			}	
 		}
 	}
 	
@@ -203,9 +222,9 @@ public abstract class AbstractTailComposite extends Composite {
 	 * Export resultset csvMessages.get().ResultSetComposite_14
 	 * @param seprator 
 	 */
-	protected void exportResultCSVType(char seprator) {
+	protected void exportResultCSVType(boolean isAddHead, char seprator) {
 		try {
-			downloadFile(CSVExpoter.makeCSVFile(findTableName(), getRSDao(), seprator));
+			downloadFile(CSVExpoter.makeCSVFile(isAddHead, findTableName(), getRSDao(), seprator));
 		} catch(Exception ee) {
 			logger.error("HTML type export error", ee); //$NON-NLS-1$
 		}
@@ -250,11 +269,20 @@ public abstract class AbstractTailComposite extends Composite {
 	 * @param strFileLocation
 	 * @throws Exception
 	 */
-	protected void downloadFile(String strFileLocation) throws Exception {
+	protected void downloadFile(String fileName, String strFileLocation) throws Exception {
 		String strZipFile = ZipUtils.pack(strFileLocation);
 		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
 		
-		downloadExtFile(findTableName() +".zip", bytesZip); //$NON-NLS-1$
+		_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
+	}
+	
+	/**
+	 * download file
+	 * @param strFileLocation
+	 * @throws Exception
+	 */
+	protected void downloadFile(String strFileLocation) throws Exception {
+		downloadFile(findTableName(), strFileLocation); //$NON-NLS-1$
 	}
 	
 	/** registery service handler */
@@ -275,7 +303,7 @@ public abstract class AbstractTailComposite extends Composite {
 	 * @param fileName
 	 * @param newContents
 	 */
-	protected void downloadExtFile(String fileName, byte[] newContents) {
+	protected void _downloadExtFile(String fileName, byte[] newContents) {
 		downloadServiceHandler.setName(fileName);
 		downloadServiceHandler.setByteContent(newContents);
 		
@@ -290,5 +318,21 @@ public abstract class AbstractTailComposite extends Composite {
 
 	@Override
 	protected void checkSubclass() {
+	}
+}
+
+/**
+ * table name validattor
+ */
+class TableNameValidator implements IInputValidator {
+	
+	public TableNameValidator() {
+	}
+
+	public String isValid(String newText) {
+		if(StringUtils.isEmpty(newText)) {
+			return "Please input the table name";
+		}	
+	    return null;
 	}
 }

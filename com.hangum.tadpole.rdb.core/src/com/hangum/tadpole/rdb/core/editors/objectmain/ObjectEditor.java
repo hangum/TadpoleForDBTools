@@ -45,6 +45,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
+import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
 import com.hangum.tadpole.engine.sql.util.OracleObjectCompileUtils;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -281,17 +282,9 @@ public class ObjectEditor extends MainEditor {
 					}
 					
 				} else {
-					if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-						String retMsg = "";
-						try {
-							retMsg = oracleAfterProcess(reqResultDAO, reqQuery);
-							if(!"".equals(retMsg)) { //$NON-NLS-1$
-								retMsg = Messages.get().ObjectEditor_7 + retMsg;
-							}
-						} catch(Exception e) {
-							logger.error("Oracle Object compile", e); //$NON-NLS-1$
-						}
-
+					String retMsg = ObjectCompileUtil.validateObject(userDB, reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
+					if(!"".equals(retMsg)) { //$NON-NLS-1$
+						retMsg = Messages.get().ObjectEditor_7 + retMsg;
 						reqResultDAO.setMesssage(retMsg);
 					}
 					
@@ -306,32 +299,6 @@ public class ObjectEditor extends MainEditor {
 
 		// google analytic
 		AnalyticCaller.track(ObjectEditor.ID, "executeCommandObject"); //$NON-NLS-1$
-	}
-	
-	/**
-	 * oracle object 
-	 * 컴파일 후 - 오브젝트 상태를 표시해 줄수 있도록 합니다. 
-	 * 
-	 * @param reqResultDAO
-	 * @param reqQuery
-	 * @return
-	 */
-	private String oracleAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) throws Exception {
-		String retMsg = ""; //$NON-NLS-1$
-		
-		QUERY_DDL_TYPE ddlType = reqQuery.getSqlDDLType();
-		String strObjectName = reqQuery.getSqlObjectName();
-		if(ddlType == QUERY_DDL_TYPE.PROCEDURE) {
-			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.PROCEDURE, "PROCEDURE", strObjectName.toUpperCase(), userDB); //$NON-NLS-1$
-		} else if(ddlType == QUERY_DDL_TYPE.PACKAGE) {
-			retMsg = OracleObjectCompileUtils.packageCompile(strObjectName, userDB);
-		} else if(ddlType == QUERY_DDL_TYPE.FUNCTION) {
-			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.FUNCTION, "FUNCTION", strObjectName.toUpperCase(), userDB);			 //$NON-NLS-1$
-		} else if(ddlType == QUERY_DDL_TYPE.TRIGGER) {
-			retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.TRIGGER, "TRIGGER",  strObjectName.toUpperCase(), userDB);			 //$NON-NLS-1$
-		}
-		
-		return retMsg;
 	}
 
 	/**
