@@ -17,10 +17,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.internal.protocol.Message;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,6 +41,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.MakeResultToUpdateStatementDialog;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -121,8 +120,8 @@ public abstract class AbstractTailComposite extends Composite {
 		comboDownload.add("HTML"); //$NON-NLS-1$
 		comboDownload.add("JSON"); //$NON-NLS-1$
 		comboDownload.add("INSERT statement"); //$NON-NLS-1$
-		comboDownload.setVisibleItemCount(7);
-//		comboDownload.add("UPDATE statement"); //$NON-NLS-1$
+		comboDownload.add("UPDATE statement"); //$NON-NLS-1$
+		comboDownload.setVisibleItemCount(8);
 		comboDownload.select(0);
 		
 		Button btnSQLResultDownload = new Button(compositeDownloadAMsg, SWT.NONE);
@@ -130,26 +129,24 @@ public abstract class AbstractTailComposite extends Composite {
 		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResultSetComposite_5)) {
-					if(getRSDao().getDataList() == null) return;
-					
-					if("CSV Comma(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultCSVType(true, ',');
-					} else if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultCSVType(false, ',');
-					} else if("CSV Tab(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultCSVType(false, '\t');
-					} else if("CSV Tab".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultCSVType(true, '\t');
-					} else if("HTML".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultHTMLType();
-					} else if("JSON".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportResultJSONType();
-					} else if("INSERT statement".equals(comboDownload.getText())) { //$NON-NLS-1$
-						exportInsertStatement();
-//					} else if("UPDATE statement".equals(comboDownload.getText())) { //$NON-NLS-1$
-//						exportUpdateStatement();
-					}
+				if(getRSDao().getDataList() == null) return;
+				
+				if("CSV Comma(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportResultCSVType(true, ',');
+				} else if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportResultCSVType(false, ',');
+				} else if("CSV Tab(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportResultCSVType(true, '\t');
+				} else if("CSV Tab".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportResultCSVType(false, '\t');
+				} else if("HTML".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportResultHTMLType();
+				} else if("JSON".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportResultJSONType();
+				} else if("INSERT statement".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportInsertStatement();
+				} else if("UPDATE statement".equals(comboDownload.getText())) { //$NON-NLS-1$
+					exportUpdateStatement();
 				}
 			}
 			
@@ -188,9 +185,21 @@ public abstract class AbstractTailComposite extends Composite {
 	 * get query result dto
 	 * @return
 	 */
-	public abstract QueryExecuteResultDTO getRSDao();// {
-//		return abstractResultComp.getRsDAO();
-//	}
+	public abstract QueryExecuteResultDTO getRSDao();
+	
+	/**
+	 * export update statement
+	 */
+	protected void exportUpdateStatement() {
+		MakeResultToUpdateStatementDialog dialog = new MakeResultToUpdateStatementDialog(null, findTableName(), getRSDao());
+		if (dialog.open() == Window.OK) {
+			try {
+				downloadFile(dialog.getStrTableName(), SQLExporter.makeFileUpdateStatment(dialog.getStrTableName(), getRSDao(), dialog.getListWhereColumnName()));
+			} catch(Exception ee) {
+				logger.error("HTML type export error", ee); //$NON-NLS-1$
+			}	
+		}
+	}
 	
 	/**
 	 * export insert into statement
@@ -206,17 +215,6 @@ public abstract class AbstractTailComposite extends Composite {
 			}	
 		}
 	}
-	
-//	/**
-//	 * export update into statement
-//	 */
-//	protected void exportUpdateStatement() {
-//		try {
-//			downloadFile(SQLExporter.makeFileUpdateStatment(findTableName(), rsDAO));
-//		} catch(Exception ee) {
-//			logger.error("HTML type export error", ee); //$NON-NLS-1$
-//		}
-//	}
 	
 	/**
 	 * Export resultset csvMessages.get().ResultSetComposite_14
@@ -331,7 +329,7 @@ class TableNameValidator implements IInputValidator {
 
 	public String isValid(String newText) {
 		if(StringUtils.isEmpty(newText)) {
-			return "Please input the table name";
+			return Messages.get().InputTableName;
 		}	
 	    return null;
 	}

@@ -2,13 +2,13 @@ Tadpole DB Hub
 ==
 [![Join the chat at https://gitter.im/TadpoleDBHub](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TadpoleDBHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1458991136820/home/TadpoleDBHub_main.jpg?height=309&width=400)
 
 1.RDB Feature
 -
-* Intuitive web interface (Safari, Chrome, IE 10, Firefox)
+* Intuitive web interface (Safari, Chrome, Edge, Firefox)
 * User Management (Admin, Manager, User)
 * Support Altibase, Apache Hive, Apache Tajo, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
@@ -29,7 +29,7 @@ It enables you to handle typical DB over the World Wide Web
 
 2.MongoDB Feature
 -
-* Intuitive web interface (Safari, Chrome, IE 10, Firefox)
+* Intuitive web interface (Safari, Chrome, Edge, Firefox)
 * User Management (Admin, Manager, User)
 * MongoDB User Management
 * Query View(Tree, Table, Text)
@@ -51,7 +51,7 @@ Environment
 -
 * more than Java 1.7.x
 * support system standalone : linux.gtk.x86, linux.gtk.x86_64, acosx.cocoa.x86, macosx.cocoa.x86_64, win32.x86, win32.x86_64
-* support system server : Apache Tomcat 7.x
+* support system server : Apache Tomcat 7.1
 
 Demo Video
 -
@@ -83,7 +83,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.0/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.1/
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License

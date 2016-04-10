@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.StringHelper;
@@ -30,60 +31,72 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class SQLExporter extends AbstractTDBExporter {
-//	/**
-//	 * UPDATE 문을 생성합니다.
-//	 * 
-//	 * @param tableName
-//	 * @param rs
-//	 * @return 파일 위치
-//	 * 
-//	 * @throws Exception
-//	 */
-//	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
-//		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-//		String strFile = tableName + ".sql";
-//		String strFullPath = strTmpDir + strFile;
-//		
-//		final String INSERT_INTO_STMT = "UPDATE " + tableName + " SET %s WHERE %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
-//		Map<Integer, String> mapTable = rsDAO.getColumnLabelName();
-//		
-//		// 데이터를 담는다.
-//		StringBuffer sbInsertInto = new StringBuffer();
-//		int DATA_COUNT = 1000;
-//		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-//		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
-//		String strSetStatement = new String();		
-//		for(int i=0; i<dataList.size(); i++) {
-//			Map<Integer, Object> mapColumns = dataList.get(i);
-//			
-//			strSetStatement = "";
-//			for(int j=1; j<mapColumns.size(); j++) {
-//				Object strValue = mapColumns.get(j);
-//				strValue = strValue == null?"":strValue;
-//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-//					strValue = StringHelper.escapeSQL(strValue.toString());
-//					strValue = SQLUtil.makeQuote(strValue.toString());
-//				}
-//				
-//				if(j != (mapTable.size()-1)) strSetStatement += mapTable.get(j) + "=" + strValue + ",";
-//				else strSetStatement +=  mapTable.get(j) + "=" + strValue;
-//			}
-//			
-//			String strHwere = "";
-//			sbInsertInto.append(String.format(INSERT_INTO_STMT, strSetStatement, strHwere));
-//			
-//			if((i%DATA_COUNT) == 0) {
-//				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
-//				sbInsertInto.setLength(0);
-//			}
-//		}
-//		if(sbInsertInto.length() > 0) {
-//			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
-//		}
-//		
-//		return strFullPath;
-//	}
+	/**
+	 * UPDATE 문을 생성합니다.
+	 * 
+	 * @param tableName
+	 * @param rsDAO
+	 * @param listWhere  where 조건
+	 * 
+	 * @throws Exception
+	 */
+	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere) throws Exception {
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strFile = tableName + ".sql";
+		String strFullPath = strTmpDir + strFile;
+		
+		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
+		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
+		
+		// 데이터를 담는다.
+		StringBuffer sbInsertInto = new StringBuffer();
+		int DATA_COUNT = 1000;
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
+		String strStatement = "";
+		String strWhere = "";
+		for(int i=0; i<dataList.size(); i++) {
+			Map<Integer, Object> mapColumns = dataList.get(i);
+			
+			strStatement = "";
+			strWhere = "";
+			for(int j=1; j<mapColumns.size(); j++) {
+				String strColumnName = mapColumnName.get(j);
+				
+				Object strValue = mapColumns.get(j);
+				strValue = strValue == null?"":strValue;
+				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+					strValue = StringHelper.escapeSQL(strValue.toString());
+					strValue = SQLUtil.makeQuote(strValue.toString());
+				}
+				
+				boolean isWhere = false;
+				for (String strTmpColumn : listWhere) {
+					if(strColumnName.equals(strTmpColumn)) {
+						isWhere = true;
+						break;
+					}
+				}
+				if(isWhere) strWhere += String.format("%s=%s,", strColumnName, strValue);
+				else strStatement += String.format("%s=%s,", strColumnName, strValue);
+			}
+			strStatement = StringUtils.removeEnd(strStatement, ",");
+			strWhere = StringUtils.removeEnd(strWhere, ",");
+			
+			sbInsertInto.append(String.format(UPDATE_STMT, strStatement, strWhere));
+			
+			if((i%DATA_COUNT) == 0) {
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				sbInsertInto.setLength(0);
+			}
+		}
+		if(sbInsertInto.length() > 0) {
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+		}
+		
+		return strFullPath;
+	}
 	
 	/**
 	 * INSERT 문을 생성합니다.

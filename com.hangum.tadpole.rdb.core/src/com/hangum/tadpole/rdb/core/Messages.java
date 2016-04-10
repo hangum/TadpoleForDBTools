@@ -399,7 +399,7 @@ public class Messages {
 	public String ResultSetComposite_16;
 	public String ResultSetComposite_2;
 	public String ResultSetComposite_3;
-	public String ResultSetComposite_5;
+
 	public String ResultSetComposite_6;
 	public String Warning;
 	public String ResultSetComposite_8;
@@ -500,6 +500,14 @@ public class Messages {
 	public String TadpoleTableComposite_Relation;
 
 	public String DropSynonym;
+
+	public String InputTableName;
+
+	public String GenerateUpdateStatement;
+
+	public String SelectWhereColumn;
+
+	public String PleaseSelectWhereColumn;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

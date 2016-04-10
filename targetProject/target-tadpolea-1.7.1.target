@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-tadpolea-1.7.1" sequenceNumber="279">
+<?pde version="3.8"?><target name="target-tadpolea-1.7.1" sequenceNumber="282">
 <locations>
 <location path="${project_loc:/targetProject}/rap-3.1.0-N-20150914-1435" type="Directory"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rap.addons.chart.feature.feature.group" version="0.1.0.20160329-0849"/>
+<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/chart"/>
+</location>
 <location path="${project_loc:/targetProject}/ext" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.babel.nls_rt.rap_fr.feature.group" version="4.5.0.v20151128060001"/>
@@ -50,22 +54,16 @@
 <repository location="http://download.eclipse.org/technology/babel/update-site/R0.13.1/mars/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>
-<repository location="http://download.eclipse.org/releases/mars"/>
+<unit id="org.eclipse.rap.gef.feature.feature.group" version="0.1.0.20151228-1339"/>
+<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/"/>
 </location>
 <location path="${project_loc:/targetProject}/multiTab" type="Directory"/>
 <location path="${project_loc:/targetProject}/test" type="Directory"/>
 <location path="${project_loc:/targetProject}/eclipse-4.3-delta-pack" type="Directory"/>
 <location path="${project_loc:/targetProject}/standalone-launcher" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.rap.addons.chart.feature.feature.group" version="0.1.0.20160318-1112"/>
-<unit id="org.eclipse.rap.addons.chart.demo" version="0.1.0.20160226-1152"/>
-<unit id="org.eclipse.rap.addons.chart.demo.source" version="0.1.0.20160226-1152"/>
-<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/chart"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.rap.gef.feature.feature.group" version="0.1.0.20151228-1339"/>
-<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/"/>
+<unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>
+<repository location="http://download.eclipse.org/releases/mars"/>
 </location>
 </locations>
 </target>
