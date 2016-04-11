@@ -569,14 +569,14 @@ public class MonitoringManagerEditor extends EditorPart {
 	/**
 	 * 트리를 갱신하고 쿼리 창을 엽니다.
 	 * 
-	 * @param dto
+	 * @param userDB
 	 */
-	private void selectAndOpenView(UserDBDAO dto) {
+	private void selectAndOpenView(UserDBDAO userDB) {
 		treeVUserDB.refresh();
-		treeVUserDB.setSelection(new StructuredSelection(dto), true);
+		treeVUserDB.setSelection(new StructuredSelection(userDB), true);
 
 		// mongodb 일경우 열지 않는다.
-		if (DBDefine.getDBDefine(dto) != DBDefine.MONGODB_DEFAULT) {
+		if (userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 //			MainEditorInput mei = new MainEditorInput(dto);
 //			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 //			try {

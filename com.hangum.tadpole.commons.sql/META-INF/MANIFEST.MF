@@ -19,7 +19,8 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/dbutils/commons-dbutils-1.6.jar,
  .,
  libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar,
- libs/driver/mongo/mongo-java-driver-3.2.0.jar
+ libs/driver/mongo/mongo-java-driver-3.2.0.jar,
+ libs/driver/sqlite/sqlite-jdbc-3.7.2.jar
 Export-Package: 
  com.hangum.tadpole.db.bander.cubrid,
  com.hangum.tadpole.db.bander.oracle,

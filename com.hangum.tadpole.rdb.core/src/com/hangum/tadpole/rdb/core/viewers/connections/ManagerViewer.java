@@ -165,7 +165,7 @@ public class ManagerViewer extends ViewPart {
 					if( PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 						UserDBDAO userDB = dao.getParent();
 						
-						if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {							
+						if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {							
 							MongoDBERDViewAction ea = new MongoDBERDViewAction();
 							ea.run(dao);
 						} else {
@@ -395,7 +395,7 @@ public class ManagerViewer extends ViewPart {
 		
 		if(!defaultOpen) return;
 		// mongodb 일경우 열지 않는다.
-		if(DBDefine.getDBDefine(userDB) != DBDefine.MONGODB_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			MainEditorInput mei = new MainEditorInput(userDB);		
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {

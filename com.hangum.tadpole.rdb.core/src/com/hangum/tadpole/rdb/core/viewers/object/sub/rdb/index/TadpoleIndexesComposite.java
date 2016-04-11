@@ -17,8 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -38,7 +36,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
@@ -129,9 +126,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
-				if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT 
-						//DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT 
-						//DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT
+				if (userDB.getDBDefine() == DBDefine.SQLite_DEFAULT 
+						//userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT 
+						//userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT
 				)  return;
 				
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
@@ -253,6 +250,8 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
+		if(getUserDB() == null) return;
+		
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_1);
 		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_2);
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().Refresh);
@@ -261,24 +260,16 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					if(!isDDLLock()) {
-						manager.add(creatAction_Index);
-						manager.add(dropAction_Index);
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					}
-					
-					manager.add(refreshAction_Index);
-					
-//					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-//					manager.add(viewDDLAction);
-				}
+		if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+			if(!isDDLLock()) {
+				menuMgr.add(creatAction_Index);
+				menuMgr.add(dropAction_Index);
+				menuMgr.add(new Separator());
 			}
-		});
+			menuMgr.add(refreshAction_Index);
+//			menuMgr.add(new Separator());
+//			menuMgr.add(viewDDLAction);
+		}
 
 		indexTableViewer.getTable().setMenu(menuMgr.createContextMenu(indexTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, indexTableViewer);
@@ -292,6 +283,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		indexTableViewer.setInput(listIndexes);
 		indexTableViewer.refresh();
 
+		if(getUserDB() == null) return;
 		creatAction_Index.setUserDB(getUserDB());
 		dropAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());

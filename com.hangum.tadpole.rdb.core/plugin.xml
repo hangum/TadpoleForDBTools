@@ -129,7 +129,7 @@
                icon="resources/icons/delete_database.png"
                id="com.hangum.tadpole.rdb.core.action2"
                label="%action.label.23"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator2">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -171,13 +171,22 @@
             <groupMarker
                   name="admin">
             </groupMarker>
+            <separator
+                  name="groupAdminSeparator0">
+            </separator>
+            <separator
+                  name="groupAdminSeparator1">
+            </separator>
+            <separator
+                  name="groupAdminSeparator2">
+            </separator>
          </menu>
          <action
                class="com.hangum.tadpole.rdb.core.actions.admin.CsvToRdbImportAction"
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import.csv"
                label="%action.label.24"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator1">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -189,7 +198,7 @@
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import.sql"
                label="%action.label.25"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator1">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -332,7 +341,7 @@
                icon="resources/icons/current-operation.png"
                id="com.hangum.tadpole.rdb.core.action.sessionlist"
                label="%action.label.26"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator0">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -547,7 +556,7 @@
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import"
                label="%action.label.11"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator0">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -559,7 +568,7 @@
                icon="resources/icons/current-operation.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.currentop"
                label="%action.label.31"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator0">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -614,7 +623,7 @@
                icon="resources/icons/profile.png"
                id="com.hangum.tadpole.rdb.core.action.nosql.mongodb.profilling"
                label="%action.label.12"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator0">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -626,7 +635,7 @@
                icon="resources/icons/command.png"
                id="com.hangum.tadpole.rdb.core.action.run.command"
                label="%action.label.33"
-               menubarPath="menu.admin/admin">
+               menubarPath="menu.admin/groupAdminSeparator0">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">

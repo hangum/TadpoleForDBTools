@@ -230,7 +230,7 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 		
 		String strSchemaName = "";
 		String strTableName = tableName;
-		if(DBDefine.getDBDefine(userDB) != DBDefine.ALTIBASE_DEFAULT) {
+		if(userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) {
 			if(StringUtils.contains(tableName, '.')) {
 				String[] arrTblInfo = StringUtils.split(tableName, ".");
 				strSchemaName = arrTblInfo[0];

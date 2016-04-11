@@ -62,7 +62,7 @@ public class FindEditorAndWriteQueryUtil {
 	 */
 	public static void run(UserDBDAO userDB, String strObjectName, String strScript, boolean isNewEditor, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 			newMongoDBEditorOpen(userDB, strScript);
 		} else {
 

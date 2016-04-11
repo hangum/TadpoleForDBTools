@@ -56,7 +56,7 @@ public class TDBDataHandler {
 		else 												strTableName = tableDao.getName();
 		
 
-		if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 			mapParam.put("user", StringUtils.substringBefore(strTableName, "."));
 			mapParam.put("table", StringUtils.substringAfter(strTableName, "."));
 		} else {

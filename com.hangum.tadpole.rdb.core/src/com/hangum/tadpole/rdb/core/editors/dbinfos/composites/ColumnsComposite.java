@@ -220,7 +220,7 @@ public class ColumnsComposite extends Composite {
 	private void createTableColumn() {
 
 		TableViewColumnDefine [] tableColumnDef = new TableViewColumnDefine [] {};
-		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
+		if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
@@ -239,7 +239,7 @@ public class ColumnsComposite extends Composite {
 					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
-		} else if (DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT) {
+		} else if (userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
@@ -258,7 +258,7 @@ public class ColumnsComposite extends Composite {
 					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
-		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+		} else if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
@@ -312,7 +312,7 @@ public class ColumnsComposite extends Composite {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<RDBInfomationforColumnDAO> listTableInform = null;
-			if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 
 				List<HashMap<String, String>> sqliteTableList = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
 				listTableInform = new ArrayList<RDBInfomationforColumnDAO>();

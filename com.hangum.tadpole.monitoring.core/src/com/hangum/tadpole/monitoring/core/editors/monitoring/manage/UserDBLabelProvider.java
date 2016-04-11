@@ -49,7 +49,7 @@ public class UserDBLabelProvider extends LabelProvider {
 		} else if(element instanceof UserDBDAO) {
 			
 			UserDBDAO dto = (UserDBDAO)element;
-			DBDefine dbType = DBDefine.getDBDefine(dto);
+			DBDefine dbType = dto.getDBDefine();
 			
 			if(DBDefine.MYSQL_DEFAULT == dbType) 
 				return ResourceManager.getPluginImage(PLUGIN_ID, "resources/icons/mysql-add.png"); //$NON-NLS-1$

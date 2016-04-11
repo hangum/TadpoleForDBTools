@@ -54,7 +54,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-		if (DBDefine.getDBDefine(userDB) != DBDefine.ORACLE_DEFAULT && DBDefine.getDBDefine(userDB) != DBDefine.TIBERO_DEFAULT) return;
+		if (userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT && userDB.getDBDefine() != DBDefine.TIBERO_DEFAULT) return;
 		
 		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {			
 			

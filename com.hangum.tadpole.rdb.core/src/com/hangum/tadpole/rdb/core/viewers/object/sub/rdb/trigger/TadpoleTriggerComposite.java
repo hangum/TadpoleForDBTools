@@ -131,6 +131,8 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	private void createMenu() {
+		if(getUserDB() == null) return;
+		
 		creatAction_Trigger = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_1);
 		deleteAction_Trigger = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_2);
 		refreshAction_Trigger = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().Refresh);
@@ -140,29 +142,20 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				if(PermissionChecker.isShow(getUserRoleType(), userDB)) {
-					if(!isDDLLock()) {
-						manager.add(creatAction_Trigger);
-						manager.add(deleteAction_Trigger);
-						manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					}
-				}
-					
-				manager.add(refreshAction_Trigger);
-				
-				manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				manager.add(viewDDLAction);
-				if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT){
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-					manager.add(objectCompileAction);
-				}
-				
+		if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+			if(!isDDLLock()) {
+				menuMgr.add(creatAction_Trigger);
+				menuMgr.add(deleteAction_Trigger);
+				menuMgr.add(new Separator());
 			}
-		});
+		}
+		menuMgr.add(refreshAction_Trigger);
+		menuMgr.add(new Separator());
+		menuMgr.add(viewDDLAction);
+		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT | getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			menuMgr.add(new Separator());
+			menuMgr.add(objectCompileAction);
+		}
 
 		triggerTableViewer.getTable().setMenu(menuMgr.createContextMenu(triggerTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, triggerTableViewer);
@@ -185,6 +178,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		triggerTableViewer.setInput(showTrigger);
 		triggerTableViewer.refresh();
 
+		if(getUserDB() == null) return;
 		creatAction_Trigger.setUserDB(getUserDB());
 		deleteAction_Trigger.setUserDB(getUserDB());
 		refreshAction_Trigger.setUserDB(getUserDB());
@@ -236,11 +230,10 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Trigger.dispose();
-		deleteAction_Trigger.dispose();
-		refreshAction_Trigger.dispose();
-		viewDDLAction.dispose();	
-		objectCompileAction.dispose();
+		if(creatAction_Trigger != null) creatAction_Trigger.dispose();
+		if(deleteAction_Trigger != null) deleteAction_Trigger.dispose();
+		if(refreshAction_Trigger != null) refreshAction_Trigger.dispose();
+		if(viewDDLAction != null) viewDDLAction.dispose();	
 	}
 
 	@Override

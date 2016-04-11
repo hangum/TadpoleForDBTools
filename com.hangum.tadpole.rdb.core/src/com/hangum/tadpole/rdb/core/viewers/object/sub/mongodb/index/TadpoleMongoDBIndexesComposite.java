@@ -15,8 +15,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -205,21 +203,16 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	 * 
 	 */
 	private void createMenu() {
+		if(getUserDB() == null) return;
 		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleMongoDBIndexesComposite_11);
 		deleteAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleMongoDBIndexesComposite_12);
 		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().Refresh);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(creatAction_Index);
-				manager.add(deleteAction_Index);
-				manager.add(refreshAction_Index);
-			}
-		});
+		menuMgr.add(creatAction_Index);
+		menuMgr.add(deleteAction_Index);
+		menuMgr.add(refreshAction_Index);
 
 		tableViewer.getTable().setMenu(menuMgr.createContextMenu(tableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableViewer);
@@ -232,6 +225,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		if (listIndexes != null) listIndexes.clear();
 		refreshViewer();
 
+		if(getUserDB() == null) return;
 		creatAction_Index.setUserDB(getUserDB());
 		deleteAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
@@ -291,9 +285,9 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Index.dispose();
-		deleteAction_Index.dispose();
-		refreshAction_Index.dispose();
+		if(creatAction_Index != null) creatAction_Index.dispose();
+		if(deleteAction_Index != null) deleteAction_Index.dispose();
+		if(refreshAction_Index != null) refreshAction_Index.dispose();
 	}
 
 	@Override

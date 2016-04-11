@@ -99,7 +99,7 @@ public class SingleAddDBDialog extends Dialog {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 		
-		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(amazonRDSDto), 
+		loginComposite = DBConnectionUtils.getDBConnection(amazonRDSDto.getDBDefine(), 
 				compositeBody, 
 				listGroupName, 
 				selGroupName, 

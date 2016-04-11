@@ -154,15 +154,15 @@ public class TablesComposite extends Composite {
 	 * table column head를 생성합니다.
 	 */
 	private void createColumn() {
-		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-			DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+			userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
 		) {
 			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Size(MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			int[] size = {120, 70, 70, 100, 80, 80, 120, 220};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			String[] name = {"Table Name","Tablespace Name","Pct Free","Ini Trans","Logging","Num Rows","Blocks","Avg Row Len","Degree","Sample Size","Last Analyzed","Partitioned","Buffer Pool","Row Movement","Duration","Compression","Dropped","Read Only","Temporary","Max Extents","Iot Type","Initial Extent","Next Extent","Min Extents"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			int[] size = {120, 120, 90, 90, 52 , 90, 90, 90, 80 , 90, 120, 52 , 68 , 72 , 100, 72 , 52 , 52 , 40 , 90, 88 , 90, 90, 90};
 			int[] align = {SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT};
@@ -308,8 +308,8 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 	public String getColumnText(Object element, int columnIndex) {
 		Map resultMap = (HashMap)element;
 		
-		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
 		) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -321,7 +321,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 6: return ""+resultMap.get("CREATE_TIME"); //$NON-NLS-1$ //$NON-NLS-2$
 			case 7: return ""+resultMap.get("TABLE_COMMENT"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT | DBDefine.getDBDefine(userDB) == DBDefine.TIBERO_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			switch(columnIndex) {
 			case 0 : return "" + resultMap.get("TABLE_NAME"      ); //$NON-NLS-1$ //$NON-NLS-2$
 			case 1 : return "" + resultMap.get("TABLESPACE_NAME" ); //$NON-NLS-1$ //$NON-NLS-2$

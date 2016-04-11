@@ -88,7 +88,7 @@ public class DDLScriptManager {
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ) {
 			rdbScript = new PostgreSQLDDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT

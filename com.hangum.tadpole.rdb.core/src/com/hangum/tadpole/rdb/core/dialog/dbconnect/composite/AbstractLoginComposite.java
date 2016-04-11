@@ -297,20 +297,20 @@ public abstract class AbstractLoginComposite extends Composite {
 	/**
 	 * db가 정상적으로 접속가능한지 검사합니다.
 	 * 
-	 * @param loginInfo
+	 * @param userDB
 	 * @param isTest
 	 * @return
 	 */
-	private boolean checkDatabase(final UserDBDAO loginInfo, boolean isTest) {
+	private boolean checkDatabase(final UserDBDAO userDB, boolean isTest) {
 		try {
-			if(DBDefine.getDBDefine(loginInfo) == DBDefine.MONGODB_DEFAULT) {
+			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				MongoConnectionManager.getInstance(userDB);
 				
-			} else if(DBDefine.getDBDefine(loginInfo) == DBDefine.TAJO_DEFAULT) {
-				new TajoConnectionManager().connectionCheck(loginInfo);
+			} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+				new TajoConnectionManager().connectionCheck(userDB);
 				
-			} else if(DBDefine.getDBDefine(loginInfo) == DBDefine.SQLite_DEFAULT) {
-				String strFileLoc = StringUtils.difference(StringUtils.remove(loginInfo.getDBDefine().getDB_URL_INFO(), "%s"), loginInfo.getUrl());
+			} else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				String strFileLoc = StringUtils.difference(StringUtils.remove(userDB.getDBDefine().getDB_URL_INFO(), "%s"), userDB.getUrl());
 				File fileDB = new File(strFileLoc);
 				if(fileDB.exists()) {
 					List<String> strArr = FileUtils.readLines(fileDB);
@@ -321,8 +321,8 @@ public abstract class AbstractLoginComposite extends Composite {
 				}
 				
 			} else {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(loginInfo);
-				sqlClient.queryForList("connectionCheck", loginInfo.getDb()); //$NON-NLS-1$
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				sqlClient.queryForList("connectionCheck", userDB.getDb()); //$NON-NLS-1$
 			}
 			
 			return true;
@@ -339,20 +339,20 @@ public abstract class AbstractLoginComposite extends Composite {
 				// igonre exception
 			}
 			
-			logger.error("DB Connecting... [url]"+ loginInfo.getUrl(), e); //$NON-NLS-1$
+			logger.error("DB Connecting... [url]"+ userDB.getUrl(), e); //$NON-NLS-1$
 			// If UserDBDao is not invalid, remove UserDBDao at internal cache
-			TadpoleSQLManager.removeInstance(loginInfo);
+			TadpoleSQLManager.removeInstance(userDB);
 
 			// mssql 데이터베이스가 연결되지 않으면 등록되면 안됩니다. 하여서 제외합니다.
 			// https://github.com/hangum/TadpoleForDBTools/issues/512 
 			if(!isTest) {// && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
 				TDBYesNoErroDialog dialog = new TDBYesNoErroDialog(getShell(), 
-													loginInfo.getDb() + " Test", 
+													userDB.getDb() + " Test", 
 													String.format(Messages.get().AbstractLoginComposite_3, errMsg));
 				if(dialog.open() == IDialogConstants.OK_ID) return true;
 			
 			} else {
-				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), loginInfo.getDb() + " Test", errMsg);
+				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), userDB.getDb() + " Test", errMsg);
 				dialog.open();
 			}
 			

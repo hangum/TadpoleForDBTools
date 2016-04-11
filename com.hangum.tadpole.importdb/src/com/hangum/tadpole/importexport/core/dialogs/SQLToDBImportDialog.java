@@ -179,7 +179,7 @@ public class SQLToDBImportDialog extends Dialog {
 		lblBatchSize.setText(Messages.get().SQLToDBImportDialog_0);
 		
 		textBatchSize = new Text(compositeHead, SWT.BORDER | SWT.RIGHT);		
-		if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT ) {
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
 			textBatchSize.setText(Messages.get().SQLToDBImportDialog_2);

@@ -162,9 +162,9 @@ public class RDBTypeToJavaTypeUtils {
   * @return
   */
 	public static String[] supportParameterTypes(UserDBDAO userDB) {
-		if (DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		if (DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
 			return oracleParams;
-		}else if (DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		}else if (DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 			return mssqlParams;
 		}else {
 			return etcParams;
