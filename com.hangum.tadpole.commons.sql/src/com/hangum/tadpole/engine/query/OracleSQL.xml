@@ -466,24 +466,26 @@ ORDER BY s.object_type DESC, s.object_name
 select distinct 
 	s.object_name as packagename
 	,s.procedure_name as name
-	,(
-		select case 
-		when instr(upper(replace(text,chr(9),' ')), ' FUNCTION ') > 0 then 'FUNCTION'
-		         when  instr(upper(replace(text,chr(9),' ')), ' PROCEDURE ') > 0 then 'PROCEDURE'
-		         else 'unknow' end
-		  from user_source
-		where 1=1
-		and  name = s.object_name
-		and  upper(replace(text,chr(9),' ')) like '% '|| s.procedure_name ||'%'
-		and rownum &lt;= 1
-	) as type
+	,p.type as type
     , nvl(p.overload, 0) as overload 
  from user_procedures s
-       left join user_arguments p on p.object_name = s.procedure_name and p.package_name = s.object_name
+         LEFT JOIN (  SELECT object_name
+                            ,package_name
+                            ,overload
+                            ,subprogram_id
+                            ,CASE WHEN SUM (CASE WHEN argument_name IS NULL THEN 1 ELSE 0 END) > 0 THEN 'FUNCTION' ELSE 'PROCEDURE' END AS TYPE
+                        FROM user_arguments
+                    GROUP BY object_name
+                            ,package_name
+                            ,overload
+                            ,subprogram_id) p
+            ON     p.object_name = s.procedure_name
+               AND p.package_name = s.object_name
+               AND p.subprogram_id = s.subprogram_id
  where 1=1
   and s.object_name = upper(#package#)
   and s.procedure_name > ' '
- order by 3, 2
+ order by 2, 3 
 </select>
 
 <!-- 
