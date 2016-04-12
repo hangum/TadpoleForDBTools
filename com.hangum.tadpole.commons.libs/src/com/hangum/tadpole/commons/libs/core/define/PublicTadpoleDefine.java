@@ -60,6 +60,7 @@ public class PublicTadpoleDefine {
 
 	/** 0번째 테이블 컬럼을 선택한다 */
 	public static String DEFINE_TABLE_COLUMN_BASE_ZERO = "TDB_BASE_ZERO";
+	public static String DEFINE_TABLE_COLUMN_BASE_ZERO_TYPE = "TDB_BASE_TYPE";
 	
 	/**
 	 * 특별 컬럼을 정의 합니다. 

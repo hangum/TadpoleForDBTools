@@ -14,6 +14,7 @@ public class Messages {
 	public String Confirm;
 	public String Cancle;
 	public String Close;
+	public String ImageViewer;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

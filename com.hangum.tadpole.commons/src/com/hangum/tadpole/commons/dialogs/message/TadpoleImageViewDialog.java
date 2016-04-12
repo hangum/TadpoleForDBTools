@@ -58,7 +58,7 @@ public class TadpoleImageViewDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Image Viewer"); //$NON-NLS-1$
+		newShell.setText(Messages.get().ImageViewer);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -70,7 +70,7 @@ public class TadpoleImageViewDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setMessage(title);
-		setTitle("Column Name");
+		setTitle(Messages.get().ImageViewer);
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
