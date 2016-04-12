@@ -55,7 +55,7 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("TIMESTAMP", java.sql.Types.TIMESTAMP);
 		mapTypes.put("DATETIME", java.sql.Types.TIMESTAMP);
 		mapTypes.put("TINYBLOB", java.sql.Types.BINARY);
-		mapTypes.put("BLOB", java.sql.Types.LONGVARBINARY);
+		mapTypes.put("BLOB", java.sql.Types.BLOB);//LONGVARBINARY);
 		mapTypes.put("MEDIUMBLOB", java.sql.Types.LONGVARBINARY);
 		mapTypes.put("LONGBLOB", java.sql.Types.LONGVARBINARY);
 		mapTypes.put("TINYTEXT", java.sql.Types.VARCHAR);

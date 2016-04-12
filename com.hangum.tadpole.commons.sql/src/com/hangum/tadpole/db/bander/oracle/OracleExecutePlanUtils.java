@@ -35,27 +35,13 @@ public class OracleExecutePlanUtils {
 	 * @throws Exception
 	 */
 	public static void plan(UserDBDAO userDB, String sql, String planTableName, java.sql.Connection javaConn, PreparedStatement stmt, String statement_id  ) throws Exception {
-		//java.sql.Connection javaConn = null;
-		//PreparedStatement stmt = null;
-		//ResultSet rs = null;
+			
+		String query = PartQueryUtil.makeExplainQuery(userDB,  sql);
+		query = StringUtils.replaceOnce(query, PublicTadpoleDefine.STATEMENT_ID, statement_id);
+		query = StringUtils.replaceOnce(query, PublicTadpoleDefine.DELIMITER, planTableName);
 		
-		try {
-			//SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			//javaConn = client.getDataSource().getConnection();
-				
-			String query = PartQueryUtil.makeExplainQuery(userDB,  sql);
-			query = StringUtils.replaceOnce(query, PublicTadpoleDefine.STATEMENT_ID, statement_id);
-			query = StringUtils.replaceOnce(query, PublicTadpoleDefine.DELIMITER, planTableName);
-			
-			stmt = javaConn.prepareStatement( query );
-			//stmt = javaConn.prepareStatement( StringUtils.replaceOnce(PartQueryUtil.makeExplainQuery(userDB,  sql), PublicTadpoleDefine.DELIMITER, planTableName));
-			stmt.execute();
-			
-		} finally {
-			//if(rs != null) rs.close();
-			//if(stmt != null) stmt.close();
-			//if(javaConn != null) javaConn.close();
-		}
+		stmt = javaConn.prepareStatement( query );
+		stmt.execute();
 		
 	}
 }
