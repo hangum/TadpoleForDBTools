@@ -60,7 +60,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			strStatement = "";
 			strWhere = "";
-			for(int j=1; j<mapColumns.size(); j++) {
+			for(int j=1; j<mapColumnName.size(); j++) {
 				String strColumnName = mapColumnName.get(j);
 				
 				Object strValue = mapColumns.get(j);
@@ -132,7 +132,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			strResult = "";
-			for(int j=1; j<mapColumns.size(); j++) {
+			for(int j=1; j<mapColumnType.size(); j++) {
 				Object strValue = mapColumns.get(j);
 				strValue = strValue == null?"":strValue;
 				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
