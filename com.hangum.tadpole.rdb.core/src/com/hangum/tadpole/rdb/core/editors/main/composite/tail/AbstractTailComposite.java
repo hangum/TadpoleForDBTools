@@ -10,38 +10,23 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite.tail;
 
-import java.io.File;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.window.Window;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
-import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
-import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
-import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
-import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
-import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.MakeResultToUpdateStatementDialog;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.ResultSetDownloadDialog;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -131,7 +116,7 @@ public abstract class AbstractTailComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(getRSDao().getDataList() == null) return;
 				
-				MakeResultToUpdateStatementDialog dialog = new MakeResultToUpdateStatementDialog(null, findTableName(), getRSDao());
+				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(null, findTableName(), getRSDao());
 				dialog.open();
 				
 //				if("CSV Comma(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$

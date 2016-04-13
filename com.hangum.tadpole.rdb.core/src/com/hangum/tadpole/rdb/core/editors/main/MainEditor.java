@@ -30,7 +30,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
@@ -184,7 +186,7 @@ public class MainEditor extends EditorExtension {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		final Composite compositeEditor = new Composite(sashForm, SWT.NONE);
-		GridLayout gl_compositeEditor = new GridLayout(1, false);
+		GridLayout gl_compositeEditor = new GridLayout(3, false);
 		gl_compositeEditor.verticalSpacing = 0;
 		gl_compositeEditor.horizontalSpacing = 0;
 		gl_compositeEditor.marginHeight = 0;
@@ -387,11 +389,18 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		tltmHelp.setToolTipText(String.format(Messages.get().MainEditor_27, STR_SHORT_CUT_PREFIX));
+		new ToolItem(toolBar, SWT.SEPARATOR);
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
+		
+		Label label = new Label(compositeEditor, SWT.NONE);
+		label.setText("DB LIST");
+		Combo dbListComobo = new Combo(compositeEditor, SWT.NONE | SWT.READ_ONLY);
+		dbListComobo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		// db list combo
 	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
-	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 	    addBrowserService();
 	    
 	    resultMainComposite = new ResultMainComposite(sashForm, SWT.BORDER);

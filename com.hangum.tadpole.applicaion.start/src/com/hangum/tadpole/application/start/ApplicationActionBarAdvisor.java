@@ -30,6 +30,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.application.start.action.NewVersionCheckAction;
+import com.hangum.tadpole.application.start.action.UserManuelAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSystemSettingAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
@@ -98,6 +99,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction preferenceAction;
     private IAction aboutAction;
     private IAction bugIssueAction;
+    private IAction userManuelAction;
     private IAction newVersionCheckAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -180,6 +182,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         bugIssueAction = new BugIssueAction(window);
         register(bugIssueAction);
+        
+        userManuelAction = new UserManuelAction(window);
+        register(userManuelAction);
        
         newVersionCheckAction = new NewVersionCheckAction(window);
         register(newVersionCheckAction);
@@ -246,6 +251,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		preferenceMenu.add(preferenceAction);
 		
 		// Help
+		helpMenu.add(userManuelAction);
 		helpMenu.add(bugIssueAction);
 		helpMenu.add(newVersionCheckAction);
 		helpMenu.add(aboutAction);
