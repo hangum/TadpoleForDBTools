@@ -106,6 +106,8 @@ public class Messages {
 
 	public String Warning;
 
+	public String OpenUserManuel;
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
