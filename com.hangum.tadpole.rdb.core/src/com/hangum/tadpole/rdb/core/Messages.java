@@ -512,6 +512,12 @@ public class Messages {
 	public String GroupDBSelected;
 
 	public String PleaseEndedTransaction;
+
+	public String Preview;
+
+	public String ExportData;
+
+	public String PreviewMsg;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

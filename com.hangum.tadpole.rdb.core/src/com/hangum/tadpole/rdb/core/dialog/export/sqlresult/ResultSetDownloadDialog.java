@@ -40,6 +40,7 @@ import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
 import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
 import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
+import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AExportComposite;
@@ -62,7 +63,8 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
  */
 public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
-	
+	/** 배열이 0부터 시작하므로 시리제로는 5건. */
+	private final int PREVIEW_COUNT = 4;
 	private final int PREVIEW_ID = IDialogConstants.CLIENT_ID + 1;
 	
 	private String defaultTargetName;
@@ -99,7 +101,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		
-		newShell.setText("Export Dialog");
+		newShell.setText(Messages.get().ExportData);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -139,7 +141,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		compositeText.setLayout(new GridLayout(1, false));
 		//--[tail]----------------------------------------------------------------------------------------
 		Group groupPreview = new Group(sashForm, SWT.NONE);
-		groupPreview.setText("Preview");
+		groupPreview.setText(Messages.get().PreviewMsg);
 		groupPreview.setLayout(new GridLayout(1, false));
 		
 		textPreview = new Text(groupPreview, SWT.BORDER | SWT.MULTI);
@@ -171,8 +173,8 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, PREVIEW_ID, "Preview", true);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Download, true);
+		createButton(parent, PREVIEW_ID, Messages.get().Preview, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Download, false);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
@@ -234,14 +236,13 @@ public class ResultSetDownloadDialog extends Dialog {
 			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Export유형이 잘못 선택되었습니다."); 
 			return;
 		}
-		
 //		super.okPressed();
 	}
 
 	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) {
 		try {
 			if (isPreview) {
-				previewDataLoad(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator, true), encoding);
+				previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT), encoding);
 			}else{
 				downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator), encoding);
 			}
@@ -253,7 +254,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	protected void exportResultHtmlType(String targetName, String encoding) {
 		try {
 			if (isPreview) {
-				previewDataLoad(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO, true), encoding);
+				previewDataLoad(targetName, HTMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT), encoding);
 			}else{
 				downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
 			}
@@ -266,13 +267,13 @@ public class ResultSetDownloadDialog extends Dialog {
 		try {
 			if (isAddHead){
 				if (isPreview) {
-					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, true), encoding);
+					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, PREVIEW_COUNT), encoding);
 				}else{
 					downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat), encoding);
 				}
 			}else{
 				if (isPreview) {
-					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, true), encoding);
+					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, PREVIEW_COUNT), encoding);
 				}else{
 					downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, isFormat), encoding);
 				}
@@ -284,11 +285,10 @@ public class ResultSetDownloadDialog extends Dialog {
 	
 	protected void exportResultXmlType(String targetName, String encoding) {
 		try {
-			//TODO:xml익스포터 구현.
 			if (isPreview) {
-				previewDataLoad(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO, true), encoding);
+				previewDataLoad(targetName, XMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT), encoding);
 			}else{
-				downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+				downloadFile(targetName, XMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
 			}
 		} catch(Exception ee) {
 			logger.error("Text type export error", ee); //$NON-NLS-1$
@@ -300,25 +300,25 @@ public class ResultSetDownloadDialog extends Dialog {
 			
 			if ("batch".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, isPreview, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, commit), encoding);
 				}
 			}else if ("insert".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, isPreview, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, commit), encoding);
 				}
 			}else if ("update".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, isPreview, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, commit), encoding);
 				}
 			}else if ("merge".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, isPreview, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, commit), encoding);
 				}
@@ -332,8 +332,14 @@ public class ResultSetDownloadDialog extends Dialog {
 		}
 	}
 	
+	/**
+	 * preview data 
+	 * @param fileName
+	 * @param previewData
+	 * @param encoding
+	 * @throws Exception
+	 */
 	protected void previewDataLoad(String fileName, String previewData, String encoding) throws Exception {
-
 		this.textPreview.setText(previewData);
 		
 		this.isPreview = false;
