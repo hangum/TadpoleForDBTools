@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -36,8 +37,6 @@ public class ExportTextComposite extends AExportComposite {
 	private static final Logger logger = Logger.getLogger(ExportTextComposite.class);
 
 	private Button btnIncludeHeader;
-	private Text textFileName;
-	private Combo comboEncoding;
 	
 	private Button btnTab;
 	private Button btnComma;
@@ -48,12 +47,12 @@ public class ExportTextComposite extends AExportComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public ExportTextComposite(Composite tabFolderObject, int style) {
+	public ExportTextComposite(Composite tabFolderObject, int style, String defaultTargetName) {
 		super(tabFolderObject, style);
 
 		CTabItem tbtmTable = new CTabItem((CTabFolder)tabFolderObject, SWT.NONE);
 		tbtmTable.setText("Text");
-		tbtmTable.setData("Text");
+		tbtmTable.setData("TEXT");//$NON-NLS-1$
 
 		Composite compositeText = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeText);
@@ -65,13 +64,15 @@ public class ExportTextComposite extends AExportComposite {
 		lblIncludeHead.setText("Include Head");
 		
 		btnIncludeHeader = new Button(compositeText, SWT.CHECK);
+		btnIncludeHeader.setSelection(true);
 		
 		Label lblFileName = new Label(compositeText, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFileName.setText("File name");
 		
-		textFileName = new Text(compositeText, SWT.BORDER);
-		textFileName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName = new Text(compositeText, SWT.BORDER);
+		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName.setText(defaultTargetName);
 		
 		Label lblSeparator = new Label(compositeText, SWT.NONE);
 		lblSeparator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -107,8 +108,21 @@ public class ExportTextComposite extends AExportComposite {
 	@Override
 	public ExportTextDAO getLastData() {
 		ExportTextDAO dao = new ExportTextDAO();
-		dao.setIsncludeHeader(btnIncludeHeader.getSelection());
 		
+		dao.setIsncludeHeader(btnIncludeHeader.getSelection());
+		dao.setComboEncoding(this.comboEncoding.getText());
+		
+		if (this.btnComma.getSelection()) {
+			dao.setSeparatorType(',');
+		}else if (this.btnTab.getSelection()) {
+			dao.setSeparatorType('\t');
+		}else if (this.btnEtc.getSelection()) {
+			dao.setSeparatorType( this.textSeparatorEtc.getText().charAt(0) );
+		}else{
+			dao.setSeparatorType(',');
+		}
+		
+		dao.setTargetName(this.textTargetName.getText()); 
 		
 		return dao;
 	}
@@ -116,10 +130,24 @@ public class ExportTextComposite extends AExportComposite {
 	@Override
 	public boolean isValidate() {
 		if(super.isValidate()) {
-		
+			
+		   if (btnEtc.getSelection()) {
+			   if (StringUtils.isEmpty( textSeparatorEtc.getText() )){
+				   MessageDialog.openWarning(getShell(), Messages.get().Warning, "구분문자를 입력하십시오.");  
+				   textSeparatorEtc.setFocus();
+				   return false;
+			   }else if (textSeparatorEtc.getText().length() != 1 ) {
+				   MessageDialog.openWarning(getShell(), Messages.get().Warning, "구분문자는 한글자만 입력하십시오."); 
+				   textSeparatorEtc.setFocus();
+				   return false;
+			   }
+		   } 
+			
 			MessageDialog.openWarning(getShell(), Messages.get().Warning, "파일이름이 공백입니다.");
+		}else{
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 }

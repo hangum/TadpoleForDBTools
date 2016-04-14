@@ -31,6 +31,74 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class SQLExporter extends AbstractTDBExporter {
+
+	/**
+	 * MERGE 문을 생성합니다. (대상 자료가 있으면 update, 없으면 insert할 수 있습니다. 오라클, MSSQL등에서 지원됩니다.)
+	 * 
+	 * @param tableName
+	 * @param rsDAO
+	 * @param listWhere  where 조건
+	 * 
+	 * @throws Exception
+	 */
+	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere) throws Exception {
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strFile = tableName + ".sql";
+		String strFullPath = strTmpDir + strFile;
+		
+		final String MERGE_STMT = "UPDATE " + tableName + " SET %s WHERE %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
+		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
+		
+		// 데이터를 담는다.
+		StringBuffer sbInsertInto = new StringBuffer();
+		int DATA_COUNT = 1000;
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
+		String strStatement = "";
+		String strWhere = "";
+		for(int i=0; i<dataList.size(); i++) {
+			Map<Integer, Object> mapColumns = dataList.get(i);
+			
+			strStatement = "";
+			strWhere = "";
+			for(int j=1; j<mapColumnName.size(); j++) {
+				String strColumnName = mapColumnName.get(j);
+				
+				Object strValue = mapColumns.get(j);
+				strValue = strValue == null?"":strValue;
+				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+					strValue = StringHelper.escapeSQL(strValue.toString());
+					strValue = SQLUtil.makeQuote(strValue.toString());
+				}
+				
+				boolean isWhere = false;
+				for (String strTmpColumn : listWhere) {
+					if(strColumnName.equals(strTmpColumn)) {
+						isWhere = true;
+						break;
+					}
+				}
+				if(isWhere) strWhere += String.format("%s=%s and", strColumnName, strValue);
+				else strStatement += String.format("%s=%s,", strColumnName, strValue);
+			}
+			strStatement = StringUtils.removeEnd(strStatement, ",");
+			strWhere = StringUtils.removeEnd(strWhere, "and");
+			
+			sbInsertInto.append(String.format(MERGE_STMT, strStatement, strWhere));
+			
+			if((i%DATA_COUNT) == 0) {
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				sbInsertInto.setLength(0);
+			}
+		}
+		if(sbInsertInto.length() > 0) {
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+		}
+		
+		return strFullPath;
+	}
+	
 	/**
 	 * UPDATE 문을 생성합니다.
 	 * 
@@ -78,11 +146,11 @@ public class SQLExporter extends AbstractTDBExporter {
 						break;
 					}
 				}
-				if(isWhere) strWhere += String.format("%s=%s,", strColumnName, strValue);
+				if(isWhere) strWhere += String.format("%s=%s and", strColumnName, strValue);
 				else strStatement += String.format("%s=%s,", strColumnName, strValue);
 			}
 			strStatement = StringUtils.removeEnd(strStatement, ",");
-			strWhere = StringUtils.removeEnd(strWhere, ",");
+			strWhere = StringUtils.removeEnd(strWhere, "and");
 			
 			sbInsertInto.append(String.format(UPDATE_STMT, strStatement, strWhere));
 			
@@ -153,6 +221,81 @@ public class SQLExporter extends AbstractTDBExporter {
 			}
 		}
 		if(sbInsertInto.length() > 0) {
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+		}
+		
+		return strFullPath;
+	}
+	
+	/**
+	 * 배치 INSERT 문을 생성합니다. (SQLite, MySQL등의 DBMS에서 지원합니다.)
+	 * 
+	 * @param tableName
+	 * @param rs
+	 * @return 파일 위치
+	 * 
+	 * @throws Exception
+	 */
+	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		String strFile = tableName + ".sql";
+		String strFullPath = strTmpDir + strFile;
+		boolean isFirst = true;
+		
+		final String INSERT_INTO_STMT = "INSERT INTO " + tableName + " (%s) VALUES (%S);" ;
+		final String NEXT_INSERT_INTO_STMT = ", (%S);" ;
+		
+		// 컬럼 이름.
+		String strColumns = "";
+		Map<Integer, String> mapTable = rsDAO.getColumnLabelName();
+		for( int i=1 ;i<mapTable.size(); i++ ) {
+			if(i != (mapTable.size()-1)) strColumns += mapTable.get(i) + ",";
+			else strColumns += mapTable.get(i);
+		}
+		
+		// 데이터를 담는다.
+		StringBuffer sbInsertInto = new StringBuffer();
+		int DATA_COUNT = 1000;
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
+		String strResult = new String();		
+		for(int i=0; i<dataList.size(); i++) {
+			Map<Integer, Object> mapColumns = dataList.get(i);
+			
+			strResult = "";
+			for(int j=1; j<mapColumnType.size(); j++) {
+				Object strValue = mapColumns.get(j);
+				strValue = strValue == null?"":strValue;
+				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+					strValue = StringHelper.escapeSQL(strValue.toString());
+					
+					strValue = SQLUtil.makeQuote(strValue.toString());
+				}
+				
+				if(j != (mapTable.size()-1)) strResult += strValue + ",";
+				else strResult += strValue;
+			}
+			
+			if (isFirst) {
+				isFirst = false;
+				sbInsertInto.append(String.format(INSERT_INTO_STMT, strColumns, strResult));
+			}else{
+				sbInsertInto.append(String.format(NEXT_INSERT_INTO_STMT, strResult));
+			}
+			
+			if((i%DATA_COUNT) == 0) {
+				isFirst = true;
+				sbInsertInto.append(PublicTadpoleDefine.LINE_SEPARATOR); 
+
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				sbInsertInto.setLength(0);
+			}
+			
+			
+		}
+		if(sbInsertInto.length() > 0) {
+			sbInsertInto.append(PublicTadpoleDefine.LINE_SEPARATOR); 
 			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 		}
 		

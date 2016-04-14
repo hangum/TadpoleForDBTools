@@ -116,7 +116,7 @@ public abstract class AbstractTailComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(getRSDao().getDataList() == null) return;
 				
-				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(null, findTableName(), getRSDao());
+				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), findTableName(), getRSDao());
 				dialog.open();
 				
 //				if("CSV Comma(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$

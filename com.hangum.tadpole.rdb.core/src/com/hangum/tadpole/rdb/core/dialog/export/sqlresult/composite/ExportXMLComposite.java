@@ -34,20 +34,17 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 public class ExportXMLComposite extends AExportComposite {
 	private static final Logger logger = Logger.getLogger(ExportXMLComposite.class);
 
-	private Text textFileName;
-	private Combo comboEncoding;
-	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public ExportXMLComposite(Composite tabFolderObject, int style) {
+	public ExportXMLComposite(Composite tabFolderObject, int style, String defaultTargetName) {
 		super(tabFolderObject, style);
 
 		CTabItem tbtmTable = new CTabItem((CTabFolder)tabFolderObject, SWT.NONE);
 		tbtmTable.setText("XML");
-		tbtmTable.setData("XML");
+		tbtmTable.setData("XML");//$NON-NLS-1$
 
 		Composite compositeText = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeText);
@@ -59,8 +56,9 @@ public class ExportXMLComposite extends AExportComposite {
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFileName.setText("File name");
 		
-		textFileName = new Text(compositeText, SWT.BORDER);
-		textFileName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName = new Text(compositeText, SWT.BORDER);
+		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName.setText(defaultTargetName);
 		
 		Label lblEncoding = new Label(compositeText, SWT.NONE);
 		lblEncoding.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));

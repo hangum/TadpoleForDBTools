@@ -34,20 +34,18 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 public class ExportHTMLComposite extends AExportComposite {
 	private static final Logger logger = Logger.getLogger(ExportHTMLComposite.class);
 
-	private Text textFileName;
-	private Combo comboEncoding;
 	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public ExportHTMLComposite(Composite tabFolderObject, int style) {
+	public ExportHTMLComposite(Composite tabFolderObject, int style, String defaultTargetName) {
 		super(tabFolderObject, style);
 
 		CTabItem tbtmTable = new CTabItem((CTabFolder)tabFolderObject, SWT.NONE);
 		tbtmTable.setText("HTML");
-		tbtmTable.setData("HTML");
+		tbtmTable.setData("HTML");//$NON-NLS-1$
 
 		Composite compositeText = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeText);
@@ -59,8 +57,9 @@ public class ExportHTMLComposite extends AExportComposite {
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFileName.setText("File name");
 		
-		textFileName = new Text(compositeText, SWT.BORDER);
-		textFileName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName = new Text(compositeText, SWT.BORDER);
+		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName.setText(defaultTargetName);
 		
 		Label lblEncoding = new Label(compositeText, SWT.NONE);
 		lblEncoding.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -74,7 +73,9 @@ public class ExportHTMLComposite extends AExportComposite {
 	@Override
 	public ExportTextDAO getLastData() {
 		ExportTextDAO dao = new ExportTextDAO();
-		
+
+		dao.setComboEncoding(this.comboEncoding.getText());
+		dao.setTargetName(this.textTargetName.getText());
 		
 		return dao;
 	}
@@ -82,8 +83,7 @@ public class ExportHTMLComposite extends AExportComposite {
 	@Override
 	public boolean isValidate() {
 		if(super.isValidate()) {
-		
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "파일이름이 공백입니다.");
+			return true;
 		}
 		return false;
 	}
