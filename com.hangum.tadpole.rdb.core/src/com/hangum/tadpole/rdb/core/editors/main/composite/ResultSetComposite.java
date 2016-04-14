@@ -168,7 +168,8 @@ public class ResultSetComposite extends Composite {
 				isUserInterrupt = false;
 			}
 		});
-		btnStopQuery.setText(Messages.get().QueryStop);
+		btnStopQuery.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/stop.png"));
+		btnStopQuery.setToolTipText(Messages.get().QueryStop);
 		btnStopQuery.setEnabled(false);
 		
 		btnAddVertical = new Button(compHead, SWT.NONE);
@@ -177,17 +178,17 @@ public class ResultSetComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(SWT.VERTICAL == sashFormResult.getOrientation()) {
 					sashFormResult.setOrientation(SWT.HORIZONTAL);	
-					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/bottom.png"));										
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_vertical.png"));										
 				} else {
 					sashFormResult.setOrientation(SWT.VERTICAL);
-					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_horizontal.png"));
 				}
 				
 				layout();
 			}
 		});
-		btnAddVertical.setText(Messages.get().ChangeRotation);
-		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
+		btnAddVertical.setToolTipText(Messages.get().ChangeRotation);
+		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_vertical.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);
 		lblTemp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

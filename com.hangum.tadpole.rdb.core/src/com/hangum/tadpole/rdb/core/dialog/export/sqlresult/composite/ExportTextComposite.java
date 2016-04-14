@@ -142,8 +142,6 @@ public class ExportTextComposite extends AExportComposite {
 				   return false;
 			   }
 		   } 
-			
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "파일이름이 공백입니다.");
 		}else{
 			return false;
 		}

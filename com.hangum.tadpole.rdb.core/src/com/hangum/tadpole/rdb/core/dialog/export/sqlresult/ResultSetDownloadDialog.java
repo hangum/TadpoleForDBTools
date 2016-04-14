@@ -76,7 +76,6 @@ public class ResultSetDownloadDialog extends Dialog {
 	// preview 
 	private Text textPreview;
 	
-	protected Shell parentShell;
 	protected DownloadServiceHandler downloadServiceHandler;	
 	
 	/**
@@ -87,7 +86,6 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	public ResultSetDownloadDialog(Shell parentShell, String strDefTableName, QueryExecuteResultDTO queryExecuteResultDTO) {
 		super(parentShell);
-		this.parentShell = parentShell;
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.defaultTargetName = strDefTableName;
@@ -223,7 +221,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			return;
 		}
 		
-		super.okPressed();
+//		super.okPressed();
 	}
 
 	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) {
@@ -319,7 +317,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		downloadServiceHandler.setName(fileName);
 		downloadServiceHandler.setByteContent(newContents);
 		
-		DownloadUtils.provideDownload(parentShell, downloadServiceHandler.getId());
+		DownloadUtils.provideDownload(getShell(), downloadServiceHandler.getId());
 	}
-
+	
 }
