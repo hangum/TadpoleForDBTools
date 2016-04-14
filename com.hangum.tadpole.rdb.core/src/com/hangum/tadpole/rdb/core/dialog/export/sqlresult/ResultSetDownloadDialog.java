@@ -169,7 +169,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, PREVIEW_ID, "Preview", true);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Download, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
