@@ -8,7 +8,7 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao;
  */
 public class ExportTextDAO extends AExportDAO {
 	protected boolean isncludeHeader;
-	String separatorType;
+	char separatorType;
 	
 	
 	public ExportTextDAO() {
@@ -18,14 +18,14 @@ public class ExportTextDAO extends AExportDAO {
 	/**
 	 * @return the separatorType
 	 */
-	public String getSeparatorType() {
+	public char getSeparatorType() {
 		return separatorType;
 	}
 
 	/**
 	 * @param separatorType the separatorType to set
 	 */
-	public void setSeparatorType(String separatorType) {
+	public void setSeparatorType(char separatorType) {
 		this.separatorType = separatorType;
 	}
 	

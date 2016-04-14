@@ -10,6 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -24,7 +29,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
+
 import org.eclipse.swt.widgets.Group;
 
 /**
@@ -35,30 +42,29 @@ import org.eclipse.swt.widgets.Group;
  */
 public class ExportSQLComposite extends AExportComposite {
 	private static final Logger logger = Logger.getLogger(ExportSQLComposite.class);
-	private Combo comboEncoding;
 	
+	private Button btnBatchInsert;
 	private Button btnInsert;
 	private Button btnUpdate;
+	private Button[] btnWhereColumn;
 	private Button btnMerge;
 	private Composite compositeTargetTable;
-	private Text textTargetTable;
 	private Label lblExSchematable;
 	private Composite compositeCommit;
 	private Text textCommit;
 	private Label label;
-	private Button btnBatchInsert;
 	private Group grpWhere;
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public ExportSQLComposite(Composite tabFolderObject, int style) {
+	public ExportSQLComposite(Composite tabFolderObject, int style, String defaultTargetName, Map<Integer, String> mapColumnName) {
 		super(tabFolderObject, style);
 
 		CTabItem tbtmTable = new CTabItem((CTabFolder)tabFolderObject, SWT.NONE);
 		tbtmTable.setText("SQL");
-		tbtmTable.setData("SQL");
+		tbtmTable.setData("SQL");//$NON-NLS-1$
 
 		Composite compositeText = new Composite(tabFolderObject, SWT.NONE);
 		tbtmTable.setControl(compositeText);
@@ -73,11 +79,12 @@ public class ExportSQLComposite extends AExportComposite {
 		compositeTargetTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		compositeTargetTable.setLayout(new GridLayout(2, false));
 		
-		textTargetTable = new Text(compositeTargetTable, SWT.BORDER);
-		textTargetTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName = new Text(compositeTargetTable, SWT.BORDER);
+		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName.setText(defaultTargetName);
 		
 		lblExSchematable = new Label(compositeTargetTable, SWT.NONE);
-		lblExSchematable.setText("ex) schema.table");
+		lblExSchematable.setText("ex) scheme.table ");
 		
 		Label lblCommit = new Label(compositeText, SWT.NONE);
 		lblCommit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -125,14 +132,46 @@ public class ExportSQLComposite extends AExportComposite {
 		new Label(compositeText, SWT.NONE);
 		
 		grpWhere = new Group(compositeText, SWT.NONE);
+		grpWhere.setLayout(new GridLayout(3, false));
 		grpWhere.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpWhere.setText("Where");
+		grpWhere.setText(Messages.get().SelectWhereColumn);
+		
+		btnWhereColumn = new Button[mapColumnName.size()-1];
+		for(int i=1; i<mapColumnName.size(); i++) {
+			btnWhereColumn[i-1] = new Button(grpWhere, SWT.CHECK);
+			btnWhereColumn[i-1].setText(mapColumnName.get(i));
+		}
+		
 	}
 
 	@Override
-	public ExportTextDAO getLastData() {
-		ExportTextDAO dao = new ExportTextDAO();
+	public ExportSqlDAO getLastData() {
+		ExportSqlDAO dao = new ExportSqlDAO();
 		
+		List<String> listWhereColumnName = new ArrayList<>();
+		for (int i=0; i<btnWhereColumn.length; i++) {
+			Button button = btnWhereColumn[i];
+			if(button.getSelection()) listWhereColumnName.add(button.getText());
+		}
+		dao.setListWhere(listWhereColumnName);
+		
+		if (StringUtils.isEmpty(this.textCommit.getText())) {
+			dao.setCommit(0);
+		}else if (!StringUtils.isNumeric(this.textCommit.getText())){
+			dao.setCommit(0);
+		}else{
+			dao.setCommit(Integer.valueOf(this.textCommit.getText().trim()));
+		}
+		
+		if (this.btnBatchInsert.getSelection()){
+			dao.setStatementType("batch");
+		}else if (this.btnInsert.getSelection()){
+			dao.setStatementType("insert");
+		}else if (this.btnUpdate.getSelection()){
+			dao.setStatementType("update");
+		}else if (this.btnMerge.getSelection()){
+			dao.setStatementType("merge");
+		}
 		
 		return dao;
 	}
@@ -140,10 +179,19 @@ public class ExportSQLComposite extends AExportComposite {
 	@Override
 	public boolean isValidate() {
 		if(super.isValidate()) {
-		
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "파일이름이 공백입니다.");
+			if (StringUtils.isEmpty(this.textTargetName.getText()) ){
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, "대상 테이블을 입력하십시오.");
+				this.textTargetName.setFocus();
+				return false;
+			}
+			if (!StringUtils.isNumeric(this.textCommit.getText())){
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, "커밋 건수는 숫자로 입력하십시오.");
+				textCommit.setText("0");
+				this.textCommit.setFocus();
+				return false;
+			}
 		}
-		return false;
+		return true;
 	}
 	
 }

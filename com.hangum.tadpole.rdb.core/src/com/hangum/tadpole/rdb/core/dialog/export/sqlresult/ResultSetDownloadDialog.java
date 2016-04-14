@@ -10,9 +10,15 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqlresult;
 
+import java.io.File;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.SashForm;
@@ -27,6 +33,13 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
+import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
+import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
+import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
+import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AExportComposite;
@@ -35,7 +48,11 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportJSONC
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportSQLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportTextComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportXMLComposite;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportHtmlDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportJsonDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 
 /**
  * Resultset to download
@@ -46,7 +63,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
 	
-	private String strDefTableName;
+	private String defaultTargetName;
 	private QueryExecuteResultDTO queryExecuteResultDTO;
 	
 	private CTabFolder tabFolder;
@@ -59,6 +76,8 @@ public class ResultSetDownloadDialog extends Dialog {
 	// preview 
 	private Text textPreview;
 	
+	protected Shell parentShell;
+	protected DownloadServiceHandler downloadServiceHandler;	
 	
 	/**
 	 * Create the dialog.
@@ -68,9 +87,10 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	public ResultSetDownloadDialog(Shell parentShell, String strDefTableName, QueryExecuteResultDTO queryExecuteResultDTO) {
 		super(parentShell);
+		this.parentShell = parentShell;
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
-		this.strDefTableName = strDefTableName;
+		this.defaultTargetName = strDefTableName;
 		this.queryExecuteResultDTO = queryExecuteResultDTO;
 	}
 	
@@ -102,20 +122,19 @@ public class ResultSetDownloadDialog extends Dialog {
 		tabFolder.setBorderVisible(false);
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
-		compositeText = new ExportTextComposite(tabFolder, SWT.NONE);
+		compositeText = new ExportTextComposite(tabFolder, SWT.NONE, defaultTargetName);
 		compositeText.setLayout(new GridLayout(1, false));
 		
-		//--------------------------------------
-		compositeHTML = new ExportHTMLComposite(tabFolder, SWT.NONE);
+		compositeHTML = new ExportHTMLComposite(tabFolder, SWT.NONE, defaultTargetName);
 		compositeText.setLayout(new GridLayout(1, false));
 		
-		compositeJSON = new ExportJSONComposite(tabFolder, SWT.NONE);
+		compositeJSON = new ExportJSONComposite(tabFolder, SWT.NONE, defaultTargetName);
 		compositeText.setLayout(new GridLayout(1, false));
 		
-		compositeXML = new ExportXMLComposite(tabFolder, SWT.NONE);
+		compositeXML = new ExportXMLComposite(tabFolder, SWT.NONE, defaultTargetName);
 		compositeText.setLayout(new GridLayout(1, false));
 		
-		compositeSQL = new ExportSQLComposite(tabFolder, SWT.NONE);
+		compositeSQL = new ExportSQLComposite(tabFolder, SWT.NONE, defaultTargetName, queryExecuteResultDTO.getColumnLabelName());
 		compositeText.setLayout(new GridLayout(1, false));
 		//--[tail]----------------------------------------------------------------------------------------
 		Group groupPreview = new Group(sashForm, SWT.NONE);
@@ -130,25 +149,9 @@ public class ResultSetDownloadDialog extends Dialog {
 		tabFolder.setSelection(0);
 		//--[end]----------------------------------------------------------------------------------------
 		
+		registerServiceHandler();
+		
 		return container;
-	}
-	
-	@Override
-	protected void okPressed() {
-		String selectionTab = ""+tabFolder.getSelection().getData();
-		if(logger.isDebugEnabled()) logger.debug("selection tab is " + selectionTab);
-		
-		if("text".equalsIgnoreCase(selectionTab)) {
-			if(logger.isDebugEnabled()) logger.debug("text");
-			
-			if(compositeText.isValidate()) {
-				ExportTextDAO dao = (ExportTextDAO)compositeText.getLastData();
-			}
-			
-		}
-		
-		
-//		super.okPressed();
 	}
 
 	/**
@@ -168,4 +171,155 @@ public class ResultSetDownloadDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(500, 600);
 	}
+	
+	@Override
+	public boolean close() {
+		unregisterServiceHandler();
+		return super.close();
+	}
+
+	@Override
+	protected void okPressed() {
+		String selectionTab = ""+tabFolder.getSelection().getData();
+
+		if("text".equalsIgnoreCase(selectionTab)) {			
+			if(compositeText.isValidate()) {
+				ExportTextDAO dao = (ExportTextDAO)compositeText.getLastData();
+				exportResultCSVType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSeparatorType(), dao.getComboEncoding());
+			}else{
+				return;
+			}
+		}else if("html".equalsIgnoreCase(selectionTab)) {			
+			if(compositeHTML.isValidate()) {
+				ExportHtmlDAO dao = (ExportHtmlDAO)compositeHTML.getLastData();
+				exportResultHtmlType(dao.getTargetName(), dao.getComboEncoding());
+			}else{
+				return;
+			}
+		}else if("json".equalsIgnoreCase(selectionTab)) {			
+			if(compositeJSON.isValidate()) {
+				ExportJsonDAO dao = (ExportJsonDAO)compositeJSON.getLastData();
+				exportResultJSONType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSchemeKey(), dao.getRecordKey(), dao.getComboEncoding());
+			}else{
+				return;
+			}
+		}else if("xml".equalsIgnoreCase(selectionTab)) {			
+			if(compositeXML.isValidate()) {
+				ExportXmlDAO dao = (ExportXmlDAO)compositeXML.getLastData();
+				exportResultXmlType(dao.getTargetName(), dao.getComboEncoding());
+			}else{
+				return;
+			}
+		}else if("sql".equalsIgnoreCase(selectionTab)) {			
+			if(compositeSQL.isValidate()) {
+				ExportSqlDAO dao = (ExportSqlDAO)compositeSQL.getLastData();
+				exportResultSqlType(dao.getTargetName(), dao.getComboEncoding(), dao.getListWhere(),  dao.getStatementType());
+			}else{
+				return;
+			}
+		}else{
+			if(logger.isDebugEnabled()) logger.debug("selection tab is " + selectionTab);	
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Export유형이 잘못 선택되었습니다."); 
+			return;
+		}
+		
+		super.okPressed();
+	}
+
+	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) {
+		try {
+			downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator), encoding);
+		} catch(Exception ee) {
+			logger.error("Text type export error", ee); //$NON-NLS-1$
+		}
+	}
+	
+	protected void exportResultHtmlType(String targetName, String encoding) {
+		try {
+			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+		} catch(Exception ee) {
+			logger.error("Text type export error", ee); //$NON-NLS-1$
+		}
+	}
+	
+	protected void exportResultJSONType(boolean isAddHead, String targetName, String schemeKey, String recordKey, String encoding) {
+		try {
+			if (isAddHead){
+				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, schemeKey, recordKey), encoding);
+			}else{
+				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+			}
+		} catch(Exception ee) {
+			logger.error("Text type export error", ee); //$NON-NLS-1$
+		}
+	}
+	
+	protected void exportResultXmlType(String targetName, String encoding) {
+		try {
+			//TODO:xml익스포터 구현.
+			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+		} catch(Exception ee) {
+			logger.error("Text type export error", ee); //$NON-NLS-1$
+		}
+	}
+	
+	protected void exportResultSqlType(String targetName, String encoding, List<String> listWhere, String stmtType) {
+		try {
+			
+			if ("batch".equalsIgnoreCase(stmtType)) {
+				downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO), encoding);
+			}else if ("insert".equalsIgnoreCase(stmtType)) {
+				downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO), encoding);
+			}else if ("update".equalsIgnoreCase(stmtType)) {
+				downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere), encoding);
+			}else if ("merge".equalsIgnoreCase(stmtType)) {
+				downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere), encoding);
+			}else{
+				// not support type;
+			}
+		} catch(Exception ee) {
+			logger.error("Text type export error", ee); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * download file
+	 * @param strFileLocation
+	 * @throws Exception
+	 */
+	protected void downloadFile(String fileName, String strFileLocation, String encoding) throws Exception {
+
+		//TODO: 결과 파일 인코딩 하기...
+		
+		String strZipFile = ZipUtils.pack(strFileLocation);
+		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+		
+		_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
+	}
+	
+	/** registery service handler */
+	protected void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	/** download service handler call */
+	protected void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
+	}
+	
+	/**
+	 * download external file
+	 * 
+	 * @param fileName
+	 * @param newContents
+	 */
+	protected void _downloadExtFile(String fileName, byte[] newContents) {
+		downloadServiceHandler.setName(fileName);
+		downloadServiceHandler.setByteContent(newContents);
+		
+		DownloadUtils.provideDownload(parentShell, downloadServiceHandler.getId());
+	}
+
 }
