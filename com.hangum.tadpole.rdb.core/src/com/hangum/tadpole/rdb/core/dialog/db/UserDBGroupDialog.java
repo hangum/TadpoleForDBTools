@@ -35,24 +35,27 @@ import com.hangum.tadpole.rdb.core.Messages;
  */
 public class UserDBGroupDialog extends Dialog {
 	private List<UserDBDAO> listUserGroup = new ArrayList<>();
+	private UserDBDAO oriUserDB;
 	private org.eclipse.swt.widgets.List listDBGroup;
 	private UserDBDAO userDB;
 	
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param oriUserDB 
 	 */
-	public UserDBGroupDialog(Shell parentShell, List<UserDBDAO> listUserGroup) {
+	public UserDBGroupDialog(Shell parentShell, List<UserDBDAO> listUserGroup, UserDBDAO oriUserDB) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.listUserGroup = listUserGroup;
+		this.oriUserDB = oriUserDB;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Other DB Selected");
+		newShell.setText(Messages.get().GroupDBSelected);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -78,12 +81,14 @@ public class UserDBGroupDialog extends Dialog {
 		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		listDBGroup = new org.eclipse.swt.widgets.List(composite, SWT.BORDER);
+		listDBGroup = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		listDBGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		for (UserDBDAO userDBDAO : listUserGroup) {
-			String strDisplayName = String.format(userDBDAO.getDisplay_name());
-			listDBGroup.add(strDisplayName);
-			listDBGroup.setData(strDisplayName, userDBDAO);
+			if(oriUserDB.getSeq() != userDBDAO.getSeq()) {
+				String strDisplayName = String.format(userDBDAO.getDisplay_name());
+				listDBGroup.add(strDisplayName);
+				listDBGroup.setData(strDisplayName, userDBDAO);
+			}
 		}
 		listDBGroup.select(0);
 		
@@ -112,7 +117,7 @@ public class UserDBGroupDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(283, 300);
+		return new Point(280, 300);
 	}
 	
 	/**
