@@ -225,7 +225,9 @@ public class MainEditor extends EditorExtension {
 				if(!isAutoCommit()) {
 					MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, "This status is transaction connection.");
 				} else {
-					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), listUserGroup);
+					if(listUserGroup.size() == 1) return;
+					
+					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), listUserGroup, userDB);
 					if(Dialog.OK == dialog.open()) {
 						UserDBDAO selectedUserDB = dialog.getUserDB();
 						userDB = selectedUserDB;

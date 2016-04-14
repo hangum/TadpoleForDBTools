@@ -63,6 +63,8 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
 	
+	private final int PREVIEW_ID = IDialogConstants.CLIENT_ID + 1;
+	
 	private String defaultTargetName;
 	private QueryExecuteResultDTO queryExecuteResultDTO;
 	
@@ -151,6 +153,14 @@ public class ResultSetDownloadDialog extends Dialog {
 		
 		return container;
 	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if(buttonId == PREVIEW_ID) {
+			MessageDialog.openInformation(getShell(), "확인", "미리보기입니다");
+		}
+		super.buttonPressed(buttonId);
+	}
 
 	/**
 	 * Create contents of the button bar.
@@ -158,8 +168,9 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, PREVIEW_ID, "Preview", true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Download, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
 	/**
