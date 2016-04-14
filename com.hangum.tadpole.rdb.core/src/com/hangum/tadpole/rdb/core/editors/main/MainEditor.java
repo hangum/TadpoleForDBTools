@@ -75,6 +75,7 @@ import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContribution
 import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
@@ -223,7 +224,7 @@ public class MainEditor extends EditorExtension {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!isAutoCommit()) {
-					MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, "This status is transaction connection.");
+					MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().PleaseEndedTransaction);
 				} else {
 					if(listUserGroup.size() == 1) return;
 					
@@ -231,6 +232,12 @@ public class MainEditor extends EditorExtension {
 					if(Dialog.OK == dialog.open()) {
 						UserDBDAO selectedUserDB = dialog.getUserDB();
 						userDB = selectedUserDB;
+						
+						try {
+							TadpoleObjectQuery.getTableList(userDB);
+						} catch (Exception e1) {
+							logger.error("get table list", e1);
+						}
 						
 						tltmConnectURL.setText(userDB.getDisplay_name());
 					}
