@@ -77,6 +77,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	
 	// preview 
 	private Text textPreview;
+	private boolean isPreview;
 	
 	protected DownloadServiceHandler downloadServiceHandler;	
 	
@@ -157,7 +158,9 @@ public class ResultSetDownloadDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == PREVIEW_ID) {
-			MessageDialog.openInformation(getShell(), "확인", "미리보기입니다");
+			isPreview = true;
+			this.textPreview.setText("");
+			okPressed();
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -208,7 +211,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		}else if("json".equalsIgnoreCase(selectionTab)) {			
 			if(compositeJSON.isValidate()) {
 				ExportJsonDAO dao = (ExportJsonDAO)compositeJSON.getLastData();
-				exportResultJSONType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSchemeKey(), dao.getRecordKey(), dao.getComboEncoding());
+				exportResultJSONType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSchemeKey(), dao.getRecordKey(), dao.getComboEncoding(), dao.isFormat());
 			}else{
 				return;
 			}
@@ -222,7 +225,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		}else if("sql".equalsIgnoreCase(selectionTab)) {			
 			if(compositeSQL.isValidate()) {
 				ExportSqlDAO dao = (ExportSqlDAO)compositeSQL.getLastData();
-				exportResultSqlType(dao.getTargetName(), dao.getComboEncoding(), dao.getListWhere(),  dao.getStatementType());
+				exportResultSqlType(dao.getTargetName(), dao.getComboEncoding(), dao.getListWhere(),  dao.getStatementType(), dao.getCommit());
 			}else{
 				return;
 			}
@@ -237,7 +240,11 @@ public class ResultSetDownloadDialog extends Dialog {
 
 	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) {
 		try {
-			downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator), encoding);
+			if (isPreview) {
+				previewDataLoad(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator, true), encoding);
+			}else{
+				downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator), encoding);
+			}
 		} catch(Exception ee) {
 			logger.error("Text type export error", ee); //$NON-NLS-1$
 		}
@@ -245,18 +252,30 @@ public class ResultSetDownloadDialog extends Dialog {
 	
 	protected void exportResultHtmlType(String targetName, String encoding) {
 		try {
-			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+			if (isPreview) {
+				previewDataLoad(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO, true), encoding);
+			}else{
+				downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+			}
 		} catch(Exception ee) {
 			logger.error("Text type export error", ee); //$NON-NLS-1$
 		}
 	}
 	
-	protected void exportResultJSONType(boolean isAddHead, String targetName, String schemeKey, String recordKey, String encoding) {
+	protected void exportResultJSONType(boolean isAddHead, String targetName, String schemeKey, String recordKey, String encoding, boolean isFormat) {
 		try {
 			if (isAddHead){
-				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, schemeKey, recordKey), encoding);
+				if (isPreview) {
+					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, true), encoding);
+				}else{
+					downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat), encoding);
+				}
 			}else{
-				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+				if (isPreview) {
+					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, true), encoding);
+				}else{
+					downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, isFormat), encoding);
+				}
 			}
 		} catch(Exception ee) {
 			logger.error("Text type export error", ee); //$NON-NLS-1$
@@ -266,29 +285,58 @@ public class ResultSetDownloadDialog extends Dialog {
 	protected void exportResultXmlType(String targetName, String encoding) {
 		try {
 			//TODO:xml익스포터 구현.
-			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+			if (isPreview) {
+				previewDataLoad(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO, true), encoding);
+			}else{
+				downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
+			}
 		} catch(Exception ee) {
 			logger.error("Text type export error", ee); //$NON-NLS-1$
 		}
 	}
 	
-	protected void exportResultSqlType(String targetName, String encoding, List<String> listWhere, String stmtType) {
+	protected void exportResultSqlType(String targetName, String encoding, List<String> listWhere, String stmtType, int commit) {
 		try {
 			
 			if ("batch".equalsIgnoreCase(stmtType)) {
-				downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO), encoding);
+				if (isPreview) {
+					previewDataLoad(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, isPreview, commit), encoding);
+				}else{
+					downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, commit), encoding);
+				}
 			}else if ("insert".equalsIgnoreCase(stmtType)) {
-				downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO), encoding);
+				if (isPreview) {
+					previewDataLoad(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, isPreview, commit), encoding);
+				}else{
+					downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, commit), encoding);
+				}
 			}else if ("update".equalsIgnoreCase(stmtType)) {
-				downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere), encoding);
+				if (isPreview) {
+					previewDataLoad(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, isPreview, commit), encoding);
+				}else{
+					downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, commit), encoding);
+				}
 			}else if ("merge".equalsIgnoreCase(stmtType)) {
-				downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere), encoding);
+				if (isPreview) {
+					previewDataLoad(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, isPreview, commit), encoding);
+				}else{
+					downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, commit), encoding);
+				}
 			}else{
 				// not support type;
 			}
+			
+			isPreview = false;
 		} catch(Exception ee) {
 			logger.error("Text type export error", ee); //$NON-NLS-1$
 		}
+	}
+	
+	protected void previewDataLoad(String fileName, String previewData, String encoding) throws Exception {
+
+		this.textPreview.setText(previewData);
+		
+		this.isPreview = false;
 	}
 	
 	/**

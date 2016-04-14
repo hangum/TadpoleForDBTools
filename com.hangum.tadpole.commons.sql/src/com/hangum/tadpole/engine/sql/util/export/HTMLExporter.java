@@ -87,6 +87,10 @@ public class HTMLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+		return makeContentFile(tableName, rsDAO, false);
+	}
+	
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, boolean isPreview) throws Exception {
 		// full text
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".html";
@@ -122,6 +126,11 @@ public class HTMLExporter extends AbstractTDBExporter {
 			}
 			sbBody.append(String.format(strGroup, sbTmp.toString()));
 			
+			// 미리보기 자료를 최대 5건까지만 생성하여 리턴한다.
+			if (isPreview && (i >= 5 || dataList.size() <= i)){
+				return sbBody.toString();
+			}
+
 			if((i%DATA_COUNT) == 0) {
 				FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), true);
 				sbBody.delete(0, sbBody.length());

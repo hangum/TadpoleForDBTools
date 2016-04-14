@@ -41,12 +41,16 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere) throws Exception {
+	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit) throws Exception {
+		return makeFileMergeStatment(tableName, rsDAO, listWhere, false, commit);
+	}
+	
+	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, boolean isPreview, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
 		
-		final String MERGE_STMT = "UPDATE " + tableName + " SET %s WHERE %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
+		final String MERGE_STMT = "MERGE INTO " + tableName + " A USING (\n SELECT %s FROM DUAL) B \n ON ( %s ) \n WHEN NOT MATCHED THEN \n INSERT ( %s ) \n VALUES ( %s ) \n WHEN MATCHED THEN \n UPDATE SET %s ;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
 		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
 		
 		// 데이터를 담는다.
@@ -54,18 +58,25 @@ public class SQLExporter extends AbstractTDBExporter {
 		int DATA_COUNT = 1000;
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		Map<Integer, Integer> mapColumnType = rsDAO.getColumnType();
-		String strStatement = "";
-		String strWhere = "";
+		String strSource = "";
+		String strInsertColumn = "";
+		String strInsertValue = "";
+		String strUpdate = "";
+		String strMatchConditon = "";
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
-			strStatement = "";
-			strWhere = "";
+			strSource = "";
+			strInsertColumn = "";
+			strInsertValue = "";
+			strUpdate = "";
+			strMatchConditon = "";
 			for(int j=1; j<mapColumnName.size(); j++) {
 				String strColumnName = mapColumnName.get(j);
 				
 				Object strValue = mapColumns.get(j);
 				strValue = strValue == null?"":strValue;
+				
 				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
 					strValue = StringEscapeUtils.escapeSql(strValue.toString());
 					strValue = StringHelper.escapeSQL(strValue.toString());
@@ -79,20 +90,39 @@ public class SQLExporter extends AbstractTDBExporter {
 						break;
 					}
 				}
-				if(isWhere) strWhere += String.format("%s=%s and", strColumnName, strValue);
-				else strStatement += String.format("%s=%s,", strColumnName, strValue);
+				
+				strSource += String.format("%s as %s ,", strValue, strColumnName);
+				strInsertColumn += String.format(" %s,", strColumnName);
+				strInsertValue += String.format(" B.%s,", strColumnName);
+				if(isWhere) strMatchConditon += String.format("A.%s = B.%s and", strColumnName, strColumnName);
+				else strUpdate += String.format("A.%s = B.%s,", strColumnName, strColumnName);
 			}
-			strStatement = StringUtils.removeEnd(strStatement, ",");
-			strWhere = StringUtils.removeEnd(strWhere, "and");
+			strSource = StringUtils.removeEnd(strSource, ",");
+			strInsertColumn = StringUtils.removeEnd(strInsertColumn, ",");
+			strInsertValue = StringUtils.removeEnd(strInsertValue, ",");
+			strUpdate = StringUtils.removeEnd(strUpdate, ",");
+			strMatchConditon = StringUtils.removeEnd(strMatchConditon, "and");
 			
-			sbInsertInto.append(String.format(MERGE_STMT, strStatement, strWhere));
+			sbInsertInto.append(String.format(MERGE_STMT, strSource, strMatchConditon, strInsertColumn, strInsertValue, strUpdate));
 			
+			if (isPreview && (i >= 5 || dataList.size() <= i)){
+				return sbInsertInto.toString();
+			}
+			
+			if(commit > 0 && (i%commit) == 0) {
+				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+			} 
+
 			if((i%DATA_COUNT) == 0) {
 				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 				sbInsertInto.setLength(0);
 			}
 		}
 		if(sbInsertInto.length() > 0) {
+			if(commit > 0) {
+				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+			} 
+
 			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 		}
 		
@@ -108,12 +138,16 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere) throws Exception {
+	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit) throws Exception {
+		return makeFileUpdateStatment(tableName, rsDAO, listWhere, false, commit) ;
+	}
+
+	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, boolean isPreview, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
 		
-		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
+		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE 1=1 %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
 		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
 		
 		// 데이터를 담는다.
@@ -154,12 +188,24 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			sbInsertInto.append(String.format(UPDATE_STMT, strStatement, strWhere));
 			
+			if (isPreview && (i >= 5 || dataList.size() <= i)){
+				return sbInsertInto.toString();
+			}
+
+			if(commit > 0 && (i%commit) == 0) {
+				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+			} 
+
 			if((i%DATA_COUNT) == 0) {
 				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 				sbInsertInto.setLength(0);
 			}
 		}
 		if(sbInsertInto.length() > 0) {
+			if(commit > 0) {
+				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+			} 
+
 			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 		}
 		
@@ -175,7 +221,11 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit) throws Exception {
+		return makeFileInsertStatment(tableName, rsDAO, false, commit);
+	}
+	
+	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, boolean isPreview, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -215,12 +265,24 @@ public class SQLExporter extends AbstractTDBExporter {
 			}
 			sbInsertInto.append(String.format(INSERT_INTO_STMT, strColumns, strResult));
 			
+			if (isPreview && (i >= 5 || dataList.size() <= i)){
+				return sbInsertInto.toString();
+			}
+
+			if(commit > 0 && (i%commit) == 0) {
+				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+			} 
+
 			if((i%DATA_COUNT) == 0) {
 				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 				sbInsertInto.setLength(0);
 			}
 		}
 		if(sbInsertInto.length() > 0) {
+			if(commit > 0) {
+				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+			} 
+
 			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 		}
 		
@@ -236,14 +298,18 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit) throws Exception {
+		return makeFileBatchInsertStatment(tableName, rsDAO, false, commit);
+	}
+	
+	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, boolean isPreview, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
 		boolean isFirst = true;
 		
-		final String INSERT_INTO_STMT = "INSERT INTO " + tableName + " (%s) VALUES (%S);" ;
-		final String NEXT_INSERT_INTO_STMT = ", (%S);" ;
+		final String INSERT_INTO_STMT = "INSERT INTO " + tableName + " (%s) VALUES (%S)" ;
+		final String NEXT_INSERT_INTO_STMT = ", (%S)" ;
 		
 		// 컬럼 이름.
 		String strColumns = "";
@@ -284,18 +350,33 @@ public class SQLExporter extends AbstractTDBExporter {
 				sbInsertInto.append(String.format(NEXT_INSERT_INTO_STMT, strResult));
 			}
 			
-			if((i%DATA_COUNT) == 0) {
+			if( dataList.size() > 1 && i > 1 && (i%DATA_COUNT) == 0) {
 				isFirst = true;
+				sbInsertInto.append(PublicTadpoleDefine.SQL_DELIMITER); 
 				sbInsertInto.append(PublicTadpoleDefine.LINE_SEPARATOR); 
+
+				if(commit > 0) {
+					sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+				} 
 
 				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 				sbInsertInto.setLength(0);
 			}
 			
+			if (isPreview && (i >= 5 || dataList.size() <= i)){
+				return sbInsertInto.toString();
+			}
+			
 			
 		}
 		if(sbInsertInto.length() > 0) {
+			sbInsertInto.append(PublicTadpoleDefine.SQL_DELIMITER); 
 			sbInsertInto.append(PublicTadpoleDefine.LINE_SEPARATOR); 
+			
+			if(commit > 0) {
+				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
+			} 
+			
 			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
 		}
 		

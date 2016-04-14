@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportHtmlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 
 /**
@@ -71,8 +72,8 @@ public class ExportHTMLComposite extends AExportComposite {
 	}
 
 	@Override
-	public ExportTextDAO getLastData() {
-		ExportTextDAO dao = new ExportTextDAO();
+	public ExportHtmlDAO getLastData() {
+		ExportHtmlDAO dao = new ExportHtmlDAO();
 
 		dao.setComboEncoding(this.comboEncoding.getText());
 		dao.setTargetName(this.textTargetName.getText());
