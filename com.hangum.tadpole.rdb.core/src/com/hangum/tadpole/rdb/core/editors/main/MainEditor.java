@@ -30,9 +30,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
@@ -54,7 +52,9 @@ import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -63,6 +63,7 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.db.DBInformationDialog;
+import com.hangum.tadpole.rdb.core.dialog.db.UserDBGroupDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToStringDialog;
 import com.hangum.tadpole.rdb.core.dialog.restfulapi.MainSQLEditorAPIServiceDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
@@ -149,6 +150,14 @@ public class MainEditor extends EditorExtension {
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
+		
+		// get group list ----------------------------------
+		try {
+			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(userDB.getGroup_name());
+		} catch(Exception e) {
+			logger.error("get group info", e);
+		}
+		// ---------------------------------------------------
 
 		setSite(site);
 		setInput(input);
@@ -194,7 +203,7 @@ public class MainEditor extends EditorExtension {
 		compositeEditor.setLayout(gl_compositeEditor);
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
-		ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
+		final ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setToolTipText(Messages.get().DatabaseInformation);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
 		tltmConnectURL.setText(userDB.getDisplay_name());
@@ -205,6 +214,25 @@ public class MainEditor extends EditorExtension {
 				DBInformationDialog dialog = new DBInformationDialog(getSite().getShell(), userDB);
 				dialog.open();
 				setFocus();
+			}
+		});
+		final ToolItem tltmSelectDB = new ToolItem(toolBar, SWT.NONE);
+		tltmSelectDB.setToolTipText("Select others DB");
+		tltmSelectDB.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/arrow_down.png")); //$NON-NLS-1$
+		tltmSelectDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(!isAutoCommit()) {
+					MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, "This status is transaction connection.");
+				} else {
+					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), listUserGroup);
+					if(Dialog.OK == dialog.open()) {
+						UserDBDAO selectedUserDB = dialog.getUserDB();
+						userDB = selectedUserDB;
+						
+						tltmConnectURL.setText(userDB.getDisplay_name());
+					}
+				}
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
@@ -392,12 +420,6 @@ public class MainEditor extends EditorExtension {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 		
-		Label label = new Label(compositeEditor, SWT.NONE);
-		label.setText("DB LIST");
-		Combo dbListComobo = new Combo(compositeEditor, SWT.NONE | SWT.READ_ONLY);
-		dbListComobo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		// db list combo
-	    
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
 	    browserQueryEditor = new Browser(compositeEditor, SWT.BORDER);
 	    browserQueryEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
