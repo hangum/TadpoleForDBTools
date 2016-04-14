@@ -325,7 +325,7 @@ public enum DBDefine {
 				
 			} catch (Exception e) {
 				logger.error("System initialize exception", e);
-				System.exit(1);
+				System.exit(0);
 			}
 			
 		} else {
