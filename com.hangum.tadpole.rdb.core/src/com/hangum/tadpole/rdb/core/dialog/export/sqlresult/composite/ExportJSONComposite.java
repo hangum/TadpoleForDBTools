@@ -42,7 +42,9 @@ public class ExportJSONComposite extends AExportComposite {
 	private Text textSchemeKey;
 	private Text textRecordKey;
 	private Button btnIncludeHeader;
-	private Composite compositeScheme;
+	private Button btnFormat;
+	private Button btnCompact;
+    private Composite compositeScheme;
 	
 	/**
 	 * Create the composite.
@@ -74,8 +76,7 @@ public class ExportJSONComposite extends AExportComposite {
 			}
 		});
 		btnIncludeHeader.setSelection(true);
-		
-		Label lblDumyLabel = new Label(compositeText, SWT.NONE);
+		new Label(compositeText, SWT.NONE);
 		
 		Label lblJsonKey = new Label(compositeText, SWT.NONE);
 		lblJsonKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -83,7 +84,6 @@ public class ExportJSONComposite extends AExportComposite {
 		
 		compositeScheme = new Composite(compositeText, SWT.NONE);
 		compositeScheme.setLayout(new GridLayout(4, false));
-		compositeScheme.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		
 		Label lblSchemeKey = new Label(compositeScheme, SWT.NONE);
 		lblSchemeKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -104,14 +104,28 @@ public class ExportJSONComposite extends AExportComposite {
 		GridData gd_textRecordKey = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_textRecordKey.minimumWidth = 100;
 		textRecordKey.setLayoutData(gd_textRecordKey);
+		new Label(compositeText, SWT.NONE);
+		
+		Label lblFormat = new Label(compositeText, SWT.NONE);
+		lblFormat.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblFormat.setText("Format");
+		
+		Composite composite = new Composite(compositeText, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		
+		btnFormat = new Button(composite, SWT.RADIO);
+		btnFormat.setSelection(true);
+		btnFormat.setText("Format");
+		
+		btnCompact = new Button(composite, SWT.RADIO);
+		btnCompact.setText("Compact");
+		new Label(compositeText, SWT.NONE);
 		
 		Label lblFileName = new Label(compositeText, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFileName.setText("File name");
 		
 		textTargetName = new Text(compositeText, SWT.BORDER);
-		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textTargetName.setText(defaultTargetName);
 		new Label(compositeText, SWT.NONE);
 		
 		Label lblEncoding = new Label(compositeText, SWT.NONE);
@@ -119,8 +133,10 @@ public class ExportJSONComposite extends AExportComposite {
 		lblEncoding.setText("encoding");
 		
 		comboEncoding = new Combo(compositeText, SWT.NONE);
+		
+		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textTargetName.setText(defaultTargetName);
 		comboEncoding.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeText, SWT.NONE);
 		comboEncoding.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboEncoding.setText("UTF-8");
 	}
@@ -138,6 +154,8 @@ public class ExportJSONComposite extends AExportComposite {
 		}
 		
 		dao.setTargetName(this.textTargetName.getText());
+		
+		dao.setFormat(this.btnFormat.getSelection());
 		
 		return dao;
 	}

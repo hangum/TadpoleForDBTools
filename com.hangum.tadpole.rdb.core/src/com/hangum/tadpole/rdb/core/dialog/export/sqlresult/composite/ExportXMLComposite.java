@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 
 /**
  * sql result to text export
@@ -70,9 +71,11 @@ public class ExportXMLComposite extends AExportComposite {
 	}
 
 	@Override
-	public ExportTextDAO getLastData() {
-		ExportTextDAO dao = new ExportTextDAO();
+	public ExportXmlDAO getLastData() {
+		ExportXmlDAO dao = new ExportXmlDAO();
 		
+		dao.setComboEncoding(this.comboEncoding.getText());
+		dao.setTargetName(this.textTargetName.getText());
 		
 		return dao;
 	}
@@ -80,8 +83,7 @@ public class ExportXMLComposite extends AExportComposite {
 	@Override
 	public boolean isValidate() {
 		if(super.isValidate()) {
-		
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "파일이름이 공백입니다.");
+			return true;
 		}
 		return false;
 	}

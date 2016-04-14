@@ -43,10 +43,18 @@ public class JsonExpoter extends AbstractTDBExporter {
 	 * @return
 	 */
 	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO) {
-		return JSONUtil.getPretty( makeContentArray(tableName, rsDAO).toString() );
+			return JSONUtil.getPretty( makeContentArray(tableName, rsDAO, false).toString() );
+	}
+
+	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, boolean isFormat, boolean isPreview) {
+		if (isFormat){
+			return JSONUtil.getPretty( makeContentArray(tableName, rsDAO, isPreview).toString());
+		}else{
+			return makeContentArray(tableName, rsDAO, isPreview).toString();
+		}
 	}
 	
-	public static JsonArray makeContentArray(String tableName, QueryExecuteResultDTO rsDAO) {
+	public static JsonArray makeContentArray(String tableName, QueryExecuteResultDTO rsDAO, boolean isPreview) {
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
 		JsonArray jsonArry = new JsonArray();
@@ -58,6 +66,11 @@ public class JsonExpoter extends AbstractTDBExporter {
 				String columnName = mapLabelName.get(j);
 				
 				jsonObj.addProperty(StringUtils.trimToEmpty(columnName), ""+mapColumns.get(j));
+				
+				if (isPreview && (i >= 5 || dataList.size() <= i)){
+					break;
+				}
+
 			}
 			jsonArry.add(jsonObj);
 		}
@@ -65,13 +78,21 @@ public class JsonExpoter extends AbstractTDBExporter {
 	}
 	
 	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey) throws SQLException {
+		return makeContent( tableName,  rsDAO,  schemeKey,  recordKey, true, false);
+	}
+	
+	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey, boolean isFormat, boolean isPreview) throws SQLException {
 		
 		JsonObject jsonObj = new JsonObject();
 		
 		jsonObj.add(schemeKey, makeMetaArray(rsDAO));
-		jsonObj.add(recordKey, makeContentArray(tableName, rsDAO));		
+		jsonObj.add(recordKey, makeContentArray(tableName, rsDAO, isPreview));		
 		
-		return	JSONUtil.getPretty(jsonObj.toString());
+		if(isFormat){
+			return JSONUtil.getPretty(jsonObj.toString());
+		}else{
+			return jsonObj.toString();
+		}
 	}
 
 	public static JsonArray makeMetaArray(QueryExecuteResultDTO rsDAO) throws SQLException {
@@ -111,7 +132,11 @@ public class JsonExpoter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
-		String strContent = makeContent(tableName, rsDAO);
+		return makeContentFile(tableName, rsDAO, true); 
+	}
+	
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, boolean isFormat) throws Exception {
+		String strContent = makeContent(tableName, rsDAO, isFormat, false);
 		
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".json";
@@ -122,8 +147,8 @@ public class JsonExpoter extends AbstractTDBExporter {
 		return strFullPath;
 	}
 	
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey) throws Exception {
-		String strContent = makeContent(tableName, rsDAO, schemeKey, recordKey);
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey, boolean isFormat) throws Exception {
+		String strContent = makeContent(tableName, rsDAO, schemeKey, recordKey, isFormat, false);
 		
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".json";

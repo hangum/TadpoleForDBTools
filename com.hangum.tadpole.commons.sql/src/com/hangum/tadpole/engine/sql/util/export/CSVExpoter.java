@@ -41,6 +41,10 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeCSVFile(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator) throws Exception {
+		return makeCSVFile(isAddHead, tableName, rsDAO, seprator, false);
+	}
+	
+	public static String makeCSVFile(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, boolean isPreview) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
@@ -85,6 +89,11 @@ public class CSVExpoter extends AbstractTDBExporter {
 			}
 			listCsvData.add(strArrys);
 			
+			// 미리보기 자료를 최대 5건까지만 생성하여 리턴한다.
+			if (isPreview && (i >= 5 || dataList.size() <= i)){
+				return CSVFileUtils.makeData(listCsvData, seprator);
+			}
+
 			if((i%DATA_COUNT) == 0) {
 				FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), true);
 				listCsvData.clear();

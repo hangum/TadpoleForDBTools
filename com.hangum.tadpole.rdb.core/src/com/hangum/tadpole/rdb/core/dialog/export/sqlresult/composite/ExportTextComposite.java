@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * sql result to text export
@@ -90,6 +92,15 @@ public class ExportTextComposite extends AExportComposite {
 		btnComma.setSelection(true);
 		
 		btnEtc = new Button(compositeSeparator, SWT.RADIO);
+		btnEtc.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textSeparatorEtc.setEnabled(true);
+				if (StringUtils.isEmpty(textSeparatorEtc.getText())) {
+					textSeparatorEtc.setText("|");
+				}
+			}
+		});
 		btnEtc.setText("etc");
 		
 		textSeparatorEtc = new Text(compositeSeparator, SWT.BORDER);

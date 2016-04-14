@@ -20,6 +20,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -121,6 +123,12 @@ public class ExportSQLComposite extends AExportComposite {
 		
 		btnMerge = new Button(compositeSeparator, SWT.RADIO);
 		btnMerge.setText("Merge");
+		btnMerge.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				grpWhere.setText("Merge를 위해 Match 조건에 사용할 컬럼");
+			}
+		});
 		
 		Label lblEncoding = new Label(compositeText, SWT.NONE);
 		lblEncoding.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -148,6 +156,9 @@ public class ExportSQLComposite extends AExportComposite {
 	public ExportSqlDAO getLastData() {
 		ExportSqlDAO dao = new ExportSqlDAO();
 		
+		dao.setComboEncoding(this.comboEncoding.getText());
+		dao.setTargetName(this.textTargetName.getText());
+
 		List<String> listWhereColumnName = new ArrayList<>();
 		for (int i=0; i<btnWhereColumn.length; i++) {
 			Button button = btnWhereColumn[i];
@@ -184,6 +195,17 @@ public class ExportSQLComposite extends AExportComposite {
 				this.textTargetName.setFocus();
 				return false;
 			}
+			
+			List<String> listWhereColumnName = new ArrayList<>();
+			for (int i=0; i<btnWhereColumn.length; i++) {
+				Button button = btnWhereColumn[i];
+				if(button.getSelection()) listWhereColumnName.add(button.getText());
+			}
+			if (this.btnMerge.getSelection() && listWhereColumnName.size() <= 0){
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, "Merge를 위한 Match 조건으로 사용할 컬럼을 선택하십시오.");
+				return false;
+			}
+			
 			if (!StringUtils.isNumeric(this.textCommit.getText())){
 				MessageDialog.openWarning(getShell(), Messages.get().Warning, "커밋 건수는 숫자로 입력하십시오.");
 				textCommit.setText("0");

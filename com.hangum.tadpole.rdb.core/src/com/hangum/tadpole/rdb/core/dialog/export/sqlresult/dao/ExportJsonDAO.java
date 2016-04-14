@@ -8,8 +8,9 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao;
  */
 public class ExportJsonDAO extends AExportDAO {
 	protected boolean isncludeHeader;
-	String schemeKey;
-	String recordKey;
+	protected String schemeKey;
+	protected String recordKey;
+	protected boolean isFormat;
 
 	public ExportJsonDAO() {
 		super();
@@ -59,6 +60,14 @@ public class ExportJsonDAO extends AExportDAO {
 	 */
 	public void setIsncludeHeader(boolean isncludeHeader) {
 		this.isncludeHeader = isncludeHeader;
+	}
+
+	public boolean isFormat() {
+		return isFormat;
+	}
+
+	public void setFormat(boolean isFormat) {
+		this.isFormat = isFormat;
 	}
 
 }
