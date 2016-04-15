@@ -42,10 +42,10 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit) throws Exception {
-		return makeFileMergeStatment(tableName, rsDAO, listWhere, false, commit);
+		return makeFileMergeStatment(tableName, rsDAO, listWhere, -1, commit);
 	}
 	
-	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, boolean isPreview, int commit) throws Exception {
+	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int intLimitCnt, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -105,7 +105,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			sbInsertInto.append(String.format(MERGE_STMT, strSource, strMatchConditon, strInsertColumn, strInsertValue, strUpdate));
 			
-			if (isPreview && (i >= 5 || dataList.size() <= i)){
+			if (intLimitCnt == i){
 				return sbInsertInto.toString();
 			}
 			
@@ -139,10 +139,10 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit) throws Exception {
-		return makeFileUpdateStatment(tableName, rsDAO, listWhere, false, commit) ;
+		return makeFileUpdateStatment(tableName, rsDAO, listWhere, -1, commit) ;
 	}
 
-	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, boolean isPreview, int commit) throws Exception {
+	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int intLimitCnt, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -188,7 +188,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			sbInsertInto.append(String.format(UPDATE_STMT, strStatement, strWhere));
 			
-			if (isPreview && (i >= 5 || dataList.size() <= i)){
+			if (intLimitCnt == i){
 				return sbInsertInto.toString();
 			}
 
@@ -222,10 +222,10 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit) throws Exception {
-		return makeFileInsertStatment(tableName, rsDAO, false, commit);
+		return makeFileInsertStatment(tableName, rsDAO, -1, commit);
 	}
 	
-	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, boolean isPreview, int commit) throws Exception {
+	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int intLimitCnt, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -265,7 +265,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			}
 			sbInsertInto.append(String.format(INSERT_INTO_STMT, strColumns, strResult));
 			
-			if (isPreview && (i >= 5 || dataList.size() <= i)){
+			if (intLimitCnt == i){
 				return sbInsertInto.toString();
 			}
 
@@ -299,10 +299,10 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit) throws Exception {
-		return makeFileBatchInsertStatment(tableName, rsDAO, false, commit);
+		return makeFileBatchInsertStatment(tableName, rsDAO, -1, commit);
 	}
 	
-	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, boolean isPreview, int commit) throws Exception {
+	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int intLimitCount, int commit) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -363,11 +363,9 @@ public class SQLExporter extends AbstractTDBExporter {
 				sbInsertInto.setLength(0);
 			}
 			
-			if (isPreview && (i >= 5 || dataList.size() <= i)){
+			if (intLimitCount == i){
 				return sbInsertInto.toString();
 			}
-			
-			
 		}
 		if(sbInsertInto.length() > 0) {
 			sbInsertInto.append(PublicTadpoleDefine.SQL_DELIMITER); 

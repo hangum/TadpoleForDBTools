@@ -74,7 +74,7 @@ public class TadpoleSystemInitializer {
 				if (logger.isDebugEnabled()) logger.debug(DEFAULT_DB_FILE_LOCATION + DB_NAME);
 			} catch(Exception e) {
 				logger.error("System DB Initialize exception", e);
-				System.exit(1);
+				System.exit(0);
 			}
 
 			// 원격디비를 사용 할 경우.
@@ -86,7 +86,7 @@ public class TadpoleSystemInitializer {
 				}
 			} catch(Exception e) {
 				logger.error("Tadpole Argument error. check ini file is -dbServer value. ");
-				System.exit(1);
+				System.exit(0);
 			}
 		}
 
