@@ -12,8 +12,11 @@ package com.hangum.tadpole.application.start;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -244,6 +247,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
     			
     			initializeUserSession();
+    			
+    			initializeDefaultLocale();
     		} else {
     	    	// Open login dialog    
     	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
@@ -260,6 +265,27 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
 
     /**
+     * initialize default locale
+     */
+    private void initializeDefaultLocale() {
+		HttpServletRequest request = RWT.getRequest();
+		Cookie[] cookies = request.getCookies();
+		
+		if(cookies != null) {
+			for (Cookie cookie : cookies) {				
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+					if(cookie.getValue().equalsIgnoreCase(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH))) {
+						RWT.getUISession().setLocale(Locale.ENGLISH);	
+					} else if(cookie.getValue().equalsIgnoreCase(Locale.ENGLISH.getDisplayLanguage(Locale.KOREAN))) {
+						RWT.getUISession().setLocale(Locale.KOREAN);
+					}
+					break;
+				}
+			}
+		}
+    }
+
+	/**
      * initialize user session
      */
     private void initializeUserSession() {

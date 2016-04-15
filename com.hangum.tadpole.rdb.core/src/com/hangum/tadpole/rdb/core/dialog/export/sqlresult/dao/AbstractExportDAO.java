@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao;
 
 /**
@@ -6,11 +16,13 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao;
  * @author hangum
  *
  */
-public abstract class AExportDAO {
+public abstract class AbstractExportDAO {
+	/** file name or table name*/
 	protected String targetName;
+	/** set codeing type */
 	protected String comboEncoding;
 
-	public AExportDAO() {
+	public AbstractExportDAO() {
 	}
 
 	/**
@@ -40,6 +52,5 @@ public abstract class AExportDAO {
 	public void setComboEncoding(String comboEncoding) {
 		this.comboEncoding = comboEncoding;
 	}
-	
 	
 }

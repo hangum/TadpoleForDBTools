@@ -43,7 +43,7 @@ import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AExportComposite;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportHTMLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportJSONComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportSQLComposite;
@@ -59,7 +59,6 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
  * Resultset to download
  * 
  * @author hangum
- *
  */
 public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
@@ -71,11 +70,11 @@ public class ResultSetDownloadDialog extends Dialog {
 	private QueryExecuteResultDTO queryExecuteResultDTO;
 	
 	private CTabFolder tabFolder;
-	private AExportComposite compositeText;
-	private AExportComposite compositeHTML;
-	private AExportComposite compositeJSON;
-	private AExportComposite compositeXML;
-	private AExportComposite compositeSQL;
+	private AbstractExportComposite compositeText;
+	private AbstractExportComposite compositeHTML;
+	private AbstractExportComposite compositeJSON;
+	private AbstractExportComposite compositeXML;
+	private AbstractExportComposite compositeSQL;
 	
 	// preview 
 	private Text textPreview;
@@ -233,10 +232,9 @@ public class ResultSetDownloadDialog extends Dialog {
 			}
 		}else{
 			if(logger.isDebugEnabled()) logger.debug("selection tab is " + selectionTab);	
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Export유형이 잘못 선택되었습니다."); 
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetDownloadDialog_notSelect); 
 			return;
 		}
-//		super.okPressed();
 	}
 
 	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) {
@@ -351,9 +349,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	 * @throws Exception
 	 */
 	protected void downloadFile(String fileName, String strFileLocation, String encoding) throws Exception {
-
 		//TODO: 결과 파일 인코딩 하기...
-		
 		String strZipFile = ZipUtils.pack(strFileLocation);
 		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
 		

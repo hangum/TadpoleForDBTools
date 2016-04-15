@@ -11,7 +11,6 @@
 package com.hangum.tadpole.engine.sql.util.export;
 
 import java.io.File;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
