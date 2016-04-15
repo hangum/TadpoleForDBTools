@@ -66,6 +66,7 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 	 */
 	public MySQLTaableCreateDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
+		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDB = userDB;
 	}
@@ -73,7 +74,7 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		super.setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
+		
 		newShell.setText(Messages.get().MySQLTaableCreateDialog);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
