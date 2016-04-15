@@ -242,6 +242,8 @@ public class MainEditor extends EditorExtension {
 						tltmConnectURL.setText(userDB.getDisplay_name());
 					}
 				}
+				
+				setFocus();
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
@@ -255,7 +257,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().MainEditor_36);
 				if(Dialog.OK == dialog.open()) {
-					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
+//					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
 					appendText(dialog.getStrTxtFile());
 				}
 			}
