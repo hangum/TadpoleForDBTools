@@ -24,6 +24,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
@@ -34,7 +35,6 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.driver.JDBCDriverManageDialog;
-import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditor;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -44,7 +44,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * Admin System setting editor
@@ -98,7 +97,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(getSite().getShell());
 				if(Dialog.OK ==  dialog.open()) {
-					if(dialog.isUploaded()) MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().jdbcdriver);
+					if(dialog.isUploaded()) {
+						MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().jdbcdriver);
+					}
 				}
 			}
 		});

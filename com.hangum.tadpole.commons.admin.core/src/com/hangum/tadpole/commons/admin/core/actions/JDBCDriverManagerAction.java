@@ -54,7 +54,9 @@ public class JDBCDriverManagerAction extends Action implements ISelectionListene
 	public void run() {
 		JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		if(Dialog.OK ==  dialog.open()) {
-			if(dialog.isUploaded()) MessageDialog.openInformation(null, Messages.get().Information, Messages.get().jdbcdriver);
+			if(dialog.isUploaded()) {
+				MessageDialog.openInformation(null, Messages.get().Information, Messages.get().jdbcdriver);
+			}
 		}
 	}
 
