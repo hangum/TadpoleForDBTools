@@ -3,6 +3,6 @@
 	"majorVer" : "1.7.1",
 	"subVer"   : "Build(R1)",
 	"date"	: "2016.04.16",
-	"download_url" : "http://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.0/",
-	"info_url"	   : "https://tadpoledbhub.atlassian.net/wiki/display/TADPOLE/v1.7.0+Release+Note"
+	"download_url" : "http://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.1/",
+	"info_url"	   : "https://tadpoledbhub.atlassian.net/wiki/display/TADPOLE/v1.7.1+Release+Note"
 }
