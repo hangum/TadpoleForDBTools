@@ -167,8 +167,8 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 * Trigger 최신정보로 갱신
 	 */
 	protected void refreshTrigger() {
-		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshTrigger(true, "");
+//		ExplorerViewer ev = getExplorerView();
+//		if(ev != null) ev.refreshTrigger(true, "");
 	}
 	
 	/**
