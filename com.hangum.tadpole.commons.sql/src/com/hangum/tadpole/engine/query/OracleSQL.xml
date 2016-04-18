@@ -350,7 +350,7 @@ ORDER BY 1
     status				:
     #table_schema# AS table_schema
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
   SELECT i.table_name
         ,i.index_name
         ,i.uniqueness
@@ -369,9 +369,7 @@ ORDER BY 1
         ,CASE
             WHEN c.constraint_type = 'P' THEN 'PK'
             WHEN i.uniqueness = 'UNIQUE' THEN 'UQ'
-            ELSE ''
-         END
-            AS index_type
+            ELSE '' END AS index_type
         ,c.status
         ,#table_schema# AS table_schema
     FROM    user_indexes i
@@ -380,6 +378,7 @@ ORDER BY 1
          ON     i.table_name = c.table_name
             AND i.index_name = c.constraint_name
             AND c.status = 'ENABLED'
+    WHERE i.table_name = #table_name#
 ORDER BY i.table_name, i.index_name
 </select>
 
@@ -400,6 +399,30 @@ ORDER BY i.table_name, i.index_name
    WHERE 1=1
      AND m.index_name = UPPER(#index_name#)
 ORDER BY m.column_position        
+</select>
+
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+  SELECT i.table_name
+        ,i.constraint_name
+        ,i.index_name
+        ,(case i.constraint_type when 'P' then 'Pk' when 'R' then 'Fk' when 'C' then 'Ck' else i.constraint_type end) as constraint_type 
+        ,i.status
+        ,I.OWNER as TABLE_SCHEMA
+        ,I.OWNER as INDEX_SCHEMA
+        ,I.SEARCH_CONDITION
+        ,i.R_OWNER
+        ,I.R_CONSTRAINT_NAME        
+    FROM user_constraints i
+         LEFT JOIN user_indexes c
+            ON     i.table_name = c.table_name
+               AND c.index_name = i.constraint_name
+               AND c.status = 'ENABLED'
+   WHERE i.table_name = #table_name#
+ORDER BY i.table_name, i.index_name
 </select>
 
 <!-- 
@@ -536,17 +559,18 @@ ORDER BY s.object_name
 	database				:
 	collation				:
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
   SELECT s.object_name AS name
         ,t.table_name AS table_name
         ,t.triggering_event AS event
         ,t.when_clause AS timing
         ,s.object_type AS TYPE
-        ,#db_name# AS db
+        ,#table_scheme# AS db
         ,s.created
         , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
     FROM user_objects s INNER JOIN user_triggers t ON S.OBJECT_NAME = t.trigger_name
    WHERE s.object_type = 'TRIGGER'
+     AND t.table_name = #table_name#
 ORDER BY t.table_name, s.object_name
 </select>
 

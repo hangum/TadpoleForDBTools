@@ -275,6 +275,7 @@ FROM
 	        c.relkind = 'i'
 	    and n.nspname not in ('pg_catalog', 'pg_toast')
 	    and pg_catalog.pg_table_is_visible(c.oid)
+	    and lower(t.relname) = lower(#table_name#) 
 </select>
 <!-- 
 	index의 디테일 정보
@@ -404,7 +405,7 @@ FROM
 	database				:
 	collation				:
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 <![CDATA[
  SELECT 
     (current_database())::information_schema.sql_identifier AS Database,
@@ -432,6 +433,7 @@ FROM
 AND (((t.tgtype)::integer & em.num) <> 0)) 
 AND (NOT t.tgisinternal)) 
 AND (NOT pg_is_other_temp_schema(n.oid))) 
+AND lower(c.relname) = lower(#table_name#)
 AND ((pg_has_role(c.relowner, 'USAGE'::text) 
  OR has_table_privilege(c.oid, 'INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER'::text)) 
  OR has_any_column_privilege(c.oid, 'INSERT, UPDATE, REFERENCES'::text)));

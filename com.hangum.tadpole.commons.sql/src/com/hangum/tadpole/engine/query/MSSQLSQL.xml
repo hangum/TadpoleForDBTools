@@ -207,13 +207,16 @@ order by v.table_schema, v.table_name
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 SELECT 
     i.table_schema 
     , i.table_schema + '.' + i.table_name as table_name
     , i.constraint_schema as index_schema
     , i.constraint_name as index_name
     FROM information_schema.CONSTRAINT_TABLE_USAGE i
+WHERE 1=1
+  AND i.table_catalog = #table_schema#
+  AND i.table_name = #table_name#    
     order by table_schema, table_name, index_schema, index_name
     
 </select>
@@ -270,7 +273,7 @@ order by p.routine_schema, p.routine_name
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	select 
 		s.table_schema + '.' + t.name as name
 		, t.name as "trigger"
@@ -281,6 +284,7 @@ order by p.routine_schema, p.routine_name
 	from sys.triggers t
 		inner join sys.objects o on o.object_id = t.parent_id
 		inner join information_schema.tables s on o.object_id = object_id(s.table_schema + '.' + s.table_name)
+	where o.object_id = object_id(#table_scheme# + '..' + #table_name#)
 	order by s.table_schema, s.table_name, t.name
 </select>
 

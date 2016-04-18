@@ -301,7 +301,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			listIndexes = sqlClient.queryForList("indexList", userDB.getDb()); //$NON-NLS-1$
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("table_schema", userDB.getDb());
+			map.put("table_name", strObjectName);
+			listIndexes = sqlClient.queryForList("indexList", map); //$NON-NLS-1$
 
 			indexTableViewer.setInput(listIndexes);
 			indexTableViewer.refresh();

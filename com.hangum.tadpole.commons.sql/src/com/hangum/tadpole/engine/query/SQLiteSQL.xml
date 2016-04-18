@@ -98,11 +98,12 @@ and sql like '%FOREIGN KEY%'
 <!-- 
 	index 정보
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
  SELECT name as index_name,
  		tbl_name as table_name
 	FROM sqlite_master
 	WHERE type = 'index'
+	  AND tbl_name = #table_name#
 	ORDER BY name      
 </select>
 
@@ -139,12 +140,13 @@ SELECT name as function_name,
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SELECT name as trigger,
  		tbl_name as table_name,
  		sql as statement
 	FROM sqlite_master
 	WHERE type = 'trigger'
+	  AND tbl_name = #table_name#
 	ORDER BY trigger  
 </select>
 

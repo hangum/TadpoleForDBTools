@@ -219,7 +219,19 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				if (objDAO != null) {
 					TableDAO tableDao = (TableDAO) objDAO;
 					if (selectTableName.equals(tableDao.getName())) return;
-					tableColumnComposite.refreshTableColumn(tableListViewer);
+					
+					if(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name().equals( (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY) )){
+						// 인덱스 탭이 선택된 상태에서 다른 테이블을 선택할 경우 선택된 테이블에 정의된 인덱스 목록을 표시한다.
+						indexComposite.refreshIndexes(userDB, true, tableDao.getName());
+					}else if(PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS.name().equals( (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY) )){
+						// 테이블에 정의된 제약조건 목록을 표시한다.
+						constraintsComposite.refreshConstraints(userDB, true, tableDao.getName());
+					}else if(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name().equals( (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY) )){
+						// 테이블에 정의된 트리거 목록을 표시한다.
+						triggerComposite.refreshTrigger(userDB, true, tableDao.getName());
+					}else{
+						tableColumnComposite.refreshTableColumn(tableListViewer);
+					}
 				}
 			}
 		});
@@ -368,7 +380,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	private void refershSelectObject(String selTab) {
-		refershSelectObject(selTab, "");
+		refershSelectObject(selTab, selectTableName);
 	}
 	
 	/**
@@ -404,7 +416,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 * constraints 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshConstraints(boolean boolRefresh, String strObjectName) {
-		constraintsComposite.refreshIndexes(getUserDB(), boolRefresh, strObjectName);
+		constraintsComposite.refreshConstraints(getUserDB(), boolRefresh, strObjectName);
 	}
 	
 	/**
