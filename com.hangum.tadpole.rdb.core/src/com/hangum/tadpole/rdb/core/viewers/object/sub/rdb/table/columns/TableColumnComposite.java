@@ -73,8 +73,8 @@ public class TableColumnComposite extends AbstractTableComposite {
 //		setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmTable = new CTabItem(parentFolder, SWT.NONE);
-		tbtmTable.setText("Columns");
-		tbtmTable.setData("Columns");//$NON-NLS-1$
+		tbtmTable.setText(Messages.get().Columns);
+		tbtmTable.setData(Messages.get().Columns);
 		
 		Composite compositeColumn = new Composite(parentFolder, SWT.NONE);
 		tbtmTable.setControl(compositeColumn);

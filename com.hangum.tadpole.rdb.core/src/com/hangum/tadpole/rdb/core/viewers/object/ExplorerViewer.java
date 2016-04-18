@@ -84,7 +84,7 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleFunctionComposite 	functionCompostite 	= null;
 	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpolePackageComposite	    packageComposite 	= null;
-//	private TadpoleIndexesComposite 	indexComposite 		= null;
+//	private TadpoleConstraintComposite 	indexComposite 		= null;
 	private TadpoleViewerComposite 		viewComposite 		= null;
 	private TadpoleTableComposite 		tableComposite 		= null;
 	// oracle
@@ -532,7 +532,7 @@ public class ExplorerViewer extends ViewPart {
 //	 * indexes 정의
 //	 */
 //	private void createIndexes() {
-//		indexComposite = new TadpoleIndexesComposite(getSite(), tabFolderObject, userDB);
+//		indexComposite = new TadpoleConstraintComposite(getSite(), tabFolderObject, userDB);
 //		indexComposite.initAction();
 //	}
 

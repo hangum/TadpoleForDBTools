@@ -559,6 +559,10 @@ public class Messages {
 	public String ExportSQLComposite_PleaseTargetInput;
 	public String ExportSQLComposite_PleaseCommitCount;
 	public String ExportSQLComposite_PleaseMergeMath;
+
+	public String Columns;
+
+	public String Constraints;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
