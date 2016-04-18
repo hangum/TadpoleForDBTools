@@ -16,6 +16,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -26,8 +28,6 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * sql result to text export
@@ -35,7 +35,7 @@ import org.eclipse.swt.events.SelectionEvent;
  * @author hangum
  *
  */
-public class ExportTextComposite extends AExportComposite {
+public class ExportTextComposite extends AbstractExportComposite {
 	private static final Logger logger = Logger.getLogger(ExportTextComposite.class);
 
 	private Button btnIncludeHeader;
@@ -63,14 +63,14 @@ public class ExportTextComposite extends AExportComposite {
 		compositeText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblIncludeHead = new Label(compositeText, SWT.NONE);
-		lblIncludeHead.setText("Include Head");
+		lblIncludeHead.setText(Messages.get().IncludeHead);
 		
 		btnIncludeHeader = new Button(compositeText, SWT.CHECK);
 		btnIncludeHeader.setSelection(true);
 		
 		Label lblFileName = new Label(compositeText, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFileName.setText("File name");
+		lblFileName.setText(Messages.get().FileName);
 		
 		textTargetName = new Text(compositeText, SWT.BORDER);
 		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -78,17 +78,17 @@ public class ExportTextComposite extends AExportComposite {
 		
 		Label lblSeparator = new Label(compositeText, SWT.NONE);
 		lblSeparator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSeparator.setText("Separator");
+		lblSeparator.setText(Messages.get().Separator);
 		
 		Composite compositeSeparator = new Composite(compositeText, SWT.NONE);
 		compositeSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeSeparator.setLayout(new GridLayout(4, false));
 		
 		btnTab = new Button(compositeSeparator, SWT.RADIO);
-		btnTab.setText("Tab");
+		btnTab.setText(Messages.get().Tab);
 		
 		btnComma = new Button(compositeSeparator, SWT.RADIO);
-		btnComma.setText("Comma");
+		btnComma.setText(Messages.get().Comma);
 		btnComma.setSelection(true);
 		
 		btnEtc = new Button(compositeSeparator, SWT.RADIO);
@@ -101,7 +101,7 @@ public class ExportTextComposite extends AExportComposite {
 				}
 			}
 		});
-		btnEtc.setText("etc");
+		btnEtc.setText(Messages.get().etc);
 		
 		textSeparatorEtc = new Text(compositeSeparator, SWT.BORDER);
 		textSeparatorEtc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -109,7 +109,7 @@ public class ExportTextComposite extends AExportComposite {
 		
 		Label lblEncoding = new Label(compositeText, SWT.NONE);
 		lblEncoding.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEncoding.setText("encoding");
+		lblEncoding.setText(Messages.get().encoding);
 		
 		comboEncoding = new Combo(compositeText, SWT.NONE);
 		comboEncoding.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -144,11 +144,11 @@ public class ExportTextComposite extends AExportComposite {
 			
 		   if (btnEtc.getSelection()) {
 			   if (StringUtils.isEmpty( textSeparatorEtc.getText() )){
-				   MessageDialog.openWarning(getShell(), Messages.get().Warning, "구분문자를 입력하십시오.");  
+				   MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportTextCompositeEmptySeparator);  
 				   textSeparatorEtc.setFocus();
 				   return false;
 			   }else if (textSeparatorEtc.getText().length() != 1 ) {
-				   MessageDialog.openWarning(getShell(), Messages.get().Warning, "구분문자는 한글자만 입력하십시오."); 
+				   MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportTextCompositeEmptySeparatorOne); 
 				   textSeparatorEtc.setFocus();
 				   return false;
 			   }

@@ -69,6 +69,7 @@ public class MySQLTableRelationDialog extends Dialog {
 	 */
 	public MySQLTableRelationDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
+		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDB = userDB;
 		this.tableDAO = tableDAO; 
@@ -77,7 +78,6 @@ public class MySQLTableRelationDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		super.setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		newShell.setText(Messages.get().TadpoleTableComposite_Relation);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());

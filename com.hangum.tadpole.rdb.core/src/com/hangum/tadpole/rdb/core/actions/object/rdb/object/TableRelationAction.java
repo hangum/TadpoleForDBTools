@@ -45,7 +45,7 @@ public class TableRelationAction extends AbstractObjectSelectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO dao = (TableDAO)selection.getFirstElement();
 		
-		MySQLTableRelationDialog dialog = new MySQLTableRelationDialog(null, userDB, dao);
+		MySQLTableRelationDialog dialog = new MySQLTableRelationDialog(window.getShell(), userDB, dao);
 		dialog.open();
 	}
 }

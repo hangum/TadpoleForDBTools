@@ -29,14 +29,6 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class HTMLExporter extends AbstractTDBExporter {
-//	public static final String sbHtml = 
-//				"<meta charset='UTF-8'>" +
-//				"<style type='text/css'>" +
-//				".tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}" +
-//				".tg td{font-family:Arial, sans-serif;font-size:12px;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}" +
-//				".tg th{font-family:Arial, sans-serif;font-size:12px;font-weight:normal;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}" +
-//				".tg .tg-yw4l{vertical-align:top}" +
-//				"</style>";
 	private static String strContetntGroup = "<table class='tg'>%s%s</table>";
 	
 	private static String strGroup = "<tr>%s</tr>";

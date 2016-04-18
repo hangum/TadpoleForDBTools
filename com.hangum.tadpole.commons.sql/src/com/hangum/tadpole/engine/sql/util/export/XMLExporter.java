@@ -50,7 +50,6 @@ public class XMLExporter extends AbstractTDBExporter {
 		return makeContent(tableName, rsDAO, -1);
 	}
 			
-			
 	/**
 	 * make content
 	 * 

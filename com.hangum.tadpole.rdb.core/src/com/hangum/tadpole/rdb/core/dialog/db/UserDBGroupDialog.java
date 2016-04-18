@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 /**
  * 사용자 디비 선택 다이얼로그
@@ -82,6 +84,12 @@ public class UserDBGroupDialog extends Dialog {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		listDBGroup = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		listDBGroup.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				okPressed();
+			}
+		});
 		listDBGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		for (UserDBDAO userDBDAO : listUserGroup) {
 			if(oriUserDB.getSeq() != userDBDAO.getSeq()) {

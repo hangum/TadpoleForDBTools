@@ -15,6 +15,8 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
 
+	public String format;
+
 	public String AddTable;
 
 	public String ViewQuery;
@@ -518,6 +520,45 @@ public class Messages {
 	public String ExportData;
 
 	public String PreviewMsg;
+
+	public String ResultSetDownloadDialog_notSelect;
+
+	public String AbstractExportCompositeFileEmpty;
+
+	public String AbstractExportCompositeEncoding;
+
+	public String FileName;
+	public String encoding;
+
+	public String IncludeScheme;
+
+	public String Record;
+
+	public String Compact;
+
+	public String ExportJSONCompositeSchemaMSG;
+
+	public String ExportJSONCompositeRecordMSG;
+
+	public String Separator;
+
+	public String Tab;
+
+	public String Comma;
+	public String etc;
+
+	public String IncludeHead;
+
+	public String ExportTextCompositeEmptySeparator;
+	
+	public String ExportTextCompositeEmptySeparatorOne;
+	public String ExportSQLComposite_TargetTable;
+	public String DMLType;
+	public String ForEachMatter;
+	public String ExportSQLComposite_MergeMatchColumn;
+	public String ExportSQLComposite_PleaseTargetInput;
+	public String ExportSQLComposite_PleaseCommitCount;
+	public String ExportSQLComposite_PleaseMergeMath;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

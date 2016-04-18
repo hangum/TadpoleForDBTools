@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -23,7 +22,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 
 /**
@@ -32,7 +30,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
  * @author hangum
  *
  */
-public class ExportXMLComposite extends AExportComposite {
+public class ExportXMLComposite extends AbstractExportComposite {
 	private static final Logger logger = Logger.getLogger(ExportXMLComposite.class);
 
 	/**
@@ -55,7 +53,7 @@ public class ExportXMLComposite extends AExportComposite {
 		
 		Label lblFileName = new Label(compositeText, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFileName.setText("File name");
+		lblFileName.setText(Messages.get().FileName);
 		
 		textTargetName = new Text(compositeText, SWT.BORDER);
 		textTargetName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -63,7 +61,7 @@ public class ExportXMLComposite extends AExportComposite {
 		
 		Label lblEncoding = new Label(compositeText, SWT.NONE);
 		lblEncoding.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEncoding.setText("encoding");
+		lblEncoding.setText(Messages.get().encoding);
 		
 		comboEncoding = new Combo(compositeText, SWT.NONE);
 		comboEncoding.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

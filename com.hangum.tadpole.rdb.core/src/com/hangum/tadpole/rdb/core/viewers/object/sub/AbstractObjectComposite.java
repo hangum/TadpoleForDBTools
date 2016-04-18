@@ -99,7 +99,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * select userDB
 	 * @return
 	 */
-	protected UserDBDAO getUserDB() {
+	public UserDBDAO getUserDB() {
 		return userDB;
 	}
 	
@@ -111,7 +111,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * select site
 	 * @return
 	 */
-	protected IWorkbenchPartSite getSite() {
+	public IWorkbenchPartSite getSite() {
 		return site;
 	}
 	

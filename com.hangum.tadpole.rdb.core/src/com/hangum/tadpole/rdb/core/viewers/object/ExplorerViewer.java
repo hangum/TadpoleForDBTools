@@ -51,12 +51,10 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.Tadpol
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynonymComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -82,11 +80,11 @@ public class ExplorerViewer extends ViewPart {
 	
 	// rdb
 	private Composite compositeBody;
-	private TadpoleTriggerComposite 	triggerComposite 	= null;
+//	private TadpoleTriggerComposite 	triggerComposite 	= null;
 	private TadpoleFunctionComposite 	functionCompostite 	= null;
 	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpolePackageComposite	    packageComposite 	= null;
-	private TadpoleIndexesComposite 	indexComposite 		= null;
+//	private TadpoleIndexesComposite 	indexComposite 		= null;
 	private TadpoleViewerComposite 		viewComposite 		= null;
 	private TadpoleTableComposite 		tableComposite 		= null;
 	// oracle
@@ -201,8 +199,8 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
 			if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 				mongoIndexComposite.filter(strSearchText);
-			} else {
-				indexComposite.filter(strSearchText);
+//			} else {
+//				indexComposite.filter(strSearchText);
 			}					
 		
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
@@ -214,8 +212,8 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
 			functionCompostite.filter(strSearchText);
 		
-		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-			triggerComposite.filter(strSearchText);
+//		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
+//			triggerComposite.filter(strSearchText);
 		
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 			mongoJavaScriptComposite.filter(strSearchText);
@@ -248,11 +246,11 @@ public class ExplorerViewer extends ViewPart {
 		if(null != tableComposite) tableComposite.dispose(); 
 		if(null != viewComposite) viewComposite.dispose(); 
 		if(null != synonymComposite) synonymComposite.dispose();
-		if(null != indexComposite) indexComposite.dispose(); 
+//		if(null != indexComposite) indexComposite.dispose(); 
 		if(null != procedureComposite) procedureComposite.dispose(); 
 		if(null != packageComposite) packageComposite.dispose(); 
 		if(null != functionCompostite) functionCompostite.dispose(); 
-		if(null != triggerComposite) triggerComposite.dispose();
+//		if(null != triggerComposite) triggerComposite.dispose();
 		
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
@@ -329,15 +327,15 @@ public class ExplorerViewer extends ViewPart {
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			createTable();
 			createView();
-			createIndexes();
-			createTrigger();
+//			createIndexes();
+//			createTrigger();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
 				tableComposite.getTableColumnViewer(),
-				viewComposite.getTableViewer(), 
-				indexComposite.getTableViewer(), 
-				triggerComposite.getTableViewer()
+				viewComposite.getTableViewer() 
+//				indexComposite.getTableViewer(), 
+//				triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
@@ -376,11 +374,11 @@ public class ExplorerViewer extends ViewPart {
 			createTable();
 			createView();
 			createSynonym();
-			createIndexes();
+//			createIndexes();
 			createProcedure();
 			createPackage();
 			createFunction();
-			createTrigger();
+//			createTrigger();
 //			createSchedule();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
@@ -388,12 +386,12 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTableColumnViewer(),
 				viewComposite.getTableViewer(), 
 				synonymComposite.getTableviewer(),
-				indexComposite.getTableViewer(), 
+//				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
 				packageComposite.getPackageTableViewer(), 
 				packageComposite.getProcFuncTableViewer(),
 				functionCompostite.getTableviewer(), 
-				triggerComposite.getTableViewer(),
+//				triggerComposite.getTableViewer(),
 //				scheduleComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
@@ -401,19 +399,19 @@ public class ExplorerViewer extends ViewPart {
 		} else {
 			createTable();
 			createView();
-			createIndexes();
+//			createIndexes();
 			createProcedure();
 			createFunction();
-			createTrigger();
+//			createTrigger();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
 				tableComposite.getTableColumnViewer(),
 				viewComposite.getTableViewer(), 
-				indexComposite.getTableViewer(), 
+//				indexComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
-				functionCompostite.getTableviewer(), 
-				triggerComposite.getTableViewer()
+				functionCompostite.getTableviewer() 
+//				triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
@@ -452,10 +450,10 @@ public class ExplorerViewer extends ViewPart {
 			refreshPackage(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
 			refreshFunction(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-			refreshTrigger(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SCHEDULE.name())) {
-			refreshSchedule(true, strObjectName);
+//		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
+//			refreshTrigger(true, strObjectName);
+//		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SCHEDULE.name())) {
+//			refreshSchedule(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 			refreshJS(true, strObjectName);
 		}
@@ -498,13 +496,13 @@ public class ExplorerViewer extends ViewPart {
 		mongoIndexComposite.initAction();
 	}
 
-	/**
-	 * Trigger 정의
-	 */
-	private void createTrigger() {
-		triggerComposite = new TadpoleTriggerComposite(getSite(), tabFolderObject, userDB);
-		triggerComposite.initAction();
-	}
+//	/**
+//	 * Trigger 정의
+//	 */
+//	private void createTrigger() {
+//		triggerComposite = new TadpoleTriggerComposite(getSite(), tabFolderObject, userDB);
+//		triggerComposite.initAction();
+//	}
 
 	/**
 	 * Procedure 정의
@@ -530,13 +528,13 @@ public class ExplorerViewer extends ViewPart {
 		packageComposite.initAction();
 	}
 
-	/**
-	 * indexes 정의
-	 */
-	private void createIndexes() {
-		indexComposite = new TadpoleIndexesComposite(getSite(), tabFolderObject, userDB);
-		indexComposite.initAction();
-	}
+//	/**
+//	 * indexes 정의
+//	 */
+//	private void createIndexes() {
+//		indexComposite = new TadpoleIndexesComposite(getSite(), tabFolderObject, userDB);
+//		indexComposite.initAction();
+//	}
 
 	/**
 	 * view 정의
@@ -583,8 +581,8 @@ public class ExplorerViewer extends ViewPart {
 	public void refreshIndexes(boolean boolRefresh, String strObjectName) {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 			mongoIndexComposite.refreshIndexes(userDB, boolRefresh);
-		} else {
-			indexComposite.refreshIndexes(getUserDB(), boolRefresh, strObjectName);
+//		} else {
+//			indexComposite.refreshIndexes(getUserDB(), boolRefresh, strObjectName);
 		}
 	}
 
@@ -602,16 +600,16 @@ public class ExplorerViewer extends ViewPart {
 		packageComposite.refreshPackage(userDB, boolRefresh, strObjectName);
 	}
 	
-	public void refreshSchedule(boolean boolRefresh, String strObjectName) {
+//	public void refreshSchedule(boolean boolRefresh, String strObjectName) {
 //		scheduleComposite.refreshSchedule(userDB, boolRefresh, strObjectName);
-	}
+//	}
 
-	/**
-	 * trigger 정보를 최신으로 갱신 합니다.
-	 */
-	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
-		triggerComposite.refreshTrigger(userDB, boolRefresh, strObjectName);
-	}
+//	/**
+//	 * trigger 정보를 최신으로 갱신 합니다.
+//	 */
+//	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
+//		triggerComposite.refreshTrigger(userDB, boolRefresh, strObjectName);
+//	}
 
 	/**
 	 * function 정보를 최신으로 갱신 합니다.

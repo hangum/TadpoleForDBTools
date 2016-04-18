@@ -8,43 +8,37 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.index;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.rdb.core.Activator;
-import com.swtdesigner.ResourceManager;
 
 /**
- * index의 컬럼 정보
+ * Index를 구성하는 컬럼 정보
  * 
- * @author hangum
+ * @author nilriri
  *
  */
-public class IndexesLabelProvicer extends LabelProvider implements ITableLabelProvider {
-
+public class IndexColumnLabelprovider extends LabelProvider implements ITableLabelProvider {
+	
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		if(columnIndex == 0) return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/index_column.png"); //$NON-NLS-1$
 		return null;
 	}
-	
+
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		InformationSchemaDAO tc = (InformationSchemaDAO) element;
-		
-		switch(columnIndex) {
-		case 0: return SQLUtil.getIndexName(tc);
-		case 1: return tc.getINDEX_NAME();
-		case 2: return tc.getINDEX_TYPE();		
-		case 3: return tc.getCOMMENT();
-		}
-		
-		return "** not set column **";
+			
+			switch(columnIndex) {
+			case 0: return tc.getSEQ_IN_INDEX();
+			case 1: return tc.getCOLUMN_NAME();
+			case 2: return tc.getCOMMENT();
+			}
+		return null;
 	}
 
 }

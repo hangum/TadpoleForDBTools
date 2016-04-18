@@ -27,14 +27,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
-import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
-
-import org.eclipse.swt.widgets.Group;
 
 /**
  * sql result to text export
@@ -42,7 +40,7 @@ import org.eclipse.swt.widgets.Group;
  * @author hangum
  *
  */
-public class ExportSQLComposite extends AExportComposite {
+public class ExportSQLComposite extends AbstractExportComposite {
 	private static final Logger logger = Logger.getLogger(ExportSQLComposite.class);
 	
 	private Button btnBatchInsert;
@@ -75,7 +73,7 @@ public class ExportSQLComposite extends AExportComposite {
 		compositeText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblIncludeHead = new Label(compositeText, SWT.NONE);
-		lblIncludeHead.setText("대상테이블");
+		lblIncludeHead.setText(Messages.get().ExportSQLComposite_TargetTable);
 		
 		compositeTargetTable = new Composite(compositeText, SWT.NONE);
 		compositeTargetTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -90,7 +88,7 @@ public class ExportSQLComposite extends AExportComposite {
 		
 		Label lblCommit = new Label(compositeText, SWT.NONE);
 		lblCommit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblCommit.setText("커밋");
+		lblCommit.setText(Messages.get().Commit);
 		
 		compositeCommit = new Composite(compositeText, SWT.NONE);
 		compositeCommit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -101,11 +99,11 @@ public class ExportSQLComposite extends AExportComposite {
 		textCommit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		label = new Label(compositeCommit, SWT.NONE);
-		label.setText("건 마다");
+		label.setText(Messages.get().ForEachMatter);
 		
 		Label lblSeparator = new Label(compositeText, SWT.NONE);
 		lblSeparator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSeparator.setText("DML Type");
+		lblSeparator.setText(Messages.get().DMLType);
 		
 		Composite compositeSeparator = new Composite(compositeText, SWT.NONE);
 		compositeSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -126,13 +124,13 @@ public class ExportSQLComposite extends AExportComposite {
 		btnMerge.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				grpWhere.setText("Merge를 위해 Match 조건에 사용할 컬럼");
+				grpWhere.setText(Messages.get().ExportSQLComposite_MergeMatchColumn);
 			}
 		});
 		
 		Label lblEncoding = new Label(compositeText, SWT.NONE);
 		lblEncoding.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblEncoding.setText("encoding");
+		lblEncoding.setText(Messages.get().encoding);
 		
 		comboEncoding = new Combo(compositeText, SWT.NONE);
 		comboEncoding.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -191,7 +189,7 @@ public class ExportSQLComposite extends AExportComposite {
 	public boolean isValidate() {
 		if(super.isValidate()) {
 			if (StringUtils.isEmpty(this.textTargetName.getText()) ){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, "대상 테이블을 입력하십시오.");
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_PleaseTargetInput);
 				this.textTargetName.setFocus();
 				return false;
 			}
@@ -202,12 +200,12 @@ public class ExportSQLComposite extends AExportComposite {
 				if(button.getSelection()) listWhereColumnName.add(button.getText());
 			}
 			if (this.btnMerge.getSelection() && listWhereColumnName.size() <= 0){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, "Merge를 위한 Match 조건으로 사용할 컬럼을 선택하십시오.");
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_PleaseMergeMath);
 				return false;
 			}
 			
 			if (!StringUtils.isNumeric(this.textCommit.getText())){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, "커밋 건수는 숫자로 입력하십시오.");
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_PleaseCommitCount);
 				textCommit.setText("0");
 				this.textCommit.setFocus();
 				return false;

@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.index;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.index;
 
 import java.util.HashMap;
 import java.util.List;

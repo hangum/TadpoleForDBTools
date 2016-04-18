@@ -73,6 +73,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 	 */
 	public MySQLTableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
+		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.userDB = userDB;
 		this.tableDAO = tableDAO;
@@ -88,6 +89,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 	 */
 	public MySQLTableColumnDialog(Shell parentShell, UserDBDAO userDB, TableDAO tableDAO, TableColumnDAO tableColumnDAO) {
 		super(parentShell);
+		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER | SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		COMP_STATUS = DATA_STATUS.MODIFY;
 		
 		this.userDB = userDB;

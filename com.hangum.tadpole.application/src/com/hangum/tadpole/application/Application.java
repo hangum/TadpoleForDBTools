@@ -38,7 +38,7 @@ public class Application implements EntryPoint {
 
 	public int createUI() {
 		Display display = PlatformUI.createDisplay();
-
+		
 		Locale locale = RWT.getLocale();
 		Locale.setDefault(locale);
 		RWT.getUISession().setLocale(locale);
