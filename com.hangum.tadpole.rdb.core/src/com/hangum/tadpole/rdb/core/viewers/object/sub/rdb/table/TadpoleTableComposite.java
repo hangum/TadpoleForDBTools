@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
@@ -89,11 +88,11 @@ import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExt
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.columns.TableColumnComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.constraints.TadpoleConstraintComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.index.TadpoleIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
@@ -147,6 +146,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private CTabFolder tabTableFolder;
 	private TableColumnComposite tableColumnComposite;
 	private TadpoleIndexesComposite 	indexComposite 		= null;
+	private TadpoleConstraintComposite constraintsComposite = null;
 	private TadpoleTriggerComposite 	triggerComposite 	= null;
 	
 	/**
@@ -359,6 +359,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableColumnComposite = new TableColumnComposite(this, tabTableFolder, SWT.NONE);
 		tableColumnComposite.setLayout(new GridLayout(1, false));
 		createIndexes();
+		createConstraints();
 		createTrigger();
 		
 		tabTableFolder.setSelection(0);
@@ -380,6 +381,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
 			refreshIndexes(true, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
+			refreshConstraints(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
 			refreshTrigger(true, strObjectName);
 
@@ -398,6 +401,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	/**
+	 * constraints 정보를 최신으로 갱신 합니다.
+	 */
+	public void refreshConstraints(boolean boolRefresh, String strObjectName) {
+		constraintsComposite.refreshIndexes(getUserDB(), boolRefresh, strObjectName);
+	}
+	
+	/**
 	 * trigger 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
@@ -411,6 +421,15 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		indexComposite = new TadpoleIndexesComposite(getSite(), tabTableFolder, userDB);
 		indexComposite.initAction();
 	}
+	
+	/**
+	 * indexes 정의
+	 */
+	private void createConstraints() {
+		constraintsComposite = new TadpoleConstraintComposite(getSite(), tabTableFolder, userDB);
+		constraintsComposite.initAction();
+	}
+	
 	/**
 	 * Trigger 정의
 	 */

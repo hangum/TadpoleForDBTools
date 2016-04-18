@@ -241,6 +241,7 @@ public class PublicTadpoleDefine {
 		VIEWS, 
 		SYNONYM,
 		INDEXES, 
+		CONSTRAINTS,
 		PROCEDURES,
 		PROCEDURE_PARAMETER,
 		FUNCTIONS, 
