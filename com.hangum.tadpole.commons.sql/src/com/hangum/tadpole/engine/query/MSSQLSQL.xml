@@ -236,6 +236,17 @@ WHERE 1=1
       and constraint_name = #index_name#
 </select>
 
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+select *
+from information_schema.table_constraints
+where table_catalog = #table_scheme#
+and table_name = #table_name#
+</select>
+
 <!-- 
 	procedure list
  -->
