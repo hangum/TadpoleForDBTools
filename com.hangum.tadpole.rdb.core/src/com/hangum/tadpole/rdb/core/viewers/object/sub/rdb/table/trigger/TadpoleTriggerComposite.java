@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -35,6 +36,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
@@ -60,6 +62,8 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleTriggerComposite.class);
+	
+	private TableDAO tableDao;
 	
 	private CTabItem tbtmTriggers;
 	private TableViewer triggerTableViewer;
@@ -185,6 +189,19 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 	
 	/**
+	 * refresh trigger
+	 * 
+	 * @param userDB
+	 * @param tableDao
+	 */
+	public void setTable(UserDBDAO userDB, TableDAO tableDao) {
+		this.userDB = userDB;
+		this.tableDao = tableDao;
+		
+		refreshTrigger(userDB, true, "");
+	}
+	
+	/**
 	 * trigger 정보를 최신으로 갱신 합니다.
 	 * @param strObjectName 
 	 */
@@ -193,7 +210,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		
 		try {
-			showTrigger = DBSystemSchema.getTrigger(userDB, strObjectName);
+			showTrigger = DBSystemSchema.getTrigger(userDB, tableDao.getName());
 
 			triggerTableViewer.setInput(showTrigger);
 			triggerTableViewer.refresh();
@@ -248,4 +265,5 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 			}
 		}
 	}
+	
 }

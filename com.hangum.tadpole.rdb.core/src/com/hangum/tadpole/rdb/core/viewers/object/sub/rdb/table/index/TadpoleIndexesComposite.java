@@ -44,6 +44,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -70,7 +71,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleIndexesComposite.class);
 	
 	private CTabItem tbtmIndex;
-	/** select table name */
+	private TableDAO tableDao;
 	private String selectIndexName = ""; //$NON-NLS-1$
 
 	// index
@@ -199,11 +200,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		indexColumnViewer.setContentProvider(new ArrayContentProvider());
 		indexColumnViewer.setLabelProvider(new IndexColumnLabelprovider());
 		
-
 		createMenu();
 		// index detail column
 		
-
 		sashForm.setWeights(new int[] { 1, 1 });
 
 	}
@@ -212,7 +211,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * selection adapter
 	 * 
 	 * @param indexColumn
-	 * @param i
+	 * @param index
 	 * @return
 	 */
 	private SelectionAdapter getSelectionAdapter(final TableViewerColumn indexColumn, final int index) {
@@ -292,6 +291,19 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	}
 	
 	/**
+	 * refresh index
+	 * 
+	 * @param userDB
+	 * @param tableDao
+	 */
+	public void setTable(UserDBDAO userDB, TableDAO tableDao) {
+		this.userDB = userDB;
+		this.tableDao = tableDao;
+		
+		refreshIndexes(userDB, true, "");
+	}
+	
+	/**
 	 * index 정보를 최신으로 갱신 합니다.
 	 * @param strObjectName 
 	 */
@@ -303,7 +315,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("table_schema", userDB.getDb());
-			map.put("table_name", strObjectName);
+			map.put("table_name", tableDao.getName());
 			listIndexes = sqlClient.queryForList("indexList", map); //$NON-NLS-1$
 
 			indexTableViewer.setInput(listIndexes);
@@ -370,4 +382,5 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			}
 		}		
 	}
+	
 }

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.columns;
 
 import java.util.ArrayList;
@@ -19,6 +29,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -70,7 +81,6 @@ public class TableColumnComposite extends AbstractTableComposite {
 	 */
 	public TableColumnComposite(TadpoleTableComposite tableComposite, CTabFolder parentFolder, int style) {
 		super(tableComposite, parentFolder, style);
-//		setLayout(new GridLayout(1, false));
 		
 		CTabItem tbtmTable = new CTabItem(parentFolder, SWT.NONE);
 		tbtmTable.setText(Messages.get().Columns);
@@ -84,9 +94,12 @@ public class TableColumnComposite extends AbstractTableComposite {
 		gl_compositeTables.marginHeight = 2;
 		gl_compositeTables.marginWidth = 2;
 		compositeColumn.setLayout(gl_compositeTables);
-//		compositeColumn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		SashForm sashForm = new SashForm(compositeColumn, SWT.NONE);
+		sashForm.setOrientation(SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		tableColumnViewer = new TableViewer(compositeColumn, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.Move);
+		tableColumnViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.Move);
 		tableColumnViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
@@ -109,6 +122,8 @@ public class TableColumnComposite extends AbstractTableComposite {
 
 		tableColumnViewer.setContentProvider(new ArrayContentProvider());
 		tableColumnViewer.setLabelProvider(new TableColumnLabelprovider(getTableComposite().getTableListViewer(), getTableComposite().getTableDecorationExtension()));
+		
+		sashForm.setWeights(new int[] { 1 });
 	}
 	
 	public List<TableColumnDAO> getShowTableColumns() {

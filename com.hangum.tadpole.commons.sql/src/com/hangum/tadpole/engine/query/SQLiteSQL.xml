@@ -140,6 +140,14 @@ SELECT name as function_name,
 <!-- 
 	show triggers
  -->
+<select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SELECT name as trigger,
+ 		tbl_name as table_name,
+ 		sql as statement
+	FROM sqlite_master
+	WHERE type = 'trigger'
+	ORDER BY trigger  
+</select>
 <select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SELECT name as trigger,
  		tbl_name as table_name,

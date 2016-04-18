@@ -44,6 +44,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
@@ -71,7 +72,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleConstraintComposite.class);
 	
 	private CTabItem tbtmConstraint;
-	/** select table name */
+	private TableDAO tableDao;
 	private String selectConstraintName = ""; //$NON-NLS-1$
 
 	// index
@@ -208,7 +209,6 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 
 		createMenu();
 		// index detail column
-		
 
 		sashForm.setWeights(new int[] { 1, 1 });
 
@@ -258,9 +258,9 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_1);
-		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_2);
-		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().Refresh);
+		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().TadpoleIndexesComposite_1);
+		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().TadpoleIndexesComposite_2);
+		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().Refresh);
 		
 //		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_7);
 
@@ -297,6 +297,13 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 //		viewDDLAction.setUserDB(getUserDB());
 	}
 	
+	public void setTable(UserDBDAO userDB, TableDAO tableDao) {
+		this.userDB = userDB;
+		this.tableDao = tableDao;
+				
+		refreshConstraints(userDB, true, "");
+	}
+	
 	/**
 	 * index 정보를 최신으로 갱신 합니다.
 	 * @param strObjectName 
@@ -310,7 +317,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("table_schema", userDB.getDb());
-			map.put("table_name", strObjectName);
+			map.put("table_name", tableDao.getName());
 			
 			listConstraints = sqlClient.queryForList("tableConstraintsList", map); //$NON-NLS-1$
 

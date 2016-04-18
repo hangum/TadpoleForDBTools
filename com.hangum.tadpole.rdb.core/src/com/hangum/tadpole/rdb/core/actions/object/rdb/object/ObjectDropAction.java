@@ -159,6 +159,23 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					}
 				}
 			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
+			InformationSchemaDAO indexDAO = (InformationSchemaDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDeleteAction_16)) {
+				
+				try {
+					if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+						executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
+					} else {
+						executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					
+					refreshIndexes();
+				} catch(Exception e) {
+					logger.error("Delete index", e);
+					exeMessage(Messages.get().ObjectDeleteAction_4, e);
+				}
+			}
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 			ProcedureFunctionDAO procedureDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDeleteAction_24)) {

@@ -222,4 +222,22 @@ public class DBSystemSchema {
 		
 		return sqlClient.queryForList("triggerList", paramMap); //$NON-NLS-1$
 	}
+
+	/**
+	 * Return trigger all list
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<TriggerDAO> getAllTrigger(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
+		) return new ArrayList<TriggerDAO>();
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		return sqlClient.queryForList("triggerAllList", userDB.getDb()); //$NON-NLS-1$
+	}
 }
