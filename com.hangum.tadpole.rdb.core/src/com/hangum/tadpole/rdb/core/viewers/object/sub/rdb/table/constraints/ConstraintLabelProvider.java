@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
@@ -25,7 +26,7 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class ConstraintLabelProvicer extends LabelProvider implements ITableLabelProvider {
+public class ConstraintLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -35,12 +36,12 @@ public class ConstraintLabelProvicer extends LabelProvider implements ITableLabe
 	
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		InformationSchemaDAO tc = (InformationSchemaDAO) element;
+		TableConstraintsDAO tc = (TableConstraintsDAO) element;
 		
 		switch(columnIndex) {
-		case 0: return SQLUtil.getIndexName(tc);
-		case 1: return tc.getINDEX_NAME();
-		case 2: return tc.getINDEX_TYPE();		
+		case 0: return SQLUtil.getConstraintName(tc);
+		case 1: return tc.getCONSTRAINT_NAME();
+		case 2: return tc.getConstraint_type();		
 		case 3: return tc.getCOMMENT();
 		}
 		

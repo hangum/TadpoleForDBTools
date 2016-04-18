@@ -43,6 +43,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
@@ -69,24 +70,24 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleConstraintComposite.class);
 	
-	private CTabItem tbtmIndex;
+	private CTabItem tbtmConstraint;
 	/** select table name */
-	private String selectIndexName = ""; //$NON-NLS-1$
+	private String selectConstraintName = ""; //$NON-NLS-1$
 
 	// index
-	private TableViewer indexTableViewer;
-	private ObjectComparator indexComparator;
-	private List<InformationSchemaDAO> listIndexes;
-	private ConstraintViewFilter indexFilter;
+	private TableViewer constraintTableViewer;
+	private ObjectComparator constraintComparator;
+	private List<InformationSchemaDAO> listConstraints;
+	private ConstraintViewFilter constraintFilter;
 
 	// column info
-	private TableViewer indexColumnViewer;
-	private ObjectComparator indexColumnComparator;
-	private List showIndexColumns;
+	private TableViewer constraintColumnViewer;
+	private ObjectComparator constraintColumnComparator;
+	private List showConstraintColumns;
 
-	private ObjectCreatAction creatAction_Index;
-	private ObjectDropAction dropAction_Index;
-	private ObjectRefreshAction refreshAction_Index;
+	private ObjectCreatAction creatAction_Constraint;
+	private ObjectDropAction dropAction_Constraint;
+	private ObjectRefreshAction refreshAction_Constraint;
 //	private GenerateViewDDLAction viewDDLAction;
 
 	/**
@@ -102,27 +103,27 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	}
 	
 	private void createWidget(final CTabFolder tabFolderObject) {
-		tbtmIndex = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmIndex.setText(Messages.get().Constraints);
-		tbtmIndex.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS.name());
+		tbtmConstraint = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmConstraint.setText(Messages.get().Constraints);
+		tbtmConstraint.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS.name());
 
-		Composite compositeIndexes = new Composite(tabFolderObject, SWT.NONE);
-		tbtmIndex.setControl(compositeIndexes);
-		GridLayout gl_compositeIndexes = new GridLayout(1, false);
-		gl_compositeIndexes.verticalSpacing = 2;
-		gl_compositeIndexes.horizontalSpacing = 2;
-		gl_compositeIndexes.marginHeight = 2;
-		gl_compositeIndexes.marginWidth = 2;
-		compositeIndexes.setLayout(gl_compositeIndexes);
+		Composite compositeConstraints = new Composite(tabFolderObject, SWT.NONE);
+		tbtmConstraint.setControl(compositeConstraints);
+		GridLayout gl_compositeConstraints = new GridLayout(1, false);
+		gl_compositeConstraints.verticalSpacing = 2;
+		gl_compositeConstraints.horizontalSpacing = 2;
+		gl_compositeConstraints.marginHeight = 2;
+		gl_compositeConstraints.marginWidth = 2;
+		compositeConstraints.setLayout(gl_compositeConstraints);
 
-		SashForm sashForm = new SashForm(compositeIndexes, SWT.NONE);
+		SashForm sashForm = new SashForm(compositeConstraints, SWT.NONE);
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		indexTableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		constraintTableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 	
-		indexTableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+		constraintTableViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
@@ -139,25 +140,30 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 					Object tableDAO = is.getFirstElement();
 
 					if (tableDAO != null) {
-						InformationSchemaDAO index = (InformationSchemaDAO) tableDAO;
+						TableConstraintsDAO constraint = (TableConstraintsDAO) tableDAO;
 
-						if (selectIndexName.equals(index.getINDEX_NAME())) return;
-						selectIndexName = index.getINDEX_NAME();
+						if (selectConstraintName.equals(constraint.getCONSTRAINT_NAME() )) return;
+						selectConstraintName = constraint.getCONSTRAINT_NAME();
 
 						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 						HashMap<String, String>paramMap = new HashMap<String, String>();
-						paramMap.put("table_schema", index.getTABLE_SCHEMA()); //$NON-NLS-1$
-						paramMap.put("table_name", index.getTABLE_NAME()); //$NON-NLS-1$
-						paramMap.put("index_name", index.getINDEX_NAME()); //$NON-NLS-1$
+						paramMap.put("table_schema", constraint.getTABLE_SCHEMA()); //$NON-NLS-1$
+						paramMap.put("table_name", constraint.getTABLE_NAME()); //$NON-NLS-1$
+						paramMap.put("constraint_type", constraint.getConstraint_type()); //$NON-NLS-1$
+						paramMap.put("constraint_name", constraint.getCONSTRAINT_NAME()); //$NON-NLS-1$
+						paramMap.put("index_name", constraint.getINDEX_NAME()); //$NON-NLS-1$
 						
-						showIndexColumns = sqlClient.queryForList("indexDetailList", paramMap); //$NON-NLS-1$
-
+						//showConstraintColumns = sqlClient.queryForList("constraintDetailList", paramMap); //$NON-NLS-1$
+						// TODO: DBMS별로 제약조건 세부내역을 어떻게 표시할지 고민해봐야함.
+						// 오라클의 fk같은경우는 연결된 index나 pk정보를 표시하면 될듯하고...
+						// check 제약조건인경우는 column2 >= 100 and column2 <= 1000  형식의 정의식을 표시하거나 column9 is not null 과 같은 정보를 표시해야함. LONG타입이므로 blob타입 처리에 대한 방법도 확인이 필요함.
+						showConstraintColumns = null;
 					} else
-						showIndexColumns = null;
+						showConstraintColumns = null;
 
-					indexColumnViewer.setInput(showIndexColumns);
-					indexColumnViewer.refresh();
-					TableUtil.packTable(indexColumnViewer.getTable());
+					constraintColumnViewer.setInput(showConstraintColumns);
+					constraintColumnViewer.refresh();
+					TableUtil.packTable(constraintColumnViewer.getTable());
 
 				} catch (Exception e) {
 					logger.error("get table column", e); //$NON-NLS-1$
@@ -169,35 +175,35 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		});		
 		
 		
-		Table tableTableList = indexTableViewer.getTable();
+		Table tableTableList = constraintTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
-		indexComparator = new DefaultComparator();
-		indexTableViewer.setSorter(indexComparator);
+		constraintComparator = new DefaultComparator();
+		constraintTableViewer.setSorter(constraintComparator);
 
-		createIndexesColumn(indexTableViewer, indexComparator);
+		createIndexesColumn(constraintTableViewer, constraintComparator);
 
-		indexTableViewer.setLabelProvider(new ConstraintLabelProvicer());
-		indexTableViewer.setContentProvider(new ArrayContentProvider());
+		constraintTableViewer.setLabelProvider(new ConstraintLabelProvider());
+		constraintTableViewer.setContentProvider(new ArrayContentProvider());
 
-		indexFilter = new ConstraintViewFilter();
-		indexTableViewer.addFilter(indexFilter);
+		constraintFilter = new ConstraintViewFilter();
+		constraintTableViewer.addFilter(constraintFilter);
 		
 		// columns
-		indexColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
-		Table tableTableColumn = indexColumnViewer.getTable();
+		constraintColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		Table tableTableColumn = constraintColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);
 		
-		indexColumnComparator = new IndexColumnComparator();
-		indexColumnViewer.setSorter(indexColumnComparator);
-		indexColumnComparator.setColumn(0);
+		constraintColumnComparator = new IndexColumnComparator();
+		constraintColumnViewer.setSorter(constraintColumnComparator);
+		constraintColumnComparator.setColumn(0);
 
-		createIndexColumne(indexColumnViewer);
+		createIndexColumne(constraintColumnViewer);
 
-		indexColumnViewer.setContentProvider(new ArrayContentProvider());
-		indexColumnViewer.setLabelProvider(new ConstraintColumnLabelprovider());
+		constraintColumnViewer.setContentProvider(new ArrayContentProvider());
+		constraintColumnViewer.setLabelProvider(new ConstraintColumnLabelprovider());
 		
 
 		createMenu();
@@ -219,12 +225,12 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		SelectionAdapter selectionAdapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				indexColumnComparator.setColumn(index);
+				constraintColumnComparator.setColumn(index);
 				
-				indexColumnViewer.getTable().setSortDirection(indexColumnComparator.getDirection());
-				indexColumnViewer.getTable().setSortColumn(indexColumn.getColumn());
+				constraintColumnViewer.getTable().setSortDirection(constraintColumnComparator.getDirection());
+				constraintColumnViewer.getTable().setSortColumn(indexColumn.getColumn());
 				
-				indexColumnViewer.refresh();
+				constraintColumnViewer.refresh();
 			}
 		};
 		
@@ -252,9 +258,9 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Index = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_1);
-		dropAction_Index = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_2);
-		refreshAction_Index = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().Refresh);
+		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_1);
+		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_2);
+		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().Refresh);
 		
 //		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_7);
 
@@ -262,31 +268,31 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
 			if(!isDDLLock()) {
-				menuMgr.add(creatAction_Index);
-				menuMgr.add(dropAction_Index);
+				menuMgr.add(creatAction_Constraint);
+				menuMgr.add(dropAction_Constraint);
 				menuMgr.add(new Separator());
 			}
-			menuMgr.add(refreshAction_Index);
+			menuMgr.add(refreshAction_Constraint);
 //			menuMgr.add(new Separator());
 //			menuMgr.add(viewDDLAction);
 		}
 
-		indexTableViewer.getTable().setMenu(menuMgr.createContextMenu(indexTableViewer.getTable()));
-		getSite().registerContextMenu(menuMgr, indexTableViewer);
+		constraintTableViewer.getTable().setMenu(menuMgr.createContextMenu(constraintTableViewer.getTable()));
+		getSite().registerContextMenu(menuMgr, constraintTableViewer);
 	}
 
 	/**
 	 * init action
 	 */
 	public void initAction() {
-		if (listIndexes != null) listIndexes.clear();
-		indexTableViewer.setInput(listIndexes);
-		indexTableViewer.refresh();
+		if (listConstraints != null) listConstraints.clear();
+		constraintTableViewer.setInput(listConstraints);
+		constraintTableViewer.refresh();
 
 		if(getUserDB() == null) return;
-		creatAction_Index.setUserDB(getUserDB());
-		dropAction_Index.setUserDB(getUserDB());
-		refreshAction_Index.setUserDB(getUserDB());
+		creatAction_Constraint.setUserDB(getUserDB());
+		dropAction_Constraint.setUserDB(getUserDB());
+		refreshAction_Constraint.setUserDB(getUserDB());
 		
 //		viewDDLAction.setUserDB(getUserDB());
 	}
@@ -295,21 +301,26 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	 * index 정보를 최신으로 갱신 합니다.
 	 * @param strObjectName 
 	 */
-	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
-		if(!boolRefresh) if(listIndexes != null) return;
+	public void refreshConstraints(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
+		if(!boolRefresh) if(listConstraints != null) return;
 		
 		this.userDB = userDB;
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			listIndexes = sqlClient.queryForList("indexList", userDB.getDb()); //$NON-NLS-1$
 
-			indexTableViewer.setInput(listIndexes);
-			indexTableViewer.refresh();
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("table_schema", userDB.getDb());
+			map.put("table_name", strObjectName);
 			
-			TableUtil.packTable(indexTableViewer.getTable());
+			listConstraints = sqlClient.queryForList("tableConstraintsList", map); //$NON-NLS-1$
+
+			constraintTableViewer.setInput(listConstraints);
+			constraintTableViewer.refresh();
+			
+			TableUtil.packTable(constraintTableViewer.getTable());
 
 			// select tabitem
-			getTabFolderObject().setSelection(tbtmIndex);
+			getTabFolderObject().setSelection(tbtmConstraint);
 			
 			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
@@ -325,8 +336,8 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	 * @param textSearch
 	 */
 	public void filter(String textSearch) {
-		indexFilter.setSearchText(textSearch);
-		indexTableViewer.refresh();		
+		constraintFilter.setSearchText(textSearch);
+		constraintTableViewer.refresh();		
 	}
 	
 	/**
@@ -334,21 +345,21 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	 * @return
 	 */
 	public TableViewer getTableViewer() {
-		return indexTableViewer;
+		return constraintTableViewer;
 	}
 
 	@Override
 	public void setSearchText(String searchText) {
-		indexFilter.setSearchText(searchText);
+		constraintFilter.setSearchText(searchText);
 	}
 	
 	@Override
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Index.dispose();
-		dropAction_Index.dispose();
-		refreshAction_Index.dispose();
+		creatAction_Constraint.dispose();
+		dropAction_Constraint.dispose();
+		refreshAction_Constraint.dispose();
 //		viewDDLAction.dispose();
 	}
 
@@ -359,9 +370,9 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		getTableViewer().getTable().setFocus();
 		
 		// find select object and viewer select
-		for(int i=0; i<listIndexes.size(); i++) {
-			InformationSchemaDAO tableDao = (InformationSchemaDAO)getTableViewer().getElementAt(i);
-			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getINDEX_NAME())) {
+		for(int i=0; i<listConstraints.size(); i++) {
+			TableConstraintsDAO tableDao = (TableConstraintsDAO)getTableViewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getCONSTRAINT_NAME() )) {
 				getTableViewer().setSelection(new StructuredSelection(getTableViewer().getElementAt(i)), true);
 				break;
 			}

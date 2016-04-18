@@ -193,7 +193,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		this.userDB = userDB;
 		
 		try {
-			showTrigger = DBSystemSchema.getTrigger(userDB);
+			showTrigger = DBSystemSchema.getTrigger(userDB, strObjectName);
 
 			triggerTableViewer.setInput(showTrigger);
 			triggerTableViewer.refresh();

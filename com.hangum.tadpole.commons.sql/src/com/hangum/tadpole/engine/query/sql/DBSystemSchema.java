@@ -208,13 +208,18 @@ public class DBSystemSchema {
 	 * 
 	 * @param strObjectName 
 	 */
-	public static List<TriggerDAO> getTrigger(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+	public static List<TriggerDAO> getTrigger(final UserDBDAO userDB, String strObjectName) throws TadpoleSQLManagerException, SQLException {
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
 		) return new ArrayList<TriggerDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("triggerList", userDB.getDb()); //$NON-NLS-1$
+
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("table_schema", userDB.getDb()); //$NON-NLS-1$
+		paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+		
+		return sqlClient.queryForList("triggerList", paramMap); //$NON-NLS-1$
 	}
 }

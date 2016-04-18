@@ -179,14 +179,15 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 SELECT 
     i.table_schema 
     , i.table_name
     , i.constraint_schema as index_owner
     , i.constraint_name as index_name
-    FROM information_schema.CONSTRAINT_TABLE_USAGE i
-    
+FROM information_schema.CONSTRAINT_TABLE_USAGE i
+WHERE i.constraint_schema = #table_schema#
+  AND i.table_name = #table_name#    
 </select>
 
 <!-- 
@@ -232,12 +233,13 @@ SELECT
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SELECT s.name,
 	 	#db_name# as db,
 	   crdate as created 
 	FROM sysobjects  s
 	WHERE s.type = 'TR'
+	  AND s.parent_obj = object_id(#table_name#)
 </select>
 
 <!-- 
