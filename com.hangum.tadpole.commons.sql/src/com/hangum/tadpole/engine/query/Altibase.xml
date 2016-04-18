@@ -309,7 +309,7 @@
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SELECT trig.trigger_name AS "trigger", 
 	       DECODE(trig.event_type,1,'INSERT',2,'DELETE',3,'UPDATE') AS "event", 
 	       tbl.table_name AS "table_name",
@@ -330,6 +330,29 @@
 	WHERE user.user_id = trig.user_id
 	  AND trig.table_id = tbl.table_id
           AND db.space_id = 0
+</select>
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+	SELECT trig.trigger_name AS "trigger", 
+	       DECODE(trig.event_type,1,'INSERT',2,'DELETE',3,'UPDATE') AS "event", 
+	       tbl.table_name AS "table_name",
+	       '' AS "statement", 
+	       DECODE(trig.event_time, 1,'BEFORE','AFTER') AS "timing",
+	       TO_CHAR(trig.created, 'DD-MM-YYYY HH24:MI:SS') AS "created", 
+	       DECODE(trig.granularity,1,'FOR EACH ROW',2,'FOR EACH STATEMENT')  AS "sql_mode", 
+	       user.user_name AS "definer", 
+	       '' AS "character_set_client",
+	       '' AS "collation_connection",
+	       db.db_name AS "database",
+	       db.nls_characterset AS "collection",
+	       DECODE(trig.is_enable,0,'DISABLE','ENABLE')  AS "status"
+	FROM system_.sys_users_ user,
+	     system_.sys_triggers_ trig,
+	     system_.sys_tables_ tbl,
+             x$$membase db
+	WHERE user.user_id = trig.user_id
+	  AND trig.table_id = tbl.table_id
+      AND db.space_id = 0
+      AND tbl.table_name = #table_name#
 </select>
 
 <!-- 
