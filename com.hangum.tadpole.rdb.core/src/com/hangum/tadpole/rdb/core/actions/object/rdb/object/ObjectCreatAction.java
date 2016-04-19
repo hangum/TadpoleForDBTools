@@ -22,6 +22,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
+import com.hangum.tadpole.rdb.core.actions.connections.CreateConstraintsAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
@@ -96,6 +97,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 					refreshIndexes();
 				}
 			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
+			CreateConstraintsAction cca = new CreateConstraintsAction();
+			cca.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);

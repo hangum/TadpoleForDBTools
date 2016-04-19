@@ -50,6 +50,8 @@ public class QueryTemplateUtils {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_VIEW_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_INDEX_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
+				defaultStr =  MySQLDMLTemplate.TMP_CREATE_CONSTRAINTS_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
@@ -67,6 +69,8 @@ public class QueryTemplateUtils {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_VIEW_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_INDEX_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
+				defaultStr =  OracleDMLTemplate.TMP_CREATE_CONSTRAINTS_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
@@ -134,6 +138,8 @@ public class QueryTemplateUtils {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_VIEW_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_INDEX_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
+				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_CONSTRAINTS_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
