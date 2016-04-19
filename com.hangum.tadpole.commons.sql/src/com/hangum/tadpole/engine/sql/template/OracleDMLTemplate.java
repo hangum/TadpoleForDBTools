@@ -32,6 +32,10 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 						 "	name varchar2(30) " + PublicTadpoleDefine.LINE_SEPARATOR +
 						");";
 
+	/** constraints  */
+	public static final String  TMP_CREATE_CONSTRAINTS_STMT = "ALTER TABLE table_name "+ PublicTadpoleDefine.LINE_SEPARATOR
+			+ " ADD CONSTRAINT constraint_name UNIQUE (column1, column2, ... column_n); "+ PublicTadpoleDefine.LINE_SEPARATOR;
+	
 	// plan_table	
 	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN set statement_id = '" + PublicTadpoleDefine.STATEMENT_ID + "' INTO " + PublicTadpoleDefine.DELIMITER + " FOR ";
 
