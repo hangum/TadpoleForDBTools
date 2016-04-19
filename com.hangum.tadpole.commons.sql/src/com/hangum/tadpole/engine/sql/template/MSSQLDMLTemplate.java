@@ -44,6 +44,14 @@ public class MSSQLDMLTemplate extends AbstractDMLTemplate {
 	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name " + PublicTadpoleDefine.LINE_SEPARATOR +
 													"	ON table_name ( columns );";
 	
+	/** constratints */
+	public static final String  TMP_CREATE_CONSTRAINTS_STMT = "ALTER TABLE schema.sample_table  " + PublicTadpoleDefine.LINE_SEPARATOR 
+													        + "	ADD CONSTRAINT constraints_name UNIQUE (column_name1, ... column_name); " + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR 
+													        + "ALTER TABLE dbo.DocExc   " + PublicTadpoleDefine.LINE_SEPARATOR 
+													        + "   ADD ColumnD int NULL  " + PublicTadpoleDefine.LINE_SEPARATOR 
+													        + "   CONSTRAINT CHK_ColumnD_DocExc   " + PublicTadpoleDefine.LINE_SEPARATOR 
+													        + "   CHECK (ColumnD > 10 AND ColumnD < 50);   " + PublicTadpoleDefine.LINE_SEPARATOR ;
+	
 	/** procedure */
 	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE PROCEDURE simpleproc " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														  "	AS " + PublicTadpoleDefine.LINE_SEPARATOR + 

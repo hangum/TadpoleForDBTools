@@ -26,6 +26,7 @@ import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
@@ -160,20 +161,20 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				}
 			}
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
-			InformationSchemaDAO indexDAO = (InformationSchemaDAO)selection.getFirstElement();
-			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDeleteAction_16)) {
+			TableConstraintsDAO constraintDAO = (TableConstraintsDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Do you want to drop Constraints?")) {
 				
 				try {
 					if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
-						executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
+						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME() + " on " + constraintDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
-						executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
+						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					
-					refreshIndexes();
+					this.refreshConstraints();
 				} catch(Exception e) {
-					logger.error("Delete index", e);
-					exeMessage(Messages.get().ObjectDeleteAction_4, e);
+					logger.error("Delete constraints", e);
+					exeMessage("CONSTRAINTS", e);
 				}
 			}
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
