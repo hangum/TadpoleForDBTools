@@ -284,6 +284,19 @@ order by p.routine_schema, p.routine_name
 <!-- 
 	show triggers
  -->
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	select 
+		s.table_schema + '.' + t.name as name
+		, t.name as "trigger"
+		, t.create_date as created
+		, o.name as table_name
+		, s.table_schema as definer
+	 	, s.table_catalog as db
+	from sys.triggers t
+		inner join sys.objects o on o.object_id = t.parent_id
+		inner join information_schema.tables s on o.object_id = object_id(s.table_schema + '.' + s.table_name)
+	order by s.table_schema, s.table_name, t.name
+</select>
 <select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	select 
 		s.table_schema + '.' + t.name as name

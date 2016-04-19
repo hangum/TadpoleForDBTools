@@ -176,7 +176,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textPassword.setText("tadpole"); //$NON-NLS-1$
 			
 			comboSSL.setText("NO"); //$NON-NLS-1$
-			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5"); //$NON-NLS-1$
+			textJDBCOptions.setText("&loginTimeout=10"); //$NON-NLS-1$
 			
 		} else {
 			textPort.setText("5432"); //$NON-NLS-1$

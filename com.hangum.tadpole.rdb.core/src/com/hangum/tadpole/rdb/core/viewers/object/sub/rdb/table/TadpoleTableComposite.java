@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
@@ -88,6 +89,7 @@ import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExt
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
@@ -144,10 +146,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	
 	// table column
 	private CTabFolder tabTableFolder;
-	private TableColumnComposite tableColumnComposite;
-	private TadpoleIndexesComposite 	indexComposite 		= null;
-	private TadpoleConstraintComposite constraintsComposite = null;
-	private TadpoleTriggerComposite 	triggerComposite 	= null;
+	private TableColumnComposite 		tableColumnComposite;
+	private TadpoleIndexesComposite 	indexComposite;
+	private TadpoleConstraintComposite 	constraintsComposite;
+	private TadpoleTriggerComposite 	triggerComposite;
 	
 	/**
 	 * Create the composite.
@@ -214,22 +216,23 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				IStructuredSelection is = (IStructuredSelection) tableListViewer.getSelection();
-				Object objDAO = is.getFirstElement();
-
-				if (objDAO != null) {
+				if (!is.isEmpty()) {
+					
+					Object objDAO = is.getFirstElement();
 					TableDAO tableDao = (TableDAO) objDAO;
 					if (selectTableName.equals(tableDao.getName())) return;
 					
-					if(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name().equals( (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY) )){
+					String selTabName = (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY);
+					if(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name().equals(selTabName)){
 						// 인덱스 탭이 선택된 상태에서 다른 테이블을 선택할 경우 선택된 테이블에 정의된 인덱스 목록을 표시한다.
-						indexComposite.refreshIndexes(userDB, true, tableDao.getName());
-					}else if(PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS.name().equals( (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY) )){
+						indexComposite.setTable(userDB, tableDao);
+					}else if(PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS.name().equals(selTabName)){
 						// 테이블에 정의된 제약조건 목록을 표시한다.
-						constraintsComposite.refreshConstraints(userDB, true, tableDao.getName());
-					}else if(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name().equals( (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY) )){
+						constraintsComposite.setTable(userDB, tableDao);
+					}else if(PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS.name().equals(selTabName)){
 						// 테이블에 정의된 트리거 목록을 표시한다.
-						triggerComposite.refreshTrigger(userDB, true, tableDao.getName());
-					}else{
+						triggerComposite.setTable(userDB, tableDao);
+					}else {
 						tableColumnComposite.refreshTableColumn(tableListViewer);
 					}
 				}
@@ -360,9 +363,24 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void widgetSelected(SelectionEvent evt) {
 				if (userDB == null) return;
 				CTabItem ct = (CTabItem)evt.item;
-				refershSelectObject(""+ct.getData(AbstractObjectComposite.TAB_DATA_KEY));
+				IStructuredSelection is = (IStructuredSelection) tableListViewer.getSelection();
+				if (!is.isEmpty()) {
+					Object objDAO = is.getFirstElement();
+					TableDAO tableDao = (TableDAO) objDAO;
+					String strSelectItemText = ""+ct.getData(AbstractObjectComposite.TAB_DATA_KEY);
+					if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
+						indexComposite.setTable(userDB, tableDao);
+					} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
+						constraintsComposite.setTable(userDB, tableDao);
+					} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
+						triggerComposite.setTable(userDB, tableDao);
+					}
+					// filterText();
+					
+					// google analytic
+					AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
+				}
 			}
-
 			
 		});
 		tabTableFolder.setBorderVisible(false);
@@ -379,32 +397,28 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		sashForm.setWeights(new int[] { 1, 1 });
 	}
 	
-	private void refershSelectObject(String selTab) {
-		refershSelectObject(selTab, selectTableName);
-	}
-	
-	/**
-	 * 현재 선택된 tab을 리프레쉬합니다.
-	 * 
-	 * @param strSelectItemText TabItem text
-	 * @param strObjectName
-	 */
-	private void refershSelectObject(String strSelectItemText, String strObjectName) {
-
-		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			refreshIndexes(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
-			refreshConstraints(true, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-			refreshTrigger(true, strObjectName);
-
-		}
-//		filterText();
-		
-		// google analytic
-//		AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
-	}
-	
+//	/**
+//	 * 현재 선택된 tab을 리프레쉬합니다.
+//	 * 
+//	 * @param strSelectItemText TabItem text
+//	 * @param strObjectName
+//	 */
+//	private void refershSelectObject(String strSelectItemText, String strObjectName) {
+//
+//		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
+//			refreshIndexes(true, strObjectName);
+//		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
+//			refreshConstraints(true, strObjectName);
+//		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
+//			refreshTrigger(true, strObjectName);
+//
+//		}
+////		filterText();
+//		
+//		// google analytic
+////		AnalyticCaller.track(ExplorerViewer.ID, strSelectItemText);
+//	}
+//	
 	/**
 	 * index 정보를 최신으로 갱신 합니다.
 	 */
@@ -780,4 +794,17 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void setSelectTableName(String tableName) {
 		selectTableName = tableName;
 	}
+
+	public TadpoleIndexesComposite getIndexComposite() {
+		return indexComposite;
+	}
+	
+	public TadpoleConstraintComposite getConstraintsComposite() {
+		return constraintsComposite;
+	}
+
+	public TadpoleTriggerComposite getTriggerComposite() {
+		return triggerComposite;
+	}
+	
 }

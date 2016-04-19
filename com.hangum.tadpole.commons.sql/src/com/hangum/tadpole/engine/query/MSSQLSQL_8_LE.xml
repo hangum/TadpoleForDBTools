@@ -244,6 +244,13 @@ and table_name = #table_name#
 <!-- 
 	show triggers
  -->
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SELECT s.name,
+	 	#db_name# as db,
+	   crdate as created 
+	FROM sysobjects  s
+	WHERE s.type = 'TR'
+</select>
 <select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SELECT s.name,
 	 	#db_name# as db,

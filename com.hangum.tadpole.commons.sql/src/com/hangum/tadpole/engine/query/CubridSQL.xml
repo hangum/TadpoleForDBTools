@@ -255,6 +255,13 @@ SELECT
 	database				:
 	collation				:
  -->
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SELECT 
+		name,
+		event,
+	 	condition AS statement
+	FROM db_trigger
+</select>
 <select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SELECT 
 		name,

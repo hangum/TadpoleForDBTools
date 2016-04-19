@@ -193,6 +193,9 @@ and table_name = #table_name#
 <!-- 
 	show triggers
  -->
+<select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SHOW TRIGGERS 
+</select>
 <select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SHOW TRIGGERS 
 </select>

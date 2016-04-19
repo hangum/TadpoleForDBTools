@@ -195,10 +195,10 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText("tester"); //$NON-NLS-1$
 			textPort.setText("13306");	 //$NON-NLS-1$
 			
-			textJDBCOptions.setText("connectTimeout=5000&socketTimeout=4000"); //$NON-NLS-1$
+			textJDBCOptions.setText("connectTimeout=10000"); //$NON-NLS-1$
 		} else {
 			textPort.setText("3306"); //$NON-NLS-1$
-			textJDBCOptions.setText("connectTimeout=5000&socketTimeout=4000"); //$NON-NLS-1$
+			textJDBCOptions.setText("connectTimeout=10000"); //$NON-NLS-1$
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();

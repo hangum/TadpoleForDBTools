@@ -85,7 +85,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES | actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				CreateIndexAction cia = new CreateIndexAction();
 				cia.run(userDB, actionType);
