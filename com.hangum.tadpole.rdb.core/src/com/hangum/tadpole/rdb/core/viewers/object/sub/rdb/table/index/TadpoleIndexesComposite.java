@@ -10,9 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.index;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -78,13 +78,13 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	// index
 	private TableViewer indexTableViewer;
 	private ObjectComparator indexComparator;
-	private List<InformationSchemaDAO> listIndexes;
+	private List<InformationSchemaDAO> listIndexes = new ArrayList<InformationSchemaDAO>();
 	private IndexesViewFilter indexFilter;
 
 	// column info
 	private TableViewer indexColumnViewer;
 	private ObjectComparator indexColumnComparator;
-	private List showIndexColumns;
+	private List<InformationSchemaDAO> showIndexColumns = new ArrayList<InformationSchemaDAO>();
 
 	private ObjectCreatAction creatAction_Index;
 	private ObjectDropAction dropAction_Index;
@@ -153,9 +153,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 						paramMap.put("index_name", index.getINDEX_NAME()); //$NON-NLS-1$
 						
 						showIndexColumns = sqlClient.queryForList("indexDetailList", paramMap); //$NON-NLS-1$
-
-					} else
-						showIndexColumns = null;
+					} else {
+						showIndexColumns = new ArrayList<InformationSchemaDAO>();
+					}
 
 					indexColumnViewer.setInput(showIndexColumns);
 					indexColumnViewer.refresh();
@@ -287,7 +287,6 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		creatAction_Index.setUserDB(getUserDB());
 		dropAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
-		
 //		viewDDLAction.setUserDB(getUserDB());
 	}
 	
@@ -302,6 +301,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		this.tableDao = tableDao;
 		
 		refreshIndexes(userDB, true, "");
+		
+		showIndexColumns.clear();
+		indexColumnViewer.setInput(showIndexColumns);
+		indexColumnViewer.refresh();
 	}
 	
 	/**

@@ -334,7 +334,8 @@ public class ExplorerViewer extends ViewPart {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
-					tableComposite.getTableListViewer() 
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer()
 				};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 				

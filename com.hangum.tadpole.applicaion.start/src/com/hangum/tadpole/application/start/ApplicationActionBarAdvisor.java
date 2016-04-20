@@ -44,6 +44,7 @@ import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SQLAuditAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
+import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringRealTimeAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -89,7 +90,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** schedule action */
 //    private IAction monitoringManageAction;
-//    private IAction monitoringRealTimeAction;
+    private IAction monitoringRealTimeAction;
     
     private IAction jDBCDriverManagerAction;
     private IAction schemaHistoryAction;
@@ -147,8 +148,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //    	monitoringManageAction = new MonitoringManageAction(window);
 //    	register(monitoringManageAction);
     	
-//    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
-//    	register(monitoringRealTimeAction);
+    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
+    	register(monitoringRealTimeAction);
     	
     	jDBCDriverManagerAction = new JDBCDriverManagerAction(window);
     	register(jDBCDriverManagerAction);
@@ -274,8 +275,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(new Separator());
         
 //        toolbar.add(monitoringManageAction);
-//        toolbar.add(monitoringRealTimeAction);
-//        toolbar.add(new Separator());
+        toolbar.add(monitoringRealTimeAction);
+        toolbar.add(new Separator());
         
 //        toolbar.add(deleteResourceAction);
 //        toolbar.add(new Separator());

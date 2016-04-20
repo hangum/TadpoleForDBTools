@@ -261,7 +261,7 @@ FROM
     status				:
     #table_schema# AS table_schema
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	select
 		 n.nspname as "schema_name",
 	     t.relname  as "table_name",
