@@ -361,10 +361,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Index.dispose();
-		dropAction_Index.dispose();
-		refreshAction_Index.dispose();
-//		viewDDLAction.dispose();
+		if(creatAction_Index != null) creatAction_Index.dispose();
+		if(dropAction_Index != null) dropAction_Index.dispose();
+		if(refreshAction_Index != null) refreshAction_Index.dispose();
+//		if(viewDDLAction != null) viewDDLAction.dispose();
 	}
 
 	@Override

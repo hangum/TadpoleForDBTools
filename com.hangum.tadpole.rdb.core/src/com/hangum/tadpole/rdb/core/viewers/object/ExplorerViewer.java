@@ -324,7 +324,7 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTableListViewer(), 
 				tableComposite.getTableColumnViewer(),
 				tableComposite.getIndexComposite().getTableViewer(),
-				tableComposite.getConstraintsComposite().getTableViewer(),
+//				tableComposite.getConstraintsComposite().getTableViewer(), // 사용하지 않음.
 				tableComposite.getTriggerComposite().getTableViewer(),
 				viewComposite.getTableViewer()
 			};

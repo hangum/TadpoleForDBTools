@@ -363,6 +363,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public void widgetSelected(SelectionEvent evt) {
 				if (userDB == null) return;
 				CTabItem ct = (CTabItem)evt.item;
+					
 				IStructuredSelection is = (IStructuredSelection) tableListViewer.getSelection();
 				if (!is.isEmpty()) {
 					Object objDAO = is.getFirstElement();
@@ -386,15 +387,24 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tabTableFolder.setBorderVisible(false);
 		tabTableFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
-		tableColumnComposite = new TableColumnComposite(this, tabTableFolder, SWT.NONE);
-		tableColumnComposite.setLayout(new GridLayout(1, false));
-		createIndexes();
-		createConstraints();
-		createTrigger();
+		sashForm.setWeights(new int[] { 1, 1 });
+		
+		initUI();
+	}
+	
+	/**
+	 * initialize ui
+	 */
+	private void initUI() {
+		createColumns();
+		
+		if(userDB != null) {
+			createIndexes();
+			if( userDB.getDBDefine() != DBDefine.SQLite_DEFAULT) createConstraints();
+			createTrigger();
+		}
 		
 		tabTableFolder.setSelection(0);
-		
-		sashForm.setWeights(new int[] { 1, 1 });
 	}
 	
 //	/**
@@ -438,6 +448,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
 		triggerComposite.refreshTrigger(userDB, boolRefresh, strObjectName);
+	}
+	
+	/**
+	 * columm 정의
+	 */
+	private void createColumns() {
+		tableColumnComposite = new TableColumnComposite(this, tabTableFolder, SWT.NONE);
+		tableColumnComposite.setLayout(new GridLayout(1, false));
 	}
 	
 	/**
