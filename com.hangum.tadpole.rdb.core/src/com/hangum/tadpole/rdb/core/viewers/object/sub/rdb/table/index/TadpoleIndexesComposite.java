@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.index;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -314,8 +315,13 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("table_schema", userDB.getDb());
-			map.put("table_name", tableDao.getName());
+			 if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+				 map.put("user_name", 	StringUtils.substringBefore(tableDao.getName(), ".")); //$NON-NLS-1$
+				 map.put("table_name", 	StringUtils.substringAfter(tableDao.getName(), ".")); //$NON-NLS-1$
+			 } else {
+				 map.put("table_schema", userDB.getDb());
+				 map.put("table_name", tableDao.getName());	 
+			 }
 			listIndexes = sqlClient.queryForList("indexList", map); //$NON-NLS-1$
 
 			indexTableViewer.setInput(listIndexes);
