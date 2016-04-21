@@ -248,10 +248,10 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Constraint.dispose();
-		dropAction_Constraint.dispose();
-		refreshAction_Constraint.dispose();
-//		viewDDLAction.dispose();
+		if(creatAction_Constraint != null) creatAction_Constraint.dispose();
+		if(dropAction_Constraint != null) dropAction_Constraint.dispose();
+		if(refreshAction_Constraint != null) refreshAction_Constraint.dispose();
+//		if(viewDDLAction != null) viewDDLAction.dispose();
 	}
 
 	@Override
