@@ -182,6 +182,7 @@ SELECT
 		left join db_index_key b on  a.index_name = b.index_name
 	WHERE 1=1
 	      AND a.index_name = #index_name#
+	      AND a.class_name = #table_name# 
 	ORDER BY column_position desc;
 </select>
 

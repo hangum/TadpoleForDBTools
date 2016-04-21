@@ -399,7 +399,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		createColumns();
 		
 		if(userDB != null) {
-			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT | 
+				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
 				createIndexes();
 				createTrigger();
 			} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT |
