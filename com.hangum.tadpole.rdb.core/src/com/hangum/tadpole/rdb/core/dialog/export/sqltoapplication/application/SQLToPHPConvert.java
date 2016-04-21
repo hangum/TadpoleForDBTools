@@ -22,7 +22,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
  *
  */
 public class SQLToPHPConvert {
-	public static final String name = "query";
+	public static final String DEFAULT_VARIABLE = "query";
 	
 	public static String sqlToString(String name, String sql) {
 		StringBuffer sbSQL = new StringBuffer("");

@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToMyBatisConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToPHPConvert;
 
 /**
@@ -32,6 +33,20 @@ public class SQLToLanguageConvert {
 			return SQLToPHPConvert.sqlToString(name, sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
 			return SQLToJavaConvert.sqlToString(name, sql);
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatisSelect) {
+			return SQLToMyBatisConvert.sqlToString(name, sql);
+		}
+		
+		return "*** not set appliation type ****";
+	}	
+	
+	public String getDefaultVariable() {
+		if(application == EditorDefine.SQL_TO_APPLICATION.PHP) {
+			return SQLToPHPConvert.DEFAULT_VARIABLE;
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
+			return SQLToJavaConvert.DEFAULT_VARIABLE;
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatisSelect) {
+			return SQLToMyBatisConvert.DEFAULT_VARIABLE;
 		}
 		
 		return "*** not set appliation type ****";
