@@ -34,6 +34,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
 
@@ -45,7 +46,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQ
  */
 public class SQLToStringDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(SQLToStringDialog.class);
-	
+	private UserDBDAO userDB;
 	private Combo comboLanguageType;
 	private String languageType = ""; //$NON-NLS-1$
 	private String sql = ""; //$NON-NLS-1$
@@ -59,10 +60,11 @@ public class SQLToStringDialog extends Dialog {
 	 * @param languageType 디폴트 변화 언어
 	 * @param sql sql
 	 */
-	public SQLToStringDialog(Shell parentShell, String languageType, String sql) {
+	public SQLToStringDialog(Shell parentShell, UserDBDAO userDB, String languageType, String sql) {
 		super(parentShell);
 		setShellStyle(SWT.RESIZE | SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		
+		this.userDB = userDB;
 		this.languageType = languageType;
 		this.sql = sql;
 	}
@@ -163,7 +165,7 @@ public class SQLToStringDialog extends Dialog {
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
-		SQLToLanguageConvert slt = new SQLToLanguageConvert( (EditorDefine.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
+		SQLToLanguageConvert slt = new SQLToLanguageConvert(userDB, (EditorDefine.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
 
 		String variable = textVariable.getText();
 		if(StringUtils.isEmpty(variable)){ 

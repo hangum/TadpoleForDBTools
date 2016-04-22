@@ -149,7 +149,7 @@ public class SQLUtil {
 	 * @param exeSQL
 	 * @return
 	 */
-	public static String removeComentAndOthers(UserDBDAO userDB, String exeSQL) {
+	public static String removeCommentAndOthers(UserDBDAO userDB, String exeSQL) {
 		exeSQL = StringUtils.trimToEmpty(exeSQL);
 		exeSQL = removeComment(exeSQL);
 		exeSQL = StringUtils.trimToEmpty(exeSQL);

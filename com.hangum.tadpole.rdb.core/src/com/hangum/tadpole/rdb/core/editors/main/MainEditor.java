@@ -338,7 +338,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 				
-				SQLToStringDialog dialog = new SQLToStringDialog(null, EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), strQuery);
+				SQLToStringDialog dialog = new SQLToStringDialog(null, getUserDB(), EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), strQuery);
 				dialog.open();
 				setFocus();
 			}
@@ -656,7 +656,7 @@ public class MainEditor extends EditorExtension {
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
 		
-		String strCheckSQL = SQLUtil.removeComentAndOthers(userDB, reqQuery.getSql());
+		String strCheckSQL = SQLUtil.removeCommentAndOthers(userDB, reqQuery.getSql());
 		if(StringUtils.startsWithIgnoreCase(strCheckSQL, "desc ")) {
 			String strObject = StringUtils.removeStartIgnoreCase(strCheckSQL, "desc ");
 			DialogUtil.popupDMLDialog(getUserDB(), strObject);
