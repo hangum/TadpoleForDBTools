@@ -48,6 +48,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	private static final long serialVersionUID = 8245123047846049939L;
 	private static final Logger logger = Logger.getLogger(OracleLoginComposite.class);
 	
+	protected Group grpConnectionType;
 	/** sid, service name */
 	protected Combo comboConnType;
 
@@ -86,7 +87,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
-		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
+		grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.get().DatabaseInformation);
@@ -154,6 +155,11 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public void init() {
+		
+		// change group title
+		grpConnectionType.setText(
+				String.format("%s %s", selectDB.getDBToString() , Messages.get().DatabaseInformation)
+		);
 		
 		if(oldUserDB != null) {
 			

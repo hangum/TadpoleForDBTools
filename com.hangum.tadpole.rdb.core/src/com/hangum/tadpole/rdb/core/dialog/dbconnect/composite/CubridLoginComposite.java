@@ -20,6 +20,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 
 /**
@@ -45,6 +46,10 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	
 	@Override
 	public void init() {
+		// change group title
+		grpConnectionType.setText(
+				String.format("%s %s", selectDB.getDBToString() , Messages.get().DatabaseInformation)
+		);
 		
 		 if(oldUserDB != null) {
 			

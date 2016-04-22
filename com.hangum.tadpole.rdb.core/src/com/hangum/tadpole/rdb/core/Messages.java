@@ -563,6 +563,12 @@ public class Messages {
 	public String Columns;
 
 	public String Constraints;
+
+	public String jdbcdriver;
+
+	public String DriverNotFound;
+
+	public String DriverNotFoundMSG;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

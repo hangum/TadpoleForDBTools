@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.commons.admin.core.driver;
+package com.hangum.tadpole.rdb.core.dialog.driver;
 
 import java.io.File;
 import java.io.IOException;

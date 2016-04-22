@@ -148,6 +148,10 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	
 	@Override
 	public void init() {
+		// change group title
+		grpConnectionType.setText(
+				String.format("%s %s", selectDB.getDBToString() , Messages.get().DatabaseInformation)
+		);
 		
 		if(oldUserDB != null) {
 			selGroupName = oldUserDB.getGroup_name();

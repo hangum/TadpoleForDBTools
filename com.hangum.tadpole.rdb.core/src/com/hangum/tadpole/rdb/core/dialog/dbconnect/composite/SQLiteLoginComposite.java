@@ -58,6 +58,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	private String ROOT_RESOURCE_DIR = ApplicationArgumentUtils.getResourcesDir() + SessionManager.getEMAIL() + PublicTadpoleDefine.DIR_SEPARATOR;
 	private static final String INITIAL_TEXT = "No files uploaded."; //$NON-NLS-1$
 	
+	protected Group grpConnectionType;
 	private Text fileNameLabel;
 	private Text textCreationDB;
 	private Text textFileLocationDB;
@@ -97,7 +98,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
-		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
+		grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(3, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.get().DatabaseInformation);
@@ -226,7 +227,10 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 
 	@Override
 	protected void init() {
-		
+		// change group title
+		grpConnectionType.setText(
+				String.format("%s %s", selectDB.getDBToString() , Messages.get().DatabaseInformation)
+		);
 		if(oldUserDB != null) {
 			
 			selGroupName = oldUserDB.getGroup_name();

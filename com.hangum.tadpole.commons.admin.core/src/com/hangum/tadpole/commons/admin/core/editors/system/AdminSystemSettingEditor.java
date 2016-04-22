@@ -34,7 +34,6 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
-import com.hangum.tadpole.commons.admin.core.driver.JDBCDriverManageDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -44,6 +43,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
 
 /**
  * Admin System setting editor
