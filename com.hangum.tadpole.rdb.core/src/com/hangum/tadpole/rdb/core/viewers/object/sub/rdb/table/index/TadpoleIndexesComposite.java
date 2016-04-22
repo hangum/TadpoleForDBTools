@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.index;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,13 +78,13 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	// index
 	private TableViewer indexTableViewer;
 	private ObjectComparator indexComparator;
-	private List<InformationSchemaDAO> listIndexes;
+	private List<InformationSchemaDAO> listIndexes = new ArrayList<InformationSchemaDAO>();
 	private IndexesViewFilter indexFilter;
 
 	// column info
 	private TableViewer indexColumnViewer;
 	private ObjectComparator indexColumnComparator;
-	private List showIndexColumns;
+	private List<InformationSchemaDAO> showIndexColumns = new ArrayList<InformationSchemaDAO>();
 
 	private ObjectCreatAction creatAction_Index;
 	private ObjectDropAction dropAction_Index;
@@ -152,9 +153,9 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 						paramMap.put("index_name", index.getINDEX_NAME()); //$NON-NLS-1$
 						
 						showIndexColumns = sqlClient.queryForList("indexDetailList", paramMap); //$NON-NLS-1$
-
-					} else
-						showIndexColumns = null;
+					} else {
+						showIndexColumns = new ArrayList<InformationSchemaDAO>();
+					}
 
 					indexColumnViewer.setInput(showIndexColumns);
 					indexColumnViewer.refresh();
@@ -286,7 +287,6 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		creatAction_Index.setUserDB(getUserDB());
 		dropAction_Index.setUserDB(getUserDB());
 		refreshAction_Index.setUserDB(getUserDB());
-		
 //		viewDDLAction.setUserDB(getUserDB());
 	}
 	
@@ -301,6 +301,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		this.tableDao = tableDao;
 		
 		refreshIndexes(userDB, true, "");
+		
+		showIndexColumns.clear();
+		indexColumnViewer.setInput(showIndexColumns);
+		indexColumnViewer.refresh();
 	}
 	
 	/**
@@ -314,8 +318,13 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("table_schema", userDB.getDb());
-			map.put("table_name", tableDao.getName());
+			 if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+				 map.put("user_name", 	StringUtils.substringBefore(tableDao.getName(), ".")); //$NON-NLS-1$
+				 map.put("table_name", 	StringUtils.substringAfter(tableDao.getName(), ".")); //$NON-NLS-1$
+			 } else {
+				 map.put("table_schema", userDB.getDb());
+				 map.put("table_name", tableDao.getName());	 
+			 }
 			listIndexes = sqlClient.queryForList("indexList", map); //$NON-NLS-1$
 
 			indexTableViewer.setInput(listIndexes);
@@ -361,10 +370,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();
 		
-		creatAction_Index.dispose();
-		dropAction_Index.dispose();
-		refreshAction_Index.dispose();
-//		viewDDLAction.dispose();
+		if(creatAction_Index != null) creatAction_Index.dispose();
+		if(dropAction_Index != null) dropAction_Index.dispose();
+		if(refreshAction_Index != null) refreshAction_Index.dispose();
+//		if(viewDDLAction != null) viewDDLAction.dispose();
 	}
 
 	@Override

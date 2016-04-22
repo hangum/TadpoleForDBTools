@@ -104,7 +104,7 @@ public class SQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().Date, Messages.get().SQL, Messages.get().Sec, Messages.get().ExecutedSQLEditor_7, Messages.get().ResultType, Messages.get().Message, Messages.get().IP}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().Date, Messages.get().SQL, Messages.get().MS, Messages.get().ExecutedSQLEditor_7, Messages.get().ResultType, Messages.get().Message, Messages.get().IP}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -276,10 +276,10 @@ public class SQLAuditEditor extends EditorPart {
 		lblDuring.setText(Messages.get().ExecutedSQLEditor_17);
 																
 		textMillis = new Text(compositeInSearch, SWT.BORDER | SWT.CENTER);
-		GridData gd_textMillis = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_textMillis = new GridData(SWT.RIGHT, SWT.RIGHT, false, false, 1, 1);
 		gd_textMillis.widthHint = 70;
 		textMillis.setLayoutData(gd_textMillis);
-		textMillis.setText("500"); //$NON-NLS-1$
+		textMillis.setText("50"); //$NON-NLS-1$
 		textMillis.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -288,10 +288,8 @@ public class SQLAuditEditor extends EditorPart {
 				}
 			}
 		});
-		
 		Label lblMilis = new Label(compositeInSearch, SWT.NONE);
-		lblMilis.setText(Messages.get().Message);
-		new Label(compositeInSearch, SWT.NONE);
+		lblMilis.setText(Messages.get().over);
 		
 		Composite compositeSearchDetail = new Composite(compositeHead, SWT.NONE);
 		compositeSearchDetail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -528,7 +526,11 @@ public class SQLAuditEditor extends EditorPart {
 				item.setText(4, Utils.convLineToHtml(strSQL));
 				item.setToolTipText(4, strSQL);
 				
-				item.setText(5, ""+( (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) / 1000f)); //$NON-NLS-1$
+				try {
+					item.setText(5, ""+( (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) )); //$NON-NLS-1$
+				} catch(Exception e) {
+					item.setText(5, "-"); //$NON-NLS-1$
+				}
 				item.setText(6, ""+reqResultDAO.getRows()); //$NON-NLS-1$
 				item.setText(7, reqResultDAO.getResult());
 				
@@ -575,7 +577,7 @@ public class SQLAuditEditor extends EditorPart {
 		}
 		// Range of date
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, -7);
+		cal.add(Calendar.DAY_OF_YEAR, -1);
 		dateTimeStart.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 		
 		callbackui();

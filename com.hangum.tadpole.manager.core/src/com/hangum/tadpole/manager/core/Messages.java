@@ -143,8 +143,6 @@ public class Messages {
 
 	public String SQL;
 
-	public String Sec;
-
 	public String ExecutedSQLEditor_28;
 
 	public String ExecutedSQLEditor_31;
@@ -326,6 +324,9 @@ public class Messages {
 	public String Warning;
 
 	public String ExecutedSQLEditor_26;
+	public String over;
+	public String MS;
+	
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

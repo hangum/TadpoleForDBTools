@@ -324,30 +324,21 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTableListViewer(), 
 				tableComposite.getTableColumnViewer(),
 				tableComposite.getIndexComposite().getTableViewer(),
-				tableComposite.getConstraintsComposite().getTableViewer(),
 				tableComposite.getTriggerComposite().getTableViewer(),
 				viewComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
-		} else if (dbDefine == DBDefine.TAJO_DEFAULT) {
+
+		// tajo, hive, hive2
+		} else if (dbDefine == DBDefine.TAJO_DEFAULT | dbDefine == DBDefine.HIVE_DEFAULT | dbDefine == DBDefine.HIVE2_DEFAULT) {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
-					tableComposite.getTableListViewer() 
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer()
 				};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 				
-		// hive
-		} else if (dbDefine == DBDefine.HIVE_DEFAULT || dbDefine == DBDefine.HIVE2_DEFAULT) {
-			createTable();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(),
-				tableComposite.getTableColumnViewer()
-			};
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
 		// mongodb
 		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
 			createMongoCollection();
@@ -360,7 +351,8 @@ public class ExplorerViewer extends ViewPart {
 				mongoJavaScriptComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, mongoCollectionComposite.getCollectionListViewer()));
-			
+
+		// oracle , tibero
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT | dbDefine == DBDefine.TIBERO_DEFAULT) {
 			createTable();
 			createView();
@@ -383,7 +375,26 @@ public class ExplorerViewer extends ViewPart {
 				functionCompostite.getTableviewer() 
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-		// cubrid, mysql, postgre, mssql
+			
+		// cubrid
+		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
+			createTable();
+			createView();
+			createProcedure();
+			createFunction();
+			
+			arrayStructuredViewer = new StructuredViewer[] { 
+				tableComposite.getTableListViewer(), 
+				tableComposite.getTableColumnViewer(),
+				tableComposite.getIndexComposite().getTableViewer(),
+				tableComposite.getTriggerComposite().getTableViewer(),
+				viewComposite.getTableViewer(), 
+				procedureComposite.getTableViewer(), 
+				functionCompostite.getTableviewer() 
+			};
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
+			
+		// mysql, postgre, mssql
 		} else {
 			createTable();
 			createView();
@@ -402,7 +413,6 @@ public class ExplorerViewer extends ViewPart {
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
-		
 		refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name());
 	}
 	

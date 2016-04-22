@@ -67,7 +67,7 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("172.16.187.132");
+			textHost.setText("192.168.29.128");
 			textPort.setText("33000");
 			textDatabase.setText("demodb");
 			textUser.setText("dba");

@@ -159,9 +159,9 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
  <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	SELECT * 
 	FROM information_schema.statistics 
-	WHERE TABLE_SCHEMA = #table_schema# AND
-		TABLE_NAME = #table_name# AND
-		INDEX_NAME = #index_name#
+	WHERE TABLE_SCHEMA = #table_schema# 
+		AND TABLE_NAME = #table_name# 
+		AND INDEX_NAME = #index_name#
 	GROUP BY TABLE_NAME, INDEX_NAME
 </select>
  
