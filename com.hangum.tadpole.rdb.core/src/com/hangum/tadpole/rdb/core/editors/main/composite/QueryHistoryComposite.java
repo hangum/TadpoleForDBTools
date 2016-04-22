@@ -38,6 +38,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
+import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.SWTResourceManager;
 
@@ -114,9 +115,8 @@ public class QueryHistoryComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				GridItem[] gridItems = gridSQLHistory.getSelection();
 				if(gridItems.length != 0) {
-					TadpoleMessageDialog dlg = new TadpoleMessageDialog(getShell(), Messages.get().SQL, 
-							gridItems[0].getText(1), Utils.convHtmlToLine(gridItems[0].getText(2)) );
-					dlg.open();
+					TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ViewQuery, Utils.convHtmlToLine(gridItems[0].getText(2)));
+					dialog.open();
 				} else {
 					MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MainEditor_29);
 				}

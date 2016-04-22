@@ -55,10 +55,10 @@ public class PreConnectionInfoGroup extends Group {
 		super(parent, style);
 		setText(Messages.get().ConnectionInfo);
 		GridLayout gridLayout = new GridLayout(2, false);
-		gridLayout.verticalSpacing = 2;
-		gridLayout.horizontalSpacing = 2;
-		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.verticalSpacing = 3;
+		gridLayout.horizontalSpacing = 3;
+		gridLayout.marginHeight = 3;
+		gridLayout.marginWidth = 3;
 		setLayout(gridLayout);
 		
 		Label lblOperationType = new Label(this, SWT.NONE);

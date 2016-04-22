@@ -377,7 +377,7 @@ class TableInfoFilter extends ViewerFilter {
 	String searchString;
 	
 	public void setSearchString(String s) {
-		this.searchString = ".*" + s + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
+		this.searchString = ".*" + s.toLowerCase() + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -391,7 +391,7 @@ class TableInfoFilter extends ViewerFilter {
 		if(resultMap.get("TABLE_NAME") != null) tbName = ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		else tbName = ""+resultMap.get("name"); //$NON-NLS-1$ //$NON-NLS-2$
 		
-		if(tbName.matches(searchString)) return true;
+		if(tbName.toLowerCase().matches(searchString)) return true;
 		return false;
 	}
 	
