@@ -103,6 +103,7 @@ public class SQLToStringDialog extends Dialog {
 		comboLanguageType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				textVariable.setText("");
 				sqlToStr();
 			}
 		});
@@ -158,16 +159,18 @@ public class SQLToStringDialog extends Dialog {
 	}
 	
 	private void sqlToStr() {
-		String variable = textVariable.getText();
-		if(StringUtils.trim(variable).equals("")){ //$NON-NLS-1$
-			variable = SQLToJavaConvert.DEFAULT_VARIABLE;
-			textVariable.setText(variable);
-		}
 		
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
 		SQLToLanguageConvert slt = new SQLToLanguageConvert( (EditorDefine.SQL_TO_APPLICATION)comboLanguageType.getData(comboLanguageType.getText()) );
+
+		String variable = textVariable.getText();
+		if(StringUtils.isEmpty(variable)){ 
+			variable = slt.getDefaultVariable();
+			textVariable.setText(variable);
+		}
+		
 		for(int i=0; i < sqls.length; i++) {
 			if("".equals(StringUtils.trimToEmpty(sqls[i]))) continue; //$NON-NLS-1$
 			
