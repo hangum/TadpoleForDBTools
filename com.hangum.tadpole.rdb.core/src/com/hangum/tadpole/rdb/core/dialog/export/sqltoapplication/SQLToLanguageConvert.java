@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToMyBatisConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToPHPConvert;
@@ -22,9 +23,11 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQ
  *
  */
 public class SQLToLanguageConvert {
+	private UserDBDAO userDB;
 	private EditorDefine.SQL_TO_APPLICATION application ;
 
-	public SQLToLanguageConvert(EditorDefine.SQL_TO_APPLICATION application) {
+	public SQLToLanguageConvert(UserDBDAO userDB, EditorDefine.SQL_TO_APPLICATION application) {
+		this.userDB = userDB;
 		this.application = application;
 	}
 	
@@ -33,8 +36,8 @@ public class SQLToLanguageConvert {
 			return SQLToPHPConvert.sqlToString(name, sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
 			return SQLToJavaConvert.sqlToString(name, sql);
-		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatisSelect) {
-			return SQLToMyBatisConvert.sqlToString(name, sql);
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatis) {
+			return SQLToMyBatisConvert.sqlToString(userDB, name, sql);
 		}
 		
 		return "*** not set appliation type ****";
@@ -45,7 +48,7 @@ public class SQLToLanguageConvert {
 			return SQLToPHPConvert.DEFAULT_VARIABLE;
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
 			return SQLToJavaConvert.DEFAULT_VARIABLE;
-		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatisSelect) {
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatis) {
 			return SQLToMyBatisConvert.DEFAULT_VARIABLE;
 		}
 		
