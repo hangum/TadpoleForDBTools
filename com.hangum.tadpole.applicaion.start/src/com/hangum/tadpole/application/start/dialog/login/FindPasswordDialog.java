@@ -33,7 +33,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * find password

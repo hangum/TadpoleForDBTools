@@ -376,8 +376,11 @@ public class ExplorerViewer extends ViewPart {
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
-		// cubrid
-		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
+		// altibase, cubrid
+		} else if (dbDefine == DBDefine.CUBRID_DEFAULT | 
+				dbDefine == DBDefine.ALTIBASE_DEFAULT |
+				dbDefine == DBDefine.POSTGRE_DEFAULT
+		) { 
 			createTable();
 			createView();
 			createProcedure();

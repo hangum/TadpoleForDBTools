@@ -54,7 +54,7 @@ import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;

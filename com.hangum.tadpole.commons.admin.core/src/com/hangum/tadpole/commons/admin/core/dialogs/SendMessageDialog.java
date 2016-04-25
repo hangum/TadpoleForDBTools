@@ -43,7 +43,7 @@ import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * 모든 사용자에게 메시지를 보냅니다.

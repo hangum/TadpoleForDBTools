@@ -119,11 +119,11 @@ public class DBInformationDialog extends Dialog {
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
 		lblName.setText(Messages.get().Name);
 		
+		Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
+		lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblNameValue.setText(SessionManager.getName());
+		
 		if(PermissionChecker.isShow(userDB.getRole_id())) {
-			Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
-			lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			lblNameValue.setText(SessionManager.getName());
-			
 			compositeBody = new Composite(container, SWT.NONE);
 			compositeBody.setLayout(new GridLayout(1, false));
 			compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

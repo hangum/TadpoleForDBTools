@@ -48,6 +48,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	 */
 	private static final Logger logger = Logger.getLogger(HiveLoginComposite.class);
 	
+	protected Group grpConnectionType;
 	protected Combo comboDriverType;
 	
 	protected Text textHost;
@@ -96,7 +97,7 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
-		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
+		grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.get().DatabaseInformation);
@@ -173,6 +174,10 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public void init() {
+		// change group title
+		grpConnectionType.setText(
+				String.format("%s %s", selectDB.getDBToString() , Messages.get().DatabaseInformation)
+		);
 		
 		 if(oldUserDB != null) {
 			

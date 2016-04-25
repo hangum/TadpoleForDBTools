@@ -74,8 +74,6 @@ public class DBManagerAction extends Action implements ISelectionListener, IWork
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		sel = (IStructuredSelection)selection;
-		
-		if("NO".equals(SessionManager.getIsRegistDB())) setEnabled(false);
 	}
 
 	@Override

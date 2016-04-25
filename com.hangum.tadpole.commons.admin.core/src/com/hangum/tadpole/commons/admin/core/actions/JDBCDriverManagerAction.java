@@ -23,7 +23,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
-import com.hangum.tadpole.commons.admin.core.driver.JDBCDriverManageDialog;
+import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
 import com.swtdesigner.ResourceManager;
 
 /**

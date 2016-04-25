@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect;
 
 import java.util.List;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -39,6 +40,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -119,15 +121,14 @@ public class DBLoginDialog extends Dialog {
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel.setText(Messages.get().Database);
-		lblNewLabel.setFont(SWTResourceManager.getBoldFont(PlatformUI.getWorkbench().getDisplay().getSystemFont()));
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
-		comboDBList.setBackground(SWTResourceManager.getColor(255, 250, 205));
+		comboDBList.setForeground(SWTResourceManager.getColor(255, 165, 0));
 		comboDBList.setVisibleItemCount(13);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {				
-				initDBWidget(null);
+				initDBWidget();
 			}
 		});
 		comboDBList.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -176,7 +177,7 @@ public class DBLoginDialog extends Dialog {
 		// history .....................................
 		sashFormContainer.setWeights(new int[] {1});
 
-		comboDBList.setFocus();
+//		comboDBList.setFocus();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -186,12 +187,39 @@ public class DBLoginDialog extends Dialog {
 	
 	/**
 	 * db widget을 설정한다.
-	 * @param userDB
 	 */
-	private void initDBWidget(UserDBDAO userDB) {
-		if (loginComposite != null)loginComposite.dispose();
+	private void initDBWidget() {
+		if(loginComposite != null) loginComposite.dispose();
+		
+		DBDefine dbDefine = (DBDefine)comboDBList.getData(comboDBList.getText());
+		
+		if(dbDefine == DBDefine.ALTIBASE_DEFAULT |
+				dbDefine == DBDefine.CUBRID_DEFAULT |
+				dbDefine == DBDefine.MYSQL_DEFAULT |
+				dbDefine == DBDefine.MARIADB_DEFAULT |
+				dbDefine == DBDefine.MSSQL_DEFAULT |
+				dbDefine == DBDefine.MONGODB_DEFAULT |
+				dbDefine == DBDefine.ORACLE_DEFAULT |
+				dbDefine == DBDefine.SQLite_DEFAULT |
+				dbDefine == DBDefine.TIBERO_DEFAULT |
+				dbDefine == DBDefine.POSTGRE_DEFAULT
+		) {
+			try {
+				ClassUtils.getClass(dbDefine.getDriverClass());
+			} catch (ClassNotFoundException e) {
 
-		createDBWidget(userDB);
+				if(MessageDialog.openConfirm(null, Messages.get().DriverNotFound, Messages.get().DriverNotFoundMSG)) {
+					JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+					if(Dialog.OK ==  dialog.open()) {
+						if(dialog.isUploaded()) {
+							MessageDialog.openInformation(null, Messages.get().Information, Messages.get().jdbcdriver);
+						}
+					}		
+				}
+			}
+		}
+
+		createDBWidget(null);
 		compositeBody.layout();
 		container.layout();
 		
@@ -218,6 +246,17 @@ public class DBLoginDialog extends Dialog {
 	 * add db
 	 */
 	private boolean addDB() {
+		// 사용자가데이터베이스를 추가할 수 있는 한계까지.
+		int limitDBCount = SessionManager.getLimitAddDBCnt();
+		try {
+			if(limitDBCount <= TadpoleSystem_UserDBQuery.getCreateUserDB().size()) {
+				MessageDialog.openInformation(null, Messages.get().Information, Messages.get().DBLoginDialog_AddDBOverMsg);
+				return false;
+			}
+		} catch(Exception e) {
+			logger.error("count userr db list", e);
+		}
+		
 		if (loginComposite.saveDBData()) {
 			this.retuserDb = loginComposite.getDBDTO();
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(this.retuserDb.getIs_lock())) {

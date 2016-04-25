@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,28 +8,14 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.cipher.core.utils;
+package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application;
 
 /**
- * Tadpole default, encrypt interface
+ * Abstract SQL to
  * 
  * @author hangum
  *
  */
-public interface DefaultEncryptDecrypt {
-	/**
-	 * encryption
-	 * 
-	 * @param text
-	 * @return
-	 */
-	public String encryption(String text);
-	
-	/**
-	 * decryption
-	 * 
-	 * @param text
-	 * @return
-	 */
-	public String decryption(String text);
+public abstract class AbstractSQLTo {
+
 }

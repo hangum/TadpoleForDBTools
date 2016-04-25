@@ -1,0 +1,80 @@
+/**
+* original source http://dev.axisj.com/samples/AXGrid/index.html
+* all options : http://jdoc.axisj.com/AXGrid.html#.setConfig 
+* 기본 코드를 기본으로 변경하였습니다. 
+* hangum(2016.04))
+*/
+    /**
+     * Require Files for AXISJ UI Component...
+     * Based        : jQuery
+     * Javascript   : AXJ.js, AXGrid.js, AXInput.js, AXSelect.js
+     * CSS          : AXJ.css, AXGrid.css, AXButton.css, AXInput.css, AXSelecto.css
+     */
+    AXConfig.AXGrid.fitToWidthRightMargin = -1;
+ 
+    var pageID = "_TDB_TEMPLATE_TITLE_";
+    var AXGrid_instances = [];
+    var fnObj = {
+        pageStart: function(){
+            fnObj.grid.bind();
+        },
+        grid: {
+            target: new AXGrid(),
+            bind: function(){
+                window.myGrid = fnObj.grid.target;
+ 
+                var getColGroup = function(){
+                    return [_TDB_TEMPLATE_HEAD_];
+                };
+ 
+                myGrid.setConfig({
+                    targetID    : "AXGridTarget",
+                    sort        : true, //정렬을 원하지 않을 경우 (tip
+                    colHeadTool : true, // column tool use
+                    fitToWidth  : true, // 너비에 자동 맞춤
+                    colGroup    : getColGroup(),
+                    colHeadAlign: "center", // 헤드의 기본 정렬 값. colHeadAlign 을 지정하면 colGroup 에서 정의한 정렬이 무시되고 colHeadAlign : false 이거나 없으면 colGroup 에서 정의한 속성이 적용됩니다.
+                    body        : {
+                        onclick: function(){
+                            toast.push(Object.toJSON({ "event": "click", "index": this.index, "r": this.r, "c": this.c, "item": this.item }));
+                            // this.list, this.page
+                        },
+                        /* ondblclick 선언하면 onclick 이벤트가 0.25 초 지연 발생 됩니다. 주의 하시기 바람니다. */
+                        ondblclick: function(){
+                            toast.push(Object.toJSON({ "event": "dblclick", "index": this.index, "r": this.r, "c": this.c, "item": this.item }));
+                            // this.list, this.page
+                        },
+                        addClass: function(){
+                            return (this.index % 2 == 0 ? "gray" : "white"); // red, green, blue, yellow, white, gray
+                        }
+                    },
+                    page: {
+                        display: false,
+                        paging: false
+                    }
+                });
+ 
+                var list = [_TDB_TEMPLATE_BODY_];
+                myGrid.setList(list);
+                //trace(myGrid.getSortParam());
+            },
+            deleteItem: function(index) {
+                $.Event(event).stopPropagation(); // 버튼클릭 이벤트가 row click 이벤트를 발생시키지 않도록 합니다.
+                var item = myGrid.list[index];
+                toast.push('deleteItem: ' + $.param(item).dec());
+            },
+            getExcel: function(type){
+                var obj = myGrid.getExcelFormat(type);
+                trace(obj);
+                $("#printout").html(Object.toJSON(obj));
+            },
+            getSelectedItem: function(){
+                trace( this.target.getSelectedItem() );
+                toast.push('콘솔창에 데이터를 출력하였습니다.');
+            }
+        }
+    };
+    jQuery(document.body).ready(function() {
+        fnObj.pageStart();
+    });
+    

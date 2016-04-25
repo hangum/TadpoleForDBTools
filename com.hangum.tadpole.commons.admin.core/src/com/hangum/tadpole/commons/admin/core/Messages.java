@@ -190,6 +190,24 @@ public class Messages {
 	public String Close;
 
 	public String Warning;
+
+	public String mustBeNumber;
+
+	public String SystemSetting;
+
+	public String JDBCDriverManage;
+
+	public String ResourceHome;
+
+	public String SettingUser;
+
+	public String IsAddDB;
+
+	public String IsSharedDB;
+
+	public String DefaultAddDBCount;
+
+	public String DefaultUseDay;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

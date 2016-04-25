@@ -45,6 +45,7 @@ import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 public class MySQLLoginComposite extends AbstractLoginComposite {
 	private static final Logger logger = Logger.getLogger(MySQLLoginComposite.class);
 	
+	protected Group grpConnectionType;
 	protected Text textHost;
 	protected Text textUser;
 	protected Text textPassword;
@@ -90,7 +91,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
-		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
+		grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.get().DatabaseInformation);
@@ -166,6 +167,11 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public void init() {
+		
+		// change group title
+		grpConnectionType.setText(
+				String.format("%s %s", selectDB.getDBToString() , Messages.get().DatabaseInformation)
+		);
 		
 		if(oldUserDB != null) {
 			

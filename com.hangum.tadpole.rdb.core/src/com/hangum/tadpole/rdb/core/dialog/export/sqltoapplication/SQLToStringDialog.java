@@ -15,8 +15,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -143,14 +141,7 @@ public class SQLToStringDialog extends Dialog {
 		btnConvertSQL.setText(Messages.get().SQLToStringDialog_btnNewButton_text);
 		
 		textConvert = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
-		textConvert.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				sql = textConvert.getText();
-			}
-		});
 		textConvert.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		textConvert.setText(sql);
 		
 		sqlToStr();
 		
@@ -159,9 +150,11 @@ public class SQLToStringDialog extends Dialog {
 
 		return container;
 	}
-	
+
+	/**
+	 * sql to str
+	 */
 	private void sqlToStr() {
-		
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
@@ -186,6 +179,10 @@ public class SQLToStringDialog extends Dialog {
 		textConvert.setText(sbStr.toString());
 	}
 	
+	/**
+	 * parese sql
+	 * @return
+	 */
 	private String[] parseSQL() {
 		String[] arry = sql.split(PublicTadpoleDefine.SQL_DELIMITER); //$NON-NLS-1$
 		 if( arry.length == 1) {

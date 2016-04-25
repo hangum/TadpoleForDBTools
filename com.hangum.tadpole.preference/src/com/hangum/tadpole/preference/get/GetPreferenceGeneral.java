@@ -10,12 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.get;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
+import com.hangum.tadpole.preference.define.AbstractPreference;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -25,25 +24,10 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
-public class GetPreferenceGeneral {
+public class GetPreferenceGeneral extends AbstractPreference {
 	private static final Logger logger = Logger.getLogger(GetPreferenceGeneral.class);
 	
 	////////////////// 일반 설정 ///////////////////////////////////////////////////////////////////////////
-	
-	public static String getValue(String key, Object defaultValue) {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(key);
-		if(null == userInfo) return defaultValue.toString();
-		else if("".equals(userInfo.getValue0())) return defaultValue.toString();
-		
-		return userInfo.getValue0();
-	}
-	
-	
-	protected static String getValue(Map<String, UserInfoDataDAO> mapUserInfoData, String key, String defaultValue) {
-		UserInfoDataDAO userInfoDao = mapUserInfoData.get(key);
-		if(null == userInfoDao) return defaultValue;
-		else return userInfoDao.getValue0();
-	}
 	
 	/**
 	 * session time out 

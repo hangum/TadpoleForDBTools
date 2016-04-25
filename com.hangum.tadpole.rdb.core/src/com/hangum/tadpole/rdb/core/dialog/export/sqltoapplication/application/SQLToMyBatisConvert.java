@@ -33,7 +33,7 @@ import net.sf.jsqlparser.statement.update.Update;
  * @author hangum
  *
  */
-public class SQLToMyBatisConvert {
+public class SQLToMyBatisConvert extends AbstractSQLTo {
 	private static final Logger logger = Logger.getLogger(SQLToMyBatisConvert.class);
 	public static final String DEFAULT_VARIABLE = "select";
 

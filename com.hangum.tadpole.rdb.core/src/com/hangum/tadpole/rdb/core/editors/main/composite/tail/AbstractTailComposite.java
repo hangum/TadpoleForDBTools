@@ -10,9 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite.tail;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,8 +40,6 @@ public abstract class AbstractTailComposite extends Composite {
 	
 	private Composite compositeParent;
 	protected Composite compositeDownloadAMsg;
-//	protected Combo comboDownload;
-//	protected DownloadServiceHandler downloadServiceHandler;
 	
 	protected Label lblQueryResultStatus;
 	protected Button btnPin;
@@ -93,21 +89,6 @@ public abstract class AbstractTailComposite extends Composite {
 			}
 		});
 		btnViewQuery.setText(Messages.get().ViewQuery);
-
-//		comboDownload = new Combo(compositeDownloadAMsg, SWT.NONE | SWT.READ_ONLY);
-//		comboDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
-//		comboDownload.add("CSV Comma(Add Header)"); //$NON-NLS-1$
-//		comboDownload.add("CSV Comma"); //$NON-NLS-1$
-//		
-//		comboDownload.add("CSV Tab(Add Header)"); //$NON-NLS-1$
-//		comboDownload.add("CSV Tab"); //$NON-NLS-1$
-//		
-//		comboDownload.add("HTML"); //$NON-NLS-1$
-//		comboDownload.add("JSON"); //$NON-NLS-1$
-//		comboDownload.add("INSERT statement"); //$NON-NLS-1$
-//		comboDownload.add("UPDATE statement"); //$NON-NLS-1$
-//		comboDownload.setVisibleItemCount(8);
-//		comboDownload.select(0);
 		
 		Button btnSQLResultDownload = new Button(compositeDownloadAMsg, SWT.NONE);
 		btnSQLResultDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
@@ -118,24 +99,6 @@ public abstract class AbstractTailComposite extends Composite {
 				
 				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), findTableName(), getRSDao());
 				dialog.open();
-				
-//				if("CSV Comma(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportResultCSVType(true, ',');
-//				} else if("CSV Comma".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportResultCSVType(false, ',');
-//				} else if("CSV Tab(Add Header)".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportResultCSVType(true, '\t');
-//				} else if("CSV Tab".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportResultCSVType(false, '\t');
-//				} else if("HTML".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportResultHTMLType();
-//				} else if("JSON".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportResultJSONType();
-//				} else if("INSERT statement".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportInsertStatement();
-//				} else if("UPDATE statement".equals(comboDownload.getText())) { //$NON-NLS-1$
-//					exportUpdateStatement();
-//				}
 			}
 			
 		});
@@ -148,8 +111,6 @@ public abstract class AbstractTailComposite extends Composite {
 		lblQueryResultStatus = new Label(compositeDownloadAMsg, SWT.NONE);
 		lblQueryResultStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblQueryResultStatus.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-
-//		registerServiceHandler();
 	}
 	
 	public void execute(String strResultMsg) {
@@ -174,70 +135,6 @@ public abstract class AbstractTailComposite extends Composite {
 	 * @return
 	 */
 	public abstract QueryExecuteResultDTO getRSDao();
-	
-//	/**
-//	 * export update statement
-//	 */
-//	protected void exportUpdateStatement() {
-//		MakeResultToUpdateStatementDialog dialog = new MakeResultToUpdateStatementDialog(null, findTableName(), getRSDao());
-//		if (dialog.open() == Window.OK) {
-//			try {
-//				downloadFile(dialog.getStrTableName(), SQLExporter.makeFileUpdateStatment(dialog.getStrTableName(), getRSDao(), dialog.getListWhereColumnName()));
-//			} catch(Exception ee) {
-//				logger.error("HTML type export error", ee); //$NON-NLS-1$
-//			}	
-//		}
-//	}
-//	
-//	/**
-//	 * export insert into statement
-//	 */
-//	protected void exportInsertStatement() {
-//		InputDialog inputDialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().TableName, //$NON-NLS-1$
-//				Messages.get().PleaseTableName, findTableName(), new TableNameValidator());
-//		if (inputDialog.open() == Window.OK) {
-//			try {
-//				downloadFile(inputDialog.getValue(), SQLExporter.makeFileInsertStatment(inputDialog.getValue(), getRSDao()));
-//			} catch(Exception ee) {
-//				logger.error("HTML type export error", ee); //$NON-NLS-1$
-//			}	
-//		}
-//	}
-//	
-//	/**
-//	 * Export resultset csvMessages.get().ResultSetComposite_14
-//	 * @param seprator 
-//	 */
-//	protected void exportResultCSVType(boolean isAddHead, char seprator) {
-//		try {
-//			downloadFile(CSVExpoter.makeCSVFile(isAddHead, findTableName(), getRSDao(), seprator));
-//		} catch(Exception ee) {
-//			logger.error("HTML type export error", ee); //$NON-NLS-1$
-//		}
-//	}
-//	
-//	/**
-//	 * export result of html
-//	 */
-//	protected void exportResultHTMLType() {
-//		try {
-//			downloadFile(HTMLExporter.makeContentFile(findTableName(), getRSDao()));
-//		} catch(Exception ee) {
-//			logger.error("HTML type export error", ee); //$NON-NLS-1$
-//		}
-//	}
-//	
-//	/**
-//	 * export result of html
-//	 */
-//	protected void exportResultJSONType() {
-//		try {
-//			downloadFile(JsonExpoter.makeContentFile(findTableName(), getRSDao()));
-//		} catch(Exception ee) {
-//			logger.error("JSON type export error", ee); //$NON-NLS-1$
-//		}
-//	}
-//	
 	/**
 	 * find table name
 	 * @return
@@ -249,76 +146,13 @@ public abstract class AbstractTailComposite extends Composite {
 		
 		return strTableName;
 	}
-//
-//	/**
-//	 * download file
-//	 * @param strFileLocation
-//	 * @throws Exception
-//	 */
-//	protected void downloadFile(String fileName, String strFileLocation) throws Exception {
-//		String strZipFile = ZipUtils.pack(strFileLocation);
-//		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
-//		
-//		_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
-//	}
-//	
-//	/**
-//	 * download file
-//	 * @param strFileLocation
-//	 * @throws Exception
-//	 */
-//	protected void downloadFile(String strFileLocation) throws Exception {
-//		downloadFile(findTableName(), strFileLocation); //$NON-NLS-1$
-//	}
-//	
-//	/** registery service handler */
-//	protected void registerServiceHandler() {
-//		downloadServiceHandler = new DownloadServiceHandler();
-//		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
-//	}
-//	
-//	/** download service handler call */
-//	protected void unregisterServiceHandler() {
-//		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
-//		downloadServiceHandler = null;
-//	}
-//	
-//	/**
-//	 * download external file
-//	 * 
-//	 * @param fileName
-//	 * @param newContents
-//	 */
-//	protected void _downloadExtFile(String fileName, byte[] newContents) {
-//		downloadServiceHandler.setName(fileName);
-//		downloadServiceHandler.setByteContent(newContents);
-//		
-//		DownloadUtils.provideDownload(getShell(), downloadServiceHandler.getId());
-//	}
 	
 	@Override
 	public void dispose() {
-//		unregisterServiceHandler();
 		super.dispose();
 	}
 
 	@Override
 	protected void checkSubclass() {
-	}
-}
-
-/**
- * table name validattor
- */
-class TableNameValidator implements IInputValidator {
-	
-	public TableNameValidator() {
-	}
-
-	public String isValid(String newText) {
-		if(StringUtils.isEmpty(newText)) {
-			return Messages.get().InputTableName;
-		}	
-	    return null;
 	}
 }

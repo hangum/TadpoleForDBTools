@@ -10,6 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.dialogs.users;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -31,6 +36,7 @@ import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -59,6 +65,12 @@ public class ModifyUserDialog extends Dialog {
 	private Text textCreateDate;
 	
 	private Combo comboIsRegistDB;
+	
+	private Combo comboIsSharedDB;
+	private Text textIntLimtCnt;
+	private DateTime endDate;
+	private DateTime endTime;
+	
 	private Combo comboApproval;
 	private Combo comboUserConfirm;
 	private Combo comboDel;
@@ -119,6 +131,33 @@ public class ModifyUserDialog extends Dialog {
 		comboIsRegistDB.add("YES"); //$NON-NLS-1$
 		comboIsRegistDB.add("NO"); //$NON-NLS-1$
 		
+		// --------------------------------------------
+		Label lblIsSharedDb = new Label(container, SWT.NONE);
+		lblIsSharedDb.setText(Messages.get().IsSharedDB);
+		
+		comboIsSharedDB = new Combo(container, SWT.READ_ONLY);
+		comboIsSharedDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsSharedDB.add(yesNo.name());
+		}
+
+		Label lblDefaultAddDb = new Label(container, SWT.NONE);
+		lblDefaultAddDb.setText(Messages.get().DefaultAddDBCount);
+		
+		textIntLimtCnt = new Text(container, SWT.BORDER);
+		textIntLimtCnt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblDefaultUseDay = new Label(container, SWT.NONE);
+		lblDefaultUseDay.setText(Messages.get().DefaultUseDay);
+		
+		Composite composite = new Composite(container, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite.setLayout(new GridLayout(2, false));
+		
+		endDate = new DateTime(composite, SWT.BORDER);
+		endTime = new DateTime(composite, SWT.BORDER | SWT.TIME);
+		// --------------------------------------------
+		
 		Label lblApproval = new Label(container, SWT.NONE);
 		lblApproval.setText(Messages.get().ModifyUserDialog_4);
 		
@@ -169,6 +208,14 @@ public class ModifyUserDialog extends Dialog {
 		textCreateDate.setText(userDAO.getCreate_time());
 		
 		comboIsRegistDB.setText(userDAO.getIs_regist_db());
+		
+		comboIsSharedDB.setText(userDAO.getIs_shared_db());
+		textIntLimtCnt.setText(""+userDAO.getLimit_add_db_cnt());
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(userDAO.getService_end().getTime());
+		endDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONDAY), cal.get(Calendar.DAY_OF_MONTH));
+		endTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+		
 		comboApproval.setText(userDAO.getApproval_yn());
 		comboUserConfirm.setText(userDAO.getIs_email_certification());
 		comboDel.setText(userDAO.getDelYn());
@@ -202,6 +249,14 @@ public class ModifyUserDialog extends Dialog {
 			user.setSeq(userDAO.getSeq());
 			user.setAllow_ip(textAllowIP.getText());
 			user.setIs_regist_db(comboIsRegistDB.getText());
+			
+			user.setIs_shared_db(comboIsSharedDB.getText());
+			user.setLimit_add_db_cnt(NumberUtils.toInt(textIntLimtCnt.getText()));
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(endDate.getYear(), endDate.getMonth(), endDate.getDay(), endTime.getHours(), endTime.getMinutes(), endTime.getSeconds());
+			user.setService_end(new Timestamp(cal.getTimeInMillis()));
+			
 			user.setApproval_yn(comboApproval.getText());
 			user.setIs_email_certification(comboUserConfirm.getText());
 			user.setDelYn(comboDel.getText());
@@ -244,7 +299,7 @@ public class ModifyUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(430, 320);
+		return new Point(430, 407);
 	}
 
 }

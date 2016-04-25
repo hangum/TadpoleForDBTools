@@ -3,6 +3,7 @@ package com.hangum.tadpole.commons.csv;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,13 @@ import java.util.List;
  * @see original file location is (http://viralpatel.net/blogs/java-load-csv-file-to-database/)
  */
 public class DateUtil {
+	
+	public static long afterMonthToMillis(int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, day);
+		
+		return cal.getTimeInMillis();
+	}
  
     // List of all date formats that we want to parse.
     // Add your own format here.

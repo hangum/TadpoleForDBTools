@@ -59,6 +59,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	private static final long serialVersionUID = -8215286981080340278L;
 	private static final Logger logger = Logger.getLogger(MSSQLLoginComposite.class);
 	
+	protected Group grpConnectionType;
 	protected Text textHost;
 	protected Text textUser;
 	protected Text textPassword;
@@ -99,7 +100,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		
-		Group grpConnectionType = new Group(compositeBody, SWT.NONE);
+		grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(5, false));
 		grpConnectionType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		grpConnectionType.setText(Messages.get().DatabaseInformation);
@@ -162,6 +163,11 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 	
 	@Override
 	public void init() {
+		// change group title
+		grpConnectionType.setText(
+				String.format("%s %s", selectDB.getDBToString() , Messages.get().DatabaseInformation)
+		);
+		
 		if(oldUserDB != null) {
 			
 			selGroupName = oldUserDB.getGroup_name();

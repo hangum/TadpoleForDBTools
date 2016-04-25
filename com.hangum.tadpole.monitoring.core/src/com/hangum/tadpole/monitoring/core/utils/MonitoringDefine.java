@@ -83,6 +83,7 @@ public class MonitoringDefine {
 	 *
 	 */
 	public static enum MONITORING_TYPE {
+		LIVE,
 		CONNECTION,
 		CPU,
 		DISK,
