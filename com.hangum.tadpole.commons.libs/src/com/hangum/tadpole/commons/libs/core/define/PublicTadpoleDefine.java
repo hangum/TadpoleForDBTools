@@ -44,7 +44,7 @@ public class PublicTadpoleDefine {
 	
 	/** default system encrypt password */
 	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
-	public static final String SYSTEM_DEFAULT_PASSWORD = "Heeseong.2me.son";
+	public static final String SYSTEM_DEFAULT_PASSWORD = "startService.tdb.son";
 	
 	/** COOKIE USER ID */
 	public static final String TDB_COOKIE_UPDATE_CHECK = "TDB_COOKIE_UPDATE_CHECK";
