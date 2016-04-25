@@ -21,7 +21,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
  * @author hangum
  *
  */
-public class SQLToJavaConvert {
+public class SQLToJavaConvert extends AbstractSQLTo {
 	public static final String DEFAULT_VARIABLE = "sqlBuff";
 	
 	/**

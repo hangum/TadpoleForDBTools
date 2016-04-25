@@ -27,7 +27,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
  * @author hangum
  *
  */
-public class ExecuteSelect {//extends AbstractExecutorService {
+public class ExecuteSelect {
 	private static final Logger logger = Logger.getLogger(ExecuteSelect.class);
 	private static ExecuteSelect executeSelect = null;
 	private ExecutorService execService = Executors.newCachedThreadPool();
@@ -68,15 +68,6 @@ public class ExecuteSelect {//extends AbstractExecutorService {
 	 * shutdown
 	 */
 	public void shutdown() {
-//		try {
-//			logger.debug("Execute thread sate is " + execService.isShutdown());
-//			
-//			List<Runnable> listRunnable = execService.shutdownNow();
-//			logger.debug("Execute thread sate is " + execService.isShutdown());
-//			
-//		} catch(Exception e) {
-//			logger.error("Query execute service", e);
-//		}
 		execService.shutdown();
 	}
 }

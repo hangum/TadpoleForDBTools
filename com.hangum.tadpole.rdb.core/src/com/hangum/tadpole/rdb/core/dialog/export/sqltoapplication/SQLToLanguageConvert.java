@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToAxisjConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToMyBatisConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToPHPConvert;
@@ -38,6 +39,8 @@ public class SQLToLanguageConvert {
 			return SQLToJavaConvert.sqlToString(name, sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatis) {
 			return SQLToMyBatisConvert.sqlToString(userDB, name, sql);
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.AXISJ) {
+			return SQLToAxisjConvert.sqlToString(userDB, name, sql);
 		}
 		
 		return "*** not set appliation type ****";
@@ -50,6 +53,8 @@ public class SQLToLanguageConvert {
 			return SQLToJavaConvert.DEFAULT_VARIABLE;
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatis) {
 			return SQLToMyBatisConvert.DEFAULT_VARIABLE;
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.AXISJ) {
+			return SQLToAxisjConvert.DEFAULT_VARIABLE;
 		}
 		
 		return "*** not set appliation type ****";
