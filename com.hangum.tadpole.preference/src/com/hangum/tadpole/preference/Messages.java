@@ -163,7 +163,7 @@ public class Messages {
 	public String GeneralPreferencePage_lblAccount_text;
 	public String GeneralPreferencePage_lblPassword_text;
 
-	public String GetAdminPreference_5;
+//	public String GetAdminPreference_5;
 	public String PerspectivePreferencePage_0;
 
 	public String PerspectivePreferencePage_3;

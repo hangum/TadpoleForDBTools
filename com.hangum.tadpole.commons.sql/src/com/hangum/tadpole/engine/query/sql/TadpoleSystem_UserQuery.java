@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,10 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
@@ -31,6 +34,7 @@ import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -80,6 +84,12 @@ public class TadpoleSystem_UserQuery {
 	 * @param approvalYn
 	 * @param use_otp
 	 * @param otp_secret
+	 * @param strAllowIP
+	 * @param strIsRegistDb
+	 * @param strIsSharedDb
+	 * @param intLimitAddDBCnt
+	 * @param serviceStart
+	 * @param serviceEnd
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
@@ -102,6 +112,12 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setUse_otp(use_otp);
 		loginDAO.setOtp_secret(otp_secret);
 		loginDAO.setAllow_ip(strAllowIP);
+		
+		loginDAO.setIs_regist_db(GetAdminPreference.getIsAddDB());
+		loginDAO.setIs_shared_db(GetAdminPreference.getIsAddDB());
+		loginDAO.setLimit_add_db_cnt(NumberUtils.toInt(GetAdminPreference.getDefaultAddDBCnt()));
+		loginDAO.setService_start(new Timestamp(System.currentTimeMillis()));
+		loginDAO.setService_end(new Timestamp(DateUtil.afterMonthToMillis(NumberUtils.toInt(GetAdminPreference.getServiceDurationDay()))));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$

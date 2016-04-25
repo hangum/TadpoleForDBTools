@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.session.manager;
 
+import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -57,6 +58,11 @@ public class SessionManager {
 														LOGIN_PASSWORD, 
 														LOGIN_NAME,
 														IS_REGIST_DB,
+														
+														IS_SHARED_DB,
+														LIMIT_ADD_DB_CNT,
+														SERVICE_END,
+														
 								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
 														USER_INFO_DATA,
 														
@@ -105,6 +111,11 @@ public class SessionManager {
 		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), userDao.getPasswd());
 		sStore.setAttribute(NAME.LOGIN_NAME.name(), userDao.getName());
 		sStore.setAttribute(NAME.IS_REGIST_DB.name(), userDao.getIs_regist_db());
+		
+		sStore.setAttribute(NAME.IS_SHARED_DB.name(), userDao.getIs_shared_db());
+		sStore.setAttribute(NAME.LIMIT_ADD_DB_CNT.name(), userDao.getLimit_add_db_cnt());
+		sStore.setAttribute(NAME.SERVICE_END.name(), userDao.getService_end());
+		
 		sStore.setAttribute(NAME.PERSPECTIVE.name(), "default");
 		
 		sStore.setAttribute(NAME.USE_OTP.name(), userDao.getUse_otp());
@@ -152,6 +163,21 @@ public class SessionManager {
 	public static String getIsRegistDB() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(NAME.IS_REGIST_DB.name());
+	}
+	
+	public static String getIsSharedDB() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.IS_SHARED_DB.name());
+	}
+	
+	public static Integer getLimitAddDBCnt() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (Integer)sStore.getAttribute(NAME.LIMIT_ADD_DB_CNT.name());
+	}
+	
+	public static Timestamp getServiceEnd() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (Timestamp)sStore.getAttribute(NAME.SERVICE_END.name());
 	}
 	
 	public static String getUseOTP() {

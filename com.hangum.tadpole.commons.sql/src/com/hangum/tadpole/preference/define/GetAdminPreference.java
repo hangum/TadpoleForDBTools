@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.preference.get;
+package com.hangum.tadpole.preference.define;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +25,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.Messages;
-import com.hangum.tadpole.preference.define.PreferenceDefine;
 
 /**
  * get administrator preference
@@ -37,7 +35,7 @@ import com.hangum.tadpole.preference.define.PreferenceDefine;
  * @since 2015. 4. 17.
  *
  */
-public class GetAdminPreference extends GetPreferenceGeneral {
+public class GetAdminPreference extends AbstractPreference {
 	private static final Logger logger = Logger.getLogger(GetAdminPreference.class);
 	
 	/**
@@ -47,8 +45,51 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 	public static String getNewUserPermit() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		
-		return getValue(mapUserInfoData, PreferenceDefine.ADMIN_NEW_USER_PERMIT, PreferenceDefine.ADMIN_NEW_USER_PERMIT_VALUE);
+		return getValue(mapUserInfoData, AdminPreferenceDefine.NEW_USER_PERMIT, AdminPreferenceDefine.NEW_USER_PERMIT_VALUE);
 	}
+	
+	/**
+	 * 사용자가 디비를 추가 할 수 있는지 여부
+	 * @return
+	 */
+	public static String getIsAddDB() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getValue(mapUserInfoData, AdminPreferenceDefine.IS_ADD_DB, AdminPreferenceDefine.IS_ADD_DB_VALUE);
+	}
+	
+	/**
+	 * 사용자가 디비를 공유 할 수있는지 여부 
+	 *
+	 * @return
+	 */
+	public static String getIsSharedDB() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		
+		return getValue(mapUserInfoData, AdminPreferenceDefine.IS_SHARED_DB, AdminPreferenceDefine.IS_SHARED_DB_VALUE);
+	}
+	
+	/**
+	 * 사용자가 기본으로 디비를 추가할 수 있는 갯수
+	 * 
+	 * @return
+	 */
+	public static String getDefaultAddDBCnt() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		
+		return getValue(mapUserInfoData, AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, AdminPreferenceDefine.DEFAULT_ADD_DB_CNT_VALUE);
+	}
+	
+	/**
+	 * 기본 사용자 서비스 사용가능 일
+	 * 
+	 * @return
+	 */
+	public static String getServiceDurationDay() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		
+		return getValue(mapUserInfoData, AdminPreferenceDefine.SERVICE_DURATION_DAY, AdminPreferenceDefine.SERVICE_DURATION_DAY_VALUE);
+	}
+	
 	
 	/**
 	 * update admin data
@@ -92,7 +133,7 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 			dto.setPasswd(strPwd);
 			
 			if("".equals(strHost) | "".equals(strPort) | "".equals(strEmail) | "".equals(strPwd)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				throw new Exception(Messages.get().GetAdminPreference_5);
+				throw new Exception("Doesn't setting is SMTP Server.");
 			}
 			
 			sStore.setAttribute("smtpinfo", dto); //$NON-NLS-1$
@@ -126,4 +167,5 @@ public class GetAdminPreference extends GetPreferenceGeneral {
 		
 		return dto;
 	}
+	
 }

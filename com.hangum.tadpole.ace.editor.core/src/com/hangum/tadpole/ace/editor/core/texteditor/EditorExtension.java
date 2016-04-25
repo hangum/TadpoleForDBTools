@@ -61,8 +61,8 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	
 	/** 현재 에디터에서 처리해야하는 디비 정보. */
 	protected UserDBDAO userDB;
-	/** 현재 유저 그룹의 그룹 리스트 */
-	protected List<UserDBDAO> listUserGroup = new ArrayList<>();
+//	/** 현재 유저 그룹의 그룹 리스트 */
+//	protected List<UserDBDAO> listUserGroup = new ArrayList<>();
 	
 	public EditorExtension() {
 		super();

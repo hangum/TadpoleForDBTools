@@ -54,7 +54,6 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -76,6 +75,7 @@ import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
@@ -152,14 +152,6 @@ public class MainEditor extends EditorExtension {
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
 		
-		// get group list ----------------------------------
-		try {
-			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(userDB.getGroup_name());
-		} catch(Exception e) {
-			logger.error("get group info", e);
-		}
-		// ---------------------------------------------------
-
 		setSite(site);
 		setInput(input);
 		setPartName(strPartName);
@@ -226,20 +218,21 @@ public class MainEditor extends EditorExtension {
 				if(!isAutoCommit()) {
 					MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().PleaseEndedTransaction);
 				} else {
-					if(listUserGroup.size() == 1) return;
 					
-					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), listUserGroup, userDB);
+					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), userDB);
 					if(Dialog.OK == dialog.open()) {
 						UserDBDAO selectedUserDB = dialog.getUserDB();
-						userDB = selectedUserDB;
-						
-						try {
-							TadpoleObjectQuery.getTableList(userDB);
-						} catch (Exception e1) {
-							logger.error("get table list", e1);
+						if(selectedUserDB != null) {
+							userDB = selectedUserDB;
+							
+							try {
+								TadpoleObjectQuery.getTableList(userDB);
+							} catch (Exception e1) {
+								logger.error("get table list", e1);
+							}
+							
+							tltmConnectURL.setText(userDB.getDisplay_name());
 						}
-						
-						tltmConnectURL.setText(userDB.getDisplay_name());
 					}
 				}
 				
@@ -655,6 +648,12 @@ public class MainEditor extends EditorExtension {
 	public void executeCommand(final RequestQuery reqQuery) {
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
+		
+		// do not execute query
+		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {
+			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().MainEditorServiceEnd);
+			return;
+		}
 		
 		String strCheckSQL = SQLUtil.removeCommentAndOthers(userDB, reqQuery.getSql());
 		if(StringUtils.startsWithIgnoreCase(strCheckSQL, "desc ")) {

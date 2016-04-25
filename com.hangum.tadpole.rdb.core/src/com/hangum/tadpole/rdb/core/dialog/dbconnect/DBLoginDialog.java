@@ -246,6 +246,17 @@ public class DBLoginDialog extends Dialog {
 	 * add db
 	 */
 	private boolean addDB() {
+		// 사용자가데이터베이스를 추가할 수 있는 한계까지.
+		int limitDBCount = SessionManager.getLimitAddDBCnt();
+		try {
+			if(limitDBCount <= TadpoleSystem_UserDBQuery.getCreateUserDB().size()) {
+				MessageDialog.openInformation(null, Messages.get().Information, Messages.get().DBLoginDialog_AddDBOverMsg);
+				return false;
+			}
+		} catch(Exception e) {
+			logger.error("count userr db list", e);
+		}
+		
 		if (loginComposite.saveDBData()) {
 			this.retuserDb = loginComposite.getDBDTO();
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(this.retuserDb.getIs_lock())) {

@@ -73,6 +73,7 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -180,7 +181,7 @@ public class DBListComposite extends Composite {
 
 		tltmAddUser = new ToolItem(toolBar, SWT.NONE);
 		tltmAddUser.setImage(GlobalImageUtils.getUserAdd());
-		tltmAddUser.setEnabled(false);
+		tltmAddUser.setEnabled(false);//"YES".equalsIgnoreCase(SessionManager.getIsSharedDB()));
 		tltmAddUser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -342,8 +343,8 @@ public class DBListComposite extends Composite {
 					
 					tltmConfigurationDB.setEnabled(true);
 					tltmOtherInformation.setEnabled(true);
-					
-					tltmAddUser.setEnabled(true);
+					if("YES".equalsIgnoreCase(SessionManager.getIsSharedDB())) tltmAddUser.setEnabled(true);
+					else tltmAddUser.setEnabled(false);
 					
 					tltmUserDelete.setEnabled(false);
 					tltmUserInfo.setEnabled(false);

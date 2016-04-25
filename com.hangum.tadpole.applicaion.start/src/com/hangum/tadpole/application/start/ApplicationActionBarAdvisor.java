@@ -90,7 +90,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** schedule action */
 //    private IAction monitoringManageAction;
-    private IAction monitoringRealTimeAction;
+//    private IAction monitoringRealTimeAction;
     
     private IAction jDBCDriverManagerAction;
     private IAction schemaHistoryAction;
@@ -148,8 +148,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //    	monitoringManageAction = new MonitoringManageAction(window);
 //    	register(monitoringManageAction);
     	
-    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
-    	register(monitoringRealTimeAction);
+//    	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
+//    	register(monitoringRealTimeAction);
     	
     	jDBCDriverManagerAction = new JDBCDriverManagerAction(window);
     	register(jDBCDriverManagerAction);
@@ -232,9 +232,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		manageMenu.add(restFulAPIAction);
 		manageMenu.add(transactionConnectionAction);
 		manageMenu.add(resourceManageAction);
-		if("YES".equals(SessionManager.getIsRegistDB())) {
-			manageMenu.add(dbMgmtAction);
-		}
+		manageMenu.add(dbMgmtAction);
+		
 		manageMenu.add(executedSQLAction);
 		manageMenu.add(schemaHistoryAction);
 		manageMenu.add(openCompareAction);
@@ -275,8 +274,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(new Separator());
         
 //        toolbar.add(monitoringManageAction);
-        toolbar.add(monitoringRealTimeAction);
-        toolbar.add(new Separator());
+//        toolbar.add(monitoringRealTimeAction);
+//        toolbar.add(new Separator());
         
 //        toolbar.add(deleteResourceAction);
 //        toolbar.add(new Separator());
