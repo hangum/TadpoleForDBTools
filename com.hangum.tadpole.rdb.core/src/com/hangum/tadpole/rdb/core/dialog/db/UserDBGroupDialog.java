@@ -56,7 +56,7 @@ public class UserDBGroupDialog extends Dialog {
 		
 		// get group list ----------------------------------
 		try {
-			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(userDB.getGroup_name());
+			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(oriUserDB.getGroup_name());
 		} catch(Exception e) {
 			logger.error("get group info", e);
 		}
