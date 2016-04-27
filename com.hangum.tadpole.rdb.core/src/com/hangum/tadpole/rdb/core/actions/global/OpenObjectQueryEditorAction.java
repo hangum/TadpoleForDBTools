@@ -47,7 +47,7 @@ public class OpenObjectQueryEditorAction extends Action implements ISelectionLis
 		setId(ID);
 		setText(Messages.get().CompileObjectEditorOpen);
 		setToolTipText(Messages.get().CompileObjectEditorOpen);
-		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/object_editor.png"));
+		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/editor/compile.png"));
 		setEnabled(false);
 		
 		window.getSelectionService().addPostSelectionListener(this);

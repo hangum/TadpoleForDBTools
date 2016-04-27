@@ -44,7 +44,6 @@ import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.SQLAuditAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
-import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringRealTimeAction;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
