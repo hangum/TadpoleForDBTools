@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.mails.template;
 
+import com.hangum.tadpole.commons.libs.core.Messages;
+import com.hangum.tadpole.commons.libs.core.define.HTMLDefine;
+
 /**
  * new user mail template
  * 
@@ -19,6 +22,7 @@ package com.hangum.tadpole.commons.libs.core.mails.template;
 public class NewUserMailBodyTemplate extends MailBodyTemplate {
 
 	/**
+	 * make mail content
 	 * 
 	 * @param strName
 	 * @param strEmail
@@ -26,46 +30,20 @@ public class NewUserMailBodyTemplate extends MailBodyTemplate {
 	 * @return
 	 */
 	public String getContent(String strName, String strEmail, String strConfirmKey) {
-		StringBuffer strContent = new StringBuffer("<html>");
+		StringBuffer strContent = new StringBuffer();
+		strContent.append(HTMLDefine.HTML_STYLE);
+		strContent.append(makeHead(Messages.get().NewUserMailTitle));
 		
-		strContent.append(makeHead("Tadpole DB Hub user has been added.\n Please check."));
-		strContent.append("<table border='1' cellpadding='0' cellspacing='0' width='100%'>");
-				
-			strContent.append("<tr>");
-				strContent.append("<td width='100' valign='top'>");
-				strContent.append("User Name");
-				strContent.append("</td>");
-				strContent.append("<td width='260' valign='top'>");
-				strContent.append(strName);
-				strContent.append("</td>");
-			strContent.append("</tr>");
-	
-			strContent.append("<tr>");
-				strContent.append("<td width='100' valign='top'>");
-				strContent.append("Email");
-				strContent.append("</td>");
-				strContent.append("<td width='260' valign='top'>");
-				strContent.append(strEmail);
-				strContent.append("</td>");
-			strContent.append("</tr>");
-		
-			strContent.append("<tr>");
-			strContent.append("<td width='100' valign='top'>");
-			strContent.append("Confirm key");
-			strContent.append("</td>");
-			strContent.append("<td width='260' valign='top'><b>");
-			strContent.append(strConfirmKey);
-			strContent.append("</b></td>");
-		strContent.append("</tr>");
-		
+		strContent.append("<table class='tg'>");
+			strContent.append(mailBodyTemplate(Messages.get().UserName, strName));
+			strContent.append(mailBodyTemplate(Messages.get().Email, strEmail));
+			strContent.append(mailBodyTemplate(Messages.get().Confirmkey, strConfirmKey));
 		strContent.append("</table>");
 		
-		
+		// tail
 		strContent.append(makeTail());
-	
-		//
-		strContent.append("</html>");
-
 		return strContent.toString();
 	}
+	
+	
 }

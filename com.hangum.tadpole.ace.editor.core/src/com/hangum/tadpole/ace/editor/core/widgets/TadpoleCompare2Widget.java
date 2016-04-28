@@ -36,7 +36,7 @@ public class TadpoleCompare2Widget extends Composite {
 	private static diff_match_patch.Operation EQUAL = diff_match_patch.Operation.EQUAL;
 	private static diff_match_patch.Operation INSERT = diff_match_patch.Operation.INSERT;
 	
-	public static String strDiffHtml = HTMLDefine.sbHtml + "<table class='tg'><tr><td class='tg-yw4l'>%s</td></tr></table>";
+	public static String strDiffHtml = HTMLDefine.HTML_STYLE + "<table class='tg'><tr><td class='tg-yw4l'>%s</td></tr></table>";
 
 			
 	private Browser browserCompare;
