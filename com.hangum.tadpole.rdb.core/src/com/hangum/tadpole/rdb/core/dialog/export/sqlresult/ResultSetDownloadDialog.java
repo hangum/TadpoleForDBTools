@@ -70,7 +70,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	public enum BTN_STATUS {PREVIEW, SENDEDITOR, DOWNLOAD};
 	public BTN_STATUS btnStatus = BTN_STATUS.PREVIEW; 
 	
-	/** 배열이 0부터 시작하므로 실제로는 5건. */
+	/** 배열이 0부터 시작하므로 실제로는 5건. */ 
 	private final int PREVIEW_COUNT = 4;
 	private final int PREVIEW_ID = IDialogConstants.CLIENT_ID + 1;
 	private final int SENDEDITOR_ID = IDialogConstants.CLIENT_ID + 2;
