@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.libs.core.mails.template;
 
 import com.hangum.tadpole.commons.libs.core.Messages;
+import com.hangum.tadpole.commons.libs.core.define.HTMLDefine;
 
 /**
  * new user mail template
@@ -28,7 +29,7 @@ public class TemporaryPasswordMailBodyTemplate extends MailBodyTemplate {
 	 */
 	public String getContent(String strEmail, String strConfirmKey) {
 		StringBuffer strContent = new StringBuffer();
-		
+		strContent.append(HTMLDefine.HTML_STYLE);
 		// title
 		strContent.append(makeHead(Messages.get().SendTemporaryPassword));
 		
