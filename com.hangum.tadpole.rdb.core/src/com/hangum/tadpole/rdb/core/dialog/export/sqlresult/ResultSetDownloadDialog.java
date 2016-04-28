@@ -30,12 +30,17 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
 import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
 import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
@@ -43,6 +48,7 @@ import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportHTMLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportJSONComposite;
@@ -54,6 +60,9 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportJsonDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
+import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
+import com.hangum.tadpole.rdb.core.util.EditorUtils;
 
 /**
  * Resultset to download
@@ -65,6 +74,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	/** 배열이 0부터 시작하므로 시리제로는 5건. */
 	private final int PREVIEW_COUNT = 4;
 	private final int PREVIEW_ID = IDialogConstants.CLIENT_ID + 1;
+	private final int SENDEDITOR_ID = IDialogConstants.CLIENT_ID + 2;
 	
 	private String defaultTargetName;
 	private QueryExecuteResultDTO queryExecuteResultDTO;
@@ -80,7 +90,9 @@ public class ResultSetDownloadDialog extends Dialog {
 	private Text textPreview;
 	private boolean isPreview;
 	
-	protected DownloadServiceHandler downloadServiceHandler;	
+	protected DownloadServiceHandler downloadServiceHandler;
+	private boolean isSendEditor;
+	private MainEditor editor;
 	
 	/**
 	 * Create the dialog.
@@ -162,6 +174,19 @@ public class ResultSetDownloadDialog extends Dialog {
 			isPreview = true;
 			this.textPreview.setText("");
 			okPressed();
+		}else if(buttonId == SENDEDITOR_ID) {
+			isPreview = false;
+			isSendEditor = true;
+			
+			QueryEditorAction qea = new QueryEditorAction();
+			IEditorPart activeEditor = qea.open(queryExecuteResultDTO.getUserDB());
+			
+			if (activeEditor instanceof MainEditor) {
+				editor = (MainEditor) activeEditor;
+				editor.setDirty(true); // 저장버튼 활성
+				editor.setFocus();
+			}
+			okPressed();
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -173,6 +198,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, PREVIEW_ID, Messages.get().Preview, true);
+		createButton(parent, SENDEDITOR_ID, "Send Editor", true);
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().Download, false);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
@@ -241,6 +267,8 @@ public class ResultSetDownloadDialog extends Dialog {
 		try {
 			if (isPreview) {
 				previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT), encoding);
+			}else if (this.isSendEditor) {
+				editor.appendText(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator));
 			}else{
 				downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator), encoding);
 			}
