@@ -76,7 +76,6 @@ public class MainEditorInput implements IEditorInput {
 		this.resourceDAO = dao;
 		
 		this.OPEN_TYPE = PublicTadpoleDefine.EDITOR_OPEN_TYPE.FILE;
-		
 		this.defaultStr = TadpoleSystem_UserDBResource.getResourceData(dao);
 	}
 	

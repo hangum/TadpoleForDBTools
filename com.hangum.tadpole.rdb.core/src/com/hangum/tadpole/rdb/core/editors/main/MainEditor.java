@@ -331,7 +331,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 				
-				SQLToStringDialog dialog = new SQLToStringDialog(null, getUserDB(), EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), strQuery);
+				SQLToStringDialog dialog = new SQLToStringDialog(null, getUserDB(), strQuery);
 				dialog.open();
 				setFocus();
 			}
