@@ -92,7 +92,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	
 	protected DownloadServiceHandler downloadServiceHandler;
 	private boolean isSendEditor;
-	private MainEditor editor;
+	private MainEditor targetEditor;
 	
 	/**
 	 * Create the dialog.
@@ -182,9 +182,9 @@ public class ResultSetDownloadDialog extends Dialog {
 			IEditorPart activeEditor = qea.open(queryExecuteResultDTO.getUserDB());
 			
 			if (activeEditor instanceof MainEditor) {
-				editor = (MainEditor) activeEditor;
-				editor.setDirty(true); // 저장버튼 활성
-				editor.setFocus();
+				targetEditor = (MainEditor) activeEditor;
+				targetEditor.setDirty(true); // 저장버튼 활성
+				targetEditor.setFocus();
 			}
 			okPressed();
 		}
@@ -268,7 +268,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (isPreview) {
 				previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT), encoding);
 			}else if (this.isSendEditor) {
-				editor.appendText(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator));
+				targetEditor.appendText(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator));
 			}else{
 				downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, queryExecuteResultDTO, seprator), encoding);
 			}
@@ -281,6 +281,8 @@ public class ResultSetDownloadDialog extends Dialog {
 		try {
 			if (isPreview) {
 				previewDataLoad(targetName, HTMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT), encoding);
+			}else if (isSendEditor) {
+				targetEditor.appendText(HTMLExporter.makeContent(targetName, queryExecuteResultDTO));
 			}else{
 				downloadFile(targetName, HTMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
 			}
@@ -294,12 +296,16 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (isAddHead){
 				if (isPreview) {
 					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, PREVIEW_COUNT), encoding);
+				}else if (isSendEditor) {
+					targetEditor.appendText(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, -1));
 				}else{
 					downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat), encoding);
 				}
 			}else{
 				if (isPreview) {
 					previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, PREVIEW_COUNT), encoding);
+				}else if (isSendEditor) {
+					targetEditor.appendText(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, -1));
 				}else{
 					downloadFile(targetName, JsonExpoter.makeContentFile(targetName, queryExecuteResultDTO, isFormat), encoding);
 				}
@@ -313,6 +319,8 @@ public class ResultSetDownloadDialog extends Dialog {
 		try {
 			if (isPreview) {
 				previewDataLoad(targetName, XMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT), encoding);
+			}else if (isSendEditor) {
+				targetEditor.appendText(XMLExporter.makeContent(targetName, queryExecuteResultDTO));
 			}else{
 				downloadFile(targetName, XMLExporter.makeContentFile(targetName, queryExecuteResultDTO), encoding);
 			}
@@ -326,25 +334,33 @@ public class ResultSetDownloadDialog extends Dialog {
 			
 			if ("batch".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeBatchInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
+				}else if (isSendEditor) {
+					targetEditor.appendText(SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, queryExecuteResultDTO, commit), encoding);
 				}
 			}else if ("insert".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
+				}else if (isSendEditor) {
+					targetEditor.appendText(SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, queryExecuteResultDTO, commit), encoding);
 				}
 			}else if ("update".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeUpdateStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
+				}else if (isSendEditor) {
+					targetEditor.appendText(SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, queryExecuteResultDTO, listWhere, commit), encoding);
 				}
 			}else if ("merge".equalsIgnoreCase(stmtType)) {
 				if (isPreview) {
-					previewDataLoad(targetName, SQLExporter.makeMergeStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
+					previewDataLoad(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
+				}else if (isSendEditor) {
+					targetEditor.appendText(SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 				}else{
 					downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, commit), encoding);
 				}
