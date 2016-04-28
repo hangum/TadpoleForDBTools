@@ -192,7 +192,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_IS_WARP_VALUE = "true";
 	
 	public static final String EDITOR_WRAP_LIMIT 		= "EDITOR_WRAP_LIMIT";
-	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "100";
+	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "300";
 	
 	public static final String EDITOR_SHOW_GUTTER = "EDITOR_SHOW_GUTTER";
 	public static final String EDITOR_SHOW_GUTTER_VALUE = "true";
