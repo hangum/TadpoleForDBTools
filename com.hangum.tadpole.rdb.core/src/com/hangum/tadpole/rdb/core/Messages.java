@@ -573,6 +573,8 @@ public class Messages {
 	public String DBLoginDialog_AddDBOverMsg;
 
 	public String MainEditorServiceEnd;
+
+	public String SendEditor;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
