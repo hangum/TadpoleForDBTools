@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -64,13 +65,17 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 	 * @param userDB
 	 */
 	public void run(UserDBDAO userDB) {
-		
+		 open(userDB);
+	}
+	
+	public IEditorPart open(UserDBDAO userDB) {
+			
 		// mongodb인지 검사하여..
 		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			MainEditorInput mei = new MainEditorInput(userDB);
 			
 			try {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID);
+				return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("open editor", e); //$NON-NLS-1$
 				
@@ -80,7 +85,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB, MongoDBInfosEditor.PAGES.COLLECTION_SUMMERY);
 			try {
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mongoInput, MongoDBInfosEditor.ID);
+				return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mongoInput, MongoDBInfosEditor.ID);
 			} catch (PartInitException e) {
 				logger.error("open editor", e); //$NON-NLS-1$
 				
@@ -88,7 +93,7 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
 		}
-		
+		return null;
 	}
 	
 	/**
