@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjComposite;
@@ -80,6 +81,8 @@ public class SQLToStringDialog extends Dialog {
 		
 		CTabFolder tabFolder = new CTabFolder(compositeBody, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setBorderVisible(false);
+		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 
 		SQLToOthersComposite compositeText = new SQLToOthersComposite(tabFolder, userDB, "PHP", sql, EditorDefine.SQL_TO_APPLICATION.PHP);
 		compositeText.setLayout(new GridLayout(1, false));
