@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToASPConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToAxisjConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToMyBatisConvert;
@@ -33,8 +34,11 @@ public class SQLToLanguageConvert {
 	}
 	
 	public String sqlToString(String name, String sql) {
+		
 		if(application == EditorDefine.SQL_TO_APPLICATION.PHP) {
 			return SQLToPHPConvert.sqlToString(name, sql);
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.ASP) {
+			return SQLToASPConvert.sqlToString(name, sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
 			return SQLToJavaConvert.sqlToString(name, sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatis) {
@@ -49,6 +53,8 @@ public class SQLToLanguageConvert {
 	public String getDefaultVariable() {
 		if(application == EditorDefine.SQL_TO_APPLICATION.PHP) {
 			return SQLToPHPConvert.DEFAULT_VARIABLE;
+		} else if(application == EditorDefine.SQL_TO_APPLICATION.ASP) {
+			return SQLToASPConvert.DEFAULT_VARIABLE;
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
 			return SQLToJavaConvert.DEFAULT_VARIABLE;
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatis) {

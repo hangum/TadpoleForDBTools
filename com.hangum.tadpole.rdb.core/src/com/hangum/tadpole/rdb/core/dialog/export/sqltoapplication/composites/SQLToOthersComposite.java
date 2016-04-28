@@ -38,6 +38,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQ
 public class SQLToOthersComposite extends AbstractSQLToComposite {
 	private Text textConvert;
 	private Text textVariable;
+	private SQLToLanguageConvert slt;
 
 	/**
 	 * Create the composite.
@@ -67,9 +68,10 @@ public class SQLToOthersComposite extends AbstractSQLToComposite {
 		lblVariable.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblVariable.setText(Messages.get().Variable);
 		
+		slt = new SQLToLanguageConvert(userDB, type);
 		textVariable = new Text(compositeTitle, SWT.BORDER);
 		textVariable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textVariable.setText(SQLToJavaConvert.DEFAULT_VARIABLE);
+		textVariable.setText(slt.getDefaultVariable());
 		
 		Button btnConvertSQL = new Button(compositeTitle, SWT.NONE);
 		btnConvertSQL.addSelectionListener(new SelectionAdapter() {
@@ -102,8 +104,6 @@ public class SQLToOthersComposite extends AbstractSQLToComposite {
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
-		SQLToLanguageConvert slt = new SQLToLanguageConvert(userDB, type);
-
 		String variable = textVariable.getText();
 		if(StringUtils.isEmpty(variable)){ 
 			variable = slt.getDefaultVariable();

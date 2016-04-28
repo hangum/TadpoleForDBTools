@@ -84,6 +84,9 @@ public class SQLToStringDialog extends Dialog {
 		SQLToOthersComposite compositeText = new SQLToOthersComposite(tabFolder, userDB, "PHP", sql, EditorDefine.SQL_TO_APPLICATION.PHP);
 		compositeText.setLayout(new GridLayout(1, false));
 		
+		SQLToOthersComposite compositeASP = new SQLToOthersComposite(tabFolder, userDB, "ASP", sql, EditorDefine.SQL_TO_APPLICATION.ASP);
+		compositeASP.setLayout(new GridLayout(1, false));
+		
 		SQLToOthersComposite compositeJavaString = new SQLToOthersComposite(tabFolder, userDB, "Java StringBuffer", sql, EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer);
 		compositeJavaString.setLayout(new GridLayout(1, false));
 		

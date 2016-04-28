@@ -85,8 +85,8 @@ public class SQLExporter extends AbstractTDBExporter {
 				strSource += String.format("%s as %s ,", strValue, strColumnName);
 				strInsertColumn += String.format(" %s,", strColumnName);
 				strInsertValue += String.format(" B.%s,", strColumnName);
-				if(isWhere) strMatchConditon += String.format("A.%s = B.%s and", strColumnName, strColumnName);
-				else strUpdate += String.format("A.%s = B.%s,", strColumnName, strColumnName);
+				if(isWhere) strMatchConditon += String.format(" A.%s = B.%s and", strColumnName, strColumnName);
+				else strUpdate += String.format(" A.%s = B.%s,", strColumnName, strColumnName);
 			}
 			strSource = StringUtils.removeEnd(strSource, ",");
 			strInsertColumn = StringUtils.removeEnd(strInsertColumn, ",");
@@ -155,8 +155,8 @@ public class SQLExporter extends AbstractTDBExporter {
 				strSource += String.format("%s as %s ,", strValue, strColumnName);
 				strInsertColumn += String.format(" %s,", strColumnName);
 				strInsertValue += String.format(" B.%s,", strColumnName);
-				if(isWhere) strMatchConditon += String.format("A.%s = B.%s and", strColumnName, strColumnName);
-				else strUpdate += String.format("A.%s = B.%s,", strColumnName, strColumnName);
+				if(isWhere) strMatchConditon += String.format(" A.%s = B.%s and", strColumnName, strColumnName);
+				else strUpdate += String.format(" A.%s = B.%s,", strColumnName, strColumnName);
 			}
 			strSource = StringUtils.removeEnd(strSource, ",");
 			strInsertColumn = StringUtils.removeEnd(strInsertColumn, ",");
@@ -196,7 +196,7 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int intLimitCnt, int commit) throws Exception {
-		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE 1=1 %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
+		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE 1=1 and %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
 		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
 		
 		// 데이터를 담는다.
@@ -228,8 +228,8 @@ public class SQLExporter extends AbstractTDBExporter {
 						break;
 					}
 				}
-				if(isWhere) strWhere += String.format("%s=%s and", strColumnName, strValue);
-				else strStatement += String.format("%s=%s,", strColumnName, strValue);
+				if(isWhere) strWhere += String.format(" %s=%s and", strColumnName, strValue);
+				else strStatement += String.format(" %s=%s,", strColumnName, strValue);
 			}
 			strStatement = StringUtils.removeEnd(strStatement, ",");
 			strWhere = StringUtils.removeEnd(strWhere, "and");
@@ -250,7 +250,7 @@ public class SQLExporter extends AbstractTDBExporter {
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
 		
-		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE 1=1 %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
+		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE 1=1 and %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
 		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
 		
 		// 데이터를 담는다.
@@ -283,8 +283,8 @@ public class SQLExporter extends AbstractTDBExporter {
 						break;
 					}
 				}
-				if(isWhere) strWhere += String.format("%s=%s and", strColumnName, strValue);
-				else strStatement += String.format("%s=%s,", strColumnName, strValue);
+				if(isWhere) strWhere += String.format(" %s=%s and", strColumnName, strValue);
+				else strStatement += String.format(" %s=%s,", strColumnName, strValue);
 			}
 			strStatement = StringUtils.removeEnd(strStatement, ",");
 			strWhere = StringUtils.removeEnd(strWhere, "and");
