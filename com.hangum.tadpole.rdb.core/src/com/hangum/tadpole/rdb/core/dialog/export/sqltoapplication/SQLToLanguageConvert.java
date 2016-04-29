@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToASPConvert;
@@ -17,6 +20,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQ
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToMyBatisConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToPHPConvert;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjHeaderDAO;
 
 /**
  * sql to language convert
@@ -33,18 +37,18 @@ public class SQLToLanguageConvert {
 		this.application = application;
 	}
 	
-	public String sqlToString(String name, String sql) {
+	public String sqlToString(String sql, Map options, List<AxisjHeaderDAO> listAxisjHeader) {
 		
 		if(application == EditorDefine.SQL_TO_APPLICATION.PHP) {
-			return SQLToPHPConvert.sqlToString(name, sql);
+			return SQLToPHPConvert.sqlToString((String) options.get("name"), sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.ASP) {
-			return SQLToASPConvert.sqlToString(name, sql);
+			return SQLToASPConvert.sqlToString((String) options.get("name"), sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer) {
-			return SQLToJavaConvert.sqlToString(name, sql);
+			return SQLToJavaConvert.sqlToString((String) options.get("name"), sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.MyBatis) {
-			return SQLToMyBatisConvert.sqlToString(userDB, name, sql);
+			return SQLToMyBatisConvert.sqlToString(userDB, (String) options.get("name"), sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.AXISJ) {
-			return SQLToAxisjConvert.sqlToString(userDB, name, sql);
+			return SQLToAxisjConvert.sqlToString(userDB, sql, options, listAxisjHeader);
 		}
 		
 		return "*** not set appliation type ****";

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites;
 
+import java.util.HashMap;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -104,17 +106,22 @@ public class SQLToOthersComposite extends AbstractSQLToComposite {
 		StringBuffer sbStr = new StringBuffer();
 		String[] sqls = parseSQL();
 		
-		String variable = textVariable.getText();
-		if(StringUtils.isEmpty(variable)){ 
-			variable = slt.getDefaultVariable();
-			textVariable.setText(variable);
+		if(StringUtils.isEmpty(textVariable.getText())){ 
+			textVariable.setText(slt.getDefaultVariable());
 		}
+		
+		HashMap<String, String> options = new HashMap<String, String>();
+		options.put("name", textVariable.getText());
 		
 		for(int i=0; i < sqls.length; i++) {
 			if("".equals(StringUtils.trimToEmpty(sqls[i]))) continue; //$NON-NLS-1$
 			
-			if(i ==0) sbStr.append( slt.sqlToString(variable, sqls[i]) );
-			else sbStr.append( slt.sqlToString(variable + i, sqls[i]) );
+			if(i ==0) {
+				sbStr.append( slt.sqlToString(sqls[i], options, null) );
+			}else{
+				options.put("name", options.get("name") + "_" + i);
+				sbStr.append( slt.sqlToString(sqls[i], options, null) );
+			}
 			
 			// 쿼리가 여러개일 경우 하나씩 한개를 준다.
 			sbStr.append("\r\n"); //$NON-NLS-1$
