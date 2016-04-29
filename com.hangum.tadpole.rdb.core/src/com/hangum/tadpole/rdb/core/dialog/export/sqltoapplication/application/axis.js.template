@@ -12,7 +12,7 @@
      */
     AXConfig.AXGrid.fitToWidthRightMargin = -1;
  
-    var pageID = "_TDB_TEMPLATE_TITLE_";
+    var pageID = "AXGridPage";
     var AXGrid_instances = [];
     var fnObj = {
         pageStart: function(){
@@ -28,13 +28,19 @@
                 };
  
                 myGrid.setConfig({
-                    targetID    : "AXGridTarget",
-                    sort        : true, //정렬을 원하지 않을 경우 (tip
-                    colHeadTool : true, // column tool use
-                    fitToWidth  : true, // 너비에 자동 맞춤
-                    colGroup    : getColGroup(),
-                    colHeadAlign: "center", // 헤드의 기본 정렬 값. colHeadAlign 을 지정하면 colGroup 에서 정의한 정렬이 무시되고 colHeadAlign : false 이거나 없으면 colGroup 에서 정의한 속성이 적용됩니다.
-                    body        : {
+	                    targetID    : "_TDB_TEMPLATE_TITLE_", 
+	    				theme       : "_TDB_TEMPLATE_THEME_", 
+	    				fixedColSeq : _TDB_TEMPLATE_FIXEDCOL_,
+	    				fitToWidth  : _TDB_TEMPLATE_FITTOWIDTH_,
+	    				colHeadAlign: "_TDB_TEMPLATE_HEADALIGN_",
+	    				mergeCells  : _TDB_TEMPLATE_MERGECELL_,  
+	    				height      : _TDB_TEMPLATE_HEIGHT_,     
+	    				sort        : _TDB_TEMPLATE_SORT_,       
+	    				remoteSort  : false,          
+	    				colHeadTool : _TDB_TEMPLATE_HEADTOOL_, 
+	    				viewMode    : "_TDB_TEMPLATE_VIEWMODE_"
+	                    colGroup    : getColGroup(),
+	                    body        : {
                         onclick: function(){
                             toast.push(Object.toJSON({ "event": "click", "index": this.index, "r": this.r, "c": this.c, "item": this.item }));
                             // this.list, this.page
