@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.mails.template;
 
+import com.hangum.tadpole.commons.libs.core.Messages;
+import com.hangum.tadpole.commons.libs.core.define.HTMLDefine;
+
 /**
  * new user mail template
  * 
@@ -25,38 +28,18 @@ public class TemporaryPasswordMailBodyTemplate extends MailBodyTemplate {
 	 * @return
 	 */
 	public String getContent(String strEmail, String strConfirmKey) {
-		StringBuffer strContent = new StringBuffer("<html>");
+		StringBuffer strContent = new StringBuffer();
+		strContent.append(HTMLDefine.HTML_STYLE);
+		// title
+		strContent.append(makeHead(Messages.get().SendTemporaryPassword));
 		
-		strContent.append(makeHead("Tadpole DB Hub temporary password sended.\n Please check."));
-		strContent.append("<table border='1' cellpadding='0' cellspacing='0' width='100%'>");
-				
-	
-			strContent.append("<tr>");
-				strContent.append("<td width='100' valign='top'>");
-				strContent.append("Email");
-				strContent.append("</td>");
-				strContent.append("<td width='260' valign='top'>");
-				strContent.append(strEmail);
-				strContent.append("</td>");
-			strContent.append("</tr>");
-		
-			strContent.append("<tr>");
-			strContent.append("<td width='100' valign='top'>");
-			strContent.append("Temporary password is ");
-			strContent.append("</td>");
-			strContent.append("<td width='260' valign='top'><b>");
-			strContent.append(strConfirmKey);
-			strContent.append("</b></td>");
-		strContent.append("</tr>");
-		
+		// body
+		strContent.append("<table class='tg'>");
+		strContent.append(mailBodyTemplate(Messages.get().Email, strEmail));
+		strContent.append(mailBodyTemplate(Messages.get().Confirmkey, strConfirmKey));
 		strContent.append("</table>");
-		
-		
+		// tail
 		strContent.append(makeTail());
-	
-		//
-		strContent.append("</html>");
-
 		return strContent.toString();
 	}
 }

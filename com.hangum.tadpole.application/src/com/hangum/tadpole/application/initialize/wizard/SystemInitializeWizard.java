@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.initialize.wizard;
 
-import java.sql.Timestamp;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.Wizard;
 

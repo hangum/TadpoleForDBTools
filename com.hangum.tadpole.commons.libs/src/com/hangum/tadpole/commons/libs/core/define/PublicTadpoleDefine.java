@@ -91,7 +91,7 @@ public class PublicTadpoleDefine {
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
 	
 	/** tadpole url */
-	public static String TADPOLE_URL = "http://127.0.0.1:%s/tadpole";//db?startup=tadpole"; //$NON-NLS-1$
+	public static String TADPOLE_URL = "http://127.0.0.1:%s";
 	
 	/**
 	 * tadpole url

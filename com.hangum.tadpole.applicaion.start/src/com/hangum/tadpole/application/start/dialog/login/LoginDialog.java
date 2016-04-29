@@ -493,7 +493,7 @@ public class LoginDialog extends Dialog {
 	}
 	
 	private void findPassword() {
-		FindPasswordDialog dlg = new FindPasswordDialog(getShell());
+		FindPasswordDialog dlg = new FindPasswordDialog(getShell(), textEMail.getText());
 		dlg.open();
 	}
 

@@ -330,6 +330,9 @@ public class NewUserDialog extends Dialog {
 			// 
 			NewUserMailBodyTemplate mailContent = new NewUserMailBodyTemplate();
 			String strContent = mailContent.getContent(name, email, strConfirmKey);
+			
+//			if(logger.isDebugEnabled()) logger.debug(strContent);
+			
 			emailDao.setContent(strContent);
 			emailDao.setTo(email);
 			
