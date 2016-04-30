@@ -1,16 +1,28 @@
-package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
+/*******************************************************************************
+ * Copyright (c) 2016 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
+package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjHeaderDAO;
-import com.hangum.tadpole.rdb.core.ext.Activator;
-import com.swtdesigner.ResourceManager;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
+/**
+ * axisj label provider
+ * 
+ * @author nilriri
+ *
+ */
 public class AxisJLabelProvider extends LabelProvider implements ITableLabelProvider {
-	private static final Image CHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/checked.gif"); //$NON-NLS-1$
-	private static final Image UNCHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unchecked.gif"); //$NON-NLS-1$
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -19,9 +31,9 @@ public class AxisJLabelProvider extends LabelProvider implements ITableLabelProv
 		switch (columnIndex) {
 		case 6:
 			if (dao.isColHeadTool())
-				return CHECKED;
+				return GlobalImageUtils.getCheck();
 			else
-				return UNCHECKED;
+				return GlobalImageUtils.getUnCheck();
 		}
 
 		return null;

@@ -10,56 +10,47 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.QueryUtils;
-import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
-import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.AxisJLabelProvider;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.AxisjConsts;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.AxisjEditingSupport;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToLanguageConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToAxisjConvert;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
-import com.hangum.tadpole.rdb.core.ext.Activator;
-import com.hangum.tadpole.rdb.core.ext.sampledata.GenType;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataConsts;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataEditingSupport;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenDAO;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenerateExecutor;
-import com.swtdesigner.ResourceManager;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisJLabelProvider;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjConsts;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjEditingSupport;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjHeaderDAO;
 
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.browser.Browser;
 
 /**
  * axisj composite
@@ -68,6 +59,8 @@ import org.eclipse.swt.custom.CCombo;
  *
  */
 public class AxisjComposite extends AbstractSQLToComposite {
+	private static final Logger logger = Logger.getLogger(AxisjComposite.class);
+	
 	private Text textConvert;
 	private Text textVariable;
 	private SQLToLanguageConvert slt;
@@ -81,6 +74,9 @@ public class AxisjComposite extends AbstractSQLToComposite {
 	private CCombo comboHeadTool;
 	private CCombo comboViewMode;
 	private TableViewer tableViewer;
+	
+	private CTabFolder tabFolder;
+	private Browser browserPreview;
 	private List<AxisjHeaderDAO> listAxisjHeader = new ArrayList<AxisjHeaderDAO>();
 
 	/**
@@ -132,6 +128,7 @@ public class AxisjComposite extends AbstractSQLToComposite {
 		btnOriginalText.setText(Messages.get().SQLToStringDialog_4);
 		
 		Composite composite = new Composite(compositeBody, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		composite.setLayout(new GridLayout(6, false));
 		
 		Label lblTheme = new Label(composite, SWT.NONE);
@@ -215,35 +212,57 @@ public class AxisjComposite extends AbstractSQLToComposite {
 		comboViewMode.setText("Grid");
 		comboViewMode.setEditable(false);
 		
-
-		Composite compositeHead = new Composite(compositeBody, SWT.NONE);
-		GridData gd_compositeHead = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
-		gd_compositeHead.minimumHeight = 200;
-		compositeHead.setLayoutData(gd_compositeHead);
-		compositeHead.setLayout(new GridLayout(1, false));
-
-		tableViewer = new TableViewer(compositeHead, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		SashForm sashForm = new SashForm(compositeBody, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
 		Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		createTaleColumn();
-
+		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new AxisJLabelProvider());
 		tableViewer.setInput(listAxisjHeader);
-
+		
 		this.listAxisjHeader = SQLToAxisjConvert.initializeHead(listAxisjHeader, this.userDB, this.sql);
-		
 		tableViewer.refresh();
-
 		
-		textConvert = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
+		tabFolder = new CTabFolder(sashForm, SWT.BORDER | SWT.BOTTOM);
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// selected preview 
+				if(tabFolder.getSelectionIndex() == 1) {
+					try {
+						String STR_PREVIEW_TEMPLATE = IOUtils.toString(AxisjConsts.class.getResource("AXIS.PREVIEW.html"));
+						browserPreview.setText(STR_PREVIEW_TEMPLATE);
+					} catch (IOException e1) {
+						logger.error("AXISJ preview exception", e1);
+					}
+				}
+			}
+		});
+		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
+		
+		CTabItem tbtmHtml = new CTabItem(tabFolder, SWT.NONE);
+		tbtmHtml.setText("HTML");
+		
+		textConvert = new Text(tabFolder, SWT.NONE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
+		tbtmHtml.setControl(textConvert);
 		textConvert.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
+		
+		CTabItem tabBrowser = new CTabItem(tabFolder, SWT.NONE);
+		tabBrowser.setText("Browser");
+		
+		browserPreview = new Browser(tabFolder, SWT.NONE);
+		tabBrowser.setControl(browserPreview);
+		tabFolder.setSelection(0);		
 		
 		sqlToStr();
+		sashForm.setWeights(new int[] {4, 5});
 	}
 	
 	private void createTaleColumn() {
@@ -258,8 +277,6 @@ public class AxisjComposite extends AbstractSQLToComposite {
 			tableViewerColumn.setEditingSupport(new AxisjEditingSupport(tableViewer, i));
 		}
 	}
-
-
 
 	/**
 	 * sql to str

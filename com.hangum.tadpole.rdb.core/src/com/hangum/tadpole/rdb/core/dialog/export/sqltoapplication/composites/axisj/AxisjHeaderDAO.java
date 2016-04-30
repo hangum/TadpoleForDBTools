@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,8 +8,14 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites;
+package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj;
 
+/**
+ * AXISJ HEADER DAO
+ * 
+ * @author hangum
+ *
+ */
 public class AxisjHeaderDAO {
 	private int seqNo;//
     private String key;//      : "no",        // {String} -- 데이터와 맵핑할 키 입니다. key 명칭은 reservedKey

@@ -13,11 +13,8 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -33,11 +30,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.SQLToOthersComposite;
-import com.hangum.tadpole.rdb.core.ext.Activator;
-import com.hangum.tadpole.rdb.core.ext.sampledata.GenType;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataConsts;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenDAO;
-import com.swtdesigner.ResourceManager;
 
 /**
  * sql to application string 
@@ -104,7 +96,7 @@ public class SQLToStringDialog extends Dialog {
 		SQLToOthersComposite compositeMybatis = new SQLToOthersComposite(tabFolder, userDB, "MyBatis", sql, EditorDefine.SQL_TO_APPLICATION.MyBatis);
 		compositeMybatis.setLayout(new GridLayout(1, false));
 		
-		AxisjComposite compositeAxisj = new AxisjComposite(tabFolder, userDB, "Axisj", sql, EditorDefine.SQL_TO_APPLICATION.AXISJ);
+		AxisjComposite compositeAxisj = new AxisjComposite(tabFolder, userDB, "AXISJ", sql, EditorDefine.SQL_TO_APPLICATION.AXISJ);
 		compositeAxisj.setLayout(new GridLayout(1, false));
 
 		tabFolder.setSelection(0);
@@ -130,6 +122,6 @@ public class SQLToStringDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(750, 650);
+		return new Point(850, 750);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,8 +8,14 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
+package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj;
 
+/**
+ * axisj label provider
+ * 
+ * @author nilriri
+ *
+ */
 public class AxisjConsts {
 
 /*		
