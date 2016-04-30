@@ -10,11 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -56,6 +59,8 @@ import org.eclipse.swt.browser.Browser;
  *
  */
 public class AxisjComposite extends AbstractSQLToComposite {
+	private static final Logger logger = Logger.getLogger(AxisjComposite.class);
+	
 	private Text textConvert;
 	private Text textVariable;
 	private SQLToLanguageConvert slt;
@@ -69,6 +74,9 @@ public class AxisjComposite extends AbstractSQLToComposite {
 	private CCombo comboHeadTool;
 	private CCombo comboViewMode;
 	private TableViewer tableViewer;
+	
+	private CTabFolder tabFolder;
+	private Browser browserPreview;
 	private List<AxisjHeaderDAO> listAxisjHeader = new ArrayList<AxisjHeaderDAO>();
 
 	/**
@@ -221,7 +229,21 @@ public class AxisjComposite extends AbstractSQLToComposite {
 		this.listAxisjHeader = SQLToAxisjConvert.initializeHead(listAxisjHeader, this.userDB, this.sql);
 		tableViewer.refresh();
 		
-		CTabFolder tabFolder = new CTabFolder(sashForm, SWT.BORDER | SWT.BOTTOM);
+		tabFolder = new CTabFolder(sashForm, SWT.BORDER | SWT.BOTTOM);
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// selected preview 
+				if(tabFolder.getSelectionIndex() == 1) {
+					try {
+						String STR_PREVIEW_TEMPLATE = IOUtils.toString(AxisjConsts.class.getResource("AXIS.PREVIEW.html"));
+						browserPreview.setText(STR_PREVIEW_TEMPLATE);
+					} catch (IOException e1) {
+						logger.error("AXISJ preview exception", e1);
+					}
+				}
+			}
+		});
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
 		
@@ -235,8 +257,8 @@ public class AxisjComposite extends AbstractSQLToComposite {
 		CTabItem tabBrowser = new CTabItem(tabFolder, SWT.NONE);
 		tabBrowser.setText("Browser");
 		
-		Browser browser = new Browser(tabFolder, SWT.NONE);
-		tabBrowser.setControl(browser);
+		browserPreview = new Browser(tabFolder, SWT.NONE);
+		tabBrowser.setControl(browserPreview);
 		tabFolder.setSelection(0);		
 		
 		sqlToStr();
