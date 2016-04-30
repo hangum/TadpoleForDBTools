@@ -47,11 +47,9 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
-import com.swtdesigner.ResourceManager;
 
 /**
  * DMLGenerae Statement Dialog
@@ -593,18 +591,14 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 class GenerateLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-	private static final Image CHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/checked.png"); //$NON-NLS-1$;
-	private static final Image UNCHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unchecked.png"); //$NON-NLS-1$;
-
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-		// TODO Auto-generated method stub
 		if (columnIndex == 0) {
 			ExtendTableColumnDAO columnDao = (ExtendTableColumnDAO) element;
 			if (columnDao.isCheck()) {
-				return CHECKED;
+				return GlobalImageUtils.getCheck();
 			} else {
-				return UNCHECKED;
+				return GlobalImageUtils.getUnCheck();
 			}
 		}
 		return null;

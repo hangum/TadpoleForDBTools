@@ -1,8 +1,8 @@
 /**
-* original source http://dev.axisj.com/samples/AXGrid/index.html
-* all options : http://jdoc.axisj.com/AXGrid.html#.setConfig 
-* 기본 코드를 기본으로 변경하였습니다. 
-* hangum(2016.04))
+* 원본소스: http://dev.axisj.com/samples/AXGrid/index.html
+* 모든 옵션정보 : http://jdoc.axisj.com/AXGrid.html#.setConfig 
+* 기본 코드를 테드폴에 맞게 변경하였습니다. 
+* @author Jeong Jaehong, Cho hyunjong(2016.04))
 */
     /**
      * Require Files for AXISJ UI Component...

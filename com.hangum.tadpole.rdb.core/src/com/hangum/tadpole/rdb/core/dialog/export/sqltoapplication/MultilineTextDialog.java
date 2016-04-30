@@ -1,17 +1,31 @@
+/*******************************************************************************
+ * Copyright (c) 2016 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 
 import org.eclipse.jface.dialogs.Dialog;
-
-import org.eclipse.jface.dialogs.Dialog; 
-import org.eclipse.jface.layout.GridDataFactory; 
-import org.eclipse.jface.layout.GridLayoutFactory; 
-import org.eclipse.swt.SWT; 
-import org.eclipse.swt.widgets.Composite; 
-import org.eclipse.swt.widgets.Control; 
-import org.eclipse.swt.widgets.Label; 
-import org.eclipse.swt.widgets.Shell; 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text; 
- 
+
+/**
+ * Multilin text dialog
+ * 
+ * @author nilriri
+ *
+ */
 public class MultilineTextDialog extends Dialog { 
     private Composite composite; 
     private String originalValue; 
@@ -55,7 +69,6 @@ public class MultilineTextDialog extends Dialog {
  
     @Override 
     protected void okPressed() { 
-        // store the value from the spinners so it can be set in the text control 
         value = textControl.getText(); 
         super.okPressed(); 
     } 

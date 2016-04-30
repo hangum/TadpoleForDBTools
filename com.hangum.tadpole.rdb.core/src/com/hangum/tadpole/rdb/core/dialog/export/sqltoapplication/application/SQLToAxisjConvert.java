@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +22,8 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.AxisjConsts;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjHeaderDAO;
-import com.hangum.tadpole.rdb.core.ext.sampledata.SampleDataGenDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjConsts;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjHeaderDAO;
 
 /**
  * sql to axisj(https://www.axisj.com/)

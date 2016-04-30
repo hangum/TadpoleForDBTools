@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
+package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -27,12 +27,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjHeaderDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.MultilineTextDialog;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToStringDialog;
 
 /**
- * SampleDAtaEditingSupport
+ * AXISJ EditingSupport
  * 
- * @author hangum
+ * @author nilriri
  */
 public class AxisjEditingSupport extends EditingSupport {
 

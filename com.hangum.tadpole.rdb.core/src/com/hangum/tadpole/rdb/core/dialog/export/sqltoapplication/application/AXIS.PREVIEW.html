@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1.0, minimum-scale=1"/>
+
+    <title>TadpoleHub - AXGrid</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/axisj/axisj/master/ui/arongi/AXJ.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/1.12.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/axisj/axisj/master/dist/AXJ.min.js"></script>
+    <style type="text/css">
+        html, body {
+            padding: 0px;
+            font-size: 12px;
+        }
+        .margin-10{
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="doc-root">
+    <div class="margin-10">
+        <h1>AXGrid (with Tadpole DB Hub tools)</h1>
+    </div>
+
+    <div class="margin-10" id="ax-grid-view-0" style="height: 400px;"></div>
+
+    <div class="margin-10 tool-view">
+        <button class="AXButton Blue" data-btn="get-all">그리드 전체 데이터 가져오기</button>
+        <button class="AXButton Blue" data-btn="get-checked">체크된 데이터 가져오기</button>
+        <button class="AXButton Blue" data-btn="get-selected">선택된 데이터 가져오기</button>
+        <button class="AXButton Blue" data-btn="get-excel">엑셀데이터 가져오기</button>
+
+        <button class="AXButton Blue" data-btn="del-checked">체크항목 삭제</button>
+        <button class="AXButton Blue" data-btn="add-item">아이템 추가</button>
+    </div>
+
+    <div id="print-out"></div>
+
+    <div class="margin-10">
+        <ul>
+            <li><a href="https://www.axisj.com">AXISJ.com</a></li>
+            <li><a href="https://github.com/axisj/axisj">https://github.com/axisj/axisj</a></li>
+            <li><a href="https://www.facebook.com/axisj">https://www.facebook.com/axisj</a></li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var fnObj = {
+        pageStart: function () {
+            var root = this;
+
+            this.toolView.initView();
+            this.gridView0.initView();
+            this.dataControl.search({}, function(data){
+                root.gridView0.setData(data);
+            });
+        }
+    };
+    jQuery(document.body).ready(function () {
+        fnObj.pageStart();
+    });
+
+    //====== tool
+    fnObj.toolView = {
+        initView: function(){
+            var root = fnObj;
+
+            $('[data-btn]').bind("click", function(){
+                switch(this.getAttribute("data-btn")){
+                    case "get-all":
+                        toast.push("데이터를 가져왔습니다. 콘솔창을 확인하세요");
+                        trace(root.gridView0.getData());
+                        break;
+                    case "get-checked":
+                        toast.push("데이터를 가져왔습니다. 콘솔창을 확인하세요");
+                        trace(root.gridView0.getCheckedData(0)); // 컬럼 0번째의 체크박스로 부터
+                        break;
+                    case "get-selected":
+                        toast.push("데이터를 가져왔습니다. 콘솔창을 확인하세요");
+                        trace(root.gridView0.getSelectedData());
+                        break;
+                    case "del-checked":
+                        root.gridView0.deleteItem(0); // 컬럼 0번째의 체크박스로 부터
+                        break;
+                    case "add-item":
+                        root.gridView0.append();
+                        break;
+                    case "get-excel":
+                        toast.push("데이터를 가져왔습니다.");
+                        $("#print-out").html(root.gridView0.getExcel("html"));
+                        break;
+
+                }
+
+            });
+        }
+    }
+
+    //=== dataControl
+    fnObj.dataControl = {
+        search: function(param, callBack){
+            var list = [
+                {EmployeeId:1,LastName:"Adams",FirstName:"Andrew",Title:"General Manager",ReportsTo:"{null}",BirthDate:"1962-02-18 00:00:00",HireDate:"2002-08-14 00:00:00",Address:"11120 Jasper Ave NW",City:"Edmonton",State:"AB",Country:"Canada",PostalCode:"T5K 2N1",Phone:"+1 (780) 428-9482",Fax:"+1 (780) 428-3457",Email:"andrew@chinookcorp.com"},
+                {EmployeeId:2,LastName:"Edwards",FirstName:"Nancy",Title:"Sales Manager",ReportsTo:"1",BirthDate:"1958-12-08 00:00:00",HireDate:"2002-05-01 00:00:00",Address:"825 8 Ave SW",City:"Calgary",State:"AB",Country:"Canada",PostalCode:"T2P 2T3",Phone:"+1 (403) 262-3443",Fax:"+1 (403) 262-3322",Email:"nancy@chinookcorp.com"},
+                {EmployeeId:3,LastName:"Peacock",FirstName:"Jane",Title:"Sales Support Agent",ReportsTo:"2",BirthDate:"1973-08-29 00:00:00",HireDate:"2002-04-01 00:00:00",Address:"1111 6 Ave SW",City:"Calgary",State:"AB",Country:"Canada",PostalCode:"T2P 5M5",Phone:"+1 (403) 262-3443",Fax:"+1 (403) 262-6712",Email:"jane@chinookcorp.com"},
+                {EmployeeId:4,LastName:"Park",FirstName:"Margaret",Title:"Sales Support Agent",ReportsTo:"2",BirthDate:"1947-09-19 00:00:00",HireDate:"2003-05-03 00:00:00",Address:"683 10 Street SW",City:"Calgary",State:"AB",Country:"Canada",PostalCode:"T2P 5G3",Phone:"+1 (403) 263-4423",Fax:"+1 (403) 263-4289",Email:"margaret@chinookcorp.com"}
+            ];
+            if(callBack) callBack(list);
+        }
+    }
+
+    //=== gridView
+    fnObj.gridView0 = {
+        target: new AXGrid(),
+        targetElementID: "ax-grid-view-0",
+        initView: function () {
+            var getColGroup = function () {
+
+                /*
+                 * {
+                 *  key : "key",
+                 *  label : "label",
+                 *  width : Number,
+                 *  align : "left|center|right",
+                 *  sort : "asc",
+                 *  colHeadTool : false,
+                 *  formatter : function(){return '';},
+                 *  tooltip : function(){return '';},
+                 *  disabled : function(){return false;},
+                 *  checked : function(){return false;}
+                 * },
+                 */
+
+                return [
+                    {key: "_", label: "", width: 40, formatter:"checkbox", align:"center"},
+                    {key: "index", label: "SEQ", width: 50, formatter:function (){ return this.index;}, align:"center"},
+                    {key: "EmployeeId", label: "EmployeeId", width: 100},
+                    {key: "LastName", label: "LastName", width: 100},
+                    {key: "FirstName", label: "FirstName", width: 100},
+                    {key: "Title", label: "Title", width: 100},
+                    {key: "ReportsTo", label: "ReportsTo", width: 100},
+                    {key: "BirthDate", label: "BirthDate", width: 100},
+                    {key: "HireDate", label: "HireDate", width: 100},
+                    {key: "Address", label: "Address", width: 100},
+                    {key: "City", label: "City", width: 100},
+                    {key: "State", label: "State", width: 100},
+                    {key: "Country", label: "Country", width: 100},
+                    {key: "PostalCode", label: "PostalCode", width: 100},
+                    {key: "Phone", label: "Phone", width: 100},
+                    {key: "Fax", label: "Fax", width: 100},
+                    {key: "Email", label: "Email", width: 100}
+                ];
+            };
+
+            this.target.setConfig({
+                targetID: this.targetElementID,
+                theme: "AXGrid",
+                //fixedColSeq: 0,
+                //fitToWidth: false,
+                colHeadAlign: "center",
+                //mergeCells: false,
+                //sort: true,
+                //colHeadTool: true,
+                //viewMode: "grid",
+                colGroup: getColGroup(),
+                body: {
+                    onclick: function () {
+                        toast.push("클릭되었습니다. 콘솔창을 확인하세요");
+                        trace({"event": "click", "index": this.index, "r": this.r, "c": this.c, "item": this.item});
+                        // this.list, this.page
+                    }
+                    /* ondblclick 선언하면 onclick 이벤트가 0.25 초 지연 발생 됩니다. 주의 하시기 바람니다. */
+                    /*
+                    ,
+                    ondblclick: function () {
+                         toast.push("더블클릭되었습니다. 콘솔창을 확인하세요");
+                         trace({"event": "click", "index": this.index, "r": this.r, "c": this.c, "item": this.item});
+                        // this.list, this.page
+                    },
+                    addClass: function () {
+                        return (this.index % 2 == 0 ? "gray" : "white"); // red, green, blue, yellow, white, gray
+                    }
+                    */
+                },
+                page: {
+                    display: false,
+                    paging: false
+                }
+            });
+
+        },
+        setData: function (data) {
+
+            var gridData = {
+                list: data,
+                page:{
+                    pageNo: 1,
+                    pageSize: 20,
+                    pageCount: 1,
+                    listCount: data.length
+                }
+            };
+            this.target.setData(gridData);
+        },
+        getData: function () {
+            return this.target.getList();
+            // or this.target.list;
+        },
+        getCheckedData: function (colSeq) {
+            return this.target.getCheckedList(colSeq);
+            // or this.target.list;
+        },
+        deleteItem: function(colSeq) {
+            this.target.removeListIndex(this.target.getCheckedListWithIndex(colSeq));
+        },
+        append: function (data) {
+            if(typeof data == "undefined"){
+                data = $.extend({}, this.target.list.last());
+            }
+            this.target.pushList(data);
+            this.target.setFocus(this.target.list.length - 1);
+        },
+        getExcel: function(type){
+            return this.target.getExcelFormat(type);
+        },
+        getSelectedData: function(){
+            return this.target.getSelectedItem();
+        }
+    };
+</script>
+</body>
+</html>
