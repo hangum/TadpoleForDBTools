@@ -22,7 +22,7 @@ import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
- * sql to axisj(http://www.realgrid.com//)
+ * sql to axisj(http://www.realgrid.com/)
  * 
  * @author hangum
  *
