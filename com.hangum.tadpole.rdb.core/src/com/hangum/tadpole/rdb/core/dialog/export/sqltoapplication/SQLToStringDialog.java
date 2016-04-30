@@ -29,6 +29,7 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjComposite;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.RealGridComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.SQLToOthersComposite;
 
 /**
@@ -98,6 +99,9 @@ public class SQLToStringDialog extends Dialog {
 		
 		AxisjComposite compositeAxisj = new AxisjComposite(tabFolder, userDB, "AXISJ", sql, EditorDefine.SQL_TO_APPLICATION.AXISJ);
 		compositeAxisj.setLayout(new GridLayout(1, false));
+		
+		RealGridComposite compositeRealgrid = new RealGridComposite(tabFolder, userDB, "RealGrid", sql, EditorDefine.SQL_TO_APPLICATION.REAL_GRID);
+		compositeRealgrid.setLayout(new GridLayout(1, false));
 
 		tabFolder.setSelection(0);
 		
