@@ -575,6 +575,14 @@ public class Messages {
 	public String MainEditorServiceEnd;
 
 	public String SendEditor;
+
+	public String ISApiUse;
+
+	public String ResourceManageEditor_27;
+
+	public String ResourceManageEditor_30;
+
+	public String ResourceManageEditor_32;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

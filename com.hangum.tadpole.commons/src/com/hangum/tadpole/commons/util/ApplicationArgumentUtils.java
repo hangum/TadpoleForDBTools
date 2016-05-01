@@ -185,6 +185,15 @@ public class ApplicationArgumentUtils {
 	public static boolean isNewUserPermit() {
 		return checkString("-newUserPermit");
 	}
+	
+	/**
+	 * Online servie
+	 * @return
+	 */
+	public static boolean isOnlineServer() {
+		return checkString("-OnlineServer");
+	}
+	
 	/**
 	 * 옵션이 정의되어 있지 않다면 어드민 허락이 필요없다.
 	 * 

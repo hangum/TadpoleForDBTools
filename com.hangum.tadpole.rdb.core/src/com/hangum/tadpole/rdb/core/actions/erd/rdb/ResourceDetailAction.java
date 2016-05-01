@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.rdb.core.dialog.resource.ResourceDetailDialog;
 
 /**
@@ -44,11 +45,23 @@ public class ResourceDetailAction implements IViewActionDelegate {
 		UserDBResourceDAO resourceDB = (UserDBResourceDAO)sel.getFirstElement();
 
 		ResourceManagerDAO managerDao = new ResourceManagerDAO();
+		managerDao.setResource_seq(resourceDB.getResource_seq());
+		managerDao.setDb_seq(resourceDB.getDb_seq());
+		managerDao.setUser_seq(resourceDB.getUser_seq());
+		
 		managerDao.setName(resourceDB.getName());
+		managerDao.setResource_types(resourceDB.getResource_types());
 		managerDao.setDescription(resourceDB.getDescription());
 		managerDao.setResource_seq(resourceDB.getResource_seq());
 		managerDao.setCreate_time(resourceDB.getCreate_time() == null?resourceDB.getSqliteCreate_time():resourceDB.getCreate_time().toLocaleString());
 		managerDao.setUser_name(resourceDB.getUsernames());
+		
+		try {
+			String defaultStr = TadpoleSystem_UserDBResource.getResourceData(resourceDB);
+			resourceDB.setDataString(defaultStr);
+		} catch(Exception e) {
+			logger.error("user resource data", e);
+		}
 		
 		ResourceDetailDialog dialog = new ResourceDetailDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), managerDao, resourceDB);
 		dialog.open();
