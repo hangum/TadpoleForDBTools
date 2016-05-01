@@ -1,5 +1,5 @@
 /*******************************************************************************
-
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -73,6 +73,7 @@ public class LoginDialog extends Dialog {
 	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
 	private Label lblLoginForm;
+	private Label lblLabelLblhangum;
 	private Composite compositeLogin;
 	private Label lblEmail;
 	
@@ -94,7 +95,7 @@ public class LoginDialog extends Dialog {
 //						"	</form>"; //$NON-NLS-1$
 	private Composite compositeHead;
 	private Composite compositeTail;
-	private Label lblLabelLblhangum;
+	
 	
 	public LoginDialog(Shell shell) {
 		super(shell);

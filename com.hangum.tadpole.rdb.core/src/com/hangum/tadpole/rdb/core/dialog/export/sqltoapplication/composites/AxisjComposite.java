@@ -116,7 +116,7 @@ public class AxisjComposite extends AbstractSQLToComposite {
 				sqlToStr();
 			}
 		});
-		btnConvertSQL.setText(Messages.get().SQLToStringDialog_btnNewButton_text);
+		btnConvertSQL.setText(String.format(Messages.get().SQLToStringDialog_btnNewButton_text, type));
 		
 		Button btnOriginalText = new Button(compositeTitle, SWT.NONE);
 		btnOriginalText.addSelectionListener(new SelectionAdapter() {

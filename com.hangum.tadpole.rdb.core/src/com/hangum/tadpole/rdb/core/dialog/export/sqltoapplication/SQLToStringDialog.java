@@ -29,8 +29,8 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AxisjComposite;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.RealGridComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.SQLToOthersComposite;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.realgrid.RealGridComposite;
 
 /**
  * sql to application string 
