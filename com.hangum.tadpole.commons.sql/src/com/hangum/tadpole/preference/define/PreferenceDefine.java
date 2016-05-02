@@ -189,7 +189,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";
 	
 	public static final String EDITOR_IS_WARP 		= "EDITOR_IS_WARP";
-	public static final String EDITOR_IS_WARP_VALUE = "true";
+	public static final String EDITOR_IS_WARP_VALUE = "false";
 	
 	public static final String EDITOR_WRAP_LIMIT 		= "EDITOR_WRAP_LIMIT";
 	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "300";
