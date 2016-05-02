@@ -27,11 +27,17 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -58,14 +64,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.widgets.Combo;
-
 /**
  * Resource history dialog
  * 
@@ -74,6 +72,8 @@ import org.eclipse.swt.widgets.Combo;
  */
 public class ResourceDetailDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResourceDetailDialog.class);
+	
+	private int MODIFY_ID = IDialogConstants.CLIENT_ID + 1;
 	
 	private UserDBResourceDAO originalResourceDB;
 	private ResourceManagerDAO resourceManagerDao;
@@ -124,7 +124,7 @@ public class ResourceDetailDialog extends Dialog {
 		
 		Composite compositeHead = new Composite(container, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeHead.setLayout(new GridLayout(3, false));
+		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
 		lblTitle.setText(Messages.get().Title);
@@ -133,7 +133,6 @@ public class ResourceDetailDialog extends Dialog {
 		textTitle.setEditable(true);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textTitle.setText(originalResourceDB.getName());
-		new Label(compositeHead, SWT.NONE);
 		
 		Label lblSharedType = new Label(compositeHead, SWT.NONE);
 		lblSharedType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -145,7 +144,6 @@ public class ResourceDetailDialog extends Dialog {
 			comboSharedType.add(type.toString());
 		}
 		comboSharedType.setText(originalResourceDB.getShared_type());
-		new Label(compositeHead, SWT.NONE);
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
 		lblDescription.setText(Messages.get().Description);
@@ -156,94 +154,7 @@ public class ResourceDetailDialog extends Dialog {
 		gd_textDescription.heightHint = 40;
 		textDescription.setLayoutData(gd_textDescription);
 		textDescription.setText(originalResourceDB.getDescription());
-		
-		Button btnModify = new Button(compositeHead, SWT.NONE);
-		btnModify.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResourceDetailDialog_delete)) {
-					resourceManagerDao.setName(textTitle.getText());
-					resourceManagerDao.setDescription(textDescription.getText());
-					resourceManagerDao.setShared_type(comboSharedType.getText());
-					resourceManagerDao.setRestapi_yesno(comboUseAPI.getText());
-					resourceManagerDao.setRestapi_uri(textAPIURL.getText());
-					
-					if(comboUseAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name()) && "".equals(resourceManagerDao.getRestapi_key())) { //$NON-NLS-1$
-						resourceManagerDao.setRestapi_key(Utils.getUniqueID());	
-					}
-					
-					try {
-						if(!isValid(resourceManagerDao)) return;
-						
-						TadpoleSystem_UserDBResource.updateResourceHeader(resourceManagerDao);
 
-						// tree refresh
-						if(originalResourceDB != null) {
-							originalResourceDB.setName(resourceManagerDao.getName());
-							originalResourceDB.setDescription(resourceManagerDao.getDescription());
-							originalResourceDB.setShared_type(resourceManagerDao.getShared_type());
-							
-							originalResourceDB.setRestapi_yesno(resourceManagerDao.getRestapi_yesno());
-							originalResourceDB.setRestapi_uri(resourceManagerDao.getRestapi_uri());
-							
-							ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
-							mv.refreshResource(originalResourceDB);
-						}
-					} catch(Exception ee) {
-						logger.error("Resource title, desc saveing", ee);
-						MessageDialog.openError(getShell(), Messages.get().Confirm, "Save exception." + ee.getMessage());
-					}
-				}
-			}
-			
-			/**
-			 * is valid
-			 * @return
-			 */
-			private boolean isValid(ResourceManagerDAO dao) {
-				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
-				if(len < 3) {
-					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
-					textTitle.setFocus();
-					return false;
-				}
-
-				// sql type 
-				if(dao.getResource_types().equals(RESOURCE_TYPE.SQL.name())) {
-					if(PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())) {
-						String strAPIURI = textAPIURL.getText().trim();
-						
-						if(strAPIURI.equals("")) { //$NON-NLS-1$
-							MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_30);
-							textAPIURL.setFocus();
-							return false;
-						}
-						
-						// check valid url. url pattern is must be /{parent}/{child}
-						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_32);
-							
-							textAPIURL.setFocus();
-							return false;
-						}
-					}
-				}
-				
-				try {
-					TadpoleSystem_UserDBResource.userDBResourceDupUpdate(originalResourceDB.getParent(), dao);
-				} catch (Exception ee) {
-					logger.error("Resource validate", ee); //$NON-NLS-1$
-					MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
-					return false;
-				}
-				
-				return true;
-			}
-		});
-		btnModify.setText(Messages.get().Modified);
-		// 생성자만 수정가능하다.
-		btnModify.setEnabled(SessionManager.getUserSeq() == resourceManagerDao.getUser_seq());
-		
 		Composite compositeHeaderUser = new Composite(compositeHead, SWT.NONE);
 		compositeHeaderUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		compositeHeaderUser.setLayout(new GridLayout(4, false));
@@ -356,6 +267,90 @@ public class ResourceDetailDialog extends Dialog {
 		return container;
 	}
 	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if(buttonId == MODIFY_ID) {
+			if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResourceDetailDialog_delete)) {
+				resourceManagerDao.setName(textTitle.getText());
+				resourceManagerDao.setDescription(textDescription.getText());
+				resourceManagerDao.setShared_type(comboSharedType.getText());
+				resourceManagerDao.setRestapi_yesno(comboUseAPI.getText());
+				resourceManagerDao.setRestapi_uri(textAPIURL.getText());
+				
+				if(comboUseAPI.getText().equals(PublicTadpoleDefine.YES_NO.YES.name()) && "".equals(resourceManagerDao.getRestapi_key())) { //$NON-NLS-1$
+					resourceManagerDao.setRestapi_key(Utils.getUniqueID());	
+				}
+				
+				try {
+					if(!isValid(resourceManagerDao)) return;
+					
+					TadpoleSystem_UserDBResource.updateResourceHeader(resourceManagerDao);
+
+					// tree refresh
+					if(originalResourceDB != null) {
+						originalResourceDB.setName(resourceManagerDao.getName());
+						originalResourceDB.setDescription(resourceManagerDao.getDescription());
+						originalResourceDB.setShared_type(resourceManagerDao.getShared_type());
+						
+						originalResourceDB.setRestapi_yesno(resourceManagerDao.getRestapi_yesno());
+						originalResourceDB.setRestapi_uri(resourceManagerDao.getRestapi_uri());
+						
+						ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
+						mv.refreshResource(originalResourceDB);
+					}
+				} catch(Exception ee) {
+					logger.error("Resource title, desc saveing", ee);
+					MessageDialog.openError(getShell(), Messages.get().Confirm, "Save exception." + ee.getMessage());
+				}
+			}
+		}
+		super.buttonPressed(buttonId);
+	}
+	
+	/**
+	 * is valid
+	 * @return
+	 */
+	private boolean isValid(ResourceManagerDAO dao) {
+		int len = StringUtils.trimToEmpty(textTitle.getText()).length();
+		if(len < 3) {
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
+			textTitle.setFocus();
+			return false;
+		}
+
+		// sql type 
+		if(dao.getResource_types().equals(RESOURCE_TYPE.SQL.name())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())) {
+				String strAPIURI = textAPIURL.getText().trim();
+				
+				if(strAPIURI.equals("")) { //$NON-NLS-1$
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_30);
+					textAPIURL.setFocus();
+					return false;
+				}
+				
+				// check valid url. url pattern is must be /{parent}/{child}
+				if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_32);
+					
+					textAPIURL.setFocus();
+					return false;
+				}
+			}
+		}
+		
+		try {
+			TadpoleSystem_UserDBResource.userDBResourceDupUpdate(originalResourceDB.getParent(), dao);
+		} catch (Exception ee) {
+			logger.error("Resource validate", ee); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
+			return false;
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Initialize ui data
 	 */
@@ -423,6 +418,9 @@ public class ResourceDetailDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		Button btnModify = createButton(parent, MODIFY_ID, Messages.get().Modified, false);
+		btnModify.setEnabled(SessionManager.getUserSeq() == resourceManagerDao.getUser_seq());
+		
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 

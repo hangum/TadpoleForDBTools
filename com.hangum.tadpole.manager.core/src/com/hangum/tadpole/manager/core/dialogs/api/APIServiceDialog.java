@@ -130,6 +130,12 @@ public class APIServiceDialog extends Dialog {
 		lblArgument.setText(Messages.get().Argument);
 		
 		textArgument = new Text(compositeTitle, SWT.BORDER);
+		textArgument.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initData(textArgument.getText());
+			}
+		});
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
@@ -139,20 +145,14 @@ public class APIServiceDialog extends Dialog {
 		comboResultType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				boolean isEnable = false;
-				if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
-					isEnable = true;
-				}
-				
-				btnAddHeader.setEnabled(isEnable);
-				textDelimiter.setEnabled(isEnable);
+				initResultType();
 			}
 		});
 		comboResultType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (QueryUtils.RESULT_TYPE resultType : QueryUtils.RESULT_TYPE.values()) {
 			comboResultType.add(resultType.name());
 		}
-		comboResultType.select(1);
+		comboResultType.select(0);
 		new Label(compositeTitle, SWT.NONE);
 		
 		Composite compositeDetailCSV = new Composite(compositeTitle, SWT.NONE);
@@ -188,9 +188,23 @@ public class APIServiceDialog extends Dialog {
 	}
 	
 	/**
+	 * initialize result type
+	 */
+	private void initResultType() {
+		boolean isEnable = false;
+		if(QueryUtils.RESULT_TYPE.CSV.name().equals(comboResultType.getText())) {
+			isEnable = true;
+		}
+		
+		btnAddHeader.setEnabled(isEnable);
+		textDelimiter.setEditable(isEnable);
+	}
+	
+	/**
 	 * initialize UI
 	 */
 	private void initUI() {
+		initResultType();
 		textAPIName.setText(resourceManagerDao.getName());
 		textApiURL.setText(resourceManagerDao.getRestapi_uri());
 		
@@ -234,6 +248,8 @@ public class APIServiceDialog extends Dialog {
 			
 			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
+		
+		textArgument.setFocus();
 	}
 	
 	/**

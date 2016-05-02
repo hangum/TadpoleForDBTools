@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -153,7 +152,7 @@ public class ParameterDialog extends Dialog {
 
 		TableViewerColumn tvcName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcName = tvcName.getColumn();
-		tcl_composite.setColumnData(tcName, new ColumnPixelData(80, true, true));
+		tcl_composite.setColumnData(tcName, new ColumnPixelData(150, true, true));
 		tcName.setText(Messages.get().ParameterDialog_2);
 
 		TableViewerColumn tvcType = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -185,7 +184,7 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(370, 300);
+		return new Point(420, 300);
 	}
 
 	/**
@@ -268,10 +267,8 @@ public class ParameterDialog extends Dialog {
 	protected void makeParamCount(Map<String, int[]> mapIndex) {
 		
 		parameters = new ArrayList<Map<Integer, Object>>();
-		Set<String> keys = mapIndex.keySet();
-		
 		int i = 0;
-		for (String strKey : keys) {
+		for (String strKey : mapIndex.keySet()) {
 			Map<Integer, Object> map = new HashMap<Integer, Object>();
 			map.put(0, (i++ + 1));
 			map.put(1, strKey);

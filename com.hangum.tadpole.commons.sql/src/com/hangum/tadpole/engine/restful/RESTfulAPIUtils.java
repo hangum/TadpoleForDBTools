@@ -11,7 +11,9 @@
 package com.hangum.tadpole.engine.restful;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
+import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.libs.core.utils.VelocityUtils;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 
@@ -36,6 +39,9 @@ import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameter
  */
 public class RESTfulAPIUtils {
 	private static final Logger logger = Logger.getLogger(RESTfulAPIUtils.class);
+
+	/** define variable */
+	public enum TDB_DATA_TYPE {_VARCHAR, _BIT, _NUM, _TINYINT, _SMALLINT, _INT, _BIGINT, _FLOAT, _DOUBLE, _VARBINARY, _DATE, _TIME};
 	
 	/**
 	 * make original sql
@@ -48,7 +54,7 @@ public class RESTfulAPIUtils {
 	public static String makeTemplateTOSQL(String strName, String strSQLs, String strArgument) throws SQLTemplateException {
 		String strResult = "";
 		try {
-			Map<String, String> params = RESTfulAPIUtils.maekArgumentTOMap(strArgument);
+			Map<String, Object> params = RESTfulAPIUtils.maekArgumentTOMap(strArgument);
 			
 			strResult = VelocityUtils.getTemplate(strName, strSQLs, params);
 			if(logger.isDebugEnabled()) logger.debug(strResult);
@@ -67,21 +73,21 @@ public class RESTfulAPIUtils {
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public static Map<String, String> maekArgumentTOMap(String strArgument) throws RESTFULUnsupportedEncodingException {
-		if(StringUtils.split(strArgument, "&") == null) return new HashMap<String, String>();
+	public static Map<String, Object> maekArgumentTOMap(String strArgument) throws RESTFULUnsupportedEncodingException {
+		if(StringUtils.split(strArgument, "&") == null) return new HashMap<String, Object>();
 		
 		if(logger.isDebugEnabled()) logger.debug("original URL is ===> " + strArgument);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		
 		try {
 			for (String param : StringUtils.split(strArgument, "&")) {
 				String pair[] = StringUtils.split(param, "=");
 				String key = URLDecoder.decode(pair[0], "UTF-8");
 				
-				String value = "";
+				Object value = null;
 				if (pair.length > 1) {
 					try {
-						value = URLDecoder.decode(pair[1], "UTF-8");
+						value = convertExistObject(key, pair[1]);
 					} catch(Exception e) {
 						value = pair[1];
 					}
@@ -94,6 +100,44 @@ public class RESTfulAPIUtils {
 		}
 		
 		return params;
+	}
+		
+	/**
+	 * 
+	 * @param variableType
+	 * @param value
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 */
+	public static Object convertExistObject(String variableType, String value) throws UnsupportedEncodingException {
+		value = URLDecoder.decode(value, "UTF-8");
+		
+		if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._BIT.name())) {
+			return new Boolean(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._NUM.name())) {
+			return new BigDecimal(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._TINYINT.name())) {
+			return new Byte(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._SMALLINT.name())) {
+			return new Short(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._INT.name())) {
+			return new Integer(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._BIGINT.name())) {
+			return new Long(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._FLOAT.name())) {
+			return new Float(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._DOUBLE.name())) {
+			return new Double(value);
+			
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._VARBINARY.name())) {
+			return new Byte(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._DATE.name())) {
+			return DateUtil.convertToDate(value);
+		} else if(StringUtils.startsWithIgnoreCase(variableType, TDB_DATA_TYPE._TIME.name())) {
+			return new Timestamp(new Long(value).longValue());
+		}
+		
+		return value;
 	}
 	
 	/**
@@ -108,7 +152,7 @@ public class RESTfulAPIUtils {
 	public static List<Object> makeArgumentToOracleList(Map<Integer, String> mapIndex, String strArgument) throws RESTFulArgumentNotMatchException, RESTFULUnsupportedEncodingException {
 		List<Object> listParam = new ArrayList<Object>();
 		
-		Map<String, String> params = maekArgumentTOMap(strArgument);
+		Map<String, Object> params = maekArgumentTOMap(strArgument);
 		
 		for(int i=1; i<=mapIndex.size(); i++ ) {
 			String strKey = mapIndex.get(i);
@@ -132,7 +176,7 @@ public class RESTfulAPIUtils {
 	public static List<Object> makeArgumentToJavaList(String strArgument) throws RESTFULUnsupportedEncodingException {
 		List<Object> listParam = new ArrayList<Object>();
 		
-		Map<String, String> params = maekArgumentTOMap(strArgument);
+		Map<String, Object> params = maekArgumentTOMap(strArgument);
 
 		// assume this count... no way i'll argument is over 100..... --;;
 		for(int i=1; i<100; i++) {
@@ -159,7 +203,7 @@ public class RESTfulAPIUtils {
 		Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
 		if(!mapIndex.isEmpty()) {
 			for(String strParam : mapIndex.values()) {
-				strArguments += String.format("%s={%s_value}&", strParam, strParam);	
+				strArguments += String.format("%s={%s}&", strParam, strParam);	
 			}
 			strArguments = StringUtils.removeEnd(strArguments, "&");
 			 
