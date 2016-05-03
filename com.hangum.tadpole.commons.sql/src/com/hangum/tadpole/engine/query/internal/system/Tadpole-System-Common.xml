@@ -603,6 +603,7 @@
 		AND a.restapi_uri != ""
 		AND a.restapi_yesno = 'YES'
 		AND a.db_seq = b.seq
+		AND a.delYn = 'NO'		
 	ORDER BY a.restapi_uri
 </select> 
 

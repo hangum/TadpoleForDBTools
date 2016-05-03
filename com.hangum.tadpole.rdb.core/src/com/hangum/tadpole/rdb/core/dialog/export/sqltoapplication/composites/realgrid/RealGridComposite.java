@@ -8,50 +8,56 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites;
+package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.realgrid;
 
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToLanguageConvert;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AbstractSQLToComposite;
 
 /**
- * SQL to other composite
+ * real grid
  * 
  * @author hangum
  *
  */
-public class SQLToOthersComposite extends AbstractSQLToComposite {
-	private Text textConvert;
+public class RealGridComposite extends AbstractSQLToComposite {
+	private static final Logger logger = Logger.getLogger(RealGridComposite.class);
+	
 	private Text textVariable;
+	private CTabFolder tabFolderPreview;
+	private Text textConvert;
+	private Browser browserPreview;
 	private SQLToLanguageConvert slt;
-
+	
 	/**
 	 * Create the composite.
-	 * @param userDB 
 	 * @param parent
-	 * @param strTitle
-	 * @param sql
-	 * @param type
+	 * @param style
 	 */
-	public SQLToOthersComposite(Composite tabFolderObject, UserDBDAO userDB, String strTitle, final String sql, EditorDefine.SQL_TO_APPLICATION type) {
+	public RealGridComposite(Composite tabFolderObject, UserDBDAO userDB, String strTitle, final String sql, EditorDefine.SQL_TO_APPLICATION type) {
 		super(tabFolderObject, SWT.NONE, userDB, sql, type);
-		
 		CTabItem tbtmTable = new CTabItem((CTabFolder)tabFolderObject, SWT.NONE);
 		tbtmTable.setText(strTitle);
 		tbtmTable.setData(type);
@@ -92,9 +98,27 @@ public class SQLToOthersComposite extends AbstractSQLToComposite {
 		});
 		btnOriginalText.setText(Messages.get().SQLToStringDialog_4);
 		
-		textConvert = new Text(compositeBody, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
-		textConvert.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		SashForm sashForm = new SashForm(compositeBody, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		tabFolderPreview = new CTabFolder(sashForm, SWT.BORDER | SWT.BOTTOM);
+		tabFolderPreview.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		tabFolderPreview.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
+		
+		CTabItem tabItemConvert = new CTabItem(tabFolderPreview, SWT.NONE);
+		tabItemConvert.setText("HTML");
+		
+		textConvert = new Text(tabFolderPreview, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
+		tabItemConvert.setControl(textConvert);
+		
+		CTabItem tabItemHTML = new CTabItem(tabFolderPreview, SWT.NONE);
+		tabItemHTML.setText("Browser");
+		
+		browserPreview = new Browser(tabFolderPreview, SWT.NONE);
+		tabItemHTML.setControl(browserPreview);
+		tabFolderPreview.setSelection(0);
+		
+		sashForm.setWeights(new int[] {1});
 		sqlToStr();
 	}
 

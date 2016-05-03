@@ -400,7 +400,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 				
-				MainSQLEditorAPIServiceDialog dialog = new MainSQLEditorAPIServiceDialog(getSite().getShell(), strQuery);
+				MainSQLEditorAPIServiceDialog dialog = new MainSQLEditorAPIServiceDialog(getSite().getShell(), userDB, strQuery);
 				dialog.open();
 				
 				setFocus();
@@ -517,7 +517,9 @@ public class MainEditor extends EditorExtension {
 		browserQueryEditor.setUrl(REAL_DB_URL);
 	    	
 //	    final String strConstList = findDefaultKeyword();
-	    final String varAutoSave 	= ""+GetPreferenceGeneral.getEditorAutoSave();
+		// 기존 리소스를 가져왔으면 auto save mode 는 false
+	    final String varAutoSave 	= dBResource != null?"fasle":""+GetPreferenceGeneral.getEditorAutoSave();
+	    
 	    final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
 	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
 	    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
@@ -818,13 +820,13 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private boolean updateAutoResourceDate(String newContents) {
+		if(dBResource != null) return true;
 		
 		// table, view만 auto save 된다.
 		if(dbAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES | 
 				dbAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 				
 			if(logger.isDebugEnabled()) logger.debug("====> called updateAutoResourceDate ");
-			
 			try {
 				dBResourceAuto = TadpoleSystem_UserDBResource.updateAutoResourceDate(getUserDB(), dBResourceAuto, dBResource, newContents);
 				if(dBResource != null) {

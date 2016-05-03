@@ -34,12 +34,14 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import com.hangum.tadpole.application.start.dialog.login.HomeLoginDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
 import com.hangum.tadpole.application.start.update.checker.NewVersionChecker;
 import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
 import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -250,11 +252,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			
     			initializeDefaultLocale();
     		} else {
-    	    	// Open login dialog    
-    	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
-    	    	if(Dialog.OK == loginDialog.open()) {
-    	    		initializeUserSession();
-    	    	}
+    			// Open login dialog
+    			if(ApplicationArgumentUtils.isOnlineServer()) {
+	    			HomeLoginDialog loginDialog = new HomeLoginDialog(Display.getCurrent().getActiveShell());
+	    	    	if(Dialog.OK == loginDialog.open()) {
+	    	    		initializeUserSession();
+	    	    	}
+    			} else {
+    				LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
+	    	    	if(Dialog.OK == loginDialog.open()) {
+	    	    		initializeUserSession();
+	    	    	}
+    			}
     		}
 
     	} catch (Exception e) {

@@ -67,6 +67,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.manager.core.Messages;
@@ -104,6 +105,7 @@ public class ResourceManageEditor extends EditorPart {
 	private UserDBDAO userDB;
 	private TadpoleEditorWidget textQuery;
 	private Text textTitle;
+	private Button btnSave;
 	private ComboViewer comboShare;
 	
 	private Text textDescription;
@@ -260,6 +262,8 @@ public class ResourceManageEditor extends EditorPart {
 						sbData.append(data);
 					}
 					textQuery.setText(sbData.toString());
+					
+					btnSave.setEnabled(resourceManagerDao.getUser_seq() == SessionManager.getUserSeq());
 
 				} catch (Exception e) {
 					logger.error("Resource detail", e); //$NON-NLS-1$
@@ -332,7 +336,7 @@ public class ResourceManageEditor extends EditorPart {
 		textTitle = new Text(compositeDetail, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
-		Button btnSave = new Button(compositeDetail, SWT.NONE);
+		btnSave = new Button(compositeDetail, SWT.NONE);
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -352,14 +356,6 @@ public class ResourceManageEditor extends EditorPart {
 					}
 					
 					if(!isValid(resourceManagerDao)) return;
-					
-					try {
-						TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, resourceManagerDao);
-					} catch (Exception ee) {
-						logger.error("Resource validate", ee); //$NON-NLS-1$
-						MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
-						return;
-					}
 					
 					TadpoleSystem_UserDBResource.updateResourceHeader(resourceManagerDao);
 					tableViewer.refresh(resourceManagerDao, true);
@@ -402,6 +398,14 @@ public class ResourceManageEditor extends EditorPart {
 							return false;
 						}
 					}
+				}
+				
+				try {
+					TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, dao);
+				} catch (Exception ee) {
+					logger.error("Resource validate", ee); //$NON-NLS-1$
+					MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
+					return false;
 				}
 				
 				return true;
@@ -517,6 +521,14 @@ public class ResourceManageEditor extends EditorPart {
 				IStructuredSelection is = (IStructuredSelection) selection;
 				if(is.getFirstElement() instanceof UserDBDAO) {
 					userDB = (UserDBDAO)is.getFirstElement();
+					refreshResouceData();
+				} else if(is.getFirstElement() instanceof UserDBResourceDAO) {
+					UserDBResourceDAO dao = (UserDBResourceDAO)is.getFirstElement();
+					userDB = dao.getParent();
+					refreshResouceData();
+				} else if(is.getFirstElement() instanceof ResourcesDAO) {
+					ResourcesDAO dao = (ResourcesDAO)is.getFirstElement();
+					userDB = dao.getUserDBDAO();
 					refreshResouceData();
 				}
 			} // end selection			

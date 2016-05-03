@@ -36,7 +36,7 @@ public class VelocityUtils {
 	 * @param mapParameter
 	 * @return
 	 */
-	public static String getTemplate(String strName, String strSQL, Map<String, String> mapParameter) throws Exception {
+	public static String getTemplate(String strName, String strSQL, Map<String, Object> mapParameter) throws Exception {
 		Writer writerReturn = new StringWriter();
 		
 		VelocityContext velocityCtx = new VelocityContext();

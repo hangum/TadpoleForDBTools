@@ -1,0 +1,84 @@
+/**
+* 원본소스: http://demo.realgrid.com/Demo/OneProviderTwoGrid#.example
+* 기본 코드를 테드폴에 맞게 변경하였습니다. 
+* @author Cho hyunjong(2016.05))
+*/
+var gridView1;
+var dataProvider;
+ 
+$(function () {
+    $("#btnChangeValue").click(btnChangeValueHandler);
+ 
+    RealGridJS.setTrace(false);
+    RealGridJS.setRootContext("/img/realgridjs")
+ 
+    dataProvider = new RealGridJS.LocalDataProvider();
+    setFields(dataProvider);
+ 
+    gridView1 = new RealGridJS.GridView("realgrid1");
+    gridView1.setDataSource(dataProvider);
+    setColumns1(gridView1);
+    setOptions(gridView1);
+    setSkin(gridView1, 103);
+
+    loadData(dataProvider);
+});
+ 
+function setFields(provider) {
+    var fields = [_TDB_TEMPLATE_FIELD_];
+ 
+    provider.setFields(fields);
+}
+ 
+function setColumns1(grid) {
+    var columns = [_TDB_TEMPLATE_COLUMN_];
+ 
+    grid.setColumns(columns);
+}
+ 
+function setOptions(grid) {
+    grid.setOptions({
+        panel: {
+            visible: false
+        },
+        footer: {
+            visible: false
+        },
+        stateBar: {
+            visible: false
+        },
+        display: {
+            rowHeight: 27
+        },
+        header: {
+            resizable:true
+        },
+        sorting: {
+            handleVisibility: "hidden"
+        }
+    });
+}
+ 
+function loadData(provider) {
+ /*
+    provider.loadData({
+        type: "json",
+        url: "/DemoData/EconomicGrowth.json?__time__=" + new Date().getTime(),
+        progress: true
+    }, function (provider) {
+        var count = provider.getRowCount();
+        $("#loadResult").css("color", "green").text(parseInt(count).toLocaleString() + " rows loaded.").show();
+    }, function (provider, message) {
+        $("#loadResult").css("color", "red").text("Load failed: " + message).show();
+    });
+*/
+}
+ 
+function btnChangeValueHandler(e) {
+    var cnt = dataProvider.getRowCount();
+    for (var i = 0; i < cnt; i++) {
+        var v = dataProvider.getValue(i, 2);
+        v = Math.round(v + (2 - ((Math.random() * 4))));
+        dataProvider.setValue(i, 2, v);
+    }
+}
