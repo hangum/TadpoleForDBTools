@@ -57,9 +57,9 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 				axisjHeader.setChecked("function(){return false;}");
 				axisjHeader.setColHeadTool(false);
 				axisjHeader.setDisabled("function(){return false;}");
-				axisjHeader.setFormatter("function(){return '';}");
+				axisjHeader.setFormatter("\"\"");
 				axisjHeader.setSort(1); //0:false, 1:Ascending, 2:Descending
-				axisjHeader.setTooltip("function(){return '';}");
+				axisjHeader.setTooltip("function(){return this.value;}");
 				axisjHeader.setWidth(100);
 				
 				listAxisjHeader.add(axisjHeader);
