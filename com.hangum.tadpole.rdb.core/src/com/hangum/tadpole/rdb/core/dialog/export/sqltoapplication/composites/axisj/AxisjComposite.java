@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites;
+package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,10 +43,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToLanguageConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToAxisjConvert;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisJLabelProvider;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjConsts;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjEditingSupport;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjHeaderDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.AbstractSQLToComposite;
 
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Display;
@@ -114,6 +111,9 @@ public class AxisjComposite extends AbstractSQLToComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				sqlToStr();
+				if(StringUtils.equalsIgnoreCase("Browser", tabFolder.getSelection().getText())){
+					refreshBrowser();
+				}
 			}
 		});
 		btnConvertSQL.setText(String.format(Messages.get().SQLToStringDialog_btnNewButton_text, type));
@@ -123,6 +123,7 @@ public class AxisjComposite extends AbstractSQLToComposite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				textConvert.setText(sql);
+				tabFolder.setSelection(0);	
 			}
 		});
 		btnOriginalText.setText(Messages.get().SQLToStringDialog_4);
@@ -235,12 +236,7 @@ public class AxisjComposite extends AbstractSQLToComposite {
 			public void widgetSelected(SelectionEvent e) {
 				// selected preview 
 				if(tabFolder.getSelectionIndex() == 1) {
-					try {
-						String STR_PREVIEW_TEMPLATE = IOUtils.toString(AxisjConsts.class.getResource("AXIS.PREVIEW.html"));
-						browserPreview.setText(STR_PREVIEW_TEMPLATE);
-					} catch (IOException e1) {
-						logger.error("AXISJ preview exception", e1);
-					}
+					refreshBrowser();
 				}
 			}
 		});
@@ -257,12 +253,25 @@ public class AxisjComposite extends AbstractSQLToComposite {
 		CTabItem tabBrowser = new CTabItem(tabFolder, SWT.NONE);
 		tabBrowser.setText("Browser");
 		
-		browserPreview = new Browser(tabFolder, SWT.NONE);
+		browserPreview = new Browser(tabFolder, SWT.NONE | SWT.H_SCROLL | SWT.V_SCROLL);
 		tabBrowser.setControl(browserPreview);
 		tabFolder.setSelection(0);		
 		
 		sqlToStr();
 		sashForm.setWeights(new int[] {4, 5});
+	}
+	
+	private void refreshBrowser(){
+		try {
+			String STR_PREVIEW_TEMPLATE = IOUtils.toString(AxisjConsts.class.getResource("AXISJ.PREVIEW.html"));
+			
+			STR_PREVIEW_TEMPLATE = StringUtils.replaceOnce(STR_PREVIEW_TEMPLATE, "_TDB_TEMPLATE_TITLE_", textVariable.getText());
+			STR_PREVIEW_TEMPLATE = StringUtils.replaceOnce(STR_PREVIEW_TEMPLATE, "_AXISJ_JS_BLOCK_", textConvert.getText());
+			
+			browserPreview.setText(STR_PREVIEW_TEMPLATE);
+		} catch (IOException e1) {
+			logger.error("AXISJ preview exception", e1);
+		}		
 	}
 	
 	private void createTaleColumn() {

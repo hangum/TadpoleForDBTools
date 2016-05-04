@@ -78,13 +78,26 @@ public class AxisjEditingSupport extends EditingSupport {
 
 			return new ComboBoxCellEditor(viewer.getTable(), AxisjConsts.aligns);
 
-		} else if (columnIndex == AxisjConsts.FORMATTER_IDX |
-				columnIndex == AxisjConsts.TOOLTIP_IDX |
+		} else if (columnIndex == AxisjConsts.FORMATTER_IDX){
+			return new DialogCellEditor(viewer.getTable()) {
+				@Override
+		        protected Object openDialogBox(Control cellEditorWindow) {
+		            Shell shell = Display.getDefault().getActiveShell();		            
+		            //String original = dao.getFormatter();
+		            String original = AxisjEditingSupport.this.getValue(element).toString();
+		            
+		            AxisjFormatterDialog dialog = new AxisjFormatterDialog(shell, original, viewer.getTable().getColumn(columnIndex).getText());
+		            if (IStatus.OK == dialog.open()) {
+		                setValue(dialog.getValue());
+		                return dialog.getValue();
+		            }else{
+		            	return original;
+		            }
+		        }
+			};			
+		} else if (columnIndex == AxisjConsts.TOOLTIP_IDX |
 				columnIndex == AxisjConsts.DISABLE_IDX |
 				columnIndex == AxisjConsts.CHECKED_IDX ) {
-
-			//return new TextCellEditor(viewer.getTable());
-			
 			return new DialogCellEditor(viewer.getTable()) {
 				@Override
 		        protected Object openDialogBox(Control cellEditorWindow) {
@@ -101,12 +114,6 @@ public class AxisjEditingSupport extends EditingSupport {
 		            }
 		        }
 			};
-			
-			
-			
-			
-			
-			
 		} else if (columnIndex == AxisjConsts.HEADTOOL_IDX) {
 
 			return new CheckboxCellEditor(null, SWT.CHECK);// | SWT.READ_ONLY);

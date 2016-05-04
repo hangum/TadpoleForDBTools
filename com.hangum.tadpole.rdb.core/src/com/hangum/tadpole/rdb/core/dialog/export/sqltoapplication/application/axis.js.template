@@ -38,7 +38,7 @@
 	    				sort        : _TDB_TEMPLATE_SORT_,       
 	    				remoteSort  : false,          
 	    				colHeadTool : _TDB_TEMPLATE_HEADTOOL_, 
-	    				viewMode    : "_TDB_TEMPLATE_VIEWMODE_"
+	    				viewMode    : "_TDB_TEMPLATE_VIEWMODE_",
 	                    colGroup    : getColGroup(),
 	                    body        : {
                         onclick: function(){
