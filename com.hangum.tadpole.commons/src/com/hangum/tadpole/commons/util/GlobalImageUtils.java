@@ -29,7 +29,7 @@ public class GlobalImageUtils {
 	 * @return
 	 */
 	public static final Image getCheck() {
-		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/check/checked.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/check/checked.gif");
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public class GlobalImageUtils {
 	 * @return
 	 */
 	public static final Image getUnCheck() {
-		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/check/unchecked.png");
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/check/unchecked.gif");
 	}
 
 	/**
