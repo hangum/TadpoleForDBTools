@@ -29,7 +29,7 @@ public class AxisJLabelProvider extends LabelProvider implements ITableLabelProv
 		AxisjHeaderDAO dao = (AxisjHeaderDAO) element;
 
 		switch (columnIndex) {
-		case 6:
+		case AxisjConsts.HEADTOOL_IDX:
 			if (dao.isColHeadTool())
 				return GlobalImageUtils.getCheck();
 			else
