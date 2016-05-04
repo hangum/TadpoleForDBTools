@@ -15,8 +15,7 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpole.commons.log.LogConfiguration;
-import com.hangum.tadpole.commons.log.LogListener;
+import com.hangum.tadpole.commons.libs.core.logs.LogListener;
 
 public class Activator implements BundleActivator {
 
