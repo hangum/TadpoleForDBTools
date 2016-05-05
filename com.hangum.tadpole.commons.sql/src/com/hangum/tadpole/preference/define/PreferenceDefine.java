@@ -180,7 +180,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_CHANGE_EVENT = "_EDITOR_CHANGE_EVENT_";
 	
 	public static final String EDITOR_AUTOSAVE 			= "EDITOR_AUTOSAVE";
-	public static final String EDITOR_AUTOSAVE_VALUE	= "true";
+	public static final String EDITOR_AUTOSAVE_VALUE	= "false";
 	
 	public static final String EDITOR_THEME 		= "EDITOR_THEME";
 	public static final String EDITOR_THEME_VALUE	= "Crimson Editor";

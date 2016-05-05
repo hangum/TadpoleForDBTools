@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.editors.system;
 
+import java.io.File;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,6 +65,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Combo comboIsSharedDB;
 	private Text textIntLimtCnt;
 	private Text textDefaultUseDay;
+	private Text textLog;
 
 	public AdminSystemSettingEditor() {
 		super();
@@ -115,6 +118,16 @@ public class AdminSystemSettingEditor extends EditorPart {
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Label lblLogDir = new Label(compositeBody, SWT.NONE);
+		lblLogDir.setText("Log dir");
+		
+		textLog = new Text(compositeBody, SWT.BORDER);
+		textLog.setEditable(false);
+		textLog.setEnabled(false);
+		textLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		File file = new File(PublicTadpoleDefine.defaultFileName);
+		textLog.setText(file.getAbsolutePath());
 		
 		Label lblResourceHome = new Label(compositeBody, SWT.NONE);
 		lblResourceHome.setText(Messages.get().ResourceHome);

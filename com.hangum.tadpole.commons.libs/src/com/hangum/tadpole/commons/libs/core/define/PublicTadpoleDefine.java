@@ -28,6 +28,11 @@ public class PublicTadpoleDefine {
 	/** url system verion information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
+	public static final String defaultFileName 	= "./logs/tadpole.log";
+	
+	/** license 파일 */
+	public static final String LICENSE_FILE = "TadpoleHub.lic";
+	
 	/** cookie path */
 	public static String _cookiePath = "/";
 	
@@ -43,7 +48,7 @@ public class PublicTadpoleDefine {
 	public static final String SERVICE_KEY_NAME = "serviceID";
 	
 	/** default system encrypt password */
-	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
+	public static final String SYSTEM_DEFAULT_USER = "hangum@tadpolehub.com";
 	public static final String SYSTEM_DEFAULT_PASSWORD = "startService.tdb.son";
 	
 	/** COOKIE USER ID */

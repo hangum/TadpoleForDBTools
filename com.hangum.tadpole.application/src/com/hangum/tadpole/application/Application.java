@@ -13,9 +13,8 @@ package com.hangum.tadpole.application;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.application.EntryPoint;
@@ -25,9 +24,8 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.engine.initialize.License;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
-import com.hangum.tadpole.rdb.core.Activator;
 
 /**
  * This class controls all aspects of the application's execution
@@ -55,6 +53,7 @@ public class Application implements EntryPoint {
 	 * If the system table does not exist, create a table.
 	 */
 	private void systemInitialize() {
+		License.load();
 		try {
 			boolean isInitialize = TadpoleSystemInitializer.initSystem();
 			if(!isInitialize) {
@@ -67,10 +66,10 @@ public class Application implements EntryPoint {
 			}
 		} catch(Exception e) {
 			logger.error("System initialize error", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2, errStatus); //$NON-NLS-1$
+			MessageDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2 + e.getMessage());
 			
 			System.exit(0);
 		}
 	}
+	
 }
