@@ -93,7 +93,7 @@ public class HomeLoginDialog extends Dialog {
 	private Composite compositeTailRight;
 	private Button btnTadpoleHub;
 	private Button btnQAndA;
-	private Button btnDownload;
+//	private Button btnDownload;
 	private Button btnBuy;
 	private Button btnEvent;
 	private Button btnCompanyInfo;
@@ -140,10 +140,24 @@ public class HomeLoginDialog extends Dialog {
 		btnTadpoleHub.setText("도움말");
 		
 		btnQAndA = new Button(compositeMainMenu, SWT.NONE);
+		btnQAndA.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+				launcher.openURL("https://github.com/hangum/TadpoleForDBTools/issues");
+			}
+		});
 		btnQAndA.setText("질의 응답");
 		
-		btnDownload = new Button(compositeMainMenu, SWT.NONE);
-		btnDownload.setText("다운로드");
+//		btnDownload = new Button(compositeMainMenu, SWT.NONE);
+//		btnDownload.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+//				launcher.openURL("https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.1/");
+//			}
+//		});
+//		btnDownload.setText("다운로드");
 		
 		btnBuy = new Button(compositeMainMenu, SWT.NONE);
 		btnBuy.setText("구매");
