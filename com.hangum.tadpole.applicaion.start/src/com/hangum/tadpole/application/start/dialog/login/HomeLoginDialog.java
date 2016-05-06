@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.client.service.UrlLauncher;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -91,10 +92,11 @@ public class HomeLoginDialog extends Dialog {
 	
 	private Composite compositeTailRight;
 	private Button btnTadpoleHub;
-	private Button button;
-	private Button button_1;
-	private Button button_2;
-	private Button button_3;
+	private Button btnQAndA;
+	private Button btnDownload;
+	private Button btnBuy;
+	private Button btnEvent;
+	private Button btnCompanyInfo;
 	private Composite compositeTail;
 	
 	public HomeLoginDialog(Shell shell) {
@@ -125,22 +127,32 @@ public class HomeLoginDialog extends Dialog {
 		
 		compositeMainMenu = new Composite(container, SWT.NONE);
 		compositeMainMenu.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 2, 1));
-		compositeMainMenu.setLayout(new GridLayout(6, false));
+		compositeMainMenu.setLayout(new GridLayout(7, false));
 		
 		btnTadpoleHub = new Button(compositeMainMenu, SWT.NONE);
+		btnTadpoleHub.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+				launcher.openURL("https://tadpoledbhub.atlassian.net/wiki/pages/viewpage.action?pageId=20578325");
+			}
+		});
 		btnTadpoleHub.setText("도움말");
 		
-		button = new Button(compositeMainMenu, SWT.NONE);
-		button.setText("질의 응답");
+		btnQAndA = new Button(compositeMainMenu, SWT.NONE);
+		btnQAndA.setText("질의 응답");
 		
-		button_1 = new Button(compositeMainMenu, SWT.NONE);
-		button_1.setText("다운로드");
+		btnDownload = new Button(compositeMainMenu, SWT.NONE);
+		btnDownload.setText("다운로드");
 		
-		button_2 = new Button(compositeMainMenu, SWT.NONE);
-		button_2.setText("구매");
+		btnBuy = new Button(compositeMainMenu, SWT.NONE);
+		btnBuy.setText("구매");
 		
-		button_3 = new Button(compositeMainMenu, SWT.NONE);
-		button_3.setText("이벤트");
+		btnEvent = new Button(compositeMainMenu, SWT.NONE);
+		btnEvent.setText("이벤트");
+		
+		btnCompanyInfo = new Button(compositeMainMenu, SWT.NONE);
+		btnCompanyInfo.setText("회사소개");
 				
 		comboLanguage = new Combo(compositeMainMenu, SWT.READ_ONLY);
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
@@ -186,7 +198,10 @@ public class HomeLoginDialog extends Dialog {
 				}
 			}
 		});
-		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_textEMail = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textEMail.minimumWidth = 140;
+		gd_textEMail.widthHint = 140;
+		textEMail.setLayoutData(gd_textEMail);
 		
 		btnCheckButton = new Button(compositeLogin, SWT.CHECK);
 		btnCheckButton.setText(Messages.get().LoginDialog_9); //$NON-NLS-1$

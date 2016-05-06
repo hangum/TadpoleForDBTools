@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import java.util.TimeZone;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -23,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -57,12 +60,16 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	private Text textRePassword;
 	private Text textName;
 	
+	private Combo comboLanguage;
+	private Combo comboTimezone;
+	
 	/** OTP code */
 	private String secretKey = ""; //$NON-NLS-1$
 	private Button btnGetOptCode;
 	private Text textSecretKey;
 	private Text textQRCodeURL;
 	private Text textOTPCode;
+	private Composite container_1;
 
 	/**
 	 * Create the preference page.
@@ -76,19 +83,19 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	 */
 	@Override
 	public Control createContents(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		container.setLayout(new GridLayout(2, false));
+		container_1 = new Composite(parent, SWT.NULL);
+		container_1.setLayout(new GridLayout(2, false));
 		
-		if(TadpoleApplicationContextManager.isPersonOperationType()) {
-			personView(container);
-		} else {
-			groupView(container);
-		}
+//		if(TadpoleApplicationContextManager.isPersonOperationType()) {
+//			personView(container);
+//		} else {
+			groupView(container_1);
+//		}
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 		
-		return container;
+		return container_1;
 	}
 	
 	/**
@@ -169,6 +176,24 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				textRePassword.setText(""); //$NON-NLS-1$
 			}
 		});
+		
+		Label lblLanguage = new Label(container_1, SWT.NONE);
+		lblLanguage.setText("Language");
+		comboLanguage = new Combo(container, SWT.READ_ONLY);
+		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboLanguage.add("ko"); //$NON-NLS-1$
+		comboLanguage.add("en_us"); //$NON-NLS-1$
+		comboLanguage.setText(SessionManager.getLangeage());
+		
+		Label lblTimezone = new Label(container_1, SWT.NONE);
+		lblTimezone.setText("Timezone");
+		comboTimezone = new Combo(container, SWT.READ_ONLY);
+		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		String[] timzons = TimeZone.getAvailableIDs();
+		for (String timzon : timzons) {
+			comboTimezone.add(timzon);
+		}
+		comboTimezone.setText(SessionManager.getTimezone());
 		
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
@@ -286,6 +311,8 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String rePass = textRePassword.getText().trim();
 			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$
 			String otpSecretKey = textSecretKey.getText();
+			String language = comboLanguage.getText();
+			String timezone = comboTimezone.getText();
 			
 			if(StringUtils.length(pass) < 5) {
 				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_14);
@@ -312,8 +339,6 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 					return false;
 				}
 			}
-			// Password double check
-			boolean isPasswordUpdated = !pass.equals(SessionManager.getPassword());
 			
 			UserDAO user = new UserDAO();
 			user.setSeq(SessionManager.getUserSeq());
@@ -321,16 +346,18 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			
 			user.setUse_otp(useOTP);
 			user.setOtp_secret(otpSecretKey);
+			user.setLanguage(language);
+			user.setTimezone(timezone);
 			
 			try {
-				if (isPasswordUpdated) {
-					TadpoleSystem_UserQuery.updateUserPassword(user);
-					SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), user.getPasswd());			
-				}
+				TadpoleSystem_UserQuery.updateUserBasic(user);
 				
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), user.getPasswd());			
 				TadpoleSystem_UserQuery.updateUserOTPCode(user);
 				SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.toString(), useOTP);			
 				SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.toString(), otpSecretKey);
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LANGUAGE.toString(), language);
+				SessionManager.updateSessionAttribute(SessionManager.NAME.TIMEZONE.toString(), timezone);
 				
 				//fix https://github.com/hangum/TadpoleForDBTools/issues/243
 				SessionManager.setPassword(user.getPasswd());

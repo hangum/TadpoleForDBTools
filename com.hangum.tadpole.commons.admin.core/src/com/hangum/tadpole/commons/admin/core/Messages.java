@@ -208,6 +208,8 @@ public class Messages {
 	public String DefaultAddDBCount;
 
 	public String DefaultUseDay;
+
+	public String Timezone;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

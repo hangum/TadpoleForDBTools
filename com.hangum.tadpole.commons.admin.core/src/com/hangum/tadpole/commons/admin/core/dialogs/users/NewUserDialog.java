@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.dialogs.users;
 
+import java.util.TimeZone;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -66,6 +68,7 @@ public class NewUserDialog extends Dialog {
 	private Text textName;
 	
 	private Combo comboLanguage;
+	private Combo comboTimezone;
 	
 	/** OTP code */
 	private String secretKey = ""; //$NON-NLS-1$
@@ -80,6 +83,7 @@ public class NewUserDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @wbp.parser.constructor
 	 */
 	public NewUserDialog(Shell parentShell) {
 		super(parentShell);
@@ -149,7 +153,18 @@ public class NewUserDialog extends Dialog {
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboLanguage.add("ko"); //$NON-NLS-1$
 		comboLanguage.add("en_us"); //$NON-NLS-1$
-		comboLanguage.select(1);
+		comboLanguage.select(0);
+		
+		Label lblTimezone = new Label(container, SWT.NONE);
+		lblTimezone.setText(Messages.get().Timezone);
+		
+		comboTimezone = new Combo(container, SWT.READ_ONLY);
+		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		String[] timzons = TimeZone.getAvailableIDs();
+		for (String timzon : timzons) {
+			comboTimezone.add(timzon);
+		}
+		comboTimezone.setText(PublicTadpoleDefine.DEFAULT_TIME_ZONE);
 		
 		btnGetOptCode = new Button(container, SWT.CHECK);
 		btnGetOptCode.addSelectionListener(new SelectionAdapter() {
@@ -202,7 +217,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	private void generateGoogleOTP() {
 		if(!btnGetOptCode.getSelection()) {
-			getShell().setSize(370, 240);
+			getShell().setSize(370, 269);
 			textSecretKey.setText(""); //$NON-NLS-1$
 			labelQRCodeURL.setText(""); //$NON-NLS-1$
 			
@@ -211,19 +226,19 @@ public class NewUserDialog extends Dialog {
 		
 		String strEmail = textEMail.getText();
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			getShell().setSize(370, 240);
+			getShell().setSize(370, 269);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_7);
 			return;
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
-			getShell().setSize(370, 240);
+			getShell().setSize(370, 269);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_15);
 			return;
 		}
-		getShell().setSize(380, 370);
+		getShell().setSize(380, 392);
 		secretKey = GoogleAuthManager.getInstance().getSecretKey();
 		textSecretKey.setText(secretKey);
 		
@@ -282,7 +297,10 @@ public class NewUserDialog extends Dialog {
 					strEmail, strEmailConformKey, isEmamilConrim, 
 					passwd, 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
-					name, comboLanguage.getText(), approvalYn,  
+					name, 
+					comboLanguage.getText(), 
+					comboTimezone.getText(),
+					approvalYn,  
 					btnGetOptCode.getSelection()?"YES":"NO",  //$NON-NLS-1$ //$NON-NLS-2$
 					textSecretKey.getText(),
 					"*"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -419,7 +437,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(370, 242);
+		return new Point(370, 270);
 	}
 	
 	/**

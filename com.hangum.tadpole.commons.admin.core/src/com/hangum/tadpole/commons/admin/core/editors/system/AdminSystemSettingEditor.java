@@ -126,8 +126,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 		textLog.setEditable(false);
 		textLog.setEnabled(false);
 		textLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		File file = new File(PublicTadpoleDefine.defaultFileName);
-		textLog.setText(file.getAbsolutePath());
+		textLog.setText(new File(PublicTadpoleDefine.DEFAULT_LOG_FILE).getAbsolutePath());
 		
 		Label lblResourceHome = new Label(compositeBody, SWT.NONE);
 		lblResourceHome.setText(Messages.get().ResourceHome);

@@ -53,7 +53,7 @@ public class LogConfiguration {
 	
 	public void init() throws Exception {
 		
-		fileAppender = new RollingFileAppender(new PatternLayout(filePattern), PublicTadpoleDefine.defaultFileName, true);
+		fileAppender = new RollingFileAppender(new PatternLayout(filePattern), PublicTadpoleDefine.DEFAULT_LOG_FILE, true);
 		fileAppender.setMaxBackupIndex(10);
 		fileAppender.setMaxFileSize("10MB");
 		

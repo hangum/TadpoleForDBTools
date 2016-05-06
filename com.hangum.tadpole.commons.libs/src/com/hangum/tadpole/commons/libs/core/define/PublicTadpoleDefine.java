@@ -28,7 +28,11 @@ public class PublicTadpoleDefine {
 	/** url system verion information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
-	public static final String defaultFileName 	= "./logs/tadpole.log";
+	/** defiee default time zone*/
+	public static final String DEFAULT_TIME_ZONE = "Asia/Seoul";
+	
+	/** defualt log file name*/
+	public static final String DEFAULT_LOG_FILE 	= "./logs/tadpole.log";
 	
 	/** license 파일 */
 	public static final String LICENSE_FILE = "TadpoleHub.lic";
