@@ -198,7 +198,7 @@ public class RESTfulAPIUtils {
 		if("".equals(strSQL)) return "";
 		
 		String strArguments = "";
-		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
+		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
 		oracleNamedParamUtil.parse(strSQL);
 		Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();
 		if(!mapIndex.isEmpty()) {

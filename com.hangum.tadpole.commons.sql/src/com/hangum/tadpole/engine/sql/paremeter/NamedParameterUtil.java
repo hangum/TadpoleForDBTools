@@ -39,7 +39,7 @@ public class NamedParameterUtil {
 		NamedParameterDAO returnDao = new NamedParameterDAO();
 		
 		strLastSQL = SQLUtil.makeExecutableSQL(userDB, strLastSQL);
-		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
+		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
 		String strOracleStyleSQL = oracleNamedParamUtil.parse(strLastSQL);
 		
 		Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();

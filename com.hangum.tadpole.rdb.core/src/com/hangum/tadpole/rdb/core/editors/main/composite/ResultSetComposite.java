@@ -59,6 +59,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.sql.paremeter.lang.GenericTokenParser;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
@@ -220,65 +221,97 @@ public class ResultSetComposite extends Composite {
 	 * @return
 	 */
 	private boolean ifIsParameterQuery() {
+		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) return true;
+		final DBDefine selectDBDefine = getUserDB().getDBDefine();
+		if((selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
+				selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
+				selectDBDefine == DBDefine.TAJO_DEFAULT 	||
+				// not support this java.sql.ParameterMetaData 
+				selectDBDefine == DBDefine.CUBRID_DEFAULT)
+		) return true; 
+
 		final Shell runShell = btnStopQuery.getShell();
 		
-		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
-			
-			final DBDefine selectDBDefine = getUserDB().getDBDefine();
-			if(!(selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
-					selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
-					selectDBDefine == DBDefine.TAJO_DEFAULT 	||
-					// not support this java.sql.ParameterMetaData 
-					selectDBDefine == DBDefine.CUBRID_DEFAULT)
-			) {
-				boolean isAlreadyApply = false;
-				try {
-					// if named parameter?
-					OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
-					String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+		// java named parameter
+		try {
+			JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
+			int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
+			if(paramCnt > 0) {
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
+				if(Dialog.OK == epd.open()) {
+					ParameterObject paramObj = epd.getParameterObject();
+					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+					reqQuery.setSql(repSQL);
 					
-					Map<String, int[]> mapIndex = oracleNamedParamUtil.getIndexMap();
-					if(!mapIndex.isEmpty()) {
-						isAlreadyApply = true;
-						
-						ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndex);
-						if(Dialog.OK == epd.open()) {
-							ParameterObject paramObj = epd.getOracleParameterObject(oracleNamedParamUtil.getMapIndexToName());
-							String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-							reqQuery.setSql(repSQL);
-							
-							if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
-//						} else {
-//							return false;
-						}
-					}
-				} catch(Exception e) {
-					logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
+					if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
 				}
-
-				if(!isAlreadyApply) {
-					try {
-						// java named parameter
-						JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
-						int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
-						if(paramCnt > 0) {
-							ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
-							if(Dialog.OK == epd.open()) {
-								ParameterObject paramObj = epd.getParameterObject();
-								String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-								reqQuery.setSql(repSQL);
-								
-								if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
-//							} else {
-//								return false;
-							}
-						}
-					} catch(Exception e) {
-						logger.error("Java style parameter parse", e); //$NON-NLS-1$
-					}
-				}  // if(!isAlreadyApply
 			}
-		}	// end if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
+		} catch(Exception e) {
+			logger.error("Java style parameter parse", e); //$NON-NLS-1$
+		}
+		
+		// oracle parameter
+		try {
+			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
+			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+			
+			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
+			if(!mapIndexToName.isEmpty()) {
+				
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+				if(Dialog.OK == epd.open()) {
+					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+					reqQuery.setSql(repSQL);
+					
+					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} catch(Exception e) {
+			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
+		}
+
+		// mybatis shap
+		GenericTokenParser mybatisShapeUtil = new GenericTokenParser("#{", "}");
+		String strSQL = mybatisShapeUtil.parse(reqQuery.getSql());
+		Map<Integer, String> mapIndexToName = mybatisShapeUtil.getMapIndexToName();
+		if(!mapIndexToName.isEmpty()) {
+			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+			if(Dialog.OK == epd.open()) {
+				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+				String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+				reqQuery.setSql(repSQL);
+				
+				if(logger.isDebugEnabled()) logger.debug("[mybatisShapeUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		// mybatis $
+		GenericTokenParser mybatisDollarUtil = new GenericTokenParser("${", "}");
+		strSQL = mybatisDollarUtil.parse(reqQuery.getSql());
+		mapIndexToName = mybatisDollarUtil.getMapIndexToName();
+		if(!mapIndexToName.isEmpty()) {
+			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+			if(Dialog.OK == epd.open()) {
+				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+				String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+				reqQuery.setSql(repSQL);
+				
+				if(logger.isDebugEnabled()) logger.debug("[mybatisDollarUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
+				return true;
+			} else {
+				return false;
+			}
+		}
 
 		return true;
 	}

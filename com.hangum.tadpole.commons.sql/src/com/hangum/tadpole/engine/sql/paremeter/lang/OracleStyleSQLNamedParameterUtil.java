@@ -51,24 +51,12 @@ import java.util.Map;
  *
 */
 public class OracleStyleSQLNamedParameterUtil {
-	private static OracleStyleSQLNamedParameterUtil instance;
 	
     /** Maps parameter names to arrays of ints which are the parameter indices. */
-    private Map<String, int[]> mapNameToIndex;
-    private Map<Integer, String> mapIndexToName;
+    private Map<String, int[]> mapNameToIndex = new HashMap<String, int[]>();
+    private Map<Integer, String> mapIndexToName = new HashMap<Integer, String>();
 
-    private OracleStyleSQLNamedParameterUtil() {}
-    
-    /**
-     * singleton construct
-     * 
-     * @return
-     */
-    public static OracleStyleSQLNamedParameterUtil getInstance() {
-    	if(instance == null) instance = new OracleStyleSQLNamedParameterUtil();
-    	
-    	return instance;
-    }
+    public OracleStyleSQLNamedParameterUtil() {}
     
     /**
      * Parses a query with named parameters.  The parameter-index mappings are 
@@ -80,8 +68,6 @@ public class OracleStyleSQLNamedParameterUtil {
      * @return the parsed query
      */
     public String parse(String query) {
-    	mapNameToIndex = new HashMap<String, int[]>();
-    	mapIndexToName = new HashMap<Integer, String>();
     	
         // I was originally using regular expressions, but they didn't work well 
     	// for ignoring parameter-like strings inside quotes.
@@ -133,16 +119,16 @@ public class OracleStyleSQLNamedParameterUtil {
             parsedQuery.append(c);
         }
 
-        // replace the lists of Integer objects with arrays of ints
-        for(Map.Entry<String, List<Integer>> entry : paramMapAux.entrySet()) {
-            List<Integer> list=entry.getValue();
-            int[] indexes=new int[list.size()];
-            int i=0;
-            for(Integer x : list) {
-                indexes[i++]=x;
-            }
-            mapNameToIndex.put(entry.getKey(), indexes) ;
-        }
+//        // replace the lists of Integer objects with arrays of ints
+//        for(Map.Entry<String, List<Integer>> entry : paramMapAux.entrySet()) {
+//            List<Integer> list=entry.getValue();
+//            int[] indexes=new int[list.size()];
+//            int i=0;
+//            for(Integer x : list) {
+//                indexes[i++]=x;
+//            }
+//            mapNameToIndex.put(entry.getKey(), indexes) ;
+//        }
         
         for(Map.Entry<String, List<Integer>> entry : paramMapAux.entrySet()) {
             List<Integer> list=entry.getValue();
@@ -155,19 +141,19 @@ public class OracleStyleSQLNamedParameterUtil {
         return parsedQuery.toString();
     }
 
-    /**
-     * Returns the indexes for a parameter.
-     * @param name parameter name
-     * @return parameter indexes
-     * @throws IllegalArgumentException if the parameter does not exist
-     */
-    public int[] getIndexes(String name) {
-        int[] indexes=mapNameToIndex.get(name);
-        if(indexes==null) {
-            throw new IllegalArgumentException("Parameter not found: "+name);
-        }
-        return indexes;
-    }
+//    /**
+//     * Returns the indexes for a parameter.
+//     * @param name parameter name
+//     * @return parameter indexes
+//     * @throws IllegalArgumentException if the parameter does not exist
+//     */
+//    public int[] getIndexes(String name) {
+//        int[] indexes=mapNameToIndex.get(name);
+//        if(indexes==null) {
+//            throw new IllegalArgumentException("Parameter not found: "+name);
+//        }
+//        return indexes;
+//    }
 
     /**
      * Returns the index to param names
@@ -178,13 +164,13 @@ public class OracleStyleSQLNamedParameterUtil {
     	return mapIndexToName.get(intIndex);
     }
     
-    /**
-     * Returns the indexMap
-     * @return
-     */
-    public Map<String, int[]> getIndexMap() {
-		return mapNameToIndex;
-	}
+//    /**
+//     * Returns the indexMap
+//     * @return
+//     */
+//    public Map<String, int[]> getIndexMap() {
+//		return mapNameToIndex;
+//	}
     
     public Map<Integer, String> getMapIndexToName() {
 		return mapIndexToName;
