@@ -12,6 +12,7 @@ package com.hangum.tadpole.commons.admin.core.dialogs.users;
 
 import java.util.TimeZone;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -79,6 +80,10 @@ public class NewUserDialog extends Dialog {
 	private Text textOTPCode;
 	
 	private UserDAO userDao = new UserDAO();
+	private Composite composite;
+	private Label label;
+	private Button btnServiceContract;
+	private Button btnPersonContract;
 	
 	/**
 	 * Create the dialog.
@@ -95,7 +100,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	public NewUserDialog(Shell parentShell, boolean isAdmin) {
 		super(parentShell);
-		
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);		
 		this.isAdmin = isAdmin;
 	}
 
@@ -104,8 +109,6 @@ public class NewUserDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText(Messages.get().NewUserDialog_0);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
-		
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 	}
 	
 	/**
@@ -166,6 +169,53 @@ public class NewUserDialog extends Dialog {
 		}
 		comboTimezone.setText(PublicTadpoleDefine.DEFAULT_TIME_ZONE);
 		
+		label = new Label(container, SWT.NONE);
+		label.setText(Messages.get().TermsOfService);
+		
+		composite = new Composite(container, SWT.NONE);
+		GridLayout gl_composite = new GridLayout(2, false);
+		gl_composite.verticalSpacing = 0;
+		gl_composite.horizontalSpacing = 0;
+		gl_composite.marginHeight = 0;
+		gl_composite.marginWidth = 0;
+		composite.setLayout(gl_composite);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		btnServiceContract = new Button(composite, SWT.CHECK);
+		btnServiceContract.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				if(!btnServiceContract.getSelection()) return;
+				
+				try {
+					String strContract = IOUtils.toString(NewUserDialog.class.getResourceAsStream("serviceContract.txt"));
+					ServiceContractDialog dialog = new ServiceContractDialog(getShell(), Messages.get().TermsOfService, strContract);
+					dialog.open();
+				} catch(Exception e3) {
+					logger.error("Doesn't read service contract", e3);
+				}
+			}
+		});
+		btnServiceContract.setText(Messages.get().TermsOfService);
+		
+		btnPersonContract = new Button(composite, SWT.CHECK);
+		btnPersonContract.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(!btnPersonContract.getSelection()) return;
+				
+				try {
+					String strContract = IOUtils.toString(NewUserDialog.class.getResourceAsStream("personServiceContract.txt"));
+					ServiceContractDialog dialog = new ServiceContractDialog(getShell(), Messages.get().PrivacyTermsandConditions, strContract);
+					dialog.open();
+				} catch(Exception e3) {
+					logger.error("Doesn't read service contract", e3);
+				}
+			}
+		});
+		btnPersonContract.setText(Messages.get().PrivacyTermsandConditions);
+		
 		btnGetOptCode = new Button(container, SWT.CHECK);
 		btnGetOptCode.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -217,7 +267,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	private void generateGoogleOTP() {
 		if(!btnGetOptCode.getSelection()) {
-			getShell().setSize(370, 269);
+			getShell().setSize(370, 289);
 			textSecretKey.setText(""); //$NON-NLS-1$
 			labelQRCodeURL.setText(""); //$NON-NLS-1$
 			
@@ -226,19 +276,19 @@ public class NewUserDialog extends Dialog {
 		
 		String strEmail = textEMail.getText();
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			getShell().setSize(370, 269);
+			getShell().setSize(370, 289);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_7);
 			return;
 		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
-			getShell().setSize(370, 269);
+			getShell().setSize(370, 289);
 			btnGetOptCode.setSelection(false);      
 			textEMail.setFocus();
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_15);
 			return;
 		}
-		getShell().setSize(380, 392);
+		getShell().setSize(380, 412);
 		secretKey = GoogleAuthManager.getInstance().getSecretKey();
 		textSecretKey.setText(secretKey);
 		
@@ -261,6 +311,14 @@ public class NewUserDialog extends Dialog {
 		String name = StringUtils.trimToEmpty(textName.getText());
 		
 		if(!validation(strEmail, passwd, rePasswd, name)) return;
+		if(!btnServiceContract.getSelection()) {
+			MessageDialog.openError(getShell(), Messages.get().Warning, Messages.get().PlzConfirmTermsService);
+			return;
+		} else if(!btnPersonContract.getSelection()) {
+			MessageDialog.openError(getShell(), Messages.get().Warning, Messages.get().PlzConfirmTermsService);
+			return;
+		}
+		
 		if(btnGetOptCode.getSelection()) {
 			if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
 				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().NewUserDialog_40);
@@ -437,7 +495,7 @@ public class NewUserDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(370, 270);
+		return new Point(370, 290);
 	}
 	
 	/**

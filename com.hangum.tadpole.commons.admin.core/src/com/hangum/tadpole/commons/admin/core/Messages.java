@@ -210,6 +210,14 @@ public class Messages {
 	public String DefaultUseDay;
 
 	public String Timezone;
+
+	public String TermsOfService;
+
+	public String PrivacyTermsandConditions;
+
+	public String Aggree;
+
+	public String PlzConfirmTermsService;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

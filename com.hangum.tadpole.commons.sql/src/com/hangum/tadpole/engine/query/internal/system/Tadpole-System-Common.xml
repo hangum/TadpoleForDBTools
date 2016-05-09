@@ -276,8 +276,7 @@
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
-	SET passwd = #passwd# 
-		use_otp = 'NO'
+	SET passwd = #passwd#
 	WHERE seq = #seq#
 </update>
 

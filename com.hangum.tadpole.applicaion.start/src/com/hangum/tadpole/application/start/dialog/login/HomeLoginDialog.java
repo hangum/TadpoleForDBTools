@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -69,8 +68,6 @@ import com.swtdesigner.SWTResourceManager;
 public class HomeLoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(HomeLoginDialog.class);
 	
-	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	private Composite compositeLogin;
 	private Label lblEmail;
 	
@@ -98,6 +95,7 @@ public class HomeLoginDialog extends Dialog {
 	private Button btnEvent;
 	private Button btnCompanyInfo;
 	private Composite compositeTail;
+	private Label label;
 	
 	public HomeLoginDialog(Shell shell) {
 		super(shell);
@@ -144,7 +142,7 @@ public class HomeLoginDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
-				launcher.openURL("https://github.com/hangum/TadpoleForDBTools/issues");
+				launcher.openURL("https://github.com/tadpolehub/tadpolehubQA/issues");
 			}
 		});
 		btnQAndA.setText("질의 응답");
@@ -160,10 +158,17 @@ public class HomeLoginDialog extends Dialog {
 //		btnDownload.setText("다운로드");
 		
 		btnBuy = new Button(compositeMainMenu, SWT.NONE);
+		btnBuy.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UrlLauncher launcher = RWT.getClient().getService( UrlLauncher.class );
+				launcher.openURL("https://github.com/tadpolehub/tadpolehubQA/wiki/%EC%84%9C%EB%B9%84%EC%8A%A4%EC%9D%B4%EC%9A%A9%EC%9A%94%EA%B8%88");
+			}
+		});
 		btnBuy.setText("구매");
 		
 		btnEvent = new Button(compositeMainMenu, SWT.NONE);
-		btnEvent.setText("이벤트");
+		btnEvent.setText("고객");
 		
 		btnCompanyInfo = new Button(compositeMainMenu, SWT.NONE);
 		btnCompanyInfo.setText("회사소개");
@@ -179,6 +184,7 @@ public class HomeLoginDialog extends Dialog {
 		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH));
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH), Locale.KOREAN);
+		new Label(compositeMainMenu, SWT.NONE);
 		
 		compositeHeadLeft = new Composite(container, SWT.NONE);
 		compositeHeadLeft.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -214,7 +220,7 @@ public class HomeLoginDialog extends Dialog {
 		});
 		GridData gd_textEMail = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_textEMail.minimumWidth = 140;
-		gd_textEMail.widthHint = 140;
+		gd_textEMail.widthHint = 170;
 		textEMail.setLayoutData(gd_textEMail);
 		
 		btnCheckButton = new Button(compositeLogin, SWT.CHECK);
@@ -246,6 +252,9 @@ public class HomeLoginDialog extends Dialog {
 		new Label(compositeLogin, SWT.NONE);
 		
 		btnNewUser = new Button(compositeLogin, SWT.NONE);
+		GridData gd_btnNewUser = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gd_btnNewUser.widthHint = 90;
+		btnNewUser.setLayoutData(gd_btnNewUser);
 		btnNewUser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -268,10 +277,10 @@ public class HomeLoginDialog extends Dialog {
 		// body composite
 		compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
-		compositeBody.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 2, 1));
+		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
 		Label lblMainimage = new Label(compositeBody, SWT.NONE);
-		lblMainimage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		lblMainimage.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1));
 		lblMainimage.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TDB_main.jpg"));
 		
 		// tail composite
@@ -284,11 +293,11 @@ public class HomeLoginDialog extends Dialog {
 		compositeTailLeft.setLayout(new GridLayout(1, false));
 		
 		Label tail_lblLoginForm = new Label(compositeTailLeft, SWT.NONE);
-		tail_lblLoginForm.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		tail_lblLoginForm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		tail_lblLoginForm.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TDB_64.png"));
 		
 		Label tail_companyName = new Label(compositeTailLeft, SWT.NONE);
-		tail_companyName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		tail_companyName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		tail_companyName.setText("주식회사 테드폴허브");
 		
 		// tail
@@ -302,6 +311,9 @@ public class HomeLoginDialog extends Dialog {
 		Label lblHangumtadpolehubcom = new Label(compositeTailRight, SWT.NONE);
 		lblHangumtadpolehubcom.setText("전자우편 : hangum@tadpolehub.com");
 		
+		label = new Label(compositeTailRight, SWT.NONE);
+		label.setText("서울시 은평구 불광로5가길 3-2 102호 (Tel. 010-4227-3601)");
+		
 		Label lblCopyrightcTadpolehub = new Label(compositeTailRight, SWT.NONE);
 		lblCopyrightcTadpolehub.setText("Copyright(c) 2016 TadpoleHub Co.,LTD All rights Reserved");
 		
@@ -310,19 +322,6 @@ public class HomeLoginDialog extends Dialog {
 		
 		return compositeLogin;
 	}
-	
-//	@Override
-//	protected void buttonPressed(int buttonId) {
-//		if(buttonId == ID_NEW_USER) {
-//			newUser();
-//			textEMail.setFocus();
-//		} else if(buttonId == ID_FINDPASSWORD) {
-//			findPassword();
-//			textEMail.setFocus();
-//		} else {
-//			okPressed();
-//		}
-//	}
 	
 	@Override
 	protected void okPressed() {
@@ -450,15 +449,6 @@ public class HomeLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-//		btnNewUser = createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
-//		try {
-//			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-//			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-//				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().FindPassword, false);
-//			}
-//		} catch (Exception e) {
-////			ignore exception
-//		}
 	}
 	
 	/**
