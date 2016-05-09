@@ -56,7 +56,7 @@ public class TadpoleSystem_UserRole {
 	
 	/**
 	 * insert table
-	 * 
+	 *  
 	 * @param userSeq
 	 * @param dbSeq
 	 * @param roleType
@@ -67,11 +67,10 @@ public class TadpoleSystem_UserRole {
 		userDBRoleDao.setUser_seq(userSeq);
 		userDBRoleDao.setDb_seq(dbSeq);
 		userDBRoleDao.setRole_id(roleType);
-		userDBRoleDao.setTerms_of_use_endtime(new Date(System.currentTimeMillis()));
 		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, 100);
-		userDBRoleDao.setTerms_of_use_endtime(new Date(cal.getTimeInMillis()));
+		userDBRoleDao.setTerms_of_use_endtime(new Timestamp(cal.getTimeInMillis()));
 		
 		// Insert tadpole_user_db_role table. 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
