@@ -111,11 +111,11 @@ public class RealGridComposite extends AbstractSQLToComposite {
 		textConvert = new Text(tabFolderPreview, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL);
 		tabItemConvert.setControl(textConvert);
 		
-		CTabItem tabItemHTML = new CTabItem(tabFolderPreview, SWT.NONE);
-		tabItemHTML.setText("Browser");
-		
-		browserPreview = new Browser(tabFolderPreview, SWT.NONE);
-		tabItemHTML.setControl(browserPreview);
+//		CTabItem tabItemHTML = new CTabItem(tabFolderPreview, SWT.NONE);
+//		tabItemHTML.setText("Browser");
+//		
+//		browserPreview = new Browser(tabFolderPreview, SWT.NONE);
+//		tabItemHTML.setControl(browserPreview);
 		tabFolderPreview.setSelection(0);
 		
 		sashForm.setWeights(new int[] {1});

@@ -85,7 +85,8 @@ public class SystemInitializeWizard extends Wizard {
 						"1005tadPole1206", 	
 						PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
 						"Default Admin", 
-						"en", 
+						"en_us", 
+						PublicTadpoleDefine.DEFAULT_TIME_ZONE,
 						PublicTadpoleDefine.YES_NO.YES.name(), 
 						PublicTadpoleDefine.YES_NO.NO.name(), 
 						"",
@@ -107,7 +108,8 @@ public class SystemInitializeWizard extends Wizard {
 				adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
 				adminDao.getPasswd(), 	
 				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-				"System Admin", "en", PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), "", "*"); //$NON-NLS-1$ //$NON-NLS-2$
+				"System Admin", "en_us", PublicTadpoleDefine.DEFAULT_TIME_ZONE,
+				PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), "", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);

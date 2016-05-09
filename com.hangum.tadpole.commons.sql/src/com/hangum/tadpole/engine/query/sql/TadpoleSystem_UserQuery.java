@@ -81,6 +81,8 @@ public class TadpoleSystem_UserQuery {
 	 * @param passwd
 	 * @param roleType
 	 * @param name
+	 * @param language
+	 * @param timezone
 	 * @param approvalYn
 	 * @param use_otp
 	 * @param otp_secret
@@ -94,7 +96,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
-								String roleType, String name, String language, String approvalYn, String use_otp, String otp_secret,
+								String roleType, String name, String language, String timezone, String approvalYn, String use_otp, String otp_secret,
 								String strAllowIP
 	) throws TadpoleSQLManagerException, SQLException {
 		UserDAO loginDAO = new UserDAO();
@@ -108,6 +110,7 @@ public class TadpoleSystem_UserQuery {
 		
 		loginDAO.setName(name);
 		loginDAO.setLanguage(language);
+		loginDAO.setTimezone(timezone);
 		loginDAO.setApproval_yn(approvalYn);
 		loginDAO.setUse_otp(use_otp);
 		loginDAO.setOtp_secret(otp_secret);
@@ -332,6 +335,18 @@ public class TadpoleSystem_UserQuery {
 	public static void updateUserData(UserDAO user) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPermission", user); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 유저의 기본정보를 수정
+	 * @param user
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static void updateUserBasic(UserDAO user) throws TadpoleSQLManagerException, SQLException {
+		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserBasic", user); //$NON-NLS-1$
 	}
 	
 	/**

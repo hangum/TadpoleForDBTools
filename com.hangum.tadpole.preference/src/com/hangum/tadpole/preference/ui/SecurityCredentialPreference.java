@@ -46,8 +46,8 @@ import org.eclipse.swt.widgets.Group;
  */
 public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(SecurityCredentialPreference.class);
-	
-	public static  String TEMPLATE_API_KEY = "TDB_SECRET_KEY: %s\nTDB_ACCESS_KEY: %s";
+	/** 사용자 억세스 키 시크릿 키를 보여준다 */
+	public static  String TEMPLATE_API_KEY = "TDB_ACCESS_KEY: %s\nTDB_SECRET_KEY: %s";
 	
 	private Combo comboIsUse;
 	private Text textAccessKey;

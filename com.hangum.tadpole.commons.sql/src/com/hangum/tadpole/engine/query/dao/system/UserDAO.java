@@ -36,6 +36,7 @@ public class UserDAO {
 	String role_type;
 	String name;
 	String language;
+	String timezone;
 	String delYn;
 	String create_time;
 	String approval_yn;
@@ -60,29 +61,6 @@ public class UserDAO {
 	String role_id;
 
 	public UserDAO() {
-	}
-
-	/**
-	 * @param input_type
-	 * @param email
-	 * @param email_key
-	 * @param is_email_certification
-	 * @param role_type
-	 * @param name
-	 * @param language
-	 * @param use_otp
-	 */
-	public UserDAO(String input_type, String email, String email_key, String is_email_certification, String role_type,
-			String name, String language, String use_otp) {
-		super();
-		this.input_type = input_type;
-		this.email = email;
-		this.email_key = email_key;
-		this.is_email_certification = is_email_certification;
-		this.role_type = role_type;
-		this.name = name;
-		this.language = language;
-		this.use_otp = use_otp;
 	}
 
 	/**
@@ -144,6 +122,20 @@ public class UserDAO {
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+	
+	/**
+	 * @return the timezone
+	 */
+	public String getTimezone() {
+		return timezone;
+	}
+
+	/**
+	 * @param timezone the timezone to set
+	 */
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
 	}
 
 	public String getDelYn() {

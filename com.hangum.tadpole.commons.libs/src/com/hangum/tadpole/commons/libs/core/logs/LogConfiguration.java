@@ -18,6 +18,8 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.eclipse.core.runtime.Platform;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * log file의 환경을 설정합니다.
  * 
@@ -25,7 +27,7 @@ import org.eclipse.core.runtime.Platform;
  *
  */
 public class LogConfiguration {
-	String defaultFileName 	= "../logs/tadpole/tadpole.log";
+	
 	String filePattern 		= "%d %-5p [%t] %-17c{2} (%13F:%L) %3x - %m%n";
 	String defaultPattern 	= "%d{yyyy MMM dd HH:mm:ss, SSS} %p - %C{1} : %M %m %n";
 	
@@ -51,7 +53,7 @@ public class LogConfiguration {
 	
 	public void init() throws Exception {
 		
-		fileAppender = new RollingFileAppender(new PatternLayout(filePattern), defaultFileName, true);
+		fileAppender = new RollingFileAppender(new PatternLayout(filePattern), PublicTadpoleDefine.DEFAULT_LOG_FILE, true);
 		fileAppender.setMaxBackupIndex(10);
 		fileAppender.setMaxFileSize("10MB");
 		

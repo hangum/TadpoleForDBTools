@@ -27,6 +27,7 @@ import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -62,6 +63,8 @@ public class SessionManager {
 														IS_SHARED_DB,
 														LIMIT_ADD_DB_CNT,
 														SERVICE_END,
+														LANGUAGE,
+														TIMEZONE,
 														
 								/* 대표적인 권한 타입 */		REPRESENT_ROLE_TYPE, 
 														USER_INFO_DATA,
@@ -108,9 +111,11 @@ public class SessionManager {
 		sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.name(), userDao.getRole_type());
 		sStore.setAttribute(NAME.USER_SEQ.name(), userDao.getSeq());
 		sStore.setAttribute(NAME.LOGIN_EMAIL.name(), userDao.getEmail());
-		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), userDao.getPasswd());
+		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), CipherManager.getInstance().decryption(userDao.getPasswd()));
 		sStore.setAttribute(NAME.LOGIN_NAME.name(), userDao.getName());
 		sStore.setAttribute(NAME.IS_REGIST_DB.name(), userDao.getIs_regist_db());
+		sStore.setAttribute(NAME.LANGUAGE.name(), userDao.getLanguage());
+		sStore.setAttribute(NAME.TIMEZONE.name(), userDao.getTimezone());
 		
 		sStore.setAttribute(NAME.IS_SHARED_DB.name(), userDao.getIs_shared_db());
 		sStore.setAttribute(NAME.LIMIT_ADD_DB_CNT.name(), userDao.getLimit_add_db_cnt());
@@ -187,6 +192,14 @@ public class SessionManager {
 	public static String getOTPSecretKey() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		return (String)sStore.getAttribute(NAME.OTP_SECRET_KEY.name());
+	}
+	public static String getLangeage() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.LANGUAGE.name());
+	}
+	public static String getTimezone() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.TIMEZONE.name());
 	}
 	
 	/**
@@ -367,4 +380,5 @@ public class SessionManager {
 			window.getActivePage().resetPerspective();	
 		}
 	}
+
 }
