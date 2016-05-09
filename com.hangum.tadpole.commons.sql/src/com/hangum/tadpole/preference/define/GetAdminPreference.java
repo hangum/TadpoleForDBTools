@@ -39,6 +39,15 @@ public class GetAdminPreference extends AbstractPreference {
 	private static final Logger logger = Logger.getLogger(GetAdminPreference.class);
 	
 	/**
+	 * api server uri
+	 * @return
+	 */
+	public static String getApiServerURL() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getValue(mapUserInfoData, AdminPreferenceDefine.API_SERVER_URL, AdminPreferenceDefine.API_SERVER_URL_VALUE);
+	}
+	
+	/**
 	 * 사용자 정보를 저장한다.
 	 * @return
 	 */

@@ -21,15 +21,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.libs.core.utils.VelocityUtils;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * RESTful API UTILS
@@ -197,6 +195,8 @@ public class RESTfulAPIUtils {
 	 * @return
 	 */
 	public static String getParameter(String strSQL) {
+		if("".equals(strSQL)) return "";
+		
 		String strArguments = "";
 		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
 		oracleNamedParamUtil.parse(strSQL);
@@ -222,11 +222,10 @@ public class RESTfulAPIUtils {
 	 * @return
 	 */
 	public static String makeURL(String strSQL, String strRestURL) {
-		HttpServletRequest httpRequest = RWT.getRequest();
-		String strServerURL = String.format("http://%s:%s%s", httpRequest.getLocalName(), httpRequest.getLocalPort(), httpRequest.getServletPath());
+		String strServerURL = GetAdminPreference.getApiServerURL();
 		
 		return String.format("%s%s?%s", 
-								strServerURL + "api/rest/base", 
+								strServerURL, 
 								strRestURL,
 								getParameter(strSQL));
 	}

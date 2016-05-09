@@ -45,6 +45,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
@@ -66,6 +67,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Text textIntLimtCnt;
 	private Text textDefaultUseDay;
 	private Text textLog;
+	private Text textAPIServerURL;
 
 	public AdminSystemSettingEditor() {
 		super();
@@ -145,6 +147,12 @@ public class AdminSystemSettingEditor extends EditorPart {
 		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
 			comboNewUserPermit.add(yesNo.name());
 		}
+		
+		Label lblApiServerUrl = new Label(compositeBody, SWT.NONE);
+		lblApiServerUrl.setText("API Server URL");
+		
+		textAPIServerURL = new Text(compositeBody, SWT.BORDER);
+		textAPIServerURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeBody, SWT.NONE);
 		
 		Label labelHorizontal = new Label(compositeBody, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -201,10 +209,11 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * initialize UI
 	 */
 	private void initUI() {
-		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
-		
 		comboIsAddDB.setText(GetAdminPreference.getIsAddDB());
 		comboIsSharedDB.setText(GetAdminPreference.getIsSharedDB());
+		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
+		textAPIServerURL.setText(GetAdminPreference.getApiServerURL());
+		
 		textIntLimtCnt.setText(GetAdminPreference.getDefaultAddDBCnt());
 		textDefaultUseDay.setText(GetAdminPreference.getServiceDurationDay());
 	}
@@ -230,6 +239,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 		try {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.NEW_USER_PERMIT, comboNewUserPermit.getText());
 			GetAdminPreference.updateAdminData(AdminPreferenceDefine.NEW_USER_PERMIT, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.API_SERVER_URL, textAPIServerURL.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.API_SERVER_URL, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_ADD_DB, comboIsAddDB.getText());
 			GetAdminPreference.updateAdminData(AdminPreferenceDefine.IS_ADD_DB, userInfoDao);

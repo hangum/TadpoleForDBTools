@@ -225,6 +225,11 @@ public class ResourceSaveDialog extends Dialog {
 			} else if(RESOURCE_TYPE.ERD == resourceType) {
 				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_10);
 				return;
+			} else if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_21);
+				
+				textAPIURI.setFocus();
+				return ;
 			}
 			
 			String strURL = RESTfulAPIUtils.makeURL(strContentData, textAPIURI.getText());
