@@ -24,12 +24,10 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class OpenDBRelationAction extends OpenQueryEditorAction {
-	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.DBRelationOpenAction"; //$NON-NLS-1$
 	
 	public OpenDBRelationAction(IWorkbenchWindow window) {
 		super(window);
-		this.window = window;
 		
 		setId(ID);
 		setText(Messages.get().ERDView);
@@ -46,10 +44,4 @@ public class OpenDBRelationAction extends OpenQueryEditorAction {
 		qea.run(userDB);
 	}
 	
-
-	@Override
-	public void dispose() {
-		window.getSelectionService().removePostSelectionListener(this);
-	}
-
 }

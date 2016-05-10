@@ -37,8 +37,8 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class OpenQueryEditorAction extends Action implements ISelectionListener, IWorkbenchAction {
-	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenQueryEditorAction"; //$NON-NLS-1$
+	protected final IWorkbenchWindow window;
 	protected IStructuredSelection iss;
 	protected UserDBDAO userDB;
 	

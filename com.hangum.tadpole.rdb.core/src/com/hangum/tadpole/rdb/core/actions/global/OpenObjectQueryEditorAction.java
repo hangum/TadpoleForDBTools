@@ -25,12 +25,10 @@ import com.swtdesigner.ResourceManager;
  *
  */
 public class OpenObjectQueryEditorAction extends OpenQueryEditorAction {
-	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenObjectQueryEditorAction"; //$NON-NLS-1$
 	
 	public OpenObjectQueryEditorAction(IWorkbenchWindow window) {
 		super(window);
-		this.window = window;
 		
 		setId(ID);
 		setText(Messages.get().CompileObjectEditorOpen);
@@ -46,11 +44,5 @@ public class OpenObjectQueryEditorAction extends OpenQueryEditorAction {
 		FindEditorAndWriteQueryUtil.run(userDB, 
 				"", 
 				PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
-	}
-	
-
-	@Override
-	public void dispose() {
-		window.getSelectionService().removePostSelectionListener(this);
 	}
 }
