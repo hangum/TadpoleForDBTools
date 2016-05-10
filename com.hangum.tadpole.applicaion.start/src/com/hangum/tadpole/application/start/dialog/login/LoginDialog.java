@@ -330,7 +330,7 @@ public class LoginDialog extends Dialog {
 		
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
+//		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
 	}
 	

@@ -265,10 +265,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         toolbar.add(saveAction);
         toolbar.add(saveAsAction);
-        toolbar.add(new Separator());        
+        toolbar.add(new Separator());
         
         toolbar.add(queryOpenAction);
         toolbar.add(openObjectQueryEditorAction);
+        toolbar.add(new Separator());
         toolbar.add(dbRelationOpenAction);
         toolbar.add(new Separator());
         
@@ -310,7 +311,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        toolbar.add(bugIssueAction);
 //        toolbar.add(aboutAction);
 //        if(!TadpoleApplicationContextManager.isPersonOperationType()) {
-	    	toolbar.add(new Separator());
+//	    	toolbar.add(new Separator());
 	    	toolbar.add(exitAction);
 //        }
     }

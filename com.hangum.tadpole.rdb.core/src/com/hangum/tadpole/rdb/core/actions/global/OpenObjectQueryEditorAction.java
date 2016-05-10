@@ -10,11 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.global;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -29,8 +27,6 @@ import com.swtdesigner.ResourceManager;
 public class OpenObjectQueryEditorAction extends OpenQueryEditorAction {
 	private final IWorkbenchWindow window;
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenObjectQueryEditorAction"; //$NON-NLS-1$
-	private IStructuredSelection iss;
-	private UserDBDAO userDB;
 	
 	public OpenObjectQueryEditorAction(IWorkbenchWindow window) {
 		super(window);
