@@ -282,6 +282,7 @@ public class ResultSetComposite extends Composite {
 		String strSQL = mybatisShapeUtil.parse(reqQuery.getSql());
 		Map<Integer, String> mapIndexToName = mybatisShapeUtil.getMapIndexToName();
 		if(!mapIndexToName.isEmpty()) {
+			
 			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
 			if(Dialog.OK == epd.open()) {
 				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
@@ -295,21 +296,22 @@ public class ResultSetComposite extends Composite {
 			}
 		}
 		
-		// mybatis $
-		GenericTokenParser mybatisDollarUtil = new GenericTokenParser("${", "}");
-		strSQL = mybatisDollarUtil.parse(reqQuery.getSql());
-		mapIndexToName = mybatisDollarUtil.getMapIndexToName();
-		if(!mapIndexToName.isEmpty()) {
-			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
-			if(Dialog.OK == epd.open()) {
-				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-				String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-				reqQuery.setSql(repSQL);
-				
-				if(logger.isDebugEnabled()) logger.debug("[mybatisDollarUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
-				return true;
-			} else {
-				return false;
+		if(GetPreferenceGeneral.getIsMyBatisDollor()) {
+			GenericTokenParser mybatisDollarUtil = new GenericTokenParser("${", "}");
+			strSQL = mybatisDollarUtil.parse(reqQuery.getSql());
+			mapIndexToName = mybatisDollarUtil.getMapIndexToName();
+			if(!mapIndexToName.isEmpty()) {
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+				if(Dialog.OK == epd.open()) {
+					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+					reqQuery.setSql(repSQL);
+					
+					if(logger.isDebugEnabled()) logger.debug("[mybatisDollarUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
+				}
 			}
 		}
 

@@ -268,5 +268,10 @@ public class GetPreferenceGeneral extends AbstractPreference {
 		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_SHOW_GUTTER_VALUE); 
 		return Boolean.parseBoolean(userInfo.getValue0());
 	}
+	public static boolean getIsMyBatisDollor() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_MYBatisDollart);
+		if(null == userInfo) return Boolean.parseBoolean(PreferenceDefine.EDITOR_MYBatisDollart_VALUE); 
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
 	
 }
