@@ -198,6 +198,6 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_SHOW_GUTTER_VALUE = "true";
 	
 	public static final String EDITOR_MYBatisDollart = "EDITOR_MYBatisDollart";
-	public static final String EDITOR_MYBatisDollart_VALUE = "true";
+	public static final String EDITOR_MYBatisDollart_VALUE = "false";
 		
 }
