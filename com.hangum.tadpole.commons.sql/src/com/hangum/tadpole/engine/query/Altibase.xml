@@ -408,22 +408,23 @@
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 <![CDATA[
- SELECT 
-    	tbl.table_name AS "table_name",
-    	''             AS "engine", 
-    	tbl.table_rows AS "table_rows",
-    	''                   AS "auto_increment", 
-    	comm.comments        AS "table_comment",
-    	db.nls_characterset AS "table_collation",
-    	TO_CHAR(tbl.created, 'DD-MM-YYYY HH24:MI:SS') AS "create_time",
-    	tbl.sizeofmb AS "sizeofmb"
+SELECT 
+    	tbl.table_name AS "TABLE_NAME",
+    	tbl.user_name  AS "OWNER", 
+    	tbl.table_rows AS "TABLE_ROWS",
+    	tbl.tbs_name        AS "TABLESPACE_NAME", 
+    	comm.comments       AS "TABLE_COMMENT",
+    	db.nls_characterset AS "CHARACTER_SET",
+    	TO_CHAR(tbl.created, 'DD-MM-YYYY HH24:MI:SS') AS "CREATED",
+    	tbl.sizeofmb AS "SIZEOFMB"
 FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/
              tbl.table_id,
              user.user_name,
     	     tbl.table_name,
              info.fixed_used_mem/info.mem_slot_size AS table_rows,
              tbl.created,
-             round((mem.fixed_used_mem+mem.var_used_mem)/1024/1024,2) AS sizeofmb
+             round((mem.fixed_used_mem+mem.var_used_mem)/1024/1024,2) AS sizeofmb,
+             tbl.tbs_name AS tbs_name
 	FROM system_.sys_tables_ tbl,
              x$$table_info info,
              v$$memtbl_info mem,
@@ -438,7 +439,8 @@ FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/
     	     tbl.table_name,
              info.disk_page_cnt AS table_rows,
              tbl.created,
-             round(disk.disk_page_cnt*8/1024,2) AS sizeofmb
+             round(disk.disk_page_cnt*8/1024,2) AS sizeofmb,
+             tbl.tbs_name AS tbs_name
 	FROM system_.sys_tables_ tbl,
              x$$table_info info,
              v$$disktbl_info disk,

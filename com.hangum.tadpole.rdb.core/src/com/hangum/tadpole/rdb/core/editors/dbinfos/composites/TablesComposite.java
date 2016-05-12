@@ -155,11 +155,17 @@ public class TablesComposite extends Composite {
 	 */
 	private void createColumn() {
 		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-			DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
+			DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT 
 		) {
-			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Size(MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "Collation", "Size(MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			int[] size = {120, 70, 70, 100, 80, 80, 120, 220};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
+			
+			createColumn(name, size, align);
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+			String[] name = {"Table Name", "Owner", "Rows", "Tablespace Name", "Character Set", "Size (MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+			int[] size = {200, 70, 70, 200, 100, 80, 120, 250};
+			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
@@ -308,7 +314,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 		Map resultMap = (HashMap)element;
 		
 		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT
+				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT 
 		) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -325,6 +331,17 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
 			case 1: return NumberFormatUtils.commaFormat(""+resultMap.get("NUM_ROWS")); //$NON-NLS-1$ //$NON-NLS-2$
 			case 2: return ""+resultMap.get("TABLE_LOCK"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+			switch(columnIndex) {
+			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
+			case 1: return ""+resultMap.get("OWNER"); //$NON-NLS-1$ //$NON-NLS-2$
+			case 2: return NumberFormatUtils.commaFormat(""+resultMap.get("TABLE_ROWS")); //$NON-NLS-1$ //$NON-NLS-2$
+			case 3: return NumberFormatUtils.commaFormat(StringUtils.replace(""+resultMap.get("TABLESPACE_NAME"), "null", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			case 4: return ""+resultMap.get("CHARACTER_SET"); //$NON-NLS-1$ //$NON-NLS-2$
+			case 5: return ""+resultMap.get("SIZEOFMB"); //$NON-NLS-1$ //$NON-NLS-2$
+			case 6: return ""+resultMap.get("CREATED"); //$NON-NLS-1$ //$NON-NLS-2$
+			case 7: return ""+resultMap.get("TABLE_COMMENT"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else {
 			switch(columnIndex) {
