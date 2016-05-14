@@ -31,10 +31,7 @@ public class AbstractPreference {
 	 * @return
 	 */
 	public static String getValue(String key, Object defaultValue) {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(key);
-		if(null == userInfo) return defaultValue.toString();
-		else if("".equals(userInfo.getValue0())) return defaultValue.toString();
-		
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(key, ""+defaultValue);
 		return userInfo.getValue0();
 	}
 	

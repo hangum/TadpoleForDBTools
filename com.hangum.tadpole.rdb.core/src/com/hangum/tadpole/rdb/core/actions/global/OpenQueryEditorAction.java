@@ -99,5 +99,4 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 			}
 		}
 	}
-
 }

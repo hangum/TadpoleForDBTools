@@ -44,5 +44,11 @@ public class AdminPreferenceDefine {
 	 */
 	public static final String API_SERVER_URL = _PREFIX + "API_SERVER_URL";
 	public static final String API_SERVER_URL_VALUE = "http://localhost:8080/api";
+	
+	/**
+	 * Define monitoring
+	 */
+	public static final String SUPPORT_MONITORING = _PREFIX + "SUPPORT_MONITORING";
+	public static final String SUPPORT_MONITORING_VALUE = "NO";
 
 }

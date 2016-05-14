@@ -48,10 +48,8 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	private Button btnShowGutter;
 	private Button btnIsWrap;
 	private Text textWrapLimit;
-	private Label lblTheme;
 	private Combo comboTheme;
 	private Button btnMybatisSupport;
-	
 
 	/**
 	 * Create the preference page.
@@ -78,7 +76,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		btnAutoSave.setText(Messages.get().EditorPreferencePage_3);
 		new Label(container, SWT.NONE);
 		
-		lblTheme = new Label(container, SWT.NONE);
+		Label lblTheme = new Label(container, SWT.NONE);
 		lblTheme.setText(Messages.get().EditorPreferencePage_lblTheme_text);
 		
 		comboTheme = new Combo(container, SWT.READ_ONLY);

@@ -218,6 +218,8 @@ public class Messages {
 	public String Aggree;
 
 	public String PlzConfirmTermsService;
+
+	public String AdminSystemSettingEditor_SupportMonitoring;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

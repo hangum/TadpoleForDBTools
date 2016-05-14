@@ -24,7 +24,6 @@ import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -112,12 +111,7 @@ public class TadpoleSystem_UserInfoData {
 	 */
 	public static void updateEncriptValue(String key, String value) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getUserSeq());
-		
-		userInfoData.setName(key);
-		userInfoData.setValue0(CipherManager.getInstance().encryption(value));
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		sqlClient.update("userInfoDataUpdate", new UserInfoDataDAO(SessionManager.getUserSeq(), key, CipherManager.getInstance().encryption(value))); //$NON-NLS-1$
 		
 		// session 에도 암호화 되게 저장합니다. 
 		SessionManager.setUserInfo(key, CipherManager.getInstance().encryption(value));
@@ -132,12 +126,8 @@ public class TadpoleSystem_UserInfoData {
 	 */
 	public static UserInfoDataDAO updateAdminValue(String key, String value)  throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(PublicTadpoleDefine.systemAdminId);
-		
-		userInfoData.setName(key);
-		userInfoData.setValue0(value);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		UserInfoDataDAO userInfoData = new UserInfoDataDAO(PublicTadpoleDefine.systemAdminId, key, value);
+		int updateCnt = sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
 		
 		return userInfoData;
 	}
@@ -151,12 +141,7 @@ public class TadpoleSystem_UserInfoData {
 	 */
 	public static void updateValue(String key, String value) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getUserSeq());
-		
-		userInfoData.setName(key);
-		userInfoData.setValue0(value);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		sqlClient.update("userInfoDataUpdate", new UserInfoDataDAO(SessionManager.getUserSeq(), key, value)); //$NON-NLS-1$
 		
 		SessionManager.setUserInfo(key, value);
 	}
@@ -175,51 +160,16 @@ public class TadpoleSystem_UserInfoData {
 	 */
 	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
 			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultType) throws TadpoleSQLManagerException, SQLException {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getUserSeq());
 		
-		// 	result type	
-		userInfoData.setName(PreferenceDefine.RDB_RESULT_TYPE);
-		userInfoData.setValue0(txtResultType);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// 	select 제한  갯수		
-		userInfoData.setName(PreferenceDefine.SELECT_LIMIT_COUNT);
-		userInfoData.setValue0(limitSelect);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// 검색 결과 페이지 당 보여주는 갯수 
-		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
-		userInfoData.setValue0(resultSelect);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// query time out
-		userInfoData.setName(PreferenceDefine.SELECT_QUERY_TIMEOUT);
-		userInfoData.setValue0(queryTimeout);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// ORACLE PLAN TABLE 
-		userInfoData.setName(PreferenceDefine.ORACLE_PLAN_TABLE);
-		userInfoData.setValue0(oraclePlan);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// RDB Result set number column.
-		userInfoData.setName(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
-		userInfoData.setValue0(txtRDBNumberColumnIsComman);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.RDB_RESULT_FONT);
-		userInfoData.setValue0(txtFontInfo);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.RDB_COMMIT_COUNT);
-		userInfoData.setValue0(txtCommitCount);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
-		userInfoData.setValue0(txtShownInTheColumn);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+		updateUserInfoData(PreferenceDefine.SELECT_LIMIT_COUNT, limitSelect);
+		updateUserInfoData(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, resultSelect);
+		updateUserInfoData(PreferenceDefine.SELECT_QUERY_TIMEOUT, queryTimeout);
+		updateUserInfoData(PreferenceDefine.ORACLE_PLAN_TABLE, oraclePlan);
+		updateUserInfoData(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, txtRDBNumberColumnIsComman);
+		updateUserInfoData(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
+		updateUserInfoData(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
+		updateUserInfoData(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, txtShownInTheColumn);
+		updateUserInfoData(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
 	}
 	
 	/**
@@ -233,43 +183,15 @@ public class TadpoleSystem_UserInfoData {
 	public static void updateSQLFormatterInfoData(String tabSize, String sqlFormatDecode, String sqlFormatIn,
 			String txtNewLineBefeoreAndOr, String txtNewLineBefeoreComma, String  txtRemoveEmptyLine,
 			String txtWordbreak, String strTextWidth
-			
-			) throws TadpoleSQLManagerException, SQLException {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB()); 
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getUserSeq());
-		
-		userInfoData.setName(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE);
-		userInfoData.setValue0(tabSize);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE);
-		userInfoData.setValue0(sqlFormatDecode);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
-		userInfoData.setValue0(sqlFormatIn);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE);
-		userInfoData.setValue0(txtNewLineBefeoreAndOr);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE);
-		userInfoData.setValue0(txtNewLineBefeoreComma);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE);
-		userInfoData.setValue0(txtRemoveEmptyLine);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE);
-		userInfoData.setValue0(txtWordbreak);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
-		userInfoData.setValue0(strTextWidth);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
+	) throws TadpoleSQLManagerException, SQLException {
+		updateUserInfoData(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE, tabSize);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE, sqlFormatDecode);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE, sqlFormatIn);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE, tabSize);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE, txtNewLineBefeoreAndOr);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE, txtRemoveEmptyLine);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE, txtWordbreak);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE, strTextWidth);
 	}
 	
 	/**
@@ -282,32 +204,11 @@ public class TadpoleSystem_UserInfoData {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void updateMongoDBUserInfoData(String txtLimitCount, String txtMacCount, String txtFindPage, String txtResultPage) throws TadpoleSQLManagerException, SQLException {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getUserSeq());
-		
-		// 	MONGO_DEFAULT_LIMIT
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_LIMIT);
-		userInfoData.setValue0(txtLimitCount);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// MONGO_DEFAULT_MAX_COUNT 
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
-		userInfoData.setValue0(txtMacCount);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// MONGO_DEFAULT_FIND
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_FIND);
-		userInfoData.setValue0(txtFindPage);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
-		// MONGO_DEFAULT_RESULT 
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_RESULT);
-		userInfoData.setValue0(txtResultPage);
-		sqlClient.update("userInfoDataUpdate", userInfoData); //$NON-NLS-1$
-		
+		updateUserInfoData(PreferenceDefine.MONGO_DEFAULT_LIMIT, txtLimitCount);
+		updateUserInfoData(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT, txtMacCount);
+		updateUserInfoData(PreferenceDefine.MONGO_DEFAULT_FIND, txtFindPage);
+		updateUserInfoData(PreferenceDefine.MONGO_DEFAULT_RESULT, txtResultPage);
 	}
-	
 	
 	/**
 	 * Update User info data
@@ -318,14 +219,8 @@ public class TadpoleSystem_UserInfoData {
 	 */
 	public static void updateUserInfoData(String key, String value0) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(SessionManager.getUserSeq());
-		
-		userInfoData.setName(key);
-		userInfoData.setValue0(value0);
-		sqlClient.update("userInfoDataUpdate", userInfoData);
+		sqlClient.update("userInfoDataUpdate", new UserInfoDataDAO(SessionManager.getUserSeq(), key, value0));
 	}
-	
 	
 	/**
 	 * 사용자의 프로필.
@@ -333,160 +228,59 @@ public class TadpoleSystem_UserInfoData {
 	 */
 	public static void initializeUserPreferenceData(UserDAO userdb) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO();
-		userInfoData.setUser_seq(userdb.getSeq());
-		/*user_db 테이블의 seq가 들어가야함.*/
-		/* 사용자별 dbms의 종류에 따른 환경설정 정보 - 초기등록시 작업이 아니라 커넥션 최초 등록시 작업하는게 맞음. */
-		/* dbms종속적인 환경설정도 있을 수 있으므로.. */
-		//userInfoData.setDb_seq(1);
+		sqlClient.startTransaction();
+		sqlClient.startBatch();
 		
-		// Security Credential Preference 
-				userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_USE);
-				userInfoData.setValue0(PublicTadpoleDefine.YES_NO.YES.name());
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				// set SECURITY_CREDENTIAL_ACCESS_KEY
-				userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY);
-				userInfoData.setValue0(Utils.getUniqueID());
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				// set SECURITY_CREDENTIAL_SECRET_KEY 
-				userInfoData.setName(PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY);
-				userInfoData.setValue0(Utils.getUniqueID());
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SECURITY_CREDENTIAL_USE, PreferenceDefine.SECURITY_CREDENTIAL_USE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SECURITY_CREDENTIAL_ACCESS_KEY, Utils.getUniqueID()));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SECURITY_CREDENTIAL_SECRET_KEY, Utils.getUniqueID()));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SYNC_EIDOTR_STATS, PreferenceDefine.SYNC_EIDOTR_STATS_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.EXPORT_DILIMITER, PreferenceDefine.EXPORT_DILIMITER_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SESSION_DFEAULT_PREFERENCE, ""+PreferenceDefine.SESSION_SERVER_DEFAULT_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.DEFAULT_HOME_PAGE, PreferenceDefine.DEFAULT_HOME_PAGE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.DEFAULT_HOME_PAGE_USE, PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SELECT_LIMIT_COUNT, ""+PreferenceDefine.SELECT_SELECT_LIMIT_COUNT_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, ""+PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SELECT_QUERY_TIMEOUT, 	""+PreferenceDefine.SELECT_QUERY_TIMEOUT_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.ORACLE_PLAN_TABLE, PreferenceDefine.ORACLE_PLAN_TABLE_VALUE));
 		
-		// editor and connection sysn status
-		userInfoData.setName(PreferenceDefine.SYNC_EIDOTR_STATS);
-		userInfoData.setValue0(""+PreferenceDefine.SYNC_EIDOTR_STATS_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_RESULT_TYPE, PreferenceDefine.RDB_RESULT_TYPE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_RESULT_FONT, PreferenceDefine.RDB_RESULT_FONT_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_COMMIT_COUNT, PreferenceDefine.RDB_COMMIT_COUNT_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE));
 		
-		// export delimiter
-		userInfoData.setName(PreferenceDefine.EXPORT_DILIMITER);
-		userInfoData.setValue0(""+PreferenceDefine.EXPORT_DILIMITER_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.MONGO_DEFAULT_LIMIT, PreferenceDefine.MONGO_DEFAULT_LIMIT_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.MONGO_DEFAULT_MAX_COUNT, PreferenceDefine.MONGO_DEFAULT_MAX_COUNT_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.MONGO_DEFAULT_FIND, PreferenceDefine.MONGO_DEFAULT_FIND_BASIC));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.MONGO_DEFAULT_RESULT, PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE));
 		
-		//SESSION TIME OUT 
-		userInfoData.setName(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);
-		userInfoData.setValue0(""+PreferenceDefine.SESSION_SERVER_DEFAULT_PREFERENCE_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-
-		//DEFAULT_HOME PAGE
-		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE);
-		userInfoData.setValue0(""+PreferenceDefine.DEFAULT_HOME_PAGE_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE, PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE, PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE, PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE, PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE, PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE, PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE, PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE, PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE));
 		
-		//DEFAULT_HOME PAGE_USE
-		userInfoData.setName(PreferenceDefine.DEFAULT_HOME_PAGE_USE);
-		userInfoData.setValue0(""+PreferenceDefine.DEFAULT_HOME_PAGE_USE_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// 	select 제한  갯수		
-		userInfoData.setName(PreferenceDefine.SELECT_LIMIT_COUNT);
-		userInfoData.setValue0(""+PreferenceDefine.SELECT_SELECT_LIMIT_COUNT_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// 검색 결과 페이지 당 보여주는 갯수 
-		userInfoData.setName(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
-		userInfoData.setValue0(""+PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// query time out
-		userInfoData.setName(PreferenceDefine.SELECT_QUERY_TIMEOUT);
-		userInfoData.setValue0(""+PreferenceDefine.SELECT_QUERY_TIMEOUT_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// ORACLE PLAN TABLE 
-		userInfoData.setName(PreferenceDefine.ORACLE_PLAN_TABLE);
-		userInfoData.setValue0(PreferenceDefine.ORACLE_PLAN_TABLE_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// RDB 결과 테이블의 폰트 설정.
-		userInfoData.setName(PreferenceDefine.RDB_RESULT_FONT);
-		userInfoData.setValue0(PreferenceDefine.RDB_RESULT_FONT_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// RDB 결과가 숫자 컬럼이면 ,를 찍도록 합니다.
-		userInfoData.setName(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
-		userInfoData.setValue0(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// 에디터에서 커밋 카운트.
-		userInfoData.setName(PreferenceDefine.RDB_COMMIT_COUNT);
-		userInfoData.setValue0(PreferenceDefine.RDB_COMMIT_COUNT_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// 에디터에서 결과 화면에서 컬럼의 보여지는 캐릭터 숫자.
-		userInfoData.setName(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
-		userInfoData.setValue0(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// MONGO_DEFAULT_LIMIT
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_LIMIT);
-		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_LIMIT_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// MONGO_DEFAULT_MAX_COUNT
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
-		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT_VALUE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$		
-		
-		// MONGO_DEFAULT_FIND
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_FIND);
-		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_FIND_BASIC);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		// MONGO_DEFAULT_RESULT
-		userInfoData.setName(PreferenceDefine.MONGO_DEFAULT_RESULT);
-		userInfoData.setValue0(PreferenceDefine.MONGO_DEFAULT_RESULT_TABLE);
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-		
-		
-		// SQLFormatter
-				userInfoData.setName(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
-				userInfoData.setName(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE);
-				userInfoData.setValue0(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE);
-				sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
-				
+		sqlClient.executeBatch();
+		sqlClient.commitTransaction();
+		sqlClient.endTransaction();
 	}
 	
 	/**
-	 * 사용자 정보를 저장합니다.
+	 * insertUserPreferenceData
 	 * 
 	 * @param userdb
 	 * @param key
 	 * @param value
-	 * @throws TadpoleSQLManagerException, SQLException
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
 	 */
-	private  void insertUserInfoData(UserDBDAO userdb, String key, String value) throws TadpoleSQLManagerException, SQLException {
-		UserInfoDataDAO userInfoData = new UserInfoDataDAO(userdb.getSeq(), key, value);
+	public static void insertUserInfoData(UserDAO userdb, String key, String value) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.insert("userInfoDataInsert", userInfoData); //$NON-NLS-1$
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), key, value)); //$NON-NLS-1$
 	}
+
 }
