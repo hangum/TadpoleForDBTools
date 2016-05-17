@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-tadpolea-1.7.1" sequenceNumber="282">
+<?pde version="3.8"?><target name="target-tadpolea-1.7.1" sequenceNumber="283">
 <locations>
 <location path="${project_loc:/targetProject}/rap-3.1.0-N-20150914-1435" type="Directory"/>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.rap.addons.chart.feature.feature.group" version="0.1.0.20160329-0849"/>
-<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/chart"/>
-</location>
 <location path="${project_loc:/targetProject}/ext" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.babel.nls_rt.rap_fr.feature.group" version="4.5.0.v20151128060001"/>
@@ -64,6 +60,10 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>
 <repository location="http://download.eclipse.org/releases/mars"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rap.addons.chart.feature.feature.group" version="0.1.0.20160506-0953"/>
+<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/chart"/>
 </location>
 </locations>
 </target>

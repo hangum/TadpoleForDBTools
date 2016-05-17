@@ -55,5 +55,6 @@
 	
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-SQL-Template.xml" />
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-AccessControl.xml" />
+	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-bill.xml" />
 
 </sqlMapConfig>

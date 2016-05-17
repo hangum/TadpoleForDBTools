@@ -31,6 +31,7 @@ import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.application.start.action.NewVersionCheckAction;
 import com.hangum.tadpole.application.start.action.UserManuelAction;
+import com.hangum.tadpole.bill.core.actions.BillAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSystemSettingAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
@@ -106,6 +107,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     // agens monitor
 //    private IAction agensMonitorAction;
+    
+    private IAction billAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -197,6 +200,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
        
         newVersionCheckAction = new NewVersionCheckAction(window);
         register(newVersionCheckAction);
+        
+        billAction = new BillAction(window);
+        register(billAction);
     }
     
     /**
@@ -260,6 +266,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		
 		// Help
 		helpMenu.add(userManuelAction);
+		helpMenu.add(billAction);
 		helpMenu.add(bugIssueAction);
 		helpMenu.add(newVersionCheckAction);
 		helpMenu.add(aboutAction);

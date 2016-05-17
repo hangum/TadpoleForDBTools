@@ -10,9 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.texteditor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.browser.Browser;

@@ -34,8 +34,8 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.tadpole.application.start.dialog.login.HomeLoginDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.application.start.dialog.login.ServiceLoginDialog;
 import com.hangum.tadpole.application.start.update.checker.NewVersionChecker;
 import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
 import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
@@ -259,7 +259,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		} else {
     			// Open login dialog
     			if(ApplicationArgumentUtils.isOnlineServer()) {
-	    			HomeLoginDialog loginDialog = new HomeLoginDialog(Display.getCurrent().getActiveShell());
+    				ServiceLoginDialog loginDialog = new ServiceLoginDialog(Display.getCurrent().getActiveShell());
 	    	    	if(Dialog.OK == loginDialog.open()) {
 	    	    		initializeUserSession();
 	    	    	}
