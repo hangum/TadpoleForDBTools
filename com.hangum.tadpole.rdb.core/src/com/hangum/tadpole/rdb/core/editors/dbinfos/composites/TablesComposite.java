@@ -77,7 +77,7 @@ public class TablesComposite extends Composite {
 	private TableInfoFilter tableFilter;
 	private Text textFilter;
 	
-	/** download servcie handler. */
+	/** download service handler. */
 	private Composite compositeTail;
 	private DownloadServiceHandler downloadServiceHandler;
 
@@ -363,7 +363,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 }
 
 /**
- * name filetr
+ * name filter
  * 
  * @author hangum
  *
