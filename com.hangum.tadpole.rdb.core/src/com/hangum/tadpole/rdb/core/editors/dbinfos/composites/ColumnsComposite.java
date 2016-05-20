@@ -70,7 +70,7 @@ public class ColumnsComposite extends Composite {
 	private DefaultTableColumnFilter columnFilter;
 	private Text textFilter;
 	
-	/** download servcie handler. */
+	/** download service handler. */
 	private Composite compositeTail;
 	private DownloadServiceHandler downloadServiceHandler;
 
@@ -182,11 +182,11 @@ public class ColumnsComposite extends Composite {
 		
 		try {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
-			downloadExtFile("ColumnInformation.csv", strCVSContent); //$NON-NLS-1$
+			downloadExtFile(userDB.getDisplay_name() + "_ColumnInformation.csv", strCVSContent); //$NON-NLS-1$
 			
 			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().TablesComposite_5);
 		} catch (Exception e) {
-			logger.error("Save CSV Data", e); //$NON-NLS-1$
+			logger.error("An error occurred while writing into a CSV file.", e); //$NON-NLS-1$
 		}		
 	}
 
@@ -276,7 +276,18 @@ public class ColumnsComposite extends Composite {
 					, new TableViewColumnDefine ("DENSITY", "Density", 100, SWT.RIGHT) // //$NON-NLS-1$ //$NON-NLS-2$
 					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 120, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
+		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
 
+			tableColumnDef = new TableViewColumnDefine [] { //
+					  new TableViewColumnDefine ("TABLE_NAME", "Table Name", 180, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("TABLE_COMMENT", "Table Comment", 150, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_NAME", "Column Name", 150, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("COLUMN_COMMENT", "Column Comment", 150, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("NULLABLE", "Nullable", 60, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("PK", "Key", 100, SWT.LEFT)
+					, new TableViewColumnDefine ("DATA_TYPE", "Data Type", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+					, new TableViewColumnDefine ("DATA_DEFAULT", "Default", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
+			};
 		} else {
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
