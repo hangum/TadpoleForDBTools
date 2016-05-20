@@ -95,7 +95,7 @@ public class DBLockDialog extends Dialog {
 		String strPassword = textPassword.getText();
 		
 		if(!strPassword.equals(userDB.getPasswd())) {
-			MessageDialog.openError(getShell(), Messages.get().DBLockDialog_2, Messages.get().DBLockDialog_3);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DBLockDialog_3);
 			textPassword.setFocus();
 			
 			return;
@@ -109,8 +109,8 @@ public class DBLockDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().DBLockDialog_4, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().DBLockDialog_5, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
 	}
 
 	/**

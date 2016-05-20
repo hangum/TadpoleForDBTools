@@ -14,6 +14,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.commons.admin.core.Messages;
+
 /**
  * Admin System setting editor input
  * 
@@ -42,7 +44,7 @@ public class AdminSystemSettingEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Tadpole System Setting";
+		return Messages.get().SystemSetting;
 	}
 
 	@Override
@@ -52,6 +54,6 @@ public class AdminSystemSettingEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Tadpole System Setting";
+		return Messages.get().SystemSetting;//"System Setting";
 	}	
 }

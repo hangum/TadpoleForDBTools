@@ -29,53 +29,46 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class HTMLExporter extends AbstractTDBExporter {
-//	public static final String sbHtml = 
-//				"<meta charset='UTF-8'>" +
-//				"<style type='text/css'>" +
-//				".tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}" +
-//				".tg td{font-family:Arial, sans-serif;font-size:12px;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}" +
-//				".tg th{font-family:Arial, sans-serif;font-size:12px;font-weight:normal;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}" +
-//				".tg .tg-yw4l{vertical-align:top}" +
-//				"</style>";
-	private static String strContetntGroup = "<table class='tg'>%s%s</table>";
 	
-	private static String strGroup = "<tr>%s</tr>";
-	private static String strHead = "<th class='tg-yw4l'>%s</th>";
-	private static String strContent= "<td class='tg-yw4l'>%s</td>";
+	public static String makeContent(String targetName, QueryExecuteResultDTO queryExecuteResultDTO) {
+		return makeContent(targetName, queryExecuteResultDTO, -1);
+	}
 
 	/**
 	 * make content
 	 * 
 	 * @param tableName
 	 * @param rsDAO
+	 * @param intLimitCnt
 	 * @return
 	 */
-	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO) {
+	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, int intLimitCnt) {
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-		// column .
+		// make column header
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
 		StringBuffer sbHead = new StringBuffer();
-		sbHead.append( String.format(strHead, "#") );
+		sbHead.append( HTMLDefine.makeTH("#") );
 		for(int i=1; i<mapLabelName.size(); i++) {
-			sbHead.append( String.format(strHead, mapLabelName.get(i)) );
+			sbHead.append( HTMLDefine.makeTH( mapLabelName.get(i)) );
 		}
-		String strLastColumnName = String.format(strGroup, sbHead.toString());
 
+		// body
 		StringBuffer sbBody = new StringBuffer("");
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			StringBuffer sbTmp = new StringBuffer();
-			sbTmp.append( String.format(strHead, ""+(i+1)) ); //$NON-NLS-1$
+			sbTmp.append(HTMLDefine.makeTH(""+(i+1)) ); //$NON-NLS-1$
 			for(int j=1; j<mapColumns.size(); j++) {
 				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
-				sbTmp.append( String.format(strContent, StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
+				sbTmp.append( HTMLDefine.makeTD(StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
 			}
-			sbBody.append(String.format(strGroup, sbTmp.toString()));
+			sbBody.append(HTMLDefine.makeTR(sbTmp.toString()));
+			
+			if(i == intLimitCnt) break;
 		}
-		String strLastBody = String.format(strContetntGroup, strLastColumnName, sbBody);
 		
-		return HTMLDefine.sbHtml + strLastBody;
+		return HTMLDefine.HTML_STYLE + HTMLDefine.makeTABLE(HTMLDefine.makeTR(sbHead.toString()), sbBody.toString());
 	}
 	
 	/**
@@ -92,7 +85,7 @@ public class HTMLExporter extends AbstractTDBExporter {
 		String strFile = tableName + ".html";
 		String strFullPath = strTmpDir + strFile;
 		
-		FileUtils.writeStringToFile(new File(strFullPath), HTMLDefine.sbHtml, true);
+		FileUtils.writeStringToFile(new File(strFullPath), HTMLDefine.HTML_STYLE, true);
 		FileUtils.writeStringToFile(new File(strFullPath), "<table class='tg'>", true);
 		
 		// make content
@@ -100,11 +93,11 @@ public class HTMLExporter extends AbstractTDBExporter {
 		// column .
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
 		StringBuffer sbHead = new StringBuffer();
-		sbHead.append( String.format(strHead, "#") );
+		sbHead.append( HTMLDefine.makeTH("#") );
 		for(int i=1; i<mapLabelName.size(); i++) {
-			sbHead.append( String.format(strHead, mapLabelName.get(i)) );
+			sbHead.append( HTMLDefine.makeTH(mapLabelName.get(i)) );
 		}
-		String strLastColumnName = String.format(strGroup, sbHead.toString());
+		String strLastColumnName = HTMLDefine.makeTR(sbHead.toString());
 		
 		// header
 		FileUtils.writeStringToFile(new File(strFullPath), strLastColumnName, true);
@@ -115,12 +108,12 @@ public class HTMLExporter extends AbstractTDBExporter {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			StringBuffer sbTmp = new StringBuffer();
-			sbTmp.append( String.format(strHead, ""+(i+1)) ); //$NON-NLS-1$
+			sbTmp.append( HTMLDefine.makeTH(""+(i+1)) ); //$NON-NLS-1$
 			for(int j=1; j<mapColumns.size(); j++) {
 				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
-				sbTmp.append( String.format(strContent, StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
+				sbTmp.append( HTMLDefine.makeTD(StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
 			}
-			sbBody.append(String.format(strGroup, sbTmp.toString()));
+			sbBody.append(HTMLDefine.makeTR(sbTmp.toString()));
 			
 			if((i%DATA_COUNT) == 0) {
 				FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), true);
@@ -131,9 +124,9 @@ public class HTMLExporter extends AbstractTDBExporter {
 		if(sbBody.length() > 0) {
 			FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), true);
 		}
-		
 		FileUtils.writeStringToFile(new File(strFullPath), "</table>", true);
 		
 		return strFullPath;
 	}
+
 }

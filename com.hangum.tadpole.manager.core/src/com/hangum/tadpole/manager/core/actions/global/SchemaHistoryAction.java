@@ -51,7 +51,7 @@ public class SchemaHistoryAction extends Action implements ISelectionListener, I
 		
 		setId(ID);
 		setText(Messages.get().SchemaHistoryAction_0);
-		setToolTipText(Messages.get().SchemaHistoryAction_1);
+		setToolTipText(Messages.get().SchemaHistoryAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/schema_history.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -65,7 +65,7 @@ public class SchemaHistoryAction extends Action implements ISelectionListener, I
 			logger.error("SchemaHistory editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().SchemaHistoryAction_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().SchemaHistoryAction_0, errStatus); //$NON-NLS-1$
 		}
 	}
 

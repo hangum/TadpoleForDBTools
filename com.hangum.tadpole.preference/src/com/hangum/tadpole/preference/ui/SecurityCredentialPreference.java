@@ -12,6 +12,7 @@ package com.hangum.tadpole.preference.ui;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,6 +33,7 @@ import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetSecurityCredentialPreference;
+import org.eclipse.swt.widgets.Group;
 
 /**
  * security credentials
@@ -44,10 +46,13 @@ import com.hangum.tadpole.preference.get.GetSecurityCredentialPreference;
  */
 public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(SecurityCredentialPreference.class);
+	/** 사용자 억세스 키 시크릿 키를 보여준다 */
+	public static  String TEMPLATE_API_KEY = "TDB_ACCESS_KEY: %s\nTDB_SECRET_KEY: %s";
 	
 	private Combo comboIsUse;
 	private Text textAccessKey;
 	private Text textSecretKey;
+	private Text textHeader;
 
 	/**
 	 * Create the preference page.
@@ -62,13 +67,13 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 	@Override
 	public Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
-		container.setLayout(new GridLayout(2, false));
+		container.setLayout(new GridLayout(3, false));
 		
 		Label lblUse = new Label(container, SWT.NONE);
 		lblUse.setText(Messages.get().SecurityCredentialPreference_0);
 		
 		comboIsUse = new Combo(container, SWT.READ_ONLY);
-		comboIsUse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboIsUse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		for(PublicTadpoleDefine.YES_NO YESNO : PublicTadpoleDefine.YES_NO.values()) {
 			comboIsUse.add(YESNO.name());
 		}
@@ -79,7 +84,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		
 		textAccessKey = new Text(container, SWT.BORDER);
 		textAccessKey.setEditable(false);
-		textAccessKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textAccessKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblSecretKey = new Label(container, SWT.NONE);
 		lblSecretKey.setText(Messages.get().SecurityCredentialPreference_2);
@@ -87,7 +92,6 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		textSecretKey = new Text(container, SWT.BORDER);
 		textSecretKey.setEditable(false);
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(container, SWT.NONE);
 		
 		Button btnGenerateKey = new Button(container, SWT.NONE);
 		btnGenerateKey.addSelectionListener(new SelectionAdapter() {
@@ -96,11 +100,30 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 				
 				if(!MessageDialog.openConfirm(getShell(), Messages.get().SecurityCredentialPreference_3, Messages.get().SecurityCredentialPreference_4)) return;
 				
-				textAccessKey.setText(Utils.getUniqueID());
 				textSecretKey.setText(Utils.getUniqueID());
+				textHeader.setText(String.format(TEMPLATE_API_KEY, textAccessKey.getText(), textSecretKey.getText()));
 			}
 		});
 		btnGenerateKey.setText(Messages.get().SecurityCredentialPreference_5);
+		
+		Group grpUsage = new Group(container, SWT.NONE);
+		grpUsage.setLayout(new GridLayout(1, false));
+		grpUsage.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		grpUsage.setText("Usage");
+		
+		Label lblHttpRequestHeader = new Label(grpUsage, SWT.NONE);
+		lblHttpRequestHeader.setText("HTTP Header");
+		
+		textHeader = new Text(grpUsage, SWT.BORDER | SWT.MULTI);
+		textHeader.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Label lblDocument = new Label(container, SWT.NONE);
+		lblDocument.setText(Messages.get().Document);
+		
+		Label lblDocUrl = new Label(container, SWT.NONE);
+		lblDocUrl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblDocUrl.setText(Messages.get().RESTAPI_Help);
+		new Label(container, SWT.NONE);
 		
 		initDefaultValue();
 		
@@ -117,6 +140,9 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		comboIsUse.setText(GetSecurityCredentialPreference.getSecurityCredentialUse());
 		textAccessKey.setText(GetSecurityCredentialPreference.getAccessValue());
 		textSecretKey.setText(GetSecurityCredentialPreference.getSecretValue());
+		
+		// make request header
+		textHeader.setText(String.format(TEMPLATE_API_KEY, GetSecurityCredentialPreference.getAccessValue(), GetSecurityCredentialPreference.getSecretValue()));
 	}
 	
 	@Override
@@ -133,7 +159,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		} catch(Exception e) {
 			logger.error("api security credential saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -166,5 +192,4 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 	@Override
 	public void init(IWorkbench workbench) {
 	}
-
 }

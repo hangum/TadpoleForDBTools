@@ -50,7 +50,7 @@ public class AdminSQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.get().AdminSQLAuditEditorInput_0;
+		return Messages.get().AdminSQLAuditAction_0;
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class AdminSQLAuditEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.get().AdminSQLAuditEditorInput_1;
+		return Messages.get().AdminSQLAuditAction_0;
 	}
 	
 }

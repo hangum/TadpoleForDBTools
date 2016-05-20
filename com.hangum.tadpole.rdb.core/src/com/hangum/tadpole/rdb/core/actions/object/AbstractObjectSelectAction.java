@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.object;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
@@ -26,7 +27,8 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
  *
  */
 public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
-
+	private static final Logger logger = Logger.getLogger(AbstractObjectSelectAction.class);
+	
 	public AbstractObjectSelectAction(IWorkbenchWindow window, OBJECT_TYPE actionType) {
 		super(window, actionType);
 	}

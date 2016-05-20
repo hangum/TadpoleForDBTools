@@ -145,10 +145,11 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	SELECT * 
 	FROM information_schema.statistics 
 	WHERE TABLE_SCHEMA = #table_schema#
+	  AND TABLE_NAME = #table_name#
 	GROUP BY TABLE_NAME, INDEX_NAME
 </select>
 
@@ -158,10 +159,21 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
  <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	SELECT * 
 	FROM information_schema.statistics 
-	WHERE TABLE_SCHEMA = #table_schema# AND
-		TABLE_NAME = #table_name# AND
-		INDEX_NAME = #index_name#
+	WHERE TABLE_SCHEMA = #table_schema# 
+		AND TABLE_NAME = #table_name# 
+		AND INDEX_NAME = #index_name#
 	GROUP BY TABLE_NAME, INDEX_NAME
+</select>
+ 
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+select *
+from information_schema.table_constraints
+where table_schema = #table_schema#
+and table_name = #table_name#
 </select>
  
 <!-- 
@@ -181,7 +193,10 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SHOW TRIGGERS 
+</select>
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SHOW TRIGGERS 
 </select>
 

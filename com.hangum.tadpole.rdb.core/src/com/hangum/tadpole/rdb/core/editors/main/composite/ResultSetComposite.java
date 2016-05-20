@@ -59,8 +59,10 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
+import com.hangum.tadpole.engine.sql.paremeter.lang.GenericTokenParser;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
+import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -167,7 +169,8 @@ public class ResultSetComposite extends Composite {
 				isUserInterrupt = false;
 			}
 		});
-		btnStopQuery.setText(Messages.get().RDBResultComposite_btnStp_text);
+		btnStopQuery.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/stop.png"));
+		btnStopQuery.setToolTipText(Messages.get().QueryStop);
 		btnStopQuery.setEnabled(false);
 		
 		btnAddVertical = new Button(compHead, SWT.NONE);
@@ -176,17 +179,17 @@ public class ResultSetComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(SWT.VERTICAL == sashFormResult.getOrientation()) {
 					sashFormResult.setOrientation(SWT.HORIZONTAL);	
-					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/bottom.png"));										
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_vertical.png"));										
 				} else {
 					sashFormResult.setOrientation(SWT.VERTICAL);
-					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
+					btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_horizontal.png"));
 				}
 				
 				layout();
 			}
 		});
-		btnAddVertical.setText(Messages.get().RDBResultComposite_btnOrientation);
-		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/left.png"));
+		btnAddVertical.setToolTipText(Messages.get().ChangeRotation);
+		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_vertical.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);
 		lblTemp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -218,65 +221,99 @@ public class ResultSetComposite extends Composite {
 	 * @return
 	 */
 	private boolean ifIsParameterQuery() {
+		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) return true;
+		final DBDefine selectDBDefine = getUserDB().getDBDefine();
+		if((selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
+				selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
+				selectDBDefine == DBDefine.TAJO_DEFAULT 	||
+				// not support this java.sql.ParameterMetaData 
+				selectDBDefine == DBDefine.CUBRID_DEFAULT)
+		) return true; 
+
 		final Shell runShell = btnStopQuery.getShell();
 		
-		if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
-			
-			final DBDefine selectDBDefine = getUserDB().getDBDefine();
-			if(!(selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
-					selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
-					selectDBDefine == DBDefine.TAJO_DEFAULT 	||
-					// not support this java.sql.ParameterMetaData 
-					selectDBDefine == DBDefine.CUBRID_DEFAULT)
-			) {
-				boolean isAlreadyApply = false;
-				try {
-					// if named parameter?
-					OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
-					String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+		// java named parameter
+		try {
+			JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
+			int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
+			if(paramCnt > 0) {
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
+				if(Dialog.OK == epd.open()) {
+					ParameterObject paramObj = epd.getParameterObject();
+					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+					reqQuery.setSql(repSQL);
 					
-					Map<String, int[]> mapIndex = oracleNamedParamUtil.getIndexMap();
-					if(!mapIndex.isEmpty()) {
-						isAlreadyApply = true;
-						
-						ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndex);
-						if(Dialog.OK == epd.open()) {
-							ParameterObject paramObj = epd.getOracleParameterObject(oracleNamedParamUtil.getMapIndexToName());
-							String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-							reqQuery.setSql(repSQL);
-							
-							if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
-//						} else {
-//							return false;
-						}
-					}
-				} catch(Exception e) {
-					logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
+					if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
 				}
-
-				if(!isAlreadyApply) {
-					try {
-						// java named parameter
-						JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
-						int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
-						if(paramCnt > 0) {
-							ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
-							if(Dialog.OK == epd.open()) {
-								ParameterObject paramObj = epd.getParameterObject();
-								String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-								reqQuery.setSql(repSQL);
-								
-								if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
-//							} else {
-//								return false;
-							}
-						}
-					} catch(Exception e) {
-						logger.error("Java style parameter parse", e); //$NON-NLS-1$
-					}
-				}  // if(!isAlreadyApply
 			}
-		}	// end if(reqQuery.getExecuteType() != EditorDefine.EXECUTE_TYPE.ALL) {
+		} catch(Exception e) {
+			logger.error("Java style parameter parse", e); //$NON-NLS-1$
+		}
+		
+		// oracle parameter
+		try {
+			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
+			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+			
+			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
+			if(!mapIndexToName.isEmpty()) {
+				
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+				if(Dialog.OK == epd.open()) {
+					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+					reqQuery.setSql(repSQL);
+					
+					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} catch(Exception e) {
+			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
+		}
+
+		// mybatis shap
+		GenericTokenParser mybatisShapeUtil = new GenericTokenParser("#{", "}");
+		String strSQL = mybatisShapeUtil.parse(reqQuery.getSql());
+		Map<Integer, String> mapIndexToName = mybatisShapeUtil.getMapIndexToName();
+		if(!mapIndexToName.isEmpty()) {
+			
+			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+			if(Dialog.OK == epd.open()) {
+				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+				String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+				reqQuery.setSql(repSQL);
+				
+				if(logger.isDebugEnabled()) logger.debug("[mybatisShapeUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		if(GetPreferenceGeneral.getIsMyBatisDollor()) {
+			GenericTokenParser mybatisDollarUtil = new GenericTokenParser("${", "}");
+			strSQL = mybatisDollarUtil.parse(reqQuery.getSql());
+			mapIndexToName = mybatisDollarUtil.getMapIndexToName();
+			if(!mapIndexToName.isEmpty()) {
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+				if(Dialog.OK == epd.open()) {
+					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+					reqQuery.setSql(repSQL);
+					
+					if(logger.isDebugEnabled()) logger.debug("[mybatisDollarUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
 
 		return true;
 	}
@@ -318,8 +355,8 @@ public class ResultSetComposite extends Composite {
 		this.rsDAO = new QueryExecuteResultDTO();
 		if(compositeResult != null) compositeResult.initUI();
 		
-		// selected first tab request quring.
-		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
+//		// selected first tab request quring.
+//		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		// 쿼리를 실행 합니다. 
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
@@ -328,6 +365,7 @@ public class ResultSetComposite extends Composite {
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
+		final UserDBDAO tmpUserDB 	= getUserDB();
 		
 		final String errMsg = Messages.get().MainEditor_21;
 		
@@ -346,7 +384,7 @@ public class ResultSetComposite extends Composite {
 						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
-							String strExeSQL = SQLUtil.sqlExecutable(strSQL);
+							String strExeSQL = SQLUtil.makeExecutableSQL(tmpUserDB, strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
 							if(SQLUtil.isStatement(strExeSQL)) {
@@ -714,21 +752,42 @@ public class ResultSetComposite extends Composite {
 				changeResultType();
 			}
 		} else {
-			getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
-			getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			
-			// working schema_history 에 history 를 남깁니다.
-			try {
-				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), getUserDB(),
-						"EDITOR", //$NON-NLS-1$
-						reqQuery.getSqlDDLType().name(),
-						reqQuery.getSqlObjectName(),
-						reqQuery.getSql());
-			} catch(Exception e) {
-				logger.error("save schemahistory", e); //$NON-NLS-1$
+			if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
+				String strDefaultMsg = Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText();
+				String retMsg = ObjectCompileUtil.validateObject(getUserDB(), reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
+				if(!"".equals(retMsg)) { //$NON-NLS-1$
+					strDefaultMsg = Messages.get().ObjectEditor_7 + retMsg;
+				}
+				
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, strDefaultMsg);
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+				refreshExplorerView(getUserDB(), reqQuery);
+			} else {
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
+				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			}
-		
-			if(reqQuery.getSqlType() == SQL_TYPE.DDL) refreshExplorerView(getUserDB(), reqQuery);
+			
+			if(reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE |
+					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP |
+					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
+			) {
+//				// working schema_history 에 history 를 남깁니다.
+//				aram strWorkType TABLE, VIEW, PROCEDURE, FUNCTION, TRIGGER...
+//				 * @param strObjecType CREATE, ALTER, DROP
+//				 * @param strObjectId 객체 명
+//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
+				try {
+					TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
+							getUserDB(),
+							reqQuery.getQueryStatus().name(), //$NON-NLS-1$
+							reqQuery.getSqlDDLType().name(),
+							reqQuery.getSqlObjectName(),
+							reqQuery.getSql());
+				} catch(Exception e) {
+					logger.error("save schemahistory", e); //$NON-NLS-1$
+				}
+			}
 		}
 	}
 		
@@ -760,14 +819,12 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void resultSashLayout() {
-		Map<Integer, Float> mapWidths = new HashMap<Integer, Float>();
-		Map<Integer, Float> mapHeight = new HashMap<Integer, Float>();
-		int intParentWidth = sashFormResult.getBounds().width;
-		int intParentHeight = sashFormResult.getBounds().height;
+		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
 		int intTmpCount = 0;
 		
 		try {
-			List<AbstractResultDetailComposite> listDisComp = new ArrayList<>();
+			List<AbstractResultDetailComposite> listDisposeComposite = new ArrayList<>();
 			Control[] childControls = sashFormResult.getChildren();
 			for (int i=0; i<childControls.length; i++) {
 				Control control = childControls[i];
@@ -775,19 +832,19 @@ public class ResultSetComposite extends Composite {
 					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
 					ResultTailComposite tailComposite = resultComposite.getCompositeTail();
 					if(!tailComposite.getBtnPinSelection()) {
-						listDisComp.add(resultComposite);
+						listDisposeComposite.add(resultComposite);
 					} else {
-						mapWidths.put(intTmpCount, ((float)resultComposite.getBounds().width / (float)intParentWidth));
-						mapHeight.put(intTmpCount, ((float)resultComposite.getBounds().height / (float)intParentHeight));
+						mapWidths.put(intTmpCount, resultComposite.getBounds().width);
+						mapHeight.put(intTmpCount, resultComposite.getBounds().height);
 						intTmpCount++;
 					}
 				}
 			}
 			
 			// 삭제한다.
-			int intDispCount = listDisComp.size()-1;
+			int intDispCount = listDisposeComposite.size()-1;
 			for(int i=0; i<intDispCount; i++) {
-				listDisComp.get(i).dispose();
+				listDisposeComposite.get(i).dispose();
 			}
 			
 			int weights[] = new int[mapWidths.size()+1];

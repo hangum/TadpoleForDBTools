@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!-- 
+
+ -->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Tadpole-System-bill">
+	<!-- bill list -->
+	<select id="userBillList" resultClass="com.hangum.tadpole.engine.query.dao.system.bill.UserBillDAO" parameterClass="java.util.Map">
+		SELECT * 
+		FROM user_bill
+		WHERE
+			user_seq = #user_seq# 
+		ORDER BY seq DESC
+	</select>
+	
+	<!--  add bill -->
+	<insert id="insertBill" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.UserBillDAO">
+		INSERT INTO user_bill
+		(user_seq, product_seq, userType, iamport_code, pg_company, pay_method, merchant_uid, name, original_amount, ea, term_month, total_amount, buyer_email, buyer_name, 
+			buyer_tel, buyer_addr, buyer_postcode, result_status, succ_imp_uid, succ_pg_tid, succ_apply_num, succ_paid_at, fail_message, admin_message) 
+		VALUES 
+		(#user_seq#, #product_seq#, #userType#, #iamport_code#, #pg_company#, #pay_method#, #merchant_uid#, #name#, #original_amount#, #ea#, #term_month#, #total_amount#, #buyer_email#, #buyer_name#, 
+		#buyer_tel#, #buyer_addr#, #buyer_postcode#, #result_status#, #succ_imp_uid#, #succ_pg_tid#, #succ_apply_num#, #succ_paid_at#, #fail_message#, #admin_message#)
+	</insert>
+
+</sqlMap>

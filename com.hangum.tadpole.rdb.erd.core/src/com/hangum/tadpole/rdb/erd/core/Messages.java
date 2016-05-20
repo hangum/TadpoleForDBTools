@@ -10,17 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.erd.core;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.erd.core.messages"; //$NON-NLS-1$
 	public String AutoLayoutAction_0;
-	public String AutoLayoutAction_1;
 	public String AutoLayoutAction_2;
 	public String AutoLayoutAction_3;
 	public String ERDRefreshAction_0;
-	public String ERDRefreshAction_3;
 	public String ERDRefreshAction_4;
 	public String ERDViewStyleAction_0;
 	public String ERDViewStyleDailog_0;
@@ -39,21 +36,14 @@ public class Messages {
 	public String TableTransferDropTargetListener_1;
 	public String TadpoleEditor_0;
 	public String TadpoleEditor_1;
-	public String TadpoleEditor_10;
-	public String TadpoleEditor_11;
 	public String TadpoleEditor_12;
-	public String TadpoleEditor_13;
-	public String TadpoleEditor_14;
-	public String TadpoleEditor_15;
-	public String TadpoleEditor_2;
 	public String TadpoleEditor_3;
-	public String TadpoleEditor_4;
 	public String TadpoleEditor_9;
 	public String TadpoleModelUtils_2;
+	public String Confirm;
+	public String Error;
+	public String Warning;
 
-	// static {
-	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	// }
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

@@ -50,7 +50,7 @@
 //
 //	@Override
 //	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-//		TableDAO tc = (TableDAO)selection.getFirstElement();
+//		TableCreateDAO tc = (TableCreateDAO)selection.getFirstElement();
 //		
 //		final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 //		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
@@ -60,7 +60,7 @@
 //				refreshTableColumn();
 //			}
 //		} else {
-//			MessageDialog.openInformation(shell, "Confirm", "Not support this database. But soon. wait for our team.");
+//			MessageDialog.openInformation(shell, Messages.get().Confirm, "Not support this database. But soon. wait for our team.");
 //		}
 //	}
 //	

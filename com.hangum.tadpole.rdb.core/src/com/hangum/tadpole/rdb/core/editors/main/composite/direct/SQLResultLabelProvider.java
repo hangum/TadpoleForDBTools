@@ -121,9 +121,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * @return
 	 */
 	private static Integer getRDBShowInTheColumn() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
-		if(null == userInfo) return Integer.parseInt(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE);
-		
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE);
 		return Integer.parseInt(userInfo.getValue0());
 	}
 

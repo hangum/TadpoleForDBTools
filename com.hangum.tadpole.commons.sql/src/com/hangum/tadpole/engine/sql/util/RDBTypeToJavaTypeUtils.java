@@ -55,7 +55,7 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("TIMESTAMP", java.sql.Types.TIMESTAMP);
 		mapTypes.put("DATETIME", java.sql.Types.TIMESTAMP);
 		mapTypes.put("TINYBLOB", java.sql.Types.BINARY);
-		mapTypes.put("BLOB", java.sql.Types.LONGVARBINARY);
+		mapTypes.put("BLOB", java.sql.Types.BLOB);//LONGVARBINARY);
 		mapTypes.put("MEDIUMBLOB", java.sql.Types.LONGVARBINARY);
 		mapTypes.put("LONGBLOB", java.sql.Types.LONGVARBINARY);
 		mapTypes.put("TINYTEXT", java.sql.Types.VARCHAR);
@@ -162,9 +162,9 @@ public class RDBTypeToJavaTypeUtils {
   * @return
   */
 	public static String[] supportParameterTypes(UserDBDAO userDB) {
-		if (DBDefine.ORACLE_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		if (DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
 			return oracleParams;
-		}else if (DBDefine.MSSQL_8_LE_DEFAULT == DBDefine.getDBDefine(userDB) || DBDefine.MSSQL_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		}else if (DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 			return mssqlParams;
 		}else {
 			return etcParams;

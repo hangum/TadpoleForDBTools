@@ -111,14 +111,14 @@ public class ResourceSaveDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText(Messages.get().ResourceSaveDialog_0);
+		lblName.setText(Messages.get().Name);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textName.setText(initDBResource.getName());
 		
 		Label lblSharedType = new Label(container, SWT.NONE);
-		lblSharedType.setText(Messages.get().ResourceSaveDialog_1);
+		lblSharedType.setText(Messages.get().SharedType);
 		
 		comboSharedType = new Combo(container, SWT.READ_ONLY);
 		comboSharedType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -128,14 +128,14 @@ public class ResourceSaveDialog extends Dialog {
 		comboSharedType.select(0);
 		
 		Label lblDescription = new Label(container, SWT.NONE);
-		lblDescription.setText(Messages.get().ResourceSaveDialog_2);
+		lblDescription.setText(Messages.get().Description);
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		textDescription.setText(initDBResource.getDescription());
 		
 		Label lblUseApi = new Label(container, SWT.NONE);
-		lblUseApi.setText(Messages.get().ResourceSaveDialog_lblUseApi_text);
+		lblUseApi.setText(Messages.get().IsUseAPI);
 		
 		comboUseAPI = new Combo(container, SWT.READ_ONLY);
 		comboUseAPI.addSelectionListener(new SelectionAdapter() {
@@ -154,7 +154,7 @@ public class ResourceSaveDialog extends Dialog {
 		comboUseAPI.select(1);
 		
 		Label lblApiURI = new Label(container, SWT.NONE);
-		lblApiURI.setText(Messages.get().ResourceSaveDialog_lblApiName_text);
+		lblApiURI.setText(Messages.get().APIURL);
 		
 		textAPIURI = new Text(container, SWT.BORDER);
 		textAPIURI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -204,7 +204,7 @@ public class ResourceSaveDialog extends Dialog {
 			TadpoleSystem_UserDBResource.userDBResourceDuplication(userDB, retResourceDao);
 		} catch (Exception e) {
 			logger.error("SQL Editor File validator", e); //$NON-NLS-1$
-			MessageDialog.openError(null, "Error", e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.get().Error, e.getMessage()); //$NON-NLS-1$
 			return;
 		}
 		
@@ -219,12 +219,17 @@ public class ResourceSaveDialog extends Dialog {
 		if(buttonId == BTN_SHOW_URL) {
 			String strApiURI = textAPIURI.getText();
 			if(strApiURI.equals("")) { //$NON-NLS-1$
-				MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_8);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_8);
 				textAPIURI.setFocus();
 				return;
 			} else if(RESOURCE_TYPE.ERD == resourceType) {
-				MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_10);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_10);
 				return;
+			} else if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_21);
+				
+				textAPIURI.setFocus();
+				return ;
 			}
 			
 			String strURL = RESTfulAPIUtils.makeURL(strContentData, textAPIURI.getText());
@@ -241,9 +246,9 @@ public class ResourceSaveDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, BTN_SHOW_URL, Messages.get().ResourceSaveDialog_12, true);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ResourceSaveDialog_13, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ResourceSaveDialog_14, false);
+		createButton(parent, BTN_SHOW_URL, Messages.get().ShowURL, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
 	}
 
 	/**
@@ -263,7 +268,7 @@ public class ResourceSaveDialog extends Dialog {
 	private boolean isValid() {
 		int len = StringUtils.trimToEmpty(textName.getText()).length();
 		if(len < 3) {
-			MessageDialog.openError(null, Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_16);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceSaveDialog_16);
 			textName.setFocus();
 			return false;
 		}
@@ -274,14 +279,14 @@ public class ResourceSaveDialog extends Dialog {
 				String strAPIURI = textAPIURI.getText().trim();
 				
 				if(strAPIURI.equals("")) { //$NON-NLS-1$
-					MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_7, Messages.get().ResourceSaveDialog_19);
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_19);
 					textAPIURI.setFocus();
 					return false;
 				}
 				
 				// check valid url. url pattern is must be /{parent}/{child}
 				if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
-					MessageDialog.openError(getShell(), Messages.get().ResourceSaveDialog_20, Messages.get().ResourceSaveDialog_21);
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_21);
 					
 					textAPIURI.setFocus();
 					return false;

@@ -134,7 +134,7 @@ public class ScheduleEditor extends EditorPart {
 					
 					ScheduleMainDAO dao = (ScheduleMainDAO)iss.getFirstElement();
 					
-					if(!MessageDialog.openQuestion(null, Messages.get().ScheduleEditor_3, Messages.get().ScheduleEditor_4)) return;
+					if(!MessageDialog.openQuestion(null, Messages.get().Confirm, Messages.get().ScheduleEditor_4)) return;
 					try {
 						UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(dao.getDb_seq());
 						ScheduleManager.getInstance().deleteJob(userDB, dao);
@@ -186,7 +186,7 @@ public class ScheduleEditor extends EditorPart {
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnCreateDate = tableViewerColumn_1.getColumn();
 		tblclmnCreateDate.setWidth(200);
-		tblclmnCreateDate.setText(Messages.get().ScheduleEditor_10);
+		tblclmnCreateDate.setText(Messages.get().Description);
 		
 		Group compositeResult = new Group(sashForm, SWT.NONE);
 		compositeResult.setLayout(new GridLayout(1, false));

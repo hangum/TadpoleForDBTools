@@ -98,17 +98,17 @@ public class SQLUpdateDialog extends Dialog {
 		String strSQL = textSQL.getText();
 		
 		if("".equals(strSQL)) { //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().SQLUpdateDialog_Error, Messages.get().SQLUpdateDialog_5);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLUpdateDialog_5);
 			return;
 		}
 		
-		RequestQuery reqQuery = new RequestQuery(strSQL, PublicTadpoleDefine.OBJECT_TYPE.TABLES, 
+		RequestQuery reqQuery = new RequestQuery(userDB, strSQL, PublicTadpoleDefine.OBJECT_TYPE.TABLES, 
 					EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.BLOCK, true);
 		try {
 			ExecuteOtherSQL.runPermissionSQLExecution(Messages.get().MainEditor_21, reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 		} catch (Exception e) {
-			logger.error(Messages.get().SQLUpdateDialog_6, e);
-			MessageDialog.openError(getShell(), Messages.get().SQLUpdateDialog_Error, Messages.get().SQLUpdateDialog_8 + e.getMessage());
+			logger.error("SQL Execute error", e);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLUpdateDialog_8 + e.getMessage());
 			return;
 		}
 		
@@ -121,8 +121,8 @@ public class SQLUpdateDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().SQLUpdateDialog_9, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SQLUpdateDialog_10, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Update, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 
 	/**

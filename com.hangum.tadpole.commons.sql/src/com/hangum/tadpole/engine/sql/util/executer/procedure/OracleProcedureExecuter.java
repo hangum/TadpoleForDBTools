@@ -121,11 +121,6 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				
 				// Set input value
 				for (InOutParameterDAO inOutParameterDAO : parameterList) {
-	//				if(logger.isDebugEnabled()) logger.debug("Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue());
-	//				if (null==inOutParameterDAO.getValue() || "".equals(inOutParameterDAO.getValue())){
-	//					MessageDialog.openError(null, "Error", inOutParameterDAO.getName() + " parameters are required.");
-	//					return false;
-	//				}
 					cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
 				}
 	
@@ -148,7 +143,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				boolean isCursor = false;
 				for (int i = 0; i < listOutParamValues.size(); i++) {				
 					InOutParameterDAO dao = listOutParamValues.get(i);
-					logger.debug("Execute Procedure result " + dao.getName() + "=" + cstmt.getString(dao.getOrder()));
+					if(logger.isDebugEnabled()) logger.debug("Execute Procedure result " + dao.getName() + "=" + cstmt.getString(dao.getOrder()));
 					
 					Object obj = cstmt.getObject(dao.getOrder());
 					// 실행결과가 String이 아닌경우 Type Cast가 필요함.... 현재는 무조건 String 으로...

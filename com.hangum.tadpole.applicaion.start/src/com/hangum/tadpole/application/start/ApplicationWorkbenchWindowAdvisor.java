@@ -12,8 +12,11 @@ package com.hangum.tadpole.application.start;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -32,11 +35,13 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.application.start.dialog.login.ServiceLoginDialog;
 import com.hangum.tadpole.application.start.update.checker.NewVersionChecker;
 import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
 import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -45,6 +50,8 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -67,14 +74,16 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     public void preWindowOpen() {
-//    	try {
-//    		logger.info("Schedule and Summary Report start.........");
-//			DBSummaryReporter.executer();
-			
-//    		ScheduleManager.getInstance();
-//		} catch(Exception e) {
-//			logger.error("Schedule", e);
-//		}
+    	if("YES".equals(GetAdminPreference.getSupportMonitoring())) {
+	    	try {
+	//    		logger.info("Schedule and Summary Report start.........");
+	//			DBSummaryReporter.executer();
+	    		
+	    		ScheduleManager.getInstance();
+			} catch(Exception e) {
+				logger.error("Schedule", e);
+			}
+    	}
     	
 //    	not support rap yet.
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;
@@ -236,7 +245,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
     			if(!isAllow) {
     				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-    				MessageDialog.openError(null, Messages.get().LoginDialog_7, Messages.get().LoginDialog_28);
+    				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().LoginDialog_28);
     				return;
     			}
     			
@@ -245,22 +254,52 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
     			
     			initializeUserSession();
+    			
+    			initializeDefaultLocale();
     		} else {
-    	    	// Open login dialog    
-    	    	LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
-    	    	if(Dialog.OK == loginDialog.open()) {
-    	    		initializeUserSession();
-    	    	}
+    			// Open login dialog
+    			if(ApplicationArgumentUtils.isOnlineServer()) {
+    				ServiceLoginDialog loginDialog = new ServiceLoginDialog(Display.getCurrent().getActiveShell());
+	    	    	if(Dialog.OK == loginDialog.open()) {
+	    	    		initializeUserSession();
+	    	    	}
+    			} else {
+    				LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
+	    	    	if(Dialog.OK == loginDialog.open()) {
+	    	    		initializeUserSession();
+	    	    	}
+    			}
     		}
 
     	} catch (Exception e) {
     		logger.error("System login fail", e); //$NON-NLS-1$
-    		MessageDialog.openError(null, "Confirm", "System login fail.  Please contact admin"); //$NON-NLS-1$ //$NON-NLS-2$
+    		MessageDialog.openError(null, Messages.get().Confirm, "System login fail.  Please contact admin"); //$NON-NLS-1$ //$NON-NLS-2$
     	}
     	
     }
 
     /**
+     * initialize default locale
+     */
+    private void initializeDefaultLocale() {
+		HttpServletRequest request = RWT.getRequest();
+		Cookie[] cookies = request.getCookies();
+		
+		if(cookies != null) {
+			for (Cookie cookie : cookies) {				
+				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+					if(cookie.getValue().equalsIgnoreCase(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH))) {
+						RWT.getUISession().setLocale(Locale.ENGLISH);	
+					} else if(cookie.getValue().equalsIgnoreCase(Locale.ENGLISH.getDisplayLanguage(Locale.KOREAN))) {
+						RWT.getUISession().setLocale(Locale.KOREAN);
+					}
+					break;
+				}
+			}
+		}
+    }
+
+	/**
      * initialize user session
      */
     private void initializeUserSession() {
@@ -305,7 +344,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	private void initSession() {
 		HttpSession iss = RWT.getUISession().getHttpSession();
 		
-		final int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
+		final int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());
 		if(sessionTimeOut <= 0) {
 			iss.setMaxInactiveInterval(90 * 60);
 		} else {

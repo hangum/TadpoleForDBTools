@@ -150,7 +150,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			}
 		});
 		tltmCRefresh.setImage(GlobalImageUtils.getRefresh());
-		tltmCRefresh.setToolTipText(Messages.get().TransactionConnectionListEditor_2);
+		tltmCRefresh.setToolTipText(Messages.get().Refresh);
 		
 		tvGeneral = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableCon = tvGeneral.getTable();
@@ -221,14 +221,14 @@ public class TransactionConnectionListEditor extends EditorPart {
 				initTransactionUI();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().TransactionConnectionListEditor_2);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		
 		tltmCommit = new ToolItem(toolBar, SWT.NONE);
 		tltmCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tvTransaction.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, Messages.get().TransactionConnectionListEditor_4, Messages.get().TransactionConnectionListEditor_5)) return;
+					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TransactionConnectionListEditor_5)) return;
 					
 					executTransaction(true);
 				}
@@ -242,7 +242,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tvTransaction.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, Messages.get().TransactionConnectionListEditor_4, Messages.get().TransactionConnectionListEditor_8)) return;
+					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TransactionConnectionListEditor_8)) return;
 					
 					executTransaction(false);
 				}
@@ -302,7 +302,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TransactionConnectionListEditor_12, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().Refresh, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -328,7 +328,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * transaction table create columns
 	 */
 	private void createTransactionColumns() {
-		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, Messages.get().TransactionConnectionListEditor_15, Messages.get().TransactionConnectionListEditor_16};
+		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, Messages.get().User, Messages.get().TransactionConnectionListEditor_16};
 		int[] sizes = {80, 200, 200, 200};
 				
 		for(int i=0; i<names.length; i++) {

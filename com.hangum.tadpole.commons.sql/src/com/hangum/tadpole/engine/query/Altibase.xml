@@ -201,13 +201,14 @@
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
  <![CDATA[
     SELECT /*+index(tbl, sys_tables_index1) ordered*/ user.user_name || '.' || tbl.table_name AS "table_name",
            idx.index_name AS "index_name",
            decode(idx.index_type, 1, 'BTREE', 2, 'RTREE', '') AS "index_type"
     FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_indices_ idx
     WHERE tbl.table_type = 'T'
+      AND tbl.table_name = #table_name#
       AND tbl.user_id = user.user_id
       AND tbl.user_id != 1
       AND tbl.table_id = idx.table_id
@@ -252,6 +253,16 @@
 ]]>
 </select>
  
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+select *
+from information_schema.table_constraints
+where table_schema = #table_schema#
+and table_name = #table_name#
+</select>
+
 <!-- 
 	procedure list
  -->
@@ -265,7 +276,7 @@
 	     TO_CHAR(proc.last_ddl_time, 'DD-MM-YYYY HH24:MI:SS') AS "Modified",
 	     TO_CHAR(proc.created, 'DD-MM-YYYY HH24:MI:SS') AS "Created",
 	     '' AS "Security_type",
-	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "Comment",
+	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "status",
 	     '' AS "character_set_client",
 	     '' AS "collation_connection", 
 	     db.nls_characterset AS "Database Collation"
@@ -292,7 +303,7 @@
 	     TO_CHAR(proc.last_ddl_time, 'DD-MM-YYYY HH24:MI:SS') AS "Modified",
 	     TO_CHAR(proc.created, 'DD-MM-YYYY HH24:MI:SS') AS "Created",
 	     '' AS "Security_type",
-	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "Comment",
+	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "status",
 	     '' AS "character_set_client",
 	     '' AS "collation_connection", 
 	     db.nls_characterset AS "Database Collation"
@@ -309,7 +320,7 @@
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SELECT trig.trigger_name AS "trigger", 
 	       DECODE(trig.event_type,1,'INSERT',2,'DELETE',3,'UPDATE') AS "event", 
 	       tbl.table_name AS "table_name",
@@ -330,6 +341,29 @@
 	WHERE user.user_id = trig.user_id
 	  AND trig.table_id = tbl.table_id
           AND db.space_id = 0
+</select>
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+	SELECT trig.trigger_name AS "trigger", 
+	       DECODE(trig.event_type,1,'INSERT',2,'DELETE',3,'UPDATE') AS "event", 
+	       tbl.table_name AS "table_name",
+	       '' AS "statement", 
+	       DECODE(trig.event_time, 1,'BEFORE','AFTER') AS "timing",
+	       TO_CHAR(trig.created, 'DD-MM-YYYY HH24:MI:SS') AS "created", 
+	       DECODE(trig.granularity,1,'FOR EACH ROW',2,'FOR EACH STATEMENT')  AS "sql_mode", 
+	       user.user_name AS "definer", 
+	       '' AS "character_set_client",
+	       '' AS "collation_connection",
+	       db.db_name AS "database",
+	       db.nls_characterset AS "collection",
+	       DECODE(trig.is_enable,0,'DISABLE','ENABLE')  AS "status"
+	FROM system_.sys_users_ user,
+	     system_.sys_triggers_ trig,
+	     system_.sys_tables_ tbl,
+             x$$membase db
+	WHERE user.user_id = trig.user_id
+	  AND trig.table_id = tbl.table_id
+      AND db.space_id = 0
+      AND tbl.table_name = #table_name#
 </select>
 
 <!-- 

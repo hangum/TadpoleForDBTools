@@ -99,7 +99,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * select userDB
 	 * @return
 	 */
-	protected UserDBDAO getUserDB() {
+	public UserDBDAO getUserDB() {
 		return userDB;
 	}
 	
@@ -111,7 +111,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * select site
 	 * @return
 	 */
-	protected IWorkbenchPartSite getSite() {
+	public IWorkbenchPartSite getSite() {
 		return site;
 	}
 	
@@ -151,9 +151,9 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createTriggerColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {Messages.get().AbstractObjectComposite_0, Messages.get().AbstractObjectComposite_1, Messages.get().AbstractObjectComposite_2, Messages.get().AbstractObjectComposite_3, Messages.get().AbstractObjectComposite_4,
-			Messages.get().AbstractObjectComposite_5, Messages.get().AbstractObjectComposite_6, Messages.get().AbstractObjectComposite_7, Messages.get().AbstractObjectComposite_8, Messages.get().AbstractObjectComposite_9, Messages.get().AbstractObjectComposite_10,
-			Messages.get().AbstractObjectComposite_11
+		String[] name = {Messages.get().Trigger, Messages.get().Event, Messages.get().Table, Messages.get().Statement, Messages.get().Timing,
+			Messages.get().Created, Messages.get().AbstractObjectComposite_6, Messages.get().Definer, Messages.get().AbstractObjectComposite_8, Messages.get().AbstractObjectComposite_9, Messages.get().Database,
+			Messages.get().Collation
 		};
 		int[] size = {120, 70, 70, 70, 70,
 					   70, 70, 70, 70, 70, 
@@ -174,9 +174,9 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createProcedureFunctionColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {Messages.get().AbstractObjectComposite_12, Messages.get().AbstractObjectComposite_13, Messages.get().AbstractObjectComposite_14, Messages.get().AbstractObjectComposite_15,
-						Messages.get().AbstractObjectComposite_16, Messages.get().AbstractObjectComposite_17, Messages.get().AbstractObjectComposite_18, Messages.get().AbstractObjectComposite_19, Messages.get().AbstractObjectComposite_20, 
-						Messages.get().AbstractObjectComposite_21
+		String[] name = {Messages.get().Name, Messages.get().Definer, Messages.get().Modified, Messages.get().Created,
+						Messages.get().AbstractObjectComposite_16, Messages.get().Comment, Messages.get().AbstractObjectComposite_18, Messages.get().AbstractObjectComposite_19, Messages.get().Database, 
+						Messages.get().Collation
 		};
 		int[] size = {120, 70, 70, 70,
 						70, 70, 70, 70, 70, 
@@ -197,7 +197,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createIndexesColumn(final TableViewer tv, final ObjectComparator comparator) {
-		String[] name = {Messages.get().AbstractObjectComposite_22, Messages.get().AbstractObjectComposite_23,Messages.get().AbstractObjectComposite_24,Messages.get().AbstractObjectComposite_25};
+		String[] name = {Messages.get().TableName, Messages.get().IndexName,Messages.get().Type,Messages.get().Comment};
 		int[] size = {120, 120, 70, 70};
 
 		for (int i=0; i<name.length; i++) {

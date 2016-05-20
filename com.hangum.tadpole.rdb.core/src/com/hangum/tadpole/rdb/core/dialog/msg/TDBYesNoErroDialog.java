@@ -40,8 +40,8 @@ public class TDBYesNoErroDialog extends TDBInfoDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().TDBErroDialog_3, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().TDBErroDialog_4, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 
 }

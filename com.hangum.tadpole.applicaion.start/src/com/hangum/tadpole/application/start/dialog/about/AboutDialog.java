@@ -78,7 +78,6 @@ public class AboutDialog extends Dialog {
 		gd_lblNewLabelImage.minimumHeight = 184;
 		gd_lblNewLabelImage.minimumWidth = 300;
 		lblNewLabelImage.setLayoutData(gd_lblNewLabelImage);
-//		lblNewLabel_1.setText(Messages.get().AboutDialog_lblNewLabel_1_text);
 		lblNewLabelImage.setImage(ResourceManager.getPluginImage(BrowserActivator.APPLICTION_ID, "resources/icons/TadpoleForDBTools.png")); //$NON-NLS-1$
 		
 		Composite composite_1 = new Composite(container, SWT.NONE);
@@ -87,7 +86,7 @@ public class AboutDialog extends Dialog {
 
 		// Thanks, stariki
 		Text txtVersion = new Text(composite_1, SWT.NONE) ;
-		txtVersion.setText(Messages.get().AboutAction_3 + " Version " + SystemDefine.MAJOR_VERSION + " " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
+		txtVersion.setText(Messages.get().AboutAction_3 + " V" + SystemDefine.MAJOR_VERSION + " " + SystemDefine.SUB_VERSION); //$NON-NLS-1$ //$NON-NLS-2$
 		txtVersion.setEditable(false);
 
 		Text txtRleaseDate = new Text(composite_1, SWT.NONE) ;
@@ -125,7 +124,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().AboutDialog_9, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true);
 	}
 
 	/**

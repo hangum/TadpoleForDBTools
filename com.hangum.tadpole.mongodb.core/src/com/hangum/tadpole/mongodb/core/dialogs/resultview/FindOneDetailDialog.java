@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.mongodb.core.Messages;
 import com.mongodb.DBObject;
 
 /**
@@ -119,7 +120,7 @@ public class FindOneDetailDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Close, true);
 	}
 
 	/**

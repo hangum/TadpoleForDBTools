@@ -114,7 +114,7 @@ public class NewDocumentDialog extends Dialog {
 		if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openError(null, Messages.get().NewDocumentDialog_3, Messages.get().NewDocumentDialog_4);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 
@@ -123,7 +123,7 @@ public class NewDocumentDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb create collection", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			return;
 		}
@@ -152,8 +152,8 @@ public class NewDocumentDialog extends Dialog {
 			}
 		});
 		
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().NewDocumentDialog_2, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().NewDocumentDialog_5, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Insert, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
 	}
 
 	/**

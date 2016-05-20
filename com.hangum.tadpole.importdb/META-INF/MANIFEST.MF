@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub Importdb
 Bundle-SymbolicName: com.hangum.tadpole.importexport.db;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.importexport.Activator
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
  com.hangum.tadpole.engine;bundle-version="1.0.0",

@@ -161,7 +161,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 						if(!jobEvent.getResult().isOK()) {
 							Exception e = new Exception(jobEvent.getResult().getException());
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
 							
 							// 오류가 발생했을때는 기본 정보로 
 							MongodbFactory factory = MongodbFactory.eINSTANCE;
@@ -378,7 +378,7 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 				logger.error("Load ERD Resource", e); //$NON-NLS-1$
 		        
 		        Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_0, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().TadpoleEditor_0, errStatus); //$NON-NLS-1$
 			}
 			
 			setPartName(isAllTable?"All " + userDBErd.getName():userDBErd.getName());
@@ -429,10 +429,10 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 					PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.SAVE_FILE, ""+userDBErd.getDb_seq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					
 				} catch (Exception e) {
-					logger.error(Messages.get().TadpoleEditor_9, e);
+					logger.error("new save error", e);
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_3, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().TadpoleEditor_3, errStatus); //$NON-NLS-1$
 				}
 			}
 			
@@ -443,10 +443,10 @@ public class TadpoleMongoDBERDEditor extends GraphicalEditor {//WithFlyoutPalett
 				TadpoleSystem_UserDBResource.updateResource(userDBErd, createResourceToString());
 				getCommandStack().markSaveLocation();
 			} catch(Exception e) {
-				logger.error(Messages.get().TadpoleEditor_12, e);
+				logger.error("Resource data", e);
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", Messages.get().TadpoleEditor_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().TadpoleEditor_1, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

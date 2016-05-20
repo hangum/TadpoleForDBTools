@@ -128,6 +128,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * Indexes 최신정보로 갱신
+	 */
+	protected void refreshConstraints() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshConstraints(true, "");		
+	}
+	
+	/**
 	 * Procedure 최신정보로 갱신
 	 */
 	protected void refreshProcedure() {

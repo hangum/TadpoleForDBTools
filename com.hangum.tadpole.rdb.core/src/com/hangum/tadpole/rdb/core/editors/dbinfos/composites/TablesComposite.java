@@ -98,7 +98,7 @@ public class TablesComposite extends Composite {
 		
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.get().TablesComposite_0);
+		lblNewLabel.setText(Messages.get().Filter);
 		
 		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -116,7 +116,7 @@ public class TablesComposite extends Composite {
 				initUI();
 			}
 		});
-		btnRefresh.setText(Messages.get().TablesComposite_1);
+		btnRefresh.setText(Messages.get().Refresh);
 		
 		tvTableInform = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvTableInform.getTable();
@@ -154,24 +154,26 @@ public class TablesComposite extends Composite {
 	 * table column head를 생성합니다.
 	 */
 	private void createColumn() {
-		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-			DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT 
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+		   userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
 		) {
-			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "Collation", "Size(MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Size(MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			int[] size = {120, 70, 70, 100, 80, 80, 120, 220};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
+			
+			createColumn(name, size, align);
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+				   userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			String[] name = {"Table Name","Tablespace Name","Pct Free","Ini Trans","Logging","Num Rows","Blocks","Avg Row Len","Degree","Sample Size","Last Analyzed","Partitioned","Buffer Pool","Row Movement","Duration","Compression","Dropped","Read Only","Temporary","Max Extents","Iot Type","Initial Extent","Next Extent","Min Extents"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			int[] size = {120, 120, 90, 90, 52 , 90, 90, 90, 80 , 90, 120, 52 , 68 , 72 , 100, 72 , 52 , 52 , 40 , 90, 88 , 90, 90, 90};
+			int[] align = {SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT};
+			
 			
 			createColumn(name, size, align);
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
 			String[] name = {"Table Name", "Owner", "Rows", "Tablespace Name", "Character Set", "Size (MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			int[] size = {200, 70, 70, 200, 100, 80, 120, 250};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
-			
-			createColumn(name, size, align);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
-			String[] name = {"Name", "Rows", "Lock"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			int[] size = {120, 70, 70};
-			int[] align = {SWT.LEFT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
 		} else {
@@ -208,10 +210,10 @@ public class TablesComposite extends Composite {
 			tvTableInform.setInput(listTableInform);
 			tvTableInform.refresh();
 		} catch (Exception e) {
-			logger.error("initialize session list", e); //$NON-NLS-1$
+			logger.error("Initialize session list", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 		
 		// google analytic
@@ -229,7 +231,7 @@ public class TablesComposite extends Composite {
 	 */
 	private void download() {
 		if(tvTableInform.getTable().getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_3)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TablesComposite_3)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -255,9 +257,9 @@ public class TablesComposite extends Composite {
 		
 		try {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
-			downloadExtFile("TableInformation.csv", strCVSContent); //$NON-NLS-1$
+			downloadExtFile(userDB.getDisplay_name() + "_TableInformation.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_5);
+			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().TablesComposite_5);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		
@@ -276,7 +278,7 @@ public class TablesComposite extends Composite {
 		DownloadUtils.provideDownload(compositeTail, downloadServiceHandler.getId());
 	}
 	
-	/** registery service handler */
+	/** Register a service handler */
 	private void registerServiceHandler() {
 		downloadServiceHandler = new DownloadServiceHandler();
 		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
@@ -313,8 +315,8 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 	public String getColumnText(Object element, int columnIndex) {
 		Map resultMap = (HashMap)element;
 		
-		if(DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT 
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
 		) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -326,22 +328,44 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 6: return ""+resultMap.get("CREATE_TIME"); //$NON-NLS-1$ //$NON-NLS-2$
 			case 7: return ""+resultMap.get("TABLE_COMMENT"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+				   userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			switch(columnIndex) {
-			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
-			case 1: return NumberFormatUtils.commaFormat(""+resultMap.get("NUM_ROWS")); //$NON-NLS-1$ //$NON-NLS-2$
-			case 2: return ""+resultMap.get("TABLE_LOCK"); //$NON-NLS-1$ //$NON-NLS-2$
+			case 0 : return "" + resultMap.get("TABLE_NAME"      ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 1 : return "" + resultMap.get("TABLESPACE_NAME" ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 2 : return NumberFormatUtils.commaFormat("" + resultMap.get("PCT_FREE"        )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 3 : return NumberFormatUtils.commaFormat("" + resultMap.get("INI_TRANS"       )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 4 : return "" + resultMap.get("LOGGING"         ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 5 : return NumberFormatUtils.commaFormat("" + resultMap.get("NUM_ROWS"        )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 6 : return NumberFormatUtils.commaFormat("" + resultMap.get("BLOCKS"          )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 7 : return NumberFormatUtils.commaFormat("" + resultMap.get("AVG_ROW_LEN"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 8 : return NumberFormatUtils.commaFormat("" + resultMap.get("DEGREE"          )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 9 : return NumberFormatUtils.commaFormat("" + resultMap.get("SAMPLE_SIZE"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 10: return "" + resultMap.get("LAST_ANALYZED"   ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 11: return "" + resultMap.get("PARTITIONED"     ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 12: return "" + resultMap.get("BUFFER_POOL"     ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 13: return "" + resultMap.get("ROW_MOVEMENT"    ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 14: return "" + resultMap.get("DURATION"        ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 15: return "" + resultMap.get("COMPRESSION"     ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 16: return "" + resultMap.get("DROPPED"         ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 17: return "" + resultMap.get("READ_ONLY"       ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 18: return "" + resultMap.get("TEMPORARY"       ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 19: return NumberFormatUtils.commaFormat("" + resultMap.get("MAX_EXTENTS"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 20: return "" + resultMap.get("IOT_TYPE"        ); //$NON-NLS-1$ //$NON-NLS-2$
+			case 21: return NumberFormatUtils.commaFormat("" + resultMap.get("INITIAL_EXTENT"  )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 22: return NumberFormatUtils.commaFormat("" + resultMap.get("NEXT_EXTENT"     )); //$NON-NLS-1$ //$NON-NLS-2$
+			case 23: return NumberFormatUtils.commaFormat("" + resultMap.get("MIN_EXTENTS"     )); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
 			switch(columnIndex) {
-			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
-			case 1: return ""+resultMap.get("OWNER"); //$NON-NLS-1$ //$NON-NLS-2$
-			case 2: return NumberFormatUtils.commaFormat(""+resultMap.get("TABLE_ROWS")); //$NON-NLS-1$ //$NON-NLS-2$
-			case 3: return NumberFormatUtils.commaFormat(StringUtils.replace(""+resultMap.get("TABLESPACE_NAME"), "null", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			case 4: return ""+resultMap.get("CHARACTER_SET"); //$NON-NLS-1$ //$NON-NLS-2$
-			case 5: return ""+resultMap.get("SIZEOFMB"); //$NON-NLS-1$ //$NON-NLS-2$
-			case 6: return ""+resultMap.get("CREATED"); //$NON-NLS-1$ //$NON-NLS-2$
-			case 7: return ""+resultMap.get("TABLE_COMMENT"); //$NON-NLS-1$ //$NON-NLS-2$
+				case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
+				case 1: return ""+resultMap.get("OWNER"); //$NON-NLS-1$ //$NON-NLS-2$
+				case 2: return NumberFormatUtils.commaFormat(""+resultMap.get("TABLE_ROWS")); //$NON-NLS-1$ //$NON-NLS-2$
+				case 3: return NumberFormatUtils.commaFormat(StringUtils.replace(""+resultMap.get("TABLESPACE_NAME"), "null", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				case 4: return ""+resultMap.get("CHARACTER_SET"); //$NON-NLS-1$ //$NON-NLS-2$
+				case 5: return ""+resultMap.get("SIZEOFMB"); //$NON-NLS-1$ //$NON-NLS-2$
+				case 6: return ""+resultMap.get("CREATED"); //$NON-NLS-1$ //$NON-NLS-2$
+				case 7: return ""+resultMap.get("TABLE_COMMENT"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else {
 			switch(columnIndex) {
@@ -357,7 +381,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			}
 		}
 		
-		return "*** not set column ***"; //$NON-NLS-1$
+		return "*** Invalid column index ***"; //$NON-NLS-1$
 	}
 	
 }

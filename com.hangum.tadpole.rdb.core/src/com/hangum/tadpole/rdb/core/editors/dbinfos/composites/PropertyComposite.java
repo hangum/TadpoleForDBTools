@@ -101,7 +101,7 @@ public class PropertyComposite extends Composite {
 		
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.get().TablesComposite_0);
+		lblNewLabel.setText(Messages.get().Filter);
 		
 		text = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -119,7 +119,7 @@ public class PropertyComposite extends Composite {
 				initUI();
 			}
 		});
-		btnRefresh.setText(Messages.get().TablesComposite_1);
+		btnRefresh.setText(Messages.get().Refresh);
 		
 		propertyViewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = propertyViewer.getTable();
@@ -205,7 +205,7 @@ public class PropertyComposite extends Composite {
 	 */
 	private void downloadCSVFile() {
 		if(propertyViewer.getTable().getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_3)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TablesComposite_3)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -233,7 +233,7 @@ public class PropertyComposite extends Composite {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile(userDB.getDisplay_name() + "_Properties.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_5);
+			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().TablesComposite_5);
 		} catch (Exception e) {
 			logger.error("An exception occurred while writing into a csv file.", e); //$NON-NLS-1$
 		}		

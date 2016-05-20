@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.importexport.core;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
@@ -19,7 +18,6 @@ public class Messages {
 	public String CsvToRDBImportDialog_1;
 	public String CsvToRDBImportDialog_10;
 	public String CsvToRDBImportDialog_11;
-	public String CsvToRDBImportDialog_12;
 	public String CsvToRDBImportDialog_14;
 	public String CsvToRDBImportDialog_15;
 	public String CsvToRDBImportDialog_16;
@@ -30,8 +28,7 @@ public class Messages {
 	public String CsvToRDBImportDialog_26;
 	public String CsvToRDBImportDialog_29;
 	public String CsvToRDBImportDialog_3;
-	public String CsvToRDBImportDialog_30;
-	public String CsvToRDBImportDialog_4;
+	public String Close;
 	public String CsvToRDBImportDialog_5;
 	public String CsvToRDBImportDialog_51;
 	public String CsvToRDBImportDialog_6;
@@ -39,19 +36,14 @@ public class Messages {
 	public String CsvToRDBImportDialog_8;
 	public String MongoDBImportEditor_0;
 	public String MongoDBImportEditor_1;
-	public String MongoDBImportEditor_10;
 	public String MongoDBImportEditor_11;
 	public String MongoDBImportEditor_12;
-	public String MongoDBImportEditor_14;
+	public String Confirm;
 	public String MongoDBImportEditor_2;
-	public String MongoDBImportEditor_3;
 	public String MongoDBImportEditor_4;
 	public String MongoDBImportEditor_5;
 	public String MongoDBImportEditor_6;
-	public String MongoDBImportEditor_7;
 	public String MongoDBImportEditor_8;
-	public String MongoDBImportEditor_9;
-	public String QueryToMongoDBImport_1;
 	public String QueryToMongoDBImport_2;
 	public String QueryToMongoDBImport_5;
 	public String TableColumnLIstComposite_1;
@@ -59,11 +51,7 @@ public class Messages {
 	public String SQLToDBImportDialog_1;
 	public String SQLToDBImportDialog_2;
 	public String SQLToDBImportDialog_BatchSize;
-	public String SQLToDBImportDialog_grpSqlResult_text;
-	public String SQLToDBImportDialog_btnInsert_text;
 	public String SQLToDBImportDialog_lblSeprator_text;
-	public String SQLToDBImportDialog_btnTruncateBeforeLoad_text;
-	public String SQLToDBImportDialog_Close;
 	public String SQLToDBImportDialog_Exception;
 	public String SQLToDBImportDialog_Ignore;
 	public String SQLToDBImportDialog_ImportException;
@@ -76,7 +64,6 @@ public class Messages {
 	public String SQLToDBImportDialog_StoreData;
 	public String SQLToDBImportDialog_UploadQuestion;
 	public String CsvToRDBImportDialog_btnCopyNew_text;
-	public String CsvToRDBImportDialog_text_1_text;
 	public String CsvToRDBImportDialog_lblExistsData_text;
 	public String CsvToRDBImportDialog_btnTruncate_text;
 	public String CsvToRDBImportDialog_btnDeleteAll_text;
@@ -99,10 +86,9 @@ public class Messages {
 	public String CsvToRDBImportDialog_btnIgnore_toolTipText;
 	public String CsvToRDBImportDialog_btnStop_toolTipText;
 	public String CsvToRDBImportDialog_btnRadioButton_text;
+	public String Error;
+	public String Warning;
 
-	// static {
-	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	// }
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/apache/commons/commons-validator-1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/parser/jsqlparser-0.9.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/velocity/commons-collections-3.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/velocity/velocity-1.7.jar"/>

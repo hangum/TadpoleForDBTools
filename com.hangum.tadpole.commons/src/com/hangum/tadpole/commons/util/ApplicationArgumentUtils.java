@@ -36,21 +36,37 @@ public class ApplicationArgumentUtils {
 	private static final Logger logger = Logger.getLogger(ApplicationArgumentUtils.class);
 	public static String[] applicationArgs = null;
 	
+	/** db server location */
+	public static String dbServer = "";
+	public static String passwd = "";
+	
+	/**
+	 * 엔진이 외부 디비를 사용 할 것인지?
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean isDBServer() {
+		return StringUtils.isNotEmpty(dbServer);
+	}
+	
+	/**
+	 * <pre>
+	 * 	엔진이 디비를 공유 디비정보를 가져온다.
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	public static String getDbServer() throws Exception {
+		return dbServer;
+	}
+	
 	/**
 	 * engine에서 사용하는 패스워드.
 	 * 
 	 * @return
 	 */
 	public static String getPasswd() {
-		String passwd = "";
-		
-		try {
-			passwd = getValue("-passwd");
-		} catch(Exception e) {
-			passwd = PublicTadpoleDefine.SYSTEM_DEFAULT_PASSWORD;
-		}
-		
-		return passwd;
+		return StringUtils.defaultIfEmpty(passwd, PublicTadpoleDefine.SYSTEM_DEFAULT_PASSWORD);
 	}
 
 	/**
@@ -67,26 +83,6 @@ public class ApplicationArgumentUtils {
 		}
 		
 		return strResourceDir + IOUtils.DIR_SEPARATOR;
-	}
-	
-	/**
-	 * 엔진이 외부 디비를 사용 할 것인지?
-	 * @return
-	 * @throws Exception
-	 */
-	public static boolean isDBServer() {
-		return checkString("-dbServer");
-	}
-	
-	/**
-	 * <pre>
-	 * 	엔진이 디비를 공유 디비정보를 가져온다.
-	 * </pre>
-	 * 
-	 * @return
-	 */
-	public static String getDbServer() throws Exception {
-		return getValue("-dbServer");
 	}
 	
 	/**
@@ -185,6 +181,15 @@ public class ApplicationArgumentUtils {
 	public static boolean isNewUserPermit() {
 		return checkString("-newUserPermit");
 	}
+	
+	/**
+	 * Online servie
+	 * @return
+	 */
+	public static boolean isOnlineServer() {
+		return checkString("-OnlineServer");
+	}
+	
 	/**
 	 * 옵션이 정의되어 있지 않다면 어드민 허락이 필요없다.
 	 * 
@@ -245,52 +250,16 @@ public class ApplicationArgumentUtils {
 	private static String[] getArguments() {
 		if(applicationArgs != null) return applicationArgs;
 		
-//		System.out.println("\t==[05:03]==========================================================");
-//		Properties p = System.getProperties();
-//		p.list(System.out);
-//		System.out.println("\t============================================================");
-		
 		try {
-			/* is osgi */
 			if(SystemDefine.isOSGIRuntime()) {
-	
-				logger.info("\t\t --> start OSGI Runtime....................................................");
 				applicationArgs = Platform.getApplicationArgs();
-				
-			/* is single or test  */
 			} else {
-				logger.info("\t\t --> [0] start api server ....................................................");
-				applicationArgs = getWebServerArguments();
-				
+				applicationArgs = new String[]{};
 			}
 		} catch(Throwable e) {
 			logger.info("\t\t [exception]--> [1] start api server ....................................................");
-			applicationArgs = getWebServerArguments();
+			applicationArgs = new String[]{};
 		}
-		
-		return applicationArgs;
-	}
-	
-	/**
-	 * traditional web server argument
-	 * 
-	 * @return
-	 */
-	private static String[] getWebServerArguments() {
-		applicationArgs = new String[4];
-		
-		applicationArgs[0] = "-dbServer";
-		applicationArgs[1] = System.getProperty("dbServer");
-		if(applicationArgs[1] == null) {
-			applicationArgs[0] = null;
-			logger.error("**** System Initialize exception : Not found Tadpole engine db");
-			
-			return applicationArgs;
-		}
-			
-		applicationArgs[2] = "-passwd";
-		applicationArgs[3] = System.getProperty("passwd");
-		if(applicationArgs[3] == null) applicationArgs[3] = PublicTadpoleDefine.SYSTEM_DEFAULT_PASSWORD;
 		
 		return applicationArgs;
 	}

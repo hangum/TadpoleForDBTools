@@ -93,10 +93,13 @@ public class NewVersionChecker {
 			}
 			
 		} catch (Exception e) {
-			logger.error("New version checker", e);
+			logger.error(String.format("New version checkerer %s.", e.getMessage()));
 		} finally {
 			if(is != null) {
-				try { IOUtils.toString(is); } 
+				try {
+//					IOUtils.toString(is);
+					IOUtils.closeQuietly(is); 
+				} 
 				catch(Exception e) {
 					//igoner excetpion
 				}

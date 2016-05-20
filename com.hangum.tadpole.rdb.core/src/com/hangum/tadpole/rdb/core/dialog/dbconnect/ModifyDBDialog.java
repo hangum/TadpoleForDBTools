@@ -29,7 +29,6 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
@@ -104,7 +103,7 @@ public class ModifyDBDialog extends Dialog {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 		
-		loginComposite = DBConnectionUtils.getDBConnection(DBDefine.getDBDefine(userDBDAO), 
+		loginComposite = DBConnectionUtils.getDBConnection(userDBDAO.getDBDefine(), 
 															compositeBody, 
 															listGroupName, 
 															userDBDAO.getGroup_name(), 
@@ -139,7 +138,7 @@ public class ModifyDBDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
 			if(loginComposite.testConnection(true)) {
-				MessageDialog.openInformation(null, Messages.get().ModifyDBDialog_0, Messages.get().ModifyDBDialog_1);
+				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().ModifyDBDialog_1);
 			}
 		}
 	}
@@ -151,8 +150,8 @@ public class ModifyDBDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID, Messages.get().ModifyDBDialog_2, false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ModifyDBDialog_3, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().ModifyDBDialog_4, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 
 	/**

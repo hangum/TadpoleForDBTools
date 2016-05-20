@@ -92,7 +92,7 @@ public class ShardingComposite extends Composite {
 				initData();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().CollectionInformationComposite_tltmRefresh_text);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		
 		Group grpReplicaSet = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpReplicaSet = new GridLayout(1, false);

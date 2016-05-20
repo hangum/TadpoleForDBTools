@@ -51,7 +51,7 @@ public class TadpoleSystem {
 					try { Thread.sleep(5000); } catch(Exception e) {};
 					
 					// 프로젝트 이미 실행되어 있는지 검사합니다.
-					System.exit(-1);
+					System.exit(0);
 				} else {
 					openURL();
 				}

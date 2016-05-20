@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfilingEditor;
 import com.hangum.tadpole.mongodb.core.ext.editors.Profilling.ProfilingEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * mongodb profilling action
@@ -58,7 +59,7 @@ public class MongodbProfillingAction implements IViewActionDelegate {
 			logger.error("Mongodb profilling", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Profilling Exception", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Profilling Exception", errStatus); //$NON-NLS-1$
 		}
 	}
 

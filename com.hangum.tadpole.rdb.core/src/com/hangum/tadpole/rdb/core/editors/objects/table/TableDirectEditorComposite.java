@@ -176,13 +176,13 @@ public class TableDirectEditorComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(tltmSave.getEnabled()) {
-					if(!MessageDialog.openConfirm(null, "Confirm", Messages.get().TableDirectEditorComposite_1)) return;
+					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TableDirectEditorComposite_1)) return;
 				}
 				
 				refreshEditor();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().TableDirectEditorComposite_tltmRefersh_text);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		
 		tltmSave = new ToolItem(toolBar, SWT.NONE);
 		tltmSave.setImage(GlobalImageUtils.getSave());
@@ -193,7 +193,7 @@ public class TableDirectEditorComposite extends Composite {
 				saveTableData();
 			}
 		});
-		tltmSave.setToolTipText(Messages.get().TableEditPart_0);
+		tltmSave.setToolTipText(Messages.get().Save);
 		
 		tltmInsert = new ToolItem(toolBar, SWT.NONE);
 		tltmInsert.setImage(GlobalImageUtils.getAdd());
@@ -203,7 +203,7 @@ public class TableDirectEditorComposite extends Composite {
 				insertRow();
 			}
 		});
-		tltmInsert.setToolTipText(Messages.get().TableEditPart_tltmInsert_text);
+		tltmInsert.setToolTipText(Messages.get().Add);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.setImage(GlobalImageUtils.getDelete());
@@ -219,7 +219,7 @@ public class TableDirectEditorComposite extends Composite {
 			}
 		});
 		tltmDelete.setEnabled(false);
-		tltmDelete.setToolTipText(Messages.get().TableEditPart_1);
+		tltmDelete.setToolTipText(Messages.get().Delete);
 		
 		Composite compositeBody = new Composite(compositeBase, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(2, false);
@@ -256,7 +256,7 @@ public class TableDirectEditorComposite extends Composite {
 		textOrderBy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
-		lblNewLabel.setText(Messages.get().TableEditPart_3);
+		lblNewLabel.setText(Messages.get().Filter);
 		
 		textFilter = new Text(compositeBody, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.addKeyListener(new KeyAdapter() {
@@ -300,7 +300,7 @@ public class TableDirectEditorComposite extends Composite {
 					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				} catch(Exception ee) {
-					MessageDialog.openError(null, "Confirm", ee.getMessage());
+					MessageDialog.openError(null, Messages.get().Confirm, ee.getMessage());
 				}
 			}
 		});
@@ -348,10 +348,10 @@ public class TableDirectEditorComposite extends Composite {
 			resultView();
 			
 		} catch(Exception e) {
-			logger.error(Messages.get().TableEditPart_4, e);
+			logger.error("Data moidfying..", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().TableViewerEditPart_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().TableViewerEditPart_2, errStatus); //$NON-NLS-1$
 			return;
 		}
 		
@@ -466,7 +466,7 @@ public class TableDirectEditorComposite extends Composite {
 		sqlResultTableViewer.setSorter(sqlSorter);
 		
 		// 결과 후처리 
-		tableResult.setToolTipText(tableDataList.size() + Messages.get().MainEditor_33);
+		tableResult.setToolTipText(tableDataList.size() + Messages.get().Rows);
 		sqlFilter.setTable(tableResult);
 		
 		// Pack the columns
@@ -495,7 +495,7 @@ public class TableDirectEditorComposite extends Composite {
 		try {
 			// column info
 			final TableViewerColumn tableColumnInfo = new TableViewerColumn(tableViewer, SWT.LEFT);
-			tableColumnInfo.getColumn().setText( Messages.get().TableViewerEditPart_0 );
+			tableColumnInfo.getColumn().setText( Messages.get().DataStatus );
 			tableColumnInfo.getColumn().setResizable(true);
 			tableColumnInfo.getColumn().setMoveable(false);
 			
@@ -588,7 +588,7 @@ public class TableDirectEditorComposite extends Composite {
 		
 		querys = SQLTextUtil.delLineChar(changedSQL).split(";"); //$NON-NLS-1$
 		try {
-			RequestQuery reqQuery = new RequestQuery(changedSQL, OBJECT_TYPE.TABLES, QUERY_MODE.QUERY, EXECUTE_TYPE.ALL, true);
+			RequestQuery reqQuery = new RequestQuery(userDB, changedSQL, OBJECT_TYPE.TABLES, QUERY_MODE.QUERY, EXECUTE_TYPE.ALL, true);
 			ExecuteBatchSQL.runSQLExecuteBatch(Messages.get().MainEditor_21, Arrays.asList(querys), reqQuery, userDB, userDB.getRole_id(), 1000, SessionManager.getEMAIL());
 			
 			// 정상적으로 모든 결과 처리 완료.

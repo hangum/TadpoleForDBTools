@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.commons.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
@@ -57,7 +58,7 @@ public class TadpoleImageViewDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Image Viewer"); //$NON-NLS-1$
+		newShell.setText(Messages.get().ImageViewer);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -69,7 +70,7 @@ public class TadpoleImageViewDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setMessage(title);
-		setTitle("Column Name");
+		setTitle(Messages.get().ImageViewer);
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
@@ -100,7 +101,7 @@ public class TadpoleImageViewDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Ok", true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true); //$NON-NLS-1$
 	}
 
 	/**

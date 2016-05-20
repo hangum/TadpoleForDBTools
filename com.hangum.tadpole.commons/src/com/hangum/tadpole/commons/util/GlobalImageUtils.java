@@ -24,6 +24,21 @@ import com.swtdesigner.ResourceManager;
 public class GlobalImageUtils {
 	public static final String IMAGE_Activator_ID = Activator.ID;
 	
+	/**
+	 * checked image
+	 * @return
+	 */
+	public static final Image getCheck() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/check/checked.gif");
+	}
+	
+	/**
+	 * unchecked image
+	 * @return
+	 */
+	public static final Image getUnCheck() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/check/unchecked.gif");
+	}
 
 	/**
 	 * history image

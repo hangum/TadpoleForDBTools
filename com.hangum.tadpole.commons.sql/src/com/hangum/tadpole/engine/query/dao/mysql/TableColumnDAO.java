@@ -64,7 +64,7 @@ public class TableColumnDAO {
 	 * column value
 	 * 컬럼에 실제 들어 있는 값을 정의 합니다. 
 	 */
-	String col_value = "";
+	Object col_value = "";
 	
 	public TableColumnDAO() {
 	}
@@ -227,14 +227,14 @@ public class TableColumnDAO {
 	/**
 	 * @return the col_value
 	 */
-	public String getCol_value() {
+	public Object getCol_value() {
 		return col_value;
 	}
 
 	/**
 	 * @param col_value the col_value to set
 	 */
-	public void setCol_value(String col_value) {
+	public void setCol_value(Object col_value) {
 		this.col_value = col_value;
 	}
 

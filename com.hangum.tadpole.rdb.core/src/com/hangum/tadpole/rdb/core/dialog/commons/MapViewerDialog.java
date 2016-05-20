@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
+import com.hangum.tadpole.mongodb.core.Messages;
 
 /**
  * Map dialog
@@ -127,7 +128,7 @@ public class MapViewerDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
+		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Close, true);
 	}
 
 	/**

@@ -24,7 +24,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
-import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -49,8 +48,8 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 		this.window = window;
 		
 		setId(ID);
-		setText(Messages.get().ExitAction_0);
-		setToolTipText(Messages.get().ExitAction_1);
+		setText(Messages.get().Exit);
+		setToolTipText(Messages.get().Exit);
 
 		setImageDescriptor( ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/exit.png")); //$NON-NLS-1$
 	}
@@ -59,8 +58,8 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	public void run() {
 		final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if(ApplicationArgumentUtils.isStandaloneMode()) {
-			MessageDialog dialog = new MessageDialog(shell, Messages.get().ExitAction_2, null, Messages.get().ExitAction_4, 
-										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().ExitAction_6, Messages.get().ExitAction_7}, 1);
+			MessageDialog dialog = new MessageDialog(shell, Messages.get().Confirm, null, Messages.get().ExitAction_4, 
+										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().Logout, Messages.get().CANCEL}, 1);
 			int intResult = dialog.open();
 			if(intResult == 0) {
 				serverLogout();
@@ -76,7 +75,7 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 //				System.exit(0);
 //			}
 		} else {
-			if( MessageDialog.openConfirm(shell, Messages.get().ExitAction_2, Messages.get().ExitAction_3) ) {
+			if( MessageDialog.openConfirm(shell, Messages.get().Confirm, Messages.get().ExitAction_3) ) {
 				serverLogout();
 			}
 		}

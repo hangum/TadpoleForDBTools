@@ -51,7 +51,7 @@ public class RestfulAPIManagerAction extends Action implements ISelectionListene
 		
 		setId(ID);
 		setText(Messages.get().RestfulAPIManagerAction_0);
-		setToolTipText(Messages.get().RestfulAPIManagerAction_1);
+		setToolTipText(Messages.get().RestfulAPIManagerAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/restful_api.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -65,7 +65,7 @@ public class RestfulAPIManagerAction extends Action implements ISelectionListene
 			logger.error("RESTFulAPI Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "RESTFulAPI Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "RESTFulAPI Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

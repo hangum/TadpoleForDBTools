@@ -39,19 +39,19 @@ public class TableColumnDeleteAction extends AbstractObjectSelectAction {
 	public TableColumnDeleteAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.get().TableColumnDeleteAction_1);
+		setText(Messages.get().DeleteColumn);
 	}
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		if(selection.isEmpty()) return;
-		if(!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().SessionListEditor_7, Messages.get().TableColumnDeleteAction_2)) return;
+		if(!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Confirm, Messages.get().TableColumnDeleteAction_2)) return;
 		
 		try {
 			TableColumnObjectQuery.deleteColumn(userDB, selection.toList());
 		} catch (Exception e) {
 			logger.error("Table delete column", e);
-			MessageDialog.openError(null, Messages.get().TDBErroDialog_0, Messages.get().TableColumnDeleteAction_3+"\n"+e.getMessage());
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().TableColumnDeleteAction_3+"\n"+e.getMessage());
 		}
 		
 		// 테이블 컬럼을 리프레쉬 합니다.

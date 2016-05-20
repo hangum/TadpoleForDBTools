@@ -593,7 +593,17 @@ parsePartSQL = function() {
 	var partQuery = findCursorSQL(varCursor.row, varCursor.column);
 	
 	// 만약에 쿼리를 발견하지 못했다면, 자신의 윗행으로 찾아 마지막 종료 문자의 쿼리를 찾습니다.
-	if(partQuery[0].trim() == "") {
+	var isQuery = false;
+	var checkQuery = partQuery[0].split("\n")
+	for(var i=0; i<checkQuery.length; i++) {
+		if(checkQuery[i].trim() == "" | stringStartsWith(checkQuery[i], "--")) {
+		} else {
+			isQuery = true;
+			break;
+		}
+	}
+	
+	if(isQuery == false) {
 		var intDelimiterLineNumber = findPreviousLineText(varCursor.row);
 		if(-1 !== intDelimiterLineNumber) {
 			var searchLien = editor.session.getLine(intDelimiterLineNumber);

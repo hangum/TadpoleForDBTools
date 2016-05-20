@@ -43,7 +43,7 @@ import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * 모든 사용자에게 메시지를 보냅니다.
@@ -135,12 +135,12 @@ public class SendMessageDialog extends Dialog {
 	protected void okPressed() {
 
 		if(StringUtils.isEmpty(textTitle.getText())) {
-			MessageDialog.openError(null, Messages.get().SendMessageDialog_7, Messages.get().SendMessageDialog_8);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_8);
 			textTitle.setFocus();
 			return;
 		}
 		if(StringUtils.isEmpty(textMessage.getText())) {
-			MessageDialog.openError(null, Messages.get().SendMessageDialog_9, Messages.get().SendMessageDialog_10);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_10);
 			textMessage.setFocus();
 			return;
 		}
@@ -217,10 +217,10 @@ public class SendMessageDialog extends Dialog {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							MessageDialog.openInformation(shell, Messages.get().SendMessageDialog_22, Messages.get().SendMessageDialog_23);
+							MessageDialog.openInformation(shell, Messages.get().Confirm, Messages.get().SendMessageDialog_23);
 						} else {
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(shell, "Error", Messages.get().SendMessageDialog_11, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(shell, Messages.get().Error, Messages.get().SendMessageDialog_11, errStatus); //$NON-NLS-1$
 						}
 					}
 				});	// end display.asyncExec
@@ -241,8 +241,8 @@ public class SendMessageDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().SendMessageDialog_26, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().SendMessageDialog_27, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
 	}
 
 	/**

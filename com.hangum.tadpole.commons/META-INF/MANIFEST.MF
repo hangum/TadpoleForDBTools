@@ -4,7 +4,7 @@ Bundle-Name: Tadpole DB Hub Commons
 Bundle-SymbolicName: com.hangum.tadpole.commons.utils;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.commons.Activator
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.4.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
@@ -31,7 +31,6 @@ Export-Package: com.google.gson,
  com.hangum.tadpole.commons.exception.dialog,
  com.hangum.tadpole.commons.google.analytics,
  com.hangum.tadpole.commons.help,
- com.hangum.tadpole.commons.log,
  com.hangum.tadpole.commons.start,
  com.hangum.tadpole.commons.util,
  com.hangum.tadpole.commons.util.download,

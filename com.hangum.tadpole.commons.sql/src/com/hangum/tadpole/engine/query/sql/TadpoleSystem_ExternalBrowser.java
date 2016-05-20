@@ -40,6 +40,6 @@ public class TadpoleSystem_ExternalBrowser {
 	 */
 	public static List<ExternalBrowserInfoDAO> getExternalBrowser(UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("getExternalBrowser", userDBDao);
+		return sqlClient.queryForList("getExternalBrowser", userDBDao.getSeq());
 	}
 }

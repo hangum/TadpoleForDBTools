@@ -92,7 +92,7 @@ public class ColumnsComposite extends Composite {
 
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.get().ColumnsComposite_0);
+		lblNewLabel.setText(Messages.get().Filter);
 
 		textFilter = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -113,7 +113,7 @@ public class ColumnsComposite extends Composite {
 				initUI();
 			}
 		});
-		btnRefresh.setText(Messages.get().ColumnsComposite_1);
+		btnRefresh.setText(Messages.get().Refresh);
 
 		tvColumnInform = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvColumnInform.getTable();
@@ -156,7 +156,7 @@ public class ColumnsComposite extends Composite {
 	 */
 	private void download() {
 		if(tvColumnInform.getTable().getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_3)) return;
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TablesComposite_3)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -184,7 +184,7 @@ public class ColumnsComposite extends Composite {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile(userDB.getDisplay_name() + "_ColumnInformation.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(null, Messages.get().TablesComposite_2, Messages.get().TablesComposite_5);
+			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().TablesComposite_5);
 		} catch (Exception e) {
 			logger.error("An error occurred while writing into a CSV file.", e); //$NON-NLS-1$
 		}		
@@ -220,7 +220,7 @@ public class ColumnsComposite extends Composite {
 	private void createTableColumn() {
 
 		TableViewColumnDefine [] tableColumnDef = new TableViewColumnDefine [] {};
-		if (DBDefine.getDBDefine(userDB) == DBDefine.MYSQL_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.MARIADB_DEFAULT) {
+		if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
@@ -239,7 +239,7 @@ public class ColumnsComposite extends Composite {
 					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
-		} else if (DBDefine.getDBDefine(userDB) == DBDefine.CUBRID_DEFAULT) {
+		} else if (userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
@@ -258,7 +258,7 @@ public class ColumnsComposite extends Composite {
 					, new TableViewColumnDefine ("LAST_ANALYZED", "Last Analyzed", 100, SWT.LEFT) // //$NON-NLS-1$ //$NON-NLS-2$
 			};
 
-		} else if (DBDefine.getDBDefine(userDB) == DBDefine.ORACLE_DEFAULT || DBDefine.getDBDefine(userDB) == DBDefine.POSTGRE_DEFAULT) {
+		} else if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 
 			tableColumnDef = new TableViewColumnDefine [] { //
 			new TableViewColumnDefine ("TABLE_NAME", "Table Name", 100, SWT.LEFT, true) // //$NON-NLS-1$ //$NON-NLS-2$
@@ -323,7 +323,7 @@ public class ColumnsComposite extends Composite {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<RDBInfomationforColumnDAO> listTableInform = null;
-			if (DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 
 				List<HashMap<String, String>> sqliteTableList = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
 				listTableInform = new ArrayList<RDBInfomationforColumnDAO>();
@@ -356,7 +356,7 @@ public class ColumnsComposite extends Composite {
 			logger.error("initialize column summary", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 	}
 

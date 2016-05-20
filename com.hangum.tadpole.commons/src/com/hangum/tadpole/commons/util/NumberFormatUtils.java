@@ -23,6 +23,45 @@ import org.apache.commons.lang.StringUtils;
 public class NumberFormatUtils {
 	
 	/**
+	 * to currency format
+	 * @param value
+	 * @return
+	 */
+	public static String currencyFormat(String value) {
+		DecimalFormat currencyFormatter = new DecimalFormat("###,####,##0");
+		return currencyFormatter.format(Integer.parseInt(value));
+	}
+	
+	/**
+	 * to currency format
+	 * @param value
+	 * @return
+	 */
+	public static String currencyFormat(double value) {
+		DecimalFormat currencyFormatter = new DecimalFormat("###,####,##0");
+		return currencyFormatter.format(value);
+	}
+	
+	/**
+	 * to currency format
+	 * @param value
+	 * @return
+	 */
+	public static String currencyFormat(Integer value) {
+		DecimalFormat currencyFormatter = new DecimalFormat("###,####,##0");
+		return currencyFormatter.format(value);
+	}
+	
+	/**
+	 * current to int
+	 * @param value
+	 * @return
+	 */
+	public static Integer currencyToInt(String value) {
+		return Integer.parseInt(StringUtils.remove(value, ","));
+	}
+	
+	/**
 	 * 데이터를 표현합니다.
 	 * @param value
 	 * @return
@@ -77,4 +116,5 @@ public class NumberFormatUtils {
 			return commaFormat(val) + " MB";
 		}
 	}
+
 }

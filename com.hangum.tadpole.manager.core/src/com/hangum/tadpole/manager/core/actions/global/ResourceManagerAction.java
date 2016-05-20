@@ -51,7 +51,7 @@ public class ResourceManagerAction extends Action implements ISelectionListener,
 		
 		setId(ID);
 		setText(Messages.get().ResourceManagerAction_0);
-		setToolTipText(Messages.get().ResourceManagerAction_1);
+		setToolTipText(Messages.get().ResourceManagerAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/resources.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -65,7 +65,7 @@ public class ResourceManagerAction extends Action implements ISelectionListener,
 			logger.error("Resource Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Resource Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Resource Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

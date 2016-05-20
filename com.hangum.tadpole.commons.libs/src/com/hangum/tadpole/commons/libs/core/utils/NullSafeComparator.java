@@ -19,6 +19,27 @@ import java.sql.Date;
  *
  */
 public class NullSafeComparator {
+	/**
+	 * int compare
+	 * 
+	 * @param int1
+	 * @param int2
+	 * @return
+	 */
+	public static int compare(final long long1, final long long2) {
+		return long1 > long1?0:1;
+	}
+	
+	/**
+	 * int compare
+	 * 
+	 * @param int1
+	 * @param int2
+	 * @return
+	 */
+	public static int compare(final int int1, final int int2) {
+		return int1 > int2?0:1;
+	}
 
 	/**
 	 * String compare

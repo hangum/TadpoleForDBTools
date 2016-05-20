@@ -19,7 +19,6 @@ import org.apache.commons.io.FileUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
-import com.hangum.tadpole.commons.util.UnicodeBOMInputStream;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -29,6 +28,55 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class CSVExpoter extends AbstractTDBExporter {
+	
+	public static String makeContent(boolean isAddHead, String targetName, QueryExecuteResultDTO queryExecuteResultDTO, char seprator) throws Exception {
+		return makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, -1);
+	}
+
+	/**
+	 * make content
+	 * 
+	 * @param tableName
+	 * @param rsDAO
+	 * @param intLimitCnt
+	 * @return
+	 */
+	public static String makeContent(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, int intLimitCnt) throws Exception {
+		StringBuffer sbReturn = new StringBuffer();
+		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
+		List<String[]> listCsvData = new ArrayList<String[]>();
+		String[] strArrys = null;
+		
+		if(isAddHead) {
+			// column .
+			Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
+			strArrys = new String[mapLabelName.size()-1];
+			for(int i=1; i<mapLabelName.size(); i++) {
+				strArrys[i-1] = mapLabelName.get(i);
+			}
+			listCsvData.add(strArrys);
+			String strTitle = CSVFileUtils.makeData(listCsvData, seprator);
+			sbReturn.append(strTitle);
+		}
+		listCsvData.clear();
+		
+		// data
+		for(int i=0; i<dataList.size(); i++) {
+			Map<Integer, Object> mapColumns = dataList.get(i);
+			
+			strArrys = new String[mapColumns.size()-1];
+			for(int j=1; j<mapColumns.size(); j++) {
+				strArrys[j-1] = mapColumns.get(j) == null?"":""+mapColumns.get(j); //$NON-NLS-1$
+			}
+			listCsvData.add(strArrys);
+
+			sbReturn.append(CSVFileUtils.makeData(listCsvData, seprator));
+			listCsvData.clear();
+			if (intLimitCnt == i) break;
+		}
+		
+		return sbReturn.toString();
+	}
 
 	/**
 	 * csv 파일을 생성하여 파일 위치를 넘겨줍니다.
@@ -40,7 +88,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeCSVFile(String tableName, QueryExecuteResultDTO rsDAO, char seprator) throws Exception {
+	public static String makeCSVFile(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
@@ -58,19 +106,23 @@ public class CSVExpoter extends AbstractTDBExporter {
 									  (byte) 0xBB, (byte) 0xBF}), true);
 		
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
-		
 		List<String[]> listCsvData = new ArrayList<String[]>();
-		// column .
-		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
-		String[] strArrys = new String[mapLabelName.size()-1];
-		for(int i=1; i<mapLabelName.size(); i++) {
-			strArrys[i-1] = mapLabelName.get(i);
-		}
-		listCsvData.add(strArrys);
-		String strTitle = CSVFileUtils.makeData(listCsvData, seprator);
-		FileUtils.writeStringToFile(new File(strFullPath), strTitle, true);
+		String[] strArrys = null;
 		
-		listCsvData.clear();
+		if(isAddHead) {
+			// column .
+			Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
+			strArrys = new String[mapLabelName.size()-1];
+			for(int i=1; i<mapLabelName.size(); i++) {
+				strArrys[i-1] = mapLabelName.get(i);
+			}
+			listCsvData.add(strArrys);
+			String strTitle = CSVFileUtils.makeData(listCsvData, seprator);
+			FileUtils.writeStringToFile(new File(strFullPath), strTitle, true);
+			
+			listCsvData.clear();
+		}
+		
 		// data
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);

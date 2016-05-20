@@ -60,8 +60,8 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 				sbSQL.append(dao.getSysName());
 				
 				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-				if(i < (showTableColumns.size()-1)) sbSQL.append("= ?,  ");  //$NON-NLS-1$
-				else sbSQL.append("=? "); //$NON-NLS-1$
+				if(i < (showTableColumns.size()-1)) sbSQL.append("= ?, ");  //$NON-NLS-1$
+				else sbSQL.append("= ? "); //$NON-NLS-1$
 			}
 
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "WHERE " + PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
@@ -80,7 +80,7 @@ public class GenerateSQLUpdateAction extends GenerateSQLSelectAction {
 			logger.error("Generate SQL Statement Error", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().GenerateSQLUpdateAction_13, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().GenerateSQLUpdateAction_13, errStatus); //$NON-NLS-1$
 		}
 	}
 

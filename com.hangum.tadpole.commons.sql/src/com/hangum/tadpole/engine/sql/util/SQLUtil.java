@@ -23,6 +23,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -90,17 +91,6 @@ public class SQLUtil {
 	 */
 	public static String removeComment(String strSQL) {
 		if(null == strSQL) return "";
-		
-//		String retStr = strSQL.replaceAll(PATTERN_COMMENT, "");
-//		retStr = retStr.replaceAll(PATTERN_COMMENT2, "");
-		
-//		Pattern regex = Pattern.compile("(?:--[^;]*?$)|(--[^\r\n])|(?:/\\*[^;]*?\\*/)", Pattern.DOTALL | Pattern.MULTILINE);
-//        Matcher regexMatcher = regex.matcher(strSQL);
-//		
-//		return regexMatcher.replaceAll("");
-//		logger.debug("[original]" + strSQL);
-//		logger.debug("[change]" + strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", ""));
-		
 		return strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
 	}
 	
@@ -123,22 +113,6 @@ public class SQLUtil {
 		
 		return isRet;
 	}
-	
-//	/**
-//	 * execute query
-//	 * 
-//	 * @param strSQL
-//	 * @return
-//	 */
-//	public static boolean isExecute(String strSQL) {
-//		strSQL = removeComment(strSQL);
-//		if((PATTERN_EXECUTE_QUERY.matcher(strSQL)).matches()) {
-//			return true;
-//		}
-//		
-//		return false;
-//	}
-	
 	
 	/**
 	 * 쿼리의 패턴이 <code>PATTERN_STATEMENT</code>인지?
@@ -168,51 +142,62 @@ public class SQLUtil {
 		return false;
 	}
 	
-//	/**
-//	 * 영문인지 검사합니다.
-//	 * @param strValue
-//	 * @return
-//	 */
-//	public static boolean isEnglish(String strValue) {
-//		if(strValue == null || strValue.length() == 0) return false;
-//		
-//		char charVal = strValue.charAt(0);
-//		if(charVal >= 65 && charVal <= 90) return true; 	// 소문자
-//		if(charVal >= 97 && charVal <= 122) return true; 	// 대문자 
-//		
-//		return false;
-//	}
+	/**
+	 * sql 관련 없는 모든 코드를 삭제한다.
+	 * 
+	 * @param userDB
+	 * @param exeSQL
+	 * @return
+	 */
+	public static String removeCommentAndOthers(UserDBDAO userDB, String exeSQL) {
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		exeSQL = removeComment(exeSQL);
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		exeSQL = StringUtils.removeEnd(exeSQL, "/");
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		//TO DO 오라클 프로시저등의 오브젝트는 마지막 딜리미터(;)가 없으면 오류입니다. 하여서 이 코드는 문제입니다.
+		exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
+		
+		return exeSQL;
+	}
 	
 	/**
 	 * 쿼리를 jdbc에서 실행 가능한 쿼리로 보정합니다.
 	 * 
+	 * @param userDB
 	 * @param exeSQL
 	 * @return
 	 */
-	public static String sqlExecutable(String exeSQL) {
+	public static String makeExecutableSQL(UserDBDAO userDB, String exeSQL) {
 		
 //		tmpStrSelText = UnicodeUtils.getUnicode(tmpStrSelText);
-//		try {
-//			
+			
 //			https://github.com/hangum/TadpoleForDBTools/issues/140 오류로 불럭지정하였습니다.
 //			TO DO 특정 쿼리에서는 주석이 있으면 오류인데..DB에서 쿼리를 실행받는 다양한 조건을 고려할 필요가 있습니다. 
-			
-			// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
-			/*
-			 *  mysql의 경우 주석문자 즉, -- 바로 다음 문자가 --와 붙어 있으면 주석으로 인식하지 않아 오류가 발생합니다. --comment 이면 주석으로 인식하지 않습니다.(다른 디비(mssql, oralce, pgsql)은 주석으로 인식합니다)
-			 *  고칠가 고민하지만, 실제 쿼리에서도 동일하게 오류로 처리할 것이기에 주석을 지우지 않고 놔둡니다. - 2013.11.11- (hangum)
-			 */
-//			
-			// 모든 쿼리에 공백 주석 제거
+		
+		// 문장 의 // 뒤에를 주석으로 인식 쿼리열에서 제외합니다.
+		/*
+		 *  mysql의 경우 주석문자 즉, -- 바로 다음 문자가 --와 붙어 있으면 주석으로 인식하지 않아 오류가 발생합니다. --comment 이면 주석으로 인식하지 않습니다.(다른 디비(mssql, oralce, pgsql)은 주석으로 인식합니다)
+		 *  고칠가 고민하지만, 실제 쿼리에서도 동일하게 오류로 처리할 것이기에 주석을 지우지 않고 놔둡니다. - 2013.11.11- (hangum)
+		 */
+
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+
+		// 주석제거.
+		// oracle, tibero, altibase은 힌트가 주석 문법을 쓰므로 주석을 삭제하지 않는다.
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | 
+				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT |
+				userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT
+		) {
+			// ignore code
+		} else {
 			exeSQL = removeComment(exeSQL);
-			exeSQL = StringUtils.trimToEmpty(exeSQL);
-			exeSQL = StringUtils.removeEnd(exeSQL, "/");
-			exeSQL = StringUtils.trimToEmpty(exeSQL);
-			exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
-			
-//		} catch(Exception e) {
-//			logger.error("query execute", e);
-//		}
+		}
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		exeSQL = StringUtils.removeEnd(exeSQL, "/");
+		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		//TO DO 오라클 프로시저등의 오브젝트는 마지막 딜리미터(;)가 없으면 오류입니다. 하여서 이 코드는 문제입니다.
+		exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 		
 		return exeSQL;
 	}
@@ -383,26 +368,6 @@ public class SQLUtil {
 		return queryType;
 	}
 	
-//	/**
-//	 * <pre>
-//	 * 이런식의 쿼리가 넘어 올때 "ALTER TABLE %s COMMENT %s", dao.getSysName(), dao.getComment()"가 입력 값일 경
-//	 * ALTER TABLE 'dao.getSysName()' COMMENT 'dao.getComment()'
-//	 * 로 바꾸어줍니다.
-//	 * </pre>
-//	 * 
-//	 * @param strings
-//	 * @return
-//	 */
-//	public static String makeQuery(String ...strings) {
-//		String sql = strings[0];
-//		
-//		String[] strParam = new String[strings.length-1];
-//		for(int i=1; i<strings.length; i++) {
-//			strParam[i-1] = makeQuote(strings[i]);
-//		}
-//		
-//		return String.format(sql, strParam);
-//	}
 	/**
 	 * make quote mark
 	 * 
@@ -419,6 +384,16 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String getIndexName(InformationSchemaDAO tc) {
+		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getTABLE_NAME();
+		else return String.format("%s.%s", tc.getSchema_name(), tc.getTABLE_NAME());
+	}
+	
+	/**
+	 * constraint name
+	 * @param tc
+	 * @return
+	 */
+	public static String getConstraintName(TableConstraintsDAO tc) {
 		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getTABLE_NAME();
 		else return String.format("%s.%s", tc.getSchema_name(), tc.getTABLE_NAME());
 	}

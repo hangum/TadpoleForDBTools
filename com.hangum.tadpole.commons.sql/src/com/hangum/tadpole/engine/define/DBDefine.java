@@ -153,6 +153,36 @@ public enum DBDefine {
 	}
 	
 	/**
+	 * Define default class
+	 * @return
+	 */
+	public String getDriverClass() {
+		switch ( this ) {
+			case ORACLE_DEFAULT:	return "oracle.jdbc.driver.OracleDriver";
+			case TIBERO_DEFAULT:	return "com.tmax.tibero.jdbc.TbDriver";
+			
+			case MSSQL_DEFAULT:		
+			case MSSQL_8_LE_DEFAULT: return "net.sourceforge.jtds.jdbc.Driver";
+			
+			case MYSQL_DEFAULT:		return "com.mysql.jdbc.Driver";
+			case MARIADB_DEFAULT:	return "org.mariadb.jdbc.Driver";
+			
+			case SQLite_DEFAULT:	return "org.sqlite.JDBC";
+			case CUBRID_DEFAULT:	return "cubrid.jdbc.driver.CUBRIDDriver";
+			case POSTGRE_DEFAULT:	return "org.postgresql.Driver";	
+
+			case HIVE_DEFAULT:		return "org.apache.hadoop.hive.jdbc.HiveDriver";
+			case HIVE2_DEFAULT:		return "org.apache.hive.jdbc.HiveDriver";
+			case TAJO_DEFAULT:		return "org.apache.tajo.jdbc.TajoDriver";
+			
+			case ALTIBASE_DEFAULT:   return "Altibase.jdbc.driver.AltibaseDriver"; 
+			
+			default:
+				return "undefine class";
+		}
+	}
+	
+	/**
 	 * DB URL INFO를 얻는다.
 	 * 
 	 * @param type
@@ -257,6 +287,8 @@ public enum DBDefine {
 			extension += "tajo"; //$NON-NLS-1$
 		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
 			extension += "altibase";
+		} else if(this == DBDefine.TIBERO_DEFAULT) {
+			extension += "tibero";
 		} else if(this == DBDefine.MONGODB_DEFAULT) {
 			extension += "mongo";
 		} else {
@@ -323,7 +355,7 @@ public enum DBDefine {
 				
 			} catch (Exception e) {
 				logger.error("System initialize exception", e);
-				System.exit(1);
+				System.exit(0);
 			}
 			
 		} else {
@@ -340,6 +372,8 @@ public enum DBDefine {
 	 */
 	public static List<DBDefine> getDriver() {
 		List<DBDefine> listSupportDb = userDBValues();
+		
+		
 		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
 		listSupportDb.remove(DBDefine.TAJO_DEFAULT);
 		listSupportDb.remove(DBDefine.HIVE_DEFAULT);
@@ -367,7 +401,7 @@ public enum DBDefine {
 		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
-//		supportDb.add(TIBERO_DEFAULT);
+		supportDb.add(TIBERO_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

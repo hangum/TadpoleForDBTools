@@ -13,8 +13,6 @@ package com.hangum.tadpole.commons.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,18 +43,6 @@ public class Utils {
 	
 	public static String convHtmlToLine(String str) {
 		return StringUtils.replace(StringEscapeUtils.unescapeHtml(str), "<br/>", PublicTadpoleDefine.LINE_SEPARATOR);
-	}
-	
-	/**
-	 * validate passwd
-	 * 
-	 * @param passwd
-	 * @return
-	 */
-	public static boolean isPassword(String passwd) {
-		Pattern p = Pattern.compile("^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$"); //$NON-NLS-1$
-		Matcher m = p.matcher(passwd);
-		return m.matches();
 	}
 	
 	/**

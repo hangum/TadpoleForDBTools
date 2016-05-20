@@ -31,6 +31,7 @@ import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.MySqlDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.OracleDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.PostgreSQLDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.SQLiteDDLScript;
+import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.TiberoDDLScript;
 
 /**
  * DDLScript Mananager
@@ -80,12 +81,14 @@ public class DDLScriptManager {
 	private void initRDBScript() throws Exception {
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			rdbScript = new SQLiteDDLScript(userDB, actionType);
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ) {
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 			rdbScript = new OracleDDLScript(userDB, actionType);
+		} else if(userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			rdbScript = new TiberoDDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ) {
 			rdbScript = new PostgreSQLDDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-				DBDefine.getDBDefine(userDB) == DBDefine.MSSQL_DEFAULT ) {
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT

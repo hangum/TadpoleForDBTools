@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -124,7 +125,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		
 		Label lblFilter = new Label(compositeHead, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.get().ResultSetComposite_lblFilter_text);
+		lblFilter.setText(Messages.get().Filter);
 		
 		textFilter = new Text(compositeHead,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -212,10 +213,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				
 				if(!"".equals(columnDao.getCol_value())) { //$NON-NLS-1$
 					if(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO.equals(columnDao.getName())) {
-						appendTextAtPosition(columnDao.getCol_value()); //$NON-NLS-1$
+						appendTextAtPosition(""+columnDao.getCol_value()); //$NON-NLS-1$
 					} else {
 						if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
-							appendTextAtPosition(columnDao.getCol_value());
+							appendTextAtPosition(""+columnDao.getCol_value());
 						} else {
 							appendTextAtPosition(String.format(" '%s'", columnDao.getCol_value())); //$NON-NLS-1$
 						}
@@ -281,18 +282,20 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				// 첫번째 컬럼이면 전체 로우의 데이터를 상세하게 뿌려줍니
 				if(i == 0) {
 					columnDao.setName(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO);
-					columnDao.setType(null);
+					columnDao.setType(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO_TYPE);
 					
 					for (int j=1; j<tableResult.getColumnCount(); j++) {
 						Object columnObject = mapColumns.get(j);
-						
-						if(RDBTypeToJavaTypeUtils.isNumberType(getRsDAO().getColumnType().get(j))) {
+						boolean isNumberType = RDBTypeToJavaTypeUtils.isNumberType(getRsDAO().getColumnType().get(j));
+						if(isNumberType) {
 							String strText = ""; //$NON-NLS-1$
 							
 							// if select value is null can 
 							if(columnObject == null) strText = "0"; //$NON-NLS-1$
 							else strText = columnObject.toString();
 							columnDao.setCol_value(columnDao.getCol_value() + strText + ", ");
+						} else if("BLOB".equalsIgnoreCase(columnDao.getData_type())) { //$NON-NLS-1$
+							// ignore blob type
 						} else {
 							String strText = ""; //$NON-NLS-1$
 							
@@ -302,7 +305,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 							columnDao.setCol_value(columnDao.getCol_value() + SQLUtil.makeQuote(strText) + ", ");
 						}
 					}
-					columnDao.setCol_value(StringUtils.removeEnd(columnDao.getCol_value(), ", "));
+					columnDao.setCol_value(StringUtils.removeEnd(""+columnDao.getCol_value(), ", "));
 
 					break;
 				} else {
@@ -340,10 +343,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 						}else if (columnObject instanceof java.sql.Blob ){
 							try {
 								Blob blob = (Blob) columnObject;
-								columnDao = null;
-								
-								TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(null, tableResult.getColumn(i).getText(), blob.getBinaryStream());
-								dlg.open();
+								columnDao.setCol_value(blob.getBinaryStream());
 	
 							} catch (Exception e) {
 								logger.error("Blob column echeck", e); //$NON-NLS-1$
@@ -391,7 +391,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if (openSingleRowDataAction.isEnabled()) {
 			openSingleRowDataAction.run();
 		} else {
-			MessageDialog.openWarning(getShell(), Messages.get().ResultSetComposite_7, Messages.get().ResultSetComposite_8);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetComposite_8);
 		}
 	}
 	
@@ -401,16 +401,25 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	private void openSinglColumViewDialog() {
 		TableColumnDAO columnDao = selectColumnToEditor();
 		if(columnDao == null) {
-			MessageDialog.openWarning(getShell(), Messages.get().ResultSetComposite_7, Messages.get().ResultSetComposite_6);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetComposite_6);
 			return;
 		}
 			
 		String strType = columnDao.getType();
 		if("JSON".equalsIgnoreCase(strType)) { //$NON-NLS-1$
-			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.get().ResultSetComposite_16, columnDao.getCol_value());
+			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
 			dialog.open();
+		} else if("BLOB".equalsIgnoreCase(strType)) { //$NON-NLS-1$
+			logger.debug(columnDao.getCol_value());
+			if (columnDao.getCol_value() instanceof String){
+				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
+				dialog.open();
+			}else{
+				TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(getShell(), Messages.get().ResultSetComposite_16, (InputStream)columnDao.getCol_value());
+				dlg.open();
+			}
 		} else {
-			TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().ResultSetComposite_16, columnDao.getCol_value());
+			TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
 			dialog.open();
 		}
 	}
@@ -510,6 +519,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 
 	@Override
 	public void initUI() {
+		if(this.isDisposed()) return;
+		
 		this.layout();
 		
 		this.sqlFilter.setFilter(""); //$NON-NLS-1$

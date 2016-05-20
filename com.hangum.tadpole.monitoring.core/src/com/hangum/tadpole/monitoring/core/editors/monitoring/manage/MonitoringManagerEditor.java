@@ -54,6 +54,7 @@ import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringResultDAO
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
 import com.hangum.tadpole.monitoring.core.Activator;
+import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.AddMonitoringDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.TemplateMonitoringManageDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.UpdateMonitoringDialog;
@@ -238,7 +239,7 @@ public class MonitoringManagerEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tableVMonitoringList.getSelection();
 				if(!iss.isEmpty()) {
-					if(!MessageDialog.openConfirm(null, "Confirm", "Do you want delete?")) return;
+					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "Do you want delete?")) return;
 					
 					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
 					try {
@@ -494,7 +495,7 @@ public class MonitoringManagerEditor extends EditorPart {
 			logger.error("initialize Managerview", e);
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Can't load database.", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, "Can't load database.", errStatus); //$NON-NLS-1$
 		}
 
 		treeVUserDB.refresh();
@@ -568,14 +569,14 @@ public class MonitoringManagerEditor extends EditorPart {
 	/**
 	 * 트리를 갱신하고 쿼리 창을 엽니다.
 	 * 
-	 * @param dto
+	 * @param userDB
 	 */
-	private void selectAndOpenView(UserDBDAO dto) {
+	private void selectAndOpenView(UserDBDAO userDB) {
 		treeVUserDB.refresh();
-		treeVUserDB.setSelection(new StructuredSelection(dto), true);
+		treeVUserDB.setSelection(new StructuredSelection(userDB), true);
 
 		// mongodb 일경우 열지 않는다.
-		if (DBDefine.getDBDefine(dto) != DBDefine.MONGODB_DEFAULT) {
+		if (userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 //			MainEditorInput mei = new MainEditorInput(dto);
 //			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 //			try {
@@ -584,7 +585,7 @@ public class MonitoringManagerEditor extends EditorPart {
 //				logger.error("main editor open", e); //$NON-NLS-1$
 //
 //				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error", "Can't open resource. ", errStatus); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, "Can't open resource. ", errStatus); //$NON-NLS-1$
 //			}
 		}
 	}

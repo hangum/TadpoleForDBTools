@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.function;
 
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -22,12 +20,10 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
-import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
-import com.hangum.tadpole.rdb.core.dialog.dml.GenerateStatmentDMLDialog;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
+import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.sql.format.SQLFormater;
 
 /**
@@ -38,10 +34,13 @@ import com.hangum.tadpole.sql.format.SQLFormater;
  */
 public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	private static final Logger logger = Logger.getLogger(MainEditorBrowserFunctionService.class);
+	protected UserDBDAO userDB;
 	protected MainEditor editor;
 
-	public MainEditorBrowserFunctionService(Browser browser, String name, MainEditor editor) {
+	public MainEditorBrowserFunctionService(UserDBDAO userDB, Browser browser, String name, MainEditor editor) {
 		super(browser, name, editor);
+		
+		this.userDB = userDB;
 		this.editor = editor;
 	}
 	
@@ -91,7 +90,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
 		if((Boolean) arguments[2]) exeType = EXECUTE_TYPE.BLOCK;
 		
-		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
+		RequestQuery rq = new RequestQuery(userDB, strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 	
@@ -101,7 +100,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void doExecutePlan(Object[] arguments) {
 		String strSQL = (String) arguments[1];
-		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
+		RequestQuery rq = new RequestQuery(userDB, strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.EXPLAIN_PLAN, EditorDefine.EXECUTE_TYPE.NONE, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 	
@@ -141,32 +140,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		if(StringUtils.contains(strObject, ".")) strObject = StringUtils.substringAfter(strObject, ".");
 		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
 		
-		try {
-			TableDAO tableDao = null;
-			List<TableDAO> listTable = editor.getUserDB().getListTable();
-			if(listTable.isEmpty()) { 
-				if(DBDefine.POSTGRE_DEFAULT != editor.getUserDB().getDBDefine()) { 
-					tableDao = TadpoleObjectQuery.getTable(editor.getUserDB(), StringUtils.trim(strObject));
-				} else {
-					tableDao = new TableDAO(strObject, "");
-				}
-			} else {
-				for (TableDAO tmpTableDAO : listTable) {
-					if(strObject.equalsIgnoreCase(tmpTableDAO.getName())) {
-						tableDao = tmpTableDAO;
-					}
-				}
-			}
-			
-			if(tableDao != null) {
-				GenerateStatmentDMLDialog dialog = new GenerateStatmentDMLDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, 
-									editor.getUserDB(), tableDao);
-				dialog.open();
-			}
-			
-		} catch (Exception e) {
-			logger.error("f4 function", e);
-		}
+		DialogUtil.popupDMLDialog(editor.getUserDB(), strObject);
 	}
 
 	/* (non-Javadoc)
@@ -179,7 +153,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		EditorDefine.EXECUTE_TYPE exeType = EXECUTE_TYPE.NONE;
 		exeType = EXECUTE_TYPE.BLOCK;
 		
-		RequestQuery rq = new RequestQuery(strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
+		RequestQuery rq = new RequestQuery(userDB, strSQL, editor.getDbAction(), EditorDefine.QUERY_MODE.QUERY, exeType, editor.isAutoCommit());
 		editor.executeCommand(rq);
 	}
 

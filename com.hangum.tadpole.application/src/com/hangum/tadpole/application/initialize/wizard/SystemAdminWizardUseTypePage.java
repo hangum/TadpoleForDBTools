@@ -70,10 +70,7 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 		comboUserGroup.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				labelInfo.setText(USER_INFO[comboUserGroup.getSelectionIndex()]);
-				labelImage.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, USER_IMAGE[comboUserGroup.getSelectionIndex()]));
-				
-				getWizard().getContainer().updateButtons();	
+				selectComoboGroup();
 			}
 		});
 		comboUserGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -91,13 +88,27 @@ public class SystemAdminWizardUseTypePage extends WizardPage {
 		
 		labelInfo = new Label(container, SWT.WRAP);
 		labelInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		labelInfo.setText(USER_INFO[0]);
+		labelInfo.setText(getUseType());
 		new Label(container, SWT.NONE);
+		
+		
+		labelImage.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, USER_IMAGE[comboUserGroup.getSelectionIndex()]));
+		labelInfo.setText(USER_INFO[comboUserGroup.getSelectionIndex()]);
 		
 		// 
 		setPageComplete(true);
 		
 		AnalyticCaller.track("SystemAdminWizardUseType"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * selected combo group
+	 */
+	private void selectComoboGroup() {
+		labelImage.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, USER_IMAGE[comboUserGroup.getSelectionIndex()]));
+		labelInfo.setText(USER_INFO[comboUserGroup.getSelectionIndex()]);
+		
+		getWizard().getContainer().updateButtons();	
 	}
 	
 	@Override

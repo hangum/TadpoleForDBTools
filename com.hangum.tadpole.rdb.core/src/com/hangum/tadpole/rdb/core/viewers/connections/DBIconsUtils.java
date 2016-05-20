@@ -42,7 +42,7 @@ public class DBIconsUtils {
 	public static String getDBImageUrl(UserDBDAO userDB) {
 		String strBaseImage = "";
 		
-		DBDefine dbType = DBDefine.getDBDefine(userDB);
+		DBDefine dbType = userDB.getDBDefine();
 		if(DBDefine.MYSQL_DEFAULT == dbType) 		strBaseImage = "mysql-add.png";
 		else if(DBDefine.MARIADB_DEFAULT == dbType) strBaseImage = "mariadb-add.png";
 		else if(DBDefine.ORACLE_DEFAULT == dbType) 	strBaseImage = "oracle-add.png";
@@ -57,7 +57,7 @@ public class DBIconsUtils {
 		else if(DBDefine.ALTIBASE_DEFAULT == dbType) strBaseImage = "altibase_add.png";
 		else  strBaseImage = "database-add.png";
 		
-		return "resources/icons/" + strBaseImage;
+		return "resources/icons/dbs/" + strBaseImage;
 	}
 	
 //	/**
@@ -90,7 +90,7 @@ public class DBIconsUtils {
 	public static Image getProcedureImage(UserDBDAO userDB) {
 		Image baseImage = getEditorImage(userDB);
 		try {
-			return getDecorateImage(baseImage, "resources/icons/object_editor_0.28.png", ResourceManager.BOTTOM_RIGHT);
+			return getDecorateImage(baseImage, "resources/icons/editor/compile_0.28.png", ResourceManager.BOTTOM_RIGHT);
 		} catch(Exception e) {
 			return baseImage;
 		}

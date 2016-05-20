@@ -1,5 +1,5 @@
 /*******************************************************************************
-
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -54,7 +54,7 @@ import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -73,6 +73,7 @@ public class LoginDialog extends Dialog {
 	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
 	private Label lblLoginForm;
+	private Label lblLabelLblhangum;
 	private Composite compositeLogin;
 	private Label lblEmail;
 	
@@ -94,7 +95,7 @@ public class LoginDialog extends Dialog {
 //						"	</form>"; //$NON-NLS-1$
 	private Composite compositeHead;
 	private Composite compositeTail;
-	private Label lblLabelLblhangum;
+	
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -267,7 +268,7 @@ public class LoginDialog extends Dialog {
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
-				MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_27);
+				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_27);
 				
 				return;
 			}
@@ -278,7 +279,7 @@ public class LoginDialog extends Dialog {
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-				MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_28);
+				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_28);
 				return;
 			}
 			
@@ -300,14 +301,14 @@ public class LoginDialog extends Dialog {
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 		} catch (TadpoleAuthorityException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_29, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
 			
 			textPasswd.setText("");
 			textPasswd.setFocus();
 			return;
 		} catch (Exception e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_29, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();
 			return;
@@ -329,7 +330,7 @@ public class LoginDialog extends Dialog {
 		
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
+//		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
 	}
 	
@@ -350,11 +351,11 @@ public class LoginDialog extends Dialog {
 	private boolean validation(String strEmail, String strPass) {
 		// validation
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_11);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_11);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, Messages.get().LoginDialog_14);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_14);
 			textPasswd.setFocus();
 			return false;
 		}
@@ -372,7 +373,7 @@ public class LoginDialog extends Dialog {
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().LoginDialog_lblFindPassword, false);
+				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().FindPassword, false);
 			}
 		} catch (Exception e) {
 //			ignore exception
@@ -384,10 +385,10 @@ public class LoginDialog extends Dialog {
 	 */
 	private void initUI() {
 		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage(Locale.ENGLISH);
-		boolean isFound = false;
+		boolean isExist = false;
 		for(String strName : comboLanguage.getItems()) {
 			if(strName.equals(defaultLanguage)) {
-				isFound = true;
+				isExist = true;
 				comboLanguage.setText(strName);
 				changeUILocale(comboLanguage.getText());
 				break;
@@ -395,17 +396,17 @@ public class LoginDialog extends Dialog {
 		}
 		
 		// 쿠키에서 사용자 정보를 찾지 못했으면..
-		if(!isFound) {
+		if(!isExist) {
 			// 사용자 브라우저 랭귀지를 가져와서, 올챙이가 지원하는 랭귀지인지 검사해서..
 			String locale = RequestInfoUtils.getDisplayLocale();
 			for(String strLocale : comboLanguage.getItems()) {
 				if(strLocale.equals(locale)) {
-					isFound = true;
+					isExist = true;
 					break;
 				}
 			}
 			// 있으면... 
-			if(isFound) comboLanguage.setText(locale);
+			if(isExist) comboLanguage.setText(locale);
 			else comboLanguage.setText(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
 			
 			// 랭귀지를 바꾸어 준다.
@@ -423,7 +424,7 @@ public class LoginDialog extends Dialog {
 		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {
 			String errMsg = Messages.get().LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.get().UserInformationDialog_5 + "\n" + Messages.get().LoginDialog_lblNewLabel_text;  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-			MessageDialog.openError(getParentShell(), Messages.get().LoginDialog_7, errMsg);
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, errMsg);
 		}
 	}
 	
@@ -477,7 +478,7 @@ public class LoginDialog extends Dialog {
 		
 		if(btnNewUser != null) btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
 		if(btnFindPasswd != null) {
-			btnFindPasswd.setText(Messages.get().LoginDialog_lblFindPassword);
+			btnFindPasswd.setText(Messages.get().FindPassword);
 		}
 		
 		compositeLogin.layout();
@@ -493,7 +494,7 @@ public class LoginDialog extends Dialog {
 	}
 	
 	private void findPassword() {
-		FindPasswordDialog dlg = new FindPasswordDialog(getShell());
+		FindPasswordDialog dlg = new FindPasswordDialog(getShell(), textEMail.getText());
 		dlg.open();
 	}
 

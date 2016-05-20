@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.rap.rwt.RWT;
 
@@ -26,6 +27,15 @@ import org.eclipse.rap.rwt.RWT;
 public class PublicTadpoleDefine {
 	/** url system verion information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
+	
+	/** defiee default time zone*/
+	public static final String DEFAULT_TIME_ZONE = "Asia/Seoul";
+	
+	/** defualt log file name*/
+	public static final String DEFAULT_LOG_FILE 	= "./logs/tadpole.log";
+	
+	/** license 파일 */
+	public static final String LICENSE_FILE = "TadpoleHub.lic";
 	
 	/** cookie path */
 	public static String _cookiePath = "/";
@@ -42,8 +52,8 @@ public class PublicTadpoleDefine {
 	public static final String SERVICE_KEY_NAME = "serviceID";
 	
 	/** default system encrypt password */
-	public static final String SYSTEM_DEFAULT_USER = "tadpoleperson@tadpoledb.com";
-	public static final String SYSTEM_DEFAULT_PASSWORD = "Heeseong.2me.son";
+	public static final String SYSTEM_DEFAULT_USER = "hangum@tadpolehub.com";
+	public static final String SYSTEM_DEFAULT_PASSWORD = "startService.tdb.son";
 	
 	/** COOKIE USER ID */
 	public static final String TDB_COOKIE_UPDATE_CHECK = "TDB_COOKIE_UPDATE_CHECK";
@@ -59,6 +69,7 @@ public class PublicTadpoleDefine {
 
 	/** 0번째 테이블 컬럼을 선택한다 */
 	public static String DEFINE_TABLE_COLUMN_BASE_ZERO = "TDB_BASE_ZERO";
+	public static String DEFINE_TABLE_COLUMN_BASE_ZERO_TYPE = "TDB_BASE_TYPE";
 	
 	/**
 	 * 특별 컬럼을 정의 합니다. 
@@ -78,18 +89,18 @@ public class PublicTadpoleDefine {
 	/** DIR SEPARATOR */
 	public static char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
 	
-	/** temmp dir 
+	/** temp dir 
 		임시 디렉토리 생성에 오류 있음. 확인 필요.
 		java.io.IOException: Directory '/tmpTempTable1458208430419' could not be created 오류 발생.
 		환경 설정에 문제인지(prefix 혹은 디렉토리 미지정).. 아니면 코드상의 오류(DIRECTORY-SEPERATOR 가 빠진 문제)인지 확인 필요
 	*/
-	public static String TEMP_DIR = System.getProperty("java.io.tmpdir") + PublicTadpoleDefine.DIR_SEPARATOR;
+	public static String TEMP_DIR = FileUtils.getTempDirectoryPath() + PublicTadpoleDefine.DIR_SEPARATOR;
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
 	
 	/** tadpole url */
-	public static String TADPOLE_URL = "http://127.0.0.1:%s/tadpole";//db?startup=tadpole"; //$NON-NLS-1$
+	public static String TADPOLE_URL = "http://127.0.0.1:%s";
 	
 	/**
 	 * tadpole url
@@ -239,6 +250,7 @@ public class PublicTadpoleDefine {
 		VIEWS, 
 		SYNONYM,
 		INDEXES, 
+		CONSTRAINTS,
 		PROCEDURES,
 		PROCEDURE_PARAMETER,
 		FUNCTIONS, 

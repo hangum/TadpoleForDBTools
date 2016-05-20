@@ -135,7 +135,7 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 		if(RequestInfoUtils.findOSSimpleType() == ServletUserAgent.OS_SIMPLE_TYPE.MACOSX) {
 			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_3, 	"Ctrl + Space|Option + Space ") 		); //$NON-NLS-1$
 		} else {
-			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_7, 	"Ctrl + Space") 		); //$NON-NLS-2$ //$NON-NLS-1$
+			listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_3, 	"Ctrl + Space") 		); //$NON-NLS-2$ //$NON-NLS-1$
 		}
 		
 		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_9, 	prefixCtrlShortcut + "+ Enter|F9|F5") 	); //$NON-NLS-2$ //$NON-NLS-1$

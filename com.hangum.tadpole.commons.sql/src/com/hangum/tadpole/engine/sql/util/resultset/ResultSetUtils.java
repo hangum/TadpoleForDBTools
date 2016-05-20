@@ -20,6 +20,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
@@ -76,20 +77,26 @@ public class ResultSetUtils {
 			for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
 				final int intColIndex = i+1;
 				final int intShowColIndex = i + intStartIndex;
+				Object obj = null;
 				try {
-					Object obj = rs.getObject(intColIndex);
+					obj = rs.getObject(intColIndex);
 //					int type = rs.getMetaData().getColumnType(intColIndex);
 //					if(obj instanceof oracle.sql.STRUCT) {
 //						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 //					} else
-					if(obj instanceof Blob) {
-						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
+					if(obj == null) {
+						tmpRow.put(intShowColIndex, PublicTadpoleDefine.DEFINE_NULL_VALUE);
 					} else {
-						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
+						String type = obj.getClass().getSimpleName();
+						if(type.toUpperCase().contains("LOB")) {
+							tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
+						} else {
+							tmpRow.put(intShowColIndex, rs.getString(intColIndex));
+						}
+//						if(logger.isDebugEnabled()) {
+//							logger.debug("======[jdbc type ]===> " + rs.getMetaData().getColumnType(intColIndex) + ", class type is " + obj.getClass().getName());
+//						}
 					}
-//					if(logger.isDebugEnabled()) {
-//						logger.debug("======[jdbc type ]===> " + rs.getMetaData().getColumnType(intColIndex) + ", class type is " + obj.getClass().getTypeName());
-//					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$
 					tmpRow.put(i+intStartIndex, ""); //$NON-NLS-1$

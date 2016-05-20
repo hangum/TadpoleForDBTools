@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.mongodb.erd.core.actions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -58,7 +57,7 @@ public class AutoLayoutAction extends SelectionAction {
 
 	@Override
 	protected void init() {
-		setText(Messages.get().AutoLayoutAction_1);
+		setText(Messages.get().AutoLayoutAction_0);
 		setToolTipText(Messages.get().AutoLayoutAction_0);
 		setId(ID);
 		setEnabled(true);
@@ -132,7 +131,7 @@ public class AutoLayoutAction extends SelectionAction {
 			logger.error(Messages.get().AutoLayoutAction_2, e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", Messages.get().AutoLayoutAction_3, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, Messages.get().AutoLayoutAction_2, errStatus); //$NON-NLS-1$
 
 		}
 	}

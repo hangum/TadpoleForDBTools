@@ -1,6 +1,5 @@
 package com.hangum.tadpole.help.core;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
@@ -38,9 +37,6 @@ public class Messages {
 	public String RDBShortcutHelpDialog_7;
 	public String RDBShortcutHelpDialog_9;
 
-	// static {
-	// NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	// }
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

@@ -21,7 +21,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
-import com.hangum.tadpole.rdb.core.dialog.table.MySQLTableColumnDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTableColumnDialog;
 
 /**
  * Table column modify action
@@ -40,7 +40,7 @@ public class TableColumnModifyAction extends AbstractObjectSelectAction {
 	public TableColumnModifyAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType, String title) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
-		setText(Messages.get().TableColumnRenameAction); //$NON-NLS-1$
+		setText(Messages.get().ModifyColumn); //$NON-NLS-1$
 	}
 
 	@Override

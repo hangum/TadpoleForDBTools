@@ -350,7 +350,7 @@ ORDER BY 1
     status				:
     #table_schema# AS table_schema
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
   SELECT i.table_name
         ,i.index_name
         ,i.uniqueness
@@ -369,9 +369,7 @@ ORDER BY 1
         ,CASE
             WHEN c.constraint_type = 'P' THEN 'PK'
             WHEN i.uniqueness = 'UNIQUE' THEN 'UQ'
-            ELSE ''
-         END
-            AS index_type
+            ELSE '' END AS index_type
         ,c.status
         ,#table_schema# AS table_schema
     FROM    user_indexes i
@@ -380,6 +378,7 @@ ORDER BY 1
          ON     i.table_name = c.table_name
             AND i.index_name = c.constraint_name
             AND c.status = 'ENABLED'
+    WHERE i.table_name = #table_name#
 ORDER BY i.table_name, i.index_name
 </select>
 
@@ -400,6 +399,30 @@ ORDER BY i.table_name, i.index_name
    WHERE 1=1
      AND m.index_name = UPPER(#index_name#)
 ORDER BY m.column_position        
+</select>
+
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+  SELECT i.table_name
+        ,i.constraint_name
+        ,i.index_name
+        ,(case i.constraint_type when 'P' then 'Pk' when 'R' then 'Fk' when 'C' then 'Ck' else i.constraint_type end) as constraint_type 
+        ,i.status
+        ,I.OWNER as TABLE_SCHEMA
+        ,I.OWNER as INDEX_SCHEMA
+        ,I.SEARCH_CONDITION
+        ,i.R_OWNER
+        ,I.R_CONSTRAINT_NAME        
+    FROM user_constraints i
+         LEFT JOIN user_indexes c
+            ON     i.table_name = c.table_name
+               AND c.index_name = i.constraint_name
+               AND c.status = 'ENABLED'
+   WHERE i.table_name = #table_name#
+ORDER BY i.table_name, i.index_name
 </select>
 
 <!-- 
@@ -463,24 +486,29 @@ ORDER BY s.object_type DESC, s.object_name
 
  -->
 <select id="packageBodyList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-select 
+select distinct 
 	s.object_name as packagename
 	,s.procedure_name as name
-	,(
-		select case 
-		when instr(upper(replace(text,chr(9),' ')), ' FUNCTION ') > 0 then 'FUNCTION'
-		         when  instr(upper(replace(text,chr(9),' ')), ' PROCEDURE ') > 0 then 'PROCEDURE'
-		         else 'unknow' end
-		  from user_source
-		where 1=1
-		and  name = s.object_name
-		and  upper(replace(text,chr(9),' ')) like '% '|| s.procedure_name ||'%'
-		and rownum &lt;= 1
-	) as type
+	,p.type as type
+    , nvl(p.overload, 0) as overload 
  from user_procedures s
+         LEFT JOIN (  SELECT object_name
+                            ,package_name
+                            ,overload
+                            ,subprogram_id
+                            ,CASE WHEN SUM (CASE WHEN argument_name IS NULL THEN 1 ELSE 0 END) > 0 THEN 'FUNCTION' ELSE 'PROCEDURE' END AS TYPE
+                        FROM user_arguments
+                    GROUP BY object_name
+                            ,package_name
+                            ,overload
+                            ,subprogram_id) p
+            ON     p.object_name = s.procedure_name
+               AND p.package_name = s.object_name
+               AND p.subprogram_id = s.subprogram_id
  where 1=1
   and s.object_name = upper(#package#)
- order by 3, 2
+  and s.procedure_name > ' '
+ order by 2, 3 
 </select>
 
 <!-- 
@@ -531,7 +559,7 @@ ORDER BY s.object_name
 	database				:
 	collation				:
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+<select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
   SELECT s.object_name AS name
         ,t.table_name AS table_name
         ,t.triggering_event AS event
@@ -542,6 +570,20 @@ ORDER BY s.object_name
         , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
     FROM user_objects s INNER JOIN user_triggers t ON S.OBJECT_NAME = t.trigger_name
    WHERE s.object_type = 'TRIGGER'
+ORDER BY t.table_name, s.object_name
+</select>
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+  SELECT s.object_name AS name
+        ,t.table_name AS table_name
+        ,t.triggering_event AS event
+        ,t.when_clause AS timing
+        ,s.object_type AS TYPE
+        ,#table_scheme# AS db
+        ,s.created
+        , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
+    FROM user_objects s INNER JOIN user_triggers t ON S.OBJECT_NAME = t.trigger_name
+   WHERE s.object_type = 'TRIGGER'
+     AND t.table_name = #table_name#
 ORDER BY t.table_name, s.object_name
 </select>
 
@@ -714,8 +756,31 @@ ORDER BY s.module, s.username
 	table information
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
-	select table_name, num_rows, table_lock
-	from user_tables
+	SELECT TABLE_NAME
+      ,TABLESPACE_NAME
+      ,PCT_FREE
+      ,INI_TRANS
+      ,LOGGING
+      ,NUM_ROWS
+      ,BLOCKS
+      ,AVG_ROW_LEN
+      ,DEGREE
+      ,SAMPLE_SIZE
+      ,LAST_ANALYZED
+      ,PARTITIONED
+      ,BUFFER_POOL
+      ,ROW_MOVEMENT
+      ,DURATION
+      ,COMPRESSION
+      ,DROPPED
+      ,'' as READ_ONLY
+      ,TEMPORARY
+      ,MAX_EXTENTS
+      ,IOT_TYPE
+      ,INITIAL_EXTENT
+      ,NEXT_EXTENT
+      ,MIN_EXTENTS
+  FROM USER_TABLES T
 </select>
 
 <!-- 
@@ -1017,7 +1082,10 @@ ORDER BY IC.COLUMN_POSITION
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('IN','IN/OUT')
    AND ua.argument_name > ' '
-   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
 ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    
@@ -1039,7 +1107,10 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
    AND ua.object_name = UPPER (#object_name#)
    AND ua.in_out in ('OUT', 'IN/OUT')
    AND ua.argument_name > ' '
-   and nvl(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
 ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    

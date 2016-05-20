@@ -154,7 +154,7 @@ SELECT 1
     status				:
     #table_schema# AS table_schema
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 SELECT
     a.class_name AS table_name
     ,a.index_name
@@ -163,6 +163,7 @@ SELECT
          WHEN a.is_unique = 'YES' then 'UQ'
         ELSE ' ' END as index_type
   FROM db_index a
+ WHERE a.class_name = #table_name# 
   ORDER BY table_name
 </select>
 <!-- 
@@ -181,6 +182,7 @@ SELECT
 		left join db_index_key b on  a.index_name = b.index_name
 	WHERE 1=1
 	      AND a.index_name = #index_name#
+	      AND a.class_name = #table_name# 
 	ORDER BY column_position desc;
 </select>
 
@@ -254,12 +256,20 @@ SELECT
 	database				:
 	collation				:
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SELECT 
 		name,
 		event,
 	 	condition AS statement
 	FROM db_trigger
+</select>
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+	SELECT 
+		name,
+		event,
+	 	condition AS statement
+	FROM db_trigger
+	WHERE table = #table_name#
 </select>
 
 <!-- 

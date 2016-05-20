@@ -27,18 +27,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.importexport.Activator;
 import com.hangum.tadpole.importexport.core.Messages;
 import com.hangum.tadpole.importexport.core.editors.mongodb.composite.editingsupport.ExistOnDeleteColumnEditingSupport;
 import com.hangum.tadpole.importexport.core.editors.mongodb.composite.editingsupport.ImportColumnEditingSupport;
 import com.hangum.tadpole.importexport.core.editors.mongodb.composite.editingsupport.RenameColumnEditingSupport;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import com.swtdesigner.ResourceManager;
 
 /**
  * <pre>
@@ -60,9 +59,6 @@ public class TableColumnLIstComposite extends Composite {
 	
 	private TableViewer tableViewer = null;
 	private List<ModTableDAO> listTables = new ArrayList<ModTableDAO>();
-	
-	private static final Image CHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/checked.png"); //$NON-NLS-1$;
-	private static final Image UNCHECKED = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/unchecked.png"); //$NON-NLS-1$;
 			
 	/**
 	 * Create the composite.
@@ -92,9 +88,9 @@ public class TableColumnLIstComposite extends Composite {
 			public Image getImage(Object element) {
 				ModTableDAO modDao = (ModTableDAO)element;
 				if (modDao.isModify()) {
-					return CHECKED;
+					return GlobalImageUtils.getCheck();
 				} else {
-					return UNCHECKED;
+					return GlobalImageUtils.getUnCheck();
 				}
 			}
 		});
@@ -124,9 +120,9 @@ public class TableColumnLIstComposite extends Composite {
 			public Image getImage(Object element) {
 				ModTableDAO modDao = (ModTableDAO)element;
 				if (modDao.isExistOnDelete()) {
-					return CHECKED;
+					return GlobalImageUtils.getCheck();
 				} else {
-					return UNCHECKED;
+					return GlobalImageUtils.getUnCheck();
 				}
 			}
 		});
@@ -150,7 +146,7 @@ public class TableColumnLIstComposite extends Composite {
 	
 	public void init(UserDBDAO userDB) {
 		if(userDB == null) {
-			MessageDialog.openError(null, "Data Import", Messages.get().TableColumnLIstComposite_1); //$NON-NLS-1$
+			MessageDialog.openWarning(null, "Data Import", Messages.get().TableColumnLIstComposite_1); //$NON-NLS-1$
 			
 			return;
 		}

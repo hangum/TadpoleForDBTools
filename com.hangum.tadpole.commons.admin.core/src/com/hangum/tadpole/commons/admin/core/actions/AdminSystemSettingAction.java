@@ -49,7 +49,7 @@ public class AdminSystemSettingAction extends Action implements ISelectionListen
 		
 		setId(ID);
 		setText(Messages.get().AdminSystemSettingAction_0);
-		setToolTipText(Messages.get().AdminSystemSettingAction_1);
+		setToolTipText(Messages.get().AdminSystemSettingAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
@@ -63,7 +63,7 @@ public class AdminSystemSettingAction extends Action implements ISelectionListen
 			logger.error("Admin System setting editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Admin System setting editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Admin System setting editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

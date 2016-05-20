@@ -180,7 +180,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_CHANGE_EVENT = "_EDITOR_CHANGE_EVENT_";
 	
 	public static final String EDITOR_AUTOSAVE 			= "EDITOR_AUTOSAVE";
-	public static final String EDITOR_AUTOSAVE_VALUE	= "true";
+	public static final String EDITOR_AUTOSAVE_VALUE	= "false";
 	
 	public static final String EDITOR_THEME 		= "EDITOR_THEME";
 	public static final String EDITOR_THEME_VALUE	= "Crimson Editor";
@@ -189,12 +189,15 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String EDITOR_FONT_SIZE_VALUE 	= "12";
 	
 	public static final String EDITOR_IS_WARP 		= "EDITOR_IS_WARP";
-	public static final String EDITOR_IS_WARP_VALUE = "true";
+	public static final String EDITOR_IS_WARP_VALUE = "false";
 	
 	public static final String EDITOR_WRAP_LIMIT 		= "EDITOR_WRAP_LIMIT";
-	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "200";
+	public static final String EDITOR_WRAP_LIMIT_VALUE 	= "300";
 	
 	public static final String EDITOR_SHOW_GUTTER = "EDITOR_SHOW_GUTTER";
 	public static final String EDITOR_SHOW_GUTTER_VALUE = "true";
+	
+	public static final String EDITOR_MYBatisDollart = "EDITOR_MYBatisDollart";
+	public static final String EDITOR_MYBatisDollart_VALUE = "false";
 		
 }

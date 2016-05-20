@@ -179,7 +179,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      */
     protected void createButtonsForButtonBar(Composite parent) {
         // create OK and Details buttons
-        createButton(parent, IDialogConstants.OK_ID, Messages.get().ExceptionDetailsErrorDialog_2, true);
+        createButton(parent, IDialogConstants.OK_ID, Messages.get().Confirm, true);
         createDetailsButton(parent);
     }
 

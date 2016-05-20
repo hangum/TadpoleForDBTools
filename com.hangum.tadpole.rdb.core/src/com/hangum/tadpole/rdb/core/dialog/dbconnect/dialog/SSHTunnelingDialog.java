@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.mongodb.core.Messages;
+
 /**
  * SSH Tunneling
  * 
@@ -97,8 +99,8 @@ public class SSHTunnelingDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "OK", true);
-		createButton(parent, IDialogConstants.CANCEL_ID, "Cancle", false);
+		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Add, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  Messages.get().Cancel, false);
 	}
 
 	/**

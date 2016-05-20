@@ -13,6 +13,7 @@ package com.hangum.tadpole.engine.sql.paremeter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.restful.RESTFULUnsupportedEncodingException;
 import com.hangum.tadpole.engine.restful.RESTFulArgumentNotMatchException;
 import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
@@ -25,19 +26,20 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
 public class NamedParameterUtil {
 
 	/**
-	 * SQL을 분석해서 사용할 SQL과 SQL bind parameter로 만든다. 
-	 * 
+	 * SQL을 분석해서 사용할 SQL과 SQL bind parameter로 만든다.
+	 *  
+	 * @param userDB 
 	 * @param strLastSQL
 	 * @param strParameter
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 * @throws RESTFulArgumentNotMatchException
 	 */
-	public static NamedParameterDAO parseParameterUtils(String strLastSQL, String strParameter) throws RESTFULUnsupportedEncodingException, RESTFulArgumentNotMatchException {
+	public static NamedParameterDAO parseParameterUtils(UserDBDAO userDB, String strLastSQL, String strParameter) throws RESTFULUnsupportedEncodingException, RESTFulArgumentNotMatchException {
 		NamedParameterDAO returnDao = new NamedParameterDAO();
 		
-		strLastSQL = SQLUtil.sqlExecutable(strLastSQL);
-		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = OracleStyleSQLNamedParameterUtil.getInstance();
+		strLastSQL = SQLUtil.makeExecutableSQL(userDB, strLastSQL);
+		OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
 		String strOracleStyleSQL = oracleNamedParamUtil.parse(strLastSQL);
 		
 		Map<Integer, String> mapIndex = oracleNamedParamUtil.getMapIndexToName();

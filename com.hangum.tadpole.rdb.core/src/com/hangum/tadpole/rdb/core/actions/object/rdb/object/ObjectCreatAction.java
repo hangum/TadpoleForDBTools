@@ -22,6 +22,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
+import com.hangum.tadpole.rdb.core.actions.connections.CreateConstraintsAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
@@ -31,6 +32,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTaableCreateDialog;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -62,10 +64,13 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				CreateTableAction cta = new CreateTableAction();
 				
 				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
-				if(DBDefine.getDBDefine(userDB) == DBDefine.SQLite_DEFAULT) {
+				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 					TableDAO tc = (TableDAO)selection.getFirstElement();
 					if(tc == null) cta.run(userDB, actionType);
 					else cta.run(userDB, tc.getComment(), actionType);
+				} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), getUserDB());
+					dialog.open();
 				} else {				
 					cta.run(userDB, actionType);
 				}
@@ -81,7 +86,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
-		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES | actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				CreateIndexAction cia = new CreateIndexAction();
 				cia.run(userDB, actionType);
@@ -92,6 +97,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 					refreshIndexes();
 				}
 			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
+			CreateConstraintsAction cca = new CreateConstraintsAction();
+			cca.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 			CreateProcedureAction cia = new CreateProcedureAction();
 			cia.run(userDB, actionType);

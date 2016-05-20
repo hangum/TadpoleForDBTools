@@ -62,7 +62,7 @@ public class FindEditorAndWriteQueryUtil {
 	 */
 	public static void run(UserDBDAO userDB, String strObjectName, String strScript, boolean isNewEditor, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == DBDefine.getDBDefine(userDB)) {
+		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
 			newMongoDBEditorOpen(userDB, strScript);
 		} else {
 
@@ -116,7 +116,7 @@ public class FindEditorAndWriteQueryUtil {
 			logger.error("Mongodb javascirpt", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "GridFS Open Exception", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "GridFS Open Exception", errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -136,7 +136,7 @@ public class FindEditorAndWriteQueryUtil {
 			logger.error("new sql editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 		}	
 	}
 	
@@ -155,7 +155,7 @@ public class FindEditorAndWriteQueryUtil {
 			logger.error("new object editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 		}	
 	}
 	
@@ -175,7 +175,7 @@ public class FindEditorAndWriteQueryUtil {
 			logger.error("find editor open", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 		}
 	}
 

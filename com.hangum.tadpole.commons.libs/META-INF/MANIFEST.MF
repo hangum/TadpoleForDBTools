@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Tadpole DB Hub commons libs
 Bundle-SymbolicName: com.hangum.tadpole.commons.libs
 Bundle-Version: 2.0.0
-Bundle-Vendor: hangum.com
+Bundle-Vendor: TadpoleHub Co.Ltd
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  libs/apache/commons/commons-lang-2.4.jar,
@@ -21,13 +21,15 @@ Bundle-ClassPath: .,
  libs/googleauth/GoogleAuth-1.0.jar,
  libs/apache/velocity/commons-collections-3.2.1.jar,
  libs/apache/velocity/velocity-1.7.jar,
- libs/sql/parser/jsqlparser-0.9.4.jar
+ libs/sql/parser/jsqlparser-0.9.4.jar,
+ libs/apache/commons/commons-validator-1.5.0.jar
 Export-Package: .,
  au.com.bytecode.opencsv,
  au.com.bytecode.opencsv.bean,
  com.hangum.tadpole.commons.libs.core.dao,
  com.hangum.tadpole.commons.libs.core.define,
  com.hangum.tadpole.commons.libs.core.googleauth,
+ com.hangum.tadpole.commons.libs.core.logs,
  com.hangum.tadpole.commons.libs.core.mails,
  com.hangum.tadpole.commons.libs.core.mails.dto,
  com.hangum.tadpole.commons.libs.core.mails.template,
@@ -108,3 +110,4 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.9.0",
  org.junit;resolution:=optional
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"
+Bundle-Activator: com.hangum.tadpole.commons.libs.core.Activator

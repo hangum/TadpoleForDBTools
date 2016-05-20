@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Link to Tadpole DB Hub
+Type=Link
+URL=http://127.0.0.1:10081/
+Icon=gnome-fs-bookmark

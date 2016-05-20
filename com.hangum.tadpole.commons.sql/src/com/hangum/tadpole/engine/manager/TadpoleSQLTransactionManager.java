@@ -11,7 +11,7 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -96,7 +96,7 @@ public class TadpoleSQLTransactionManager {
 					transactionDAO.setConn(conn);
 					transactionDAO.setUserId(userId);
 					transactionDAO.setUserDB(userDB);
-					transactionDAO.setStartTransaction(new Date(System.currentTimeMillis()));
+					transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
 					
 					transactionDAO.setKey(searchKey);
 					

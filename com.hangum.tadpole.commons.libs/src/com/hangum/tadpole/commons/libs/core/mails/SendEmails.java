@@ -50,6 +50,7 @@ public class SendEmails {
 //			CommandMap.setDefaultCommandMap(mc);
 			
 			HtmlEmail email = new HtmlEmail();
+			email.setCharset("euc-kr");
 			email.setHostName(smtpDto.getHost());
 			email.setSmtpPort(NumberUtils.toInt(smtpDto.getPort()));
 			email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));

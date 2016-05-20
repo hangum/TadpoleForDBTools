@@ -57,11 +57,11 @@ public class DeleteDBAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
-			MessageDialog.openError(null, Messages.get().DeleteDBAction_0, Messages.get().DeleteDBAction_2);
+			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().DeleteDBAction_2);
 			return;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().DeleteDBAction_0, Messages.get().DeleteDBAction_3 + userDB.getDisplay_name() + "] " + Messages.get().DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
+		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "[" + userDB.getDisplay_name() + "] " + Messages.get().DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
 		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		
@@ -101,7 +101,7 @@ public class DeleteDBAction implements IViewActionDelegate {
 			logger.error("disconnection exception", e);			 //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error", "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

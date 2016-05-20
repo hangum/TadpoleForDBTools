@@ -12,11 +12,9 @@ package com.hangum.tadpole.mongodb.core.editors.dbInfos.comosites;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.rap.addons.d3chart.BarChart;
-import org.eclipse.rap.addons.d3chart.ChartItem;
-import org.eclipse.rap.addons.d3chart.ColorStream;
-import org.eclipse.rap.addons.d3chart.Colors;
-import org.eclipse.rap.addons.d3chart.PieChart;
+import org.eclipse.rap.addons.chart.basic.BarChart;
+import org.eclipse.rap.addons.chart.basic.DataItem;
+import org.eclipse.rap.addons.chart.basic.PieChart;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -30,6 +28,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.util.ColorsSWTUtils;
 import com.hangum.tadpole.commons.util.ENumberUtils;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.commons.util.TimeUtils;
@@ -293,25 +292,15 @@ public class InstanceInformationComposite extends Composite {
 	    float fMapped 	= virtual==0?0:(float)mapped / (float)virtual;
 	    float fMappedWithJournal = virtual==0?0:(float)mappedWithJournal / (float)virtual;
 	    
-	    ChartItem itemAvailable = barChartMemory.getItems()[0];
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bits) + ")");
-	    itemAvailable.setValue(fBits);
-
-	    ChartItem itemCurrent = barChartMemory.getItems()[1];
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(resident) + ")");
-	    itemCurrent.setValue(fResident);
-	    
-	    ChartItem itemNumRequests = barChartMemory.getItems()[2];
-	    itemNumRequests.setText("Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")");
-	    itemNumRequests.setValue(fVirtual);
-	    
-	    ChartItem itemMapped = barChartMemory.getItems()[3];
-	    itemMapped.setText("Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")");
-	    itemMapped.setValue(fMapped);
-	    
-	    ChartItem itemMappedWithJournal = barChartMemory.getItems()[4];
-	    itemMappedWithJournal.setText("Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")");
-	    itemMappedWithJournal.setValue(fMappedWithJournal);
+	    DataItem[] dataItems = new DataItem[] {
+	    	      new DataItem( fBits, 				"In (" + NumberFormatUtils.kbMbFormat(bits) + ")", 			ColorsSWTUtils.CAT10_COLORS[ 0 ] ),
+	    	      new DataItem( fResident, 			"Out (" + NumberFormatUtils.kbMbFormat(resident) + ")", 	ColorsSWTUtils.CAT10_COLORS[ 1 ] ),
+	    	      new DataItem( fVirtual, 			"Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")", ColorsSWTUtils.CAT10_COLORS[ 2 ] ),
+	    	      new DataItem( fMapped, 			"Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")", 	ColorsSWTUtils.CAT10_COLORS[ 3 ] ),
+	    	      new DataItem( fMappedWithJournal, "Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")", ColorsSWTUtils.CAT10_COLORS[ 4 ] )
+	    	    };
+	
+		barChartMemory.setItems(dataItems);
 	}
 	
 	/**
@@ -338,18 +327,14 @@ public class InstanceInformationComposite extends Composite {
 	    	floatBO = (float)bytesOut / (float)bytesIn;
 	    	floatNf = (float)numRequests / (float)bytesIn;
 	    }
-
-	    ChartItem itemAvailable = barChartNetwork.getItems()[0];
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
-	    itemAvailable.setValue(floatBI);
-
-	    ChartItem itemCurrent = barChartNetwork.getItems()[1];
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
-	    itemCurrent.setValue(floatBO);
 	    
-	    ChartItem itemNumRequests = barChartNetwork.getItems()[2];
-	    itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
-	    itemNumRequests.setValue(floatNf);
+	    DataItem[] dataItems = new DataItem[] {
+	    	      new DataItem( floatBI, "In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")", 			ColorsSWTUtils.CAT10_COLORS[ 0 ] ),
+	    	      new DataItem( floatBO, "Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")", 		ColorsSWTUtils.CAT10_COLORS[ 1 ] ),
+	    	      new DataItem( floatNf, "Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")", ColorsSWTUtils.CAT10_COLORS[ 2 ] ),
+	    	    };
+	
+	    barChartNetwork.setItems(dataItems);
 	}
 	
 	/**
@@ -362,14 +347,13 @@ public class InstanceInformationComposite extends Composite {
 	    int current 		= cursorConnections==null?0:ENumberUtils.toInt(cursorConnections.get("current"));
 	    int available 		= cursorConnections==null?0:ENumberUtils.toInt(cursorConnections.get("available"));
 	    float floatCurrent 	= available==0?0:(float)current / (float)available;
-
-	    ChartItem itemAvailable = barChartConnection.getItems()[0];
-	    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
-	    itemAvailable.setValue(0.80f);
-
-	    ChartItem itemCurrent = barChartConnection.getItems()[1];
-	    itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
-	    itemCurrent.setValue(floatCurrent);
+	    
+	    DataItem[] dataItems = new DataItem[] {
+	    	      new DataItem( 0.80f, 		 "Available (" + NumberFormatUtils.commaFormat(available) + ")", ColorsSWTUtils.CAT10_COLORS[ 0 ] ),
+	    	      new DataItem( floatCurrent, "Available (" + NumberFormatUtils.commaFormat(available) + ")", ColorsSWTUtils.CAT10_COLORS[ 1 ] ),
+	    	    };
+	    
+	    barChartConnection.setItems(dataItems);
 	}
 	
 	/**
@@ -383,17 +367,12 @@ public class InstanceInformationComposite extends Composite {
 		int clientCursors_size 	= cursorCursors==null?0:ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
 		int timedOut 			= cursorCursors==null?0:ENumberUtils.toInt(cursorCursors.get("timedOut"));
 		
-		ChartItem itemTotalOpen = pieChartCursors.getItems()[0];
-	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
-	    itemTotalOpen.setValue(totalOpen);
-
-	    ChartItem itemClientCursors_size = pieChartCursors.getItems()[1];
-	    itemClientCursors_size.setText("Client cursors size (" + clientCursors_size + ")");
-	    itemClientCursors_size.setValue(clientCursors_size);
-	    
-	    ChartItem itemTimedOut = pieChartCursors.getItems()[1];
-	    itemTimedOut.setText("Timed Out (" + timedOut + ")");
-	    itemTimedOut.setValue(timedOut);
+		 DataItem[] dataItems = new DataItem[] {
+	    	      new DataItem( totalOpen, "Total Open (" + totalOpen + ")", ColorsSWTUtils.CAT10_COLORS[ 0 ] ),
+	    	      new DataItem( clientCursors_size, "Client cursors size (" + clientCursors_size + ")", ColorsSWTUtils.CAT10_COLORS[ 1 ] ),
+	    	      new DataItem( timedOut, "Timed Out (" + timedOut + ")", ColorsSWTUtils.CAT10_COLORS[ 2 ] ),
+	    	    };
+		 pieChartCursors.setItems(dataItems);
 	}
 	
 	/**
@@ -470,12 +449,9 @@ public class InstanceInformationComposite extends Composite {
 		compositeMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeMemory.setText("Memory");
 		
-		ColorStream colors = Colors.cat20Colors(compositeMemory.getDisplay()).loop();
-		
 		barChartMemory = new BarChart(compositeMemory, SWT.NONE);
 		barChartMemory.setLayout(new GridLayout(1, false));
 		barChartMemory.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	    barChartMemory.setBarWidth(25);
 
 	    DBObject cursorConnections = (DBObject)commandResult.get("mem");
 	    int bits 		= cursorConnections == null?0:ENumberUtils.toInt(cursorConnections.get("bits"));
@@ -494,31 +470,14 @@ public class InstanceInformationComposite extends Composite {
 	    float fMapped 	= virtual==0?0:(float)mapped / (float)virtual;
 	    float fMappedWithJournal = virtual==0?0:(float)mappedWithJournal / (float)virtual;
 	    
-	    
-	    ChartItem itemAvailable = new ChartItem(barChartMemory);
-	    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bits) + ")");
-	    itemAvailable.setColor(colors.next());
-	    itemAvailable.setValue(fBits);
-
-	    ChartItem itemCurrent = new ChartItem(barChartMemory);
-	    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(resident) + ")");
-	    itemCurrent.setColor(colors.next());
-	    itemCurrent.setValue(fResident);
-	    
-	    ChartItem itemNumRequests = new ChartItem(barChartMemory);
-	    itemNumRequests.setText("Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")");
-	    itemNumRequests.setColor(colors.next());
-	    itemNumRequests.setValue(fVirtual);
-	    
-	    ChartItem itemMapped = new ChartItem(barChartMemory);
-	    itemMapped.setText("Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")");
-	    itemMapped.setColor(colors.next());
-	    itemMapped.setValue(fMapped);
-	    
-	    ChartItem itemMappedWithJournal = new ChartItem(barChartMemory);
-	    itemMappedWithJournal.setText("Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")");
-	    itemMappedWithJournal.setColor(colors.next());
-	    itemMappedWithJournal.setValue(fMappedWithJournal);
+	    DataItem[] dataItems = new DataItem[] {
+	    	      new DataItem( fBits, 				"In (" + NumberFormatUtils.kbMbFormat(bits) + ")", 			ColorsSWTUtils.CAT10_COLORS[ 0 ] ),
+	    	      new DataItem( fResident, 			"Out (" + NumberFormatUtils.kbMbFormat(resident) + ")", 	ColorsSWTUtils.CAT10_COLORS[ 1 ] ),
+	    	      new DataItem( fVirtual, 			"Vitrual (" + NumberFormatUtils.commaFormat(virtual) + ")", ColorsSWTUtils.CAT10_COLORS[ 2 ] ),
+	    	      new DataItem( fMapped, 			"Mapped (" + NumberFormatUtils.commaFormat(mapped) + ")", 	ColorsSWTUtils.CAT10_COLORS[ 3 ] ),
+	    	      new DataItem( fMappedWithJournal, "Mapped With Journal (" + NumberFormatUtils.commaFormat(mappedWithJournal) + ")", ColorsSWTUtils.CAT10_COLORS[ 4 ] )
+	    	    };
+	    barChartMemory.setItems(dataItems);
 	}
 	
 	/**
@@ -530,12 +489,9 @@ public class InstanceInformationComposite extends Composite {
 		compositeNetwork.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeNetwork.setText("Network");
 		
-		ColorStream colors = Colors.cat20Colors(compositeNetwork.getDisplay()).loop();
-		
 		barChartNetwork = new BarChart(compositeNetwork, SWT.NONE);
 		barChartNetwork.setLayout(new GridLayout(1, false));
 		barChartNetwork.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	    barChartNetwork.setBarWidth(25);
 	    
 	    try {
 		    DBObject cursorConnections = (DBObject)commandResult.get("network");
@@ -557,21 +513,14 @@ public class InstanceInformationComposite extends Composite {
 		    	floatBO = (float)bytesOut / (float)bytesIn;
 		    	floatNf = (float)numRequests / (float)bytesIn;
 		    }
-	
-		    ChartItem itemAvailable = new ChartItem(barChartNetwork);
-		    itemAvailable.setText("In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")");
-		    itemAvailable.setColor(colors.next());
-		    itemAvailable.setValue(floatBI);
-	
-		    ChartItem itemCurrent = new ChartItem(barChartNetwork);
-		    itemCurrent.setText("Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")");
-		    itemCurrent.setColor(colors.next());
-		    itemCurrent.setValue(floatBO);
-		    
-		    ChartItem itemNumRequests = new ChartItem(barChartNetwork);
-		    itemNumRequests.setText("Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")");
-		    itemNumRequests.setColor(colors.next());
-		    itemNumRequests.setValue(floatNf);
+
+		    DataItem[] dataItems = new DataItem[] {
+		    	      new DataItem( floatBI, "In (" + NumberFormatUtils.kbMbFormat(bytesIn) + ")", 			ColorsSWTUtils.CAT10_COLORS[ 0 ] ),
+		    	      new DataItem( floatBO, "Out (" + NumberFormatUtils.kbMbFormat(bytesOut) + ")", 		ColorsSWTUtils.CAT10_COLORS[ 1 ] ),
+		    	      new DataItem( floatNf, "Requests (" + NumberFormatUtils.commaFormat(numRequests) + ")", ColorsSWTUtils.CAT10_COLORS[ 2 ] ),
+		    	    };
+		
+		    barChartNetwork.setItems(dataItems);
 	    } catch(Exception e) {
 	    	logger.error("Network information", e);
 	    }
@@ -581,14 +530,12 @@ public class InstanceInformationComposite extends Composite {
 	 * create connection pie chart
 	 */
 	private void createConnectionChart(Composite cmpConnections, CommandResult commandResult) {
-		logger.debug("=============start create newtrok Information================================================");
+		if(logger.isDebugEnabled()) logger.debug("=============start create newtrok Information================================================");
 		
 		Group compositeConnection = new Group(cmpConnections, SWT.NONE);
 		compositeConnection.setLayout(new GridLayout(1, false));
 		compositeConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeConnection.setText("Connections");
-		
-		ColorStream colors = Colors.cat20Colors(compositeConnection.getDisplay()).loop();
 		
 		barChartConnection = new BarChart(compositeConnection, SWT.NONE );
 		GridLayout gl_grpConnectionInfo = new GridLayout(1, false);
@@ -598,7 +545,6 @@ public class InstanceInformationComposite extends Composite {
 		gl_grpConnectionInfo.marginWidth = 0;
 		barChartConnection.setLayout(gl_grpConnectionInfo);
 		barChartConnection.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-	    barChartConnection.setBarWidth(25);
 
 	    int current 	= 0;
 	    int available 	= 0;
@@ -612,16 +558,6 @@ public class InstanceInformationComposite extends Composite {
 			    available 	= ENumberUtils.toInt(cursorConnections.get("available"));
 			    floatCurrent = (float)current / (float)available;	
 		    }
-		    
-		    ChartItem itemAvailable = new ChartItem(barChartConnection);
-		    itemAvailable.setText("Available (" + NumberFormatUtils.commaFormat(available) + ")");
-		    itemAvailable.setColor(colors.next());
-		    itemAvailable.setValue(0.80f);
-	
-		    ChartItem itemCurrent = new ChartItem(barChartConnection);
-		    itemCurrent.setText("Current (" + NumberFormatUtils.commaFormat(current) + ")");
-		    itemCurrent.setColor(colors.next());
-		    itemCurrent.setValue(floatCurrent);
 	    } catch(Exception e) {
 	    	logger.error("Crate Connection chart", e);
 	    }
@@ -637,9 +573,7 @@ public class InstanceInformationComposite extends Composite {
 		compositeCursor.setLayout(new GridLayout(1, false));
 		compositeCursor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeCursor.setText("Cursors");
-		
-		ColorStream colors = Colors.cat20Colors(compositeCursor.getDisplay()).loop();
-		
+
 		pieChartCursors = new PieChart(compositeCursor, SWT.NONE);
 		GridLayout gl_grpConnectionInfo = new GridLayout(1, false);
 		gl_grpConnectionInfo.verticalSpacing = 0;
@@ -648,28 +582,19 @@ public class InstanceInformationComposite extends Composite {
 		gl_grpConnectionInfo.marginWidth = 0;
 		pieChartCursors.setLayout(gl_grpConnectionInfo);
 		pieChartCursors.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		pieChartCursors.setInnerRadius(0.1f);
+//		pieChartCursors.setInnerRadius(0.1f);
 		
 		DBObject cursorCursors = (DBObject)commandResult.get("cursors");
 		int totalOpen 			= cursorCursors == null?0:ENumberUtils.toInt(cursorCursors.get("totalOpen"));
 		int clientCursors_size 	= cursorCursors == null?0:ENumberUtils.toInt(cursorCursors.get("clientCursors_size"));
 		int timedOut 			= cursorCursors == null?0:ENumberUtils.toInt(cursorCursors.get("timedOut"));
 		
-		ChartItem itemTotalOpen = new ChartItem(pieChartCursors);
-	    itemTotalOpen.setText("Total Open (" + totalOpen + ")");
-	    itemTotalOpen.setColor(colors.next());
-	    itemTotalOpen.setValue(totalOpen);
-
-	    ChartItem itemClientCursors_size = new ChartItem(pieChartCursors);
-	    itemClientCursors_size.setText("Client cursors size (" + clientCursors_size + ")");
-	    itemClientCursors_size.setColor(colors.next());
-	    itemClientCursors_size.setValue(clientCursors_size);
-	    
-	    ChartItem itemTimedOut = new ChartItem(pieChartCursors);
-	    itemTimedOut.setText("Timed Out (" + timedOut + ")");
-	    itemTimedOut.setColor(colors.next());
-	    itemTimedOut.setValue(timedOut);
-
+		DataItem[] dataItems = new DataItem[] {
+	    	      new DataItem( totalOpen, "Total Open (" + totalOpen + ")", ColorsSWTUtils.CAT10_COLORS[ 0 ] ),
+	    	      new DataItem( clientCursors_size, "Client cursors size (" + clientCursors_size + ")", ColorsSWTUtils.CAT10_COLORS[ 1 ] ),
+	    	      new DataItem( timedOut, "Timed Out (" + timedOut + ")", ColorsSWTUtils.CAT10_COLORS[ 2 ] ),
+	    	    };
+		 pieChartCursors.setItems(dataItems);
 	}
 	
 	@Override

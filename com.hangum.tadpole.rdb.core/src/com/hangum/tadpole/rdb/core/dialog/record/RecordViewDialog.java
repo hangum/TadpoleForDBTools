@@ -210,7 +210,7 @@ public class RecordViewDialog extends Dialog {
 		Map<Integer, Object> record = resultSet.get(loc);
 		for (Integer index : record.keySet()) {
 			Text txt = controlList.get(index);
-			txt.setText(record.get(index)==null?"":record.get(index).toString()); //$NON-NLS-1$
+			if(txt != null) txt.setText(record.get(index)==null?"":record.get(index).toString()); //$NON-NLS-1$
 		}
 		if (getDialogArea() != null) {
 			getDialogArea().redraw();
@@ -224,7 +224,7 @@ public class RecordViewDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().RecordViewDialog_13, false);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
 
 	@Override

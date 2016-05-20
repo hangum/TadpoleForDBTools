@@ -49,7 +49,7 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 		
 		setId(ID);
 		setText(Messages.get().TransactionConnectionManagerAction_0);
-		setToolTipText(Messages.get().TransactionConnectionManagerAction_1);
+		setToolTipText(Messages.get().TransactionConnectionManagerAction_0);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/transaction_db_status.png"));
 		setEnabled(true);
 	}
@@ -63,7 +63,7 @@ public class TransactionConnectionManagerAction extends Action implements ISelec
 			logger.error("Connections Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Connections Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Connections Management editor", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

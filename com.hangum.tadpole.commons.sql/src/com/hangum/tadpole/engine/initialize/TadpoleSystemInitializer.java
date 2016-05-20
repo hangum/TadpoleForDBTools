@@ -12,18 +12,17 @@ package com.hangum.tadpole.engine.initialize;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.osgi.framework.Bundle;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -74,7 +73,7 @@ public class TadpoleSystemInitializer {
 				if (logger.isDebugEnabled()) logger.debug(DEFAULT_DB_FILE_LOCATION + DB_NAME);
 			} catch(Exception e) {
 				logger.error("System DB Initialize exception", e);
-				System.exit(1);
+				System.exit(0);
 			}
 
 			// 원격디비를 사용 할 경우.
@@ -86,7 +85,7 @@ public class TadpoleSystemInitializer {
 				}
 			} catch(Exception e) {
 				logger.error("Tadpole Argument error. check ini file is -dbServer value. ");
-				System.exit(1);
+				System.exit(0);
 			}
 		}
 
@@ -142,17 +141,19 @@ public class TadpoleSystemInitializer {
 	 * initialize jdbc driver
 	 */
 	private static void initJDBCDriver() {
-		File jdbcLocationDir = new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+		final String strJDBCDir = ApplicationArgumentUtils.JDBC_RESOURCE_DIR;
+		File jdbcLocationDir = new File(strJDBCDir);
+		logger.info("######### TDB JDBC Driver local Path : " + strJDBCDir);
 		if(!jdbcLocationDir.exists()) {
+			logger.info("\t##### Copying initialize JDBC Driver........");
 			try {
-				logger.info("######### TDB JDBC Driver local Path : " + ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
 				jdbcLocationDir.mkdirs();
 				
 				File fileEngine = FileLocator.getBundleFile(TadpoleEngineActivator.getDefault().getBundle());
 				String filePath = fileEngine.getAbsolutePath() + "/libs/driver";
 				logger.info("##### TDB JDBC URI: " + filePath);
 				
-				FileUtils.copyDirectory(new File(filePath), new File(ApplicationArgumentUtils.JDBC_RESOURCE_DIR));
+				FileUtils.copyDirectory(new File(filePath), new File(strJDBCDir));
 			} catch(Exception e) {
 				logger.error("Initialize JDBC driver file", e);
 			}
@@ -160,7 +161,7 @@ public class TadpoleSystemInitializer {
 		
 		// driver loading
 		try {
-			JDBCDriverLoader.addJARDir(ApplicationArgumentUtils.JDBC_RESOURCE_DIR);
+			JDBCDriverLoader.addJARDir(strJDBCDir);
 		} catch(Exception e) {
 			logger.error("JDBC driver loading", e);
 		}
@@ -209,19 +210,6 @@ public class TadpoleSystemInitializer {
 					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
 					tadpoleEngineDB.setUsers(user);
 					tadpoleEngineDB.setPasswd(passwd);
-//				} else if("PGSQL".equalsIgnoreCase(whichDB)) {
-//					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
-//					tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
-//					
-//					String isSSL = prop.getProperty("isSSL");
-//					if("true".equals(isSSL)) {
-//						tadpoleEngineDB.setUrl( tadpoleEngineDB.getUrl() + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
-//					}
-//					
-//					tadpoleEngineDB.setDb(database);
-//					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
-//					tadpoleEngineDB.setUsers(user);
-//					tadpoleEngineDB.setPasswd(passwd);
 				}
 
 			} catch (Exception ioe) {

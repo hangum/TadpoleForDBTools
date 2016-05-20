@@ -102,7 +102,7 @@ public class TadpoleSQLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().TadpoleSimpleMessageDialog_1, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true);
 	}
 
 	/**

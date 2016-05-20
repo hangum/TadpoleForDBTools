@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,10 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
@@ -31,6 +34,7 @@ import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -77,14 +81,22 @@ public class TadpoleSystem_UserQuery {
 	 * @param passwd
 	 * @param roleType
 	 * @param name
+	 * @param language
+	 * @param timezone
 	 * @param approvalYn
 	 * @param use_otp
 	 * @param otp_secret
+	 * @param strAllowIP
+	 * @param strIsRegistDb
+	 * @param strIsSharedDb
+	 * @param intLimitAddDBCnt
+	 * @param serviceStart
+	 * @param serviceEnd
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
-								String roleType, String name, String language, String approvalYn, String use_otp, String otp_secret,
+								String roleType, String name, String language, String timezone, String approvalYn, String use_otp, String otp_secret,
 								String strAllowIP
 	) throws TadpoleSQLManagerException, SQLException {
 		UserDAO loginDAO = new UserDAO();
@@ -98,10 +110,17 @@ public class TadpoleSystem_UserQuery {
 		
 		loginDAO.setName(name);
 		loginDAO.setLanguage(language);
+		loginDAO.setTimezone(timezone);
 		loginDAO.setApproval_yn(approvalYn);
 		loginDAO.setUse_otp(use_otp);
 		loginDAO.setOtp_secret(otp_secret);
 		loginDAO.setAllow_ip(strAllowIP);
+		
+		loginDAO.setIs_regist_db(GetAdminPreference.getIsAddDB());
+		loginDAO.setIs_shared_db(GetAdminPreference.getIsAddDB());
+		loginDAO.setLimit_add_db_cnt(NumberUtils.toInt(GetAdminPreference.getDefaultAddDBCnt()));
+		loginDAO.setService_start(new Timestamp(System.currentTimeMillis()));
+		loginDAO.setService_end(new Timestamp(DateUtil.afterMonthToMillis(NumberUtils.toInt(GetAdminPreference.getServiceDurationDay()))));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
@@ -316,6 +335,18 @@ public class TadpoleSystem_UserQuery {
 	public static void updateUserData(UserDAO user) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPermission", user); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 유저의 기본정보를 수정
+	 * @param user
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static void updateUserBasic(UserDAO user) throws TadpoleSQLManagerException, SQLException {
+		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserBasic", user); //$NON-NLS-1$
 	}
 	
 	/**

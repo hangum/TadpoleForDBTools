@@ -231,7 +231,7 @@ public class MongoDBTableEditor extends EditorPart {
 				findBasic();
 			}
 		});
-		btnBasicSearch.setText(Messages.get().MongoDBTableEditor_5);//String.format(Messages.get().MongoDBTableEditor_5, prefixOSShortcut));
+		btnBasicSearch.setText(Messages.get().Search);
 		
 		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, true);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

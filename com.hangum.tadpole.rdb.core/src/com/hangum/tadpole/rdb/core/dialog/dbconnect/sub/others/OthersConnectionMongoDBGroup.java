@@ -63,7 +63,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 	public OthersConnectionMongoDBGroup(Composite parent, int style, DBDefine selectDB) {
 		super(parent, style, selectDB);
 		
-		setText(Messages.get().OthersConnectionMongoDBGroup_0);
+		setText(Messages.get().SettingOtherInfo);
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
@@ -72,7 +72,7 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 		setLayout(gridLayout);
 		
 		btnReadOnlyConnection = new Button(this, SWT.CHECK);
-		btnReadOnlyConnection.setText(Messages.get().OthersConnectionMongoDBGroup_1);
+		btnReadOnlyConnection.setText(Messages.get().ReadOnly);
 		
 //		btnTableFilters = new Button(this, SWT.NONE);
 //		btnTableFilters.addSelectionListener(new SelectionAdapter() {
@@ -101,11 +101,11 @@ public class OthersConnectionMongoDBGroup extends AbstractOthersConnection {
 				}
 			}
 		});
-		btnExternalBrowser.setText(Messages.get().OthersConnectionMongoDBGroup_btnExternalBrowser_text);
+		btnExternalBrowser.setText(Messages.get().ExternalBrowser);
 		
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
-		btnShowTables.setText(Messages.get().OthersConnectionMongoDBGroup_btnShowTables_text);
+		btnShowTables.setText(Messages.get().ShowTables);
 		
 //		btnIsVisible = new Button(this, SWT.CHECK);
 //		btnIsVisible.setSelection(true);

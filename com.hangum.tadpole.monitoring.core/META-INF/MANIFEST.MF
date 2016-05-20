@@ -4,7 +4,7 @@ Bundle-Name: Core
 Bundle-SymbolicName: com.hangum.tadpole.monitoring.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.monitoring.core.Activator
-Bundle-Vendor: HANGUM
+Bundle-Vendor: TadpoleHub Co.Ltd
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="2.3.0",
  com.hangum.tadpole.commons.libs;bundle-version="2.0.0",
@@ -16,6 +16,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/guava/guava-18.0.jar,
+ lib/quartz/c3p0-0.9.1.1.jar,
  lib/quartz/log4j-1.2.16.jar,
  lib/quartz/quartz-2.2.1.jar,
  lib/quartz/quartz-jobs-2.2.1.jar,

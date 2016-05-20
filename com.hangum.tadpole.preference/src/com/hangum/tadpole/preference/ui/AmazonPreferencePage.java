@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -40,12 +41,8 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 	private Text textAccessKey;
 	private Text textSecretKey;
 
-	/**
-	 * @wbp.parser.constructor
-	 */
 	public AmazonPreferencePage() {
 	}
-
 
 	@Override
 	public void init(IWorkbench workbench) {
@@ -89,25 +86,17 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtAccessKey	= textAccessKey.getText();
 		String txtSecretKey = textSecretKey.getText();
 		
-//		if(txtAccessKey.equals("")) {
-//			MessageDialog.openError(getShell(), "Error", "Access Key is empty. Please input this value.");
-//			textAccessKey.setFocus();
-//			return false;
-//		} else if(txtSecretKey.equals("")) {
-//			MessageDialog.openError(getShell(), "Error", "Secret Key is empty. Please input this value.");
-//			textSecretKey.setFocus();
-//			return false;
-//		}
-
-		try {			
-			updateEncriptInfo(PreferenceDefine.AMAZON_ACCESS_NAME, txtAccessKey);
-			updateEncriptInfo(PreferenceDefine.AMAZON_SECRET_NAME, txtSecretKey);
-			
-		} catch(Exception e) {
-			logger.error("GeneralPreference saveing", e); //$NON-NLS-1$
-			
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
-			return false;
+		if(StringUtils.length(txtAccessKey) > 10 && StringUtils.length(txtSecretKey) > 10) {
+			try {			
+				updateEncriptInfo(PreferenceDefine.AMAZON_ACCESS_NAME, txtAccessKey);
+				updateEncriptInfo(PreferenceDefine.AMAZON_SECRET_NAME, txtSecretKey);
+				
+			} catch(Exception e) {
+				logger.error("GeneralPreference saveing", e); //$NON-NLS-1$
+				
+				MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+				return false;
+			}
 		}
 		
 		return super.performOk();

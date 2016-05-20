@@ -59,7 +59,7 @@ public class ObjectRenameAction extends AbstractObjectSelectAction {
 		if(dialog.open() == Window.OK) {
 			String newTableNm = dialog.getValue();
 			
-			if(!MessageDialog.openConfirm(null, Messages.get().ObjectRenameAction_1, String.format(Messages.get().ObjectRenameAction_2, newTableNm))) return;
+			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectRenameAction_2, newTableNm))) return;
 			try {
 				TadpoleObjectQuery.renameTable(userDB, dao, newTableNm);
 				refreshTable(newTableNm);

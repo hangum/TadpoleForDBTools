@@ -124,13 +124,13 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		try {
 			Integer.parseInt(txtLimitCount);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
 			return false;
 		}
 		try {
 			Integer.parseInt(txtMacCount);
 		} catch(Exception e) {
-			MessageDialog.openError(getShell(), "Confirm", Messages.get().MongoDBPreferencePage_11);			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().MongoDBPreferencePage_11);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -158,7 +158,7 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		} catch(Exception e) {
 			logger.error("MongoDBreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.get().MongoDBPreferencePage_12, e.getMessage());
+			MessageDialog.openError(getShell(), Messages.get().Confirm, e.getMessage());
 			return false;
 		}
 		

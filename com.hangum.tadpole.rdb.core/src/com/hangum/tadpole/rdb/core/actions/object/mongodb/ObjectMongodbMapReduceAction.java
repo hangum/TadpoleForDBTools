@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.editors.mapreduce.MapReduceEditor;
 import com.hangum.tadpole.mongodb.core.editors.mapreduce.MapReduceEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 
 /**
@@ -62,7 +63,7 @@ public class ObjectMongodbMapReduceAction extends AbstractObjectAction {
 			logger.error("Mongodb MapReduce", e);
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "MapReduce Open Exception", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "MapReduce Open Exception", errStatus); //$NON-NLS-1$
 		}
 	}
 	

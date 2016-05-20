@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.core.editors.mongodb.MongoDBImportEditor;
 import com.hangum.tadpole.importexport.core.editors.mongodb.MongoDBImportEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * tadpole db data to mongodb migration
@@ -56,7 +57,7 @@ public class MongoDBImportAction implements IViewActionDelegate {
 			logger.error("Mongodb import", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "MongoDB Import Exception", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "MongoDB Import Exception", errStatus); //$NON-NLS-1$
 		}
 	}
 

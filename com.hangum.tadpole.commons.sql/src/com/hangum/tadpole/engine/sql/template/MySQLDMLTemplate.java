@@ -34,6 +34,12 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	 */
 	public static final String TMP_EXPLAIN_EXTENDED_JSON = "explain format=json ";
 	
+	public static final String TMP_DIALOG_CREATE_TABLE 
+			= "CREATE TABLE %s (id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT) " + PublicTadpoleDefine.LINE_SEPARATOR +
+				" DEFAULT CHARACTER SET %s " + PublicTadpoleDefine.LINE_SEPARATOR +
+				" DEFAULT COLLATE %s " + PublicTadpoleDefine.LINE_SEPARATOR +
+				" ENGINE = %s";
+	
 	/** table - mysql */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 
 						 "	id INT(11) default NULL auto_increment, " + PublicTadpoleDefine.LINE_SEPARATOR +
@@ -52,6 +58,11 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	/** index */
 	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  index_name "+ PublicTadpoleDefine.LINE_SEPARATOR +  
 														"	ON table_name ( columns );";
+	
+	/** constraints */
+	public static final String  TMP_CREATE_CONSTRAINTS_STMT = "ALTER TABLE sample_table ADD COLUMN `author` int(10) unsigned NOT NULL ; "+ PublicTadpoleDefine.LINE_SEPARATOR 
+                                                            + "ALTER TABLE sample_table ADD INDEX (author) ; "+ PublicTadpoleDefine.LINE_SEPARATOR
+                                                            + "ALTER TABLE sample_table ADD FOREIGN KEY (author) REFERENCES `users` (`id`) ;  "+ PublicTadpoleDefine.LINE_SEPARATOR;
 	
 	/** procedure */
 	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE PROCEDURE simpleproc (OUT param1 INT) " + PublicTadpoleDefine.LINE_SEPARATOR +

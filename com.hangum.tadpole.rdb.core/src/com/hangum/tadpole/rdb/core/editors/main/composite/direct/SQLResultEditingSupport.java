@@ -98,7 +98,7 @@ public class SQLResultEditingSupport extends EditingSupport {
 		// 입력 값이 올바른지 검사합니다.
 		String colType = RDBTypeToJavaTypeUtils.getRDBType(rsDAO.getColumnType().get(intColumnIndex));
 		if(!DataTypeValidate.isValid(rsDAO.getUserDB(), colType, value.toString())) {
-			MessageDialog.openError(getViewer().getControl().getShell(), Messages.get().TextViewerEditingSupport_0, Messages.get().TextViewerEditingSupport_2 + " is " + colType + "."); 
+			MessageDialog.openError(getViewer().getControl().getShell(), Messages.get().Confirm, Messages.get().TextViewerEditingSupport_2 + " is " + colType + "."); 
 			return;
 		} 
 

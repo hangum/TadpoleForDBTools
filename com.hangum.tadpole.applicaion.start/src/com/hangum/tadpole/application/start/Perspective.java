@@ -184,7 +184,7 @@ public class Perspective implements IPerspectiveFactory {
 			logger.error("Open editor", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, BrowserActivator.APPLICTION_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, "Error", "Open editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Open editor", errStatus); //$NON-NLS-1$
 		}
 	}
 

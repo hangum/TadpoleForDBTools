@@ -80,9 +80,8 @@ SELECT getdate()
 	   and t.name = 'column_comment'    
  -->
 SELECT  b.name field, 
-        c.name + CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
-                 ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' 
-        END type, 
+        c.name + case when c.xtype in (106,108,62,165,173,231,167,175) then
+            case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' end else '' end as type,
         CASE WHEN b.isnullable = 0  then 'NO' 
              ELSE 'YES' 
         END notnull, 
@@ -180,14 +179,15 @@ GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 SELECT 
     i.table_schema 
     , i.table_name
     , i.constraint_schema as index_owner
     , i.constraint_name as index_name
-    FROM information_schema.CONSTRAINT_TABLE_USAGE i
-    
+FROM information_schema.CONSTRAINT_TABLE_USAGE i
+WHERE i.constraint_schema = #table_schema#
+  AND i.table_name = #table_name#    
 </select>
 
 <!-- 
@@ -202,6 +202,17 @@ SELECT
          table_catalog AS table_schema
     FROM information_schema.CONSTRAINT_COLUMN_USAGE
     WHERE constraint_name = #index_name#
+</select>
+
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+select *
+from information_schema.table_constraints
+where table_catalog = #table_schema#
+and table_name = #table_name#
 </select>
 
 <!-- 
@@ -233,12 +244,20 @@ SELECT
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	SELECT s.name,
 	 	#db_name# as db,
 	   crdate as created 
 	FROM sysobjects  s
 	WHERE s.type = 'TR'
+</select>
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+	SELECT s.name,
+	 	#db_name# as db,
+	   crdate as created 
+	FROM sysobjects  s
+	WHERE s.type = 'TR'
+	  AND s.parent_obj = object_id(#table_name#)
 </select>
 
 <!-- 
@@ -303,12 +322,13 @@ SELECT
 	      t.name as table_name
 	      , tc.value as table_comment 
 	      , b.name as column_name
-	       , c.name + case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')'  else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')'  end as data_type
-	       , case when b.isnullable = 0  then 'NO' else 'YES' end as nullable
-           , case when d.keyno > 0 and f.keyno > 0 then 'MUL'
+          , c.name + case when c.xtype in (106,108,62,165,173,231,167,175) then
+            case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' end else '' end as data_type
+	      , case when b.isnullable = 0  then 'NO' else 'YES' end as nullable
+          , case when d.keyno > 0 and f.keyno > 0 then 'MUL'
 		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
 			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as pk
-	       , cc.value as column_comment
+	      , cc.value as column_comment
 	from sysobjects t
 			    left join sysproperties tc on t.id = tc.id	 and tc.type = '3'	
 	   inner join sysobjects a on t.id = a.id 
@@ -332,9 +352,9 @@ SELECT
 	    t.name AS TABLE_NAME
 	    ,c.name AS COLUMN_NAME
 	    ,d.name AS DATA_TYPE
-	    ,c.length AS DATA_LENGTH
-	    ,c.xprec AS DATA_PRECISION
-	    ,c.xscale AS DATA_SCALE
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.max_length else '' end as DATA_LENGTH
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.precision else '' end as DATA_PRECISION
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.scale else '' end as DATA_SCALE		
 	    ,(CASE WHEN c.isnullable = 0 THEN 'NO' ELSE 'YES' END ) AS NULLABLE
 	    ,USER AS OWNER
 	    ,NULL AS DATA_DEFAULT

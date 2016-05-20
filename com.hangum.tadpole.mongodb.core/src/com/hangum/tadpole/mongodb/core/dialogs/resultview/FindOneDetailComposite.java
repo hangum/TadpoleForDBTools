@@ -98,7 +98,7 @@ public class FindOneDetailComposite extends Composite {
 				showViewSource();
 			}
 		});
-		btnViewSource.setText(Messages.get().FindOneDetailComposite_0); //$NON-NLS-1$
+		btnViewSource.setText(Messages.get().ViewSource); //$NON-NLS-1$
 		
 		createTreeColumn();
 		

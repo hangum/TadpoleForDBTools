@@ -98,12 +98,14 @@ SELECT
 
 <!-- 
 	table, view의 컬럼 정보
+	c.xtype in (/*decimal*/106,/*numeric*/108,/*float*/62,/*varbinary*/165,/*binary*/173,/*nvarchar*/231,/*varchar*/167,/*char*/175)
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
 SELECT  b.name field, 
-        c.name + CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
-                 ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' 
-        END type, 
+        c.name + 
+        CASE WHEN c.xtype in (106,108,62,165,173,231,167,175) then
+        CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
+        ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' END ELSE '' END as type, 
         CASE WHEN b.isnullable = 0  then 'NO' 
              ELSE 'YES' 
         END notnull, 
@@ -205,13 +207,16 @@ order by v.table_schema, v.table_name
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
  -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.lang.String">
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 SELECT 
     i.table_schema 
     , i.table_schema + '.' + i.table_name as table_name
     , i.constraint_schema as index_schema
     , i.constraint_name as index_name
     FROM information_schema.CONSTRAINT_TABLE_USAGE i
+WHERE 1=1
+  AND i.table_catalog = #table_schema#
+  AND i.table_name = #table_name#    
     order by table_schema, table_name, index_schema, index_name
     
 </select>
@@ -229,6 +234,17 @@ SELECT
     FROM information_schema.CONSTRAINT_COLUMN_USAGE
     WHERE table_schema+'.'+table_name = #table_name#
       and constraint_name = #index_name#
+</select>
+
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+select *
+from information_schema.table_constraints
+where table_catalog = #table_schema#
+and table_name = #table_name#
 </select>
 
 <!-- 
@@ -268,7 +284,7 @@ order by p.routine_schema, p.routine_name
 <!-- 
 	show triggers
  -->
-<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
 	select 
 		s.table_schema + '.' + t.name as name
 		, t.name as "trigger"
@@ -279,6 +295,20 @@ order by p.routine_schema, p.routine_name
 	from sys.triggers t
 		inner join sys.objects o on o.object_id = t.parent_id
 		inner join information_schema.tables s on o.object_id = object_id(s.table_schema + '.' + s.table_name)
+	order by s.table_schema, s.table_name, t.name
+</select>
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+	select 
+		s.table_schema + '.' + t.name as name
+		, t.name as "trigger"
+		, t.create_date as created
+		, o.name as table_name
+		, s.table_schema as definer
+	 	, s.table_catalog as db
+	from sys.triggers t
+		inner join sys.objects o on o.object_id = t.parent_id
+		inner join information_schema.tables s on o.object_id = object_id(s.table_schema + '.' + s.table_name)
+	where o.object_id = object_id(#table_schema# + '..' + #table_name#)
 	order by s.table_schema, s.table_name, t.name
 </select>
 
@@ -352,7 +382,8 @@ select
     ,a.name
     , b.name  as column_name
     , p.value as column_comment
-    , c.name +  case  when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')'  end as data_type
+    , c.name + case when c.xtype in (106,108,62,165,173,231,167,175) then
+        case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' end else '' end as data_type
     , case  when b.isnullable = 0 then 'NO' else 'YES'  end as nullable
     , (case when d.keyno > 0 and f.keyno > 0 then 'MUL'
 		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
@@ -377,9 +408,9 @@ from sys.tables  as tbl
 		'[' + s.table_schema + '.' + t.name + ']' as TABLE_NAME
 	    , c.name as COLUMN_NAME
 		, d.name as DATA_TYPE
-		, c.max_length as DATA_LENGTH
-		, c.precision as DATA_PRECISION
-		, c.scale as DATA_SCALE
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.max_length else '' end as DATA_LENGTH
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.precision else '' end as DATA_PRECISION
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.scale else '' end as DATA_SCALE		
 		, (case when c.is_nullable = 0 then 'NO' else 'YES' end) as NULLABLE 
 		, USER as OWNER
 		, convert(varchar, v.definition) as DATA_DEFAULT

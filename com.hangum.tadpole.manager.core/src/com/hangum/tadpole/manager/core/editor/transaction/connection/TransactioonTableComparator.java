@@ -64,7 +64,7 @@ public class TransactioonTableComparator extends ViewerSorter  {
 			rc = NullSafeComparator.compare(dao1.getUserId(), dao2.getUserId());
 			break;
 		case 3:
-			rc = NullSafeComparator.compare(dao1.getStartTransaction(), dao2.getStartTransaction());
+			rc = NullSafeComparator.compare(dao1.getStartTransaction().getTime(), dao2.getStartTransaction().getTime());
 			break;
 		}
 		

@@ -19,6 +19,38 @@ public class ColumnHeaderCreator {
 	public ColumnHeaderCreator() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public static void createColumnHeader(TableViewer tableViewer, ObjectComparator tableComparator, TableViewColumnDefine[] colDef) {
+		boolean sortable = false;
+
+		for (int i = 0; i < colDef.length; i++) {
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, colDef[i].align);
+
+			TableColumn tableColumn = tableViewerColumn.getColumn();
+			tableColumn.setMoveable(true);
+			tableColumn.setText(colDef[i].caption);
+			tableColumn.setData("column", colDef[i].column);
+			tableColumn.setData("merge", colDef[i].merge);
+			tableColumn.setData("preValue", colDef[i].preValue);
+			tableColumn.setWidth(colDef[i].width);
+
+			if (colDef[i].sortable) {
+				tableColumn.addSelectionListener(getSelectionAdapter(tableViewer, tableComparator, tableColumn, i));
+				sortable = true;
+			}
+
+			if ("comments".equals(colDef[i].column)) {
+				tableViewerColumn.setLabelProvider(getTooltipProvider(tableViewer));
+			}
+
+			if (colDef[i].editor != null) {
+				tableViewerColumn.setEditingSupport(colDef[i].editor);
+			}
+		}
+		if (sortable) {
+			tableViewer.setSorter(tableComparator);
+		}
+	}
 
 	/**
 	 * 실제 컬럼의 헤더를 생성합니다.

@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
+import java.sql.Timestamp;
+
+import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
@@ -33,6 +36,7 @@ public class UserDAO {
 	String role_type;
 	String name;
 	String language;
+	String timezone;
 	String delYn;
 	String create_time;
 	String approval_yn;
@@ -44,34 +48,19 @@ public class UserDAO {
 
 	/** 디비등록 가능 여부 */
 	String is_regist_db = PublicTadpoleDefine.YES_NO.YES.name();
+	/** 공유 할수 있는지 여부 */
+	String is_shared_db = PublicTadpoleDefine.YES_NO.YES.name();
+	/** 디비 추가 할 수있는 한계 */
+	int limit_add_db_cnt = 5;
 	
+	Timestamp service_start = new Timestamp(System.currentTimeMillis());
+	Timestamp service_end = new Timestamp(DateUtil.afterMonthToMillis(30));
+	
+	//------------------------------------------------------------------------
 	/** tadpole_user_db_role column */
 	String role_id;
 
 	public UserDAO() {
-	}
-
-	/**
-	 * @param input_type
-	 * @param email
-	 * @param email_key
-	 * @param is_email_certification
-	 * @param role_type
-	 * @param name
-	 * @param language
-	 * @param use_otp
-	 */
-	public UserDAO(String input_type, String email, String email_key, String is_email_certification, String role_type,
-			String name, String language, String use_otp) {
-		super();
-		this.input_type = input_type;
-		this.email = email;
-		this.email_key = email_key;
-		this.is_email_certification = is_email_certification;
-		this.role_type = role_type;
-		this.name = name;
-		this.language = language;
-		this.use_otp = use_otp;
 	}
 
 	/**
@@ -133,6 +122,20 @@ public class UserDAO {
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+	
+	/**
+	 * @return the timezone
+	 */
+	public String getTimezone() {
+		return timezone;
+	}
+
+	/**
+	 * @param timezone the timezone to set
+	 */
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
 	}
 
 	public String getDelYn() {
@@ -241,4 +244,61 @@ public class UserDAO {
 	public void setIs_regist_db(String is_regist_db) {
 		this.is_regist_db = is_regist_db;
 	}
+
+	/**
+	 * @return the is_shared_db
+	 */
+	public String getIs_shared_db() {
+		return is_shared_db;
+	}
+
+	/**
+	 * @param is_shared_db the is_shared_db to set
+	 */
+	public void setIs_shared_db(String is_shared_db) {
+		this.is_shared_db = is_shared_db;
+	}
+
+	/**
+	 * @return the limit_add_db_cnt
+	 */
+	public int getLimit_add_db_cnt() {
+		return limit_add_db_cnt;
+	}
+
+	/**
+	 * @param limit_add_db_cnt the limit_add_db_cnt to set
+	 */
+	public void setLimit_add_db_cnt(int limit_add_db_cnt) {
+		this.limit_add_db_cnt = limit_add_db_cnt;
+	}
+
+	/**
+	 * @return the service_start
+	 */
+	public Timestamp getService_start() {
+		return service_start;
+	}
+
+	/**
+	 * @param service_start the service_start to set
+	 */
+	public void setService_start(Timestamp service_start) {
+		this.service_start = service_start;
+	}
+
+	/**
+	 * @return the service_end
+	 */
+	public Timestamp getService_end() {
+		return service_end;
+	}
+
+	/**
+	 * @param service_end the service_end to set
+	 */
+	public void setService_end(Timestamp service_end) {
+		this.service_end = service_end;
+	}
+	
 }

@@ -60,6 +60,7 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	protected boolean canEdit(Object element) {
 		if(column == 3) {
 			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || 
 					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || 
