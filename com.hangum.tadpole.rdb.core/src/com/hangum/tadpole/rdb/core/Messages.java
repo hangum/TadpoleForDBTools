@@ -366,7 +366,13 @@ public class Messages {
 	public String RDBDBInfosEditor_1;
 	public String RDBDBInfosEditor_2;
 	public String RDBDBInfosEditor_3;
+
+	public String RDBDBInfosEditor_4; /* Property Summary */
+	public String RDBInformationComposite_0;
+	public String RDBInformationComposite_1;
+
 	public String Value;
+
 	public String RDBInformationComposite_17;
 	public String JDBCURL;
 	public String AutoCommit;
@@ -583,6 +589,10 @@ public class Messages {
 	public String ResourceManageEditor_30;
 
 	public String ResourceManageEditor_32;
+	
+	/* for Property Summary */
+	public String PropertyComposite_Name;
+	public String PropertyComposite_Value;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

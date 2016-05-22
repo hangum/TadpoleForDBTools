@@ -46,7 +46,9 @@ public class UserBillDAO {
 	private String succ_paid_at = "";
 	private Timestamp create_time;
 	
-	private String admin_message = "";
+	private String description = "";
+	private String start_yn = "";
+	private Timestamp service_start;
 	
 	public UserBillDAO() {
 	}
@@ -402,17 +404,45 @@ public class UserBillDAO {
 	}
 
 	/**
-	 * @return the admin_message
+	 * @return the description
 	 */
-	public String getAdmin_message() {
-		return admin_message;
+	public String getDescription() {
+		return description;
 	}
 
 	/**
-	 * @param admin_message the admin_message to set
+	 * @param description the description to set
 	 */
-	public void setAdmin_message(String admin_message) {
-		this.admin_message = admin_message;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the start_yn
+	 */
+	public String getStart_yn() {
+		return start_yn;
+	}
+
+	/**
+	 * @param start_yn the start_yn to set
+	 */
+	public void setStart_yn(String start_yn) {
+		this.start_yn = start_yn;
+	}
+
+	/**
+	 * @return the service_start
+	 */
+	public Timestamp getService_start() {
+		return service_start;
+	}
+
+	/**
+	 * @param service_start the service_start to set
+	 */
+	public void setService_start(Timestamp service_start) {
+		this.service_start = service_start;
 	}
 
 	/* (non-Javadoc)
@@ -428,7 +458,8 @@ public class UserBillDAO {
 				+ ", buyer_addr=" + buyer_addr + ", buyer_postcode=" + buyer_postcode + ", result_status="
 				+ result_status + ", fail_message=" + fail_message + ", succ_imp_uid=" + succ_imp_uid + ", succ_pg_tid="
 				+ succ_pg_tid + ", succ_apply_num=" + succ_apply_num + ", succ_paid_at=" + succ_paid_at
-				+ ", create_time=" + create_time + ", admin_message=" + admin_message + "]";
+				+ ", create_time=" + create_time + ", description=" + description + ", start_yn=" + start_yn
+				+ ", service_start=" + service_start + "]";
 	}
 
 }

@@ -94,6 +94,10 @@ public class ServiceLoginDialog extends Dialog {
 //						"	<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'> " + //$NON-NLS-1$
 //						"	</form>"; //$NON-NLS-1$
 	private Composite compositeHead;
+//	private Button btnNewButton;
+//	private Button btnNewButton_1;
+//	private Button btnNewButton_2;
+	private Composite compositeOtherBtn;
 	
 	
 	public ServiceLoginDialog(Shell shell) {
@@ -196,36 +200,63 @@ public class ServiceLoginDialog extends Dialog {
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH), Locale.KOREAN);
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		// company info
-		Composite compositeTailRight = new Composite(container, SWT.BORDER);
-		compositeTailRight.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeTailRight.setLayout(new GridLayout(2, false));
+		compositeOtherBtn = new Composite(compositeLogin, SWT.NONE);
+		compositeOtherBtn.setLayout(new GridLayout(2, false));
+		compositeOtherBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 3, 1));
 		
-		Label tail_lblLoginForm = new Label(compositeTailRight, SWT.NONE);
-		tail_lblLoginForm.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 3));
-		tail_lblLoginForm.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TDB_64.png"));
-
+		btnNewUser = new Button(compositeOtherBtn, SWT.NONE);
+		btnNewUser.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				buttonPressed(ID_NEW_USER);
+			}
+		});
+		btnNewUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
+		
+		try {
+			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+				btnFindPasswd = new Button(compositeOtherBtn, SWT.NONE); //ID_FINDPASSWORD,
+				btnFindPasswd.setText(Messages.get().FindPassword);
+				btnFindPasswd.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						buttonPressed(ID_FINDPASSWORD);
+					}
+				});
+			}
+		} catch (Exception e) {
+		//	ignore exception
+		}
+		
+		// company info
+		Composite compositeTailRight = new Composite(container, SWT.NONE);
+		compositeTailRight.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		compositeTailRight.setLayout(new GridLayout(2, false));
 		
 		Label labelCompanyInfo = new Label(compositeTailRight, SWT.NONE);
 		labelCompanyInfo.setText("사업자등록번호 : 460-86-00429 | 대표, 개인정보관리책임자 : 조현종");
 		
+		Label tail_lblLoginForm = new Label(compositeTailRight, SWT.NONE);
+		tail_lblLoginForm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 3));
+		tail_lblLoginForm.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TDB_64.png"));
+
+		
 		Label lblHangumtadpolehubcom = new Label(compositeTailRight, SWT.NONE);
-		lblHangumtadpolehubcom.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblHangumtadpolehubcom.setText("전자우편 : hangum@tadpolehub.com");
 	
 		Label label = new Label(compositeTailRight, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		label.setText("서울시 은평구 불광로5가길 3-2 102호 (Tel. 010-4227-3601)");
 		
-		Label tail_companyName = new Label(compositeTailRight, SWT.NONE);
-		tail_companyName.setText("주식회사 테드폴허브");
-		
 		Label lblCopyrightcTadpolehub = new Label(compositeTailRight, SWT.NONE);
-		lblCopyrightcTadpolehub.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCopyrightcTadpolehub.setText("Copyright(c) 2016 TadpoleHub Co.,LTD ");
 	
+		Label tail_companyName = new Label(compositeTailRight, SWT.NONE);
+		tail_companyName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 3));
+		tail_companyName.setText("(주) 테드폴허브");
 		
-		AnalyticCaller.track("login"); //$NON-NLS-1$
+		AnalyticCaller.track("ServiceLoginDialog"); //$NON-NLS-1$
 		
 		initUI();
 		
@@ -371,15 +402,9 @@ public class ServiceLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		btnNewUser = createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
-		try {
-			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
-				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().FindPassword, false);
-			}
-		} catch (Exception e) {
-//			ignore exception
-		}
+		GridLayout layout = (GridLayout)parent.getLayout();
+		layout.marginHeight = 0;
+		parent.setLayout(layout);
 	}
 	
 	/**
@@ -505,6 +530,6 @@ public class ServiceLoginDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(520, 360);
+		return new Point(520, 340);
 	}
 }

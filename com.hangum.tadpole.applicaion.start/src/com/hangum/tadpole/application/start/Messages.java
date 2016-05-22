@@ -110,6 +110,8 @@ public class Messages {
 
 	public String TemporayPassword;
 
+	public String ServiceBill;
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

@@ -31,6 +31,12 @@ public class AdminSystemSettingEditorInput implements IEditorInput {
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof AdminSystemSettingEditorInput) ) return false;
+		return ((AdminSystemSettingEditorInput)obj).getName().equals(getName());
+	}
 
 	@Override
 	public boolean exists() {
