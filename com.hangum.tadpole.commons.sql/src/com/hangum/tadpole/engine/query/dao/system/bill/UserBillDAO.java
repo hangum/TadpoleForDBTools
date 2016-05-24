@@ -1,6 +1,10 @@
 package com.hangum.tadpole.engine.query.dao.system.bill;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 
 /**
  * User bill dao
@@ -48,7 +52,10 @@ public class UserBillDAO {
 	
 	private String description = "";
 	private String start_yn = "";
-	private Timestamp service_start;
+	private Timestamp service_end;
+	
+	/** 서비스를 사용하고 있는유저 정보 */
+	private List<AssignedServiceDAO> listUser = new ArrayList<AssignedServiceDAO>();
 	
 	public UserBillDAO() {
 	}
@@ -432,34 +439,32 @@ public class UserBillDAO {
 	}
 
 	/**
-	 * @return the service_start
+	 * @return the service_end
 	 */
-	public Timestamp getService_start() {
-		return service_start;
+	public Timestamp getService_end() {
+		return service_end;
 	}
 
 	/**
-	 * @param service_start the service_start to set
+	 * @param service_end the service_end to set
 	 */
-	public void setService_start(Timestamp service_start) {
-		this.service_start = service_start;
+	public void setService_end(Timestamp service_end) {
+		this.service_end = service_end;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @return the listUser
 	 */
-	@Override
-	public String toString() {
-		return "UserBillDAO [seq=" + seq + ", user_seq=" + user_seq + ", product_seq=" + product_seq + ", userType="
-				+ userType + ", iamport_code=" + iamport_code + ", pg_company=" + pg_company + ", pay_method="
-				+ pay_method + ", merchant_uid=" + merchant_uid + ", name=" + name + ", original_amount="
-				+ original_amount + ", ea=" + ea + ", term_month=" + term_month + ", total_amount=" + total_amount
-				+ ", buyer_email=" + buyer_email + ", buyer_name=" + buyer_name + ", buyer_tel=" + buyer_tel
-				+ ", buyer_addr=" + buyer_addr + ", buyer_postcode=" + buyer_postcode + ", result_status="
-				+ result_status + ", fail_message=" + fail_message + ", succ_imp_uid=" + succ_imp_uid + ", succ_pg_tid="
-				+ succ_pg_tid + ", succ_apply_num=" + succ_apply_num + ", succ_paid_at=" + succ_paid_at
-				+ ", create_time=" + create_time + ", description=" + description + ", start_yn=" + start_yn
-				+ ", service_start=" + service_start + "]";
+	public List<AssignedServiceDAO> getListUser() {
+		return listUser;
 	}
+
+	/**
+	 * @param listUser the listUser to set
+	 */
+	public void setListUser(List<AssignedServiceDAO> listUser) {
+		this.listUser = listUser;
+	}
+
 
 }
