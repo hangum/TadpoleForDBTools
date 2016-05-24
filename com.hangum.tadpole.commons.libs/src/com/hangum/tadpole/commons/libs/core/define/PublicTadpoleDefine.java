@@ -32,7 +32,8 @@ public class PublicTadpoleDefine {
 	public static final String DEFAULT_TIME_ZONE = "Asia/Seoul";
 	
 	/** defualt log file name*/
-	public static final String DEFAULT_LOG_FILE 	= "./logs/tadpole.log";
+	public static final String DEFAULT_LOG_FILE 		= "./logs/tadpole.log";
+	public static final String DEFAULT_VELOCITY_LOG_FILE = "./logs/tadpoleVelocity.log";
 	
 	/** license 파일 */
 	public static final String LICENSE_FILE = "TadpoleHub.lic";
