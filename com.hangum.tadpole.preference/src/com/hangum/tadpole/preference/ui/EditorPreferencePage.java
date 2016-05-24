@@ -48,8 +48,8 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	private Button btnShowGutter;
 	private Button btnIsWrap;
 	private Text textWrapLimit;
-	private Label lblTheme;
 	private Combo comboTheme;
+	private Button btnMybatisSupport;
 
 	/**
 	 * Create the preference page.
@@ -76,7 +76,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		btnAutoSave.setText(Messages.get().EditorPreferencePage_3);
 		new Label(container, SWT.NONE);
 		
-		lblTheme = new Label(container, SWT.NONE);
+		Label lblTheme = new Label(container, SWT.NONE);
 		lblTheme.setText(Messages.get().EditorPreferencePage_lblTheme_text);
 		
 		comboTheme = new Combo(container, SWT.READ_ONLY);
@@ -110,6 +110,10 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		btnShowGutter.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnShowGutter.setText(Messages.get().EditorPreferencePage_2);
 		
+		btnMybatisSupport = new Button(container, SWT.CHECK);
+		btnMybatisSupport.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnMybatisSupport.setText(Messages.get().isSupportMyBatisDollos);
+		
 		initDefaultValue();
 		
 		// google analytic
@@ -126,6 +130,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtIsWrap 	= ""+btnIsWrap.getSelection(); //$NON-NLS-1$
 		String txtWrapLimit = textWrapLimit.getText();
 		String txtIsGutter 	= ""+btnShowGutter.getSelection(); //$NON-NLS-1$
+		String txtMyBatisDollar = ""+btnMybatisSupport.getSelection();
 	
 		if(!NumberUtils.isNumber(txtWrapLimit)) {
 			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLFormatterPreferencePage_8);
@@ -141,6 +146,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_IS_WARP, txtIsWrap);
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_WRAP_LIMIT, txtWrapLimit);
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_SHOW_GUTTER, txtIsGutter);
+			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_MYBatisDollart, txtMyBatisDollar);
 			
 			PlatformUI.getPreferenceStore().setValue(PreferenceDefine.EDITOR_CHANGE_EVENT, "EDITOR_CHANGE_EVENT" + System.currentTimeMillis());
 	
@@ -172,6 +178,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		btnIsWrap.setSelection(GetPreferenceGeneral.getEditorIsWarp());
 		textWrapLimit.setText(GetPreferenceGeneral.getEditorWarpLimitValue());
 		btnShowGutter.setSelection(GetPreferenceGeneral.getEditorShowGutter());
+		btnMybatisSupport.setSelection(GetPreferenceGeneral.getIsMyBatisDollor());
 	}
 
 	@Override
@@ -193,6 +200,5 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 
 		super.performDefaults();
 	}
-
 	
 }

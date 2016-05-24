@@ -39,6 +39,15 @@ public class GetAdminPreference extends AbstractPreference {
 	private static final Logger logger = Logger.getLogger(GetAdminPreference.class);
 	
 	/**
+	 * api server uri
+	 * @return
+	 */
+	public static String getApiServerURL() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getValue(mapUserInfoData, AdminPreferenceDefine.API_SERVER_URL, AdminPreferenceDefine.API_SERVER_URL_VALUE);
+	}
+	
+	/**
 	 * 사용자 정보를 저장한다.
 	 * @return
 	 */
@@ -90,6 +99,16 @@ public class GetAdminPreference extends AbstractPreference {
 		return getValue(mapUserInfoData, AdminPreferenceDefine.SERVICE_DURATION_DAY, AdminPreferenceDefine.SERVICE_DURATION_DAY_VALUE);
 	}
 	
+	/**
+	 * 기본 사용자 서비스 사용가능 일
+	 * 
+	 * @return
+	 */
+	public static String getSupportMonitoring() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		
+		return getValue(mapUserInfoData, AdminPreferenceDefine.SUPPORT_MONITORING, AdminPreferenceDefine.SUPPORT_MONITORING_VALUE);
+	}
 	
 	/**
 	 * update admin data

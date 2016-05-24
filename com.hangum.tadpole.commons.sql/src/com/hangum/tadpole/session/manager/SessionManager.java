@@ -247,10 +247,7 @@ public class SessionManager {
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
 		UserInfoDataDAO userInfoDataDAO = (UserInfoDataDAO)mapUserInfoData.get(key);
 		if(userInfoDataDAO == null) {
-			userInfoDataDAO = new UserInfoDataDAO();
-			userInfoDataDAO.setName(key);
-			userInfoDataDAO.setUser_seq(SessionManager.getUserSeq());
-			userInfoDataDAO.setValue0(obj);
+			userInfoDataDAO = new UserInfoDataDAO(SessionManager.getUserSeq(), key, obj);
 		
 			try {
 				TadpoleSystem_UserInfoData.insertUserInfoData(userInfoDataDAO);
@@ -262,7 +259,6 @@ public class SessionManager {
 		}
 			
 		mapUserInfoData.put(key, userInfoDataDAO);
-		
 		sStore.setAttribute(NAME.USER_INFO_DATA.name(), mapUserInfoData);
 	}
 	
@@ -270,13 +266,24 @@ public class SessionManager {
 	 * 사용자 User 정보 .
 	 * 
 	 * @param key
+	 * @param value 
 	 * @return
 	 */
-	public static UserInfoDataDAO getUserInfo(String key) {
+	public static UserInfoDataDAO getUserInfo(String key, String value) {
 		HttpSession sStore = RWT.getRequest().getSession();
 		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
 		
-		return (UserInfoDataDAO)mapUserInfoData.get(key);
+		UserInfoDataDAO userData = (UserInfoDataDAO)mapUserInfoData.get(key);
+		if(userData == null) {
+			userData = new UserInfoDataDAO(SessionManager.getUserSeq(), key, value);
+			try {
+				TadpoleSystem_UserInfoData.insertUserInfoData(userData);
+			} catch(Exception e) {
+				logger.error("User data save exception [key]" + key + "[value]" + value, e);
+			}
+		}
+		
+		return userData;
 	}
 	
 	/**
@@ -358,8 +365,8 @@ public class SessionManager {
 	}
 	
 	public static String getPerspective() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(NAME.PERSPECTIVE.name());
-		return userInfo == null ? "" : userInfo.getValue0();
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(NAME.PERSPECTIVE.name(), "default");
+		return userInfo.getValue0();
 	}
 	
 	public static void setPerspective(String persp) { 

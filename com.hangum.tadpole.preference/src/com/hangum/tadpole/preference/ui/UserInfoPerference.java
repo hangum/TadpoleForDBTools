@@ -129,6 +129,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		lblEmail.setText(Messages.get().UserInfoPerference_2);
 		
 		textEmail = new Text(container, SWT.BORDER);
+		textEmail.setEditable(false);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textEmail.setText(SessionManager.getEMAIL());
 		

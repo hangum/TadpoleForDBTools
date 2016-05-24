@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite.direct;
 
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -121,9 +121,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * @return
 	 */
 	private static Integer getRDBShowInTheColumn() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
-		if(null == userInfo) return Integer.parseInt(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE);
-		
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE);
 		return Integer.parseInt(userInfo.getValue0());
 	}
 
@@ -220,7 +218,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		if(value==null) return PublicTadpoleDefine.DEFINE_NULL_VALUE;
 		
 		try{
-			NumberFormat nf = NumberFormat.getNumberInstance();
+			DecimalFormat nf = new DecimalFormat("###,###.#############");
 			return nf.format(Double.parseDouble(value.toString()));
 		} catch(Exception e){
 			// ignore exception

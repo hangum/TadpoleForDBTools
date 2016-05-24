@@ -34,8 +34,8 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.tadpole.application.start.dialog.login.HomeLoginDialog;
 import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
+import com.hangum.tadpole.application.start.dialog.login.ServiceLoginDialog;
 import com.hangum.tadpole.application.start.update.checker.NewVersionChecker;
 import com.hangum.tadpole.application.start.update.checker.NewVersionObject;
 import com.hangum.tadpole.application.start.update.checker.NewVersionViewDialog;
@@ -50,6 +50,8 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.monitoring.core.manager.schedule.ScheduleManager;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -72,13 +74,16 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     public void preWindowOpen() {
-//    	try {
-//    		logger.info("Schedule and Summary Report start.........");
-//			DBSummaryReporter.executer();
-//    		ScheduleManager.getInstance();
-//		} catch(Exception e) {
-//			logger.error("Schedule", e);
-//		}
+    	if("YES".equals(GetAdminPreference.getSupportMonitoring())) {
+	    	try {
+	//    		logger.info("Schedule and Summary Report start.........");
+	//			DBSummaryReporter.executer();
+	    		
+	    		ScheduleManager.getInstance();
+			} catch(Exception e) {
+				logger.error("Schedule", e);
+			}
+    	}
     	
 //    	not support rap yet.
 //    	String prop = IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS;
@@ -254,7 +259,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		} else {
     			// Open login dialog
     			if(ApplicationArgumentUtils.isOnlineServer()) {
-	    			HomeLoginDialog loginDialog = new HomeLoginDialog(Display.getCurrent().getActiveShell());
+    				ServiceLoginDialog loginDialog = new ServiceLoginDialog(Display.getCurrent().getActiveShell());
 	    	    	if(Dialog.OK == loginDialog.open()) {
 	    	    		initializeUserSession();
 	    	    	}
@@ -339,7 +344,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	private void initSession() {
 		HttpSession iss = RWT.getUISession().getHttpSession();
 		
-		final int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());		
+		final int sessionTimeOut = Integer.parseInt(GetPreferenceGeneral.getSessionTimeout());
 		if(sessionTimeOut <= 0) {
 			iss.setMaxInactiveInterval(90 * 60);
 		} else {

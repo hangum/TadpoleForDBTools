@@ -38,5 +38,17 @@ public class AdminPreferenceDefine {
 	/** 가입 일 부터 서비스 사용 제한 일 */
 	public static final String SERVICE_DURATION_DAY = _PREFIX + "SERVICE_DURATION_DAY";
 	public static final String SERVICE_DURATION_DAY_VALUE = "3650";
+	
+	/**
+	 * Define api server uri
+	 */
+	public static final String API_SERVER_URL = _PREFIX + "API_SERVER_URL";
+	public static final String API_SERVER_URL_VALUE = "http://localhost:8080/api";
+	
+	/**
+	 * Define monitoring
+	 */
+	public static final String SUPPORT_MONITORING = _PREFIX + "SUPPORT_MONITORING";
+	public static final String SUPPORT_MONITORING_VALUE = "NO";
 
 }

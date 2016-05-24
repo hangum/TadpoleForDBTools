@@ -66,6 +66,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Text textIntLimtCnt;
 	private Text textDefaultUseDay;
 	private Text textLog;
+	private Combo comboSupportMonitoring;
+	private Text textAPIServerURL;
 
 	public AdminSystemSettingEditor() {
 		super();
@@ -145,6 +147,20 @@ public class AdminSystemSettingEditor extends EditorPart {
 		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
 			comboNewUserPermit.add(yesNo.name());
 		}
+		
+		Label lblSupportMonitoring = new Label(compositeBody, SWT.NONE);
+		lblSupportMonitoring.setText(Messages.get().AdminSystemSettingEditor_SupportMonitoring);
+		
+		comboSupportMonitoring = new Combo(compositeBody, SWT.READ_ONLY);
+		comboSupportMonitoring.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboSupportMonitoring.add("YES");
+		comboSupportMonitoring.add("NO");
+		
+		Label lblApiServerUrl = new Label(compositeBody, SWT.NONE);
+		lblApiServerUrl.setText("API Server URL");
+		
+		textAPIServerURL = new Text(compositeBody, SWT.BORDER);
+		textAPIServerURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeBody, SWT.NONE);
 		
 		Label labelHorizontal = new Label(compositeBody, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -186,7 +202,6 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		textDefaultUseDay = new Text(grpSettingDefaultUser, SWT.BORDER);
 		textDefaultUseDay.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-	
 		
 //		Composite compositeTail = new Composite(parent, SWT.NONE);
 //		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -201,12 +216,14 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * initialize UI
 	 */
 	private void initUI() {
-		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
-		
 		comboIsAddDB.setText(GetAdminPreference.getIsAddDB());
 		comboIsSharedDB.setText(GetAdminPreference.getIsSharedDB());
+		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
+		textAPIServerURL.setText(GetAdminPreference.getApiServerURL());
+		
 		textIntLimtCnt.setText(GetAdminPreference.getDefaultAddDBCnt());
 		textDefaultUseDay.setText(GetAdminPreference.getServiceDurationDay());
+		comboSupportMonitoring.setText(GetAdminPreference.getSupportMonitoring());
 	}
 	
 	/**
@@ -231,6 +248,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.NEW_USER_PERMIT, comboNewUserPermit.getText());
 			GetAdminPreference.updateAdminData(AdminPreferenceDefine.NEW_USER_PERMIT, userInfoDao);
 			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.API_SERVER_URL, textAPIServerURL.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.API_SERVER_URL, userInfoDao);
+			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_ADD_DB, comboIsAddDB.getText());
 			GetAdminPreference.updateAdminData(AdminPreferenceDefine.IS_ADD_DB, userInfoDao);
 			
@@ -242,6 +262,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SERVICE_DURATION_DAY, textDefaultUseDay.getText());
 			GetAdminPreference.updateAdminData(AdminPreferenceDefine.SERVICE_DURATION_DAY, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SUPPORT_MONITORING, comboSupportMonitoring.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.SUPPORT_MONITORING, userInfoDao);
 		} catch (Exception e) {
 			logger.error("save exception", e); //$NON-NLS-1$
 			
