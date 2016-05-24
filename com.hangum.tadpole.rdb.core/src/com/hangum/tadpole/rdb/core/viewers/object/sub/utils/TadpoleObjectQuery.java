@@ -78,11 +78,13 @@ public class TadpoleObjectQuery {
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 				StringBuffer query = new StringBuffer();
 				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
+				if(logger.isDebugEnabled()) logger.debug(query);
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
 				query = new StringBuffer();
 				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
+				if(logger.isDebugEnabled()) logger.debug(query);
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
