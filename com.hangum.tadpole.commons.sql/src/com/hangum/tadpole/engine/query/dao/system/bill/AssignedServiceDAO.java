@@ -2,6 +2,8 @@ package com.hangum.tadpole.engine.query.dao.system.bill;
 
 import java.sql.Timestamp;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+
 /**
  * assigned service 
  * 
@@ -15,6 +17,11 @@ public class AssignedServiceDAO {
 	private Timestamp service_end_data;
 	private String del_yn;
 	private String description;
+	private Timestamp create_time;
+	
+	// private 
+	private String name;
+	private String email;
 	
 	public AssignedServiceDAO() {
 	}
@@ -101,6 +108,48 @@ public class AssignedServiceDAO {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * @return the create_time
+	 */
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

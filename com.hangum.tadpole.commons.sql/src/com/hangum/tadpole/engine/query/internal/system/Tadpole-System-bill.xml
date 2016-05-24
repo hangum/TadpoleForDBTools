@@ -30,10 +30,64 @@
 	<insert id="insertBill" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.UserBillDAO">
 		INSERT INTO user_bill
 		(user_seq, product_seq, userType, iamport_code, pg_company, pay_method, merchant_uid, name, original_amount, ea, term_month, total_amount, buyer_email, buyer_name, 
-			buyer_tel, buyer_addr, buyer_postcode, result_status, succ_imp_uid, succ_pg_tid, succ_apply_num, succ_paid_at, fail_message, admin_message) 
+			buyer_tel, buyer_addr, buyer_postcode, result_status, succ_imp_uid, succ_pg_tid, succ_apply_num, succ_paid_at, fail_message, description) 
 		VALUES 
 		(#user_seq#, #product_seq#, #userType#, #iamport_code#, #pg_company#, #pay_method#, #merchant_uid#, #name#, #original_amount#, #ea#, #term_month#, #total_amount#, #buyer_email#, #buyer_name#, 
-		#buyer_tel#, #buyer_addr#, #buyer_postcode#, #result_status#, #succ_imp_uid#, #succ_pg_tid#, #succ_apply_num#, #succ_paid_at#, #fail_message#, #admin_message#)
+		#buyer_tel#, #buyer_addr#, #buyer_postcode#, #result_status#, #succ_imp_uid#, #succ_pg_tid#, #succ_apply_num#, #succ_paid_at#, #fail_message#, #description#)
+	</insert>
+	
+	<!--  start service  -->
+	<update id="updateStartService" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.UserBillDAO">
+		UPDATE user_bill
+		SET start_yn = 'YES', service_end = #service_end#
+		WHERE seq = #seq#
+	</update>
+	
+	<!-- Is alreay service -->
+	<select id="getAlreadyService" resultClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO">
+		SELECT * 
+		FROM assigned_service
+		WHERE
+				bill_seq = #bill_seq# 
+			AND del_yn = 'NO'
+	</select>
+	
+	<!-- insert user service -->
+	<insert id="insertStartUserService" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO">
+		INSERT INTO assigned_service
+			(bill_seq, user_seq, service_end_data) 
+		VALUES 
+			(#bill_seq#, #user_seq#, #service_end_data#)
 	</insert>
 
+	<!--  update user service date -->
+	<update id="updateUserServiceDate" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO">
+		UPDATE tadpole_user 
+		SET service_end = #service_end_data#
+		WHERE seq = #user_seq#
+	</update>
+	
+	<!-- find service list -->
+	<select id="getEachServiceUser" resultClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.UserBillDAO">
+		SELECT b.*, a.name, a.email 
+		FROM tadpole_user a,
+			 assigned_service b
+		WHERE a.seq = b.user_seq
+			AND b.bill_seq = #seq#
+		ORDER BY b.create_time DESC
+	</select>
+	
+	<!-- delete user service -->
+	<update id="deleteUserService" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO">
+		UPDATE assigned_service 
+		SET del_yn = 'YES'
+		WHERE seq = #seq#
+	</update>
+	
+	<!-- 사용자의 서비스 가능 날짜를 구한다. -->
+	<select id="calcMaxServiceDate" resultClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO" parameterClass="java.lang.Integer">
+		select seq, max(service_end_data) service_end_data from assigned_service
+		where user_seq = #user_seq#
+	</select>
+	
 </sqlMap>

@@ -14,6 +14,25 @@ import java.util.List;
  */
 public class DateUtil {
 	
+	/**
+	 * 몇개월 후
+	 * 
+	 * @param month
+	 * @return
+	 */
+	public static long afterMonthToMillsMonth(int month) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, month);
+		
+		return cal.getTimeInMillis();
+	}
+	
+	/**
+	 * 몇일 후
+	 * 
+	 * @param day
+	 * @return
+	 */
 	public static long afterMonthToMillis(int day) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, day);
