@@ -361,7 +361,6 @@ public class Messages {
 	public String Compile;
 	public String ObjectEditor_13;
 	public String ObjectEditor_2;
-	public String ObjectEditor_3;
 	public String ObjectEditor_7;
 	public String RDBDBInfosEditor_1;
 	public String RDBDBInfosEditor_2;
