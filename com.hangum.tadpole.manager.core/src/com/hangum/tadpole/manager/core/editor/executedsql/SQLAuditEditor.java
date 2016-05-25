@@ -607,7 +607,7 @@ public class SQLAuditEditor extends EditorPart {
 					});
 					
 					// 20 seconds
-					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
+					try{ Thread.sleep(1000 * 30); } catch(Exception e) {}
 				}
 			};
 		};
