@@ -28,10 +28,11 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
 import com.hangum.tadpole.application.start.action.AboutAction;
+import com.hangum.tadpole.application.start.action.BillAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.application.start.action.NewVersionCheckAction;
 import com.hangum.tadpole.application.start.action.UserManuelAction;
-import com.hangum.tadpole.bill.core.actions.BillAction;
+//import com.hangum.tadpole.bill.core.actions.BillAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSystemSettingAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
@@ -219,9 +220,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	if(isAdmin) {
     		adminMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_2, IWorkbenchActionConstants.MENU_PREFIX + Messages.get().ApplicationActionBarAdvisor_3);
         }
-    	if(ApplicationArgumentUtils.isOnlineServer()) {
-    		serviceMenu = new MenuManager(Messages.get().ServiceBill, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
-    	}
+    	
     	MenuManager preferenceMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
 		MenuManager helpMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_5, IWorkbenchActionConstants.M_HELP);
 		
@@ -233,7 +232,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			menuBar.add(adminMenu);
 			menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		}
-		menuBar.add(serviceMenu);
+		if(ApplicationArgumentUtils.isOnlineServer()) {
+			serviceMenu = new MenuManager(Messages.get().ServiceBill, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
+			menuBar.add(serviceMenu);
+			serviceMenu.add(billAction);
+		}
 		menuBar.add(preferenceMenu);
 		menuBar.add(helpMenu);
 		
@@ -266,8 +269,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			adminMenu.add(new Separator());
 			adminMenu.add(jDBCDriverManagerAction);
 		}
-		
-		serviceMenu.add(billAction);
 
 		// preference action
 		preferenceMenu.add(preferenceAction);

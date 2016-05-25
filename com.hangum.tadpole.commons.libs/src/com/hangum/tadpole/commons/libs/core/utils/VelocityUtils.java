@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.RuntimeConstants;
+import org.junit.validator.PublicClassValidator;
+
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
 /**
  * Velocity utils
@@ -41,7 +44,7 @@ public class VelocityUtils {
 		Writer writerReturn = new StringWriter();
 		
 		VelocityContext velocityCtx = new VelocityContext();
-		Velocity.setProperty(RuntimeConstants.RUNTIME_LOG, "../logs/tadpole/tadpoleVelocity.log");
+		Velocity.setProperty(RuntimeConstants.RUNTIME_LOG, PublicTadpoleDefine.DEFAULT_VELOCITY_LOG_FILE);//"../logs/tadpole/tadpoleVelocity.log");
 		
 		for(String strKey :mapParameter.keySet()) {
 			velocityCtx.put(strKey, mapParameter.get(strKey));

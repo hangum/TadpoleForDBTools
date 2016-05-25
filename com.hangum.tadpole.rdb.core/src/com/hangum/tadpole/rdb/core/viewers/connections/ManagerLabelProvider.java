@@ -101,13 +101,14 @@ public class ManagerLabelProvider extends LabelProvider {
 				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
 			}
 			
-			if(PublicTadpoleDefine.SHARED_TYPE.PRIVATE.name().equals(dao.getShared_type())) {
-				try {
-					baseImage = DBIconsUtils.getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.TOP_RIGHT);
-				} catch(Exception e) {
-					logger.error("image decorate error", e);
-				}
-			}
+			// 이미지 캐쉬에 문제가 있어서 주석처리.
+//			if(PublicTadpoleDefine.SHARED_TYPE.PRIVATE.name().equals(dao.getShared_type())) {
+//				try {
+//					baseImage = DBIconsUtils.getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.TOP_RIGHT);
+//				} catch(Exception e) {
+//					logger.error("image decorate error", e);
+//				}
+//			}
 			
 			return baseImage;
 		}

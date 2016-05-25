@@ -89,11 +89,13 @@ public class DBIconsUtils {
 	 */
 	public static Image getProcedureImage(UserDBDAO userDB) {
 		Image baseImage = getEditorImage(userDB);
-		try {
-			return getDecorateImage(baseImage, "resources/icons/editor/compile_0.28.png", ResourceManager.BOTTOM_RIGHT);
-		} catch(Exception e) {
-			return baseImage;
-		}
+		// 이미지 캐쉬에 문제가 있어서 주석처리.
+//		try {
+//			return getDecorateImage(baseImage, "resources/icons/editor/compile_0.28.png", ResourceManager.BOTTOM_RIGHT);
+//		} catch(Exception e) {
+//			return baseImage;
+//		}
+		return baseImage;
 	}
 	
 	/**
@@ -104,44 +106,45 @@ public class DBIconsUtils {
 	 */
 	public static Image getDBConnectionImage(UserDBDAO userDB) {
 		Image baseImage = getEditorImage(userDB);
-		
-		try {
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
-				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {
-					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.BOTTOM_RIGHT);
-				} else {
-					baseImage = getDecorateImage(baseImage, "resources/icons/unlock_0.28.png", ResourceManager.BOTTOM_RIGHT);
-				}
-			}
-		} catch(Exception e) {
-			logger.error("Image decoration", e);
-		}
-		
-		// extension image decoration
-		try {
-			ConnectionDecorationContributionsHandler handler = new ConnectionDecorationContributionsHandler();
-			Image extensionImage = handler.getImage(userDB);
-			if(extensionImage != null) {
-				return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_LEFT);
-			}
-		} catch(Exception e) {
-			logger.error("extension point exception", e);
-		}
+		// 이미지 캐쉬에 문제가 있어서 주석처리.
+//		try {
+//			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
+//				if(!TadpoleSecurityManager.getInstance().isLock(userDB)) {
+//					baseImage = getDecorateImage(baseImage, "resources/icons/lock_0.28.png", ResourceManager.BOTTOM_RIGHT);
+//				} else {
+//					baseImage = getDecorateImage(baseImage, "resources/icons/unlock_0.28.png", ResourceManager.BOTTOM_RIGHT);
+//				}
+//			}
+//		} catch(Exception e) {
+//			logger.error("Image decoration", e);
+//		}
+//		
+//		// extension image decoration
+//		try {
+//			ConnectionDecorationContributionsHandler handler = new ConnectionDecorationContributionsHandler();
+//			Image extensionImage = handler.getImage(userDB);
+//			if(extensionImage != null) {
+//				return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_LEFT);
+//			}
+//		} catch(Exception e) {
+//			logger.error("extension point exception", e);
+//		}
 		
 		return baseImage;
 	}
 	
-	/**
-	 * lock image
-	 * 
-	 * @param baseImage
-	 * @return
-	 */
-	public static Image getDecorateImage(Image baseImage, String strDecorateImage, int conor) throws Exception {
-		return ResourceManager.decorateImage(baseImage, 
-				ResourceManager.getPluginImage(Activator.PLUGIN_ID, strDecorateImage), 
-				conor);
-	}
+//				// 이미지 캐쉬에 문제가 있어서 주석처리.
+//	/**
+//	 * lock image
+//	 * 
+//	 * @param baseImage
+//	 * @return
+//	 */
+//	public static Image getDecorateImage(Image baseImage, String strDecorateImage, int conor) throws Exception {
+//		return ResourceManager.decorateImage(baseImage, 
+//				ResourceManager.getPluginImage(Activator.PLUGIN_ID, strDecorateImage), 
+//				conor);
+//	}
 	
 	/**
 	 * get plugin image

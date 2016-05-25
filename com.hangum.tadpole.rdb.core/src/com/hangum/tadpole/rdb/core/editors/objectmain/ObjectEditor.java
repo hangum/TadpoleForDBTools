@@ -263,10 +263,10 @@ public class ObjectEditor extends MainEditor {
 				return;
 			}
 			
-			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().ObjectEditor_3)) {
-				setOrionTextFocus();
-				return;
-			}
+//			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().ObjectEditor_3)) {
+//				setOrionTextFocus();
+//				return;
+//			}
 			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
@@ -275,7 +275,6 @@ public class ObjectEditor extends MainEditor {
 				logger.error("execute ddl", e); //$NON-NLS-1$
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
 				reqResultDAO.setMesssage(e.getMessage());
-				
 			} finally {
 				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
