@@ -67,9 +67,13 @@ public class TadpoleObjectQuery {
 
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 				StringBuffer query = new StringBuffer();
-				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
-				stmt = javaConn.prepareStatement(query.toString());
-				stmt.execute();
+				try{
+					query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
+					stmt = javaConn.prepareStatement(query.toString());
+					stmt.execute();
+				}catch(Exception e){
+					// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
+				}
 
 				query = new StringBuffer();
 				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getName()).append("'");
@@ -77,10 +81,14 @@ public class TadpoleObjectQuery {
 				stmt.execute();
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 				StringBuffer query = new StringBuffer();
-				query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
-				if(logger.isDebugEnabled()) logger.debug(query);
-				stmt = javaConn.prepareStatement(query.toString());
-				stmt.execute();
+				try{
+					query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , "+dao.getSchema_name()+",'table' ").append(" , '").append(dao.getTable_name()).append("'");
+					if(logger.isDebugEnabled()) logger.debug(query);
+					stmt = javaConn.prepareStatement(query.toString());
+					stmt.execute();
+				}catch(Exception e){
+					// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
+				}
 
 				query = new StringBuffer();
 				query.append(" exec sp_addextendedproperty 'MS_Description', '").append(dao.getComment()).append("' ,'schema' , "+dao.getSchema_name()+" ,'table' ").append(" , '").append(dao.getTable_name()).append("'");
