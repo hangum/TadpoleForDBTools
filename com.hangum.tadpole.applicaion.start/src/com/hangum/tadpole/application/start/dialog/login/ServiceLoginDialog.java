@@ -247,7 +247,7 @@ public class ServiceLoginDialog extends Dialog {
 		lblHangumtadpolehubcom.setText("전자우편 : hangum@tadpolehub.com");
 	
 		Label label = new Label(compositeTailRight, SWT.NONE);
-		label.setText("서울시 은평구 불광로5가길 3-2 102호 (Tel. 010-4227-3601)");
+		label.setText("서울시 은평구 불광로5가길 3-2 102호 (Tel. 02-2226-8291)");
 		
 		Label lblCopyrightcTadpolehub = new Label(compositeTailRight, SWT.NONE);
 		lblCopyrightcTadpolehub.setText("Copyright(c) 2016 TadpoleHub Co.,LTD ");
