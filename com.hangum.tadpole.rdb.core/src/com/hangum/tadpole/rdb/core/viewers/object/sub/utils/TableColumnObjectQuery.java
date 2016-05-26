@@ -232,7 +232,11 @@ public class TableColumnObjectQuery {
 			query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers());
 			query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
 			query.append(",'column' , '").append(columnDAO.getSysName()).append("'");
-			ExecuteDDLCommand.executSQL(userDB, query.toString());
+			try{
+				ExecuteDDLCommand.executSQL(userDB, query.toString());
+			}catch(Exception e){
+				// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
+			}
 
 			query = new StringBuffer();
 			query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'user' ,").append(userDB.getUsers());
@@ -244,7 +248,11 @@ public class TableColumnObjectQuery {
 			query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , " + tableDAO.getSchema_name());
 			query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
 			query.append(",'column' , '").append(columnDAO.getSysName()).append("'");
-			ExecuteDDLCommand.executSQL(userDB, query.toString());
+			try{
+				ExecuteDDLCommand.executSQL(userDB, query.toString());
+			}catch(Exception e){
+				// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
+			}
 
 			query = new StringBuffer();
 			query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'schema' , " + tableDAO.getSchema_name());
