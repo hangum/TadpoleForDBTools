@@ -50,6 +50,7 @@ public class TableFigure extends Figure {
 	
 	public TableFigure() {
 		tableName = new Label();
+		
 		tableName.setBorder(new MarginBorder(2, 2, 0, 2));
 		tableName.setForegroundColor(ColorConstants.blue());
 
@@ -142,23 +143,4 @@ public class TableFigure extends Figure {
 		return connectionAnchor;
 	}
 	
-	private class ColumnLayoutFigure extends Figure {
-		public ColumnLayoutFigure(){
-			ToolbarLayout layout = new ToolbarLayout(true);
-			layout.setMinorAlignment(ToolbarLayout.ALIGN_TOPLEFT);
-			layout.setStretchMinorAxis(true);
-			layout.setSpacing(2);
-			setLayoutManager(layout);
-			setBorder(new CompartmentFigureBorder());
-		}
-	}
-
-	public class CompartmentFigureBorder extends AbstractBorder {
-		public Insets getInsets(IFigure figure) {
-			return new Insets(5, 5, 5, 5);
-		}
-		public void paint(IFigure figure, Graphics graphics, Insets insets) {
-			graphics.drawLine(getPaintRectangle(figure, insets).getTopLeft(), tempRect.getTopRight());
-		}
-	}
 }
