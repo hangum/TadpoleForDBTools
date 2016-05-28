@@ -131,34 +131,13 @@ public class GetAdminPreference extends AbstractPreference {
 		dto = (SMTPDTO)sStore.getAttribute("smtpinfo"); //$NON-NLS-1$
 		
 		if(dto == null) {
-			dto = new SMTPDTO();
+			dto = getSMTPINFO();
 			
-//			try {
-			UserDAO userDao = TadpoleApplicationContextManager.getSystemAdmin();
-			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
-			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
-			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
-			}
-			
-			String strHost = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE);
-			String strPort = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE);
-			String strEmail = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE);
-			String strPwd = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE);
-		
-			dto.setHost(strHost);
-			dto.setPort(strPort);
-			dto.setEmail(strEmail);
-			dto.setPasswd(strPwd);
-			
-			if("".equals(strHost) | "".equals(strPort) | "".equals(strEmail) | "".equals(strPwd)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			if("".equals(dto.getEmail()) | "".equals(dto.getPasswd())) {
 				throw new Exception("Doesn't setting is SMTP Server.");
 			}
 			
 			sStore.setAttribute("smtpinfo", dto); //$NON-NLS-1$
-//			} catch (Exception e) {
-//				logger.error("get stmt info", e);
-//			}
 		}
 		
 		return dto;
@@ -168,17 +147,17 @@ public class GetAdminPreference extends AbstractPreference {
 		SMTPDTO dto = new SMTPDTO();
 		
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getSystemAdmin();
-			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(userDao.getSeq());
+			List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(-1);
 			Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
 			for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 			}
 		
-			dto.setHost(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
-			dto.setPort(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
-			dto.setEmail(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
-			dto.setPasswd(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
+			dto.setSendgrid_api(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SENDGRID_API_NAME, AdminPreferenceDefine.SENDGRID_API_VALUE));
+			dto.setHost(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_HOST_NAME, AdminPreferenceDefine.SMTP_HOST_NAME_VALUE));
+			dto.setPort(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_PORT, AdminPreferenceDefine.SMTP_PORT_VALUE));
+			dto.setEmail(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_EMAIL, AdminPreferenceDefine.SMTP_EMAIL_VALUE));
+			dto.setPasswd(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_PASSWD, AdminPreferenceDefine.SMTP_PASSWD_VALUE));
 			
 		} catch (Exception e) {
 			logger.error("get stmt info", e); //$NON-NLS-1$

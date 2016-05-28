@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -40,7 +39,6 @@ import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * general preference
@@ -58,11 +56,6 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 	private Text textExportDelimit;
 	private Text textHomePage;
 	private Button btnCheckButtonHomepage;
-	private Group grpEmailAccount;
-	private Text textSMTP;
-	private Text textPort;
-	private Text textEmail;
-	private Text textPasswd;
 
 	public GeneralPreferencePage() {
 	}
@@ -116,40 +109,6 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		btnCheckButtonHomepage.setText(Messages.get().GeneralPreferencePage_btnCheckButton_text);
 		btnCheckButtonHomepage.setSelection(true);
 		
-		grpEmailAccount = new Group(container, SWT.NONE);
-		grpEmailAccount.setVisible(false);
-		grpEmailAccount.setLayout(new GridLayout(2, false));
-		grpEmailAccount.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		grpEmailAccount.setText(Messages.get().GeneralPreferencePage_grpEmailAccount_text);
-		
-		Label lblSmtpServer = new Label(grpEmailAccount, SWT.NONE);
-		lblSmtpServer.setText(Messages.get().GeneralPreferencePage_lblSmtpServer_text);
-		
-		textSMTP = new Text(grpEmailAccount, SWT.BORDER);
-		textSMTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblPort = new Label(grpEmailAccount, SWT.NONE);
-		lblPort.setText(Messages.get().GeneralPreferencePage_lblPort_text);
-		
-		textPort = new Text(grpEmailAccount, SWT.BORDER);
-		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblAccount = new Label(grpEmailAccount, SWT.NONE);
-		lblAccount.setText(Messages.get().GeneralPreferencePage_lblAccount_text);
-		
-		textEmail = new Text(grpEmailAccount, SWT.BORDER);
-		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblPassword = new Label(grpEmailAccount, SWT.NONE);
-		lblPassword.setText(Messages.get().GeneralPreferencePage_lblPassword_text);
-		
-		textPasswd = new Text(grpEmailAccount, SWT.BORDER | SWT.PASSWORD);
-		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		if(SessionManager.isSystemAdmin()) {
-			grpEmailAccount.setVisible(true);
-		}
-		
 		initDefaultValue();
 		
 		// google analytic
@@ -176,11 +135,6 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		String txtHomePage 		= textHomePage.getText();
 		String txtHomePageUse 	= ""+btnCheckButtonHomepage.getSelection();
 		
-		String txtSmtp 			= textSMTP.getText();
-		String txtPort			= textPort.getText();
-		String txtEmail			= textEmail.getText();
-		String txtPasswd		= textPasswd.getText();
-		
 		// change locale
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, strLocale);
 		Locale localeSelect = (Locale)comboLanguage.getData(strLocale);
@@ -192,24 +146,12 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 			return false;
 		}
 		
-		if(!NumberUtils.isNumber(txtPort)) {
-			textPort.setFocus();
-			MessageDialog.openError(getShell(), Messages.get().Error, "Port is " + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
-			return false;
-		}
-		
 		// 테이블에 저장 
 		try {			
 			updateInfo(PreferenceDefine.SESSION_DFEAULT_PREFERENCE, txtSessionTime);
 			updateInfo(PreferenceDefine.EXPORT_DILIMITER, 			txtExportDelimit);
 			updateInfo(PreferenceDefine.DEFAULT_HOME_PAGE, 			txtHomePage);
 			updateInfo(PreferenceDefine.DEFAULT_HOME_PAGE_USE, 		txtHomePageUse);
-			
-			updateInfo(PreferenceDefine.SMTP_HOST_NAME, txtSmtp);
-			updateInfo(PreferenceDefine.SMTP_PORT, 		txtPort);
-			updateInfo(PreferenceDefine.SMTP_EMAIL, 	txtEmail);
-			updateInfo(PreferenceDefine.SMTP_PASSWD, 	txtPasswd);
-			
 		} catch(Exception e) {
 			logger.error("GeneralPreference saveing", e);
 			
@@ -283,10 +225,5 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		} else {
 			btnCheckButtonHomepage.setSelection(false);
 		}
-		
-		textSMTP.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
-		textPort.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
-		textEmail.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
-		textPasswd.setText(GetPreferenceGeneral.getValue(PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
 	}
 }

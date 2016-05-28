@@ -41,6 +41,7 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
@@ -68,6 +69,13 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Text textLog;
 	private Combo comboSupportMonitoring;
 	private Text textAPIServerURL;
+	
+	// smtp server
+	private Text textSMTP;
+	private Text textPort;
+	private Text textEmail;
+	private Text textPasswd;
+	private Text textSendGridAPI;
 
 	public AdminSystemSettingEditor() {
 		super();
@@ -167,6 +175,44 @@ public class AdminSystemSettingEditor extends EditorPart {
 		labelHorizontal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeBody, SWT.NONE);
 		
+		Group grpSMTPServer = new Group(compositeBody, SWT.NONE);
+		grpSMTPServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpSMTPServer.setText("SMTP Setting");
+		grpSMTPServer.setLayout(new GridLayout(2, false));
+		
+		Label lblSendgridApiKey = new Label(grpSMTPServer, SWT.NONE);
+		lblSendgridApiKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSendgridApiKey.setText("SendGrid API KEY");
+		
+		textSendGridAPI = new Text(grpSMTPServer, SWT.BORDER);
+		textSendGridAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblSmtpServer = new Label(grpSMTPServer, SWT.NONE);
+		lblSmtpServer.setText("SMTP Server");
+		
+		textSMTP = new Text(grpSMTPServer, SWT.BORDER);
+		textSMTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPort = new Label(grpSMTPServer, SWT.NONE);
+		lblPort.setText("PORT");
+		
+		textPort = new Text(grpSMTPServer, SWT.BORDER);
+		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblAccount = new Label(grpSMTPServer, SWT.NONE);
+		lblAccount.setText("Admin email");
+		
+		textEmail = new Text(grpSMTPServer, SWT.BORDER);
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPassword = new Label(grpSMTPServer, SWT.NONE);
+		lblPassword.setText("Password");
+		
+		textPasswd = new Text(grpSMTPServer, SWT.BORDER | SWT.PASSWORD);
+		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		new Label(compositeBody, SWT.NONE);
+		
 		Group grpSettingDefaultUser = new Group(compositeBody, SWT.NONE);
 		grpSettingDefaultUser.setLayout(new GridLayout(4, false));
 		grpSettingDefaultUser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -189,7 +235,6 @@ public class AdminSystemSettingEditor extends EditorPart {
 		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
 			comboIsSharedDB.add(yesNo.name());
 		}
-		
 		Label lblDefaultAddDb = new Label(grpSettingDefaultUser, SWT.NONE);
 		lblDefaultAddDb.setText(Messages.get().DefaultAddDBCount);
 		
@@ -224,6 +269,14 @@ public class AdminSystemSettingEditor extends EditorPart {
 		textIntLimtCnt.setText(GetAdminPreference.getDefaultAddDBCnt());
 		textDefaultUseDay.setText(GetAdminPreference.getServiceDurationDay());
 		comboSupportMonitoring.setText(GetAdminPreference.getSupportMonitoring());
+		
+		// email
+		SMTPDTO smtpDto = GetAdminPreference.getSMTPINFO();
+		textSendGridAPI.setText(smtpDto.getSendgrid_api());
+		textSMTP.setText(smtpDto.getHost());
+		textPort.setText(smtpDto.getPort());
+		textEmail.setText(smtpDto.getEmail());
+		textPasswd.setText(smtpDto.getPasswd());
 	}
 	
 	/**
@@ -231,6 +284,11 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * 
 	 */
 	private void saveData() {
+		String txtSendGrid		= textSendGridAPI.getText();
+		String txtSmtp 			= textSMTP.getText();
+		String txtPort			= textPort.getText();
+		String txtEmail			= textEmail.getText();
+		String txtPasswd		= textPasswd.getText();
 		
 		if(!NumberUtils.isDigits(textIntLimtCnt.getText())) {
 			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().mustBeNumber);
@@ -239,6 +297,10 @@ public class AdminSystemSettingEditor extends EditorPart {
 		} else if(!NumberUtils.isNumber(textDefaultUseDay.getText())) {
 			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().mustBeNumber);
 			textDefaultUseDay.setFocus();
+			return;
+		} else if(!NumberUtils.isNumber(txtPort)) {
+			textPort.setFocus();
+			MessageDialog.openError(null, Messages.get().Error, "Port is must be number.");			 //$NON-NLS-1$
 			return;
 		}
 		
@@ -265,6 +327,14 @@ public class AdminSystemSettingEditor extends EditorPart {
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SUPPORT_MONITORING, comboSupportMonitoring.getText());
 			GetAdminPreference.updateAdminData(AdminPreferenceDefine.SUPPORT_MONITORING, userInfoDao);
+			
+			// update admin value
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SENDGRID_API_NAME, txtSendGrid);
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_HOST_NAME, txtSmtp);
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_PORT, txtPort);
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_EMAIL, txtEmail);
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_PASSWD, txtPasswd);
+			
 		} catch (Exception e) {
 			logger.error("save exception", e); //$NON-NLS-1$
 			
