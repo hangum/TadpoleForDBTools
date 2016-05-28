@@ -44,7 +44,7 @@ public class GetAdminPreference extends AbstractPreference {
 	 */
 	public static String getApiServerURL() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
-		return getValue(mapUserInfoData, AdminPreferenceDefine.API_SERVER_URL, AdminPreferenceDefine.API_SERVER_URL_VALUE);
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.API_SERVER_URL, AdminPreferenceDefine.API_SERVER_URL_VALUE);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class GetAdminPreference extends AbstractPreference {
 	public static String getNewUserPermit() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		
-		return getValue(mapUserInfoData, AdminPreferenceDefine.NEW_USER_PERMIT, AdminPreferenceDefine.NEW_USER_PERMIT_VALUE);
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.NEW_USER_PERMIT, AdminPreferenceDefine.NEW_USER_PERMIT_VALUE);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class GetAdminPreference extends AbstractPreference {
 	 */
 	public static String getIsAddDB() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
-		return getValue(mapUserInfoData, AdminPreferenceDefine.IS_ADD_DB, AdminPreferenceDefine.IS_ADD_DB_VALUE);
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.IS_ADD_DB, AdminPreferenceDefine.IS_ADD_DB_VALUE);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class GetAdminPreference extends AbstractPreference {
 	public static String getIsSharedDB() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		
-		return getValue(mapUserInfoData, AdminPreferenceDefine.IS_SHARED_DB, AdminPreferenceDefine.IS_SHARED_DB_VALUE);
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.IS_SHARED_DB, AdminPreferenceDefine.IS_SHARED_DB_VALUE);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class GetAdminPreference extends AbstractPreference {
 	public static String getDefaultAddDBCnt() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		
-		return getValue(mapUserInfoData, AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, AdminPreferenceDefine.DEFAULT_ADD_DB_CNT_VALUE);
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, AdminPreferenceDefine.DEFAULT_ADD_DB_CNT_VALUE);
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class GetAdminPreference extends AbstractPreference {
 	public static String getServiceDurationDay() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		
-		return getValue(mapUserInfoData, AdminPreferenceDefine.SERVICE_DURATION_DAY, AdminPreferenceDefine.SERVICE_DURATION_DAY_VALUE);
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SERVICE_DURATION_DAY, AdminPreferenceDefine.SERVICE_DURATION_DAY_VALUE);
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class GetAdminPreference extends AbstractPreference {
 	public static String getSupportMonitoring() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		
-		return getValue(mapUserInfoData, AdminPreferenceDefine.SUPPORT_MONITORING, AdminPreferenceDefine.SUPPORT_MONITORING_VALUE);
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SUPPORT_MONITORING, AdminPreferenceDefine.SUPPORT_MONITORING_VALUE);
 	}
 	
 	/**
@@ -141,10 +141,10 @@ public class GetAdminPreference extends AbstractPreference {
 				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 			}
 			
-			String strHost = getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE);
-			String strPort = getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE);
-			String strEmail = getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE);
-			String strPwd = getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE);
+			String strHost = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE);
+			String strPort = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE);
+			String strEmail = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE);
+			String strPwd = getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE);
 		
 			dto.setHost(strHost);
 			dto.setPort(strPort);
@@ -175,10 +175,10 @@ public class GetAdminPreference extends AbstractPreference {
 				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 			}
 		
-			dto.setHost(getValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
-			dto.setPort(getValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
-			dto.setEmail(getValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
-			dto.setPasswd(getValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
+			dto.setHost(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_HOST_NAME, PreferenceDefine.SMTP_HOST_NAME_VALUE));
+			dto.setPort(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PORT, PreferenceDefine.SMTP_PORT_VALUE));
+			dto.setEmail(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_EMAIL, PreferenceDefine.SMTP_EMAIL_VALUE));
+			dto.setPasswd(getAdminValue(mapUserInfoData, PreferenceDefine.SMTP_PASSWD, PreferenceDefine.SMTP_PASSWD_VALUE));
 			
 		} catch (Exception e) {
 			logger.error("get stmt info", e); //$NON-NLS-1$
