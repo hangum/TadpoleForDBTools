@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.sendgrid.core.utils;
 
-import org.apache.commons.codec.binary.StringUtils;
-
 import com.sendgrid.SendGrid;
 
 /**
