@@ -271,12 +271,18 @@ public class AdminSystemSettingEditor extends EditorPart {
 		comboSupportMonitoring.setText(GetAdminPreference.getSupportMonitoring());
 		
 		// email
-		SMTPDTO smtpDto = GetAdminPreference.getSMTPINFO();
-		textSendGridAPI.setText(smtpDto.getSendgrid_api());
-		textSMTP.setText(smtpDto.getHost());
-		textPort.setText(smtpDto.getPort());
-		textEmail.setText(smtpDto.getEmail());
-		textPasswd.setText(smtpDto.getPasswd());
+		try {
+			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+			textSendGridAPI.setText(smtpDto.getSendgrid_api());
+			textSMTP.setText(smtpDto.getHost());
+			textPort.setText(smtpDto.getPort());
+			textEmail.setText(smtpDto.getEmail());
+			textPasswd.setText(smtpDto.getPasswd());
+		} catch (Exception e) {
+			logger.error("smtp initialize exception", e);
+			textSMTP.setText(AdminPreferenceDefine.SMTP_HOST_NAME_VALUE);
+			textPort.setText(AdminPreferenceDefine.SMTP_PORT_VALUE);
+		}
 	}
 	
 	/**

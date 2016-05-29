@@ -18,13 +18,22 @@ package com.hangum.tadpole.commons.libs.core.mails.dto;
  */
 public class SMTPDTO {
 	String sendgrid_api = "";
-	
 	String host = "";
 	String port = "";
 	String email = "";
 	String passwd = "";
 	
 	public SMTPDTO() {
+	}
+	
+	public boolean isValid() {
+		if("".equals(getSendgrid_api())) {
+			if("".equals(getEmail()) | "".equals(getPasswd())) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	/**

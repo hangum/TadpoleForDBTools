@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ApplicationContext;
 
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
@@ -48,7 +49,9 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
-	 * 사용자 정보를 저장한다.
+	 * 신규 사용자 등록이 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
+	 * 디폴트는 YES이므로 어드민 허락이 필요치 않다. 
+	 * 
 	 * @return
 	 */
 	public static String getNewUserPermit() {
@@ -127,23 +130,28 @@ public class GetAdminPreference extends AbstractPreference {
 	public static SMTPDTO getSessionSMTPINFO() throws Exception {
 		SMTPDTO dto = new SMTPDTO();
 		
-		HttpSession sStore = RWT.getRequest().getSession();
-		dto = (SMTPDTO)sStore.getAttribute("smtpinfo"); //$NON-NLS-1$
+		ApplicationContext context = RWT.getApplicationContext();
+		dto = (SMTPDTO)context.getAttribute("smtpinfo"); //$NON-NLS-1$
 		
 		if(dto == null) {
 			dto = getSMTPINFO();
-			
-			if("".equals(dto.getEmail()) | "".equals(dto.getPasswd())) {
-				throw new Exception("Doesn't setting is SMTP Server.");
+			if("".equals(dto.getSendgrid_api())) {
+				if("".equals(dto.getEmail()) | "".equals(dto.getPasswd())) {
+					throw new Exception("Doesn't setting is SMTP Server.");
+				}
 			}
 			
-			sStore.setAttribute("smtpinfo", dto); //$NON-NLS-1$
+			context.setAttribute("smtpinfo", dto); //$NON-NLS-1$
 		}
 		
 		return dto;
 	}
 	
-	public static SMTPDTO getSMTPINFO() {
+	/**
+	 * get smtp
+	 * @return
+	 */
+	private static SMTPDTO getSMTPINFO() {
 		SMTPDTO dto = new SMTPDTO();
 		
 		try {

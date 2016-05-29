@@ -216,7 +216,7 @@ public class ServiceLoginDialog extends Dialog {
 		
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+			if(smtpDto.isValid()) { //$NON-NLS-1$
 				btnFindPasswd = new Button(compositeOtherBtn, SWT.NONE); //ID_FINDPASSWORD,
 				btnFindPasswd.setText(Messages.get().FindPassword);
 				btnFindPasswd.addSelectionListener(new SelectionAdapter() {

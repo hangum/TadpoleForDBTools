@@ -26,7 +26,7 @@ public class SystemDefine {
 	public static final String RELEASE_DATE = "2016.05.28";
 	public static final String INFORMATION = "http://hangum.github.io/TadpoleForDBTools/";
 	
-	public static final String ADMIN_EMAIL = "adi.tadpole@gmail.com";
+	public static final String ADMIN_EMAIL = "hangum@tadpolehub.com";
 	public static final String SOURCE_PAGE = INFORMATION;
 	
 	/**

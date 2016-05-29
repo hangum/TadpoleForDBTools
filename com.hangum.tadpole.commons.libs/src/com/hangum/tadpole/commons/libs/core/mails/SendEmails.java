@@ -16,6 +16,7 @@ import org.apache.commons.mail.HtmlEmail;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.Messages;
+import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.sendgrid.core.utils.SendgridUtils;
@@ -52,12 +53,10 @@ public class SendEmails {
 				email.setSSLOnConnect(true);
 				
 				email.setFrom(smtpDto.getEmail(), Messages.get().TadpoleHub);
+				email.addTo(emailDao.getTo());
 				email.setSubject(emailDao.getSubject());
-				
-				// set the html message
 				email.setHtmlMsg(emailDao.getContent());
 				
-				email.addTo(emailDao.getTo());
 				email.send();
 				
 			} catch(Exception e) {
@@ -65,7 +64,7 @@ public class SendEmails {
 				throw e;
 			}
 		} else {
-			SendgridUtils.send(smtpDto.getSendgrid_api(), smtpDto.getEmail(), emailDao.getSubject(), emailDao.getContent(), emailDao.getTo());
+			SendgridUtils.send(smtpDto.getSendgrid_api(), SystemDefine.ADMIN_EMAIL, emailDao.getTo(), emailDao.getSubject(), emailDao.getContent());
 		}
 	}
 }

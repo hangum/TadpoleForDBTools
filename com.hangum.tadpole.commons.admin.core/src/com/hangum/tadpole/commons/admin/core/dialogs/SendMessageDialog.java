@@ -156,7 +156,7 @@ public class SendMessageDialog extends Dialog {
 				
 				try {
 					List<UserDAO> listUser = TadpoleSystem_UserQuery.getLiveAllUser();
-					SendEmails email = new SendEmails(GetAdminPreference.getSMTPINFO());
+					SendEmails email = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
 					
 					monitor.beginTask("Start send mail", listUser.size());
 					
