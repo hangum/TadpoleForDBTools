@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.GeneralPlanComposite;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * plan 의 결과 정보를보여주는 컴포짖
@@ -30,12 +31,13 @@ public class PlanTailComposite extends AbstractTailComposite {
 	
 	/**
 	 * Create the composite.
+	 * @param requestQuery 
 	 * @param parent
 	 * @param compositeBtn 
 	 * @param style
 	 */
-	public PlanTailComposite(Composite reqAbstractResult, Composite compositeBtn, int style) {
-		super(compositeBtn, style);
+	public PlanTailComposite(Composite reqAbstractResult, RequestQuery requestQuery, Composite compositeBtn, int style) {
+		super(compositeBtn, requestQuery, style);
 		setLayout(new GridLayout(1, false));
 		
 		abstractResultComp = (GeneralPlanComposite)reqAbstractResult;

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * 결과 화면의 다운로드 부분과 결과 상태를  컴포짖
@@ -31,12 +32,13 @@ public class ResultTailComposite extends AbstractTailComposite {
 	
 	/**
 	 * Create the composite.
+	 * @param requestQuery 
 	 * @param parent
 	 * @param compositeBtn 
 	 * @param style
 	 */
-	public ResultTailComposite(Composite reqAbstractResult, Composite compositeBtn, int style) {
-		super(compositeBtn, style);
+	public ResultTailComposite(Composite reqAbstractResult, RequestQuery requestQuery, Composite compositeBtn, int style) {
+		super(compositeBtn, requestQuery, style);
 		setLayout(new GridLayout(1, false));
 		
 		abstractResultComp = (AbstractResultDetailComposite)reqAbstractResult;

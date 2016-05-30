@@ -57,6 +57,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * Resultset to download
@@ -68,7 +69,10 @@ public class ResultSetDownloadDialog extends Dialog {
 	
 	/** button status */
 	public enum BTN_STATUS {PREVIEW, SENDEDITOR, DOWNLOAD};
-	public BTN_STATUS btnStatus = BTN_STATUS.PREVIEW; 
+	public BTN_STATUS btnStatus = BTN_STATUS.PREVIEW;
+	
+	// request query
+	private RequestQuery requestQuery;
 	
 	/** 배열이 0부터 시작하므로 실제로는 5건. */ 
 	private final int PREVIEW_COUNT = 4;
@@ -93,13 +97,16 @@ public class ResultSetDownloadDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param requestQuery
+	 * @param requestQuery 
 	 * @param queryExecuteResultDTO 
 	 * @param strDefTableName 
 	 */
-	public ResultSetDownloadDialog(Shell parentShell, String strDefTableName, QueryExecuteResultDTO queryExecuteResultDTO) {
+	public ResultSetDownloadDialog(Shell parentShell, RequestQuery requestQuery, String strDefTableName, QueryExecuteResultDTO queryExecuteResultDTO) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
+		this.requestQuery = requestQuery;
 		this.defaultTargetName = strDefTableName;
 		this.queryExecuteResultDTO = queryExecuteResultDTO;
 	}
@@ -136,16 +143,16 @@ public class ResultSetDownloadDialog extends Dialog {
 		compositeText.setLayout(new GridLayout(1, false));
 		
 		compositeHTML = new ExportHTMLComposite(tabFolder, SWT.NONE, defaultTargetName);
-		compositeText.setLayout(new GridLayout(1, false));
+		compositeHTML.setLayout(new GridLayout(1, false));
 		
 		compositeJSON = new ExportJSONComposite(tabFolder, SWT.NONE, defaultTargetName);
-		compositeText.setLayout(new GridLayout(1, false));
+		compositeJSON.setLayout(new GridLayout(1, false));
 		
 		compositeXML = new ExportXMLComposite(tabFolder, SWT.NONE, defaultTargetName);
-		compositeText.setLayout(new GridLayout(1, false));
+		compositeXML.setLayout(new GridLayout(1, false));
 		
 		compositeSQL = new ExportSQLComposite(tabFolder, SWT.NONE, defaultTargetName, queryExecuteResultDTO.getColumnLabelName());
-		compositeText.setLayout(new GridLayout(1, false));
+		compositeSQL.setLayout(new GridLayout(1, false));
 		//--[tail]----------------------------------------------------------------------------------------
 		Group groupPreview = new Group(sashForm, SWT.NONE);
 		groupPreview.setText(Messages.get().PreviewMsg);
@@ -392,6 +399,15 @@ public class ResultSetDownloadDialog extends Dialog {
 				downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, queryExecuteResultDTO, listWhere, commit), encoding);
 			}
 		}
+	}
+	
+	/**
+	 * get request query
+	 * 
+	 * @return
+	 */
+	public RequestQuery getRequestQuery() {
+		return requestQuery;
 	}
 	
 	/**

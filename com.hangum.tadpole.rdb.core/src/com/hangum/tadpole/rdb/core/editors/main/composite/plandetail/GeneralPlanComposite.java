@@ -83,7 +83,7 @@ public class GeneralPlanComposite extends AbstractPlanComposite {
 		gl_compositeBtn.marginHeight = 2;
 		compositeBtn.setLayout(gl_compositeBtn);
 		
-		compositeTail = new PlanTailComposite(this, compositeBtn, SWT.NONE);
+		compositeTail = new PlanTailComposite(this, getReqQuery(), compositeBtn, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;
