@@ -25,6 +25,7 @@ import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.ResultSetDownloadDialog;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -37,7 +38,7 @@ import com.swtdesigner.SWTResourceManager;
 public abstract class AbstractTailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(AbstractTailComposite.class);
-	
+	private RequestQuery requestQuery;
 	private Composite compositeParent;
 	protected Composite compositeDownloadAMsg;
 	
@@ -45,9 +46,10 @@ public abstract class AbstractTailComposite extends Composite {
 	protected Button btnPin;
 	protected Button btnViewQuery;
 	
-	public AbstractTailComposite(Composite compositeBtn, int style) {
+	public AbstractTailComposite(Composite compositeBtn, RequestQuery requestQuery, int style) {
 		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
+		this.requestQuery = requestQuery;
 		
 		compositeParent = compositeBtn;
 		compositeDownloadAMsg = new Composite(this, SWT.NONE);
@@ -97,7 +99,7 @@ public abstract class AbstractTailComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(getRSDao().getDataList() == null) return;
 				
-				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), findTableName(), getRSDao());
+				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), getRequestQuery(), findTableName(), getRSDao());
 				dialog.open();
 			}
 			
@@ -117,6 +119,10 @@ public abstract class AbstractTailComposite extends Composite {
 		this.layout();
 		lblQueryResultStatus.setText(strResultMsg);
 		lblQueryResultStatus.pack();
+	}
+	
+	public RequestQuery getRequestQuery() {
+		return requestQuery;
 	}
 	
 	/**

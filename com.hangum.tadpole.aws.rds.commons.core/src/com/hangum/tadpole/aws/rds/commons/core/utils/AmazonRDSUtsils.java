@@ -34,6 +34,12 @@ import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
  */
 public class AmazonRDSUtsils {
 	private static final Logger logger = Logger.getLogger(AmazonRDSUtsils.class);	
+	
+	public static void main(String[] args) {
+		for(String reg : AmazonRDSUtsils.getRDSRegionList()){
+			System.out.println(reg);
+		}
+	}
 	/**
 	 * list region name
 	 * 
@@ -92,7 +98,7 @@ public class AmazonRDSUtsils {
 				} else if(strDBMStype.startsWith("mysql")) {
 					strDBMStype = DBDefine.MYSQL_DEFAULT.getDBToString();
 				} else {
-					logger.error(String.format("AmazonRDS type is %s. Tadpole does't suupoort this. Check your system.", strDBMStype));
+					logger.error(String.format("AmazonRDS type is %s. Tadpole does't suupoort this.", strDBMStype));
 				}
 				
 				// 

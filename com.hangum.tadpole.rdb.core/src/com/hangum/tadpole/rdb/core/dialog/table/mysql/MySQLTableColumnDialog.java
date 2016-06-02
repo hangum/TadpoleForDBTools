@@ -268,6 +268,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MySQLTableColumnDialog_25);
 				
 				textColumnName.setText("");
+				textComment.setText("");
 				textColumnName.setFocus();
 			} catch (Exception e) {
 				logger.error("add colum exception", e);

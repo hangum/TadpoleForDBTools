@@ -113,7 +113,7 @@ public class FindPasswordDialog extends Dialog {
 			logger.error("password initialize and send email ", e);
 			
 			MessageDialog.openError(getShell(), Messages.get().Error, 
-					String.format(Messages.get().SendMsgErr, GetAdminPreference.getSMTPINFO().getEmail(),  e.getMessage()));
+					String.format(Messages.get().SendMsgErr, e.getMessage()));
 		}
 		
 		

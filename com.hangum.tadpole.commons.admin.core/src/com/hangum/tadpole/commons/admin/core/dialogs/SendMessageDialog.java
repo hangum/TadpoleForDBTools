@@ -156,14 +156,14 @@ public class SendMessageDialog extends Dialog {
 				
 				try {
 					List<UserDAO> listUser = TadpoleSystem_UserQuery.getLiveAllUser();
-					SendEmails email = new SendEmails(GetAdminPreference.getSMTPINFO());
+					SendEmails email = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
 					
-					monitor.beginTask(Messages.get().SendMessageDialog_12, listUser.size());
+					monitor.beginTask("Start send mail", listUser.size());
 					
 					for (int i=0; i<listUser.size(); i++) {
 						UserDAO userDAO = listUser.get(i);
 						
-						monitor.setTaskName(String.format(Messages.get().SendMessageDialog_13, i, listUser.size(), userDAO.getEmail()));
+						monitor.setTaskName(String.format("%d/%d, user %s ", i, listUser.size(), userDAO.getEmail()));
 						logger.info("admin user sender " + userDAO.getEmail()); //$NON-NLS-1$
 						try {
 							EmailDTO emailDto = new EmailDTO();
@@ -184,7 +184,7 @@ public class SendMessageDialog extends Dialog {
 						}
 					}
 				} catch(Exception e) {
-					logger.error(Messages.get().SendMessageDialog_19, e);
+					logger.error("sending mail", e);
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
 				} finally {
 					resultMessage("done."); //$NON-NLS-1$

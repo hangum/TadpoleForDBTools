@@ -319,7 +319,7 @@ public class SessionManager {
 			HttpSession sStore = request.getSession();			
 			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
 			sStore.invalidate();
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			// ignore exception
 		}
 		

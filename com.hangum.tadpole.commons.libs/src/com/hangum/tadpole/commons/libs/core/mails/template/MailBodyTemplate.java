@@ -74,7 +74,7 @@ public abstract class MailBodyTemplate {
 			strContent.append(String.format("<tr><td>%s</td></tr>", Messages.get().Thanks));
 			strContent.append("<br>");
 			strContent.append(String.format("<tr><td width='100' valign='top'>%s%s</td></tr>", Messages.get().MailBodyTempAdmin, "hangum@tadpolehub.com"));
-			strContent.append("<tr><td>" + Messages.get().HomePage +"www.tadpolehub.com</td></tr>");
+			strContent.append("<tr><td>" + Messages.get().HomePage +"https://tadpolehub.com</td></tr>");
 		strContent.append("</table>");
 		
 		return strContent.toString();

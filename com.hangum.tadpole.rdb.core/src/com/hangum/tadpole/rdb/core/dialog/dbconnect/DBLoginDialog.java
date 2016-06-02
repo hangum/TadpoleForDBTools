@@ -191,30 +191,30 @@ public class DBLoginDialog extends Dialog {
 	private void initDBWidget() {
 		if(loginComposite != null) loginComposite.dispose();
 		
-		DBDefine dbDefine = (DBDefine)comboDBList.getData(comboDBList.getText());
+		if(!ApplicationArgumentUtils.isOnlineServer()) {
+			DBDefine dbDefine = (DBDefine)comboDBList.getData(comboDBList.getText());
+			if(dbDefine == DBDefine.ALTIBASE_DEFAULT |
+					dbDefine == DBDefine.CUBRID_DEFAULT |
+					dbDefine == DBDefine.MYSQL_DEFAULT |
+					dbDefine == DBDefine.MARIADB_DEFAULT |
+					dbDefine == DBDefine.MSSQL_DEFAULT |
+					dbDefine == DBDefine.ORACLE_DEFAULT |
+					dbDefine == DBDefine.SQLite_DEFAULT |
+					dbDefine == DBDefine.TIBERO_DEFAULT |
+					dbDefine == DBDefine.POSTGRE_DEFAULT
+			) {
+				try {
+					ClassUtils.getClass(dbDefine.getDriverClass());
+				} catch (ClassNotFoundException e) {
 		
-		if(dbDefine == DBDefine.ALTIBASE_DEFAULT |
-				dbDefine == DBDefine.CUBRID_DEFAULT |
-				dbDefine == DBDefine.MYSQL_DEFAULT |
-				dbDefine == DBDefine.MARIADB_DEFAULT |
-				dbDefine == DBDefine.MSSQL_DEFAULT |
-				dbDefine == DBDefine.MONGODB_DEFAULT |
-				dbDefine == DBDefine.ORACLE_DEFAULT |
-				dbDefine == DBDefine.SQLite_DEFAULT |
-				dbDefine == DBDefine.TIBERO_DEFAULT |
-				dbDefine == DBDefine.POSTGRE_DEFAULT
-		) {
-			try {
-				ClassUtils.getClass(dbDefine.getDriverClass());
-			} catch (ClassNotFoundException e) {
-
-				if(MessageDialog.openConfirm(null, Messages.get().DriverNotFound, Messages.get().DriverNotFoundMSG)) {
-					JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-					if(Dialog.OK ==  dialog.open()) {
-						if(dialog.isUploaded()) {
-							MessageDialog.openInformation(null, Messages.get().Information, Messages.get().jdbcdriver);
-						}
-					}		
+					if(MessageDialog.openConfirm(null, Messages.get().DriverNotFound, Messages.get().DriverNotFoundMSG)) {
+						JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+						if(Dialog.OK ==  dialog.open()) {
+							if(dialog.isUploaded()) {
+								MessageDialog.openInformation(null, Messages.get().Information, Messages.get().jdbcdriver);
+							}
+						}		
+					}
 				}
 			}
 		}

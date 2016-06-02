@@ -216,7 +216,7 @@ public class ServiceLoginDialog extends Dialog {
 		
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+			if(smtpDto.isValid()) { //$NON-NLS-1$
 				btnFindPasswd = new Button(compositeOtherBtn, SWT.NONE); //ID_FINDPASSWORD,
 				btnFindPasswd.setText(Messages.get().FindPassword);
 				btnFindPasswd.addSelectionListener(new SelectionAdapter() {
@@ -236,7 +236,7 @@ public class ServiceLoginDialog extends Dialog {
 		compositeTailRight.setLayout(new GridLayout(2, false));
 		
 		Label labelCompanyInfo = new Label(compositeTailRight, SWT.NONE);
-		labelCompanyInfo.setText("사업자등록번호 : 460-86-00429 | 대표, 개인정보관리책임자 : 조현종");
+		labelCompanyInfo.setText("사업자등록번호 : 460-86-00429 | 통신판매번호 : 제 2016-서울은평-0401호");
 		
 		Label tail_lblLoginForm = new Label(compositeTailRight, SWT.NONE);
 		tail_lblLoginForm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 3));
@@ -244,10 +244,10 @@ public class ServiceLoginDialog extends Dialog {
 
 		
 		Label lblHangumtadpolehubcom = new Label(compositeTailRight, SWT.NONE);
-		lblHangumtadpolehubcom.setText("전자우편 : hangum@tadpolehub.com");
+		lblHangumtadpolehubcom.setText("대표, 개인정보관리책임자 : 조현종 | email : hangum@tadpolehub.com");
 	
 		Label label = new Label(compositeTailRight, SWT.NONE);
-		label.setText("서울시 은평구 불광로5가길 3-2 102호 (Tel. 010-4227-3601)");
+		label.setText("서울시 은평구 불광로5가길 3-2 102호 (Tel. 02-2226-8291)");
 		
 		Label lblCopyrightcTadpolehub = new Label(compositeTailRight, SWT.NONE);
 		lblCopyrightcTadpolehub.setText("Copyright(c) 2016 TadpoleHub Co.,LTD ");
