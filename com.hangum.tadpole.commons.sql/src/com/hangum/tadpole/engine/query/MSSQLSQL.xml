@@ -447,9 +447,9 @@ from sys.tables  as tbl
  
 <select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
 SELECT
-	'exec sp_addextendedproperty ''Caption'', ''' 
+	'exec sp_addextendedproperty ''MS_Description'', ''' 
 		+ convert(varchar, p.value) 
-		+ ''', ''user'', dbo, ''table'', ''' 
+		+ ''', ''schema'', '+schema_name(tbl.schema_id)+', ''table'', ''' 
 		+ convert(varchar, tbl.name) 
 		+ ''' ;'  as comment 
   FROM sys.tables AS tbl
@@ -462,9 +462,9 @@ SELECT
         AND p.value &gt; ''
   UNION ALL
 SELECT  
-	'exec sp_addextendedproperty ''Caption'', ''' 
+	'exec sp_addextendedproperty ''MS_Description'', ''' 
 		+ convert(varchar, p.value) 
-		+ ''', ''user'', dbo, ''table'', ''' 
+		+ ''', ''schema'', '+schema_name(a.uid)+', ''table'', ''' 
 		+ convert(varchar, a.name) 
 		+ ''', ''column'', ''' 
 		+ convert(varchar, b.name) 
