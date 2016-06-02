@@ -82,9 +82,7 @@ SELECT getdate()
 SELECT  b.name field, 
         c.name + case when c.xtype in (106,108,62,165,173,231,167,175) then
             case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' end else '' end as type,
-        CASE WHEN b.isnullable = 0  then 'NO' 
-             ELSE 'YES' 
-        END notnull, 
+        (CASE WHEN b.isnullable = 0  then 'NO' ELSE 'YES' END) as "NULL", 
         case when d.keyno > 0 and f.keyno > 0 then 'MUL'
 		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
 			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as [key],

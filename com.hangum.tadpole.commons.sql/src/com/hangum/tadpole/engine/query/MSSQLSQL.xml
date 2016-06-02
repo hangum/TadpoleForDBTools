@@ -106,9 +106,7 @@ SELECT  b.name field,
         CASE WHEN c.xtype in (106,108,62,165,173,231,167,175) then
         CASE WHEN c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' 
         ELSE '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' END ELSE '' END as type, 
-        CASE WHEN b.isnullable = 0  then 'NO' 
-             ELSE 'YES' 
-        END notnull, 
+        (CASE WHEN b.isnullable = 0  then 'NO' ELSE 'YES' END) as "NULL",  
         case when d.keyno > 0 and f.keyno > 0 then 'MUL'
 		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
 			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as [key],
