@@ -147,7 +147,7 @@ public class DBListComposite extends Composite {
 		});
 		tltmRefresh.setToolTipText(Messages.get().Refresh);
 		
-		ToolItem toolItem_0 = new ToolItem(toolBar, SWT.SEPARATOR);
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmConfigurationDB = new ToolItem(toolBar, SWT.NONE);
 		tltmConfigurationDB.setImage(GlobalImageUtils.getConfigurationDatabase());
@@ -177,7 +177,7 @@ public class DBListComposite extends Composite {
 		tltmOtherInformation.setEnabled(false);
 		tltmOtherInformation.setToolTipText(Messages.get().DBListComposite_2);
 		
-		ToolItem toolItem_1 = new ToolItem(toolBar, SWT.SEPARATOR);
+		new ToolItem(toolBar, SWT.SEPARATOR);
 
 		tltmAddUser = new ToolItem(toolBar, SWT.NONE);
 		tltmAddUser.setImage(GlobalImageUtils.getUserAdd());
@@ -269,7 +269,7 @@ public class DBListComposite extends Composite {
 		tltmQueryHistory.setEnabled(false);
 		tltmQueryHistory.setToolTipText(Messages.get().QueryHistory);
 		
-		ToolItem toolItem_2 = new ToolItem(toolBar, SWT.SEPARATOR);
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		tltmSQLEditor = new ToolItem(toolBar, SWT.NONE);
 		tltmSQLEditor.setImage(GlobalImageUtils.getSQLEditor()); //$NON-NLS-1$
 		tltmSQLEditor.addSelectionListener(new SelectionAdapter() {

@@ -141,7 +141,7 @@ public class ManagerLabelProvider extends LabelProvider {
 			return strShareType + dao.getName() + " " + strSupportAPI + strComment;
 		} else if(element instanceof DBOtherDAO) {
 			DBOtherDAO dao = (DBOtherDAO)element;
-			if("".equals(dao.getComment()) | "null".equals(dao.getComment()) | null == dao.getComment()) return dao.getName();
+			if("".equals(dao.getComment()) || "null".equals(dao.getComment()) || null == dao.getComment()) return dao.getName();
 			else return String.format("%s (%s)", dao.getName(), dao.getComment());
 		}
 		

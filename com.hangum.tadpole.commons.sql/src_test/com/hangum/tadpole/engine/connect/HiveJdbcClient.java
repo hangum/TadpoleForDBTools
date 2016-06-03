@@ -53,9 +53,9 @@ public class HiveJdbcClient {
 		System.out.println("Running: " + sql);
 		res = stmt.executeQuery(sql);
 		
-		while (res.next()) {
-			System.out.println(res.getString(0));
-		}
+//		while (res.next()) {
+//			System.out.println(res.getString(0));
+//		}
 		
 
 //		// load data into table

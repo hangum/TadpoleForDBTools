@@ -81,7 +81,7 @@ public class MonitoringJob implements Job {
 						}
 						resultDao.setMonitoringIndexDAO(monitoringIndexDAO);
 						resultDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
-						if(isError & PublicTadpoleDefine.YES_NO.YES.name().equals(monitoringIndexDAO.getIs_snapshot_save())) {
+						if(isError && PublicTadpoleDefine.YES_NO.YES.name().equals(monitoringIndexDAO.getIs_snapshot_save())) {
 							resultDao.setSnapshot(Utils.getDBVariable(userDB));	
 						}
 						

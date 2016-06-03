@@ -235,7 +235,7 @@ public class TableColumnComposite extends AbstractTableComposite {
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			menuMgr.add(tableColumnModifyAction);
 			menuMgr.add(tableColumnDeleteAction);
 			menuMgr.add(new Separator());

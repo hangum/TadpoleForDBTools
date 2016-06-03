@@ -261,8 +261,10 @@ public class CSVLoader {
 			csvReader = new CSVReader(new InputStreamReader(cleanStream, charset), this.seprator);
 			headerRow = csvReader.readNext();
 			int i=0;
-			for (String columnHead:headerRow){
-				headerRow[i++] = columnHead.toLowerCase();
+			if(headerRow != null) {
+				for (String columnHead: headerRow){
+					headerRow[i++] = columnHead.toLowerCase();
+				}
 			}
 
 			if (null == headerRow) {

@@ -56,7 +56,7 @@ public class TadpoleObjectQuery {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
 				stmt = javaConn.prepareStatement(strSQL);
 				try{
@@ -127,17 +127,17 @@ public class TadpoleObjectQuery {
 	 */
 	public static RequestResultDAO renameTable(final UserDBDAO userDB, TableDAO tableDAO, String strNewname) throws Exception {
 		RequestResultDAO resultDao = null;
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
-					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
-					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT |
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
+					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
 		) {
 			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
-		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
@@ -290,7 +290,7 @@ public class TadpoleObjectQuery {
 					break;
 				}
 			}
-		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableDAO> tmpShowTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 			

@@ -93,7 +93,7 @@ public class AboutDialog extends Dialog {
 		txtRleaseDate.setText(Messages.get().AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE); //$NON-NLS-1$
 		txtRleaseDate.setEditable(false);
 		
-		Label label = new Label(composite_1, SWT.NONE);
+		new Label(composite_1, SWT.NONE);
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
 		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

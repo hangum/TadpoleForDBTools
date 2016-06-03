@@ -153,7 +153,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		menuMgr.add(refreshAction_Trigger);
 		menuMgr.add(new Separator());
 		menuMgr.add(viewDDLAction);
-		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT | getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}

@@ -44,7 +44,7 @@ public class TableColumnObjectQuery {
 	 */
 	public static RequestResultDAO modifyColumnType(final UserDBDAO userDB, TableDAO tableDAO, TableColumnUpdateDAO metaDataDao) throws Exception {
 		RequestResultDAO resultDao = null;
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			// ALTER TABLE 테이블명 MODIFY 컬럼이름 새컬럼타입
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s", 
 					tableDAO.getSysName(), metaDataDao.getColumnName(), metaDataDao.getColumnName(), metaDataDao.getDataType());
@@ -68,7 +68,7 @@ public class TableColumnObjectQuery {
 	 */
 	public static RequestResultDAO renameColumn(final UserDBDAO userDB, TableDAO tableDAO, TableColumnUpdateDAO metaDataDao, String newColumnName) throws Exception {
 		RequestResultDAO resultDao = null;
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			//ALTER TABLE `dbtype` CHANGE `tesst` `cho` INT(11)  NULL  DEFAULT NULL;
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s", 
 												tableDAO.getSysName(), metaDataDao.getColumnName(), newColumnName, metaDataDao.getDataType()
@@ -102,10 +102,10 @@ public class TableColumnObjectQuery {
 	 */
 	public static RequestResultDAO deleteColumn(final UserDBDAO userDB, final List<TableColumnDAO> listTableColumnDao) throws Exception {
 		RequestResultDAO resultDao = null;
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT |
-				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT |
-				userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
-				userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT |
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
 		) {
 			for(TableColumnDAO tableColumnDao: listTableColumnDao) {
@@ -219,7 +219,7 @@ public class TableColumnObjectQuery {
 
 		StringBuffer query = new StringBuffer();
 
-		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			String strQuery = String.format("COMMENT ON COLUMN %s.%s IS %s", tableDAO.getSysName(), columnDAO.getField(), SQLUtil.makeQuote(columnDAO.getComment()));
 			
 			try{

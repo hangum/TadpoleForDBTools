@@ -67,10 +67,10 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 		if (column == 1 || column == 3) {
 			if (logger.isDebugEnabled()) logger.debug("DBMS Type is " + userDB.getDBDefine());
 
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | 
-					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT | 
-					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT | 
-					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT | 
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || 
 					userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 				return true;
 			} else {

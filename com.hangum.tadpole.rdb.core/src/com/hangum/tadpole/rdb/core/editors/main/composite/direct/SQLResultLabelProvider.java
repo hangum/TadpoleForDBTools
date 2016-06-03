@@ -131,7 +131,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		
 		Object obj = rsResult.get(columnIndex);
 		if(rsDAO != null && rsDAO.getColumnType().get(columnIndex) != null && queryMode == QUERY_MODE.QUERY) {
-			if(isPretty & RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
+			if(isPretty && RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
 		}
 		
 		if(obj == null) {

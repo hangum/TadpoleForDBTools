@@ -26,9 +26,9 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
  */
 public class GoogleAuthManagerTest {
 
-	public static void main(String[] args) {
-		GoogleAuthManagerTest gamt = new GoogleAuthManagerTest();
-	}
+//	public static void main(String[] args) {
+//		GoogleAuthManagerTest gamt = new GoogleAuthManagerTest();
+//	}
 	/**
 	 * 
 	 */

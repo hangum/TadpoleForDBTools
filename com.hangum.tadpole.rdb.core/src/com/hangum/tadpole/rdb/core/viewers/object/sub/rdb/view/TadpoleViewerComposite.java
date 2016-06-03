@@ -218,7 +218,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO tdbDao = (TableDAO)element;
-				if("".equals(tdbDao.getSchema_name()) | null == tdbDao.getSchema_name()) return tdbDao.getName();
+				if("".equals(tdbDao.getSchema_name()) || null == tdbDao.getSchema_name()) return tdbDao.getName();
 				else return String.format("%s.%s", tdbDao.getSchema_name(), tdbDao.getName());
 			}
 		});
@@ -308,7 +308,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		menuMgr.add(new Separator());
 		menuMgr.add(viewDDLAction);
 		
-		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT | getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}

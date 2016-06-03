@@ -28,7 +28,7 @@ public class SMTPDTO {
 	
 	public boolean isValid() {
 		if("".equals(getSendgrid_api())) {
-			if("".equals(getEmail()) | "".equals(getPasswd())) {
+			if("".equals(getEmail()) || "".equals(getPasswd())) {
 				return false;
 			}
 		}

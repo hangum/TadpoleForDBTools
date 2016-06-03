@@ -29,17 +29,13 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
  */
 public class ExecuteSelect {
 	private static final Logger logger = Logger.getLogger(ExecuteSelect.class);
-	private static ExecuteSelect executeSelect = null;
+	private static ExecuteSelect executeSelect = new ExecuteSelect();
 	private ExecutorService execService = Executors.newCachedThreadPool();
 	
 	private ExecuteSelect() {
 	}
 	
 	public static ExecuteSelect getInstance() {
-		if(executeSelect == null) {
-			executeSelect = new ExecuteSelect();
-		}
-		
 		return executeSelect;
 	}
 	
