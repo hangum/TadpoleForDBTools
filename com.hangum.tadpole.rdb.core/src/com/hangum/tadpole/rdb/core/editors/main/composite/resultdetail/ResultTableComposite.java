@@ -247,7 +247,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		});
 		btnColumnDetail.setText(Messages.get().ResultSetComposite_btnColumnDetail_text);
 		
-		compositeTail = new ResultTailComposite(this, getReqQuery(), compositeBtn, SWT.NONE);
+		compositeTail = new ResultTailComposite(this, compositeBtn, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;

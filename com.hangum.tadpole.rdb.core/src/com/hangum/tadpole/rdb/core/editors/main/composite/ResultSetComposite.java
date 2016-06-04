@@ -820,7 +820,7 @@ public class ResultSetComposite extends Composite {
 			}
 			
 			resultSashLayout();
-		} catch(Exception e) {
+		} catch(CloneNotSupportedException e) {
 			logger.error("show execute result", e);
 		}
 	}

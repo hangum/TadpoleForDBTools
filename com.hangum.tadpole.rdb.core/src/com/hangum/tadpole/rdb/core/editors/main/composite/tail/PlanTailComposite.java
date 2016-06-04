@@ -31,13 +31,12 @@ public class PlanTailComposite extends AbstractTailComposite {
 	
 	/**
 	 * Create the composite.
-	 * @param requestQuery 
 	 * @param parent
 	 * @param compositeBtn 
 	 * @param style
 	 */
-	public PlanTailComposite(Composite reqAbstractResult, RequestQuery requestQuery, Composite compositeBtn, int style) {
-		super(compositeBtn, requestQuery, style);
+	public PlanTailComposite(Composite reqAbstractResult, Composite compositeBtn, int style) {
+		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
 		abstractResultComp = (GeneralPlanComposite)reqAbstractResult;
@@ -55,5 +54,9 @@ public class PlanTailComposite extends AbstractTailComposite {
 	public String getSQL() {
 		return abstractResultComp.getReqQuery().getSql();
 	}
-
+	
+	@Override
+	public RequestQuery getRequestQuery() {
+		return abstractResultComp.getReqQuery();
+	}
 }
