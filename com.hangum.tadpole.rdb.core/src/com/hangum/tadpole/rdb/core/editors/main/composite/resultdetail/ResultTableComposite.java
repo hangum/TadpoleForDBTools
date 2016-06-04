@@ -480,7 +480,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
@@ -528,12 +528,12 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 	
 	@Override
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePin) {
 		isLastReadData = false;
 		if(rsDAO == null) return;
 		if(rsDAO.getDataList() == null) return;
 		
-		super.printUI(reqQuery, rsDAO);
+		super.printUI(reqQuery, rsDAO, isMakePin);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
 		sqlSorter = new SQLResultSorter(-999);

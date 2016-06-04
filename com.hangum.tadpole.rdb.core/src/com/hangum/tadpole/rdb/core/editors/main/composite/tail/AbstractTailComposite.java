@@ -67,9 +67,7 @@ public abstract class AbstractTailComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				String strPin = btnPin.getToolTipText();
 				if("Pin".equals(strPin)) {
-					btnPin.setToolTipText("Unpin");
-					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-					layout();
+					makePinBtn();
 				} else {
 					Composite parentComposite = compositeParent.getParent().getParent();
 					Composite resultMainComposite = parentComposite.getParent();
@@ -125,6 +123,12 @@ public abstract class AbstractTailComposite extends Composite {
 		return requestQuery;
 	}
 	
+	private void makePinBtn() {
+		btnPin.setToolTipText("Unpin");
+		btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		btnPin.getParent().layout();
+	}
+	
 	/**
 	 * btn pin selection
 	 * @return
@@ -132,6 +136,13 @@ public abstract class AbstractTailComposite extends Composite {
 	public boolean getBtnPinSelection() {
 		if(btnPin.isDisposed()) return true;
 		return btnPin.getSelection();
+	}
+	
+	public void setBtnPint(boolean isSelect) {
+		btnPin.setSelection(isSelect);
+		if(isSelect) {
+			makePinBtn();
+		}
 	}
 	
 	public abstract String getSQL();

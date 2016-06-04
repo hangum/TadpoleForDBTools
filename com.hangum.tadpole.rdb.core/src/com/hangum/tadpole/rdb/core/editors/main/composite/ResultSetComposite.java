@@ -25,10 +25,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.internal.jobs.JobManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
@@ -48,6 +50,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
+import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -99,6 +102,9 @@ public class ResultSetComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
 	
+	/** 쿼리를 배치실행했을때 수행 할 수 있는 SQL 수 */
+	private int BATCH_EXECUTE_SQL_LIMIT = 5;
+	
 	/**
 	 * 에디터가 select 에디터인지 즉 구분자로 쿼리를 검색하는 상태인지 나타냅니다.
 	 * 
@@ -111,15 +117,12 @@ public class ResultSetComposite extends Composite {
 	
 	/** execute job */
 	private Job jobQueryManager = null;
-
-	/** 사용자가 요청한 쿼리 */
-	private RequestQuery reqQuery = null;
 	
 	/** result composite */
 	private ResultMainComposite rdbResultComposite;
 	
 	/** 쿼리 호출 후 결과 dao */
-	private QueryExecuteResultDTO rsDAO = new QueryExecuteResultDTO();
+//	private QueryExecuteResultDTO rsDAO = new QueryExecuteResultDTO();
 	
 	private ProgressBar progressBarQuery;
 	private Button btnStopQuery;
@@ -220,7 +223,7 @@ public class ResultSetComposite extends Composite {
 	 * 파라미터 쿼리인지 검사하여 쿼리를 만듭니다.
 	 * @return
 	 */
-	private boolean ifIsParameterQuery() {
+	private boolean ifIsParameterQuery(final RequestQuery reqQuery) {
 		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) return true;
 		final DBDefine selectDBDefine = getUserDB().getDBDefine();
 		if((selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
@@ -324,8 +327,6 @@ public class ResultSetComposite extends Composite {
 	 * @param reqQuery
 	 */
 	public boolean executeCommand(final RequestQuery reqQuery) {
-		this.reqQuery = reqQuery;
-		
 		// 쿼리를 이미 실행 중이라면 무시합니다.
 		if(jobQueryManager != null) {
 			if(Job.RUNNING == jobQueryManager.getState()) {
@@ -346,28 +347,28 @@ public class ResultSetComposite extends Composite {
 		}
 		
 		// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
-		if(!ifIsParameterQuery()) return false;
+		if(!ifIsParameterQuery(reqQuery)) return false;
 		
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
 		controlProgress(true);
 		
 //		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
-		this.rsDAO = new QueryExecuteResultDTO();
+//		this.rsDAO = new QueryExecuteResultDTO();
 		if(compositeResult != null) compositeResult.initUI();
 		
 //		// selected first tab request quring.
 //		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
-		// 쿼리를 실행 합니다. 
-		final RequestResultDAO reqResultDAO = new RequestResultDAO();
+		final List<QueryExecuteResultDTO> listRSDao = new ArrayList<>();
+		
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
 		final String strPlanTBName 	= GetPreferenceGeneral.getPlanTableName();
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
 		final UserDBDAO tmpUserDB 	= getUserDB();
-		
 		final String errMsg = Messages.get().MainEditor_21;
+		final RequestResultDAO reqResultDAO = new RequestResultDAO();
 		
 		jobQueryManager = new Job(Messages.get().MainEditor_45) {
 			@Override
@@ -379,46 +380,44 @@ public class ResultSetComposite extends Composite {
 				reqResultDAO.setStrSQLText(reqQuery.getOriginalSql());
 				
 				try {
-					
 					if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
-						
 						List<String> listStrExecuteQuery = new ArrayList<String>();
+						List<String> listStrSQL = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
 							String strExeSQL = SQLUtil.makeExecutableSQL(tmpUserDB, strSQL);
 							
 							// execute batch update는 ddl문이 있으면 안되어서 실행할 수 있는 쿼리만 걸러 줍니다.
-							if(SQLUtil.isStatement(strExeSQL)) {
-								reqQuery.setSql(strExeSQL);											
-							} else if(TransactionManger.isStartTransaction(strExeSQL)) {
-								startTransactionMode();
-								reqQuery.setAutoCommit(false);
-							} else {
+							if(!SQLUtil.isStatement(strExeSQL)) {
 								listStrExecuteQuery.add(strExeSQL);
+							} else {
+								listStrSQL.add(strExeSQL);
 							}
 						}
-						
 						// select 이외의 쿼리 실행
 						if(!listStrExecuteQuery.isEmpty()) {
 							ExecuteBatchSQL.runSQLExecuteBatch(errMsg, listStrExecuteQuery, reqQuery, getUserDB(), getDbUserRoleType(), intCommitCount, strUserEmail);
 						}
 						
-						// select 문장 실행
-						if(SQLUtil.isStatement(reqQuery.getSql())) { //$NON-NLS-1$
-							rsDAO = runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
-							reqResultDAO.setRows(rsDAO.getDataList().getData().size());
+						if(!listStrSQL.isEmpty()) {
+							for (String strSQL : listStrSQL) {
+								reqQuery.setSql(strSQL);
+								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+								listRSDao.add(rsDAO);
+							}
 						}
-					} else {
 						
+					} else {
 						if(reqQuery.isStatement()) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-								rsDAO = ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName);
+								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName));
 							} else {
-								rsDAO = runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
 								if(rsDAO.getDataList() == null) {
 									reqResultDAO.setRows(0);
 								} else {
 									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 								}
+								listRSDao.add(rsDAO);
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {
@@ -460,7 +459,7 @@ public class ResultSetComposite extends Composite {
 						
 						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
-							executeFinish(reqQuery);
+							executeFinish(reqQuery, listRSDao);
 						} else {
 							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
@@ -470,7 +469,7 @@ public class ResultSetComposite extends Composite {
 						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 						
 						// 모든 쿼리가 종료 되었음을 알린다.
-						finallyEndExecuteCommand();
+						finallyEndExecuteCommand(listRSDao);
 					}
 				});	// end display.asyncExec
 			}	// end done
@@ -500,6 +499,7 @@ public class ResultSetComposite extends Composite {
 	/**
 	 * 실제쿼리를 호출한다.
 	 * 
+	 * @param reqQuery
 	 * @param queryTimeOut
 	 * @param strUserEmail
 	 * @param intSelectLimitCnt
@@ -507,7 +507,10 @@ public class ResultSetComposite extends Composite {
 	 * @return
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO runSelect(String strSQL, final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt) throws Exception {
+	public QueryExecuteResultDTO runSelect(final RequestQuery reqQuery, final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt) throws Exception {
+		String strSQL = reqQuery.getSql();
+		if(logger.isDebugEnabled()) logger.debug("==> real execute query : " + strSQL);
+		
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), strSQL)) {
 			throw new Exception(Messages.get().MainEditor_21);
 		}
@@ -685,7 +688,7 @@ public class ResultSetComposite extends Composite {
 	/**
 	 * 에디터를 실행 후에 마지막으로 실행해 주어야 하는 코드.
 	 */
-	private void finallyEndExecuteCommand() {
+	private void finallyEndExecuteCommand(final List<QueryExecuteResultDTO> listRsDAO) {
 		controlProgress(false);
 		compositeResult.endQuery();
 		
@@ -694,7 +697,7 @@ public class ResultSetComposite extends Composite {
 		if(extensions == null) return;
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			try {
-				iMainEditorExtension.queryEndedExecute(rsDAO);
+				iMainEditorExtension.queryEndedExecute(listRsDAO.get(0));
 			} catch(Exception e) {
 				logger.error("sql result extension", e);
 			}
@@ -742,14 +745,14 @@ public class ResultSetComposite extends Composite {
 	/**
 	 * 쿼리 결과를 화면에 출력합니다.
 	 */
-	public void executeFinish(RequestQuery reqQuery) {
+	public void executeFinish(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
 		if(reqQuery.isStatement()) {
 			
 			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-				getRdbResultComposite().setQueryPlanView(reqQuery, rsDAO);
+				getRdbResultComposite().setQueryPlanView(reqQuery, listRSDao.get(0));
 				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.QUERY_PLAN);
 			} else {	// table data를 생성한다.
-				changeResultType();
+				changeResultType(reqQuery, listRSDao);
 			}
 		} else {
 			
@@ -795,20 +798,23 @@ public class ResultSetComposite extends Composite {
 	 * change result type
 	 * 
 	 */
-	private void changeResultType() {
-		if(!compositeResult.getCompositeTail().getBtnPinSelection()) {
-			compositeResult.printUI(reqQuery, rsDAO);
-		} else {
-			compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
-			compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-			compositeResult.printUI(reqQuery, rsDAO);
-			
-			GridLayout gl_compositeResult = new GridLayout(1, false);
-			gl_compositeResult.verticalSpacing = 2;
-			gl_compositeResult.horizontalSpacing = 2;
-			gl_compositeResult.marginHeight = 0;
-			gl_compositeResult.marginWidth = 2;
-			compositeResult.setLayout(gl_compositeResult);
+	private void changeResultType(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
+		for (QueryExecuteResultDTO rsDAO : listRSDao) {
+			boolean isMakePing = listRSDao.size()==1?false:true;
+			if(!compositeResult.getCompositeTail().getBtnPinSelection()) {
+				compositeResult.printUI(reqQuery, rsDAO, isMakePing);
+			} else {
+				compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
+				compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+				compositeResult.printUI(reqQuery, rsDAO, isMakePing);
+				
+				GridLayout gl_compositeResult = new GridLayout(1, false);
+				gl_compositeResult.verticalSpacing = 2;
+				gl_compositeResult.horizontalSpacing = 2;
+				gl_compositeResult.marginHeight = 0;
+				gl_compositeResult.marginWidth = 2;
+				compositeResult.setLayout(gl_compositeResult);
+			}
 		}
 		
 		resultSashLayout();
@@ -934,11 +940,11 @@ public class ResultSetComposite extends Composite {
 		return isSelect;
 	}
 	
-	public RequestQuery getReqQuery() {
-		return reqQuery;
-	}
+//	public RequestQuery getReqQuery() {
+//		return reqQuery;
+//	}
 	
-	public QueryExecuteResultDTO getRsDAO() {
-		return rsDAO;
-	}
+//	public QueryExecuteResultDTO getRsDAO() {
+//		return rsDAO;
+//	}
 }

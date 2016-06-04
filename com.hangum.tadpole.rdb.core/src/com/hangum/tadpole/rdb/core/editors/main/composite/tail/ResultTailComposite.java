@@ -36,6 +36,7 @@ public class ResultTailComposite extends AbstractTailComposite {
 	 * @param parent
 	 * @param compositeBtn 
 	 * @param style
+	 * @param isMakePing 
 	 */
 	public ResultTailComposite(Composite reqAbstractResult, RequestQuery requestQuery, Composite compositeBtn, int style) {
 		super(compositeBtn, requestQuery, style);

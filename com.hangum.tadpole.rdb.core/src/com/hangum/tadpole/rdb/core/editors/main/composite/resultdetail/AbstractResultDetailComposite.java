@@ -69,10 +69,13 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	 * print ui
 	 * @param rsDAO 
 	 * @param reqQuery 
+	 * @param isMakePing 
 	 */
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePing) {
 		this.reqQuery = reqQuery;
 		this.rsDAO = rsDAO;
+		
+		compositeTail.setBtnPint(isMakePing);
 	}
 	
 	public void endQuery() {
@@ -92,7 +95,7 @@ public abstract class AbstractResultDetailComposite extends Composite {
 			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 			boolean isContinue = true;
 			while(isContinue) {
-				QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+				QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 				if(newRsDAO.getDataList().getData().isEmpty()) isContinue = false;
 			
 //				if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );

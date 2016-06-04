@@ -21,6 +21,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  * 
  */
 public class RequestResultDAO {
+	
 	int seq;
 	
 	/** Execute start time */
