@@ -250,7 +250,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-			return new QueryExecuteResultDTO(userDB, true, rs, limitCount);
+			return new QueryExecuteResultDTO(userDB, requestQuery, true, rs, limitCount);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;

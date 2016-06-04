@@ -144,7 +144,7 @@ public class QueryUtils {
 				statement.execute(strSQL);
 				resultSet = statement.getResultSet();
 			}
-			return new QueryExecuteResultDTO(userDB, false, resultSet, intSelectLimitCnt, intStartCnt);
+			return new QueryExecuteResultDTO(userDB, strSQL, false, resultSet, intSelectLimitCnt, intStartCnt);
 			
 		} catch(Exception e) {
 			logger.error("execute query", e);

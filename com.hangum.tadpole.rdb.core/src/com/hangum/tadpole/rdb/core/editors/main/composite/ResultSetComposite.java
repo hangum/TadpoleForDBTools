@@ -25,12 +25,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.jobs.JobManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
@@ -50,7 +48,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -327,7 +324,7 @@ public class ResultSetComposite extends Composite {
 	 * @param reqQuery
 	 */
 	public boolean executeCommand(final RequestQuery reqQuery) {
-		// 쿼리를 이미 실행 중이라면 무시합니다.
+		// 쿼리를 이미 실행 중이라면 무시합니다
 		if(jobQueryManager != null) {
 			if(Job.RUNNING == jobQueryManager.getState()) {
 				if(logger.isDebugEnabled()) logger.debug("\t\t================= return already running query job "); //$NON-NLS-1$
@@ -399,10 +396,11 @@ public class ResultSetComposite extends Composite {
 						}
 						
 						if(!listStrSQL.isEmpty()) {
-							for (String strSQL : listStrSQL) {
-								reqQuery.setSql(strSQL);
-								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
-								listRSDao.add(rsDAO);
+							for(int i=0;i<listStrSQL.size(); i++) {
+								if(i >= BATCH_EXECUTE_SQL_LIMIT) break;
+								reqQuery.setSql(listStrSQL.get(i));
+								QueryExecuteResultDTO qeResultDao = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+								listRSDao.add(qeResultDao);
 							}
 						}
 						
@@ -572,7 +570,7 @@ public class ResultSetComposite extends Composite {
 				resultSet = runSQLSelect(statement, strSQL);
 			}
 			
-			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), true, resultSet, intSelectLimitCnt, intStartCnt);
+			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt);
 		} catch(Exception e) {
 			throw e;
 		} finally {
@@ -799,25 +797,32 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 */
 	private void changeResultType(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
-		for (QueryExecuteResultDTO rsDAO : listRSDao) {
-			boolean isMakePing = listRSDao.size()==1?false:true;
-			if(!compositeResult.getCompositeTail().getBtnPinSelection()) {
-				compositeResult.printUI(reqQuery, rsDAO, isMakePing);
-			} else {
-				compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
-				compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-				compositeResult.printUI(reqQuery, rsDAO, isMakePing);
+		try {
+			for (QueryExecuteResultDTO rsDAO : listRSDao) {
+				boolean isMakePing = listRSDao.size()==1?false:true;
+				RequestQuery reqNewQuery = (RequestQuery)reqQuery.clone();
+				reqNewQuery.setSql(rsDAO.getReqQuery());
 				
-				GridLayout gl_compositeResult = new GridLayout(1, false);
-				gl_compositeResult.verticalSpacing = 2;
-				gl_compositeResult.horizontalSpacing = 2;
-				gl_compositeResult.marginHeight = 0;
-				gl_compositeResult.marginWidth = 2;
-				compositeResult.setLayout(gl_compositeResult);
+				if(!compositeResult.getCompositeTail().getBtnPinSelection()) {
+					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing);
+				} else {
+					compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
+					compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing);
+					
+					GridLayout gl_compositeResult = new GridLayout(1, false);
+					gl_compositeResult.verticalSpacing = 2;
+					gl_compositeResult.horizontalSpacing = 2;
+					gl_compositeResult.marginHeight = 0;
+					gl_compositeResult.marginWidth = 2;
+					compositeResult.setLayout(gl_compositeResult);
+				}
 			}
+			
+			resultSashLayout();
+		} catch(Exception e) {
+			logger.error("show execute result", e);
 		}
-		
-		resultSashLayout();
 	}
 	
 	/**
