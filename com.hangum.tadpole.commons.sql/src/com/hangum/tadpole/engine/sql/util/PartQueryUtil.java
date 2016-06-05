@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.template.AltibaseDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.CubridDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.HIVEDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.MSSQLDMLTemplate;
@@ -40,9 +41,9 @@ public class PartQueryUtil {
 	public static String makeSelect(UserDBDAO userDB, String strQuery, int intStartPos, int intRowCnt) throws Exception {
 		String requestQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() | DBDefine.MARIADB_DEFAULT == userDB.getDBDefine() ) {
+		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine() ) {
 			requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
-		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() || DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
 			requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
 		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
 			requestQuery = String.format(SQLiteDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
@@ -50,6 +51,8 @@ public class PartQueryUtil {
 			requestQuery = String.format(CubridDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
 		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
 			requestQuery = String.format(PostgreDMLTemplate.TMP_GET_PARTDATA, strQuery,  intStartPos, intRowCnt);
+		} else if(DBDefine.ALTIBASE_DEFAULT == userDB.getDBDefine()) {
+			requestQuery = String.format(AltibaseDMLTemplate.TMP_GET_PARTDATA, strQuery,  intStartPos, intRowCnt);
 //		} else if(DBDefine.MSSQL_DEFAULT == userDB.getDBDefine() | DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine()) {
 //			requestQuery = String.format(MSSQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intRowCnt, intStartPos+intRowCnt);
 //			
