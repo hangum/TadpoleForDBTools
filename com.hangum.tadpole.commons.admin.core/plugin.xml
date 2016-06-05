@@ -20,7 +20,7 @@
       <editor
             class="com.hangum.tadpole.commons.admin.core.editors.system.AdminSystemSettingEditor"
             default="false"
-            icon="resources/icons/user.png"
+            icon="resources/icons/SystemConfiguration.png"
             id="com.hangum.tadpole.admin.editor.admn.system.setting"
             name="System setting">
       </editor>

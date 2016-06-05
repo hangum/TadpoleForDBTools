@@ -14,18 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ApplicationContext;
 
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
-import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 
 /**
  * get administrator preference
@@ -38,6 +34,15 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
  */
 public class GetAdminPreference extends AbstractPreference {
 	private static final Logger logger = Logger.getLogger(GetAdminPreference.class);
+
+	/**
+	 * db_time_zone
+	 * @return
+	 */
+	public static String getDBTimezone() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.DB_TIME_ZONE, AdminPreferenceDefine.DB_TIME_ZONE_VALUE);
+	}
 	
 	/**
 	 * api server uri
@@ -118,7 +123,7 @@ public class GetAdminPreference extends AbstractPreference {
 	 * @param key
 	 * @param userInfoDao
 	 */
-	public static void updateAdminData(String key, UserInfoDataDAO userInfoDao) {
+	public static void updateAdminSessionData(String key, UserInfoDataDAO userInfoDao) {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		mapUserInfoData.put(key, userInfoDao);
 	}
@@ -136,7 +141,7 @@ public class GetAdminPreference extends AbstractPreference {
 		if(dto == null) {
 			dto = getSMTPINFO();
 			if("".equals(dto.getSendgrid_api())) {
-				if("".equals(dto.getEmail()) | "".equals(dto.getPasswd())) {
+				if("".equals(dto.getEmail()) || "".equals(dto.getPasswd())) {
 					throw new Exception("Doesn't setting is SMTP Server.");
 				}
 			}

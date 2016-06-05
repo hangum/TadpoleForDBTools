@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.admin.core.editors.system;
 
 import java.io.File;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -59,6 +60,8 @@ import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
 public class AdminSystemSettingEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(AdminSystemSettingEditor.class);
 	public static final String ID = "com.hangum.tadpole.admin.editor.admn.system.setting"; //$NON-NLS-1$
+	
+	private Combo comboTimezone;
 	private Combo comboNewUserPermit;
 	private Text textResourceHome;
 	
@@ -128,6 +131,21 @@ public class AdminSystemSettingEditor extends EditorPart {
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		new Label(compositeBody, SWT.NONE);
+		
+		Label lblApplicationServer = new Label(compositeBody, SWT.NONE);
+		lblApplicationServer.setText("* Application Server와 DB Server의 Timezone은 같아야 합니다.");
+		
+		Label lblDBTimezone = new Label(compositeBody, SWT.NONE);
+		lblDBTimezone.setText("DB time zone");
+		
+		comboTimezone = new Combo(compositeBody, SWT.NONE);
+		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboTimezone.add("");
+		String[] timzons = TimeZone.getAvailableIDs();
+		for (String timzon : timzons) {
+			comboTimezone.add(timzon);
+		}
 		
 		Label lblLogDir = new Label(compositeBody, SWT.NONE);
 		lblLogDir.setText("Log dir");
@@ -175,17 +193,26 @@ public class AdminSystemSettingEditor extends EditorPart {
 		labelHorizontal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeBody, SWT.NONE);
 		
+		Label lblSendgrid = new Label(compositeBody, SWT.NONE);
+		lblSendgrid.setText("* 이메일이 SendGrid와 SMTP 둘다 설정 되어 있을 경우 SendGrid를 사용합니다.");
+		new Label(compositeBody, SWT.NONE);
+		
+		Group grpSendGrid = new Group(compositeBody, SWT.NONE);
+		grpSendGrid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpSendGrid.setText("SendGrid");
+		grpSendGrid.setLayout(new GridLayout(2, false));
+		
+		Label lblSendgridApiKey = new Label(grpSendGrid, SWT.NONE);
+		lblSendgridApiKey.setText("SendGrid API KEY");
+		
+		textSendGridAPI = new Text(grpSendGrid, SWT.BORDER);
+		textSendGridAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeBody, SWT.NONE);
+		
 		Group grpSMTPServer = new Group(compositeBody, SWT.NONE);
 		grpSMTPServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpSMTPServer.setText("SMTP Setting");
 		grpSMTPServer.setLayout(new GridLayout(2, false));
-		
-		Label lblSendgridApiKey = new Label(grpSMTPServer, SWT.NONE);
-		lblSendgridApiKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSendgridApiKey.setText("SendGrid API KEY");
-		
-		textSendGridAPI = new Text(grpSMTPServer, SWT.BORDER);
-		textSendGridAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblSmtpServer = new Label(grpSMTPServer, SWT.NONE);
 		lblSmtpServer.setText("SMTP Server");
@@ -261,6 +288,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * initialize UI
 	 */
 	private void initUI() {
+		comboTimezone.setText(GetAdminPreference.getDBTimezone());
 		comboIsAddDB.setText(GetAdminPreference.getIsAddDB());
 		comboIsSharedDB.setText(GetAdminPreference.getIsSharedDB());
 		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
@@ -313,26 +341,29 @@ public class AdminSystemSettingEditor extends EditorPart {
 		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().AdminSystemSettingEditor_4)) return;
 		
 		try {
-			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.NEW_USER_PERMIT, comboNewUserPermit.getText());
-			GetAdminPreference.updateAdminData(AdminPreferenceDefine.NEW_USER_PERMIT, userInfoDao);
+			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.DB_TIME_ZONE, comboTimezone.getText());
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.DB_TIME_ZONE, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.NEW_USER_PERMIT, comboNewUserPermit.getText());
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.NEW_USER_PERMIT, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.API_SERVER_URL, textAPIServerURL.getText());
-			GetAdminPreference.updateAdminData(AdminPreferenceDefine.API_SERVER_URL, userInfoDao);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.API_SERVER_URL, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_ADD_DB, comboIsAddDB.getText());
-			GetAdminPreference.updateAdminData(AdminPreferenceDefine.IS_ADD_DB, userInfoDao);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.IS_ADD_DB, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_SHARED_DB, comboIsSharedDB.getText());
-			GetAdminPreference.updateAdminData(AdminPreferenceDefine.IS_SHARED_DB, userInfoDao);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.IS_SHARED_DB, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, textIntLimtCnt.getText());
-			GetAdminPreference.updateAdminData(AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, userInfoDao);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SERVICE_DURATION_DAY, textDefaultUseDay.getText());
-			GetAdminPreference.updateAdminData(AdminPreferenceDefine.SERVICE_DURATION_DAY, userInfoDao);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SERVICE_DURATION_DAY, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SUPPORT_MONITORING, comboSupportMonitoring.getText());
-			GetAdminPreference.updateAdminData(AdminPreferenceDefine.SUPPORT_MONITORING, userInfoDao);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SUPPORT_MONITORING, userInfoDao);
 			
 			// update admin value
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SENDGRID_API_NAME, txtSendGrid);

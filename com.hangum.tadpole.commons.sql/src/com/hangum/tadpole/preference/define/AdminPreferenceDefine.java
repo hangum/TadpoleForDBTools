@@ -18,6 +18,10 @@ package com.hangum.tadpole.preference.define;
  */
 public class AdminPreferenceDefine {
 	private static final String _PREFIX = "ADMIN_";
+	
+	/** DBMS timezone */
+	public static final String DB_TIME_ZONE = _PREFIX + "DB_TIME_ZONE";
+	public static final String DB_TIME_ZONE_VALUE = "";
 
 	/** 신규 사용자 허락 유무 */
 	public static final String NEW_USER_PERMIT = _PREFIX + "NEW_USER_PERMIT";
