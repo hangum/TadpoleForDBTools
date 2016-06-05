@@ -262,8 +262,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		manageMenu.add(openCompareAction);
 		
 		if(isAdmin) {
-			adminMenu.add(adminSystemSettingAction);
 			adminMenu.add(adminSendMessageAction);
+			adminMenu.add(new Separator());
+			adminMenu.add(adminSystemSettingAction);
 			adminMenu.add(adminUserAction);
 			adminMenu.add(adminSQLAuditAction);
 			adminMenu.add(new Separator());

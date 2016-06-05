@@ -50,7 +50,7 @@ public class AdminSystemSettingAction extends Action implements ISelectionListen
 		setId(ID);
 		setText(Messages.get().AdminSystemSettingAction_0);
 		setToolTipText(Messages.get().AdminSystemSettingAction_0);
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/user.png")); //$NON-NLS-1$
+		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/SystemConfiguration.png")); //$NON-NLS-1$
 		setEnabled(true);
 	}
 	
