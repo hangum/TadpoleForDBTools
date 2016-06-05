@@ -18,11 +18,10 @@ import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
-import org.eclipse.draw2d.ConnectionEndpointLocator;
+import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -38,9 +37,9 @@ import com.hangum.tadpole.rdb.model.Relation;
 public class RelationEditPart extends AbstractConnectionEditPart {
 	private static final Logger logger = Logger.getLogger(RelationEditPart.class);
 	private RelationAdapter adapter;
-	private Label labelSource;
-	
-	private Label labelTarget;
+
+//	private Label labelSource;
+//	private Label labelTarget;
 
 	public RelationEditPart() {
 		super();
@@ -65,30 +64,35 @@ public class RelationEditPart extends AbstractConnectionEditPart {
 		conn.setSourceDecoration(new RelationDecorator(relation.getSource_kind().getName()));
 		conn.setTargetDecoration(new RelationDecorator(relation.getTarget_kind().getName()));
 		
-		// source
-		// text에는 target 이름을 넣는다.
-		labelSource = new Label();
-		labelSource.setText(relation.getReferenced_column_name());
-		labelSource.setLabelAlignment(PositionConstants.CENTER);
-		labelSource.setOpaque(true);
-		labelSource.setBackgroundColor(ColorConstants.white());
-		labelSource.setForegroundColor(ColorConstants.darkBlue());
-		conn.add(labelSource, new ConnectionEndpointLocator(conn, true));
-
-		// target
-		// text에서 source이름을 넣는다.
-		//
-		labelTarget = new Label();
-		labelTarget.setText(relation.getColumn_name());
-		labelTarget.setLabelAlignment(PositionConstants.CENTER);
-		labelTarget.setOpaque(true);
-		labelTarget.setBackgroundColor(ColorConstants.white());
-		labelTarget.setForegroundColor(ColorConstants.darkBlue());
-		conn.add(labelTarget, new ConnectionEndpointLocator(conn, false));
+		Label labelSourceTarget = new Label();
+		labelSourceTarget.setText(String.format("%s:%s", relation.getReferenced_column_name(), relation.getColumn_name()));
+		labelSourceTarget.setForegroundColor(ColorConstants.darkBlue());
+		labelSourceTarget.setBackgroundColor(ColorConstants.white());
+		conn.add(labelSourceTarget, new ConnectionLocator(conn, ConnectionLocator.MIDDLE));
+		
+//		// source
+//		// text에는 target 이름을 넣는다.
+//		labelSource = new Label();
+//		labelSource.setText(relation.getReferenced_column_name());
+//		labelSource.setLabelAlignment(PositionConstants.CENTER);
+//		labelSource.setOpaque(true);
+//		labelSource.setBackgroundColor(ColorConstants.white());
+//		labelSource.setForegroundColor(ColorConstants.darkBlue());
+//		conn.add(labelSource, new ConnectionEndpointLocator(conn, true));
+//
+//		// target
+//		// text에서 source이름을 넣는다.
+//		labelTarget = new Label();
+//		labelTarget.setText(relation.getColumn_name());
+//		labelTarget.setLabelAlignment(PositionConstants.CENTER);
+//		labelTarget.setOpaque(true);
+//		labelTarget.setBackgroundColor(ColorConstants.white());
+//		labelTarget.setForegroundColor(ColorConstants.darkBlue());
+//		conn.add(labelTarget, new ConnectionEndpointLocator(conn, false));
 		
 		return conn;
 	}
-
+	
 	@Override
 	protected void refreshVisuals() {
 		Connection connection = getConnectionFigure();

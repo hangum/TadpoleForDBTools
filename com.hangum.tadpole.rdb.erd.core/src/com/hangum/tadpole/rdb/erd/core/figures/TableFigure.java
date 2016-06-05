@@ -11,19 +11,21 @@
 package com.hangum.tadpole.rdb.erd.core.figures;
 
 import org.apache.log4j.Logger;
-import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -50,9 +52,9 @@ public class TableFigure extends Figure {
 	
 	public TableFigure() {
 		tableName = new Label();
-		
 		tableName.setBorder(new MarginBorder(2, 2, 0, 2));
 		tableName.setForegroundColor(ColorConstants.blue());
+		tableName.setFont(TadpoleApplicationContextManager.getERDTitleFont());
 
 		columnFigure = new ColumnLayoutFigure();
 		// key

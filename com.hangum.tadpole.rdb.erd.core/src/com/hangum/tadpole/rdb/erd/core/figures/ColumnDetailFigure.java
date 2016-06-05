@@ -12,12 +12,8 @@ package com.hangum.tadpole.rdb.erd.core.figures;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
 
-import com.hangum.tadpole.rdb.erd.core.Messages;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -28,15 +24,13 @@ import com.hangum.tadpole.session.manager.SessionManager;
  */
 public class ColumnDetailFigure extends Figure {
 	
-	
+	/**
+	 * column detail figure
+	 */
 	public ColumnDetailFigure() {
 		
 		if("Asia/Seoul".equals(SessionManager.getTimezone())) {
-			try{
-				super.setFont(new Font(Display.getCurrent(), new FontData(Messages.get().Gullim, 12, SWT.NONE)));
-			} catch(Exception e) {
-				//
-			}
+			super.setFont(TadpoleApplicationContextManager.getGulimFont());
 		}
 		
 		ToolbarLayout layout = new ToolbarLayout();
