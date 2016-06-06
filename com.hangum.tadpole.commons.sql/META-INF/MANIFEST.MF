@@ -20,7 +20,8 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  .,
  libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar,
  libs/driver/mongo/mongo-java-driver-3.2.0.jar,
- libs/driver/sqlite/sqlite-jdbc-3.7.2.jar
+ libs/driver/sqlite/sqlite-jdbc-3.7.2.jar,
+ libs/apache/joda-time-2.3.jar
 Export-Package: 
  com.hangum.tadpole.db.bander.cubrid,
  com.hangum.tadpole.db.bander.oracle,
@@ -68,6 +69,7 @@ Export-Package:
  com.hangum.tadpole.engine.sql.util.sqlscripts,
  com.hangum.tadpole.engine.sql.util.sqlscripts.scripts,
  com.hangum.tadpole.engine.sql.util.tables,
+ com.hangum.tadpole.engine.utils,
  com.hangum.tadpole.preference.define,
  com.hangum.tadpole.session.manager,
  com.ibatis.sqlmap.client,

@@ -957,6 +957,7 @@ SELECT
  	SELECT 
  			b.executed_sql_resource_seq, 
  			a.types,
+ 			a.duration,
  			a.startdateexecute, 
  			a.enddateexecute,
  			a.message, 
@@ -999,6 +1000,7 @@ SELECT
  	SELECT 
  			b.executed_sql_resource_seq, 
  			a.types,
+ 			a.duration,
  			a.startdateexecute, 
  			a.enddateexecute,
  			a.message, 
@@ -1045,7 +1047,7 @@ SELECT
 	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
  -->
 <select id="getExecuteQueryHistory" resultClass="java.util.HashMap" parameterClass="java.util.Map">
-	  SELECT b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result, a.message
+	 SELECT a.duration, b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result, a.message
 	 FROM 
 	 executed_sql_resource a,
 	 executed_sql_resource_data b

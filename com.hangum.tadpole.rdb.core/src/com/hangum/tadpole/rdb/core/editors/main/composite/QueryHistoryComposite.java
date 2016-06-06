@@ -33,11 +33,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.dialogs.message.TadpoleMessageDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
+import com.hangum.tadpole.engine.utils.UTCUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.SWTResourceManager;
@@ -230,11 +230,11 @@ public class QueryHistoryComposite extends Composite {
 		}
 		
 		item.setText(0, ""+gridSQLHistory.getRootItemCount()); //$NON-NLS-1$
-		item.setText(1, Utils.dateToStr(reqResultDAO.getStartDateExecute()));
+		item.setText(1, UTCUtil.dateToStr(reqResultDAO.getStartDateExecute()));
 		item.setText(2, Utils.convLineToHtml(strSQL));
 		item.setToolTipText(2, strSQL);
 		
-		item.setText(3, ""+( (reqResultDAO.getEndDateExecute().getTime() - reqResultDAO.getStartDateExecute().getTime()) / 1000f)); //$NON-NLS-1$
+		item.setText(3, ""+(reqResultDAO.getDuration())); //$NON-NLS-1$
 		item.setText(4, ""+reqResultDAO.getRows()); //$NON-NLS-1$
 		item.setText(5, reqResultDAO.getResult());
 		
@@ -293,7 +293,7 @@ public class QueryHistoryComposite extends Composite {
 		GridColumn tvcDuration = new GridColumn(gridSQLHistory, SWT.RIGHT);
 		tvcDuration.setWidth(60);
 		tvcDuration.setMoveable(true);
-		tvcDuration.setText(Messages.get().Sec);
+		tvcDuration.setText(Messages.get().ms);
 		
 		// rows
 		GridColumn tvcRows = new GridColumn(gridSQLHistory, SWT.RIGHT);

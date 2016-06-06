@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.commons.libs.core.sqls;
+package com.hangum.tadpole.engine.sql.util;
 
 import java.util.Date;
 

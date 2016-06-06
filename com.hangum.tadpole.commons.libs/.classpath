@@ -10,7 +10,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/mail/commons-email-1.3.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mail/activation-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mail/mail.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/apache/commons/joda-time-2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/formatter/kry.sql.format_1.0.0.v20101023.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/log4j/log4j-1.2.16.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/httpcomponents-client-4.1.1/httpclient-4.1.1.jar"/>

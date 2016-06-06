@@ -132,8 +132,9 @@ public class TadpoleSystem_ExecutedSQL {
 			int dbSeq2 = (Integer) resultMap.get("dbseq");
 			
 			String strMessage = (String)resultMap.get("message");
+			int duration = (Integer) resultMap.get("duration");
 
-			RequestResultDAO dao = new RequestResultDAO(userName+"("+ userEmail+")", dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
+			RequestResultDAO dao = new RequestResultDAO(duration,userName+"("+ userEmail+")", dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
 					ipAddress, dbSeq2);
 			dao.setSeq(seq);
 			if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
@@ -195,7 +196,9 @@ public class TadpoleSystem_ExecutedSQL {
 			int row 			= (Integer)resultMap.get("row");
 			String result 		= (String)resultMap.get("result");
 			
-			RequestResultDAO dao = new RequestResultDAO(new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage);
+			int duration 		= (Integer)resultMap.get("duration");
+			
+			RequestResultDAO dao = new RequestResultDAO(duration, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage);
 			dao.setSeq(seq);
 			returnSQLHistory.add(dao);
 		}

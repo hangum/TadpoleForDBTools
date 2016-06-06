@@ -35,6 +35,7 @@ public class RequestResultDAO {
 	boolean dataChanged = false;
 	String result = PublicTadpoleDefine.SUCCESS_FAIL.S.toString();
 	String messsage = "";
+	int duration;
 
 	String userName;
 	String dbName;
@@ -46,7 +47,8 @@ public class RequestResultDAO {
 	/** execute_sql_type */
 	PublicTadpoleDefine.EXECUTE_SQL_TYPE EXECUSTE_SQL_TYPE = PublicTadpoleDefine.EXECUTE_SQL_TYPE.SESSION;
 
-	public RequestResultDAO(Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message) {
+	public RequestResultDAO(int duration, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message) {
+		this.duration = duration;
 		this.userName = "";
 		this.dbName = "";
 		this.startDateExecute = dateExecute;
@@ -58,8 +60,9 @@ public class RequestResultDAO {
 	}
 
 	// Sql history for executedSqlEditor
-	public RequestResultDAO(String userName, String dbName, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message,
+	public RequestResultDAO(int duration, String userName, String dbName, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message,
 			String ipAddress, int dbSeq) {
+		this.duration = duration;
 		this.userName = userName;
 		this.dbName = dbName;
 		this.ipAddress = ipAddress;
@@ -232,6 +235,20 @@ public class RequestResultDAO {
 	 */
 	public void setDataChanged(boolean dataChanged) {
 		this.dataChanged = dataChanged;
+	}
+
+	/**
+	 * @return the duration
+	 */
+	public int getDuration() {
+		return duration;
+	}
+
+	/**
+	 * @param duration the duration to set
+	 */
+	public void setDuration(int duration) {
+		this.duration = duration;
 	}
 
 }

@@ -52,7 +52,6 @@ import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionServ
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
-import com.hangum.tadpole.commons.libs.core.sqls.ParameterUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -63,6 +62,7 @@ import com.hangum.tadpole.engine.sql.paremeter.lang.GenericTokenParser;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
+import com.hangum.tadpole.engine.sql.util.ParameterUtils;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
