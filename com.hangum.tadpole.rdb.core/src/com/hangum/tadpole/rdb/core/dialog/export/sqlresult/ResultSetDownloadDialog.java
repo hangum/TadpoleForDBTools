@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -44,7 +44,6 @@ import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportHTMLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportJSONComposite;
@@ -56,8 +55,8 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportJsonDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
-import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 
 /**
  * Resultset to download
@@ -92,7 +91,6 @@ public class ResultSetDownloadDialog extends Dialog {
 	// preview 
 	private Text textPreview;
 	protected DownloadServiceHandler downloadServiceHandler;
-	private MainEditor targetEditor;
 	
 	/**
 	 * Create the dialog.
@@ -182,15 +180,6 @@ public class ResultSetDownloadDialog extends Dialog {
 				
 			}else if(buttonId == SENDEDITOR_ID) {
 				btnStatus = BTN_STATUS.SENDEDITOR;
-				
-				QueryEditorAction qea = new QueryEditorAction();
-				IEditorPart activeEditor = qea.open(queryExecuteResultDTO.getUserDB());
-				
-				if (activeEditor instanceof MainEditor) {
-					targetEditor = (MainEditor) activeEditor;
-					targetEditor.setDirty(true); // 저장버튼 활성
-					targetEditor.setFocus();
-				}
 			} else if(buttonId == IDialogConstants.OK_ID) {
 				btnStatus = BTN_STATUS.DOWNLOAD;
 			}
@@ -314,7 +303,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		if (btnStatus == BTN_STATUS.PREVIEW) {
 			previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT), encoding);
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-			targetEditor.appendText(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator));
+			targetEditor(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
 			downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, allResusltDto, seprator), encoding);
@@ -331,7 +320,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		if (btnStatus == BTN_STATUS.PREVIEW) {
 			previewDataLoad(targetName, HTMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT), encoding);
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-			targetEditor.appendText(HTMLExporter.makeContent(targetName, queryExecuteResultDTO));
+			targetEditor(HTMLExporter.makeContent(targetName, queryExecuteResultDTO));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
 			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, allResusltDto), encoding);
@@ -353,7 +342,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
 				previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, PREVIEW_COUNT), encoding);
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-				targetEditor.appendText(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, -1));
+				targetEditor(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, -1));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
 				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, allResusltDto, schemeKey, recordKey, isFormat), encoding);
@@ -362,7 +351,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
 				previewDataLoad(targetName, JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, PREVIEW_COUNT), encoding);
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-				targetEditor.appendText(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, -1));
+				targetEditor(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, -1));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
 				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, allResusltDto, isFormat), encoding);
@@ -380,7 +369,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		if (btnStatus == BTN_STATUS.PREVIEW) {
 			previewDataLoad(targetName, XMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT), encoding);
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-			targetEditor.appendText(XMLExporter.makeContent(targetName, queryExecuteResultDTO));
+			targetEditor(XMLExporter.makeContent(targetName, queryExecuteResultDTO));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
 			downloadFile(targetName, XMLExporter.makeContentFile(targetName, allResusltDto), encoding);
@@ -401,7 +390,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
 				previewDataLoad(targetName, SQLExporter.makeBatchInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-				targetEditor.appendText(SQLExporter.makeBatchInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
+				targetEditor(SQLExporter.makeBatchInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
 				downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, allResusltDto, commit), encoding);
@@ -410,7 +399,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
 				previewDataLoad(targetName, SQLExporter.makeInsertStatment(targetName, queryExecuteResultDTO, PREVIEW_COUNT, commit), encoding);
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-				targetEditor.appendText(SQLExporter.makeInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
+				targetEditor(SQLExporter.makeInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
 				downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, allResusltDto, commit), encoding);
@@ -419,7 +408,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
 				previewDataLoad(targetName, SQLExporter.makeUpdateStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-				targetEditor.appendText(SQLExporter.makeUpdateStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
+				targetEditor(SQLExporter.makeUpdateStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
 				downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, allResusltDto, listWhere, commit), encoding);
@@ -428,12 +417,21 @@ public class ResultSetDownloadDialog extends Dialog {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
 				previewDataLoad(targetName, SQLExporter.makeMergeStatment(targetName, queryExecuteResultDTO, listWhere, PREVIEW_COUNT, commit), encoding);
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-				targetEditor.appendText(SQLExporter.makeMergeStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
+				targetEditor(SQLExporter.makeMergeStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
 				downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, allResusltDto, listWhere, commit), encoding);
 			}
 		}
+	}
+	
+	/**
+	 * 에디터 오픈
+	 * 
+	 * @param strContetn
+	 */
+	private void targetEditor(String strContetn) {
+		FindEditorAndWriteQueryUtil.run(queryExecuteResultDTO.getUserDB(), strContetn, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 	}
 	
 	/**
