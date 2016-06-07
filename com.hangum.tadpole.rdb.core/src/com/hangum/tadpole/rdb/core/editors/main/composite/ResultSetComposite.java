@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -104,7 +105,6 @@ public class ResultSetComposite extends Composite {
 	
 	/**
 	 * 에디터가 select 에디터인지 즉 구분자로 쿼리를 검색하는 상태인지 나타냅니다.
-	 * 
 	 */
 	private boolean isSelect = true;
 	/**
@@ -118,12 +118,10 @@ public class ResultSetComposite extends Composite {
 	/** result composite */
 	private ResultMainComposite rdbResultComposite;
 	
-	/** 쿼리 호출 후 결과 dao */
-//	private QueryExecuteResultDTO rsDAO = new QueryExecuteResultDTO();
-	
 	private ProgressBar progressBarQuery;
 	private Button btnStopQuery;
 	
+	private ScrolledComposite scrolledComposite;
 	private SashForm sashFormResult;
 	/** 쿼리 결과 컴포짖 */
 	private AbstractResultDetailComposite compositeResult;
@@ -189,23 +187,32 @@ public class ResultSetComposite extends Composite {
 			}
 		});
 		btnAddVertical.setToolTipText(Messages.get().ChangeRotation);
-		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_vertical.png"));
+		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_horizontal.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);
 		lblTemp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		sashFormResult = new SashForm(this, SWT.HORIZONTAL);
+		// scrolled composite
+		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
+		
+		sashFormResult = new SashForm(scrolledComposite, SWT.VERTICAL);
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
+		compositeResult = new ResultTableComposite(sashFormResult, SWT.NONE, this);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;
 		gl_compositeResult.horizontalSpacing = 2;
-		gl_compositeResult.marginHeight = 0;
+		gl_compositeResult.marginHeight = 200;
 		gl_compositeResult.marginWidth = 2;
 		compositeResult.setLayout(gl_compositeResult);
+		
+		scrolledComposite.setContent(sashFormResult);
+		scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
 	/**
@@ -602,9 +609,7 @@ public class ResultSetComposite extends Composite {
 			}
 		});
 		
-		
 		/* SELECT ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
-    
 		 * Caused by: java.lang.NullPointerException
 			at oracle.jdbc.driver.T4C8Oall.getNumRows(T4C8Oall.java:973)
 		 */
@@ -793,10 +798,23 @@ public class ResultSetComposite extends Composite {
 	}
 		
 	/**
-	 * change result type
-	 * 
+	 * 결과탭을 새로 생성하거나 합니다.
 	 */
 	private void changeResultType(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
+		
+		// 모든 쿼리를 수행 하면 기존 결과 화면을 핀 유무와 상관없이 닫는다.
+		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
+			Control[] childControls = sashFormResult.getChildren();
+			for (int i=0; i<childControls.length; i++) {
+				Control control = childControls[i];
+				if(control instanceof ResultTableComposite) {
+					ResultTableComposite resultComposite = (ResultTableComposite)control;
+					resultComposite.dispose();
+				}
+			}
+		}
+		
+		// 화면 결과를 출력한다.
 		try {
 			for (QueryExecuteResultDTO rsDAO : listRSDao) {
 				boolean isMakePing = listRSDao.size()==1?false:true;
@@ -887,6 +905,7 @@ public class ResultSetComposite extends Composite {
 			logger.error("calc weights of result composite");
 		}
 		sashFormResult.layout();
+		scrolledComposite.layout();
 	}
 	
 	/**
@@ -944,12 +963,4 @@ public class ResultSetComposite extends Composite {
 	public boolean isSelect() {
 		return isSelect;
 	}
-	
-//	public RequestQuery getReqQuery() {
-//		return reqQuery;
-//	}
-	
-//	public QueryExecuteResultDTO getRsDAO() {
-//		return rsDAO;
-//	}
 }

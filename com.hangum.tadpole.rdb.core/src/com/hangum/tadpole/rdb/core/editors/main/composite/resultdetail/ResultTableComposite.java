@@ -140,6 +140,12 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tvQueryResult = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
+		gl_compositeHead = new GridLayout(2, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginHeight = 50;
+		gl_compositeHead.marginWidth = 2;
+		tableResult.setLayout(gl_compositeHead);
 
 		final String PREFERENCE_USER_FONT = GetPreferenceGeneral.getRDBResultFont();
 		if(!"".equals(PREFERENCE_USER_FONT)) { //$NON-NLS-1$
