@@ -45,7 +45,7 @@ public class ZipUtils {
 		String zipFullPath = PublicTadpoleDefine.TEMP_DIR + zipFile + ".zip";
 		ZipUtil.pack(new File(base_dir), new File(zipFullPath), new NameMapper() {
 			public String map(String name) {
-				return "/" + name;
+				return name;
 			}
 		});
 		
