@@ -23,6 +23,7 @@ import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -35,6 +36,7 @@ import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import com.hangum.tadpole.rdb.erd.core.figures.decoration.relation.RelationDecorator;
 import com.hangum.tadpole.rdb.erd.core.policies.RelationBendpointEditPolicy;
 import com.hangum.tadpole.rdb.model.Relation;
+import com.hangum.tadpole.rdb.model.Table;
 
 public class RelationEditPart extends AbstractConnectionEditPart {
 	private static final Logger logger = Logger.getLogger(RelationEditPart.class);
@@ -77,7 +79,29 @@ public class RelationEditPart extends AbstractConnectionEditPart {
 		labelSourceTarget.setBackgroundColor(ColorConstants.white());
 		labelSourceTarget.setToolTip(new Label(String.format("%s:%s", relation.getReferenced_column_name(), relation.getColumn_name())));
 		
-		conn.add(labelSourceTarget, new ConnectionLocator(conn, ConnectionLocator.MIDDLE));
+		
+		Table table = relation.getTarget();
+		if(table == null) {
+			conn.add(labelSourceTarget, new ConnectionLocator(conn, ConnectionLocator.MIDDLE));
+		} else {
+			EList<Relation> list = table.getIncomingLinks();
+			if(list.size() == 1) {
+				conn.add(labelSourceTarget, new ConnectionLocator(conn, ConnectionLocator.MIDDLE));
+			} else {
+				for (Relation tmpRelation : list) {
+					if(StringUtils.equals(tmpRelation.getConstraint_name(), relation.getConstraint_name())) {
+						ConnectionLocator cl = new ConnectionLocator(conn, ConnectionLocator.MIDDLE);
+						cl.setGap(10);
+						cl.setRelativePosition(PositionConstants.SOUTH);
+						conn.add(labelSourceTarget, cl);
+					} else {
+						ConnectionLocator cl = new ConnectionLocator(conn, ConnectionLocator.MIDDLE);
+						cl.setRelativePosition(PositionConstants.WEST);
+						conn.add(labelSourceTarget, cl);
+					}
+				}
+			}
+		}
 		
 		return conn;
 	}
