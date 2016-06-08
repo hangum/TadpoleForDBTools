@@ -43,6 +43,7 @@ import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
 import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportHTMLComposite;
@@ -166,7 +167,12 @@ public class ResultSetDownloadDialog extends Dialog {
 		
 		registerServiceHandler();
 		
+		initUIData();
+		
 		return container;
+	}
+	
+	private void initUIData() {
 	}
 	
 	@Override
@@ -274,7 +280,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		final String strSQL = requestQuery.getSql();
 		QueryExecuteResultDTO allResultDto = null; 
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(queryExecuteResultDTO.getUserDB(), strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(queryExecuteResultDTO.getUserDB(), strSQL, GetPreferenceGeneral.getResultNull());
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO partResultDto = sqlUtil.nextQuery();
 				if(allResultDto == null) {

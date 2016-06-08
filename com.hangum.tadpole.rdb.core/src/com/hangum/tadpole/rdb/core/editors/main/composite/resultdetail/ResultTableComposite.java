@@ -487,9 +487,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
 					final String strUserEmail 	= SessionManager.getEMAIL();
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
+					final String strNullValue   = GetPreferenceGeneral.getResultNull();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size(), strNullValue);
 						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );

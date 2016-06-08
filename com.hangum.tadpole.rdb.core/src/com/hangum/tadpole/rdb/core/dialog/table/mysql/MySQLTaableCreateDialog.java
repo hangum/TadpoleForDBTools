@@ -39,6 +39,7 @@ import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
@@ -141,7 +142,7 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 			try {
 				// 으로 가져와서 comboTableEncoding 에 설정해 준다.
 				QueryExecuteResultDTO showCharacterSet = QueryUtils.executeQuery(userDB, 
-						String.format("SELECT * FROM information_schema.collations WHERE character_set_name = '%s' ORDER BY collation_name ASC", selColumnData.get(0)), 0, 100);
+						String.format("SELECT * FROM information_schema.collations WHERE character_set_name = '%s' ORDER BY collation_name ASC", selColumnData.get(0)), 0, 100, GetPreferenceGeneral.getResultNull());
 				for (Map<Integer, Object> columnData : showCharacterSet.getDataList().getData()) {
 					comboTableCollation.add(""+columnData.get(0));
 					comboTableCollation.setData(""+columnData.get(0), ""+columnData.get(0));
@@ -164,13 +165,13 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 			 	SHOW VARIABLES LIKE 'collation_database'
 			 */
 			String strDefaultCollation = "";
-			QueryExecuteResultDTO showCollationDatabase = QueryUtils.executeQuery(userDB, "SHOW VARIABLES LIKE 'collation_database'", 0, 10);
+			QueryExecuteResultDTO showCollationDatabase = QueryUtils.executeQuery(userDB, "SHOW VARIABLES LIKE 'collation_database'", 0, 10, GetPreferenceGeneral.getResultNull());
 			for (Map<Integer, Object> columnData : showCollationDatabase.getDataList().getData()) {
 				strDefaultCollation = ""+columnData.get(1);
 			}
 			
 			// 으로 가져와서 comboTableEncoding 에 설정해 준다.
-			QueryExecuteResultDTO showCharacterSet = QueryUtils.executeQuery(userDB, "SELECT * FROM information_schema.character_sets ORDER BY character_set_name ASC", 0, 100);
+			QueryExecuteResultDTO showCharacterSet = QueryUtils.executeQuery(userDB, "SELECT * FROM information_schema.character_sets ORDER BY character_set_name ASC", 0, 100, GetPreferenceGeneral.getResultNull());
 			for (Map<Integer, Object> columnData : showCharacterSet.getDataList().getData()) {
 				String strViewData = String.format("%s (%s)", columnData.get(2), columnData.get(1));
 				if(StringUtils.startsWithIgnoreCase(""+columnData.get(1), strDefaultCollation)) {
@@ -187,7 +188,7 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 			/*
 			 * default engine
 			 */
-			TadpoleResultSet tdbEngine = QueryUtils.executeQuery(userDB, "SELECT engine, support, comment FROM information_schema.engines WHERE support IN ('DEFAULT', 'YES')", 0, 20).getDataList();
+			TadpoleResultSet tdbEngine = QueryUtils.executeQuery(userDB, "SELECT engine, support, comment FROM information_schema.engines WHERE support IN ('DEFAULT', 'YES')", 0, 20, GetPreferenceGeneral.getResultNull()).getDataList();
 			String strDefaultEngine = "";
 			for (Map<Integer, Object> mapColumnData : tdbEngine.getData()) {
 				String strViewData = ""+mapColumnData.get(1);

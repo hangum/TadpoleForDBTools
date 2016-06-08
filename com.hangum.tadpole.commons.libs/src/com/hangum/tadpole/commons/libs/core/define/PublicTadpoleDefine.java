@@ -116,8 +116,8 @@ public class PublicTadpoleDefine {
 	/** 외부 계정으로 올챙이가 접속 할때의 외부 계정 리스트. 현재는 external_account 의 type에 사용. */
 	public enum EXTERNAL_ACCOUNT {AMAZONRDS};
 	
-	/** NULL VALUE */
-	public static final String DEFINE_NULL_VALUE = "{null}";
+//	/** NULL VALUE */
+//	public static final String DEFINE_NULL_VALUE = "{null}";
 	
 	/** user login type */
 	public static enum INPUT_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};

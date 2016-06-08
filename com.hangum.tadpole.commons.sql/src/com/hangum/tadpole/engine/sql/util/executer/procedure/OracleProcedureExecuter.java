@@ -73,7 +73,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 	}
 	
 	@Override
-	public boolean exec(List<InOutParameterDAO> parameterList)  throws Exception {
+	public boolean exec(final List<InOutParameterDAO> parameterList, final String strNullValue)  throws Exception {
 		initResult();
 		
 		java.sql.Connection javaConn = null;
@@ -113,7 +113,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 					pstmt.setObject(dao.getOrder(), "");
 				}
 				ResultSet rs = pstmt.executeQuery();
-				setResultCursor(strExecuteScript, rs);
+				setResultCursor(strExecuteScript, rs, strNullValue);
 			}else{
 			
 				// set prepare call
@@ -151,7 +151,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 						if ("SYS_REFCURSOR".equals(dao.getRdbType())){
 							isCursor = true;
 							ResultSet rs = (ResultSet)obj;
-							setResultCursor(strExecuteScript, rs);
+							setResultCursor(strExecuteScript, rs, strNullValue);
 							// cursor의 결과 리턴은 항상 1개입니다.
 						}else{
 							dao.setValue(obj.toString());
@@ -178,7 +178,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 						sourceDataList.add(tmpRow);
 					}
 					
-					setResultNoCursor(strExecuteScript, new TadpoleResultSet(sourceDataList));
+					setResultNoCursor(strExecuteScript, new TadpoleResultSet(sourceDataList), strNullValue);
 				}
 			}
 			try { dbmsOutput.show(); } catch(SQLException e) { logger.error("dbmsoutput exception", e); }

@@ -459,6 +459,7 @@ public class ResultSetComposite extends Composite {
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
+		final String strNullValue	= GetPreferenceGeneral.getResultNull();
 		final UserDBDAO tmpUserDB 	= getUserDB();
 		final String errMsg = Messages.get().MainEditor_21;
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
@@ -495,7 +496,7 @@ public class ResultSetComposite extends Composite {
 							for(int i=0;i<listStrSQL.size(); i++) {
 								if(i >= BATCH_EXECUTE_SQL_LIMIT) break;
 								reqQuery.setSql(listStrSQL.get(i));
-								QueryExecuteResultDTO qeResultDao = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+								QueryExecuteResultDTO qeResultDao = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0, strNullValue);
 								listRSDao.add(qeResultDao);
 							}
 						}
@@ -503,9 +504,9 @@ public class ResultSetComposite extends Composite {
 					} else {
 						if(reqQuery.isStatement()) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName));
+								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName, strNullValue));
 							} else {
-								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0, strNullValue);
 								if(rsDAO.getDataList() == null) {
 									reqResultDAO.setRows(0);
 								} else {
@@ -598,10 +599,11 @@ public class ResultSetComposite extends Composite {
 	 * @param strUserEmail
 	 * @param intSelectLimitCnt
 	 * @param intStartCnt
+	 * @param strNullValue 
 	 * @return
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO runSelect(final RequestQuery reqQuery, final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt) throws Exception {
+	public QueryExecuteResultDTO runSelect(final RequestQuery reqQuery, final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt, String strNullValue) throws Exception {
 		String strSQL = reqQuery.getSql();
 		if(logger.isDebugEnabled()) logger.debug("==> real execute query : " + strSQL);
 		
@@ -666,7 +668,7 @@ public class ResultSetComposite extends Composite {
 				resultSet = runSQLSelect(statement, strSQL);
 			}
 			
-			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt);
+			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt, strNullValue);
 		} catch(Exception e) {
 			throw e;
 		} finally {

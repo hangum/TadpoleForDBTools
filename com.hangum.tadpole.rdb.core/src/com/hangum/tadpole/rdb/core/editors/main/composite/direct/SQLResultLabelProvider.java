@@ -36,6 +36,7 @@ import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
@@ -135,7 +136,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		}
 		
 		if(obj == null) {
-			return PublicTadpoleDefine.DEFINE_NULL_VALUE;
+			return GetPreferenceGeneral.getResultNull();
 		} else {
 			if(getRDBShowInTheColumn() == -1) {
 				return obj.toString();
@@ -215,7 +216,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * @return
 	 */
 	private static String addComma(Object value) {
-		if(value==null) return PublicTadpoleDefine.DEFINE_NULL_VALUE;
+		if(value==null) return GetPreferenceGeneral.getResultNull();
 		
 		try{
 			DecimalFormat nf = new DecimalFormat("###,###.#############");

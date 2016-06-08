@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.resultset;
 
-import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -20,7 +19,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
@@ -43,8 +41,8 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount) throws SQLException {
-		return getResultToList(false, rs, limitCount, 0);
+	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount, String strNullValue) throws SQLException {
+		return getResultToList(false, rs, limitCount, 0, strNullValue);
 	}
 	
 	/**
@@ -59,7 +57,7 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex) throws SQLException {
+	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex, String strNullValue) throws SQLException {
 		TadpoleResultSet returnRS = new TadpoleResultSet();
 		Map<Integer, Object> tmpRow = null;
 		
@@ -85,7 +83,7 @@ public class ResultSetUtils {
 //						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 //					} else
 					if(obj == null) {
-						tmpRow.put(intShowColIndex, PublicTadpoleDefine.DEFINE_NULL_VALUE);
+						tmpRow.put(intShowColIndex, strNullValue);
 					} else {
 						String type = obj.getClass().getSimpleName();
 						if(type.toUpperCase().contains("LOB")) {

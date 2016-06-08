@@ -91,7 +91,7 @@ public class MSSQLProcedureExecuter extends ProcedureExecutor {
 	}
 	
 	@Override
-	public boolean exec(List<InOutParameterDAO> parameterList)  throws Exception {
+	public boolean exec(List<InOutParameterDAO> parameterList, String strNullValue)  throws Exception {
 		throw new Exception("Do now use the method");
 	}
 	

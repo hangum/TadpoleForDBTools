@@ -37,12 +37,13 @@ public class ExecuteQueryPlan {
 	 * @param reqQuery
 	 * @param userDB
 	 * @param planTableName
+	 * @param strNullValue 
 	 * 
 	 * @throws Exception
 	 */
 	public static QueryExecuteResultDTO runSQLExplainPlan(final RequestQuery reqQuery, 
 									final UserDBDAO userDB, 
-									final String planTableName
+									final String planTableName, String strNullValue
 						) throws Exception {
 	
 		QueryExecuteResultDTO rsDAO = new QueryExecuteResultDTO();
@@ -55,7 +56,7 @@ public class ExecuteQueryPlan {
 		try {
 			if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 				TajoConnectionManager manager = new TajoConnectionManager();
-				rsDAO = manager.executeQueryPlan(userDB, reqQuery.getSql());
+				rsDAO = manager.executeQueryPlan(userDB, reqQuery.getSql(), strNullValue);
 			} else {
 				
 				javaConn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
@@ -97,7 +98,7 @@ public class ExecuteQueryPlan {
 				}
 				
 				rsDAO = new QueryExecuteResultDTO(
-						userDB, reqQuery.getSql(), true, rs, 1000/*, true*/);
+						userDB, reqQuery.getSql(), true, rs, 1000, strNullValue/*, true*/);
 			}
 			
 			return rsDAO;

@@ -99,8 +99,8 @@ public class TajoConnectionManager implements ConnectionInterfact {
 	 * @return
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO executeQueryPlan(UserDBDAO userDB, String strQuery) throws Exception {
-		return select(userDB, PartQueryUtil.makeExplainQuery(userDB, strQuery), 1000);
+	public QueryExecuteResultDTO executeQueryPlan(UserDBDAO userDB, String strQuery, String strNullValue) throws Exception {
+		return select(userDB, PartQueryUtil.makeExplainQuery(userDB, strQuery), 1000, strNullValue);
 	}
 	
 	/**
@@ -238,7 +238,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 	 * 
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount) throws Exception {
+	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, int limitCount, String strNullValue) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
 		java.sql.Connection javaConn = null;
@@ -250,7 +250,7 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			pstmt = javaConn.prepareStatement(requestQuery);
 			rs = pstmt.executeQuery();
 			
-			return new QueryExecuteResultDTO(userDB, requestQuery, true, rs, limitCount);
+			return new QueryExecuteResultDTO(userDB, requestQuery, true, rs, limitCount, strNullValue);
 		} catch(Exception e) {
 			logger.error("Tajo select", e);
 			throw e;
