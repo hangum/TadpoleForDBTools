@@ -47,6 +47,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
@@ -142,8 +143,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 		comboTimezone = new Combo(compositeBody, SWT.NONE);
 		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTimezone.add("");
-		String[] timzons = TimeZone.getAvailableIDs();
-		for (String timzon : timzons) {
+		for (String timzon : TimeZoneUtil.getTimezoneList()) {
 			comboTimezone.add(timzon);
 		}
 		

@@ -32,6 +32,7 @@ import com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDataDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -83,11 +84,11 @@ public class TadpoleSystem_ExecutedSQL {
 		if(!"All".equals(strType)) queryMap.put("type", strType);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
-			Date date = new Date(startTime);
+			Date date = new Date(TimeZoneUtil.chageTimeZone(startTime));
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
 			queryMap.put("startTime",  formatter.format(date));
 			
-			Date dateendTime = new Date(endTime);
+			Date dateendTime = new Date(TimeZoneUtil.chageTimeZone(endTime));
 			queryMap.put("endTime", formatter.format(dateendTime));			
 		} else {
 			queryMap.put("startTime",  startTime);

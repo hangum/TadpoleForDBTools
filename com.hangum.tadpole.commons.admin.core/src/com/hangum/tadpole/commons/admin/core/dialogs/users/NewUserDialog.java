@@ -50,6 +50,7 @@ import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.AddDefaultSampleDBToUser;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
@@ -163,8 +164,7 @@ public class NewUserDialog extends Dialog {
 		
 		comboTimezone = new Combo(container, SWT.READ_ONLY);
 		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		String[] timzons = TimeZone.getAvailableIDs();
-		for (String timzon : timzons) {
+		for (String timzon : TimeZoneUtil.getTimezoneList()) {
 			comboTimezone.add(timzon);
 		}
 		comboTimezone.setText(PublicTadpoleDefine.DEFAULT_TIME_ZONE);

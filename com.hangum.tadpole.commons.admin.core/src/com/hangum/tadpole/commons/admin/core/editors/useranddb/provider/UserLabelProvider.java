@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 
 /**
 * 유저 정보 레이블 
@@ -34,7 +35,7 @@ public class UserLabelProvider extends LabelProvider implements ITableLabelProvi
 
 		case 4: return user.getIs_shared_db();
 		case 5: return ""+user.getLimit_add_db_cnt();
-		case 6: return user.getService_end().toString();
+		case 6: return TimeZoneUtil.dateToStr(user.getService_end());
 
 		case 7: return user.getEmail_key();
 		case 8: return user.getApproval_yn();

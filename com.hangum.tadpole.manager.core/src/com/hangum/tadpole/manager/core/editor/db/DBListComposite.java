@@ -59,7 +59,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
-import com.hangum.tadpole.engine.utils.UTCUtil;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.manager.core.dialogs.users.DetailUserAndDBRoleDialog;
@@ -626,7 +626,7 @@ class DBListLabelProvider extends LabelProvider implements ITableLabelProvider {
 			switch(columnIndex) {
 				case 0: return String.format("%s (%s)", roleDao.getName(), roleDao.getEmail()); //$NON-NLS-1$
 				case 1: return roleDao.getRole_id();
-				case 2: return UTCUtil.dateToStr(roleDao.getTerms_of_use_starttime()) + " ~ " + UTCUtil.dateToStr(roleDao.getTerms_of_use_endtime()); //$NON-NLS-1$
+				case 2: return TimeZoneUtil.dateToStr(roleDao.getTerms_of_use_starttime()) + " ~ " + TimeZoneUtil.dateToStr(roleDao.getTerms_of_use_endtime()); //$NON-NLS-1$
 			}
 		}
 		

@@ -79,7 +79,7 @@ public class TadpoleSQLTransactionManager {
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
 		
-		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + " / " + userDB.getUsers());
+		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + "/" + userDB.getUsers());
 		
 		synchronized(dbManager) {
 			final String searchKey = getKey(userId, userDB);

@@ -37,7 +37,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
-import com.hangum.tadpole.engine.utils.UTCUtil;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.SWTResourceManager;
@@ -230,7 +230,7 @@ public class QueryHistoryComposite extends Composite {
 		}
 		
 		item.setText(0, ""+gridSQLHistory.getRootItemCount()); //$NON-NLS-1$
-		item.setText(1, UTCUtil.dateToStr(reqResultDAO.getStartDateExecute()));
+		item.setText(1, TimeZoneUtil.dateToStr(reqResultDAO.getStartDateExecute()));
 		item.setText(2, Utils.convLineToHtml(strSQL));
 		item.setToolTipText(2, strSQL);
 		
