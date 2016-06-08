@@ -64,6 +64,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
+import com.hangum.tadpole.engine.utils.UTCUtil;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
@@ -462,7 +463,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				item.setText(0, ""+i); //$NON-NLS-1$
 				item.setText(1, reqResultDAO.getDbName());
 				item.setText(2, reqResultDAO.getUserName());
-				item.setText(3, Utils.dateToStr(reqResultDAO.getStartDateExecute()));
+				item.setText(3, UTCUtil.dateToStr(reqResultDAO.getStartDateExecute()));
 				item.setText(4, Utils.convLineToHtml(strSQL));
 				item.setToolTipText(4, strSQL);
 				
@@ -519,7 +520,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 					});
 					
 					// 20 seconds
-					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
+					try{ Thread.sleep(1000 * 10); } catch(Exception e) {}
 				}
 			};
 		};

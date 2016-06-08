@@ -279,9 +279,9 @@ public class ObjectEditor extends MainEditor {
 				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 					
-					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 						mysqlAfterProcess(reqResultDAO, reqQuery);
-					} else if(getUserDB().getDBDefine() == DBDefine.MSSQL_DEFAULT | getUserDB().getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+					} else if(getUserDB().getDBDefine() == DBDefine.MSSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 						mssqlAfterProcess(reqResultDAO, reqQuery);
 					}
 					

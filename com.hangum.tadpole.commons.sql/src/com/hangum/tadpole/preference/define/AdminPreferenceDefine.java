@@ -18,6 +18,10 @@ package com.hangum.tadpole.preference.define;
  */
 public class AdminPreferenceDefine {
 	private static final String _PREFIX = "ADMIN_";
+	
+	/** DBMS timezone */
+	public static final String DB_TIME_ZONE = _PREFIX + "DB_TIME_ZONE";
+	public static final String DB_TIME_ZONE_VALUE = "";
 
 	/** 신규 사용자 허락 유무 */
 	public static final String NEW_USER_PERMIT = _PREFIX + "NEW_USER_PERMIT";
@@ -50,5 +54,21 @@ public class AdminPreferenceDefine {
 	 */
 	public static final String SUPPORT_MONITORING = _PREFIX + "SUPPORT_MONITORING";
 	public static final String SUPPORT_MONITORING_VALUE = "NO";
+	
+	// set smtp information
+		public static final String SENDGRID_API_NAME 		= "SENDGRID_API_NAME";
+		public static final String SENDGRID_API_VALUE 		= "";
+	
+		public static final String SMTP_HOST_NAME 		= "SMTP_HOST_NAME";
+		public static final String SMTP_HOST_NAME_VALUE = "smtp.googlemail.com";
+		
+		public static final String SMTP_PORT 			= "SMTP_PORT";
+		public static final String SMTP_PORT_VALUE 		= "465";
+		
+		public static final String SMTP_EMAIL 			= "SMTP_EMAIL";
+		public static final String SMTP_EMAIL_VALUE 	= "";
+		
+		public static final String SMTP_PASSWD 			= "SMTP_PASSWD";
+		public static final String SMTP_PASSWD_VALUE 	= "";
 
 }

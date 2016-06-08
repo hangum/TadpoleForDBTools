@@ -215,7 +215,7 @@ public class Messages {
 
 	public String PrivacyTermsandConditions;
 
-	public String Aggree;
+	public String Agree;
 
 	public String PlzConfirmTermsService;
 

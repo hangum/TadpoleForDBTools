@@ -103,19 +103,6 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final int SESSION_DEFAULT_MAX_PREFERENEC_VALUE = 999999;
 	
 	
-	// set smtp information
-		public static final String SMTP_HOST_NAME 		= "SMTP_HOST_NAME";
-		public static final String SMTP_HOST_NAME_VALUE = "smtp.googlemail.com";
-		
-		public static final String SMTP_PORT 			= "SMTP_PORT";
-		public static final String SMTP_PORT_VALUE 		= "465";
-		
-		public static final String SMTP_EMAIL 			= "SMTP_EMAIL";
-		public static final String SMTP_EMAIL_VALUE 	= "";//tadpole.sender@gmail.com";
-		
-		public static final String SMTP_PASSWD 			= "SMTP_PASSWD";
-		public static final String SMTP_PASSWD_VALUE 	= "";//tadpoleadmin";
-		
 	/** ORACLE PLAN TABLE */
 	public static final String ORACLE_PLAN_TABLE = "ORACLE_PLAN_TABLE";
 	/** ORACLE PLAN TABLE VALUE */

@@ -97,7 +97,7 @@ public class ExecuteQueryPlan {
 				}
 				
 				rsDAO = new QueryExecuteResultDTO(
-						userDB, true, rs, 1000/*, true*/);
+						userDB, reqQuery.getSql(), true, rs, 1000/*, true*/);
 			}
 			
 			return rsDAO;

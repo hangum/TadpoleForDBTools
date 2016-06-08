@@ -68,7 +68,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 					TableDAO tc = (TableDAO)selection.getFirstElement();
 					if(tc == null) cta.run(userDB, actionType);
 					else cta.run(userDB, tc.getComment(), actionType);
-				} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 					MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), getUserDB());
 					dialog.open();
 				} else {				

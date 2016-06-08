@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: tadpole sendgrid
+Bundle-SymbolicName: com.hangum.tadpole.sendgrid.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.sendgrid.core.Activator
+Bundle-Vendor: TadpoleHub
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: libs/sendgrid-java.jar,
+ .
+Export-Package: com.hangum.tadpole.sendgrid.core.utils

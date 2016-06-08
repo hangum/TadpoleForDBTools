@@ -27,25 +27,25 @@ public class ConAndAuthentication {
 	public static String serverurl = "localhost";
 	public static int port = 27017;
 
-	/**
-	 * db 연결 및 권한
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		ConAndAuthentication testMongoCls = new ConAndAuthentication();
-
-		Mongo mongo = testMongoCls.connection(serverurl, port);
-		if (mongo != null) {
-			DB testDB = mongo.getDB("test");
-			// Set<String> collectionNames =
-			// testMongoCls.getCollectionNames(testDB);
-			// for (String collection : collectionNames) {
-			testMongoCls.getCollectionInfo(testDB, "store");
-			// }
-		}
-		mongo.close();
-	}
+//	/**
+//	 * db 연결 및 권한
+//	 * 
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//		ConAndAuthentication testMongoCls = new ConAndAuthentication();
+//
+//		Mongo mongo = testMongoCls.connection(serverurl, port);
+//		if (mongo != null) {
+//			DB testDB = mongo.getDB("test");
+//			// Set<String> collectionNames =
+//			// testMongoCls.getCollectionNames(testDB);
+//			// for (String collection : collectionNames) {
+//			testMongoCls.getCollectionInfo(testDB, "store");
+//			// }
+//		}
+//		mongo.close();
+//	}
 
 	/**
 	 * mongo db를 호출합니다.

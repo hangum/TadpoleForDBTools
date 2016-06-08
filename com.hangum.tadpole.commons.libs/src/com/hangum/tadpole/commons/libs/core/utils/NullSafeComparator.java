@@ -27,7 +27,7 @@ public class NullSafeComparator {
 	 * @return
 	 */
 	public static int compare(final long long1, final long long2) {
-		return long1 > long1?0:1;
+		return long1 > long2?0:1;
 	}
 	
 	/**
@@ -51,13 +51,15 @@ public class NullSafeComparator {
 	public static int compare(final String str1, final String str2) {
 		if (str1 == null ^ str2 == null) {
 			return (str1 == null)?-1:1;
-		}
-
-		if (str1 == null && str2 == null) {
+		} else if (str1 == null && str2 == null) {
 			return 0;
+		} else {
+			if(str1 != null) {
+				return str1.compareToIgnoreCase(str2);
+			} else {
+				return 0;
+			}
 		}
-
-		return str1.compareToIgnoreCase(str2);
 	}
 
 	/**
@@ -70,13 +72,15 @@ public class NullSafeComparator {
 	public static int compare(Date date1, Date date2) {
 		if (date1 == null ^ date2 == null) {
 			return (date1 == null) ? -1 : 1;
-		}
-
-		if (date1 == null && date2 == null) {
+		} else if (date1 == null && date2 == null) {
 			return 0;
+		} else {
+			if(date1 != null) {
+				return date1.compareTo(date2);
+			} else {
+				return 0;
+			}
 		}
-		
-		return date1.compareTo(date2);
 	}
 
 }

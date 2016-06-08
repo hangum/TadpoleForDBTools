@@ -15,10 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ApplicationContext;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
@@ -134,6 +140,45 @@ public class TadpoleApplicationContextManager {
 		ApplicationContext context = RWT.getApplicationContext();
 		context.removeAttribute("getSystemInfo");
 		context.removeAttribute("getSystemAdmin");
+	}
+	
+	/**
+	 * get erd title font
+	 * @return
+	 */
+	public static Font getERDTitleFont() {
+		ApplicationContext context = RWT.getApplicationContext();
+		Object obj = context.getAttribute("getERDTitleFont");
+		if(obj == null) {
+			Font defaultFont = JFaceResources.getFont(JFaceResources.DEFAULT_FONT);
+			FontData[] fd = defaultFont.getFontData();
+			int fontSize = fd[0].getHeight()+1;
+			fd[0].setHeight(fontSize);
+			
+			Font titleFont = new Font(Display.getCurrent(), fd[0]);
+			context.setAttribute("getERDTitleFont", titleFont);
+			return titleFont;
+		}
+		
+		return (Font)obj;		
+	}
+	
+	/**
+	 * gulim font
+	 * @return
+	 */
+	public static Font getGulimFont() {
+		ApplicationContext context = RWT.getApplicationContext();
+		Object obj = context.getAttribute("getGulimFont");
+		if(obj == null) {
+			Font defaultFont = JFaceResources.getFont(JFaceResources.DEFAULT_FONT);
+			int intDefaultHeight = defaultFont.getFontData()[0].getHeight()+1;
+			Font font = new Font(Display.getCurrent(), new FontData(Messages.get().Gullim, intDefaultHeight, SWT.NONE));
+			context.setAttribute("getGulimFont", font);
+			return font;
+		}
+		
+		return (Font)obj;
 	}
 	
 }

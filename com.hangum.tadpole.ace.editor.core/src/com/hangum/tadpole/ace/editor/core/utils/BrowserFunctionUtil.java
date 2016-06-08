@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.ace.editor.core.utils;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.browser.Browser;
 
@@ -55,7 +57,7 @@ public class BrowserFunctionUtil {
 	 */
 	public void browserEvaluate(String command, String... args) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("\t ### send command is : [command] " + command + ", [args]" + args);
+			logger.debug("\t ### send command is : [command] " + command + ", [args]" + Arrays.toString(args));
 		}
 		
 		try {

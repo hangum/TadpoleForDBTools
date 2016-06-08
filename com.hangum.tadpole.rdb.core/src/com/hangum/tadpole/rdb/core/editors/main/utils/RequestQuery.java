@@ -40,7 +40,7 @@ import net.sf.jsqlparser.statement.update.Update;
  * @author hangum
  *
  */
-public class RequestQuery {
+public class RequestQuery implements Cloneable {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(RequestQuery.class);
 	
@@ -80,7 +80,7 @@ public class RequestQuery {
 	
 	/** query result */
 	private RequestResultDAO resultDao = new RequestResultDAO();
-
+	
 	/**
 	 * 
 	 * @param userDB 
@@ -107,6 +107,14 @@ public class RequestQuery {
 		this.isAutoCommit = isAutoCommit;
 	}
 
+	/**
+	 * implements clone
+	 */
+	public Object clone() throws CloneNotSupportedException {
+		RequestQuery clone = (RequestQuery)super.clone();
+		return clone;
+	}
+	
 	/**
 	 * sql of query type
 	 * 
@@ -368,5 +376,5 @@ public class RequestQuery {
 				+ ", \nsqlDDLType=" + sqlDDLType + ", sqlObjectName=" + sqlObjectName + ", queryStatus=" + queryStatus
 				+ ", \nresultDao=" + resultDao + "]";
 	}
-
+	
 }

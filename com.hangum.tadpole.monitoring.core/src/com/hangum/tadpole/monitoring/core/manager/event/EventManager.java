@@ -47,11 +47,11 @@ public class EventManager {
 			final UserDBDAO userDB = resultDAO.getUserDB();
 			String strAfterType = resultDAO.getMonitoringIndexDAO().getAfter_type();
 		
-			if(strAfterType.equals("EMAIL")) {
+			if("EMAIL".equals(strAfterType)) {
 				sendEmail(resultDAO);
-			} else if(strAfterType.equals(AFTER_PROCESS_TYPE.PUSH_EMAIL)) {
+			} else if(AFTER_PROCESS_TYPE.PUSH_EMAIL.equals(strAfterType)) {
 				sendEmail(resultDAO);
-			} else if(strAfterType.equals("KILL_AFTER_EMAIL")) {
+			} else if("KILL_AFTER_EMAIL".equals(strAfterType)) {
 				sendEmail(resultDAO);
 				
 				JsonElement jsonElement = parser.parse(resultDAO.getQuery_result());

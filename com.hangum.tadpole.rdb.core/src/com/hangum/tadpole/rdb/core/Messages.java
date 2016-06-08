@@ -592,6 +592,8 @@ public class Messages {
 	/* for Property Summary */
 	public String PropertyComposite_Name;
 	public String PropertyComposite_Value;
+
+	public String ms;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

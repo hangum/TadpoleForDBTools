@@ -189,9 +189,9 @@ public class MySQLTableRelationDialog extends Dialog {
 			for (TableColumnDAO tableColumnDAO : tmpTableColumns) {
 				String strTitle = "";
 				if("".equals(tableColumnDAO.getComment())) {
-					strTitle = String.format("%s (%s)", tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey());
+					strTitle = String.format("%s (%s)-%s", tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey());
 				} else {
-					strTitle = String.format("%s (%s) %s", tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), tableColumnDAO.getComment());
+					strTitle = String.format("%s (%s)-%s-%s", tableColumnDAO.getField(), tableColumnDAO.getType(), tableColumnDAO.getKey(), tableColumnDAO.getComment());
 				}
 				comboColumn.add(strTitle);
 				comboColumn.setData(strTitle, tableColumnDAO);

@@ -25,6 +25,7 @@ import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.ResultSetDownloadDialog;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -37,7 +38,6 @@ import com.swtdesigner.SWTResourceManager;
 public abstract class AbstractTailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(AbstractTailComposite.class);
-	
 	private Composite compositeParent;
 	protected Composite compositeDownloadAMsg;
 	
@@ -65,9 +65,7 @@ public abstract class AbstractTailComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				String strPin = btnPin.getToolTipText();
 				if("Pin".equals(strPin)) {
-					btnPin.setToolTipText("Unpin");
-					btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
-					layout();
+					makePinBtn();
 				} else {
 					Composite parentComposite = compositeParent.getParent().getParent();
 					Composite resultMainComposite = parentComposite.getParent();
@@ -95,9 +93,9 @@ public abstract class AbstractTailComposite extends Composite {
 		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(getRSDao().getDataList() == null) return;
+				if(getRSDao() == null || getRSDao().getDataList() == null) return;
 				
-				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), findTableName(), getRSDao());
+				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), getRequestQuery(), findTableName(), getRSDao());
 				dialog.open();
 			}
 			
@@ -119,6 +117,14 @@ public abstract class AbstractTailComposite extends Composite {
 		lblQueryResultStatus.pack();
 	}
 	
+	public abstract RequestQuery getRequestQuery();
+	
+	private void makePinBtn() {
+		btnPin.setToolTipText("Unpin");
+		btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		btnPin.getParent().layout();
+	}
+	
 	/**
 	 * btn pin selection
 	 * @return
@@ -126,6 +132,13 @@ public abstract class AbstractTailComposite extends Composite {
 	public boolean getBtnPinSelection() {
 		if(btnPin.isDisposed()) return true;
 		return btnPin.getSelection();
+	}
+	
+	public void setBtnPint(boolean isSelect) {
+		btnPin.setSelection(isSelect);
+		if(isSelect) {
+			makePinBtn();
+		}
 	}
 	
 	public abstract String getSQL();

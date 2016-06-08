@@ -232,13 +232,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			menuBar.add(adminMenu);
 			menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		}
+		menuBar.add(preferenceMenu);
+		menuBar.add(helpMenu);
 		if(ApplicationArgumentUtils.isOnlineServer()) {
 			serviceMenu = new MenuManager(Messages.get().ServiceBill, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
 			menuBar.add(serviceMenu);
 			serviceMenu.add(billAction);
 		}
-		menuBar.add(preferenceMenu);
-		menuBar.add(helpMenu);
 		
 		// File
 		fileMenu.add(connectAction);
@@ -262,8 +262,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		manageMenu.add(openCompareAction);
 		
 		if(isAdmin) {
-			adminMenu.add(adminSystemSettingAction);
 			adminMenu.add(adminSendMessageAction);
+			adminMenu.add(new Separator());
+			adminMenu.add(adminSystemSettingAction);
 			adminMenu.add(adminUserAction);
 			adminMenu.add(adminSQLAuditAction);
 			adminMenu.add(new Separator());

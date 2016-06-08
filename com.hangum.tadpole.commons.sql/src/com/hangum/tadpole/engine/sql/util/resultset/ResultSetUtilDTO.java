@@ -30,6 +30,11 @@ public class ResultSetUtilDTO {
 	 */
 	private UserDBDAO userDB;
 	
+	/**
+	 * 요청 쿼리
+	 */
+	private String reqQuery;
+	
 	/** 
 	 * column 이름. <columnIndex, name>
 	 */
@@ -75,12 +80,14 @@ public class ResultSetUtilDTO {
 	 */
 	public ResultSetUtilDTO(
 			UserDBDAO userDB, 
+			String reqQuery,
 			Map<Integer, String> columnName,
 			Map<Integer, String> columnTableName,
 			Map<Integer, Integer> columnType, 
 			TadpoleResultSet dataList
 	) {
 		this.userDB 	= userDB;
+		this.reqQuery 	= reqQuery;
 		this.columnName = columnName;
 		this.columnTableName = columnTableName;
 		this.columnType = columnType;
@@ -100,8 +107,10 @@ public class ResultSetUtilDTO {
 	 */
 	public ResultSetUtilDTO(
 						final UserDBDAO userDB, 
+						final String reqQuery,
 						final boolean isShowRownum, final ResultSet rs, final int limitCount, int intLastIndex) throws Exception {
 		this.userDB = userDB;
+		this.reqQuery = reqQuery;
 		
 		if(rs != null) {
 			columnTableName = ResultSetUtils.getColumnTableName(userDB, isShowRownum, rs);
@@ -133,6 +142,20 @@ public class ResultSetUtilDTO {
 		this.userDB = userDB;
 	}
 
+	/**
+	 * @return the reqQuery
+	 */
+	public String getReqQuery() {
+		return reqQuery;
+	}
+
+	/**
+	 * @param reqQuery the reqQuery to set
+	 */
+	public void setReqQuery(String reqQuery) {
+		this.reqQuery = reqQuery;
+	}
+	
 	/**
 	 * @return the columnName
 	 */

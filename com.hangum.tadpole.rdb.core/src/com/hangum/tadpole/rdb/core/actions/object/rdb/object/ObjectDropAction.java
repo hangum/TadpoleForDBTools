@@ -302,7 +302,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 	 */
 	private void executeSQL(UserDBDAO userDB, String cmd) throws Exception {
 		RequestResultDAO resultDao = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
-		if(resultDao.getResult() == PublicTadpoleDefine.SUCCESS_FAIL.F.name()) {
+		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(resultDao.getResult())) {
 			exeMessage(Messages.get().ObjectDeleteAction_0, resultDao.getException());		
 		}
 	}

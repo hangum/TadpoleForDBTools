@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -64,10 +62,5 @@ public class Utils {
 	public static String getUniqueDigit(int digit) {
 		return getUniqueID().substring(0, digit);
 	}
-	
-	public static String dateToStr(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return sdf.format(date);
- 	}
 	
 }

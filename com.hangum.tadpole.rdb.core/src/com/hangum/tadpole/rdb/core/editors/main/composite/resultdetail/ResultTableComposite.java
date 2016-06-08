@@ -140,6 +140,12 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tvQueryResult = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
+		gl_compositeHead = new GridLayout(2, false);
+		gl_compositeHead.verticalSpacing = 2;
+		gl_compositeHead.horizontalSpacing = 2;
+		gl_compositeHead.marginHeight = 50;
+		gl_compositeHead.marginWidth = 2;
+		tableResult.setLayout(gl_compositeHead);
 
 		final String PREFERENCE_USER_FONT = GetPreferenceGeneral.getRDBResultFont();
 		if(!"".equals(PREFERENCE_USER_FONT)) { //$NON-NLS-1$
@@ -480,7 +486,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery.getSql(), queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
@@ -528,12 +534,12 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 	
 	@Override
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePin) {
 		isLastReadData = false;
 		if(rsDAO == null) return;
 		if(rsDAO.getDataList() == null) return;
 		
-		super.printUI(reqQuery, rsDAO);
+		super.printUI(reqQuery, rsDAO, isMakePin);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
 		sqlSorter = new SQLResultSorter(-999);

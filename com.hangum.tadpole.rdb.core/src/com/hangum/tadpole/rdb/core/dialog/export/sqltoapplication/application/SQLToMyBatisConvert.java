@@ -186,11 +186,11 @@ public class SQLToMyBatisConvert extends AbstractSQLTo {
 				boolean isOpen = false;
 				for (int p=0; p<part.length(); p++) {
 					 
-					if (!isOpen & '\'' == part.charAt(p) ) {
+					if (!isOpen && '\'' == part.charAt(p) ) {
 						 strLine.append("#{");
 						 strConst.append("/* '");
 						 isOpen = true;
-					 }else if (isOpen & '\'' == part.charAt(p) ) {
+					 }else if (isOpen && '\'' == part.charAt(p) ) {
 						 strLine.append("param_"+ idx++ +"}");
 						 strConst.append("' */");
 						 isOpen = false;

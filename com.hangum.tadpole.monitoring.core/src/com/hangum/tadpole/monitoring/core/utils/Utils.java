@@ -133,7 +133,7 @@ public class Utils {
 			emailDao.setContent(strContent);
 			emailDao.setTo(receivers);
 			
-			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSMTPINFO());
+			SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
 			sendEmail.sendMail(emailDao);
 		} catch(Exception e) {
 			logger.error("Error send email", e);

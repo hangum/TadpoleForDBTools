@@ -66,34 +66,6 @@
 	table 이름
 	테이블 코멘트 부분 처리를 못해서... 
 	AND relname ~ '^(emp)$' 부분에 AND relname ~ '^(a.table_name)$' 가 들어가야 합니다. 
-	
-	SELECT a.table_name "name", 
-	(
-		SELECT 
-		  pg_catalog.obj_description(oid, 'pg_class') 
-		FROM pg_catalog.pg_class
-		WHERE relkind IN ('r','')
-		  AND relname ~ '^(emp)$'
-		  AND pg_catalog.pg_table_is_visible(oid)
-  	) as "comment"
-	FROM information_schema.tables a
-	where a.table_schema = 'public' and 
-		a.table_type = 'BASE TABLE'
-	ORDER BY name 
-	
-	
-	SELECT
-    relname as "name"
-    ,pg_catalog.obj_description(oid,'pg_class') as "comment"
-  FROM pg_catalog.pg_class ‌
-  WHERE 1 = 1 
-    AND relkind IN ('r','')
-    AND relname IN (
-      SELECT a.table_name
-        FROM information_schema.tables a
-        WHERE a.table_schema = 'public' 
-          AND a.table_type = 'BASE TABLE' )
-  ORDER BY name
  -->
  <select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
@@ -652,7 +624,7 @@ SELECT
 	Table DDL Script => Table, Column Comment Script
  -->
  
-<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.util.HashMap">
 SELECT
     'COMMENT ON TABLE ' || relname || ' IS ''' || pg_catalog.obj_description(oid,'pg_class') || '''' as "comment_text"
   FROM pg_catalog.pg_class ‌
@@ -662,14 +634,14 @@ SELECT
     AND relname IN (
       SELECT a.table_name
         FROM information_schema.tables a
-        WHERE a.table_schema = 'public' 
+        WHERE a.table_schema = #schema#
           AND a.table_type = 'BASE TABLE' )
-		  AND relname = #table_name#
+		  AND relname = #object_name#
 UNION ALL
 	SELECT 
-		'COMMENT ON COLUMN ' ||#table_name#||'.'|| ATTNAME || ' IS ''' || pg_catalog.col_description(attrelid, attnum) || '''' 
+		'COMMENT ON COLUMN ' ||#object_name#||'.'|| ATTNAME || ' IS ''' || pg_catalog.col_description(attrelid, attnum) || '''' 
 		FROM   pg_catalog.pg_attribute
-		WHERE attrelid = (select oid from pg_catalog.pg_class where relname = #table_name#) 
+		WHERE attrelid = (select oid from pg_catalog.pg_class where relname = #object_name#) 
 		AND attnum > 0 
 		AND NOT attisdropped
 		AND pg_catalog.col_description(attrelid, attnum) > ''
@@ -692,21 +664,21 @@ and t.tgisinternal = false
 	pg_get_functiondef(func_oid) : get definition of a function
  -->
  
-<select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
  SELECT   
  	proname as procedure_name
  	, proargtypes as parameter_types
  	, prorettype as return_types
  	, prosrc as source_text
  FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
- WHERE   nspname = 'public'   
+ WHERE   nspname = #schema#  
  and proname = #object_name#
 </select>
 
 <!-- 
 
  -->        
-<select id="getProcedureInParamter"  resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<select id="getProcedureInParamter"  resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
 	SELECT  proname as name, 
 			proargnames as arguments,
 	        oidvectortypes(proargtypes) as rdbType, 
@@ -715,7 +687,7 @@ and t.tgisinternal = false
 	FROM    pg_catalog.pg_namespace n
 	JOIN    pg_catalog.pg_proc p   ON    pronamespace = n.oid     
 	JOIN    pg_type t ON p.prorettype = t.oid  
-	WHERE   nspname = 'public'  
+	WHERE   nspname = #schema#  
 		AND proname = #object_name#;
 </select>
  
@@ -723,14 +695,14 @@ and t.tgisinternal = false
 	Procedure Script 
  -->
  
-<select id="getProcedureScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<select id="getProcedureScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
  SELECT   
  	proname as procedure_name
  	, proargtypes as parameter_types
  	, prorettype as return_types
  	, prosrc as source_text
  FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
- WHERE   nspname = 'public'   
+ WHERE   nspname = #schema#   
  and proname = #object_name#
 </select>
  

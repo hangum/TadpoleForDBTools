@@ -345,7 +345,7 @@ public class NewUserDialog extends Dialog {
 			} catch(Exception e) {
 				// igonre exception
 			}
-			if(isAdmin || "".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+			if(isAdmin || !smtpDto.isValid()) { //$NON-NLS-1$
 				isEmamilConrim 	= PublicTadpoleDefine.YES_NO.YES.name();
 			}
 			
@@ -364,7 +364,7 @@ public class NewUserDialog extends Dialog {
 					"*"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 			boolean isSentMail = false;
-			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+			if(smtpDto.isValid()) {
 				sendEmailAccessKey(name, strEmail, strEmailConformKey);
 				isSentMail = true;
 			}

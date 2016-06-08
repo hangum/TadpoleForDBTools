@@ -52,12 +52,14 @@ public class JDBCDriverLoader {
 		File fileDir = new File(strDir);
 		if(fileDir.isDirectory()) {
 			File[] files = fileDir.listFiles();
-			for (File file : files) {
-				if(file.isDirectory()) {
-					addJARDir(file.getAbsolutePath());
-				} else {
-					if(StringUtils.endsWithIgnoreCase(file.getName(), ".jar")) {
-						addJARLoader(new Object[]{file.toURI().toURL()});
+			if(files != null) {
+				for (File file : files) {
+					if(file.isDirectory()) {
+						addJARDir(file.getAbsolutePath());
+					} else {
+						if(StringUtils.endsWithIgnoreCase(file.getName(), ".jar")) {
+							addJARLoader(new Object[]{file.toURI().toURL()});
+						}
 					}
 				}
 			}

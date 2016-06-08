@@ -176,7 +176,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			menuMgr.add(executeAction_Procedure);
 		}
 		
-		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT | getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}

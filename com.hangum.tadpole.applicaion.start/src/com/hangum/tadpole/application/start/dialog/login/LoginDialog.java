@@ -372,7 +372,7 @@ public class LoginDialog extends Dialog {
 		btnNewUser = createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(!"".equals(smtpDto.getEmail())) { //$NON-NLS-1$
+			if(smtpDto.isValid()) { //$NON-NLS-1$
 				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().FindPassword, false);
 			}
 		} catch (Exception e) {

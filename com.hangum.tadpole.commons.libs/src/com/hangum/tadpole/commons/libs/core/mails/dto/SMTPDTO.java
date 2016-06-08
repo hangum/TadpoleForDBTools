@@ -17,12 +17,37 @@ package com.hangum.tadpole.commons.libs.core.mails.dto;
  *
  */
 public class SMTPDTO {
+	String sendgrid_api = "";
 	String host = "";
 	String port = "";
 	String email = "";
 	String passwd = "";
 	
 	public SMTPDTO() {
+	}
+	
+	public boolean isValid() {
+		if("".equals(getSendgrid_api())) {
+			if("".equals(getEmail()) || "".equals(getPasswd())) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	/**
+	 * @return the sendgrid_api
+	 */
+	public String getSendgrid_api() {
+		return sendgrid_api;
+	}
+
+	/**
+	 * @param sendgrid_api the sendgrid_api to set
+	 */
+	public void setSendgrid_api(String sendgrid_api) {
+		this.sendgrid_api = sendgrid_api;
 	}
 
 	/**

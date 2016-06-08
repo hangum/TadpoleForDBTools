@@ -55,7 +55,7 @@ public class SQLToRealGridConvert extends AbstractSQLTo {
 			for (int i=0; i<columnLabel.size(); i++) {
 				String strColumnLabel = columnLabel.get(i);
 				boolean isNumber = RDBTypeToJavaTypeUtils.isNumberType(columnType.get(i));
-				sbField.append(String.format(GROUP_TEMPLATE, strColumnLabel, strColumnLabel, isNumber?"number":"text"));
+				sbField.append(String.format(GROUP_TEMPLATE, strColumnLabel, isNumber?"number":"text"));
 			}
 			strField = StringUtils.removeEnd(sbField.toString(), ",");
 			

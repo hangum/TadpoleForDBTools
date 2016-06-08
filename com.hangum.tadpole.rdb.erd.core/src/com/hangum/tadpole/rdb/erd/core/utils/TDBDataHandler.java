@@ -101,6 +101,9 @@ public class TDBDataHandler {
 		for(TableColumnDAO td : returnColumns) {
 			td.setTableDao(tableDao);
 			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getField()));
+			
+			// 코멘트에 행 분리자가 있다면 제거한다.
+			td.setComment(StringUtils.remove(td.getComment(), "\n"));
 		}
 		
 		returnColumns = DBAccessCtlManager.getInstance().getColumnFilter(tableDao, returnColumns, userDB);
