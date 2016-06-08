@@ -103,7 +103,9 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 					String strColumnLabel = columnLabel.get(i);
 					String strColumnValue = ""+resultRow.get(i);
 					boolean isNumber = RDBTypeToJavaTypeUtils.isNumberType(columnType.get(i));
-					sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, isNumber?strColumnValue:"\"" + strColumnValue + "\""));
+					//sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, isNumber?strColumnValue:"\"" + strColumnValue + "\""));
+					//TODO: https://github.com/hangum/TadpoleForDBTools/issues/809 fix 전까지 무조건 String 처럼 따옴표(")로 묶어준다.
+					sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, "\"" + strColumnValue + "\""));
 				}
 				
 				strBody += PREFIX_TAB + "{" + StringUtils.removeEnd(sbData.toString(), ",") + "},";
