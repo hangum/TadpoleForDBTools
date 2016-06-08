@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -44,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -72,7 +72,6 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
-import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -201,9 +200,6 @@ public class ResultSetComposite extends Composite {
 		sashFormResult = new SashForm(scrolledComposite, SWT.VERTICAL);
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-//		compositeResult = new ResultTableComposite(sashFormResult, SWT.NONE, this);
-//		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-		
 		scrolledComposite.setContent(sashFormResult);
 		scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
@@ -217,9 +213,8 @@ public class ResultSetComposite extends Composite {
 		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
 			Control[] childControls = sashFormResult.getChildren();
 			for (int i=0; i<childControls.length; i++) {
-				Control control = childControls[i];
-				if(control instanceof ResultTableComposite) {
-					ResultTableComposite resultComposite = (ResultTableComposite)control;
+				if(childControls[i] instanceof AbstractResultDetailComposite) {
+					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)childControls[i];
 					resultComposite.dispose();
 				}
 			}
@@ -248,69 +243,65 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * refresh sash layout form
-	 * 
+	 * 화면을 다시 조절한다.
 	 */
 	private void resultSashLayout() {
-		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
-		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
-		int intTmpCount = 0;
-		
-		try {
-			List<AbstractResultDetailComposite> listDisposeComposite = new ArrayList<>();
-			Control[] childControls = sashFormResult.getChildren();
-			for (int i=0; i<childControls.length; i++) {
-				Control control = childControls[i];
-				if(control instanceof AbstractResultDetailComposite) {
-					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
-					ResultTailComposite tailComposite = resultComposite.getCompositeTail();
-					if(!tailComposite.getBtnPinSelection()) {
-						listDisposeComposite.add(resultComposite);
-					} else {
-						mapWidths.put(intTmpCount, resultComposite.getBounds().width);
-						mapHeight.put(intTmpCount, resultComposite.getBounds().height);
-						intTmpCount++;
-					}
-				}
-			}
-			
-			// 삭제한다.
-			int intDispCount = listDisposeComposite.size()-1;
-			for(int i=0; i<intDispCount; i++) {
-				listDisposeComposite.get(i).dispose();
-			}
-			
-			int weights[] = new int[mapWidths.size()+1];
-			if(mapWidths.size() != 0) {
-				for (int i=0; i<mapWidths.size(); i++) {
-					float intCompositeWeights = 0f;
-					if(sashFormResult.getOrientation() == SWT.HORIZONTAL) {
-						intCompositeWeights = mapWidths.get(i) * 100;
-					} else {
-						intCompositeWeights = mapHeight.get(i) * 100;
-					}
-					weights[i] = (int)intCompositeWeights;
-					intTmpCount += weights[i];
-					// 처음 위젯이 생성 되었을 경우무조건 100이므로 반만 위젲을 준다. 
-					if(weights[i] == 100) {
-						weights[i] = 50;
-						intTmpCount = 50;
-					// 100 이 넘어가면 마지막 위젲에서 30로 만큼 위젲을 차지한다.
-					} else if(intTmpCount >= 100) { 
-						weights[i] = 30;
-					}
-				}
-				weights[mapWidths.size()] = 100 - intTmpCount;
-			} else {
-				weights[0] = 100;
-			}
-			sashFormResult.setWeights(weights);
-		} catch(Exception e) {
-			logger.error("calc weights of result composite");
-		}
+//		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
+//		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
+//		int intTmpCount = 0;
+//		
+//		try {
+//			Control[] childControls = sashFormResult.getChildren();
+//			for (int i=0; i<childControls.length; i++) {
+//				Control control = childControls[i];
+//				if(control instanceof AbstractResultDetailComposite) {
+//					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
+//					mapWidths.put(intTmpCount, resultComposite.getBounds().width);
+//					mapHeight.put(intTmpCount, resultComposite.getBounds().height);
+//					intTmpCount++;
+//				}
+//			}
+//			
+//			int weights[] = new int[mapWidths.size()+1];
+//			if(mapWidths.size() != 0) {
+//				for (int i=0; i<mapWidths.size(); i++) {
+//					float intCompositeWeights = 0f;
+//					if(sashFormResult.getOrientation() == SWT.HORIZONTAL) {
+//						intCompositeWeights = mapWidths.get(i) * 100;
+//					} else {
+//						intCompositeWeights = mapHeight.get(i) * 100;
+//					}
+//					weights[i] = (int)intCompositeWeights;
+//					intTmpCount += weights[i];
+//					// 처음 위젯이 생성 되었을 경우무조건 100이므로 반만 위젲을 준다. 
+//					if(weights[i] == 100) {
+//						weights[i] = 50;
+//						intTmpCount = 50;
+//					// 100 이 넘어가면 마지막 위젲에서 30로 만큼 위젲을 차지한다.
+//					} else if(intTmpCount >= 100) { 
+//						weights[i] = 30;
+//					}
+//				}
+//				weights[mapWidths.size()] = 100 - intTmpCount;
+//			} else {
+//				weights[0] = 100;
+//			}
+//			sashFormResult.setWeights(weights);
+//		} catch(Exception e) {
+//			logger.error("calc weights of result composite");
+//		}
+
 		sashFormResult.layout();
 		scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		scrolledComposite.layout();
+		
+		if(SWT.VERTICAL == scrolledComposite.getOrientation()) {
+			ScrollBar sbX = scrolledComposite.getHorizontalBar();
+			sbX.setSelection(sbX.getMaximum());
+		} else {
+			ScrollBar sbX = scrolledComposite.getVerticalBar();
+			sbX.setSelection(sbX.getMaximum());
+		}
 	}
 
 	/**
