@@ -48,18 +48,20 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 */
 	private static final Logger logger = Logger.getLogger(SQLResultLabelProvider.class);
 	private boolean isPretty = false;
+	private String strNullValue = "";
 	private ResultSetUtilDTO rsDAO;
-	
 	
 	public SQLResultLabelProvider() {
 	}
 
-	public SQLResultLabelProvider(final boolean isPretty) {
+	public SQLResultLabelProvider(final boolean isPretty, final String strNullValue) {
 		this.isPretty = isPretty;
+		this.strNullValue = strNullValue;
 	}
 	
-	public SQLResultLabelProvider(final boolean isPretty, final ResultSetUtilDTO rsDAO) {
+	public SQLResultLabelProvider(final boolean isPretty, final ResultSetUtilDTO rsDAO, final String strNullValue) {
 		this.isPretty = isPretty;
+		this.strNullValue = strNullValue;
 		this.rsDAO = rsDAO;
 	}
 
@@ -103,7 +105,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			else showValue = obj.toString();
 		} catch(Exception e) {}
 		
-		return obj == null ? PublicTadpoleDefine.DEFINE_NULL_VALUE : showValue;
+		return obj == null ? strNullValue : showValue;
 	}
 	
 	/**
@@ -167,8 +169,8 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * @param value
 	 * @return
 	 */
-	public static String addComma(Object value) {
-		if(value==null) return PublicTadpoleDefine.DEFINE_NULL_VALUE;
+	private String addComma(Object value) {
+		if(value==null) return strNullValue;
 		
 		try{
 			NumberFormat nf = NumberFormat.getNumberInstance();

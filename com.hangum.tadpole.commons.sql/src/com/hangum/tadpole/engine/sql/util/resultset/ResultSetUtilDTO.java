@@ -67,6 +67,11 @@ public class ResultSetUtilDTO {
 	 */
 	private TadpoleResultSet dataList = null;//new TadpoleResultSet();
 	
+	/**
+	 * default null value
+	 */
+	private String strNullValue;
+	
 	public ResultSetUtilDTO() {
 	}
 	
@@ -84,7 +89,8 @@ public class ResultSetUtilDTO {
 			Map<Integer, String> columnName,
 			Map<Integer, String> columnTableName,
 			Map<Integer, Integer> columnType, 
-			TadpoleResultSet dataList
+			TadpoleResultSet dataList,
+			String strNullValue
 	) {
 		this.userDB 	= userDB;
 		this.reqQuery 	= reqQuery;
@@ -92,6 +98,7 @@ public class ResultSetUtilDTO {
 		this.columnTableName = columnTableName;
 		this.columnType = columnType;
 		this.dataList 	= dataList;
+		this.strNullValue = strNullValue;
 	}
 
 	/**
@@ -108,9 +115,10 @@ public class ResultSetUtilDTO {
 	public ResultSetUtilDTO(
 						final UserDBDAO userDB, 
 						final String reqQuery,
-						final boolean isShowRownum, final ResultSet rs, final int limitCount, int intLastIndex) throws Exception {
+						final boolean isShowRownum, final ResultSet rs, final int limitCount, int intLastIndex, String strNullValue) throws Exception {
 		this.userDB = userDB;
 		this.reqQuery = reqQuery;
+		this.strNullValue = strNullValue;
 		
 		if(rs != null) {
 			columnTableName = ResultSetUtils.getColumnTableName(userDB, isShowRownum, rs);
@@ -121,7 +129,7 @@ public class ResultSetUtilDTO {
 			if(isShowRownum && (columnName.size() == 1)) {
 				dataList = new TadpoleResultSet();
 			} else {
-				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount, intLastIndex);
+				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount, intLastIndex, strNullValue);
 			}
 			
 			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());

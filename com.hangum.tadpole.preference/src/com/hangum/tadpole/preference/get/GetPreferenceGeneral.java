@@ -79,6 +79,12 @@ public class GetPreferenceGeneral extends AbstractPreference {
 		return Integer.parseInt( userInfo.getValue0() );		
 	}
 	
+	/** rdb 쿼리 결과를 중에 NULL 값을 처리하는 기준 */
+	public static String getResultNull() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_NULL, ""+PreferenceDefine.RDB_RESULT_NULL_VALUE);
+		return userInfo.getValue0();
+	}
+	
 	/** rdb 쿼리 결과를 page당 처리 하는 카운트 */
 	public static int getPageCount() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, ""+PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE_VALUE);

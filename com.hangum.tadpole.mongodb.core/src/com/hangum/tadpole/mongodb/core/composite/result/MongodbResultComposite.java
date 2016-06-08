@@ -819,7 +819,7 @@ public class MongodbResultComposite extends Composite {
 		treeViewerMongo.refresh();
 		
 		List<HashMap<Integer, Object>> tmpTable = new ArrayList<HashMap<Integer,Object>>();
-		resultTableViewer.setLabelProvider( new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma()) );
+		resultTableViewer.setLabelProvider( new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), GetPreferenceGeneral.getResultNull()) );
 		resultTableViewer.setContentProvider(new SQLResultContentProvider(sourceDataList) );
 		resultTableViewer.setInput(tmpTable);
 		resultTableViewer.refresh();

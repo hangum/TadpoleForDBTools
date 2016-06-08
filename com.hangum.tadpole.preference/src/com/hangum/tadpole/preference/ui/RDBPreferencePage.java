@@ -104,6 +104,12 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textResultPage = new Text(container, SWT.BORDER);		
 		textResultPage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblNull = new Label(container, SWT.NONE);
+		lblNull.setText("Null 표시");
+		
+		textNull = new Text(container, SWT.BORDER);
+		textNull.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Label lblResultViewFont = new Label(container, SWT.NONE);
 		lblResultViewFont.setText(Messages.get().RDBPreferencePage_lblResultViewFont_text);
 		
@@ -187,6 +193,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		String txtResultType = comboRDBResultType.getText();
 		String txtSelectLimit = textSelectLimit.getText();
 		String txtResultPage = textResultPage.getText();
+		String txtNull		= textNull.getText();
 		String txtQueryTimtout = textQueryTimeout.getText();
 		String txtOraclePlan = textOraclePlan.getText();
 		String txtRDBNumberColumnIsComman = comboRDBNumberComma.getText();
@@ -238,6 +245,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, txtResultPage);
+			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_NULL, txtNull);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_QUERY_TIMEOUT, txtQueryTimtout);
 			
 			SessionManager.setUserInfo(PreferenceDefine.ORACLE_PLAN_TABLE, txtOraclePlan);		
@@ -282,6 +290,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	private void initDefaultValue() {
 		comboRDBResultType.setText(GetPreferenceGeneral.getResultType());
 		textSelectLimit.setText( "" + GetPreferenceGeneral.getSelectLimitCount() ); //$NON-NLS-1$
+		textNull.setText(GetPreferenceGeneral.getResultNull());
 		textResultPage.setText( "" + GetPreferenceGeneral.getPageCount() ); //$NON-NLS-1$
 		textQueryTimeout.setText( "" + GetPreferenceGeneral.getQueryTimeOut() );
 		
@@ -335,5 +344,6 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 					"         TIME               NUMERIC,         \r\n" + 
 					"         qblock_name        VARCHAR2(30)     \r\n" + 
 					" ) ";
+	private Text textNull;
 }
 

@@ -20,6 +20,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 
 /**
  * sql to axisj(http://www.realgrid.com/)
@@ -46,7 +47,7 @@ public class SQLToRealGridConvert extends AbstractSQLTo {
 		try {
 			String STR_TEMPLATE = IOUtils.toString(SQLToRealGridConvert.class.getResource("realgrid.js.template"));
 
-			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4);
+			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4, GetPreferenceGeneral.getResultNull());
 			Map<Integer, String> columnLabel = queryResult.getColumnLabelName();
 			Map<Integer, Integer> columnType = queryResult.getColumnType();
 			

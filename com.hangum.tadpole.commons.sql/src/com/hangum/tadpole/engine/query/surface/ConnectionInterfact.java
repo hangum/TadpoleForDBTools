@@ -44,7 +44,7 @@ public interface ConnectionInterfact {
 	 * 
 	 * @throws Exception
 	 */
-	public ResultSetUtilDTO select(UserDBDAO userDB, String requestQuery, int queryResultCount) throws Exception;
+	public ResultSetUtilDTO select(UserDBDAO userDB, String requestQuery, int queryResultCount, String strNullValue) throws Exception;
 	
 	/**
 	 * 연결 테스트 합니다.

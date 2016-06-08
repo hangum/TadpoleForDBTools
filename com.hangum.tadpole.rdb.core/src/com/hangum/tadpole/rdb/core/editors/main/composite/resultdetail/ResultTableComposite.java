@@ -77,6 +77,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultTableComposite.class);
 	
+	public static int Composite_HEIGHT_SIZE = 220;
+	public static int Composite_WIDTH_SIZE = 400;
+	
 	/** 이미 결과를 마지막까지 그렸는지 유무 */
 	private boolean isLastReadData = false;
 	
@@ -104,6 +107,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	public ResultTableComposite(Composite parent, int style, ResultSetComposite rdbResultComposite) {
 		super(parent, style, rdbResultComposite);
 		setLayout(new GridLayout(1, false));
+		GridData gd_compositeBody = new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1);
+		gd_compositeBody.heightHint = Composite_HEIGHT_SIZE;
+		gd_compositeBody.widthHint = Composite_WIDTH_SIZE;
+		setLayoutData(gd_compositeBody);
 		
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -140,12 +147,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tvQueryResult = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
-		gl_compositeHead = new GridLayout(2, false);
-		gl_compositeHead.verticalSpacing = 2;
-		gl_compositeHead.horizontalSpacing = 2;
-		gl_compositeHead.marginHeight = 50;
-		gl_compositeHead.marginWidth = 2;
-		tableResult.setLayout(gl_compositeHead);
+		GridData gd_tableResult = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		gd_tableResult.heightHint = 90;
+		tableResult.setLayoutData(gd_tableResult);
 
 		final String PREFERENCE_USER_FONT = GetPreferenceGeneral.getRDBResultFont();
 		if(!"".equals(PREFERENCE_USER_FONT)) { //$NON-NLS-1$
@@ -180,7 +184,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		
 		tableResult.setLinesVisible(true);
 		tableResult.setHeaderVisible(true);
-		tableResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		createResultMenu();
 		
 		sqlFilter.setTable(tableResult);
@@ -484,9 +487,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
 					final String strUserEmail 	= SessionManager.getEMAIL();
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
+					final String strNullValue   = GetPreferenceGeneral.getResultNull();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size(), strNullValue);
 						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );

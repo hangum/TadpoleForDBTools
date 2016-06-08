@@ -438,7 +438,7 @@ public class MainEditor extends EditorExtension {
 	    resultMainComposite.setLayout(gl_compositeResult);
 	    resultMainComposite.setMainEditor(this);
 		
-		sashForm.setWeights(new int[] {65, 35});
+		sashForm.setWeights(new int[] {63, 37});
 		initEditor();
 		
 		// 올챙이 확장에 관한 코드를 넣습니다. =================================================================== 

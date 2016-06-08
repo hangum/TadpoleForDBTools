@@ -20,10 +20,6 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
 
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.swtdesigner.SWTResourceManager;

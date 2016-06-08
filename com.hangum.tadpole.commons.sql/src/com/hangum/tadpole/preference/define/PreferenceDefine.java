@@ -46,6 +46,11 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	/** RDB Result type 값 */
 	public static final String RDB_RESULT_TYPE_VALUE = "Table";
 	
+	/** RDB Result 값중에 NULL값이 있을 경우 처리 */ 
+	public static final String RDB_RESULT_NULL = "RDB_RESULT_NULL";
+	/** RDB Result type 값 */
+	public static final String RDB_RESULT_NULL_VALUE = "{null}";
+	
 	/** select 제한  갯수 */ 
 	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */

@@ -281,7 +281,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		}
 		
 		try {
-			boolean ret = procedureExecutor.exec(parameterInList);
+			boolean ret = procedureExecutor.exec(parameterInList, GetPreferenceGeneral.getResultNull());
 			if(ret) {
 				if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 					textDBMSOutput.setText(procedureExecutor.getStrOutput());
@@ -302,7 +302,7 @@ public class ExecuteProcedureDialog extends Dialog {
 					sqlSorter = new SQLResultSorter(-999);
 					
 					SQLResultLabelProvider.createTableColumn(sqlResultTableViewer[i], resultDao, sqlSorter);
-					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), resultDao));
+					sqlResultTableViewer[i].setLabelProvider(new SQLResultLabelProvider(GetPreferenceGeneral.getISRDBNumberIsComma(), resultDao, GetPreferenceGeneral.getResultNull()));
 					sqlResultTableViewer[i].setContentProvider(new SQLResultContentProvider(resultDao.getDataList().getData()));
 					
 					sqlResultTableViewer[i].setInput(resultDao.getDataList());
