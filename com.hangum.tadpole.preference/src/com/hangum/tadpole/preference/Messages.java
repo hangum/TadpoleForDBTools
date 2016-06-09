@@ -15,6 +15,8 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.preference.messages"; //$NON-NLS-1$
 
+	public String isSupportMyBatisDollos;
+
 	public String EditorPreferencePage_3;
 	
 	public String AmazonPreferencePage_0;
@@ -163,7 +165,7 @@ public class Messages {
 	public String GeneralPreferencePage_lblAccount_text;
 	public String GeneralPreferencePage_lblPassword_text;
 
-	public String GetAdminPreference_5;
+//	public String GetAdminPreference_5;
 	public String PerspectivePreferencePage_0;
 
 	public String PerspectivePreferencePage_3;
@@ -196,6 +198,10 @@ public class Messages {
 	public String Close;
 
 	public String Warning;
+
+	public String RESTAPI_Help;
+
+	public String Document;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -11,7 +11,7 @@
 package com.hangum.tadpole.engine.manager.transaction;
 
 import java.sql.Connection;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -25,7 +25,7 @@ public class TransactionDAO {
 	
 	private String userId;
 	private UserDBDAO userDB;
-	private Date startTransaction;
+	private Timestamp startTransaction;
 	private String key;
 
 	private Connection conn;
@@ -50,15 +50,20 @@ public class TransactionDAO {
 		this.userDB = userDB;
 	}
 	
-	public Date getStartTransaction() {
+	/**
+	 * @return the startTransaction
+	 */
+	public Timestamp getStartTransaction() {
 		return startTransaction;
 	}
 
-	public void setStartTransaction(Date startTransaction) {
+	/**
+	 * @param startTransaction the startTransaction to set
+	 */
+	public void setStartTransaction(Timestamp startTransaction) {
 		this.startTransaction = startTransaction;
 	}
-	
-	
+
 	public String getKey() {
 		return key;
 	}

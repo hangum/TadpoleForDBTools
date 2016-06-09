@@ -54,12 +54,12 @@ public class ScheduleManager {
 				scheduler = new StdSchedulerFactory().getScheduler();
 				scheduler.start();
 				
-				// 기 등록된 job들을 등록해줍니다.
-				List<ScheduleMainDAO> listSchedule = TadpoleSystem_Schedule.findAllScheduleMain();
-				for (ScheduleMainDAO scheduleMainDao : listSchedule) {
-					UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(scheduleMainDao.getDb_seq());
-					manager.newJob(userDB, scheduleMainDao);
-				}
+//				// 기 등록된 job들을 등록해줍니다.
+//				List<ScheduleMainDAO> listSchedule = TadpoleSystem_Schedule.findAllScheduleMain();
+//				for (ScheduleMainDAO scheduleMainDao : listSchedule) {
+//					UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(scheduleMainDao.getDb_seq());
+//					manager.newJob(userDB, scheduleMainDao);
+//				}
 				
 				// Add monitoring job
 				manager.newMonitoringJob();

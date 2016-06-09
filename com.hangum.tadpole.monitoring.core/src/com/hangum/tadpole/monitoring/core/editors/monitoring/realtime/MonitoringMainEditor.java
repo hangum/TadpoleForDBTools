@@ -348,8 +348,8 @@ public class MonitoringMainEditor extends EditorPart {
 						}
 					});
 					
-					// 20 seconds
-					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
+					// 10 seconds
+					try{ Thread.sleep(1000 * 10); } catch(Exception e) {}
 
 				}
 			};

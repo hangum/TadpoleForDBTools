@@ -18,6 +18,22 @@ public class Messages {
 	public String Warning;
 	public String CheckNumberString;
 	public String CheckTextString;
+
+	public String UserName;
+
+	public String Email;
+
+	public String Confirmkey;
+
+	public String NewUserMailTitle;
+
+	public String MailBodyTempAdmin;
+
+	public String HomePage;
+
+	public String Thanks;
+
+	public String SendTemporaryPassword;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -3,7 +3,7 @@
 # Package Files #
 *.ear
 
-*.pmd
+.pmd
 
 bin/
 .DS_Store

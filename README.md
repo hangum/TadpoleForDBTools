@@ -103,7 +103,9 @@ Contributor
 * hangum (hangum@gmail.com)
 * darkcanol@gmail.com
 * Billy (sangmo.gu@gmail.com)
+* BJJang (bjjang@gaia3d.com)
 * Wahyu Kristianto (w.kristories@gmail.com) : Indonesia localization
+* SunYoung Han(sun.sy.han@gmail.com) : Altibase extension
 
 Donation
 - Paypal(paypal.com) : hangum@gmail.com

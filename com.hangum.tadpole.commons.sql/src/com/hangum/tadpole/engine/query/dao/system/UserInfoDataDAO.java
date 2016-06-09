@@ -31,8 +31,8 @@ public class UserInfoDataDAO {
 	public UserInfoDataDAO() {
 	}
 	
-	public UserInfoDataDAO(int seq, String name, String value) {
-		this.seq = seq;
+	public UserInfoDataDAO(int user_seq, String name, String value) {
+		this.user_seq = user_seq;
 		this.name = name;
 		this.value0 = value;
 	}

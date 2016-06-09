@@ -442,22 +442,23 @@ and table_name = #table_name#
  -->
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 <![CDATA[
- SELECT 
-    	tbl.table_name AS "table_name",
-    	''             AS "engine", 
-    	tbl.table_rows AS "table_rows",
-    	''                   AS "auto_increment", 
-    	comm.comments        AS "table_comment",
-    	db.nls_characterset AS "table_collation",
-    	TO_CHAR(tbl.created, 'DD-MM-YYYY HH24:MI:SS') AS "create_time",
-    	tbl.sizeofmb AS "sizeofmb"
+SELECT 
+    	tbl.table_name AS "TABLE_NAME",
+    	tbl.user_name  AS "OWNER", 
+    	tbl.table_rows AS "TABLE_ROWS",
+    	tbl.tbs_name        AS "TABLESPACE_NAME", 
+    	comm.comments       AS "TABLE_COMMENT",
+    	db.nls_characterset AS "CHARACTER_SET",
+    	TO_CHAR(tbl.created, 'DD-MM-YYYY HH24:MI:SS') AS "CREATED",
+    	tbl.sizeofmb AS "SIZEOFMB"
 FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/
              tbl.table_id,
              user.user_name,
     	     tbl.table_name,
              info.fixed_used_mem/info.mem_slot_size AS table_rows,
              tbl.created,
-             round((mem.fixed_used_mem+mem.var_used_mem)/1024/1024,2) AS sizeofmb
+             round((mem.fixed_used_mem+mem.var_used_mem)/1024/1024,2) AS sizeofmb,
+             tbl.tbs_name AS tbs_name
 	FROM system_.sys_tables_ tbl,
              x$$table_info info,
              v$$memtbl_info mem,
@@ -472,7 +473,8 @@ FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/
     	     tbl.table_name,
              info.disk_page_cnt AS table_rows,
              tbl.created,
-             round(disk.disk_page_cnt*8/1024,2) AS sizeofmb
+             round(disk.disk_page_cnt*8/1024,2) AS sizeofmb,
+             tbl.tbs_name AS tbs_name
 	FROM system_.sys_tables_ tbl,
              x$$table_info info,
              v$$disktbl_info disk,
@@ -491,25 +493,24 @@ WHERE db.space_id = 0
  -->
 <select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
 <![CDATA[
-    SELECT col.user_name || '.' || col.table_name AS "table_name",
-           tblcomm.comments AS "table_comm", 
-           col.column_name AS "column_name",
+    SELECT col.user_name || '.' || col.table_name AS "TABLE_NAME",
+           tblcomm.comments AS "TABLE_COMMENT", 
+           col.column_name AS "COLUMN_NAME",
+           comm.comments   AS "COLUMN_COMMENT",
+           decode(col.is_nullable, 'F', 'NO', 'YES') AS "NULLABLE",        
+           const.key AS "PK",           
            datatype.type_name || decode(datatype.create_param, 
                                         'precision,scale', '('||col.precision||','||col.scale||')',
                                         'precision', '('||col.precision||')',
-                                        '') AS "data_type", 
+                                        '') AS "DATA_TYPE", 
+           col.default_val AS "DATA_DEFAULT",
            decode(datatype.create_param, 
                   'precision,scale', col.precision,
                   'precision', col.precision,
-                  null) AS "precision", 
+                  null) AS "DATA_PRECISION", 
            decode(datatype.create_param, 
                   'precision,scale', col.scale,
-                  null) AS "scale", 
-           decode(col.is_nullable, 'F', 'NO', 'YES') AS "null", 
-           const.key AS "key",
-           col.default_val AS "default",
-           ''              AS "extra", 
-	   comm.comments   AS "comment"
+                  null) AS "DATA_SCALE"
     FROM (SELECT /*+index(tbl, sys_tables_index1) index(col, sys_columns_index2) ordered*/ user.user_id, tbl.table_id, col.column_id,
                  user.user_name, tbl.table_name, col.column_name, col.data_type, col.precision, col.scale, col.is_nullable, col.default_val
           FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_columns_ col
@@ -663,7 +664,7 @@ Altibase does not provide any DDL scripts for tables with a query. - March 2016
 <select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
 <![CDATA[
 	SELECT /*+index(proc, sys_procedures_index1) ordered*/
-               param.para_order                     AS "order", 
+           param.para_order                     AS "order", 
 	       param.para_name                      AS "name", 
 	       datatype.type_name                   AS "rdbtype", 
 	       decode(param.inout_type, 0, 'IN', 
@@ -692,4 +693,16 @@ Altibase does not provide any DDL scripts for tables with a query. - March 2016
 	       AND PROC.proc_name = '$proc_name$'
 ]]>
 </select>    
+
+<select id="getProperties" resultClass="java.util.HashMap">
+<![CDATA[
+	SELECT name AS "PROPERTY_NAME", value1 AS "VALUE" FROM v$$property ORDER BY name
+]]>
+</select>  
+
+<select id="setProperty" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+<![CDATA[
+	ALTER #property_type# SET #property_name# = #property_value#
+]]>
+</select>
 </sqlMap>

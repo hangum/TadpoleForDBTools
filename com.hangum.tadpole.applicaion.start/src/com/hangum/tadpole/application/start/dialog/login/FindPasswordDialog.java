@@ -33,7 +33,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * find password
@@ -43,11 +43,12 @@ import com.hangum.tadpole.preference.get.GetAdminPreference;
  */
 public class FindPasswordDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(FindPasswordDialog.class);
-	
+	private String strEmail;
 	private Text textEmail;
 
-	public FindPasswordDialog(Shell parentShell) {
+	public FindPasswordDialog(Shell parentShell, String strEmail) {
 		super(parentShell);
+		this.strEmail = strEmail;
 	}
 	
 	@Override
@@ -74,6 +75,7 @@ public class FindPasswordDialog extends Dialog {
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textEmail.setText(strEmail);
 		
 		textEmail.setFocus();
 		
@@ -90,7 +92,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strEmail = StringUtils.trimToEmpty(textEmail.getText());
-		logger.info("Find password dialog" + strEmail);
+		if(logger.isInfoEnabled()) logger.info("Find password dialog" + strEmail);
 
 		if (!checkValidation()) {
 			MessageDialog.openWarning(getShell(), Messages.get().Confirm, Messages.get().FindPasswordDialog_6);
@@ -138,7 +140,7 @@ public class FindPasswordDialog extends Dialog {
 
 		// manager 에게 메일을 보낸다.
 		EmailDTO emailDao = new EmailDTO();
-		emailDao.setSubject("Temporay password."); //$NON-NLS-1$
+		emailDao.setSubject(Messages.get().TemporayPassword); //$NON-NLS-1$
 		// 
 		// 그룹, 사용자, 권한.
 		// 

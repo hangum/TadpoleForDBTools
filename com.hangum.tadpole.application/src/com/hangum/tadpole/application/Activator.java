@@ -16,7 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpole.commons.log.LogListener;
+import com.hangum.tadpole.commons.libs.core.logs.LogListener;
 
 /**
  * The activator class controls the plug-in life cycle

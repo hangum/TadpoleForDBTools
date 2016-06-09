@@ -54,7 +54,6 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -76,6 +75,7 @@ import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.format.SQLFormater;
 import com.swtdesigner.ResourceManager;
 
@@ -152,14 +152,6 @@ public class MainEditor extends EditorExtension {
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
 		
-		// get group list ----------------------------------
-		try {
-			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(userDB.getGroup_name());
-		} catch(Exception e) {
-			logger.error("get group info", e);
-		}
-		// ---------------------------------------------------
-
 		setSite(site);
 		setInput(input);
 		setPartName(strPartName);
@@ -226,20 +218,21 @@ public class MainEditor extends EditorExtension {
 				if(!isAutoCommit()) {
 					MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().PleaseEndedTransaction);
 				} else {
-					if(listUserGroup.size() == 1) return;
 					
-					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), listUserGroup, userDB);
+					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), userDB);
 					if(Dialog.OK == dialog.open()) {
 						UserDBDAO selectedUserDB = dialog.getUserDB();
-						userDB = selectedUserDB;
-						
-						try {
-							TadpoleObjectQuery.getTableList(userDB);
-						} catch (Exception e1) {
-							logger.error("get table list", e1);
+						if(selectedUserDB != null) {
+							userDB = selectedUserDB;
+							
+							try {
+								TadpoleObjectQuery.getTableList(userDB);
+							} catch (Exception e1) {
+								logger.error("get table list", e1);
+							}
+							
+							tltmConnectURL.setText(userDB.getDisplay_name());
 						}
-						
-						tltmConnectURL.setText(userDB.getDisplay_name());
 					}
 				}
 				
@@ -338,7 +331,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 				
-				SQLToStringDialog dialog = new SQLToStringDialog(null, getUserDB(), EditorDefine.SQL_TO_APPLICATION.Java_StringBuffer.toString(), strQuery);
+				SQLToStringDialog dialog = new SQLToStringDialog(null, getUserDB(), strQuery);
 				dialog.open();
 				setFocus();
 			}
@@ -407,7 +400,7 @@ public class MainEditor extends EditorExtension {
 			public void widgetSelected(SelectionEvent e) {
 				String strQuery = browserEvaluateToStr(EditorFunctionService.ALL_TEXT);
 				
-				MainSQLEditorAPIServiceDialog dialog = new MainSQLEditorAPIServiceDialog(getSite().getShell(), strQuery);
+				MainSQLEditorAPIServiceDialog dialog = new MainSQLEditorAPIServiceDialog(getSite().getShell(), userDB, strQuery);
 				dialog.open();
 				
 				setFocus();
@@ -524,7 +517,9 @@ public class MainEditor extends EditorExtension {
 		browserQueryEditor.setUrl(REAL_DB_URL);
 	    	
 //	    final String strConstList = findDefaultKeyword();
-	    final String varAutoSave 	= ""+GetPreferenceGeneral.getEditorAutoSave();
+		// 기존 리소스를 가져왔으면 auto save mode 는 false
+	    final String varAutoSave 	= dBResource != null?"fasle":""+GetPreferenceGeneral.getEditorAutoSave();
+	    
 	    final String varTheme 		= PublicTadpoleDefine.getMapTheme().get(GetPreferenceGeneral.getEditorTheme());
 	    final String varFontSize 	= GetPreferenceGeneral.getEditorFontSize();
 	    final String varIsWrap 		= ""+GetPreferenceGeneral.getEditorIsWarp();
@@ -655,6 +650,12 @@ public class MainEditor extends EditorExtension {
 	public void executeCommand(final RequestQuery reqQuery) {
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
+		
+		// do not execute query
+		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {
+			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().MainEditorServiceEnd);
+			return;
+		}
 		
 		String strCheckSQL = SQLUtil.removeCommentAndOthers(userDB, reqQuery.getSql());
 		if(StringUtils.startsWithIgnoreCase(strCheckSQL, "desc ")) {
@@ -819,13 +820,13 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private boolean updateAutoResourceDate(String newContents) {
+		if(dBResource != null) return true;
 		
 		// table, view만 auto save 된다.
 		if(dbAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES | 
 				dbAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 				
 			if(logger.isDebugEnabled()) logger.debug("====> called updateAutoResourceDate ");
-			
 			try {
 				dBResourceAuto = TadpoleSystem_UserDBResource.updateAutoResourceDate(getUserDB(), dBResourceAuto, dBResource, newContents);
 				if(dBResource != null) {

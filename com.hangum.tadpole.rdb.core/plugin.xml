@@ -59,7 +59,7 @@
       <editor
             class="com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor"
             default="false"
-            icon="resources/icons/mongodb-add.png"
+            icon="resources/icons/dbs/mongodb-add.png"
             id="com.hangum.tadpole.mongodb.core.ext.editor.javascript"
             name="%editor.name.3">
       </editor>
@@ -93,7 +93,7 @@
       <editor
             class="com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditor"
             default="false"
-            icon="resources/icons/editor/hammer-icon.png"
+            icon="resources/icons/editor/compile.png"
             id="com.hangum.tadpole.rdb.core.editor.main.procedure"
             name="%editor.name.8">
       </editor>
@@ -285,7 +285,7 @@
          </action>
          <action
                class="com.hangum.tadpole.rdb.core.actions.connections.ObjecCompileAction"
-               icon="resources/icons/object_editor.png"
+               icon="resources/icons/editor/compile.png"
                id="com.hangum.tadpole.rdb.core.action.query.object.compile.editor"
                label="%action.label.openObjectCompile"
                menubarPath="additions">

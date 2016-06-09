@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
-import com.hangum.tadpole.preference.define.PreferenceDefine;
+import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 
 /**
  * System setting
@@ -19,7 +19,7 @@ import com.hangum.tadpole.preference.define.PreferenceDefine;
  *
  */
 public class SystemSettingDAO {
-	String newUserPermit = PreferenceDefine.ADMIN_NEW_USER_PERMIT_VALUE;
+	String newUserPermit = AdminPreferenceDefine.NEW_USER_PERMIT_VALUE;
 	
 	public SystemSettingDAO() {
 	}

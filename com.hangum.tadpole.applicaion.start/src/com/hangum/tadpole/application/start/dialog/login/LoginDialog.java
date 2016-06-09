@@ -1,5 +1,5 @@
 /*******************************************************************************
-
+ * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -54,7 +54,7 @@ import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -73,6 +73,7 @@ public class LoginDialog extends Dialog {
 	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
 	private Label lblLoginForm;
+	private Label lblLabelLblhangum;
 	private Composite compositeLogin;
 	private Label lblEmail;
 	
@@ -94,7 +95,7 @@ public class LoginDialog extends Dialog {
 //						"	</form>"; //$NON-NLS-1$
 	private Composite compositeHead;
 	private Composite compositeTail;
-	private Label lblLabelLblhangum;
+	
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -329,7 +330,7 @@ public class LoginDialog extends Dialog {
 		
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
+//		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
 	}
 	
@@ -493,7 +494,7 @@ public class LoginDialog extends Dialog {
 	}
 	
 	private void findPassword() {
-		FindPasswordDialog dlg = new FindPasswordDialog(getShell());
+		FindPasswordDialog dlg = new FindPasswordDialog(getShell(), textEMail.getText());
 		dlg.open();
 	}
 

@@ -100,6 +100,7 @@ public class EventManager {
 			String strMailTitle = resultDao.getUserDB().getDisplay_name() + " - " + resultDao.getMonitoringIndexDAO().getTitle();
 			String strMailContent = strMailTitle + "\n" + resultDao.getSystem_description() + "\n" + resultDao.getQuery_result();
 
+			// TODO 이메일 보내기를 막아놓고 임시조취 
 			//			Utils.sendEmail(resultDao.getMonitoringIndexDAO().getReceiver(), strMailTitle, strMailContent);
 			FileWriter fw = new FileWriter("/Users/hangum/Downloads/mail.txt", true);
 			fw.write(strMailTitle); 

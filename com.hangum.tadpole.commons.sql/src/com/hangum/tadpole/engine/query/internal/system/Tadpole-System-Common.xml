@@ -122,8 +122,10 @@
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, approval_yn, use_otp, otp_secret, allow_ip)
-	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#)
+	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, timezone, approval_yn, use_otp, otp_secret, allow_ip
+	,is_regist_db, is_shared_db, limit_add_db_cnt, service_start, service_end)
+	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #timezone#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#
+	,#is_regist_db#, #is_shared_db#, #limit_add_db_cnt#, #service_start#, #service_end#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 		SELECT * 
@@ -247,8 +249,25 @@
 		allow_ip = #allow_ip#,
 		delYn = #delYn#,
 		is_regist_db = #is_regist_db#,
+		
+		is_shared_db = #is_shared_db#, 
+		limit_add_db_cnt = #limit_add_db_cnt#, 
+		service_end = #service_end#,
+		
 		approval_yn = #approval_yn#,
 		is_email_certification = #is_email_certification#
+	WHERE seq = #seq#
+</update>
+
+<!-- 
+	Change basic info
+ -->
+<update id="updateUserBasic" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user 
+	SET passwd = #passwd#,
+		language = #language#,
+		timezone = #timezone#, 
+		use_otp = 'NO'
 	WHERE seq = #seq#
 </update>
 
@@ -257,7 +276,7 @@
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
-	SET passwd = #passwd#, use_otp = 'NO'
+	SET passwd = #passwd#
 	WHERE seq = #seq#
 </update>
 
@@ -596,6 +615,7 @@
 		AND a.restapi_uri != ""
 		AND a.restapi_yesno = 'YES'
 		AND a.db_seq = b.seq
+		AND a.delYn = 'NO'		
 	ORDER BY a.restapi_uri
 </select> 
 

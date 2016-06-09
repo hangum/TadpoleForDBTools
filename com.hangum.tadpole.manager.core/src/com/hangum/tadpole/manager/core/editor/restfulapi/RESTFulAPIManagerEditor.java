@@ -442,7 +442,6 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 		textQuery.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1));
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		
 		initUI();
 
 	}

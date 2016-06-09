@@ -1,5 +1,6 @@
 package com.hangum.tadpole.engine.query.dao.system;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -18,10 +19,10 @@ public class TadpoleUserDbRoleDAO {
 	String access_ip = "*";
 	
 	// default value is 00:00
-	Date terms_of_use_starttime 	= new Date(System.currentTimeMillis());
+	Timestamp terms_of_use_starttime 	= new Timestamp(System.currentTimeMillis());
 
 	// default value is 100 years after
-	Date terms_of_use_endtime  		= new Date(System.currentTimeMillis());// + (10 * 365 * 24 * 60 * 60 * 1000));
+	Timestamp terms_of_use_endtime  	= new Timestamp(System.currentTimeMillis());// + (10 * 365 * 24 * 60 * 60 * 1000));
 	
 	String delYn;
 	Date create_time;
@@ -113,32 +114,32 @@ public class TadpoleUserDbRoleDAO {
 	public void setAccess_ip(String access_ip) {
 		this.access_ip = access_ip;
 	}
-
+	
 	/**
 	 * @return the terms_of_use_starttime
 	 */
-	public Date getTerms_of_use_starttime() {
+	public Timestamp getTerms_of_use_starttime() {
 		return terms_of_use_starttime;
 	}
 
 	/**
 	 * @param terms_of_use_starttime the terms_of_use_starttime to set
 	 */
-	public void setTerms_of_use_starttime(Date terms_of_use_starttime) {
+	public void setTerms_of_use_starttime(Timestamp terms_of_use_starttime) {
 		this.terms_of_use_starttime = terms_of_use_starttime;
 	}
 
 	/**
 	 * @return the terms_of_use_endtime
 	 */
-	public Date getTerms_of_use_endtime() {
+	public Timestamp getTerms_of_use_endtime() {
 		return terms_of_use_endtime;
 	}
 
 	/**
 	 * @param terms_of_use_endtime the terms_of_use_endtime to set
 	 */
-	public void setTerms_of_use_endtime(Date terms_of_use_endtime) {
+	public void setTerms_of_use_endtime(Timestamp terms_of_use_endtime) {
 		this.terms_of_use_endtime = terms_of_use_endtime;
 	}
 

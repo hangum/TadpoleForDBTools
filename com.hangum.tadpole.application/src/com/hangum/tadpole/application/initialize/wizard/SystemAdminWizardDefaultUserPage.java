@@ -28,7 +28,6 @@ import com.hangum.tadpole.application.Messages;
 import com.hangum.tadpole.application.initialize.wizard.dao.SystemAdminWizardUserDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
-import com.hangum.tadpole.commons.util.Utils;
 
 /**
  *

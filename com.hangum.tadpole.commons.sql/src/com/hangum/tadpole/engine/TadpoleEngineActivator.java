@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-import com.hangum.tadpole.commons.log.LogListener;
+import com.hangum.tadpole.commons.libs.core.logs.LogListener;
 
 public class TadpoleEngineActivator extends Plugin {
 

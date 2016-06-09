@@ -21,7 +21,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
  * @author hangum
  *
  */
-public class SQLToPHPConvert {
+public class SQLToPHPConvert extends AbstractSQLTo {
 	public static final String DEFAULT_VARIABLE = "query";
 	
 	public static String sqlToString(String name, String sql) {

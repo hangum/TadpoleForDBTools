@@ -31,11 +31,13 @@ import com.hangum.tadpole.application.start.action.AboutAction;
 import com.hangum.tadpole.application.start.action.BugIssueAction;
 import com.hangum.tadpole.application.start.action.NewVersionCheckAction;
 import com.hangum.tadpole.application.start.action.UserManuelAction;
+//import com.hangum.tadpole.bill.core.actions.BillAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSQLAuditAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminSystemSettingAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
 import com.hangum.tadpole.commons.admin.core.actions.JDBCDriverManagerAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.compare.core.actions.OpenCompareAction;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.actions.global.DBManagerAction;
@@ -45,6 +47,7 @@ import com.hangum.tadpole.manager.core.actions.global.SQLAuditAction;
 import com.hangum.tadpole.manager.core.actions.global.SchemaHistoryAction;
 import com.hangum.tadpole.manager.core.actions.global.TransactionConnectionManagerAction;
 import com.hangum.tadpole.monitoring.core.actions.monitoring.MonitoringRealTimeAction;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.actions.global.ConnectDatabaseAction;
 import com.hangum.tadpole.rdb.core.actions.global.DeleteResourceAction;
 import com.hangum.tadpole.rdb.core.actions.global.ExitAction;
@@ -102,6 +105,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction bugIssueAction;
     private IAction userManuelAction;
     private IAction newVersionCheckAction;
+    
+    // agens monitor
+//    private IAction agensMonitorAction;
+    
+    private IAction billAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -151,6 +159,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
     	register(monitoringRealTimeAction);
     	
+    	//
+//    	agensMonitorAction = new AgensManagerOpenAction(window);
+//    	register(agensMonitorAction);
+    	
     	jDBCDriverManagerAction = new JDBCDriverManagerAction(window);
     	register(jDBCDriverManagerAction);
     	
@@ -189,6 +201,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
        
         newVersionCheckAction = new NewVersionCheckAction(window);
         register(newVersionCheckAction);
+        
+ //       billAction = new BillAction(window);
+ //       register(billAction);
     }
     
     /**
@@ -198,11 +213,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	MenuManager fileMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_0, IWorkbenchActionConstants.M_FILE);
     	MenuManager manageMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_1, IWorkbenchActionConstants.M_PROJECT);
     	MenuManager adminMenu = null;
+    	MenuManager serviceMenu = null;
     	
     	boolean isAdmin = PermissionChecker.isAdmin(SessionManager.getRepresentRole());
     	if(isAdmin) {
     		adminMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_2, IWorkbenchActionConstants.MENU_PREFIX + Messages.get().ApplicationActionBarAdvisor_3);
         }
+    	if(ApplicationArgumentUtils.isOnlineServer()) {
+    		serviceMenu = new MenuManager(Messages.get().ServiceBill, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
+    	}
     	MenuManager preferenceMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
 		MenuManager helpMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_5, IWorkbenchActionConstants.M_HELP);
 		
@@ -214,6 +233,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			menuBar.add(adminMenu);
 			menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		}
+		menuBar.add(serviceMenu);
 		menuBar.add(preferenceMenu);
 		menuBar.add(helpMenu);
 		
@@ -232,9 +252,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		manageMenu.add(restFulAPIAction);
 		manageMenu.add(transactionConnectionAction);
 		manageMenu.add(resourceManageAction);
-		if("YES".equals(SessionManager.getIsRegistDB())) {
-			manageMenu.add(dbMgmtAction);
-		}
+		manageMenu.add(dbMgmtAction);
+		
 		manageMenu.add(executedSQLAction);
 		manageMenu.add(schemaHistoryAction);
 		manageMenu.add(openCompareAction);
@@ -247,6 +266,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			adminMenu.add(new Separator());
 			adminMenu.add(jDBCDriverManagerAction);
 		}
+		
+		serviceMenu.add(billAction);
 
 		// preference action
 		preferenceMenu.add(preferenceAction);
@@ -267,16 +288,20 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         toolbar.add(saveAction);
         toolbar.add(saveAsAction);
-        toolbar.add(new Separator());        
+        toolbar.add(new Separator());
         
         toolbar.add(queryOpenAction);
         toolbar.add(openObjectQueryEditorAction);
+        toolbar.add(new Separator());
         toolbar.add(dbRelationOpenAction);
         toolbar.add(new Separator());
         
 //        toolbar.add(monitoringManageAction);
-        toolbar.add(monitoringRealTimeAction);
-        toolbar.add(new Separator());
+        if("YES".equals(GetAdminPreference.getSupportMonitoring())) {
+        	toolbar.add(monitoringRealTimeAction);
+        }
+//        toolbar.add(agensMonitorAction);
+//        toolbar.add(new Separator());
         
 //        toolbar.add(deleteResourceAction);
 //        toolbar.add(new Separator());
@@ -312,7 +337,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 //        toolbar.add(bugIssueAction);
 //        toolbar.add(aboutAction);
 //        if(!TadpoleApplicationContextManager.isPersonOperationType()) {
-	    	toolbar.add(new Separator());
+//	    	toolbar.add(new Separator());
 	    	toolbar.add(exitAction);
 //        }
     }

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -87,7 +86,7 @@ public class ParameterDialog extends Dialog {
 		this.makeParamCount(paramCount);
 	}
 
-	public ParameterDialog(Shell parentShell, final UserDBDAO userDB, Map<String, int[]> mapIndex) {
+	public ParameterDialog(Shell parentShell, final UserDBDAO userDB, Map<Integer, String> mapIndex) {
 		super(parentShell);
 		
 		this.userDB = userDB;
@@ -153,7 +152,7 @@ public class ParameterDialog extends Dialog {
 
 		TableViewerColumn tvcName = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcName = tvcName.getColumn();
-		tcl_composite.setColumnData(tcName, new ColumnPixelData(80, true, true));
+		tcl_composite.setColumnData(tcName, new ColumnPixelData(150, true, true));
 		tcName.setText(Messages.get().ParameterDialog_2);
 
 		TableViewerColumn tvcType = new TableViewerColumn(tableViewer, SWT.NONE);
@@ -177,7 +176,7 @@ public class ParameterDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteQuery, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 
 	/**
@@ -185,7 +184,7 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(370, 300);
+		return new Point(420, 300);
 	}
 
 	/**
@@ -265,15 +264,15 @@ public class ParameterDialog extends Dialog {
 	 * 
 	 * @param mapIndex
 	 */
-	protected void makeParamCount(Map<String, int[]> mapIndex) {
+	protected void makeParamCount(Map<Integer, String> mapIndex) {
 		
 		parameters = new ArrayList<Map<Integer, Object>>();
-		Set<String> keys = mapIndex.keySet();
-		
-		int i = 0;
-		for (String strKey : keys) {
+//		int i = 0;
+//		for (String strKey : mapIndex.keySet()) {
+		for(int i=0; i<mapIndex.size(); i++) {
+			String strKey = mapIndex.get(i+1);
 			Map<Integer, Object> map = new HashMap<Integer, Object>();
-			map.put(0, (i++ + 1));
+			map.put(0, (i+ + 1));
 			map.put(1, strKey);
 			map.put(2, RDBTypeToJavaTypeUtils.supportParameterTypes(userDB)[0]);
 			map.put(3, ""); //$NON-NLS-1$

@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.editors.system;
 
+import java.io.File;
+
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -23,6 +26,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -41,8 +45,8 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
-import com.hangum.tadpole.preference.define.PreferenceDefine;
-import com.hangum.tadpole.preference.get.GetAdminPreference;
+import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
 
 /**
@@ -56,6 +60,14 @@ public class AdminSystemSettingEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.admin.editor.admn.system.setting"; //$NON-NLS-1$
 	private Combo comboNewUserPermit;
 	private Text textResourceHome;
+	
+	private Combo comboIsAddDB;
+	private Combo comboIsSharedDB;
+	private Text textIntLimtCnt;
+	private Text textDefaultUseDay;
+	private Text textLog;
+	private Combo comboSupportMonitoring;
+	private Text textAPIServerURL;
 
 	public AdminSystemSettingEditor() {
 		super();
@@ -103,14 +115,23 @@ public class AdminSystemSettingEditor extends EditorPart {
 				}
 			}
 		});
-		tltmJdbcDriverManage.setText("JDBC Driver Manage");
+		tltmJdbcDriverManage.setText(Messages.get().JDBCDriverManage);
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		Label lblLogDir = new Label(compositeBody, SWT.NONE);
+		lblLogDir.setText("Log dir");
+		
+		textLog = new Text(compositeBody, SWT.BORDER);
+		textLog.setEditable(false);
+		textLog.setEnabled(false);
+		textLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textLog.setText(new File(PublicTadpoleDefine.DEFAULT_LOG_FILE).getAbsolutePath());
+		
 		Label lblResourceHome = new Label(compositeBody, SWT.NONE);
-		lblResourceHome.setText("Resource Home");
+		lblResourceHome.setText(Messages.get().ResourceHome);
 		
 		textResourceHome = new Text(compositeBody, SWT.BORDER);
 		textResourceHome.setEnabled(false);
@@ -127,6 +148,61 @@ public class AdminSystemSettingEditor extends EditorPart {
 			comboNewUserPermit.add(yesNo.name());
 		}
 		
+		Label lblSupportMonitoring = new Label(compositeBody, SWT.NONE);
+		lblSupportMonitoring.setText(Messages.get().AdminSystemSettingEditor_SupportMonitoring);
+		
+		comboSupportMonitoring = new Combo(compositeBody, SWT.READ_ONLY);
+		comboSupportMonitoring.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboSupportMonitoring.add("YES");
+		comboSupportMonitoring.add("NO");
+		
+		Label lblApiServerUrl = new Label(compositeBody, SWT.NONE);
+		lblApiServerUrl.setText("API Server URL");
+		
+		textAPIServerURL = new Text(compositeBody, SWT.BORDER);
+		textAPIServerURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeBody, SWT.NONE);
+		
+		Label labelHorizontal = new Label(compositeBody, SWT.SEPARATOR | SWT.HORIZONTAL);
+		labelHorizontal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeBody, SWT.NONE);
+		
+		Group grpSettingDefaultUser = new Group(compositeBody, SWT.NONE);
+		grpSettingDefaultUser.setLayout(new GridLayout(4, false));
+		grpSettingDefaultUser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpSettingDefaultUser.setText(Messages.get().SettingUser);
+		
+		Label lblNewLabel_1 = new Label(grpSettingDefaultUser, SWT.NONE);
+		lblNewLabel_1.setText(Messages.get().IsAddDB);
+		
+		comboIsAddDB = new Combo(grpSettingDefaultUser, SWT.READ_ONLY);
+		comboIsAddDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsAddDB.add(yesNo.name());
+		}
+		
+		Label lblIsSharedDb = new Label(grpSettingDefaultUser, SWT.NONE);
+		lblIsSharedDb.setText(Messages.get().IsSharedDB);
+		
+		comboIsSharedDB = new Combo(grpSettingDefaultUser, SWT.READ_ONLY);
+		comboIsSharedDB.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsSharedDB.add(yesNo.name());
+		}
+		
+		Label lblDefaultAddDb = new Label(grpSettingDefaultUser, SWT.NONE);
+		lblDefaultAddDb.setText(Messages.get().DefaultAddDBCount);
+		
+		textIntLimtCnt = new Text(grpSettingDefaultUser, SWT.BORDER);
+		textIntLimtCnt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblDefaultUseDay = new Label(grpSettingDefaultUser, SWT.NONE);
+		lblDefaultUseDay.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDefaultUseDay.setText(Messages.get().DefaultUseDay);
+		
+		textDefaultUseDay = new Text(grpSettingDefaultUser, SWT.BORDER);
+		textDefaultUseDay.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 //		Composite compositeTail = new Composite(parent, SWT.NONE);
 //		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 //		compositeTail.setLayout(new GridLayout(1, false));
@@ -140,7 +216,14 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * initialize UI
 	 */
 	private void initUI() {
+		comboIsAddDB.setText(GetAdminPreference.getIsAddDB());
+		comboIsSharedDB.setText(GetAdminPreference.getIsSharedDB());
 		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
+		textAPIServerURL.setText(GetAdminPreference.getApiServerURL());
+		
+		textIntLimtCnt.setText(GetAdminPreference.getDefaultAddDBCnt());
+		textDefaultUseDay.setText(GetAdminPreference.getServiceDurationDay());
+		comboSupportMonitoring.setText(GetAdminPreference.getSupportMonitoring());
 	}
 	
 	/**
@@ -148,11 +231,40 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * 
 	 */
 	private void saveData() {
+		
+		if(!NumberUtils.isDigits(textIntLimtCnt.getText())) {
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().mustBeNumber);
+			textIntLimtCnt.setFocus();
+			return;
+		} else if(!NumberUtils.isNumber(textDefaultUseDay.getText())) {
+			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().mustBeNumber);
+			textDefaultUseDay.setFocus();
+			return;
+		}
+		
 		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().AdminSystemSettingEditor_4)) return;
 		
 		try {
-			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(PreferenceDefine.ADMIN_NEW_USER_PERMIT, comboNewUserPermit.getText());
-			GetAdminPreference.updateAdminData(PreferenceDefine.ADMIN_NEW_USER_PERMIT, userInfoDao);
+			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.NEW_USER_PERMIT, comboNewUserPermit.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.NEW_USER_PERMIT, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.API_SERVER_URL, textAPIServerURL.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.API_SERVER_URL, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_ADD_DB, comboIsAddDB.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.IS_ADD_DB, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_SHARED_DB, comboIsSharedDB.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.IS_SHARED_DB, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, textIntLimtCnt.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.DEFAULT_ADD_DB_CNT, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SERVICE_DURATION_DAY, textDefaultUseDay.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.SERVICE_DURATION_DAY, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SUPPORT_MONITORING, comboSupportMonitoring.getText());
+			GetAdminPreference.updateAdminData(AdminPreferenceDefine.SUPPORT_MONITORING, userInfoDao);
 		} catch (Exception e) {
 			logger.error("save exception", e); //$NON-NLS-1$
 			

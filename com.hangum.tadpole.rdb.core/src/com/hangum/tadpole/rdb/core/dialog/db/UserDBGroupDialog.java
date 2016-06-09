@@ -13,9 +13,12 @@ package com.hangum.tadpole.rdb.core.dialog.db;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -25,9 +28,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 
 /**
  * 사용자 디비 선택 다이얼로그
@@ -36,6 +38,8 @@ import org.eclipse.swt.events.MouseEvent;
  *
  */
 public class UserDBGroupDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(UserDBGroupDialog.class);
+	
 	private List<UserDBDAO> listUserGroup = new ArrayList<>();
 	private UserDBDAO oriUserDB;
 	private org.eclipse.swt.widgets.List listDBGroup;
@@ -46,11 +50,17 @@ public class UserDBGroupDialog extends Dialog {
 	 * @param parentShell
 	 * @param oriUserDB 
 	 */
-	public UserDBGroupDialog(Shell parentShell, List<UserDBDAO> listUserGroup, UserDBDAO oriUserDB) {
+	public UserDBGroupDialog(Shell parentShell, UserDBDAO oriUserDB) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
-		this.listUserGroup = listUserGroup;
+		// get group list ----------------------------------
+		try {
+			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(oriUserDB.getGroup_name());
+		} catch(Exception e) {
+			logger.error("get group info", e);
+		}
+		// ---------------------------------------------------
 		this.oriUserDB = oriUserDB;
 	}
 	

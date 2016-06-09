@@ -12,18 +12,17 @@ package com.hangum.tadpole.engine.initialize;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.osgi.framework.Bundle;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -211,19 +210,6 @@ public class TadpoleSystemInitializer {
 					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
 					tadpoleEngineDB.setUsers(user);
 					tadpoleEngineDB.setPasswd(passwd);
-//				} else if("PGSQL".equalsIgnoreCase(whichDB)) {
-//					tadpoleEngineDB.setDbms_types(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
-//					tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDB_URL_INFO(), ip, port, database));
-//					
-//					String isSSL = prop.getProperty("isSSL");
-//					if("true".equals(isSSL)) {
-//						tadpoleEngineDB.setUrl( tadpoleEngineDB.getUrl() + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
-//					}
-//					
-//					tadpoleEngineDB.setDb(database);
-//					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_PGSQL_DEFAULT.getDBToString());
-//					tadpoleEngineDB.setUsers(user);
-//					tadpoleEngineDB.setPasswd(passwd);
 				}
 
 			} catch (Exception ioe) {
