@@ -11,7 +11,10 @@
 package com.hangum.tadpole.commons.utils.zip.util;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.zeroturnaround.zip.NameMapper;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -43,12 +46,22 @@ public class ZipUtils {
 	 */
 	public static String pack(String base_dir, String zipFile) throws Exception {
 		String zipFullPath = PublicTadpoleDefine.TEMP_DIR + zipFile + ".zip";
-		ZipUtil.pack(new File(base_dir), new File(zipFullPath), new NameMapper() {
-			public String map(String name) {
-				return name;
-			}
-		});
-		
-		return zipFullPath; 
+		ZipUtil.pack(new File(base_dir), new File(zipFullPath),
+				new NameMapper() {
+					public String map(String name) {
+						try {
+							if (!StringUtils.equals(name,StringEscapeUtils.escapeJava(name))) {
+								name = "download_files" + StringUtils.substring(name,StringUtils.lastIndexOf(name, '.'));
+							}
+							name = new String(name.getBytes(), "UTF-8");
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return name;
+					}
+				});
+
+		return zipFullPath;
 	}
 }
