@@ -11,6 +11,8 @@
 package com.hangum.tadpole.commons.util.download;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +67,12 @@ public class DownloadServiceHandler implements ServiceHandler {
 	}
 
 	public void setName(String name) {
+		try {
+			name = URLEncoder.encode(name, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.name = name;
 	}
 
