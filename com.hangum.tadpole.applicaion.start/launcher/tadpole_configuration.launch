@@ -16,7 +16,7 @@
 <booleanAttribute key="includeOptional" value="true"/>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch}  -nl en -consoleLog -console  -registryMultiLanguage true -test -testDB -forceSystemInitialize -defaultDB MySQL -debuglog -passwd heechan.tadpole.owner.son -db Server -dbPath /home/mimi/tadpole"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch}  -nl en -consoleLog -console  -registryMultiLanguage true -test -testDB -forceSystemInitialize -defaultDB MySQL -debuglog -passwd heechan.tadpole.owner.son -dbPath /Users/sunyoung/tadpole"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#13;&#10;-Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info -Xverify:none -Xverify:none -XX:+UseParallelGC -XX:-UseConcMarkSweepGC -XX:PermSize=256M -XX:MaxPermSize=2014M -XX:MaxNewSize=4096M -XX:NewSize=128M -Xmx8292M -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer"/>
 <stringAttribute key="org.eclipse.rap.launch.browserMode" value="EXTERNAL"/>
@@ -25,7 +25,7 @@
 <booleanAttribute key="org.eclipse.rap.launch.developmentMode" value="true"/>
 <booleanAttribute key="org.eclipse.rap.launch.openBrowser" value="true"/>
 <intAttribute key="org.eclipse.rap.launch.port" value="10082"/>
-<stringAttribute key="org.eclipse.rap.launch.servletPath" value="/"/>
+<stringAttribute key="org.eclipse.rap.launch.servletPath" value="/tadpole"/>
 <intAttribute key="org.eclipse.rap.launch.sessionTimeout" value="0"/>
 <booleanAttribute key="org.eclipse.rap.launch.useDefaultDataLocation" value="true"/>
 <booleanAttribute key="org.eclipse.rap.launch.useManualContextPath" value="false"/>
