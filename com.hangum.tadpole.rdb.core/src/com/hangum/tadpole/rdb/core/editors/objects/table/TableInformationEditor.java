@@ -70,7 +70,7 @@ public class TableInformationEditor extends EditorPart {
 		
 		DBTableEditorInput qei = (DBTableEditorInput)input;
 		userDB = qei.getUserDB();
-		setPartName(qei.getName() + Messages.get().TableInformationEditor_1);
+		setPartName(Messages.get().TableInformationEditor_1 + " [" + qei.getName() + "]");
 		
 		tableDao = qei.getTableDAO();
 		columnList = qei.getShowTableColumns();

@@ -221,6 +221,51 @@ public class Messages {
 
 	public String AdminSystemSettingEditor_SupportMonitoring;
 	
+	public String AppServerDbServerTimeZone;
+	
+	public String DatabaseTimeZone;
+	
+	public String LogDirectory;
+	
+	public String Yes;
+	
+	public String No;
+	
+	public String APIServerURL;
+	
+	public String UseSendGridFirst;
+	
+	public String SendGrid;
+	
+	public String SendGridAPIKey;
+	
+	public String SMTPSettings;
+	
+	public String SMTPServer;
+	
+	public String Port;
+	
+	public String AdminEmail;
+	
+	public String Password;
+	
+	public String InputDigits;
+	
+	public String UserRoles;
+	
+	public String SendGridSettings;
+	
+	public String UserLoginHistory_ManageAccounts;
+	
+	public String AdministratorList;
+	
+	public String DeleteAccounts;
+	
+	public String Language_English;
+	public String Language_Korean;
+	
+	public String Agreement;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

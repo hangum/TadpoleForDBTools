@@ -203,6 +203,19 @@ public class Messages {
 
 	public String Document;
 	
+	public String Language_English;
+	public String Language_Korean;
+	public String Language;
+	
+	public String TimeZone;
+	
+	public String UserAnswer_Yes;
+	public String UserAnswer_No;
+	
+	public String ShowNullCharacters;
+	
+	public String OTP;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

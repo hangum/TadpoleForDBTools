@@ -105,7 +105,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textResultPage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNull = new Label(container, SWT.NONE);
-		lblNull.setText("Null 표시");
+		lblNull.setText(Messages.get().ShowNullCharacters);
 		
 		textNull = new Text(container, SWT.BORDER);
 		textNull.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

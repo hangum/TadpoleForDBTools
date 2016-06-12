@@ -592,6 +592,8 @@ public class Messages {
 	/* for Property Summary */
 	public String PropertyComposite_Name;
 	public String PropertyComposite_Value;
+	
+	public String Menu_SettingsAndPreferences;
 
 	public String ms;
 	

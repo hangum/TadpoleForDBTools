@@ -116,10 +116,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		
 		textHeader = new Text(grpUsage, SWT.BORDER | SWT.MULTI);
 		textHeader.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Label lblDocument = new Label(container, SWT.NONE);
-		lblDocument.setText(Messages.get().Document);
-		
+			
 		Label lblDocUrl = new Label(container, SWT.NONE);
 		lblDocUrl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblDocUrl.setText(Messages.get().RESTAPI_Help);
