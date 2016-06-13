@@ -269,6 +269,8 @@ public class Messages {
 	public String daumDoesNotSupportDomain;
 	
 	public String hanmailDoesNotSupportDomain;
+
+	public String kakaocorpDoesNotSupportDomain;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

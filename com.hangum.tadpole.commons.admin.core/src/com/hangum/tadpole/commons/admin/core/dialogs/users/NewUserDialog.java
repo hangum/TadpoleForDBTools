@@ -43,7 +43,6 @@ import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.mails.template.NewUserMailBodyTemplate;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
-import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.AddDefaultSampleDBToUser;
@@ -374,7 +373,7 @@ public class NewUserDialog extends Dialog {
 				logger.error("Sample db copy error", e); //$NON-NLS-1$
 			}
 			
-			if(isSentMail) MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().NewUserDialog_31);
+			if(isSentMail) MessageDialog.openInformation(null, Messages.get().Confirm, String.format(Messages.get().NewUserDialog_31, strEmail));
 			else MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().NewUserDialog_29); //$NON-NLS-1$
 			
 		} catch (Exception e) {
@@ -430,18 +429,6 @@ public class NewUserDialog extends Dialog {
 	 * @param name
 	 */
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
-		// 온라인 서버 일 경우.
-		if(ApplicationArgumentUtils.isOnlineServer()) {
-			if(StringUtils.endsWithIgnoreCase(strEmail, "@daum.net")) {
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().daumDoesNotSupportDomain);
-				textEMail.setFocus();
-				return false;
-			} else if(StringUtils.endsWithIgnoreCase(strEmail, "@hanmail.net")) {
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().hanmailDoesNotSupportDomain);
-				textEMail.setFocus();
-				return false;
-			}
-		}
 
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_7);
