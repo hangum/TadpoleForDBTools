@@ -31,9 +31,10 @@ public class License {
 	public static String tdbLicense = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
 	
 	public static void load() {
+		if(ApplicationArgumentUtils.isInitialize) return;
+		
 		try {
 			// license file checke
-			
 			File fileExist = new File(tdbLicense);
 			if(fileExist.isFile()) {
 				String[] arrLicenseInfo = StringUtils.split(IOUtils.toString(new FileInputStream(fileExist)), "\n");
@@ -41,6 +42,7 @@ public class License {
 				ApplicationArgumentUtils.passwd = arrLicenseInfo[0];
 				ApplicationArgumentUtils.dbServer = arrLicenseInfo[1];
 			}
+			ApplicationArgumentUtils.isInitialize = true;
 		} catch(Exception e) {
 			logger.error("System initialize exception", e);
 			MessageDialog.openError(null, "Error", "License validate exception\n" + e.getMessage());

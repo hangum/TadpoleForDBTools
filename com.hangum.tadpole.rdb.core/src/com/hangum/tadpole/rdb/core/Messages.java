@@ -596,6 +596,14 @@ public class Messages {
 	public String Menu_SettingsAndPreferences;
 
 	public String ms;
+
+	public String Delimiter;
+
+	public String Header;
+
+	public String SelectOthersDB;
+
+	public String DeleteDriver;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

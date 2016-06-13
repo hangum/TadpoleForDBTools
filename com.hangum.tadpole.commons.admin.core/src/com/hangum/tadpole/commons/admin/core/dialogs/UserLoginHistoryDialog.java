@@ -47,6 +47,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 
 /**
  * User login history dialog
@@ -247,8 +248,8 @@ class LoginHistoryLabelProvider  extends LabelProvider implements ITableLabelPro
 		
 		switch(columnIndex) {
 		case 0 : return dao.getLogin_ip();
-		case 1 : return dao.getConnet_time() == null?dao.getSqliteConnet_time():dao.getConnet_time().toString();
-		case 2 : return dao.getDisconnect_time() == null?"":dao.getDisconnect_time().toString(); //$NON-NLS-1$
+		case 1 : return dao.getConnet_time() == null?dao.getSqliteConnet_time():TimeZoneUtil.dateToStr(dao.getConnet_time());
+		case 2 : return dao.getDisconnect_time() == null?"":TimeZoneUtil.dateToStr(dao.getDisconnect_time()); //$NON-NLS-1$
 		}
 		
 		return "*** not column setting ***"; //$NON-NLS-1$

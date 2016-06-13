@@ -121,7 +121,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		textArgument.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblType = new Label(compositeTitle, SWT.NONE);
-		lblType.setText("ResultType");
+		lblType.setText(Messages.get().Result);
 		
 		comboResultType = new Combo(compositeTitle, SWT.READ_ONLY);
 		comboResultType.addSelectionListener(new SelectionAdapter() {
@@ -141,11 +141,11 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		compositeDetailCSV.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		btnAddHeader = new Button(compositeDetailCSV, SWT.CHECK);
-		btnAddHeader.setText("Header");
+		btnAddHeader.setText(Messages.get().Header);
 		
 		Label lblDelimiter = new Label(compositeDetailCSV, SWT.NONE);
 		lblDelimiter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDelimiter.setText("Delimiter");
+		lblDelimiter.setText(Messages.get().Delimiter);
 		
 		textDelimiter = new Text(compositeDetailCSV, SWT.BORDER);
 		textDelimiter.setEditable(false);
@@ -176,7 +176,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		Group grpResult = new Group(sashFormMain, SWT.NONE);
 		grpResult.setLayout(new GridLayout(1, false));
 		grpResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpResult.setText("Result");
+		grpResult.setText(Messages.get().Result);
 		
 		textResult = new Text(grpResult, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

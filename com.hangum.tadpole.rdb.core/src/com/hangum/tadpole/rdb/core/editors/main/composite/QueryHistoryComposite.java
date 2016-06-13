@@ -103,7 +103,7 @@ public class QueryHistoryComposite extends Composite {
 				if(gridItems.length != 0) {
 					appendText(Utils.convHtmlToLine(gridItems[0].getText(2)));
 				} else {
-					MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MainEditor_29);
+					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MainEditor_29);
 				}
 			}
 		});
@@ -118,7 +118,7 @@ public class QueryHistoryComposite extends Composite {
 					TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ViewQuery, Utils.convHtmlToLine(gridItems[0].getText(2)));
 					dialog.open();
 				} else {
-					MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MainEditor_29);
+					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MainEditor_29);
 				}
 			}
 		});
