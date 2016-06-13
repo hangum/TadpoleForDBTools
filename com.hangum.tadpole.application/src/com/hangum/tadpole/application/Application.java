@@ -61,11 +61,11 @@ public class Application implements EntryPoint {
 				
 				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
 				if(Dialog.OK != dialog.open()) {
-					throw new Exception("System initialize fail.\n");
+					throw new Exception("Initialization failed.\n");
 				}
 			}
 		} catch(Exception e) {
-			logger.error("System initialize error", e); //$NON-NLS-1$
+			logger.error("Initialization failed.", e); //$NON-NLS-1$
 			MessageDialog.openError(null, "Error", com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2 + e.getMessage());
 			
 			System.exit(0);

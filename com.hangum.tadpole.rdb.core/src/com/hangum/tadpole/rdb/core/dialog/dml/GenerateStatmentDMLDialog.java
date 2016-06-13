@@ -573,10 +573,8 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		if(isEditorAdd) {
 			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
-			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
-		} else {
-			createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);	
 		}
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 		
 	}
 

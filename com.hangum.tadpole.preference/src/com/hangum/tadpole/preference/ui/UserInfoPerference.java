@@ -180,15 +180,15 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		});
 		
 		Label lblLanguage = new Label(container_1, SWT.NONE);
-		lblLanguage.setText("Language");
+		lblLanguage.setText(Messages.get().Language);
 		comboLanguage = new Combo(container, SWT.READ_ONLY);
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboLanguage.add("ko"); //$NON-NLS-1$
-		comboLanguage.add("en_us"); //$NON-NLS-1$
+		comboLanguage.add(Messages.get().Language_English); //$NON-NLS-1$
+		comboLanguage.add(Messages.get().Language_Korean); //$NON-NLS-1$
 		comboLanguage.setText(SessionManager.getLangeage());
 		
 		Label lblTimezone = new Label(container_1, SWT.NONE);
-		lblTimezone.setText("Timezone");
+		lblTimezone.setText(Messages.get().TimeZone);
 		comboTimezone = new Combo(container, SWT.READ_ONLY);
 		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (String timzon : TimeZoneUtil.getTimezoneList()) {
@@ -249,7 +249,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		}
 		
 		Label lblOptCode = new Label(grpGoogleAuth, SWT.NONE);
-		lblOptCode.setText("OTP Code"); //$NON-NLS-1$
+		lblOptCode.setText(Messages.get().OTP); //$NON-NLS-1$
 		lblOptCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
@@ -310,7 +310,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 			String pass = textPassword.getText().trim();
 			String rePass = textRePassword.getText().trim();
-			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$
+			String useOTP = btnGetOptCode.getSelection()?Messages.get().UserAnswer_Yes:Messages.get().UserAnswer_No; //$NON-NLS-1$ //$NON-NLS-2$
 			String otpSecretKey = textSecretKey.getText();
 			String language = comboLanguage.getText();
 			String timezone = comboTimezone.getText();

@@ -11,7 +11,6 @@
 package com.hangum.tadpole.commons.admin.core.editors.system;
 
 import java.io.File;
-import java.util.TimeZone;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -135,10 +134,10 @@ public class AdminSystemSettingEditor extends EditorPart {
 		new Label(compositeBody, SWT.NONE);
 		
 		Label lblApplicationServer = new Label(compositeBody, SWT.NONE);
-		lblApplicationServer.setText("* Application Server와 DB Server의 Timezone은 같아야 합니다.");
+		lblApplicationServer.setText(Messages.get().AppServerDbServerTimeZone);
 		
 		Label lblDBTimezone = new Label(compositeBody, SWT.NONE);
-		lblDBTimezone.setText("DB time zone");
+		lblDBTimezone.setText(Messages.get().DatabaseTimeZone);
 		
 		comboTimezone = new Combo(compositeBody, SWT.NONE);
 		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -148,7 +147,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 		}
 		
 		Label lblLogDir = new Label(compositeBody, SWT.NONE);
-		lblLogDir.setText("Log dir");
+		lblLogDir.setText(Messages.get().LogDirectory);
 		
 		textLog = new Text(compositeBody, SWT.BORDER);
 		textLog.setEditable(false);
@@ -179,11 +178,11 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		comboSupportMonitoring = new Combo(compositeBody, SWT.READ_ONLY);
 		comboSupportMonitoring.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboSupportMonitoring.add("YES");
-		comboSupportMonitoring.add("NO");
+		comboSupportMonitoring.add(Messages.get().Yes);
+		comboSupportMonitoring.add(Messages.get().No);
 		
 		Label lblApiServerUrl = new Label(compositeBody, SWT.NONE);
-		lblApiServerUrl.setText("API Server URL");
+		lblApiServerUrl.setText(Messages.get().APIServerURL);
 		
 		textAPIServerURL = new Text(compositeBody, SWT.BORDER);
 		textAPIServerURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -194,16 +193,16 @@ public class AdminSystemSettingEditor extends EditorPart {
 		new Label(compositeBody, SWT.NONE);
 		
 		Label lblSendgrid = new Label(compositeBody, SWT.NONE);
-		lblSendgrid.setText("* 이메일이 SendGrid와 SMTP 둘다 설정 되어 있을 경우 SendGrid를 사용합니다.");
+		lblSendgrid.setText(Messages.get().UseSendGridFirst);
 		new Label(compositeBody, SWT.NONE);
 		
 		Group grpSendGrid = new Group(compositeBody, SWT.NONE);
 		grpSendGrid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpSendGrid.setText("SendGrid");
+		grpSendGrid.setText(Messages.get().SendGridSettings);
 		grpSendGrid.setLayout(new GridLayout(2, false));
 		
 		Label lblSendgridApiKey = new Label(grpSendGrid, SWT.NONE);
-		lblSendgridApiKey.setText("SendGrid API KEY");
+		lblSendgridApiKey.setText(Messages.get().SendGridAPIKey);
 		
 		textSendGridAPI = new Text(grpSendGrid, SWT.BORDER);
 		textSendGridAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -211,29 +210,29 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		Group grpSMTPServer = new Group(compositeBody, SWT.NONE);
 		grpSMTPServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpSMTPServer.setText("SMTP Setting");
+		grpSMTPServer.setText(Messages.get().SMTPSettings);
 		grpSMTPServer.setLayout(new GridLayout(2, false));
 		
 		Label lblSmtpServer = new Label(grpSMTPServer, SWT.NONE);
-		lblSmtpServer.setText("SMTP Server");
+		lblSmtpServer.setText(Messages.get().SMTPServer);
 		
 		textSMTP = new Text(grpSMTPServer, SWT.BORDER);
 		textSMTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPort = new Label(grpSMTPServer, SWT.NONE);
-		lblPort.setText("PORT");
+		lblPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpSMTPServer, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblAccount = new Label(grpSMTPServer, SWT.NONE);
-		lblAccount.setText("Admin email");
+		lblAccount.setText(Messages.get().AdminEmail);
 		
 		textEmail = new Text(grpSMTPServer, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpSMTPServer, SWT.NONE);
-		lblPassword.setText("Password");
+		lblPassword.setText(Messages.get().Password);
 		
 		textPasswd = new Text(grpSMTPServer, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -243,7 +242,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 		Group grpSettingDefaultUser = new Group(compositeBody, SWT.NONE);
 		grpSettingDefaultUser.setLayout(new GridLayout(4, false));
 		grpSettingDefaultUser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpSettingDefaultUser.setText(Messages.get().SettingUser);
+		grpSettingDefaultUser.setText(Messages.get().UserRoles);
 		
 		Label lblNewLabel_1 = new Label(grpSettingDefaultUser, SWT.NONE);
 		lblNewLabel_1.setText(Messages.get().IsAddDB);
@@ -307,7 +306,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 			textEmail.setText(smtpDto.getEmail());
 			textPasswd.setText(smtpDto.getPasswd());
 		} catch (Exception e) {
-			logger.error("smtp initialize exception", e);
+			logger.error("SMTP Initialization Failed.", e);
 			textSMTP.setText(AdminPreferenceDefine.SMTP_HOST_NAME_VALUE);
 			textPort.setText(AdminPreferenceDefine.SMTP_PORT_VALUE);
 		}
@@ -334,7 +333,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 			return;
 		} else if(!NumberUtils.isNumber(txtPort)) {
 			textPort.setFocus();
-			MessageDialog.openError(null, Messages.get().Error, "Port is must be number.");			 //$NON-NLS-1$
+			MessageDialog.openError(null, Messages.get().Error, Messages.get().InputDigits);			 //$NON-NLS-1$
 			return;
 		}
 		

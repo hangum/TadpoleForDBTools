@@ -198,6 +198,7 @@ public class LoginDialog extends Dialog {
 			}
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
+		// 쿠키에 한글 저장시오류라... 좀 이상해도 영어로 놔둬야 할듯합니다. - hangum(16.6.12)
 		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH));
 
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);

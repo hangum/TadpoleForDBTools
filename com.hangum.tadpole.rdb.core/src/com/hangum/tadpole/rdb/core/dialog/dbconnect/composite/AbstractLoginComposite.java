@@ -347,12 +347,12 @@ public abstract class AbstractLoginComposite extends Composite {
 			// https://github.com/hangum/TadpoleForDBTools/issues/512 
 			if(!isTest) {// && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
 				TDBYesNoErroDialog dialog = new TDBYesNoErroDialog(getShell(), 
-													userDB.getDb() + " Test", 
+													Messages.get().DBLoginDialog_9, 
 													String.format(Messages.get().AbstractLoginComposite_3, errMsg));
 				if(dialog.open() == IDialogConstants.OK_ID) return true;
 			
 			} else {
-				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), userDB.getDb() + " Test", errMsg);
+				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().DBLoginDialog_9, errMsg);
 				dialog.open();
 			}
 			

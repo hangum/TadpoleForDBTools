@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.dialogs.users;
 
-import java.util.TimeZone;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -155,8 +153,8 @@ public class NewUserDialog extends Dialog {
 		
 		comboLanguage = new Combo(container, SWT.READ_ONLY);
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboLanguage.add("ko"); //$NON-NLS-1$
-		comboLanguage.add("en_us"); //$NON-NLS-1$
+		comboLanguage.add(Messages.get().Language_English); //$NON-NLS-1$
+		comboLanguage.add(Messages.get().Language_Korean); //$NON-NLS-1$
 		comboLanguage.select(0);
 		
 		Label lblTimezone = new Label(container, SWT.NONE);
@@ -170,7 +168,7 @@ public class NewUserDialog extends Dialog {
 		comboTimezone.setText(PublicTadpoleDefine.DEFAULT_TIME_ZONE);
 		
 		label = new Label(container, SWT.NONE);
-		label.setText(Messages.get().TermsOfService);
+		label.setText(Messages.get().Aggreement);
 		
 		composite = new Composite(container, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(2, false);

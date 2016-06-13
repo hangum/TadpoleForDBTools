@@ -37,6 +37,7 @@ public class ApplicationArgumentUtils {
 	public static String[] applicationArgs = null;
 	
 	/** db server location */
+	public static boolean isInitialize = false;
 	public static String dbServer = "";
 	public static String passwd = "";
 	

@@ -251,7 +251,7 @@ public class UserListComposite extends Composite {
 							Messages.get().AdminUserListComposite_7, Messages.get().AdminUserListComposite_8, 
 							Messages.get().AdminUserListComposite_9, 
 							
-							Messages.get().Delete, Messages.get().AdminUserListComposite_11};
+							Messages.get().DeleteAccounts, Messages.get().AdminUserListComposite_11};
 		int[] colSize = {150, 120, 70, 70, 60, 60, 120, 60, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {

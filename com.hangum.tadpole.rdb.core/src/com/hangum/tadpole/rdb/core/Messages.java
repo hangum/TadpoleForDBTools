@@ -592,8 +592,18 @@ public class Messages {
 	/* for Property Summary */
 	public String PropertyComposite_Name;
 	public String PropertyComposite_Value;
+	
+	public String Menu_SettingsAndPreferences;
 
 	public String ms;
+
+	public String Delimiter;
+
+	public String Header;
+
+	public String SelectOthersDB;
+
+	public String DeleteDriver;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
