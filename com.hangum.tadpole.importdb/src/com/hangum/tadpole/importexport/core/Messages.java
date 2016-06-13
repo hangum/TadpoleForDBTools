@@ -68,7 +68,6 @@ public class Messages {
 	public String CsvToRDBImportDialog_btnTruncate_text;
 	public String CsvToRDBImportDialog_btnDeleteAll_text;
 	public String CsvToRDBImportDialog_lblDisable_text;
-	public String CsvToRDBImportDialog_btnCheckButton_text;
 	public String CsvToRDBImportDialog_btnTrigger_text;
 	public String CsvToRDBImportDialog_btnPk_text;
 	public String CsvToRDBImportDialog_btnFk_text;

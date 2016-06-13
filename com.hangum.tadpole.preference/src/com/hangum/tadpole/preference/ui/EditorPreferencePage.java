@@ -72,10 +72,6 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
 		
-		btnAutoSave = new Button(container, SWT.CHECK);
-		btnAutoSave.setText(Messages.get().EditorPreferencePage_3);
-		new Label(container, SWT.NONE);
-		
 		Label lblTheme = new Label(container, SWT.NONE);
 		lblTheme.setText(Messages.get().EditorPreferencePage_lblTheme_text);
 		
@@ -113,6 +109,10 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		btnMybatisSupport = new Button(container, SWT.CHECK);
 		btnMybatisSupport.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnMybatisSupport.setText(Messages.get().isSupportMyBatisDollos);
+		
+		btnAutoSave = new Button(container, SWT.CHECK);
+		btnAutoSave.setText(Messages.get().EditorPreferencePage_3);
+		new Label(container, SWT.NONE);
 		
 		initDefaultValue();
 		

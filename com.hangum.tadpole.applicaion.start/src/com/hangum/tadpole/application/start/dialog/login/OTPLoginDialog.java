@@ -71,7 +71,7 @@ public class OTPLoginDialog extends Dialog {
 		
 		Label lblOtpCode = new Label(container, SWT.NONE);
 		lblOtpCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblOtpCode.setText("OTP Code"); //$NON-NLS-1$
+		lblOtpCode.setText(Messages.get().OTP); //$NON-NLS-1$
 		
 		textOTPCode = new Text(container, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

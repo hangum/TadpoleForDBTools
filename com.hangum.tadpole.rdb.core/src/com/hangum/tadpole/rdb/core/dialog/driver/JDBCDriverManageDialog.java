@@ -187,7 +187,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				if(ss.isEmpty()) return;
 				
 				String strFile = (String)ss.getFirstElement();
-				if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().Delete)) return;
+				if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().DeleteDriver)) return;
 				if(logger.isDebugEnabled()) logger.debug("File delete : " + jdbc_dir + strFile);
 				
 				try {

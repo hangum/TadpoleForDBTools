@@ -210,7 +210,7 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		final ToolItem tltmSelectDB = new ToolItem(toolBar, SWT.NONE);
-		tltmSelectDB.setToolTipText("Select others DB");
+		tltmSelectDB.setToolTipText(Messages.get().SelectOthersDB);
 		tltmSelectDB.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/arrow_down.png")); //$NON-NLS-1$
 		tltmSelectDB.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -252,16 +252,20 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 */
 	private void search() {
 		String txtUserEmail = textUserEMail.getText();
-//		if("".equals(txtUserEmail)) return; //$NON-NLS-1$
-		
+		if("".equals(txtUserEmail)) return; //$NON-NLS-1$
 		listUserGroup.clear();
 		
 		try {
-			listUserGroup =  TadpoleSystem_UserQuery.findLikeUser(txtUserEmail);
+			UserDAO userDAO = TadpoleSystem_UserQuery.findUser(txtUserEmail);
+			if(userDAO != null) {
+				listUserGroup.add(userDAO);
+			}
+			
 			tableViewer.setInput(listUserGroup);
 			tableViewer.refresh();
 		} catch(Exception e) {
 			logger.error("search exception", e); //$NON-NLS-1$
+			MessageDialog.openInformation(getShell(), Messages.get().Error, e.getMessage());
 		}
 	}
 	

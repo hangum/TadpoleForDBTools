@@ -50,7 +50,7 @@ public class UserMgntEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.get().UserMgntEditorInput_0;
+		return Messages.get().AdministratorList;
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class UserMgntEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.get().UserMgntEditorInput_0;
+		return Messages.get().AdministratorList;
 	}
 
 }

@@ -51,6 +51,7 @@ import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDetailDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.manager.core.Messages;
 import com.swtdesigner.ResourceManager;
 
@@ -380,7 +381,7 @@ class SchemaHistorLabelProvider extends LabelProvider implements ITableLabelProv
 		case 1: return dao.getObject_id();
 		case 2: return dao.getWork_type();
 		case 3: return dao.getObject_type();
-		case 4: return dao.getCreate_date().toLocaleString();
+		case 4: return TimeZoneUtil.dateToStr(dao.getCreate_date());
 		}
 		
 		return dao.toString();

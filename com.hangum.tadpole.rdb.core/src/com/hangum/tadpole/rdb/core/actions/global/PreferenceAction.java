@@ -27,8 +27,8 @@ public class PreferenceAction extends Action implements  IWorkbenchAction {
 		this.window = window;
 
 		setId(ID);
-		setText(Messages.get().Preference);
-		setToolTipText(Messages.get().Preference);
+		setText(Messages.get().Menu_SettingsAndPreferences);
+		setToolTipText(Messages.get().Menu_SettingsAndPreferences);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/preferences.png")); //$NON-NLS-1$
 	}
 
