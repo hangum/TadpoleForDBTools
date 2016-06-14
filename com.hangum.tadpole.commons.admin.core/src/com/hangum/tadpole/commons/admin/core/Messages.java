@@ -215,8 +215,6 @@ public class Messages {
 
 	public String PrivacyTermsandConditions;
 
-	public String Agree;
-
 	public String PlzConfirmTermsService;
 
 	public String AdminSystemSettingEditor_SupportMonitoring;
@@ -265,6 +263,10 @@ public class Messages {
 	public String Language_Korean;
 	
 	public String Agreement;
+	
+	public String Agree;
+	
+	public String ERR_InvalidEmailDomain;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

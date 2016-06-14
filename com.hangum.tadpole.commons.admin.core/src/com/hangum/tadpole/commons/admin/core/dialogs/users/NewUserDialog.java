@@ -432,15 +432,12 @@ public class NewUserDialog extends Dialog {
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
 		// 온라인 서버 일 경우.
 		if(ApplicationArgumentUtils.isOnlineServer()) {
-			if(StringUtils.endsWithIgnoreCase(strEmail, "@daum.net")) {
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().daumDoesNotSupportDomain);
+			if( (StringUtils.endsWithIgnoreCase(strEmail, "@daum.net")) 
+			 || (StringUtils.endsWithIgnoreCase(strEmail, "@hanmail.net")) ) {
+				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().ERR_InvalidEmailDomain);
 				textEMail.setFocus();
 				return false;
-			} else if(StringUtils.endsWithIgnoreCase(strEmail, "@hanmail.net")) {
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().hanmailDoesNotSupportDomain);
-				textEMail.setFocus();
-				return false;
-			}
+			} 
 		}
 
 		if("".equals(strEmail)) { //$NON-NLS-1$
