@@ -429,18 +429,6 @@ public class NewUserDialog extends Dialog {
 	 * @param name
 	 */
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name) {
-<<<<<<< HEAD
-		// 온라인 서버 일 경우.
-		if(ApplicationArgumentUtils.isOnlineServer()) {
-			if( (StringUtils.endsWithIgnoreCase(strEmail, "@daum.net")) 
-			 || (StringUtils.endsWithIgnoreCase(strEmail, "@hanmail.net")) ) {
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().ERR_InvalidEmailDomain);
-				textEMail.setFocus();
-				return false;
-			} 
-		}
-=======
->>>>>>> branch 'master' of https://github.com/hangum/TadpoleForDBTools.git
 
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().NewUserDialog_7);
