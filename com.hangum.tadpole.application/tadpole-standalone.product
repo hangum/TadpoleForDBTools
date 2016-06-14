@@ -70,6 +70,7 @@
       <plugin id="com.hangum.tadpole.rdb.core.ext"/>
       <plugin id="com.hangum.tadpole.rdb.erd.core"/>
       <plugin id="com.hangum.tadpole.rdb.model"/>
+      <plugin id="com.hangum.tadpole.sendgrid.core"/>
       <plugin id="com.hangum.tadpole.sql.parser"/>
       <plugin id="com.hangum.tadpole.tajo.core"/>
       <plugin id="com.ibm.icu.base"/>

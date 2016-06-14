@@ -75,21 +75,22 @@ public class CookieUtils {
 			Cookie[] cookies = request.getCookies();
 			for (Cookie cookie : cookies) {
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
+					cookie.setValue("");
 					cookie.setMaxAge(0);
 					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
+				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
+					cookie.setValue("");
 					cookie.setMaxAge(0);
 					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
+				} else  if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
+					cookie.setValue("");
 					cookie.setMaxAge(0);
 					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
-				}
-				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
+					cookie.setValue("");
 					cookie.setMaxAge(0);
 					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);

@@ -415,7 +415,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			return;
 		}
 
-		final String jobName = Messages.get().Refresh;
+		final String jobName = Messages.get().TadpoleTableComposite_17;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {

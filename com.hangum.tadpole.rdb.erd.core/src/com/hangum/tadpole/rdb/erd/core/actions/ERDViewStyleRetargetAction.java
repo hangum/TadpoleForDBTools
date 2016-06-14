@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.erd.core.actions;
 
 import org.eclipse.ui.actions.RetargetAction;
 
+import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.stanalone.Activator;
 import com.swtdesigner.ResourceManager;
 
@@ -24,8 +25,8 @@ import com.swtdesigner.ResourceManager;
 public class ERDViewStyleRetargetAction extends RetargetAction {
 	
 	public ERDViewStyleRetargetAction() {
-		super(ERDViewStyleAction.ID, "Show Column");
-		setToolTipText("Show Column");
+		super(ERDViewStyleAction.ID, Messages.get().ShowColumn);
+		setToolTipText(Messages.get().ShowColumn);
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor(Activator.PLUGIN_ID, "resources/icons/setting_gear_-16.png"));
 	}
 

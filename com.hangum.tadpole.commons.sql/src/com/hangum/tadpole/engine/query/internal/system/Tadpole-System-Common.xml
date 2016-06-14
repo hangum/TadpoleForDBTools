@@ -114,7 +114,8 @@
 	SELECT *
 	FROM tadpole_user 
 	WHERE 
-		email = #email#
+			email = #email#
+		AND delyn = 'NO'
 	ORDER BY create_time DESC
 </select>
 

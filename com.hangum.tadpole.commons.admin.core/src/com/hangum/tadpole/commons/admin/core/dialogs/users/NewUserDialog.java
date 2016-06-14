@@ -168,7 +168,7 @@ public class NewUserDialog extends Dialog {
 		comboTimezone.setText(PublicTadpoleDefine.DEFAULT_TIME_ZONE);
 		
 		label = new Label(container, SWT.NONE);
-		label.setText(Messages.get().Aggreement);
+		label.setText(Messages.get().Agreement);
 		
 		composite = new Composite(container, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(2, false);

@@ -15,6 +15,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ApplicationContext;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -172,7 +174,15 @@ public class ApplicationArgumentUtils {
 	 * @return
 	 */
 	public static boolean isGAOFF() {
-		return checkString("-GAOFF");
+		ApplicationContext context = RWT.getApplicationContext();
+		Object obj = context.getAttribute("GAOFF");
+		if(obj == null) {
+			boolean bool = checkString("-GAOFF");
+			context.setAttribute("GAOFF", bool);
+			return bool;
+		} else {
+			return (Boolean)obj;
+		}
 	}
 	
 	/**

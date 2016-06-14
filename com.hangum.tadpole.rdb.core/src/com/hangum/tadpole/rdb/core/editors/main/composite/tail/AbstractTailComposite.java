@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite.tail;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -82,8 +83,11 @@ public abstract class AbstractTailComposite extends Composite {
 		btnViewQuery.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ViewQuery, getSQL());
-				dialog.open();
+				String strSQL = getSQL();
+				if(StringUtils.isNotEmpty(strSQL)) { 
+					TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ViewQuery, strSQL);
+					dialog.open();
+				}
 			}
 		});
 		btnViewQuery.setText(Messages.get().ViewQuery);

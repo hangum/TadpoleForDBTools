@@ -262,15 +262,9 @@ public class Messages {
 	public String Language_English;
 	public String Language_Korean;
 	
-	public String Aggree;
-
-	public String Aggreement;
-
-	public String daumDoesNotSupportDomain;
+	public String Agreement;
 	
-	public String hanmailDoesNotSupportDomain;
-
-	public String kakaocorpDoesNotSupportDomain;
+	public String Agree;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

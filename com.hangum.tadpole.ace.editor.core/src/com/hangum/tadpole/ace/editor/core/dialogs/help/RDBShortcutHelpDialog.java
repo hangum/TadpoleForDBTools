@@ -91,7 +91,7 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 		int y = mainShell.getSize().y;
 		
 		// 현재 shell location
-		shlEditorShortcutDialog.setLocation(x - 280, y - 300);
+		shlEditorShortcutDialog.setLocation(x - 300, y - 300);
 		
 		tableViewer = new TableViewer(shlEditorShortcutDialog, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();

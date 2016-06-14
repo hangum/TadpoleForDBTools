@@ -157,6 +157,14 @@ public class ServiceLoginDialog extends Dialog {
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnCheckButton = new Button(compositeLogin, SWT.CHECK);
+		btnCheckButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(!btnCheckButton.getSelection()) {
+					CookieUtils.deleteLoginCookie();
+				}
+			}
+		});
 		btnCheckButton.setText(Messages.get().LoginDialog_9); //$NON-NLS-1$
 		
 		lblPassword = new Label(compositeLogin, SWT.NONE);

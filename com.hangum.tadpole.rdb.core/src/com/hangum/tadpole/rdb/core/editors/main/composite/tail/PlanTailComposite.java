@@ -52,7 +52,8 @@ public class PlanTailComposite extends AbstractTailComposite {
 
 	@Override
 	public String getSQL() {
-		return abstractResultComp.getReqQuery().getSql();
+		if(abstractResultComp.getReqQuery() != null) return abstractResultComp.getReqQuery().getSql();
+		else return "";
 	}
 	
 	@Override

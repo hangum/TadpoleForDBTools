@@ -57,7 +57,7 @@ public class TDBErroDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().Error);
+		newShell.setText(title);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 

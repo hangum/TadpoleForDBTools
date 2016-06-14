@@ -161,6 +161,14 @@ public class LoginDialog extends Dialog {
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnCheckButton = new Button(compositeLogin, SWT.CHECK);
+		btnCheckButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(!btnCheckButton.getSelection()) {
+					CookieUtils.deleteLoginCookie();
+				}
+			}
+		});
 		btnCheckButton.setText(Messages.get().LoginDialog_9); //$NON-NLS-1$
 		
 		lblPassword = new Label(compositeLogin, SWT.NONE);
@@ -216,7 +224,7 @@ public class LoginDialog extends Dialog {
 		
 		Label lblHome = new Label(compositeTail, SWT.NONE);
 		lblHome.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Home</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Website</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblHome.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblIssue = new Label(compositeTail, SWT.NONE);

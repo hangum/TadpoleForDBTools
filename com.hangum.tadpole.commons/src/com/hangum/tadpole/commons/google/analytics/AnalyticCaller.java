@@ -42,7 +42,7 @@ public class AnalyticCaller {
 	 * @param event
 	 */
 	public static void track(String event) {
-//		track("action", event);
+		track("action", event);
 	}
 	
 	/**
