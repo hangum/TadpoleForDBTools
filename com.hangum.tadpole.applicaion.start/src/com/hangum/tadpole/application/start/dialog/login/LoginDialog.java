@@ -216,7 +216,7 @@ public class LoginDialog extends Dialog {
 		
 		Label lblHome = new Label(compositeTail, SWT.NONE);
 		lblHome.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Home</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Website</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblHome.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblIssue = new Label(compositeTail, SWT.NONE);
