@@ -60,7 +60,8 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 				axisjHeader.setDisabled("function(){return false;}");
 				axisjHeader.setFormatter("\"\"");
 				axisjHeader.setSort(1); //0:false, 1:Ascending, 2:Descending
-				axisjHeader.setTooltip("function(){return this.value;}");
+				//TODO: https://github.com/axisj/axisj/issues/887
+				axisjHeader.setTooltip("function(){return this.value.replace(/\\\"/gi, \"`\");} ");
 				axisjHeader.setWidth(100);
 				
 				listAxisjHeader.add(axisjHeader);
@@ -106,6 +107,7 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 					boolean isNumber = RDBTypeToJavaTypeUtils.isNumberType(columnType.get(i));
 					//sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, isNumber?strColumnValue:"\"" + strColumnValue + "\""));
 					//TODO: https://github.com/hangum/TadpoleForDBTools/issues/809 fix 전까지 무조건 String 처럼 따옴표(")로 묶어준다.
+					strColumnValue = StringUtils.replaceEach(strColumnValue, new String[]{">","<","\"","\r","\n"}, new String[]{"&gt;","&lt;","\\\"","","\\n"});
 					sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, "\"" + strColumnValue + "\""));
 				}
 				
