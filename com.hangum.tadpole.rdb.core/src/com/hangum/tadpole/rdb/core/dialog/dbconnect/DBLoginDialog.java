@@ -123,7 +123,7 @@ public class DBLoginDialog extends Dialog {
 		lblNewLabel.setText(Messages.get().Database);
 
 		comboDBList = new Combo(compositeHead, SWT.DROP_DOWN | SWT.READ_ONLY);
-		comboDBList.setForeground(SWTResourceManager.getColor(255, 165, 0));
+		comboDBList.setForeground(SWTResourceManager.getColor(0, 0, 204));
 		comboDBList.setVisibleItemCount(13);
 		comboDBList.addSelectionListener(new SelectionAdapter() {
 			@Override

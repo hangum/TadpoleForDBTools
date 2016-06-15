@@ -157,6 +157,14 @@ public class ServiceLoginDialog extends Dialog {
 		textEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnCheckButton = new Button(compositeLogin, SWT.CHECK);
+		btnCheckButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(!btnCheckButton.getSelection()) {
+					CookieUtils.deleteLoginCookie();
+				}
+			}
+		});
 		btnCheckButton.setText(Messages.get().LoginDialog_9); //$NON-NLS-1$
 		
 		lblPassword = new Label(compositeLogin, SWT.NONE);
@@ -288,7 +296,7 @@ public class ServiceLoginDialog extends Dialog {
 			
 			// firsttime email confirm
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
-				InputDialog inputDialog=new InputDialog(getShell(), Messages.get().LoginDialog_10, Messages.get().LoginDialog_17, "", null); //$NON-NLS-3$ //$NON-NLS-1$
+				InputDialog inputDialog=new InputDialog(getShell(), Messages.get().LoginDialog_10, String.format(Messages.get().LoginDialog_17, strEmail), "", null); //$NON-NLS-3$ //$NON-NLS-1$
 				if(inputDialog.open() == Window.OK) {
 					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
 						throw new Exception(Messages.get().LoginDialog_19);

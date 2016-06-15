@@ -34,6 +34,12 @@
 		VALUES 
 		(#user_seq#, #product_seq#, #userType#, #iamport_code#, #pg_company#, #pay_method#, #merchant_uid#, #name#, #original_amount#, #ea#, #term_month#, #total_amount#, #buyer_email#, #buyer_name#, 
 		#buyer_tel#, #buyer_addr#, #buyer_postcode#, #result_status#, #succ_imp_uid#, #succ_pg_tid#, #succ_apply_num#, #succ_paid_at#, #fail_message#, #description#)
+		
+		<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.bill.UserBillDAO">
+			SELECT * 
+			FROM user_bill 
+			WHERE succ_imp_uid = #succ_imp_uid#
+		</selectKey>
 	</insert>
 	
 	<!--  start service  -->

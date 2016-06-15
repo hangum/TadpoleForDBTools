@@ -36,11 +36,11 @@ import com.hangum.tadpole.rdb.core.Messages;
  */
 public class TDBInfoDialog extends TitleAreaDialog {
 	private static final Logger logger = Logger.getLogger(TDBErroDialog.class);
-	private Text textMessage;
+	protected Text textMessage;
 	
 	protected String title;
-	private String message;
-	private Label lblMessage;
+	protected String message;
+	protected Label lblMessage;
 	
 	/**
 	 * Create the dialog.
