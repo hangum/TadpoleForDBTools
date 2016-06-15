@@ -107,7 +107,7 @@ public class RDBInformationComposite extends Composite {
 			listInfo.add(new KeyValueDAO("User",	 		userDB.getUsers(userDB.getRole_id()))); //$NON-NLS-1$
 		}
 		
-		listInfo.add(new KeyValueDAO(Messages.get().AutoCommit, 	userDB.getIs_readOnlyConnect()));
+		listInfo.add(new KeyValueDAO(Messages.get().ReadOnly, 	userDB.getIs_readOnlyConnect()));
 
 		// 몽고디비는 없으므로.. 
 		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {

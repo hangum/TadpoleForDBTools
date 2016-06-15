@@ -207,10 +207,10 @@ public class LoginDialog extends Dialog {
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
 		// 쿠키에 한글 저장시오류라... 좀 이상해도 영어로 놔둬야 할듯합니다. - hangum(16.6.12)
-		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH));
+		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
 
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
-		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH), Locale.KOREAN);
+		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
 		
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -340,7 +340,9 @@ public class LoginDialog extends Dialog {
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
 //		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, comboLanguage.getText());
+		
+		Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
 	}
 	
 	@Override
@@ -457,7 +459,8 @@ public class LoginDialog extends Dialog {
 					btnCheckButton.setSelection(Boolean.parseBoolean(cookie.getValue()));
 					intCount++;
 				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
-					comboLanguage.setText(cookie.getValue());
+					Locale locale = Locale.forLanguageTag(cookie.getValue());
+					comboLanguage.setText(locale.getDisplayLanguage(locale));
 					changeUILocale(comboLanguage.getText());
 					intCount++;
 				}

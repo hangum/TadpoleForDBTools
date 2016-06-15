@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.admin.core.dialogs.users;
 
+import java.util.Locale;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -153,8 +155,10 @@ public class NewUserDialog extends Dialog {
 		
 		comboLanguage = new Combo(container, SWT.READ_ONLY);
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboLanguage.add(Messages.get().Language_English); //$NON-NLS-1$
-		comboLanguage.add(Messages.get().Language_Korean); //$NON-NLS-1$
+		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
+		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
+		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
+		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
 		comboLanguage.select(0);
 		
 		Label lblTimezone = new Label(container, SWT.NONE);
@@ -348,13 +352,14 @@ public class NewUserDialog extends Dialog {
 			}
 			
 			String strEmailConformKey = Utils.getUniqueDigit(7);
+			Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
 			userDao = TadpoleSystem_UserQuery.newUser(
 					PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
 					strEmail, strEmailConformKey, isEmamilConrim, 
 					passwd, 
 					PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
 					name, 
-					comboLanguage.getText(), 
+					locale.toLanguageTag(), 
 					comboTimezone.getText(),
 					approvalYn,  
 					btnGetOptCode.getSelection()?"YES":"NO",  //$NON-NLS-1$ //$NON-NLS-2$

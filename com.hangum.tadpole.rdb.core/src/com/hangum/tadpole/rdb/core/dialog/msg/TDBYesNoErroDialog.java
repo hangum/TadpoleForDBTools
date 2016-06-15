@@ -75,7 +75,7 @@ public class TDBYesNoErroDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		lblMessage = new Label(container, SWT.NONE);
-		lblMessage.setText(Messages.get().TDBYesNoErroDialog_ERRMSG);
+		lblMessage.setText(Messages.get().TDBErroDialog_2);
 		new Label(container, SWT.NONE);
 		
 		textMessage = new Text(container, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
