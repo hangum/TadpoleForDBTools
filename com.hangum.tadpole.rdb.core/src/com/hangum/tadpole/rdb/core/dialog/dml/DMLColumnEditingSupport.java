@@ -20,6 +20,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.CommentCellEditor;
+
 /**
  * 데이터 임포트 할것인지.
  * 
@@ -46,7 +48,8 @@ public class DMLColumnEditingSupport extends EditingSupport {
 		if (columnIndex == 0) {
 			return new CheckboxCellEditor(null, SWT.CHECK | SWT.READ_ONLY);
 		} else {
-			return new TextCellEditor(viewer.getTable());
+			//return new TextCellEditor(viewer.getTable());
+			return new CommentCellEditor(columnIndex, viewer);
 		}
 
 	}

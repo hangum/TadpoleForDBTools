@@ -142,7 +142,7 @@ public class RealGridComposite extends AbstractSQLToComposite {
 			if(i ==0) {
 				sbStr.append( slt.sqlToString(sqls[i], options, null) );
 			}else{
-				options.put("name", options.get("name") + "_" + i);
+				options.put("name", textVariable.getText() + "_" + i);
 				sbStr.append( slt.sqlToString(sqls[i], options, null) );
 			}
 			
