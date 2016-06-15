@@ -610,7 +610,7 @@ class GenerateLabelProvider extends LabelProvider implements ITableLabelProvider
 		case 0: return dao.getColumnNamebyTableAlias();
 		case 1: return dao.getType();
 		case 2: return dao.getKey();
-		case 3: return dao.getSysName();
+		case 3: return dao.getColumnAlias();
 		case 4: return dao.getComment();
 		} 
 
