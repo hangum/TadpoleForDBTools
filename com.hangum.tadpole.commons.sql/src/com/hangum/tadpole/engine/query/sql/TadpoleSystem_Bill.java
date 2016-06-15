@@ -43,9 +43,9 @@ public class TadpoleSystem_Bill {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static void insertBill(UserBillDAO dao) throws TadpoleSQLManagerException, SQLException {
+	public static UserBillDAO insertBill(UserBillDAO dao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.insert("insertBill", dao); //$NON-NLS-1$
+		return (UserBillDAO)sqlClient.insert("insertBill", dao); //$NON-NLS-1$
 	}
 	
 	/**

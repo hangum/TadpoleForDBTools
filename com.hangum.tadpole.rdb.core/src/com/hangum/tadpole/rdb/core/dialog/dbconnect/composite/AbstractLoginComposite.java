@@ -38,7 +38,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnectionInfoDAO;
-import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBYesNoErroDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
@@ -328,6 +328,10 @@ public abstract class AbstractLoginComposite extends Composite {
 			return true;
 		} catch (Exception e) {
 			String errMsg = e.getMessage();
+
+			// If UserDBDao is not invalid, remove UserDBDao at internal cache
+			logger.error("DB Connecting... [url]"+ userDB.getUrl(), e); //$NON-NLS-1$
+			TadpoleSQLManager.removeInstance(userDB);
 			
 			// driver 가 없을때 메시지 추가.
 			try {
@@ -339,10 +343,6 @@ public abstract class AbstractLoginComposite extends Composite {
 				// igonre exception
 			}
 			
-			logger.error("DB Connecting... [url]"+ userDB.getUrl(), e); //$NON-NLS-1$
-			// If UserDBDao is not invalid, remove UserDBDao at internal cache
-			TadpoleSQLManager.removeInstance(userDB);
-
 			// mssql 데이터베이스가 연결되지 않으면 등록되면 안됩니다. 하여서 제외합니다.
 			// https://github.com/hangum/TadpoleForDBTools/issues/512 
 			if(!isTest) {// && loginInfo.getDBDefine() != DBDefine.MSSQL_DEFAULT) {
@@ -352,7 +352,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				if(dialog.open() == IDialogConstants.OK_ID) return true;
 			
 			} else {
-				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().DBLoginDialog_9, errMsg);
+				TDBErroDialog dialog = new TDBErroDialog(getShell(), Messages.get().DBLoginDialog_43, errMsg);
 				dialog.open();
 			}
 			
