@@ -203,8 +203,6 @@ public class Messages {
 
 	public String Document;
 	
-	public String Language_English;
-	public String Language_Korean;
 	public String Language;
 	
 	public String TimeZone;
