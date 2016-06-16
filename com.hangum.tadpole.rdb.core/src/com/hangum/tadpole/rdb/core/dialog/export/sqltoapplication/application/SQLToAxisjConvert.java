@@ -58,7 +58,7 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 				axisjHeader.setChecked("function(){return false;}");
 				axisjHeader.setColHeadTool(false);
 				axisjHeader.setDisabled("function(){return false;}");
-				axisjHeader.setFormatter("\"\"");
+				axisjHeader.setFormatter(isNumber? "function(){return this.value.number();}" :"\"\"");
 				axisjHeader.setSort(1); //0:false, 1:Ascending, 2:Descending
 				//TODO: https://github.com/axisj/axisj/issues/887
 				axisjHeader.setTooltip("function(){return this.value.replace(/\\\"/gi, \"`\");} ");
@@ -86,7 +86,6 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 
 			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4, GetPreferenceGeneral.getResultNull());
 			Map<Integer, String> columnLabel = queryResult.getColumnLabelName();
-			Map<Integer, Integer> columnType = queryResult.getColumnType();
 			
 			String strHead = "";
 			StringBuffer sbGroup = new StringBuffer();
@@ -104,30 +103,27 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 				for (int i=0; i<columnLabel.size(); i++) {
 					String strColumnLabel = columnLabel.get(i);
 					String strColumnValue = ""+resultRow.get(i);
-					boolean isNumber = RDBTypeToJavaTypeUtils.isNumberType(columnType.get(i));
-					//sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, isNumber?strColumnValue:"\"" + strColumnValue + "\""));
-					//TODO: https://github.com/hangum/TadpoleForDBTools/issues/809 fix 전까지 무조건 String 처럼 따옴표(")로 묶어준다.
 					strColumnValue = StringUtils.replaceEach(strColumnValue, new String[]{">","<","\"","\r","\n"}, new String[]{"&gt;","&lt;","\\\"","","\\n"});
-					sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, "\"" + strColumnValue + "\""));
+					sbData.append(String.format(GROUP_DATA_TEMPLATE, strColumnLabel, "\"" + strColumnValue +"\"" ));
 				}
 				
 				strBody += PREFIX_TAB + "{" + StringUtils.removeEnd(sbData.toString(), ",") + "},";
 			}
 			strBody = StringUtils.removeEnd(strBody, ",");
 			
-			retHtml = StringUtils.replaceOnce(STR_TEMPLATE, "_TDB_TEMPLATE_TITLE_", (String) options.get("name"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_THEME_", (String) options.get("theme"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_FIXEDCOL_", (String) options.get("fixedColSeq"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_FITTOWIDTH_", (String) options.get("fitToWidth"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_HEADALIGN_", (String) options.get("colHeadAlign"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_MERGECELL_", (String) options.get("mergeCells"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_HEIGHT_", (String) options.get("height"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_SORT_", (String) options.get("sort"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_HEADTOOL_", (String) options.get("colHeadTool"));
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_VIEWMODE_", (String) options.get("viewMode"));
-			
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_HEAD_", strHead);
-			retHtml = StringUtils.replaceOnce(retHtml, "_TDB_TEMPLATE_BODY_", strBody);
+			retHtml = StringUtils.replaceEach(STR_TEMPLATE, new String[]{"_TDB_TEMPLATE_TITLE_"}, new String[]{(String) options.get("name")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_THEME_"     }, new String[]{(String) options.get("theme")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_FIXEDCOL_"  }, new String[]{(String) options.get("fixedColSeq")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_FITTOWIDTH_"}, new String[]{(String) options.get("fitToWidth")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_HEADALIGN_" }, new String[]{(String) options.get("colHeadAlign")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_MERGECELL_" }, new String[]{(String) options.get("mergeCells")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_HEIGHT_"    }, new String[]{(String) options.get("height")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_SORT_"      }, new String[]{(String) options.get("sort")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_HEADTOOL_"  }, new String[]{(String) options.get("colHeadTool")});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_VIEWMODE_"  }, new String[]{(String) options.get("viewMode")});
+
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_HEAD_"      }, new String[]{strHead});
+			retHtml = StringUtils.replaceEach(retHtml, new String[]{"_TDB_TEMPLATE_BODY_"      }, new String[]{strBody});
 		} catch (Exception e) {
 			logger.error("SQL template exception", e);
 		}
