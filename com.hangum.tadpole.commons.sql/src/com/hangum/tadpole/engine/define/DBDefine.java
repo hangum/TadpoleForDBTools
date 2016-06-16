@@ -67,10 +67,11 @@ public enum DBDefine {
 	TAJO_DEFAULT,
 	
 	/** NO SQL */
-	MONGODB_DEFAULT,
+	MONGODB_DEFAULT
+//	,
 	
 	/** Aamazon RDS */
-	AMAZONRDS_DEFAULT
+//	AMAZONRDS_DEFAULT
 	;	
 	
 	private static final Logger logger = Logger.getLogger(DBDefine.class);
@@ -134,7 +135,7 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("PostgreSQL"))		return POSTGRE_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
-		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
+//		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
 		else if(type.equalsIgnoreCase("Apache Hive")) 	return HIVE_DEFAULT;
 		else if(type.equalsIgnoreCase("Apache Hive2")) 	return HIVE2_DEFAULT;
 		
@@ -248,7 +249,7 @@ public enum DBDefine {
 			
 			case MONGODB_DEFAULT :  	return "MongoDB";
 			
-			case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
+//			case AMAZONRDS_DEFAULT: 	return "AmazonRDS";
 			
 			case HIVE_DEFAULT: 			return "Apache Hive";
 			case HIVE2_DEFAULT: 			return "Apache Hive2";
@@ -373,8 +374,7 @@ public enum DBDefine {
 	public static List<DBDefine> getDriver() {
 		List<DBDefine> listSupportDb = userDBValues();
 		
-		
-		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
+//		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
 		listSupportDb.remove(DBDefine.TAJO_DEFAULT);
 		listSupportDb.remove(DBDefine.HIVE_DEFAULT);
 		return listSupportDb;
@@ -389,7 +389,7 @@ public enum DBDefine {
 
 		supportDb.add(ALTIBASE_DEFAULT);
 		supportDb.add(HIVE_DEFAULT);
-		supportDb.add(AMAZONRDS_DEFAULT);
+//		supportDb.add(AMAZONRDS_DEFAULT);
 		supportDb.add(TAJO_DEFAULT);
 		
 		supportDb.add(CUBRID_DEFAULT);

@@ -28,11 +28,13 @@
             id="com.hangum.tadpole.preference.page.mongodb"
             name="%page.name.3">
       </page>
+      <!--
       <page
             class="com.hangum.tadpole.preference.ui.AmazonPreferencePage"
             id="com.hangum.tadpole.preference.page.aws.amazon"
             name="%page.name.4">
       </page>
+      -->
       <page
             class="com.hangum.tadpole.preference.ui.PerspectivePreferencePage"
             id="com.hangum.tadpole.preference.page.perspective"
