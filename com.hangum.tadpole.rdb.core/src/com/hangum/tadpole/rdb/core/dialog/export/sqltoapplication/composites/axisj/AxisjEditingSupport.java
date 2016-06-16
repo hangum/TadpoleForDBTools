@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -29,6 +30,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.MultilineTextDialog;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.SQLToStringDialog;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.CommentCellEditor;
 
 /**
  * AXISJ EditingSupport
@@ -124,7 +126,7 @@ public class AxisjEditingSupport extends EditingSupport {
 
 		} else {
 
-			return new TextCellEditor(viewer.getTable());
+			return new CommentCellEditor(columnIndex, viewer);
 
 		}
 	}
