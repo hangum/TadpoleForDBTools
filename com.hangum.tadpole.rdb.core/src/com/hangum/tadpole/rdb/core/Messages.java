@@ -605,6 +605,8 @@ public class Messages {
 
 	public String DeleteDriver;
 
+	public String MainEditorServiceEndGoPay;
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
