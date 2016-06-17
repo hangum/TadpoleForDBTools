@@ -35,7 +35,7 @@ public class IntroEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return Messages.get().HomePage;
+		return Messages.get().HELP;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class IntroEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.get().HomePage;
+		return Messages.get().HELP;
 	}
 
 }
