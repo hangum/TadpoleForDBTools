@@ -371,8 +371,6 @@ public class ServiceLoginDialog extends Dialog {
 		
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-//		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_PWD, userPwd);
-
 		Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
 	}
@@ -421,35 +419,6 @@ public class ServiceLoginDialog extends Dialog {
 	 * initialize ui
 	 */
 	private void initUI() {
-		String defaultLanguage = RWT.getUISession().getLocale().getDisplayLanguage(Locale.ENGLISH);
-		boolean isExist = false;
-		for(String strName : comboLanguage.getItems()) {
-			if(strName.equals(defaultLanguage)) {
-				isExist = true;
-				comboLanguage.setText(strName);
-				changeUILocale(comboLanguage.getText());
-				break;
-			}
-		}
-		
-		// 쿠키에서 사용자 정보를 찾지 못했으면..
-		if(!isExist) {
-			// 사용자 브라우저 랭귀지를 가져와서, 올챙이가 지원하는 랭귀지인지 검사해서..
-			String locale = RequestInfoUtils.getDisplayLocale();
-			for(String strLocale : comboLanguage.getItems()) {
-				if(strLocale.equals(locale)) {
-					isExist = true;
-					break;
-				}
-			}
-			// 있으면... 
-			if(isExist) comboLanguage.setText(locale);
-			else comboLanguage.setText(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
-			
-			// 랭귀지를 바꾸어 준다.
-			changeUILocale(comboLanguage.getText());
-		}
-		
 		// find login id
 		initCookieData();
 		if("".equals(textEMail.getText())) {
@@ -478,9 +447,6 @@ public class ServiceLoginDialog extends Dialog {
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_ID.equals(cookie.getName())) {
 					textEMail.setText(cookie.getValue());
 					intCount++;
-				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_PWD.equals(cookie.getName())) {
-					textPasswd.setText(cookie.getValue());
-					intCount++;
 				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK.equals(cookie.getName())) {
 					btnCheckButton.setSelection(Boolean.parseBoolean(cookie.getValue()));
 					intCount++;
@@ -491,9 +457,13 @@ public class ServiceLoginDialog extends Dialog {
 					intCount++;
 				}
 				
-				if(intCount == 4) break;
+				if(intCount == 3) return;
 			}
 		}
+		
+		// 세션에 발견되지 않았으면.
+		comboLanguage.select(0);
+		changeUILocale(comboLanguage.getText());
 	}
 	
 	/**
