@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.CommentCellEditor;
 
 /**
  * SampleDAtaEditingSupport
@@ -58,12 +59,12 @@ public class ParameterEditingSupport extends EditingSupport {
 		HashMap<Integer, Object> map = (HashMap<Integer, Object>) element;
 
 		if (columnIndex == 2) {
-			return new ComboBoxCellEditor(viewer.getTable(), types);
+			return new KeyEventComboBoxCellEditor(columnIndex, viewer, types);
 		} else if (columnIndex == 3) {
 			if (RDBTypeToJavaTypeUtils.isNumberType((String)map.get(2)) || RDBTypeToJavaTypeUtils.isCharType((String)map.get(2)) ) {
-				return new TextCellEditor(viewer.getTable());
+				return new CommentCellEditor(columnIndex, viewer);
 			} else {
-				return new TextCellEditor(viewer.getTable());
+				return new CommentCellEditor(columnIndex, viewer);
 			}
 		}else{
 			return null;

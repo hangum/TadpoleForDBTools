@@ -175,7 +175,7 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteQuery, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteQuery, false);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
 	}
 
