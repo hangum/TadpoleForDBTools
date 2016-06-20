@@ -605,8 +605,10 @@ public class Messages {
 
 	public String DeleteDriver;
 
-	public String TDBYesNoErroDialog_ERRMSG;
-	
+	public String MainEditorServiceEndGoPay;
+
+	public String HELP;
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

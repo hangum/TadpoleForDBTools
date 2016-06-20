@@ -48,12 +48,14 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
+import com.hangum.tadpole.engine.query.dao.system.bill.UserBillEditorInput;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -653,7 +655,21 @@ public class MainEditor extends EditorExtension {
 		
 		// do not execute query
 		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {
-			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().MainEditorServiceEnd);
+			if(ApplicationArgumentUtils.isOnlineServer()) {
+				if(MessageDialog.openConfirm(null, Messages.get().Information, Messages.get().MainEditorServiceEndGoPay)) {
+					UserBillEditorInput mei = new UserBillEditorInput();
+					
+					try {
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, "com.hangum.tadpole.bill.core.editor.user");
+					} catch (PartInitException e) {
+						logger.error("open editor", e); //$NON-NLS-1$
+						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Bill page open", errStatus); //$NON-NLS-1$
+					}
+				}
+			} else {
+				MessageDialog.openInformation(null, Messages.get().Information, Messages.get().MainEditorServiceEnd);
+			}
 			return;
 		}
 		

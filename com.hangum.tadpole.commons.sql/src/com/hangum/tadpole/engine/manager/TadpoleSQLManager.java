@@ -84,7 +84,7 @@ public class TadpoleSQLManager {
 
 					// oracle 일 경우 설정 
 					try { 
-						if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+						if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
 								userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 							DriverManager.setLoginTimeout(10);
 							
@@ -194,9 +194,9 @@ public class TadpoleSQLManager {
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tadpoleMetaData.setKeywords(StringUtils.join(SQLConstants.QUOTE_SQLITE_KEYWORDS, ","));
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | 
-					userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | 
-					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || 
+					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MYSQL_KEYWORDS, ",") + "," + dbMetadata;
 			tadpoleMetaData.setKeywords(strFullKeywords);

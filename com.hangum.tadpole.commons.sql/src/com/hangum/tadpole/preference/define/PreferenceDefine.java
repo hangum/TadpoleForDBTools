@@ -34,12 +34,12 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	
 	/** default home page */
 	public static final String DEFAULT_HOME_PAGE 		= "DEFAULT_HOME_PAGE";
-	public static final String DEFAULT_HOME_PAGE_VALUE 	= "http://hangum.github.io/TadpoleForDBTools/";//https://sites.google.com/site/tadpolefordb/home";//"https://www.github.com/hangum/TadpoleForDBTools/wiki";
+	public static final String DEFAULT_HOME_PAGE_VALUE 	= "http://hangum.github.io/TadpoleForDBTools/index2.html";//https://sites.google.com/site/tadpolefordb/home";//"https://www.github.com/hangum/TadpoleForDBTools/wiki";
 //	public static final String DEFAULT_HOME_PAGE_EN_VALUE 	= "https://sites.google.com/site/tadpolefordbtoolsen";
 	
 	/** default home page use */
 	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";
-	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "false";
+	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "true";
 	
 	/** RDB Result type */ 
 	public static final String RDB_RESULT_TYPE = "RDB_RESULT_TYPE";

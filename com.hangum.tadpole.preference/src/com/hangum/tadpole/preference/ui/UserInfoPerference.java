@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
-import java.util.TimeZone;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -183,9 +183,17 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		lblLanguage.setText(Messages.get().Language);
 		comboLanguage = new Combo(container, SWT.READ_ONLY);
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboLanguage.add(Messages.get().Language_English); //$NON-NLS-1$
-		comboLanguage.add(Messages.get().Language_Korean); //$NON-NLS-1$
-		comboLanguage.setText(SessionManager.getLangeage());
+		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
+		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
+		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
+		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
+		
+		try {
+			Locale locale = Locale.forLanguageTag(SessionManager.getLangeage());
+			comboLanguage.setText(locale.getDisplayLanguage(locale));
+		} catch(Exception e) {
+			logger.error("initialize language", e);
+		}
 		
 		Label lblTimezone = new Label(container_1, SWT.NONE);
 		lblTimezone.setText(Messages.get().TimeZone);
@@ -312,7 +320,11 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String rePass = textRePassword.getText().trim();
 			String useOTP = btnGetOptCode.getSelection()?Messages.get().UserAnswer_Yes:Messages.get().UserAnswer_No; //$NON-NLS-1$ //$NON-NLS-2$
 			String otpSecretKey = textSecretKey.getText();
-			String language = comboLanguage.getText();
+			Locale locale = Locale.ENGLISH;
+			if(comboLanguage.getData(comboLanguage.getText()) != null) {
+				locale = (Locale)comboLanguage.getData(comboLanguage.getText());	
+			}
+			
 			String timezone = comboTimezone.getText();
 			
 			if(StringUtils.length(pass) < 5) {
@@ -347,7 +359,8 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			
 			user.setUse_otp(useOTP);
 			user.setOtp_secret(otpSecretKey);
-			user.setLanguage(language);
+			
+			user.setLanguage(locale.toLanguageTag());
 			user.setTimezone(timezone);
 			
 			try {
@@ -357,7 +370,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				TadpoleSystem_UserQuery.updateUserOTPCode(user);
 				SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.toString(), useOTP);			
 				SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.toString(), otpSecretKey);
-				SessionManager.updateSessionAttribute(SessionManager.NAME.LANGUAGE.toString(), language);
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LANGUAGE.toString(), locale.toLanguageTag());
 				SessionManager.updateSessionAttribute(SessionManager.NAME.TIMEZONE.toString(), timezone);
 				
 				//fix https://github.com/hangum/TadpoleForDBTools/issues/243

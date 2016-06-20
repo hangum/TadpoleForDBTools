@@ -281,7 +281,7 @@ public class ColumnDataTypeDef {
 				result += name + ",";
 			}
 			return StringUtils.split(result, ",");
-		case AMAZONRDS_DEFAULT:
+//		case AMAZONRDS_DEFAULT:
 		case CUBRID_DEFAULT:
 		case HIVE2_DEFAULT:
 		case HIVE_DEFAULT:
@@ -381,8 +381,8 @@ public class ColumnDataTypeDef {
 	public static String getTypeName(DBDefine dbDef, int dataType) {
 		try {
 			switch (dbDef) {
-			case AMAZONRDS_DEFAULT:
-				return (String) defaultNameMap.get(dataType);
+//			case AMAZONRDS_DEFAULT:
+//				return (String) defaultNameMap.get(dataType);
 			case CUBRID_DEFAULT:
 				return (String) defaultNameMap.get(dataType);
 			case HIVE2_DEFAULT:

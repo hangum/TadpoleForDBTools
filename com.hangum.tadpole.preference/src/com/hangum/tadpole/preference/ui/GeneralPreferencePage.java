@@ -80,10 +80,9 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 			}
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
-		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH));
+		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
-		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.ENGLISH), Locale.KOREAN);
-
+		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setText(Messages.get().DefaultPreferencePage_2);
@@ -136,9 +135,9 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		String txtHomePageUse 	= ""+btnCheckButtonHomepage.getSelection();
 		
 		// change locale
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, strLocale);
-		Locale localeSelect = (Locale)comboLanguage.getData(strLocale);
-		RWT.getUISession().setLocale(localeSelect);
+		Locale locale = (Locale)comboLanguage.getData(strLocale);
+		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
+		RWT.getUISession().setLocale(locale);
 		
 		if(!NumberUtils.isNumber(txtSessionTime)) {
 			textSessionTime.setFocus();
@@ -195,7 +194,10 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		if(cookies != null) {
 			for (Cookie cookie : cookies) {				
 				if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
-					comboLanguage.setText(cookie.getValue());
+					
+					Locale locale = Locale.forLanguageTag(cookie.getValue());
+					comboLanguage.setText(locale.getDisplayLanguage(locale));
+
 					changeUILocale(comboLanguage.getText());
 					isExist = true;
 					
