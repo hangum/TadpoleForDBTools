@@ -1,11 +1,12 @@
 /**
  * 
  */
-package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
+package com.hangum.tadpole.rdb.core.editors.main.parameter;
 
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
@@ -13,46 +14,59 @@ import org.eclipse.swt.widgets.Composite;
  * @author nilriri
  *
  */
-public class CommentCellEditor extends TextCellEditor {
+public class KeyEventComboBoxCellEditor extends ComboBoxCellEditor {
 	private TableViewer viewer = null;
+	private String[] items = null;
 	private int column = -1;
 
 	/**
 	 * 
 	 */
-	public CommentCellEditor() {
+	public KeyEventComboBoxCellEditor() {
 	}
 
 	/**
 	 * @param parent
+	 * @param items
 	 */
-	public CommentCellEditor(Composite parent) {
-		super(parent);
+	public KeyEventComboBoxCellEditor(Composite parent, String[] items) {
+		super(parent, items);
 	}
 
 	/**
+	 * @param items
 	 * @param parent
 	 */
-	public CommentCellEditor(int column, TableViewer viewer) {
-		super(viewer.getTable());
+	public KeyEventComboBoxCellEditor(int column, TableViewer viewer,
+			String[] items) {
+		super(viewer.getTable(), items);
 		this.viewer = viewer;
 		this.column = column;
-	}
-
-	/**
-	 * @param parent
-	 * @param style
-	 */
-	public CommentCellEditor(Composite parent, int style) {
-		super(parent, style);
+		this.items = items;
 	}
 
 	@Override
-    protected void keyReleaseOccured(KeyEvent keyEvent) {
+	protected void keyReleaseOccured(KeyEvent keyEvent) {
 		super.keyReleaseOccured(keyEvent);
 		
-		if (keyEvent.keyCode == SWT.ARROW_UP) { 
-			if (-1 < viewer.getTable().getSelectionIndex()){
+		ComboBoxCellEditor cbe = (ComboBoxCellEditor)this;
+		
+		CCombo cm = (CCombo)cbe.getControl();
+		
+		// 아이템 목록이 표시되어 있으면...
+		if ( cm.getListVisible() ) {
+			if (keyEvent.keyCode == SWT.CR || keyEvent.keyCode == SWT.KEYPAD_CR) {
+				// 엔터키을 누른경우 선택값을 반영후 편집상태를 계속유지하도록 한다.
+				Object element = viewer.getElementAt(viewer.getTable().getSelectionIndex());
+				viewer.editElement(element, column);
+				return;
+			}
+			return;
+		}
+		
+		
+		if (keyEvent.keyCode == SWT.ARROW_UP) {
+			if (-1 < viewer.getTable().getSelectionIndex()) {
 				Object element = viewer.getElementAt(viewer.getTable().getSelectionIndex() - 1);
 				if (element != null){ 
 					viewer.editElement(element, column);
@@ -61,8 +75,8 @@ public class CommentCellEditor extends TextCellEditor {
 					viewer.editElement(element, column);
 				}
 			}
-		}else if (keyEvent.keyCode == SWT.ARROW_DOWN) { 
-			if (viewer.getTable().getItemCount() > viewer.getTable().getSelectionIndex()){
+		} else if (keyEvent.keyCode == SWT.ARROW_DOWN) {
+			if (viewer.getTable().getItemCount() > viewer.getTable().getSelectionIndex()) {
 				Object element = viewer.getElementAt(viewer.getTable().getSelectionIndex() + 1);
 				if (element != null){ 
 					viewer.editElement(element, column);
@@ -90,6 +104,7 @@ public class CommentCellEditor extends TextCellEditor {
 				if(!viewer.isCellEditorActive()) viewer.editElement(element, column);
 			}
 		}
+
 	}
-	
+
 }
