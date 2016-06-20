@@ -13,8 +13,8 @@ package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.hangum.tadpole.db.bander.cubrid.CubridExecutePlanUtils;
-import com.hangum.tadpole.db.bander.oracle.OracleExecutePlanUtils;
+import com.hangum.tadpole.db.vender.cubrid.CubridExecutePlanUtils;
+import com.hangum.tadpole.db.vender.oracle.OracleExecutePlanUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
