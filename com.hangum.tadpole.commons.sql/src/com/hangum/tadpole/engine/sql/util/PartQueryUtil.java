@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -82,7 +83,13 @@ public class PartQueryUtil {
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
 		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() || DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
-			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + "( " + query + ")";
+			
+			// with문으로 시작하는 쿼리르 괄호를 치면 오류다. (https://github.com/hangum/TadpoleForDBTools/issues/844)
+			if(StringUtils.startsWithIgnoreCase(query, "with")) {
+				resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			} else {
+				resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + "( " + query + ")";
+			}
 		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 	      resultQuery =  MSSQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
