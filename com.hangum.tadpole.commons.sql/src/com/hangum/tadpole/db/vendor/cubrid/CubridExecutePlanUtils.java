@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.db.vender.cubrid;
+package com.hangum.tadpole.db.vendor.cubrid;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

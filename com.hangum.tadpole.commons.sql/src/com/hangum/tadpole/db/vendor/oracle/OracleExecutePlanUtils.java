@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.db.vender.oracle;
+package com.hangum.tadpole.db.vendor.oracle;
 
 import java.sql.PreparedStatement;
 

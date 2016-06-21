@@ -37,7 +37,7 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 			+ " ADD CONSTRAINT constraint_name UNIQUE (column1, column2, ... column_n); "+ PublicTadpoleDefine.LINE_SEPARATOR;
 	
 	// plan_table	
-	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN set statement_id = '" + PublicTadpoleDefine.STATEMENT_ID + "' INTO " + PublicTadpoleDefine.DELIMITER + " FOR ";
+	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN PLAN SET statement_id = '" + PublicTadpoleDefine.STATEMENT_ID + "' INTO " + PublicTadpoleDefine.DELIMITER + " FOR ";
 
 	/** procedure */
 	public static final String  TMP_CREATE_PROCEDURE_STMT = "CREATE OR REPLACE PROCEDURE simpleproc2 (param1 out INT) " + PublicTadpoleDefine.LINE_SEPARATOR +
