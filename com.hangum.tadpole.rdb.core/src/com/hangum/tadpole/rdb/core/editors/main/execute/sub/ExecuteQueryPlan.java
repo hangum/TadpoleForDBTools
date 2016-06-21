@@ -13,6 +13,8 @@ package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.log4j.Logger;
+
 import com.hangum.tadpole.db.vendor.cubrid.CubridExecutePlanUtils;
 import com.hangum.tadpole.db.vendor.oracle.OracleExecutePlanUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -30,6 +32,7 @@ import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
  *
  */
 public class ExecuteQueryPlan {
+	private static final Logger logger = Logger.getLogger(ExecuteQueryPlan.class);
 
 	/**
 	 * execute plan 을 실행합니다.
@@ -82,7 +85,18 @@ public class ExecuteQueryPlan {
 					// 플랜결과를 디비에 저장합니다.
 					OracleExecutePlanUtils.plan(userDB, reqQuery.getSql(), planTableName, javaConn, pstmt, statement_id);
 					// 저장된 결과를 가져와서 보여줍니다.
-					pstmt = javaConn.prepareStatement("select * from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//					pstmt = javaConn.prepareStatement("select * from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					StringBuffer sbQuery = new StringBuffer();
+					sbQuery.append("SELECT TRIM(LEVEL)||'. '||LPAD (' ', LEVEL - 1)||operation||' '||options||' on '||object_name \"Query\", ")
+							.append("		cost \"Cost\", cardinality \"Rows\", bytes \"Bytes\", decode(level,1,0,position) \"Pos\" ")
+							.append(String.format(" FROM %s", planTableName))
+							.append(" CONNECT BY prior id = parent_id ")
+							.append(" AND prior statement_id = statement_id ")
+							.append(" START WITH id = 0 ")
+							.append(String.format(" AND statement_id = '%s'", statement_id))
+							.append(" ORDER BY id");
+					if(logger.isDebugEnabled()) logger.debug(sbQuery);
+					pstmt = javaConn.prepareStatement(sbQuery.toString());
 					rs = pstmt.executeQuery(); 
 				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 					 stmt = javaConn.createStatement();
