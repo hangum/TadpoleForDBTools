@@ -478,13 +478,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 
-			if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
-			if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
+			final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
+			if(oldTadpoleResultSet.getData().size() >= intSelectLimitCnt) {
+				if(logger.isDebugEnabled()) logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 				if(logger.isDebugEnabled()) logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 				
-				if(oldTadpoleResultSet.getData().size() >= (tableResult.getItemCount())) {
+				if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
 					// 나머지 데이터를 가져온다.
-					final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
+					
 					final String strUserEmail 	= SessionManager.getEMAIL();
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 					final String strNullValue   = GetPreferenceGeneral.getResultNull();
