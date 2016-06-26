@@ -54,15 +54,21 @@ public class TadpoleSQLTransactionManager {
 	 */
 	public static void executeRollback(final String userId) {
 		Set<String> keys = dbManager.keySet();
-		for (String key : keys) {
-			if(StringUtils.startsWith(key, userId + PublicTadpoleDefine.DELIMITER)) {
-				if(logger.isDebugEnabled()) logger.debug("== logout transaction start==");
+		for (String searchKey : keys) {
+			if(StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
+				if(logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
 				
-				TransactionDAO transactionDAO = dbManager.get(key);
-				try {
-					transactionDAO.getConn().rollback();
-				} catch(Exception e) {
-					logger.error("logout transaction commit", e);
+				TransactionDAO transactionDAO = dbManager.get(searchKey);
+				if(transactionDAO != null) {
+					Connection conn = transactionDAO.getConn();
+					try {
+						conn.rollback();
+					} catch(Exception e) {
+						logger.error("logout transaction commit", e);
+					} finally {
+						try { if(conn != null) conn.close(); } catch(Exception e) {}
+					}
+					removeInstance(userId, searchKey);
 				}
 			}
 		}
@@ -81,15 +87,14 @@ public class TadpoleSQLTransactionManager {
 		
 		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + "/" + userDB.getUsers());
 		
-		synchronized(dbManager) {
+//		synchronized(dbManager) {
 			final String searchKey = getKey(userId, userDB);
 			TransactionDAO transactionDAO = dbManager.get(searchKey);
 			if(transactionDAO == null) {
 				try {
-					DataSource ds = DBCPConnectionManager.getInstance().getDataSource(userId, userDB);
+					DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(userId, userDB);
 					
 					transactionDAO = new TransactionDAO();
-					
 					Connection conn = ds.getConnection();
 					conn.setAutoCommit(false);
 					
@@ -114,7 +119,7 @@ public class TadpoleSQLTransactionManager {
 			if(logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.toString());
 			
 			return transactionDAO.getConn();
-		}
+//		}
 	}
 	
 //	/**
@@ -138,15 +143,16 @@ public class TadpoleSQLTransactionManager {
 	 * @param userDB
 	 */
 	public static void commit(final String userId, final UserDBDAO userDB) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("=============================================================================");
-			logger.debug("\t commit [userId]" + getKey(userId, userDB) );
-			logger.debug("=============================================================================");
-		}
 		
 		synchronized (dbManager) {
-			TransactionDAO transactionDAO = dbManager.get(getKey(userId, userDB));
+			final String searchKey = getKey(userId, userDB);
+			if(logger.isDebugEnabled()) {
+				logger.debug("=============================================================================");
+				logger.debug("\t rollback [userId]" + searchKey);
+				logger.debug("=============================================================================");
+			}
 			
+			TransactionDAO transactionDAO = dbManager.get(searchKey);
 			if(transactionDAO != null) {
 				Connection conn = transactionDAO.getConn();
 				try {
@@ -158,7 +164,7 @@ public class TadpoleSQLTransactionManager {
 					try { if(conn != null) conn.close(); } catch(Exception e) {}
 				}
 					
-				removeInstance(userId, userDB);
+				removeInstance(userId, searchKey);
 			}
 		} // end synchronized
 	}
@@ -170,14 +176,15 @@ public class TadpoleSQLTransactionManager {
 	 * @param userDB
 	 */
 	public static void rollback(final String userId, final UserDBDAO userDB) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("=============================================================================");
-			logger.debug("\t rollback [userId]" + getKey(userId, userDB) );
-			logger.debug("=============================================================================");
-		}
 		
 		synchronized (dbManager) {
-			TransactionDAO transactionDAO = dbManager.get(getKey(userId, userDB));
+			final String searchKey = getKey(userId, userDB);
+			if(logger.isDebugEnabled()) {
+				logger.debug("=============================================================================");
+				logger.debug("\t rollback [userId]" + searchKey);
+				logger.debug("=============================================================================");
+			}
+			TransactionDAO transactionDAO = dbManager.get(dbManager);
 			
 			if(transactionDAO != null) {
 				Connection conn = transactionDAO.getConn();
@@ -190,7 +197,7 @@ public class TadpoleSQLTransactionManager {
 					try { if(conn != null) conn.close(); } catch(Exception e) {}
 				}
 					
-				removeInstance(userId, userDB);
+				removeInstance(userId, searchKey);
 			}
 		} // end synchronized
 	}
@@ -201,11 +208,17 @@ public class TadpoleSQLTransactionManager {
 	 * @param userId
 	 * @param userDB
 	 */
-	private static void removeInstance(final String userId, final UserDBDAO userDB) {
+	private static void removeInstance(final String userId, final String searchKey) {
 		synchronized (dbManager) {
-			Connection conn = dbManager.remove(getKey(userId, userDB)).getConn();
-			try { if(conn != null) conn.close(); } catch(Exception e) {}
-			conn = null;
+			if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLTransactionManager] remove Instance: " + searchKey);
+			
+			try {
+				dbManager.remove(searchKey);
+				
+				DBCPConnectionManager.getInstance().releaseConnectionPool(searchKey);
+			} catch (Exception e) {
+				logger.error("remove connection", e);
+			}
 		}
 	}
 	
@@ -224,8 +237,8 @@ public class TadpoleSQLTransactionManager {
 	 */
 	public static String getKey(final String userId, final UserDBDAO userDB) {
 		return userId + PublicTadpoleDefine.DELIMITER + 
-				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
-				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
+//				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
+//				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getSeq()  			+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers() 			+ PublicTadpoleDefine.DELIMITER ;
 	}

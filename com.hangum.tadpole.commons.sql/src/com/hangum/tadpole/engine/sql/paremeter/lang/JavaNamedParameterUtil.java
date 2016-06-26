@@ -56,13 +56,8 @@ public class JavaNamedParameterUtil {
 			paramCount = 0;
 			throw e;
 		} finally {
-			try {
-				if(stmt != null) stmt.close();
-			} catch (Exception e) {}
-			
-			try {
-				if(javaConn != null) javaConn.close();
-			} catch (Exception e) {}
+			try { if(stmt != null) stmt.close(); } catch (Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch (Exception e) {}
 		}
 		
 		return paramCount;

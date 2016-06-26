@@ -51,8 +51,8 @@ public class ExecuteQueryPlan {
 	
 		QueryExecuteResultDTO rsDAO = new QueryExecuteResultDTO();
 
-		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
+		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		java.sql.Statement stmt = null;
 		
@@ -72,22 +72,31 @@ public class ExecuteQueryPlan {
 					
 					return rsDAO;
 					
-				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {					
-					// generation to statement id for query plan. 
-					pstmt = javaConn.prepareStatement("select USERENV('SESSIONID') from dual "); //$NON-NLS-1$
-					rs = pstmt.executeQuery(); 
+				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 					String statement_id = "tadpole"; //$NON-NLS-1$
-					if (rs.next()) statement_id = rs.getString(1);
 					
-					pstmt = javaConn.prepareStatement("delete from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					pstmt.execute(); 
+					try {
+						// generation to statement id for query plan. 
+						pstmt = javaConn.prepareStatement("select USERENV('SESSIONID') from dual "); //$NON-NLS-1$
+						rs = pstmt.executeQuery(); 
+						if (rs.next()) statement_id = rs.getString(1);
+					} finally {
+						if(pstmt != null) pstmt.close();
+						if(rs != null) rs.close();
+					}
+					
+					try {
+						pstmt = javaConn.prepareStatement("delete from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						pstmt.execute();
+					} finally {
+						if(pstmt != null) pstmt.close();
+					}
 					
 					// 플랜결과를 디비에 저장합니다.
-					OracleExecutePlanUtils.plan(userDB, reqQuery.getSql(), planTableName, javaConn, pstmt, statement_id);
+					OracleExecutePlanUtils.plan(userDB, reqQuery.getSql(), planTableName, javaConn, statement_id);
 					// 저장된 결과를 가져와서 보여줍니다.
-//					pstmt = javaConn.prepareStatement("select * from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					StringBuffer sbQuery = new StringBuffer();
-					sbQuery.append("SELECT TRIM(LEVEL)||'. '||LPAD (' ', LEVEL - 1)||operation||' '||options||' on '||object_name \"Query\", ")
+					sbQuery.append("SELECT TRIM(LEVEL), LPAD (' ', LEVEL - 1)||operation||' '||options||' on '||object_name \"Query\", ")
 							.append("		cost \"Cost\", cardinality \"Rows\", bytes \"Bytes\", decode(level,1,0,position) \"Pos\" ")
 							.append(String.format(" FROM %s", planTableName))
 							.append(" CONNECT BY prior id = parent_id ")
@@ -98,13 +107,14 @@ public class ExecuteQueryPlan {
 					if(logger.isDebugEnabled()) logger.debug(sbQuery);
 					pstmt = javaConn.prepareStatement(sbQuery.toString());
 					rs = pstmt.executeQuery(); 
+					
 				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 					 stmt = javaConn.createStatement();
 					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "ON")); //$NON-NLS-1$
-	
+				
 					 pstmt = javaConn.prepareStatement(reqQuery.getSql());
 					 rs = pstmt.executeQuery();
-	
+
 					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "OFF")); //$NON-NLS-1$
 				} else {
 					pstmt = javaConn.prepareStatement(PartQueryUtil.makeExplainQuery(userDB, reqQuery.getSql()));
@@ -121,6 +131,7 @@ public class ExecuteQueryPlan {
 			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
 			try { if(stmt != null) stmt.close(); } catch(Exception e) {}
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 		}
 	}
 

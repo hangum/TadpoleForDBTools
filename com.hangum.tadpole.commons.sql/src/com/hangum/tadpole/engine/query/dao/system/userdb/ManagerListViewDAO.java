@@ -22,7 +22,7 @@ import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURC
  * @author hangum
  *
  */
-public class ManagerListViewDAO {
+public class ManagerListViewDAO extends TDBParentDAO {
 
 	protected ManagerListDTO parent;
 

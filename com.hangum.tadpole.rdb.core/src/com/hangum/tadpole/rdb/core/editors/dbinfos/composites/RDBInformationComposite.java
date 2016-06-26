@@ -126,15 +126,18 @@ public class RDBInformationComposite extends Composite {
 	 * add rdb info
 	 */
 	private void rdbInfo() {
+		Connection conn = null;
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			Connection conn = sqlClient.getDataSource().getConnection();
+			conn = sqlClient.getDataSource().getConnection();
 			DatabaseMetaData dmd = conn.getMetaData();
 			
 			listInfo.add(new KeyValueDAO(Messages.get().DatabaseInformation, dmd.getDatabaseProductName() + " " + dmd.getDatabaseProductVersion()));
 			listInfo.add(new KeyValueDAO(Messages.get().DriverInformation, dmd.getDriverName() + " " + dmd.getDriverVersion()));
 		} catch(Exception e) {
 			logger.error("RDB info", e);
+		} finally {
+			try { if(conn != null) conn.close(); } catch(Exception e) {}
 		}
 	}
 

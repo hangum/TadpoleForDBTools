@@ -123,10 +123,10 @@ public class ExecuteBatchSQL {
 			logger.error("Execute batch update", e); //$NON-NLS-1$
 			throw e;
 		} finally {
-			try { statement.close();} catch(Exception e) {}
+			try { if(statement != null) statement.close();} catch(Exception e) {}
 
 			if(reqQuery.isAutoCommit()) {
-				try { javaConn.close(); } catch(Exception e){}
+				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 			}
 		}
 	}

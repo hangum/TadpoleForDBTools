@@ -389,13 +389,13 @@ public class TableDirectEditorComposite extends Composite {
 		if(logger.isDebugEnabled()) logger.debug("Last query is " + requestQuery);
 					
 		ResultSet rs = null;
+		PreparedStatement stmt = null;
 		java.sql.Connection javaConn = null;
 		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
-			PreparedStatement stmt = null;
 			stmt = javaConn.prepareStatement(requestQuery);
 			stmt.setMaxRows(GetPreferenceGeneral.getSelectLimitCount());
 			
@@ -446,8 +446,9 @@ public class TableDirectEditorComposite extends Composite {
 			}
 
 		} finally {
-			try { rs.close(); } catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e){}
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(stmt != null) stmt.close(); } catch(Exception e){}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
 	}
 	

@@ -79,6 +79,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 		java.sql.Connection javaConn = null;
 		java.sql.CallableStatement cstmt = null;
 		java.sql.PreparedStatement pstmt = null;
+		ResultSet rs = null;
 
 		OracleDbmsOutputUtil dbmsOutput = null;
 		try {
@@ -112,7 +113,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 					//pstmt.registerOutParameter(dao.getOrder(), RDBTypeToJavaTypeUtils.getJavaType(dao.getRdbType()));
 					pstmt.setObject(dao.getOrder(), "");
 				}
-				ResultSet rs = pstmt.executeQuery();
+				rs = pstmt.executeQuery();
 				setResultCursor(strExecuteScript, rs, strNullValue);
 			}else{
 			
@@ -150,7 +151,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 					if (obj!=null){
 						if ("SYS_REFCURSOR".equals(dao.getRdbType())){
 							isCursor = true;
-							ResultSet rs = (ResultSet)obj;
+							rs = (ResultSet)obj;
 							setResultCursor(strExecuteScript, rs, strNullValue);
 							// cursor의 결과 리턴은 항상 1개입니다.
 						}else{
@@ -189,6 +190,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			logger.error("ProcedureExecutor executing error", e);
 			throw e;
 		} finally {
+			try { if(rs != null) rs.close(); } catch (Exception e) {  }
 			try { if(pstmt != null) pstmt.close(); } catch (Exception e) {  }
 			try { if(cstmt != null) cstmt.close(); } catch (Exception e) {  }
 			try { if(dbmsOutput != null) dbmsOutput.close(); } catch (Exception e) {  }

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.template;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * 템블릿을 정의합니다.
  * 
@@ -17,5 +19,7 @@ package com.hangum.tadpole.engine.sql.template;
  *
  */
 public abstract class AbstractDMLTemplate {
+	/** tdb custom column */
+	public static final String TDB_CUSTOME_COLUMN = PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN + "__RNUM";
 
 }

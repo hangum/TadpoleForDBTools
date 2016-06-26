@@ -28,6 +28,9 @@ public class PublicTadpoleDefine {
 	/** url system verion information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
+	/** sert user info */
+	public static final String CERT_USER_INFO = "/***<cert_user_info><ip:%s><id:%s>*/";
+	
 	/** defiee default time zone*/
 	public static final String DEFAULT_TIME_ZONE = "Asia/Seoul";
 	
@@ -66,42 +69,42 @@ public class PublicTadpoleDefine {
 	/**
 	 * PLAN Statement ID
 	 */
-	public static String STATEMENT_ID = "||TDB_STATEMENT_ID||"; //$NON-NLS-1$
+	public static final String STATEMENT_ID = "||TDB_STMT_ID||"; //$NON-NLS-1$
 
 	/** 0번째 테이블 컬럼을 선택한다 */
-	public static String DEFINE_TABLE_COLUMN_BASE_ZERO = "TDB_BASE_ZERO";
-	public static String DEFINE_TABLE_COLUMN_BASE_ZERO_TYPE = "TDB_BASE_TYPE";
+	public static final String DEFINE_TABLE_COLUMN_BASE_ZERO = "TDB_BASE_ZERO";
+	public static final String DEFINE_TABLE_COLUMN_BASE_ZERO_TYPE = "TDB_BASE_TYPE";
 	
 	/**
 	 * 특별 컬럼을 정의 합니다. 
 	 */
-	public static String SPECIAL_USER_DEFINE_HIDE_COLUMN = "TDB_HIDE";
+	public static final String SPECIAL_USER_DEFINE_HIDE_COLUMN = "TDB_HIDE";
 	
 	/**
 	 * 분리자
 	 */
-	public static String DELIMITER = "||TDB-DELIMITER||"; //$NON-NLS-1$
-	public static String DELIMITER_DBL = "||TDB-DELIMITER-DBL||"; //$NON-NLS-1$
+	public static final String DELIMITER = "||DEL||"; //$NON-NLS-1$
+	public static final String DELIMITER_DBL = "||DEL-DBL||"; //$NON-NLS-1$
 	
 	/** 라인분리자 */
-	public static String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
-	public static String DOUBLE_LINE_SEPARATOR = LINE_SEPARATOR + LINE_SEPARATOR;
+	public static final String LINE_SEPARATOR = "\n";//System.getProperty("line.separator"); //$NON-NLS-1$
+	public static final String DOUBLE_LINE_SEPARATOR = LINE_SEPARATOR + LINE_SEPARATOR;
 	
 	/** DIR SEPARATOR */
-	public static char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
+	public static final char DIR_SEPARATOR = IOUtils.DIR_SEPARATOR;
 	
 	/** temp dir 
 		임시 디렉토리 생성에 오류 있음. 확인 필요.
 		java.io.IOException: Directory '/tmpTempTable1458208430419' could not be created 오류 발생.
 		환경 설정에 문제인지(prefix 혹은 디렉토리 미지정).. 아니면 코드상의 오류(DIRECTORY-SEPERATOR 가 빠진 문제)인지 확인 필요
 	*/
-	public static String TEMP_DIR = FileUtils.getTempDirectoryPath() + PublicTadpoleDefine.DIR_SEPARATOR;
+	public static final String TEMP_DIR = FileUtils.getTempDirectoryPath() + PublicTadpoleDefine.DIR_SEPARATOR;
 
 	/**  쿼리 구분자 */
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
 	
 	/** tadpole url */
-	public static String TADPOLE_URL = "http://127.0.0.1:%s";
+	public static final String TADPOLE_URL = "http://127.0.0.1:%s";
 	
 	/**
 	 * tadpole url

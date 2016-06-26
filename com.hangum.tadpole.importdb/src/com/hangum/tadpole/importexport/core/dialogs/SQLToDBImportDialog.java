@@ -172,6 +172,7 @@ public class SQLToDBImportDialog extends Dialog {
 		
 		textSeprator = new Text(compositeHead, SWT.BORDER);
 		textSeprator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textSeprator.setText(";");
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblBatchSize = new Label(compositeHead, SWT.NONE);

@@ -11,9 +11,12 @@
 package com.hangum.tadpole.rdb.core.dialog.export.sqlresult;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -288,6 +291,23 @@ public class ResultSetDownloadDialog extends Dialog {
 				} else {
 					allResultDto.getDataList().getData().addAll(partResultDto.getDataList().getData());
 				}
+			}
+			
+			// 헤더 컬럼에서 내부 적으로 사용하는 컬럼을 삭제한다.
+			Map<Integer, String> labelColumnName = allResultDto.getColumnLabelName();
+			List<Integer> listRemoveColumn = new ArrayList<>();
+			int intSize = labelColumnName.size();
+			for (int i=0; i<intSize; i++) {
+				if(StringUtils.startsWithIgnoreCase(labelColumnName.get(i), PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) {
+					labelColumnName.remove(i);
+					listRemoveColumn.add(i);
+				}
+			}
+			
+			// 실제 데이터에서 제거한다.
+			List<Map<Integer, Object>> listAllData = allResultDto.getDataList().getData();
+			for (Map<Integer, Object> map : listAllData) {
+				for(Integer intColumn : listRemoveColumn) map.remove(intColumn);
 			}
 			
 			return allResultDto;

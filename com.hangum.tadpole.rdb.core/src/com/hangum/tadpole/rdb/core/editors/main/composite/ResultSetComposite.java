@@ -784,7 +784,7 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void finallyEndExecuteCommand(final List<QueryExecuteResultDTO> listRsDAO) {
 		controlProgress(false);
-		compositeResult.endQuery();
+		if(compositeResult != null) compositeResult.endQuery();
 		
 		// 확장포인트에 실행결과를 위임합니다. 
 		IMainEditorExtension[] extensions = getRdbResultComposite().getMainEditor().getMainEditorExtions();
