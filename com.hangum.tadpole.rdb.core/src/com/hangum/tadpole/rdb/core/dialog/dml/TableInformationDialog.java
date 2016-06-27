@@ -54,8 +54,8 @@ import com.hangum.tadpole.sql.format.SQLFormater;
  * @author nilriri
  *
  */
-public class GenerateStatmentDMLDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(GenerateStatmentDMLDialog.class);
+public class TableInformationDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(TableInformationDialog.class);
 	private boolean isEditorAdd = false;
 	
 	/** generation SQL string */
@@ -80,7 +80,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 * 
 	 * @param parentShell
 	 */
-	public GenerateStatmentDMLDialog(Shell parentShell, boolean isEditorAdd, UserDBDAO userDB, TableDAO tableDAO) {
+	public TableInformationDialog(Shell parentShell, boolean isEditorAdd, UserDBDAO userDB, TableDAO tableDAO) {
 		super(parentShell);
 		setBlockOnOpen(isEditorAdd);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
@@ -190,7 +190,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		TableColumn tcColumnName = tvColumnName.getColumn();
 		tcColumnName.setWidth(130);
 		tcColumnName.setText(Messages.get().ColumnName);
-		tvColumnName.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 0, this));
+//		tvColumnName.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 0, this));
 
 		TableViewerColumn tvColumnDataType = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcDataType = tvColumnDataType.getColumn();
@@ -206,7 +206,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		TableColumn tcAlias = tvColumnAlias.getColumn();
 		tcAlias.setWidth(100);
 		tcAlias.setText(Messages.get().Alias);
-		tvColumnAlias.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 3, this));
+//		tvColumnAlias.setEditingSupport(new DMLColumnEditingSupport(tableViewer, 3, this));
 		
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt =  tvColumnCmt.getColumn();
@@ -583,3 +583,4 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		return new Point(500, 600);
 	}
 }
+

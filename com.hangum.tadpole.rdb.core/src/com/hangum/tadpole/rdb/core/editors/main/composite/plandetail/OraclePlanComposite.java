@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -29,9 +32,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.rdb.core.dialog.dml.TableInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.oracle.OraclePlanDAO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -74,6 +79,20 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		tvQueryPlan.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				
+				IStructuredSelection is = (IStructuredSelection)event.getSelection();
+				Object selElement = is.getFirstElement();
+				TableDAO tableDao = new TableDAO();
+				tableDao.setSchema_name("HR");
+				tableDao.setSysName("sample_table");
+				
+				TableInformationDialog dialog = new TableInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao);
+				dialog.open();
+			}
+		});
 		
 		Composite compositeBtn = new Composite(compositeBody, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
