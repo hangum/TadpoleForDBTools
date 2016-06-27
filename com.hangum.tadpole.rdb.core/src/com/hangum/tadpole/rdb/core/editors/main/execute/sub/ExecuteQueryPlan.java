@@ -96,8 +96,17 @@ public class ExecuteQueryPlan {
 					OracleExecutePlanUtils.plan(userDB, reqQuery.getSql(), planTableName, javaConn, statement_id);
 					// 저장된 결과를 가져와서 보여줍니다.
 					StringBuffer sbQuery = new StringBuffer();
-					sbQuery.append("SELECT TRIM(LEVEL), LPAD (' ', LEVEL - 1)||operation||' '||options||' on '||object_name \"Query\", ")
-							.append("		cost \"Cost\", cardinality \"Rows\", bytes \"Bytes\", decode(level,1,0,position) \"Pos\" ")
+					sbQuery.append("SELECT ")
+				 	        .append("         LPAD ('　', (LEVEL - 1) * 2 , '　')||row_number() over(partition by statement_id  order by level desc, position )||'.'||operation   ")
+							.append("		||(case when options is null then '' else ' '||options end) ")
+							.append("		||(case when optimizer is null then '' else ' ('||initcap(optimizer)||')' end) as \"Operation\"  ")
+							.append("		, object_owner||'.'||object_name || (case when object_type is null then '' else '('||object_type||')' end) as \"Object\" ")
+							.append("		, cost as \"Cost\" ")
+							.append("		, cardinality as \"Rows\" ")
+							.append("		, bytes as \"Bytes\" ")
+							.append("		, level - 1 as \"Pos\" ")
+							.append("		, access_predicates as \"Access\" ")
+							.append("		, filter_predicates as \"Filter\" ")
 							.append(String.format(" FROM %s", planTableName))
 							.append(" CONNECT BY prior id = parent_id ")
 							.append(" AND prior statement_id = statement_id ")

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.oracle.OraclePlanDAO;
@@ -106,12 +107,14 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		
 		for (Map<Integer, Object> map : listObj) {
 			OraclePlanDAO dao = new OraclePlanDAO();
-			dao.setLevel(map.get(1).toString());
-			dao.setQuery(map.get(2).toString());
+			dao.setOperation(map.get(1).toString());
+			dao.setName(map.get(2).toString());
 			dao.setCost(map.get(3).toString());
 			dao.setRows(map.get(4).toString());
 			dao.setBytes(map.get(5).toString());
 			dao.setPos(Integer.parseInt(map.get(6).toString()));
+			dao.setFilter(map.get(7).toString());
+			dao.setAccess(map.get(8).toString());
 			
 			if(listOraclePlanDao.isEmpty()) {
 				listOraclePlanDao.add(dao);
@@ -127,6 +130,7 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 					}
 				}
 				if(!isAdd) listOraclePlanDao.add(dao);
+				
 			}
 		}
 		
@@ -135,6 +139,7 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		
 		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
 		tvQueryPlan.setInput(listOraclePlanDao);
+		tvQueryPlan.expandAll();
 		
 		compositeTail.execute(getTailResultMsg());
 	}
@@ -145,10 +150,18 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 	 */
 	private void createTreeColumn(QueryExecuteResultDTO rsDAO) {
 		Map<Integer, String> mapColumn = rsDAO.getColumnLabelName();
+		
 		for (int i=1; i< mapColumn.size(); i++) {
 			TreeViewerColumn treeViewerColumn = new TreeViewerColumn(tvQueryPlan, SWT.NONE);
 			TreeColumn trclmnUrl = treeViewerColumn.getColumn();
-			trclmnUrl.setWidth(100);
+			
+			if( RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i)) ) {
+				trclmnUrl.setAlignment(SWT.RIGHT);
+				trclmnUrl.setWidth(80);
+			}else{
+				trclmnUrl.setWidth(300);
+			}
+			
 			trclmnUrl.setText(mapColumn.get(i));			
 		}
 	}
@@ -215,12 +228,14 @@ class OracleLabelProvider extends LabelProvider implements ITableLabelProvider {
 		OraclePlanDAO dao = (OraclePlanDAO)element;
 
 		switch(columnIndex) {
-		case 0: return ""+dao.getLevel();
-		case 1: return dao.getQuery();
+		case 0: return dao.getOperation();
+		case 1: return dao.getName();
 		case 2: return dao.getCost();
 		case 3: return dao.getRows();
 		case 4: return dao.getBytes();
 		case 5: return ""+dao.getPos();
+		case 6: return ""+dao.getAccess();
+		case 7: return ""+dao.getFilter();
 		}
 		
 		return "*** not set column ***";
