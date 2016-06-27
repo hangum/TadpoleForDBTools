@@ -184,7 +184,7 @@ public class TadpoleSQLTransactionManager {
 				logger.debug("\t rollback [userId]" + searchKey);
 				logger.debug("=============================================================================");
 			}
-			TransactionDAO transactionDAO = dbManager.get(dbManager);
+			TransactionDAO transactionDAO = dbManager.get(searchKey);
 			
 			if(transactionDAO != null) {
 				Connection conn = transactionDAO.getConn();
@@ -236,9 +236,10 @@ public class TadpoleSQLTransactionManager {
 	 * @return
 	 */
 	public static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + PublicTadpoleDefine.DELIMITER + 
-//				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
-//				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
+		return 	 
+				userId + PublicTadpoleDefine.DELIMITER + 
+				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getSeq()  			+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers() 			+ PublicTadpoleDefine.DELIMITER ;
 	}

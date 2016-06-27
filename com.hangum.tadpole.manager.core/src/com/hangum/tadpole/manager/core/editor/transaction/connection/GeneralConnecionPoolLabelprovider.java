@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.engine.manager.DBCPInfoDAO;
-import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * general connection pool lnfo
@@ -42,8 +41,8 @@ public class GeneralConnecionPoolLabelprovider extends LabelProvider implements 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		DBCPInfoDAO dao = (DBCPInfoDAO)element;
-		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14,
-				Messages.get().GeneralConnecionPoolLabelprovider_0, Messages.get().GeneralConnecionPoolLabelprovider_1, Messages.get().GeneralConnecionPoolLabelprovider_2, Messages.get().GeneralConnecionPoolLabelprovider_3};
+//		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14,
+//				Messages.get().GeneralConnecionPoolLabelprovider_0, Messages.get().GeneralConnecionPoolLabelprovider_1, Messages.get().GeneralConnecionPoolLabelprovider_2, Messages.get().GeneralConnecionPoolLabelprovider_3};
 		
 		switch(columnIndex) {
 		case 0: return dao.getDbType();
