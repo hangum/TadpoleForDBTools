@@ -145,8 +145,8 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			logger.error("connection check", e);
 			throw e;
 		} finally {
-			if(rs != null) rs.close();
-			if(conn != null) conn.close();
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(conn != null) conn.close(); } catch(Exception e) {}
 		}
 	}
 	
@@ -184,8 +184,8 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			logger.error("table list", e);
 			throw e;
 		} finally {
-			if(rs != null) rs.close();
-			if(conn != null) conn.close();
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(conn != null) conn.close(); } catch(Exception e) {}
 		}
 		
 		return showTables;
@@ -222,8 +222,8 @@ public class TajoConnectionManager implements ConnectionInterfact {
 			logger.error(mapParam.get("table") + " table column", e);
 			throw e;
 		} finally {
-			if(rs != null) rs.close();
-			if(conn != null) conn.close();
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(conn != null) conn.close(); } catch(Exception e) {}
 		}
 		
 		return showTableColumns;

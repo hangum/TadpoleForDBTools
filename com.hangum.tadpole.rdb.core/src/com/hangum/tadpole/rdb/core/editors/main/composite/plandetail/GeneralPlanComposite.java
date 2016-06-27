@@ -70,10 +70,6 @@ public class GeneralPlanComposite extends AbstractPlanComposite {
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-//		Composite compositeTail = new Composite(this, SWT.NONE);
-//		compositeTail.setLayout(new GridLayout(1, false));
-//		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		Composite compositeBtn = new Composite(compositeBody, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		GridLayout gl_compositeBtn = new GridLayout(4, false);
@@ -122,36 +118,4 @@ public class GeneralPlanComposite extends AbstractPlanComposite {
 		TableUtil.packTable(tvQueryPlan.getTable());
 	}
 	
-	/**
-	 * 쿼리 결과 메시지를 출력합니다. 
-	 * 
-	 * @return
-	 */
-	public String getTailResultMsg() {
-		if(getRsDAO() == null) return "";
-		final TadpoleResultSet trs = getRsDAO().getDataList();
-		final RequestResultDAO rsDAO = getReqQuery().getResultDao();
-		
-		// 메시지를 출력합니다.
-		float longExecuteTime = (rsDAO.getEndDateExecute().getTime() - rsDAO.getStartDateExecute().getTime()) / 1000f;
-		String strResultMsg = ""; //$NON-NLS-1$
-		if(trs.isEndOfRead()) {
-			strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().Rows, longExecuteTime, Messages.get().Sec); //$NON-NLS-1$
-		} else {
-			if( (trs.getData().size() % GetPreferenceGeneral.getSelectLimitCount()) == 0) {
-				// 데이터가 한계가 넘어 갔습니다.
-				String strMsg = String.format(Messages.get().MainEditor_34, NumberFormatUtils.commaFormat(trs.getData().size()));
-				strResultMsg = String.format("%s (%s %s)", strMsg, longExecuteTime, Messages.get().Sec); //$NON-NLS-1$
-			} else { 
-				strResultMsg = String.format("%s %s (%s %s)", NumberFormatUtils.commaFormat(trs.getData().size()), Messages.get().Rows, longExecuteTime, Messages.get().Sec); //$NON-NLS-1$
-			}
-		}
-		
-		return strResultMsg;
-	}
-	
-
-	public PlanTailComposite getCompositeTail() {
-		return compositeTail;
-	}
 }

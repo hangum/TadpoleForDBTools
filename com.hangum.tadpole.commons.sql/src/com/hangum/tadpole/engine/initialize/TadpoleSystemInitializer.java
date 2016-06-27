@@ -25,12 +25,14 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.TadpoleEngineActivator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * <pre>
@@ -183,7 +185,8 @@ public class TadpoleSystemInitializer {
 			tadpoleEngineDB.setDb("SQLite"); //$NON-NLS-1$
 			tadpoleEngineDB.setDisplay_name("Tadpole Engine DB"); //$NON-NLS-1$
 			tadpoleEngineDB.setPasswd(""); //$NON-NLS-1$
-			tadpoleEngineDB.setUsers(""); //$NON-NLS-1$			
+			tadpoleEngineDB.setUsers(""); //$NON-NLS-1$
+			tadpoleEngineDB.setTdbUserID(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name());
 
 		} else {
 			try {
@@ -210,6 +213,8 @@ public class TadpoleSystemInitializer {
 					tadpoleEngineDB.setDisplay_name(DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT.getDBToString());
 					tadpoleEngineDB.setUsers(user);
 					tadpoleEngineDB.setPasswd(passwd);
+					
+					tadpoleEngineDB.setTdbUserID(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name());
 				}
 
 			} catch (Exception ioe) {

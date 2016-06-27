@@ -27,10 +27,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.AbstractPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.GeneralPlanComposite;
+import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.OraclePlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.swtdesigner.ResourceManager;
@@ -47,7 +50,7 @@ public class ResultPlanComposite extends Composite {
 	private Button btnAddVertical;
 	
 	private SashForm sashFormResult;
-	private GeneralPlanComposite compositeQueryPlan;
+	private AbstractPlanComposite compositeQueryPlan;
 
 	/**
 	 * Create the composite.
@@ -93,14 +96,14 @@ public class ResultPlanComposite extends Composite {
 		sashFormResult = new SashForm(this, SWT.HORIZONTAL);
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		compositeQueryPlan = new GeneralPlanComposite(sashFormResult, SWT.BORDER);
-		compositeQueryPlan.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-		GridLayout gl_compositeResult = new GridLayout(1, false);
-		gl_compositeResult.verticalSpacing = 2;
-		gl_compositeResult.horizontalSpacing = 2;
-		gl_compositeResult.marginHeight = 0;
-		gl_compositeResult.marginWidth = 2;
-		compositeQueryPlan.setLayout(gl_compositeResult);
+//		compositeQueryPlan = new GeneralPlanComposite(sashFormResult, SWT.BORDER);
+//		compositeQueryPlan.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+//		GridLayout gl_compositeResult = new GridLayout(1, false);
+//		gl_compositeResult.verticalSpacing = 2;
+//		gl_compositeResult.horizontalSpacing = 2;
+//		gl_compositeResult.marginHeight = 0;
+//		gl_compositeResult.marginWidth = 2;
+//		compositeQueryPlan.setLayout(gl_compositeResult);
 	}
 
 	public void setRDBResultComposite(ResultMainComposite resultMainComposite) {
@@ -109,10 +112,14 @@ public class ResultPlanComposite extends Composite {
 
 	public void setQueryPlanData(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
 	
-		if(!compositeQueryPlan.getCompositeTail().getBtnPinSelection()) {
+		if(compositeQueryPlan != null && !compositeQueryPlan.getCompositeTail().getBtnPinSelection()) {
 			compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
 		} else {
-			compositeQueryPlan = new GeneralPlanComposite(sashFormResult, SWT.BORDER);
+			if(rsDAO.getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || rsDAO.getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+				compositeQueryPlan = new OraclePlanComposite(sashFormResult, SWT.BORDER);
+			} else {
+				compositeQueryPlan = new GeneralPlanComposite(sashFormResult, SWT.BORDER);	
+			}
 			compositeQueryPlan.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);
 			gl_compositeResult.verticalSpacing = 2;

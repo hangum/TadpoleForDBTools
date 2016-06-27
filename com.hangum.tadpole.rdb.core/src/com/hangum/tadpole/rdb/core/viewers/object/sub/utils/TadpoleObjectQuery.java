@@ -71,8 +71,10 @@ public class TadpoleObjectQuery {
 					query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getSysName()).append("'");
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
-				}catch(Exception e){
+				} catch(Exception e) {
 					// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch(Exception e) {}
 				}
 
 				query = new StringBuffer();
@@ -88,6 +90,8 @@ public class TadpoleObjectQuery {
 					stmt.execute();
 				}catch(Exception e){
 					// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch(Exception e) {}
 				}
 
 				query = new StringBuffer();
@@ -106,14 +110,8 @@ public class TadpoleObjectQuery {
 		} catch (Exception e) {
 			logger.error("Comment change error ", e);
 		} finally {
-			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
+			try { if(stmt != null) stmt.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch (Exception e) {}
 		}
 	}
 	

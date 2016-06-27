@@ -34,14 +34,19 @@ public class OracleExecutePlanUtils {
 	 * @param planTableName
 	 * @throws Exception
 	 */
-	public static void plan(UserDBDAO userDB, String sql, String planTableName, java.sql.Connection javaConn, PreparedStatement stmt, String statement_id  ) throws Exception {
-			
-		String query = PartQueryUtil.makeExplainQuery(userDB,  sql);
-		query = StringUtils.replaceOnce(query, PublicTadpoleDefine.STATEMENT_ID, statement_id);
-		query = StringUtils.replaceOnce(query, PublicTadpoleDefine.DELIMITER, planTableName);
+	public static void plan(UserDBDAO userDB, String sql, String planTableName, java.sql.Connection javaConn, String statement_id  ) throws Exception {
 		
-		stmt = javaConn.prepareStatement( query );
-		stmt.execute();
+		PreparedStatement stmt = null;
+		try {
+			String query = PartQueryUtil.makeExplainQuery(userDB,  sql);
+			query = StringUtils.replaceOnce(query, PublicTadpoleDefine.STATEMENT_ID, statement_id);
+			query = StringUtils.replaceOnce(query, PublicTadpoleDefine.DELIMITER, planTableName);
+			
+			stmt = javaConn.prepareStatement( query );
+			stmt.execute();
+		} finally {
+			try { if(stmt != null) stmt.close(); } catch(Exception e) {}
+		}
 		
 	}
 }

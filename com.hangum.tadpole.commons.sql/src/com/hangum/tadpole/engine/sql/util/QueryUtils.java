@@ -106,7 +106,8 @@ public class QueryUtils {
 				return prepareStatement.executeUpdate();
 				
 			} finally {
-				try { prepareStatement.close();} catch(Exception e) {}
+				try { if(prepareStatement != null) prepareStatement.close();} catch(Exception e) {}
+				try { if(javaConn != null) javaConn.close();} catch(Exception e) {}
 			}
 		}  	// end which db
 		

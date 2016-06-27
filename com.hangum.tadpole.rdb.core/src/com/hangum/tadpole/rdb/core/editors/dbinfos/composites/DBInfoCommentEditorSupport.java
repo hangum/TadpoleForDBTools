@@ -181,6 +181,8 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					if (logger.isDebugEnabled())
 						logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 
 				try {
@@ -193,6 +195,8 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} catch (Exception e) {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo ");
@@ -204,6 +208,8 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} catch (Exception e) {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 
 				try {
@@ -216,20 +222,16 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} catch (Exception e) {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 			}
 
 		} catch (Exception e) {
 			logger.error("Comment change error ", e);
 		} finally {
-			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
+			try { if(stmt != null) stmt.close(); } catch (Exception e) { }
+			try { if(javaConn != null) javaConn.close(); } catch (Exception e) { }
 		}
 	}
 
@@ -262,6 +264,8 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} catch (Exception e) {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 
 				try {
@@ -272,6 +276,8 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} catch (Exception e) {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo,'table' ").append(" , '").append(dao.getTable_name()).append("'");
@@ -281,6 +287,8 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} catch (Exception e) {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 
 				try {
@@ -291,20 +299,16 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} catch (Exception e) {
 					logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
+				} finally {
+					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
 			}
 
 		} catch (Exception e) {
 			logger.error("Comment change error ", e);
 		} finally {
-			try {
-				stmt.close();
-			} catch (Exception e) {
-			}
-			try {
-				javaConn.close();
-			} catch (Exception e) {
-			}
+			try { if(stmt != null) stmt.close(); } catch (Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch (Exception e) { }
 		}
 	}
 

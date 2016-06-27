@@ -32,7 +32,7 @@ public class SQLQueryUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLQueryUtil.class);
 	
-	private int DATA_COUNT = 1000;
+	private int DATA_COUNT = 100000;
 	
 	private UserDBDAO userDB;
 	private String requestQuery;
@@ -64,23 +64,22 @@ public class SQLQueryUtil {
 		queryResultDAO = new QueryExecuteResultDTO();
 		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, nextPoint);		
 		ResultSet rs = null;
+		PreparedStatement stmt = null;
 		java.sql.Connection javaConn = null;
 		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 			
-			PreparedStatement stmt = null;
 			stmt = javaConn.prepareStatement(thisTimeQuery); 
-			
 			rs = stmt.executeQuery();//Query( selText );
 			
 			// table column의 정보
-			
 			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, true, rs, startPoint, nextPoint, strNullValue);
 		} finally {
-			try { rs.close(); } catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e){}
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(stmt != null) stmt.close();} catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
 		
 		return queryResultDAO;

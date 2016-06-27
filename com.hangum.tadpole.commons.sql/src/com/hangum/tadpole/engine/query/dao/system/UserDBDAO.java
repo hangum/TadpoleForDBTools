@@ -16,10 +16,12 @@ import java.util.List;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.TDBDBDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * <pre>
@@ -162,6 +164,8 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     protected DBAccessControlDAO dbAccessCtl = new DBAccessControlDAO();
     
     public UserDBDAO() {
+    	setTdbUserID(SessionManager.getEMAIL());
+    	setTdbLogingIP(RequestInfoUtils.getRequestIP());
 	}
    
     public DBDefine getDBDefine() {

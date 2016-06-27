@@ -87,8 +87,8 @@ public class ExecuteDDLCommand {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	private static boolean _executSQL(UserDBDAO userDB, QUERY_DDL_STATUS queryDDLStatus, QUERY_DDL_TYPE query_DDL_TYPE, String objName, String strSQL) throws TadpoleSQLManagerException, SQLException {
-		if(queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE |
-			queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP |
+		if(queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE ||
+			queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
 			queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
 		) {
 			java.sql.Connection javaConn = null;

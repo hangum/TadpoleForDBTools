@@ -33,6 +33,7 @@ import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -46,7 +47,9 @@ public class TadpoleSQLManager {
 	
 	/** db 인스턴스를 가지고 있는 아이 */
 	private static Map<String, SqlMapClient> dbManager = null;
-	private static Map<String, TadpoleMetaData> dbMetadata = new HashMap<String, TadpoleMetaData>();
+	private final static Map<String, TadpoleMetaData> dbMetadata = new HashMap<String, TadpoleMetaData>();
+	/** dbManager 의 키를 가지고 있는 친구 - logout시에 키를 사용하여 인스턴스를 삭제하기 위해 */
+	private final static Map<String, List<String>> managerKey = new HashMap<String, List<String>>();
 	
 	private static TadpoleSQLManager tadpoleSQLManager = null;
 	
@@ -99,9 +102,27 @@ public class TadpoleSQLManager {
 					// connection pool 을 가져옵니다.
 					sqlMapClient = SQLMap.getInstance(userDB);
 					dbManager.put(searchKey, sqlMapClient);
+					List<String> listSearchKey = managerKey.get(userDB.getTdbUserID());
+					if(listSearchKey == null) {
+						listSearchKey = new ArrayList<String>();
+						listSearchKey.add(searchKey);
+						
+						managerKey.put(userDB.getTdbUserID(), listSearchKey);
+					} else {
+						listSearchKey.add(searchKey);
+					}
 					
 					// metadata를 가져와서 저장해 놓습니다.
 					conn = sqlMapClient.getDataSource().getConnection();
+					
+//					Properties propClient = new Properties();
+//					propClient.put("ApplicationName", 	SystemDefine.getSystemInfo());
+//					propClient.put("ClientUser", 		userDB.getTdbUserID()==null?"not set":userDB.getTdbUserID());
+//					propClient.put("ClientHostname", 	userDB.getTdbLogingIP());
+//					conn.setClientInfo(propClient);
+					
+					// DBSafer를 위한 초기 검증코드를 삽입합니다.
+					checkAccessControl(userDB);
 					
 					// don't belive keyword. --;;
 					setMetaData(searchKey, userDB, conn.getMetaData());
@@ -125,6 +146,29 @@ public class TadpoleSQLManager {
 //		}
 
 		return sqlMapClient;
+	}
+	
+	/**
+	 * 접근제어를 위한 테스트 코드
+	 * 
+	 * @param userDB
+	 */
+	private static void checkAccessControl(UserDBDAO userDB) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("*** check access control [start]*** ");
+		String checkSQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID());
+		
+		switch (userDB.getDBDefine()) {
+		case ORACLE_DEFAULT:
+			if(logger.isDebugEnabled()) logger.debug(checkSQL + " select * from dual;");
+			QueryUtils.executeQuery(userDB, checkSQL + "\n select * from dual;", 0, 100, "");
+			break;
+		case MYSQL_DEFAULT:
+		case MARIADB_DEFAULT:
+			if(logger.isDebugEnabled()) logger.debug(checkSQL + " SELECT TABLE_NAME name FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0;");
+			QueryUtils.executeQuery(userDB, checkSQL + "\n SELECT TABLE_NAME name FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0;", 0, 100, "");
+			break;
+		}			
+		if(logger.isDebugEnabled()) logger.debug("*** check access control [end]*** ");
 	}
 
 //	/**
@@ -273,6 +317,16 @@ public class TadpoleSQLManager {
 	}
 	
 	/**
+	 * 
+	 */
+	public static void removeAllInstance(String id) {
+		List<String> listKeyMap = managerKey.get(id);
+		for (String searchKey : listKeyMap) {
+			removeInstance(searchKey);
+		}
+	}
+	
+	/**
 	 * DB 정보를 삭제한다.
 	 * 
 	 * @param dbInfo
@@ -280,11 +334,30 @@ public class TadpoleSQLManager {
 	public static void removeInstance(UserDBDAO dbInfo) {
 		synchronized (dbManager) {
 			String key = getKey(dbInfo);
-			SqlMapClient sqlMapClient = dbManager.remove(key);
-			TadpoleMetaData metaData = dbMetadata.remove(key);
-			
-			sqlMapClient = null;
+			removeInstance(key);
+		}
+	}
+	
+	/**
+	 * remove instance
+	 * @param searchKey
+	 */
+	private static void removeInstance(String searchKey) {
+		if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLManager] remove Instance: " + searchKey);
+		synchronized (dbManager) {
+			TadpoleMetaData metaData = dbMetadata.remove(searchKey);
 			metaData = null;
+			
+			SqlMapClient sqlMapClient = null;
+			try {
+				sqlMapClient = dbManager.remove(searchKey);
+				BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
+				basicDataSource.close();
+			} catch (Exception e) {
+				logger.error("remove connection", e);
+			} finally {
+				sqlMapClient = null;	
+			}
 		}
 	}
 	
@@ -295,9 +368,10 @@ public class TadpoleSQLManager {
 	 */
 	public static String getKey(UserDBDAO dbInfo) {
 		return dbInfo.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
-				dbInfo.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
+//				dbInfo.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
+//				dbInfo.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
+				dbInfo.getUrl()  		+ //PublicTadpoleDefine.DELIMITER +
 				dbInfo.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
 	}
+
 }

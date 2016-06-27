@@ -22,9 +22,9 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 	
 	/* 참조 : http://devhome.tistory.com/22 */
 	public static final String TMP_GET_PARTDATA = "SELECT * FROM (	" +
-												 "    SELECT tdb_a.*, ROWNUM AS tdb_rnum, COUNT(*) OVER() AS tdb_totcnt  " +
-												 "    FROM ( %s ) tdb_a " +
-												 " 	) WHERE tdb_rnum > %s AND tdb_rnum <= %s";
+												 "    SELECT tdb__a.*, ROWNUM AS " + TDB_CUSTOME_COLUMN +
+												 "    FROM ( %s ) tdb__a " +
+												 " 	) WHERE " + TDB_CUSTOME_COLUMN + " > %s AND " + TDB_CUSTOME_COLUMN + " <= %s";
 	
 	/** table - oracle */
 	public static final String TMP_CREATE_TABLE_STMT = "CREATE TABLE sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 

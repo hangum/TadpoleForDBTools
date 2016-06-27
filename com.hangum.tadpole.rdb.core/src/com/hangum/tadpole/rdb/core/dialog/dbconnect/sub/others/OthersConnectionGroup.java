@@ -74,7 +74,11 @@ public abstract class OthersConnectionGroup extends AbstractOthersConnection {
 		btnReadOnlyConnection.setText(Messages.get().ReadOnly);
 		
 		btnAutoCommit = new Button(this, SWT.CHECK);
-		btnAutoCommit.setSelection(true);
+		if(selectDB == DBDefine.ORACLE_DEFAULT) {
+			btnAutoCommit.setSelection(false);
+		} else {
+			btnAutoCommit.setSelection(true);
+		}
 		btnAutoCommit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnAutoCommit.setText(Messages.get().OthersConnectionRDBGroup_2);
 		

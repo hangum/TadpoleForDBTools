@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-pool-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/joda-time-2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/sqlite/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mongo/mongo-java-driver-3.2.0.jar"/>
@@ -9,8 +11,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src_test"/>
-	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar" sourcepath="/Users/hangum/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-pool-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/dbutils/commons-dbutils-1.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="output" path="bin"/>

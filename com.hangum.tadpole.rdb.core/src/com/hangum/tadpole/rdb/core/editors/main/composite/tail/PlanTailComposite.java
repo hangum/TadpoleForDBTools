@@ -15,7 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
-import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.GeneralPlanComposite;
+import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.AbstractPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
@@ -27,7 +27,7 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 public class PlanTailComposite extends AbstractTailComposite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(PlanTailComposite.class);
-	private GeneralPlanComposite abstractResultComp;
+	private AbstractPlanComposite abstractResultComp;
 	
 	/**
 	 * Create the composite.
@@ -39,7 +39,7 @@ public class PlanTailComposite extends AbstractTailComposite {
 		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
-		abstractResultComp = (GeneralPlanComposite)reqAbstractResult;
+		abstractResultComp = (AbstractPlanComposite)reqAbstractResult;
 	}
 
 	/**

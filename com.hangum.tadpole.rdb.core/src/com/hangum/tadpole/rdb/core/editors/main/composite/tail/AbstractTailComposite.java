@@ -99,6 +99,7 @@ public abstract class AbstractTailComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				if(getRSDao() == null || getRSDao().getDataList() == null) return;
 				
+				// result set download
 				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), getRequestQuery(), findTableName(), getRSDao());
 				dialog.open();
 			}

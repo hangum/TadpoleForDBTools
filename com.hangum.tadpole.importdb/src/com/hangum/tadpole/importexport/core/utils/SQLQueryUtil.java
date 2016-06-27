@@ -113,8 +113,8 @@ public class SQLQueryUtil {
 			}
 
 		} finally {
-			try { rs.close(); } catch(Exception e) {}
-			try { javaConn.close(); } catch(Exception e){}
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
 	}
 	
