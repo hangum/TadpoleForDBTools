@@ -5,10 +5,13 @@ import java.util.List;
 
 public class OraclePlanDAO {
 	String level;
-	String query;
+	String operation;
 	String cost;
 	String rows;
 	String bytes;
+	String name;
+	String filter;
+	String access;
 	int pos;
 	
 	List<OraclePlanDAO> listChildren = new ArrayList<>();
@@ -27,12 +30,12 @@ public class OraclePlanDAO {
 	}
 
 
-	public String getQuery() {
-		return query;
+	public String getOperation() {
+		return operation;
 	}
 
-	public void setQuery(String query) {
-		this.query = query;
+	public void setOperation(String operation) {
+		this.operation = operation;
 	}
 
 	public String getCost() {
@@ -58,6 +61,36 @@ public class OraclePlanDAO {
 	public void setBytes(String bytes) {
 		this.bytes = bytes;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getFilter() {
+		return filter;
+	}
+
+
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+
+
+	public String getAccess() {
+		return access;
+	}
+
+
+	public void setAccess(String access) {
+		this.access = access;
+	}
+
 
 	public int getPos() {
 		return pos;
