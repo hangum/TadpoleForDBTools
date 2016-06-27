@@ -504,7 +504,7 @@ public class ResultSetComposite extends Composite {
 					} else {
 						if(reqQuery.isStatement()) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName, strNullValue));
+								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName, ""));
 							} else {
 								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0, strNullValue);
 								if(rsDAO.getDataList() == null) {
