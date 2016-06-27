@@ -16,7 +16,6 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.rap.rwt.RWT;
 
 /**
  * 전역 변수 정의 
@@ -29,7 +28,7 @@ public class PublicTadpoleDefine {
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
 	/** sert user info */
-	public static final String CERT_USER_INFO = "/***<cert_user_info><ip:%s><id:%s>*/";
+	public static final String CERT_USER_INFO = "/***<cert_user_info><ip:%s><id:%s><app:tadpole>*/";
 	
 	/** defiee default time zone*/
 	public static final String DEFAULT_TIME_ZONE = "Asia/Seoul";
@@ -157,8 +156,8 @@ public class PublicTadpoleDefine {
 	public static Properties getSQLClientInfo() {
 		Properties prop = new Properties();
 		prop.setProperty("ApplicationName", String.format("%s %s %s", SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.RELEASE_DATE));
-		prop.setProperty("ClientUser", 		RWT.getRequest().getRemoteHost());
-		prop.setProperty("ClientHostname", 	RWT.getRequest().getLocalAddr());
+//		prop.setProperty("ClientUser", 		RWT.getRequest().getRemoteHost());
+//		prop.setProperty("ClientHostname", 	RWT.getRequest().getLocalAddr());
 		
 		return prop;
 	}
@@ -238,6 +237,9 @@ public class PublicTadpoleDefine {
 	
 	/** define SQL, ERD shared type */
 	public static enum SHARED_TYPE {PUBLIC, PRIVATE};
+	
+	/** executed sql type */
+	public static enum SQL_STATEMENT_TYPE {NONE, PREPARED_STATEMENT};
 	
 	/** executed sql history type */
 	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION, API};

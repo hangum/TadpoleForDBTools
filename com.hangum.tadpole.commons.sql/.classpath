@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/ibatis-2.3.4.726-patched-tadpole.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/orai18n.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar"/>
@@ -8,7 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/driver/sqlite/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mongo/mongo-java-driver-3.2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/ibatis-2.3.4.726-patched-tadpole.jar" sourcepath="libs/ibatis-sqlmap-2.3.4.726-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>

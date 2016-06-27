@@ -16,6 +16,8 @@ import java.io.StringReader;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
@@ -30,6 +32,9 @@ public class SQLMap {
 	private final static String USERNAME 	= "${JDBC.Username}";
 	private final static String PASSWORD 	= "${JDBC.Password}";
 	
+	private final static String TDB_SPECIAL_INITIALSTRING_0 = "${TDB.SPECIAL.INITIALSTRING.0}";
+	private final static String TDB_SPECIAL_INITIALSTRING_1 = "${TDB.SPECIAL.INITIALSTRING.1}";
+
 	/**
 	 * Logger for this class
 	 */
@@ -53,7 +58,23 @@ public class SQLMap {
 		
 		config = config.replace(URL, StringEscapeUtils.escapeXml(dbInfo.getUrl()));	
 		config = config.replace(USERNAME, StringEscapeUtils.escapeXml(dbInfo.getUsers()));
-		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml(dbInfo.getPasswd())) ;
+		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml(dbInfo.getPasswd()));
+		
+		String HELLO_SQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, dbInfo.getTdbLogingIP(), dbInfo.getTdbUserID());
+		String APPLICATION_NAME_SQL = "";
+		if(dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " select * from dual;");
+			HELLO_SQL = HELLO_SQL + "\n select * from dual";
+			
+			APPLICATION_NAME_SQL = String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub(%s)', '')", dbInfo.getTdbUserID());
+		} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT || dbInfo.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " SELECT 1;");
+			HELLO_SQL = HELLO_SQL + "\n SELECT 1";
+		} else {
+			if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " Do not execute query.");
+		}
+		config = config.replace(TDB_SPECIAL_INITIALSTRING_0, StringEscapeUtils.escapeXml(HELLO_SQL)) ;
+		config = config.replace(TDB_SPECIAL_INITIALSTRING_1, StringEscapeUtils.escapeXml(APPLICATION_NAME_SQL)) ;
 		
 		return config;		
 	}

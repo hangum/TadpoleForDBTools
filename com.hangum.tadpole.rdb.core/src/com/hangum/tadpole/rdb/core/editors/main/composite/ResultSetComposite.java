@@ -11,6 +11,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -52,6 +53,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -336,10 +338,13 @@ public class ResultSetComposite extends Composite {
 				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
 				if(Dialog.OK == epd.open()) {
 					ParameterObject paramObj = epd.getParameterObject();
-					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-					reqQuery.setSql(repSQL);
+//					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+//					reqQuery.setSql(repSQL);
+//					if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
 					
-					if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
+					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
+					reqQuery.setStatementParameter(paramObj.getParameter());
+					
 					return true;
 				} else {
 					return false;
@@ -360,10 +365,14 @@ public class ResultSetComposite extends Composite {
 				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
 				if(Dialog.OK == epd.open()) {
 					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-					reqQuery.setSql(repSQL);
+//					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+//					reqQuery.setSql(repSQL);
 					
-					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + repSQL); //$NON-NLS-1$
+					reqQuery.setSql(strSQL);
+					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
+					reqQuery.setStatementParameter(paramObj.getParameter());
+					
+					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + strSQL); //$NON-NLS-1$
 					return true;
 				} else {
 					return false;
@@ -382,10 +391,14 @@ public class ResultSetComposite extends Composite {
 			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
 			if(Dialog.OK == epd.open()) {
 				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-				String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-				reqQuery.setSql(repSQL);
+//				String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+//				reqQuery.setSql(repSQL);
 				
-				if(logger.isDebugEnabled()) logger.debug("[mybatisShapeUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
+				reqQuery.setSql(strSQL);
+				reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
+				reqQuery.setStatementParameter(paramObj.getParameter());
+				
+				if(logger.isDebugEnabled()) logger.debug("[mybatisShapeUtil] User parameter query is  " + strSQL); //$NON-NLS-1$
 				return true;
 			} else {
 				return false;
@@ -400,10 +413,14 @@ public class ResultSetComposite extends Composite {
 				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
 				if(Dialog.OK == epd.open()) {
 					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-					reqQuery.setSql(repSQL);
+//					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+//					reqQuery.setSql(repSQL);
 					
-					if(logger.isDebugEnabled()) logger.debug("[mybatisDollarUtil] User parameter query is  " + repSQL); //$NON-NLS-1$
+					reqQuery.setSql(strSQL);
+					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
+					reqQuery.setStatementParameter(paramObj.getParameter());
+					
+					if(logger.isDebugEnabled()) logger.debug("[mybatisDollarUtil] User parameter query is  " + strSQL); //$NON-NLS-1$
 					return true;
 				} else {
 					return false;
@@ -629,6 +646,7 @@ public class ResultSetComposite extends Composite {
 		ResultSet resultSet = null;
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
+		PreparedStatement preparedStatement = null;
 		
 		try {
 			if(DBDefine.TAJO_DEFAULT == getUserDB().getDBDefine()) {
@@ -644,31 +662,62 @@ public class ResultSetComposite extends Composite {
 			if(javaConn == null) {
 				throw new Exception("Cann't create session. Please check system.");
 			}
-			statement = javaConn.createStatement();
 			
-			statement.setFetchSize(intSelectLimitCnt);
-			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
-			) {
-				statement.setQueryTimeout(queryTimeOut);
-				statement.setMaxRows(intSelectLimitCnt);
-			}
-			
-			// check stop thread
-			esCheckStop = Executors.newSingleThreadExecutor();
-			CheckStopThread cst = new CheckStopThread(statement);
-			cst.setName("TDB Query Stop checker"); //$NON-NLS-1$
-			esCheckStop.execute(cst);
-			
-			// execute query
-			execServiceQuery = Executors.newSingleThreadExecutor();
-			if(intStartCnt == 0) {
-				resultSet = runSQLSelect(statement, strSQL);
-			} else {
-				strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
+			// if statement type is preparedstatement?
+			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
+				statement = javaConn.createStatement();
 				
-				if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
-				resultSet = runSQLSelect(statement, strSQL);
+				statement.setFetchSize(intSelectLimitCnt);
+				if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+						getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
+				) {
+					statement.setQueryTimeout(queryTimeOut);
+					statement.setMaxRows(intSelectLimitCnt);
+				}
+				
+				// check stop thread
+				esCheckStop = Executors.newSingleThreadExecutor();
+				CheckStopThread cst = new CheckStopThread(statement);
+				cst.setName("TDB Query Stop checker"); //$NON-NLS-1$
+				esCheckStop.execute(cst);
+				
+				// execute query
+				execServiceQuery = Executors.newSingleThreadExecutor();
+				if(intStartCnt == 0) {
+					resultSet = runSQLSelect(statement, strSQL);
+				} else {
+					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
+					
+					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
+					resultSet = runSQLSelect(statement, strSQL);
+				}
+			} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
+				preparedStatement = javaConn.prepareStatement(strSQL);
+				
+				preparedStatement.setFetchSize(intSelectLimitCnt);
+				if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
+						getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
+				) {
+					preparedStatement.setQueryTimeout(queryTimeOut);
+					preparedStatement.setMaxRows(intSelectLimitCnt);
+				}
+				
+				// check stop thread
+				esCheckStop = Executors.newSingleThreadExecutor();
+				CheckStopThread cst = new CheckStopThread(preparedStatement);
+				cst.setName("TDB Query Stop checker"); //$NON-NLS-1$
+				esCheckStop.execute(cst);
+				
+				// execute query
+				execServiceQuery = Executors.newSingleThreadExecutor();
+				if(intStartCnt == 0) {
+					resultSet = runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
+				} else {
+					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
+					
+					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
+					resultSet = runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
+				}
 			}
 			
 			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt, strNullValue);
@@ -676,7 +725,7 @@ public class ResultSetComposite extends Composite {
 			throw e;
 		} finally {
 			isCheckRunning = false;
-			
+			try { if(preparedStatement != null) preparedStatement.close(); } catch(Exception e) {}
 			try { if(statement != null) statement.close(); } catch(Exception e) {}
 			try { if(resultSet != null) resultSet.close(); } catch(Exception e) {}
 
@@ -688,6 +737,32 @@ public class ResultSetComposite extends Composite {
 		return queryResultDAO;
 	}
 	
+	/**
+	 * prepared statment 로 실행한다.
+	 * 
+	 * @param preparedStatement
+	 * @param statementParameter
+	 * @return
+	 */
+	private ResultSet runSQLSelect(final PreparedStatement preparedStatement, final Object[] statementParameter) throws Exception {
+		
+		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
+			@Override
+			public ResultSet call() throws SQLException {
+				for (int i=1; i<=statementParameter.length; i++) {
+					preparedStatement.setObject(i, statementParameter[i-1]);					
+				}
+				return preparedStatement.executeQuery();
+			}
+		});
+		
+		/* SELECT ALRM_DATE 와같은 select다음에 한글 모음이 들어갔을때 아래와 같은 에러가 발생한다.
+		 * Caused by: java.lang.NullPointerException
+			at oracle.jdbc.driver.T4C8Oall.getNumRows(T4C8Oall.java:973)
+		 */
+		return queryFuture.get();
+	}
+
 	/**
 	 * select문을 실행합니다.
 	 * 

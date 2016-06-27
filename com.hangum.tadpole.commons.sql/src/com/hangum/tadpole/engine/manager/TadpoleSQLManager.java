@@ -33,7 +33,6 @@ import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -43,7 +42,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class TadpoleSQLManager {
+public class TadpoleSQLManager extends AbstractTadpoleManager {
 	private static final Logger logger = Logger.getLogger(TadpoleSQLManager.class);
 	
 	/** db 인스턴스를 가지고 있는 아이 */
@@ -81,87 +80,58 @@ public class TadpoleSQLManager {
 		Connection conn = null;
 		
 //		synchronized (dbManager) {
-			String searchKey = getKey(userDB);
-			try {
-				sqlMapClient = dbManager.get( searchKey );
-				if(sqlMapClient == null) {
+		String searchKey = getKey(userDB);
+		try {
+			sqlMapClient = dbManager.get( searchKey );
+			if(sqlMapClient == null) {
 
-					// oracle 일 경우 설정 
-					try { 
-						if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
-								userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
-							DriverManager.setLoginTimeout(10);
-							
-							if(userDB.getLocale() != null && !"".equals(userDB.getLocale())) {
-								Locale.setDefault(new Locale(userDB.getLocale()));
-							}
+				// oracle 일 경우 설정 
+				try { 
+					if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
+							userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+						DriverManager.setLoginTimeout(10);
+						if(userDB.getLocale() != null && !"".equals(userDB.getLocale())) {
+							Locale.setDefault(new Locale(userDB.getLocale()));
 						}
-					} catch(Exception e) {
-						logger.error("set locale error", e);
 					}
-					
-					// connection pool 을 가져옵니다.
-					sqlMapClient = SQLMap.getInstance(userDB);
-					dbManager.put(searchKey, sqlMapClient);
-					List<String> listSearchKey = managerKey.get(userDB.getTdbUserID());
-					if(listSearchKey == null) {
-						listSearchKey = new ArrayList<String>();
-						listSearchKey.add(searchKey);
-						
-						managerKey.put(userDB.getTdbUserID(), listSearchKey);
-					} else {
-						listSearchKey.add(searchKey);
-					}
-					
-					// metadata를 가져와서 저장해 놓습니다.
-					conn = sqlMapClient.getDataSource().getConnection();
-										
-					// DBSafer를 위한 초기 검증코드를 삽입합니다.
-					checkAccessControl(userDB);
-					
-					// don't belive keyword. --;;
-					setMetaData(searchKey, userDB, conn.getMetaData());
+				} catch(Exception e) {
+					logger.error("set locale error", e);
 				}
 				
-			} catch(Exception e) {
-//				String strAddReqInfo = "";
-//				try {
-//					strAddReqInfo = RequestInfoUtils.requestInfo("db connection exception ", SessionManager.getEMAIL());
-//				} catch(Exception ee) {
-//					logger.error("request error", ee);
-//				}
-				logger.error("===\n get DB Instance \n seq is " + userDB.getSeq() + "\n" , e);
+				// connection pool 을 가져옵니다.
+				sqlMapClient = SQLMap.getInstance(userDB);
+				dbManager.put(searchKey, sqlMapClient);
+				List<String> listSearchKey = managerKey.get(userDB.getTdbUserID());
+				if(listSearchKey == null) {
+					listSearchKey = new ArrayList<String>();
+					listSearchKey.add(searchKey);
+					
+					managerKey.put(userDB.getTdbUserID(), listSearchKey);
+				} else {
+					listSearchKey.add(searchKey);
+				}
 				
-				dbManager.remove(searchKey);
+				// metadata를 가져와서 저장해 놓습니다.
+				conn = sqlMapClient.getDataSource().getConnection();
+
+				// connection initialize
+//				setConnectionInitialize(userDB, conn);
 				
-				throw new TadpoleSQLManagerException(e);
-			} finally {
-				if(conn != null) try {conn.close();} catch(Exception e) {}
+				// don't belive keyword. --;;
+				setMetaData(searchKey, userDB, conn.getMetaData());
 			}
-//		}
+			
+		} catch(Exception e) {
+			logger.error("===\n get DB Instance \n seq is " + userDB.getSeq() + "\n" , e);
+			
+			dbManager.remove(searchKey);
+			
+			throw new TadpoleSQLManagerException(e);
+		} finally {
+			if(conn != null) try {conn.close();} catch(Exception e) {}
+		}
 
 		return sqlMapClient;
-	}
-	
-	/**
-	 * 접근제어를 위한 테스트 코드
-	 * 
-	 * @param userDB
-	 */
-	private static void checkAccessControl(UserDBDAO userDB) throws Exception {
-		if(logger.isInfoEnabled()) logger.info("*** check access control [start]*** ");
-		String checkSQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID());
-		
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			if(logger.isInfoEnabled()) logger.info(checkSQL + " select * from dual;");
-			QueryUtils.executeQuery(userDB, checkSQL + "\n select * from dual;", 0, 100, "");
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-			if(logger.isInfoEnabled()) logger.info(checkSQL + " SELECT TABLE_NAME name FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0;");
-			QueryUtils.executeQuery(userDB, checkSQL + "\n SELECT TABLE_NAME name FROM INFORMATION_SCHEMA.TABLES WHERE 1 = 0;", 0, 100, "");
-		} else {
-			if(logger.isInfoEnabled()) logger.info(checkSQL + " Do not execute query.");
-		}
-		if(logger.isInfoEnabled()) logger.info("*** check access control [end]*** ");
 	}
 	
 	/**
@@ -173,6 +143,7 @@ public class TadpoleSQLManager {
 	 * @return
 	 */
 	public static void setMetaData(String searchKey, final UserDBDAO userDB, DatabaseMetaData dbMetaData) throws Exception {
+		
 		// 엔진디비는 메타데이터를 저장하지 않는다.
 		if(userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_DEFAULT || userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) return;
 				
@@ -205,15 +176,6 @@ public class TadpoleSQLManager {
 				tadpoleMetaData = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.NONE);
 		}
 		
-//		SQLConstantFactory factory = new SQLConstantFactory();
-//		SQLConstants sqlConstants = factory.getDB(userDB);
-//		tmd.setKeywords(
-//				StringUtils.replace(
-//						sqlConstants.keyword() + "|" + sqlConstants.function() + "|" + sqlConstants.constant() + "|" +sqlConstants.variable(),
-//						"|",
-//						","
-//						)
-//				);
 		// set keyword
 		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			// not support keyword http://sqlite.org/lang_keywords.html
@@ -249,10 +211,7 @@ public class TadpoleSQLManager {
 	public static Map<String, SqlMapClient> getDbManager() {
 		return dbManager;
 	}
-//	public static Map<String, TadpoleMetaData> getDbMetadata() {
-//		return dbMetadata;
-//	}
-//	
+
 	/**
 	 * dbcp pool info
 	 * 

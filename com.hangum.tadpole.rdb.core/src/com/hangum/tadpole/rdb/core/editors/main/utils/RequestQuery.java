@@ -56,6 +56,11 @@ public class RequestQuery implements Cloneable {
 	/** 에디터가 실행 가능한 쿼리로 수정한 */
 	private String sql = "";
 	
+	/** 현재 실행 중인 sql statement type */
+	private PublicTadpoleDefine.SQL_STATEMENT_TYPE sqlStatementType = PublicTadpoleDefine.SQL_STATEMENT_TYPE.NONE;
+	/** SQL이 preparedStatement일 경우 SQL_STATEMENT_TYPE.PREPARED_STATEMENT 상태일때의 파라미터 종류 */ 
+	private Object[] statementParameter = null;
+	
 	private OBJECT_TYPE dbAction = OBJECT_TYPE.TABLES;
 	
 	/** 사용자 쿼리를 지정한다 */
@@ -77,6 +82,7 @@ public class RequestQuery implements Cloneable {
 	private QUERY_DDL_TYPE sqlDDLType = QUERY_DDL_TYPE.UNKNOWN;
 	private String sqlObjectName = "";
 	private QUERY_DDL_STATUS queryStatus = QUERY_DDL_STATUS.UNKNOWN;
+	
 	
 	/** query result */
 	private RequestResultDAO resultDao = new RequestResultDAO();
@@ -364,13 +370,35 @@ public class RequestQuery implements Cloneable {
 	public void setQueryStatus(QUERY_DDL_STATUS queryStatus) {
 		this.queryStatus = queryStatus;
 	}
+	
+	public PublicTadpoleDefine.SQL_STATEMENT_TYPE getSqlStatementType() {
+		return sqlStatementType;
+	}
+
+	public void setSqlStatementType(PublicTadpoleDefine.SQL_STATEMENT_TYPE sqlStatementType) {
+		this.sqlStatementType = sqlStatementType;
+	}
+	
+	/**
+	 * @return the statementParameter
+	 */
+	public Object[] getStatementParameter() {
+		return statementParameter;
+	}
+
+	/**
+	 * @param statementParameter the statementParameter to set
+	 */
+	public void setStatementParameter(Object[] statementParameter) {
+		this.statementParameter = statementParameter;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "RequestQuery [userIp=" + userIp + ", isAutoCommit=" + isAutoCommit + ", originalSql=" + originalSql
+		return "RequestQuery [userIp=" + userIp + ", isAutoCommit=" + isAutoCommit + ", originalSql=" + originalSql + ", sqlStatementType=" + sqlStatementType
 				+ ", sql=" + sql + ", \ndbAction=" + dbAction + ", mode=" + mode + ", executeType=" + executeType
 				+ ", \nisStatement=" + isStatement + ", sqlType=" + sqlType + ", sqlDMLType=" + sqlDMLType
 				+ ", \nsqlDDLType=" + sqlDDLType + ", sqlObjectName=" + sqlObjectName + ", queryStatus=" + queryStatus
