@@ -641,6 +641,9 @@ public class ResultSetComposite extends Composite {
 					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEmail, getUserDB());
 				}
 			}
+			if(javaConn == null) {
+				throw new Exception("Cann't create session. Please check system.");
+			}
 			statement = javaConn.createStatement();
 			
 			statement.setFetchSize(intSelectLimitCnt);

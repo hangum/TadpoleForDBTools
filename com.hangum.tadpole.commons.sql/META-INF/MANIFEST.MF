@@ -21,7 +21,9 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/driver/sqlite/sqlite-jdbc-3.7.2.jar,
  libs/apache/joda-time-2.3.jar,
  libs/apache/dbcp/commons-dbcp-1.4.jar,
- libs/apache/dbcp/commons-pool-1.6.jar
+ libs/apache/dbcp/commons-pool-1.6.jar,
+ libs/driver/oracle/ojdbc6.jar,
+ libs/driver/oracle/orai18n.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.db.metadata.constants,

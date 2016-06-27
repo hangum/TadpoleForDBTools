@@ -185,17 +185,24 @@ public class SQLUtil {
 
 		// 주석제거.
 		// oracle, tibero, altibase은 힌트가 주석 문법을 쓰므로 주석을 삭제하지 않는다.
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | 
-				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT |
-				userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
+				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
 		) {
 			// ignore code
 		} else {
 			exeSQL = removeComment(exeSQL);
 		}
+		
+		// 주석으로 종료되는 행이면 지우지 않도록 수정.
 		exeSQL = StringUtils.trimToEmpty(exeSQL);
-		exeSQL = StringUtils.removeEnd(exeSQL, "/");
+		if(!StringUtils.endsWith(exeSQL, "*/")) { 
+			exeSQL = StringUtils.removeEnd(exeSQL, "/");
+		}
 		exeSQL = StringUtils.trimToEmpty(exeSQL);
+		
 		//TO DO 오라클 프로시저등의 오브젝트는 마지막 딜리미터(;)가 없으면 오류입니다. 하여서 이 코드는 문제입니다.
 		exeSQL = StringUtils.removeEnd(exeSQL, PublicTadpoleDefine.SQL_DELIMITER);
 		
@@ -394,7 +401,7 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String getConstraintName(TableConstraintsDAO tc) {
-		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getTABLE_NAME();
+		if("".equals(tc.getSchema_name()) || null == tc.getSchema_name()) return tc.getTABLE_NAME();
 		else return String.format("%s.%s", tc.getSchema_name(), tc.getTABLE_NAME());
 	}
 	
@@ -405,7 +412,7 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String getProcedureName(ProcedureFunctionDAO tc) {
-		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getName();
+		if("".equals(tc.getSchema_name()) || null == tc.getSchema_name()) return tc.getName();
 		else return String.format("%s.%s", tc.getSchema_name(), tc.getName());
 	}
 	
