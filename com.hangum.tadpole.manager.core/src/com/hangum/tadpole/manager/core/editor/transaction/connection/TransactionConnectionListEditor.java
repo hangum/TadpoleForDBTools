@@ -10,8 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.editor.transaction.connection;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -42,14 +45,16 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.manager.DBCPInfoDAO;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * Transaction Connection List
@@ -321,7 +326,18 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 */
 	private void initTransactionUI() {
 		transactionBtnInit(false);
-		tvTransaction.setInput(TadpoleSQLTransactionManager.getDbManager().values());
+		
+		List<TransactionDAO> listTransaction = new ArrayList<TransactionDAO>();
+		final String strLoginId = SessionManager.getEMAIL();
+		HashMap<String, TransactionDAO> mapList = TadpoleSQLTransactionManager.getDbManager();
+		for (String key : mapList.keySet()) {
+			String[] strKey = StringUtils.split(key, PublicTadpoleDefine.DELIMITER);
+			
+			if(strLoginId.equals(strKey[0])) {
+				listTransaction.add(mapList.get(key));
+			}
+		}
+		tvTransaction.setInput(listTransaction);
 	}
 	
 	/**

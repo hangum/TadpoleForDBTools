@@ -25,8 +25,8 @@
 			<property name="JDBC.Password" 			value="${JDBC.Password}" />
 
 			<!--OPTIONAL PROPERTIES BELOW -->
-			<property name="Pool.MaximumActiveConnections" 	value="50" />
-			<property name="Pool.MaximumIdleConnections" 	value="5" />
+			<property name="Pool.MaximumActiveConnections" 	value="1000" />
+			<property name="Pool.MaximumIdleConnections" 	value="10" />
 			<property name="Pool.MaximumWait" 				value="1000" />
 			<!--
 				Use of the validation query can be problematic. If you have

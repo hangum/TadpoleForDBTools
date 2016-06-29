@@ -48,33 +48,6 @@ public class TadpoleSQLTransactionManager {
 	}
 	
 	/**
-	 * 사용자가 로그 아웃등으로 나갈때 transaction commit합니다. 
-	 * 
-	 * @param userId
-	 */
-	public static void executeRollback(final String userId) {
-		Set<String> keys = dbManager.keySet();
-		for (String searchKey : keys) {
-			if(StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
-				if(logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
-				
-				TransactionDAO transactionDAO = dbManager.get(searchKey);
-				if(transactionDAO != null) {
-					Connection conn = transactionDAO.getConn();
-					try {
-						conn.rollback();
-					} catch(Exception e) {
-						logger.error("logout transaction commit", e);
-					} finally {
-						try { if(conn != null) conn.close(); } catch(Exception e) {}
-					}
-					removeInstance(userId, searchKey);
-				}
-			}
-		}
-	}
-	
-	/**
 	 * java.sql.connection을 생성하고 관리합니다.
 	 * 
 	 * @param userId
@@ -184,7 +157,7 @@ public class TadpoleSQLTransactionManager {
 				logger.debug("\t rollback [userId]" + searchKey);
 				logger.debug("=============================================================================");
 			}
-			TransactionDAO transactionDAO = dbManager.get(dbManager);
+			TransactionDAO transactionDAO = dbManager.get(searchKey);
 			
 			if(transactionDAO != null) {
 				Connection conn = transactionDAO.getConn();
@@ -200,6 +173,33 @@ public class TadpoleSQLTransactionManager {
 				removeInstance(userId, searchKey);
 			}
 		} // end synchronized
+	}
+	
+	/**
+	 * 사용자가 로그 아웃등으로 나갈때 transaction commit합니다. 
+	 * 
+	 * @param userId
+	 */
+	public static void executeRollback(final String userId) {
+		Set<String> keys = dbManager.keySet();
+		for (String searchKey : keys) {
+			if(StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
+				if(logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
+				
+				TransactionDAO transactionDAO = dbManager.get(searchKey);
+				if(transactionDAO != null) {
+					Connection conn = transactionDAO.getConn();
+					try {
+						conn.rollback();
+					} catch(Exception e) {
+						logger.error("logout transaction commit", e);
+					} finally {
+						try { if(conn != null) conn.close(); } catch(Exception e) {}
+					}
+					removeInstance(userId, searchKey);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -236,9 +236,10 @@ public class TadpoleSQLTransactionManager {
 	 * @return
 	 */
 	public static String getKey(final String userId, final UserDBDAO userDB) {
-		return userId + PublicTadpoleDefine.DELIMITER + 
-//				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
-//				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
+		return 	 
+				userId + PublicTadpoleDefine.DELIMITER + 
+				userDB.getDisplay_name() 	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDbms_type() 		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getSeq()  			+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers() 			+ PublicTadpoleDefine.DELIMITER ;
 	}

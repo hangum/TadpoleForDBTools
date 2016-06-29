@@ -10,7 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.manager.transaction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -23,6 +25,8 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -47,6 +51,8 @@ public class DBCPConnectionManager {
 	
 	private DataSource makePool(final String userId, UserDBDAO userDB) {
 		String searchKey = TadpoleSQLTransactionManager.getKey(userId, userDB);
+		
+		//
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(5);
 //		connectionPool.setWhenExhaustedAction((byte)1);
@@ -60,8 +66,24 @@ public class DBCPConnectionManager {
 		} catch(Exception e) {
 			passwdDecrypt = userDB.getPasswd();
 		}
+		
 		ConnectionFactory cf = new DriverManagerConnectionFactory(userDB.getUrl(), userDB.getUsers(), passwdDecrypt);
 		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
+		
+		// initialize connection string
+		List<String> listInitializeSql = new ArrayList<String>();
+		String HELLO_SQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID());
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " select * from dual;");
+			listInitializeSql.add(HELLO_SQL + "\n select * from dual");
+			listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction-(%s)', '')", userDB.getTdbUserID()));
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " SELECT 1;");
+			listInitializeSql.add(HELLO_SQL + "\n SELECT 1");
+		}
+		if(!listInitializeSql.isEmpty()) pcf.setConnectionInitSql(listInitializeSql);
+		
+		// setting poolable connection factory
 		DataSource ds = new PoolingDataSource(connectionPool);
 		mapDataSource.put(searchKey, ds);
 		mapGenericObject.put(searchKey, connectionPool);

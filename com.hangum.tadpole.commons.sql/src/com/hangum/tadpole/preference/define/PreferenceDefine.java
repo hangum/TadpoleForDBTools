@@ -39,7 +39,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	
 	/** default home page use */
 	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";
-	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "true";
+	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "false";
 	
 	/** RDB Result type */ 
 	public static final String RDB_RESULT_TYPE = "RDB_RESULT_TYPE";
