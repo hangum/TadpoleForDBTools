@@ -15,6 +15,7 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -24,6 +25,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,6 +47,7 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
+import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -52,6 +57,7 @@ import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
@@ -90,7 +96,10 @@ public class LoginDialog extends Dialog {
 	
 	private Composite compositeHead;
 	private Composite compositeTail;
+	private Browser browser;
 	
+	/** 사용자가 브라우저로 접속한 ip*/
+	private String browserIP = "";
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -209,7 +218,12 @@ public class LoginDialog extends Dialog {
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		compositeTail = new Composite(container, SWT.NONE);
-		compositeTail.setLayout(new GridLayout(3, false));
+		GridLayout gl_compositeTail = new GridLayout(4, false);
+		gl_compositeTail.verticalSpacing = 0;
+		gl_compositeTail.horizontalSpacing = 0;
+		gl_compositeTail.marginHeight = 0;
+		gl_compositeTail.marginWidth = 0;
+		compositeTail.setLayout(gl_compositeTail);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblHangum = new Label(compositeTail, SWT.NONE);
@@ -221,16 +235,55 @@ public class LoginDialog extends Dialog {
 		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Website</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblHome.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
+		browser = new Browser(compositeTail, SWT.NONE);
+		GridData gd_browser = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gd_browser.heightHint = 0;
+		gd_browser.widthHint = 0;
+		browser.setLayoutData(gd_browser);
+		
 		Label lblIssue = new Label(compositeTail, SWT.NONE);
 		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>Feedback</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+
+		findBrowserIP();
 		
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
 		initUI();
 		
 		return compositeLogin;
+	}
+	
+	/** get browser ip */
+	private void findBrowserIP() {
+		try {
+			String script = TadpoleApplicationContextManager.getRealIPScript();
+			if("".equals(script)) {
+				if(logger.isDebugEnabled()) logger.debug("set real ip script");
+				script = IOUtils.toString(LoginDialog.class.getResourceAsStream("ips.html"));
+				TadpoleApplicationContextManager.setRealIpScript(script);
+			}
+			browser.setText(script);
+			browser.addProgressListener(new ProgressListener() {
+				@Override
+				public void completed( ProgressEvent event ) {
+					try {
+						Object obj = browser.evaluate("return document.getElementById('list').textContent");
+						if(obj == null) browserIP = "";
+						else browserIP = obj.toString();
+						
+						if(logger.isDebugEnabled()) logger.debug("[find browser ip]"+browserIP);
+					} catch(Exception ee) {
+						logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
+						browserIP = "";
+					}
+				}
+				public void changed( ProgressEvent event ) {}			
+			});
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -276,9 +329,15 @@ public class LoginDialog extends Dialog {
 				return;
 			}
 			
+			// login
+			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
+			String ip_servletRequest = browserIP;
+			if(browserIP.equals("n/a") || browserIP.equals("")) {
+				ip_servletRequest = RequestInfoUtils.getRequestIP();
+			}
+			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
@@ -298,7 +357,14 @@ public class LoginDialog extends Dialog {
 			// 로그인 유지.
 			registLoginID(userDao.getEmail(), strPass);
 			
-			SessionManager.addSession(userDao);
+			//
+			if(browserIP.equals("n/a") || browserIP.equals("")) {
+				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
+			} else {
+				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.WEB_RTC.name(), browserIP);
+			}
+			
+//			RWT.getUISession().getHttpSession().getServletContext().addListener(new HttpSessionCollectorListener());
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
@@ -309,8 +375,14 @@ public class LoginDialog extends Dialog {
 			textPasswd.setText("");
 			textPasswd.setFocus();
 			return;
-		} catch (Exception e) {
+		} catch(TadpoleRuntimeException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			
+			textPasswd.setFocus();
+			return;
+		} catch (Exception e) {
+			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage()), e); //$NON-NLS-1$
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();

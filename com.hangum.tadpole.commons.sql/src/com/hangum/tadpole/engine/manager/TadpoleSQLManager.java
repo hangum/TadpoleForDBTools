@@ -259,6 +259,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 */
 	public static void removeAllInstance(String id) {
 		List<String> listKeyMap = managerKey.get(id);
+		if(listKeyMap == null) return;
 		for (String searchKey : listKeyMap) {
 			removeInstance(searchKey);
 		}

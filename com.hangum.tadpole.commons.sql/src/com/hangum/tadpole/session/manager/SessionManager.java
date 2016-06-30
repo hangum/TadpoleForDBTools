@@ -45,6 +45,9 @@ public class SessionManager {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(SessionManager.class);
+	
+	/** login ip를 가져온 경로를 지정한다 */
+	public static enum LOGIN_IP_TYPE {WEB_RTC, SERVLET_REQUEST};
 
 	/**
 	 * <pre>
@@ -53,7 +56,11 @@ public class SessionManager {
 	 * 
 	 * @author hangum
 	 */
-	public static enum NAME {	
+	public static enum NAME {
+														/** webrtc, request.getRemoteAddrress */
+														LOGIN_IP_TYPE,
+														LOGIN_IP,
+														
 								/* 자신의 유저 seq */		USER_SEQ, 
 														LOGIN_EMAIL, 
 														LOGIN_PASSWORD, 
@@ -105,9 +112,14 @@ public class SessionManager {
 	 * 사용자를 session에 등록
 	 * 
 	 * @param userDao
+	 * @param loginType
+	 * @param ip
 	 */
-	public static void addSession(UserDAO userDao) {
+	public static void addSession(UserDAO userDao, String loginType, String ip) {
 		HttpSession sStore = RWT.getRequest().getSession();
+		
+		sStore.setAttribute(NAME.LOGIN_IP_TYPE.name(), loginType);
+		sStore.setAttribute(NAME.LOGIN_IP.name(), ip);
 		sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.name(), userDao.getRole_type());
 		sStore.setAttribute(NAME.USER_SEQ.name(), userDao.getSeq());
 		sStore.setAttribute(NAME.LOGIN_EMAIL.name(), userDao.getEmail());
@@ -127,6 +139,25 @@ public class SessionManager {
 		sStore.setAttribute(NAME.OTP_SECRET_KEY.name(), userDao.getOtp_secret());
 		
 		sStore.setAttribute(NAME.UNLOCK_DB_LIST.name(), new ArrayList<Integer>());
+	}
+	
+	/**
+	 * get login ip type
+	 * 
+	 * @param getLoginIpType
+	 */
+	public static String getLoginIpType() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.LOGIN_IP_TYPE.name());
+	}
+	
+	/**
+	 * get login ip
+	 * @return
+	 */
+	public static String getLoginIp() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.LOGIN_IP.name());
 	}
 	
 	/**

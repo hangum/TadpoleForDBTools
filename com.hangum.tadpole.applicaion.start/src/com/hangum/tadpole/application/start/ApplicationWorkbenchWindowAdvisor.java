@@ -247,7 +247,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     				return;
     			}
     			
-    			SessionManager.addSession(userDao);
+    			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), RequestInfoUtils.getRequestIP());
     			// save login_history
     			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
     			

@@ -165,7 +165,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     
     public UserDBDAO() {
     	setTdbUserID(SessionManager.getEMAIL());
-    	setTdbLogingIP(RequestInfoUtils.getRequestIP());
+    	setTdbLogingIP(SessionManager.getLoginIp());
 	}
    
     public DBDefine getDBDefine() {
