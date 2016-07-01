@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -83,14 +84,34 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		tvQueryPlan.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				
-				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				Object selElement = is.getFirstElement();
 				TableDAO tableDao = new TableDAO();
-				tableDao.setSchema_name("HR");
-				tableDao.setSysName("sample_table");
+				IStructuredSelection is = (IStructuredSelection)event.getSelection();
+				OraclePlanDAO selElement = (OraclePlanDAO)is.getFirstElement();
 				
-				TableInformationDialog dialog = new TableInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao);
-				dialog.open();
+				if (StringUtils.equalsIgnoreCase("TABLE", selElement.getObjectType())){
+					
+					String temp = selElement.getName();				
+					String object[] = StringUtils.split(temp,  '.');
+					
+					if (object.length > 1){
+						//tableDao.setSchema_name(object[0]);					
+						String obj = object[1];					
+						String tbl[] = StringUtils.split(obj, '(');
+						if (tbl.length > 1){
+							tableDao.setSysName(tbl[0]);
+							tableDao.setTable_name(tbl[0]);
+						}else{
+							tableDao.setSysName(obj);	
+							tableDao.setTable_name(obj);
+						}					
+					}else{
+						tableDao.setSysName(temp);	
+					}				
+
+					new TableInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao).open();
+				}else if (StringUtils.equalsIgnoreCase("TABLE", selElement.getObjectType())){
+					//new IndexInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao).open();
+				}
 			}
 		});
 		
@@ -134,6 +155,7 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 			dao.setPos(Integer.parseInt(map.get(6).toString()));
 			dao.setFilter(map.get(7).toString());
 			dao.setAccess(map.get(8).toString());
+			dao.setObjectType(map.get(9).toString());
 			
 			if(listOraclePlanDao.isEmpty()) {
 				listOraclePlanDao.add(dao);
@@ -255,6 +277,7 @@ class OracleLabelProvider extends LabelProvider implements ITableLabelProvider {
 		case 5: return ""+dao.getPos();
 		case 6: return ""+dao.getAccess();
 		case 7: return ""+dao.getFilter();
+		case 8: return ""+dao.getObjectType();
 		}
 		
 		return "*** not set column ***";
