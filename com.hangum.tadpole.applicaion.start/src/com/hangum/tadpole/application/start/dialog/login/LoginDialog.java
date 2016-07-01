@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -58,9 +59,13 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -301,6 +306,11 @@ public class LoginDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
+		
+		if(!isBrowserIP()) {
+			noticeBrowserIPMsg();
+			return;
+		}
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String strPass = StringUtils.trimToEmpty(textPasswd.getText());
 
@@ -333,8 +343,8 @@ public class LoginDialog extends Dialog {
 			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			String ip_servletRequest = browserIP;
-			if(browserIP.equals("n/a") || browserIP.equals("")) {
+			String ip_servletRequest = "";
+			if(!isBrowserIP()) {
 				ip_servletRequest = RequestInfoUtils.getRequestIP();
 			}
 			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
@@ -354,17 +364,22 @@ public class LoginDialog extends Dialog {
 				}
 			}
 			
+			// check session
+			HttpSession httpSession = HttpSessionCollectorUtil.getInstance().findSession(strEmail);
+			if(httpSession != null) {
+				if(logger.isDebugEnabled()) logger.debug(String.format("Already login user %s", strEmail));
+				HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
+			}
+			
 			// 로그인 유지.
 			registLoginID(userDao.getEmail(), strPass);
 			
 			//
-			if(browserIP.equals("n/a") || browserIP.equals("")) {
+			if(isBrowserIP()) {
 				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
 			} else {
 				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.WEB_RTC.name(), browserIP);
 			}
-			
-//			RWT.getUISession().getHttpSession().getServletContext().addListener(new HttpSessionCollectorListener());
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
@@ -393,20 +408,36 @@ public class LoginDialog extends Dialog {
 	}
 	
 	/**
+	 * is browserip
+	 * @return
+	 */
+	private boolean isBrowserIP() {
+		if("n/a".equals(browserIP) || "".equals(browserIP)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * register login id
 	 * 
 	 * @param userId
 	 */
 	private void registLoginID(String userId, String userPwd) {
-		if(!btnCheckButton.getSelection()) {
-			CookieUtils.deleteLoginCookie();
-			return;
+		try {
+			if(!btnCheckButton.getSelection()) {
+				CookieUtils.deleteLoginCookie();
+				return;
+			}
+			
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+			Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
+		} catch(Exception e) {
+			logger.error("register cookie", e);
 		}
-		
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
 	}
 	
 	@Override
@@ -456,6 +487,18 @@ public class LoginDialog extends Dialog {
 	}
 	
 	/**
+	 * notice browser ip msg
+	 */
+	private void noticeBrowserIPMsg() {
+		// 클라이언트 브라우저 IP 식별
+		if(!isBrowserIP()) {
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().doesnotFoundPrivateIP);
+			return;
+		}
+
+	}
+	
+	/**
 	 * initialize ui
 	 */
 	private void initUI() {
@@ -465,6 +508,8 @@ public class LoginDialog extends Dialog {
 		} else {
 			textPasswd.setFocus();
 		}
+		
+//		noticeBrowserIPMsg();
 		
 		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {

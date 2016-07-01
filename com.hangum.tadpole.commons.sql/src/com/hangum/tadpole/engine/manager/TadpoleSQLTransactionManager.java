@@ -197,8 +197,8 @@ public class TadpoleSQLTransactionManager {
 						try { if(conn != null) conn.close(); } catch(Exception e) {}
 					}
 					removeInstance(userId, searchKey);
-				}
-			}
+				}	// end trsansaction dao
+			}	// 
 		}
 	}
 	
