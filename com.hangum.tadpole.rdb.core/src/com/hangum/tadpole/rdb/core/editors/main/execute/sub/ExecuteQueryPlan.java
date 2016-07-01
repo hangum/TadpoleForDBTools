@@ -22,6 +22,8 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
+import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
@@ -107,6 +109,7 @@ public class ExecuteQueryPlan {
 							.append("		, level - 1 as \"Pos\" ")
 							.append("		, access_predicates as \"Access\" ")
 							.append("		, filter_predicates as \"Filter\" ")
+							.append("		, object_type as \"ObjectType\" ")
 							.append(String.format(" FROM %s", planTableName))
 							.append(" CONNECT BY prior id = parent_id ")
 							.append(" AND prior statement_id = statement_id ")
@@ -130,8 +133,19 @@ public class ExecuteQueryPlan {
 					rs = pstmt.executeQuery();
 				}
 				
-				rsDAO = new QueryExecuteResultDTO(
-						userDB, reqQuery.getSql(), true, rs, 1000, strNullValue/*, true*/);
+				rsDAO = new QueryExecuteResultDTO(userDB, reqQuery.getSql(), true, rs, 1000, strNullValue/*, true*/);
+				
+				try{
+					// pstmt를 닫기전에 데이터가 추가로 있으면 기존 자료에 덧붙인다.
+					TadpoleResultSet dataList = rsDAO.getDataList();
+					while (pstmt.getMoreResults()) {
+						dataList.appendList(ResultSetUtils.getResultToList(true, pstmt.getResultSet() , 1000, 0, ""));
+					}
+					rsDAO.setDataList(dataList);
+				}catch(Exception e){
+					// getMoreResults 가 지원되지 않거나 오류 발생시 로그만 남기고 다음 처리 절차를 진행하도록한다.
+					logger.equals(e);
+				}
 			}
 			
 			return rsDAO;

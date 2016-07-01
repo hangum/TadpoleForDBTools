@@ -176,6 +176,26 @@ public class TadpoleObjectQuery {
 	}
 	
 	/**
+	 * 테이블이 차지하는 저장공간 정보를 조회한다.
+	 */
+	public static Object getTableSizeInfo(UserDBDAO userDB, TableDAO tableDao) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		
+		 return  client.queryForObject("getTableSizeInfo", tableDao.getName());
+		
+	}
+	
+	/**
+	 * 테이블의 통계수집 및 추가정보를 조회한다.
+	 */
+	public static Object getStatisticsInfo(UserDBDAO userDB, TableDAO tableDao) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		
+		 return  client.queryForObject("getStatisticsInfo", tableDao.getName());
+		
+	}
+	
+	/**
 	 * 선택된 Table의 컬럼 정보를 리턴합니다.
 	 * 
 	 * @param userDB

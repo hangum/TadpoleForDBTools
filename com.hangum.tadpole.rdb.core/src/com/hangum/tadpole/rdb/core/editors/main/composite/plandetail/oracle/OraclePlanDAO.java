@@ -12,6 +12,7 @@ public class OraclePlanDAO {
 	String name;
 	String filter;
 	String access;
+	String object_type;
 	int pos;
 	
 	List<OraclePlanDAO> listChildren = new ArrayList<>();
@@ -89,6 +90,16 @@ public class OraclePlanDAO {
 
 	public void setAccess(String access) {
 		this.access = access;
+	}
+
+
+	public String getObjectType() {
+		return object_type;
+	}
+
+
+	public void setObjectType(String object_type) {
+		this.object_type = object_type;
 	}
 
 

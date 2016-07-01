@@ -52,6 +52,15 @@ public class TadpoleResultSet {
 	}
 
 	/**
+	 * 쿼리결과셋이 여러개일경우 기존 결과셋에 추가해 준다.
+	 */
+	public final void appendList(TadpoleResultSet resultSet) {
+		for(Map<Integer, Object> rs : resultSet.getData()){
+			this.resultSet.add(rs);
+		}
+	}
+
+	/**
 	 * @return the isEndOfRead
 	 */
 	public final boolean isEndOfRead() {

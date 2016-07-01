@@ -1115,4 +1115,25 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
   
 </select>    
 
+<!-- 
+	통계정보 및 테이블의 사이즈를 조회한다.
+ -->
+<select id="getTableSizeInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+
+Select 
+	  sum(bytes) as bytes
+	, sum(extents) as extents
+from  sys.user_segments
+Where segment_type in ('LOBINDEX', 'INDEX', 'INDEX PARTITION', 'INDEX SUBPARTITION')
+and segment_name in (select index_name from sys.user_indexes where table_name = UPPER (#table_name#) )
+
+
+</select>
+
+<select id="getStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+Select *
+from sys.user_tables
+where table_name = UPPER (#table_name#)
+</select>
+
 </sqlMap>
