@@ -495,7 +495,6 @@ public class LoginDialog extends Dialog {
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().doesnotFoundPrivateIP);
 			return;
 		}
-
 	}
 	
 	/**
@@ -508,8 +507,6 @@ public class LoginDialog extends Dialog {
 		} else {
 			textPasswd.setFocus();
 		}
-		
-//		noticeBrowserIPMsg();
 		
 		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {
