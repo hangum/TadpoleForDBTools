@@ -20,7 +20,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -55,17 +54,13 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 import com.swtdesigner.SWTResourceManager;
@@ -77,11 +72,8 @@ import com.swtdesigner.SWTResourceManager;
  * @author hangum
  *
  */
-public class LoginDialog extends Dialog {
+public class LoginDialog extends AbstractLoginDialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
-	
-	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
 	private Label lblLoginForm;
 	private Label lblLabelLblhangum;
@@ -108,13 +100,6 @@ public class LoginDialog extends Dialog {
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
-	}
-	
-	@Override
-	public void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
-		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -273,21 +258,32 @@ public class LoginDialog extends Dialog {
 			browser.addProgressListener(new ProgressListener() {
 				@Override
 				public void completed( ProgressEvent event ) {
-					try {
-						Object obj = browser.evaluate("return document.getElementById('list').textContent");
-						if(obj == null) browserIP = "";
-						else browserIP = obj.toString();
-						
-						if(logger.isDebugEnabled()) logger.debug("[find browser ip]"+browserIP);
-					} catch(Exception ee) {
-						logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
-						browserIP = "";
-					}
+					findPrivateIP();
 				}
 				public void changed( ProgressEvent event ) {}			
 			});
 		} catch(Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void findPrivateIP() {
+		String retIP = "";
+		try {
+			Object obj = browser.evaluate("return document.getElementById('list').textContent");
+			if(obj == null) retIP = "";
+			else retIP = obj.toString();
+		} catch(Exception ee) {
+			logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
+			retIP = "";
+		} finally {
+			browserIP = retIP;
+		}
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("############################################################");
+			logger.debug("######## [find browser ip]"+browserIP);
+			logger.debug("############################################################");
 		}
 	}
 	
@@ -308,8 +304,13 @@ public class LoginDialog extends Dialog {
 	protected void okPressed() {
 		
 		if(!isBrowserIP()) {
-			noticeBrowserIPMsg();
-			return;
+			
+			// 처음 브라우저 로딩시 가져오지 못하는 오류가 있어 다시 한번 검사한다.
+			findPrivateIP();
+			if(!isBrowserIP()) {
+				noticeBrowserIPMsg();
+				return;
+			}
 		}
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String strPass = StringUtils.trimToEmpty(textPasswd.getText());
@@ -343,7 +344,7 @@ public class LoginDialog extends Dialog {
 			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			String ip_servletRequest = "";
+			String ip_servletRequest = browserIP;
 			if(!isBrowserIP()) {
 				ip_servletRequest = RequestInfoUtils.getRequestIP();
 			}
@@ -369,13 +370,15 @@ public class LoginDialog extends Dialog {
 			if(httpSession != null) {
 				if(logger.isDebugEnabled()) logger.debug(String.format("Already login user %s", strEmail));
 				HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
+			} else {
+//				HttpSessionCollectorUtil.getInstance().sessionCreated(id, session, intMinuteTimeOut);
 			}
 			
 			// 로그인 유지.
 			registLoginID(userDao.getEmail(), strPass);
 			
 			//
-			if(isBrowserIP()) {
+			if(!isBrowserIP()) {
 				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
 			} else {
 				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.WEB_RTC.name(), browserIP);
@@ -412,7 +415,7 @@ public class LoginDialog extends Dialog {
 	 * @return
 	 */
 	private boolean isBrowserIP() {
-		if("n/a".equals(browserIP) || "".equals(browserIP)) {
+		if(StringUtils.startsWith(browserIP, "n/a") || "".equals(browserIP) || null == browserIP) {
 			return false;
 		}
 		
@@ -438,14 +441,6 @@ public class LoginDialog extends Dialog {
 		} catch(Exception e) {
 			logger.error("register cookie", e);
 		}
-	}
-	
-	@Override
-	public boolean close() {
-		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)
-		if(!SessionManager.isLogin()) return false;
-		
-		return super.close();
 	}
 
 	/**

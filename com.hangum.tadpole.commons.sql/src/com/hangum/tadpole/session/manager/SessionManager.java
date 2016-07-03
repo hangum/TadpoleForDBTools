@@ -312,6 +312,8 @@ public class SessionManager {
 			} catch(Exception e) {
 				logger.error("User data save exception [key]" + key + "[value]" + value, e);
 			}
+			
+			mapUserInfoData.put(key, userData);
 		}
 		
 		return userData;

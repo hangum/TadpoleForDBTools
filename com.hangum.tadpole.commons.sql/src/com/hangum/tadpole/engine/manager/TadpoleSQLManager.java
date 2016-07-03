@@ -113,12 +113,12 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				
 				// metadata를 가져와서 저장해 놓습니다.
 				conn = sqlMapClient.getDataSource().getConnection();
-
+				
 				// connection initialize
-//				setConnectionInitialize(userDB, conn);
+				setConnectionInitialize(userDB, conn);
 				
 				// don't belive keyword. --;;
-				setMetaData(searchKey, userDB, conn.getMetaData());
+				initializeConnection(searchKey, userDB, conn.getMetaData());
 			}
 			
 		} catch(Exception e) {
@@ -142,7 +142,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * @param dbMetadata
 	 * @return
 	 */
-	public static void setMetaData(String searchKey, final UserDBDAO userDB, DatabaseMetaData dbMetaData) throws Exception {
+	public static void initializeConnection(String searchKey, final UserDBDAO userDB, DatabaseMetaData dbMetaData) throws Exception {
 		
 		// 엔진디비는 메타데이터를 저장하지 않는다.
 		if(userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_DEFAULT || userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) return;
@@ -290,6 +290,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			SqlMapClient sqlMapClient = null;
 			try {
 				sqlMapClient = dbManager.remove(searchKey);
+				if(sqlMapClient == null) return;
 				BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
 				basicDataSource.close();
 			} catch (Exception e) {

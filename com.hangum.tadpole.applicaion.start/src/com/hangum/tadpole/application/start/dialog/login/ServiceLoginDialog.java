@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -50,7 +48,6 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -67,11 +64,8 @@ import com.swtdesigner.SWTResourceManager;
  * @author hangum
  *
  */
-public class ServiceLoginDialog extends Dialog {
+public class ServiceLoginDialog extends AbstractLoginDialog {
 	private static final Logger logger = Logger.getLogger(ServiceLoginDialog.class);
-	
-	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
 	private Label lblLoginForm;
 	private Label lblLabelLblhangum;
@@ -105,13 +99,6 @@ public class ServiceLoginDialog extends Dialog {
 		super(shell);
 	}
 	
-	@Override
-	public void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
-		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
-	}
-
 	/**
 	 * Create contents of the dialog.
 	 * @param parent
@@ -381,14 +368,6 @@ public class ServiceLoginDialog extends Dialog {
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
 		Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
-	}
-	
-	@Override
-	public boolean close() {
-		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)
-		if(!SessionManager.isLogin()) return false;
-		
-		return super.close();
 	}
 
 	/**

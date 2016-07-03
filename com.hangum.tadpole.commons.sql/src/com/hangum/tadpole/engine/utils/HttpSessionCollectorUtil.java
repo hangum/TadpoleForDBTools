@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -20,7 +19,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * 사용자 session 을 저장하고 관리하는 유틸 클래스이다.
@@ -36,9 +34,13 @@ public class HttpSessionCollectorUtil {
 	/** id, httpsession */
 	private final Map<String, Map<String, Object>> mapSession = new HashMap<String, Map<String, Object>>();
 	
-	private HttpSessionCollectorUtil() {
-	};
+	private HttpSessionCollectorUtil() {};
 	
+	/**
+	 * get instance
+	 * 
+	 * @return
+	 */
 	public static HttpSessionCollectorUtil getInstance() {
 		if(sessionCollector == null) {
 			sessionCollector = new HttpSessionCollectorUtil();
@@ -49,6 +51,13 @@ public class HttpSessionCollectorUtil {
 		return sessionCollector;
 	}
 	
+	/**
+	 * session created
+	 * 
+	 * @param id
+	 * @param session
+	 * @param intMinuteTimeOut
+	 */
 	public void sessionCreated(String id, HttpSession session, int intMinuteTimeOut) {
 		if(logger.isDebugEnabled()) logger.debug(String.format("---> [login]%s->%s", id, session.getId()));
 		
@@ -59,35 +68,57 @@ public class HttpSessionCollectorUtil {
 		mapSession.put(id, mapUserData);
 	}
 
-	public void sessionDestroyed(String id) {
-		if(logger.isDebugEnabled()) logger.debug(String.format("---> [login]%s", id));
-		Map<String, Object> mapUserData = mapSession.remove(id);
-		HttpSession httpSesssion = (HttpSession)mapUserData.get(COLLECT_KEY.SESSION);
+	/**
+	 * session destoryed
+	 * 
+	 * @param id
+	 */
+	public void sessionDestroyed(String strEmail) {
+		if(logger.isDebugEnabled()) logger.debug(String.format("---> [login]%s", strEmail));
+		Map<String, Object> mapUserData = mapSession.remove(strEmail);
+		HttpSession httpSesssion = (HttpSession)mapUserData.get(COLLECT_KEY.SESSION.name());
 		
 		if(logger.isDebugEnabled()) logger.debug("=== remove user connection ");
 		try {
-			TadpoleSQLManager.removeAllInstance(id);
-			TadpoleSQLTransactionManager.executeRollback(id);
+			TadpoleSQLManager.removeAllInstance(strEmail);
+			TadpoleSQLTransactionManager.executeRollback(strEmail);
 		} catch(Exception e) {
 			logger.error("remove user connection", e);
 		}
 		
+		// 로그 아웃이 되었다면 exception이 나올것이ㅏ.
 		try {
 			httpSesssion.invalidate();
 		} catch(Exception e) {
-			// already expire session something
-			// ignore exception
+			logger.error(String.format("System invalidate user %s", strEmail), e);
 		}
 	}
 
+	/**
+	 * get all session
+	 * 
+	 * @return
+	 */
 	public Map<String, Map<String, Object>> getSessions() {
 		return mapSession;
 	}
 
-	public Map<String, Object> find(String id) {
-		return mapSession.get(id);
+	/**
+	 * find id to session
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> find(String strEmail) {
+		return mapSession.get(strEmail);
 	}
 
+	/**
+	 * find session
+	 * 
+	 * @param strEmail
+	 * @return
+	 */
 	public HttpSession findSession(String strEmail) {
 		Map<String, Object> mapUserData = find(strEmail);
 		if(mapUserData != null) {
@@ -133,7 +164,7 @@ class SessionLiveChecker implements Runnable{
 						}
 						
 						if(gapTime > userTime) {
-							logger.debug("[session invalidate is ]" + id);
+							if(logger.isDebugEnabled()) logger.debug("[session invalidate is ]" + id);
 							HttpSessionCollectorUtil.getInstance().sessionDestroyed(id);
 						}
 						
@@ -144,8 +175,8 @@ class SessionLiveChecker implements Runnable{
 				}
 			}
 			
-			// 60 분에 한번씩 Thread 검사.
-			try { Thread.sleep(60 * 1000 * 60); } catch(Exception e) {};
+			// 30 분에 한번씩 Thread 검사.
+			try { Thread.sleep((60 * 1000) * 30); } catch(Exception e) {};
 		}
 		
 	}

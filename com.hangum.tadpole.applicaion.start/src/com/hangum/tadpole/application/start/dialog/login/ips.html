@@ -32,11 +32,6 @@ if (RTCPeerConnection) (function () {
         var displayAddrs = Object.keys(addrs).filter(function (k) { return addrs[k]; });
         
         document.getElementById('list').textContent = displayAddrs.join(", ") || "n/a";
-        ips.value = document.getElementById('list').textContent;
-    }
-    
-    function getIps() {
-    	return ips.value;
     }
     
     function grepSDP(sdp) {

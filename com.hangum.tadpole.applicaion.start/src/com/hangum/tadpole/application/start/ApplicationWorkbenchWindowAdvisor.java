@@ -271,7 +271,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     		}
     		
 			// 중복 로그인 방지를 위해 세션을 기록합니다.
-			HttpSessionCollectorUtil.getInstance().sessionCreated(SessionManager.getEMAIL(), RWT.getUISession().getHttpSession(), Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()));
+			HttpSessionCollectorUtil.getInstance().sessionCreated(SessionManager.getEMAIL(), RWT.getRequest().getSession(), Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()));
 
     	} catch (Exception e) {
     		logger.error("System login fail", e); //$NON-NLS-1$

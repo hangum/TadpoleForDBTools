@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
@@ -129,31 +130,30 @@ public class RequestInfoUtils {
 	 * @return
 	 */
 	public static String getRequestIP() {
-		
 		HttpServletRequest request = RWT.getRequest();
 		
 		String strIP = request.getHeader("X-Forwarded-For");
-		logger.debug("X-Forwarded-For: " + strIP);
+		if(logger.isDebugEnabled()) logger.debug("X-Forwarded-For: " + strIP);
 		
-		if (strIP == null || strIP.length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
 		    strIP = request.getHeader("Proxy-Client-IP"); 
-		    logger.debug("Proxy-Client-IP[ip]" + strIP);
+		    if(logger.isDebugEnabled()) logger.debug("Proxy-Client-IP[ip]" + strIP);
 		} 
-		if (strIP == null || strIP.length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
 		    strIP = request.getHeader("WL-Proxy-Client-IP");
-		    logger.debug("WL-Proxy-Client-IP[ip]" + strIP);
+		    if(logger.isDebugEnabled()) logger.debug("WL-Proxy-Client-IP[ip]" + strIP);
 		} 
-		if (strIP == null || strIP.length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
 		    strIP = request.getHeader("HTTP_CLIENT_IP");
-		    logger.debug("HTTP_CLIENT_IP[ip]" + strIP);
+		    if(logger.isDebugEnabled()) logger.debug("HTTP_CLIENT_IP[ip]" + strIP);
 		} 
-		if (strIP == null || strIP.length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
 		    strIP = request.getHeader("HTTP_X_FORWARDED_FOR");
-		    logger.debug("HTTP_X_FORWARDED_FOR[ip]" + strIP);
+		    if(logger.isDebugEnabled()) logger.debug("HTTP_X_FORWARDED_FOR[ip]" + strIP);
 		} 
-		if (strIP == null || strIP.length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
 		    strIP = request.getRemoteAddr(); 
-		    logger.debug("[ip]" + strIP);
+		    if(logger.isDebugEnabled()) logger.debug("[ip]" + strIP);
 		}
 		
 		return strIP;
