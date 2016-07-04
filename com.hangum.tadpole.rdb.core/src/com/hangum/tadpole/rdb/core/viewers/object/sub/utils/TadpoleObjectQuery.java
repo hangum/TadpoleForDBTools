@@ -24,6 +24,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteForeignKeyListDAO;
@@ -346,4 +347,40 @@ public class TadpoleObjectQuery {
 			return null;
 		}
 	}
+
+	/**
+	 * 인덱스의 컬럼 목록을 조회한다.
+	 * @param userDB
+	 * @param indexDao
+	 * @return
+	 * @throws Exception
+	 */
+	
+	public static List<InformationSchemaDAO> getIndexColumns(UserDBDAO userDB, InformationSchemaDAO indexDao) throws Exception {
+
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("table_schema", indexDao.getTABLE_SCHEMA()); //$NON-NLS-1$
+		paramMap.put("table_name", indexDao.getTABLE_NAME()); //$NON-NLS-1$
+		paramMap.put("index_name", indexDao.getINDEX_NAME()); //$NON-NLS-1$
+		
+		return sqlClient.queryForList("indexDetailList", paramMap); //$NON-NLS-1$
+		 
+	}
+	
+	/**
+	 * 인덱스의 통계정보를 조회한다.
+	 * @param userDB
+	 * @param tableDao
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object getIndexStatisticsInfo(UserDBDAO userDB, InformationSchemaDAO indexDao) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		
+		 return  client.queryForObject("getIndexStatisticsInfo", indexDao.getINDEX_NAME());
+		
+	}
+
+	
 }

@@ -1136,4 +1136,46 @@ from sys.user_tables
 where table_name = UPPER (#table_name#)
 </select>
 
+<!-- 
+	인덱스에 대한 컬럼 정보 및 통계정보를 조회한다.
+ -->
+<select id="getIndexStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+SELECT INDEX_NAME "Index Name"
+      ,INDEX_TYPE "Index Type"
+      ,UNIQUENESS "Uniqueness"
+      ,STATUS "Status"
+      ,TABLE_OWNER || '.' || TABLE_NAME "Table"
+      ,TABLE_TYPE "Table Type"
+      ,TABLESPACE_NAME "Tablespace"
+      ,BUFFER_POOL "Buffer Pool"
+      ,INITCAP (partitioned) "Partitioned"
+      ,DECODE (temporary, 'N', 'No', 'Yes') "Temporary"
+      ,INI_TRANS "Initial Transactions"
+      ,MAX_TRANS "Max Transactions"
+      ,INITIAL_EXTENT "Initial Extent Size"
+      ,NEXT_EXTENT "Next Extent Size"
+      ,MIN_EXTENTS "Minimum Extents"
+      ,MAX_EXTENTS "Maximum Extents"
+      ,PCT_INCREASE "Percent Increase"
+      ,PCT_FREE "Percent Free"
+      ,FREELISTS "Freelists"
+      ,FREELIST_GROUPS "Freelist Groups"
+      ,DEGREE "Degree"
+      ,INSTANCES "Instances"
+      ,LAST_ANALYZED "Last Analyzed"
+      ,BLEVEL "BLevel"
+      ,LEAF_BLOCKS "Leaf Blocks"
+      ,DISTINCT_KEYS "Distinct Keys"
+      ,AVG_LEAF_BLOCKS_PER_KEY "Avg Leaf Blocks Per Key"
+      ,AVG_DATA_BLOCKS_PER_KEY "Avg Data Blocks Per Key"
+      ,CLUSTERING_FACTOR "Clustering Factor"
+      ,NUM_ROWS "Num Rows"
+      ,SAMPLE_SIZE "Sample Size"
+      ,GENERATED "Generated"
+      ,DECODE (JOIN_INDEX, 'NO', 'No', 'Yes') "Join Index"
+      ,Visibility "Visibility"
+  FROM SYS.USER_INDEXES
+ WHERE INDEX_NAME = UPPER (#index_name#)
+</select>
+
 </sqlMap>

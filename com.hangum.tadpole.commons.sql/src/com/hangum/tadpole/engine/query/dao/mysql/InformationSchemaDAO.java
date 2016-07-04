@@ -26,6 +26,7 @@ public class InformationSchemaDAO extends StructObjectDAO {
 	String NULLABLE;			
 	String INDEX_TYPE;			
 	String COMMENT;
+	int CHAR_LENGTH;
 	
 	public InformationSchemaDAO() {
 	}
@@ -143,11 +144,19 @@ public class InformationSchemaDAO extends StructObjectDAO {
 	}
 
 	public String getCOMMENT() {
-		return COMMENT;
+		return COMMENT == null?"":COMMENT;
 	}
 
 	public void setCOMMENT(String cOMMENT) {
 		COMMENT = cOMMENT;
+	}
+
+	public int getCHAR_LENGTH() {
+		return CHAR_LENGTH;
+	}
+
+	public void setCHAR_LENGTH(int cHAR_LENGTH) {
+		CHAR_LENGTH = cHAR_LENGTH;
 	}
 	
 	
