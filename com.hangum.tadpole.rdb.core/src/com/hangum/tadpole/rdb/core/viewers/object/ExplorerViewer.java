@@ -130,7 +130,7 @@ public class ExplorerViewer extends ViewPart {
 		
 		Label labelSchema = new Label(compositeSchema, SWT.NONE);
 		labelSchema.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
-		labelSchema.setText("Schema");
+		labelSchema.setText(Messages.get().Schemas);
 		
 		comboSchema = new Combo(compositeSchema, SWT.NONE | SWT.READ_ONLY);
 		comboSchema.addSelectionListener(new SelectionAdapter() {
@@ -143,13 +143,17 @@ public class ExplorerViewer extends ViewPart {
 		
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeSearch = new GridLayout(1, false);
+		GridLayout gl_compositeSearch = new GridLayout(2, false);
 		gl_compositeSearch.horizontalSpacing = 2;
 		gl_compositeSearch.verticalSpacing = 2;
 		gl_compositeSearch.marginHeight = 2;
 		gl_compositeSearch.marginWidth = 2;
 		compositeSearch.setLayout(gl_compositeSearch);
 
+		Label labelFilter = new Label(compositeSearch, SWT.NONE);
+		labelFilter.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
+		labelFilter.setText(Messages.get().Filter);
+		
 		// filter를 설정합니다.
 		textSearch = new Text(compositeSearch, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.addKeyListener(new KeyAdapter() {
@@ -314,17 +318,22 @@ public class ExplorerViewer extends ViewPart {
 		
 		/** schema list*/
 		comboSchema.removeAll();
-		if(userDB != null && userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-			try {
-				// 스키마 리스트를 초기화 시킨다.
-				for (Object object : DBSystemSchema.getSchemas(userDB)) {
-					HashMap mapData = (HashMap)object;
-					comboSchema.add(""+mapData.get("schema"));
+		if(userDB != null) {
+			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				try {
+					// 스키마 리스트를 초기화 시킨다.
+					for (Object object : DBSystemSchema.getSchemas(userDB)) {
+						HashMap mapData = (HashMap)object;
+						comboSchema.add(""+mapData.get("schema"));
+					}
+					comboSchema.setText("public");
+				} catch(Exception e) {
+					logger.error("Schema list", e);
 				}
-				
-				comboSchema.setText("public");
-			} catch(Exception e) {
-				logger.error("Schema list", e);
+			}	// end postgresql
+			else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				comboSchema.add(userDB.getDb());
+				comboSchema.setText(userDB.getDb());
 			}
 		}
 	}

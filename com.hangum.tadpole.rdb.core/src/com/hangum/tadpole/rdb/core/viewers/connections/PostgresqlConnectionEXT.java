@@ -18,7 +18,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURCE_TYPE;
-import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.query.sql.pgsql.PGSQLSystem;
 import com.hangum.tadpole.rdb.core.Messages;
 
@@ -36,26 +35,26 @@ public class PostgresqlConnectionEXT {
 	public static void connectionext(UserDBDAO userDB) throws Exception {
 		ResourcesDAO resourcesDAO = new ResourcesDAO(userDB);
 		List listOtherObj = new ArrayList();
-		for (Object object : DBSystemSchema.getSchemas(userDB)) {
-			DBOtherDAO dao = new DBOtherDAO();
-			Map map = (Map)object;
-
-			dao.setName(""+map.get("schema"));
-			dao.setComment(""+map.get("description"));
-			dao.setUserObject(map);
-			dao.setParent(resourcesDAO);
-			
-			listOtherObj.add(dao);
-		}
-		
-		resourcesDAO.setType(DB_RESOURCE_TYPE.SCHEMAS);
-		resourcesDAO.setName(Messages.get().Schemas);
-		resourcesDAO.setListResource(listOtherObj);
-		userDB.getListResource().add(resourcesDAO);
+//		for (Object object : DBSystemSchema.getSchemas(userDB)) {
+//			DBOtherDAO dao = new DBOtherDAO();
+//			Map map = (Map)object;
+//
+//			dao.setName(""+map.get("schema"));
+//			dao.setComment(""+map.get("description"));
+//			dao.setUserObject(map);
+//			dao.setParent(resourcesDAO);
+//			
+//			listOtherObj.add(dao);
+//		}
+//		
+//		resourcesDAO.setType(DB_RESOURCE_TYPE.SCHEMAS);
+//		resourcesDAO.setName(Messages.get().Schemas);
+//		resourcesDAO.setListResource(listOtherObj);
+//		userDB.getListResource().add(resourcesDAO);
 		
 		// pg extension list
-		resourcesDAO = new ResourcesDAO(userDB);
-		listOtherObj = new ArrayList();
+//		resourcesDAO = new ResourcesDAO(userDB);
+//		listOtherObj = new ArrayList();
 		for (Object object : PGSQLSystem.getExtension(userDB)) {
 			DBOtherDAO dao = new DBOtherDAO();
 			Map map = (Map)object;
