@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
@@ -129,7 +130,33 @@ public class RequestInfoUtils {
 	 * @return
 	 */
 	public static String getRequestIP() {
-		return RWT.getRequest().getLocalAddr();
+		HttpServletRequest request = RWT.getRequest();
+		
+		String strIP = request.getHeader("X-Forwarded-For");
+		if(logger.isDebugEnabled()) logger.debug("X-Forwarded-For: " + strIP);
+		
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		    strIP = request.getHeader("Proxy-Client-IP"); 
+		    if(logger.isDebugEnabled()) logger.debug("Proxy-Client-IP[ip]" + strIP);
+		} 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		    strIP = request.getHeader("WL-Proxy-Client-IP");
+		    if(logger.isDebugEnabled()) logger.debug("WL-Proxy-Client-IP[ip]" + strIP);
+		} 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		    strIP = request.getHeader("HTTP_CLIENT_IP");
+		    if(logger.isDebugEnabled()) logger.debug("HTTP_CLIENT_IP[ip]" + strIP);
+		} 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		    strIP = request.getHeader("HTTP_X_FORWARDED_FOR");
+		    if(logger.isDebugEnabled()) logger.debug("HTTP_X_FORWARDED_FOR[ip]" + strIP);
+		} 
+		if (StringUtils.defaultString(strIP).length() == 0 || "unknown".equalsIgnoreCase(strIP)) { 
+		    strIP = request.getRemoteAddr(); 
+		    if(logger.isDebugEnabled()) logger.debug("[ip]" + strIP);
+		}
+		
+		return strIP;
 	}
 	
 }

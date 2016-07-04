@@ -14,16 +14,20 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,17 +47,19 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
+import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -66,11 +72,8 @@ import com.swtdesigner.SWTResourceManager;
  * @author hangum
  *
  */
-public class LoginDialog extends Dialog {
+public class LoginDialog extends AbstractLoginDialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
-	
-	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
 	private Label lblLoginForm;
 	private Label lblLabelLblhangum;
@@ -90,17 +93,13 @@ public class LoginDialog extends Dialog {
 	
 	private Composite compositeHead;
 	private Composite compositeTail;
+	private Browser browser;
 	
+	/** 사용자가 브라우저로 접속한 ip*/
+	private String browserIP = "";
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
-	}
-	
-	@Override
-	public void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
-		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -209,7 +208,12 @@ public class LoginDialog extends Dialog {
 		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		compositeTail = new Composite(container, SWT.NONE);
-		compositeTail.setLayout(new GridLayout(3, false));
+		GridLayout gl_compositeTail = new GridLayout(4, false);
+		gl_compositeTail.verticalSpacing = 0;
+		gl_compositeTail.horizontalSpacing = 0;
+		gl_compositeTail.marginHeight = 0;
+		gl_compositeTail.marginWidth = 0;
+		compositeTail.setLayout(gl_compositeTail);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		Label lblHangum = new Label(compositeTail, SWT.NONE);
@@ -221,16 +225,66 @@ public class LoginDialog extends Dialog {
 		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Website</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblHome.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
+		browser = new Browser(compositeTail, SWT.NONE);
+		GridData gd_browser = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gd_browser.heightHint = 0;
+		gd_browser.widthHint = 0;
+		browser.setLayoutData(gd_browser);
+		
 		Label lblIssue = new Label(compositeTail, SWT.NONE);
 		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>Feedback</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+
+		findBrowserIP();
 		
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
 		initUI();
 		
 		return compositeLogin;
+	}
+	
+	/** get browser ip */
+	private void findBrowserIP() {
+		try {
+			String script = TadpoleApplicationContextManager.getRealIPScript();
+			if("".equals(script)) {
+				if(logger.isDebugEnabled()) logger.debug("set real ip script");
+				script = IOUtils.toString(LoginDialog.class.getResourceAsStream("ips.html"));
+				TadpoleApplicationContextManager.setRealIpScript(script);
+			}
+			browser.setText(script);
+			browser.addProgressListener(new ProgressListener() {
+				@Override
+				public void completed( ProgressEvent event ) {
+					findPrivateIP();
+				}
+				public void changed( ProgressEvent event ) {}			
+			});
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void findPrivateIP() {
+		String retIP = "";
+		try {
+			Object obj = browser.evaluate("return document.getElementById('list').textContent");
+			if(obj == null) retIP = "";
+			else retIP = obj.toString();
+		} catch(Exception ee) {
+			logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
+			retIP = "";
+		} finally {
+			browserIP = retIP;
+		}
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("############################################################");
+			logger.debug("######## [find browser ip]"+browserIP);
+			logger.debug("############################################################");
+		}
 	}
 	
 	@Override
@@ -248,6 +302,16 @@ public class LoginDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
+		
+		if(!isBrowserIP()) {
+			
+			// 처음 브라우저 로딩시 가져오지 못하는 오류가 있어 다시 한번 검사한다.
+			findPrivateIP();
+			if(!isBrowserIP()) {
+				noticeBrowserIPMsg();
+				return;
+			}
+		}
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String strPass = StringUtils.trimToEmpty(textPasswd.getText());
 
@@ -276,9 +340,15 @@ public class LoginDialog extends Dialog {
 				return;
 			}
 			
+			// login
+			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
+			String ip_servletRequest = browserIP;
+			if(!isBrowserIP()) {
+				ip_servletRequest = RequestInfoUtils.getRequestIP();
+			}
+			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
@@ -295,10 +365,24 @@ public class LoginDialog extends Dialog {
 				}
 			}
 			
+			// check session
+			HttpSession httpSession = HttpSessionCollectorUtil.getInstance().findSession(strEmail);
+			if(httpSession != null) {
+				if(logger.isDebugEnabled()) logger.debug(String.format("Already login user %s", strEmail));
+				HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
+			} else {
+//				HttpSessionCollectorUtil.getInstance().sessionCreated(id, session, intMinuteTimeOut);
+			}
+			
 			// 로그인 유지.
 			registLoginID(userDao.getEmail(), strPass);
 			
-			SessionManager.addSession(userDao);
+			//
+			if(!isBrowserIP()) {
+				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
+			} else {
+				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.WEB_RTC.name(), browserIP);
+			}
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
@@ -309,8 +393,14 @@ public class LoginDialog extends Dialog {
 			textPasswd.setText("");
 			textPasswd.setFocus();
 			return;
-		} catch (Exception e) {
+		} catch(TadpoleRuntimeException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			
+			textPasswd.setFocus();
+			return;
+		} catch (Exception e) {
+			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage()), e); //$NON-NLS-1$
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();
@@ -321,28 +411,36 @@ public class LoginDialog extends Dialog {
 	}
 	
 	/**
+	 * is browserip
+	 * @return
+	 */
+	private boolean isBrowserIP() {
+		if(StringUtils.startsWith(browserIP, "n/a") || "".equals(browserIP) || null == browserIP) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * register login id
 	 * 
 	 * @param userId
 	 */
 	private void registLoginID(String userId, String userPwd) {
-		if(!btnCheckButton.getSelection()) {
-			CookieUtils.deleteLoginCookie();
-			return;
+		try {
+			if(!btnCheckButton.getSelection()) {
+				CookieUtils.deleteLoginCookie();
+				return;
+			}
+			
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+			Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
+		} catch(Exception e) {
+			logger.error("register cookie", e);
 		}
-		
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
-	}
-	
-	@Override
-	public boolean close() {
-		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)
-		if(!SessionManager.isLogin()) return false;
-		
-		return super.close();
 	}
 
 	/**
@@ -380,6 +478,17 @@ public class LoginDialog extends Dialog {
 			}
 		} catch (Exception e) {
 //			ignore exception
+		}
+	}
+	
+	/**
+	 * notice browser ip msg
+	 */
+	private void noticeBrowserIPMsg() {
+		// 클라이언트 브라우저 IP 식별
+		if(!isBrowserIP()) {
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().doesnotFoundPrivateIP);
+			return;
 		}
 	}
 	

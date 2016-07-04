@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -43,13 +41,13 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
+import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -66,11 +64,8 @@ import com.swtdesigner.SWTResourceManager;
  * @author hangum
  *
  */
-public class ServiceLoginDialog extends Dialog {
+public class ServiceLoginDialog extends AbstractLoginDialog {
 	private static final Logger logger = Logger.getLogger(ServiceLoginDialog.class);
-	
-	private int ID_NEW_USER		 	= IDialogConstants.CLIENT_ID 	+ 1;
-	private int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
 	private Label lblLoginForm;
 	private Label lblLabelLblhangum;
@@ -104,13 +99,6 @@ public class ServiceLoginDialog extends Dialog {
 		super(shell);
 	}
 	
-	@Override
-	public void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
-		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
-	}
-
 	/**
 	 * Create contents of the dialog.
 	 * @param parent
@@ -316,7 +304,8 @@ public class ServiceLoginDialog extends Dialog {
 			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
+			String ip_servletRequest = RequestInfoUtils.getRequestIP();
+			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
@@ -336,7 +325,7 @@ public class ServiceLoginDialog extends Dialog {
 			// 로그인 유지.
 			registLoginID(userDao.getEmail(), strPass);
 			
-			SessionManager.addSession(userDao);
+			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
@@ -347,8 +336,14 @@ public class ServiceLoginDialog extends Dialog {
 			textPasswd.setText("");
 			textPasswd.setFocus();
 			return;
-		} catch (Exception e) {
+		} catch(TadpoleRuntimeException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
+			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			
+			textPasswd.setFocus();
+			return;
+		} catch (Exception e) {
+			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage()), e); //$NON-NLS-1$
 			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();
@@ -373,14 +368,6 @@ public class ServiceLoginDialog extends Dialog {
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
 		Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
-	}
-	
-	@Override
-	public boolean close() {
-		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)
-		if(!SessionManager.isLogin()) return false;
-		
-		return super.close();
 	}
 
 	/**

@@ -181,4 +181,20 @@ public class TadpoleApplicationContextManager {
 		return (Font)obj;
 	}
 	
+	/**
+	 * set real ip script
+	 * @param script
+	 */
+	public static void setRealIpScript(String script) {
+		ApplicationContext context = RWT.getApplicationContext();
+		context.setAttribute("realIPScript", script);
+	}
+	
+	/** get real ip script */
+	public static String getRealIPScript() {
+		ApplicationContext context = RWT.getApplicationContext();
+		Object obj = context.getAttribute("realIPScript");
+		if(obj == null) return "";
+		return obj.toString();
+	}
 }

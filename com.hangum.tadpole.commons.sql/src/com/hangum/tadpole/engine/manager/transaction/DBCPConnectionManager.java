@@ -74,10 +74,14 @@ public class DBCPConnectionManager {
 		List<String> listInitializeSql = new ArrayList<String>();
 		String HELLO_SQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID());
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			pcf.setValidationQuery("select * from dual");
+			
 			if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " select * from dual;");
 			listInitializeSql.add(HELLO_SQL + "\n select * from dual");
 			listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction-(%s)', '')", userDB.getTdbUserID()));
 		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			pcf.setValidationQuery("select 1");
+			
 			if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " SELECT 1;");
 			listInitializeSql.add(HELLO_SQL + "\n SELECT 1");
 		}

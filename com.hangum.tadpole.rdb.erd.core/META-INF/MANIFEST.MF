@@ -18,5 +18,6 @@ Require-Bundle: org.eclipse.rap.ui,
  com.hangum.tadpole.tajo.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.servlet;version="2.4.0",javax.servlet.http;version="2.4.0"
+Import-Package: javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0"
 Export-Package: com.hangum.tadpole.rdb.erd.core.editor

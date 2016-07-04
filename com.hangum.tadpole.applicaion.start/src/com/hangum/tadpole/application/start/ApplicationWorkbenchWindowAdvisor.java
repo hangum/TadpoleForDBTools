@@ -50,6 +50,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -247,7 +248,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     				return;
     			}
     			
-    			SessionManager.addSession(userDao);
+    			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), RequestInfoUtils.getRequestIP());
     			// save login_history
     			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
     			
@@ -268,6 +269,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	    	}
     			}
     		}
+    		
+			// 중복 로그인 방지를 위해 세션을 기록합니다.
+			HttpSessionCollectorUtil.getInstance().sessionCreated(SessionManager.getEMAIL(), RWT.getRequest().getSession(), Integer.parseInt(GetPreferenceGeneral.getSessionTimeout()));
 
     	} catch (Exception e) {
     		logger.error("System login fail", e); //$NON-NLS-1$

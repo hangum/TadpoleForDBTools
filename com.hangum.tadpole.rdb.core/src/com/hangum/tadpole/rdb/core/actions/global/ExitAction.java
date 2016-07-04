@@ -26,6 +26,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
+import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -104,8 +105,7 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	 * </pre> 
 	 */
 	private void beforeLogoutAction() {
-		TadpoleSQLManager.removeAllInstance(SessionManager.getEMAIL());
-		TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
+		HttpSessionCollectorUtil.getInstance().sessionDestroyed(SessionManager.getEMAIL());
 		
 //		HttpServletResponse hsr = RWT.getResponse();
 //		try {

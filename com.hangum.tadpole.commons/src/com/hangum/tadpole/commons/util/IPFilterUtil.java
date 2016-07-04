@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
+import org.apache.log4j.Logger;
 import org.chimi.ipfilter.Config;
 import org.chimi.ipfilter.IpFilters;
 
@@ -20,7 +21,9 @@ import org.chimi.ipfilter.IpFilters;
  *
  */
 public class IPFilterUtil {
-
+	private static final Logger logger = Logger.getLogger(IPFilterUtil.class);
+	
+	
 	/**
 	 * ip filter
 	 * 
@@ -31,11 +34,16 @@ public class IPFilterUtil {
 	 * @return
 	 */
 	public static boolean ifFilterString(String strAllowIP, String strCheckIP) {
-		Config config = new Config();
-		config.setAllowFirst(true);
-		config.setDefaultAllow(false);
-		config.allow(strAllowIP);
-		
-		return IpFilters.create(config).accept(strCheckIP);
+		try {
+			Config config = new Config();
+			config.setAllowFirst(true);
+			config.setDefaultAllow(false);
+			config.allow(strAllowIP);
+			
+			return IpFilters.create(config).accept(strCheckIP);
+		} catch(Exception e) {
+			logger.error("check user ip", e);
+		}
+		return true;
 	}
 }

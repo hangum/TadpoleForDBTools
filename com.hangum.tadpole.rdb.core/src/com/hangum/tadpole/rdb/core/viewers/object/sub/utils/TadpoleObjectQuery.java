@@ -163,7 +163,7 @@ public class TadpoleObjectQuery {
 
 			// sql keyword를 설정합니다.
 			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
-				TadpoleSQLManager.setMetaData(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
+				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
 			}
 			
 		} else {

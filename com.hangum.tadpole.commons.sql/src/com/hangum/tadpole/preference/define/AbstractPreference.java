@@ -56,6 +56,7 @@ public class AbstractPreference {
 			} catch(Exception e) {
 				logger.error("User data save exception [key]" + key + "[value]" + defaultValue, e);
 			}
+			mapUserInfoData.put(key, userInfoDao);
 			
 			return defaultValue;
 		}
