@@ -391,8 +391,8 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String getIndexName(InformationSchemaDAO tc) {
-		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getTABLE_NAME();
-		else return String.format("%s.%s", tc.getSchema_name(), tc.getTABLE_NAME());
+		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getINDEX_NAME();
+		else return String.format("%s.%s", tc.getSchema_name(), tc.getINDEX_NAME());
 	}
 	
 	/**

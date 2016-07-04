@@ -33,10 +33,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.rdb.core.dialog.dml.IndexInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.TableInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.oracle.OraclePlanDAO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
@@ -84,12 +86,13 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		tvQueryPlan.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				
-				TableDAO tableDao = new TableDAO();
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
 				OraclePlanDAO selElement = (OraclePlanDAO)is.getFirstElement();
 				
 				if (StringUtils.equalsIgnoreCase("TABLE", selElement.getObjectType())){
 					
+					TableDAO tableDao = new TableDAO();
+
 					String temp = selElement.getName();				
 					String object[] = StringUtils.split(temp,  '.');
 					
@@ -109,8 +112,30 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 					}				
 
 					new TableInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao).open();
-				}else if (StringUtils.equalsIgnoreCase("TABLE", selElement.getObjectType())){
-					//new IndexInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao).open();
+				}else if (StringUtils.startsWithIgnoreCase(selElement.getObjectType(), "INDEX" )){
+					
+					InformationSchemaDAO indexDao = new InformationSchemaDAO();
+					
+					String temp = selElement.getName();				
+					String object[] = StringUtils.split(temp,  '.');
+					
+					if (object.length > 1){
+						//tableDao.setSchema_name(object[0]);					
+						String obj = object[1];					
+						String tbl[] = StringUtils.split(obj, '(');
+						if (tbl.length > 1){
+							indexDao.setINDEX_NAME(tbl[0]);
+						}else{
+							indexDao.setINDEX_NAME(obj);	
+						}					
+					}else{
+						indexDao.setINDEX_NAME(temp);
+						//tableDao.setSysName(temp);	
+					}				
+					
+
+					
+					new IndexInformationDialog(getShell(), false, getRsDAO().getUserDB(), indexDao).open();
 				}
 			}
 		});
