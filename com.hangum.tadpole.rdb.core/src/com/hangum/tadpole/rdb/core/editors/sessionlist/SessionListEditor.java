@@ -248,7 +248,7 @@ public class SessionListEditor extends EditorPart {
 		AnalyticCaller.track(this.getClass().getName());
 		
 		// init data
-		initSessionListData();
+//		initSessionListData();
 		
 		callbackui();
 	}
@@ -261,25 +261,27 @@ public class SessionListEditor extends EditorPart {
 	}
 	
 	private Runnable startUIThread() {
-		final String email = SessionManager.getEMAIL();
-		final Display display = PlatformUI.getWorkbench().getDisplay();// tvError.getTable().getDisplay();
+//		final String email = SessionManager.getEMAIL();
+		final Display display = tltmStart.getDisplay();
 
 		Runnable bgRunnable = new Runnable() {
 			@Override
 			public void run() {
 
 				while(isThread) {
-					display.asyncExec(new Runnable() {
+					display.syncExec(new Runnable() {
 						@Override
 						public void run() {
 							
 							if(isNotRefreshUi) initSessionListData();
+							
 						}
-					});	
-						
+					});
+					
 					// 20 seconds
 					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
-				}
+						
+				}	// end while 
 			};
 		};
 
@@ -374,9 +376,18 @@ public class SessionListEditor extends EditorPart {
 		} catch (Exception e) {
 			logger.error("initialize session list", e); //$NON-NLS-1$
 			
+			exitSession();
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
+	}
+	
+	private void exitSession() {
+		isThread = true;
+		isNotRefreshUi = false;
+		tltmStart.setEnabled(false);
+		tltmStop.setEnabled(false);
+		pushSession.stop();
 	}
 	
 	/**

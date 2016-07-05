@@ -122,7 +122,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			}
 			
 		} catch(Exception e) {
-			logger.error("===\n get DB Instance \n seq is " + userDB.getSeq() + "\n" , e);
+			logger.error("=== get DB Instance seq is " + userDB.getSeq() + "\n" , e);
 			
 			dbManager.remove(searchKey);
 			

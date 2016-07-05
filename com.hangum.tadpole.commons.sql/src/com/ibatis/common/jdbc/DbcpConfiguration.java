@@ -131,10 +131,10 @@ public class DbcpConfiguration {
       // add tdb properties - hangum
       List<String> listConnectionInitialize = new ArrayList<String>();
       String initSQL0 = (String) map.get("tdb.connectionInitSqls-0");
-      if (notEmpty(initSQL0)) listConnectionInitialize.add(initSQL0);
+      if (notEmpty(initSQL0) && !"TDB.SPECIAL.INITIALSTRING.0".equals(initSQL0)) listConnectionInitialize.add(initSQL0);
 
       String initSQL1 = (String) map.get("tdb.connectionInitSqls-1");
-      if (notEmpty(initSQL1)) listConnectionInitialize.add(initSQL1);
+      if (notEmpty(initSQL1) && !"TDB.SPECIAL.INITIALSTRING.1".equals(initSQL1)) listConnectionInitialize.add(initSQL1);
 
       if(!listConnectionInitialize.isEmpty()) {
     	  basicDataSource.setConnectionInitSqls(listConnectionInitialize);;
