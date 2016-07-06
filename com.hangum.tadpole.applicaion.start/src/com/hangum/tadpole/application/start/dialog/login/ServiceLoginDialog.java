@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -52,6 +53,7 @@ import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -93,7 +95,6 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 //	private Button btnNewButton_1;
 //	private Button btnNewButton_2;
 	private Composite compositeOtherBtn;
-	
 	
 	public ServiceLoginDialog(Shell shell) {
 		super(shell);
@@ -304,7 +305,10 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			String ip_servletRequest = RequestInfoUtils.getRequestIP();
+			String ip_servletRequest = getBrowserIP();
+			if(!isBrowserIP()) {
+				ip_servletRequest = RequestInfoUtils.getRequestIP();
+			}
 			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
@@ -320,6 +324,13 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 				if(!GoogleAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
 					throw new Exception(Messages.get().LoginDialog_2);
 				}
+			}
+			
+			// check session
+			HttpSession httpSession = HttpSessionCollectorUtil.getInstance().findSession(strEmail);
+			if(httpSession != null) {
+				if(logger.isDebugEnabled()) logger.debug(String.format("Already login user %s", strEmail));
+				HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
 			}
 			
 			// 로그인 유지.
