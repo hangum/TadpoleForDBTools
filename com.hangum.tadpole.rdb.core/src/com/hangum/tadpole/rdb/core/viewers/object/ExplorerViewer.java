@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -25,7 +27,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -43,6 +47,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -67,6 +72,9 @@ import com.hangum.tadpole.session.manager.SessionManager;
 public class ExplorerViewer extends ViewPart {
 	private static Logger logger = Logger.getLogger(ExplorerViewer.class);
 	public static String ID = "com.hangum.tadpole.rdb.core.view.object.explorer"; //$NON-NLS-1$
+	
+	/** schema list */
+	private Combo comboSchema;
 	
 	/** tabfolder가 초기화 될때는 tab select 이벤트 먹지 않도록 조절하지 않도록 */
 	private boolean boolInitObjectHead = true;
@@ -110,16 +118,42 @@ public class ExplorerViewer extends ViewPart {
 		gl_parent.horizontalSpacing = 0;
 		gl_parent.marginHeight = 0;
 		parent.setLayout(gl_parent);
-
+		
+		Composite compositeSchema = new Composite(parent, SWT.NONE);
+		compositeSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeSchema = new GridLayout(2, false);
+		gl_compositeSchema.horizontalSpacing = 2;
+		gl_compositeSchema.verticalSpacing = 2;
+		gl_compositeSchema.marginHeight = 2;
+		gl_compositeSchema.marginWidth = 2;
+		compositeSchema.setLayout(gl_compositeSchema);
+		
+		Label labelSchema = new Label(compositeSchema, SWT.NONE);
+		labelSchema.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
+		labelSchema.setText(Messages.get().Schemas);
+		
+		comboSchema = new Combo(compositeSchema, SWT.NONE | SWT.READ_ONLY);
+		comboSchema.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				changeSchema();
+			}
+		});
+		comboSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_compositeSearch = new GridLayout(1, false);
+		GridLayout gl_compositeSearch = new GridLayout(2, false);
 		gl_compositeSearch.horizontalSpacing = 2;
 		gl_compositeSearch.verticalSpacing = 2;
 		gl_compositeSearch.marginHeight = 2;
 		gl_compositeSearch.marginWidth = 2;
 		compositeSearch.setLayout(gl_compositeSearch);
 
+		Label labelFilter = new Label(compositeSearch, SWT.NONE);
+		labelFilter.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
+		labelFilter.setText(Messages.get().Filter);
+		
 		// filter를 설정합니다.
 		textSearch = new Text(compositeSearch, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.addKeyListener(new KeyAdapter() {
@@ -138,7 +172,7 @@ public class ExplorerViewer extends ViewPart {
 		gl_compositeBody.marginHeight = 2;
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
-
+		
 		tabFolderObject = new CTabFolder(compositeBody, SWT.NONE);
 		tabFolderObject.setBorderVisible(false);
 		tabFolderObject.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
@@ -213,6 +247,14 @@ public class ExplorerViewer extends ViewPart {
 			mongoJavaScriptComposite.filter(strSearchText);
 		}
 	}
+	
+	/**
+	 *  change schema name
+	 */
+	private void changeSchema() {
+		String strSchemaName = comboSchema.getText();
+		logger.debug("Change schema name is " + strSchemaName);
+	}
 
 	/**
 	 * management의 tree가 선택되었을때
@@ -249,7 +291,7 @@ public class ExplorerViewer extends ViewPart {
 			mongoIndexComposite.dispose();
 			mongoJavaScriptComposite.dispose();
 		}
-
+		
 		// Initialize resources
 		if (selectElement instanceof UserDBDAO || selectElement instanceof UserDBResourceDAO) {
 			selectUserDB(selectElement);
@@ -272,6 +314,27 @@ public class ExplorerViewer extends ViewPart {
 			// 존재하는 tadfolder를 삭제한다.
 			for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 			createTable();
+		}
+		
+		/** schema list*/
+		comboSchema.removeAll();
+		if(userDB != null) {
+			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				try {
+					// 스키마 리스트를 초기화 시킨다.
+					for (Object object : DBSystemSchema.getSchemas(userDB)) {
+						HashMap mapData = (HashMap)object;
+						comboSchema.add(""+mapData.get("schema"));
+					}
+					comboSchema.setText("public");
+				} catch(Exception e) {
+					logger.error("Schema list", e);
+				}
+			}	// end postgresql
+			else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				comboSchema.add(userDB.getDb());
+				comboSchema.setText(userDB.getDb());
+			}
 		}
 	}
 	

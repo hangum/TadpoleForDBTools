@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURCE_TYPE;
-import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.query.sql.pgsql.PGSQLSystem;
 import com.hangum.tadpole.rdb.core.Messages;
 
@@ -29,47 +31,33 @@ import com.hangum.tadpole.rdb.core.Messages;
  *
  */
 public class PostgresqlConnectionEXT {
-
+	private static final Logger logger = Logger.getLogger(PostgresqlConnectionEXT.class);
+	
 	/**
 	 *  extension 
 	 */
-	public static void connectionext(UserDBDAO userDB) throws Exception {
-		ResourcesDAO resourcesDAO = new ResourcesDAO(userDB);
-		List listOtherObj = new ArrayList();
-		for (Object object : DBSystemSchema.getSchemas(userDB)) {
-			DBOtherDAO dao = new DBOtherDAO();
-			Map map = (Map)object;
-
-			dao.setName(""+map.get("schema"));
-			dao.setComment(""+map.get("description"));
-			dao.setUserObject(map);
-			dao.setParent(resourcesDAO);
+	public static void connectionext(UserDBDAO userDB) {
+		try {
+			ResourcesDAO resourcesDAO = new ResourcesDAO(userDB);
+			List listOtherObj = new ArrayList();
 			
-			listOtherObj.add(dao);
+			for (Object object : PGSQLSystem.getExtension(userDB)) {
+				DBOtherDAO dao = new DBOtherDAO();
+				Map map = (Map)object;
+	
+				dao.setName(""+map.get("extname"));
+				dao.setComment(""+map.get("comment"));
+				dao.setUserObject(map);
+				dao.setParent(resourcesDAO);
+				
+				listOtherObj.add(dao);
+			}
+			resourcesDAO.setType(DB_RESOURCE_TYPE.PG_EXTENSION);
+			resourcesDAO.setName(Messages.get().Extensions);
+			resourcesDAO.setListResource(listOtherObj);
+			userDB.getListResource().add(resourcesDAO);
+		} catch(Exception e) {
+			logger.error("connection exception", e);
 		}
-		
-		resourcesDAO.setType(DB_RESOURCE_TYPE.SCHEMAS);
-		resourcesDAO.setName(Messages.get().Schemas);
-		resourcesDAO.setListResource(listOtherObj);
-		userDB.getListResource().add(resourcesDAO);
-		
-		// pg extension list
-		resourcesDAO = new ResourcesDAO(userDB);
-		listOtherObj = new ArrayList();
-		for (Object object : PGSQLSystem.getExtension(userDB)) {
-			DBOtherDAO dao = new DBOtherDAO();
-			Map map = (Map)object;
-
-			dao.setName(""+map.get("extname"));
-			dao.setComment(""+map.get("comment"));
-			dao.setUserObject(map);
-			dao.setParent(resourcesDAO);
-			
-			listOtherObj.add(dao);
-		}
-		resourcesDAO.setType(DB_RESOURCE_TYPE.PG_EXTENSION);
-		resourcesDAO.setName(Messages.get().Extensions);
-		resourcesDAO.setListResource(listOtherObj);
-		userDB.getListResource().add(resourcesDAO);
 	}
 }

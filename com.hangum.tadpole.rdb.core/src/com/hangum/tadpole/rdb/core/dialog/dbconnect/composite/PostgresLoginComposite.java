@@ -185,7 +185,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		} else {
 			textPort.setText("5432"); //$NON-NLS-1$
 			comboSSL.setText("NO"); //$NON-NLS-1$
-			textJDBCOptions.setText("&loginTimeout=5&socketTimeout=5"); //$NON-NLS-1$
+			textJDBCOptions.setText("&loginTimeout=30"); //&socketTimeout=30
 		}
 
 		Combo comboGroup = preDBInfo.getComboGroup();

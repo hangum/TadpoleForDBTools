@@ -28,7 +28,7 @@ public class PublicTadpoleDefine {
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
 	/** sert user info */
-	public static final String CERT_USER_INFO = "/***<cert_user_info><ip:%s><id:%s><app:tadpole>*/";
+	public static String CERT_USER_INFO = "";
 	
 	/** defiee default time zone*/
 	public static final String DEFAULT_TIME_ZONE = "Asia/Seoul";

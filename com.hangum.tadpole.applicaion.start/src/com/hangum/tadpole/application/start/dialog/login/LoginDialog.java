@@ -14,9 +14,7 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -25,9 +23,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.ProgressEvent;
-import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -56,10 +51,8 @@ import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPFilterUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
-import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -93,7 +86,6 @@ public class LoginDialog extends AbstractLoginDialog {
 	
 	private Composite compositeHead;
 	private Composite compositeTail;
-	private Browser browser;
 	
 	/** 사용자가 브라우저로 접속한 ip*/
 	private String browserIP = "";
@@ -101,7 +93,7 @@ public class LoginDialog extends AbstractLoginDialog {
 	public LoginDialog(Shell shell) {
 		super(shell);
 	}
-
+	
 	/**
 	 * Create contents of the dialog.
 	 * @param parent
@@ -225,66 +217,16 @@ public class LoginDialog extends AbstractLoginDialog {
 		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Website</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblHome.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		browser = new Browser(compositeTail, SWT.NONE);
-		GridData gd_browser = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
-		gd_browser.heightHint = 0;
-		gd_browser.widthHint = 0;
-		browser.setLayoutData(gd_browser);
-		
 		Label lblIssue = new Label(compositeTail, SWT.NONE);
 		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>Feedback</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 
-		findBrowserIP();
-		
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
 		initUI();
 		
 		return compositeLogin;
-	}
-	
-	/** get browser ip */
-	private void findBrowserIP() {
-		try {
-			String script = TadpoleApplicationContextManager.getRealIPScript();
-			if("".equals(script)) {
-				if(logger.isDebugEnabled()) logger.debug("set real ip script");
-				script = IOUtils.toString(LoginDialog.class.getResourceAsStream("ips.html"));
-				TadpoleApplicationContextManager.setRealIpScript(script);
-			}
-			browser.setText(script);
-			browser.addProgressListener(new ProgressListener() {
-				@Override
-				public void completed( ProgressEvent event ) {
-					findPrivateIP();
-				}
-				public void changed( ProgressEvent event ) {}			
-			});
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void findPrivateIP() {
-		String retIP = "";
-		try {
-			Object obj = browser.evaluate("return document.getElementById('list').textContent");
-			if(obj == null) retIP = "";
-			else retIP = obj.toString();
-		} catch(Exception ee) {
-			logger.error("rdb editor initialize ", ee); //$NON-NLS-1$
-			retIP = "";
-		} finally {
-			browserIP = retIP;
-		}
-		
-		if(logger.isDebugEnabled()) {
-			logger.debug("############################################################");
-			logger.debug("######## [find browser ip]"+browserIP);
-			logger.debug("############################################################");
-		}
 	}
 	
 	@Override
@@ -303,15 +245,6 @@ public class LoginDialog extends AbstractLoginDialog {
 	@Override
 	protected void okPressed() {
 		
-		if(!isBrowserIP()) {
-			
-			// 처음 브라우저 로딩시 가져오지 못하는 오류가 있어 다시 한번 검사한다.
-			findPrivateIP();
-			if(!isBrowserIP()) {
-				noticeBrowserIPMsg();
-				return;
-			}
-		}
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String strPass = StringUtils.trimToEmpty(textPasswd.getText());
 
@@ -344,10 +277,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			String ip_servletRequest = browserIP;
-			if(!isBrowserIP()) {
-				ip_servletRequest = RequestInfoUtils.getRequestIP();
-			}
+			String ip_servletRequest = RequestInfoUtils.getRequestIP();
 			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
@@ -365,24 +295,11 @@ public class LoginDialog extends AbstractLoginDialog {
 				}
 			}
 			
-			// check session
-			HttpSession httpSession = HttpSessionCollectorUtil.getInstance().findSession(strEmail);
-			if(httpSession != null) {
-				if(logger.isDebugEnabled()) logger.debug(String.format("Already login user %s", strEmail));
-				HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
-			} else {
-//				HttpSessionCollectorUtil.getInstance().sessionCreated(id, session, intMinuteTimeOut);
-			}
-			
 			// 로그인 유지.
 			registLoginID(userDao.getEmail(), strPass);
 			
 			//
-			if(!isBrowserIP()) {
-				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
-			} else {
-				SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.WEB_RTC.name(), browserIP);
-			}
+			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
@@ -411,18 +328,6 @@ public class LoginDialog extends AbstractLoginDialog {
 	}
 	
 	/**
-	 * is browserip
-	 * @return
-	 */
-	private boolean isBrowserIP() {
-		if(StringUtils.startsWith(browserIP, "n/a") || "".equals(browserIP) || null == browserIP) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
 	 * register login id
 	 * 
 	 * @param userId
@@ -442,7 +347,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			logger.error("register cookie", e);
 		}
 	}
-
+	
 	/**
 	 * validation
 	 * 
@@ -478,17 +383,6 @@ public class LoginDialog extends AbstractLoginDialog {
 			}
 		} catch (Exception e) {
 //			ignore exception
-		}
-	}
-	
-	/**
-	 * notice browser ip msg
-	 */
-	private void noticeBrowserIPMsg() {
-		// 클라이언트 브라우저 IP 식별
-		if(!isBrowserIP()) {
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().doesnotFoundPrivateIP);
-			return;
 		}
 	}
 	
