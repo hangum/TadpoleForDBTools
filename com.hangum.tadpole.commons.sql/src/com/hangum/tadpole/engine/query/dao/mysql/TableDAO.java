@@ -13,6 +13,8 @@ package com.hangum.tadpole.engine.query.dao.mysql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * table 정보 
  * 
@@ -144,5 +146,14 @@ public class TableDAO extends StructObjectDAO {
 	 */
 	public void setListColumn(List<TableColumnDAO> listColumn) {
 		this.listColumn = listColumn;
+	}
+	
+	@Override
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.getSchema_name())) {
+			return this.getName();
+		}else{
+			return String.format("%s.%s", this.getSchema_name(), this.getName());
+		}
 	}
 }

@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
@@ -200,9 +201,14 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
 			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("table_schema", userDB.getDb());
-			map.put("table_name", tableDao.getName());
-			
+
+			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				map.put("table_schema", userDB.getSchema());
+				map.put("table_name", tableDao.getName());
+			}else{
+				map.put("table_schema", userDB.getDb());
+				map.put("table_name", tableDao.getName());
+			}
 			listConstraints = sqlClient.queryForList("tableConstraintsList", map); //$NON-NLS-1$
 
 			constraintTableViewer.setInput(listConstraints);

@@ -167,6 +167,9 @@ public class TadpoleObjectQuery {
 				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
 			}
 			
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableList", userDB.getSchema()); //$NON-NLS-1$			
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$			
@@ -182,7 +185,16 @@ public class TadpoleObjectQuery {
 	public static Object getTableSizeInfo(UserDBDAO userDB, TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		 return  client.queryForObject("getTableSizeInfo", tableDao.getName());
+		Map<String, String> mapParam = new HashMap<String, String>();
+		mapParam.put("db", userDB.getDb());
+		if(StringUtils.isEmpty(tableDao.getSchema_name())){
+			mapParam.put("schema_name", userDB.getSchema());
+		}else{
+			mapParam.put("schema_name", tableDao.getSchema_name());
+		}
+		mapParam.put("table", tableDao.getName());
+		
+		 return  client.queryForObject("getTableSizeInfo", mapParam);
 		
 	}
 	
@@ -192,7 +204,35 @@ public class TadpoleObjectQuery {
 	public static Object getStatisticsInfo(UserDBDAO userDB, TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		 return  client.queryForObject("getStatisticsInfo", tableDao.getName());
+		Map<String, String> mapParam = new HashMap<String, String>();
+		mapParam.put("db", userDB.getDb());
+		if(StringUtils.isEmpty(tableDao.getSchema_name())){
+			mapParam.put("schema_name", userDB.getSchema());
+		}else{
+			mapParam.put("schema_name", tableDao.getSchema_name());
+		}
+		mapParam.put("table", tableDao.getName());
+
+		return  client.queryForObject("getStatisticsInfo", mapParam);
+		
+	}
+	
+	/**
+	 * 뷰의 추가정보를 조회한다.
+	 */
+	public static Object getViewStatisticsInfo(UserDBDAO userDB, TableDAO tableDao) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		
+		Map<String, String> mapParam = new HashMap<String, String>();
+		mapParam.put("db", userDB.getDb());
+		if(StringUtils.isEmpty(tableDao.getSchema_name())){
+			mapParam.put("schema_name", userDB.getSchema());
+		}else{
+			mapParam.put("schema_name", tableDao.getSchema_name());
+		}
+		mapParam.put("table", tableDao.getName());
+
+		return  client.queryForObject("getViewStatisticsInfo", mapParam);
 		
 	}
 	
@@ -296,7 +336,7 @@ public class TadpoleObjectQuery {
 	 * @param strObject
 	 * @return
 	 */
-	public static TableDAO getTable(UserDBDAO userDB, String strObject) throws Exception {
+	public static TableDAO getTable(UserDBDAO userDB, TableDAO tableDAO) throws Exception {
 		TableDAO tableDao = null;
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
@@ -304,7 +344,7 @@ public class TadpoleObjectQuery {
 			List<TableDAO> tmpShowTables = new TajoConnectionManager().tableList(userDB);
 			
 			for(TableDAO dao : tmpShowTables) {
-				if(dao.getName().equals(strObject)) {
+				if(dao.getName().equals(tableDAO.getName())) {
 					showTables.add(dao);
 					break;
 				}
@@ -314,7 +354,7 @@ public class TadpoleObjectQuery {
 			List<TableDAO> tmpShowTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 			
 			for(TableDAO dao : tmpShowTables) {
-				if(dao.getName().equals(strObject)) {
+				if(dao.getName().equals(tableDAO.getName())) {
 					showTables.add(dao);
 					break;
 				}
@@ -322,15 +362,22 @@ public class TadpoleObjectQuery {
 		} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 			Map<String, Object> mapParam = new HashMap<String, Object>();
 			
-			mapParam.put("user_name", 	StringUtils.substringBefore(strObject, ".")); //$NON-NLS-1$
-			mapParam.put("table_name", 	StringUtils.substringAfter(strObject, ".")); //$NON-NLS-1$
+			mapParam.put("user_name", 	StringUtils.substringBefore(tableDAO.getSchema_name(), ".")); //$NON-NLS-1$
+			mapParam.put("table_name", 	StringUtils.substringAfter(tableDAO.getName(), ".")); //$NON-NLS-1$
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			Map<String, Object> mapParam = new HashMap<String, Object>();
+			mapParam.put("schema", 	tableDAO.getSchema_name()); //$NON-NLS-1$
+			mapParam.put("name", 	tableDAO.getName()); //$NON-NLS-1$
+			
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$			
 		} else {
 			Map<String, Object> mapParam = new HashMap<String, Object>();
-			mapParam.put("db", 	userDB.getDb()); //$NON-NLS-1$
-			mapParam.put("name", 	strObject); //$NON-NLS-1$
+			mapParam.put("db", 	tableDAO.getSchema_name()); //$NON-NLS-1$
+			mapParam.put("name", 	tableDAO.getName()); //$NON-NLS-1$
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$			
@@ -349,6 +396,24 @@ public class TadpoleObjectQuery {
 	}
 
 	/**
+	 * 전체 오브젝트 목록을 조회한다.
+	 * @return
+	 * @throws Exception
+	 */
+	
+	public static List<HashMap> getObjectInfo(UserDBDAO userDB, String object_type, String object_name) throws Exception {
+
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("object_type", object_type);
+		paramMap.put("object_name", object_name);
+		
+		return sqlClient.queryForList("allObjects", paramMap); //$NON-NLS-1$
+		 
+	}
+
+	/**
 	 * 인덱스의 컬럼 목록을 조회한다.
 	 * @param userDB
 	 * @param indexDao
@@ -360,7 +425,7 @@ public class TadpoleObjectQuery {
 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		HashMap<String, String>paramMap = new HashMap<String, String>();
-		paramMap.put("table_schema", indexDao.getTABLE_SCHEMA()); //$NON-NLS-1$
+		paramMap.put("table_schema", indexDao.getTABLE_SCHEMA()==null?indexDao.getSchema_name():indexDao.getTABLE_SCHEMA()); //$NON-NLS-1$
 		paramMap.put("table_name", indexDao.getTABLE_NAME()); //$NON-NLS-1$
 		paramMap.put("index_name", indexDao.getINDEX_NAME()); //$NON-NLS-1$
 		
@@ -378,7 +443,11 @@ public class TadpoleObjectQuery {
 	public static Object getIndexStatisticsInfo(UserDBDAO userDB, InformationSchemaDAO indexDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		 return  client.queryForObject("getIndexStatisticsInfo", indexDao.getINDEX_NAME());
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("schema", indexDao.getTABLE_SCHEMA()==null?indexDao.getSchema_name():indexDao.getTABLE_SCHEMA()); //$NON-NLS-1$
+		paramMap.put("index_name", indexDao.getINDEX_NAME()); //$NON-NLS-1$
+
+		return  client.queryForObject("getIndexStatisticsInfo", paramMap);
 		
 	}
 

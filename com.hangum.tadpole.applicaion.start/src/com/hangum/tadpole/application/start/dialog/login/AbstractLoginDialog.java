@@ -31,8 +31,8 @@ public class AbstractLoginDialog extends Dialog {
 	protected int ID_NEW_USER	 	= IDialogConstants.CLIENT_ID 	+ 1;
 	protected int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
 	
-	/** 사용자가 브라우저로 접속한 ip*/
-	private String browserIP = "";
+//	/** 사용자가 브라우저로 접속한 ip*/
+//	private String browserIP = "";
 
 	protected AbstractLoginDialog(Shell parentShell) {
 		super(parentShell);
@@ -43,34 +43,6 @@ public class AbstractLoginDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
-	}
-	
-	/**
-	 * is browserip
-	 * @return
-	 */
-	protected boolean isBrowserIP() {
-		if(StringUtils.startsWith(getBrowserIP(), "n/a") || "".equals(getBrowserIP()) || null == getBrowserIP()) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * set browser ip
-	 * @param browserIP
-	 */
-	public void setBrowserIP(String browserIP) {
-		this.browserIP = browserIP;
-	}
-	
-	/**
-	 * get browser ip
-	 * @return
-	 */
-	public String getBrowserIP() {
-		return browserIP;
 	}
 	
 	@Override

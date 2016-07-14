@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.db.vendor.cubrid;
+package com.hangum.tadpole.rdb.core.editors.main.utils.plan;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,9 +21,11 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 import cubrid.jdbc.driver.CUBRIDStatement;
 
@@ -53,11 +55,12 @@ public class CubridExecutePlanUtils {
 	 * cubrid execute plan
 	 * 
 	 * @param userDB
-	 * @param sql
+	 * @param reqQuery
 	 * @return
 	 * @throws Exception
 	 */
-	public static String plan(UserDBDAO userDB, String sql) throws Exception {
+	public static String plan(UserDBDAO userDB, final RequestQuery reqQuery) throws Exception {
+		String sql = reqQuery.getSql();
 		if(!sql.toLowerCase().startsWith("select")) {
 			logger.error("[cubrid execute plan ]" + sql);
 			throw new Exception ("This statment not select. please check.");
@@ -67,9 +70,6 @@ public class CubridExecutePlanUtils {
 		PreparedStatement pstmt = null;
 
 		try {
-//			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-//			conn = DriverManager.getConnection(userDB.getUrl(), userDB.getUsers(), userDB.getPasswd());
-//			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.
 			conn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
 			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.
 
@@ -78,16 +78,19 @@ public class CubridExecutePlanUtils {
 			sql = "select " + RECOMPILE + sql;				
 
 			pstmt = conn.prepareStatement(sql);
+			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
+				final Object[] statementParameter = reqQuery.getStatementParameter();
+				for (int i=1; i<=statementParameter.length; i++) {
+					pstmt.setObject(i, statementParameter[i-1]);					
+				}	
+			}
 			((CUBRIDStatement) pstmt).setQueryInfo(true);
 			rs = pstmt.executeQuery();
 			
 			String plan = ((CUBRIDStatement) pstmt).getQueryplan(); // 수행한 질의 플랜 정보를 가져오는 메소드.
-//			conn.commit();
-			
 			if(logger.isDebugEnabled()) logger.debug("cubrid plan text : " + plan);
 			
 			return plan;
-			
 		} finally {
 			if (rs != null) rs.close();
 			if (pstmt != null) pstmt.close();

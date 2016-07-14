@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -159,7 +160,11 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 						
-						showPackageProcFuncColumns = sqlClient.queryForList("packageBodyList", selectPackageName); //$NON-NLS-1$
+						HashMap<String, String>paramMap = new HashMap<String, String>();
+						paramMap.put("schema_name", userDB.getSchema());
+						paramMap.put("package_name", selectPackageName);
+						
+						showPackageProcFuncColumns = sqlClient.queryForList("packageBodyList", paramMap); //$NON-NLS-1$
 
 					} else
 						showPackageProcFuncColumns = null;
@@ -341,7 +346,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showPackage = sqlClient.queryForList("packageList", userDB.getDb()); //$NON-NLS-1$
+			showPackage = sqlClient.queryForList("packageList", userDB.getSchema()); //$NON-NLS-1$
 
 			packageTableViewer.setInput(showPackage);
 			packageTableViewer.refresh();

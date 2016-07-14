@@ -26,6 +26,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -82,61 +84,21 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tree.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent event) {
+				if (event.keyCode == SWT.F4) {
+					IStructuredSelection is = (IStructuredSelection) tvQueryPlan.getSelection();
+					OraclePlanDAO selElement = (OraclePlanDAO)is.getFirstElement();				
+					openInformationDialog(selElement);
+				}
+			}
+		});
 		
 		tvQueryPlan.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				
+			public void doubleClick(DoubleClickEvent event) {				
 				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				OraclePlanDAO selElement = (OraclePlanDAO)is.getFirstElement();
-				
-				if (StringUtils.equalsIgnoreCase("TABLE", selElement.getObjectType())){
-					
-					TableDAO tableDao = new TableDAO();
-
-					String temp = selElement.getName();				
-					String object[] = StringUtils.split(temp,  '.');
-					
-					if (object.length > 1){
-						//tableDao.setSchema_name(object[0]);					
-						String obj = object[1];					
-						String tbl[] = StringUtils.split(obj, '(');
-						if (tbl.length > 1){
-							tableDao.setSysName(tbl[0]);
-							tableDao.setTable_name(tbl[0]);
-						}else{
-							tableDao.setSysName(obj);	
-							tableDao.setTable_name(obj);
-						}					
-					}else{
-						tableDao.setSysName(temp);	
-					}				
-
-					new TableInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao).open();
-				}else if (StringUtils.startsWithIgnoreCase(selElement.getObjectType(), "INDEX" )){
-					
-					InformationSchemaDAO indexDao = new InformationSchemaDAO();
-					
-					String temp = selElement.getName();				
-					String object[] = StringUtils.split(temp,  '.');
-					
-					if (object.length > 1){
-						//tableDao.setSchema_name(object[0]);					
-						String obj = object[1];					
-						String tbl[] = StringUtils.split(obj, '(');
-						if (tbl.length > 1){
-							indexDao.setINDEX_NAME(tbl[0]);
-						}else{
-							indexDao.setINDEX_NAME(obj);	
-						}					
-					}else{
-						indexDao.setINDEX_NAME(temp);
-						//tableDao.setSysName(temp);	
-					}				
-					
-
-					
-					new IndexInformationDialog(getShell(), false, getRsDAO().getUserDB(), indexDao).open();
-				}
+				OraclePlanDAO selElement = (OraclePlanDAO)is.getFirstElement();				
+				openInformationDialog(selElement);
 			}
 		});
 		
@@ -159,6 +121,61 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		compositeTail.setLayout(gl_compositeResult);
 	}
 
+	/**
+	 * 플랜뷰에서 F4를 누르거나 더블클릭했을때 관련 오브젝트의 상세 내역을 표시한다.
+	 * @param selElement
+	 */
+	private void openInformationDialog(OraclePlanDAO selElement) {
+		if (StringUtils.equalsIgnoreCase("TABLE", selElement.getObjectType())){
+			
+			TableDAO tableDao = new TableDAO();
+
+			String temp = selElement.getName();				
+			String object[] = StringUtils.split(temp,  '.');
+			
+			if (object.length > 1){
+				tableDao.setSchema_name(object[0]);
+				
+				String obj = object[1];					
+				String tbl[] = StringUtils.split(obj, '(');
+				if (tbl.length > 1){
+					tableDao.setSysName(tbl[0]);
+					tableDao.setTable_name(tbl[0]);
+				}else{
+					tableDao.setSysName(obj);	
+					tableDao.setTable_name(obj);
+				}					
+			}else{
+				tableDao.setSysName(temp);	
+				tableDao.setTable_name(temp);
+			}				
+
+			new TableInformationDialog(getShell(), false, getRsDAO().getUserDB(), tableDao).open();
+		}else if (StringUtils.startsWithIgnoreCase(selElement.getObjectType(), "INDEX" )){
+			
+			InformationSchemaDAO indexDao = new InformationSchemaDAO();
+			
+			String temp = selElement.getName();				
+			String object[] = StringUtils.split(temp,  '.');
+			
+			if (object.length > 1){
+				indexDao.setTABLE_SCHEMA(object[0]);					
+				
+				String obj = object[1];					
+				String tbl[] = StringUtils.split(obj, '(');
+				if (tbl.length > 1){
+					indexDao.setINDEX_NAME(tbl[0]);
+				}else{
+					indexDao.setINDEX_NAME(obj);	
+				}					
+			}else{
+				indexDao.setINDEX_NAME(temp);
+			}				
+			
+			new IndexInformationDialog(getShell(), false, getRsDAO().getUserDB(), indexDao).open();
+		}
+	}
+	
 	public void setQueryPlanData(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
 		if(tvQueryPlan.getTree().getColumnCount() == 0) createTreeColumn(rsDAO);
 		listOraclePlanDao.clear();
@@ -172,31 +189,21 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		
 		for (Map<Integer, Object> map : listObj) {
 			OraclePlanDAO dao = new OraclePlanDAO();
-			dao.setOperation(map.get(1).toString());
-			dao.setName(map.get(2).toString());
-			dao.setCost(map.get(3).toString());
-			dao.setRows(map.get(4).toString());
-			dao.setBytes(map.get(5).toString());
-			dao.setPos(Integer.parseInt(map.get(6).toString()));
-			dao.setFilter(map.get(7).toString());
-			dao.setAccess(map.get(8).toString());
-			dao.setObjectType(map.get(9).toString());
+			
+			dao.setOperation(""+map.get(1));
+			dao.setName(""+map.get(2));
+			dao.setCost(""+map.get(3));
+			dao.setRows(""+map.get(4));
+			dao.setBytes(map.get(5)==null?"":""+map.get(5));
+			dao.setPos(Integer.parseInt(map.get(6)==null?"0":""+map.get(6)));
+			dao.setFilter(map.get(7)==null?"":""+map.get(7));
+			dao.setAccess(map.get(8)==null?"":""+map.get(8));
+			dao.setObjectType(map.get(9)==null?"":""+map.get(9));
 			
 			if(listOraclePlanDao.isEmpty()) {
 				listOraclePlanDao.add(dao);
 			} else {
-			
-				boolean isAdd = false;
-				for(OraclePlanDAO alOraclePlan : listOraclePlanDao) {
-					int pos = alOraclePlan.getPos();
-					if((dao.getPos()-1) == pos) {
-						alOraclePlan.getListChildren().add(dao);
-						isAdd = true;
-						break;
-					}
-				}
-				if(!isAdd) listOraclePlanDao.add(dao);
-				
+				addChild(listOraclePlanDao, dao);
 			}
 		}
 		
@@ -208,6 +215,25 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		tvQueryPlan.expandAll();
 		
 		compositeTail.execute(getTailResultMsg());
+	}
+	
+	private void addChild(List<OraclePlanDAO> list,  OraclePlanDAO dao){
+		int size=0;
+		for(OraclePlanDAO alOraclePlan : list) {
+			if(alOraclePlan.getListChildren().size() > 0) {
+				addChild(alOraclePlan.getListChildren(), dao);
+				return;
+			}			
+			size++;			
+			if (list.size() > size) continue;
+			
+			if((dao.getPos()-1) == alOraclePlan.getPos()) {
+				alOraclePlan.getListChildren().add(dao);
+				return;						
+			}
+		}
+		list.add(dao);
+		return;
 	}
 
 	/**

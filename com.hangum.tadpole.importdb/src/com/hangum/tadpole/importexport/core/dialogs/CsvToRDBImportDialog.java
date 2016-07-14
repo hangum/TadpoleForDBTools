@@ -481,14 +481,21 @@ public class CsvToRDBImportDialog extends Dialog {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
 			if (btnTrigger.getSelection()){
-				disableObjectResults = sqlClient.queryForList("triggerListInTable", tableName); //$NON-NLS-1$
+				Map<String, String> parameters = new HashMap<String, String>(2);
+				parameters.put("schema_name", userDB.getSchema());
+				parameters.put("table_name", tableName);
+				disableObjectResults = sqlClient.queryForList("triggerListInTable", parameters); //$NON-NLS-1$
 			}
 
 			if (btnPk.getSelection()){
+				Map<String, String> parameters = new HashMap<String, String>(2);
 				if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
-					Map<String, String> parameters = new HashMap<String, String>(2);
 					parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 					parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
+					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
+				} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+					parameters.put("schema_name", userDB.getSchema());
+					parameters.put("table_name", tableName);
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
 				} else {
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$

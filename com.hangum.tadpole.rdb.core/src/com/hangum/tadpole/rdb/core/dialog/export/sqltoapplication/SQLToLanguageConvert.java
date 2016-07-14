@@ -20,7 +20,6 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQ
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToMyBatisConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToPHPConvert;
-import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToRealGridConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjHeaderDAO;
 
 /**
@@ -50,8 +49,8 @@ public class SQLToLanguageConvert {
 			return SQLToMyBatisConvert.sqlToString(userDB, (String) options.get("name"), sql);
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.AXISJ) {
 			return SQLToAxisjConvert.sqlToString(userDB, sql, options, listAxisjHeader);
-		} else if(application == EditorDefine.SQL_TO_APPLICATION.REAL_GRID) {
-			return SQLToRealGridConvert.sqlToString(userDB, (String) options.get("name"), sql);
+//		} else if(application == EditorDefine.SQL_TO_APPLICATION.REAL_GRID) {
+//			return SQLToRealGridConvert.sqlToString(userDB, (String) options.get("name"), sql);
 		}
 		
 		return "*** not set appliation type ****";
@@ -68,8 +67,8 @@ public class SQLToLanguageConvert {
 			return SQLToMyBatisConvert.DEFAULT_VARIABLE;
 		} else if(application == EditorDefine.SQL_TO_APPLICATION.AXISJ) {
 			return SQLToAxisjConvert.DEFAULT_VARIABLE;
-		} else if(application == EditorDefine.SQL_TO_APPLICATION.REAL_GRID) {
-			return SQLToRealGridConvert.DEFAULT_VARIABLE;
+//		} else if(application == EditorDefine.SQL_TO_APPLICATION.REAL_GRID) {
+//			return SQLToRealGridConvert.DEFAULT_VARIABLE;
 		}
 		
 		return "*** not set appliation type ****";

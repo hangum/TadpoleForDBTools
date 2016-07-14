@@ -11,6 +11,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.rdb;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 테이블의 모든 컬럼에 대한 정보를 조회
  * 
@@ -153,5 +155,15 @@ public class OracleSynonymDAO extends AbstractDAO {
 	public void setObject_type(String object_type) {
 		this.object_type = object_type;
 	}
+	
+	@Override
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.schema_name)) {
+			return this.getSynonym_name();
+		}else{
+			return String.format("%s.%s", this.getSchema_name(), this.getSynonym_name());
+		}
+	}
+
 
 }

@@ -43,7 +43,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.IPFilterUtil;
+import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -240,7 +240,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			UserDAO userDao = TadpoleSystem_UserQuery.findUser(PublicTadpoleDefine.SYSTEM_DEFAULT_USER);
     			
     			String strAllowIP = userDao.getAllow_ip();
-    			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
+    			boolean isAllow = IPUtil.ifFilterString(strAllowIP, RequestInfoUtils.getRequestIP());
     			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
     			if(!isAllow) {
     				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
@@ -264,6 +264,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	    	    	}
     			} else {
     				LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
+//    				SpecialLoginDialog loginDialog = new SpecialLoginDialog(Display.getCurrent().getActiveShell());
 	    	    	if(Dialog.OK == loginDialog.open()) {
 	    	    		initializeUserSession();
 	    	    	}

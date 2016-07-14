@@ -253,7 +253,11 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						
 						executeSQL(userDB, sbQuery.toString()); //$NON-NLS-1$
 					} else {
-						executeSQL(userDB, "drop function " + functionDAO.getName()); //$NON-NLS-1$
+						if (StringUtils.isEmpty(functionDAO.getSchema_name())){
+							executeSQL(userDB, "drop function " + functionDAO.getName()); //$NON-NLS-1$
+						}else{
+							executeSQL(userDB, "drop function " + functionDAO.getSchema_name() +"."+ functionDAO.getName()); //$NON-NLS-1$
+						}
 					}
 					
 					refreshFunction();

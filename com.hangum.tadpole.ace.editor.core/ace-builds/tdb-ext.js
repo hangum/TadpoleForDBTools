@@ -13,6 +13,7 @@
  *  @author hangum, hangum@gmail.com
  */
 var editorService = {
+
 	/** initialize editor */
 	RDBinitEditor : function(varMode, varType, varInitText, varAutoSave, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
 	MONGODBinitEditor : function(varMode, varInitText, varTheme, varFontSize, varIsWrap, varWarpLimit, varIsShowGutter) {},
@@ -72,6 +73,9 @@ var editorService = {
 	F4_DML_OPEN			: "40",
 	GENERATE_SELECT		: "45"
 };
+
+/** debug option */
+var isDebug = false;
 
 var varDBType;
 /** 에디터가 저장 할 수 있는 상태인지 */
@@ -596,7 +600,7 @@ parsePartSQL = function() {
 	var isQuery = false;
 	var checkQuery = partQuery[0].split("\n")
 	for(var i=0; i<checkQuery.length; i++) {
-		if(checkQuery[i].trim() == "" | stringStartsWith(checkQuery[i], "--")) {
+		if(checkQuery[i].trim() == "" | stringStartsWith(checkQuery[i], "--")  | stringStartsWith(checkQuery[i], "/*")) {
 		} else {
 			isQuery = true;
 			break;
@@ -723,7 +727,7 @@ findCursorSQL = function(varRow, varColumn) {
  		firstLineQuery += "\n";
  		_startColumn = editor.session.getLine(startRow).length - firstLineQuery.length;
  	}
- 	console.log("==>[Start position]" + _startRow + "." + _startColumn);
+ 	if(isDebug) console.log("==>[Start position]" + _startRow + "." + _startColumn);
  	
  	// 다음행부터 마지막 행까지 가져온다.
  	var middleQuery = "";
@@ -746,10 +750,10 @@ findCursorSQL = function(varRow, varColumn) {
  	}
  	// 쿼리의 마지막 행과 열을 기록한다.
  	_endRow = endRow, _endColumn = lastLineQuery.length;
- 	console.log("==>[End position]" + _endRow + "." + _endColumn);
+ 	if(isDebug) console.log("==>[End position]" + _endRow + "." + _endColumn);
  	
 	var fullyQuery = firstLineQuery + middleQuery + lastLineQuery + " ";
-	console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
+	if(isDebug) console.log("[fully query][" + firstLineQuery + "][" + middleQuery + "][" + lastLineQuery + "]");
 
 	//////////////////////////////////////////////////////
 	/// 쿼리 중에 커서의 위치를 계산한다. ////////////////////////

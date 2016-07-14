@@ -11,6 +11,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.rdb;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 오라클 시노님의 세부 컬럼 정보.
  * 
@@ -211,5 +213,15 @@ public class OracleSynonymColumnDAO extends AbstractDAO {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
+	
+	@Override
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.schema_name)) {
+			return String.format("%s.%s", this.getTable_name(), this.getColumn_name());
+		}else{
+			return String.format("%s.%s.%s", this.getSchema_name(), this.getTable_name(), this.getColumn_name());
+		}
+	}
+
 
 }

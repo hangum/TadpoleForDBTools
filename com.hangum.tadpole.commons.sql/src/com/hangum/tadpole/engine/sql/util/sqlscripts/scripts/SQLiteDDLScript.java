@@ -33,9 +33,9 @@ public class SQLiteDDLScript extends AbstractRDBDDLScript {
 	}
 
 	@Override
-	public String getViewScript(String strName) throws Exception {
+	public String getViewScript(TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		return ""+client.queryForObject("getViewScript", strName);
+		return ""+client.queryForObject("getViewScript", tableDao.getName());
 	}
 
 	@Override

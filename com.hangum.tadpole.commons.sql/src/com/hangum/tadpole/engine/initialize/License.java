@@ -21,7 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 
 /**
- * License loader
+ * License loader (extension point)
  * 
  * @author hangum
  *

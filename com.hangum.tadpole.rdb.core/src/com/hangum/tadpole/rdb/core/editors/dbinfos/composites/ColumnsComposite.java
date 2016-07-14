@@ -326,6 +326,7 @@ public class ColumnsComposite extends Composite {
 			if (userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 
 				List<HashMap<String, String>> sqliteTableList = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
+				
 				listTableInform = new ArrayList<RDBInfomationforColumnDAO>();
 				for (HashMap<String, String> table : sqliteTableList) {
 
@@ -344,6 +345,10 @@ public class ColumnsComposite extends Composite {
 					}
 				}
 
+			} else if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				HashMap<String, String>paramMap = new HashMap<String, String>();
+				paramMap.put("schema_name", userDB.getSchema()); //$NON-NLS-1$
+				listTableInform = sqlClient.queryForList("columnInformation", paramMap); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				listTableInform = sqlClient.queryForList("columnInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
 			}

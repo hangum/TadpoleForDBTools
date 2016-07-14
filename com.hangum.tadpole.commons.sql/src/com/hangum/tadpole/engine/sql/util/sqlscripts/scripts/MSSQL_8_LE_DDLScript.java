@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -152,13 +153,13 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	 * @see com.hangum.tadpole.rdb.core.editors.objects.table.scripts.RDBDDLScript#getViewScript(java.lang.String)
 	 */
 	@Override
-	public String getViewScript(String strName) throws Exception {
+	public String getViewScript(TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		StringBuilder result = new StringBuilder("");
 //		result.append("/* DROP VIEW " + strName + "; */ \n\n");
 
-		List<String> srcProcList = client.queryForList("getViewScript", strName);				
+		List<String> srcProcList = client.queryForList("getViewScript", tableDao.getName());				
 		for (int i=0; i<srcProcList.size(); i++){
 			result.append(srcProcList.get(i));
 		}

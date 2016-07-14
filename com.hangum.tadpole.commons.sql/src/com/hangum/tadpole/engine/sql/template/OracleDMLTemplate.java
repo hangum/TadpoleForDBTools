@@ -45,6 +45,12 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 														  "BEGIN " + PublicTadpoleDefine.LINE_SEPARATOR +
 														  "	SELECT COUNT(*) INTO param1 FROM t; " + PublicTadpoleDefine.LINE_SEPARATOR +
 														  "END;";
+	/** function */
+	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE OR REPLACE FUNCTION hello (param1 VARCHAR2) RETURNS VARCHAR2 AS " + PublicTadpoleDefine.LINE_SEPARATOR + 
+														  "BEGIN " + 
+														  "RETURN CONCAT('Hello', param1);" + PublicTadpoleDefine.LINE_SEPARATOR + 
+														  "END; ";
+
 	/** package */
 	public static final String  TMP_CREATE_PACKAGE_STMT = "CREATE OR REPLACE PACKAGE PKG_SAMPLE " + PublicTadpoleDefine.LINE_SEPARATOR +
 														 " AS " + PublicTadpoleDefine.LINE_SEPARATOR +

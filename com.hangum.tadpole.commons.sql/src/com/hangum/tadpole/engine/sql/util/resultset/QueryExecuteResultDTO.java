@@ -35,15 +35,14 @@ public class QueryExecuteResultDTO extends ResultSetUtilDTO {
 			boolean isShowRownum, 
 			ResultSet resultSet, 
 			int intSelectLimitCnt, 
-			int intLastIndex, 
-			String strNullValue
+			int intLastIndex
 	) throws Exception {
-		super(userDB, reqQuery, isShowRownum, resultSet, intSelectLimitCnt, intLastIndex, strNullValue);
+		super(userDB, reqQuery, isShowRownum, resultSet, intSelectLimitCnt, intLastIndex);
 	}
 
 	public QueryExecuteResultDTO(
-			UserDBDAO userDB, String reqQuery, boolean isShowRownum, ResultSet rs, int queryResultCount, String strNullValue) throws Exception {
-		super(userDB, reqQuery, isShowRownum, rs, queryResultCount, 0, strNullValue);
+			UserDBDAO userDB, String reqQuery, boolean isShowRownum, ResultSet rs, int queryResultCount) throws Exception {
+		super(userDB, reqQuery, isShowRownum, rs, queryResultCount, 0);
 	}
 	
 	/**

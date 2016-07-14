@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -143,7 +146,13 @@ public class MainEditor extends EditorExtension {
 			try {
 				dBResourceAuto = TadpoleSystem_UserDBResource.getDefaultDBResourceData(userDB);
 				if(dBResourceAuto != null) {
-					if(!StringUtils.isEmpty(dBResourceAuto.getDataString())) initDefaultEditorStr = dBResourceAuto.getDataString() + Messages.get().AutoRecoverMsg + initDefaultEditorStr;
+					if(!StringUtils.isEmpty(dBResourceAuto.getDataString())) {
+						if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+							initDefaultEditorStr = dBResourceAuto.getDataString() + Messages.get().AutoRecoverMsg_mysql + initDefaultEditorStr;
+						} else {
+							initDefaultEditorStr = dBResourceAuto.getDataString() + Messages.get().AutoRecoverMsg + initDefaultEditorStr;
+						}
+					}
 				}
 			} catch(Exception e) {
 				logger.error("Get default resource", e);
@@ -676,7 +685,17 @@ public class MainEditor extends EditorExtension {
 		String strCheckSQL = SQLUtil.removeCommentAndOthers(userDB, reqQuery.getSql());
 		if(StringUtils.startsWithIgnoreCase(strCheckSQL, "desc ")) {
 			String strObject = StringUtils.removeStartIgnoreCase(strCheckSQL, "desc ");
-			DialogUtil.popupDMLDialog(getUserDB(), strObject);
+			/*
+			TableDAO tableDAO = new TableDAO();
+			tableDAO.setSchema_name(userDB.getSchema());
+			tableDAO.setName(strObject);
+			*/
+			Map<String, String> map = new HashMap<String, String>();
+			
+			map.put("OBJECT_NAME", strObject);
+			map.put("OBJECT_OWNER", userDB.getSchema());
+			
+			DialogUtil.popupObjectInformationDialog(getUserDB(), map);
 		} else {
 			resultMainComposite.executeCommand(reqQuery);
 		}

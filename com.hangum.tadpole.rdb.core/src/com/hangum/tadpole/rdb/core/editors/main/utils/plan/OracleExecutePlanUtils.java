@@ -8,15 +8,17 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.db.vendor.oracle;
+package com.hangum.tadpole.rdb.core.editors.main.utils.plan;
 
 import java.sql.PreparedStatement;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
+import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * oracle execute plan
@@ -30,22 +32,28 @@ public class OracleExecutePlanUtils {
 	 * oracle query plan을 실행합니다. 
 	 * 
 	 * @param userDB
-	 * @param sql
+	 * @param reqQuery
 	 * @param planTableName
 	 * @throws Exception
 	 */
-	public static void plan(UserDBDAO userDB, String sql, String planTableName, java.sql.Connection javaConn, String statement_id  ) throws Exception {
+	public static void plan(UserDBDAO userDB, RequestQuery reqQuery, String planTableName, java.sql.Connection javaConn, String statement_id  ) throws Exception {
 		
-		PreparedStatement stmt = null;
+		PreparedStatement pstmt = null;
 		try {
-			String query = PartQueryUtil.makeExplainQuery(userDB,  sql);
+			String query = PartQueryUtil.makeExplainQuery(userDB, reqQuery.getSql());
 			query = StringUtils.replaceOnce(query, PublicTadpoleDefine.STATEMENT_ID, statement_id);
 			query = StringUtils.replaceOnce(query, PublicTadpoleDefine.DELIMITER, planTableName);
 			
-			stmt = javaConn.prepareStatement( query );
-			stmt.execute();
+			pstmt = javaConn.prepareStatement( query );
+			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
+				final Object[] statementParameter = reqQuery.getStatementParameter();
+				for (int i=1; i<=statementParameter.length; i++) {
+					pstmt.setObject(i, statementParameter[i-1]);					
+				}	
+			}
+			pstmt.execute();
 		} finally {
-			try { if(stmt != null) stmt.close(); } catch(Exception e) {}
+			try { if(pstmt != null) pstmt.close(); } catch(Exception e) {}
 		}
 		
 	}

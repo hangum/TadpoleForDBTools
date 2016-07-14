@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.viewers.object;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -141,6 +142,7 @@ public class ExplorerViewer extends ViewPart {
 		});
 		comboSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeSearch = new GridLayout(2, false);
@@ -253,6 +255,9 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void changeSchema() {
 		String strSchemaName = comboSchema.getText();
+		this.userDB.setSchema(strSchemaName);
+		
+		tableComposite.refreshTable(userDB, true, "");
 		logger.debug("Change schema name is " + strSchemaName);
 	}
 
@@ -330,12 +335,33 @@ public class ExplorerViewer extends ViewPart {
 				} catch(Exception e) {
 					logger.error("Schema list", e);
 				}
-			}	// end postgresql
-			else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			}else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				
+				try {
+					for (Object object : DBSystemSchema.getSchemas(userDB)) {
+						HashMap<String, String> mapData = (HashMap)object;
+						comboSchema.add(mapData.get("SCHEMA"));
+					}
+
+					comboSchema.select(0);
+					//TODO: 최초 로그인시 userDB 설정시 기본 스키마 지정해 놓는 방법.
+					userDB.setSchema(comboSchema.getText());
+				} catch (Exception e) {
+					comboSchema.setItems( new String[]{userDB.getSchema()} );
+					e.printStackTrace();
+				}
+			}else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			
+				comboSchema.add(userDB.getDb());
+				comboSchema.setText(userDB.getDb());
+			}else{
+			
 				comboSchema.add(userDB.getDb());
 				comboSchema.setText(userDB.getDb());
 			}
 		}
+		comboSchema.setVisibleItemCount(comboSchema.getItemCount() > 15 ? 15 : comboSchema.getItemCount());
+		
 	}
 	
 	/**

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
+import org.apache.commons.lang.StringUtils;
+
 public class TriggerDAO extends StructObjectDAO {
 	String Trigger;	
 	String Event;
@@ -39,6 +41,14 @@ public class TriggerDAO extends StructObjectDAO {
 	String db;
 	
 	public TriggerDAO() {
+	}
+	
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.getSchema_name())) {
+			return this.getTrigger();
+		}else{
+			return String.format("%s.%s", this.getSchema_name(), this.getTrigger());
+		}
 	}
 
 	public String getTrigger() {

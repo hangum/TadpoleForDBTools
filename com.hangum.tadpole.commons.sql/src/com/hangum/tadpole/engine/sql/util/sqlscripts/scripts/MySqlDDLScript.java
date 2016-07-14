@@ -60,10 +60,10 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	 * @see com.hangum.tadpole.rdb.core.editors.objects.table.scripts.RDBDDLScript#getViewScript(java.lang.String)
 	 */
 	@Override
-	public String getViewScript(String strName) throws Exception {
+	public String getViewScript(TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		Map srcList = (HashMap)client.queryForObject("getViewScript", strName);
+		Map srcList = (HashMap)client.queryForObject("getViewScript", tableDao.getName());
 		String strSource = ""+srcList.get("Create View");
 		strSource = StringUtils.substringAfterLast(strSource, "VIEW");
 		

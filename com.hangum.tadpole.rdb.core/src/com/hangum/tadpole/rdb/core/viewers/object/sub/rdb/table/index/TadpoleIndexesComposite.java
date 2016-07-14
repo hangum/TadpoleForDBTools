@@ -318,9 +318,12 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			HashMap<String, String> map = new HashMap<String, String>();
-			 if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 				 map.put("user_name", 	StringUtils.substringBefore(tableDao.getName(), ".")); //$NON-NLS-1$
 				 map.put("table_name", 	StringUtils.substringAfter(tableDao.getName(), ".")); //$NON-NLS-1$
+			 } else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+				 map.put("table_schema", userDB.getSchema());
+				 map.put("table_name", tableDao.getName());	 
 			 } else {
 				 map.put("table_schema", userDB.getDb());
 				 map.put("table_name", tableDao.getName());	 

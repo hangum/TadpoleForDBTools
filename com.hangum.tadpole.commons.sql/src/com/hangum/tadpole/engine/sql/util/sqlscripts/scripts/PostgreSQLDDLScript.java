@@ -166,16 +166,16 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 	 * #getViewScript(java.lang.String)
 	 */
 	@Override
-	public String getViewScript(String strName) throws Exception {
+	public String getViewScript(TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		StringBuilder result = new StringBuilder("");
 //		result.append("/* DROP VIEW " + strName + "; */ \n\n");
 
-		List<String> srcViewHeadList = client.queryForList("getViewScript.head", strName);
+		List<String> srcViewHeadList = client.queryForList("getViewScript.head", tableDao.getName());
 		for (int i = 0; i < srcViewHeadList.size(); i++) {
 			result.append(srcViewHeadList.get(i) + "\n");
 		}
-		List<String> srcViewBodyList = client.queryForList("getViewScript.body", strName);
+		List<String> srcViewBodyList = client.queryForList("getViewScript.body", tableDao.getName());
 		for (int i = 0; i < srcViewBodyList.size(); i++) {
 			result.append(srcViewBodyList.get(i) + "\n");
 		}

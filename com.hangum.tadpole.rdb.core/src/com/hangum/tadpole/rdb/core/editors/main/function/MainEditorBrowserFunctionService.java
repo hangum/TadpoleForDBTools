@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.function;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -137,10 +140,33 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void f4DMLOpen(Object[] arguments) {
 		String strObject = parseLastObject((String) arguments[1]);
-		if(StringUtils.contains(strObject, ".")) strObject = StringUtils.substringAfter(strObject, ".");
 		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
+
+		/*
+		TableDAO tableDAO = new TableDAO();
+		tableDAO.setSchema_name(userDB.getSchema());
+		if(StringUtils.contains(strObject, ".")) {
+			tableDAO.setSchema_name(StringUtils.substringBefore(strObject, "."));
+			tableDAO.setSysName(StringUtils.substringAfter(strObject, "."));
+			tableDAO.setTab_name(StringUtils.substringAfter(strObject, "."));
+			tableDAO.setTable_name(StringUtils.substringAfter(strObject, "."));
+		}else{
+			tableDAO.setSysName(strObject);
+			tableDAO.setTab_name(strObject);
+			tableDAO.setTable_name(strObject);
+		}
+		*/
 		
-		DialogUtil.popupDMLDialog(editor.getUserDB(), strObject);
+		Map<String,String> paramMap = new HashMap<String, String>();
+		if(StringUtils.contains(strObject, ".")) {
+			paramMap.put("OBJECT_OWNER", StringUtils.substringBefore(strObject, "."));
+			paramMap.put("OBJECT_NAME", StringUtils.substringAfter(strObject, "."));
+		}else{
+			paramMap.put("OBJECT_OWNER", userDB.getSchema());
+			paramMap.put("OBJECT_NAME", strObject);
+		}
+
+		DialogUtil.popupObjectInformationDialog(editor.getUserDB(), paramMap);
 	}
 
 	/* (non-Javadoc)

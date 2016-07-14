@@ -481,6 +481,7 @@ public class Messages {
 	public String MySQLTableColumnDialog_25;
 
 	public String AutoRecoverMsg;
+	public String AutoRecoverMsg_mysql;
 
 	public String CompileObjectEditorOpen;
 
