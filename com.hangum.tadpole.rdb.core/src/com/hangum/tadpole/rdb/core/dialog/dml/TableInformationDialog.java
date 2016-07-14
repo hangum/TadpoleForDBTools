@@ -15,12 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -32,6 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -40,6 +44,9 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.engine.sql.util.tables.BasicViewerSorter;
+import com.hangum.tadpole.engine.sql.util.tables.DefaultViewerSorter;
+import com.hangum.tadpole.engine.sql.util.tables.SQLHistorySorter;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.sql.format.SQLFormater;
@@ -84,7 +91,7 @@ public class TableInformationDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(tableDAO.getName() + Messages.get().TableInformation);
+		newShell.setText(tableDAO.getName() + " " + Messages.get().Information);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -125,10 +132,6 @@ public class TableInformationDialog extends Dialog {
 		textTBNameCmt.setLayoutData(gd_textTBNameCmt);
 		textTBNameCmt.setText(tableDAO.getComment());
 
-		Composite compositeDML = new Composite(compositeBody, SWT.NONE);
-		compositeDML.setLayout(new GridLayout(5, false));
-		compositeDML.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,	false, 1, 1));
-
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();
 		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -168,16 +171,7 @@ public class TableInformationDialog extends Dialog {
 		gl_composite_3.marginWidth = 2;
 		composite_3.setLayout(gl_composite_3);
 
-		Composite previewComposite = new Composite(compositeBody, SWT.BORDER);
-		previewComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		GridLayout gl_previewComposite = new GridLayout(1, false);
-		gl_previewComposite.verticalSpacing = 2;
-		gl_previewComposite.horizontalSpacing = 2;
-		gl_previewComposite.marginHeight = 2;
-		gl_previewComposite.marginWidth = 2;
-		previewComposite.setLayout(gl_previewComposite);
-
-		tableViewer_ext = new TableViewer(previewComposite, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewer_ext = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table_ext = tableViewer_ext.getTable();
 		GridData gd_table_ext = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_table_ext.minimumHeight = 150;
@@ -199,9 +193,12 @@ public class TableInformationDialog extends Dialog {
 		tableViewer.setLabelProvider(new TableInformationLabelProvider());
 
 		initData();
-
+		
+		//DefaultViewerSorter sorterMessage = new DefaultViewerSorter();
+		
 		tableViewer_ext.setContentProvider(new ArrayContentProvider());
 		tableViewer_ext.setLabelProvider(new TableStatisticsLabelProvider());
+		//tableViewer_ext.setComparator(new BasicViewerSorter());
 		initExtendedData();
 
 		// google analytic
@@ -212,15 +209,36 @@ public class TableInformationDialog extends Dialog {
 
 	private void initData() {
 		try {
-			List<TableColumnDAO> showTableColumns = TadpoleObjectQuery
-					.getTableColumns(userDB, tableDAO);
+			List<TableColumnDAO> showTableColumns;
+
+			//조회된 내용이 없고 스키마 정보가 없으면
+			if (StringUtils.isEmpty(tableDAO.getSchema_name()) ){//&& showTableColumns.size() <= 0) {
+				SelectObjectDialog dialog = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, tableDAO.getName());
+
+				if (dialog.getSelectObject().isEmpty() && dialog.getObjectCount() > 1) {
+					//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
+					dialog.open();
+				} else if (dialog.getObjectCount() <= 0) {
+					//해당 오브젝트를 찾을 수 없습니다.
+					MessageDialog.openInformation(null , "Information" , "객체를 찾을 수 없습니다.");
+				}
+				Map<String, String> map = dialog.getSelectObject();
+				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
+				tableDAO.setTable_name(map.get("OBJECT_NAME"));
+				tableDAO.setTab_name(map.get("OBJECT_NAME"));
+				this.lblTableName.setText(tableDAO.getSchema_name() + "." + tableDAO.getName());
+				showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
+			}else{
+				showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
+			}
+			
 			List<ExtendTableColumnDAO> newTableColumns = new ArrayList<ExtendTableColumnDAO>();
 
 			ExtendTableColumnDAO newTableDAO;// = new ExtendTableColumnDAO("*", "", "", lblTableName.getText()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			// newTableDAO.setCheck(true);
 			// newTableColumns.add(newTableDAO);
 
-			tableDAO = TadpoleObjectQuery.getTable(userDB, tableDAO.getName());
+			//tableDAO = TadpoleObjectQuery.getTable(userDB, tableDAO);
 			textTBNameCmt.setText(tableDAO.getComment());
 
 			for (TableColumnDAO tableColumnDAO : showTableColumns) {
@@ -246,21 +264,35 @@ public class TableInformationDialog extends Dialog {
 		try {
 			Map<String, String> sizeInfoMap = (Map<String, String>) TadpoleObjectQuery.getTableSizeInfo(userDB, tableDAO);
 			Map<String, String> statInfoMap = (Map<String, String>) TadpoleObjectQuery.getStatisticsInfo(userDB, tableDAO);
+			Map<String, String> statViewInfoMap = (Map<String, String>) TadpoleObjectQuery.getViewStatisticsInfo(userDB, tableDAO);
 
 			List<Map<String, String>> extendsInfoList = new ArrayList<Map<String, String>>();
 
-			for (String key : sizeInfoMap.keySet()) {
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("key", key);
-				map.put("value", String.valueOf(sizeInfoMap.get(key)));
-				extendsInfoList.add(map);
+			if(sizeInfoMap != null){
+				for (String key : sizeInfoMap.keySet()) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("key", key);
+					map.put("value", String.valueOf(sizeInfoMap.get(key)));				
+					extendsInfoList.add(map);
+				}
 			}
 
-			for (String key : statInfoMap.keySet()) {
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("key", key);
-				map.put("value", String.valueOf(statInfoMap.get(key)));
-				extendsInfoList.add(map);
+			if(statInfoMap != null){
+				for (String key : statInfoMap.keySet()) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("key", key);
+					map.put("value", String.valueOf(statInfoMap.get(key)));
+					extendsInfoList.add(map);
+				}
+			}
+
+			if(statViewInfoMap != null){
+				for (String key : statViewInfoMap.keySet()) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("key", key);
+					map.put("value", String.valueOf(statViewInfoMap.get(key)));
+					extendsInfoList.add(map);
+				}
 			}
 
 			tableViewer_ext.setInput(extendsInfoList);
@@ -269,23 +301,6 @@ public class TableInformationDialog extends Dialog {
 			e.printStackTrace();
 		}
 
-	}
-
-	/**
-	 * 쿼리 생성 후 후반작업을 합니다.
-	 * 
-	 * @param strSQL
-	 * @return
-	 */
-	private String lastSQLGen(String strSQL) {
-		String retSQL = strSQL + PublicTadpoleDefine.SQL_DELIMITER;
-		try {
-			retSQL = SQLFormater.format(retSQL);
-		} catch (Exception e) {
-			logger.error("SQL Formatting", e); //$NON-NLS-1$
-		}
-
-		return retSQL;
 	}
 
 	/**

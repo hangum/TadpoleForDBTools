@@ -72,7 +72,7 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	
 	/** function */
 	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION hello (s CHAR(20)) RETURNS CHAR(50) " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"RETURN CONCAT('Hello, 's');";
+														"RETURN CONCAT('Hello', s);";
 	
 	/** trigger */
 	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER testref BEFORE INSERT ON test1  " + PublicTadpoleDefine.LINE_SEPARATOR +

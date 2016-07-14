@@ -11,6 +11,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.FieldNameAnnotationClass;
@@ -281,6 +283,15 @@ public class ResourceManagerDAO extends AbstractDAO {
 
 	public void setDisplay_name(String display_name) {
 		this.display_name = display_name;
+	}
+
+	@Override
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.getSchema_name())){
+			return this.getName();
+		}else{
+			return String.format("%s.%s", this.getSchema_name(), this.getName());
+		}
 	}
 
 }

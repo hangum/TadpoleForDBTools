@@ -45,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO;
@@ -371,7 +372,11 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 */
 	public static List<OracleSynonymDAO> getSynonymList(final UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("synonymList", userDB.getDb()); //$NON-NLS-1$
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			return sqlClient.queryForList("synonymList", userDB.getSchema()); //$NON-NLS-1$
+		}else{
+			return sqlClient.queryForList("synonymList", userDB.getDb()); //$NON-NLS-1$
+		}
 	}
 
 	/**

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
+import org.apache.commons.lang.StringUtils;
+
 public class InformationSchemaDAO extends StructObjectDAO {
 	String TABLE_CATALOG;			
 	String TABLE_SCHEMA;			
@@ -157,6 +159,15 @@ public class InformationSchemaDAO extends StructObjectDAO {
 
 	public void setCHAR_LENGTH(int cHAR_LENGTH) {
 		CHAR_LENGTH = cHAR_LENGTH;
+	}
+
+	@Override
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.getSchema_name())) {
+			return this.getINDEX_NAME();
+		}else{
+			return String.format("%s.%s", this.getSchema_name(), this.getINDEX_NAME());
+		}
 	}
 	
 	

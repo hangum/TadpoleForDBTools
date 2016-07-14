@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -28,12 +29,12 @@ public class AltibaseDDLScript extends MySqlDDLScript {
 	 * @see com.hangum.tadpole.rdb.core.editors.objects.table.scripts.RDBDDLScript#getViewScript(java.lang.String)
 	 */
 	@Override
-	public String getViewScript(String strName) throws Exception {
+	public String getViewScript(TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		Map<String, String> parameters = new HashMap<String, String>(2);
-		parameters.put("object_definer", StringUtils.substringBefore(strName, "."));
-		parameters.put("object_name", StringUtils.substringAfter(strName, "."));
+		parameters.put("object_definer", StringUtils.substringBefore(tableDao.getName(), "."));
+		parameters.put("object_name", StringUtils.substringAfter(tableDao.getName(), "."));
 		
 		Map srcList = (HashMap)client.queryForObject("getViewScript", parameters);
 		String strSource = ""+srcList.get("Create View");

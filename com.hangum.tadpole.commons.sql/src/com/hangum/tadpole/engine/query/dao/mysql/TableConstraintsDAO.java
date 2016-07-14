@@ -12,6 +12,8 @@ package com.hangum.tadpole.engine.query.dao.mysql;
 
 import java.sql.Blob;
 
+import org.apache.commons.lang.StringUtils;
+
 public class TableConstraintsDAO extends StructObjectDAO {
 	String TABLE_CATALOG;			
 	String TABLE_SCHEMA;			
@@ -180,5 +182,12 @@ public class TableConstraintsDAO extends StructObjectDAO {
 		R_CONSTRAINT_NAME = r_CONSTRAINT_NAME;
 	}
 	
-	
+	@Override
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.getSchema_name())) {
+			return this.getCONSTRAINT_NAME();
+		}else{
+			return String.format("%s.%s", this.getSchema_name(), this.getCONSTRAINT_NAME());
+		}
+	}
 }

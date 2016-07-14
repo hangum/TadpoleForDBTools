@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -676,7 +679,17 @@ public class MainEditor extends EditorExtension {
 		String strCheckSQL = SQLUtil.removeCommentAndOthers(userDB, reqQuery.getSql());
 		if(StringUtils.startsWithIgnoreCase(strCheckSQL, "desc ")) {
 			String strObject = StringUtils.removeStartIgnoreCase(strCheckSQL, "desc ");
-			DialogUtil.popupDMLDialog(getUserDB(), strObject);
+			/*
+			TableDAO tableDAO = new TableDAO();
+			tableDAO.setSchema_name(userDB.getSchema());
+			tableDAO.setName(strObject);
+			*/
+			Map<String, String> map = new HashMap<String, String>();
+			
+			map.put("OBJECT_NAME", strObject);
+			map.put("OBJECT_OWNER", userDB.getSchema());
+			
+			DialogUtil.popupObjectInformationDialog(getUserDB(), map);
 		} else {
 			resultMainComposite.executeCommand(reqQuery);
 		}

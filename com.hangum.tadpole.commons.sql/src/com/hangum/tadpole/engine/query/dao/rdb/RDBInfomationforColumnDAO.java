@@ -11,6 +11,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.rdb;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * 테이블의 모든 컬럼에 대한 정보를 조회
@@ -305,6 +307,15 @@ public class RDBInfomationforColumnDAO extends AbstractDAO {
 	 */
 	public void setPk(String pk) {
 		this.pk = pk;
+	}
+	
+	@Override
+	public String getFullName() {
+		if(StringUtils.isEmpty(this.schema_name)) {
+			return String.format("%s.%s", this.getTable_name(), this.getColumn_name());
+		}else{
+			return String.format("%s.%s.%s", this.getSchema_name(), this.getTable_name(), this.getColumn_name());
+		}
 	}
 
 }

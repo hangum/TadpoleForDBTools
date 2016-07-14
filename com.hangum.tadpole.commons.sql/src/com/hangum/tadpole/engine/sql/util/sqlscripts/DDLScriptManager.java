@@ -119,7 +119,7 @@ public class DDLScriptManager {
 			TableDAO tbl = (TableDAO)obj;
 			
 			setObjectName(tbl.getName());
-			retStr = rdbScript.getViewScript(tbl.getName());
+			retStr = rdbScript.getViewScript(tbl);
 		} else if(PublicTadpoleDefine.OBJECT_TYPE.INDEXES == actionType) {
 			InformationSchemaDAO index = (InformationSchemaDAO)obj;
 			setObjectName(index.getINDEX_NAME());

@@ -208,6 +208,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		tblclmnTableName.setWidth(200);
 		tblclmnTableName.setText(Messages.get().Name);
 		tblclmnTableName.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
+
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
 			
 			@Override
@@ -222,6 +223,21 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				else return String.format("%s.%s", tdbDao.getSchema_name(), tdbDao.getName());
 			}
 		});
+
+		TableViewerColumn tableViewerComment = new TableViewerColumn(viewListViewer, SWT.NONE);
+		TableColumn tblclmnViewComment = tableViewerComment.getColumn();
+		tblclmnViewComment.setWidth(300);
+		tblclmnViewComment.setText(Messages.get().Comment);
+		tblclmnViewComment.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
+
+		tableViewerComment.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				TableDAO tdbDao = (TableDAO)element;
+				return tdbDao.getComment() == null ? "" : tdbDao.getComment();
+			}
+		});
+
 		viewListViewer.setContentProvider(new ArrayContentProvider());
 		viewListViewer.setInput(showViews);
 		

@@ -94,6 +94,25 @@ public class DBSystemSchema {
 			userDB.setTableListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
 			return listView;
+		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			List<HashMap<String,String>> listView = sqlClient.queryForList("viewList", userDB.getSchema());
+			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+			// 2. keyword 를 만든다.
+			StringBuffer strViewList = new StringBuffer();
+			for(HashMap<String,String> map : listView) {
+				TableDAO tblDao = new TableDAO();
+				tblDao.setName(map.get("NAME"));
+				tblDao.setSchema_name(map.get("SCHEMA_NAME"));
+				tblDao.setSysName(SQLUtil.makeIdentifierName(userDB, map.get("NAME")));
+				tblDao.setComment(map.get("COMMENTS"));
+				
+				listTblView.add(tblDao);
+	
+				strViewList.append(MakeContentAssistUtil.makeObjectPattern(tblDao.getSchema_name(), tblDao.getSysName(), "View")); //$NON-NLS-1$
+			}
+			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
+			
+			return listTblView; 
 		} else {
 			List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
 			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
@@ -163,7 +182,13 @@ public class DBSystemSchema {
 		) return new ArrayList<ProcedureFunctionDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		List<ProcedureFunctionDAO> listFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
+		List<ProcedureFunctionDAO> listFunction;
+		
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			listFunction = sqlClient.queryForList("functionList", userDB.getSchema()); //$NON-NLS-1$
+		}else{
+			listFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
+		}
 		
 		// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 		// 2. create to default keyword 
@@ -193,7 +218,12 @@ public class DBSystemSchema {
 		) return new ArrayList<ProcedureFunctionDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		List<ProcedureFunctionDAO> listProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
+		List<ProcedureFunctionDAO> listProcedure;
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
+		}else{
+			listProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
+		}
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 		for(ProcedureFunctionDAO pfDao : listProcedure) {
@@ -217,9 +247,13 @@ public class DBSystemSchema {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
 		HashMap<String, String>paramMap = new HashMap<String, String>();
-		paramMap.put("table_schema", userDB.getDb()); //$NON-NLS-1$
-		paramMap.put("table_name", strObjectName); //$NON-NLS-1$
-		
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
+			paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+		}else{
+			paramMap.put("table_schema", userDB.getDb()); //$NON-NLS-1$
+			paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+		}
 		return sqlClient.queryForList("triggerList", paramMap); //$NON-NLS-1$
 	}
 

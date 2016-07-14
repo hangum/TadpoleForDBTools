@@ -99,10 +99,11 @@ public class ExecuteQueryPlan {
 					// 저장된 결과를 가져와서 보여줍니다.
 					StringBuffer sbQuery = new StringBuffer();
 					sbQuery.append("SELECT ")
-				 	        .append("         LPAD ('　', (LEVEL - 1) * 2 , '　')||row_number() over(partition by statement_id  order by level desc, position )||'.'||operation   ")
+				 	        //.append("         LPAD ('　', (LEVEL - 1) * 2 , '　')||row_number() over(partition by statement_id  order by level desc, position )||'.'||operation   ")
+							.append("       operation   ")
 							.append("		||(case when options is null then '' else ' '||options end) ")
 							.append("		||(case when optimizer is null then '' else ' ('||initcap(optimizer)||')' end) as \"Operation\"  ")
-							.append("		, object_owner||'.'||object_name || (case when object_type is null then '' else '('||object_type||')' end) as \"Object\" ")
+							.append("		, object_owner||'.'||object_name as \"Object\" ")
 							.append("		, cost as \"Cost\" ")
 							.append("		, cardinality as \"Rows\" ")
 							.append("		, bytes as \"Bytes\" ")

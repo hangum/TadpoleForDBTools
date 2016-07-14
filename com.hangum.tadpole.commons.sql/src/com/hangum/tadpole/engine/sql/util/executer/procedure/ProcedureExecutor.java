@@ -98,9 +98,9 @@ public abstract class ProcedureExecutor {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("SELECT " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
 			}else{
-				sbQuery.append("SELECT " + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
 			}
 			
 			List<InOutParameterDAO> inList = getInParameters();
@@ -112,9 +112,9 @@ public abstract class ProcedureExecutor {
 			sbQuery.append(") from dual");
 		} else {
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("{call " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
 			}else{
-				sbQuery.append("{call " + procedureDAO.getName() + "(");
+				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
 			}
 			// in script
 			int intParamSize = getParametersCount();

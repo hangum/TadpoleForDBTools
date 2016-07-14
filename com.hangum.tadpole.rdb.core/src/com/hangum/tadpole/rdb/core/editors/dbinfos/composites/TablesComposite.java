@@ -205,7 +205,16 @@ public class TablesComposite extends Composite {
 	private void initUI() {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List listTableInform = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$
+			
+			List listTableInform;// = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$
+			
+			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				HashMap<String, String>paramMap = new HashMap<String, String>();
+				paramMap.put("schema_name", userDB.getSchema()); //$NON-NLS-1$
+				listTableInform = sqlClient.queryForList("tableInformation", paramMap); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				listTableInform = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			
 			tvTableInform.setInput(listTableInform);
 			tvTableInform.refresh();

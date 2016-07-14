@@ -83,7 +83,7 @@ public class IndexInformationDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(indexDAO.getINDEX_NAME() + Messages.get().TableInformation);
+		newShell.setText(indexDAO.getINDEX_NAME() + " " + Messages.get().Information);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 

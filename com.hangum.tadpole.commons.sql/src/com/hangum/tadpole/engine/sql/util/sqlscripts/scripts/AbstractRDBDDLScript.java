@@ -54,11 +54,11 @@ public abstract class AbstractRDBDDLScript {
 	/**
 	 * view script
 	 * 
-	 * @param strName
+	 * @param tableDAO
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract String getViewScript(String strName) throws Exception;
+	public abstract String getViewScript(TableDAO tableDAO) throws Exception;
 	
 	/**
 	 * index script
