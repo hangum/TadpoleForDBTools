@@ -77,6 +77,8 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDeleteAction_3)) {
 					for(Object selObjec : selection.toList()) {
 						TableDAO selTableDao = (TableDAO)selObjec;
+						//TODO: getFullName(). 메소드에서 getSysName().을 사용하도록 변경하고 getFullName()을 사용해야 한다.
+						// 대.소문자 또는 특수문자를 포함하는 오브젝트 명을 사용하는 경우...
 						String strSQL = "drop table " + SQLUtil.getTableName(userDB, selTableDao);// dao.getSysName(); //$NON-NLS-1$
 						try {
 							if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
@@ -109,7 +111,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			TableDAO viewDao = (TableDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDeleteAction_9)) {
 				try {
-					executeSQL(userDB, "drop view " + viewDao.getSysName()); //$NON-NLS-1$
+					executeSQL(userDB, "drop view " + viewDao.getFullName()); //$NON-NLS-1$
 					
 					refreshView();
 				} catch(Exception e) {
@@ -122,7 +124,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			OracleSynonymDAO dao = (OracleSynonymDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDeleteAction_synonym)) {
 				try {
-					executeSQL(userDB, "drop synonym " + dao.getTable_owner() + "." + dao.getSynonym_name()); //$NON-NLS-1$ //$NON-NLS-2$
+					executeSQL(userDB, "drop synonym " + dao.getFullName()); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					refreshSynonym();
 				} catch(Exception e) {
@@ -139,7 +141,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
-							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
+							executeSQL(userDB, "drop index " + indexDAO.getFullName() + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						
 						refreshIndexes();
@@ -168,7 +170,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME() + " on " + constraintDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
-						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
+						executeSQL(userDB, "drop constraints " + constraintDAO.getFullName()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					
 					this.refreshConstraints();
@@ -201,7 +203,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						
 						executeSQL(userDB, sbQuery.toString()); //$NON-NLS-1$
 					} else {
-						executeSQL(userDB, "drop procedure " + procedureDAO.getName()); //$NON-NLS-1$
+						executeSQL(userDB, "drop procedure " + procedureDAO.getFullName()); //$NON-NLS-1$
 					}
 					
 					refreshProcedure();
@@ -216,11 +218,11 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDropAction_1)) {
 				try {
 					try{
-						executeSQL(userDB, "drop package body " + procedureDAO.getName()); //$NON-NLS-1$
+						executeSQL(userDB, "drop package body " + procedureDAO.getFullName(true/*isPackage*/)); //$NON-NLS-1$
 					}catch(Exception e){
 						// package body는 없을 수도 있음.
 					}
-					executeSQL(userDB, "drop package " + procedureDAO.getName()); //$NON-NLS-1$
+					executeSQL(userDB, "drop package " + procedureDAO.getFullName(true)); //$NON-NLS-1$
 					
 					refreshPackage();
 				} catch(Exception e) {
@@ -253,11 +255,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						
 						executeSQL(userDB, sbQuery.toString()); //$NON-NLS-1$
 					} else {
-						if (StringUtils.isEmpty(functionDAO.getSchema_name())){
-							executeSQL(userDB, "drop function " + functionDAO.getName()); //$NON-NLS-1$
-						}else{
-							executeSQL(userDB, "drop function " + functionDAO.getSchema_name() +"."+ functionDAO.getName()); //$NON-NLS-1$
-						}
+						executeSQL(userDB, "drop function " + functionDAO.getFullName()); //$NON-NLS-1$
 					}
 					
 					refreshFunction();
@@ -273,7 +271,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger() + " on " + triggerDAO.getTable_name()); //$NON-NLS-1$
 					} else {
-						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger()); //$NON-NLS-1$
+						executeSQL(userDB, "drop trigger " + triggerDAO.getFullName()); //$NON-NLS-1$
 					}
 					
 					refreshTrigger();

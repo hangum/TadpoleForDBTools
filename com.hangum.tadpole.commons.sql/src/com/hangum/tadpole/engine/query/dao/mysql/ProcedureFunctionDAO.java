@@ -181,20 +181,24 @@ public class ProcedureFunctionDAO extends StructObjectDAO {
 		this.sysName = sysName;
 	}
 	
+	public String getFullName(boolean isPackage) {
+		if(isPackage) {
+			if(StringUtils.isEmpty(this.getSchema_name())){
+				return this.getPackagename();
+			}else{
+				return String.format("%s.%s", this.getSchema_name(), this.getPackagename());
+			}
+		}else{
+			return this.getFullName();
+		}
+	}
+	
 	@Override
 	public String getFullName() {
 		if(StringUtils.isEmpty(this.getSchema_name())) {
-			if(StringUtils.isEmpty(this.getPackagename())){
-				return this.getName();
-			}else{
-				return String.format("%s.%s", this.getPackagename(), this.getName());
-			}
-		}else {
-			if(StringUtils.isEmpty(this.getPackagename())){
-				return String.format("%s.%s", this.getSchema_name(), this.getName());
-			}else{
-				return String.format("%s.%s.%s", this.getSchema_name(), this.getPackagename(), this.getName());
-			}
+			return this.getName();
+		}else{
+			return String.format("%s.%s", this.getSchema_name(), this.getName());
 		}
 	}
 	

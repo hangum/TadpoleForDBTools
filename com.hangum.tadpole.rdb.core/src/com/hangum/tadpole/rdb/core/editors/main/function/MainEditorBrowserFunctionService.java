@@ -162,7 +162,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 			paramMap.put("OBJECT_OWNER", StringUtils.substringBefore(strObject, "."));
 			paramMap.put("OBJECT_NAME", StringUtils.substringAfter(strObject, "."));
 		}else{
-			paramMap.put("OBJECT_OWNER", userDB.getSchema());
+			//paramMap.put("OBJECT_OWNER", userDB.getSchema());
 			paramMap.put("OBJECT_NAME", strObject);
 		}
 

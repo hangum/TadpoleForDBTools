@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.dialog.dml;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -317,7 +318,9 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 			//조회된 내용이 없고 스키마 정보가 없으면
 			if (StringUtils.isEmpty(tableDAO.getSchema_name()) && showTableColumns.size() <= 0) {
-				SelectObjectDialog dialog = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, tableDAO.getName());
+				Map<String,String> paramMap = new HashMap<String,String>();
+				paramMap.put("OBJECT_NAME", tableDAO.getName());
+				SelectObjectDialog dialog = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap );
 
 				if (dialog.getSelectObject().isEmpty() && dialog.getObjectCount() > 1) {
 					//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
