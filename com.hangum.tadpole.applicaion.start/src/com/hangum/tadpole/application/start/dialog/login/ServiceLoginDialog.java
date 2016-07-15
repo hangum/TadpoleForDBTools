@@ -49,7 +49,7 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.IPFilterUtil;
+import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -305,11 +305,11 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
-			String ip_servletRequest = getBrowserIP();
-			if(!isBrowserIP()) {
-				ip_servletRequest = RequestInfoUtils.getRequestIP();
-			}
-			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
+//			String ip_servletRequest = getBrowserIP();
+//			if(!isBrowserIP()) {
+			String ip_servletRequest =ip_servletRequest = RequestInfoUtils.getRequestIP();
+//			}
+			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
@@ -334,7 +334,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			}
 			
 			// 로그인 유지.
-			registLoginID(userDao.getEmail(), strPass);
+			registLoginID();
 			
 			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
 			
@@ -366,19 +366,21 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 	
 	/**
 	 * register login id
-	 * 
-	 * @param userId
 	 */
-	private void registLoginID(String userId, String userPwd) {
-		if(!btnCheckButton.getSelection()) {
-			CookieUtils.deleteLoginCookie();
-			return;
+	private void registLoginID() {
+		try {
+			if(!btnCheckButton.getSelection()) {
+				CookieUtils.deleteLoginCookie();
+				return;
+			}
+			
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, textEMail.getText());
+			Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
+		} catch(Exception e) {
+			logger.error("registe cookie", e);
 		}
-		
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
-		Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
-		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
 	}
 
 	/**

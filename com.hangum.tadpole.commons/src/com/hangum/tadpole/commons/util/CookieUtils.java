@@ -94,6 +94,11 @@ public class CookieUtils {
 					cookie.setMaxAge(0);
 					cookie.setPath(PublicTadpoleDefine._cookiePath);
 					response.addCookie(cookie);
+				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_IP.equals(cookie.getName())) {
+					cookie.setValue("");
+					cookie.setMaxAge(0);
+					cookie.setPath(PublicTadpoleDefine._cookiePath);
+					response.addCookie(cookie);
 				}
 			}
 

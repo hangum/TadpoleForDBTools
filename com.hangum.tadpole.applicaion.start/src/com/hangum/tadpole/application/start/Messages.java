@@ -116,6 +116,10 @@ public class Messages {
 
 	public String doesnotFoundPrivateIP;
 
+	public String LoginDialog_userIP;
+
+	public String AlreadyLoginConfirm;
+
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

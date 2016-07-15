@@ -281,7 +281,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		}
 		
 		try {
-			boolean ret = procedureExecutor.exec(parameterInList, GetPreferenceGeneral.getResultNull());
+			boolean ret = procedureExecutor.exec(parameterInList);
 			if(ret) {
 				if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 					textDBMSOutput.setText(procedureExecutor.getStrOutput());

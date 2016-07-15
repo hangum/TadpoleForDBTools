@@ -89,7 +89,6 @@ public class NewUserDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
-	 * @wbp.parser.constructor
 	 */
 	public NewUserDialog(Shell parentShell) {
 		super(parentShell);

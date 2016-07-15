@@ -36,7 +36,6 @@ public class SQLQueryUtil {
 	
 	private UserDBDAO userDB;
 	private String requestQuery;
-	private String strNullValue;
 	
 	/** 처음한번은 반듯이 동작해야 하므로 */
 	private boolean isFirst = true;
@@ -45,10 +44,9 @@ public class SQLQueryUtil {
 	
 	private QueryExecuteResultDTO queryResultDAO = new QueryExecuteResultDTO();
 	
-	public SQLQueryUtil(UserDBDAO userDB, String requestQuery, String strNullValue) {
+	public SQLQueryUtil(UserDBDAO userDB, String requestQuery) {
 		this.userDB = userDB;
 		this.requestQuery = requestQuery;
-		this.strNullValue = strNullValue;
 	}
 	
 	public QueryExecuteResultDTO nextQuery() throws Exception {
@@ -75,7 +73,7 @@ public class SQLQueryUtil {
 			rs = stmt.executeQuery();//Query( selText );
 			
 			// table column의 정보
-			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, true, rs, startPoint, nextPoint, strNullValue);
+			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, true, rs, startPoint, nextPoint);
 		} finally {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			try { if(stmt != null) stmt.close();} catch(Exception e) {}

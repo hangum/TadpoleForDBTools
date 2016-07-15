@@ -49,7 +49,7 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.IPFilterUtil;
+import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -208,14 +208,14 @@ public class LoginDialog extends AbstractLoginDialog {
 		compositeTail.setLayout(gl_compositeTail);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblHangum = new Label(compositeTail, SWT.NONE);
-		lblHangum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblHangum.setText("License is GNU Lesser General Public License v.3");
+		Label lblLicense = new Label(compositeTail, SWT.NONE);
+		lblLicense.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblLicense.setText("License is GNU Lesser General Public License v.3");
 		
-		Label lblHome = new Label(compositeTail, SWT.NONE);
-		lblHome.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblHome.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Website</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		lblHome.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		Label lblDocument = new Label(compositeTail, SWT.NONE);
+		lblDocument.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDocument.setText("<a href='" + Messages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Document</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		lblDocument.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		Label lblIssue = new Label(compositeTail, SWT.NONE);
 		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -278,7 +278,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			// Check the allow ip
 			String strAllowIP = userDao.getAllow_ip();
 			String ip_servletRequest = RequestInfoUtils.getRequestIP();
-			boolean isAllow = IPFilterUtil.ifFilterString(strAllowIP, ip_servletRequest);
+			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
@@ -296,7 +296,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			}
 			
 			// 로그인 유지.
-			registLoginID(userDao.getEmail(), strPass);
+			registLoginID();
 			
 			//
 			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
@@ -329,10 +329,8 @@ public class LoginDialog extends AbstractLoginDialog {
 	
 	/**
 	 * register login id
-	 * 
-	 * @param userId
 	 */
-	private void registLoginID(String userId, String userPwd) {
+	private void registLoginID() {
 		try {
 			if(!btnCheckButton.getSelection()) {
 				CookieUtils.deleteLoginCookie();
@@ -340,11 +338,11 @@ public class LoginDialog extends AbstractLoginDialog {
 			}
 			
 			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_SAVE_CKECK, Boolean.toString(btnCheckButton.getSelection()));
-			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, userId);
+			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_ID, textEMail.getText());
 			Locale locale = (Locale)comboLanguage.getData(comboLanguage.getText());
 			CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
 		} catch(Exception e) {
-			logger.error("register cookie", e);
+			logger.error("registe cookie", e);
 		}
 	}
 	

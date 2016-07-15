@@ -41,8 +41,8 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount, String strNullValue) throws SQLException {
-		return getResultToList(false, rs, limitCount, 0, strNullValue);
+	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount) throws SQLException {
+		return getResultToList(false, rs, limitCount, 0);
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex, String strNullValue) throws SQLException {
+	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex) throws SQLException {
 		TadpoleResultSet returnRS = new TadpoleResultSet();
 		Map<Integer, Object> tmpRow = null;
 		
@@ -83,7 +83,7 @@ public class ResultSetUtils {
 //						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 //					} else
 					if(obj == null) {
-						tmpRow.put(intShowColIndex, strNullValue);
+						tmpRow.put(intShowColIndex, null);
 					} else {
 						String type = obj.getClass().getSimpleName();
 						if(type.toUpperCase().contains("LOB")) {

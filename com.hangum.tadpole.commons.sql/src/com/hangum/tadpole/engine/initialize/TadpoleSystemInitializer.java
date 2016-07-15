@@ -12,17 +12,13 @@ package com.hangum.tadpole.engine.initialize;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -32,7 +28,6 @@ import com.hangum.tadpole.engine.TadpoleEngineActivator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * <pre>
@@ -218,7 +213,7 @@ public class TadpoleSystemInitializer {
 				}
 
 			} catch (Exception ioe) {
-				logger.error("File not found exception or file encrypt exception. check the exist file." + dbServerPath, ioe);
+				logger.error("File not found exception or file encrypt exception. check the file." + dbServerPath, ioe);
 				System.exit(0);
 			}
 

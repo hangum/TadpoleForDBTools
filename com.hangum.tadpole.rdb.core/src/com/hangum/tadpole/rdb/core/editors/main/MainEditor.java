@@ -146,7 +146,13 @@ public class MainEditor extends EditorExtension {
 			try {
 				dBResourceAuto = TadpoleSystem_UserDBResource.getDefaultDBResourceData(userDB);
 				if(dBResourceAuto != null) {
-					if(!StringUtils.isEmpty(dBResourceAuto.getDataString())) initDefaultEditorStr = dBResourceAuto.getDataString() + Messages.get().AutoRecoverMsg + initDefaultEditorStr;
+					if(!StringUtils.isEmpty(dBResourceAuto.getDataString())) {
+						if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+							initDefaultEditorStr = dBResourceAuto.getDataString() + Messages.get().AutoRecoverMsg_mysql + initDefaultEditorStr;
+						} else {
+							initDefaultEditorStr = dBResourceAuto.getDataString() + Messages.get().AutoRecoverMsg + initDefaultEditorStr;
+						}
+					}
 				}
 			} catch(Exception e) {
 				logger.error("Get default resource", e);
