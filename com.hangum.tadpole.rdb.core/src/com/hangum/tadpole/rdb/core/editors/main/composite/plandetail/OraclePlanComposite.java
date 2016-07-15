@@ -190,17 +190,15 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 		for (Map<Integer, Object> map : listObj) {
 			OraclePlanDAO dao = new OraclePlanDAO();
 			
-			logger.debug(map.toString());
-			
-			dao.setOperation(map.get(1).toString());
-			dao.setName(map.get(2).toString());
-			dao.setCost(map.get(3).toString());
-			dao.setRows(map.get(4).toString());
-			dao.setBytes(map.get(5).toString());
-			dao.setPos(Integer.parseInt(map.get(6).toString()));
-			dao.setFilter(map.get(7).toString());
-			dao.setAccess(map.get(8).toString());
-			dao.setObjectType(map.get(9).toString());
+			dao.setOperation(""+map.get(1));
+			dao.setName(""+map.get(2));
+			dao.setCost(""+map.get(3));
+			dao.setRows(""+map.get(4));
+			dao.setBytes(map.get(5)==null?"":""+map.get(5));
+			dao.setPos(Integer.parseInt(map.get(6)==null?"0":""+map.get(6)));
+			dao.setFilter(map.get(7)==null?"":""+map.get(7));
+			dao.setAccess(map.get(8)==null?"":""+map.get(8));
+			dao.setObjectType(map.get(9)==null?"":""+map.get(9));
 			
 			if(listOraclePlanDao.isEmpty()) {
 				listOraclePlanDao.add(dao);
