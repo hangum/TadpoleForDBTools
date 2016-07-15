@@ -163,15 +163,15 @@ public abstract class ProcedureExecutor {
 	 * @param rs
 	 * @throws Exception
 	 */
-	protected void setResultCursor(String reqQuery, ResultSet rs, String strNullValue) throws Exception {
+	protected void setResultCursor(String reqQuery, ResultSet rs) throws Exception {
 		Map<Integer, String> mapColumns = ResultSetUtils.getColumnName(rs);
 		Map<Integer, String> mapTableColum = ResultSetUtils.getColumnTableName(userDB, rs);
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
-		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000, strNullValue);
+		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000);
 
 		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(
 //				PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, 
-				userDB, reqQuery, mapColumns, mapTableColum, mapColumnType, sourceDataList, strNullValue);
+				userDB, reqQuery, mapColumns, mapTableColum, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -186,7 +186,7 @@ public abstract class ProcedureExecutor {
 	 *  
 	 *  @param List<Map<Integer, Object>> sourceDataList
 	 */
-	protected void setResultNoCursor(String reqQuery, TadpoleResultSet sourceDataList, String strNullValue) throws Exception {
+	protected void setResultNoCursor(String reqQuery, TadpoleResultSet sourceDataList) throws Exception {
 		Map<Integer, String> mapColumns = new HashMap<Integer, String>();
 		mapColumns.put(0, "Seq");
 		mapColumns.put(1, "Name");
@@ -211,7 +211,7 @@ public abstract class ProcedureExecutor {
 		mapColumnTable.put(4, "dumy");
 		mapColumnTable.put(5, "dumy");
 		
-		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(userDB, reqQuery, mapColumns, mapColumnTable, mapColumnType, sourceDataList, strNullValue);
+		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(userDB, reqQuery, mapColumns, mapColumnTable, mapColumnType, sourceDataList);
 		addResultDAO(resultSet);
 	}
 	
@@ -239,7 +239,7 @@ public abstract class ProcedureExecutor {
 	 * @param parameterList
 	 * @return
 	 */
-	public abstract boolean exec(List<InOutParameterDAO> parameterList, String strNullValue) throws Exception ;
+	public abstract boolean exec(List<InOutParameterDAO> parameterList) throws Exception ;
 	
 	/**
 	 * @return the strOutput

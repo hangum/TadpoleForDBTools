@@ -65,7 +65,6 @@ import com.hangum.tadpole.engine.sql.paremeter.lang.GenericTokenParser;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
-import com.hangum.tadpole.engine.sql.util.ParameterUtils;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -354,33 +353,33 @@ public class ResultSetComposite extends Composite {
 			logger.error("Java style parameter parse", e); //$NON-NLS-1$
 		}
 		
-		// oracle parameter
-		try {
-			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
-			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
-			
-			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
-			if(!mapIndexToName.isEmpty()) {
-				
-				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
-				if(Dialog.OK == epd.open()) {
-					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-//					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-//					reqQuery.setSql(repSQL);
-					
-					reqQuery.setSql(strSQL);
-					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
-					reqQuery.setStatementParameter(paramObj.getParameter());
-					
-					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + strSQL); //$NON-NLS-1$
-					return true;
-				} else {
-					return false;
-				}
-			}
-		} catch(Exception e) {
-			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
-		}
+//		// oracle parameter
+//		try {
+//			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
+//			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+//			
+//			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
+//			if(!mapIndexToName.isEmpty()) {
+//				
+//				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+//				if(Dialog.OK == epd.open()) {
+//					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+////					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
+////					reqQuery.setSql(repSQL);
+//					
+//					reqQuery.setSql(strSQL);
+//					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
+//					reqQuery.setStatementParameter(paramObj.getParameter());
+//					
+//					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + strSQL); //$NON-NLS-1$
+//					return true;
+//				} else {
+//					return false;
+//				}
+//			}
+//		} catch(Exception e) {
+//			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
+//		}
 
 		// mybatis shap
 		GenericTokenParser mybatisShapeUtil = new GenericTokenParser("#{", "}");
@@ -476,7 +475,7 @@ public class ResultSetComposite extends Composite {
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
-		final String strNullValue	= GetPreferenceGeneral.getResultNull();
+//		final String strNullValue	= GetPreferenceGeneral.getResultNull();
 		final UserDBDAO tmpUserDB 	= getUserDB();
 		final String errMsg = Messages.get().MainEditor_21;
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
@@ -488,7 +487,18 @@ public class ResultSetComposite extends Composite {
 				
 				reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
 				reqResultDAO.setIpAddress(reqQuery.getUserIp());
-				reqResultDAO.setStrSQLText(reqQuery.getOriginalSql());
+				
+				StringBuffer sbParameter = new StringBuffer("/* Execute type is ").append(reqQuery.getMode());
+				// prepared statement 일 경우는 인자도 넣어준다.
+				if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
+					sbParameter.append(", Parameter is ");
+					for (int i=0; i<reqQuery.getStatementParameter().length; i++) {
+						Object objParam = reqQuery.getStatementParameter()[i];
+						sbParameter.append(String.format("[ %d = %s ]", i, ""+objParam));
+					}
+				}
+				sbParameter.append(" */ \n");
+				reqResultDAO.setStrSQLText(sbParameter.toString() + reqQuery.getOriginalSql());
 				
 				try {
 					if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
@@ -513,7 +523,7 @@ public class ResultSetComposite extends Composite {
 							for(int i=0;i<listStrSQL.size(); i++) {
 								if(i >= BATCH_EXECUTE_SQL_LIMIT) break;
 								reqQuery.setSql(listStrSQL.get(i));
-								QueryExecuteResultDTO qeResultDao = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0, strNullValue);
+								QueryExecuteResultDTO qeResultDao = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
 								listRSDao.add(qeResultDao);
 							}
 						}
@@ -521,9 +531,9 @@ public class ResultSetComposite extends Composite {
 					} else {
 						if(reqQuery.isStatement()) {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(reqQuery, getUserDB(), strPlanTBName, ""));
+								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(getUserDB(), reqQuery, strPlanTBName));
 							} else {
-								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0, strNullValue);
+								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
 								if(rsDAO.getDataList() == null) {
 									reqResultDAO.setRows(0);
 								} else {
@@ -620,7 +630,7 @@ public class ResultSetComposite extends Composite {
 	 * @return
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO runSelect(final RequestQuery reqQuery, final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt, String strNullValue) throws Exception {
+	public QueryExecuteResultDTO runSelect(final RequestQuery reqQuery, final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt) throws Exception {
 		String strSQL = reqQuery.getSql();
 		if(logger.isDebugEnabled()) logger.debug("==> real execute query : " + strSQL);
 		
@@ -663,7 +673,7 @@ public class ResultSetComposite extends Composite {
 				throw new Exception("Cann't create session. Please check system.");
 			}
 			
-			// if statement type is preparedstatement?
+			// if statement type is prepared statement?
 			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
 				statement = javaConn.createStatement();
 				
@@ -720,7 +730,7 @@ public class ResultSetComposite extends Composite {
 				}
 			}
 			
-			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt, strNullValue);
+			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt);
 		} catch(Exception e) {
 			throw e;
 		} finally {

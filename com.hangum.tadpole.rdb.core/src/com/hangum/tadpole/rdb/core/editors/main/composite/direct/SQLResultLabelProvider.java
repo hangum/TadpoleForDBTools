@@ -54,41 +54,15 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	private static final Logger logger = Logger.getLogger(SQLResultLabelProvider.class);
 	
 	private EditorDefine.QUERY_MODE queryMode = QUERY_MODE.QUERY;
-	private boolean isPretty = false;
 	private ResultSetUtilDTO rsDAO;
 	
 	public SQLResultLabelProvider() {
 	}
 
-	public SQLResultLabelProvider(final boolean isPretty) {
-		this.isPretty = isPretty;
-	}
-	
-	public SQLResultLabelProvider(EditorDefine.QUERY_MODE queryMode, final boolean isPretty, final ResultSetUtilDTO rsDAO) {
+	public SQLResultLabelProvider(EditorDefine.QUERY_MODE queryMode, final ResultSetUtilDTO rsDAO) {
 		this.queryMode = queryMode;
-		this.isPretty = isPretty;
 		this.rsDAO = rsDAO;
 	}
-	
-//	@Override
-//	public Font getFont(Object element, int columnIndex) {
-//		if(tvQueryResult == null) return null;
-//		
-//		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
-//		Object obj = rsResult.get(columnIndex);
-//		if(obj == null) {
-//			Font font = tvQueryResult.getTable().getFont();
-//			if(font != null) return ResourceManager.getItalicFont(font);
-//			
-//		} else if(queryMode == QUERY_MODE.QUERY) {
-//			if(obj.toString().length() > getRDBShowInTheColumn()) {
-//				Font font = tvQueryResult.getTable().getFont();
-//				if(font != null) return ResourceManager.getItalicFont(font);
-//			}
-//		}
-//		
-//		return null;
-//	}
 
 	@Override
 	public Color getForeground(Object element, int columnIndex) {
@@ -96,10 +70,16 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		Object obj = rsResult.get(columnIndex);
 		if(obj == null) {
 			return SWTResourceManager.getColor(152, 118, 137);
+		} else {
+			String objValue = obj.toString();
 			
-		} else if(queryMode == QUERY_MODE.QUERY) {
-			if(getRDBShowInTheColumn() != -1 && obj.toString().length() > getRDBShowInTheColumn()) {
-				return SWTResourceManager.getColor(152, 118, 137);
+			if(queryMode == QUERY_MODE.QUERY) {
+				if(getRDBShowInTheColumn() != -1 
+						&& objValue.length() > getRDBShowInTheColumn()
+						&& !RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))
+				) {
+					return SWTResourceManager.getColor(152, 118, 137);
+				}
 			}
 		}
 		
@@ -131,12 +111,15 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 		HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)element;
 		
 		Object obj = rsResult.get(columnIndex);
-		if(rsDAO != null && rsDAO.getColumnType().get(columnIndex) != null && queryMode == QUERY_MODE.QUERY) {
-			if(isPretty && RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
-		}
+//		if(rsDAO.getColumnType().get(columnIndex) != null && queryMode == QUERY_MODE.QUERY) {
+//			if(GetPreferenceGeneral.getISRDBNumberIsComma() && RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) return addComma(obj);
+//		}
+//		logger.debug("\t object name is " + obj);
 		
 		if(obj == null) {
 			return GetPreferenceGeneral.getResultNull();
+		} else if(GetPreferenceGeneral.getISRDBNumberIsComma() && RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(columnIndex))) {
+			return addComma(obj);
 		} else {
 			if(getRDBShowInTheColumn() == -1) {
 				return obj.toString();
@@ -216,7 +199,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * @return
 	 */
 	private static String addComma(Object value) {
-		if(value==null) return GetPreferenceGeneral.getResultNull();
+		if(value==null) return null;//GetPreferenceGeneral.getResultNull();
 		
 		try{
 			DecimalFormat nf = new DecimalFormat("###,###.#############");

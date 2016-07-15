@@ -37,7 +37,7 @@ public class EditorDefine {
     public enum EXECUTE_TYPE {ALL, BLOCK, NONE};
 
 	/** sql을 각 언어로 컨버팅 해줍니다 */
-	public static enum SQL_TO_APPLICATION {AXISJ, Java_StringBuffer, PHP, ASP, MyBatis, REAL_GRID};
+	public static enum SQL_TO_APPLICATION {AXISJ, Java_StringBuffer, PHP, ASP, MyBatis/*, REAL_GRID*/};
 
 	/** tab index name */
 	public enum RESULT_TAB {RESULT_SET, QUERY_PLAN, SQL_RECALL, TADPOLE_MESSAGE};

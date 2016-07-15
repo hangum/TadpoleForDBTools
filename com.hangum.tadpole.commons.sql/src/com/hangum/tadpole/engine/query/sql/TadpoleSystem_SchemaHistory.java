@@ -147,7 +147,7 @@ public class TadpoleSystem_SchemaHistory {
 		dataDao.setSchema_seq(schemaHistoryDao.getSeq());
 		String[] arrayContent = SQLUtil.makeResourceDataArays(strSQL);
 		for (String content : arrayContent) {
-			dataDao.setSource(strSQL);		
+			dataDao.setSource(content);		
 			sqlClient.insert("sqlHistoryDataInsert", dataDao); //$NON-NLS-1$				
 		}
 	}

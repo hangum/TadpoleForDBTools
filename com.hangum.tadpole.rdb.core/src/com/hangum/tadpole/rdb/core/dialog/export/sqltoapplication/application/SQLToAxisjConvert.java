@@ -22,7 +22,6 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjConsts;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites.axisj.AxisjHeaderDAO;
 
@@ -42,7 +41,7 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 	
 	public static List<AxisjHeaderDAO> initializeHead(List<AxisjHeaderDAO> listAxisjHeader, UserDBDAO userDB, String sql) {
 		try {
-			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4, GetPreferenceGeneral.getResultNull());
+			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4);
 			Map<Integer, String> columnLabel = queryResult.getColumnLabelName();
 			Map<Integer, Integer> columnType = queryResult.getColumnType();
 			
@@ -84,7 +83,7 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 		try {
 			String STR_TEMPLATE = IOUtils.toString(SQLToAxisjConvert.class.getResource("axis.js.template"));
 
-			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4, GetPreferenceGeneral.getResultNull());
+			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4);
 			Map<Integer, String> columnLabel = queryResult.getColumnLabelName();
 			
 			String strHead = "";

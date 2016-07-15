@@ -144,7 +144,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			}
 		});
 		
-	//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
+		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		tvQueryResult = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
 		GridData gd_tableResult = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
@@ -488,10 +488,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					
 					final String strUserEmail 	= SessionManager.getEMAIL();
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
-					final String strNullValue   = GetPreferenceGeneral.getResultNull();
+//					final String strNullValue   = GetPreferenceGeneral.getResultNull();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size(), strNullValue);
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
 						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
@@ -553,7 +553,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
 		SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
 		
-		tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
+		tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
 		tvQueryResult.setContentProvider(new ArrayContentProvider());
 		
 		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.

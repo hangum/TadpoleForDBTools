@@ -19,14 +19,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
-import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -89,6 +86,9 @@ public class GeneralPlanComposite extends AbstractPlanComposite {
 		compositeTail.setLayout(gl_compositeResult);
 	}
 
+	/**
+	 * 
+	 */
 	public void setQueryPlanData(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
 		this.reqQuery = reqQuery;
 		this.rsDAO = rsDAO;
@@ -101,7 +101,7 @@ public class GeneralPlanComposite extends AbstractPlanComposite {
 		if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
 		SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryPlan, rsDAO, sqlSorter, isEditable);
 		
-		tvQueryPlan.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), GetPreferenceGeneral.getISRDBNumberIsComma(), rsDAO));
+		tvQueryPlan.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
 		tvQueryPlan.setContentProvider(new ArrayContentProvider());
 		
 		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.

@@ -124,7 +124,7 @@ public class QueryUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static QueryExecuteResultDTO executeQuery(final UserDBDAO userDB, String strSQL, final int intStartCnt, final int intSelectLimitCnt, final String strNullValue) throws Exception {
+	public static QueryExecuteResultDTO executeQuery(final UserDBDAO userDB, String strSQL, final int intStartCnt, final int intSelectLimitCnt) throws Exception {
 		ResultSet resultSet = null;
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -145,7 +145,7 @@ public class QueryUtils {
 				statement.execute(strSQL);
 				resultSet = statement.getResultSet();
 			}
-			return new QueryExecuteResultDTO(userDB, strSQL, false, resultSet, intSelectLimitCnt, intStartCnt, strNullValue);
+			return new QueryExecuteResultDTO(userDB, strSQL, false, resultSet, intSelectLimitCnt, intStartCnt);
 			
 		} catch(Exception e) {
 			logger.error("execute query", e);

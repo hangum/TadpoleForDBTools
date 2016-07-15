@@ -64,6 +64,7 @@ public class PublicTadpoleDefine {
 	public static final String TDB_COOKIE_USER_PWD = "TDB_USER_PWD";
 	public static final String TDB_COOKIE_USER_SAVE_CKECK = "TDB_USER_SAVE_CHECK";
 	public static final String TDB_COOKIE_USER_LANGUAGE = "TDB_USER_LANGUAGE";
+	public static final String TDB_COOKIE_USER_IP = "TDB_USER_IP";
 
 	/**
 	 * PLAN Statement ID
