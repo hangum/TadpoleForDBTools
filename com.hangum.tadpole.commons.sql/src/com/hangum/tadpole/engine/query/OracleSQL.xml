@@ -27,8 +27,14 @@
 	database connection test 
  -->
 <select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
-SELECT sysdate	FROM dual  
+SELECT 1 FROM dual  
 </select>
+
+<!--  change schema -->
+<select id="selectSchema" parameterClass="java.lang.String">
+	ALTER SESSION SET CURRENT_SCHEMA = #schema#
+</select>
+
 
 <!-- 
 	db의 모든 table 이름만.
@@ -68,6 +74,9 @@ ORDER BY T.table_name
         , O.object_type as object_type
      from sys.all_objects O
     where 1=1
+<isNotEmpty property="schema_name">
+	  and o.owner = upper(#schema_name#)
+</isNotEmpty>    
       and o.object_type not in ('SYNONYM')
 	  and object_name in (#object_name#, upper(#object_name#))
 	
@@ -80,7 +89,10 @@ ORDER BY T.table_name
 	             and o.owner = s.table_owner
 	             and o.object_name = s.table_name
 	 where     1 = 1
-	       and o.object_type in ('TABLE', 'VIEW')
+<isNotEmpty property="schema_name">
+	  and o.owner = upper(#schema_name#)
+</isNotEmpty>    
+      and o.object_type in ('TABLE', 'VIEW')
 </select>
 
 <!-- 
@@ -139,7 +151,7 @@ ORDER BY T.table_name
                            WHEN MIN(P.CONSTRAINT_TYPE) = 'U' THEN 'UNI' 
                            ELSE '' END
              FROM ALL_CONS_COLUMNS D 
-              JOIN USER_CONSTRAINTS P ON D.OWNER = P.OWNER AND D.TABLE_NAME = P.TABLE_NAME 
+              JOIN ALL_CONSTRAINTS P ON D.OWNER = P.OWNER AND D.TABLE_NAME = P.TABLE_NAME 
               AND D.CONSTRAINT_NAME = P.CONSTRAINT_NAME
              AND  P.CONSTRAINT_TYPE IN ('P', 'R', 'U')
            WHERE C.TABLE_NAME = D.TABLE_NAME AND C.COLUMN_NAME = D.COLUMN_NAME 
@@ -164,37 +176,41 @@ ORDER BY T.table_name
 	referenced_table_name	:	타켓 테이블 이름
 	referenced_column_name	: 	타켓 테이블 컬럼
  -->
-<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.util.HashMap">
  SELECT t.constraint_name ,
         t.table_name,
        max(decode(rno,1,t.column_name)) ||','|| max(decode(rno,2,t.column_name)) AS column_name ,
                                                 max(r.table_name) AS referenced_table_name ,
                                                 max(r.columns) AS referenced_column_name
 FROM
-  ( SELECT C.table_name ,
+  ( SELECT c.owner, C.table_name ,
            C.CONSTRAINT_NAME ,
            S.column_name ,
            C.R_CONSTRAINT_NAME ,
-           COUNT(*)OVER(PARTITION BY C.CONSTRAINT_NAME) CNT ,
-                                                        ROW_NUMBER()OVER(PARTITION BY C.CONSTRAINT_NAME
+           COUNT(*)OVER(PARTITION BY C.CONSTRAINT_NAME) CNT 
+           ,         ROW_NUMBER()OVER(PARTITION BY C.CONSTRAINT_NAME
                                                                          ORDER BY S.COLUMN_NAME) RNO
-   FROM user_constraints C
-   LEFT JOIN USER_CONS_COLUMNS S ON C.CONSTRAINT_NAME = S.CONSTRAINT_NAME
-   AND C.TABLE_NAME = S.TABLE_NAME
+   FROM all_constraints C
+       LEFT JOIN all_CONS_COLUMNS S ON c.owner = s.owner and C.CONSTRAINT_NAME = S.CONSTRAINT_NAME AND C.TABLE_NAME = S.TABLE_NAME
    WHERE C.CONSTRAINT_TYPE = 'R' ) t
 LEFT JOIN
-  (SELECT x.table_name,
+  (SELECT x.owner,
+          x.table_name,
           x.constraint_name ,
           max(decode(x.rno,1,COLUMN_NAME))||',' || max(decode(x.rno,2,COLUMN_NAME)) columns
    FROM
-     (SELECT s.table_name ,
-             s.constraint_name ,
-             s.COLUMN_NAME , ROW_NUMBER()OVER(PARTITION BY s.CONSTRAINT_NAME
-                                              ORDER BY S.COLUMN_NAME) RNO
-      FROM USER_CONS_COLUMNS S)x
-   GROUP BY x.table_name,
-            x.constraint_name ) R ON t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
-WHERE t.table_name in ( $table$ )            
+     (SELECT s.table_name 
+             ,s.constraint_name 
+             ,s.COLUMN_NAME  
+             ,ROW_NUMBER()OVER(PARTITION BY s.CONSTRAINT_NAME ORDER BY S.COLUMN_NAME) RNO
+             ,s.owner
+      FROM all_CONS_COLUMNS S)x
+   GROUP BY x.owner,
+            x.table_name,
+            x.constraint_name ) R ON t.owner = r.owner and t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
+WHERE 1=1
+and t.owner = upper(#schema#)
+and t.table_name in ( $table$ )            
 GROUP BY t.table_name,
          t.constraint_name
 </select>
@@ -218,30 +234,33 @@ GROUP BY t.table_name,
                                                 max(r.table_name) AS referenced_table_name ,
                                                 max(r.columns) AS referenced_column_name
 FROM
-  ( SELECT C.table_name ,
+  ( SELECT c.owner, C.table_name ,
            C.CONSTRAINT_NAME ,
            S.column_name ,
            C.R_CONSTRAINT_NAME ,
            COUNT(*)OVER(PARTITION BY C.CONSTRAINT_NAME) CNT ,
                                                         ROW_NUMBER()OVER(PARTITION BY C.CONSTRAINT_NAME
                                                                          ORDER BY S.COLUMN_NAME) RNO
-   FROM user_constraints C
-   LEFT JOIN USER_CONS_COLUMNS S ON C.CONSTRAINT_NAME = S.CONSTRAINT_NAME
+   FROM all_constraints C
+   LEFT JOIN all_CONS_COLUMNS S ON c.owner = s.owner and C.CONSTRAINT_NAME = S.CONSTRAINT_NAME
    AND C.TABLE_NAME = S.TABLE_NAME
    WHERE C.CONSTRAINT_TYPE = 'R' ) t
 LEFT JOIN
-  (SELECT x.table_name,
+  (SELECT x.owner, 
+          x.table_name,
           x.constraint_name ,
           max(decode(x.rno,1,COLUMN_NAME))||',' || max(decode(x.rno,2,COLUMN_NAME)) columns
    FROM
-     (SELECT s.table_name ,
+     (SELECT s.owner,
+             s.table_name ,
              s.constraint_name ,
              s.COLUMN_NAME , ROW_NUMBER()OVER(PARTITION BY s.CONSTRAINT_NAME
                                               ORDER BY S.COLUMN_NAME) RNO
-      FROM USER_CONS_COLUMNS S)x
-   GROUP BY x.table_name,
-            x.constraint_name ) R ON t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
-GROUP BY t.table_name,
+      FROM all_CONS_COLUMNS S)x
+   GROUP BY x.owner, x.table_name,
+            x.constraint_name ) R ON t.owner = r.owner and t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
+GROUP BY t.owner, 
+         t.table_name,
          t.constraint_name
 </select>
 	
@@ -280,10 +299,8 @@ SELECT
 	      ,o.object_type
 	      ,s.owner as schema_name
 	  FROM all_synonyms s
-	       LEFT JOIN all_tab_comments c
-	          ON s.table_owner = c.owner AND s.table_name = c.table_name
-	       INNER JOIN all_objects o
-	          ON o.owner = s.table_owner AND o.object_name = s.table_name
+	       INNER JOIN all_objects o     ON o.owner = s.table_owner AND o.object_name = s.table_name
+	       LEFT JOIN all_tab_comments c ON o.owner = c.owner AND o.object_name = c.table_name AND o.object_type = c.table_type
 	  WHERE 1=1
 	    AND s.owner = upper(#schema#)
 	    AND o.object_type IN ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION')
@@ -339,7 +356,7 @@ SELECT
 	        ,PACKAGE_NAME
 	    FROM ALL_ARGUMENTS
 	   WHERE OBJECT_ID = (SELECT OBJECT_ID
-	                        FROM SYS.USER_OBJECTS
+	                        FROM SYS.all_OBJECTS
 	                       WHERE 1=1
 	                       AND OWNER = upper(#owner#)
 	                       AND OBJECT_NAME = #table# 
@@ -461,12 +478,15 @@ ORDER BY m.column_position
         ,I.SEARCH_CONDITION
         ,i.R_OWNER
         ,I.R_CONSTRAINT_NAME        
-    FROM user_constraints i
-         LEFT JOIN user_indexes c
-            ON     i.table_name = c.table_name
+    FROM all_constraints i
+         LEFT JOIN all_indexes c
+            ON     i.owner = c.owner 
+               and i.table_name = c.table_name
                AND c.index_name = i.constraint_name
                AND c.status = 'ENABLED'
-   WHERE i.table_name = #table_name#
+   WHERE 1=1
+     AND i.owner = upper(#table_schema#)
+     AND i.table_name = #table_name#
 ORDER BY i.table_name, i.index_name
 </select>
 
@@ -1210,7 +1230,7 @@ Select
 from  sys.dba_segments s
 Where s.segment_type in ('LOBINDEX', 'INDEX', 'INDEX PARTITION', 'INDEX SUBPARTITION')
 and s.segment_name in (select x.index_name from sys.all_indexes x where s.owner = x.owner and x.table_name = UPPER (#table#) )
-and s.ownerb = upper(#schema_name#)
+and s.owner = upper(#schema_name#)
 
 
 </select>
@@ -1273,6 +1293,18 @@ SELECT INDEX_NAME "Index Name"
  WHERE 1=1
    and owner = upper(#schema_name#)
    and INDEX_NAME = UPPER (#index_name#)
+</select>
+
+<!-- 
+	object error 목록을 리턴한다.
+ -->
+<select id="getObjectError" resultClass="com.hangum.tadpole.engine.query.dao.oracle.OracleAllErrorsDAO" parameterClass="com.hangum.tadpole.engine.query.dao.oracle.OracleAllErrorsDAO">
+	SELECT * FROM all_errors
+	WHERE 
+			owner = #owner# 
+		AND name = #name# 
+		AND type = #type#
+	ORDER BY sequence
 </select>
 
 </sqlMap>

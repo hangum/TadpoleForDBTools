@@ -151,9 +151,9 @@ public class TableDAO extends StructObjectDAO {
 	@Override
 	public String getFullName() {
 		if(StringUtils.isEmpty(this.getSchema_name())) {
-			return this.getName();
+			return this.getSysName();
 		}else{
-			return String.format("%s.%s", this.getSchema_name(), this.getName());
+			return String.format("%s.%s", this.getSchema_name(), this.getSysName());
 		}
 	}
 }

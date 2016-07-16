@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;

@@ -401,15 +401,11 @@ public class TadpoleObjectQuery {
 	 * @throws Exception
 	 */
 	
-	public static List<HashMap> getObjectInfo(UserDBDAO userDB, String object_type, String object_name) throws Exception {
+	public static List<HashMap> getObjectInfo(UserDBDAO userDB, Map<String,String> object_map) throws Exception {
 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		
-		HashMap<String, String>paramMap = new HashMap<String, String>();
-		paramMap.put("object_type", object_type);
-		paramMap.put("object_name", object_name);
-		
-		return sqlClient.queryForList("allObjects", paramMap); //$NON-NLS-1$
+		return sqlClient.queryForList("allObjects", object_map); //$NON-NLS-1$
 		 
 	}
 
@@ -444,7 +440,7 @@ public class TadpoleObjectQuery {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		HashMap<String, String>paramMap = new HashMap<String, String>();
-		paramMap.put("schema", indexDao.getTABLE_SCHEMA()==null?indexDao.getSchema_name():indexDao.getTABLE_SCHEMA()); //$NON-NLS-1$
+		paramMap.put("schema_name", indexDao.getTABLE_SCHEMA()==null?indexDao.getSchema_name():indexDao.getTABLE_SCHEMA()); //$NON-NLS-1$
 		paramMap.put("index_name", indexDao.getINDEX_NAME()); //$NON-NLS-1$
 
 		return  client.queryForObject("getIndexStatisticsInfo", paramMap);

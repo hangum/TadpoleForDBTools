@@ -45,7 +45,7 @@ public class DialogUtil {
 	public static void popupObjectInformationDialog(UserDBDAO userDB, Map<String, String> paramMap) {
 		//TODO: 디비엔진 종류별로 지원유무에 따라 처리해야 하나?
 		
-		SelectObjectDialog objectSelector = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap.get("OBJECT_NAME"));
+		SelectObjectDialog objectSelector = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap);
 
 		if (objectSelector.getSelectObject().isEmpty() | objectSelector.getObjectCount() > 1) {
 			//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.

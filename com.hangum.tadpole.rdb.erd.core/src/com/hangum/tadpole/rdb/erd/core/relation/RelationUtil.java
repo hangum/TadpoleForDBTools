@@ -22,6 +22,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteRefTableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.model.Column;
@@ -347,7 +348,17 @@ public class RelationUtil {
 	 */
 	public static List<ReferencedTableDAO> getReferenceTable(UserDBDAO userDB, String tableName) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("referencedTableList", tableName);
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("schema", userDB.getSchema());
+		paramMap.put("table", tableName);
+
+		if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() | DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
+			return sqlClient.queryForList("referencedTableList", paramMap);
+		}else{
+			return sqlClient.queryForList("referencedTableList", tableName);
+		}
+		
 	}
 	
 	/**

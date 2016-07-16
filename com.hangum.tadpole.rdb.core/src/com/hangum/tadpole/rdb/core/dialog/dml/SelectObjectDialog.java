@@ -67,7 +67,7 @@ public class SelectObjectDialog extends Dialog {
 	private UserDBDAO userDB;
 	private TableViewer tableViewer;
 	private Label lblTableName;
-	private String object_name;
+	private Map<String,String> object_map = new HashMap<String,String>();
 
 	private Shell shell;
 
@@ -76,12 +76,15 @@ public class SelectObjectDialog extends Dialog {
 	 * 
 	 * @param parentShell
 	 */
-	public SelectObjectDialog(Shell parentShell, UserDBDAO userDB, String object_name) {
+	public SelectObjectDialog(Shell parentShell, UserDBDAO userDB, Map<String,String> object_map) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 
 		this.userDB = userDB;
-		this.object_name = object_name;
+		// 상세보기를 지원하는 오브젝트 타입.
+		this.object_map.put("object_type", "'TABLE','VIEW','SYNONYM'");
+		this.object_map.put("schema_name", object_map.get("OBJECT_OWNER"));
+		this.object_map.put("object_name", object_map.get("OBJECT_NAME"));
 
 		initData();
 	}
@@ -90,7 +93,7 @@ public class SelectObjectDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		this.shell = newShell;
-		newShell.setText(object_name);
+		newShell.setText(object_map.get("object_name"));
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -123,7 +126,7 @@ public class SelectObjectDialog extends Dialog {
 
 		lblTableName = new Label(compositeTable, SWT.NONE);
 		lblTableName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTableName.setText(object_name);
+		lblTableName.setText(object_map.get("object_name"));
 
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();
@@ -191,7 +194,7 @@ public class SelectObjectDialog extends Dialog {
 		try {
 			
 
-			List<HashMap> Objects = TadpoleObjectQuery.getObjectInfo(userDB, "'TABLE','VIEW','SYNONYM'", object_name);
+			List<HashMap> Objects = TadpoleObjectQuery.getObjectInfo(userDB, object_map);
 			for (HashMap map : Objects) {
 				extendsInfoList.add(map);
 			}

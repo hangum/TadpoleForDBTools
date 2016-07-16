@@ -685,17 +685,17 @@ public class MainEditor extends EditorExtension {
 		String strCheckSQL = SQLUtil.removeCommentAndOthers(userDB, reqQuery.getSql());
 		if(StringUtils.startsWithIgnoreCase(strCheckSQL, "desc ")) {
 			String strObject = StringUtils.removeStartIgnoreCase(strCheckSQL, "desc ");
-			/*
-			TableDAO tableDAO = new TableDAO();
-			tableDAO.setSchema_name(userDB.getSchema());
-			tableDAO.setName(strObject);
-			*/
-			Map<String, String> map = new HashMap<String, String>();
-			
-			map.put("OBJECT_NAME", strObject);
-			map.put("OBJECT_OWNER", userDB.getSchema());
-			
-			DialogUtil.popupObjectInformationDialog(getUserDB(), map);
+
+			Map<String,String> paramMap = new HashMap<String, String>();
+			if(StringUtils.contains(strObject, ".")) {
+				paramMap.put("OBJECT_OWNER", StringUtils.substringBefore(strObject, "."));
+				paramMap.put("OBJECT_NAME", StringUtils.substringAfter(strObject, "."));
+			}else{
+				//paramMap.put("OBJECT_OWNER", userDB.getSchema());
+				paramMap.put("OBJECT_NAME", strObject);
+			}
+
+			DialogUtil.popupObjectInformationDialog(getUserDB(), paramMap);
 		} else {
 			resultMainComposite.executeCommand(reqQuery);
 		}

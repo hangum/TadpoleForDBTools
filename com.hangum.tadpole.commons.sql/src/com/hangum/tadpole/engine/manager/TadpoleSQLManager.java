@@ -204,6 +204,19 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	}
 	
 	/**
+	 * 사용자가 schema  변경을 눌렀을 경우 사용한다.
+	 * @param userDB
+	 */
+	public static void changeSchema(final UserDBDAO userDB) {
+		String stKey = getKey(userDB);
+		SqlMapClient sqlMap = dbManager.get(stKey);
+		DataSource ds = sqlMap.getDataSource();
+		BasicDataSource bds = (BasicDataSource)ds;
+		
+		
+	}
+	
+	/**
 	 * 현재 연결된 Connection pool 정보를 리턴합니다.
 	 * 
 	 * @return
@@ -245,6 +258,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		
 		return listDbcpInfo;
 	}
+	
 	
 	/**
 	 * DBMetadata
@@ -291,8 +305,14 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			try {
 				sqlMapClient = dbManager.remove(searchKey);
 				if(sqlMapClient == null) return;
-				BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
-				basicDataSource.close();
+				DataSource ds = sqlMapClient.getDataSource();
+				if(ds != null) {
+					BasicDataSource basicDataSource = (BasicDataSource)ds;
+					basicDataSource.close();
+					
+					basicDataSource= null;
+					ds = null;
+				}
 			} catch (Exception e) {
 				logger.error("remove connection", e);
 			} finally {
@@ -303,16 +323,16 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	
 	/**
 	 * map의 카를 가져옵니다.
-	 * @param dbInfo
+	 * @param userDB
 	 * @return
 	 */
-	public static String getKey(UserDBDAO dbInfo) {
-		return 	dbInfo.getTdbUserID()   + PublicTadpoleDefine.DELIMITER +
-				dbInfo.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
-				dbInfo.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
+	public static String getKey(final UserDBDAO userDB) {
+		return 	userDB.getTdbUserID()   + PublicTadpoleDefine.DELIMITER +
+				userDB.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
+				userDB.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
 	}
 
 }

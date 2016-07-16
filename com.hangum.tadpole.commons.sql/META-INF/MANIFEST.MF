@@ -40,6 +40,7 @@ Export-Package:
  com.hangum.tadpole.engine.query.dao,
  com.hangum.tadpole.engine.query.dao.mongodb,
  com.hangum.tadpole.engine.query.dao.mysql,
+ com.hangum.tadpole.engine.query.dao.oracle,
  com.hangum.tadpole.engine.query.dao.rdb,
  com.hangum.tadpole.engine.query.dao.sqlite,
  com.hangum.tadpole.engine.query.dao.system,

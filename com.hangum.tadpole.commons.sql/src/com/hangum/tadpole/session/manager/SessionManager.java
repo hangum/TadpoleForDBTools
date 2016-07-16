@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
@@ -177,6 +178,7 @@ public class SessionManager {
 	public static int getUserSeq() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		Object obj = sStore.getAttribute(NAME.USER_SEQ.name());
+		if(logger.isDebugEnabled()) logger.debug("user seq is : " + obj);
 		
 		if(obj == null) return 0;
 		else return (Integer)obj;
@@ -184,6 +186,8 @@ public class SessionManager {
 	
 	public static String getEMAIL() {
 		HttpSession sStore = RWT.getRequest().getSession();
+		if(logger.isDebugEnabled()) logger.debug("user email is : " + (String)sStore.getAttribute(NAME.LOGIN_EMAIL.name()));
+		
 		return (String)sStore.getAttribute(NAME.LOGIN_EMAIL.name());
 	}
 	
@@ -356,22 +360,10 @@ public class SessionManager {
 			// ignore exception
 		}
 		
-		//fixed https://github.com/hangum/TadpoleForDBTools/issues/647
-//		String defaultUrl = MessageFormat.format(
-//			"{0}://{1}:{2}{3}",
-//			new Object[] {	request.getScheme(), 
-//							request.getLocalName(),
-//							Integer.toString(request.getLocalPort()),
-//							request.getRequestURI() 
-//						}
-//		);
-//		if(logger.isDebugEnabled()) {
-//			logger.debug("==request url=> " + request.getRequestURL());
-//			logger.debug("==request query string=> " + request.getQueryString());
-//		}
-		
 		// fixed https://github.com/hangum/TadpoleForDBTools/issues/708
-     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", request.getRequestURL());
+		// ps - 사용자 session id를 보여주고 싶지 않아서 배열을 이용해서 뺐어요. - hangum
+		String[] arryRequestURL = StringUtils.split(request.getRequestURL().toString(), ";");
+     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", arryRequestURL[0]);
      	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
      	executor.execute("setTimeout('"+browserText+"', 100)" );
 		
