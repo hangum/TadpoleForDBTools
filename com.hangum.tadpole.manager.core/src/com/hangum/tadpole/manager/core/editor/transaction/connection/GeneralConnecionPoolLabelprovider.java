@@ -41,16 +41,15 @@ public class GeneralConnecionPoolLabelprovider extends LabelProvider implements 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		DBCPInfoDAO dao = (DBCPInfoDAO)element;
-//		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14,
-//				Messages.get().GeneralConnecionPoolLabelprovider_0, Messages.get().GeneralConnecionPoolLabelprovider_1, Messages.get().GeneralConnecionPoolLabelprovider_2, Messages.get().GeneralConnecionPoolLabelprovider_3};
 		
 		switch(columnIndex) {
-		case 0: return dao.getDbType();
-		case 1: return dao.getDisplayName();
-		case 2: return ""+dao.getNumberActive();
-		case 3: return ""+dao.getMaxActive(); //$NON-NLS-1$
-		case 4: return ""+dao.getNumberIdle(); //$NON-NLS-1$
-		case 5: return ""+dao.getMaxWait(); //$NON-NLS-1$
+		case 0: return dao.getUser();
+		case 1: return dao.getDbType();
+		case 2: return dao.getDisplayName();
+		case 3: return ""+dao.getNumberActive();
+		case 4: return ""+dao.getMaxActive(); //$NON-NLS-1$
+		case 5: return ""+dao.getNumberIdle(); //$NON-NLS-1$
+		case 6: return ""+dao.getMaxWait(); //$NON-NLS-1$
 		}
 		
 		return "** not set column **"; //$NON-NLS-1$

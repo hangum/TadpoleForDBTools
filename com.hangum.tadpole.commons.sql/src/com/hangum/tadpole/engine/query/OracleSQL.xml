@@ -27,7 +27,7 @@
 	database connection test 
  -->
 <select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
-SELECT 1 FROM dual  
+	SELECT 1 FROM dual
 </select>
 
 <!--  change schema -->

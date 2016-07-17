@@ -65,7 +65,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class TablesComposite extends Composite {
+public class TablesComposite extends DBInfosComposite {
 	/**
 	 * Logger for this class
 	 */
@@ -80,6 +80,7 @@ public class TablesComposite extends Composite {
 	/** download service handler. */
 	private Composite compositeTail;
 	private DownloadServiceHandler downloadServiceHandler;
+	private List listTableInform = new ArrayList<>();
 
 	/**
 	 * Create the composite.
@@ -113,7 +114,7 @@ public class TablesComposite extends Composite {
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initUI();
+				initUI(true);
 			}
 		});
 		btnRefresh.setText(Messages.get().Refresh);
@@ -146,7 +147,7 @@ public class TablesComposite extends Composite {
 		btnCsvExport.setBounds(0, 0, 94, 28);
 		btnCsvExport.setText(Messages.get().TablesComposite_btnCsvExport_text);
 
-		initUI();
+//		initUI();
 		registerServiceHandler();
 	}
 	
@@ -200,14 +201,17 @@ public class TablesComposite extends Composite {
 	}
 	
 	/**
-	 * 
+	 *  initialize ui data
 	 */
-	private void initUI() {
+	public void initUI(boolean isRefresh) {
+		if(isRefresh) {
+			listTableInform.clear();
+		} else {
+			if(listTableInform.size() != 0) return;
+		}
+		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			
-			List listTableInform;// = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$
-			
 			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
 				HashMap<String, String>paramMap = new HashMap<String, String>();
 				paramMap.put("schema_name", userDB.getSchema()); //$NON-NLS-1$
@@ -298,9 +302,6 @@ public class TablesComposite extends Composite {
 		super.dispose();
 	};
 	
-	@Override
-	protected void checkSubclass() {
-	}
 }
 
 /**

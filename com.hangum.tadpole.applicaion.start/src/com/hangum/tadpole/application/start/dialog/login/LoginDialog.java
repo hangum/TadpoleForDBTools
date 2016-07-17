@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
-import java.text.MessageFormat;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
@@ -87,9 +86,6 @@ public class LoginDialog extends AbstractLoginDialog {
 	
 	private Composite compositeHead;
 	private Composite compositeTail;
-	
-	/** 사용자가 브라우저로 접속한 ip*/
-	private String browserIP = "";
 	
 	public LoginDialog(Shell shell) {
 		super(shell);

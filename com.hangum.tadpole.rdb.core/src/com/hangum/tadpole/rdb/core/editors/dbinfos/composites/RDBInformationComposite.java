@@ -44,7 +44,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class RDBInformationComposite extends Composite {
+public class RDBInformationComposite extends DBInfosComposite {
 	private static final Logger logger = Logger.getLogger(RDBInformationComposite.class);
 	private UserDBDAO userDB;
 	private TableViewer tvInformation;
@@ -81,14 +81,19 @@ public class RDBInformationComposite extends Composite {
 		
 		tvInformation.setContentProvider(new ArrayContentProvider());
 		tvInformation.setLabelProvider(new RDBInformationLabelProvider());
-		initUI();
+		initUI(true);
 	}
 	
 	/**
 	 * 초기데이터를 쌓습니다.
 	 */
-	private void initUI() {
-		listInfo = new ArrayList<KeyValueDAO>();
+	public void initUI(boolean isRefresh) {
+		if(isRefresh) {
+			listInfo.clear();
+		} else {
+			if(listInfo.size() != 0) return;
+		}
+		
 		// db information
 		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 			rdbInfo();
@@ -140,11 +145,6 @@ public class RDBInformationComposite extends Composite {
 			try { if(conn != null) conn.close(); } catch(Exception e) {}
 		}
 	}
-
-	@Override
-	protected void checkSubclass() {
-	}
-	
 }
 
 /**

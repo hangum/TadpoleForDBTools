@@ -178,7 +178,6 @@ public class SessionManager {
 	public static int getUserSeq() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		Object obj = sStore.getAttribute(NAME.USER_SEQ.name());
-		if(logger.isDebugEnabled()) logger.debug("user seq is : " + obj);
 		
 		if(obj == null) return 0;
 		else return (Integer)obj;
@@ -186,7 +185,6 @@ public class SessionManager {
 	
 	public static String getEMAIL() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		if(logger.isDebugEnabled()) logger.debug("user email is : " + (String)sStore.getAttribute(NAME.LOGIN_EMAIL.name()));
 		
 		return (String)sStore.getAttribute(NAME.LOGIN_EMAIL.name());
 	}

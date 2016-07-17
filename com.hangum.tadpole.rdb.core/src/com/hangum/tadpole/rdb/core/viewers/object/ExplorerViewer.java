@@ -43,7 +43,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
@@ -256,11 +255,6 @@ public class ExplorerViewer extends ViewPart {
 	private void changeSchema() {
 		String strSchemaName = comboSchema.getText();
 		this.userDB.setSchema(strSchemaName);
-		
-		// 에디터의 schema 를 바꾸어준다.
-		// 만약에 트랜잭션 쿼리가 있다면 수정 하지 못하도록 한다.
-		// 현재는 오라클만 
-		
 		
 		tableComposite.refreshTable(userDB, true, "");
 		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);

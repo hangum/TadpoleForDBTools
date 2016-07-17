@@ -15,9 +15,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -46,6 +49,7 @@ public class RDBDBInfosEditor extends EditorPart {
 	private static final Logger logger = Logger.getLogger(RDBDBInfosEditor.class);
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.rdb.dbinfos"; //$NON-NLS-1$
 	
+	private CTabFolder tabFolder;
 	private UserDBDAO userDB;
 	private RDBInformationComposite compositeRDBInformation;
 	private TablesComposite tableInformationComposite;
@@ -80,10 +84,29 @@ public class RDBDBInfosEditor extends EditorPart {
 		gl_compositeRDBInformation.marginHeight = 2;
 		gl_compositeRDBInformation.marginWidth = 2;
 		
-		CTabFolder tabFolder = new CTabFolder(parent, SWT.NONE);
+		tabFolder = new CTabFolder(parent, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolder.setBorderVisible(false);		
 		tabFolder.setSelectionBackground(TadpoleWidgetUtils.getTabFolderBackgroundColor(), TadpoleWidgetUtils.getTabFolderPercents());
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent evt) {
+				if (userDB == null) return;
+				
+				CTabItem tabItem = tabFolder.getSelection();
+				Control control = tabItem.getControl();
+				if(control instanceof TablesComposite) {
+					TablesComposite composite = (TablesComposite)control;
+					composite.initUI(false);
+				} else if(control instanceof ColumnsComposite) {
+					ColumnsComposite composite = (ColumnsComposite)control;
+					composite.initUI(false);
+				} else if(control instanceof PropertyComposite) {
+					PropertyComposite composite = (PropertyComposite)control;
+					composite.initUI(false);
+				}
+			}
+		});
 		
 		//[information composite start]///////////////////////////////		
 		CTabItem tbtmServerStatus = new CTabItem(tabFolder, SWT.NONE);
@@ -140,8 +163,6 @@ public class RDBDBInfosEditor extends EditorPart {
 			gl_compositeProperty.marginWidth = 2;
 			
 			propertyInformationComposite.setLayout(gl_compositeProperty);
-			
-			
 		}
 		
 		tabFolder.setSelection(0);
