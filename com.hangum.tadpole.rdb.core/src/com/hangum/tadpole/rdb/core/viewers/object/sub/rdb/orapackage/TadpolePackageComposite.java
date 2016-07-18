@@ -397,13 +397,13 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	public void selectDataOfTable(String strObjectName) {
 		if("".equals(strObjectName) || strObjectName == null) return;
 		
-		getProcFuncTableViewer().getTable().setFocus();
+		getPackageTableViewer().getTable().setFocus();
 		
 		// find select object and viewer select
 		for(int i=0; i<showPackage.size(); i++) {
-			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getProcFuncTableViewer().getElementAt(i);
-			if(StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
-				getProcFuncTableViewer().setSelection(new StructuredSelection(getProcFuncTableViewer().getElementAt(i)), true);
+			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getPackageTableViewer().getElementAt(i);
+			if ( StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+				getPackageTableViewer().setSelection(new StructuredSelection(getPackageTableViewer().getElementAt(i)), true);
 				break;
 			}
 		}
