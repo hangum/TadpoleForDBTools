@@ -52,6 +52,7 @@ import com.hangum.tadpole.engine.manager.DBCPInfoDAO;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
+import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -175,7 +176,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * 
 	 */
 	private void initGeneral() {
-		List<DBCPInfoDAO> listDbcp = TadpoleSQLManager.getDBCPInfo();
+		List<DBCPInfoDAO> listDbcp = TadpoleSQLManager.getDBCPInfo(isAdmin());
 		tvGeneral.setInput(listDbcp);
 	}
 	
@@ -183,9 +184,9 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * general table create columns
 	 */
 	private void createGeneralColumns() {
-		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, 
+		String[] names = {Messages.get().User, Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, 
 				Messages.get().GeneralConnecionPoolLabelprovider_0, Messages.get().GeneralConnecionPoolLabelprovider_1, Messages.get().GeneralConnecionPoolLabelprovider_2, Messages.get().GeneralConnecionPoolLabelprovider_3};
-		int[] sizes = {80, 200, 100, 100, 100, 100};
+		int[] sizes = {200, 120, 200, 100, 100, 100, 100};
 				
 		for(int i=0; i<names.length; i++) {
 			String name = names[i];
@@ -332,9 +333,16 @@ public class TransactionConnectionListEditor extends EditorPart {
 		HashMap<String, TransactionDAO> mapList = TadpoleSQLTransactionManager.getDbManager();
 		for (String key : mapList.keySet()) {
 			String[] strKey = StringUtils.split(key, PublicTadpoleDefine.DELIMITER);
-			
-			if(strLoginId.equals(strKey[0])) {
+		
+			// 시스템 디비는 추가하지 않는다.
+			if(StringUtils.equals(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name(), strKey[0])) continue;
+				
+			if(isAdmin()) {
 				listTransaction.add(mapList.get(key));
+			} else {
+				if(strLoginId.equals(strKey[0])) {
+					listTransaction.add(mapList.get(key));
+				}	
 			}
 		}
 		tvTransaction.setInput(listTransaction);
@@ -344,8 +352,8 @@ public class TransactionConnectionListEditor extends EditorPart {
 	 * transaction table create columns
 	 */
 	private void createTransactionColumns() {
-		String[] names = {Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, Messages.get().User, Messages.get().TransactionConnectionListEditor_16};
-		int[] sizes = {80, 200, 200, 200};
+		String[] names = {Messages.get().User, Messages.get().TransactionConnectionListEditor_13, Messages.get().TransactionConnectionListEditor_14, Messages.get().TransactionConnectionListEditor_16};
+		int[] sizes = {200, 120, 200, 200};
 				
 		for(int i=0; i<names.length; i++) {
 			String name = names[i];
@@ -393,6 +401,14 @@ public class TransactionConnectionListEditor extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
+	}
+	
+	/**
+	 * admin 인지 여부
+	 * @return
+	 */
+	private boolean isAdmin() {
+		return PermissionChecker.isAdmin(SessionManager.getRepresentRole());
 	}
 
 	@Override

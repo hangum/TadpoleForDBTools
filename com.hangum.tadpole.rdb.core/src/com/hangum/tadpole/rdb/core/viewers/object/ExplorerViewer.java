@@ -11,7 +11,6 @@
 package com.hangum.tadpole.rdb.core.viewers.object;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -258,7 +257,7 @@ public class ExplorerViewer extends ViewPart {
 		this.userDB.setSchema(strSchemaName);
 		
 		tableComposite.refreshTable(userDB, true, "");
-		logger.debug("Change schema name is " + strSchemaName);
+		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);
 	}
 
 	/**

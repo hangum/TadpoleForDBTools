@@ -329,7 +329,7 @@ public class ResultSetComposite extends Composite {
 
 		final Shell runShell = btnStopQuery.getShell();
 		
-		// java named parameter
+		// java named parameter (오라클 디비의 경우는 :parameter도 변수 취급합니다.)
 		try {
 			JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
 			int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
@@ -337,10 +337,6 @@ public class ResultSetComposite extends Composite {
 				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
 				if(Dialog.OK == epd.open()) {
 					ParameterObject paramObj = epd.getParameterObject();
-//					String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
-//					reqQuery.setSql(repSQL);
-//					if(logger.isDebugEnabled()) logger.debug("[Java Type]User parameter query is  " + repSQL); //$NON-NLS-1$
-					
 					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
 					reqQuery.setStatementParameter(paramObj.getParameter());
 					
@@ -353,33 +349,30 @@ public class ResultSetComposite extends Composite {
 			logger.error("Java style parameter parse", e); //$NON-NLS-1$
 		}
 		
-//		// oracle parameter
-//		try {
-//			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
-//			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
-//			
-//			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
-//			if(!mapIndexToName.isEmpty()) {
-//				
-//				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
-//				if(Dialog.OK == epd.open()) {
-//					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-////					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-////					reqQuery.setSql(repSQL);
-//					
-//					reqQuery.setSql(strSQL);
-//					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
-//					reqQuery.setStatementParameter(paramObj.getParameter());
-//					
-//					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + strSQL); //$NON-NLS-1$
-//					return true;
-//				} else {
-//					return false;
-//				}
-//			}
-//		} catch(Exception e) {
-//			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
-//		}
+		// oracle parameter
+		try {
+			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
+			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+			
+			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
+			if(!mapIndexToName.isEmpty()) {
+				
+				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
+				if(Dialog.OK == epd.open()) {
+					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
+					reqQuery.setSql(strSQL);
+					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
+					reqQuery.setStatementParameter(paramObj.getParameter());
+					
+					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + strSQL); //$NON-NLS-1$
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} catch(Exception e) {
+			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
+		}
 
 		// mybatis shap
 		GenericTokenParser mybatisShapeUtil = new GenericTokenParser("#{", "}");
@@ -390,9 +383,6 @@ public class ResultSetComposite extends Composite {
 			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
 			if(Dialog.OK == epd.open()) {
 				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-//				String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-//				reqQuery.setSql(repSQL);
-				
 				reqQuery.setSql(strSQL);
 				reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
 				reqQuery.setStatementParameter(paramObj.getParameter());
@@ -412,9 +402,6 @@ public class ResultSetComposite extends Composite {
 				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
 				if(Dialog.OK == epd.open()) {
 					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-//					String repSQL = ParameterUtils.fillParameters(strSQL, paramObj.getParameter());
-//					reqQuery.setSql(repSQL);
-					
 					reqQuery.setSql(strSQL);
 					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
 					reqQuery.setStatementParameter(paramObj.getParameter());

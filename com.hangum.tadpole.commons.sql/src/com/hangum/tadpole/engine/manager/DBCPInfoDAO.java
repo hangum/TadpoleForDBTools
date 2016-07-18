@@ -20,6 +20,7 @@ package com.hangum.tadpole.engine.manager;
  *
  */
 public class DBCPInfoDAO {
+	String user;
 	int dbSeq;
 	String displayName;
 	String dbType;
@@ -35,13 +36,20 @@ public class DBCPInfoDAO {
 	public DBCPInfoDAO() {
 	}
 	
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
 	/**
 	 * @return the dbSeq
 	 */
 	public int getDbSeq() {
 		return dbSeq;
 	}
-
 
 	/**
 	 * @param dbSeq the dbSeq to set
@@ -50,14 +58,12 @@ public class DBCPInfoDAO {
 		this.dbSeq = dbSeq;
 	}
 
-
 	/**
 	 * @return the displayName
 	 */
 	public String getDisplayName() {
 		return displayName;
 	}
-
 
 	/**
 	 * @param displayName the displayName to set
@@ -66,7 +72,6 @@ public class DBCPInfoDAO {
 		this.displayName = displayName;
 	}
 
-
 	/**
 	 * @return the dbType
 	 */
@@ -74,14 +79,12 @@ public class DBCPInfoDAO {
 		return dbType;
 	}
 
-
 	/**
 	 * @param dbType the dbType to set
 	 */
 	public void setDbType(String dbType) {
 		this.dbType = dbType;
 	}
-
 
 	/**
 	 * @return the numberActive

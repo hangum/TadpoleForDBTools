@@ -23,6 +23,9 @@ import com.hangum.tadpole.manager.core.Messages;
  *
  */
 public class TransactionConnectionListEditorInput implements IEditorInput {
+	
+	public TransactionConnectionListEditorInput() {
+	}
 
 	@Override
 	public Object getAdapter(Class adapter) {

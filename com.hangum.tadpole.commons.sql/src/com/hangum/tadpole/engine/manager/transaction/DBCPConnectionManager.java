@@ -55,9 +55,9 @@ public class DBCPConnectionManager {
 		//
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(5);
-//		connectionPool.setWhenExhaustedAction((byte)1);
-//		connectionPool.setMaxWait(1000 * 60); 					// 1분대기.
-//		connectionPool.setTimeBetweenEvictionRunsMillis(3 * 1000);
+		connectionPool.setWhenExhaustedAction((byte)1);
+		connectionPool.setMaxWait(1000 * 60); 					// 1분대기.
+		connectionPool.setTimeBetweenEvictionRunsMillis(3 * 1000);
 		connectionPool.setTestWhileIdle(true);
 		
 		String passwdDecrypt = "";
@@ -68,7 +68,7 @@ public class DBCPConnectionManager {
 		}
 		
 		ConnectionFactory cf = new DriverManagerConnectionFactory(userDB.getUrl(), userDB.getUsers(), passwdDecrypt);
-		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
+		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, userDB.getDBDefine().getValidateQuery(), false, false);
 		
 		if(!"".equals(PublicTadpoleDefine.CERT_USER_INFO)) {
 			// initialize connection string
@@ -79,7 +79,7 @@ public class DBCPConnectionManager {
 				
 				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " select * from dual;");
 				listInitializeSql.add(HELLO_SQL + "\n select * from dual");
-				listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction-(%s)', '')", userDB.getTdbUserID()));
+				listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction(%s)', '')", userDB.getTdbUserID()));
 			} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 				pcf.setValidationQuery("select 1");
 				
@@ -124,13 +124,13 @@ public class DBCPConnectionManager {
 		}
 	}
 	
-//	/**
-//	 * map의 카를 가져옵니다.
-//	 * @param userDB
-//	 * @return
-//	 */
-//	private static String getKey(final String userId, final UserDBDAO userDB) {
-//		return userId + userDB.getSeq() + userDB.getDbms_types()+userDB.getUrl()+userDB.getUsers();//+dbInfo.getPasswd();
-//	}
+	/**
+	 * map의 카를 가져옵니다.
+	 * @param userDB
+	 * @return
+	 */
+	private static String getPoolKey(final String userId, final UserDBDAO userDB) {
+		return userId + userDB.getSeq() + userDB.getDisplay_name();
+	}
 
 }

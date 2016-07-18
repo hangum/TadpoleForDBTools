@@ -262,6 +262,40 @@ public enum DBDefine {
 	}
 	
 	/**
+	 * 디비의 기본 validate 쿼리를 정의합니다.
+	 * @return
+	 */
+	public String getValidateQuery() {
+		if(this == DBDefine.MYSQL_DEFAULT) {
+			return "select 1";
+		} else if(this == DBDefine.MARIADB_DEFAULT) {
+			return "select 1";
+		} else if(this == DBDefine.ORACLE_DEFAULT) {
+			return "SELECT 1 FROM dual";
+		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
+			return "SELECT getdate()";
+		} else if(this == DBDefine.SQLite_DEFAULT) {
+			return "SELECT name FROM sqlite_master where 1 = 0";
+		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
+			return "show databases";
+		} else if(this == DBDefine.POSTGRE_DEFAULT) {
+			return "SELECT version()";
+		} else if(this == DBDefine.CUBRID_DEFAULT) {
+			return "SELECT 1";
+		} else if(this == DBDefine.TAJO_DEFAULT) {
+			return "\\d";
+		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
+			return "SELECT 1";
+		} else if(this == DBDefine.TIBERO_DEFAULT) {
+			return "SELECT 1 FROM dual";
+//		} else if(this == DBDefine.MONGODB_DEFAULT) {
+//			extension += "mongo";
+		} else {
+			return "SELECT 1";
+		}
+	}
+	
+	/**
 	 * 에디터에서 사용할 확장자를 만듭니다.
 	 * @return
 	 */

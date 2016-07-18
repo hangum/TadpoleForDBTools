@@ -87,9 +87,6 @@ public class LoginDialog extends AbstractLoginDialog {
 	private Composite compositeHead;
 	private Composite compositeTail;
 	
-	/** 사용자가 브라우저로 접속한 ip*/
-	private String browserIP = "";
-	
 	public LoginDialog(Shell shell) {
 		super(shell);
 	}

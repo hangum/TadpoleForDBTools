@@ -123,7 +123,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			
 		} catch(Exception e) {
 			logger.error("=== get DB Instance seq is " + userDB.getSeq() + "\n" , e);
-			
 			dbManager.remove(searchKey);
 			
 			throw new TadpoleSQLManagerException(e);
@@ -214,23 +213,31 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 
 	/**
 	 * dbcp pool info
+	 * @param isAdmin
 	 * 
 	 * @return
 	 */
-	public static List<DBCPInfoDAO> getDBCPInfo() {
+	public static List<DBCPInfoDAO> getDBCPInfo(boolean isAdmin) {
 		List<DBCPInfoDAO> listDbcpInfo = new ArrayList<DBCPInfoDAO>();
 		final String strLoginEmail = SessionManager.getEMAIL();
 		
 		Set<String> setKeys = getDbManager().keySet();
 		for (String stKey : setKeys) {
 			String strArryKey[] = StringUtils.splitByWholeSeparator(stKey, PublicTadpoleDefine.DELIMITER);
-			if(!StringUtils.equals(strLoginEmail, strArryKey[0])) continue; 
+			
+			// 시스템 디비는 보여주지 않습니다.
+			if(StringUtils.equals(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name(), strArryKey[0])) continue;
+			
+			// 어드민 만이 모두 호출한다.
+			if(!isAdmin) if(!StringUtils.equals(strLoginEmail, strArryKey[0])) continue;
+			
 			
 			SqlMapClient sqlMap = dbManager.get(stKey);
 			DataSource ds = sqlMap.getDataSource();
 			BasicDataSource bds = (BasicDataSource)ds;
 				
 			DBCPInfoDAO dao = new DBCPInfoDAO();
+			dao.setUser(strArryKey[0]);
 			dao.setDbSeq(Integer.parseInt(strArryKey[1]));
 			dao.setDbType(strArryKey[2]);
 			dao.setDisplayName(strArryKey[3]);
@@ -245,6 +252,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		
 		return listDbcpInfo;
 	}
+	
 	
 	/**
 	 * DBMetadata
@@ -291,8 +299,14 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			try {
 				sqlMapClient = dbManager.remove(searchKey);
 				if(sqlMapClient == null) return;
-				BasicDataSource basicDataSource = (BasicDataSource)sqlMapClient.getDataSource();
-				basicDataSource.close();
+				DataSource ds = sqlMapClient.getDataSource();
+				if(ds != null) {
+					BasicDataSource basicDataSource = (BasicDataSource)ds;
+					basicDataSource.close();
+					
+					basicDataSource= null;
+					ds = null;
+				}
 			} catch (Exception e) {
 				logger.error("remove connection", e);
 			} finally {
@@ -303,16 +317,16 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	
 	/**
 	 * map의 카를 가져옵니다.
-	 * @param dbInfo
+	 * @param userDB
 	 * @return
 	 */
-	public static String getKey(UserDBDAO dbInfo) {
-		return 	dbInfo.getTdbUserID()   + PublicTadpoleDefine.DELIMITER +
-				dbInfo.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
-				dbInfo.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
-				dbInfo.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
+	public static String getKey(final UserDBDAO userDB) {
+		return 	userDB.getTdbUserID()   + PublicTadpoleDefine.DELIMITER +
+				userDB.getSeq()  		+ PublicTadpoleDefine.DELIMITER + 
+				userDB.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
 	}
 
 }

@@ -41,6 +41,7 @@ import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.compare.core.actions.OpenCompareAction;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
+import com.hangum.tadpole.manager.core.actions.global.AdminTransactionConnectionManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.DBManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.ResourceManagerAction;
 import com.hangum.tadpole.manager.core.actions.global.RestfulAPIManagerAction;
@@ -88,6 +89,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     /** transaction connection */
     private IAction transactionConnectionAction;
+    private IAction adminTransactionConnectionManagerAction;
     
     /** executed sql */
     private IAction executedSQLAction;
@@ -150,6 +152,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	transactionConnectionAction = new TransactionConnectionManagerAction(window);
     	register(transactionConnectionAction);
+    	
+    	adminTransactionConnectionManagerAction = new AdminTransactionConnectionManagerAction(window);
+    	register(adminTransactionConnectionManagerAction); 
     	
     	executedSQLAction = new SQLAuditAction(window);
     	register(executedSQLAction);
@@ -265,8 +270,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			adminMenu.add(adminSendMessageAction);
 			adminMenu.add(new Separator());
 			adminMenu.add(adminSystemSettingAction);
+			adminMenu.add(new Separator());
 			adminMenu.add(adminUserAction);
 			adminMenu.add(adminSQLAuditAction);
+			adminMenu.add(adminTransactionConnectionManagerAction);
 			adminMenu.add(new Separator());
 			adminMenu.add(jDBCDriverManagerAction);
 		}

@@ -68,7 +68,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author sun.han
  *
  */
-public class PropertyComposite extends Composite {
+public class PropertyComposite extends DBInfosComposite {
 	/**
 	 * Logger for this class
 	 */
@@ -83,6 +83,7 @@ public class PropertyComposite extends Composite {
 	/* Download service handler */
 	private Composite composite;
 	private DownloadServiceHandler downloadServiceHandler;
+	private List listTableInform = new ArrayList<>();
 
 	/**
 	 * Create a composite.
@@ -116,7 +117,7 @@ public class PropertyComposite extends Composite {
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initUI();
+				initUI(true);
 			}
 		});
 		btnRefresh.setText(Messages.get().Refresh);
@@ -149,7 +150,7 @@ public class PropertyComposite extends Composite {
 		btnCsvExport.setBounds(0, 0, 94, 28);
 		btnCsvExport.setText(Messages.get().TablesComposite_btnCsvExport_text);
 
-		initUI();
+//		initUI();
 		registerServiceHandler();
 	}
 	
@@ -182,10 +183,16 @@ public class PropertyComposite extends Composite {
 	/**
 	 * Initialize User Interface. 
 	 */
-	private void initUI() {
+	public void initUI(boolean isRefresh) {
+		if(isRefresh) {
+			listTableInform.clear();
+		} else {
+			if(listTableInform.size() != 0) return;
+		}
+		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List listTableInform = sqlClient.queryForList("getProperties", userDB.getDb()); //$NON-NLS-1$
+			listTableInform = sqlClient.queryForList("getProperties", userDB.getDb()); //$NON-NLS-1$
 			
 			propertyViewer.setInput(listTableInform);
 			propertyViewer.refresh();
@@ -266,10 +273,6 @@ public class PropertyComposite extends Composite {
 		unregisterServiceHandler();
 		super.dispose();
 	};
-	
-	@Override
-	protected void checkSubclass() {
-	}
 }
 
 /**

@@ -27,8 +27,14 @@
 	database connection test 
  -->
 <select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
-SELECT sysdate	FROM dual  
+	SELECT 1 FROM dual
 </select>
+
+<!--  change schema -->
+<select id="selectSchema" parameterClass="java.lang.String">
+	ALTER SESSION SET CURRENT_SCHEMA = #schema#
+</select>
+
 
 <!-- 
 	db의 모든 table 이름만.
@@ -1287,6 +1293,18 @@ SELECT INDEX_NAME "Index Name"
  WHERE 1=1
    and owner = upper(#schema_name#)
    and INDEX_NAME = UPPER (#index_name#)
+</select>
+
+<!-- 
+	object error 목록을 리턴한다.
+ -->
+<select id="getObjectError" resultClass="com.hangum.tadpole.engine.query.dao.oracle.OracleAllErrorsDAO" parameterClass="com.hangum.tadpole.engine.query.dao.oracle.OracleAllErrorsDAO">
+	SELECT * FROM all_errors
+	WHERE 
+			owner = #owner# 
+		AND name = #name# 
+		AND type = #type#
+	ORDER BY sequence
 </select>
 
 </sqlMap>

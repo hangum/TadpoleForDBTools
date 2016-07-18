@@ -58,7 +58,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author nilriri
  * 
  */
-public class ColumnsComposite extends Composite {
+public class ColumnsComposite extends DBInfosComposite {
 	/**
 	 * Logger for this class
 	 */
@@ -73,6 +73,8 @@ public class ColumnsComposite extends Composite {
 	/** download service handler. */
 	private Composite compositeTail;
 	private DownloadServiceHandler downloadServiceHandler;
+	
+	private List<RDBInfomationforColumnDAO> listTableInform = new ArrayList<RDBInfomationforColumnDAO>();
 
 	/**
 	 * Create the composite.
@@ -110,7 +112,7 @@ public class ColumnsComposite extends Composite {
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initUI();
+				initUI(true);
 			}
 		});
 		btnRefresh.setText(Messages.get().Refresh);
@@ -141,7 +143,6 @@ public class ColumnsComposite extends Composite {
 		columnFilter = new DefaultTableColumnFilter();
 		tvColumnInform.addFilter(columnFilter);
 
-		initUI();
 		registerServiceHandler();
 	}
 	
@@ -319,10 +320,16 @@ public class ColumnsComposite extends Composite {
 	/**
 	 * 
 	 */
-	private void initUI() {
+	public void initUI(boolean isRefresh) {
+		if(isRefresh) {
+			listTableInform.clear();
+		} else {
+			if(listTableInform.size() != 0) return;
+		}
+		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List<RDBInfomationforColumnDAO> listTableInform = null;
+			
 			if (userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 
 				List<HashMap<String, String>> sqliteTableList = sqlClient.queryForList("tableInformation", userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -331,7 +338,6 @@ public class ColumnsComposite extends Composite {
 				for (HashMap<String, String> table : sqliteTableList) {
 
 					List<HashMap<String, String>> sqliteColumnList = sqlClient.queryForList("columnInformation", table.get("name")); //$NON-NLS-1$ //$NON-NLS-2$
-
 
 					for (HashMap<String, String> sqliteMap : sqliteColumnList) {//
 						RDBInfomationforColumnDAO dao = new RDBInfomationforColumnDAO(table.get("name"), ""// //$NON-NLS-1$ //$NON-NLS-2$
@@ -363,10 +369,6 @@ public class ColumnsComposite extends Composite {
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
-	}
-
-	@Override
-	protected void checkSubclass() {
 	}
 
 }
