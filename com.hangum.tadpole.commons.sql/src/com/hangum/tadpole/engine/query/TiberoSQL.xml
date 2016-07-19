@@ -289,10 +289,13 @@ ORDER BY O.OWNER, O.OBJECT_NAME
 	
 	컬럼 설명
 	oebjt_name		: view 이름
+	
+	o.owner in ( s.org_object_owner, 'PUBLIC', 'SYSCAT') 
+	PUBLIC 시노님을 다시 시노님으로 만들었을 경우 목록이 보이지 않아서 조건 추가.
  -->
 <select id="synonymList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO" parameterClass="java.lang.String">
 	SELECT s.synonym_name
-	      ,s.org_object_owner as table_owner
+	      ,o.owner as table_owner
 	      ,s.org_object_name as table_name
 	      ,null as db_link
 	      ,c.comments
@@ -302,7 +305,7 @@ ORDER BY O.OWNER, O.OBJECT_NAME
 	       LEFT JOIN all_tab_comments c
 	          ON s.org_object_owner = c.owner AND s.org_object_name = c.table_name
 	       INNER JOIN all_objects o
-	          ON o.owner = s.org_object_owner AND o.object_name = s.org_object_name
+	          ON o.owner in ( s.org_object_owner, 'PUBLIC', 'SYSCAT') AND o.object_name = s.org_object_name
 	  WHERE 1=1
 	    AND s.owner = upper(#schema#)
 	    AND o.object_type IN ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION')
