@@ -1037,6 +1037,7 @@ SELECT
   FROM all_objects a 
       INNER JOIN all_source b ON a.owner = b.owner and a.object_name = b.name
 WHERE 1 = 1
+  AND a.owner = upper(#schema_name#)
   AND a.object_name = UPPER(#object_name#)
   AND a.object_type = 'PROCEDURE'
 ORDER BY b.line

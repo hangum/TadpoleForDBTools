@@ -12,11 +12,16 @@ package com.hangum.tadpole.engine.sql.util;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -72,7 +77,22 @@ public class OracleObjectCompileUtils {
 	 */
 	public static String otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objType, String objName, UserDBDAO userDB) throws Exception {
 		// 티베로가 컴파일시 DEBUG옵션을 지원하지 않는것이 있음.
-		return otherObjectCompile(actionType, objType, objName, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
+		
+		//TODO: 모든 DAO에 스키마명을 포함한 오브젝트명을 조회가 가능한 메소드를 추가하여 대체해야함. 
+		Map<String,String> paramMap = new HashMap<String,String>();
+		if (StringUtils.contains(objName, '.')){
+			//오브젝트명에 스키마 정보가 포함되어 있으면...
+			paramMap.put("schema_name", StringUtils.substringBefore(objName, "."));
+			paramMap.put("object_name", StringUtils.substringAfter(objName, "."));
+			paramMap.put("full_name", objName);
+		}else{
+			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
+			paramMap.put("schema_name", userDB.getSchema());
+			paramMap.put("object_name", objName);
+			paramMap.put("full_name", userDB.getSchema() + "." + objName);
+		}
+		
+		return otherObjectCompile(actionType, objType, paramMap, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
 	}
 	
 	/**
@@ -83,11 +103,11 @@ public class OracleObjectCompileUtils {
 	 * @param objName
 	 * @param userDB
 	 */
-	public static String otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objType, String objName, UserDBDAO userDB, boolean isDebug) throws Exception {
+	public static String otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE actionType, String objType, Map<String,String> paramMap, UserDBDAO userDB, boolean isDebug) throws Exception {
 		String withDebugOption = "";
 		if(isDebug) withDebugOption = "DEBUG";
 		
-		String sqlQuery = "ALTER "+objType+" " + userDB.getUsers() + "." + objName.trim().toUpperCase() + " COMPILE " + withDebugOption; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		String sqlQuery = "ALTER "+objType+" " + paramMap.get("full_name") + " COMPILE " + withDebugOption; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -99,7 +119,7 @@ public class OracleObjectCompileUtils {
 			statement = javaConn.createStatement();
 			statement.execute(sqlQuery);
 			
-			sqlQuery = "Select * From user_Errors where name='"+ objName +"' and type = '"+objType+"' order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			sqlQuery = "Select * From all_Errors where owner = nvl('"+paramMap.get("schema_name")+"', user) and name='"+ paramMap.get("object_name") +"' and type = '"+objType+"' order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			rs = statement.executeQuery(sqlQuery);
 			StringBuffer result = new StringBuffer();
 			while (rs.next()) {
@@ -120,8 +140,24 @@ public class OracleObjectCompileUtils {
 	 * @param objectName
 	 * @param userDB
 	 */
-	public static String packageCompile(String objectName, UserDBDAO userDB) throws Exception {
-		return packageCompile(objectName, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
+	public static String packageCompile(String strObjectName, UserDBDAO userDB) throws Exception {
+		//TODO: RequestQuery에서 스키마 정보를 포함하는지 확인해야함.  
+		ProcedureFunctionDAO packageDao = new ProcedureFunctionDAO();
+		if (StringUtils.contains(strObjectName, '.')){
+			//오브젝트명에 스키마 정보가 포함되어 있으면...
+			packageDao.setSchema_name(StringUtils.substringBefore(strObjectName, "."));
+			packageDao.setName(StringUtils.substringAfter(strObjectName, "."));
+		}else{
+			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
+			packageDao.setSchema_name(userDB.getSchema());
+			packageDao.setName(strObjectName);
+		}
+		
+		return packageCompile(packageDao, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
+	}
+	
+	public static String packageCompile(ProcedureFunctionDAO packageDao, UserDBDAO userDB) throws Exception {
+		return packageCompile(packageDao, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
 	}
 	/**
 	 * package compile
@@ -129,12 +165,12 @@ public class OracleObjectCompileUtils {
 	 * @param objectName
 	 * @param userDB
 	 */
-	public static String packageCompile(String objectName, UserDBDAO userDB, boolean isDebug) throws Exception {
+	public static String packageCompile(ProcedureFunctionDAO packageDao, UserDBDAO userDB, boolean isDebug) throws Exception {
 		String withDebugOption = "";
 		if(isDebug) withDebugOption = "DEBUG";
 		
-		String sqlQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + objectName.trim().toUpperCase() + " COMPILE "+withDebugOption+" SPECIFICATION "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		String sqlBodyQuery = "ALTER PACKAGE " + userDB.getUsers() + "." + objectName.trim().toUpperCase() + " COMPILE "+withDebugOption+" BODY "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String sqlQuery = "ALTER PACKAGE " + packageDao.getFullName(true/*isPackage*/) + " COMPILE "+withDebugOption+" SPECIFICATION "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String sqlBodyQuery = "ALTER PACKAGE " + packageDao.getFullName(true/*isPackage*/) + " COMPILE "+withDebugOption+" BODY "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -147,7 +183,7 @@ public class OracleObjectCompileUtils {
 			statement.execute(sqlQuery);
 			statement.execute(sqlBodyQuery);
 			
-			sqlQuery = "Select * From user_Errors where name='"+ objectName.trim().toUpperCase() +"' and type in ('PACKAGE', 'PACKAGE BODY') order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$
+			sqlQuery = "Select * From all_Errors where owner = nvl('"+packageDao.getSchema_name()+"', user) and name='"+ packageDao.getName() +"' and type in ('PACKAGE', 'PACKAGE BODY') order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$
 			rs = statement.executeQuery(sqlQuery);
 			StringBuffer result = new StringBuffer();
 			while (rs.next()) {

@@ -399,13 +399,17 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		
 		getPackageTableViewer().getTable().setFocus();
 		
+		//TODO: 패키지 바디를 컴파일 할때는 strObjectName 에 BODY라고 넘어온다. ㅡㅡ; 아마도 package 라는 키워드 다음문자를 오브젝트 명칭으로 처리한듯....
 		// find select object and viewer select
 		for(int i=0; i<showPackage.size(); i++) {
+			
 			ProcedureFunctionDAO tableDao = (ProcedureFunctionDAO)getPackageTableViewer().getElementAt(i);
-			if ( StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
+			if (tableDao !=null && StringUtils.equalsIgnoreCase(strObjectName, tableDao.getName())) {
 				getPackageTableViewer().setSelection(new StructuredSelection(getPackageTableViewer().getElementAt(i)), true);
 				break;
 			}
+			break;
 		}
+		
 	}	
 }
