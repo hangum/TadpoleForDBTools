@@ -529,7 +529,8 @@ ORDER BY s.object_type DESC, s.object_name
 
 <select id="packageList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT  
-          s.object_name AS name
+          s.object_name AS packagename
+        , s.object_name AS name
         , s.object_type AS TYPE
         , #db_name#   AS db
         , s.created
@@ -1037,6 +1038,7 @@ SELECT
   FROM all_objects a 
       INNER JOIN all_source b ON a.owner = b.owner and a.object_name = b.name
 WHERE 1 = 1
+  AND a.owner = UPPER(#schema_name#)
   AND a.object_name = UPPER(#object_name#)
   AND a.object_type = 'PROCEDURE'
 ORDER BY b.line
