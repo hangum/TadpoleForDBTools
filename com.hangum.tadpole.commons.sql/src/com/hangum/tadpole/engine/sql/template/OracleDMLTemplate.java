@@ -46,7 +46,7 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 														  "	SELECT COUNT(*) INTO param1 FROM t; " + PublicTadpoleDefine.LINE_SEPARATOR +
 														  "END;";
 	/** function */
-	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE OR REPLACE FUNCTION hello (param1 VARCHAR2) RETURNS VARCHAR2 AS " + PublicTadpoleDefine.LINE_SEPARATOR + 
+	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE OR REPLACE FUNCTION hello (param1 VARCHAR2) RETURN VARCHAR2 AS " + PublicTadpoleDefine.LINE_SEPARATOR + 
 														  "BEGIN " + 
 														  "RETURN CONCAT('Hello', param1);" + PublicTadpoleDefine.LINE_SEPARATOR + 
 														  "END; ";
@@ -69,5 +69,6 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 														  " IS  " + PublicTadpoleDefine.LINE_SEPARATOR +
 														  " BEGIN  " + PublicTadpoleDefine.LINE_SEPARATOR +
 														  "		dbms_output.put_line(param1); " + PublicTadpoleDefine.LINE_SEPARATOR +
+														  " END;" + PublicTadpoleDefine.LINE_SEPARATOR +
 														  "END;";
 }
