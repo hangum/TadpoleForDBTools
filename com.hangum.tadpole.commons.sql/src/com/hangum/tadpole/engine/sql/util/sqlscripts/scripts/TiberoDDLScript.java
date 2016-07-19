@@ -48,9 +48,13 @@ public class TiberoDDLScript extends OracleDDLScript {
 		
 		if(logger.isDebugEnabled()) logger.debug("\n Function DDL Generation...");
 		
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("schema_name", functionDAO.getSchema_name() == null ? userDB.getSchema() : functionDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("object_name", functionDAO.getName()); //$NON-NLS-1$
+
 		StringBuilder result = new StringBuilder("");
 
-		List<String> srcScriptList = client.queryForList("getFunctionScript", functionDAO.getName());				
+		List<String> srcScriptList = client.queryForList("getFunctionScript", paramMap);				
 		for (int i=0; i<srcScriptList.size(); i++){
 			result.append( srcScriptList.get(i));
 		}
@@ -66,12 +70,16 @@ public class TiberoDDLScript extends OracleDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		if(logger.isDebugEnabled()) logger.debug("\n Procedure DDL Generation...");
 		
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("schema_name", procedureDAO.getSchema_name() == null ? userDB.getSchema() : procedureDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("object_name", procedureDAO.getName()); //$NON-NLS-1$
+
 		StringBuilder result = new StringBuilder("");
-		String objType = (String)client.queryForObject("getSourceObjectType", procedureDAO.getName());				
-					
+		String objType = (String)client.queryForObject("getSourceObjectType", paramMap);
+							
 		List<String> srcScriptList = null;
 		if (StringUtils.contains(objType, "PROCEDURE")){
-			srcScriptList = client.queryForList("getProcedureScript", procedureDAO.getName());				
+			srcScriptList = client.queryForList("getProcedureScript", paramMap);				
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
 			}
@@ -79,12 +87,12 @@ public class TiberoDDLScript extends OracleDDLScript {
 			result.append("/* STATEMENT PACKAGE BODY " + procedureDAO.getName() + "; */ \n\n");
 			result.append("/* STATEMENT PACKAGE " + procedureDAO.getName() + "; */ \n\n");
 			
-			srcScriptList = client.queryForList("getPackageScript.head", procedureDAO.getName());				
+			srcScriptList = client.queryForList("getPackageScript.head", paramMap);				
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
 			}
 			result.append("/ \n\n ");
-			srcScriptList = client.queryForList("getPackageScript.body", procedureDAO.getName());				
+			srcScriptList = client.queryForList("getPackageScript.body", paramMap);				
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
 			}
@@ -105,9 +113,13 @@ public class TiberoDDLScript extends OracleDDLScript {
 
 		if(logger.isDebugEnabled()) logger.debug("\n Trigger DDL Generation...");
 		
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("schema_name", triggerDAO.getSchema_name() == null ? userDB.getSchema() : triggerDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("object_name", triggerDAO.getTrigger()); //$NON-NLS-1$
+		
 		StringBuilder result = new StringBuilder("");
 
-		List<String> srcScriptList = client.queryForList("getTriggerScript", objectName);				
+		List<String> srcScriptList = client.queryForList("getTriggerScript", paramMap);				
 		for (int i=0; i<srcScriptList.size(); i++){
 			result.append( srcScriptList.get(i));
 		}

@@ -22,6 +22,7 @@ import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -39,7 +40,26 @@ public class OracleObjectCompileUtils {
 	 * @param userDB
 	 */
 	public static String viewCompile(String viewName, UserDBDAO userDB) throws Exception {
-		String sqlQuery = "ALTER VIEW " + userDB.getUsers() + "." + viewName.trim().toUpperCase() + " COMPILE "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		// 티베로가 컴파일시 DEBUG옵션을 지원하지 않는것이 있음.
+		
+		TableDAO viewDao = new TableDAO();
+		if (StringUtils.contains(viewName, '.')){
+			//오브젝트명에 스키마 정보가 포함되어 있으면...
+			viewDao.setSchema_name(StringUtils.substringBefore(viewName, "."));
+			viewDao.setTable_name(StringUtils.substringAfter(viewName, "."));
+			viewDao.setSysName(StringUtils.substringAfter(viewName, "."));
+		}else{
+			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
+			viewDao.setSchema_name(userDB.getSchema());
+			viewDao.setTable_name(viewName);
+			viewDao.setSysName(viewName);
+		}
+		
+		return viewCompile(viewDao, userDB);
+	}
+
+	public static String viewCompile(TableDAO viewDao, UserDBDAO userDB) throws Exception {
+		String sqlQuery = "ALTER VIEW " + viewDao.getFullName() + " COMPILE "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -50,8 +70,8 @@ public class OracleObjectCompileUtils {
 			
 			statement = javaConn.createStatement();
 			statement.execute(sqlQuery);
-			
-			sqlQuery = "Select * From sys.user_Errors where name='"+ viewName.trim().toUpperCase() +"' and type = 'VIEW' order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$
+			//티베로에는 all_errors가 syscat 스키마에 존재한다. sys.all_errors, syscat.all_errors로 분리하려면 오라클롸 티베로를 옵젝트 컴파일 클래스를 분리해야함. 
+			sqlQuery = "Select * From all_Errors where owner = '"+viewDao.getSchema_name()+"' and name='"+ viewDao.getName() +"' and type = 'VIEW' order by type, sequence "; //$NON-NLS-1$ //$NON-NLS-2$
 			rs = statement.executeQuery(sqlQuery);
 			
 			StringBuffer result = new StringBuffer();
@@ -146,10 +166,12 @@ public class OracleObjectCompileUtils {
 		if (StringUtils.contains(strObjectName, '.')){
 			//오브젝트명에 스키마 정보가 포함되어 있으면...
 			packageDao.setSchema_name(StringUtils.substringBefore(strObjectName, "."));
+			packageDao.setPackagename(StringUtils.substringAfter(strObjectName, "."));
 			packageDao.setName(StringUtils.substringAfter(strObjectName, "."));
 		}else{
 			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
 			packageDao.setSchema_name(userDB.getSchema());
+			packageDao.setPackagename(strObjectName);
 			packageDao.setName(strObjectName);
 		}
 		
