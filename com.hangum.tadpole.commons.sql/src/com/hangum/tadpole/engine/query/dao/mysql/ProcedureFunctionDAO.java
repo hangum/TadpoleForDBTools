@@ -13,13 +13,6 @@ package com.hangum.tadpole.engine.query.dao.mysql;
 import org.apache.commons.lang.StringUtils;
 
 public class ProcedureFunctionDAO extends StructObjectDAO {
-	/** 
-	 * 시스템에서 쿼리에 사용할 이름을 정의 .
-	 * 보여줄때는 {@link TableDAO#name}을 사용하고, 쿼리를 사용할때는 . 
-	 * 
-	 * 자세한 사항은 https://github.com/hangum/TadpoleForDBTools/issues/412 를 참고합니다.
-	 */
-	String sysName = "";
 	
 	String Db;
 	String Name;
@@ -165,20 +158,6 @@ public class ProcedureFunctionDAO extends StructObjectDAO {
 
 	public void setOverload(int overload) {
 		this.overload = overload;
-	}
-
-	/**
-	 * @return the sysName
-	 */
-	public String getSysName() {
-		return sysName;
-	}
-
-	/**
-	 * @param sysName the sysName to set
-	 */
-	public void setSysName(String sysName) {
-		this.sysName = sysName;
 	}
 	
 	public String getFullName(boolean isPackage) {

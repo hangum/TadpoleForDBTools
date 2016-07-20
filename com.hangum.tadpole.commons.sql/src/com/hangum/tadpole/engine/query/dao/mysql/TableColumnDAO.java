@@ -28,10 +28,9 @@ package com.hangum.tadpole.engine.query.dao.mysql;
  * @author hangum
  *
  */
-public class TableColumnDAO {
-	TableDAO tableDao;
+public class TableColumnDAO extends StructObjectDAO {
 	
-	String sysName = "";
+	TableDAO tableDao;
 	
 	// MySQL, Oracle 사용하는 컬럼.
 	String Field = "";
@@ -73,20 +72,6 @@ public class TableColumnDAO {
 		this.Field = name;
 		this.Type = type;
 		this.Key = index;
-	}
-	
-	/**
-	 * @return the sysName
-	 */
-	public final String getSysName() {
-		return sysName;
-	}
-
-	/**
-	 * @param sysName the sysName to set
-	 */
-	public final void setSysName(String sysName) {
-		this.sysName = sysName;
 	}
 
 	public String getField() {
@@ -264,6 +249,12 @@ public class TableColumnDAO {
 	 */
 	public void setCollation_name(String collation_name) {
 		this.collation_name = collation_name;
+	}
+
+	@Override
+	public String getFullName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
