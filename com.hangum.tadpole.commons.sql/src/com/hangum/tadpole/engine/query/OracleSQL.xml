@@ -1117,7 +1117,7 @@ ORDER BY B.LINE
 
   SELECT B.TEXT AS SOURCE_TEXT
     FROM all_objects A 
-    	INNER JOIN all_SOURCE B ON A.object_name = B.NAME AND a.object_type = b.type
+    	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
    WHERE     1 = 1
          AND b.owner = upper(#schema_name#)
          AND A.object_name = UPPER (#object_name#)

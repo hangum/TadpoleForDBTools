@@ -51,7 +51,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		HashMap<String, String>paramMap = new HashMap<String, String>();
-		paramMap.put("schema_name", tableDAO.getSchema_name() == null ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("schema_name", StringUtils.isBlank(tableDAO.getSchema_name()) ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
 		paramMap.put("table_name", tableDAO.getName()); //$NON-NLS-1$
 		
 		List<HashMap> srcList = client.queryForList("getTableScript", paramMap);
