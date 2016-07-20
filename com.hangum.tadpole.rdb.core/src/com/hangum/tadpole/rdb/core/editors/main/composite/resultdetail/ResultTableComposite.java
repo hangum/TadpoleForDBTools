@@ -46,7 +46,10 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -55,12 +58,15 @@ import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
+import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.global.OpenSingleRowDataDialogAction;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
+import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQLExtensionViewDialog;
+import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
@@ -92,6 +98,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
     
     private OpenSingleRowDataDialogAction openSingleRowDataAction;
 	
+    /** mysql profilling yn */
+    private Button btnShowQueryProfilling;
     private Button btnResultToEditor;
     
     private Button btnDetailView;
@@ -203,15 +211,57 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				calcTableData();
 			}
 		});
-		
+
+		// bottom composite group
 		Composite compositeBtn = new Composite(compositeBody, SWT.NONE);
 		compositeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		GridLayout gl_compositeBtn = new GridLayout(4, false);
+		GridLayout gl_compositeBtn = new GridLayout(6, false);
 		gl_compositeBtn.verticalSpacing = 2;
 		gl_compositeBtn.horizontalSpacing = 2;
 		gl_compositeBtn.marginWidth = 0;
 		gl_compositeBtn.marginHeight = 2;
 		compositeBtn.setLayout(gl_compositeBtn);
+		
+		// mysql, maria 일 경우  버튼에 프로파일 버튼을 붙인다.
+		final UserDBDAO userDB = rdbResultComposite.getUserDB();
+		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			
+			final Button btnQueryProfilling = new Button(compositeBtn, SWT.CHECK);
+			btnQueryProfilling.setText("프로파일 여부");
+			btnQueryProfilling.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						boolean booleanQueryProfilling = btnQueryProfilling.getSelection();
+						TadpoleSystem_UserInfoData.updateUserInfoData(PreferenceDefine.RDB_QUERY_PROFILLING, ""+booleanQueryProfilling);
+						SessionManager.setUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, ""+booleanQueryProfilling);
+						
+						btnShowQueryProfilling.setEnabled(booleanQueryProfilling);
+					} catch(Exception ee) {
+						logger.error("Update RDB query profilling option", ee);
+					}
+				}
+			});
+			btnQueryProfilling.setSelection(GetPreferenceGeneral.getRDBQueryProfilling());
+			
+			btnShowQueryProfilling = new Button(compositeBtn, SWT.NONE);
+			btnShowQueryProfilling.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					
+					// rsDAO의 결과가 없을 경우에 처리 할것 
+					Object obj = rsDAO.getMapExtendResult().get(MYSQL_EXTENSION_VIEW.SHOW_PROFILLING.name());
+					if(obj != null) {
+						MySQLExtensionViewDialog profileDialog = new MySQLExtensionViewDialog(getShell(), reqQuery, rsDAO);
+						profileDialog.open();
+					} else {
+						MessageDialog.openWarning(getShell(), Messages.get().Warning, "프로파일 결과가 생성되지 않았습니다. 확인하여 주십시오.");
+					}
+				}
+			});
+			btnShowQueryProfilling.setText("프로파일 결과 보기");
+			btnShowQueryProfilling.setEnabled(GetPreferenceGeneral.getRDBQueryProfilling());
+		}
 		
 		btnResultToEditor = new Button(compositeBtn, SWT.NONE);
 		btnResultToEditor.addSelectionListener(new SelectionAdapter() {

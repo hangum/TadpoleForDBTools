@@ -148,6 +148,7 @@ public class TadpoleSystem_UserInfoData {
 
 	/**
 	 * 신규 사용자의 기본 유저 데이터 정보를 저장합니다.
+	 * @param txtQueryProfilling 
 	 * 
 	 * @param limitSelect
 	 * @param resultSelect
@@ -158,9 +159,10 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtCommitCount commit count
 	 * @param txtResultType 
 	 */
-	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
+	public static void updateRDBUserInfoData(boolean txtQueryProfilling, String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
 			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultType) throws TadpoleSQLManagerException, SQLException {
 		
+		updateUserInfoData(PreferenceDefine.RDB_QUERY_PROFILLING, ""+txtQueryProfilling);
 		updateUserInfoData(PreferenceDefine.SELECT_LIMIT_COUNT, limitSelect);
 		updateUserInfoData(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, resultSelect);
 		updateUserInfoData(PreferenceDefine.SELECT_QUERY_TIMEOUT, queryTimeout);

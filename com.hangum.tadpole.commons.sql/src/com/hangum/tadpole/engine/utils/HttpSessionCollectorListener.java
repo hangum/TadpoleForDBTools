@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.engine.utils;
 
 import java.util.HashMap;
@@ -19,13 +29,13 @@ public class HttpSessionCollectorListener implements HttpSessionListener {
 	@Override
 	public void sessionCreated(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
-		logger.debug("---> [login]" + session.getId());
+		if(logger.isDebugEnabled()) logger.debug("---> [login]" + session.getId());
 		sessions.put(session.getId(), session);
 	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent event) {
-		logger.debug("---> [logout]" + event.getSession().getId());
+		if(logger.isDebugEnabled()) logger.debug("---> [logout]" + event.getSession().getId());
 		sessions.remove(event.getSession().getId());
 	}
 

@@ -375,7 +375,7 @@ public class ExplorerViewer extends ViewPart {
 		// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
 		if (userDB != null) {
 			if (userDB.getSeq() == selectUserDb.getSeq()) {
-				textSearch.setText(selectUserDb.getSchema());
+//				textSearch.setText(selectUserDb.getSchema());
 				filterText();
 				userDB = selectUserDb;		
 				return;

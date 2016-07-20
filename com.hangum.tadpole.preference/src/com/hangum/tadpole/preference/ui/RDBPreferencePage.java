@@ -47,6 +47,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
 public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IWorkbenchPreferencePage {
 	private static final Logger logger = Logger.getLogger(RDBPreferencePage.class);
 	
+	private Button btnQueryProfilling;
 	private Text textSelectLimit;
 	private Text textResultPage;
 	private Text textOraclePlan;
@@ -72,6 +73,10 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setLayout(new GridLayout(2, false));
+		new Label(container, SWT.NONE);
+		
+		btnQueryProfilling = new Button(container, SWT.CHECK);
+		btnQueryProfilling.setText("Query profilling(MySQL only)");
 		
 		Label lblResultType = new Label(container, SWT.NONE);
 		lblResultType.setText(Messages.get().RDBPreferencePage_resultType);
@@ -190,6 +195,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	
 	@Override
 	public boolean performOk() {
+		boolean txtQueryProfilling = btnQueryProfilling.getSelection();
 		String txtResultType = comboRDBResultType.getText();
 		String txtSelectLimit = textSelectLimit.getText();
 		String txtResultPage = textResultPage.getText();
@@ -238,10 +244,11 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateRDBUserInfoData(
+			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtQueryProfilling,
 					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn, txtResultType);
 			
 			// session 데이터를 수정한다.
+			SessionManager.setUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, ""+txtQueryProfilling);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_LIMIT_COUNT, txtSelectLimit);
 			SessionManager.setUserInfo(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, txtResultPage);
@@ -288,6 +295,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	 * 초기값을 설정 합니다.
 	 */
 	private void initDefaultValue() {
+		btnQueryProfilling.setSelection(GetPreferenceGeneral.getRDBQueryProfilling());
 		comboRDBResultType.setText(GetPreferenceGeneral.getResultType());
 		textSelectLimit.setText( "" + GetPreferenceGeneral.getSelectLimitCount() ); //$NON-NLS-1$
 		textNull.setText(GetPreferenceGeneral.getResultNull());

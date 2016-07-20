@@ -60,7 +60,7 @@ public class TadpoleSQLTransactionManager {
 		
 		if(logger.isDebugEnabled()) logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + "/" + userDB.getUsers());
 		
-//		synchronized(dbManager) {
+		synchronized(dbManager) {
 			final String searchKey = getKey(userId, userDB);
 			TransactionDAO transactionDAO = dbManager.get(searchKey);
 			if(transactionDAO == null) {
@@ -92,7 +92,7 @@ public class TadpoleSQLTransactionManager {
 			if(logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.toString());
 			
 			return transactionDAO.getConn();
-//		}
+		}
 	}
 	
 //	/**
@@ -176,30 +176,33 @@ public class TadpoleSQLTransactionManager {
 	}
 	
 	/**
-	 * 사용자가 로그 아웃등으로 나갈때 transaction commit합니다. 
+	 * 사용자가 로그 아웃등으로 나갈때 transaction rollback합니다. 
 	 * 
 	 * @param userId
 	 */
 	public static void executeRollback(final String userId) {
-		Set<String> keys = dbManager.keySet();
-		for (String searchKey : keys) {
-			if(StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
-				if(logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
-				
-				TransactionDAO transactionDAO = dbManager.get(searchKey);
-				if(transactionDAO != null) {
-					Connection conn = transactionDAO.getConn();
-					try {
-						conn.rollback();
-					} catch(Exception e) {
-						logger.error("logout transaction commit", e);
-					} finally {
-						try { if(conn != null) conn.close(); } catch(Exception e) {}
-					}
-					removeInstance(userId, searchKey);
-				}	// end trsansaction dao
-			}	// 
-		}
+		synchronized(dbManager) {
+			Set<String> keys = dbManager.keySet();
+			for (String searchKey : keys) {
+				if(StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
+					if(logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
+					
+					TransactionDAO transactionDAO = dbManager.get(searchKey);
+					if(transactionDAO != null) {
+						Connection conn = transactionDAO.getConn();
+						try {
+							conn.rollback();
+						} catch(Exception e) {
+							logger.error("logout transaction commit", e);
+						} finally {
+							try { if(conn != null) conn.close(); } catch(Exception e) {}
+						}
+						removeInstance(userId, searchKey);
+					}	// end trsansaction dao
+				}	// 
+			}
+		} 	// synchronized
+ 
 	}
 	
 	/**
@@ -209,9 +212,9 @@ public class TadpoleSQLTransactionManager {
 	 * @param userDB
 	 */
 	private static void removeInstance(final String userId, final String searchKey) {
+		if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLTransactionManager] remove Instance: " + searchKey);
+		
 		synchronized (dbManager) {
-			if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLTransactionManager] remove Instance: " + searchKey);
-			
 			try {
 				dbManager.remove(searchKey);
 				
@@ -219,7 +222,7 @@ public class TadpoleSQLTransactionManager {
 			} catch (Exception e) {
 				logger.error("remove connection", e);
 			}
-		}
+		}	// synchronized
 	}
 	
 	public static HashMap<String, TransactionDAO> getDbManager() {

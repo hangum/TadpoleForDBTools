@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hangum.tadpole.commons.util.JSONUtil;
-import com.hangum.tadpole.commons.util.ResultSetUtil;
+import com.hangum.tadpole.commons.util.ResultSetToHTMLUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -418,7 +418,6 @@ public class QueryUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("deprecation")
 	public static String selectToHTML_TABLE(final UserDBDAO userDB, final String strQuery, final List<Object> listParam) throws Exception {
 		
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
@@ -429,7 +428,7 @@ public class QueryUtils {
 			public Object handle(ResultSet rs) throws SQLException {
 
 				try {
-					return ResultSetUtil.makeResultSetTOHTML(rs, 1000);
+					return ResultSetToHTMLUtil.makeResultSetTOHTML(rs, 1000);
 				} catch(Exception e) {
 					return e.getMessage();
 				}
