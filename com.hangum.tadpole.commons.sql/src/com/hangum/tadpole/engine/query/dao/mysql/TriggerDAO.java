@@ -12,6 +12,9 @@ package com.hangum.tadpole.engine.query.dao.mysql;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
+
 public class TriggerDAO extends StructObjectDAO {
 	String Trigger;	
 	String Event;
@@ -26,6 +29,7 @@ public class TriggerDAO extends StructObjectDAO {
 	String Database; 
 	String Collation;
 	String Status;
+	String sysname;
 	
 	public boolean isValid() {
 		return "VALID".equals(Status) || "".equals(Status) || Status == null;
@@ -43,11 +47,17 @@ public class TriggerDAO extends StructObjectDAO {
 	public TriggerDAO() {
 	}
 	
+	public String getFullName(UserDBDAO userDB) {
+		//TODO: dao생성할때 sysname생성하도록 해놔야함.
+		this.sysname = SQLUtil.makeIdentifierName(userDB, this.getTrigger());
+		return this.getFullName();
+	}
+		
 	public String getFullName() {
 		if(StringUtils.isEmpty(this.getSchema_name())) {
-			return this.getTrigger();
+			return this.getSysname();
 		}else{
-			return String.format("%s.%s", this.getSchema_name(), this.getTrigger());
+			return String.format("%s.%s", this.getSchema_name(), this.getSysname());
 		}
 	}
 
@@ -169,6 +179,14 @@ public class TriggerDAO extends StructObjectDAO {
 	public void setDb(String db) {
 		this.db = db;
 		setDatabase(db);
+	}
+
+	public String getSysname() {
+		return sysname;
+	}
+
+	public void setSysname(String sysname) {
+		this.sysname = sysname;
 	}
 	
 	

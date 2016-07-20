@@ -65,15 +65,15 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 			ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
-			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE, "PROCEDURE", dao.getName().trim().toUpperCase(), userDB);			 //$NON-NLS-1$
+			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.PROCEDURE, "PROCEDURE", dao.getName(), userDB);			 //$NON-NLS-1$
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
 			packageCompile((ProcedureFunctionDAO)selection.getFirstElement(), userDB);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 			ProcedureFunctionDAO dao = (ProcedureFunctionDAO)selection.getFirstElement();
-			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.FUNCTION, "FUNCTION",  dao.getName().trim().toUpperCase(), userDB);			 //$NON-NLS-1$
+			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.FUNCTION, "FUNCTION",  dao.getName(), userDB);			 //$NON-NLS-1$
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 			TriggerDAO dao = (TriggerDAO)selection.getFirstElement();
-			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.TRIGGER, "TRIGGER",  dao.getName().trim().toUpperCase(), userDB);			 //$NON-NLS-1$
+			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.TRIGGER, "TRIGGER",  dao.getName(), userDB);			 //$NON-NLS-1$
 		}
 	}
 	

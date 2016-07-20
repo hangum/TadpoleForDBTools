@@ -271,7 +271,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger() + " on " + triggerDAO.getTable_name()); //$NON-NLS-1$
 					} else {
-						executeSQL(userDB, "drop trigger " + triggerDAO.getFullName()); //$NON-NLS-1$
+						executeSQL(userDB, "drop trigger " + triggerDAO.getFullName(userDB)); //$NON-NLS-1$
 					}
 					
 					refreshTrigger();

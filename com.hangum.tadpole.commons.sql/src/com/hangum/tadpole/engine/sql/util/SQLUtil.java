@@ -257,6 +257,11 @@ public class SQLUtil {
 		// Is keywords?
 		// schema.tableName
 		if(!isChanged) {
+			// TODO : IdentifierQuoteString에 대한 검증 필요.
+			// 오브젝트명칭 자체에 쩜(.)을 포함하는 경우는 "test.data" => "test"."data"로 변경되어 버림..
+			// 실제 db에서 가져온 명칭을 대소문자 변환 없이 그대로 IdentifierQuoteString 으로만 감싸줘도 될것같음...
+			
+			/*
 			String[] arryRetStr = StringUtils.split(retStr, ".");
 			if(arryRetStr.length == 1) {
 				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
@@ -267,6 +272,12 @@ public class SQLUtil {
 					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
 				}
 			}
+			*/
+			if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+retStr+",")) {
+				retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+			}
+			
+			
 		}
 //		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
 		return retStr;
@@ -274,11 +285,13 @@ public class SQLUtil {
 	
 	private static String makeFullyTableName(String tableName, String strIdentifier) {
 		String retStr = "";
-		
+		/*
 		for(String chunk : StringUtils.split(tableName, '.')) {
 			retStr += strIdentifier + chunk + strIdentifier + ".";
 		}
 		retStr = StringUtils.removeEnd(retStr, ".");
+		*/
+		retStr = strIdentifier + tableName + strIdentifier;
 		
 		return retStr;
 	}
