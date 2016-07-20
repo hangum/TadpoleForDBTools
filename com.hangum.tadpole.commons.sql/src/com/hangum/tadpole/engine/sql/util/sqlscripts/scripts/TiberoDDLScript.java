@@ -50,7 +50,7 @@ public class TiberoDDLScript extends OracleDDLScript {
 		
 		HashMap<String, String>paramMap = new HashMap<String, String>();
 		paramMap.put("schema_name", functionDAO.getSchema_name() == null ? userDB.getSchema() : functionDAO.getSchema_name()); //$NON-NLS-1$
-		paramMap.put("object_name", functionDAO.getName()); //$NON-NLS-1$
+		paramMap.put("object_name", StringUtils.replace(functionDAO.getSysName(), "\"", "")); //$NON-NLS-1$
 
 		StringBuilder result = new StringBuilder("");
 

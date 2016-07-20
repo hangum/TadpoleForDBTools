@@ -203,8 +203,8 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 			HashMap<String, String> map = new HashMap<String, String>();
 
 			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
-				map.put("table_schema", userDB.getSchema());
-				map.put("table_name", tableDao.getName());
+				map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
+				map.put("table_name", tableDao.getSysName());
 			}else{
 				map.put("table_schema", userDB.getDb());
 				map.put("table_name", tableDao.getName());

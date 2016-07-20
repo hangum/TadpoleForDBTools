@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -163,6 +165,11 @@ public class QueryTemplateUtils {
 			}
 		}
 		
+		if(!StringUtils.isBlank(userDB.getSchema())){
+			defaultStr = StringUtils.replace(defaultStr, "{#schema#}", userDB.getSchema());
+		}else{
+			defaultStr = StringUtils.replace(defaultStr, "{#schema#}.", "");
+		}
 		return defaultStr;
 	}
 }

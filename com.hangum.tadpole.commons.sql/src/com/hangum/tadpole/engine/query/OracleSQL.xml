@@ -655,6 +655,10 @@ SELECT
    WHERE s.object_type = 'TRIGGER'
 ORDER BY t.table_name, s.object_name
 </select>
+
+<!-- 
+	각 스키마에 속한 특정 테이블의 트리거 목록을 조회한다.
+ -->
 <select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
   SELECT s.object_name AS name
         ,t.table_name AS table_name
@@ -664,7 +668,7 @@ ORDER BY t.table_name, s.object_name
         ,#table_schema# AS db
         ,s.created
         , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
-        , s.schema_name
+        , s.owner as schema_name
     FROM all_objects s 
     	INNER JOIN all_triggers t ON s.owner = t.owner and S.OBJECT_NAME = t.trigger_name
    WHERE 1=1

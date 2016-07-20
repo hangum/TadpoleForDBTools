@@ -103,13 +103,13 @@ public class OracleObjectCompileUtils {
 		if (StringUtils.contains(objName, '.')){
 			//오브젝트명에 스키마 정보가 포함되어 있으면...
 			paramMap.put("schema_name", StringUtils.substringBefore(objName, "."));
-			paramMap.put("object_name", StringUtils.substringAfter(objName, "."));
-			paramMap.put("full_name", objName);
+			paramMap.put("object_name", SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(objName, ".")));
+			paramMap.put("full_name", SQLUtil.makeIdentifierName(userDB, objName));
 		}else{
 			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
 			paramMap.put("schema_name", userDB.getSchema());
-			paramMap.put("object_name", objName);
-			paramMap.put("full_name", userDB.getSchema() + "." + objName);
+			paramMap.put("object_name", SQLUtil.makeIdentifierName(userDB, objName) );
+			paramMap.put("full_name", userDB.getSchema() + "." + SQLUtil.makeIdentifierName(userDB, objName));
 		}
 		
 		return otherObjectCompile(actionType, objType, paramMap, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
