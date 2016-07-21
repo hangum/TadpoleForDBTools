@@ -382,7 +382,7 @@ public class TableDirectEditorComposite extends Composite {
 			if(i < (tmpTableColumns.size()-1)) requestQuery += ","; //$NON-NLS-1$
 		}
 		
-		requestQuery += " FROM " + SQLUtil.getTableName(userDB, tableDao);
+		requestQuery += " FROM " + tableDao.getFullName();
 		
 		if(!"".equals( strWhere )) requestQuery += " where " + strWhere; //$NON-NLS-1$ //$NON-NLS-2$
 		if(!"".equals( strOrderBy )) requestQuery += " order by " + strOrderBy; //$NON-NLS-1$ //$NON-NLS-2$

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,7 +20,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -68,7 +68,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	private CTabItem tbtmTriggers;
 	private TableViewer triggerTableViewer;
 	private TriggerComparator triggerComparator;
-	private List<TriggerDAO> showTrigger;
+	private List<TriggerDAO> showTrigger = new ArrayList<>();
 	private TriggerViewFilter triggerFilter;
 
 	private ObjectCreatAction creatAction_Trigger;
@@ -175,7 +175,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
-		if (showTrigger != null) showTrigger.clear();
+		showTrigger.clear();
 		triggerTableViewer.setInput(showTrigger);
 		triggerTableViewer.refresh();
 

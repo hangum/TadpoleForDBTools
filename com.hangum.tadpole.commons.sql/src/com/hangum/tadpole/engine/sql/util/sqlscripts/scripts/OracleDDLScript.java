@@ -52,14 +52,14 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		HashMap<String, String>paramMap = new HashMap<String, String>();
 		paramMap.put("schema_name", StringUtils.isBlank(tableDAO.getSchema_name()) ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
 		paramMap.put("object_type", "TABLE"); //$NON-NLS-1$
-		paramMap.put("object_name", tableDAO.getSysName()); //$NON-NLS-1$
-		paramMap.put("table_name", tableDAO.getSysName()); //$NON-NLS-1$
+		paramMap.put("object_name", tableDAO.getName()); //$NON-NLS-1$
+		paramMap.put("table_name", tableDAO.getName()); //$NON-NLS-1$
 		
 		String strDDLScript = (String)client.queryForObject("getDDLScript", paramMap);
 		
 		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
 		//result.append(SQLFormater.format(strDDLScript));
-		result.append(strDDLScript);
+		result.append(strDDLScript + ";\n\n");
 
 //		HashMap<String, String>paramMap = new HashMap<String, String>();
 //		paramMap.put("schema_name", StringUtils.isBlank(tableDAO.getSchema_name()) ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
@@ -161,18 +161,30 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		StringBuilder result = new StringBuilder("");
 //		result.append("/* DROP VIEW " + strName + "; */ \n\n");
 		
+//		HashMap<String, String>paramMap = new HashMap<String, String>();
+//		paramMap.put("schema_name", tableDAO.getSchema_name() == null ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
+//		paramMap.put("view_name", tableDAO.getName()); //$NON-NLS-1$
+//
+//		List<String> srcViewHeadList = client.queryForList("getViewScript.head", paramMap);				
+//		for (int i=0; i<srcViewHeadList.size(); i++){
+//			result.append( srcViewHeadList.get(i)+"\n");
+//		}
+//		List<String> srcViewBodyList = client.queryForList("getViewScript.body", paramMap);				
+//		for (int i=0; i<srcViewBodyList.size(); i++){
+//			result.append( srcViewBodyList.get(i)+"\n");
+//		}
+		
 		HashMap<String, String>paramMap = new HashMap<String, String>();
-		paramMap.put("schema_name", tableDAO.getSchema_name() == null ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("schema_name", StringUtils.isBlank(tableDAO.getSchema_name()) ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("object_type", "VIEW"); //$NON-NLS-1$
+		paramMap.put("object_name", tableDAO.getName()); //$NON-NLS-1$
 		paramMap.put("view_name", tableDAO.getName()); //$NON-NLS-1$
-
-		List<String> srcViewHeadList = client.queryForList("getViewScript.head", paramMap);				
-		for (int i=0; i<srcViewHeadList.size(); i++){
-			result.append( srcViewHeadList.get(i)+"\n");
-		}
-		List<String> srcViewBodyList = client.queryForList("getViewScript.body", paramMap);				
-		for (int i=0; i<srcViewBodyList.size(); i++){
-			result.append( srcViewBodyList.get(i)+"\n");
-		}
+		
+		String strDDLScript = (String)client.queryForObject("getDDLScript", paramMap);
+		
+		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
+		//result.append(SQLFormater.format(strDDLScript));
+		result.append(strDDLScript);
 		
 		return result.toString();
 	}
@@ -296,22 +308,28 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 				result.append( srcScriptList.get(i));
 			}
 		}else if (StringUtils.contains(objType, "PACKAGE")){
-			result.append("/* STATEMENT PACKAGE BODY " + procedureDAO.getName() + "; */ \n\n");
-			result.append("/* STATEMENT PACKAGE " + procedureDAO.getName() + "; */ \n\n");
+			result.append("/* STATEMENT PACKAGE " + procedureDAO.getName() + "; */ \n");
 			
 			result.append("CREATE OR REPLACE ");
 			srcScriptList = client.queryForList("getPackageScript.head", paramMap);				
 			for (int i=0; i<srcScriptList.size(); i++){
 				result.append( srcScriptList.get(i));
 			}
-			result.append("/ \n\n ");
-			result.append("CREATE OR REPLACE ");
-			srcScriptList = client.queryForList("getPackageScript.body", paramMap);				
-			for (int i=0; i<srcScriptList.size(); i++){
-				result.append( srcScriptList.get(i));
+			result.append("\n/\n ");
+
+			srcScriptList = client.queryForList("getPackageScript.body", paramMap);
+			if (srcScriptList.size() > 0){
+				// body가 있는 경우에만 작성한다.
+				result.append("/* STATEMENT PACKAGE BODY " + procedureDAO.getName() + "; */ \n");
+				result.append("CREATE OR REPLACE ");
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
+				result.append("\n/\n");
+			}else{
+				result.append("/*PACKAGE BODY NOT DEFINE... */\n\n ");
 			}
 			
-			result.append("/ \n\n ");
 		}
 		
 		return result.toString();

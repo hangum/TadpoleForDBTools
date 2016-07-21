@@ -163,9 +163,9 @@ public class ProcedureFunctionDAO extends StructObjectDAO {
 	public String getFullName(boolean isPackage) {
 		if(isPackage) {
 			if(StringUtils.isEmpty(this.getSchema_name())){
-				return this.getPackagename();
+				return String.format("%s.%s", this.getPackagename(), this.getSysName());
 			}else{
-				return String.format("%s.%s", this.getSchema_name(), this.getPackagename());
+				return String.format("%s.%s.%s", this.getSchema_name(), this.getPackagename(), this.getSysName());
 			}
 		}else{
 			return this.getFullName();

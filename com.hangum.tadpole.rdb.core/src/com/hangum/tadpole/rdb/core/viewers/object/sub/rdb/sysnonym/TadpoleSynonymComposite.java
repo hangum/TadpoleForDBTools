@@ -51,6 +51,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.OracleDDLScript;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
@@ -172,6 +173,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 						mapParam.put("table", synonym.getTable_name()); //$NON-NLS-1$
 
 						showSynonymColumns = sqlClient.queryForList("synonymColumnList", mapParam); //$NON-NLS-1$
+
+						for(OracleSynonymColumnDAO dao : showSynonymColumns) {
+							dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getColumn_name() ));
+						}
 
 					} else {
 						showSynonymColumns = null;
@@ -313,6 +318,10 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 				try {
 					showSynonyms = getSynonymList(userDB);
+					
+					for(OracleSynonymDAO dao : showSynonyms) {
+						dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName() ));
+					}
 				} catch (Exception e) {
 					logger.error("Synonym Referesh", e); //$NON-NLS-1$
 

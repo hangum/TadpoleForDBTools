@@ -46,7 +46,9 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -98,7 +100,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	// column info
 	private TableViewer packageProcFuncViewer;
 	private ObjectComparator packageProcFuncComparator;
-	private List showPackageProcFuncColumns;
+	private List<ProcedureFunctionDAO> showPackageProcFuncColumns;
 
 	/**
 	 * procedure
@@ -165,6 +167,11 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 						paramMap.put("package_name", selectPackageName);
 						
 						showPackageProcFuncColumns = sqlClient.queryForList("packageBodyList", paramMap); //$NON-NLS-1$
+						
+						for(ProcedureFunctionDAO dao : showPackageProcFuncColumns) {
+							dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName()));
+						}
+
 
 					} else
 						showPackageProcFuncColumns = null;
@@ -348,6 +355,10 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showPackage = sqlClient.queryForList("packageList", userDB.getSchema()); //$NON-NLS-1$
 
+			for(ProcedureFunctionDAO dao : showPackage) {
+				dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName()));
+			}
+			
 			packageTableViewer.setInput(showPackage);
 			packageTableViewer.refresh();
 			

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.constraints;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,10 +38,10 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
-import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -70,7 +71,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	// index
 	private TableViewer constraintTableViewer;
 	private ObjectComparator constraintComparator;
-	private List<InformationSchemaDAO> listConstraints;
+	private List<TableConstraintsDAO> listConstraints = new ArrayList<>();
 	private ConstraintViewFilter constraintFilter;
 
 	private ObjectCreatAction creatAction_Constraint;
@@ -165,7 +166,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	 * init action
 	 */
 	public void initAction() {
-		if (listConstraints != null) listConstraints.clear();
+		listConstraints.clear();
 		constraintTableViewer.setInput(listConstraints);
 		constraintTableViewer.refresh();
 
@@ -210,6 +211,10 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 				map.put("table_name", tableDao.getName());
 			}
 			listConstraints = sqlClient.queryForList("tableConstraintsList", map); //$NON-NLS-1$
+			
+			for(TableConstraintsDAO dao : listConstraints) {
+				dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getCONSTRAINT_NAME() ));
+			}
 
 			constraintTableViewer.setInput(listConstraints);
 			constraintTableViewer.refresh();

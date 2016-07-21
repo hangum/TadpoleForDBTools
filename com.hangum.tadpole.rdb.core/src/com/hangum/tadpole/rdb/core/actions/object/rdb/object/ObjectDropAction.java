@@ -167,7 +167,15 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Do you want to drop Constraints?")) {
 				
 				try {
-					if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+					if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+						String constraintPath = "";
+						if (StringUtils.isBlank(constraintDAO.getSchema_name())){
+							constraintPath = SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME());
+						}else{
+							constraintPath = String.format("%s.%s", SQLUtil.makeIdentifierName(userDB, constraintDAO.getSchema_name()), SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME())); 
+						}
+						executeSQL(userDB, "alter table "+ constraintPath +" drop constraint " + constraintDAO.getSysName() ); //$NON-NLS-1$ //$NON-NLS-2$
+					} else if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME() + " on " + constraintDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
 						executeSQL(userDB, "drop constraints " + constraintDAO.getFullName()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -271,7 +279,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger() + " on " + triggerDAO.getTable_name()); //$NON-NLS-1$
 					} else {
-						executeSQL(userDB, "drop trigger " + triggerDAO.getFullName(userDB)); //$NON-NLS-1$
+						executeSQL(userDB, "drop trigger " + triggerDAO.getFullName()); //$NON-NLS-1$
 					}
 					
 					refreshTrigger();
