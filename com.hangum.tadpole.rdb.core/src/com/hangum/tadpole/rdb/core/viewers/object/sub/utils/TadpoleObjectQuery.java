@@ -173,6 +173,9 @@ public class TadpoleObjectQuery {
 		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTables = sqlClient.queryForList("tableList", userDB.getSchema()); //$NON-NLS-1$			
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			showTables = sqlClient.queryForList("tableList", userDB.getSchema()); //$NON-NLS-1$			
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$			

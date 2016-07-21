@@ -113,6 +113,24 @@ public class DBSystemSchema {
 			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
 			return listTblView; 
+		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			List<HashMap<String,String>> listView = sqlClient.queryForList("viewList", userDB.getSchema());
+			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
+			// 2. keyword 를 만든다.
+			StringBuffer strViewList = new StringBuffer();
+			for(HashMap<String,String> map : listView) {
+				TableDAO tblDao = new TableDAO();
+				tblDao.setName(map.get("VIEW_NAME"));
+				tblDao.setSchema_name(map.get("SCHEMA_NAME"));
+				tblDao.setSysName(SQLUtil.makeIdentifierName(userDB, map.get("VIEW_NAME")));
+				
+				listTblView.add(tblDao);
+	
+				strViewList.append(MakeContentAssistUtil.makeObjectPattern(tblDao.getSchema_name(), tblDao.getSysName(), "View")); //$NON-NLS-1$
+			}
+			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
+			
+			return listTblView; 
 		} else {
 			List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
 			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
