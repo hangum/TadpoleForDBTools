@@ -256,9 +256,9 @@ public class ExplorerViewer extends ViewPart {
 	private void changeSchema() {
 		String strSchemaName = comboSchema.getText();
 		this.userDB.setSchema(strSchemaName);
+		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);
 		
 		tableComposite.refreshTable(userDB, true, "");
-		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);
 	}
 
 	/**

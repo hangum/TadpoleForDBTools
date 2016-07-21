@@ -46,9 +46,9 @@ import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnModifyAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnSelectionAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TableColumnComparator;
@@ -153,8 +153,10 @@ public class TableColumnComposite extends AbstractTableComposite {
 	 * initialize action
 	 */
 	public void initAction() {
+		showTableColumns.clear();
+		tableColumnViewer.setInput(showTableColumns);
+
 		if(getUserDB() == null) return;
-		
 		// table column
 		tableColumnSelectionAction.setUserDB(getUserDB());
 		tableColumnDeleteAction.setUserDB(getUserDB());
@@ -230,10 +232,12 @@ public class TableColumnComposite extends AbstractTableComposite {
 		if(getUserDB() == null) return;
 		
 		tableColumnDeleteAction = new TableColumnDeleteAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
-		tableColumnSelectionAction = new TableColumnSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		tableColumnModifyAction = new TableColumnModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		
-		// menu
+		//  컬럼을 에디터로 복사하기 
+		tableColumnSelectionAction = new ObjectExplorerSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES); //$NON-NLS-1$
+		
+		// menu	
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			menuMgr.add(tableColumnModifyAction);
@@ -250,9 +254,9 @@ public class TableColumnComposite extends AbstractTableComposite {
 	public void dispose() {
 		super.dispose();
 		
-		if(tableColumnSelectionAction != null) tableColumnSelectionAction.dispose();
 		if(tableColumnDeleteAction != null) tableColumnDeleteAction.dispose();
 		if(tableColumnModifyAction != null) tableColumnModifyAction.dispose();
+		if(tableColumnSelectionAction != null) tableColumnSelectionAction.dispose();
 	}
 
 }

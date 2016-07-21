@@ -38,16 +38,12 @@ public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 		
 		if(ExplorerViewer.ID.equals(part.getSite().getId())) {
 			this.selection = (IStructuredSelection)selection;
-			
-			UserDBDAO userDB = this.userDB;
-			if(userDB != null) {
-				if(!this.selection.isEmpty()) {
-					setEnabled(true);
-					return;
-				}
+			if(this.selection.isEmpty()) {
+				setEnabled(false);
+			} else {
+				UserDBDAO userDB = this.userDB;
+				if(userDB != null) setEnabled(true);
 			}
 		}
-		
-		setEnabled(false);
-	}
+	}	// public void selectionChanged
 }

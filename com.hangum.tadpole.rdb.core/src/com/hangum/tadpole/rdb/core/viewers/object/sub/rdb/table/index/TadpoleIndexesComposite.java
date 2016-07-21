@@ -206,7 +206,6 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		// index detail column
 		
 		sashForm.setWeights(new int[] { 1, 1 });
-
 	}
 
 	/**
@@ -280,7 +279,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * init action
 	 */
 	public void initAction() {
-		if (listIndexes != null) listIndexes.clear();
+		listIndexes.clear();
 		indexTableViewer.setInput(listIndexes);
 		indexTableViewer.refresh();
 

@@ -81,6 +81,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSampleDat
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRenameAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnCreateAction;
@@ -143,6 +144,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private AbstractObjectAction tableDataEditorAction;
 	
 	private AbstractObjectAction addTableColumnAction;
+	/** object select action */
+	private AbstractObjectAction objectSelectionAction;
 	
 	// table column
 	private CTabFolder tabTableFolder;
@@ -521,6 +524,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().ViewDDL);
 		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 		
+		// object copy to query editor
+		objectSelectionAction = new ObjectExplorerSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		if(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
@@ -585,12 +591,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					menuMgr.add(new Separator());
 					menuMgr.add(viewDDLAction);
 				}
-				if(!(isInsertLock() | isUpdateLock() | isDeleteLock())) {
+				if(!(isInsertLock() || isUpdateLock() || isDeleteLock())) {
 					menuMgr.add(new Separator());
 					menuMgr.add(tableDataEditorAction);
 				}
 			}
 		}	// if rdb
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionAction);
 
 		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
@@ -682,6 +690,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 								ExceptionDetailsErrorDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_3, Messages.get().ExplorerViewer_86, errStatus);
 							}
 						}	// end else if
+						
+						// 컬럼, 인덱스,제약조건, 트리거 목록 초기화
+						initializeSubComposite();
+						
 					}	// end run
 				});	// end display.asyncExec
 			}	// end done
@@ -691,6 +703,18 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
 		job.schedule();
+	}
+	
+	/**
+	 * 컬럼, 인덱스, 제약조건, 트리거를 초기화 한다.
+	 */
+	private void initializeSubComposite() {
+		tabTableFolder.setSelection(0);
+		
+		if(tableColumnComposite != null) tableColumnComposite.initAction();
+		if(indexComposite != null) indexComposite.initAction();
+		if(constraintsComposite != null) constraintsComposite.initAction();
+		if(triggerComposite != null) triggerComposite.initAction();
 	}
 	
 	/**
@@ -720,6 +744,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableDataEditorAction.setUserDB(getUserDB());
 		
 		tableColumnComposite.initAction();
+		objectSelectionAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -789,6 +814,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		if(viewDDLAction != null) viewDDLAction.dispose();
 		if(tableDataEditorAction != null) tableDataEditorAction.dispose();
+		if(objectSelectionAction != null) objectSelectionAction.dispose();
 	}
 
 	@Override
