@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.object;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -345,6 +346,21 @@ public class ExplorerViewer extends ViewPart {
 					comboSchema.select(0);
 					//TODO: 최초 로그인시 userDB 설정시 기본 스키마 지정해 놓는 방법.
 					userDB.setSchema(comboSchema.getText());
+				} catch (Exception e) {
+					comboSchema.setItems( new String[]{userDB.getSchema()} );
+					e.printStackTrace();
+				}
+			}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+				try {
+					for (Object object : DBSystemSchema.getSchemas(userDB)) {
+						HashMap<String, String> mapData = (HashMap)object;
+						comboSchema.add(mapData.get("SCHEMA"));
+						if (StringUtils.equalsIgnoreCase(mapData.get("SCHEMA"), userDB.getDb())) {
+							userDB.setSchema(mapData.get("SCHEMA"));
+							comboSchema.select(comboSchema.getItemCount()-1);	
+						}
+					}	
+					this.refreshTable(true, "");
 				} catch (Exception e) {
 					comboSchema.setItems( new String[]{userDB.getSchema()} );
 					e.printStackTrace();

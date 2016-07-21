@@ -47,6 +47,15 @@ select 1
 </select>
 
 <!-- 
+	스키마 목록을 조회한다.
+	ExplorerViewer에 조회된 스키마 목록을 표시하여 다른 스키마의 오브젝트에 접근할 수 있도록 한다.
+ -->
+<select id="getSchemas" resultClass="java.util.HashMap">
+	select schema_name as "SCHEMA"
+	from information_schema.schemata
+</select>
+
+<!-- 
 	table 이름
 	
 	SELECT 
@@ -60,8 +69,9 @@ select 1
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	SELECT 
-		TABLE_NAME name, 
-		TABLE_COMMENT comment
+		TABLE_NAME as name, 
+		TABLE_COMMENT as comment,
+		TABLE_SCHEMA as schema_name
 	FROM INFORMATION_SCHEMA.TABLES
 	WHERE TABLE_SCHEMA = #db# 
 		AND TABLE_TYPE = 'BASE TABLE'
@@ -72,9 +82,12 @@ select 1
 	table 이름
  -->
 <select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.Map">
-	SELECT TABLE_NAME name, TABLE_COMMENT comment
+	SELECT 
+		TABLE_NAME as name, 
+		TABLE_COMMENT as comment,
+		TABLE_SCHEMA as schema_name
 	FROM INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = #db# 
+	WHERE TABLE_SCHEMA = #schema# 
 		AND TABLE_TYPE = 'BASE TABLE'
 		AND TABLE_NAME = #name#
 	ORDER BY name
@@ -94,16 +107,17 @@ select 1
  -->
 <select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.Map">
 	SELECT   
-         column_name field,
-         column_type type,
-         is_nullable "null",
-         column_key "key",
-         column_default "default",
-         extra,
-         column_comment "comment", 
-         collation_name
+         column_name as field,
+         column_type as type,
+         is_nullable as "null",
+         column_key as "key",
+         column_default as "default",
+         extra as extra,
+         column_comment as "comment", 
+         collation_name as collation_name,
+         table_schema as schema_name
 	FROM information_schema.columns
-	WHERE table_schema = #db# AND 
+	WHERE table_schema = #schema# AND 
 		table_name = #table#
 </select>
 
@@ -136,10 +150,15 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	
 <!-- 
 	view 정보
+	SHOW FULL TABLES IN $dbName$ WHERE TABLE_TYPE = 'VIEW'
  -->
-<select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
-	SHOW FULL TABLES IN $dbName$ 
-	WHERE TABLE_TYPE = 'VIEW'
+<select id="viewList" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select 
+		TABLE_NAME as VIEW_NAME
+		,TABLE_SCHEMA as SCHEMA_NAME 
+	from  information_schema.TABLES
+	WHERE TABLE_SCHEMA = #schema#
+	  AND TABLE_TYPE in ('VIEW', 'SYSTEM VIEW')
 </select>
 	
 <!-- 
