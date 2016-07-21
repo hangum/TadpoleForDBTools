@@ -25,7 +25,6 @@ import com.hangum.tadpole.engine.query.dao.system.ScheduleDetailDAO;
 import com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.engine.query.dao.system.ScheduleResultDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -165,15 +164,15 @@ public class TadpoleSystem_Schedule {
 			ScheduleDAO retScheduleDAO = (ScheduleDAO)sqlClient.insert("scheduleInsert", scheduleDAO);
 			
 			// sql 
-			String[] sqls = SQLUtil.makeResourceDataArays(scheduleDAO.getSql());
-			ScheduleDetailDAO detailDao = null;
-			for (String sql : sqls) {
-				detailDao = new ScheduleDetailDAO();
-				detailDao.setSchedule_seq(retScheduleDAO.getSeq());
-				detailDao.setDatas(sql);
-				
-				sqlClient.insert("scheduleDetailInsert", detailDao);	
-			}
+//			String[] sqls = SQLUtil.makeResourceDataArays(scheduleDAO.getSql());
+//			ScheduleDetailDAO detailDao = null;
+//			for (String sql : sqls) {
+			ScheduleDetailDAO detailDao = new ScheduleDetailDAO();
+			detailDao.setSchedule_seq(retScheduleDAO.getSeq());
+			detailDao.setDatas(scheduleDAO.getSql());
+			
+			sqlClient.insert("scheduleDetailInsert", detailDao);	
+//			}
 		}
 		
 		return dao;
@@ -203,15 +202,15 @@ public class TadpoleSystem_Schedule {
 			ScheduleDAO retScheduleDAO = (ScheduleDAO)sqlClient.insert("scheduleInsert", scheduleDAO);
 			
 			// sql 
-			String[] sqls = SQLUtil.makeResourceDataArays(scheduleDAO.getSql());
-			ScheduleDetailDAO detailDao = null;
-			for (String sql : sqls) {
-				detailDao = new ScheduleDetailDAO();
-				detailDao.setSchedule_seq(retScheduleDAO.getSeq());
-				detailDao.setDatas(sql);
-				
-				sqlClient.insert("scheduleDetailInsert", detailDao);	
-			}
+//			String[] sqls = SQLUtil.makeResourceDataArays(scheduleDAO.getSql());
+//			ScheduleDetailDAO detailDao = null;
+//			for (String sql : sqls) {
+			ScheduleDetailDAO detailDao = new ScheduleDetailDAO();
+			detailDao.setSchedule_seq(retScheduleDAO.getSeq());
+			detailDao.setDatas(scheduleDAO.getSql());
+			
+			sqlClient.insert("scheduleDetailInsert", detailDao);	
+//			}
 		}
 		
 		return scheduleDao;

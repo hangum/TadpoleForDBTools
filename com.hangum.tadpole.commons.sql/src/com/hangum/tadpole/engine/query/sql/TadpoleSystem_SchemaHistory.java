@@ -145,10 +145,10 @@ public class TadpoleSystem_SchemaHistory {
 		// content data를 저장합니다.
 		SchemaHistoryDetailDAO dataDao = new SchemaHistoryDetailDAO();
 		dataDao.setSchema_seq(schemaHistoryDao.getSeq());
-		String[] arrayContent = SQLUtil.makeResourceDataArays(strSQL);
-		for (String content : arrayContent) {
-			dataDao.setSource(content);		
-			sqlClient.insert("sqlHistoryDataInsert", dataDao); //$NON-NLS-1$				
-		}
+//		String[] arrayContent = SQLUtil.makeResourceDataArays(strSQL);
+//		for (String content : arrayContent) {
+		dataDao.setSource(strSQL);		
+		sqlClient.insert("sqlHistoryDataInsert", dataDao); //$NON-NLS-1$				
+//		}
 	}
 }
