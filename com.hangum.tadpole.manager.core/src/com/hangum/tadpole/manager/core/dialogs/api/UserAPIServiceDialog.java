@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.google.gson.JsonArray;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.HTMLDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
@@ -213,6 +214,9 @@ public class UserAPIServiceDialog extends Dialog {
 				userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(userDBResourceDao.getDb_seq());
 			
 				String strReturnResult = ""; //$NON-NLS-1$
+				if(QueryUtils.RESULT_TYPE.XML.name().equals(comboResultType.getText())) {
+					strReturnResult = HTMLDefine.HTML_STYLE;
+				}
 				
 				String strSQLs = RESTfulAPIUtils.makeTemplateTOSQL("APIServiceDialog", strSQL, strArgument); //$NON-NLS-1$
 				// 분리자 만큼 실행한다.

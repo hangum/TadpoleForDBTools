@@ -18,8 +18,14 @@ package com.hangum.tadpole.engine.query.dao.mysql;
  */
 public abstract class StructObjectDAO {
 	protected String schema_name = "";
-	//TODO: sysname 을 fullname으로 사용하도록 개선해야함
-	// 한글이나 특수문자등이 포함된 객체명...
+	
+	/** 
+	 * 시스템에서 쿼리에 사용할 이름을 정의 .
+	 * 보여줄때는 {@link TableDAO#name}을 사용하고, 쿼리를 사용할때는 . 
+	 * 
+	 * 자세한 사항은 https://github.com/hangum/TadpoleForDBTools/issues/412 를 참고합니다.
+	 */
+	protected String sysName = "";
 	
 	/**
 	 * @return the schema_name
@@ -33,6 +39,20 @@ public abstract class StructObjectDAO {
 	 */
 	public void setSchema_name(String schema_name) {
 		this.schema_name = schema_name;
+	}
+	
+	/**
+	 * @return the sysName
+	 */
+	public final String getSysName() {
+		return sysName;
+	}
+
+	/**
+	 * @param sysName the sysName to set
+	 */
+	public final void setSysName(String sysName) {
+		this.sysName = sysName;
 	}
 	
 	/**

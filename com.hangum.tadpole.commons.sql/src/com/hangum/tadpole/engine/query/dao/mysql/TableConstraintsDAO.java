@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
-import java.sql.Blob;
-
 import org.apache.commons.lang.StringUtils;
 
 public class TableConstraintsDAO extends StructObjectDAO {

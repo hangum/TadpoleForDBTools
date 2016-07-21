@@ -23,13 +23,20 @@ public class HTMLDefine {
 			".tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}" +
 			".tg td{font-family:Arial, sans-serif;font-size:12px;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}" +
 			".tg th{font-family:Arial, sans-serif;font-size:12px;font-weight:normal;padding:5px 5px;border-style:dotted;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}" +
+			".tg .tg-mtwr{font-size:18px;background-color:#bbdaff;vertical-align:top}" +
 			".tg .tg-yw4l{vertical-align:top}" +
 			"</style>";
 
 	/** group */
 	public static String TABLE = "<table class='tg'>%s%s</table>";
 	public static String TR = "<tr>%s</tr>";
+	
+	/** single head title */
+	public static String SINGLE_TH = "<th class='tg-mtwr'>%s</th>";
+	
+	/** th header */
 	public static String TH = "<th class='tg-yw4l'>%s</th>";
+	/** tr */
 	public static String TD = "<td class='tg-yw4l'>%s</td>";
 
 	public static String makeTABLE(String header, String body) {

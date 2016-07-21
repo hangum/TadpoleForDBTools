@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -24,6 +25,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,11 +69,14 @@ import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
+import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQLExtensionViewDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
@@ -466,6 +472,8 @@ public class ResultSetComposite extends Composite {
 		final UserDBDAO tmpUserDB 	= getUserDB();
 		final String errMsg = Messages.get().MainEditor_21;
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
+		// is profilling
+		final boolean isProfilling = GetPreferenceGeneral.getRDBQueryProfilling();
 		
 		jobQueryManager = new Job(Messages.get().MainEditor_45) {
 			@Override
@@ -520,13 +528,59 @@ public class ResultSetComposite extends Composite {
 							if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
 								listRSDao.add(ExecuteQueryPlan.runSQLExplainPlan(getUserDB(), reqQuery, strPlanTBName));
 							} else {
-								QueryExecuteResultDTO rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+								QueryExecuteResultDTO rsDAO = null;
+
+								// 
+								// mysql profile, show status 모드의 쿼리.
+								//
+								//
+								if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+									if(isProfilling) {
+										try {
+											QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 1", 0, 10);
+											QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 0", 0, 10);
+											QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 15", 0, 10);
+
+											// 사용자 쿼리를 날리고. 
+											QueryExecuteResultDTO startStatus = QueryUtils.executeQuery(tmpUserDB, "SHOW STATUS", 0, 500);
+											
+											//
+											rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+											listRSDao.add(rsDAO);
+											//
+											QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(tmpUserDB, "SHOW STATUS", 0, 500);
+											QueryExecuteResultDTO _tmppShowProfiles = QueryUtils.executeQuery(tmpUserDB, "SHOW PROFILES", 0, 100);
+											String strQueryID = getLastQueryID(_tmppShowProfiles);
+
+											if(logger.isDebugEnabled()) logger.debug("profile query id is : " + strQueryID);
+											QueryExecuteResultDTO showProfiles = QueryUtils.executeQuery(tmpUserDB, 
+													String.format("SELECT state, ROUND(SUM(duration),5) AS `duration(sec)` FROM information_schema.profiling WHERE query_id=%s GROUP BY state ORDER BY `duration(sec)` DESC", strQueryID), 0, 100);
+											rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.SHOW_PROFILLING.name(), showProfiles);
+											
+											// diff data
+											QueryExecuteResultDTO diffStatusDAO = diffStatus(startStatus, endStatus);
+											rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.STATUS_VARIABLE.name(), diffStatusDAO);
+											
+											// free profiling
+											QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 0", 0, 10);
+										} catch(Exception e) {
+											logger.error("Extend MySQL plan", e);
+										}
+									} else {
+										rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+										listRSDao.add(rsDAO);	
+									}
+								} else {
+									rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+									listRSDao.add(rsDAO);
+								}
+								
+								// 공통 코드.
 								if(rsDAO.getDataList() == null) {
 									reqResultDAO.setRows(0);
 								} else {
 									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 								}
-								listRSDao.add(rsDAO);
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {
@@ -552,6 +606,73 @@ public class ResultSetComposite extends Composite {
 				
 				/////////////////////////////////////////////////////////////////////////////////////////
 				return Status.OK_STATUS;
+			}
+			
+			/**
+			 * get Last query id
+			 * 
+			 * @param query id
+			 * @return
+			 */
+			private String getLastQueryID(QueryExecuteResultDTO showProfiles) {
+				List<Map<Integer, Object>> listShowProfiles = showProfiles.getDataList().getData();
+				Map<Integer, Object> mapLastData = listShowProfiles.get(listShowProfiles.size()-2);
+				
+				return ""+mapLastData.get(0);
+			}
+			
+			/**
+			 * Diffrent show status 
+			 * 
+			 * @param startStatus
+			 * @param endStatus
+			 * @return
+			 */
+			private QueryExecuteResultDTO diffStatus(QueryExecuteResultDTO startStatus, QueryExecuteResultDTO endStatus) {
+				List<Map<Integer, Object>> trsStart = startStatus.getDataList().getData();
+				List<Map<Integer, Object>> trsEnd = endStatus.getDataList().getData();
+				
+				QueryExecuteResultDTO renewDiffObject = new QueryExecuteResultDTO();
+				
+				// setting column type
+				Map<Integer, Integer> columnType = new HashMap<>();
+				columnType.put(0, java.sql.Types.VARCHAR);
+				columnType.put(1, java.sql.Types.DOUBLE);
+//				columnType.put(2, java.sql.Types.VARCHAR);
+				renewDiffObject.setColumnType(columnType);;
+				
+				// setting column label name
+				Map<Integer, String> columnLabelName = new HashMap<>();
+				columnLabelName.put(0, "variable");
+				columnLabelName.put(1, "value");
+//				columnLabelName.put(2, "description");
+				renewDiffObject.setColumnName(columnLabelName);
+				
+				TadpoleResultSet dataList = new TadpoleResultSet();
+				List<Map<Integer, Object>> diffData = new ArrayList<>();
+				for (int i=0; i<trsStart.size(); i++) {
+					Map<Integer, Object> mapStartObject = trsStart.get(i);
+					Map<Integer, Object> mapEndObject = trsEnd.get(i);
+
+					// 숫자만 비교 값을 출력해 주기위해..
+					if(!NumberUtils.isNumber(""+mapStartObject.get(1))) continue;
+
+					// 두개의 오브젝트가 틀리면 입력한다.
+					if(!StringUtils.equals(""+mapStartObject.get(1), ""+mapEndObject.get(1))) {
+						Map<Integer, Object> mapData = new HashMap<>();
+						mapData.put(0, mapStartObject.get(0));
+				
+						Long longDiff = NumberUtils.createLong(""+mapEndObject.get(1)) - NumberUtils.createLong(""+mapStartObject.get(1));  
+						mapData.put(1, longDiff);
+//						mapData.put(2, "");
+						
+						diffData.add(mapData);
+					}
+				}
+				dataList.getData().addAll(diffData);
+				renewDiffObject.setDataList(dataList);
+				
+				return renewDiffObject;
 			}
 		};
 		
@@ -850,7 +971,7 @@ public class ResultSetComposite extends Composite {
 		getRdbResultComposite().refreshErrorMessageView(requestQuery, throwable, msg);
 	}
 	
-	private UserDBDAO getUserDB() {
+	public UserDBDAO getUserDB() {
 		return getRdbResultComposite().getUserDB();
 	}
 	

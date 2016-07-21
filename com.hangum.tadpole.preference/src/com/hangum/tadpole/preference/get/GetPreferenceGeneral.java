@@ -67,6 +67,14 @@ public class GetPreferenceGeneral extends AbstractPreference {
 	}
 	
 	////////////////// rdb 설정 ////////////////////////////////////////////////////////////////////////////
+	/** 
+	 * RDB_QUERY_PROFILLING
+	 * @return
+	 */
+	public static boolean getRDBQueryProfilling() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, PreferenceDefine.RDB_QUERY_PROFILLING_VALUE);
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
 	/** rdb result type */
 	public static String getResultType() {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_TYPE, PreferenceDefine.RDB_RESULT_TYPE_VALUE);

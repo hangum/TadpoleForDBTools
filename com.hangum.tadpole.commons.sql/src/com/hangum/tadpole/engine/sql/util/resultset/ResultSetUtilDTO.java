@@ -67,6 +67,16 @@ public class ResultSetUtilDTO {
 	 */
 	private TadpoleResultSet dataList = null;//new TadpoleResultSet();
 	
+	/**
+	 *  extension 결과를 정의한다.
+	 *  
+	 *  ex) mysql의 Show status, show profile 정보를 입력한다.
+	 */
+	protected Map<String, Object> mapExtendResult = new HashMap<String, Object>();
+	
+	/**
+	 * 
+	 */
 	public ResultSetUtilDTO() {
 	}
 	
@@ -236,6 +246,22 @@ public class ResultSetUtilDTO {
 	 */
 	public void setColumnLabelName(Map<Integer, String> columnLabelName) {
 		this.columnLabelName = columnLabelName;
+	}
+	
+	/**
+	 * 확장 결과를 가져온다.
+	 * @return
+	 */
+	public Map<String, Object> getMapExtendResult() {
+		return mapExtendResult;
+	}
+	
+	/**
+	 * 확장 결과를 설정한다.
+	 * @param mapExtendResult
+	 */
+	public void setMapExtendResult(String key, Object obj) {
+		this.mapExtendResult.put(key, obj);
 	}
 
 }
