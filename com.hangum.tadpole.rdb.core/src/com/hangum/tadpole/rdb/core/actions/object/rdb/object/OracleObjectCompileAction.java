@@ -85,7 +85,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	 */
 	public void viewCompile(TableDAO tableDao, UserDBDAO userDB) {
 		try {
-			String result = OracleObjectCompileUtils.viewCompile(tableDao.getName(), userDB);
+			String result = OracleObjectCompileUtils.viewCompile(tableDao.getFullName(), userDB);
 			showMessage(result);
 			
 		} catch (Exception e) {

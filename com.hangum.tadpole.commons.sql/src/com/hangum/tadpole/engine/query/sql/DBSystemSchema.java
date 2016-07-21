@@ -239,22 +239,33 @@ public class DBSystemSchema {
 	 * @param strObjectName 
 	 */
 	public static List<TriggerDAO> getTrigger(final UserDBDAO userDB, String strObjectName) throws TadpoleSQLManagerException, SQLException {
+		List<TriggerDAO> triggerList = null;
+		
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
-		) return new ArrayList<TriggerDAO>();
+		) {
+			triggerList = new ArrayList<TriggerDAO>();
+		}else {
 		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-
-		HashMap<String, String>paramMap = new HashMap<String, String>();
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
-			paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
-			paramMap.put("table_name", strObjectName); //$NON-NLS-1$
-		}else{
-			paramMap.put("table_schema", userDB.getDb()); //$NON-NLS-1$
-			paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+	
+			HashMap<String, String>paramMap = new HashMap<String, String>();
+			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
+				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+			}else{
+				paramMap.put("table_schema", userDB.getDb()); //$NON-NLS-1$
+				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+			}
+			triggerList = sqlClient.queryForList("triggerList", paramMap); //$NON-NLS-1$
 		}
-		return sqlClient.queryForList("triggerList", paramMap); //$NON-NLS-1$
+		
+		for(TriggerDAO dao : triggerList) {
+			dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName() ));
+		}
+		
+		return triggerList;
 	}
 
 	/**

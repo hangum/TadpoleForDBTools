@@ -183,9 +183,9 @@ public class TableConstraintsDAO extends StructObjectDAO {
 	@Override
 	public String getFullName() {
 		if(StringUtils.isEmpty(this.getSchema_name())) {
-			return this.getCONSTRAINT_NAME();
+			return this.getSysName();
 		}else{
-			return String.format("%s.%s", this.getSchema_name(), this.getCONSTRAINT_NAME());
+			return String.format("%s.%s", this.getSchema_name(), this.getSysName());
 		}
 	}
 }

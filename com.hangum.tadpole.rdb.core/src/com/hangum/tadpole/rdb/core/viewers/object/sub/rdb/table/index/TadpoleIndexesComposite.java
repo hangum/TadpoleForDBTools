@@ -47,6 +47,7 @@ import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -329,6 +330,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 				 map.put("table_name", tableDao.getName());	 
 			 }
 			listIndexes = sqlClient.queryForList("indexList", map); //$NON-NLS-1$
+			
+			for(InformationSchemaDAO dao : listIndexes) {
+				dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getINDEX_NAME() ));
+			}
 
 			indexTableViewer.setInput(listIndexes);
 			indexTableViewer.refresh();

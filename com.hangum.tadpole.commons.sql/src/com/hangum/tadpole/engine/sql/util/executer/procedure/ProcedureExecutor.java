@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -97,11 +98,12 @@ public abstract class ProcedureExecutor {
 	public String getMakeExecuteScript() throws Exception {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
-			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
-			}else{
-				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
-			}
+//			if(!"".equals(procedureDAO.getPackagename())){
+//				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+//			}else{
+//				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
+//			}
+			sbQuery.append("SELECT " + procedureDAO.getFullName( !StringUtils.isBlank(procedureDAO.getPackagename()) ) + "(");
 			
 			List<InOutParameterDAO> inList = getInParameters();
 			for(int i=0; i<inList.size(); i++) {
@@ -111,11 +113,13 @@ public abstract class ProcedureExecutor {
 			}
 			sbQuery.append(") from dual");
 		} else {
-			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
-			}else{
-				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
-			}
+//			if(!"".equals(procedureDAO.getPackagename())){
+//				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+//			}else{
+//				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
+//			}
+			sbQuery.append("{call " + procedureDAO.getFullName( !StringUtils.isBlank(procedureDAO.getPackagename()) ) + "(");
+			
 			// in script
 			int intParamSize = getParametersCount();
 			for (int i = 0; i < intParamSize; i++) {

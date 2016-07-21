@@ -134,6 +134,9 @@ public class TadpoleObjectQuery {
 					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
 		) {
+			if(!StringUtils.equals(strNewname, strNewname.toUpperCase() )){
+				strNewname = SQLUtil.makeIdentifierName(userDB, strNewname);
+			}
 			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strNewname);
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {

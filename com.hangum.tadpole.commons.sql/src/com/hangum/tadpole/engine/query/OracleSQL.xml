@@ -56,10 +56,15 @@ ORDER BY T.table_name
 	ExplorerViewer에 조회된 스키마 목록을 표시하여 다른 스키마의 오브젝트에 접근할 수 있도록 한다.
  -->
 <select id="getSchemas" resultClass="java.util.HashMap">
+	SELECT * FROM (
   	SELECT 
   		USERNAME AS schema 
 	FROM ALL_USERS
-	ORDER BY (CASE WHEN USERNAME = USER THEN 0 ELSE ASCII(USERNAME) END)
+	UNION 
+  	SELECT 
+  		'PUBLIC' AS schema 
+	FROM DUAL )
+	ORDER BY (CASE WHEN schema = USER THEN 0 ELSE ASCII(schema) END)
 </select>
 
 <!--
@@ -75,22 +80,22 @@ ORDER BY T.table_name
      from sys.all_objects O
     where 1=1
 <isNotEmpty property="schema_name">
-	  and o.owner = upper(#schema_name#)
+	  and o.owner = (#schema_name#)
 </isNotEmpty>    
       and o.object_type not in ('SYNONYM')
-	  and object_name in (#object_name#, upper(#object_name#))
+	  and object_name = #object_name#
 	
 	UNION 	  
 	
 	select o.owner as object_owner, o.object_name as object_name, o.object_type as object_type
 	  from sys.all_objects o
 	       inner join sys.all_synonyms s
-	          on     s.synonym_name in (#object_name#, upper (#object_name#))
+	          on     s.synonym_name = (#object_name#)
 	             and o.owner = s.table_owner
 	             and o.object_name = s.table_name
 	 where     1 = 1
 <isNotEmpty property="schema_name">
-	  and o.owner = upper(#schema_name#)
+	  and o.owner = (#schema_name#)
 </isNotEmpty>    
       and o.object_type in ('TABLE', 'VIEW')
 </select>
@@ -108,7 +113,7 @@ ORDER BY T.table_name
     FROM ALL_TABLES T 
       LEFT JOIN ALL_TAB_COMMENTS S ON T.OWNER = S.OWNER AND S.TABLE_NAME = T.TABLE_NAME
     WHERE 1=1
-      AND T.OWNER = upper(NVL(#schema_name#, USER))
+      AND T.OWNER = (NVL(#schema_name#, USER))
 	ORDER BY T.TABLE_NAME
 </select>
 
@@ -122,8 +127,8 @@ ORDER BY T.table_name
             ON     T.OWNER = S.OWNER
                AND S.TABLE_NAME = T.TABLE_NAME
    WHERE     1 = 1
-         AND UPPER (#schema#) IN (T.OWNER, S.OWNER)
-         AND UPPER (#name#) IN (T.TABLE_NAME, S.TABLE_NAME)
+         AND (#schema#) IN (T.OWNER, S.OWNER)
+         AND (#name#) IN (T.TABLE_NAME, S.TABLE_NAME)
   ORDER BY T.TABLE_NAME
 </select>
 
@@ -160,8 +165,8 @@ ORDER BY T.table_name
    FROM ALL_TAB_COLUMNS C
         LEFT JOIN ALL_COL_COMMENTS S ON C.OWNER = S.OWNER AND S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
     WHERE 1=1
-      AND C.OWNER = upper(NVL(#schema#, USER))
-      AND C.TABLE_NAME = upper(#table#) 
+      AND C.OWNER = (NVL(#schema#, USER))
+      AND C.TABLE_NAME = (#table#) 
     ORDER BY C.COLUMN_ID
 </select>
 
@@ -209,7 +214,7 @@ LEFT JOIN
             x.table_name,
             x.constraint_name ) R ON t.owner = r.owner and t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
 WHERE 1=1
-and t.owner = upper(#schema#)
+and t.owner = (#schema#)
 and t.table_name in ( $table$ )            
 GROUP BY t.table_name,
          t.constraint_name
@@ -279,7 +284,7 @@ SELECT
   FROM ALL_objects o
        left join all_tab_comments c on o.owner = c.owner and o.object_name = c.table_name and o.object_type = c.table_type
   WHERE 1 = 1
-    AND o.owner = NVL(upper(#schema#), user)
+    AND o.owner = NVL((#schema#), user)
     AND o.object_type = 'VIEW'
   ORDER BY O.OWNER, O.OBJECT_NAME
 </select>
@@ -302,7 +307,7 @@ SELECT
 	       INNER JOIN all_objects o     ON o.owner = s.table_owner AND o.object_name = s.table_name
 	       LEFT JOIN all_tab_comments c ON o.owner = c.owner AND o.object_name = c.table_name AND o.object_type = c.table_type
 	  WHERE 1=1
-	    AND s.owner = upper(#schema#)
+	    AND s.owner = (#schema#)
 	    AND o.object_type IN ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION')
 </select>
 	
@@ -341,7 +346,7 @@ SELECT
        S.COMMENTS AS "COMMENTS"
    FROM ALL_TAB_COLUMNS C
         LEFT JOIN ALL_COL_COMMENTS S ON S.OWNER = C.OWNER AND S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
-    WHERE C.OWNER = upper(#owner#)
+    WHERE C.OWNER = (#owner#)
        AND C.TABLE_NAME = #table# 
    	UNION ALL
 	SELECT SEQUENCE
@@ -358,7 +363,7 @@ SELECT
 	   WHERE OBJECT_ID = (SELECT OBJECT_ID
 	                        FROM SYS.all_OBJECTS
 	                       WHERE 1=1
-	                       AND OWNER = upper(#owner#)
+	                       AND OWNER = (#owner#)
 	                       AND OBJECT_NAME = #table# 
 	                       AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION'))
   UNION ALL
@@ -387,8 +392,8 @@ SELECT
         ,NULL
     FROM all_procedures s
    WHERE 1 = 1 
-   AND s.owner = UPPER (#owner#) 
-   AND s.object_name = UPPER (#table#)
+   AND s.owner = (#owner#) 
+   AND s.object_name = (#table#)
    ORDER BY 1
 </select>
 
@@ -438,7 +443,7 @@ SELECT
             AND i.table_name = c.table_name
             AND i.index_name = c.constraint_name
             AND c.status = 'ENABLED'
-    WHERE i.owner = upper(#table_schema#)
+    WHERE i.owner = (#table_schema#)
       AND i.table_name = #table_name#
 ORDER BY i.table_name, i.index_name
 </select>
@@ -458,8 +463,8 @@ ORDER BY i.table_name, i.index_name
          LEFT JOIN all_indexes i
             ON m.table_owner = i.table_owner and m.table_name = i.table_name AND m.index_name = i.index_name
    WHERE 1=1
-     AND i.table_owner = upper(#table_schema#)
-     AND m.index_name = UPPER(#index_name#)
+     AND i.table_owner = (#table_schema#)
+     AND m.index_name = (#index_name#)
 ORDER BY m.column_position        
 </select>
 
@@ -477,7 +482,8 @@ ORDER BY m.column_position
         ,I.OWNER as INDEX_SCHEMA
         ,I.SEARCH_CONDITION
         ,i.R_OWNER
-        ,I.R_CONSTRAINT_NAME        
+        ,I.R_CONSTRAINT_NAME
+        ,i.owner as schema_name        
     FROM all_constraints i
          LEFT JOIN all_indexes c
             ON     i.owner = c.owner 
@@ -485,7 +491,7 @@ ORDER BY m.column_position
                AND c.index_name = i.constraint_name
                AND c.status = 'ENABLED'
    WHERE 1=1
-     AND i.owner = upper(#table_schema#)
+     AND i.owner = (#table_schema#)
      AND i.table_name = #table_name#
 ORDER BY i.table_name, i.index_name
 </select>
@@ -518,7 +524,7 @@ SELECT
         , s.owner as schema_name
 FROM    all_objects s
 WHERE 1=1
-  AND s.owner = upper(#schema#)
+  AND s.owner = (#schema#)
   AND s.object_type = 'PROCEDURE'
 ORDER BY s.object_type DESC, s.object_name 
 </select>
@@ -539,7 +545,7 @@ ORDER BY s.object_type DESC, s.object_name
     FROM all_objects s 
     	LEFT JOIN all_objects b ON s.owner = b.owner and s.object_name = b.object_name AND b.object_type = 'PACKAGE BODY'
 	WHERE 1=1
-	  AND s.owner = upper(#schema_name#)
+	  AND s.owner = (#schema_name#)
 	  AND s.object_type = 'PACKAGE'
 	ORDER BY s.object_type DESC, s.object_name 
 </select>
@@ -584,8 +590,8 @@ select distinct
                AND p.package_name = s.object_name
                AND p.subprogram_id = s.subprogram_id
  where 1=1
-  and s.owner = upper(#schema_name#)
-  and s.object_name = upper(#package_name#)
+  and s.owner = (#schema_name#)
+  and s.object_name = (#package_name#)
   and s.procedure_name > ' '
  order by 2, 3 
 </select>
@@ -618,7 +624,7 @@ SELECT
         , s.owner as schema_name
   FROM all_objects s
  WHERE 1=1
-   AND s.owner = upper(#schema#)
+   AND s.owner = (#schema#)
    AND s.object_type = 'FUNCTION'
  ORDER BY s.object_name 
 </select>
@@ -672,7 +678,7 @@ ORDER BY t.table_name, s.object_name
     FROM all_objects s 
     	INNER JOIN all_triggers t ON s.owner = t.owner and S.OBJECT_NAME = t.trigger_name
    WHERE 1=1
-     AND s.owner = upper(#table_schema#)
+     AND s.owner = (#table_schema#)
      AND s.object_type = 'TRIGGER'
      AND t.table_name = #table_name#
 ORDER BY t.table_name, s.object_name
@@ -693,8 +699,8 @@ ORDER BY t.table_name, s.object_name
          AND t.status = 'ENABLED'
          AND s.status = 'VALID'
          AND s.object_type = 'TRIGGER'
-         AND s.owner = upper(#schema_name#)
-         AND t.table_name = UPPER(#table_name#)
+         AND s.owner = (#schema_name#)
+         AND t.table_name = (#table_name#)
 ORDER BY t.table_name, s.object_name
  ]]>
 </select>
@@ -712,8 +718,8 @@ ORDER BY t.table_name, s.object_name
                AND a.column_name = c.column_name
                AND a.constraint_name = b.constraint_name
    WHERE     1 = 1
-     AND c.owner = upper(#schema_name#)
-     AND c.table_name = UPPER (#table_name#)
+     AND c.owner = (#schema_name#)
+     AND c.table_name = (#table_name#)
      AND b.constraint_type = 'P'
      AND b.status = 'ENABLED'
 ORDER BY a.position
@@ -736,7 +742,7 @@ ORDER BY a.position
 	FROM all_OBJECTS O
 		LEFT JOIN all_SOURCE S ON o.owner = s.owner and O.OBJECT_NAME = S.NAME
 	WHERE 1 = 1
-	 AND o.owner = upper(#schema_name#)
+	 AND o.owner = (#schema_name#)
      AND O.OBJECT_NAME = #object_name#
 	ORDER BY O.OBJECT_NAME, S.LINE
 </select>
@@ -757,9 +763,9 @@ ORDER BY a.position
          INNER JOIN ALL_CONSTRAINTS b ON a.owner = b.owner and a.table_name = b.table_name AND a.constraint_name = b.constraint_name 
          LEFT JOIN all_CONSTRAINTS r ON b.owner = r.owner and b.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME 
    WHERE 1=1 
-     AND a.owner = upper(#schema#)
-     AND a.table_name = UPPER ( #table# ) 
-     AND a.column_name = UPPER ( #column# ) 
+     AND a.owner = (#schema#)
+     AND a.table_name = ( #table# ) 
+     AND a.column_name = ( #column# ) 
 ORDER BY 1, 2 
 </select>
 
@@ -908,6 +914,10 @@ select cols.table_name as table_name
     order by cols.table_name, cols.column_id
 </select>
 
+<select id="getDDLScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	select SYS.DBMS_METADATA.GET_DDL(#object_type#,#object_name#,#schema_name#) from dual
+</select>
+
 <!-- 
 	Table DDL Script
  -->
@@ -934,8 +944,8 @@ SELECT C.TABLE_NAME
       , C.DATA_DEFAULT
 FROM SYS.all_TAB_COLUMNS C
 WHERE 1=1
-and c.owner = upper(#schema_name#)
-AND C.TABLE_NAME = UPPER(#table_name#)
+and c.owner = (#schema_name#)
+AND C.TABLE_NAME = (#table_name#)
 ORDER BY C.TABLE_NAME, C.COLUMN_ID
 
 
@@ -951,8 +961,8 @@ ORDER BY C.TABLE_NAME, C.COLUMN_ID
    WHERE     C.OWNER = CC.OWNER
          AND C.CONSTRAINT_NAME = CC.CONSTRAINT_NAME
          AND C.TABLE_NAME = CC.TABLE_NAME
-         AND C.OWNER = upper(#schema_name#)
-         AND C.TABLE_NAME = UPPER(#table_name#)
+         AND C.OWNER = (#schema_name#)
+         AND C.TABLE_NAME = (#table_name#)
          AND C.CONSTRAINT_TYPE = 'P'
 ORDER BY CC.POSITION
 
@@ -973,9 +983,9 @@ SELECT    'COMMENT ON TABLE '
        || ''';'
           AS COMMENT_TEXT
   FROM SYS.DBA_TAB_COMMENTS C
- WHERE     C.OWNER = upper(#schema_name#)
+ WHERE     C.OWNER = (#schema_name#)
        AND C.COMMENTS IS NOT NULL
-       AND C.TABLE_NAME = UPPER(#table_name#)
+       AND C.TABLE_NAME = (#table_name#)
 UNION ALL
 SELECT    'COMMENT ON COLUMN '
        || C.OWNER
@@ -987,9 +997,9 @@ SELECT    'COMMENT ON COLUMN '
        || C.COMMENTS
        || ''';'
   FROM SYS.DBA_COL_COMMENTS C
- WHERE     C.OWNER = upper(#schema_name#)
+ WHERE     C.OWNER = (#schema_name#)
        AND C.COMMENTS IS NOT NULL
-       AND C.TABLE_NAME = UPPER(#table_name#)
+       AND C.TABLE_NAME = (#table_name#)
   
 </select>
 
@@ -998,13 +1008,12 @@ SELECT    'COMMENT ON COLUMN '
  -->
  
 <select id="getViewScript.head" resultClass="java.lang.String" parameterClass="java.util.HashMap">
-
-
+<![CDATA[
   SELECT CASE
             WHEN COLUMN_ID = 1
             THEN
                'CREATE OR REPLACE VIEW ' || TABLE_NAME || ' ( ' || COLUMN_NAME
-            WHEN COLUMN_ID &gt;= 1 AND COLUMN_ID &lt; COUNT (COLUMN_ID) OVER ()
+            WHEN COLUMN_ID >= 1 AND COLUMN_ID < COUNT (COLUMN_ID) OVER ()
             THEN
                ', ' || COLUMN_NAME
             ELSE
@@ -1012,10 +1021,10 @@ SELECT    'COMMENT ON COLUMN '
          END AS SOURCE_TEXT
     FROM SYS.all_TAB_COLUMNS C
    WHERE 1 = 1 
-   AND OWNER = upper(#schema_name#)
-   AND TABLE_NAME = UPPER(#view_name#)
+   AND OWNER = (#schema_name#)
+   AND TABLE_NAME = (#view_name#)
 ORDER BY TABLE_NAME, COLUMN_ID
-
+]]>
 </select>
 
 <!-- 
@@ -1026,8 +1035,8 @@ ORDER BY TABLE_NAME, COLUMN_ID
   SELECT V.TEXT AS SOURCE_TEXT
     FROM SYS.ALL_VIEWS V
    WHERE 1 = 1 
-     AND V.OWNER = UPPER(#schema_name#)
-     AND V.VIEW_NAME = UPPER(#view_name#)
+     AND V.OWNER = (#schema_name#)
+     AND V.VIEW_NAME = (#view_name#)
 ORDER BY VIEW_NAME
 
 </select>
@@ -1042,8 +1051,8 @@ SELECT
   FROM all_objects a 
       INNER JOIN all_source b ON a.owner = b.owner and a.object_name = b.name
 WHERE 1 = 1
-  AND a.owner = UPPER(#schema_name#)
-  AND a.object_name = UPPER(#object_name#)
+  AND a.owner = (#schema_name#)
+  AND a.object_name = (#object_name#)
   AND a.object_type = 'PROCEDURE'
 ORDER BY b.line
 </select>
@@ -1058,8 +1067,8 @@ ORDER BY b.line
     FROM all_objects A 
     	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
    WHERE     1 = 1
-         AND a.owner = upper(#schema_name#)
-         AND A.object_name = UPPER (#object_name#)
+         AND a.owner = (#schema_name#)
+         AND A.object_name = (#object_name#)
          AND B.TYPE = 'TRIGGER'
 ORDER BY B.LINE
 
@@ -1075,8 +1084,8 @@ ORDER BY B.LINE
     FROM all_objects A 
     	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
    WHERE     1 = 1
-         AND a.owner = upper(#schema_name#)
-         AND A.object_name = UPPER (#object_name#)
+         AND a.owner = (#schema_name#)
+         AND A.object_name = (#object_name#)
          AND B.TYPE = 'FUNCTION'
 ORDER BY B.LINE
 
@@ -1091,8 +1100,8 @@ ORDER BY B.LINE
   SELECT B.object_type as TYPE 
     FROM all_objects B
    WHERE 1 = 1 
-      AND b.owner = upper(#schema_name#)
-      AND B.object_name = UPPER (#object_name#)
+      AND b.owner = (#schema_name#)
+      AND B.object_name = (#object_name#)
       AND ROWNUM &lt;= 1
 </select>
 
@@ -1106,8 +1115,8 @@ ORDER BY B.LINE
     FROM all_objects A 
     	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
    WHERE     1 = 1
-         AND b.owner = upper(#schema_name#)
-         AND A.object_name = UPPER (#object_name#)
+         AND b.owner = (#schema_name#)
+         AND A.object_name = (#object_name#)
          AND B.TYPE = 'PACKAGE'
 ORDER BY B.LINE
 
@@ -1123,8 +1132,8 @@ ORDER BY B.LINE
     FROM all_objects A 
     	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
    WHERE     1 = 1
-         AND b.owner = upper(#schema_name#)
-         AND A.object_name = UPPER (#object_name#)
+         AND b.owner = (#schema_name#)
+         AND A.object_name = (#object_name#)
          AND B.TYPE = 'PACKAGE BODY'
 ORDER BY B.LINE
 
@@ -1159,7 +1168,7 @@ SELECT
   , IC.COLUMN_NAME
   , IE.COLUMN_EXPRESSION
 FROM all_INDEXES I
-INNER JOIN USER_IND_COLUMNS IC ON i.owner = ic.owner and I.INDEX_NAME     = IC.INDEX_NAME   AND I.TABLE_NAME = IC.TABLE_NAME
+INNER JOIN all_IND_COLUMNS IC ON i.owner = ic.owner and I.INDEX_NAME     = IC.INDEX_NAME   AND I.TABLE_NAME = IC.TABLE_NAME
 LEFT JOIN USER_IND_EXPRESSIONS IE
       ON 1 = 1
    and ie.owner = ic.owner
@@ -1167,8 +1176,8 @@ LEFT JOIN USER_IND_EXPRESSIONS IE
    AND IE.TABLE_NAME      = IC.TABLE_NAME
    AND IE.COLUMN_POSITION = IC.COLUMN_POSITION
 WHERE 1  = 1
-   and ic.owner = upper(#schema_name#)
-   AND IC.INDEX_NAME      = UPPER( #object_name# )
+   and ic.owner = (#schema_name#)
+   AND IC.INDEX_NAME      = ( #object_name# )
 ORDER BY IC.COLUMN_POSITION
 
 </select>
@@ -1187,11 +1196,11 @@ ORDER BY IC.COLUMN_POSITION
         ,ua.default_value as value
     FROM all_arguments ua
    WHERE 1=1
-   AND ua.owner = upper(#schema_name#)
-   AND ua.object_name = UPPER (#object_name#)
+   AND ua.owner = (#schema_name#)
+   AND ua.object_name = (#object_name#)
    AND ua.in_out in ('IN','IN/OUT')
    AND ua.argument_name > ' '
-   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else (#package_name#) end
 	<isGreaterThan prepend="AND" property="overload" compareValue="0">
     	overload = #overload#
 	</isGreaterThan>
@@ -1213,11 +1222,11 @@ ORDER BY ua.object_name, ua.overload, ua.sequence
         ,null as value
     FROM all_arguments ua
    WHERE 1=1
-   AND ua.owner = upper(#schema_name#)
-   AND ua.object_name = UPPER (#object_name#)
+   AND ua.owner = (#schema_name#)
+   AND ua.object_name = (#object_name#)
    AND ua.in_out in ('OUT', 'IN/OUT')
    AND ua.argument_name > ' '
-   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else UPPER (#package_name#) end
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else (#package_name#) end
 	<isGreaterThan prepend="AND" property="overload" compareValue="0">
     	overload = #overload#
 	</isGreaterThan>
@@ -1235,8 +1244,8 @@ Select
 	, sum(s.extents) as extents
 from  sys.dba_segments s
 Where s.segment_type in ('LOBINDEX', 'INDEX', 'INDEX PARTITION', 'INDEX SUBPARTITION')
-and s.segment_name in (select x.index_name from sys.all_indexes x where s.owner = x.owner and x.table_name = UPPER (#table#) )
-and s.owner = upper(#schema_name#)
+and s.segment_name in (select x.index_name from sys.all_indexes x where s.owner = x.owner and x.table_name = (#table#) )
+and s.owner = (#schema_name#)
 
 
 </select>
@@ -1245,16 +1254,16 @@ and s.owner = upper(#schema_name#)
 Select *
 from sys.all_tables
 where 1=1
-  and owner = upper(#schema_name#)
-  and table_name = UPPER (#table#)
+  and owner = (#schema_name#)
+  and table_name = (#table#)
 </select>
 
 <select id="getViewStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
 Select *
 from sys.all_views
 where 1=1
-  and owner = upper(#schema_name#)
-  and view_name = UPPER (#table#)
+  and owner = (#schema_name#)
+  and view_name = (#table#)
 </select>
 
 <!-- 
@@ -1297,20 +1306,8 @@ SELECT INDEX_NAME "Index Name"
       ,Visibility "Visibility"
   FROM SYS.all_INDEXES
  WHERE 1=1
-   and owner = upper(#schema_name#)
-   and INDEX_NAME = UPPER (#index_name#)
-</select>
-
-<!-- 
-	object error 목록을 리턴한다.
- -->
-<select id="getObjectError" resultClass="com.hangum.tadpole.engine.query.dao.oracle.OracleAllErrorsDAO" parameterClass="com.hangum.tadpole.engine.query.dao.oracle.OracleAllErrorsDAO">
-	SELECT * FROM all_errors
-	WHERE 
-			owner = #owner# 
-		AND name = #name# 
-		AND type = #type#
-	ORDER BY sequence
+   and owner = (#schema_name#)
+   and INDEX_NAME = (#index_name#)
 </select>
 
 </sqlMap>

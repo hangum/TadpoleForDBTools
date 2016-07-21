@@ -46,12 +46,6 @@ public class TriggerDAO extends StructObjectDAO {
 	public TriggerDAO() {
 	}
 	
-	public String getFullName(UserDBDAO userDB) {
-		//TODO: dao생성할때 sysname생성하도록 해놔야함.
-		this.sysName = SQLUtil.makeIdentifierName(userDB, this.getTrigger());
-		return this.getFullName();
-	}
-		
 	public String getFullName() {
 		if(StringUtils.isEmpty(this.getSchema_name())) {
 			return this.getSysName();

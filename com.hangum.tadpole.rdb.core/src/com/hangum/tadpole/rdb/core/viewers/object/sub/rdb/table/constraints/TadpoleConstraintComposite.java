@@ -41,6 +41,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -70,7 +71,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	// index
 	private TableViewer constraintTableViewer;
 	private ObjectComparator constraintComparator;
-	private List<InformationSchemaDAO> listConstraints;
+	private List<TableConstraintsDAO> listConstraints;
 	private ConstraintViewFilter constraintFilter;
 
 	private ObjectCreatAction creatAction_Constraint;
@@ -210,6 +211,10 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 				map.put("table_name", tableDao.getName());
 			}
 			listConstraints = sqlClient.queryForList("tableConstraintsList", map); //$NON-NLS-1$
+			
+			for(TableConstraintsDAO dao : listConstraints) {
+				dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getCONSTRAINT_NAME() ));
+			}
 
 			constraintTableViewer.setInput(listConstraints);
 			constraintTableViewer.refresh();

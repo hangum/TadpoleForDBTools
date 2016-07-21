@@ -51,10 +51,15 @@
 	ExplorerViewer에 조회된 스키마 목록을 표시하여 다른 스키마의 오브젝트에 접근할 수 있도록 한다.
  -->
 <select id="getSchemas" resultClass="java.util.HashMap">
+	SELECT * FROM (
   	SELECT 
-  		USERNAME AS SCHEMA 
+  		USERNAME AS schema 
 	FROM ALL_USERS
-	ORDER BY (CASE WHEN USERNAME = USER THEN 0 ELSE ASCII(USERNAME) END)
+	UNION 
+  	SELECT 
+  		'PUBLIC' AS schema 
+	FROM DUAL )
+	ORDER BY (CASE WHEN schema = USER THEN 0 ELSE ASCII(schema) END)
 </select>
 
 <!--
@@ -483,7 +488,8 @@ ORDER BY m.column_position
         ,I.OWNER as INDEX_SCHEMA
         ,I.SEARCH_CONDITION
         ,i.R_OWNER
-        ,I.R_CONSTRAINT_NAME        
+        ,I.R_CONSTRAINT_NAME 
+        ,i.index_owner as schema_name       
     FROM all_constraints i
          LEFT JOIN all_indexes c
             ON     i.owner = c.owner
@@ -1210,5 +1216,81 @@ ORDER BY ua.object_name, ua.overload, ua.position
 ORDER BY ua.object_name, ua.overload, ua.position
   
 </select>    
+
+<!-- 
+	통계정보 및 테이블의 사이즈를 조회한다.
+ -->
+<select id="getTableSizeInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+
+Select 
+	  sum(s.bytes) as bytes
+	, sum(s.extents) as extents
+from  sys.dba_segments s
+Where s.segment_type in ('LOBINDEX', 'INDEX', 'INDEX PARTITION', 'INDEX SUBPARTITION')
+and s.segment_name in (select x.index_name from sys.all_indexes x where s.owner = x.owner and x.table_name = (#table#) )
+and s.owner = (#schema_name#)
+
+
+</select>
+
+<select id="getStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+Select *
+from sys.all_tables
+where 1=1
+  and owner = (#schema_name#)
+  and table_name = (#table#)
+</select>
+
+<select id="getViewStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+Select *
+from sys.all_views
+where 1=1
+  and owner = (#schema_name#)
+  and view_name = (#table#)
+</select>
+
+<!-- 
+	인덱스에 대한 컬럼 정보 및 통계정보를 조회한다.
+ -->
+<select id="getIndexStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT INDEX_NAME "Index Name"
+      ,INDEX_TYPE "Index Type"
+      ,UNIQUENESS "Uniqueness"
+      ,STATUS "Status"
+      ,TABLE_OWNER || '.' || TABLE_NAME "Table"
+      ,TABLE_TYPE "Table Type"
+      ,TABLESPACE_NAME "Tablespace"
+      ,BUFFER_POOL "Buffer Pool"
+      ,INITCAP (partitioned) "Partitioned"
+      ,DECODE (temporary, 'N', 'No', 'Yes') "Temporary"
+      ,INI_TRANS "Initial Transactions"
+      ,MAX_TRANS "Max Transactions"
+      ,INITIAL_EXTENT "Initial Extent Size"
+      ,NEXT_EXTENT "Next Extent Size"
+      ,MIN_EXTENTS "Minimum Extents"
+      ,MAX_EXTENTS "Maximum Extents"
+      ,PCT_INCREASE "Percent Increase"
+      ,PCT_FREE "Percent Free"
+      ,FREELISTS "Freelists"
+      ,FREELIST_GROUPS "Freelist Groups"
+      ,DEGREE "Degree"
+      ,INSTANCES "Instances"
+      ,LAST_ANALYZED "Last Analyzed"
+      ,BLEVEL "BLevel"
+      ,LEAF_BLOCKS "Leaf Blocks"
+      ,DISTINCT_KEYS "Distinct Keys"
+      ,AVG_LEAF_BLOCKS_PER_KEY "Avg Leaf Blocks Per Key"
+      ,AVG_DATA_BLOCKS_PER_KEY "Avg Data Blocks Per Key"
+      ,CLUSTERING_FACTOR "Clustering Factor"
+      ,NUM_ROWS "Num Rows"
+      ,SAMPLE_SIZE "Sample Size"
+      ,GENERATED "Generated"
+      ,DECODE (JOIN_INDEX, 'NO', 'No', 'Yes') "Join Index"
+      ,Visibility "Visibility"
+  FROM SYS.all_INDEXES
+ WHERE 1=1
+   and owner = (#schema_name#)
+   and INDEX_NAME = (#index_name#)
+</select>
 
 </sqlMap>
