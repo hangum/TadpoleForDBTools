@@ -255,13 +255,8 @@ public class TadpoleSystem_ExecutedSQL {
 		// content data를 저장합니다.
 		ExecutedSqlResourceDataDAO dataDao = new ExecutedSqlResourceDataDAO();
 		dataDao.setExecuted_sql_resource_seq(userDBResource.getSeq());
-		
-		// https://github.com/hangum/TadpoleForDBTools/issues/864
-//		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
-//		for (String content : arrayContent) {
-			dataDao.setDatas(contents);		
-			sqlClient.insert("userExecuteSQLResourceDataInsert", dataDao); //$NON-NLS-1$				
-//		}
+		dataDao.setDatas(contents);		
+		sqlClient.insert("userExecuteSQLResourceDataInsert", dataDao); //$NON-NLS-1$				
 	}
 
 }

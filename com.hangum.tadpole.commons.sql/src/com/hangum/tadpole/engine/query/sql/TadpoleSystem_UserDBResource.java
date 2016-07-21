@@ -224,11 +224,8 @@ public class TadpoleSystem_UserDBResource {
 		dataDao.setGroup_seq(System.currentTimeMillis());
 		dataDao.setUser_seq(SessionManager.getUserSeq());
 		
-//		String[] arrayContent = SQLUtil.makeResourceDataArays(contents);
-//		for (String content : arrayContent) {
 		dataDao.setDatas(contents);		
 		sqlClient.insert("userDbResourceDataInsert", dataDao); //$NON-NLS-1$				
-//		}
 	}
 	
 	/**

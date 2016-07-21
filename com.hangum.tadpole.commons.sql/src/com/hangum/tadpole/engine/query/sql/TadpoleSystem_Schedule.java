@@ -164,15 +164,11 @@ public class TadpoleSystem_Schedule {
 			ScheduleDAO retScheduleDAO = (ScheduleDAO)sqlClient.insert("scheduleInsert", scheduleDAO);
 			
 			// sql 
-//			String[] sqls = SQLUtil.makeResourceDataArays(scheduleDAO.getSql());
-//			ScheduleDetailDAO detailDao = null;
-//			for (String sql : sqls) {
 			ScheduleDetailDAO detailDao = new ScheduleDetailDAO();
 			detailDao.setSchedule_seq(retScheduleDAO.getSeq());
 			detailDao.setDatas(scheduleDAO.getSql());
 			
 			sqlClient.insert("scheduleDetailInsert", detailDao);	
-//			}
 		}
 		
 		return dao;
@@ -202,15 +198,11 @@ public class TadpoleSystem_Schedule {
 			ScheduleDAO retScheduleDAO = (ScheduleDAO)sqlClient.insert("scheduleInsert", scheduleDAO);
 			
 			// sql 
-//			String[] sqls = SQLUtil.makeResourceDataArays(scheduleDAO.getSql());
-//			ScheduleDetailDAO detailDao = null;
-//			for (String sql : sqls) {
 			ScheduleDetailDAO detailDao = new ScheduleDetailDAO();
 			detailDao.setSchedule_seq(retScheduleDAO.getSeq());
 			detailDao.setDatas(scheduleDAO.getSql());
 			
 			sqlClient.insert("scheduleDetailInsert", detailDao);	
-//			}
 		}
 		
 		return scheduleDao;
