@@ -244,10 +244,16 @@ public class SQLUtil {
 			if(name.matches(".*[a-z\\s].*")) {
 				isChanged = true;
 				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}else if(name.matches(".*[.].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}
 			break;
 		case UPPERCASE_BLANK:
 			if(name.matches(".*[A-Z\\s].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}else if(name.matches(".*[.].*")) {
 				isChanged = true;
 				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
 			}

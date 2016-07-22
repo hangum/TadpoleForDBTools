@@ -204,6 +204,8 @@ public class DBSystemSchema {
 		
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
 			listFunction = sqlClient.queryForList("functionList", userDB.getSchema()); //$NON-NLS-1$
+		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			listFunction = sqlClient.queryForList("functionList", userDB.getSchema()); //$NON-NLS-1$
 		}else{
 			listFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
 		}
@@ -239,6 +241,8 @@ public class DBSystemSchema {
 		List<ProcedureFunctionDAO> listProcedure;
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
+		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
 		}else{
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
 		}
@@ -270,6 +274,9 @@ public class DBSystemSchema {
 	
 			HashMap<String, String>paramMap = new HashMap<String, String>();
 			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
+				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+			}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
 				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
 				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
 			}else{

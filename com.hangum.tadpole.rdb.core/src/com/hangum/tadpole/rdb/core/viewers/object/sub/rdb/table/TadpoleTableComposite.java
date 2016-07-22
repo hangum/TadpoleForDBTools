@@ -225,6 +225,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					TableDAO tableDao = (TableDAO) objDAO;
 					if (selectTableName.equals(tableDao.getName())) return;
 					
+					// column이 리프레쉬 될때만 selectTableName 값이 갱신되서 인덱스, 제약조건, 트리거 리프레쉬 전에 현재 선택된 테이블명 설정해줌.
+					setSelectTableName(tableDao.getName());
+					
 					String selTabName = (String)tabTableFolder.getSelection().getData(TAB_DATA_KEY);
 					if(PublicTadpoleDefine.OBJECT_TYPE.INDEXES.name().equals(selTabName)){
 						// 인덱스 탭이 선택된 상태에서 다른 테이블을 선택할 경우 선택된 테이블에 정의된 인덱스 목록을 표시한다.
@@ -372,7 +375,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					Object objDAO = is.getFirstElement();
 					TableDAO tableDao = (TableDAO) objDAO;
 					String strSelectItemText = ""+ct.getData(AbstractObjectComposite.TAB_DATA_KEY);
-					if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
+					if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.COLUMNS.name())) {
+						tableColumnComposite.refreshTableColumn(tableListViewer);
+					} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
 						indexComposite.setTable(userDB, tableDao);
 					} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
 						constraintsComposite.setTable(userDB, tableDao);

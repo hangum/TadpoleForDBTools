@@ -26,6 +26,9 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComp
 public abstract class AbstractTableComposite extends Composite {
 	protected TadpoleTableComposite tableComposite;
 	
+	/** TAB DATA KEY */
+	public static String TAB_DATA_KEY = "DB_ACTION";
+
 	/**
 	 * Create the composite.
 	 * @param parent

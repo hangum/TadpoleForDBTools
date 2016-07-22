@@ -85,6 +85,8 @@ public class TableColumnComposite extends AbstractTableComposite {
 		CTabItem tbtmTable = new CTabItem(parentFolder, SWT.NONE);
 		tbtmTable.setText(Messages.get().Columns);
 		tbtmTable.setData(Messages.get().Columns);
+		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.COLUMNS.name());
+
 		
 		Composite compositeColumn = new Composite(parentFolder, SWT.NONE);
 		tbtmTable.setControl(compositeColumn);

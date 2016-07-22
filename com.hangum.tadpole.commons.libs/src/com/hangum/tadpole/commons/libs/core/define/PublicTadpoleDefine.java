@@ -265,7 +265,8 @@ public class PublicTadpoleDefine {
 		COLLECTIONS,
 		JAVASCRIPT,
 		PACKAGES,
-		SCHEDULE
+		SCHEDULE,
+		COLUMNS
 	};
 
 	/** sql type - http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands */

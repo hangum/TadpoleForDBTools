@@ -52,8 +52,12 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	public String getTableScript(TableDAO tableDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		Map srcList = (HashMap)client.queryForObject("getTableScript", tableDAO.getName());
-		return ""+srcList.get("Create Table");
+		Map srcList = (HashMap)client.queryForObject("getTableScript", tableDAO.getFullName());
+		if(StringUtils.isBlank(tableDAO.getSchema_name())){
+			return srcList.get("Create Table")+"";
+		}else{
+			return StringUtils.replaceOnce(srcList.get("Create Table")+"", "CREATE TABLE ", "CREATE TABLE " + tableDAO.getSchema_name() + ".");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -63,11 +67,11 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	public String getViewScript(TableDAO tableDao) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		Map srcList = (HashMap)client.queryForObject("getViewScript", tableDao.getName());
+		Map srcList = (HashMap)client.queryForObject("getViewScript", tableDao.getFullName());
 		String strSource = ""+srcList.get("Create View");
 		strSource = StringUtils.substringAfterLast(strSource, "VIEW");
 		
-		return "CREATE VIEW " + strSource;
+		return "CREATE VIEW " + strSource.trim();
 	}
 
 	/* (non-Javadoc)
@@ -88,11 +92,15 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		
 		StringBuilder result = new StringBuilder("");
 
-		Map srcList = (HashMap)client.queryForObject("getFunctionScript", functionDAO.getName());
+		Map srcList = (HashMap)client.queryForObject("getFunctionScript", functionDAO.getFullName());
 		String strSource = ""+srcList.get("Create Function");
 		strSource = StringUtils.substringAfterLast(strSource, "FUNCTION");
 		
-		return "CREATE FUNCTION " + strSource;
+		if(StringUtils.isBlank(functionDAO.getSchema_name())){
+			return "CREATE FUNCTION " + strSource.trim();
+		}else{
+			return "CREATE FUNCTION " + functionDAO.getSchema_name() + "." + strSource.trim();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -101,11 +109,15 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	@Override
 	public String getProcedureScript(ProcedureFunctionDAO procedureDAO)	throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		Map srcList = (HashMap)client.queryForObject("getProcedureScript", procedureDAO.getName());
+		Map srcList = (HashMap)client.queryForObject("getProcedureScript", procedureDAO.getFullName());
 		String strSource = ""+srcList.get("Create Procedure");
 		strSource = StringUtils.substringAfterLast(strSource, "PROCEDURE");
 		
-		return "CREATE PROCEDURE " + strSource;
+		if(StringUtils.isBlank(procedureDAO.getSchema_name())){
+			return "CREATE PROCEDURE " + strSource.trim();
+		}else{
+			return "CREATE PROCEDURE " + procedureDAO.getSchema_name() + "." + strSource.trim();
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -117,23 +129,37 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		
 		StringBuilder result = new StringBuilder("");
 
-		Map srcList = (HashMap)client.queryForObject("getTriggerScript", triggerDAO.getTrigger());	
+		Map srcList = (HashMap)client.queryForObject("getTriggerScript", triggerDAO.getFullName());	
 		String strSource = ""+srcList.get("SQL Original Statement");
 		strSource = StringUtils.substringAfterLast(strSource, "TRIGGER");
 		
-		return "CREATE TRIGGER " + strSource;
+		if(StringUtils.isBlank(triggerDAO.getSchema_name())){
+			return "CREATE TRIGGER " + strSource.trim();
+		}else{
+			return "CREATE TRIGGER " + triggerDAO.getSchema_name() + "." + strSource.trim();
+		}
 	}
 
 	@Override
 	public List<InOutParameterDAO> getProcedureInParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		return client.queryForList("getProcedureInParamter", procedureDAO.getName());
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("schema_name", procedureDAO.getSchema_name() == null ? userDB.getSchema() : procedureDAO.getSchema_name()); //$NON-NLS-1$
+		map.put("object_name", procedureDAO.getName());	
+
+		return client.queryForList("getProcedureInParamter", map);
 	}
 	
 	@Override
 	public List<InOutParameterDAO> getProcedureOutParamter(ProcedureFunctionDAO procedureDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-		return client.queryForList("getProcedureOutParamter", procedureDAO.getName());
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("schema_name", procedureDAO.getSchema_name() == null ? userDB.getSchema() : procedureDAO.getSchema_name()); //$NON-NLS-1$
+		map.put("object_name", procedureDAO.getName());	
+
+		return client.queryForList("getProcedureOutParamter", map);
 	}
 }
 
