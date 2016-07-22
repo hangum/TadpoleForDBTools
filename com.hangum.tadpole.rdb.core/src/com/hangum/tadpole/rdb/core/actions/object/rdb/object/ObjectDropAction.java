@@ -138,7 +138,9 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectDeleteAction_16)) {
 					
 					try {
-						if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+						if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+							executeSQL(userDB, "drop index " + indexDAO.getFullName() ); //$NON-NLS-1$ //$NON-NLS-2$
+						} else if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							executeSQL(userDB, "drop index " + indexDAO.getFullName() + ";"); //$NON-NLS-1$ //$NON-NLS-2$

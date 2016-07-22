@@ -164,9 +164,9 @@ public class InformationSchemaDAO extends StructObjectDAO {
 	@Override
 	public String getFullName() {
 		if(StringUtils.isEmpty(this.getSchema_name())) {
-			return this.getINDEX_NAME();
+			return this.getSysName();
 		}else{
-			return String.format("%s.%s", this.getSchema_name(), this.getINDEX_NAME());
+			return String.format("%s.%s", this.getSchema_name(), this.getSysName());
 		}
 	}
 	

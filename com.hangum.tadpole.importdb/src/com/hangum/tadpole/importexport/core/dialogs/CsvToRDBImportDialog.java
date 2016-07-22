@@ -493,7 +493,10 @@ public class CsvToRDBImportDialog extends Dialog {
 					parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 					parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
-				} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
+						userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT|
+						userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT|
+						userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 					parameters.put("schema_name", userDB.getSchema());
 					parameters.put("table_name", tableName);
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);

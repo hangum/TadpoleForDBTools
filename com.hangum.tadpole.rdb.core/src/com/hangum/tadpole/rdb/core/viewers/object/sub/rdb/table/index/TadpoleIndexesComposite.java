@@ -323,7 +323,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 				 map.put("table_name", 	StringUtils.substringAfter(tableDao.getName(), ".")); //$NON-NLS-1$
 			 } else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 				 map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
-				 map.put("table_name", tableDao.getSysName());	 
+				 map.put("table_name", tableDao.getName());	 
+			 } else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				 map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
+				 map.put("table_name", tableDao.getName());	 
 			 } else {
 				 map.put("table_schema", userDB.getDb());
 				 map.put("table_name", tableDao.getName());	 

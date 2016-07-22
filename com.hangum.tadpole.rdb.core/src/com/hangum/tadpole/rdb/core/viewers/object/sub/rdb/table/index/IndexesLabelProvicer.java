@@ -38,7 +38,7 @@ public class IndexesLabelProvicer extends LabelProvider implements ITableLabelPr
 		InformationSchemaDAO tc = (InformationSchemaDAO) element;
 		
 		switch(columnIndex) {
-		case 0: return SQLUtil.getIndexName(tc);
+		case 0: return tc.getTABLE_NAME();// SQLUtil.getIndexName(tc);
 		case 1: return tc.getINDEX_NAME();
 		case 2: return tc.getINDEX_TYPE();		
 		case 3: return tc.getCOMMENT();
