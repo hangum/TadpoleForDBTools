@@ -36,10 +36,12 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -107,7 +109,7 @@ public class MySQLTableRelationDialog extends Dialog {
 		Group grpTableEmployees = new Group(container, SWT.NONE);
 		grpTableEmployees.setLayout(new GridLayout(2, false));
 		grpTableEmployees.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		grpTableEmployees.setText("Table : employees");
+		grpTableEmployees.setText("Table : " + tableDAO.getFullName());
 		
 		Label lblColumn = new Label(grpTableEmployees, SWT.NONE);
 		lblColumn.setText("Column");
@@ -255,8 +257,11 @@ public class MySQLTableRelationDialog extends Dialog {
 		String strOriColumn = ((TableColumnDAO)comboOriColumn.getData(comboOriColumn.getText())).getField();
 		String strRefTable = ((TableDAO)comboRefTableName.getData(comboRefTableName.getText())).getName();
 		String strRefColumn = ((TableColumnDAO)comboRefColumnName.getData(comboRefColumnName.getText())).getField();
-		String strCreateIndex = String.format(TEMP_REFERENCE_SQL, tableDAO.getName(), strReferenceName, strOriColumn,
-					strRefTable, strRefColumn,
+		String strCreateIndex = String.format(TEMP_REFERENCE_SQL, tableDAO.getFullName(), 
+				    SQLUtil.makeIdentifierName(userDB, strReferenceName), 
+				    SQLUtil.makeIdentifierName(userDB, strOriColumn),
+				    SQLUtil.makeIdentifierName(userDB, tableDAO.getSchema_name()) +"."+ SQLUtil.makeIdentifierName(userDB,strRefTable), 
+				    SQLUtil.makeIdentifierName(userDB, strRefColumn),
 					comboOnUpdate.getText(), comboOnDelete.getText()
 				);
 		try {

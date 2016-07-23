@@ -24,10 +24,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -96,9 +95,9 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 			// get the table columns
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			Map<String, String> mapParam = new HashMap<String, String>();
-			mapParam.put("db", userDB.getDb()); //$NON-NLS-1$
+			mapParam.put("schema", tableDAO.getSchema_name()); //$NON-NLS-1$
 			mapParam.put("table", tableDAO.getName()); //$NON-NLS-1$
-			List showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
+			List<TableColumnDAO> showTableColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 
 			// Open the table director editor
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

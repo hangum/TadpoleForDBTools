@@ -165,7 +165,24 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	index 정보, SHOW INDEX FROM $tableName$
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
-	SELECT * 
+	SELECT
+		table_catalog
+	    , table_schema
+	    , table_schema as schema_name
+	    , table_name
+	    , non_unique
+	    , index_schema
+	    , index_name
+	    , seq_in_index
+	    , column_name
+	    , collation
+	    , cardinality
+	    , sub_part
+	    , packed
+	    , nullable
+	    , index_type
+	    , comment
+	    , index_comment	
 	FROM information_schema.statistics 
 	WHERE TABLE_SCHEMA = #table_schema#
 	  AND TABLE_NAME = #table_name#
@@ -189,10 +206,11 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
  
  -->
 <select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
-select *
-from information_schema.table_constraints
-where table_schema = #table_schema#
-and table_name = #table_name#
+select c.*
+	, c.table_schema as schema_name
+from information_schema.table_constraints c
+where c.table_schema = #table_schema#
+and c.table_name = #table_name#
 </select>
  
 <!-- 
@@ -212,6 +230,7 @@ select
     ,character_set_client
     ,collation_connection
     ,database_collation as `Database Collation`
+    ,routine_schema as schema_name
   from
     information_schema.ROUTINES
   where 1=1
@@ -236,6 +255,7 @@ select
     ,character_set_client
     ,collation_connection
     ,database_collation as `Database Collation`
+    ,routine_schema as schema_name
   from
     information_schema.ROUTINES
   where 1=1

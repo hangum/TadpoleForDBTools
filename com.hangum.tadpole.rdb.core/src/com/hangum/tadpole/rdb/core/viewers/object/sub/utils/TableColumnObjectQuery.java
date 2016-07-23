@@ -264,13 +264,16 @@ public class TableColumnObjectQuery {
 		} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s %s COMMENT %s", 
-											tableDAO.getSysName(),
-											columnDAO.getField(), columnDAO.getField(), columnDAO.getType(), ("NO".equals(columnDAO.getNull())?"NOT NULL":"NULL"), 
+											tableDAO.getFullName(),
+											SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), 
+											SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), 
+											columnDAO.getType(), ("NO".equals(columnDAO.getNull())?"NOT NULL":"NULL"), 
 											SQLUtil.makeQuote(columnDAO.getComment()));
 			ExecuteDDLCommand.executSQL(userDB, strQuery);
 			
 			strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
-					tableDAO.getSysName(), columnDAO.getField(),  
+					tableDAO.getFullName(), 
+					SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  
 					SQLUtil.makeQuote(columnDAO.getDefault()));
 			ExecuteDDLCommand.executSQL(userDB, strQuery);
 
