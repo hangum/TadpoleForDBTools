@@ -51,6 +51,9 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 														  "RETURN CONCAT('Hello', param1);" + PublicTadpoleDefine.LINE_SEPARATOR + 
 														  "END; ";
 
+	/** sysnonym */
+	public static final String TMP_CREATE_SYNONYM_STMT = "CREATE SYNONYM {#schema#}.sn_sample FOR {#schema#}.sample_table;";
+
 	/** package */
 	public static final String  TMP_CREATE_PACKAGE_STMT = "CREATE OR REPLACE PACKAGE {#schema#}.PKG_SAMPLE " + PublicTadpoleDefine.LINE_SEPARATOR +
 														 " AS " + PublicTadpoleDefine.LINE_SEPARATOR +

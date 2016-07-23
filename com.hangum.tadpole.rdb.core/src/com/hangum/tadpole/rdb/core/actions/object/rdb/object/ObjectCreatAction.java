@@ -109,6 +109,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();
 			cia.run(userDB, actionType);
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.SYNONYM) {
+			CreateFunctionAction cia = new CreateFunctionAction();
+			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 			CreateTriggerAction cia = new CreateTriggerAction();
 			cia.run(userDB, actionType);

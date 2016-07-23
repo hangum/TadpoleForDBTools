@@ -47,10 +47,10 @@ public class DialogUtil {
 		
 		SelectObjectDialog objectSelector = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap);
 
-		if (objectSelector.getSelectObject().isEmpty() | objectSelector.getObjectCount() > 1) {
+		if (objectSelector.getObjectCount() > 1) {
 			//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
 			objectSelector.open();
-		} else if (objectSelector.getObjectCount() <= 0) {
+		} else if (objectSelector.getObjectCount() <= 0 || objectSelector.getSelectObject().isEmpty()) {
 			//해당 오브젝트를 찾을 수 없습니다.
 			MessageDialog.openInformation(null , "Information" , "객체를 찾을 수 없습니다.");
 			return;
@@ -97,7 +97,7 @@ public class DialogUtil {
 				}
 			} else {
 				//TODO: F4상세정보 조회에서도 테이블필터에 의해서 조회가 제한된 테이블인 경우는 조회하지 못하게 해야 하는가?
-				// 스키마가 다른경우는 예외로?
+				// 스키마가 다른경우는 예외로? 
 				for (TableDAO tmpTableDAO : listTable) {
 					if (StringUtils.equalsIgnoreCase(paramTableDAO.getName(), tmpTableDAO.getName()) && StringUtils.equalsIgnoreCase(paramTableDAO.getSchema_name(), tmpTableDAO.getSchema_name())) {
 						tableDao = tmpTableDAO;

@@ -37,6 +37,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.template.MySQLDMLTemplate;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -227,7 +228,7 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 		
 		if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TableCreationWantToCreate)) {
 			String strCreateTable = String.format(MySQLDMLTemplate.TMP_DIALOG_CREATE_TABLE,
-					tableCreateDao.getName(),
+					tableCreateDao.getFullName(userDB),
 					tableCreateDao.getEncoding(),
 					tableCreateDao.getCollation(),
 					tableCreateDao.getType());

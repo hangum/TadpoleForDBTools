@@ -102,7 +102,7 @@ public class TadpoleObjectQuery {
 				stmt.execute();
 
 			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-				String strSQL = String.format("ALTER TABLE %s COMMENT %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
+				String strSQL = String.format("ALTER TABLE %s COMMENT %s", dao.getFullName(), SQLUtil.makeQuote(dao.getComment()));
 				if(logger.isDebugEnabled()) logger.debug(strSQL);
 				stmt = javaConn.prepareStatement(strSQL);
 				stmt.execute();
