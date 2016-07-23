@@ -75,22 +75,22 @@
      from sys.all_objects O
     where 1=1
 <isNotEmpty property="schema_name">
-	  and o.owner = (#schema_name#)
+	  and o.owner in (#schema_name#, upper(#schema_name#))
 </isNotEmpty>    
       and o.object_type not in ('SYNONYM')
-	  and object_name = (#object_name#)
+	  and object_name in (#object_name#, upper(#object_name#))
 	
 	UNION 	  
 	
 	select o.owner as object_owner, o.object_name as object_name, o.object_type as object_type
 	  from sys.all_objects o
 	       inner join sys.all_synonyms s
-	          on     s.synonym_name = (#object_name#)
+	          on     s.synonym_name in (#object_name#, upper(#object_name#))
 	             and o.owner = s.org_object_owner
 	             and o.object_name = s.org_object_name
 	 where     1 = 1
 <isNotEmpty property="schema_name">
-	  and o.owner = (#schema_name#)
+	  and o.owner in (#schema_name#, upper(#schema_name#))
 </isNotEmpty>    
       and o.object_type in ('TABLE', 'VIEW')
 </select>

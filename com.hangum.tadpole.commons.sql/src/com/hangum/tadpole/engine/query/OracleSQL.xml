@@ -576,19 +576,16 @@ select distinct
                             ,object_name
                             ,package_name
                             ,overload
-                            ,subprogram_id
                             ,CASE WHEN SUM (CASE WHEN argument_name IS NULL THEN 1 ELSE 0 END) > 0 THEN 'FUNCTION' ELSE 'PROCEDURE' END AS TYPE
                         FROM all_arguments
                     GROUP BY owner
                             ,object_name
                             ,package_name
-                            ,overload
-                            ,subprogram_id) p
+                            ,overload) p
                 ON 1=1
                AND p.owner = s.owner
                AND p.object_name = s.procedure_name
                AND p.package_name = s.object_name
-               AND p.subprogram_id = s.subprogram_id
  where 1=1
   and s.owner = (#schema_name#)
   and s.object_name = (#package_name#)
