@@ -109,7 +109,8 @@ public class TableColumnObjectQuery {
 				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
 		) {
 			for(TableColumnDAO tableColumnDao: listTableColumnDao) {
-				resultDao = deleteColumn(userDB, tableColumnDao.getTableDao().getSysName(), tableColumnDao.getField());
+				//TODO: 테이블 컬럼명에 공백이나 특수문자가 있을경우 getSysName을 사용할 수 있도록 처리가 필요함.
+				resultDao = deleteColumn(userDB, tableColumnDao.getTableDao().getFullName(), SQLUtil.makeIdentifierName(userDB, tableColumnDao.getField()));
 			}
 			
 		} else {
@@ -143,8 +144,8 @@ public class TableColumnObjectQuery {
 		RequestResultDAO addColumnResultDAO = null;
 		
 		String strQuery = String.format("ALTER TABLE %s ADD COLUMN %s %s %s COMMENT %s ", 
-											tableDAO.getSysName(), 
-											metaDataDao.getColumnName(), 
+											tableDAO.getFullName(), 
+											SQLUtil.makeIdentifierName(userDB, metaDataDao.getColumnName()), 
 											metaDataDao.getDataType(), 
 											metaDataDao.isNotNull()?"NOT NULL":"NULL", 
 											SQLUtil.makeQuote(metaDataDao.getComment())
@@ -182,9 +183,9 @@ public class TableColumnObjectQuery {
 		RequestResultDAO addColumnResultDAO = null;
 		
 		String strQuery = String.format("ALTER TABLE %s CHANGE COLUMN %s %s %s %s COMMENT %s ", 
-											tableDAO.getSysName(), 
-											tableColumnDAO.getField(),
-											metaDataDao.getColumnName(), 
+											tableDAO.getFullName(), 
+											SQLUtil.makeIdentifierName(userDB, tableColumnDAO.getField()),
+											SQLUtil.makeIdentifierName(userDB, metaDataDao.getColumnName()), 
 											metaDataDao.getDataType(), 
 											metaDataDao.isNotNull()?"NOT NULL":"NULL", 
 											SQLUtil.makeQuote(metaDataDao.getComment())

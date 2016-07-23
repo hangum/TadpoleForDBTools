@@ -80,22 +80,22 @@ ORDER BY T.table_name
      from sys.all_objects O
     where 1=1
 <isNotEmpty property="schema_name">
-	  and o.owner = (#schema_name#)
+	  and o.owner in (#schema_name#, upper(#schema_name#))
 </isNotEmpty>    
       and o.object_type not in ('SYNONYM')
-	  and object_name = #object_name#
+	  and object_name in (#object_name#, upper(#object_name#))
 	
 	UNION 	  
 	
 	select o.owner as object_owner, o.object_name as object_name, o.object_type as object_type
 	  from sys.all_objects o
 	       inner join sys.all_synonyms s
-	          on     s.synonym_name = (#object_name#)
+	          on     s.synonym_name in (#object_name#, upper(#object_name#))
 	             and o.owner = s.table_owner
 	             and o.object_name = s.table_name
 	 where     1 = 1
 <isNotEmpty property="schema_name">
-	  and o.owner = (#schema_name#)
+	  and o.owner in (#schema_name#, upper(#schema_name#))
 </isNotEmpty>    
       and o.object_type in ('TABLE', 'VIEW')
 </select>
@@ -576,19 +576,16 @@ select distinct
                             ,object_name
                             ,package_name
                             ,overload
-                            ,subprogram_id
                             ,CASE WHEN SUM (CASE WHEN argument_name IS NULL THEN 1 ELSE 0 END) > 0 THEN 'FUNCTION' ELSE 'PROCEDURE' END AS TYPE
                         FROM all_arguments
                     GROUP BY owner
                             ,object_name
                             ,package_name
-                            ,overload
-                            ,subprogram_id) p
+                            ,overload) p
                 ON 1=1
                AND p.owner = s.owner
                AND p.object_name = s.procedure_name
                AND p.package_name = s.object_name
-               AND p.subprogram_id = s.subprogram_id
  where 1=1
   and s.owner = (#schema_name#)
   and s.object_name = (#package_name#)

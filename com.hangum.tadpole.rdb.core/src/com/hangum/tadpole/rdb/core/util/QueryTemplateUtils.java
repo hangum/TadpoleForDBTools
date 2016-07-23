@@ -79,6 +79,8 @@ public class QueryTemplateUtils {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_PACKAGE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_FUNCTION_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.SYNONYM) {
+				defaultStr =  OracleDMLTemplate.TMP_CREATE_SYNONYM_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}

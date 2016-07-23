@@ -294,10 +294,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
 				final DBDefine selectDB = getUserDB().getDBDefine();
-				if(selectDB == DBDefine.ORACLE_DEFAULT | 
-						selectDB == DBDefine.POSTGRE_DEFAULT |
-						selectDB == DBDefine.MSSQL_DEFAULT |
-						selectDB == DBDefine.TIBERO_DEFAULT) {
+				if(selectDB == DBDefine.ORACLE_DEFAULT || 
+						selectDB == DBDefine.POSTGRE_DEFAULT ||
+						selectDB == DBDefine.MSSQL_DEFAULT ||
+						selectDB == DBDefine.TIBERO_DEFAULT ||
+						selectDB == DBDefine.MYSQL_DEFAULT ||
+						selectDB == DBDefine.MARIADB_DEFAULT) {
 					
 					if("".equals(table.getSchema_name()) || null == table.getSchema_name()) return table.getName();
 					return table.getSchema_name() + "."+ table.getName();

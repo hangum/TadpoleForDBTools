@@ -10,6 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.table.mysql;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
+
 /**
  * table create dao
  * 
@@ -80,6 +85,14 @@ public class TableCreateDAO {
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getFullName(UserDBDAO userDB) {
+		if(StringUtils.isBlank(userDB.getSchema())){
+			return SQLUtil.makeIdentifierName(userDB, this.getName());
+		}else{
+			return String.format("%s.%s", SQLUtil.makeIdentifierName(userDB, userDB.getSchema()), SQLUtil.makeIdentifierName(userDB, this.getName()) );
+		}
 	}
 	
 }

@@ -59,6 +59,7 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
@@ -97,6 +98,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	private List<OracleSynonymColumnDAO> showSynonymColumns;
 	private SynonymColumnComparator synonymColumnComparator;
 
+	private ObjectCreatAction creatAction_Synonym;
 	private AbstractObjectAction dropAction_Synonym;
 	private AbstractObjectAction refreshAction_Synonym;
 	private GenerateViewDDLAction viewDDLAction;
@@ -270,6 +272,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	private void createSynonymMenu() {
 		if(getUserDB() == null) return;
 		
+		creatAction_Synonym = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().Synonym + " " + Messages.get().Created);
 		dropAction_Synonym = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().DropSynonym); //$NON-NLS-1$
 		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().Refresh); //$NON-NLS-1$
 		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().Execute); //$NON-NLS-1$
@@ -278,6 +281,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Synonym"); //$NON-NLS-1$ //$NON-NLS-2$
 		if(!isDDLLock()) {
+			menuMgr.add(creatAction_Synonym);
 			menuMgr.add(dropAction_Synonym);
 			menuMgr.add(new Separator());
 		}
@@ -394,6 +398,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	public void initAction() {
 		if(getUserDB() == null) return; 
 		
+		creatAction_Synonym.setUserDB(getUserDB());
 		dropAction_Synonym.setUserDB(getUserDB());
 		refreshAction_Synonym.setUserDB(getUserDB());
 		executeAction.setUserDB(getUserDB());
@@ -431,6 +436,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	@Override
 	public void dispose() {
 		super.dispose();	
+		if(creatAction_Synonym != null) creatAction_Synonym.dispose();
 		if(dropAction_Synonym != null) dropAction_Synonym.dispose();
 		if(refreshAction_Synonym != null) refreshAction_Synonym.dispose();
 		if(viewDDLAction != null) viewDDLAction.dispose();

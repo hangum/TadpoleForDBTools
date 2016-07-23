@@ -387,7 +387,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 							allDao.getSysName() + " as " + allDao.getColumnAlias(); //$NON-NLS-1$
 
 					sbColumn.append(strTableAlias);
+					if (chkComment.getSelection()) {
+						sbColumn.append("/* " + allDao.getType() +":"+ allDao.getComment()+ " */"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 				}
+				
 				cnt++;
 			}
 		}
@@ -398,7 +402,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		resultSQL.append(" FROM " + SQLUtil.getTableName(userDB, tableDAO) + " " + this.textTableAlias.getText().trim()); //$NON-NLS-1$ //$NON-NLS-2$
 		cnt = 0;
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
-			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
+			if ("PK".equals(allDao.getKey()) || "PRI".equals(allDao.getKey())) { //$NON-NLS-1$
 
 				if (cnt == 0) {
 					resultSQL.append(" WHERE "); //$NON-NLS-1$
@@ -442,7 +446,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 				resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? "); //$NON-NLS-1$
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */"); //$NON-NLS-1$ //$NON-NLS-2$
+					resultSQL.append("/* " + allDao.getType() +":"+ allDao.getComment()+ " */"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				cnt++;
 			}
@@ -458,7 +462,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? "); //$NON-NLS-1$
 					if (chkComment.getSelection()) {
-						resultSQL.append("/* " + allDao.getType() + " */"); //$NON-NLS-1$ //$NON-NLS-2$
+						resultSQL.append("/* " + allDao.getType() +":"+ allDao.getComment() + " */"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					cnt++;
 
@@ -508,6 +512,10 @@ public class GenerateStatmentDMLDialog extends Dialog {
 				if (cnt > 0)
 					resultSQL.append(", "); //$NON-NLS-1$
 				resultSQL.append(allDao.getSysName());
+				
+				if (chkComment.getSelection()){
+					resultSQL.append("/*" + allDao.getComment() + "*/");
+				}
 
 				cnt++;
 			}
@@ -519,6 +527,10 @@ public class GenerateStatmentDMLDialog extends Dialog {
 					if (cnt > 0)
 						resultSQL.append(", "); //$NON-NLS-1$
 					resultSQL.append(allDao.getSysName());
+					
+					if (chkComment.getSelection()) {
+						resultSQL.append("/* " + allDao.getComment() + " */"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					}
 
 					cnt++;
 				}

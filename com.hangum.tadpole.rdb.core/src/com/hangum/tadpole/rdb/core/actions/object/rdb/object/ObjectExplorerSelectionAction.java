@@ -49,7 +49,10 @@ public class ObjectExplorerSelectionAction extends AbstractObjectSelectAction {
 			Object obj = arryObj[arryObj.length-i-1];
 			
 			StructObjectDAO tcDAO = (StructObjectDAO)obj;
-			strColumnName += tcDAO.getSysName() + ", "; //$NON-NLS-1$
+			strColumnName += tcDAO.getFullName() + ", "; //$NON-NLS-1$
+			if (i > 1 && i % 5 == 0){
+				strColumnName += "\n";
+			}
 		}
 		strColumnName = StringUtils.removeEnd(strColumnName, ", "); //$NON-NLS-1$
 		
