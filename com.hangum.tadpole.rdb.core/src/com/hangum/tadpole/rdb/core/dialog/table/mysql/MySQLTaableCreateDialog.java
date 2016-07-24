@@ -31,13 +31,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.template.MySQLDMLTemplate;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -234,7 +234,8 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 					tableCreateDao.getType());
 			
 			try {
-				ExecuteDDLCommand.executSQL(userDB, strCreateTable);
+				RequestResultDAO reqReResultDAO = new RequestResultDAO();
+				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strCreateTable);
 				
 				ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
 				if(ev != null) ev.refreshTable(true, strTableName);

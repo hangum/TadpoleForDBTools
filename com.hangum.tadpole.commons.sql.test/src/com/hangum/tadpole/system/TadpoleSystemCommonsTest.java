@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.system;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 
@@ -27,13 +28,14 @@ public class TadpoleSystemCommonsTest extends TestCase {
 	 * {@link com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand#executSQL(com.hangum.db.dao.system.UserDBDAO, String) 쿼리실행(select 제외)}executeSQL
 	 */
 	public void testExecutSQL() {
+		RequestResultDAO reqResultDAO = new RequestResultDAO();
 		try {
 			
-			ExecuteDDLCommand.executSQL(TadpoleSystemInitializer.getUserDB(), "CREATE TABLE   sample_table_a   (  id INTEGER NOT NULL,   name char(60) default NULL,  PRIMARY KEY (id)  );");
+			ExecuteDDLCommand.executSQL(TadpoleSystemInitializer.getUserDB(), reqResultDAO, "CREATE TABLE   sample_table_a   (  id INTEGER NOT NULL,   name char(60) default NULL,  PRIMARY KEY (id)  );");
 			
-			ExecuteDDLCommand.executSQL(TadpoleSystemInitializer.getUserDB(), "INSERT INTO sample_table_a  (id, name)  VALUES  ( 1, '11' ); ");
+			ExecuteDDLCommand.executSQL(TadpoleSystemInitializer.getUserDB(), reqResultDAO, "INSERT INTO sample_table_a  (id, name)  VALUES  ( 1, '11' ); ");
 			
-			ExecuteDDLCommand.executSQL(TadpoleSystemInitializer.getUserDB(), "drop table sample_table_a; ");
+			ExecuteDDLCommand.executSQL(TadpoleSystemInitializer.getUserDB(), reqResultDAO, "drop table sample_table_a; ");
 			
 		} catch (Exception e) {
 			fail("execute sql " + e.getMessage());

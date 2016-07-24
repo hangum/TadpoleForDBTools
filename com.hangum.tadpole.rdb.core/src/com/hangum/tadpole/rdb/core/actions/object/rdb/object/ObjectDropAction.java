@@ -315,9 +315,10 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 	 * @throws Exception
 	 */
 	private void executeSQL(UserDBDAO userDB, String cmd) throws Exception {
-		RequestResultDAO resultDao = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
-		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(resultDao.getResult())) {
-			exeMessage(Messages.get().ObjectDeleteAction_0, resultDao.getException());		
+		RequestResultDAO reqReResultDAO = new RequestResultDAO();
+		ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, cmd); //$NON-NLS-1$
+		if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
+			exeMessage(Messages.get().ObjectDeleteAction_0, reqReResultDAO.getException());		
 		}
 	}
 	

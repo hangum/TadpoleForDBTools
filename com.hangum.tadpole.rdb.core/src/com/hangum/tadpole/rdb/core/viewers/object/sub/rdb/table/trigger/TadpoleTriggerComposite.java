@@ -206,6 +206,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshTrigger(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
+		if(tableDao == null) return;
 		if(!boolRefresh) if(showTrigger != null) return;
 		this.userDB = userDB;
 		

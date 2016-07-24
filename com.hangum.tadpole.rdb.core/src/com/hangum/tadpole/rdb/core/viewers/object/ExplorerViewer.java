@@ -749,10 +749,15 @@ public class ExplorerViewer extends ViewPart {
 	public void refreshCurrentTab(UserDBDAO chgUserDB, final RequestQuery reqQuery) {
 		if(reqQuery.getSqlDDLType() == null) return;
 		
+		if(logger.isDebugEnabled()) {
+			logger.debug(String.format("update object : %s : %s : ", reqQuery.getSqlDDLType().name(), reqQuery.getSql()));
+		}
+		
 		QUERY_DDL_TYPE queryDDLType = reqQuery.getSqlDDLType();
 		String strObjectName = reqQuery.getSqlObjectName();
 		
 		refreshCurrentTab(queryDDLType, strObjectName, chgUserDB);
+		
 		// refresh filter
 		filterText();
 	}
@@ -783,6 +788,8 @@ public class ExplorerViewer extends ViewPart {
 			refershSelectObject(OBJECT_TYPE.PACKAGES.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.SYNONYM) {
 			refershSelectObject(OBJECT_TYPE.SYNONYM.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
+			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
 		} else {
 			refreshSelectTab();
 		}

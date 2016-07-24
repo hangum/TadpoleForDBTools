@@ -46,12 +46,12 @@ public class ExecuteDDLCommand {
 	 * 쿼리중에 quote sql을 반영해서 작업합니다.
 	 * 
 	 * @param userDB
+	 * @param reqResultDAO
 	 * @param sql
 	 * @throws Exception
 	 */
-	public static RequestResultDAO executSQL(UserDBDAO userDB, String sql) throws Exception {
+	public static RequestResultDAO executSQL(UserDBDAO userDB, RequestResultDAO reqResultDAO, String sql) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("\t ### "+ sql);
-		RequestResultDAO reqResultDAO = new RequestResultDAO();
 		reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
 		reqResultDAO.setIpAddress(RWT.getRequest().getRemoteAddr());
 		reqResultDAO.setStrSQLText(sql);

@@ -140,8 +140,8 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, "Create Constraints");
-		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, "Drop Constraints");
+		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().CreateConstraints);
+		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().DropConstraints);
 		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().Refresh);
 //		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_7);
 
@@ -196,6 +196,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	 */
 	public void refreshConstraints(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(listConstraints != null) return;
+		if(tableDao == null) return;
 		
 		this.userDB = userDB;
 		try {

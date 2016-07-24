@@ -469,7 +469,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			TadpoleSimpleMessageDialog dialog = new TadpoleSimpleMessageDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
 			dialog.open();
 		} else if("BLOB".equalsIgnoreCase(strType)) { //$NON-NLS-1$
-			logger.debug(columnDao.getCol_value());
 			if (columnDao.getCol_value() instanceof String){
 				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
 				dialog.open();
