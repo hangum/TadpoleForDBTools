@@ -30,9 +30,12 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -153,6 +156,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private TadpoleIndexesComposite 	indexComposite;
 	private TadpoleConstraintComposite 	constraintsComposite;
 	private TadpoleTriggerComposite 	triggerComposite;
+
+	private Object index;
 	
 	/**
 	 * Create the composite.
@@ -264,7 +269,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 
 		TableViewerColumn tvColName = new TableViewerColumn(tableListViewer, SWT.NONE);
 		TableColumn tbName = tvColName.getColumn();
-		tbName.setWidth(170);
+		tbName.setWidth(100);
 		tbName.setMoveable(true);
 		tbName.setText(Messages.get().TadpoleTableComposite_1);
 		tbName.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbName, 0));
@@ -275,13 +280,26 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
 				
 				try {
+					TableDAO table = (TableDAO) element;
+					
 					if(tableDecorationExtension != null) {
-						TableDAO table = (TableDAO) element;
 						Image extensionImage = tableDecorationExtension.getTableImage(table.getName());
 						
 						if(extensionImage != null) {
 							return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
 						}
+					}else if(StringUtils.contains(table.getTable_type(), "PARTITION")){
+						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_partition.png"); //$NON-NLS-1$
+					}else if(StringUtils.equalsIgnoreCase(table.getTable_type(), "IOT")){
+						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_iot.png"); //$NON-NLS-1$
+					}else if(StringUtils.contains(table.getTable_type(), "OVERFLOW" )){
+						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_iot_overflow.png"); //$NON-NLS-1$
+					}else if(StringUtils.contains(table.getTable_type(), "CSV" )){
+						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_csv.png"); //$NON-NLS-1$
+					}else if(StringUtils.contains(table.getTable_type(), "InnoDB" )){
+						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_inno.png"); //$NON-NLS-1$
+					}else if(StringUtils.contains(table.getTable_type(), "MyISAM" )){
+						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_isam.png"); //$NON-NLS-1$
 					}
 				} catch(Exception e) {
 					logger.error("extension point exception " + e.getMessage()); //$NON-NLS-1$
@@ -316,7 +334,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// table column tooltip
 		ColumnViewerToolTipSupport.enableFor(tableListViewer);
 		CellLabelProvider clpTable = new CellLabelProvider() {
-
+			
 			public String getToolTipText(Object element) {
 				TableDAO table = (TableDAO) element;
 				return table.getComment();
@@ -350,10 +368,26 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tvTableComment.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
 		
+		CellLabelProvider clpTableType = new CellLabelProvider() {		
+			public void update(ViewerCell cell) {
+				TableDAO table = (TableDAO)cell.getElement();
+				cell.setText(table.getTable_type());
+			}
+		};
+		TableViewerColumn tvTableType = new TableViewerColumn(tableListViewer, SWT.NONE);
+		TableColumn tbTabType = tvTableType.getColumn();
+		tbTabType.setWidth(40);
+		tbTabType.setMoveable(true);
+		tbTabType.setText(Messages.get().TableType);
+		tbTabType.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbTabType, 1));
+		tvTableType.setLabelProvider(clpTableType);
+		tvTableType.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
+
 		tableListViewer.getTable().setLayout(layoutColumnLayout);
 		tableListViewer.setContentProvider(new ArrayContentProvider());
 		tableListViewer.setInput(listTablesDAO);
-		
+				
 		// dnd 기능 추가
 		Transfer[] transferTypes = new Transfer[]{TextTransfer.getInstance()};
 		tableListViewer.addDragSupport(DND_OPERATIONS, transferTypes , new TableDragListener(userDB, tableListViewer));

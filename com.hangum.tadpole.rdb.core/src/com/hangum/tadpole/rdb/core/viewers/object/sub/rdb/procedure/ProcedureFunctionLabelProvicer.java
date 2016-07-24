@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -34,7 +35,15 @@ public class ProcedureFunctionLabelProvicer extends LabelProvider implements ITa
 		switch(columnIndex) {
 		case 0: 
 			if (procDao.isValid()){
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/normalcy.png");
+				if (StringUtils.contains(procDao.getType(), "PROCEDURE")){
+					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/procedure.png"); //$NON-NLS-1$
+				}else if (StringUtils.contains(procDao.getType(), "FUNCTION")){
+					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/function.png"); //$NON-NLS-1$
+				}else if (StringUtils.contains(procDao.getType(), "PACKAGE")){
+					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/package.png"); //$NON-NLS-1$
+				}else{
+					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/normalcy.png");
+				}
 			}else{
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/state/warning.png");
 			}

@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 
@@ -31,7 +32,9 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 
 		if (columnIndex == 0) {
 //			for (DB_KEY key : DB_KEY.values()) {
-				if (PublicTadpoleDefine.isPK(dao.getvalue("pk"))) {
+				if (dao instanceof OracleSynonymDAO){
+					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/synonyms.png"); //$NON-NLS-1$
+				}else if (PublicTadpoleDefine.isPK(dao.getvalue("pk"))) {
 					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/primary_key_column.png"); //$NON-NLS-1$
 				} else if (PublicTadpoleDefine.isFK(dao.getvalue("pk"))) {
 					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/foreign_key_column.png"); //$NON-NLS-1$
