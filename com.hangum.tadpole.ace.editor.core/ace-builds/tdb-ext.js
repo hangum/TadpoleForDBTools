@@ -103,7 +103,7 @@ var strLastContent;
 	editor.resize(true)
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
-//	editor.setOption("firstLineNumber", 1);
+//	editor.setOption('firstLineNumber', 1);
 	
 	editor.setOptions({
 	    enableBasicAutocompletion: true,

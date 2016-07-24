@@ -50,7 +50,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	private static Map<String, TadpoleMetaData> dbMetadata = null;
 	/** dbManager 의 키를 가지고 있는 친구 - logout시에 키를 사용하여 인스턴스를 삭제하기 위해 */
 	private static Map<String, List<String>> managerKey = null;//
-	
 	private static TadpoleSQLManager tadpoleSQLManager = null;
 	
 	static {
