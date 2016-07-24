@@ -65,9 +65,9 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append("SELECT " + procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getFullName(true) + "(");
 			}else{
-				sbQuery.append("SELECT " + procedureDAO.getName() + "(");
+				sbQuery.append("SELECT " + procedureDAO.getFullName() + "(");
 			}
 			
 			List<InOutParameterDAO> inList = getInParameters();
@@ -90,9 +90,9 @@ public class MySqlProcedureExecuter extends ProcedureExecutor {
 			
 			// 프로시저 본체 만들기.
 			if(!"".equals(procedureDAO.getPackagename())){
-				sbQuery.append(String.format("CALL %s.%s(", procedureDAO.getPackagename(), procedureDAO.getName()));
+				sbQuery.append(String.format("CALL %s(", procedureDAO.getFullName(true)));
 			}else{
-				sbQuery.append(String.format("CALL %s(", procedureDAO.getName()));
+				sbQuery.append(String.format("CALL %s(", procedureDAO.getFullName()));
 			}
 			
 			// in 설정

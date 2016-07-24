@@ -378,7 +378,7 @@ public class TableDirectEditorComposite extends Composite {
 		List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDao);
 		for(int i=0 ; i<tmpTableColumns.size(); i++) {
 			TableColumnDAO tabledao = tmpTableColumns.get(i);
-			requestQuery += tabledao.getName();
+			requestQuery += SQLUtil.makeIdentifierName(userDB, tabledao.getName());
 			if(i < (tmpTableColumns.size()-1)) requestQuery += ","; //$NON-NLS-1$
 		}
 		
@@ -722,13 +722,18 @@ public class TableDirectEditorComposite extends Composite {
 			if(!primaryKeyListIndex.isEmpty()) {
 				for(int i=0; i<primaryKeyListIndex.size(); i++) {
 					int keyIndex = primaryKeyListIndex.get(i);
-					strWhere += primaryKEYIntStrList.get(keyIndex) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(orgRs.get(keyIndex+1).toString())); //$NON-NLS-1$ //$NON-NLS-2$
+					strWhere += SQLUtil.makeIdentifierName(userDB, primaryKEYIntStrList.get(keyIndex)) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(orgRs.get(keyIndex+1).toString())); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					if(i < (primaryKeyListIndex.size()-1)) strWhere += " AND "; //$NON-NLS-1$
 				}
 			} else {
 				for(int i=1; i<tmpRs.size(); i++) {
-					strWhere += mapColumns.get(i-1) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(orgRs.get(i).toString()) ); //$NON-NLS-1$ //$NON-NLS-2$
+					
+					if (StringUtils.isBlank( TbUtils.getOriginalData(orgRs.get(i).toString()) ) ) {
+						strWhere += SQLUtil.makeIdentifierName(userDB, mapColumns.get(i-1)) + " IS NULL "; //$NON-NLS-1$ //$NON-NLS-2$
+					}else{
+						strWhere += SQLUtil.makeIdentifierName(userDB, mapColumns.get(i-1)) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(orgRs.get(i).toString()) ); //$NON-NLS-1$ //$NON-NLS-2$
+					}
 					
 					if(i < (tmpRs.size()-1)) strWhere += " AND "; //$NON-NLS-1$
 				}
@@ -746,7 +751,7 @@ public class TableDirectEditorComposite extends Composite {
 	 * @return
 	 */
 	private String makeDelete(int rowSeq, Map<Integer, Object> tmpRs) {
-		String deleteStmt = "DELETE FROM " + tableDao.getSysName(); //$NON-NLS-1$
+		String deleteStmt = "DELETE FROM " + tableDao.getFullName(); //$NON-NLS-1$
 		deleteStmt += " WHERE  (" + getWhereMake(rowSeq, tmpRs) + ") "; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
@@ -763,14 +768,14 @@ public class TableDirectEditorComposite extends Composite {
 	 * @return
 	 */
 	private String makeUpdate(int rowSeq, Map<Integer, Object> tmpRs) {
-		String updateStmt = "UPDATE " + tableDao.getSysName() +   //$NON-NLS-1$ //$NON-NLS-2$
+		String updateStmt = "UPDATE " + tableDao.getFullName() +   //$NON-NLS-1$ //$NON-NLS-2$
 				" SET "; //$NON-NLS-1$
 		
 		// 수정된 컬럼의 값을 넣는다.
 		// 0 번째 컬럼은 데이터 수정 유무이므로 .
 		for(int i=1; i<tmpRs.size(); i++) {
 			if(TbUtils.isModifyData( tmpRs.get(i).toString() )) {
-				updateStmt += mapColumns.get(i-1) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(tmpRs.get(i).toString())) + ", "; //$NON-NLS-1$ //$NON-NLS-2$
+				updateStmt += SQLUtil.makeIdentifierName(userDB, mapColumns.get(i-1)) + " = " + SQLUtil.makeQuote(TbUtils.getOriginalData(tmpRs.get(i).toString())) + ", "; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		updateStmt = StringUtils.chompLast(updateStmt, ", "); //$NON-NLS-1$
@@ -791,13 +796,13 @@ public class TableDirectEditorComposite extends Composite {
 	 * @return
 	 */
 	private String makeInsert(Map<Integer, Object> tmpRs) {
-		String insertStmt = "INSERT INTO " + tableDao.getSysName() + "("; //$NON-NLS-1$ //$NON-NLS-2$
+		String insertStmt = "INSERT INTO " + tableDao.getFullName() + "("; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		// 수정된 컬럼 리스트를 나열한다.
 		boolean isModifyColumn = false;
 		for(int i=1; i<tmpRs.size(); i++) {
 			if(TbUtils.isModifyData( tmpRs.get(i).toString() )) {
-				insertStmt += mapColumns.get(i-1) + ", "; //$NON-NLS-1$
+				insertStmt += SQLUtil.makeIdentifierName(userDB, mapColumns.get(i-1)) + ", "; //$NON-NLS-1$
 				isModifyColumn = true;
 			}
 		}

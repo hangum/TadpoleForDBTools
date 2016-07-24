@@ -143,18 +143,11 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
 					if (null != is) {
-						OracleSynonymDAO tableDAO = (OracleSynonymDAO) is.getFirstElement();
-
-						if (PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.toString().startsWith(tableDAO.getObject_type())) {
-							AbstractRDBDDLScript rdbScript = new OracleDDLScript(userDB, PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
-							ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
-							dao.setName(tableDAO.getTable_name());
-
-							FindEditorAndWriteQueryUtil.run(userDB, rdbScript.getFunctionScript(dao), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
-						}
+						OracleSynonymDAO synonymDAO = (OracleSynonymDAO) is.getFirstElement();
+						FindEditorAndWriteQueryUtil.run(userDB, "SELECT * FROM " + synonymDAO.getFullName(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("create synoonym", e);
 				}
 			}
 		});

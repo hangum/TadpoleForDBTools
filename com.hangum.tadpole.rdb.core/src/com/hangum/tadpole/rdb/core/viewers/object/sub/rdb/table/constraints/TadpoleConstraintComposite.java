@@ -140,8 +140,8 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	private void createMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, "Create Constraints");
-		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, "Drop Constraints");
+		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().CreateConstraints);
+		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().DropConstraints);
 		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().Refresh);
 //		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_7);
 
@@ -204,6 +204,9 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 			HashMap<String, String> map = new HashMap<String, String>();
 
 			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
+				map.put("table_name", tableDao.getName());
+			}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
 				map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
 				map.put("table_name", tableDao.getName());
 			}else{

@@ -282,6 +282,7 @@ public class PublicTadpoleDefine {
 	public static String[] DB_PRIMARY_KEY = {
 											"PRI", 
 											"PK", 
+											"PRIMARY", 
 											"PRIMARY KEY",	// pgsql
 											};
 	

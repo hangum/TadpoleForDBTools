@@ -536,7 +536,7 @@ public class ResultSetComposite extends Composite {
 								//
 								if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 									if(isProfilling) {
-										try {
+//										try {
 											QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 1", 0, 10);
 											QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 0", 0, 10);
 											QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 15", 0, 10);
@@ -563,9 +563,9 @@ public class ResultSetComposite extends Composite {
 											
 											// free profiling
 											QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 0", 0, 10);
-										} catch(Exception e) {
-											logger.error("Extend MySQL plan", e);
-										}
+//										} catch(Exception e) {
+//											logger.error("Extend MySQL plan", e);
+//										}
 									} else {
 										rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
 										listRSDao.add(rsDAO);	
@@ -576,7 +576,7 @@ public class ResultSetComposite extends Composite {
 								}
 								
 								// 공통 코드.
-								if(rsDAO.getDataList() == null) {
+								if(rsDAO == null || rsDAO.getDataList() == null) {
 									reqResultDAO.setRows(0);
 								} else {
 									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
@@ -609,7 +609,7 @@ public class ResultSetComposite extends Composite {
 			}
 			
 			/**
-			 * get Last query id
+			 * MYSQL get Last query id
 			 * 
 			 * @param query id
 			 * @return
@@ -622,7 +622,7 @@ public class ResultSetComposite extends Composite {
 			}
 			
 			/**
-			 * Diffrent show status 
+			 * MYSQL Diffrent show status 
 			 * 
 			 * @param startStatus
 			 * @param endStatus
@@ -1055,6 +1055,8 @@ public class ResultSetComposite extends Composite {
 				
 				getRdbResultComposite().refreshInfoMessageView(reqQuery, strDefaultMsg);
 				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+				
+				// explorer viewer를 리프레쉬하여 최신정보가 반영되게한다.
 				refreshExplorerView(getUserDB(), reqQuery);
 			} else {
 				getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
@@ -1066,7 +1068,7 @@ public class ResultSetComposite extends Composite {
 					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
 			) {
 //				// working schema_history 에 history 를 남깁니다.
-//				aram strWorkType TABLE, VIEW, PROCEDURE, FUNCTION, TRIGGER...
+//				 strWorkType TABLE, VIEW, PROCEDURE, FUNCTION, TRIGGER...
 //				 * @param strObjecType CREATE, ALTER, DROP
 //				 * @param strObjectId 객체 명
 //				String strWorkType, String strObjecType, String strObjectId, String strSQL) {

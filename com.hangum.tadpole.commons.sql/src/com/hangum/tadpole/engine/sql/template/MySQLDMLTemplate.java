@@ -56,7 +56,7 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 													"	SQL SECURITY DEFINER VIEW '%s' AS " + PublicTadpoleDefine.LINE_SEPARATOR;
 	
 	/** index */
-	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX  {#schema#}.index_name "+ PublicTadpoleDefine.LINE_SEPARATOR +  
+	public static final String  TMP_CREATE_INDEX_STMT = "CREATE INDEX index_name "+ PublicTadpoleDefine.LINE_SEPARATOR +  
 														"	ON {#schema#}.table_name ( columns );";
 	
 	/** constraints */
@@ -72,7 +72,7 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	
 	/** function */
 	public static final String TMP_CREATE_FUNCTION_STMT = "CREATE FUNCTION {#schema#}.hello (s CHAR(20)) RETURNS CHAR(50) " + PublicTadpoleDefine.LINE_SEPARATOR + 
-														"RETURN CONCAT('Hello', s);";
+														"RETURN CONCAT('Hello, ', s, '!!!');";
 	
 	/** trigger */
 	public static final String TMP_CREATE_TRIGGER_STMT = "CREATE TRIGGER {#schema#}.testref BEFORE INSERT ON {#schema#}.test1  " + PublicTadpoleDefine.LINE_SEPARATOR +

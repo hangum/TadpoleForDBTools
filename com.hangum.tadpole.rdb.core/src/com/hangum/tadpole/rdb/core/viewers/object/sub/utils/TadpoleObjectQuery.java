@@ -127,7 +127,7 @@ public class TadpoleObjectQuery {
 	public static RequestResultDAO renameTable(final UserDBDAO userDB, TableDAO tableDAO, String strNewname) throws Exception {
 		RequestResultDAO resultDao = null;
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getSysName(), strNewname);
+			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getFullName(), SQLUtil.makeIdentifierName(userDB, tableDAO.getSchema_name()) +"."+ SQLUtil.makeIdentifierName(userDB,strNewname));
 			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||

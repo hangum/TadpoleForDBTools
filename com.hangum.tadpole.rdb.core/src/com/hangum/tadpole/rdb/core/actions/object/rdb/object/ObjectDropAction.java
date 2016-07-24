@@ -140,6 +140,8 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					try {
 						if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 							executeSQL(userDB, "drop index " + indexDAO.getFullName() ); //$NON-NLS-1$ //$NON-NLS-2$
+						} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+							executeSQL(userDB, "drop index " + indexDAO.getSysName() + " on " + SQLUtil.makeIdentifierName(userDB, indexDAO.getSchema_name()) + "." + SQLUtil.makeIdentifierName(userDB, indexDAO.getTABLE_NAME()) ); //$NON-NLS-1$ //$NON-NLS-2$
 						} else if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
