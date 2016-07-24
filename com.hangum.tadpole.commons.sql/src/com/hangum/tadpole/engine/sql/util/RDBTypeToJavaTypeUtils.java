@@ -14,6 +14,7 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -130,7 +131,13 @@ public class RDBTypeToJavaTypeUtils {
 	public static boolean isNumberType(String rdbType) {
 		if(rdbType == null) return false;
 		
+		// 데이터 타입하고 데이터 사이즈가 함께 있을경우.. decimal(8) 
+		if(StringUtils.contains(rdbType, "(")){
+			rdbType = StringUtils.substringBefore(rdbType, "(");
+		}
+		
 		Integer intType = mapTypes.get(rdbType.toUpperCase());
+		
 		if(intType == null) return false;
 		
 		return isNumberType(intType);
