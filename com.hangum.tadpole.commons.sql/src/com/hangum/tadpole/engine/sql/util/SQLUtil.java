@@ -402,7 +402,11 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String makeQuote(String value) {
-		return String.format("'%s'", StringEscapeUtils.escapeSql(value));
+		if (null == value){
+			return null;
+		}else{
+			return String.format("'%s'", StringEscapeUtils.escapeSql(value));
+		}
 	}
 	
 	/**

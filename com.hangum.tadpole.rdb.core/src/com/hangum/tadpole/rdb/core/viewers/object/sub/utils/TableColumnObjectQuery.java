@@ -21,6 +21,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
+import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.TableColumnUpdateDAO;
 
@@ -274,11 +275,19 @@ public class TableColumnObjectQuery {
 											SQLUtil.makeQuote(columnDAO.getComment()));
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 			
-			strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
+			if (RDBTypeToJavaTypeUtils.isNumberType(columnDAO.getType())) {
+				strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
 					tableDAO.getFullName(), 
-					SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  
+					SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
+					columnDAO.getDefault());
+				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
+			}else{
+				strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
+					tableDAO.getFullName(), 
+					SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
 					SQLUtil.makeQuote(columnDAO.getDefault()));
-			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
+				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
+			}
 		}
 	}
 
