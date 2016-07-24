@@ -275,18 +275,20 @@ public class TableColumnObjectQuery {
 											SQLUtil.makeQuote(columnDAO.getComment()));
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 			
-			if (RDBTypeToJavaTypeUtils.isNumberType(columnDAO.getType())) {
-				strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
-					tableDAO.getFullName(), 
-					SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
-					columnDAO.getDefault());
-				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
-			}else{
-				strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
-					tableDAO.getFullName(), 
-					SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
-					SQLUtil.makeQuote(columnDAO.getDefault()));
-				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
+			if (null != columnDAO.getDefault()){
+				if (RDBTypeToJavaTypeUtils.isNumberType(columnDAO.getType())) {
+					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
+						tableDAO.getFullName(), 
+						SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
+						columnDAO.getDefault());
+					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
+				}else{
+					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
+						tableDAO.getFullName(), 
+						SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
+						SQLUtil.makeQuote(columnDAO.getDefault()));
+					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
+				}
 			}
 		}
 	}
