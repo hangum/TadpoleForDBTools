@@ -196,6 +196,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	 */
 	public void refreshConstraints(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(listConstraints != null) return;
+		if(tableDao == null) return;
 		
 		this.userDB = userDB;
 		try {

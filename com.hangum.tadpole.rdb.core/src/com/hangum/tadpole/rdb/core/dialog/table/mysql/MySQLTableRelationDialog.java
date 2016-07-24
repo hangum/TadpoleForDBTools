@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -265,7 +266,8 @@ public class MySQLTableRelationDialog extends Dialog {
 					comboOnUpdate.getText(), comboOnDelete.getText()
 				);
 		try {
-			ExecuteDDLCommand.executSQL(userDB, strCreateIndex);
+			RequestResultDAO reqReResultDAO = new RequestResultDAO();
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strCreateIndex);
 			
 			ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
 			if(ev != null) ev.refreshTable(true, tableDAO.getName());

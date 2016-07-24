@@ -43,18 +43,18 @@ public class TableColumnObjectQuery {
 	 * @return
 	 */
 	public static RequestResultDAO modifyColumnType(final UserDBDAO userDB, TableDAO tableDAO, TableColumnUpdateDAO metaDataDao) throws Exception {
-		RequestResultDAO resultDao = null;
+		RequestResultDAO reqReResultDAO = new RequestResultDAO();
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			// ALTER TABLE 테이블명 MODIFY 컬럼이름 새컬럼타입
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s", 
 					tableDAO.getSysName(), metaDataDao.getColumnName(), metaDataDao.getColumnName(), metaDataDao.getDataType());
-			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 			
 		} else {
 			throw new Exception("Not support rename table.");
 		}
 		
-		return resultDao;
+		return reqReResultDAO;
 	}
 	
 	/**
@@ -67,13 +67,13 @@ public class TableColumnObjectQuery {
 	 * @return
 	 */
 	public static RequestResultDAO renameColumn(final UserDBDAO userDB, TableDAO tableDAO, TableColumnUpdateDAO metaDataDao, String newColumnName) throws Exception {
-		RequestResultDAO resultDao = null;
+		RequestResultDAO reqReResultDAO = new RequestResultDAO();
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			//ALTER TABLE `dbtype` CHANGE `tesst` `cho` INT(11)  NULL  DEFAULT NULL;
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s", 
 												tableDAO.getSysName(), metaDataDao.getColumnName(), newColumnName, metaDataDao.getDataType()
 					);
-			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 //		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT |
 //					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
 //					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
@@ -90,7 +90,7 @@ public class TableColumnObjectQuery {
 			throw new Exception("Not support rename table.");
 		}
 		
-		return resultDao;
+		return reqReResultDAO;
 	}
 	
 	/**
@@ -129,8 +129,11 @@ public class TableColumnObjectQuery {
 	 * @throws Exception
 	 */
 	public static RequestResultDAO deleteColumn(final UserDBDAO userDB, String tableName, String columnName) throws Exception {
+		RequestResultDAO reqReResultDAO = new RequestResultDAO();
 		String strQuery = String.format("ALTER TABLE %s DROP COLUMN %s", tableName, columnName);
-		return ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$
+		ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery); //$NON-NLS-1$
+		
+		return reqReResultDAO;
 	}
 	
 	/**
@@ -141,7 +144,7 @@ public class TableColumnObjectQuery {
 	 * @param metaDataDao
 	 */
 	public static RequestResultDAO addColumn(final UserDBDAO userDB, final TableDAO tableDAO, final TableColumnUpdateDAO metaDataDao) throws Exception {
-		RequestResultDAO addColumnResultDAO = null;
+		RequestResultDAO addColumnResultDAO = new RequestResultDAO();
 		
 		String strQuery = String.format("ALTER TABLE %s ADD COLUMN %s %s %s COMMENT %s ", 
 											tableDAO.getFullName(), 
@@ -165,7 +168,7 @@ public class TableColumnObjectQuery {
 			}
 		}
 		
-		addColumnResultDAO =  ExecuteDDLCommand.executSQL(userDB, strQuery); //$NON-NLS-1$	
+		ExecuteDDLCommand.executSQL(userDB, addColumnResultDAO, strQuery); //$NON-NLS-1$	
 		return addColumnResultDAO;
 	}
 	
@@ -180,7 +183,7 @@ public class TableColumnObjectQuery {
 	 * @throws Exception
 	 */
 	public static RequestResultDAO updateColumn(final UserDBDAO userDB, final TableDAO tableDAO, TableColumnDAO tableColumnDAO, final TableColumnUpdateDAO metaDataDao) throws Exception {
-		RequestResultDAO addColumnResultDAO = null;
+		RequestResultDAO addColumnResultDAO = new RequestResultDAO();
 		
 		String strQuery = String.format("ALTER TABLE %s CHANGE COLUMN %s %s %s %s COMMENT %s ", 
 											tableDAO.getFullName(), 
@@ -205,7 +208,7 @@ public class TableColumnObjectQuery {
 			}
 		}
 		
-		addColumnResultDAO = ExecuteDDLCommand.executSQL(userDB, strQuery);	
+		ExecuteDDLCommand.executSQL(userDB, addColumnResultDAO, strQuery);	
 		return addColumnResultDAO;
 	}
 	
@@ -217,14 +220,14 @@ public class TableColumnObjectQuery {
 	 * @param columnDAO
 	 */
 	public static void updateComment(final UserDBDAO userDB, final TableDAO tableDAO, TableColumnDAO columnDAO) throws Exception {
-
+		RequestResultDAO reqReResultDAO = new RequestResultDAO();
 		StringBuffer query = new StringBuffer();
 
 		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
 			String strQuery = String.format("COMMENT ON COLUMN %s.%s IS %s", tableDAO.getSysName(), columnDAO.getField(), SQLUtil.makeQuote(columnDAO.getComment()));
 			
 			try{
-				ExecuteDDLCommand.executSQL(userDB, strQuery);
+				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 			}catch(Exception e){
 				//  org.postgresql.util.PSQLException: No results were returned by the query.
 			}
@@ -234,7 +237,7 @@ public class TableColumnObjectQuery {
 			query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
 			query.append(",'column' , '").append(columnDAO.getSysName()).append("'");
 			try{
-				ExecuteDDLCommand.executSQL(userDB, query.toString());
+				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, query.toString());
 			}catch(Exception e){
 				// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
 			}
@@ -243,14 +246,14 @@ public class TableColumnObjectQuery {
 			query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'user' ,").append(userDB.getUsers());
 			query.append(",'table' , '").append(tableDAO.getSysName()).append("'");
 			query.append(",'column', '").append(columnDAO.getSysName()).append("'");
-			ExecuteDDLCommand.executSQL(userDB, query.toString());
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, query.toString());
 
 		} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 			query.append(" exec sp_dropextendedproperty 'MS_Description' ").append(", 'schema' , " + tableDAO.getSchema_name());
 			query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
 			query.append(",'column' , '").append(columnDAO.getSysName()).append("'");
 			try{
-				ExecuteDDLCommand.executSQL(userDB, query.toString());
+				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, query.toString());
 			}catch(Exception e){
 				// 주석이 최초로 등록될때는 삭제될 주석이 없으므로 오류 발생함.
 			}
@@ -259,7 +262,7 @@ public class TableColumnObjectQuery {
 			query.append(" exec sp_addextendedproperty 'MS_Description', '").append(columnDAO.getComment()).append("' ,'schema' , " + tableDAO.getSchema_name());
 			query.append(",'table' , '").append(tableDAO.getTable_name()).append("'");
 			query.append(",'column', '").append(columnDAO.getSysName()).append("'");
-			ExecuteDDLCommand.executSQL(userDB, query.toString());
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, query.toString());
 
 		} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 
@@ -269,16 +272,14 @@ public class TableColumnObjectQuery {
 											SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), 
 											columnDAO.getType(), ("NO".equals(columnDAO.getNull())?"NOT NULL":"NULL"), 
 											SQLUtil.makeQuote(columnDAO.getComment()));
-			ExecuteDDLCommand.executSQL(userDB, strQuery);
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 			
 			strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
 					tableDAO.getFullName(), 
 					SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  
 					SQLUtil.makeQuote(columnDAO.getDefault()));
-			ExecuteDDLCommand.executSQL(userDB, strQuery);
-
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 		}
-
 	}
 
 }

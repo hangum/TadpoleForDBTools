@@ -313,6 +313,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 */
 	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(listIndexes != null) return;
+		if(tableDao == null) return;
 		
 		this.userDB = userDB;
 		try {

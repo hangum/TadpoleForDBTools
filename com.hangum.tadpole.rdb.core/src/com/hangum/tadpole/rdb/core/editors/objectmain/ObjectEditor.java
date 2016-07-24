@@ -270,7 +270,8 @@ public class ObjectEditor extends MainEditor {
 			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
 			try {
-				reqResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+				ExecuteDDLCommand.executSQL(userDB, reqResultDAO, reqQuery.getOriginalSql()); //$NON-NLS-1$
+
 			} catch(Exception e) {
 				logger.error("execute ddl", e); //$NON-NLS-1$
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
@@ -376,10 +377,10 @@ public class ObjectEditor extends MainEditor {
 			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
-					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
+					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, cmd); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 					
-					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, reqQuery.getOriginalSql()); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 				} catch(Exception ee) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
@@ -417,10 +418,10 @@ public class ObjectEditor extends MainEditor {
 			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
-					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, cmd); //$NON-NLS-1$
+					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, cmd); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 					
-					reqReResultDAO = ExecuteDDLCommand.executSQL(userDB, reqQuery.getOriginalSql()); //$NON-NLS-1$
+					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, reqQuery.getOriginalSql()); //$NON-NLS-1$
 					afterProcess(reqQuery, reqReResultDAO, Messages.get().ObjectEditor_2);
 				} catch(Exception ee) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$

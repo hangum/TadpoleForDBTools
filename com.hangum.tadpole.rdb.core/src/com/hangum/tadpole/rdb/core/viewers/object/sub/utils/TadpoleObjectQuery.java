@@ -125,10 +125,10 @@ public class TadpoleObjectQuery {
 	 * @return
 	 */
 	public static RequestResultDAO renameTable(final UserDBDAO userDB, TableDAO tableDAO, String strNewname) throws Exception {
-		RequestResultDAO resultDao = null;
+		RequestResultDAO reqReResultDAO = new RequestResultDAO();
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getFullName(), SQLUtil.makeIdentifierName(userDB, tableDAO.getSchema_name()) +"."+ SQLUtil.makeIdentifierName(userDB,strNewname));
-			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
 					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
@@ -138,18 +138,18 @@ public class TadpoleObjectQuery {
 				strNewname = SQLUtil.makeIdentifierName(userDB, strNewname);
 			}
 			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strNewname);
-			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
 			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), strNewname);
-			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 		} else if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
 			String strQuery = String.format("RENAME TABLE %s AS %s", tableDAO.getSysName(), strNewname);
-			resultDao = ExecuteDDLCommand.executSQL(userDB, strQuery);
+			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 		} else {
 			throw new Exception("Not support rename table.");
 		}
 		
-		return resultDao;
+		return reqReResultDAO;
 	}
 	
 	/**
