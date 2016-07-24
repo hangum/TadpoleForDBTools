@@ -14,11 +14,11 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -47,16 +47,18 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	
 	/** db 인스턴스를 가지고 있는 아이 */
 	private static Map<String, SqlMapClient> dbManager = null;
-	private final static Map<String, TadpoleMetaData> dbMetadata = new HashMap<String, TadpoleMetaData>();
+	private static Map<String, TadpoleMetaData> dbMetadata = null;
 	/** dbManager 의 키를 가지고 있는 친구 - logout시에 키를 사용하여 인스턴스를 삭제하기 위해 */
-	private final static Map<String, List<String>> managerKey = new HashMap<String, List<String>>();
+	private static Map<String, List<String>> managerKey = null;//
 	
 	private static TadpoleSQLManager tadpoleSQLManager = null;
 	
 	static {
 		if(tadpoleSQLManager == null) {
 			tadpoleSQLManager = new TadpoleSQLManager();
-			dbManager = new HashMap<String, SqlMapClient>();
+			dbManager = new ConcurrentHashMap<String, SqlMapClient>();
+			dbMetadata = new ConcurrentHashMap<String, TadpoleMetaData>();
+			managerKey = new ConcurrentHashMap<String, List<String>>();
 		} 
 	}
 	
@@ -141,14 +143,14 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * @param dbMetadata
 	 * @return
 	 */
-	public static void initializeConnection(String searchKey, final UserDBDAO userDB, DatabaseMetaData dbMetaData) throws Exception {
+	public static void initializeConnection(String searchKey, final UserDBDAO userDB, DatabaseMetaData metaData) throws Exception {
 		
 		// 엔진디비는 메타데이터를 저장하지 않는다.
 		if(userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_DEFAULT || userDB.getDBDefine() == DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) return;
 				
 		String strIdentifierQuoteString = "";
 		try {
-			strIdentifierQuoteString = dbMetaData.getIdentifierQuoteString();
+			strIdentifierQuoteString = metaData.getIdentifierQuoteString();
 		} catch(Exception e) {
 			// ignore exception, not support quoteString
 		}
@@ -191,14 +193,14 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
 				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
 		) {
-			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MSSQL_KEYWORDS, ",") + "," + dbMetaData.getSQLKeywords();
+			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MSSQL_KEYWORDS, ",") + "," + metaData.getSQLKeywords();
 			tadpoleMetaData.setKeywords(strFullKeywords);
 		} else {
-			tadpoleMetaData.setKeywords(dbMetaData.getSQLKeywords());
+			tadpoleMetaData.setKeywords(metaData.getSQLKeywords());
 		}
 						
-		tadpoleMetaData.setDbMajorVersion(dbMetaData.getDatabaseMajorVersion());
-		tadpoleMetaData.setMinorVersion(dbMetaData.getDatabaseMinorVersion());
+		tadpoleMetaData.setDbMajorVersion(metaData.getDatabaseMajorVersion());
+		tadpoleMetaData.setMinorVersion(metaData.getDatabaseMinorVersion());
 		dbMetadata.put(searchKey, tadpoleMetaData);
 	}
 	
