@@ -12,8 +12,9 @@ package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -36,14 +37,14 @@ public class TadpoleSQLTransactionManager {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSQLTransactionManager.class);
-	private static HashMap<String, TransactionDAO> dbManager = null;
+	private static Map<String, TransactionDAO> dbManager = null;
 	private static TadpoleSQLTransactionManager transactionManager = null;
 	private TadpoleSQLTransactionManager() {}
 	
 	static {
 		if(transactionManager == null) {
 			transactionManager = new TadpoleSQLTransactionManager();
-			dbManager = new HashMap<String, TransactionDAO>();
+			dbManager = new ConcurrentHashMap<String, TransactionDAO>();
 		} 
 	}
 	
@@ -225,7 +226,7 @@ public class TadpoleSQLTransactionManager {
 		}	// synchronized
 	}
 	
-	public static HashMap<String, TransactionDAO> getDbManager() {
+	public static Map<String, TransactionDAO> getDbManager() {
 		return dbManager;
 	}
 	

@@ -11,8 +11,8 @@
 package com.hangum.tadpole.manager.core.editor.transaction.connection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -330,7 +330,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 		
 		List<TransactionDAO> listTransaction = new ArrayList<TransactionDAO>();
 		final String strLoginId = SessionManager.getEMAIL();
-		HashMap<String, TransactionDAO> mapList = TadpoleSQLTransactionManager.getDbManager();
+		Map<String, TransactionDAO> mapList = TadpoleSQLTransactionManager.getDbManager();
 		for (String key : mapList.keySet()) {
 			String[] strKey = StringUtils.split(key, PublicTadpoleDefine.DELIMITER);
 		

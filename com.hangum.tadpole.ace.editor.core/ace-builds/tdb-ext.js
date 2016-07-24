@@ -95,7 +95,7 @@ var strLastContent;
 	var Range = ace.require("ace/range").Range;
 	var langTools = ace.require("ace/ext/language_tools");
 	var editor = ace.edit("editor");
-	
+
 	var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
     var EditSession = ace.require("ace/edit_session").EditSession;
@@ -103,6 +103,7 @@ var strLastContent;
 	editor.resize(true)
 	editor.setShowPrintMargin(true);
 	editor.setHighlightActiveLine(true);
+//	editor.setOption("firstLineNumber", 1);
 	
 	editor.setOptions({
 	    enableBasicAutocompletion: true,
