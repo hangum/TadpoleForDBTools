@@ -47,13 +47,10 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
-import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.OracleDDLScript;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -317,7 +314,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 					showSynonyms = getSynonymList(userDB);
 					
 					for(OracleSynonymDAO dao : showSynonyms) {
-						dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName() ));
+						dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getSynonym_name() ));
 					}
 				} catch (Exception e) {
 					logger.error("Synonym Referesh", e); //$NON-NLS-1$

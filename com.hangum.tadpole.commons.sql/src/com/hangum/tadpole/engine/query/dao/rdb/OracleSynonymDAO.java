@@ -159,9 +159,9 @@ public class OracleSynonymDAO extends AbstractDAO {
 	@Override
 	public String getFullName() {
 		if(StringUtils.isEmpty(this.schema_name)) {
-			return this.getSynonym_name();
+			return this.getSysName();
 		}else{
-			return String.format("%s.%s", this.getSchema_name(), this.getSynonym_name());
+			return String.format("%s.%s", this.getSchema_name(), this.getSysName());
 		}
 	}
 

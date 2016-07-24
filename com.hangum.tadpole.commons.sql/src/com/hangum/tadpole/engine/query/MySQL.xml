@@ -71,7 +71,8 @@ select 1
 	SELECT 
 		TABLE_NAME as name, 
 		TABLE_COMMENT as comment,
-		TABLE_SCHEMA as SCHEMA_NAME
+		TABLE_SCHEMA as SCHEMA_NAME,
+		CONCAT(`ENGINE`) AS TABLE_TYPE
 	FROM INFORMATION_SCHEMA.TABLES
 	WHERE TABLE_SCHEMA = #db# 
 		AND TABLE_TYPE = 'BASE TABLE'
@@ -163,6 +164,7 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
+	5.1 버젼에서는 index_commnt 컬럼이 없어서 제거.
  -->
  <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 	SELECT
@@ -182,7 +184,6 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	    , nullable
 	    , index_type
 	    , comment
-	    , index_comment	
 	FROM information_schema.statistics 
 	WHERE TABLE_SCHEMA = #table_schema#
 	  AND TABLE_NAME = #table_name#

@@ -29,6 +29,8 @@ public class TableDAO extends StructObjectDAO {
 	/* postgresql, MSSQL Server schema support */
 	String table_name = "";
 	
+	String table_type = "";
+	
 	/** hive */
 	String tab_name = "";
 
@@ -68,6 +70,14 @@ public class TableDAO extends StructObjectDAO {
 	public void setTable_name(String table_name) {
 		this.table_name = table_name;
 		setName(table_name);
+	}
+
+	public String getTable_type() {
+		return table_type;
+	}
+
+	public void setTable_type(String table_type) {
+		this.table_type = table_type;
 	}
 
 	public String getComment() {
