@@ -289,11 +289,14 @@ public class ObjectEditor extends MainEditor {
 				} else {
 					String retMsg = ObjectCompileUtil.validateObject(userDB, reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
 					if(!"".equals(retMsg)) { //$NON-NLS-1$
-						retMsg = Messages.get().ObjectEditor_7 + retMsg;
 						reqResultDAO.setMesssage(retMsg);
+						
+						afterProcess(reqQuery, reqResultDAO, Messages.get().ObjectEditorCompileError);
+					} else {
+						reqResultDAO.setMesssage("");
+						afterProcess(reqQuery, reqResultDAO, Messages.get().ObjectEditor_2);
 					}
 					
-					afterProcess(reqQuery, reqResultDAO, Messages.get().ObjectEditor_2);
 				}
 
 				setDirty(false);
