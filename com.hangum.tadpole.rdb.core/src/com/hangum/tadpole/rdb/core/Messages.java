@@ -614,6 +614,13 @@ public class Messages {
 
 	public String DropConstraints;
 
+	public String NotFountObject;
+
+	public String DeleteConstraint;
+	public String DoNotSupportObject;
+
+	public String ObjectEditorCompileError;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

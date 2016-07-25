@@ -140,7 +140,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void f4DMLOpen(Object[] arguments) {
 		String strObject = parseLastObject((String) arguments[1]);
-		if(logger.isDebugEnabled()) logger.debug("select editor content is '" + strObject + "'");
+		if(logger.isDebugEnabled()) logger.debug("select editor content is [" + strObject + "]");
 
 		/*
 		TableDAO tableDAO = new TableDAO();

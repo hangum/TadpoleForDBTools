@@ -30,12 +30,9 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -157,7 +154,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private TadpoleConstraintComposite 	constraintsComposite;
 	private TadpoleTriggerComposite 	triggerComposite;
 
-	private Object index;
+//	private Object index;
 	
 	/**
 	 * Create the composite.
@@ -277,7 +274,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			
 			@Override
 			public Image getImage(Object element) {
-				Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
 				
 				try {
 					TableDAO table = (TableDAO) element;
@@ -286,26 +282,29 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						Image extensionImage = tableDecorationExtension.getTableImage(table.getName());
 						
 						if(extensionImage != null) {
+							Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
 							return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
 						}
 					}else if(StringUtils.contains(table.getTable_type(), "PARTITION")){
-						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_partition.png"); //$NON-NLS-1$
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_partition.png"); //$NON-NLS-1$
 					}else if(StringUtils.equalsIgnoreCase(table.getTable_type(), "IOT")){
-						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_iot.png"); //$NON-NLS-1$
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_iot.png"); //$NON-NLS-1$
 					}else if(StringUtils.contains(table.getTable_type(), "OVERFLOW" )){
-						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_iot_overflow.png"); //$NON-NLS-1$
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_iot_overflow.png"); //$NON-NLS-1$
 					}else if(StringUtils.contains(table.getTable_type(), "CSV" )){
-						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_csv.png"); //$NON-NLS-1$
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_csv.png"); //$NON-NLS-1$
 					}else if(StringUtils.contains(table.getTable_type(), "InnoDB" )){
-						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_inno.png"); //$NON-NLS-1$
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_inno.png"); //$NON-NLS-1$
 					}else if(StringUtils.contains(table.getTable_type(), "MyISAM" )){
-						baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_isam.png"); //$NON-NLS-1$
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_isam.png"); //$NON-NLS-1$
+					} else {
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$;
 					}
 				} catch(Exception e) {
 					logger.error("extension point exception " + e.getMessage()); //$NON-NLS-1$
 				}
 				
-				return baseImage;
+				return null;
 			}
 			
 			@Override

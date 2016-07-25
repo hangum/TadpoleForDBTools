@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -23,7 +23,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -38,18 +37,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.engine.sql.util.tables.BasicViewerSorter;
-import com.hangum.tadpole.engine.sql.util.tables.DefaultViewerSorter;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistorySorter;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
-import com.hangum.tadpole.sql.format.SQLFormater;
+import org.eclipse.swt.custom.SashForm;
 
 /**
  * DMLGenerae Statement Dialog
@@ -58,12 +53,8 @@ import com.hangum.tadpole.sql.format.SQLFormater;
  *
  */
 public class TableInformationDialog extends Dialog {
-	private static final Logger logger = Logger
-			.getLogger(TableInformationDialog.class);
+	private static final Logger logger = Logger.getLogger(TableInformationDialog.class);
 	private boolean isEditorAdd = false;
-
-	/** generation SQL string */
-	private String genSQL = ""; //$NON-NLS-1$
 
 	private UserDBDAO userDB;
 	private TableDAO tableDAO;
@@ -131,15 +122,15 @@ public class TableInformationDialog extends Dialog {
 		gd_textTBNameCmt.heightHint = 33;
 		textTBNameCmt.setLayoutData(gd_textTBNameCmt);
 		textTBNameCmt.setText(tableDAO.getComment());
-
-		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		
+		SashForm sashFormData = new SashForm(compositeBody, SWT.VERTICAL);
+		sashFormData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		tableViewer = new TableViewer(sashFormData, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();
-		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_table.minimumHeight = 300;
-		table.setLayoutData(gd_table);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-
+		
 		TableViewerColumn tvColumnName = new TableViewerColumn(tableViewer,	SWT.NONE);
 		TableColumn tcColumnName = tvColumnName.getColumn();
 		tcColumnName.setWidth(150);
@@ -151,53 +142,42 @@ public class TableInformationDialog extends Dialog {
 		TableColumn tcDataType = tvColumnDataType.getColumn();
 		tcDataType.setWidth(100);
 		tcDataType.setText(Messages.get().DataType);
-
+				
 		TableViewerColumn tvColumnKey = new TableViewerColumn(tableViewer, SWT.CENTER);
 		TableColumn tcKey = tvColumnKey.getColumn();
 		tcKey.setWidth(50);
 		tcKey.setText(Messages.get().Key);
-
+		
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt = tvColumnCmt.getColumn();
 		tcCmt.setWidth(300);
 		tcCmt.setText(Messages.get().Description);
-
-		Composite composite_3 = new Composite(compositeBody, SWT.NONE);
-		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_composite_3 = new GridLayout(2, false);
-		gl_composite_3.verticalSpacing = 2;
-		gl_composite_3.horizontalSpacing = 2;
-		gl_composite_3.marginHeight = 2;
-		gl_composite_3.marginWidth = 2;
-		composite_3.setLayout(gl_composite_3);
-
-		tableViewer_ext = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		
+		tableViewer_ext = new TableViewer(sashFormData, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table_ext = tableViewer_ext.getTable();
-		GridData gd_table_ext = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_table_ext.minimumHeight = 150;
-		table_ext.setLayoutData(gd_table_ext);
 		table_ext.setLinesVisible(true);
 		table_ext.setHeaderVisible(true);
-
+		
 		TableViewerColumn tvPropertyName = new TableViewerColumn(tableViewer_ext, SWT.NONE);
 		TableColumn tcPropertyName = tvPropertyName.getColumn();
 		tcPropertyName.setWidth(180);
 		tcPropertyName.setText("Property");
-
+				
 		TableViewerColumn tvPropertyValue = new TableViewerColumn(tableViewer_ext, SWT.NONE);
 		TableColumn tcPropertyValue = tvPropertyValue.getColumn();
 		tcPropertyValue.setWidth(300);
 		tcPropertyValue.setText("Value");
-
-		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setLabelProvider(new TableInformationLabelProvider());
-
-		initData();
 		
 		//DefaultViewerSorter sorterMessage = new DefaultViewerSorter();
 		
 		tableViewer_ext.setContentProvider(new ArrayContentProvider());
 		tableViewer_ext.setLabelProvider(new TableStatisticsLabelProvider());
+
+		tableViewer.setContentProvider(new ArrayContentProvider());
+		tableViewer.setLabelProvider(new TableInformationLabelProvider());
+		sashFormData.setWeights(new int[] {6, 4});
+
+		initData();
 		//tableViewer_ext.setComparator(new BasicViewerSorter());
 		initExtendedData();
 
@@ -222,7 +202,7 @@ public class TableInformationDialog extends Dialog {
 					dialog.open();
 				} else if (dialog.getObjectCount() <= 0) {
 					//해당 오브젝트를 찾을 수 없습니다.
-					MessageDialog.openInformation(null , "Information" , "객체를 찾을 수 없습니다.");
+					MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
 				}
 				Map<String, String> map = dialog.getSelectObject();
 				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
@@ -236,11 +216,7 @@ public class TableInformationDialog extends Dialog {
 			
 			List<ExtendTableColumnDAO> newTableColumns = new ArrayList<ExtendTableColumnDAO>();
 
-			ExtendTableColumnDAO newTableDAO;// = new ExtendTableColumnDAO("*", "", "", lblTableName.getText()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			// newTableDAO.setCheck(true);
-			// newTableColumns.add(newTableDAO);
-
-			//tableDAO = TadpoleObjectQuery.getTable(userDB, tableDAO);
+			ExtendTableColumnDAO newTableDAO;
 			textTBNameCmt.setText(tableDAO.getComment());
 
 			for (TableColumnDAO tableColumnDAO : showTableColumns) {
@@ -250,7 +226,6 @@ public class TableInformationDialog extends Dialog {
 				newTableDAO.setComment(tableColumnDAO.getComment());
 
 				newTableColumns.add(newTableDAO);
-
 			}
 
 			tableViewer.setInput(newTableColumns);

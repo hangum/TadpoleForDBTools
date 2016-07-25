@@ -77,7 +77,6 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	private ObjectCreatAction creatAction_Constraint;
 	private ObjectDropAction dropAction_Constraint;
 	private ObjectRefreshAction refreshAction_Constraint;
-//	private GenerateViewDDLAction viewDDLAction;
 
 	/**
 	 * indexes info
@@ -143,7 +142,6 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().CreateConstraints);
 		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().DropConstraints);
 		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().Refresh);
-//		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.INDEXES, Messages.get().TadpoleIndexesComposite_7);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -154,8 +152,6 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 				menuMgr.add(new Separator());
 			}
 			menuMgr.add(refreshAction_Constraint);
-//			menuMgr.add(new Separator());
-//			menuMgr.add(viewDDLAction);
 		}
 
 		constraintTableViewer.getTable().setMenu(menuMgr.createContextMenu(constraintTableViewer.getTable()));
@@ -174,7 +170,6 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		creatAction_Constraint.setUserDB(getUserDB());
 		dropAction_Constraint.setUserDB(getUserDB());
 		refreshAction_Constraint.setUserDB(getUserDB());
-//		viewDDLAction.setUserDB(getUserDB());
 	}
 
 	/** 

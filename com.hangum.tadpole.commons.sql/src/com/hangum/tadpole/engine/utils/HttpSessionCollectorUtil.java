@@ -145,33 +145,31 @@ class SessionLiveChecker implements Runnable{
 		while(true) {
 			
 			Map<String, Map<String, Object>> allUserSession = HttpSessionCollectorUtil.getInstance().getSessions();
-			synchronized (allUserSession) {
-				Set<String> keys = allUserSession.keySet();
-				for(String id : keys) {
-					Map<String, Object> mapUserData = allUserSession.get(id);
-					HttpSession httpSession = (HttpSession)mapUserData.get(HttpSessionCollectorUtil.COLLECT_KEY.SESSION.name());
-					Integer intTimeOut = (Integer)mapUserData.get(HttpSessionCollectorUtil.COLLECT_KEY.TIMEOUT.name());
-					long userTime = intTimeOut * 60 * 1000;
-					try {
-						long gapTime = System.currentTimeMillis() - httpSession.getLastAccessedTime();
+			Set<String> keys = allUserSession.keySet();
+			for(String id : keys) {
+				Map<String, Object> mapUserData = allUserSession.get(id);
+				HttpSession httpSession = (HttpSession)mapUserData.get(HttpSessionCollectorUtil.COLLECT_KEY.SESSION.name());
+				Integer intTimeOut = (Integer)mapUserData.get(HttpSessionCollectorUtil.COLLECT_KEY.TIMEOUT.name());
+				long userTime = intTimeOut * 60 * 1000;
+				try {
+					long gapTime = System.currentTimeMillis() - httpSession.getLastAccessedTime();
+				
+					if(logger.isDebugEnabled()) {
+						logger.debug("=========== session live checker ===============");
+						logger.debug("[session user is ]" + id);
+						logger.debug("[userTime]" + userTime);
+						logger.debug("[gapTime]" + gapTime);
+						logger.debug("=========== session live checker ===============");
+					}
 					
-						if(logger.isDebugEnabled()) {
-							logger.debug("=========== session live checker ===============");
-							logger.debug("[session user is ]" + id);
-							logger.debug("[userTime]" + userTime);
-							logger.debug("[gapTime]" + gapTime);
-							logger.debug("=========== session live checker ===============");
-						}
-						
-						if(gapTime > userTime) {
-							if(logger.isDebugEnabled()) logger.debug("[session invalidate is ]" + id);
-							HttpSessionCollectorUtil.getInstance().sessionDestroyed(id);
-						}
-						
-					// session 이 만료되어서 시간을 가져 올수 없는 상태이므로 세션과 커넥션을 처리합니다.
-					} catch(IllegalStateException e) {
+					if(gapTime > userTime) {
+						if(logger.isDebugEnabled()) logger.debug("[session invalidate is ]" + id);
 						HttpSessionCollectorUtil.getInstance().sessionDestroyed(id);
 					}
+					
+				// session 이 만료되어서 시간을 가져 올수 없는 상태이므로 세션과 커넥션을 처리합니다.
+				} catch(IllegalStateException e) {
+					HttpSessionCollectorUtil.getInstance().sessionDestroyed(id);
 				}
 			}
 			

@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.dialog.table.mysql;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -274,7 +275,9 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 				logger.error("add colum exception", e);
 				
 				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_27 + e.getMessage());
-				errDialog.open();
+				if(Dialog.OK == errDialog.open()) {
+					textColumnName.setFocus();
+				}
 			}
 		} else {
 			try {
@@ -287,7 +290,9 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 				logger.error("add column exception", e); //$NON-NLS-1$
 				
 				TDBErroDialog errDialog = new TDBErroDialog(null, Messages.get().ObjectDeleteAction_25, Messages.get().MySQLTableColumnDialog_31 + e.getMessage());
-				errDialog.open();
+				if(Dialog.OK == errDialog.open()) {
+					textColumnName.setFocus();
+				}
 			}
 		}
 	}

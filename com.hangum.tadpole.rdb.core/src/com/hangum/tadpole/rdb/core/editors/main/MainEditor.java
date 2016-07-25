@@ -921,7 +921,6 @@ public class MainEditor extends EditorExtension {
 	
 	@Override
 	public void dispose() {
-//		getSite().getPage().removePartListener(partListener);
 		super.dispose();
 	}
 	
@@ -956,36 +955,6 @@ public class MainEditor extends EditorExtension {
 		return initDefaultEditorStr;
 	}
 	
-//	/**
-//	 * 저장 이벤트 
-//	 * 
-//	 * @return
-//	 */
-//	private String startUploadReceiver() {
-//		receiver = new DiskFileUploadReceiver();
-//		final FileUploadHandler uploadHandler = new FileUploadHandler(receiver);
-//		uploadHandler.addUploadListener(new FileUploadListener() {
-//
-//			public void uploadProgress(FileUploadEvent event) {
-//			}
-//
-//			public void uploadFailed(FileUploadEvent event) {
-////				MessageDi( "upload failed: " + event.getException() ); //$NON-NLS-1$
-//				MessageDialog.openError(null, Messages.get().Error, "Download fail. \n" + event.getException().getMessage());
-//			}
-//
-//			public void uploadFinished(FileUploadEvent event) {
-//				for( FileDetails file : event.getFileDetails() ) {
-////					addToLog( "uploaded : " + file.getFileName() );
-//					System.out.println("downloaded. " + file.getFileName());
-//
-//				}
-//			}			
-//		});
-//		
-//		return uploadHandler.getUploadUrl();
-//	}
-
 	public IMainEditorExtension[] getMainEditorExtions() {
 		return compMainExtions;
 	}
