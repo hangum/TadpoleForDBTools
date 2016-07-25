@@ -42,7 +42,7 @@ public class LogConfiguration {
 	
 	private LogConfiguration(){}
 	
-	public synchronized static LogConfiguration getInstance() {
+	public static LogConfiguration getInstance() {
 		if( logConfig == null) {
 			logConfig = new LogConfiguration();
 			try { logConfig.init();}catch(Exception e){}

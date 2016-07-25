@@ -80,7 +80,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
-//		synchronized (dbManager) {
 		String searchKey = getKey(userDB);
 		try {
 			sqlMapClient = dbManager.get( searchKey );
@@ -280,10 +279,8 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * @param dbInfo
 	 */
 	public static void removeInstance(UserDBDAO dbInfo) {
-		synchronized (dbManager) {
-			String key = getKey(dbInfo);
-			removeInstance(key);
-		}
+		String key = getKey(dbInfo);
+		removeInstance(key);
 	}
 	
 	/**
@@ -292,27 +289,25 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 */
 	private static void removeInstance(String searchKey) {
 		if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLManager] remove Instance: " + searchKey);
-		synchronized (dbManager) {
-			TadpoleMetaData metaData = dbMetadata.remove(searchKey);
-			metaData = null;
-			
-			SqlMapClient sqlMapClient = null;
-			try {
-				sqlMapClient = dbManager.remove(searchKey);
-				if(sqlMapClient == null) return;
-				DataSource ds = sqlMapClient.getDataSource();
-				if(ds != null) {
-					BasicDataSource basicDataSource = (BasicDataSource)ds;
-					basicDataSource.close();
-					
-					basicDataSource= null;
-					ds = null;
-				}
-			} catch (Exception e) {
-				logger.error("remove connection", e);
-			} finally {
-				sqlMapClient = null;	
+		TadpoleMetaData metaData = dbMetadata.remove(searchKey);
+		metaData = null;
+		
+		SqlMapClient sqlMapClient = null;
+		try {
+			sqlMapClient = dbManager.remove(searchKey);
+			if(sqlMapClient == null) return;
+			DataSource ds = sqlMapClient.getDataSource();
+			if(ds != null) {
+				BasicDataSource basicDataSource = (BasicDataSource)ds;
+				basicDataSource.close();
+				
+				basicDataSource= null;
+				ds = null;
 			}
+		} catch (Exception e) {
+			logger.error("remove connection", e);
+		} finally {
+			sqlMapClient = null;	
 		}
 	}
 	
