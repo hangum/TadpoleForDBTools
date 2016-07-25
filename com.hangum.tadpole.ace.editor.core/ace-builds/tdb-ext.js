@@ -396,20 +396,30 @@ editor.commands.addCommand({
  * @returns
  */
 parseCursorObject = function() {
-	// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
-	var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
-	var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
-	var strArryBeforeTxt = strBeforeTxt.split(' ');
-
-	// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
-	var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
-	var strArryAfterTxt = strAfterTxt.split(' ');
-
-	var strObjectName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
-	// 마지막 문자가 ; 라면 제거해준다.
-	strObjectName = strObjectName.replace(varDelimiter, "");
 	
-	return strObjectName;
+	try {
+		var strTokenAt = editor.session.getTokenAt(editor.getCursorPosition().row, editor.getCursorPosition().column);
+		if("" === strTokenAt.value) {
+			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
+			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+			var strBeforeTxt = startQueryLine.substring(0, editor.getCursorPosition().column);
+			var strArryBeforeTxt = strBeforeTxt.split(' ');
+
+			// 공백 배열로 만들어 제일 처음 백스트를 가져온다.
+			var strAfterTxt = startQueryLine.substring(editor.getCursorPosition().column);
+			var strArryAfterTxt = strAfterTxt.split(' ');
+
+			var strObjectName = strArryBeforeTxt[strArryBeforeTxt.length-1] + strArryAfterTxt[0];
+
+			// 마지막 문자가 ; 라면 제거해준다.
+			return strObjectName.replace(varDelimiter, "");
+			
+		} else {
+			return strTokenAt.value;
+		}
+	} catch(e) {
+		console.log(e);
+	}
 }
 editor.commands.addCommand({
     name: 'executePlan',

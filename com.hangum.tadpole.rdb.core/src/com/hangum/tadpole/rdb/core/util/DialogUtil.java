@@ -22,6 +22,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dml.IndexInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.SelectObjectDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.TableInformationDialog;
@@ -52,7 +53,7 @@ public class DialogUtil {
 			objectSelector.open();
 		} else if (objectSelector.getObjectCount() <= 0 || objectSelector.getSelectObject().isEmpty()) {
 			//해당 오브젝트를 찾을 수 없습니다.
-			MessageDialog.openInformation(null , "Information" , "객체를 찾을 수 없습니다.");
+			MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
 			return;
 		}
 		Map<String, String> map = objectSelector.getSelectObject();
@@ -77,10 +78,10 @@ public class DialogUtil {
 			popupIndexInformationDialog(userDB, indexDao);
 		} else if (!StringUtils.isEmpty( map.get("OBJECT_TYPE"))){
 
-			MessageDialog.openInformation(null , "Information" , "상세보기가 지원되지 않는 객체입니다.");
+			MessageDialog.openInformation(null , Messages.get().Information, Messages.get().DoNotSupportObject);
 		} else if (StringUtils.isEmpty( map.get("OBJECT_TYPE"))){
 
-			MessageDialog.openInformation(null , "Information" , "객체를 찾을 수 없습니다.");
+			MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
 		}
 
 	}
