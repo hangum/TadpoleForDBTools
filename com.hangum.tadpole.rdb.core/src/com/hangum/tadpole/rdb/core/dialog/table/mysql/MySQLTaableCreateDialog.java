@@ -53,6 +53,9 @@ import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 public class MySQLTaableCreateDialog extends TitleAreaDialog {
 	private static final Logger logger = Logger.getLogger(MySQLTaableCreateDialog.class);
 	
+	/** 테이블 생성이 정상 되었는지 채크하기 위함 */
+	private boolean isCreated = false;
+	
 	private TableCreateDAO tableCreateDao;
 	
 	private UserDBDAO userDB;
@@ -237,6 +240,9 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strCreateTable);
 				
+				// 테이블이 
+				isCreated = true;
+				
 				ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
 				if(ev != null) ev.refreshTable(true, strTableName);
 		
@@ -276,5 +282,13 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 	 */
 	public TableCreateDAO getTableCreateDao() {
 		return tableCreateDao;
+	}
+	
+	/**
+	 * 테이블이 정상생성 되었는지 구분
+	 * @return
+	 */
+	public boolean isCreated() {
+		return isCreated;
 	}
 }

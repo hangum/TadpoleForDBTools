@@ -20,6 +20,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateConstraintsAction;
@@ -33,6 +34,8 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTaableCreateDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTableColumnDialog;
+import com.hangum.tadpole.rdb.core.dialog.table.mysql.TableCreateDAO;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -61,17 +64,32 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			// others db
 			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
 				
-				CreateTableAction cta = new CreateTableAction();
-				
 				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
 				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 					TableDAO tc = (TableDAO)selection.getFirstElement();
+					
+					CreateTableAction cta = new CreateTableAction();
 					if(tc == null) cta.run(userDB, actionType);
 					else cta.run(userDB, tc.getComment(), actionType);
 				} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-					MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), getUserDB());
-					dialog.open();
-				} else {				
+					MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), userDB);
+					if(Dialog.OK == dialog.open()) {
+						// 테이블이 정상생성 되었으면 컬럼 팝업 다이얼로그를 오픈한다.
+						if(dialog.isCreated()) {
+							TableCreateDAO tableCreateDAO = dialog.getTableCreateDao();
+							
+							TableDAO tableDAO = new TableDAO();
+							tableDAO.setName(tableCreateDAO.getName());
+							tableDAO.setSchema_name(getUserDB().getSchema());
+							tableDAO.setSysName(SQLUtil.makeIdentifierName(userDB, tableCreateDAO.getName()));
+							
+							MySQLTableColumnDialog tableColumnDialog = new MySQLTableColumnDialog(window.getShell(), userDB, tableDAO);
+							tableColumnDialog.open();
+						}
+					}
+					
+				} else {
+					CreateTableAction cta = new CreateTableAction();
 					cta.run(userDB, actionType);
 				}
 				

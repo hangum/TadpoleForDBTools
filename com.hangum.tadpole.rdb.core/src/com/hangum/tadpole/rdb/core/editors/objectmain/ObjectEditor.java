@@ -58,9 +58,9 @@ import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
+
 /**
  * Object Editor
- * 
  * 
  * @author hangum
  *

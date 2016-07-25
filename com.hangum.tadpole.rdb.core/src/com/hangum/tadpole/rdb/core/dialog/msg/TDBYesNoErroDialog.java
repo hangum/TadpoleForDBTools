@@ -103,6 +103,6 @@ public class TDBYesNoErroDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 550);
+		return new Point(370, 450);
 	}
 }

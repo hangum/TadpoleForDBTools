@@ -168,7 +168,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			}
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
 			TableConstraintsDAO constraintDAO = (TableConstraintsDAO)selection.getFirstElement();
-			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Do you want to drop Constraints?")) {
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().DeleteConstraint)) {
 				
 				try {
 					if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
