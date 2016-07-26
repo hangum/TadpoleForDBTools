@@ -90,6 +90,14 @@ public class GlobalImageUtils {
 	}
 	
 	/**
+	 * remove database 
+	 * @return
+	 */
+	public static final Image getRemoveConnectionDatabase() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/delete_database.png");
+	}
+	
+	/**
 	 * Other information
 	 * @return
 	 */

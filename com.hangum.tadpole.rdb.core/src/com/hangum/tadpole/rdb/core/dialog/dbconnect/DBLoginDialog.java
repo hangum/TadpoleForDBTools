@@ -38,6 +38,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
@@ -259,7 +260,7 @@ public class DBLoginDialog extends Dialog {
 		
 		if (loginComposite.saveDBData()) {
 			this.retuserDb = loginComposite.getDBDTO();
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(this.retuserDb.getIs_lock())) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(this.retuserDb.getIs_lock()) || PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())) {
 				SessionManager.setUnlokDB(retuserDb);
 			}
 			

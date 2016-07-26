@@ -326,6 +326,8 @@ public class Messages {
 	public String ExecutedSQLEditor_26;
 	public String over;
 	public String MS;
+
+	public String ReleteConnectionPool;
 	
 
 	public static Messages get() {
