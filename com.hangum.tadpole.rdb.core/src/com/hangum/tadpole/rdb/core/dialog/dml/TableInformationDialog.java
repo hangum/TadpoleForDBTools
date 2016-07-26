@@ -239,9 +239,25 @@ public class TableInformationDialog extends Dialog {
 
 	private void initExtendedData() {
 		try {
-			Map<String, String> sizeInfoMap = (Map<String, String>) TadpoleObjectQuery.getTableSizeInfo(userDB, tableDAO);
-			Map<String, String> statInfoMap = (Map<String, String>) TadpoleObjectQuery.getStatisticsInfo(userDB, tableDAO);
-			Map<String, String> statViewInfoMap = (Map<String, String>) TadpoleObjectQuery.getViewStatisticsInfo(userDB, tableDAO);
+			Map<String, String> sizeInfoMap = new HashMap<String,String>();
+			Map<String, String> statInfoMap = new HashMap<String,String>();
+			Map<String, String> statViewInfoMap = new HashMap<String,String>();
+
+			try{
+				sizeInfoMap = (Map<String, String>) TadpoleObjectQuery.getTableSizeInfo(userDB, tableDAO);
+			}catch(Exception e){
+				logger.error(e);
+			}
+			try{
+				statInfoMap = (Map<String, String>) TadpoleObjectQuery.getStatisticsInfo(userDB, tableDAO);
+			}catch(Exception e){
+				logger.error(e);
+			}
+			try{
+				statViewInfoMap = (Map<String, String>) TadpoleObjectQuery.getViewStatisticsInfo(userDB, tableDAO);
+			}catch(Exception e){
+				logger.error(e);
+			}
 
 			List<Map<String, String>> extendsInfoList = new ArrayList<Map<String, String>>();
 
