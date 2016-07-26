@@ -289,6 +289,14 @@ public class SQLUtil {
 		return retStr;
 	}
 	
+	public static String removeIdentifierQuoteString(UserDBDAO userDB, String name) {
+		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
+		
+		if(tmd == null) return name;
+
+		return StringUtils.replace(name, tmd.getIdentifierQuoteString(), "");
+	}
+
 	private static String makeFullyTableName(String tableName, String strIdentifier) {
 		String retStr = "";
 		/*

@@ -55,6 +55,33 @@ select 1
 	from information_schema.schemata
 </select>
 
+<select id="allObjects" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT  
+    TABLE_SCHEMA as OBJECT_OWNER
+    , TABLE_NAME as OBJECT_NAME
+    , (CASE WHEN TABLE_TYPE='BASE TABLE' THEN 'TABLE'
+            WHEN TABLE_TYPE='SYSTEM VIEW' THEN 'VIEW' ELSE TABLE_TYPE END) as OBJECT_TYPE
+    , TABLE_COMMENT as OBJECT_COMMENT
+FROM information_schema.TABLES
+WHERE 1=1 
+<isNotEmpty property="schema_name">
+	  and TABLE_SCHEMA in (#schema_name#, upper(#schema_name#))
+</isNotEmpty>    
+	  and TABLE_NAME in (#object_name#, upper(#object_name#))
+UNION 
+SELECT  
+    TABLE_SCHEMA
+    , TABLE_NAME
+    , 'VIEW'
+    , ''
+FROM information_schema.VIEWS
+WHERE 1=1
+<isNotEmpty property="schema_name">
+	  and TABLE_SCHEMA in (#schema_name#, upper(#schema_name#))
+</isNotEmpty>    
+	  and TABLE_NAME in (#object_name#, upper(#object_name#))
+	
+</select>	
 <!-- 
 	table 이름
 	

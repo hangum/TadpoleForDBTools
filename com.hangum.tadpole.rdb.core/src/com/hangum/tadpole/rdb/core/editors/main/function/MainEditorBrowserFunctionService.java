@@ -24,6 +24,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.util.DialogUtil;
@@ -140,6 +141,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 	@Override
 	protected void f4DMLOpen(Object[] arguments) {
 		String strObject = parseLastObject((String) arguments[1]);
+		strObject = SQLUtil.removeIdentifierQuoteString(userDB, strObject);
 		if(logger.isDebugEnabled()) logger.debug("select editor content is [" + strObject + "]");
 
 		/*

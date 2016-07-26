@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.dml.ExtendTableColumnDAO;
 import com.hangum.tadpole.rdb.core.dialog.dml.IndexInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.SelectObjectDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.TableInformationDialog;
@@ -46,17 +49,26 @@ public class DialogUtil {
 	public static void popupObjectInformationDialog(UserDBDAO userDB, Map<String, String> paramMap) {
 		//TODO: 디비엔진 종류별로 지원유무에 따라 처리해야 하나?
 		
-		SelectObjectDialog objectSelector = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap);
-
-		if (objectSelector.getObjectCount() > 1) {
-			//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
-			objectSelector.open();
-		} else if (objectSelector.getObjectCount() <= 0 || objectSelector.getSelectObject().isEmpty()) {
-			//해당 오브젝트를 찾을 수 없습니다.
-			MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
-			return;
+		Map<String, String> map = new HashMap<String,String>();
+		
+		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT || 
+		    userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			//TODO:SQLMap에 allObjects 가 정의되어 있어야 한다.
+			SelectObjectDialog objectSelector = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap);
+	
+			if (objectSelector.getObjectCount() > 1) {
+				//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
+				objectSelector.open();
+			} else if (objectSelector.getObjectCount() <= 0) {
+				//해당 오브젝트를 찾을 수 없습니다.
+				MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
+				return;
+			}
+			map = objectSelector.getSelectObject();
+		}else{
+			map.put("OBJECT_TYPE", "TABLE"); 
+			map.put("OBJECT_NAME", paramMap.get("OBJECT_NAME")); 
 		}
-		Map<String, String> map = objectSelector.getSelectObject();
 
 		if (StringUtils.contains("TABLE,VIEW", map.get("OBJECT_TYPE"))) {
 
