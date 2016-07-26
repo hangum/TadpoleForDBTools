@@ -64,6 +64,16 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.NEW_USER_PERMIT, AdminPreferenceDefine.NEW_USER_PERMIT_VALUE);
 	}
+
+	/**
+	 * 신규 디비 등록시 디비 패스워드가 저장 여부
+	 * YES이면 패스워드 저장이다.
+	 * @return
+	 */
+	public static String getSaveDBPassword() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SAVE_DB_PASSWORD, AdminPreferenceDefine.SAVE_DB_PASSWORD_VALUE);
+	}
 	
 	/**
 	 * 사용자가 디비를 추가 할 수 있는지 여부
@@ -178,5 +188,5 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		return dto;
 	}
-	
+
 }

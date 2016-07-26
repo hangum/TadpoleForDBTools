@@ -562,6 +562,7 @@ public class ResourceManageEditor extends EditorPart {
 	 */
 	public void refreshResouceData() {
 		if(lblDbname.isDisposed()) return;
+		if(userDB == null) return;
 		
 		lblDbname.setText(userDB.getDisplay_name());
 		

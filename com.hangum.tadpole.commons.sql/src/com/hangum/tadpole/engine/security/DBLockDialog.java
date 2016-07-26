@@ -25,8 +25,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.Messages;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * DB Lock Dialog
@@ -94,12 +98,32 @@ public class DBLockDialog extends Dialog {
 	protected void okPressed() {
 		String strPassword = textPassword.getText();
 		
-		if(!strPassword.equals(userDB.getPasswd())) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DBLockDialog_3);
-			textPassword.setFocus();
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
+			if(!strPassword.equals(userDB.getPasswd())) {
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DBLockDialog_3);
+				textPassword.setFocus();
+				
+				return;
+			}
+		// 시스템 어드민이 사용자 패스워드를 저장하도록 해서 입력받고 디비에 입력한다.
+		} else if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
+			if(!"".equals(textPassword.getText())) {
+				userDB.setPasswd(CipherManager.getInstance().encryption(textPassword.getText()));
+			} else {
+				userDB.setPasswd("");
+			}
 			
-			return;
+			// 실제 접속 되는지 테스트해봅니다.
+			try {
+				TadpoleSQLManager.getInstance(userDB);
+			} catch(Exception e) {
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DBLockDialog_3);
+				textPassword.setFocus();
+				
+				return;
+			}
 		}
+		
 		super.okPressed();
 	}
 

@@ -29,6 +29,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBOriginalDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -153,7 +154,11 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setHost(CipherManager.getInstance().encryption(userDb.getHost()));
 		userEncryptDao.setPort(CipherManager.getInstance().encryption(userDb.getPort()));
 		userEncryptDao.setUsers(CipherManager.getInstance().encryption(userDb.getUsers()));
-		userEncryptDao.setPasswd(CipherManager.getInstance().encryption(userDb.getPasswd()));
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(GetAdminPreference.getSaveDBPassword())) {
+			userEncryptDao.setPasswd(CipherManager.getInstance().encryption(userDb.getPasswd()));
+		} else {
+			userEncryptDao.setPasswd("");
+		}
 		
 		userEncryptDao.setUrl_user_parameter(userDb.getUrl_user_parameter());
 
@@ -227,7 +232,13 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setHost(CipherManager.getInstance().encryption(newUserDb.getHost()));
 		userEncryptDao.setPort(CipherManager.getInstance().encryption(newUserDb.getPort()));
 		userEncryptDao.setUsers(CipherManager.getInstance().encryption(newUserDb.getUsers()));
-		userEncryptDao.setPasswd(CipherManager.getInstance().encryption(newUserDb.getPasswd()));
+		
+		// 시스템 어드민의 패스워드 저장 여부에 따라 저장
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(GetAdminPreference.getSaveDBPassword())) {
+			userEncryptDao.setPasswd(CipherManager.getInstance().encryption(newUserDb.getPasswd()));
+		} else {
+			userEncryptDao.setPasswd("");
+		}
 		
 		userEncryptDao.setUrl_user_parameter(newUserDb.getUrl_user_parameter());
 

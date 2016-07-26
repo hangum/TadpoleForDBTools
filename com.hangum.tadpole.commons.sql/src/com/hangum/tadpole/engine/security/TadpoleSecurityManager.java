@@ -15,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -61,7 +62,7 @@ public class TadpoleSecurityManager {
 	public boolean isLock(final UserDBDAO userDB) {
 		if(userDB == null) return false;
 		
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) || PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())) {
 			if(!SessionManager.isUnlockDB(userDB)) {
 				return false;
 			}
