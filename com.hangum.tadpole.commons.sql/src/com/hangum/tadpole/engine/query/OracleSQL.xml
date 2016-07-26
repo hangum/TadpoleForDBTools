@@ -46,8 +46,6 @@
   SELECT 
       T.table_name AS "NAME"
     FROM user_tables T 
-      LEFT JOIN USER_TAB_COMMENTS S
-            ON S.TABLE_NAME = T.TABLE_NAME
 ORDER BY T.table_name
 </select>
 
@@ -655,8 +653,11 @@ SELECT
         ,s.created
         , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
         , s.owner as schema_name
-    FROM user_objects s INNER JOIN user_triggers t ON S.OBJECT_NAME = t.trigger_name
-   WHERE s.object_type = 'TRIGGER'
+    FROM all_objects s 
+    	INNER JOIN all_triggers t ON s.owner = t.owner and S.OBJECT_NAME = t.trigger_name
+   WHERE 1=1
+     AND s.owner = #db_name#
+     AND s.object_type = 'TRIGGER'
 ORDER BY t.table_name, s.object_name
 </select>
 
