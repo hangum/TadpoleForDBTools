@@ -26,6 +26,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -71,7 +72,13 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		String strSource = ""+srcList.get("Create View");
 		strSource = StringUtils.substringAfterLast(strSource, "VIEW");
 		
-		return "CREATE VIEW " + strSource.trim();
+		String schema_name = SQLUtil.makeIdentifierName(userDB, tableDao.getSchema_name());
+		
+		if ( strSource.indexOf(schema_name.trim(), 0) > 1 ){
+			return "CREATE VIEW " + strSource.trim();
+		}else{
+			return "CREATE VIEW " + schema_name +"."+ strSource.trim();
+		}
 	}
 
 	/* (non-Javadoc)
