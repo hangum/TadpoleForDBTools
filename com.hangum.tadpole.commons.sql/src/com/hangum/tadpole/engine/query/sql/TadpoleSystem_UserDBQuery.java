@@ -313,9 +313,8 @@ public class TadpoleSystem_UserDBQuery {
 			DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.getDBAccessControl(userDBDAO.getRole_seq());
 			userDBDAO.setDbAccessCtl(dbAccessCtl);
 			
-//			// 접근제어와 연동하기위해 현재 사용자의 ip, id를 가지고 있는다.
-//			userDBDAO.setTdbLogingIP(RequestInfoUtils.getRequestIP());
-//			userDBDAO.setTdbUserID(SessionManager.getEMAIL());
+			// default schema 를 넣어준다.
+			userDBDAO.setSchema(userDBDAO.getDb());
 		}
 		
 		return listUserDB;

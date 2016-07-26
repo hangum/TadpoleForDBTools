@@ -308,6 +308,12 @@ public class DBSystemSchema {
 		) return new ArrayList<TriggerDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("triggerAllList", userDB.getDb()); //$NON-NLS-1$
+		List<TriggerDAO> triggerList = sqlClient.queryForList("triggerAllList", userDB.getDb()); //$NON-NLS-1$
+		
+		for(TriggerDAO dao : triggerList) {
+			dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName() ));
+		}
+		
+		return triggerList;
 	}
 }
