@@ -127,8 +127,6 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	public String getTriggerScript(TriggerDAO triggerDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		StringBuilder result = new StringBuilder("");
-
 		Map srcList = (HashMap)client.queryForObject("getTriggerScript", triggerDAO.getFullName());	
 		String strSource = ""+srcList.get("SQL Original Statement");
 		strSource = StringUtils.substringAfterLast(strSource, "TRIGGER");
