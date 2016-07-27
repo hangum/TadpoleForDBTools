@@ -20,6 +20,9 @@ package com.hangum.tadpole.engine.manager;
  *
  */
 public class DBCPInfoDAO {
+	/** engine에서 저장하고 있는 key */
+	String engineKey;
+	
 	String user;
 	int dbSeq;
 	String displayName;
@@ -142,4 +145,18 @@ public class DBCPInfoDAO {
 		this.maxWait = maxWait;
 	}
 
+	/**
+	 * @return the engineKey
+	 */
+	public String getEngineKey() {
+		return engineKey;
+	}
+
+	/**
+	 * @param engineKey the engineKey to set
+	 */
+	public void setEngineKey(String engineKey) {
+		this.engineKey = engineKey;
+	}
+	
 }

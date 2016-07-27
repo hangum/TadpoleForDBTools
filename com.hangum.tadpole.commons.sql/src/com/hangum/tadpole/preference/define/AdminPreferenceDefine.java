@@ -27,6 +27,10 @@ public class AdminPreferenceDefine {
 	public static final String NEW_USER_PERMIT = _PREFIX + "NEW_USER_PERMIT";
 	public static final String NEW_USER_PERMIT_VALUE = "YES";
 	
+	/** 신규 디비 등록시 패스워드 저장 유무(YES이면 패스워드 저장) */
+	public static final String SAVE_DB_PASSWORD = _PREFIX + "SAVE_DB_PASSWORD";
+	public static final String SAVE_DB_PASSWORD_VALUE = "YES";
+	
 	/** 사용자가 디비 추가 여부 */
 	public static final String IS_ADD_DB = _PREFIX + "IS_ADD_DB";
 	public static final String IS_ADD_DB_VALUE = "YES";

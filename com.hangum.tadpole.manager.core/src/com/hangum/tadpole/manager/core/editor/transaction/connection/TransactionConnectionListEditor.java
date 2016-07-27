@@ -158,7 +158,34 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tltmCRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmCRefresh.setToolTipText(Messages.get().Refresh);
 		
+		final ToolItem tltmCReleaseConnection = new ToolItem(toolBar, SWT.NONE);
+		tltmCReleaseConnection.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection iss = (IStructuredSelection)tvGeneral.getSelection();
+				if(!iss.isEmpty()) {
+					DBCPInfoDAO dao = (DBCPInfoDAO)iss.getFirstElement();
+					
+					if(MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().ReleteConnectionPool)) {
+						TadpoleSQLManager.removeInstance(dao.getEngineKey());
+						initGeneral();
+						
+						tltmCReleaseConnection.setEnabled(false);
+					}
+				}
+			}
+		});
+
+		tltmCReleaseConnection.setImage(GlobalImageUtils.getRemoveConnectionDatabase());
+		tltmCReleaseConnection.setToolTipText("Release connection");
+		tltmCReleaseConnection.setEnabled(false);
+		
 		tvGeneral = new TableViewer(compositeConnectionPool, SWT.BORDER | SWT.FULL_SELECTION);
+		tvGeneral.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				tltmCReleaseConnection.setEnabled(true);
+			}
+		});
 		Table tableCon = tvGeneral.getTable();
 		tableCon.setLinesVisible(true);
 		tableCon.setHeaderVisible(true);

@@ -231,12 +231,13 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			// 어드민 만이 모두 호출한다.
 			if(!isAdmin) if(!StringUtils.equals(strLoginEmail, strArryKey[0])) continue;
 			
-			
+			// add connection information
 			SqlMapClient sqlMap = dbManager.get(stKey);
 			DataSource ds = sqlMap.getDataSource();
 			BasicDataSource bds = (BasicDataSource)ds;
 				
 			DBCPInfoDAO dao = new DBCPInfoDAO();
+			dao.setEngineKey(stKey);
 			dao.setUser(strArryKey[0]);
 			dao.setDbSeq(Integer.parseInt(strArryKey[1]));
 			dao.setDbType(strArryKey[2]);
@@ -263,7 +264,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	}
 	
 	/**
-	 * 
+	 * 사용자의 모든 인스턴스를 삭제한다.
 	 */
 	public static void removeAllInstance(String id) {
 		List<String> listKeyMap = managerKey.get(id);
@@ -287,7 +288,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * remove instance
 	 * @param searchKey
 	 */
-	private static void removeInstance(String searchKey) {
+	public static void removeInstance(String searchKey) {
 		if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLManager] remove Instance: " + searchKey);
 		TadpoleMetaData metaData = dbMetadata.remove(searchKey);
 		metaData = null;

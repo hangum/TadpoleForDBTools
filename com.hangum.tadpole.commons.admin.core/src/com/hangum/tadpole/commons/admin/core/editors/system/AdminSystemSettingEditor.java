@@ -72,6 +72,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Text textLog;
 	private Combo comboSupportMonitoring;
 	private Text textAPIServerURL;
+	private Combo comboSaveDBPassword;
 	
 	// smtp server
 	private Text textSMTP;
@@ -178,14 +179,25 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		comboSupportMonitoring = new Combo(compositeBody, SWT.READ_ONLY);
 		comboSupportMonitoring.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboSupportMonitoring.add(Messages.get().Yes);
-		comboSupportMonitoring.add(Messages.get().No);
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboSupportMonitoring.add(yesNo.name());
+		}
 		
 		Label lblApiServerUrl = new Label(compositeBody, SWT.NONE);
 		lblApiServerUrl.setText(Messages.get().APIServerURL);
 		
 		textAPIServerURL = new Text(compositeBody, SWT.BORDER);
 		textAPIServerURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label label = new Label(compositeBody, SWT.NONE);
+		label.setText(Messages.get().SaveDBPassword);
+		
+		comboSaveDBPassword = new Combo(compositeBody, SWT.READ_ONLY);
+		comboSaveDBPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboSaveDBPassword.add(yesNo.name());
+		}
+		comboSaveDBPassword.setText(PublicTadpoleDefine.YES_NO.YES.name());
 		new Label(compositeBody, SWT.NONE);
 		
 		Label labelHorizontal = new Label(compositeBody, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -292,6 +304,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 		comboIsSharedDB.setText(GetAdminPreference.getIsSharedDB());
 		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
 		textAPIServerURL.setText(GetAdminPreference.getApiServerURL());
+		comboSaveDBPassword.setText(GetAdminPreference.getSaveDBPassword());
 		
 		textIntLimtCnt.setText(GetAdminPreference.getDefaultAddDBCnt());
 		textDefaultUseDay.setText(GetAdminPreference.getServiceDurationDay());
@@ -306,7 +319,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 			textEmail.setText(smtpDto.getEmail());
 			textPasswd.setText(smtpDto.getPasswd());
 		} catch (Exception e) {
-			logger.error("SMTP Initialization Failed.", e);
+			logger.error("SMTP Initialization Failed." + e.getMessage());
 			textSMTP.setText(AdminPreferenceDefine.SMTP_HOST_NAME_VALUE);
 			textPort.setText(AdminPreferenceDefine.SMTP_PORT_VALUE);
 		}
@@ -348,6 +361,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.API_SERVER_URL, textAPIServerURL.getText());
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.API_SERVER_URL, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SAVE_DB_PASSWORD, comboSaveDBPassword.getText());
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SAVE_DB_PASSWORD, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_ADD_DB, comboIsAddDB.getText());
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.IS_ADD_DB, userInfoDao);
