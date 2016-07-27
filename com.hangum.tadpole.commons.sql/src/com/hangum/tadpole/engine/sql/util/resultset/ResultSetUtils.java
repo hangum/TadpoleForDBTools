@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.resultset;
 
-import java.io.InputStream;
 import java.io.Reader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -91,7 +90,7 @@ public class ResultSetUtils {
 							while ((cnum = is.read(cbuf)) != -1) sb.append(cbuf, 0 ,cnum);
 						} // if
 						tmpRow.put(intShowColIndex, sb.toString()  );
-					}else if (StringUtils.contains(rs.getMetaData().getColumnTypeName(intColIndex), "LOB") || java.sql.Types.LONGVARBINARY == colType ){
+					} else if(java.sql.Types.BLOB == colType) {
 						tmpRow.put(intShowColIndex, rs.getObject(intColIndex)  );
 					}else{					
 						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
