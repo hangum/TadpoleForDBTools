@@ -380,31 +380,20 @@ ORDER BY O.OWNER, O.OBJECT_NAME
 	                       AND OBJECT_NAME = (#table#) 
 	                       AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION'))
   UNION ALL
-  SELECT ROWNUM
-        ,s.owner
-        ,s.object_name
-        ,s.procedure_name
-        , (SELECT CASE
-                     WHEN INSTR (UPPER (REPLACE (text, CHR (9), ' ')), ' FUNCTION ') &gt; 0
-                     THEN
-                        'FUNCTION'
-                     WHEN INSTR (UPPER (REPLACE (text, CHR (9), ' ')), ' PROCEDURE ') &gt; 0
-                     THEN
-                        'PROCEDURE'
-                     ELSE
-                        'unknow'
-                  END
-             FROM all_source
-            WHERE 1 = 1 AND name = s.object_name AND UPPER (REPLACE (text, CHR (9), ' ')) LIKE '% ' || s.procedure_name || '%' AND ROWNUM &lt;= 1)
+    SELECT ROWNUM
+        ,p.owner
+        ,p.object_name
+        ,p.procedure_name
+        ,(case when s.functionable = 'YES' then 'FUNCTION' else 'PROCEDURE' end) as object_type
         ,NULL
         ,NULL
         ,NULL
         ,NULL
         ,NULL
-    FROM all_procedures s
-   WHERE 1 = 1 
-   AND s.owner =  (#owner#) 
-   AND s.object_name =  (#table#)
+    FROM all_procedures p
+   WHERE     p.owner = (#owner#)
+         AND p.object_name = (#table#)
+         AND p.procedure_name > ' '
    ORDER BY 1
 </select>
 
