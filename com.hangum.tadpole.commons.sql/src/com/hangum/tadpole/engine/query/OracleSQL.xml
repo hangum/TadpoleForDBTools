@@ -374,6 +374,26 @@ SELECT
 	                       AND OWNER = (#owner#)
 	                       AND OBJECT_NAME = #table# 
 	                       AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION'))
+  UNION ALL
+    SELECT ROWNUM
+        ,p.owner
+        ,p.object_name
+        ,p.procedure_name
+        ,CASE WHEN a.argument_name IS NULL AND a.in_out IS NOT NULL THEN 'FUNCTION' ELSE 'PROCEDURE' END AS object_type
+        ,NULL
+        ,NULL
+        ,NULL
+        ,NULL
+        ,NULL
+    FROM all_procedures p
+         LEFT JOIN all_arguments a
+            ON     p.owner = a.owner
+               AND p.object_name = a.package_name
+               AND p.procedure_name = a.object_name
+               AND a.in_out = 'OUT'
+   WHERE     p.owner = (#owner#)
+         AND p.object_name = (#table#)
+         AND p.procedure_name > ' '
    ORDER BY 1
 </select>
 
@@ -548,24 +568,15 @@ ORDER BY s.object_type DESC, s.object_name
 select distinct 
 	s.object_name as packagename
 	,s.procedure_name as name
-	,p.type as type
+    ,(CASE WHEN a.argument_name IS NULL AND a.in_out IS NOT NULL THEN 'FUNCTION' ELSE 'PROCEDURE' END) as type
     , nvl(p.overload, 0) as overload 
     , s.owner as schema_name
  from all_procedures s
-         LEFT JOIN (  SELECT owner
-                            ,object_name
-                            ,package_name
-                            ,overload
-                            ,CASE WHEN SUM (CASE WHEN argument_name IS NULL THEN 1 ELSE 0 END) > 0 THEN 'FUNCTION' ELSE 'PROCEDURE' END AS TYPE
-                        FROM all_arguments
-                    GROUP BY owner
-                            ,object_name
-                            ,package_name
-                            ,overload) p
-                ON 1=1
-               AND p.owner = s.owner
-               AND p.object_name = s.procedure_name
-               AND p.package_name = s.object_name
+         LEFT JOIN all_arguments a
+            ON     p.owner = a.owner
+               AND p.object_name = a.package_name
+               AND p.procedure_name = a.object_name
+               AND a.in_out = 'OUT'
  where 1=1
   and s.owner = (#schema_name#)
   and s.object_name = (#package_name#)

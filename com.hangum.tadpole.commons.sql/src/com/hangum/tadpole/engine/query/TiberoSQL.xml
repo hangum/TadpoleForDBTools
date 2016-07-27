@@ -379,6 +379,21 @@ ORDER BY O.OWNER, O.OBJECT_NAME
 	                       AND OWNER = (#owner#)
 	                       AND OBJECT_NAME = (#table#) 
 	                       AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION'))
+  UNION ALL
+    SELECT ROWNUM
+        ,p.owner
+        ,p.object_name
+        ,p.procedure_name
+        ,(case when s.functionable = 'YES' then 'FUNCTION' else 'PROCEDURE' end) as object_type
+        ,NULL
+        ,NULL
+        ,NULL
+        ,NULL
+        ,NULL
+    FROM all_procedures p
+   WHERE     p.owner = (#owner#)
+         AND p.object_name = (#table#)
+         AND p.procedure_name > ' '
    ORDER BY 1
 </select>
 
