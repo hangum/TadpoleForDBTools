@@ -218,102 +218,88 @@ public class SQLUtil {
 	 */
 	public static String makeIdentifierName(UserDBDAO userDB, String name) {
 		boolean isChanged = false;
-		String retStr = name == null ? "null" : name;
-		try{
-			TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
-			
-			if(tmd == null) return retStr;
-	
-			// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;; 
-			if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
-				if(StringUtils.contains(name, "\"")) {
-					return name = String.format("[%s]", name);
-				}
-			}
-			
-			switch(tmd.getSTORE_TYPE()) {
-	//		case NONE: 
-	//			retStr = tableName;
-	//			break;
-			case BLANK: 
-				if(name.matches(".*\\s.*")) {
-					isChanged = true;
-					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-				}
-				break;
-			case LOWCASE_BLANK:
-				if(name.matches(".*[a-z\\s].*")) {
-					isChanged = true;
-					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-				}else if(name.matches(".*[.].*")) {
-					isChanged = true;
-					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-				}
-				break;
-			case UPPERCASE_BLANK:
-				if(name.matches(".*[A-Z\\s].*")) {
-					isChanged = true;
-					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-				}else if(name.matches(".*[.].*")) {
-					isChanged = true;
-					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-				}
-				break;
-			}
-			
-			// Is keywords?
-			// schema.tableName
-			if(!isChanged) {
-				// TODO : IdentifierQuoteString에 대한 검증 필요.
-				// 오브젝트명칭 자체에 쩜(.)을 포함하는 경우는 "test.data" => "test"."data"로 변경되어 버림..
-				// 실제 db에서 가져온 명칭을 대소문자 변환 없이 그대로 IdentifierQuoteString 으로만 감싸줘도 될것같음...
-				
-				/*
-				String[] arryRetStr = StringUtils.split(retStr, ".");
-				if(arryRetStr.length == 1) {
-					if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
-						retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
-					}
-				} else if(arryRetStr.length > 1){
-					if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[1]+",")) {
-						retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
-					}
-				}
-				*/
-				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+retStr+",")) {
-					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
-				}
-				
-				
-			}
-	//		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
-		}catch(Exception e){
-			logger.error(e);
-		}
-		return retStr;
-	}
-	
-	public static String removeIdentifierQuoteString(UserDBDAO userDB, String name) {
+		String retStr = "";
+
+		//
+		// 오라클 평선의 파라미터 중에 리턴값의 아규먼트 명칭은 널이다.  
+		//
+		name = name == null ? "" : name;
 		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
 		
+		if(tmd == null) return retStr;
+
+		//
+		// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;;
+		//
+		if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+			if(StringUtils.contains(name, "\"")) {
+				return name = String.format("[%s]", name);
+			}
+		}
+		
+		// 정의 된 형태로 오브젝트 명을 변경한다.
+		switch(tmd.getSTORE_TYPE()) {
+		case BLANK: 
+			if(name.matches(".*\\s.*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case LOWCASE_BLANK:
+			if(name.matches(".*[a-z\\s].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}else if(name.matches(".*[.].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}
+			break;
+		case UPPERCASE_BLANK:
+			if(name.matches(".*[A-Z\\s].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}else if(name.matches(".*[.].*")) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}
+			break;
+		}
+		
+		// 키워드 인지 검사하여 오브젝트 명을 변경한다.
+		if(!isChanged) {
+			if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+retStr+",")) {
+				retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+			}
+		}
+		
+		return retStr;
+	}
+
+	/**
+	 * remove identifier quote string
+	 * 
+	 * @param userDB
+	 * @param name
+	 * @return
+	 */
+	public static String removeIdentifierQuoteString(UserDBDAO userDB, String name) {
+		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
 		if(tmd == null) return name;
 
 		return StringUtils.replace(name, tmd.getIdentifierQuoteString(), "");
 	}
 
+	/**
+	 * make fully table name
+	 * @param tableName
+	 * @param strIdentifier
+	 * @return
+	 */
 	private static String makeFullyTableName(String tableName, String strIdentifier) {
-		String retStr = "";
-		/*
-		for(String chunk : StringUtils.split(tableName, '.')) {
-			retStr += strIdentifier + chunk + strIdentifier + ".";
-		}
-		retStr = StringUtils.removeEnd(retStr, ".");
-		*/
-		retStr = strIdentifier + tableName + strIdentifier;
-		
-		return retStr;
+		return strIdentifier + tableName + strIdentifier;
 	}
 	
+//	컬럼을 2천바이트까지만 저장하는 컬럼이 있을 경우 사용하였으나, 사용하지 않아서 삭제한다. - hangum
 //	/**
 //	 * db resource data를 저장할때 2000byte 단위로 저장하도록 합니다.
 //	 * 이 이슈( https://github.com/hangum/TadpoleForDBTools/issues/864 )로 컬럼을 하나로 만들고 수정합니다.
@@ -460,8 +446,6 @@ public class SQLUtil {
 	 */
 	public static String getTableName(UserDBDAO userDB, TableDAO tableDAO) {
 		return tableDAO.getFullName();
-		//if("".equals(tableDAO.getSchema_name()) || null == tableDAO.getSchema_name()) return tableDAO.getSysName(); //$NON-NLS-2$
-		//return tableDAO.getSchema_name() + "." + tableDAO.getSysName(); //$NON-NLS-2$
 	}
 	
 }
