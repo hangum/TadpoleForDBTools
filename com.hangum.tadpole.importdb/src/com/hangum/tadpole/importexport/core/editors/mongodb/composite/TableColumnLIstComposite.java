@@ -13,6 +13,7 @@ package com.hangum.tadpole.importexport.core.editors.mongodb.composite;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -161,7 +162,7 @@ public class TableColumnLIstComposite extends Composite {
 				}
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				List<TableDAO> showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+				List<TableDAO> showTables = sqlClient.queryForList("tableList", StringUtils.isBlank(userDB.getSchema()) ? userDB.getDb() : userDB.getSchema()); //$NON-NLS-1$
 				for (TableDAO tableDAO : showTables) {
 					listTables.add( new ModTableDAO(tableDAO.getName()) );
 				}			

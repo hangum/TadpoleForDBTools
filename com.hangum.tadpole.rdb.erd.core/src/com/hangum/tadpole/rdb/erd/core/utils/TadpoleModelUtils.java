@@ -186,7 +186,7 @@ public enum TadpoleModelUtils {
 			listAllTables = new TajoConnectionManager().tableList(userDB);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			listAllTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			listAllTables = sqlClient.queryForList("tableList", StringUtils.isBlank(userDB.getSchema()) ? userDB.getDb() : userDB.getSchema()); //$NON-NLS-1$
 		}
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
@@ -212,7 +212,7 @@ public enum TadpoleModelUtils {
 			listAllTables = new TajoConnectionManager().tableList(userDB);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			listAllTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			listAllTables = sqlClient.queryForList("tableList",StringUtils.isBlank(userDB.getSchema()) ? userDB.getDb() : userDB.getSchema()); //$NON-NLS-1$
 		}
 
 		Map<String, TableDAO> mapTabls = new HashMap<String, TableDAO>();
