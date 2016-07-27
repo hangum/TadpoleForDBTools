@@ -218,74 +218,78 @@ public class SQLUtil {
 	 */
 	public static String makeIdentifierName(UserDBDAO userDB, String name) {
 		boolean isChanged = false;
-		String retStr = name;
-		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
-		
-		if(tmd == null) return retStr;
-
-		// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;; 
-		if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
-			if(StringUtils.contains(name, "\"")) {
-				return name = String.format("[%s]", name);
-			}
-		}
-		
-		switch(tmd.getSTORE_TYPE()) {
-//		case NONE: 
-//			retStr = tableName;
-//			break;
-		case BLANK: 
-			if(name.matches(".*\\s.*")) {
-				isChanged = true;
-				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-			}
-			break;
-		case LOWCASE_BLANK:
-			if(name.matches(".*[a-z\\s].*")) {
-				isChanged = true;
-				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-			}else if(name.matches(".*[.].*")) {
-				isChanged = true;
-				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-			}
-			break;
-		case UPPERCASE_BLANK:
-			if(name.matches(".*[A-Z\\s].*")) {
-				isChanged = true;
-				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-			}else if(name.matches(".*[.].*")) {
-				isChanged = true;
-				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
-			}
-			break;
-		}
-		
-		// Is keywords?
-		// schema.tableName
-		if(!isChanged) {
-			// TODO : IdentifierQuoteString에 대한 검증 필요.
-			// 오브젝트명칭 자체에 쩜(.)을 포함하는 경우는 "test.data" => "test"."data"로 변경되어 버림..
-			// 실제 db에서 가져온 명칭을 대소문자 변환 없이 그대로 IdentifierQuoteString 으로만 감싸줘도 될것같음...
+		String retStr = name == null ? "null" : name;
+		try{
+			TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
 			
-			/*
-			String[] arryRetStr = StringUtils.split(retStr, ".");
-			if(arryRetStr.length == 1) {
-				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
-					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
-				}
-			} else if(arryRetStr.length > 1){
-				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[1]+",")) {
-					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+			if(tmd == null) return retStr;
+	
+			// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;; 
+			if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+				if(StringUtils.contains(name, "\"")) {
+					return name = String.format("[%s]", name);
 				}
 			}
-			*/
-			if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+retStr+",")) {
-				retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+			
+			switch(tmd.getSTORE_TYPE()) {
+	//		case NONE: 
+	//			retStr = tableName;
+	//			break;
+			case BLANK: 
+				if(name.matches(".*\\s.*")) {
+					isChanged = true;
+					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+				}
+				break;
+			case LOWCASE_BLANK:
+				if(name.matches(".*[a-z\\s].*")) {
+					isChanged = true;
+					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+				}else if(name.matches(".*[.].*")) {
+					isChanged = true;
+					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+				}
+				break;
+			case UPPERCASE_BLANK:
+				if(name.matches(".*[A-Z\\s].*")) {
+					isChanged = true;
+					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+				}else if(name.matches(".*[.].*")) {
+					isChanged = true;
+					retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+				}
+				break;
 			}
 			
-			
+			// Is keywords?
+			// schema.tableName
+			if(!isChanged) {
+				// TODO : IdentifierQuoteString에 대한 검증 필요.
+				// 오브젝트명칭 자체에 쩜(.)을 포함하는 경우는 "test.data" => "test"."data"로 변경되어 버림..
+				// 실제 db에서 가져온 명칭을 대소문자 변환 없이 그대로 IdentifierQuoteString 으로만 감싸줘도 될것같음...
+				
+				/*
+				String[] arryRetStr = StringUtils.split(retStr, ".");
+				if(arryRetStr.length == 1) {
+					if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[0]+",")) {
+						retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+					}
+				} else if(arryRetStr.length > 1){
+					if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+arryRetStr[1]+",")) {
+						retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+					}
+				}
+				*/
+				if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+retStr+",")) {
+					retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+				}
+				
+				
+			}
+	//		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
+		}catch(Exception e){
+			logger.error(e);
 		}
-//		if(logger.isDebugEnabled()) logger.debug("[tmd.getSTORE_TYPE()]" + tmd.getSTORE_TYPE() + "[original]" + tableName + "[retStr = ]" + retStr);
 		return retStr;
 	}
 	
