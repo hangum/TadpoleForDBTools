@@ -89,9 +89,9 @@ public class ResultSetUtils {
 							char[] cbuf = new char[10];							 
 							while ((cnum = is.read(cbuf)) != -1) sb.append(cbuf, 0 ,cnum);
 						} // if
-						tmpRow.put(intShowColIndex, sb.toString()  );
+						tmpRow.put(intShowColIndex, sb.toString());
 					} else if(java.sql.Types.BLOB == colType) {
-						tmpRow.put(intShowColIndex, rs.getObject(intColIndex)  );
+						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 					}else{					
 						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
 					}
