@@ -312,9 +312,6 @@ public class TadpoleSystem_UserDBQuery {
 		for (UserDBDAO userDBDAO : listUserDB) {
 			DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.getDBAccessControl(userDBDAO.getRole_seq());
 			userDBDAO.setDbAccessCtl(dbAccessCtl);
-			
-			// default schema 를 넣어준다.
-			userDBDAO.setSchema(userDBDAO.getDb());
 		}
 		
 		return listUserDB;

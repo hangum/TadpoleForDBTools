@@ -154,7 +154,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	
 	/** RDB의 결과 화면에서 컬럼에서 보여지는 캐릭터 숫자. */
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN = "RDB_CHARACTER_SHOW_IN_THE_COLUMN";
-	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "-1";
+	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "100";
 	
 	/** define Amazon key */ 
 	public static final String AMAZON_ACCESS_NAME = "AMAZON_ACCESS_NAME";
