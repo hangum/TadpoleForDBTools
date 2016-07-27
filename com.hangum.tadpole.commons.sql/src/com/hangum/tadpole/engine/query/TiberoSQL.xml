@@ -41,7 +41,7 @@
   SELECT 
       T.table_name AS "NAME"
   FROM ALL_TABLES T  
-  WHERE T.OWNER = NVL(#schema, user)
+  WHERE T.OWNER = NVL(#schema#, user)
   ORDER BY T.table_name
 </select>
 
@@ -199,7 +199,9 @@ FROM
    FROM all_constraints C
    LEFT JOIN all_CONS_COLUMNS S ON c.owner = s.owner and C.CONSTRAINT_NAME = S.CONSTRAINT_NAME
    AND C.TABLE_NAME = S.TABLE_NAME
-   WHERE C.CONSTRAINT_TYPE = 'R' ) t
+   WHERE C.CONSTRAINT_TYPE = 'R' 
+     AND c.owner = (#schema#)
+     AND c.table_name in ( $table$ ) ) t
 LEFT JOIN
   (SELECT x.owner,
           x.table_name,
@@ -211,7 +213,10 @@ LEFT JOIN
              s.COLUMN_NAME , ROW_NUMBER()OVER(PARTITION BY s.CONSTRAINT_NAME
                                               ORDER BY S.COLUMN_NAME) RNO,
              s.owner
-      FROM all_CONS_COLUMNS S)x
+      FROM all_CONS_COLUMNS S
+      WHERE 1=1
+        AND s.owner = (#schema#)
+        AND s.table_name in ( $table$ ) )x
    GROUP BY x.owner,
             x.table_name,
             x.constraint_name ) R ON t.owner = r.owner and t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
@@ -234,7 +239,7 @@ GROUP BY t.table_name,
 	referenced_table_name	:	타켓 테이블 이름
 	referenced_column_name	: 	타켓 테이블 컬럼
  -->
-<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
  SELECT t.table_name,
        t.constraint_name ,
        max(decode(rno,1,t.column_name)) ||','|| max(decode(rno,2,t.column_name)) AS column_name ,
@@ -251,7 +256,8 @@ FROM
    FROM all_constraints C
    LEFT JOIN all_CONS_COLUMNS S ON c.owner = s.owner and C.CONSTRAINT_NAME = S.CONSTRAINT_NAME
    AND C.TABLE_NAME = S.TABLE_NAME
-   WHERE C.CONSTRAINT_TYPE = 'R' ) t
+   WHERE C.CONSTRAINT_TYPE = 'R' 
+     AND c.owner = (#schema#) ) t
 LEFT JOIN
   (SELECT x.owner,
           x.table_name,
@@ -263,7 +269,9 @@ LEFT JOIN
              s.constraint_name ,
              s.COLUMN_NAME , ROW_NUMBER()OVER(PARTITION BY s.CONSTRAINT_NAME
                                               ORDER BY S.COLUMN_NAME) RNO
-      FROM all_CONS_COLUMNS S)x
+      FROM all_CONS_COLUMNS S
+      WHERE 1=1
+        AND s.owner = #schema#)x
    GROUP BY x.owner,
             x.table_name,
             x.constraint_name ) R ON t.owner = r.owner and t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME

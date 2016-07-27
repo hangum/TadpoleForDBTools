@@ -104,7 +104,7 @@ public class CubridTableRelation {
 		// 모든 테이블 목록을 가져옵니다.		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			List showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
+			List showTables = sqlClient.queryForList("tableList", StringUtils.isBlank(userDB.getSchema()) ? userDB.getDb() : userDB.getSchema()); //$NON-NLS-1$
 			
 			String tables = "";
 			for (Object table : showTables) {

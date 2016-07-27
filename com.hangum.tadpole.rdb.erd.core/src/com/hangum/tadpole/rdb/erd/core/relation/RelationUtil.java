@@ -326,7 +326,7 @@ public class RelationUtil {
 	 */
 	public static List<SQLiteRefTableDAO> getSQLiteRefTbl(UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("referencedTableListALL");
+		return sqlClient.queryForList("referencedTableListALL", userDB.getSchema());
 	}
 	
 	/**
@@ -369,7 +369,7 @@ public class RelationUtil {
 	 */
 	public static List<ReferencedTableDAO> getReferenceTable(UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("referencedTableListALL");
+		return sqlClient.queryForList("referencedTableListALL", userDB.getSchema());
 	}
 
 }
