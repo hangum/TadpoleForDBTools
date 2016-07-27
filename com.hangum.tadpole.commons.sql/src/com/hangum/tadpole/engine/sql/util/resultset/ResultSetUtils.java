@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.resultset;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -75,25 +77,24 @@ public class ResultSetUtils {
 			for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
 				final int intColIndex = i+1;
 				final int intShowColIndex = i + intStartIndex;
-				Object obj = null;
 				try {
-					obj = rs.getObject(intColIndex);
-//					int type = rs.getMetaData().getColumnType(intColIndex);
-//					if(obj instanceof oracle.sql.STRUCT) {
-//						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
-//					} else
-					if(obj == null) {
-						tmpRow.put(intShowColIndex, null);
-					} else {
-						String type = obj.getClass().getSimpleName();
-						if(type.toUpperCase().contains("LOB")) {
-							tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
-						} else {
-							tmpRow.put(intShowColIndex, rs.getString(intColIndex));
-						}
-//						if(logger.isDebugEnabled()) {
-//							logger.debug("======[jdbc type ]===> " + rs.getMetaData().getColumnType(intColIndex) + ", class type is " + obj.getClass().getName());
-//						}
+					int colType = rs.getMetaData().getColumnType(intColIndex); 
+					if (java.sql.Types.LONGVARCHAR == colType || 
+							java.sql.Types.LONGNVARCHAR == colType || 
+							java.sql.Types.CLOB == colType || 
+							java.sql.Types.NCLOB == colType){
+						StringBuffer sb = new StringBuffer();						  
+						Reader is =  rs.getCharacterStream(intColIndex);						
+						if (is != null) {
+							int cnum = 0;
+							char[] cbuf = new char[10];							 
+							while ((cnum = is.read(cbuf)) != -1) sb.append(cbuf, 0 ,cnum);
+						} // if
+						tmpRow.put(intShowColIndex, sb.toString()  );
+					}else if (StringUtils.contains(rs.getMetaData().getColumnTypeName(intColIndex), "LOB") || java.sql.Types.LONGVARBINARY == colType ){
+						tmpRow.put(intShowColIndex, rs.getObject(intColIndex)  );
+					}else{					
+						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
 					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$
