@@ -488,7 +488,7 @@ ORDER BY m.column_position
         ,i.status
         ,I.OWNER as TABLE_SCHEMA
         ,I.OWNER as INDEX_SCHEMA
-        ,I.SEARCH_CONDITION
+        ,I.SEARCH_CONDITION as comments
         ,i.R_OWNER
         ,I.R_CONSTRAINT_NAME
         ,i.owner as schema_name        
