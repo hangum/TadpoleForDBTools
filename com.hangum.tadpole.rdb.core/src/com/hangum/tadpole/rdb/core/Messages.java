@@ -620,6 +620,12 @@ public class Messages {
 	public String DoNotSupportObject;
 
 	public String ObjectEditorCompileError;
+
+	public String ShowProfileResult;
+
+	public String DoNotShowProfileResult;
+
+	public String WhetherProfile;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

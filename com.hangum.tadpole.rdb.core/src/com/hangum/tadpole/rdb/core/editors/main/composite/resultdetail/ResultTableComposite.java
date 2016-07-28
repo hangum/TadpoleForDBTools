@@ -227,7 +227,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			
 			final Button btnQueryProfilling = new Button(compositeBtn, SWT.CHECK);
-			btnQueryProfilling.setText("프로파일 여부");
+			btnQueryProfilling.setText(Messages.get().WhetherProfile);
 			btnQueryProfilling.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -255,11 +255,11 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 						MySQLExtensionViewDialog profileDialog = new MySQLExtensionViewDialog(getShell(), reqQuery, rsDAO);
 						profileDialog.open();
 					} else {
-						MessageDialog.openWarning(getShell(), Messages.get().Warning, "프로파일 결과가 생성되지 않았습니다. 확인하여 주십시오.");
+						MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DoNotShowProfileResult);
 					}
 				}
 			});
-			btnShowQueryProfilling.setText("프로파일 결과 보기");
+			btnShowQueryProfilling.setText(Messages.get().ShowProfileResult);
 			btnShowQueryProfilling.setEnabled(GetPreferenceGeneral.getRDBQueryProfilling());
 		}
 		
