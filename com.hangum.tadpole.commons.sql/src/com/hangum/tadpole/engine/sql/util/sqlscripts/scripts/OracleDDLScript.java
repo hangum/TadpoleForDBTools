@@ -24,6 +24,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -391,5 +392,25 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		
 		return client.queryForList("getProcedureOutParamter", map );
 	}
+
+	
+	@Override
+	public String getSequenceScript(OracleSequenceDAO sequenceDao) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		StringBuilder result = new StringBuilder("");
+
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("schema_name", StringUtils.isBlank(sequenceDao.getSchema_name()) ? userDB.getSchema() : sequenceDao.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("object_name", sequenceDao.getSequence_name()); //$NON-NLS-1$
+		
+		String strDDLScript = (String)client.queryForObject("getSequenceScript", paramMap);
+		
+		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
+		//result.append(SQLFormater.format(strDDLScript));
+		result.append(strDDLScript);
+		
+		return result.toString();
+	}
+
 
 }

@@ -59,6 +59,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.T
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sequence.TadpoleSequenceComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynonymComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
@@ -98,6 +99,7 @@ public class ExplorerViewer extends ViewPart {
 	
 	// oracle
 	private TadpoleSynonymComposite 	synonymComposite 	= null;
+	private TadpoleSequenceComposite 	sequenceComposite 	= null;
 	
 	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpolePackageComposite	    packageComposite 	= null;
@@ -231,6 +233,9 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
 			synonymComposite.filter(strSearchText);
 
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SEQUENCE.name())) {
+			sequenceComposite.filter(strSearchText);
+
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 			viewComposite.filter(strSearchText);					
 		
@@ -293,6 +298,7 @@ public class ExplorerViewer extends ViewPart {
 		if(null != tableComposite) tableComposite.dispose(); 
 		if(null != viewComposite) viewComposite.dispose(); 
 		if(null != synonymComposite) synonymComposite.dispose();
+		if(null != sequenceComposite) sequenceComposite.dispose();
 		if(null != procedureComposite) procedureComposite.dispose(); 
 		if(null != packageComposite) packageComposite.dispose(); 
 		if(null != functionCompostite) functionCompostite.dispose(); 
@@ -468,6 +474,7 @@ public class ExplorerViewer extends ViewPart {
 			createTable();
 			createView();
 			createSynonym();
+			createSequence();
 			createProcedure();
 			createPackage();
 			createFunction();
@@ -481,6 +488,7 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTriggerComposite().getTableViewer(),
 				viewComposite.getTableViewer(), 
 				synonymComposite.getTableviewer(), 
+				sequenceComposite.getTableviewer(),
 				procedureComposite.getTableViewer(), 
 				packageComposite.getPackageTableViewer(), 
 				packageComposite.getProcFuncTableViewer(),
@@ -566,7 +574,8 @@ public class ExplorerViewer extends ViewPart {
 			refreshView(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
 			refreshSynonym(true, strObjectName);
-		
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SEQUENCE.name())) {
+			refreshSequence(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
 			refreshProcedure(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
@@ -678,6 +687,21 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshSynonym(boolean boolRefresh, String strObjectName) {
 		synonymComposite.refreshSynonym(getUserDB(), boolRefresh, strObjectName);
+	}
+
+	/**
+	 * Sequence 정의
+	 */
+	private void createSequence() {
+		sequenceComposite = new TadpoleSequenceComposite(getSite(), tabFolderObject, userDB);
+		sequenceComposite.initAction();
+	}
+
+	/**
+	 * Sequence 정보를 최신으로 리프레쉬합니다.
+	 */
+	public void refreshSequence(boolean boolRefresh, String strObjectName) {
+		sequenceComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**

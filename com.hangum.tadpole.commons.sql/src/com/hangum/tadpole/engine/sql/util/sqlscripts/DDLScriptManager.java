@@ -23,6 +23,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AltibaseDDLScript;
@@ -91,8 +92,7 @@ public class DDLScriptManager {
 				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
-		) {
+				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
 			rdbScript = new MySqlDDLScript(userDB, actionType);
 		} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 			rdbScript = new AltibaseDDLScript(userDB, actionType);
@@ -135,6 +135,11 @@ public class DDLScriptManager {
 			setObjectName(procedure.getName());
 			
 			retStr = rdbScript.getProcedureScript(procedure);
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE == actionType) {
+			OracleSequenceDAO sequenceDAO = (OracleSequenceDAO)obj;
+			setObjectName(sequenceDAO.getSequence_name());
+			
+			retStr = rdbScript.getSequenceScript(sequenceDAO);
 		} else if(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES == actionType) {
 			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
 			setObjectName(procedure.getName());

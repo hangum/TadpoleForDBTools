@@ -25,6 +25,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -165,6 +166,12 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		map.put("object_name", procedureDAO.getName());	
 
 		return client.queryForList("getProcedureOutParamter", map);
+	}
+
+	@Override
+	public String getSequenceScript(OracleSequenceDAO sequenceDAO) throws Exception {
+		// TODO Auto-generated method stub
+		return "undefined";
 	}
 }
 

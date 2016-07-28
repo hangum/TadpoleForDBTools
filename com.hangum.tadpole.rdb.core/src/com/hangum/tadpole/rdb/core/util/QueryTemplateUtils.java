@@ -83,6 +83,8 @@ public class QueryTemplateUtils {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_SYNONYM_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TRIGGER_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE) {
+				defaultStr =  OracleDMLTemplate.TMP_CREATE_SEQUENCE_STMT;
 			}
 		} else if(DBDefine.SQLite_DEFAULT ==  userDB.getDBDefine()) {
 			
