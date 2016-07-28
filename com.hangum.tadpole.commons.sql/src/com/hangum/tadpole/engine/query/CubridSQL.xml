@@ -263,13 +263,18 @@ SELECT
 	 	condition AS statement
 	FROM db_trigger
 </select>
+<!-- 
+	#table_name# 아규먼트가 없으면 해당 스키마의 모든 트리거 목록을 조회하도록 한다.
+ -->
 <select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
 	SELECT 
 		name,
 		event,
 	 	condition AS statement
 	FROM db_trigger
+<isNotEmpty property="table_name">
 	WHERE table = #table_name#
+</isNotEmpty>
 </select>
 
 <!-- 
