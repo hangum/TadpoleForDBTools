@@ -30,7 +30,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO;
 import com.hangum.tadpole.engine.restful.RESTFulNotFoundURLException;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 

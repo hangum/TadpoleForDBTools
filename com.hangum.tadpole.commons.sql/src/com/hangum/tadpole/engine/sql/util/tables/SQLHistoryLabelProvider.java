@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.tables;
 
-import java.sql.SQLNonTransientConnectionException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

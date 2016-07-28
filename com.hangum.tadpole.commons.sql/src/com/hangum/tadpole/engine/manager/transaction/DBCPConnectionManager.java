@@ -11,9 +11,9 @@
 package com.hangum.tadpole.engine.manager.transaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -40,8 +40,8 @@ public class DBCPConnectionManager {
 	private static final Logger logger = Logger.getLogger(DBCPConnectionManager.class);
 	
 	public static DBCPConnectionManager instance = new DBCPConnectionManager();
-	private Map<String, DataSource> mapDataSource = new HashMap<String, DataSource>();
-	private Map<String, GenericObjectPool> mapGenericObject = new HashMap<String, GenericObjectPool>();
+	private Map<String, DataSource> mapDataSource = new ConcurrentHashMap<String, DataSource>();
+	private Map<String, GenericObjectPool> mapGenericObject = new ConcurrentHashMap<String, GenericObjectPool>();
 	
 	private DBCPConnectionManager() {}
 	
@@ -118,7 +118,9 @@ public class DBCPConnectionManager {
 				connectionPool.close();
 				
 				mapDataSource.remove(searchKey);
+				mapGenericObject.remove(searchKey);
 			}
+			
 		} catch(Exception e) {
 			logger.error(String.format("**** release connection key is %s", searchKey), e);
 		}

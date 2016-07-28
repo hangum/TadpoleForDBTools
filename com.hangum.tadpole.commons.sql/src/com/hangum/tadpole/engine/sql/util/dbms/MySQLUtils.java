@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.executer.ProcedureExecuterManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
