@@ -17,7 +17,6 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 

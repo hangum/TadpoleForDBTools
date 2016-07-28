@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,6 @@ import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.dml.ExtendTableColumnDAO;
 import com.hangum.tadpole.rdb.core.dialog.dml.IndexInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.SelectObjectDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.TableInformationDialog;

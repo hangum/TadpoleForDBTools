@@ -16,13 +16,9 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.extensionpoint.handler.ConnectionDecorationContributionsHandler;
-import com.swtdesigner.ResourceManager;
 
 /**
  *  db icons utils

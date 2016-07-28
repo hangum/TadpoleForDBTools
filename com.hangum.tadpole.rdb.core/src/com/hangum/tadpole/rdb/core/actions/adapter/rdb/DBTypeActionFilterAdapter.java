@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.ui.IActionFilter;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * rdb db popup

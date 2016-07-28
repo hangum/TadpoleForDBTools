@@ -37,8 +37,6 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Messages;

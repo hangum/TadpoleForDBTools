@@ -29,7 +29,6 @@ public class MongodbDBStatusAction implements IViewActionDelegate {
 	private IStructuredSelection sel;
 
 	public MongodbDBStatusAction() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

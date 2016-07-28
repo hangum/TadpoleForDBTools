@@ -29,8 +29,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -233,7 +231,7 @@ public class SelectObjectDialog extends Dialog {
 			public void widgetSelected(SelectionEvent event) {
 
 				if (map.isEmpty()) {
-					MessageDialog.openInformation(null , "Information" , "조회대상 객체를 선택하십시오.");
+					MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().SelectSearchObject);
 					return;
 				} else {
 					okPressed();
