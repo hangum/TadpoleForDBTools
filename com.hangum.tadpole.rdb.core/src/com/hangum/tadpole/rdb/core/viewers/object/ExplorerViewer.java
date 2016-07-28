@@ -61,6 +61,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePack
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynonymComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -92,6 +93,8 @@ public class ExplorerViewer extends ViewPart {
 	
 	private TadpoleTableComposite 		tableComposite 		= null;
 	private TadpoleViewerComposite 		viewComposite 		= null;
+
+	private TadpoleTriggerComposite 	triggerComposite    = null;
 	
 	// oracle
 	private TadpoleSynonymComposite 	synonymComposite 	= null;
@@ -245,6 +248,9 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
 			functionCompostite.filter(strSearchText);
 		
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
+			triggerComposite.filter(strSearchText);
+		
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 			mongoJavaScriptComposite.filter(strSearchText);
 		}
@@ -290,6 +296,7 @@ public class ExplorerViewer extends ViewPart {
 		if(null != procedureComposite) procedureComposite.dispose(); 
 		if(null != packageComposite) packageComposite.dispose(); 
 		if(null != functionCompostite) functionCompostite.dispose(); 
+		if(null != triggerComposite) triggerComposite.dispose(); 
 		
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
@@ -464,6 +471,7 @@ public class ExplorerViewer extends ViewPart {
 			createProcedure();
 			createPackage();
 			createFunction();
+			createTrigger();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(),
@@ -476,7 +484,8 @@ public class ExplorerViewer extends ViewPart {
 				procedureComposite.getTableViewer(), 
 				packageComposite.getPackageTableViewer(), 
 				packageComposite.getProcFuncTableViewer(),
-				functionCompostite.getTableviewer() 
+				functionCompostite.getTableviewer(),
+				triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
@@ -489,6 +498,7 @@ public class ExplorerViewer extends ViewPart {
 			createView();
 			createProcedure();
 			createFunction();
+			createTrigger();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
@@ -497,7 +507,8 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTriggerComposite().getTableViewer(),
 				viewComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
-				functionCompostite.getTableviewer() 
+				functionCompostite.getTableviewer(),
+				triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
@@ -507,6 +518,7 @@ public class ExplorerViewer extends ViewPart {
 			createView();
 			createProcedure();
 			createFunction();
+			createTrigger();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(), 
@@ -516,7 +528,8 @@ public class ExplorerViewer extends ViewPart {
 				tableComposite.getTriggerComposite().getTableViewer(),
 				viewComposite.getTableViewer(), 
 				procedureComposite.getTableViewer(), 
-				functionCompostite.getTableviewer() 
+				functionCompostite.getTableviewer(),
+				triggerComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
@@ -548,6 +561,7 @@ public class ExplorerViewer extends ViewPart {
 			refreshConstraints(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
 			refreshTrigger(true, strObjectName);	
+			refreshAllTrigger(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 			refreshView(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
@@ -603,11 +617,19 @@ public class ExplorerViewer extends ViewPart {
 	}
 
 	/**
-	 * Procedure 정의
+	 * Function 정의
 	 */
 	private void createFunction() {
 		functionCompostite = new TadpoleFunctionComposite(getSite(), tabFolderObject, userDB);
 		functionCompostite.initAction();
+	}
+
+	/**
+	 * Trigger 정의
+	 */
+	private void createTrigger() {
+		triggerComposite = new TadpoleTriggerComposite(getSite(), tabFolderObject, userDB);
+		triggerComposite.initAction();
 	}
 
 	/**
@@ -702,6 +724,13 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
 		tableComposite.getTriggerComposite().refreshTrigger(userDB, boolRefresh, strObjectName);
+	}
+
+	/**
+	 * 전체 trigger 정보를 최신으로 갱신 합니다.
+	 */
+	public void refreshAllTrigger(boolean boolRefresh, String strObjectName) {
+		triggerComposite.refreshAllTrigger(userDB, boolRefresh, strObjectName); 
 	}
 
 	/**

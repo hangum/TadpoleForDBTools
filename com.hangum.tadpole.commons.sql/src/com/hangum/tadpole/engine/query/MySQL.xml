@@ -338,7 +338,9 @@ select
     INFORMATION_SCHEMA.TRIGGERS
   where 1=1
     and event_object_schema = #table_schema#
+<isNotEmpty property="table_name">
     and event_object_table = #table_name#
+</isNotEmpty>
 </select>
 
 <!-- 

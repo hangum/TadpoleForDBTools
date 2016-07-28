@@ -229,6 +229,32 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	}
 
 	/**
+	 * 지정된 스키마의 모든 trigger 정보를 최신으로 갱신 합니다.
+	 * @param strObjectName 
+	 */
+	public void refreshAllTrigger(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
+		if(!boolRefresh) if(showTrigger != null) return;
+		this.userDB = userDB;
+		
+		try {
+			showTrigger = DBSystemSchema.getTrigger(userDB, "");
+
+			triggerTableViewer.setInput(showTrigger);
+			triggerTableViewer.refresh();
+			
+			TableUtil.packTable(triggerTableViewer.getTable());
+
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmTriggers);
+			selectDataOfTable(strObjectName);
+		} catch (Exception e) {
+			logger.error("showTrigger refresh", e); //$NON-NLS-1$
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_76, errStatus); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * get tableviewer
 	 * @return
 	 */

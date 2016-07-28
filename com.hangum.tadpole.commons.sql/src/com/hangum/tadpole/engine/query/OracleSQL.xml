@@ -671,7 +671,10 @@ ORDER BY t.table_name, s.object_name
    WHERE 1=1
      AND s.owner = (#table_schema#)
      AND s.object_type = 'TRIGGER'
+<isNotEmpty property="table_name">
      AND t.table_name = #table_name#
+
+</isNotEmpty>
 ORDER BY t.table_name, s.object_name
 </select>
 

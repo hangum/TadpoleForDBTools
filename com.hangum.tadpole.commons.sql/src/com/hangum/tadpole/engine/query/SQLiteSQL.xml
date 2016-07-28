@@ -154,7 +154,9 @@ SELECT name as function_name,
  		sql as statement
 	FROM sqlite_master
 	WHERE type = 'trigger'
+<isNotEmpty property="table_name">
 	  AND tbl_name = #table_name#
+</isNotEmpty>
 	ORDER BY trigger  
 </select>
 
