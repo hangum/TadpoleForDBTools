@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -37,10 +35,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class TadpoleSystem_UserInfoData {
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserInfoData.class);
+//	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserInfoData.class);
 	
 	/**
 	 * Return to user credential
