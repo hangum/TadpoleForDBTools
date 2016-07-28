@@ -28,7 +28,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -327,7 +326,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 					dialog.open();
 				} else if (dialog.getObjectCount() <= 0) {
 					//해당 오브젝트를 찾을 수 없습니다.
-					MessageDialog.openInformation(null , "Information" , "객체를 찾을 수 없습니다.");
+					MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().NotFountObject);
 				}
 				Map<String, String> map = dialog.getSelectObject();
 				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
@@ -355,7 +354,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 			tableViewer.refresh();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("DML Generate dialog", e);
 		}
 
 	}
@@ -368,7 +367,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	private String buildSelectSQL() {
 		StringBuffer resultSQL = new StringBuffer();
 		if (chkComment.getSelection()) {
-			resultSQL.append("/* Tadpole SQL Generator */"); //$NON-NLS-1$
+			resultSQL.append(makeDefaultComment());
 		}
 		resultSQL.append("SELECT "); //$NON-NLS-1$
 		int cnt = 0;
@@ -388,7 +387,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 					sbColumn.append(strTableAlias);
 					if (chkComment.getSelection()) {
-						sbColumn.append("/* " + allDao.getType() +":"+ allDao.getComment()+ " */"); //$NON-NLS-1$ //$NON-NLS-2$
+						sbColumn.append(makeComment(allDao.getType(), allDao.getComment()));
 					}
 				}
 				
@@ -404,14 +403,12 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey()) || "PRI".equals(allDao.getKey())) { //$NON-NLS-1$
 
-				if (cnt == 0) {
-					resultSQL.append(" WHERE "); //$NON-NLS-1$
-				} else {
-					resultSQL.append(" AND "); //$NON-NLS-1$
-				}
+				if (cnt == 0) resultSQL.append(" WHERE "); //$NON-NLS-1$
+				 else resultSQL.append(" AND "); //$NON-NLS-1$
+				
 				resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? "); //$NON-NLS-1$
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */"); //$NON-NLS-1$ //$NON-NLS-2$
+					resultSQL.append(makeComment(allDao.getType()));
 				}
 				cnt++;
 			}
@@ -427,8 +424,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 */
 	private String buildUpdateSQL() {
 		StringBuffer resultSQL = new StringBuffer();
-		if (chkComment.getSelection())
-			resultSQL.append("/* Tadpole SQL Generator */"); //$NON-NLS-1$
+		if (chkComment.getSelection()) resultSQL.append(makeDefaultComment());
 
 		int cnt = 0;
 
@@ -439,14 +435,12 @@ public class GenerateStatmentDMLDialog extends Dialog {
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if ("*".equals(allDao.getField()))continue; //$NON-NLS-1$
 
-				if (cnt == 0)
-					resultSQL.append(" SET "); //$NON-NLS-1$
-				else
-					resultSQL.append(" , "); //$NON-NLS-1$
+				if (cnt == 0) resultSQL.append(" SET "); //$NON-NLS-1$
+				else resultSQL.append(" , "); //$NON-NLS-1$
 
 				resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? "); //$NON-NLS-1$
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() +":"+ allDao.getComment()+ " */"); //$NON-NLS-1$ //$NON-NLS-2$
+					resultSQL.append(makeComment(allDao.getType(), allDao.getComment()));
 				}
 				cnt++;
 			}
@@ -455,14 +449,12 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if (allDao.isCheck()) {
-					if (cnt == 0)
-						resultSQL.append(" SET "); //$NON-NLS-1$
-					else
-						resultSQL.append(", "); //$NON-NLS-1$
+					if (cnt == 0) resultSQL.append(" SET "); //$NON-NLS-1$
+					else resultSQL.append(", "); //$NON-NLS-1$
 
 					resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? "); //$NON-NLS-1$
 					if (chkComment.getSelection()) {
-						resultSQL.append("/* " + allDao.getType() +":"+ allDao.getComment() + " */"); //$NON-NLS-1$ //$NON-NLS-2$
+						resultSQL.append(makeComment(allDao.getType(), allDao.getComment()));
 					}
 					cnt++;
 
@@ -473,15 +465,13 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
 
-				if (cnt == 0)
-					resultSQL.append(" WHERE "); //$NON-NLS-1$
-				else
-					resultSQL.append(" AND "); //$NON-NLS-1$
+				if (cnt == 0) resultSQL.append(" WHERE "); //$NON-NLS-1$
+				else resultSQL.append(" AND "); //$NON-NLS-1$
 
 				resultSQL.append(allDao.getColumnNamebyTableAlias()).append(" = ? "); //$NON-NLS-1$
 
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */"); //$NON-NLS-1$ //$NON-NLS-2$
+					resultSQL.append(makeComment(allDao.getType()));
 				}
 				cnt++;
 			}
@@ -497,8 +487,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	 */
 	private String buildInsertSQL() {
 		StringBuffer resultSQL = new StringBuffer();
-		if (chkComment.getSelection())
-			resultSQL.append("/* Tadpole SQL Generator */"); //$NON-NLS-1$
+		if (chkComment.getSelection()) resultSQL.append(makeDefaultComment());
 
 		int cnt = 0;
 
@@ -509,12 +498,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if ("*".equals(allDao.getField()))continue; //$NON-NLS-1$
 
-				if (cnt > 0)
-					resultSQL.append(", "); //$NON-NLS-1$
+				if (cnt > 0) resultSQL.append(", "); //$NON-NLS-1$
 				resultSQL.append(allDao.getSysName());
 				
 				if (chkComment.getSelection()){
-					resultSQL.append("/*" + allDao.getComment() + "*/");
+					resultSQL.append(makeComment(allDao.getComment()));
 				}
 
 				cnt++;
@@ -524,12 +512,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if (allDao.isCheck()) {
-					if (cnt > 0)
-						resultSQL.append(", "); //$NON-NLS-1$
+					if (cnt > 0) resultSQL.append(", "); //$NON-NLS-1$
 					resultSQL.append(allDao.getSysName());
 					
 					if (chkComment.getSelection()) {
-						resultSQL.append("/* " + allDao.getComment() + " */"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						resultSQL.append(makeComment(allDao.getComment()));
 					}
 
 					cnt++;
@@ -543,12 +530,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if ("*".equals(allDao.getSysName()))continue; //$NON-NLS-1$
 
-				if (cnt > 0)
-					resultSQL.append(", "); //$NON-NLS-1$
+				if (cnt > 0) resultSQL.append(", "); //$NON-NLS-1$
 				resultSQL.append("?"); //$NON-NLS-1$
 
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getField() + ":" + allDao.getType() + " */"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					resultSQL.append(makeComment(allDao.getField(), allDao.getType()));
 				}
 
 				cnt++;
@@ -558,12 +544,11 @@ public class GenerateStatmentDMLDialog extends Dialog {
 
 			for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 				if (allDao.isCheck()) {
-					if (cnt > 0)
-						resultSQL.append(", "); //$NON-NLS-1$
+					if (cnt > 0) resultSQL.append(", "); //$NON-NLS-1$
 
 					resultSQL.append("?"); //$NON-NLS-1$
 					if (chkComment.getSelection()) {
-						resultSQL.append("/* " + allDao.getField() + ":" + allDao.getType() + " */"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						resultSQL.append(makeComment(allDao.getField(), allDao.getType()));
 					}
 					cnt++;
 				}
@@ -578,7 +563,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 	private String buildDeleteSQL() {
 		StringBuffer resultSQL = new StringBuffer();
 		if (chkComment.getSelection())
-			resultSQL.append("/* Tadpole SQL Generator */"); //$NON-NLS-1$
+			resultSQL.append(makeDefaultComment());
 
 		int cnt = 0;
 
@@ -586,14 +571,12 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		for (ExtendTableColumnDAO allDao : (List<ExtendTableColumnDAO>) tableViewer.getInput()) {
 			if ("PK".equals(allDao.getKey())) { //$NON-NLS-1$
 
-				if (cnt == 0)
-					resultSQL.append("WHERE "); //$NON-NLS-1$
-				else
-					resultSQL.append("\t AND "); //$NON-NLS-1$
+				if (cnt == 0) resultSQL.append("WHERE "); //$NON-NLS-1$
+				else resultSQL.append("\t AND "); //$NON-NLS-1$
 
 				resultSQL.append(allDao.getSysName()).append(" = ? "); //$NON-NLS-1$
 				if (chkComment.getSelection()) {
-					resultSQL.append("/* " + allDao.getType() + " */"); //$NON-NLS-1$ //$NON-NLS-2$
+					resultSQL.append(makeComment(allDao.getType()));
 				}
 				cnt++;
 			}
@@ -613,10 +596,33 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		try {
 			retSQL = SQLFormater.format(retSQL);
 		} catch (Exception e) {
-			logger.error("SQL Formatting", e); //$NON-NLS-1$
+			logger.error("SQL Formatting" + e); //$NON-NLS-1$
 		}
 
 		return retSQL;
+	}
+	
+	/**
+	 * 기본 커맨트를 리턴한다.
+	 * @return
+	 */
+	private String makeDefaultComment() {
+		return "/* Tadpole SQL Generator */";
+	}
+	
+	/**
+	 * 코드의 코멘트를 생성한다.
+	 * 
+	 * @param columnName
+	 * @param columnType
+	 * @return
+	 */
+	private String makeComment(String... comments) {
+		StringBuffer sbComment = new StringBuffer("/* ");
+		for (String comment : comments) {
+			sbComment.append(comment + ", ");
+		}
+		return StringUtils.removeEnd(sbComment.toString(), ", ") + " */";
 	}
 
 	/**

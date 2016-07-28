@@ -28,10 +28,10 @@ import com.hangum.tadpole.mongodb.core.dialogs.users.UserManagerDialog;
  *
  */
 public class MongodbUserManagerAction implements IViewActionDelegate {
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger logger = Logger.getLogger(MongodbUserManagerAction.class);
+//	/**
+//	 * Logger for this class
+//	 */
+//	private static final Logger logger = Logger.getLogger(MongodbUserManagerAction.class);
 
 	private IStructuredSelection sel;
 

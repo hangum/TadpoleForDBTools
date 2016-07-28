@@ -202,7 +202,7 @@ public class ExportSQLComposite extends AbstractExportComposite {
 
 			// fix https://github.com/hangum/TadpoleForDBTools/issues/807
 			if (this.btnUpdate.getSelection() && listWhereColumnName.size() <= 0){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, "Update문 Where 조건에 사용할 컬럼을 선택하십시오.");
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_UpdateMsg);
 				return false;
 			}else if (this.btnMerge.getSelection() && listWhereColumnName.size() <= 0){
 				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_PleaseMergeMath);

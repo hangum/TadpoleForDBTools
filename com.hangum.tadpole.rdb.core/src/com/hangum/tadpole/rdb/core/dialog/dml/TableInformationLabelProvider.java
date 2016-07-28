@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 

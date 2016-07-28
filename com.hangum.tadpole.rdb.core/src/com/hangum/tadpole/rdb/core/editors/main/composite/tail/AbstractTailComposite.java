@@ -65,7 +65,7 @@ public abstract class AbstractTailComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String strPin = btnPin.getToolTipText();
-				if("Pin".equals(strPin)) {
+				if(Messages.get().Pin.equals(strPin)) {
 					makePinBtn();
 				} else {
 					Composite parentComposite = compositeParent.getParent().getParent();
@@ -77,7 +77,7 @@ public abstract class AbstractTailComposite extends Composite {
 			}
 		});
 		btnPin.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/pin.png"));
-		btnPin.setToolTipText("Pin");
+		btnPin.setToolTipText(Messages.get().Pin);
 		
 		btnViewQuery = new Button(compositeDownloadAMsg, SWT.NONE);
 		btnViewQuery.addSelectionListener(new SelectionAdapter() {
@@ -125,7 +125,7 @@ public abstract class AbstractTailComposite extends Composite {
 	public abstract RequestQuery getRequestQuery();
 	
 	private void makePinBtn() {
-		btnPin.setToolTipText("Unpin");
+		btnPin.setToolTipText(Messages.get().Unpin);
 		btnPin.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 		btnPin.getParent().layout();
 	}

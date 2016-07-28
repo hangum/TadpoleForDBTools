@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
