@@ -120,6 +120,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * Sequence 최신정보로 갱신
+	 */
+	protected void refreshSequence() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshSequence(true, "");		
+	}
+	
+	/**
 	 * Indexes 최신정보로 갱신
 	 */
 	protected void refreshIndexes() {
@@ -177,6 +185,8 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	protected void refreshTrigger() {
 		ExplorerViewer ev = getExplorerView();
 		if(ev != null) ev.refreshTrigger(true, "");
+		//TODO:무조건 리프레쉬 하는것이 아니라 전체트리거 탭이 선택되어 있을때만 리프레쉬 해야하나?
+		if(ev != null) ev.refreshAllTrigger(true, "");
 	}
 	
 	/**

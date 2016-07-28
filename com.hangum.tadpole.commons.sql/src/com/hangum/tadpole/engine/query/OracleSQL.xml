@@ -398,6 +398,17 @@ SELECT
 </select>
 
 <!-- 
+	시퀀스 목록을 조회한다.
+ -->
+<select id="sequenceList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO" parameterClass="java.lang.String">
+	select 
+		SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER,
+		SEQUENCE_OWNER as schema_name
+	from ALL_SEQUENCES
+	where SEQUENCE_OWNER = #schema_name#
+</select>
+
+<!-- 
 	index 상세 내역
 	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
 	
@@ -910,6 +921,19 @@ select cols.table_name as table_name
 
 <select id="getDDLScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
 	select SYS.DBMS_METADATA.GET_DDL(#object_type#,#object_name#,#schema_name#) from dual
+</select>
+
+<select id="getSequenceScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+select 
+    'CREATE SEQUENCE ' || sequence_owner || '.' || sequence_name || ' start with ' || min_value || ' increment by ' || increment_by
+   || case when length(to_char(max_value)) >= 20 then ' nomaxvalue ' else ' maxvalue ' || max_value end 
+   || case when cycle_flag = 'Y' then ' cycle ' else ' nocycle ' end 
+   || case when cache_size > 1 then  ' cache ' || cache_size else ' nocache ' end
+   || case when order_flag = 'Y' then ' order ' else ' noorder ' end 
+from ALL_SEQUENCES 
+where 1=1
+  and SEQUENCE_OWNER = #schema_name#
+  and SEQUENCE_NAME = #object_name#
 </select>
 
 <!-- 

@@ -29,6 +29,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreatePackageAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateProcedureAction;
+import com.hangum.tadpole.rdb.core.actions.connections.CreateSequenceAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
@@ -123,6 +124,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
 			CreatePackageAction cia = new CreatePackageAction();
+			cia.run(userDB, actionType);
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE) {
+			CreateSequenceAction cia = new CreateSequenceAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();

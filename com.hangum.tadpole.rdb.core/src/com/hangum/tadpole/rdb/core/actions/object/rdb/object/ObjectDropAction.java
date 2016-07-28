@@ -30,6 +30,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
@@ -129,6 +130,19 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					refreshSynonym();
 				} catch(Exception e) {
 					logger.error("drop synoym", e);
+					exeMessage(Messages.get().ObjectDeleteAction_1, e);
+				}
+			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE) {
+			
+			OracleSequenceDAO dao = (OracleSequenceDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Drop Sequence?")) {
+				try {
+					executeSQL(userDB, "drop sequence " + dao.getFullName()); //$NON-NLS-1$ //$NON-NLS-2$
+					
+					refreshSequence();
+				} catch(Exception e) {
+					logger.error("drop sequence", e);
 					exeMessage(Messages.get().ObjectDeleteAction_1, e);
 				}
 			}

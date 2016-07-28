@@ -52,6 +52,8 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 			refreshView();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.SYNONYM) {
 			refreshSynonym();
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE) {
+			refreshSequence();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
 			refreshProcedure();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.PACKAGES) {
