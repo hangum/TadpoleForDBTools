@@ -218,15 +218,14 @@ public class SQLUtil {
 	 */
 	public static String makeIdentifierName(UserDBDAO userDB, String name) {
 		boolean isChanged = false;
-		String retStr = "";
+		name = name == null ? "" : name;
+		String retStr = name;
 
 		//
 		// 오라클 평선의 파라미터 중에 리턴값의 아규먼트 명칭은 널이다.  
 		//
-		name = name == null ? "" : name;
 		TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
-		
-		if(tmd == null) return retStr;
+		if(tmd == null) return name;
 
 		//
 		// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;;
@@ -268,7 +267,7 @@ public class SQLUtil {
 		// 키워드 인지 검사하여 오브젝트 명을 변경한다.
 		if(!isChanged) {
 			if(StringUtils.containsIgnoreCase(","+tmd.getKeywords()+",", ","+retStr+",")) {
-				retStr = tmd.getIdentifierQuoteString() + retStr + tmd.getIdentifierQuoteString();
+				retStr = tmd.getIdentifierQuoteString() + name + tmd.getIdentifierQuoteString();
 			}
 		}
 		
