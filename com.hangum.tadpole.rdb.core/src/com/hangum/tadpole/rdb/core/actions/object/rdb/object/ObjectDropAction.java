@@ -30,6 +30,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -143,6 +144,19 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					refreshSequence();
 				} catch(Exception e) {
 					logger.error("drop sequence", e);
+					exeMessage(Messages.get().ObjectDeleteAction_1, e);
+				}
+			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.LINK) {
+			
+			OracleDBLinkDAO dao = (OracleDBLinkDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Drop database link?")) {
+				try {
+					executeSQL(userDB, "drop database link " + dao.getSysName()); //$NON-NLS-1$ //$NON-NLS-2$
+					
+					refreshDBLink();
+				} catch(Exception e) {
+					logger.error("drop database link", e);
 					exeMessage(Messages.get().ObjectDeleteAction_1, e);
 				}
 			}

@@ -347,6 +347,8 @@ public class SQLUtil {
 	 * 
 	 * https://github.com/hangum/TadpoleForDBTools/issues/466
 	 * 
+	 * 오라클 디비링크 관련 스크립트는 SQL에디터를 사용하도록 OBJECT_TYPE.LINK 추가.
+	 * 
 	 * @param dbAction
 	 * @return
 	 */
@@ -355,7 +357,8 @@ public class SQLUtil {
 				dbAction == OBJECT_TYPE.VIEWS ||
 				dbAction == OBJECT_TYPE.SYNONYM ||
 				dbAction == OBJECT_TYPE.INDEXES ||
-				dbAction == OBJECT_TYPE.SEQUENCE) {
+				dbAction == OBJECT_TYPE.SEQUENCE ||
+				dbAction == OBJECT_TYPE.LINK) {
 			return true;
 		}
 		

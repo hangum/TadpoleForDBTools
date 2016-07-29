@@ -56,6 +56,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.dblink.TadpoleDBLinkComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
@@ -100,6 +101,7 @@ public class ExplorerViewer extends ViewPart {
 	// oracle
 	private TadpoleSynonymComposite 	synonymComposite 	= null;
 	private TadpoleSequenceComposite 	sequenceComposite 	= null;
+	private TadpoleDBLinkComposite 	    dblinkComposite 	= null;
 	
 	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpolePackageComposite	    packageComposite 	= null;
@@ -236,6 +238,9 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.SEQUENCE.name())) {
 			sequenceComposite.filter(strSearchText);
 
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
+			dblinkComposite.filter(strSearchText);
+
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 			viewComposite.filter(strSearchText);					
 		
@@ -303,6 +308,7 @@ public class ExplorerViewer extends ViewPart {
 		if(null != packageComposite) packageComposite.dispose(); 
 		if(null != functionCompostite) functionCompostite.dispose(); 
 		if(null != triggerComposite) triggerComposite.dispose(); 
+		if(null != dblinkComposite) dblinkComposite.dispose();
 		
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
@@ -479,6 +485,7 @@ public class ExplorerViewer extends ViewPart {
 			createPackage();
 			createFunction();
 			createTrigger();
+			createDBLink();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				tableComposite.getTableListViewer(),
@@ -493,7 +500,8 @@ public class ExplorerViewer extends ViewPart {
 				packageComposite.getPackageTableViewer(), 
 				packageComposite.getProcFuncTableViewer(),
 				functionCompostite.getTableviewer(),
-				triggerComposite.getTableViewer()
+				triggerComposite.getTableViewer(),
+				dblinkComposite.getTableviewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
@@ -582,9 +590,10 @@ public class ExplorerViewer extends ViewPart {
 			refreshPackage(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
 			refreshFunction(true, strObjectName);
-		
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
 			refreshJS(true, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
+			refreshDBLink(true, strObjectName);
 		}
 		filterText();
 		
@@ -695,6 +704,21 @@ public class ExplorerViewer extends ViewPart {
 	private void createSequence() {
 		sequenceComposite = new TadpoleSequenceComposite(getSite(), tabFolderObject, userDB);
 		sequenceComposite.initAction();
+	}
+
+	/**
+	 * Database link 정의
+	 */
+	private void createDBLink() {
+		dblinkComposite = new TadpoleDBLinkComposite(getSite(), tabFolderObject, userDB);
+		dblinkComposite.initAction();
+	}
+
+	/**
+	 * Database Link 정보를 최신으로 리프레쉬합니다.
+	 */
+	public void refreshDBLink(boolean boolRefresh, String strObjectName) {
+		dblinkComposite.refreshDBLink(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**
@@ -830,7 +854,6 @@ public class ExplorerViewer extends ViewPart {
 			refershSelectObject(OBJECT_TYPE.INDEXES.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
 			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
-
 		} else if(queryDDLType == QUERY_DDL_TYPE.VIEW) {
 			refershSelectObject(OBJECT_TYPE.VIEWS.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.PROCEDURE) {
@@ -843,6 +866,8 @@ public class ExplorerViewer extends ViewPart {
 			refershSelectObject(OBJECT_TYPE.SYNONYM.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.SEQUENCE) {
 			refershSelectObject(OBJECT_TYPE.SEQUENCE.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.LINK ) {
+			refershSelectObject(OBJECT_TYPE.LINK.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
 			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
 		} else {

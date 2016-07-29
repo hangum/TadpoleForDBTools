@@ -1328,4 +1328,35 @@ SELECT INDEX_NAME "Index Name"
    and INDEX_NAME = (#index_name#)
 </select>
 
+<!-- 
+	데이터베이스 링크 정보를 조회한다.
+ -->
+<select id="dbLinkList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT
+	     DB_LINK
+	    ,USERNAME
+	    ,HOST
+	    ,CREATED
+	    ,OWNER AS SCHEMA_NAME
+	FROM ALL_DB_LINKS
+	WHERE OWNER = #schema_name#
+	ORDER BY OWNER, DB_LINK
+]]>
+</select>
+
+<!-- 
+	데이터베이스 링크의 DDL 스크립트를 생성한다.
+ -->
+<select id="getDatabaseLinkScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	<![CDATA[
+		SELECT 'CREATE' || case when OWNER = 'PUBLIC' then ' PUBLIC' else '' end || ' DATABASE LINK "'|| db_link ||'" CONNECT TO ' || nvl(username,user) || ' IDENTIFIED BY "<password>" USING ''' || host || ''';' 
+		FROM all_db_links 
+		WHERE OWNER = #schema_name# 
+		  AND DB_LINK = #object_name#
+		  AND ROWNUM <= 1
+	]]>
+</select>
+
+
 </sqlMap>
