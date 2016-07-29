@@ -19,6 +19,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -123,5 +124,14 @@ public abstract class AbstractRDBDDLScript {
 	 * @throws Exception
 	 */
 	public abstract String getSequenceScript(OracleSequenceDAO sequenceDAO) throws Exception;
+	
+	/**
+	 * database link script
+	 * 
+	 * @param dblinkDAO
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract String getDBLinkScript(OracleDBLinkDAO dblinkDAO) throws Exception;
 	
 }

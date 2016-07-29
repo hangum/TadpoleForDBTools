@@ -128,6 +128,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * Database Link 최신정보로 갱신
+	 */
+	protected void refreshDBLink() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshDBLink(true, "");		
+	}
+	
+	/**
 	 * Indexes 최신정보로 갱신
 	 */
 	protected void refreshIndexes() {

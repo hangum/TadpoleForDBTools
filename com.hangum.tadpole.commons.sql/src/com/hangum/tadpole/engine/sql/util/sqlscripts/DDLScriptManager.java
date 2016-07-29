@@ -23,6 +23,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.scripts.AbstractRDBDDLScript;
@@ -140,6 +141,11 @@ public class DDLScriptManager {
 			setObjectName(sequenceDAO.getSequence_name());
 			
 			retStr = rdbScript.getSequenceScript(sequenceDAO);
+		} else if(PublicTadpoleDefine.OBJECT_TYPE.LINK == actionType) {
+			OracleDBLinkDAO dblinkDAO = (OracleDBLinkDAO)obj;
+			setObjectName(dblinkDAO.getDb_link());
+			
+			retStr = rdbScript.getDBLinkScript(dblinkDAO);
 		} else if(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES == actionType) {
 			ProcedureFunctionDAO procedure = (ProcedureFunctionDAO)obj;
 			setObjectName(procedure.getName());

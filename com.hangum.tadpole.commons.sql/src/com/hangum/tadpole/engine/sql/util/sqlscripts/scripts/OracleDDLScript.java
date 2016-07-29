@@ -24,6 +24,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -407,6 +408,21 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		
 		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
 		//result.append(SQLFormater.format(strDDLScript));
+		result.append(strDDLScript);
+		
+		return result.toString();
+	}
+
+	@Override
+	public String getDBLinkScript(OracleDBLinkDAO dblinkDAO) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		StringBuilder result = new StringBuilder("");
+
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("schema_name", StringUtils.isBlank(dblinkDAO.getSchema_name()) ? userDB.getSchema() : dblinkDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("object_name", dblinkDAO.getDb_link()); //$NON-NLS-1$
+		
+		String strDDLScript = (String)client.queryForObject("getDatabaseLinkScript", paramMap);
 		result.append(strDDLScript);
 		
 		return result.toString();

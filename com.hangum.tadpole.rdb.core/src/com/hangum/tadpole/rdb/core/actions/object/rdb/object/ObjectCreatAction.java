@@ -24,6 +24,7 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewCollectionDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateConstraintsAction;
+import com.hangum.tadpole.rdb.core.actions.connections.CreateDBLinkAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
@@ -127,6 +128,9 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE) {
 			CreateSequenceAction cia = new CreateSequenceAction();
+			cia.run(userDB, actionType);
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.LINK) {
+			CreateDBLinkAction cia = new CreateDBLinkAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();

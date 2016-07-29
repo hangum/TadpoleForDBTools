@@ -85,6 +85,8 @@ public class QueryTemplateUtils {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_SEQUENCE_STMT;
+			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.LINK) {
+				defaultStr =  OracleDMLTemplate.TMP_CREATE_LINK_STMT;
 			}
 		} else if(DBDefine.SQLite_DEFAULT ==  userDB.getDBDefine()) {
 			
@@ -167,6 +169,10 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
+		}
+		
+		if(StringUtils.isBlank(defaultStr)){
+			defaultStr =  initAction.name() + "의 CREATE문 템플릿이 정의되지 않았습니다.";
 		}
 		
 		if(!StringUtils.isBlank(userDB.getSchema())){
