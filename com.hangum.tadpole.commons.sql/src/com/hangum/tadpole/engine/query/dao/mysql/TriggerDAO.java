@@ -12,9 +12,6 @@ package com.hangum.tadpole.engine.query.dao.mysql;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
-
 public class TriggerDAO extends StructObjectDAO {
 	String Trigger;	
 	String Event;

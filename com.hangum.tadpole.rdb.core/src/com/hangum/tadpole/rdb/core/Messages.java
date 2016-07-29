@@ -634,6 +634,14 @@ public class Messages {
 	public String Pin;
 
 	public String Unpin;
+
+	public String Sequence;
+
+	public String SequenceCreated;
+
+	public String SequenceDelete;
+
+	public String IsDropSequence;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

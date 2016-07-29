@@ -354,7 +354,8 @@ public class SQLUtil {
 		if(dbAction == OBJECT_TYPE.TABLES ||
 				dbAction == OBJECT_TYPE.VIEWS ||
 				dbAction == OBJECT_TYPE.SYNONYM ||
-				dbAction == OBJECT_TYPE.INDEXES) {
+				dbAction == OBJECT_TYPE.INDEXES ||
+				dbAction == OBJECT_TYPE.SEQUENCE) {
 			return true;
 		}
 		
