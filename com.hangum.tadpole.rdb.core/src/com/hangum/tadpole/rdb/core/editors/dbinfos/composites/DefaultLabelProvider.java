@@ -33,21 +33,19 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 		AbstractDAO dao = (AbstractDAO) element;
 
 		if (columnIndex == 0) {
-//			for (DB_KEY key : DB_KEY.values()) {
-				if (dao instanceof OracleSynonymDAO){
-					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/synonyms.png"); //$NON-NLS-1$
-				}else if (dao instanceof OracleDBLinkDAO){
-					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/database_link.png"); //$NON-NLS-1$
-				}else if (dao instanceof OracleSequenceDAO){
-					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/sequence.png"); //$NON-NLS-1$
-				}else if (PublicTadpoleDefine.isPK(dao.getvalue("pk"))) {
-					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/primary_key_column.png"); //$NON-NLS-1$
-				} else if (PublicTadpoleDefine.isFK(dao.getvalue("pk"))) {
-					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/foreign_key_column.png"); //$NON-NLS-1$
-				} else if (PublicTadpoleDefine.isMUL(dao.getvalue("pk"))) {
-					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/multi_key_column.png"); //$NON-NLS-1$
-				}
-//			}
+			if (dao instanceof OracleSynonymDAO){
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/synonyms.png"); //$NON-NLS-1$
+			}else if (dao instanceof OracleDBLinkDAO){
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/database_link.png"); //$NON-NLS-1$
+			}else if (dao instanceof OracleSequenceDAO){
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/sequence.png"); //$NON-NLS-1$
+			}else if (PublicTadpoleDefine.isPK(dao.getvalue("pk"))) {
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/primary_key_column.png"); //$NON-NLS-1$
+			} else if (PublicTadpoleDefine.isFK(dao.getvalue("pk"))) {
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/foreign_key_column.png"); //$NON-NLS-1$
+			} else if (PublicTadpoleDefine.isMUL(dao.getvalue("pk"))) {
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/multi_key_column.png"); //$NON-NLS-1$
+			}
 			return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/column.png"); //$NON-NLS-1$
 		}
 
