@@ -26,6 +26,27 @@ public class SMTPDTO {
 	public SMTPDTO() {
 	}
 	
+	/**
+	 * is smtp valid
+	 * @return
+	 */
+	public boolean isSMTPValid() {
+		if("".equals(getEmail()) || "".equals(getPasswd())) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * is send grid valid
+	 * @return
+	 */
+	public boolean isSendGridValid() {
+		if("".equals(getSendgrid_api())) return true;
+		else return false;
+	}
+	
 	public boolean isValid() {
 		if("".equals(getSendgrid_api())) {
 			if("".equals(getEmail()) || "".equals(getPasswd())) {

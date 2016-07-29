@@ -141,7 +141,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
 					if (null != is) {
 						OracleSynonymDAO synonymDAO = (OracleSynonymDAO) is.getFirstElement();
-						FindEditorAndWriteQueryUtil.run(userDB, "SELECT * FROM " + synonymDAO.getFullName(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM);
+						FindEditorAndWriteQueryUtil.run(userDB, "SELECT * FROM " + synonymDAO.getFullName() + PublicTadpoleDefine.SQL_DELIMITER, PublicTadpoleDefine.OBJECT_TYPE.SYNONYM);
 					}
 				} catch (Exception e) {
 					logger.error("create synoonym", e);
