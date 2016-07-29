@@ -41,6 +41,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
+import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
@@ -150,14 +151,24 @@ public class SendMessageDialog extends Dialog {
 		final String strTitle = textTitle.getText();
 		final String strMessage = textMessage.getText();
 		
+		SMTPDTO smtpDao = null;
+		try {
+			smtpDao = GetAdminPreference.getSessionSMTPINFO();
+		} catch (Exception e1) {
+			logger.error("not set email info" + e1);
+			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DoNotSettingEmailServer);
+			return;
+		}
+		final SMTPDTO finalSMTDao = smtpDao;
+		
 		Job job = new Job("AdminSendingmail") { //$NON-NLS-1$
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				
 				try {
 					List<UserDAO> listUser = TadpoleSystem_UserQuery.getLiveAllUser();
-					SendEmails email = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
 					
+					final SendEmails email = new SendEmails(finalSMTDao);					
 					monitor.beginTask("Start send mail", listUser.size());
 					
 					for (int i=0; i<listUser.size(); i++) {

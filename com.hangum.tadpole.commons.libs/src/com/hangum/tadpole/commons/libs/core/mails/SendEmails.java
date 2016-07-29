@@ -33,7 +33,7 @@ public class SendEmails {
 	private SMTPDTO smtpDto;
 	
 	// send grid로 보내지지 않는 리스트.
-	private String[] OLD_TYPE_DOMAIN = {".daum.net", ".hamail.net", ".kakao"};
+	private String[] OLD_TYPE_DOMAIN = {"@daum.net", "@hanmail.net", "kakao"};
 	
 	public SendEmails(SMTPDTO smtpDto) {
 		this.smtpDto = smtpDto;
@@ -45,9 +45,8 @@ public class SendEmails {
 	 * @param emailDao
 	 */
 	public void sendMail(EmailDTO emailDao) throws Exception {
-		if(smtpDto.isValid()) {
-			logger.error("Valid smtp information." + emailDao);
-			return;
+		if(!smtpDto.isValid()) {
+			throw new Exception("Valid smtp information." + emailDao);
 		}
 		if(logger.isDebugEnabled()) logger.debug("Add new message");
 
@@ -55,14 +54,17 @@ public class SendEmails {
 		if(!"".equals(smtpDto.getSendgrid_api())) {
 			for(String strDomain : OLD_TYPE_DOMAIN) {
 				if(StringUtils.contains(emailDao.getTo(), strDomain)) {
+					if(logger.isDebugEnabled()) logger.debug(String.format("=== sendind SMTP=>%s", emailDao.getTo()));
 					sendSTMT(emailDao);
 					return;
 				}
 			}
 			
 			// 메일을 보내지 못했다면 sendgrid 를 이용해서 보낸다.
-			SendgridUtils.send(smtpDto.getSendgrid_api(), SystemDefine.ADMIN_EMAIL, emailDao.getTo(), emailDao.getSubject(), emailDao.getContent());
+			if(logger.isDebugEnabled()) logger.debug(String.format("=== sending SENDGRID=>%s", emailDao.getTo()));
+			sendSendgrid(emailDao);
 		} else {
+			if(logger.isDebugEnabled()) logger.debug(String.format("=== sending SMTP=>%s", emailDao.getTo()));
 			sendSTMT(emailDao);
 		}
 	}
@@ -90,7 +92,7 @@ public class SendEmails {
 			email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));
 			email.setSSLOnConnect(true);
 			
-			email.setFrom(smtpDto.getEmail(), Messages.get().TadpoleHub);
+			email.setFrom(smtpDto.getEmail(), "Tadpole Hub");
 			email.addTo(emailDao.getTo());
 			email.setSubject(emailDao.getSubject());
 			email.setHtmlMsg(emailDao.getContent());

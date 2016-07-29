@@ -864,10 +864,10 @@ public class ExplorerViewer extends ViewPart {
 			refershSelectObject(OBJECT_TYPE.PACKAGES.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.SYNONYM) {
 			refershSelectObject(OBJECT_TYPE.SYNONYM.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.SEQUENCE) {
+			refershSelectObject(OBJECT_TYPE.SEQUENCE.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.LINK ) {
 			refershSelectObject(OBJECT_TYPE.LINK.name(), strObjectName);
-		} else if(queryDDLType == QUERY_DDL_TYPE.SYNONYM) {
-			refershSelectObject(OBJECT_TYPE.SYNONYM.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
 			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
 		} else {
