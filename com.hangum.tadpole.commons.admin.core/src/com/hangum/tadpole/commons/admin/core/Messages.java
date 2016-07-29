@@ -267,6 +267,8 @@ public class Messages {
 	public String Agree;
 
 	public String SaveDBPassword;
+
+	public String DoNotSettingEmailServer;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
