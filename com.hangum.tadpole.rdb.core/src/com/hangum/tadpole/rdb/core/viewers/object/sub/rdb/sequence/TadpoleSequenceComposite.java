@@ -1,19 +1,17 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     hangum - initial API and implementation
+ *     nilrir - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sequence;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,9 +26,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -45,7 +41,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -57,7 +52,6 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
@@ -70,7 +64,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 /**
  * RDB sequence composite
  * 
- * @author hangum
+ * @author nilriri
  * 
  */
 public class TadpoleSequenceComposite extends AbstractObjectComposite {
@@ -80,8 +74,6 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 	private static final Logger logger = Logger.getLogger(TadpoleSequenceComposite.class);
 
 	private CTabItem tbtmSequence;
-	/** select sequence name */
-	private String selectSequenceName = ""; //$NON-NLS-1$
 
 	// table info
 	private TableViewer sequenceListViewer;
@@ -95,7 +87,6 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 	private AbstractObjectAction dropAction_Sequence;
 	private AbstractObjectAction refreshAction_Sequence;
 	private GenerateViewDDLAction viewDDLAction;
-	//private ObjectExecuteProcedureAction executeAction;
 
 	/**
 	 * Create the composite.
@@ -112,7 +103,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmSequence = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmSequence.setText("Sequence");
+		tbtmSequence.setText(Messages.get().Sequence);
 		tbtmSequence.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
@@ -140,7 +131,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 						FindEditorAndWriteQueryUtil.run(userDB, "SELECT " + sequenceDAO.getFullName() + ".NEXTVAL FROM DUAL;" , PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE);
 					}
 				} catch (Exception e) {
-					logger.error("create synoonym", e);
+					logger.error("create sequence", e);
 				}
 			}
 		});
@@ -157,14 +148,12 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 
 		sequenceFilter = new DefaultTableColumnFilter();
 		sequenceListViewer.addFilter(sequenceFilter);
-
-		
 	}
 
 	//SEQUENCE_OWNER, SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER
 	private void createSequenceListColumns() {
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
-		new TableViewColumnDefine("SEQUENCE_NAME", "Sequence name", 100, SWT.LEFT) // //$NON-NLS-1$
+		new TableViewColumnDefine("SEQUENCE_NAME", Messages.get().Name, 100, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("MIN_VALUE", "Min value", 80, SWT.RIGHT) // //$NON-NLS-1$
 				//, new TableViewColumnDefine("MAX_VALUE", "Max value", 80, SWT.RIGHT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("INCREMENT_BY", "Increment by", 40, SWT.RIGHT) // //$NON-NLS-1$
@@ -187,8 +176,8 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 	private void createSequenceMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Sequence = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, "Sequence" + " " + Messages.get().Created);
-		dropAction_Sequence = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE,"Drop Sequence" ); //$NON-NLS-1$
+		creatAction_Sequence = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().SequenceCreated);
+		dropAction_Sequence = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().SequenceDelete); //$NON-NLS-1$
 		refreshAction_Sequence = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().Refresh); //$NON-NLS-1$
 		//executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().Execute); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().ViewDDL); //$NON-NLS-1$
@@ -271,8 +260,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 							sequenceListViewer.refresh();
 							TableUtil.packTable(sequenceListViewer.getTable());
 
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult()
-									.getException()); //$NON-NLS-1$
+							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}

@@ -162,10 +162,11 @@ public class RequestQuery implements Cloneable {
 				
 				//
 				// CREATE, ALTER , 
-				// 프로시저, 펑션, 트리거, 패키지, 시노늄은 마직에 ; 문자가 있어야 정상 실행 됩니다. - 좀더 확인 필요 hangum
+				// 프로시저, 펑션, 트리거, 패키지, 마지막에 ; 문자가 있어야 정상 실행 됩니다. - 좀더 확인 필요 hangum
+				// 시노님은없어야합니다. - 2016-07-29 (niliri)
 				//
 				if(queryStatus == QUERY_DDL_STATUS.CREATE | queryStatus == QUERY_DDL_STATUS.ALTER)
-				if(sqlDDLType == QUERY_DDL_TYPE.PROCEDURE | sqlDDLType == QUERY_DDL_TYPE.FUNCTION | sqlDDLType == QUERY_DDL_TYPE.TRIGGER | sqlDDLType == QUERY_DDL_TYPE.PACKAGE | sqlDDLType == QUERY_DDL_TYPE.SYNONYM) {
+				if(sqlDDLType == QUERY_DDL_TYPE.PROCEDURE | sqlDDLType == QUERY_DDL_TYPE.FUNCTION | sqlDDLType == QUERY_DDL_TYPE.TRIGGER | sqlDDLType == QUERY_DDL_TYPE.PACKAGE) {
 					if(!StringUtils.endsWith(this.sql, PublicTadpoleDefine.SQL_DELIMITER)) {
 						this.sql += PublicTadpoleDefine.SQL_DELIMITER;
 					}

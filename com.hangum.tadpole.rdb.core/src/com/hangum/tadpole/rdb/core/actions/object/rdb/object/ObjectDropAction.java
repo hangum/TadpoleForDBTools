@@ -136,7 +136,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE) {
 			
 			OracleSequenceDAO dao = (OracleSequenceDAO)selection.getFirstElement();
-			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Drop Sequence?")) {
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().IsDropSequence)) {
 				try {
 					executeSQL(userDB, "drop sequence " + dao.getFullName()); //$NON-NLS-1$ //$NON-NLS-2$
 					
