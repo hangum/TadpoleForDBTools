@@ -531,41 +531,44 @@ public class ResultSetComposite extends Composite {
 								QueryExecuteResultDTO rsDAO = null;
 
 								// 
-								// mysql profile, show status 모드의 쿼리.
+								// mysql profile, show status, query plan 모드의 쿼리.
 								//
 								//
 								if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 									if(isProfilling) {
-//										try {
-											QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 1", 0, 10);
-											QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 0", 0, 10);
-											QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 15", 0, 10);
 
-											// 사용자 쿼리를 날리고. 
-											QueryExecuteResultDTO startStatus = QueryUtils.executeQuery(tmpUserDB, "SHOW STATUS", 0, 500);
-											
-											//
-											rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
-											listRSDao.add(rsDAO);
-											//
-											QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(tmpUserDB, "SHOW STATUS", 0, 500);
-											QueryExecuteResultDTO _tmppShowProfiles = QueryUtils.executeQuery(tmpUserDB, "SHOW PROFILES", 0, 100);
-											String strQueryID = getLastQueryID(_tmppShowProfiles);
+										QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 1", 0, 10);
+										QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 0", 0, 10);
+										QueryUtils.executeQuery(tmpUserDB, "SET profiling_history_size = 15", 0, 10);
 
-											if(logger.isDebugEnabled()) logger.debug("profile query id is : " + strQueryID);
-											QueryExecuteResultDTO showProfiles = QueryUtils.executeQuery(tmpUserDB, 
-													String.format("SELECT state, ROUND(SUM(duration),5) AS `duration(sec)` FROM information_schema.profiling WHERE query_id=%s GROUP BY state ORDER BY `duration(sec)` DESC", strQueryID), 0, 100);
-											rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.SHOW_PROFILLING.name(), showProfiles);
+										// 사용자 쿼리를 날리고. 
+										QueryExecuteResultDTO startStatus = QueryUtils.executeQuery(tmpUserDB, "SHOW STATUS", 0, 500);
+										
+										//
+										rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
+										listRSDao.add(rsDAO);
+										//
+										QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(tmpUserDB, "SHOW STATUS", 0, 500);
+										QueryExecuteResultDTO _tmppShowProfiles = QueryUtils.executeQuery(tmpUserDB, "SHOW PROFILES", 0, 100);
+										String strQueryID = getLastQueryID(_tmppShowProfiles);
+
+										if(logger.isDebugEnabled()) logger.debug("profile query id is : " + strQueryID);
+										QueryExecuteResultDTO showProfiles = QueryUtils.executeQuery(tmpUserDB, 
+												String.format("SELECT state, ROUND(SUM(duration),5) AS `duration(sec)` FROM information_schema.profiling WHERE query_id=%s GROUP BY state ORDER BY `duration(sec)` DESC", strQueryID), 0, 100);
+										rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.SHOW_PROFILLING.name(), showProfiles);
+										
+										// diff data
+										QueryExecuteResultDTO diffStatusDAO = diffStatus(startStatus, endStatus);
+										rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.STATUS_VARIABLE.name(), diffStatusDAO);
+										
+										// free profiling
+										QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 0", 0, 10);
+										
+										// EXECUTE_PLAN
+										QueryExecuteResultDTO queryPlanDAO = ExecuteQueryPlan.runSQLExplainPlan(getUserDB(), reqQuery, strPlanTBName);
+										rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name(), queryPlanDAO);
 											
-											// diff data
-											QueryExecuteResultDTO diffStatusDAO = diffStatus(startStatus, endStatus);
-											rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.STATUS_VARIABLE.name(), diffStatusDAO);
-											
-											// free profiling
-											QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 0", 0, 10);
-//										} catch(Exception e) {
-//											logger.error("Extend MySQL plan", e);
-//										}
+
 									} else {
 										rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
 										listRSDao.add(rsDAO);	
