@@ -16,7 +16,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -49,13 +52,14 @@ public class MySQLExtensionViewDialog extends Dialog {
 	 * @author hangum
 	 *
 	 */
-	public enum MYSQL_EXTENSION_VIEW {SHOW_PROFILLING, STATUS_VARIABLE};
+	public enum MYSQL_EXTENSION_VIEW {SHOW_PROFILLING, STATUS_VARIABLE, EXECUTE_PLAN};
 	
 	private RequestQuery reqQuery;
 	private QueryExecuteResultDTO rsDAO;
 	
 	private TableViewer tvShowProfiller;
 	private TableViewer tvShowStatus;
+	private TableViewer tvExecutePlan;
 	
 	/**
 	 * Create the dialog.
@@ -75,7 +79,7 @@ public class MySQLExtensionViewDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("SHOW PROFILE and Change of STATUS VARIABLES Dialog");
+		newShell.setText("SHOW PROFILE and Others Dialog");
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -92,16 +96,29 @@ public class MySQLExtensionViewDialog extends Dialog {
 		gridLayout.marginHeight = 2;
 		gridLayout.marginWidth = 2;
 		
-		Composite compositeBody = new Composite(container, SWT.NONE);
+		ScrolledComposite scCompositeBody = new ScrolledComposite(container, SWT.H_SCROLL | SWT.V_SCROLL);
+		scCompositeBody.setLayout(new FillLayout());
+		scCompositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		SashForm compositeBody = new SashForm(scCompositeBody, SWT.VERTICAL);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		tvShowProfiller = createTitleTable(compositeBody, "SHOW PROFILE Result");
-		tvShowStatus = createTitleTable(compositeBody, "Change Of STATUS VARIABLES ");
+		tvShowStatus 	= createTitleTable(compositeBody, "Change Of STATUS VARIABLES");
+		tvExecutePlan 	= createTitleTable(compositeBody, "Execute Plan");
+		
+		compositeBody.setWeights(new int[] {4, 4, 2});
 		
 		showProfiller();
 		showDiffStatus();
+		showExecutePlan();
 		
+		scCompositeBody.setContent(compositeBody);
+		scCompositeBody.setMinSize(scCompositeBody.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scCompositeBody.setExpandHorizontal(true);
+		scCompositeBody.setExpandVertical(true);
+	    
 		return container;
 	}
 	
@@ -152,6 +169,29 @@ public class MySQLExtensionViewDialog extends Dialog {
 	}
 	
 	/**
+	 * execute plan
+	 */
+	private void showExecutePlan() {
+		QueryExecuteResultDTO showExecutePlan = (QueryExecuteResultDTO)rsDAO.getMapExtendResult().get(MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name());
+		
+		// table data를 생성한다.
+		final TadpoleResultSet trs = showExecutePlan.getDataList();
+		final SQLResultSorter sqlSorter = new SQLResultSorter(-999);
+		
+		SQLResultLabelProvider.createTableColumn(reqQuery, tvExecutePlan, showExecutePlan, sqlSorter, false);
+		
+		tvExecutePlan.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), showExecutePlan));
+		tvExecutePlan.setContentProvider(new ArrayContentProvider());
+		
+		// 쿼리를 설정한 사용자가 설정 한 만큼 보여준다.
+		tvExecutePlan.setInput(trs.getData());
+		tvExecutePlan.setSorter(sqlSorter);
+	
+		// Pack the columns
+		TableUtil.packTable(tvExecutePlan.getTable());
+	}
+	
+	/**
 	 * crate title table
 	 * 
 	 * @param bodyComposite
@@ -195,7 +235,7 @@ public class MySQLExtensionViewDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(400, 550);
+		return new Point(700, 550);
 	}
 
 }
