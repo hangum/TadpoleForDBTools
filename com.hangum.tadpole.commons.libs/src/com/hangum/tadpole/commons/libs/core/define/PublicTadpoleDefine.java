@@ -278,7 +278,7 @@ public class PublicTadpoleDefine {
 	
 	/** query ddl type */
 	public static enum QUERY_DDL_STATUS {CREATE, ALTER, DROP, UNKNOWN};
-	public static enum QUERY_DDL_TYPE 	{TABLE, VIEW, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, UNKNOWN};
+	public static enum QUERY_DDL_TYPE 	{TABLE, VIEW, SEQUENCE, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, UNKNOWN};
 	
 	public static String[] DB_PRIMARY_KEY = {
 											"PRI", 

@@ -638,14 +638,12 @@ public class ResultSetComposite extends Composite {
 				Map<Integer, Integer> columnType = new HashMap<>();
 				columnType.put(0, java.sql.Types.VARCHAR);
 				columnType.put(1, java.sql.Types.DOUBLE);
-//				columnType.put(2, java.sql.Types.VARCHAR);
 				renewDiffObject.setColumnType(columnType);;
 				
 				// setting column label name
 				Map<Integer, String> columnLabelName = new HashMap<>();
 				columnLabelName.put(0, "variable");
 				columnLabelName.put(1, "value");
-//				columnLabelName.put(2, "description");
 				renewDiffObject.setColumnName(columnLabelName);
 				
 				TadpoleResultSet dataList = new TadpoleResultSet();
@@ -664,7 +662,6 @@ public class ResultSetComposite extends Composite {
 				
 						Long longDiff = NumberUtils.createLong(""+mapEndObject.get(1)) - NumberUtils.createLong(""+mapStartObject.get(1));  
 						mapData.put(1, longDiff);
-//						mapData.put(2, "");
 						
 						diffData.add(mapData);
 					}
