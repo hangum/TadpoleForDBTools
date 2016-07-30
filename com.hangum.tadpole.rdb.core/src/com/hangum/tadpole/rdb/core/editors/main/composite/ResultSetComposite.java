@@ -567,7 +567,6 @@ public class ResultSetComposite extends Composite {
 										// EXECUTE_PLAN
 										QueryExecuteResultDTO queryPlanDAO = ExecuteQueryPlan.runSQLExplainPlan(getUserDB(), reqQuery, strPlanTBName);
 										rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name(), queryPlanDAO);
-											
 
 									} else {
 										rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);

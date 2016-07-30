@@ -94,7 +94,10 @@ public class TadpoleSecurityManager {
 	 */
 	private boolean openPasswdDialog(final UserDBDAO userDB) {
 		// SQLite은 패스워드가 없으므로..
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) return true;
+		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			SessionManager.setUnlokDB(userDB);
+			return true;
+		}
 		
 		DBLockDialog dialog = new DBLockDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 		if(Dialog.OK == dialog.open()) {

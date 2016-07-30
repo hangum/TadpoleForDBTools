@@ -1,14 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2014 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     billy.goo - initial API and implementation
+ *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.global;
+package com.hangum.tadpole.rdb.core.actions.resultView;
 
 import java.util.HashMap;
 
@@ -21,30 +21,30 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.record.RecordViewDialog;
+import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
 
 /**
- * Query Result 창에서 선택된 로우 데이터를 한번에 보기 위한 창을 
- * 열어 줍니다.
+ * Query Result 창에서 선택된 컬럼 데이터를 한번에 보기 위한 창을 열어 줍니다.
  * 
- * @author billy.goo
+ * @author hangum
  *
  */
-public class OpenSingleRowDataDialogAction extends Action implements IWorkbenchAction {
-	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenSingleRowDataDialogAction"; //$NON-NLS-1$
+public class ColumnRowDataDialogAction extends Action implements IWorkbenchAction {
+	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenColumnRowDataDialogAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
-	private QueryExecuteResultDTO dto;
+	private ResultTableComposite resultTableComposite;
 	
-	public OpenSingleRowDataDialogAction() {
+	public ColumnRowDataDialogAction(ResultTableComposite resultTableComposite) {
 		setId(ID);
-		setText(Messages.get().OpenSingleRowDataDialogAction_0);
-		setToolTipText(Messages.get().OpenSingleRowDataDialogAction_0);
+		setText(Messages.get().ResultSetComposite_0);
+		setToolTipText(Messages.get().ResultSetComposite_0);
 		setEnabled(false);
+		this.resultTableComposite = resultTableComposite;
 	}
 	
 	@Override
 	public void run() {
-		RecordViewDialog dialog = new RecordViewDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), dto, iss.getFirstElement());
-		dialog.open();
+		resultTableComposite.openSinglColumViewDialog();
 	}
 	
 	@Override
@@ -59,11 +59,9 @@ public class OpenSingleRowDataDialogAction extends Action implements IWorkbenchA
 	 * 원래 WorkbenchWindow를 가져오려해도 실제 Editor의 WorkbenchWindow가 
 	 * 초기화 되지 않아(Null을 반환) 내부적으로 직접 실행하도록 되었습니다. 
 	 * 
-	 * @param dto
 	 * @param selection
 	 */
-	public void selectionChanged(QueryExecuteResultDTO dto, ISelection selection) {
-		this.dto = dto;
+	public void selectionChanged(ISelection selection) {
 		IStructuredSelection sel = (IStructuredSelection)selection;
 		if(sel != null) {
 			if( sel.getFirstElement() instanceof HashMap<?, ?> ) {

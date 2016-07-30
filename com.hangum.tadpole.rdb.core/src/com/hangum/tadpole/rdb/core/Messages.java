@@ -180,7 +180,6 @@ public class Messages {
 	public String ObjectMongodbRenameAction_8;
 	public String ERDView;
 	public String EditSQL;
-	public String OpenSingleRowDataDialogAction_0;
 	public String QueryHistoryComposite_10;
 	public String Result;
 	public String Message;
@@ -642,6 +641,10 @@ public class Messages {
 	public String SequenceDelete;
 
 	public String IsDropSequence;
+
+	public String DBLinkCreated;
+
+	public String DBLinkDrop;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 nilriri.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -172,8 +172,8 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 	private void createDBLinkMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_DBLink = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, "DBLink Created");
-		dropAction_DBLink = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, "DBLink Drop"); //$NON-NLS-1$
+		creatAction_DBLink = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, Messages.get().DBLinkCreated);
+		dropAction_DBLink = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, Messages.get().DBLinkDrop); //$NON-NLS-1$
 		refreshAction_DBLink = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, Messages.get().Refresh); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, Messages.get().ViewDDL); //$NON-NLS-1$
 
