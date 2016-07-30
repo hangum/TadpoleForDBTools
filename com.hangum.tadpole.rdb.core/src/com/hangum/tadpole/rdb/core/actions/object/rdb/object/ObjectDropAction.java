@@ -150,7 +150,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.LINK) {
 			
 			OracleDBLinkDAO dao = (OracleDBLinkDAO)selection.getFirstElement();
-			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Drop database link?")) {
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, Messages.get().IsDropDBLink)) {
 				try {
 					executeSQL(userDB, "drop database link " + dao.getSysName()); //$NON-NLS-1$ //$NON-NLS-2$
 					

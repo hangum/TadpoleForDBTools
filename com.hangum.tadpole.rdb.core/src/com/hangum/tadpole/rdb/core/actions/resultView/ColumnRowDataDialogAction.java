@@ -15,12 +15,9 @@ import java.util.HashMap;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
-import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.record.RecordViewDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
 
 /**
@@ -36,8 +33,8 @@ public class ColumnRowDataDialogAction extends Action implements IWorkbenchActio
 	
 	public ColumnRowDataDialogAction(ResultTableComposite resultTableComposite) {
 		setId(ID);
-		setText(Messages.get().ResultSetComposite_0);
-		setToolTipText(Messages.get().ResultSetComposite_0);
+		setText(Messages.get().ResultSetComposite_btnColumnDetail_text);
+		setToolTipText(Messages.get().ResultSetComposite_btnColumnDetail_text);
 		setEnabled(false);
 		this.resultTableComposite = resultTableComposite;
 	}
@@ -51,7 +48,6 @@ public class ColumnRowDataDialogAction extends Action implements IWorkbenchActio
 	public void dispose() {
 	}
 
-	
 	/**
 	 * Selection 서비스를 이용하지 않고, 내부적으로 데이터 변경이 있을때 마다
 	 * 아래 메소드를 직접 실행해 줍니다. 
