@@ -8,7 +8,7 @@
  * Contributors:
  *     billy.goo - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.actions.global;
+package com.hangum.tadpole.rdb.core.actions.resultView;
 
 import java.util.HashMap;
 
@@ -36,8 +36,8 @@ public class OpenSingleRowDataDialogAction extends Action implements IWorkbenchA
 	
 	public OpenSingleRowDataDialogAction() {
 		setId(ID);
-		setText(Messages.get().OpenSingleRowDataDialogAction_0);
-		setToolTipText(Messages.get().OpenSingleRowDataDialogAction_0);
+		setText(Messages.get().ResultSetComposite_0);
+		setToolTipText(Messages.get().ResultSetComposite_0);
 		setEnabled(false);
 	}
 	

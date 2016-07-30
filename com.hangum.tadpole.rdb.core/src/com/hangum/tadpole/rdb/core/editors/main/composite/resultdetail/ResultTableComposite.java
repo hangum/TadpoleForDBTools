@@ -61,7 +61,9 @@ import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.actions.global.OpenSingleRowDataDialogAction;
+import com.hangum.tadpole.rdb.core.actions.resultView.ColumnRowDataDialogAction;
+import com.hangum.tadpole.rdb.core.actions.resultView.OpenSingleRowDataDialogAction;
+import com.hangum.tadpole.rdb.core.actions.resultView.SelectRowtoEditorAction;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
@@ -96,7 +98,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	private SQLResultFilter sqlFilter = new SQLResultFilter();
 	private SQLResultSorter sqlSorter;
     
+	// 결과 로우 지정.
     private OpenSingleRowDataDialogAction openSingleRowDataAction;
+    private SelectRowtoEditorAction selectRowtoEditorAction;
+    private ColumnRowDataDialogAction columnRowDataDialogAction;
 	
     /** mysql profilling yn */
     private Button btnShowQueryProfilling;
@@ -267,20 +272,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		btnResultToEditor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TableColumnDAO columnDao = selectColumnToEditor();
-				if(columnDao == null) return;
-				
-				if(!"".equals(columnDao.getCol_value())) { //$NON-NLS-1$
-					if(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO.equals(columnDao.getName())) {
-						appendTextAtPosition(""+columnDao.getCol_value()); //$NON-NLS-1$
-					} else {
-						if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
-							appendTextAtPosition(""+columnDao.getCol_value());
-						} else {
-							appendTextAtPosition(String.format(" '%s'", columnDao.getCol_value())); //$NON-NLS-1$
-						}
-					}
-				}
+				selectRowToEditor();
 			}
 		});
 		btnResultToEditor.setText(Messages.get().ResultSetComposite_2);
@@ -314,6 +306,26 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		gl_compositeResult.marginHeight = 0;
 		gl_compositeResult.marginWidth = 2;
 		compositeTail.setLayout(gl_compositeResult);
+	}
+	
+	/**
+	 * 선택결과를 에디터로 보낸다.
+	 */
+	public void selectRowToEditor() {
+		TableColumnDAO columnDao = selectColumnToEditor();
+		if(columnDao == null) return;
+		
+		if(!"".equals(columnDao.getCol_value())) { //$NON-NLS-1$
+			if(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO.equals(columnDao.getName())) {
+				appendTextAtPosition(""+columnDao.getCol_value()); //$NON-NLS-1$
+			} else {
+				if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
+					appendTextAtPosition(""+columnDao.getCol_value());
+				} else {
+					appendTextAtPosition(String.format(" '%s'", columnDao.getCol_value())); //$NON-NLS-1$
+				}
+			}
+		}
 	}
 
 	/**
@@ -457,7 +469,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	/**
 	 * column popup dialog
 	 */
-	private void openSinglColumViewDialog() {
+	public void openSinglColumViewDialog() {
 		TableColumnDAO columnDao = selectColumnToEditor();
 		if(columnDao == null) {
 			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetComposite_6);
@@ -487,13 +499,18 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	 */
 	private void createResultMenu() {
 		openSingleRowDataAction = new OpenSingleRowDataDialogAction();
+		selectRowtoEditorAction = new SelectRowtoEditorAction(this);
+		columnRowDataDialogAction = new ColumnRowDataDialogAction(this);
+		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "ResultSet"); //$NON-NLS-1$ //$NON-NLS-2$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			@Override
 			public void menuAboutToShow(IMenuManager manager) {
+				manager.add(selectRowtoEditorAction);
 				manager.add(openSingleRowDataAction);
+				manager.add(columnRowDataDialogAction);
 			}
 		});
 
@@ -509,6 +526,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				openSingleRowDataAction.selectionChanged(getRsDAO(), event.getSelection());
+				selectRowtoEditorAction.selectionChanged(event.getSelection());
+				columnRowDataDialogAction.selectionChanged(event.getSelection());
 			}
 		});
 	}
@@ -531,15 +550,12 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			if(oldTadpoleResultSet.getData().size() >= intSelectLimitCnt) {
 				if(logger.isDebugEnabled()) {
 					logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
-					logger.debug("####2222222###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 				}
 				
 				if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
 					// 나머지 데이터를 가져온다.
-					
 					final String strUserEmail 	= SessionManager.getEMAIL();
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
-//					final String strNullValue   = GetPreferenceGeneral.getResultNull();
 					
 					try {
 						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
@@ -576,6 +592,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	
 	@Override
 	public void dispose() {
+		if(openSingleRowDataAction != null) openSingleRowDataAction.dispose();
+		if(selectRowtoEditorAction != null) selectRowtoEditorAction.dispose();
+		if(columnRowDataDialogAction != null) columnRowDataDialogAction.dispose();
+		
 		super.dispose();
 	}
 
