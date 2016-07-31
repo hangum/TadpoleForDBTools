@@ -86,8 +86,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultTableComposite.class);
 	
-	public static int Composite_HEIGHT_SIZE = 220;
-	public static int Composite_WIDTH_SIZE = 400;
+//	public static int Composite_HEIGHT_SIZE = 220;
+//	public static int Composite_WIDTH_SIZE = 400;
 	
 	/** 이미 결과를 마지막까지 그렸는지 유무 */
 	private boolean isLastReadData = false;
@@ -126,8 +126,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		super(parent, style, rdbResultComposite);
 		setLayout(new GridLayout(1, false));
 		GridData gd_compositeBody = new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1);
-		gd_compositeBody.heightHint = Composite_HEIGHT_SIZE;
-		gd_compositeBody.widthHint = Composite_WIDTH_SIZE;
+//		gd_compositeBody.heightHint = Composite_HEIGHT_SIZE;
+//		gd_compositeBody.widthHint = Composite_WIDTH_SIZE;
 		setLayoutData(gd_compositeBody);
 		
 		Composite compositeBody = new Composite(this, SWT.NONE);
@@ -328,7 +328,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	public void selectRowToEditor() {
 		TableColumnDAO columnDao = findSelectRowData();
 		if(columnDao == null) {
-			MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().PleaseSelectRowData);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().PleaseSelectRowData);
 			return;
 		}
 		
@@ -341,7 +341,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	public void selectColumnToEditor() {
 		TableColumnDAO columnDao = findSelectColumnData();
 		if(columnDao == null) {
-			MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().PleaseSelectRowData);
+			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().PleaseSelectRowData);
 			return;
 		}
 		

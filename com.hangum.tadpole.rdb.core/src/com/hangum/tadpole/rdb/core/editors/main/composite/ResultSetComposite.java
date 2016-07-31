@@ -253,53 +253,14 @@ public class ResultSetComposite extends Composite {
 	 * 화면을 다시 조절한다.
 	 */
 	private void resultSashLayout() {
-//		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
-//		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
-//		int intTmpCount = 0;
-//		
-//		try {
-//			Control[] childControls = sashFormResult.getChildren();
-//			for (int i=0; i<childControls.length; i++) {
-//				Control control = childControls[i];
-//				if(control instanceof AbstractResultDetailComposite) {
-//					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
-//					mapWidths.put(intTmpCount, resultComposite.getBounds().width);
-//					mapHeight.put(intTmpCount, resultComposite.getBounds().height);
-//					intTmpCount++;
-//				}
-//			}
-//			
-//			int weights[] = new int[mapWidths.size()+1];
-//			if(mapWidths.size() != 0) {
-//				for (int i=0; i<mapWidths.size(); i++) {
-//					float intCompositeWeights = 0f;
-//					if(sashFormResult.getOrientation() == SWT.HORIZONTAL) {
-//						intCompositeWeights = mapWidths.get(i) * 100;
-//					} else {
-//						intCompositeWeights = mapHeight.get(i) * 100;
-//					}
-//					weights[i] = (int)intCompositeWeights;
-//					intTmpCount += weights[i];
-//					// 처음 위젯이 생성 되었을 경우무조건 100이므로 반만 위젲을 준다. 
-//					if(weights[i] == 100) {
-//						weights[i] = 50;
-//						intTmpCount = 50;
-//					// 100 이 넘어가면 마지막 위젲에서 30로 만큼 위젲을 차지한다.
-//					} else if(intTmpCount >= 100) { 
-//						weights[i] = 30;
-//					}
-//				}
-//				weights[mapWidths.size()] = 100 - intTmpCount;
-//			} else {
-//				weights[0] = 100;
-//			}
-//			sashFormResult.setWeights(weights);
-//		} catch(Exception e) {
-//			logger.error("calc weights of result composite");
-//		}
-
 		sashFormResult.layout();
-		scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		if(SWT.VERTICAL == scrolledComposite.getOrientation()) {
+			int width = scrolledComposite.getClientArea().width;
+			scrolledComposite.setMinSize(sashFormResult.computeSize(width, SWT.DEFAULT));
+		} else {
+			int height = scrolledComposite.getClientArea().height;
+			scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, height));
+		}
 		scrolledComposite.layout();
 		
 		if(SWT.VERTICAL == scrolledComposite.getOrientation()) {
