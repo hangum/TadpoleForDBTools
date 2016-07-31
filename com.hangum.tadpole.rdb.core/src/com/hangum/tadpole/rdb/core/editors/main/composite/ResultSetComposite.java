@@ -996,6 +996,14 @@ public class ResultSetComposite extends Composite {
 	 * 쿼리 결과를 화면에 출력합니다.
 	 */
 	public void executeFinish(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
+		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 시작.
+		StringBuffer sbMSG = new StringBuffer();
+		for (QueryExecuteResultDTO queryExecuteResultDTO : listRSDao) {
+			sbMSG.append(queryExecuteResultDTO.getStrExceptionMsg()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+		}
+		getRdbResultComposite().refreshErrorMessageView(reqQuery, null, sbMSG.toString());
+		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 종료.
+		
 		if(reqQuery.isStatement()) {
 			
 			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
@@ -1027,11 +1035,7 @@ public class ResultSetComposite extends Composite {
 					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
 					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
 			) {
-//				// working schema_history 에 history 를 남깁니다.
-//				 strWorkType TABLE, VIEW, PROCEDURE, FUNCTION, TRIGGER...
-//				 * @param strObjecType CREATE, ALTER, DROP
-//				 * @param strObjectId 객체 명
-//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
+				// working schema_history 에 history 를 남깁니다.
 				try {
 					TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
 							getUserDB(),
