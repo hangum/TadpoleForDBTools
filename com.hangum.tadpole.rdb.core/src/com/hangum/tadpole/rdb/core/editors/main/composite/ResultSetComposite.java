@@ -208,7 +208,7 @@ public class ResultSetComposite extends Composite {
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		scrolledComposite.setContent(sashFormResult);
-		scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scrolledComposite.setMinSize(sashFormResult.computeSize(scrolledComposite.getClientArea().width, scrolledComposite.getClientArea().height));
 	}
 	
 	/**
@@ -999,7 +999,7 @@ public class ResultSetComposite extends Composite {
 		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 시작.
 		StringBuffer sbMSG = new StringBuffer();
 		for (QueryExecuteResultDTO queryExecuteResultDTO : listRSDao) {
-			sbMSG.append(queryExecuteResultDTO.getStrExceptionMsg()).append(PublicTadpoleDefine.LINE_SEPARATOR);
+			sbMSG.append(queryExecuteResultDTO.getQueryMsg()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 		}
 		getRdbResultComposite().refreshErrorMessageView(reqQuery, null, sbMSG.toString());
 		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 종료.
