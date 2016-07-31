@@ -254,22 +254,8 @@ public class ResultSetComposite extends Composite {
 	 */
 	private void resultSashLayout() {
 		sashFormResult.layout();
-		if(SWT.VERTICAL == scrolledComposite.getOrientation()) {
-			int width = scrolledComposite.getClientArea().width;
-			scrolledComposite.setMinSize(sashFormResult.computeSize(width, SWT.DEFAULT));
-		} else {
-			int height = scrolledComposite.getClientArea().height;
-			scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, height));
-		}
+		scrolledComposite.setMinSize(sashFormResult.computeSize(sashFormResult.getClientArea().width, sashFormResult.getClientArea().height));
 		scrolledComposite.layout();
-		
-		if(SWT.VERTICAL == scrolledComposite.getOrientation()) {
-			ScrollBar sbX = scrolledComposite.getHorizontalBar();
-			sbX.setSelection(sbX.getMaximum());
-		} else {
-			ScrollBar sbX = scrolledComposite.getVerticalBar();
-			sbX.setSelection(sbX.getMaximum());
-		}
 	}
 
 	/**
