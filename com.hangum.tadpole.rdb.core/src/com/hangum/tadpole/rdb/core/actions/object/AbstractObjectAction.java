@@ -136,6 +136,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * Job 최신정보로 갱신
+	 */
+	protected void refreshJobs() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshJobs(true, "");		
+	}
+	
+	/**
 	 * Indexes 최신정보로 갱신
 	 */
 	protected void refreshIndexes() {

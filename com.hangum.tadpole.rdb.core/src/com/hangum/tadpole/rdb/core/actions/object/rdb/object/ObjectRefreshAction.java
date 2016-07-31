@@ -64,6 +64,8 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 			refreshJS();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.LINK) {
 			refreshDBLink();
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JOBS) {
+			refreshJobs();
 		}
 	}
 

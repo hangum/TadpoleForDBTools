@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.rdb;
 
-
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -22,27 +21,27 @@ import org.apache.commons.lang.StringUtils;
 public class OracleJobDAO extends AbstractDAO {
 
 	int job;
-    String what;
-    String log_user;
-    String priv_user;
-    String last_date;
-    String this_date;
-    String this_sec;
-    String next_date;
-    String next_sec;
-    long total_time;
-    String broken;
-    String interval;
-    long failures;
-    String nls_env;
-    long instance;
-    
+	String what;
+	String log_user;
+	String priv_user;
+	String last_date;
+	String this_date;
+	String this_sec;
+	String next_date;
+	String next_sec;
+	long total_time;
+	String broken;
+	String interval;
+	long failures;
+	String nls_env;
+	long instance;
+
 	public OracleJobDAO() {
 	}
 
 	@Override
 	public String getFullName() {
-		return (job+"");
+		return (job + "");
 	}
 
 	@FieldNameAnnotationClass(fieldKey = "job")
@@ -56,7 +55,7 @@ public class OracleJobDAO extends AbstractDAO {
 
 	@FieldNameAnnotationClass(fieldKey = "what")
 	public String getWhat() {
-		return what;
+		return what == null ? "" : what;
 	}
 
 	public void setWhat(String what) {
@@ -146,7 +145,7 @@ public class OracleJobDAO extends AbstractDAO {
 
 	@FieldNameAnnotationClass(fieldKey = "interval")
 	public String getInterval() {
-		return interval;
+		return interval == null ? "" : interval;
 	}
 
 	public void setInterval(String interval) {
@@ -178,5 +177,17 @@ public class OracleJobDAO extends AbstractDAO {
 
 	public void setInstance(long instance) {
 		this.instance = instance;
+	}
+
+	public int getNextYear() {
+		return Integer.parseInt(this.next_date.substring(0, 4));
+	}
+
+	public int getNextMonth() {
+		return Integer.parseInt(this.next_date.substring(5, 7)) - 1;
+	}
+
+	public int getNextDay() {
+		return Integer.parseInt(this.next_date.substring(8, 10));
 	}
 }

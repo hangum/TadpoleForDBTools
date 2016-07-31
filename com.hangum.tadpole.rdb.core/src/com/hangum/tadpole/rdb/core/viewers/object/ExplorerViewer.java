@@ -492,25 +492,44 @@ public class ExplorerViewer extends ViewPart {
 			createFunction();
 			createTrigger();
 			createDBLink();
-			createJobs();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(),
-				tableComposite.getTableColumnViewer(),
-				tableComposite.getIndexComposite().getTableViewer(),
-				tableComposite.getConstraintsComposite().getTableViewer(),
-				tableComposite.getTriggerComposite().getTableViewer(),
-				viewComposite.getTableViewer(), 
-				synonymComposite.getTableviewer(), 
-				sequenceComposite.getTableviewer(),
-				procedureComposite.getTableViewer(), 
-				packageComposite.getPackageTableViewer(), 
-				packageComposite.getProcFuncTableViewer(),
-				functionCompostite.getTableviewer(),
-				triggerComposite.getTableViewer(),
-				dblinkComposite.getTableviewer(),
-				jobsComposite.getTableviewer()
-			};
+			if (dbDefine == DBDefine.ORACLE_DEFAULT ) {
+				createJobs();
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer(),
+					tableComposite.getIndexComposite().getTableViewer(),
+					tableComposite.getConstraintsComposite().getTableViewer(),
+					tableComposite.getTriggerComposite().getTableViewer(),
+					viewComposite.getTableViewer(), 
+					synonymComposite.getTableviewer(), 
+					sequenceComposite.getTableviewer(),
+					procedureComposite.getTableViewer(), 
+					packageComposite.getPackageTableViewer(), 
+					packageComposite.getProcFuncTableViewer(),
+					functionCompostite.getTableviewer(),
+					triggerComposite.getTableViewer(),
+					dblinkComposite.getTableviewer(),
+					jobsComposite.getTableviewer()
+				};
+			}else{
+				arrayStructuredViewer = new StructuredViewer[] { 
+						tableComposite.getTableListViewer(),
+						tableComposite.getTableColumnViewer(),
+						tableComposite.getIndexComposite().getTableViewer(),
+						tableComposite.getConstraintsComposite().getTableViewer(),
+						tableComposite.getTriggerComposite().getTableViewer(),
+						viewComposite.getTableViewer(), 
+						synonymComposite.getTableviewer(), 
+						sequenceComposite.getTableviewer(),
+						procedureComposite.getTableViewer(), 
+						packageComposite.getPackageTableViewer(), 
+						packageComposite.getProcFuncTableViewer(),
+						functionCompostite.getTableviewer(),
+						triggerComposite.getTableViewer(),
+						dblinkComposite.getTableviewer()
+					};
+			}
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 		// altibase, cubrid

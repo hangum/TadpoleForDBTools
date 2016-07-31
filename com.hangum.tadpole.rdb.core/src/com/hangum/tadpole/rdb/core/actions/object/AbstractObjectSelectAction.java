@@ -18,6 +18,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
@@ -32,7 +34,11 @@ public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 	public AbstractObjectSelectAction(IWorkbenchWindow window, OBJECT_TYPE actionType) {
 		super(window, actionType);
 	}
-
+	
+	protected void exeMessage(String msgHead, Exception e) {
+		TDBErroDialog errDialog = new TDBErroDialog(null, msgHead + Messages.get().ObjectDeleteAction_25, e.getMessage());
+		errDialog.open();
+	}
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		

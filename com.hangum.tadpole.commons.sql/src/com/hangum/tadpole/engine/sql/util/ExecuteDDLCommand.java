@@ -102,7 +102,6 @@ public class ExecuteDDLCommand {
 			try {
 				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 				javaConn = client.getDataSource().getConnection();
-				javaConn.setAutoCommit(false);
 				
 				stmt = javaConn.createStatement();
 				

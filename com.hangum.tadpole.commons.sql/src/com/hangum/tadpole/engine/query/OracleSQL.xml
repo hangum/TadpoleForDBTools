@@ -581,13 +581,13 @@ select distinct
 	s.object_name as packagename
 	,s.procedure_name as name
     ,(CASE WHEN a.argument_name IS NULL AND a.in_out IS NOT NULL THEN 'FUNCTION' ELSE 'PROCEDURE' END) as type
-    , nvl(p.overload, 0) as overload 
+    , nvl(s.overload, 0) as overload 
     , s.owner as schema_name
  from all_procedures s
          LEFT JOIN all_arguments a
-            ON     p.owner = a.owner
-               AND p.object_name = a.package_name
-               AND p.procedure_name = a.object_name
+            ON     s.owner = a.owner
+               AND s.object_name = a.package_name
+               AND s.procedure_name = a.object_name
                AND a.in_out = 'OUT'
  where 1=1
   and s.owner = (#schema_name#)

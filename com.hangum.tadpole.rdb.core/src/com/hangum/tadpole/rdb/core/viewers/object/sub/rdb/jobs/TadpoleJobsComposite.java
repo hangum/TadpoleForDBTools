@@ -44,12 +44,11 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectAlterAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
@@ -84,9 +83,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	private TableViewer jobsColumnViewer;
 	
 	private ObjectCreatAction creatAction_Jobs;
+	private ObjectAlterAction alterAction_Jobs;
 	private AbstractObjectAction dropAction_Jobs;
 	private AbstractObjectAction refreshAction_Jobs;
-	private GenerateViewDDLAction viewDDLAction;
 
 	/**
 	 * Create the composite.
@@ -172,22 +171,21 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	private void createJobsMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Jobs = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Job Create");
-		dropAction_Jobs = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Job Remove"); //$NON-NLS-1$
+		creatAction_Jobs = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Create job");
+		alterAction_Jobs = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Change job");
+		dropAction_Jobs = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Remove job"); //$NON-NLS-1$
 		refreshAction_Jobs = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, Messages.get().Refresh); //$NON-NLS-1$
-		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, Messages.get().ViewDDL); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Jobs"); //$NON-NLS-1$ //$NON-NLS-2$
 		if(!isDDLLock()) {
 			menuMgr.add(creatAction_Jobs);
+			menuMgr.add(alterAction_Jobs);
 			menuMgr.add(dropAction_Jobs);
 			menuMgr.add(new Separator());
 		}
 		menuMgr.add(refreshAction_Jobs);
 		menuMgr.add(new Separator());
-		viewDDLAction.setEnabled(true);
-		menuMgr.add(viewDDLAction);
 
 		jobsListViewer.getTable().setMenu(menuMgr.createContextMenu(jobsListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, jobsListViewer);
@@ -280,10 +278,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		if(getUserDB() == null) return; 
 		
 		creatAction_Jobs.setUserDB(getUserDB());
+		alterAction_Jobs.setUserDB(getUserDB());
 		dropAction_Jobs.setUserDB(getUserDB());
 		refreshAction_Jobs.setUserDB(getUserDB());
-		//executeAction.setUserDB(getUserDB());
-		viewDDLAction.setUserDB(getUserDB());
 	}
 
 	/**
@@ -318,10 +315,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	public void dispose() {
 		super.dispose();	
 		if(creatAction_Jobs != null) creatAction_Jobs.dispose();
+		if(alterAction_Jobs != null) alterAction_Jobs.dispose();
 		if(dropAction_Jobs != null) dropAction_Jobs.dispose();
 		if(refreshAction_Jobs != null) refreshAction_Jobs.dispose();
-		if(viewDDLAction != null) viewDDLAction.dispose();
-		//if(executeAction != null) executeAction.dispose();
 	}
 
 	@Override

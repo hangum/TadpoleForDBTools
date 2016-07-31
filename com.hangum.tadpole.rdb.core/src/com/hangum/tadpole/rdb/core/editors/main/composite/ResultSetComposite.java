@@ -581,13 +581,11 @@ public class ResultSetComposite extends Composite {
 								// 공통 코드.
 								if(rsDAO == null || rsDAO.getDataList() == null) {
 									reqResultDAO.setRows(0);
-									//DBMS_OUTPUT
-									//executeErrorProgress(reqQuery, new Exception(Messages.get().ResultSetComposite_1), rsDAO.getStrExceptionMsg());
-//									return new Status(Status.WARNING, Activator.PLUGIN_ID, rsDAO.getStrExceptionMsg());
 								} else {
 									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 								}
-								
+								//DBMS_OUTPUT 에서 출력된 메시지가 있으면 쿼리History에 함께 저장하도록 한다.
+								reqResultDAO.setMesssage(rsDAO.getStrExceptionMsg());
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {
@@ -907,9 +905,7 @@ public class ResultSetComposite extends Composite {
 						statement.execute(strSQL);
 						dbmsOutput.show();
 						dbms_output = dbmsOutput.getOutput();
-					} catch (Exception e) {
-						e.printStackTrace();
-					} finally {
+					}finally {
 						try {if(dbmsOutput!=null)dbmsOutput.close();} catch (SQLException e) {}
 					}
 				}else{
