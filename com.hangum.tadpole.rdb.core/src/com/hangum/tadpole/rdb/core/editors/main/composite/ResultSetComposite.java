@@ -208,7 +208,7 @@ public class ResultSetComposite extends Composite {
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		scrolledComposite.setContent(sashFormResult);
-		scrolledComposite.setMinSize(sashFormResult.computeSize(scrolledComposite.getClientArea().width, scrolledComposite.getClientArea().height));
+		scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 	
 	/**
