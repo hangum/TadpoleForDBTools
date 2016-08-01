@@ -480,6 +480,8 @@ public class ResultSetComposite extends Composite {
 
 								// 
 								// mysql profile, show status, query plan 모드의 쿼리.
+								// 
+								// SET, CALL 명령도 프로파일을 해야하는가? - hangum
 								//
 								//
 								if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
@@ -513,7 +515,9 @@ public class ResultSetComposite extends Composite {
 										QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 0", 0, 10);
 										
 										// EXECUTE_PLAN
-										if(StringUtils.startsWithIgnoreCase(reqQuery.getOriginalSql(), "SET")) {
+										if(!StringUtils.startsWithIgnoreCase(StringUtils.trimToEmpty(reqQuery.getSql()), "SET") ||
+												!StringUtils.startsWithIgnoreCase(StringUtils.trimToEmpty(reqQuery.getSql()), "CALL")
+										) {
 											QueryExecuteResultDTO queryPlanDAO = ExecuteQueryPlan.runSQLExplainPlan(getUserDB(), reqQuery, strPlanTBName);
 											rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name(), queryPlanDAO);
 										}
