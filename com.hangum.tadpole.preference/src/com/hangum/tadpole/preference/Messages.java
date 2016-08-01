@@ -207,9 +207,6 @@ public class Messages {
 	
 	public String TimeZone;
 	
-	public String UserAnswer_Yes;
-	public String UserAnswer_No;
-	
 	public String ShowNullCharacters;
 	
 	public String OTP;

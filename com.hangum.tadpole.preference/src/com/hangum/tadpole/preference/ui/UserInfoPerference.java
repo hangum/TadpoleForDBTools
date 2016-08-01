@@ -318,7 +318,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 			String pass = textPassword.getText().trim();
 			String rePass = textRePassword.getText().trim();
-			String useOTP = btnGetOptCode.getSelection()?Messages.get().UserAnswer_Yes:Messages.get().UserAnswer_No; //$NON-NLS-1$ //$NON-NLS-2$
+			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$  
 			String otpSecretKey = textSecretKey.getText();
 			Locale locale = Locale.ENGLISH;
 			if(comboLanguage.getData(comboLanguage.getText()) != null) {

@@ -13,7 +13,6 @@ package com.hangum.tadpole.commons.admin.core.dialogs.users;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -76,7 +75,7 @@ public class NewUserDialog extends Dialog {
 	private String secretKey = ""; //$NON-NLS-1$
 	private Button btnGetOptCode;
 	private Text textSecretKey;
-	private Label labelQRCodeURL;
+	private Text labelQRCodeURL;
 	private Label lblOtpCdoe;
 	private Text textOTPCode;
 	
@@ -89,6 +88,7 @@ public class NewUserDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @wbp.parser.constructor
 	 */
 	public NewUserDialog(Shell parentShell) {
 		super(parentShell);
@@ -245,10 +245,8 @@ public class NewUserDialog extends Dialog {
 		Label lblQrcodeUrl = new Label(grpGoogleOtp, SWT.NONE);
 		lblQrcodeUrl.setText(Messages.get().NewUserDialog_lblQrcodeUrl_text);
 		
-		labelQRCodeURL = new Label(grpGoogleOtp, SWT.NONE);
-		labelQRCodeURL.setText(""); //$NON-NLS-1$
+		labelQRCodeURL = new Text(grpGoogleOtp, SWT.BORDER | SWT.READ_ONLY);
 		labelQRCodeURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		labelQRCodeURL.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		lblOtpCdoe = new Label(grpGoogleOtp, SWT.NONE);
 		lblOtpCdoe.setText(Messages.get().NewUserDialog_lblOtpCdoe_text);
@@ -300,8 +298,7 @@ public class NewUserDialog extends Dialog {
 			logger.debug("url is " + strURL); //$NON-NLS-1$
 		}
 		
-		strURL = StringEscapeUtils.escapeHtml(strURL);
-		labelQRCodeURL.setText(String.format("<a href='%s' target='_blank'>Show QRCode(Only support Google Chrome)</a>", strURL)); //$NON-NLS-1$
+		labelQRCodeURL.setText(strURL); //$NON-NLS-1$
 	}
 	
 	@Override
