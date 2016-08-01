@@ -136,7 +136,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateDBLinkAction cia = new CreateDBLinkAction();
 			cia.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JOBS) {
-			CreateJobsAction cia = new CreateJobsAction(new OracleJobDAO());
+			CreateJobsAction cia = new CreateJobsAction(new OracleJobDAO( userDB ));
 			cia.run(userDB, actionType);
 			this.refreshJobs();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {

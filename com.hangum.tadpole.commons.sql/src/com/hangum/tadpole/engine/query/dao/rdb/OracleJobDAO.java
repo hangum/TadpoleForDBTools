@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.rdb;
 
-import org.apache.commons.lang.StringUtils;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
  * 데이터베이스에 정의된 링크 정보를 조회한다.
@@ -37,6 +37,10 @@ public class OracleJobDAO extends AbstractDAO {
 	long instance;
 
 	public OracleJobDAO() {
+	}
+
+	public OracleJobDAO(UserDBDAO userDB) {
+		this.schema_name = userDB.getSchema();
 	}
 
 	@Override
