@@ -76,7 +76,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		new Label(container, SWT.NONE);
 		
 		btnQueryProfilling = new Button(container, SWT.CHECK);
-		btnQueryProfilling.setText("Query profilling(MySQL only)");
+		btnQueryProfilling.setText(Messages.get().QueryProfilling);
 		
 		Label lblResultType = new Label(container, SWT.NONE);
 		lblResultType.setText(Messages.get().RDBPreferencePage_resultType);
