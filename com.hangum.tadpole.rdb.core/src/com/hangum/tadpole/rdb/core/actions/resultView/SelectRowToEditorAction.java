@@ -26,15 +26,15 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTab
  * @author hangum
  *
  */
-public class SelectRowtoEditorAction extends Action implements IWorkbenchAction {
+public class SelectRowToEditorAction extends Action implements IWorkbenchAction {
 	private final static String ID = "com.hangum.db.browser.rap.core.actions.result.SelectRowtoEditorAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
 	private ResultTableComposite resultTableComposite;
 	
-	public SelectRowtoEditorAction(ResultTableComposite resultTableComposite) {
+	public SelectRowToEditorAction(ResultTableComposite resultTableComposite) {
 		setId(ID);
-		setText(Messages.get().ResultSetComposite_2);
-		setToolTipText(Messages.get().ResultSetComposite_2);
+		setText(Messages.get().ResultSetComposite_row_to_editor);
+		setToolTipText(Messages.get().ResultSetComposite_row_to_editor);
 		setEnabled(false);
 		
 		this.resultTableComposite = resultTableComposite;

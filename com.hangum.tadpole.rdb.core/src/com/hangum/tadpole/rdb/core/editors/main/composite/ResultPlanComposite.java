@@ -141,8 +141,6 @@ public class ResultPlanComposite extends Composite {
 	private void resultSashLayout() {
 		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
 		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
-//		int intParentWidth = sashFormResult.getBounds().width;
-//		int intParentHeight = sashFormResult.getBounds().height;
 		int intTmpCount = 0;
 		
 		try {
