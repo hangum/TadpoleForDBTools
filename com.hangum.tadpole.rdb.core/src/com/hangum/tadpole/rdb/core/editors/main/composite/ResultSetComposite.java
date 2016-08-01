@@ -68,6 +68,7 @@ import com.hangum.tadpole.engine.sql.paremeter.lang.GenericTokenParser;
 import com.hangum.tadpole.engine.sql.paremeter.lang.JavaNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.paremeter.lang.OracleStyleSQLNamedParameterUtil;
 import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
+import com.hangum.tadpole.engine.sql.util.OracleDbmsOutputUtil;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -530,6 +531,8 @@ public class ResultSetComposite extends Composite {
 								} else {
 									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 								}
+								//DBMS_OUTPUT 에서 출력된 메시지가 있으면 쿼리History에 함께 저장하도록 한다.
+								reqResultDAO.setMesssage(rsDAO.getQueryMsg());
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {
@@ -671,7 +674,8 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService execServiceQuery = null;
 	private ExecutorService esCheckStop = null; 
 	private Button btnAddVertical;
-
+	private OracleDbmsOutputUtil dbmsOutput = null;
+	private String dbms_output = "";
 	/**
 	 * 실제쿼리를 호출한다.
 	 * 
@@ -755,6 +759,7 @@ public class ResultSetComposite extends Composite {
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
 					resultSet = runSQLSelect(statement, strSQL);
 				}
+				
 			} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
 				preparedStatement = javaConn.prepareStatement(strSQL);
 				
@@ -785,6 +790,8 @@ public class ResultSetComposite extends Composite {
 			}
 			
 			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt);
+			queryResultDAO.setQueryMsg(dbms_output);
+
 		} catch(Exception e) {
 			throw e;
 		} finally {
@@ -837,7 +844,22 @@ public class ResultSetComposite extends Composite {
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
 			public ResultSet call() throws SQLException {
-				statement.execute(strSQL);
+				if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT ){
+					// 오라클인 경우 PL/SQL 실행후 dbms_output 출력 메시지를 결과 메시지에 받아온다.
+					try {
+						dbmsOutput = new OracleDbmsOutputUtil( statement.getConnection() );
+						dbmsOutput.enable( 1000000 ); 
+						statement.execute(strSQL);
+						dbmsOutput.show();
+						dbms_output = dbmsOutput.getOutput();
+					}finally {
+						try {if(dbmsOutput!=null)dbmsOutput.close();} catch (SQLException e) {}
+					}
+				}else{
+					dbms_output = "";
+					statement.execute(strSQL);
+				}
+				
 				return statement.getResultSet();
 			}
 		});

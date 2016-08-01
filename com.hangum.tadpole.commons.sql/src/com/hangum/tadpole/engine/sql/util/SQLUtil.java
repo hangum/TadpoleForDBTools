@@ -358,7 +358,8 @@ public class SQLUtil {
 				dbAction == OBJECT_TYPE.SYNONYM ||
 				dbAction == OBJECT_TYPE.INDEXES ||
 				dbAction == OBJECT_TYPE.SEQUENCE ||
-				dbAction == OBJECT_TYPE.LINK) {
+				dbAction == OBJECT_TYPE.LINK||
+				dbAction == OBJECT_TYPE.JOBS) {
 			return true;
 		}
 		

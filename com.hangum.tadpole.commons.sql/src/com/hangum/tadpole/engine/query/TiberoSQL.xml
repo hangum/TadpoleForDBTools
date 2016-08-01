@@ -110,6 +110,7 @@
       LEFT JOIN all_TAB_COMMENTS S
             ON T.OWNER = S.OWNER AND S.TABLE_NAME = T.TABLE_NAME
 WHERE T.OWNER = (NVL(#schema_name#, USER))
+  AND NVL(T.IOT_TYPE,'NONE') != 'IOT_OVERFLOW'
 ORDER BY T.table_name
 </select>
 
@@ -1293,6 +1294,62 @@ SELECT INDEX_NAME "Index Name"
  WHERE 1=1
    and owner = (#schema_name#)
    and INDEX_NAME = (#index_name#)
+</select>
+
+<!-- 
+	데이터베이스 링크 정보를 조회한다.
+ -->
+<select id="dbLinkList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT
+	     DB_LINK
+	    ,USERNAME
+	    ,HOST
+	    ,CREATED
+	    ,OWNER AS SCHEMA_NAME
+	FROM ALL_DB_LINKS
+	WHERE OWNER = #schema_name#
+	ORDER BY OWNER, DB_LINK
+]]>
+</select>
+
+<!-- 
+	데이터베이스 링크의 DDL 스크립트를 생성한다.
+ -->
+<select id="getDatabaseLinkScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	<![CDATA[
+		SELECT 'CREATE' || case when OWNER = 'PUBLIC' then ' PUBLIC' else '' end || ' DATABASE LINK "'|| db_link ||'" CONNECT TO ' || nvl(username,user) || ' IDENTIFIED BY "<password>" USING ''' || host || ''';' 
+		FROM all_db_links 
+		WHERE OWNER = #schema_name# 
+		  AND DB_LINK = #object_name#
+		  AND ROWNUM <= 1
+	]]>
+</select>
+
+<!-- 
+	데이터베이스 JOB 목록을 조회한다.
+ -->
+<select id="getJobList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO" parameterClass="java.lang.String">
+  SELECT job
+        ,what
+        ,log_user
+        ,priv_user
+        ,schema_user as schema_name
+        ,last_date
+        ,this_date
+        ,this_sec
+        ,next_date 
+        ,next_sec
+        ,total_time
+        ,broken
+        ,interval
+        ,failures
+        ,nls_env
+        ,instance
+    FROM sys.dba_jobs
+   WHERE 1 = 1
+and #schema_name# in (schema_user, log_user)
+ORDER BY job
 </select>
 
 </sqlMap>

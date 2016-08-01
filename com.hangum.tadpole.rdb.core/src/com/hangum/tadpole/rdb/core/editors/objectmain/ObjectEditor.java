@@ -293,7 +293,8 @@ public class ObjectEditor extends MainEditor {
 						
 						afterProcess(reqQuery, reqResultDAO, Messages.get().ObjectEditorCompileError);
 					} else {
-						reqResultDAO.setMesssage("");
+						//DBMS_OUTOUT.PUT_LINE을 이용해 출력했던 내용이 있으면 그대로 표시하기 위해서 주석처리.
+						//reqResultDAO.setMesssage("");
 						afterProcess(reqQuery, reqResultDAO, Messages.get().ObjectEditor_2);
 					}
 					

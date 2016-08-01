@@ -31,6 +31,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -131,6 +132,20 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					refreshSynonym();
 				} catch(Exception e) {
 					logger.error("drop synoym", e);
+					exeMessage(Messages.get().ObjectDeleteAction_1, e);
+				}
+			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JOBS) {
+			
+			OracleJobDAO dao = (OracleJobDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Remove job?")) {
+				try {
+					
+					executeSQL(userDB, "begin sys.dbms_ijob.remove('"+dao.getJob()+"'); commit;end;"); //$NON-NLS-1$ //$NON-NLS-2$
+					
+					refreshJobs();
+				} catch(Exception e) {
+					logger.error("drop job", e);
 					exeMessage(Messages.get().ObjectDeleteAction_1, e);
 				}
 			}

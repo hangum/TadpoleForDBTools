@@ -126,7 +126,7 @@ public class OracleDbmsOutputUtil {
 		for (;;) {
 			show_stmt.setInt(1, 32000);
 			show_stmt.executeUpdate();
-			System.out.print(show_stmt.getString(3));
+			//System.out.print(show_stmt.getString(3));
 			output.append(show_stmt.getString(3));
 			
 			if ((done = show_stmt.getInt(2)) == 1)
@@ -149,9 +149,9 @@ public class OracleDbmsOutputUtil {
 	 * statement, result set and so on.
 	 */
 	public void close() throws SQLException {
-		enable_stmt.close();
-		disable_stmt.close();
-		show_stmt.close();
+		try { if(enable_stmt != null) enable_stmt.close(); } catch(Exception e) {}
+		try { if(disable_stmt != null) disable_stmt.close(); } catch(Exception e) {}
+		try { if(show_stmt != null) show_stmt.close(); } catch(Exception e) {}
 	}
 
 }

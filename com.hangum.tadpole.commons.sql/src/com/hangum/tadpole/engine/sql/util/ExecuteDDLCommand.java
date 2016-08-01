@@ -13,6 +13,8 @@ package com.hangum.tadpole.engine.sql.util;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
@@ -22,6 +24,7 @@ import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_STATUS;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
@@ -60,9 +63,10 @@ public class ExecuteDDLCommand {
 			QueryInfoDTO queryInfoDTO = new QueryInfoDTO();
 			ParserDDL parser = new ParserDDL();
 			parser.parseQuery(sql, queryInfoDTO);
-			boolean bool = _executSQL(userDB, queryInfoDTO.getQueryStatus(), queryInfoDTO.getQueryDDLType(), queryInfoDTO.getObjectName(), sql);
+			Map<String, Object> resultMap = _executSQL(userDB, queryInfoDTO.getQueryStatus(), queryInfoDTO.getQueryDDLType(), queryInfoDTO.getObjectName(), sql);
 			
-			reqResultDAO.setDataChanged(bool);
+			reqResultDAO.setDataChanged((Boolean)resultMap.get("result"));
+			reqResultDAO.setMesssage((String)resultMap.get("dbms_output"));
 		} catch(Exception e) {
 			logger.error("execute sql", e);
 			reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name()); //$NON-NLS-1$
@@ -86,19 +90,32 @@ public class ExecuteDDLCommand {
 	 * @param strSQL
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	private static boolean _executSQL(UserDBDAO userDB, QUERY_DDL_STATUS queryDDLStatus, QUERY_DDL_TYPE query_DDL_TYPE, String objName, String strSQL) throws TadpoleSQLManagerException, SQLException {
+	private static Map<String, Object> _executSQL(UserDBDAO userDB, QUERY_DDL_STATUS queryDDLStatus, QUERY_DDL_TYPE query_DDL_TYPE, String objName, String strSQL) throws TadpoleSQLManagerException, SQLException {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE ||
 			queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
 			queryDDLStatus == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
 		) {
 			java.sql.Connection javaConn = null;
+			OracleDbmsOutputUtil dbmsOutput = null;
 			Statement stmt = null;
 			try {
 				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 				javaConn = client.getDataSource().getConnection();
 				
 				stmt = javaConn.createStatement();
-				return stmt.execute(strSQL);
+				
+				if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+					dbmsOutput = new OracleDbmsOutputUtil( javaConn );
+					dbmsOutput.enable( 1000000 ); 
+					resultMap.put("result", stmt.execute(strSQL));
+					dbmsOutput.show();
+					resultMap.put("dbms_output", dbmsOutput.getOutput());
+				}else{
+					resultMap.put("result", stmt.execute(strSQL));
+					resultMap.put("dbms_output", "");
+				}
+				
 				
 			} finally {
 				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB,
@@ -108,11 +125,10 @@ public class ExecuteDDLCommand {
 						strSQL);
 				
 				try { if(stmt != null) stmt.close(); } catch(Exception e) {}
+				try { if(dbmsOutput != null) dbmsOutput.close(); } catch(Exception e) {}
 				try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
-				
 			}
 		}
-		
-		return false;
+		return resultMap;
 	}
 }

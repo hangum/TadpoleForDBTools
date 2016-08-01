@@ -58,6 +58,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongo
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.dblink.TadpoleDBLinkComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.jobs.TadpoleJobsComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sequence.TadpoleSequenceComposite;
@@ -102,6 +103,7 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleSynonymComposite 	synonymComposite 	= null;
 	private TadpoleSequenceComposite 	sequenceComposite 	= null;
 	private TadpoleDBLinkComposite 	    dblinkComposite 	= null;
+	private TadpoleJobsComposite 	    jobsComposite 	    = null;
 	
 	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpolePackageComposite	    packageComposite 	= null;
@@ -241,6 +243,9 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
 			dblinkComposite.filter(strSearchText);
 
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
+			jobsComposite.filter(strSearchText);
+
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 			viewComposite.filter(strSearchText);					
 		
@@ -309,6 +314,7 @@ public class ExplorerViewer extends ViewPart {
 		if(null != functionCompostite) functionCompostite.dispose(); 
 		if(null != triggerComposite) triggerComposite.dispose(); 
 		if(null != dblinkComposite) dblinkComposite.dispose();
+		if(null != jobsComposite) jobsComposite.dispose();
 		
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
@@ -486,23 +492,44 @@ public class ExplorerViewer extends ViewPart {
 			createFunction();
 			createTrigger();
 			createDBLink();
-			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(),
-				tableComposite.getTableColumnViewer(),
-				tableComposite.getIndexComposite().getTableViewer(),
-				tableComposite.getConstraintsComposite().getTableViewer(),
-				tableComposite.getTriggerComposite().getTableViewer(),
-				viewComposite.getTableViewer(), 
-				synonymComposite.getTableviewer(), 
-				sequenceComposite.getTableviewer(),
-				procedureComposite.getTableViewer(), 
-				packageComposite.getPackageTableViewer(), 
-				packageComposite.getProcFuncTableViewer(),
-				functionCompostite.getTableviewer(),
-				triggerComposite.getTableViewer(),
-				dblinkComposite.getTableviewer()
-			};
+			if (dbDefine == DBDefine.ORACLE_DEFAULT ) {
+				createJobs();
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer(),
+					tableComposite.getTableColumnViewer(),
+					tableComposite.getIndexComposite().getTableViewer(),
+					tableComposite.getConstraintsComposite().getTableViewer(),
+					tableComposite.getTriggerComposite().getTableViewer(),
+					viewComposite.getTableViewer(), 
+					synonymComposite.getTableviewer(), 
+					sequenceComposite.getTableviewer(),
+					procedureComposite.getTableViewer(), 
+					packageComposite.getPackageTableViewer(), 
+					packageComposite.getProcFuncTableViewer(),
+					functionCompostite.getTableviewer(),
+					triggerComposite.getTableViewer(),
+					dblinkComposite.getTableviewer(),
+					jobsComposite.getTableviewer()
+				};
+			}else{
+				arrayStructuredViewer = new StructuredViewer[] { 
+						tableComposite.getTableListViewer(),
+						tableComposite.getTableColumnViewer(),
+						tableComposite.getIndexComposite().getTableViewer(),
+						tableComposite.getConstraintsComposite().getTableViewer(),
+						tableComposite.getTriggerComposite().getTableViewer(),
+						viewComposite.getTableViewer(), 
+						synonymComposite.getTableviewer(), 
+						sequenceComposite.getTableviewer(),
+						procedureComposite.getTableViewer(), 
+						packageComposite.getPackageTableViewer(), 
+						packageComposite.getProcFuncTableViewer(),
+						functionCompostite.getTableviewer(),
+						triggerComposite.getTableViewer(),
+						dblinkComposite.getTableviewer()
+					};
+			}
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 		// altibase, cubrid
@@ -594,6 +621,8 @@ public class ExplorerViewer extends ViewPart {
 			refreshJS(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
 			refreshDBLink(true, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
+			refreshJobs(true, strObjectName);
 		}
 		filterText();
 		
@@ -726,6 +755,21 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshSequence(boolean boolRefresh, String strObjectName) {
 		sequenceComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
+	}
+
+	/**
+	 * Job 정의
+	 */
+	private void createJobs() {
+		jobsComposite = new TadpoleJobsComposite(getSite(), tabFolderObject, userDB);
+		jobsComposite.initAction();
+	}
+
+	/**
+	 * Job 정보를 최신으로 리프레쉬합니다.
+	 */
+	public void refreshJobs(boolean boolRefresh, String strObjectName) {
+		jobsComposite.refreshJobs(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**

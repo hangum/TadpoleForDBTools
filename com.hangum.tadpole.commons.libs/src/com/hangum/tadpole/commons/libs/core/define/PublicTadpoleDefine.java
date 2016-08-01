@@ -268,7 +268,8 @@ public class PublicTadpoleDefine {
 		JAVASCRIPT,
 		PACKAGES,
 		SCHEDULE,
-		COLUMNS
+		COLUMNS,
+		JOBS
 	};
 
 	/** sql type - http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands */
@@ -279,7 +280,7 @@ public class PublicTadpoleDefine {
 	
 	/** query ddl type */
 	public static enum QUERY_DDL_STATUS {CREATE, ALTER, DROP, UNKNOWN};
-	public static enum QUERY_DDL_TYPE 	{TABLE, VIEW, SEQUENCE, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, LINK, UNKNOWN};
+	public static enum QUERY_DDL_TYPE 	{TABLE, VIEW, SEQUENCE, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, LINK, JOBS, UNKNOWN};
 	
 	public static String[] DB_PRIMARY_KEY = {
 											"PRI", 
