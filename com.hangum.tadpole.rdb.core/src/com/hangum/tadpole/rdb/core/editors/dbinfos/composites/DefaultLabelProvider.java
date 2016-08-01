@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -51,6 +52,8 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 		if (columnIndex == 0) {
 			if (dao instanceof OracleSynonymDAO){
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/synonyms.png"); //$NON-NLS-1$
+			}else if (dao instanceof OracleJobDAO){
+				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/jobs.png"); //$NON-NLS-1$
 			}else if (dao instanceof OracleDBLinkDAO){
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/database_link.png"); //$NON-NLS-1$
 			}else if (dao instanceof OracleSequenceDAO){
