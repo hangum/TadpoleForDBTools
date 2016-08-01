@@ -117,7 +117,7 @@ public class DBLockDialog extends Dialog {
 			try {
 				TadpoleSQLManager.getInstance(userDB);
 			} catch(Exception e) {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DBLockDialog_3);
+				MessageDialog.openWarning(getShell(), Messages.get().Warning, e.getMessage());
 				textPassword.setFocus();
 				
 				return;

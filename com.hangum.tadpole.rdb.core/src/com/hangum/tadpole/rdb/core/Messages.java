@@ -403,7 +403,6 @@ public class Messages {
 	public String ResultSetComposite_10;
 	public String Download;
 	public String ResultSetComposite_16;
-	public String ResultSetComposite_2;
 	public String ResultSetComposite_3;
 
 	public String ResultSetComposite_6;
@@ -645,6 +644,14 @@ public class Messages {
 	public String DBLinkCreated;
 
 	public String DBLinkDrop;
+
+	public String IsDropDBLink;
+
+	public String ResultSetComposite_row_to_editor;
+
+	public String ResultSetComposite_column_to_editor;
+
+	public String PleaseSelectRowData;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -254,62 +254,9 @@ public class ResultSetComposite extends Composite {
 	 * 화면을 다시 조절한다.
 	 */
 	private void resultSashLayout() {
-//		Map<Integer, Integer> mapWidths = new HashMap<Integer, Integer>();
-//		Map<Integer, Integer> mapHeight = new HashMap<Integer, Integer>();
-//		int intTmpCount = 0;
-//		
-//		try {
-//			Control[] childControls = sashFormResult.getChildren();
-//			for (int i=0; i<childControls.length; i++) {
-//				Control control = childControls[i];
-//				if(control instanceof AbstractResultDetailComposite) {
-//					AbstractResultDetailComposite resultComposite = (AbstractResultDetailComposite)control;
-//					mapWidths.put(intTmpCount, resultComposite.getBounds().width);
-//					mapHeight.put(intTmpCount, resultComposite.getBounds().height);
-//					intTmpCount++;
-//				}
-//			}
-//			
-//			int weights[] = new int[mapWidths.size()+1];
-//			if(mapWidths.size() != 0) {
-//				for (int i=0; i<mapWidths.size(); i++) {
-//					float intCompositeWeights = 0f;
-//					if(sashFormResult.getOrientation() == SWT.HORIZONTAL) {
-//						intCompositeWeights = mapWidths.get(i) * 100;
-//					} else {
-//						intCompositeWeights = mapHeight.get(i) * 100;
-//					}
-//					weights[i] = (int)intCompositeWeights;
-//					intTmpCount += weights[i];
-//					// 처음 위젯이 생성 되었을 경우무조건 100이므로 반만 위젲을 준다. 
-//					if(weights[i] == 100) {
-//						weights[i] = 50;
-//						intTmpCount = 50;
-//					// 100 이 넘어가면 마지막 위젲에서 30로 만큼 위젲을 차지한다.
-//					} else if(intTmpCount >= 100) { 
-//						weights[i] = 30;
-//					}
-//				}
-//				weights[mapWidths.size()] = 100 - intTmpCount;
-//			} else {
-//				weights[0] = 100;
-//			}
-//			sashFormResult.setWeights(weights);
-//		} catch(Exception e) {
-//			logger.error("calc weights of result composite");
-//		}
-
 		sashFormResult.layout();
-		scrolledComposite.setMinSize(sashFormResult.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scrolledComposite.setMinSize(sashFormResult.computeSize(sashFormResult.getClientArea().width, sashFormResult.getClientArea().height));
 		scrolledComposite.layout();
-		
-		if(SWT.VERTICAL == scrolledComposite.getOrientation()) {
-			ScrollBar sbX = scrolledComposite.getHorizontalBar();
-			sbX.setSelection(sbX.getMaximum());
-		} else {
-			ScrollBar sbX = scrolledComposite.getVerticalBar();
-			sbX.setSelection(sbX.getMaximum());
-		}
 	}
 
 	/**
@@ -585,7 +532,7 @@ public class ResultSetComposite extends Composite {
 									reqResultDAO.setRows(rsDAO.getDataList().getData().size());
 								}
 								//DBMS_OUTPUT 에서 출력된 메시지가 있으면 쿼리History에 함께 저장하도록 한다.
-								reqResultDAO.setMesssage(rsDAO.getStrExceptionMsg());
+								reqResultDAO.setMesssage(rsDAO.getQueryMsg());
 							}
 						} else if(TransactionManger.isTransaction(reqQuery.getSql())) {
 							if(TransactionManger.isStartTransaction(reqQuery.getSql())) {
@@ -843,7 +790,7 @@ public class ResultSetComposite extends Composite {
 			}
 			
 			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt);
-			queryResultDAO.setStrExceptionMsg(dbms_output);
+			queryResultDAO.setQueryMsg(dbms_output);
 
 		} catch(Exception e) {
 			throw e;
@@ -1057,11 +1004,13 @@ public class ResultSetComposite extends Composite {
 	 * 쿼리 결과를 화면에 출력합니다.
 	 */
 	public void executeFinish(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
-		StringBuffer sbOutPutMsg = new StringBuffer();
+		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 시작.
+		StringBuffer sbMSG = new StringBuffer();
 		for (QueryExecuteResultDTO queryExecuteResultDTO : listRSDao) {
-			sbOutPutMsg.append(queryExecuteResultDTO.getStrExceptionMsg());
+			sbMSG.append(queryExecuteResultDTO.getQueryMsg()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 		}
-		getRdbResultComposite().refreshErrorMessageView(reqQuery, null, sbOutPutMsg.toString());
+		getRdbResultComposite().refreshErrorMessageView(reqQuery, null, sbMSG.toString());
+		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 종료.
 		
 		if(reqQuery.isStatement()) {
 			
@@ -1094,11 +1043,7 @@ public class ResultSetComposite extends Composite {
 					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
 					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
 			) {
-//				// working schema_history 에 history 를 남깁니다.
-//				 strWorkType TABLE, VIEW, PROCEDURE, FUNCTION, TRIGGER...
-//				 * @param strObjecType CREATE, ALTER, DROP
-//				 * @param strObjectId 객체 명
-//				String strWorkType, String strObjecType, String strObjectId, String strSQL) {
+				// working schema_history 에 history 를 남깁니다.
 				try {
 					TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
 							getUserDB(),

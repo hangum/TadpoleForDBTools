@@ -21,33 +21,34 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
 
 /**
- * Query Result 창에서 선택된 컬럼 데이터를 한번에 보기 위한 창을 열어 줍니다.
+ * 쿼리 결과의 선택 컬럼을 에디터로 보낸다.
  * 
  * @author hangum
  *
  */
-public class ColumnRowDataDialogAction extends Action implements IWorkbenchAction {
-	private final static String ID = "com.hangum.db.browser.rap.core.actions.global.OpenColumnRowDataDialogAction"; //$NON-NLS-1$
+public class SelectColumnToEditorAction extends Action implements IWorkbenchAction {
+	private final static String ID = "com.hangum.db.browser.rap.core.actions.result.SelectRowtoEditorAction"; //$NON-NLS-1$
 	private IStructuredSelection iss;
 	private ResultTableComposite resultTableComposite;
 	
-	public ColumnRowDataDialogAction(ResultTableComposite resultTableComposite) {
+	public SelectColumnToEditorAction(ResultTableComposite resultTableComposite) {
 		setId(ID);
-		setText(Messages.get().ResultSetComposite_btnColumnDetail_text);
-		setToolTipText(Messages.get().ResultSetComposite_btnColumnDetail_text);
+		setText(Messages.get().ResultSetComposite_column_to_editor);
+		setToolTipText(Messages.get().ResultSetComposite_column_to_editor);
 		setEnabled(false);
+		
 		this.resultTableComposite = resultTableComposite;
 	}
 	
 	@Override
 	public void run() {
-		resultTableComposite.openSinglColumViewDialog();
+		if(resultTableComposite != null) resultTableComposite.selectColumnToEditor();
 	}
 	
 	@Override
 	public void dispose() {
 	}
-
+	
 	/**
 	 * Selection 서비스를 이용하지 않고, 내부적으로 데이터 변경이 있을때 마다
 	 * 아래 메소드를 직접 실행해 줍니다. 
