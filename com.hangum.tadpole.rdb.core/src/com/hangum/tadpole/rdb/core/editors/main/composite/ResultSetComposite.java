@@ -513,8 +513,10 @@ public class ResultSetComposite extends Composite {
 										QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 0", 0, 10);
 										
 										// EXECUTE_PLAN
-										QueryExecuteResultDTO queryPlanDAO = ExecuteQueryPlan.runSQLExplainPlan(getUserDB(), reqQuery, strPlanTBName);
-										rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name(), queryPlanDAO);
+										if(StringUtils.startsWithIgnoreCase(reqQuery.getOriginalSql(), "SET")) {
+											QueryExecuteResultDTO queryPlanDAO = ExecuteQueryPlan.runSQLExplainPlan(getUserDB(), reqQuery, strPlanTBName);
+											rsDAO.setMapExtendResult(MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name(), queryPlanDAO);
+										}
 
 									} else {
 										rsDAO = runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, 0);
