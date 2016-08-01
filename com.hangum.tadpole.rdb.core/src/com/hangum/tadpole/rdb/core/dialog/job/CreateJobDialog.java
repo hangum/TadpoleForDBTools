@@ -122,7 +122,7 @@ public class CreateJobDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().ExecuteProcedureDialog_0);
+		newShell.setText("Job Manager");
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
