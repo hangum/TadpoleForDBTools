@@ -8,9 +8,8 @@
  * Contributors:
  *     nilrir - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.jobs;
+package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.java;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -53,40 +52,43 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectAlterAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
+import com.hangum.tadpole.rdb.core.dialog.java.CreateJavaDialog;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
-import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * Oracle database job composite
+ * Oracle java composite
  * 
  * @author nilriri
  * 
  */
-public class TadpoleJobsComposite extends AbstractObjectComposite {
+public class TadpoleJavaComposite extends AbstractObjectComposite {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(TadpoleJobsComposite.class);
+	private static final Logger logger = Logger.getLogger(TadpoleJavaComposite.class);
 
-	private CTabItem tbtmJobs;
+	private CTabItem tbtmJava;
 
 	// table info
-	private TableViewer jobsListViewer;
-	private List<OracleJobDAO> showJobs = new ArrayList<OracleJobDAO>();
-	private DefaultTableColumnFilter jobsFilter;
+	private TableViewer javaListViewer;
+	private List<OracleJavaDAO> showJava = new ArrayList<OracleJavaDAO>();
+	private DefaultTableColumnFilter javaFilter;
 
 	// column info
-	private TableViewer jobsColumnViewer;
+	private TableViewer javaColumnViewer;
 	
-	private ObjectCreatAction creatAction_Jobs;
-	private ObjectAlterAction alterAction_Jobs;
-	private AbstractObjectAction dropAction_Jobs;
-	private AbstractObjectAction refreshAction_Jobs;
+	private ObjectCreatAction creatAction_Java;
+	private ObjectAlterAction alterAction_Java;
+	private AbstractObjectAction dropAction_Java;
+	private AbstractObjectAction refreshAction_Java;
+
+	private OracleObjectCompileAction compileAction;
 
 	/**
 	 * Create the composite.
@@ -95,19 +97,19 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	 * @param parent
 	 * @param userDB
 	 */
-	public TadpoleJobsComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
+	public TadpoleJavaComposite(IWorkbenchPartSite partSite, final CTabFolder tabFolderObject, UserDBDAO userDB) {
 		super(partSite, tabFolderObject, userDB);
 
 		createWidget(tabFolderObject);
 	}
 
 	private void createWidget(final CTabFolder tabFolderObject) {
-		tbtmJobs = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmJobs.setText("Jobs");
-		tbtmJobs.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.JOBS.name());
+		tbtmJava = new CTabItem(tabFolderObject, SWT.NONE);
+		tbtmJava.setText("Java");
+		tbtmJava.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.JAVA.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
-		tbtmJobs.setControl(compositeTables);
+		tbtmJava.setControl(compositeTables);
 		GridLayout gl_compositeTables = new GridLayout(1, false);
 		gl_compositeTables.verticalSpacing = 2;
 		gl_compositeTables.horizontalSpacing = 2;
@@ -121,84 +123,87 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		jobsListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
-		jobsListViewer.addDoubleClickListener(new IDoubleClickListener() {
+		javaListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		javaListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				try {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
 					if (null != is) {
-						OracleJobDAO jobsDAO = (OracleJobDAO) is.getFirstElement();
-						FindEditorAndWriteQueryUtil.run(userDB, "CALL SYS.DBMS_JOB.RUN('"+jobsDAO.getJob()+"');" , PublicTadpoleDefine.OBJECT_TYPE.JOBS);
+						OracleJavaDAO javaDao = (OracleJavaDAO) is.getFirstElement();
+						CreateJavaDialog epd = new CreateJavaDialog(null, userDB, javaDao);
+						epd.open();
 					}
 				} catch (Exception e) {
-					logger.error("create jobs", e);
+					logger.error("Open detail information view!", e);
 				}
 			}
 		});
 
-		Table tableTableList = jobsListViewer.getTable();
+		Table tableTableList = javaListViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
 
-		createJobsMenu();
-		createJobsListColumns();
+		createJavaMenu();
+		createJavaListColumns();
 
-		jobsListViewer.setInput(showJobs);
-		jobsListViewer.refresh();
+		javaListViewer.setInput(showJava);
+		javaListViewer.refresh();
 
-		jobsFilter = new DefaultTableColumnFilter();
-		jobsListViewer.addFilter(jobsFilter);
+		javaFilter = new DefaultTableColumnFilter();
+		javaListViewer.addFilter(javaFilter);
 	}
 
-	private void createJobsListColumns() {
+	private void createJavaListColumns() {
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
-				  new TableViewColumnDefine("JOB", "ID", 40, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("SCHEMA_NAME", "Schema", 80, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("WHAT", "What", 120, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("LAST_DATE", "Last", 120, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("NEXT_DATE", "Next", 120, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("INTERVAL", "Interval", 80, SWT.LEFT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("PRIV_USER", "Privilege", 80, SWT.LEFT) // //$NON-NLS-1$
+				  new TableViewColumnDefine("OBJECT_NAME", "Name", 120, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("SCHEMA_NAME", "Owner", 80, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("OBJECT_TYPE", "Type", 80, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("CREATED", "Created", 80, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("LAST_DDL_TIME", "Lst DDL", 80, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("STATUS", "Status", 80, SWT.LEFT) // //$NON-NLS-1$
 		};
 
-		ColumnHeaderCreator.createColumnHeader(jobsListViewer, tableColumnDef);
+		ColumnHeaderCreator.createColumnHeader(javaListViewer, tableColumnDef);
 
-		jobsListViewer.setContentProvider(new ArrayContentProvider());
-		jobsListViewer.setLabelProvider(new DefaultLabelProvider(jobsListViewer));
+		javaListViewer.setContentProvider(new ArrayContentProvider());
+		javaListViewer.setLabelProvider(new DefaultLabelProvider(javaListViewer));
 
 	}
 
 	/**
 	 * create Table menu
 	 */
-	private void createJobsMenu() {
+	private void createJavaMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Jobs = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Create job");
-		alterAction_Jobs = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Change job");
-		dropAction_Jobs = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Remove job"); //$NON-NLS-1$
-		refreshAction_Jobs = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, Messages.get().Refresh); //$NON-NLS-1$
+		creatAction_Java = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Create java");
+		alterAction_Java = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Change java");
+		dropAction_Java = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Drop java"); //$NON-NLS-1$
+		refreshAction_Java = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().Refresh); //$NON-NLS-1$
+		compileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Compile java");
 
 		// menu
-		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Jobs"); //$NON-NLS-1$ //$NON-NLS-2$
+		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Java"); //$NON-NLS-1$ //$NON-NLS-2$
+		menuMgr.add(refreshAction_Java);
+		menuMgr.add(new Separator());
 		if(!isDDLLock()) {
-			menuMgr.add(creatAction_Jobs);
-			menuMgr.add(alterAction_Jobs);
-			menuMgr.add(dropAction_Jobs);
+			menuMgr.add(creatAction_Java);
+			menuMgr.add(alterAction_Java);
+			menuMgr.add(dropAction_Java);
 			menuMgr.add(new Separator());
 		}
-		menuMgr.add(refreshAction_Jobs);
 		menuMgr.add(new Separator());
+		menuMgr.add(compileAction);
 
-		jobsListViewer.getTable().setMenu(menuMgr.createContextMenu(jobsListViewer.getTable()));
-		getSite().registerContextMenu(menuMgr, jobsListViewer);
+		javaListViewer.getTable().setMenu(menuMgr.createContextMenu(javaListViewer.getTable()));
+		getSite().registerContextMenu(menuMgr, javaListViewer);
 	}
 
 	/**
 	 * 정보를 최신으로 리프레쉬합니다.
 	 * @param strObjectName 
 	 */
-	public void refreshJobs(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
+	public void refreshJava(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
 		if (!boolRefresh) if (selectUserDb == null) return;
 		this.userDB = selectUserDb;
 
@@ -208,13 +213,13 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
 				try {
-					showJobs = getJobsList(userDB);
+					showJava = getJavaList(userDB);
 					
-					for(OracleJobDAO dao : showJobs) {
-						dao.setSysName( dao.getJob() + "" );
+					for(OracleJavaDAO dao : showJava) {
+						dao.setSysName( dao.getObjectName() + "" );
 					}
 				} catch (Exception e) {
-					logger.error("Jobs Referesh", e); //$NON-NLS-1$
+					logger.error("Java Referesh", e); //$NON-NLS-1$
 
 					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
 				} finally {
@@ -233,20 +238,20 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (jobEvent.getResult().isOK()) {
-							jobsListViewer.setInput(showJobs);
-							jobsListViewer.refresh();
-							TableUtil.packTable(jobsListViewer.getTable());
+							javaListViewer.setInput(showJava);
+							javaListViewer.refresh();
+							TableUtil.packTable(javaListViewer.getTable());
 
 							// select tabitem
-							getTabFolderObject().setSelection(tbtmJobs);
+							getTabFolderObject().setSelection(tbtmJava);
 							
 							selectDataOfTable(strObjectName);
 						} else {
-							if (showJobs != null)
-								showJobs.clear();
-							jobsListViewer.setInput(showJobs);
-							jobsListViewer.refresh();
-							TableUtil.packTable(jobsListViewer.getTable());
+							if (showJava != null)
+								showJava.clear();
+							javaListViewer.setInput(showJava);
+							javaListViewer.refresh();
+							TableUtil.packTable(javaListViewer.getTable());
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
 							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
@@ -269,26 +274,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<OracleJobDAO> getJobsList(final UserDBDAO userDB) throws Exception {
+	public static List<OracleJavaDAO> getJavaList(final UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-
-		List<OracleJobDAO> DBAResult = new ArrayList<OracleJobDAO>();
-		List<OracleJobDAO> UserResult = new ArrayList<OracleJobDAO>();
-		
-		UserResult = sqlClient.queryForList("getJobList", userDB.getSchema()); //$NON-NLS-1$
-		try{
-			DBAResult = sqlClient.queryForList("getDBAJobList", userDB.getSchema()); //$NON-NLS-1$
-		}catch(SQLException e){
-			// DBA권한이 없을경우 발생하는 Exception은 무시한다.
-		}
-		for (OracleJobDAO dao:DBAResult){
-			if (!UserResult.contains(dao) ){
-				UserResult.add(dao);
-			}
-		}
-		
-		return UserResult;
-		
+		return sqlClient.queryForList("getJavaList", userDB.getSchema()); //$NON-NLS-1$
 	}
 
 	/**
@@ -297,28 +285,29 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	public void initAction() {
 		if(getUserDB() == null) return; 
 		
-		creatAction_Jobs.setUserDB(getUserDB());
-		alterAction_Jobs.setUserDB(getUserDB());
-		dropAction_Jobs.setUserDB(getUserDB());
-		refreshAction_Jobs.setUserDB(getUserDB());
+		creatAction_Java.setUserDB(getUserDB());
+		alterAction_Java.setUserDB(getUserDB());
+		dropAction_Java.setUserDB(getUserDB());
+		refreshAction_Java.setUserDB(getUserDB());
+		compileAction.setUserDB(getUserDB());
 	}
 
 	/**
-	 * get jobsViewer
+	 * get javaViewer
 	 * 
 	 * @return
 	 */
 	public TableViewer getTableviewer() {
-		return jobsListViewer;
+		return javaListViewer;
 	}
 
 	/**
-	 * get jobs column viewer
+	 * get java column viewer
 	 * 
 	 * @return
 	 */
 	public TableViewer getJobsColumnViewer() {
-		return jobsColumnViewer;
+		return javaColumnViewer;
 	}
 
 	/**
@@ -327,22 +316,23 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	 * @param textSearch
 	 */
 	public void filter(String textSearch) {
-		jobsFilter.setSearchString(textSearch);
-		jobsListViewer.refresh();
+		javaFilter.setSearchString(textSearch);
+		javaListViewer.refresh();
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();	
-		if(creatAction_Jobs != null) creatAction_Jobs.dispose();
-		if(alterAction_Jobs != null) alterAction_Jobs.dispose();
-		if(dropAction_Jobs != null) dropAction_Jobs.dispose();
-		if(refreshAction_Jobs != null) refreshAction_Jobs.dispose();
+		if(creatAction_Java != null) creatAction_Java.dispose();
+		if(alterAction_Java != null) alterAction_Java.dispose();
+		if(dropAction_Java != null) dropAction_Java.dispose();
+		if(refreshAction_Java != null) refreshAction_Java.dispose();
+		if(compileAction != null) compileAction.dispose();
 	}
 
 	@Override
 	public void setSearchText(String searchText) {
-		jobsFilter.setSearchString(searchText);
+		javaFilter.setSearchString(searchText);
 	}
 
 	@Override
@@ -352,9 +342,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		getTableviewer().getTable().setFocus();
 		
 		// find select object and viewer select
-		for(int i=0; i< this.showJobs.size(); i++) {
-			OracleJobDAO jobsDao = (OracleJobDAO)getTableviewer().getElementAt(i);
-			if(StringUtils.equalsIgnoreCase(strObjectName, jobsDao.getJob()+"" )) {
+		for(int i=0; i< this.showJava.size(); i++) {
+			OracleJavaDAO javaDao = (OracleJavaDAO)getTableviewer().getElementAt(i);
+			if(StringUtils.equalsIgnoreCase(strObjectName, javaDao.getObjectName()+"" )) {
 				getTableviewer().setSelection(new StructuredSelection(getTableviewer().getElementAt(i)), true);
 				break;
 			}

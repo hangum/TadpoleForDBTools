@@ -56,6 +56,8 @@ import com.hangum.tadpole.engine.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 
 /**
  * procedure 실행 다이얼로그.
@@ -238,6 +240,12 @@ public class CreateJobDialog extends Dialog {
 		comboRepeat.setLayoutData(gd_comboRepeat);
 
 		textRepeat = new Text(composite_3, SWT.BORDER);
+		textRepeat.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				createScript();
+			}
+		});
 		GridData gd_textRepeat = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_textRepeat.minimumWidth = 200;
 		gd_textRepeat.widthHint = 300;
@@ -296,13 +304,14 @@ public class CreateJobDialog extends Dialog {
 		comboType = new Combo(composite_1, SWT.READ_ONLY);
 		comboType.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
-
-			@Override
 			public void widgetSelected(SelectionEvent e) {
-				initMainObject(comboType.getText());
+				if (StringUtils.startsWithIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name(), comboType.getText()) ||
+						StringUtils.startsWithIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name(), comboType.getText()) ) {
+					initMainObject(comboType.getText());
+				}else{
+					//PL/SQL블럭 스크립트를 생성한다.
+					createScript();
+				}
 			}
 		});
 		comboType.setItems(new String[] { "Procedure", "Package", "PL/SQL Block" });
@@ -354,6 +363,12 @@ public class CreateJobDialog extends Dialog {
 		grpTables.setText("실행할 스크립트");
 
 		textScript = new Text(grpTables, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		textScript.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				createScript();
+			}
+		});
 		textScript.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -621,13 +636,10 @@ public class CreateJobDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (this.jobDao.getJob() > 0) {
 			btnCreateJob = createButton(parent, ID_CREATE_JOB, "Change Job", false);
+			btnDropJob = createButton(parent, ID_DROP_JOB, "Drop Job", false);
 		} else {
 			btnCreateJob = createButton(parent, ID_CREATE_JOB, "Create Job", false);
 		}
-		btnDropJob = createButton(parent, ID_DROP_JOB, "Drop Job", false);
-
-		btnDropJob.setEnabled(this.jobDao.getJob() > 0);
-
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
 
@@ -639,13 +651,13 @@ public class CreateJobDialog extends Dialog {
 			try {
 				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, this.textPreview.getText().trim());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 			} //$NON-NLS-1$
 			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				exeMessage(Messages.get().ObjectDeleteAction_0, reqReResultDAO.getException());
+				MessageDialog.openError(this.parentShell, Messages.get().Error, "Job을 등록/변경 중 오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 			} else {
-				MessageDialog.openError(this.parentShell, Messages.get().Information, "작업이 완료 되었습니다.");
+				MessageDialog.openInformation(this.parentShell, Messages.get().Information, "Job 등록 및 변경 작업이 완료 되었습니다.");
+				this.okPressed();
 			}
 		} else if (buttonId == ID_DROP_JOB) {
 			//Excute script
@@ -657,24 +669,21 @@ public class CreateJobDialog extends Dialog {
 					MessageDialog.openWarning(parentShell, Messages.get().Warning, "삭제 대상 job이 업습니다.");
 					return;
 				} else {
-					drop_stmp = "begin sys.dbms_ijob.remove('" + jobDao.getJob() + "'); commit;end;";
+					drop_stmp = "begin sys.dbms_job.remove('" + jobDao.getJob() + "'); commit;end;";
 					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, drop_stmp);
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 			} //$NON-NLS-1$
 			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				exeMessage(Messages.get().ObjectDeleteAction_0, reqReResultDAO.getException());
+				MessageDialog.openError(this.parentShell, Messages.get().Error, "Job을 삭제하는중 오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+			}else{
+				MessageDialog.openInformation(this.parentShell, Messages.get().Information, "Job을 삭제하였습니다.");
+				okPressed();
 			}
 		} else {
 			okPressed();
 		}
-	}
-
-	private void exeMessage(String msgHead, Exception e) {
-		TDBErroDialog errDialog = new TDBErroDialog(null, msgHead + Messages.get().ObjectDeleteAction_25, e.getMessage());
-		errDialog.open();
 	}
 
 	/**

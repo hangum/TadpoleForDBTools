@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
+import com.hangum.tadpole.engine.query.dao.rdb.FieldNameAnnotationClass;
+
 /**
  * commons schema object
  * 
@@ -30,6 +32,7 @@ public abstract class StructObjectDAO {
 	/**
 	 * @return the schema_name
 	 */
+	@FieldNameAnnotationClass(fieldKey = "schema_name")
 	public String getSchema_name() {
 		return schema_name;
 	}

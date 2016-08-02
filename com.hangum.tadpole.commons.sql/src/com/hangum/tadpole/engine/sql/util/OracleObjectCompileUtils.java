@@ -111,8 +111,12 @@ public class OracleObjectCompileUtils {
 			paramMap.put("object_name", SQLUtil.makeIdentifierName(userDB, objName) );
 			paramMap.put("full_name", userDB.getSchema() + "." + SQLUtil.makeIdentifierName(userDB, objName));
 		}
-		
-		return otherObjectCompile(actionType, objType, paramMap, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
+		if (PublicTadpoleDefine.QUERY_DDL_TYPE.JAVA == actionType){
+			//Java object는 컴파일 옵션이 없다.
+			return otherObjectCompile(actionType, objType, paramMap, userDB, false);
+		}else{
+			return otherObjectCompile(actionType, objType, paramMap, userDB, userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT);
+		}
 	}
 	
 	/**

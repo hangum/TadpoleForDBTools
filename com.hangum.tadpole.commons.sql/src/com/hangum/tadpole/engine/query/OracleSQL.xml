@@ -1362,12 +1362,11 @@ SELECT INDEX_NAME "Index Name"
 <!-- 
 	데이터베이스 JOB 목록을 조회한다.
  -->
-<select id="getJobList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO" parameterClass="java.lang.String">
+<select id="getDBAJobList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO" parameterClass="java.lang.String">
   SELECT job
         ,what
         ,log_user
         ,priv_user
-        ,schema_user as schema_name
         ,last_date
         ,this_date
         ,this_sec
@@ -1379,10 +1378,62 @@ SELECT INDEX_NAME "Index Name"
         ,failures
         ,nls_env
         ,instance
-    FROM sys.dba_jobs
+        ,schema_user as schema_name        
+    FROM dba_jobs
    WHERE 1 = 1
-and #schema_name# in (schema_user, log_user)
+and priv_user = #schema_name#
 ORDER BY job
+</select>
+
+<select id="getJobList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO" parameterClass="java.lang.String">
+  SELECT job
+        ,what
+        ,log_user
+        ,priv_user
+        ,last_date
+        ,this_date
+        ,this_sec
+        ,next_date 
+        ,next_sec
+        ,total_time
+        ,broken
+        ,interval
+        ,failures
+        ,nls_env
+        ,instance
+        ,schema_user as schema_name
+    FROM all_jobs
+   WHERE 1 = 1
+and priv_user = #schema_name#
+ORDER BY job
+</select>
+
+<select id="getJavaList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO" parameterClass="java.lang.String">
+    select 
+      nvl(j.longname, s.object_name) as object_name
+      , nvl(j.short, ' ') as short_name
+      , s.last_ddl_time as created 
+      , s.object_type
+      , s.last_ddl_time
+      , s.status
+      , s.owner as schema_name
+    from all_objects s
+      left join javasnm j on s.object_name = j.short
+    where 1=1
+      and s.owner = #schema_name#
+      and s.object_type IN ('JAVA SOURCE', 'JAVA CLASS')
+    order by 1
+</select>
+
+<select id="getJavaSource" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+SELECT text 
+FROM all_source s
+	left join javasnm l on s.name = l.short
+WHERE 1=1
+AND s.owner = #schema_name#
+AND NVL(l.longname, s.name) = #object_name#
+AND s.type = 'JAVA SOURCE'
+ORDER BY s.line
 </select>
 
 </sqlMap>

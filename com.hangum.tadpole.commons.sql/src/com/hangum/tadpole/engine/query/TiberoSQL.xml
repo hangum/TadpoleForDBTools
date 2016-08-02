@@ -1332,23 +1332,22 @@ SELECT INDEX_NAME "Index Name"
 <select id="getJobList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO" parameterClass="java.lang.String">
   SELECT job
         ,what
-        ,log_user
-        ,priv_user
+        ,'' as log_user
         ,schema_user as schema_name
         ,last_date
         ,this_date
-        ,this_sec
+        ,'' as this_sec
         ,next_date 
-        ,next_sec
-        ,total_time
+        ,'' as next_sec
+        ,0 as total_time
         ,broken
         ,interval
         ,failures
-        ,nls_env
+        ,'' as nls_env
         ,instance
-    FROM sys.dba_jobs
+    FROM all_jobs
    WHERE 1 = 1
-and #schema_name# in (schema_user, log_user)
+and schema_user = #schema_name#
 ORDER BY job
 </select>
 

@@ -27,17 +27,18 @@ public class OracleConnectTest extends AbstractDriverInfo {
 	public static void main(String args[]) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@192.168.29.128:1521:XE";
+			String url = "jdbc:oracle:thin:@10.211.55.25:1521:XE";
 	
 			Properties props = new Properties();
-			props.put("user", "HR");
-			props.put("password", "tadpole");
-			props.put("ResultSetMetaDataOptions", "1");
+			props.put("user", "SCOTT");
+			props.put("password", "tiger");
+			//props.put("ResultSetMetaDataOptions", "1");
 	
 			Connection conn = DriverManager.getConnection(url, props);
 //			printMetaData(conn.getMetaData());
 	
-			PreparedStatement preStatement = conn.prepareStatement("SELECT DEPARTMENT_ID, DEPARTMENT_NAME, MANAGER_ID, LOCATION_ID  FROM DEPARTMENTS  t");//select * from v$version");
+			PreparedStatement preStatement = conn.prepareStatement(
+"begin execute immediate 'CREATE OR REPLACE and RESOLVE JAVA SOURCE NAMED TESTJ AS public class TESTJ { public static String helloworld(String str) { return str;}}'; end; ");//select * from v$version");
 			ResultSet result = preStatement.executeQuery();
 			
 //			ResultSetMetaData rsm = result.getMetaData();

@@ -31,6 +31,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
@@ -141,9 +142,22 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Remove job?")) {
 				try {
 					
-					executeSQL(userDB, "begin sys.dbms_ijob.remove('"+dao.getJob()+"'); commit;end;"); //$NON-NLS-1$ //$NON-NLS-2$
+					executeSQL(userDB, "begin sys.dbms_job.remove('"+dao.getJob()+"'); commit;end;"); //$NON-NLS-1$ //$NON-NLS-2$
 					
 					refreshJobs();
+				} catch(Exception e) {
+					logger.error("drop job", e);
+					exeMessage(Messages.get().ObjectDeleteAction_1, e);
+				}
+			}
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVA) {			
+			OracleJavaDAO dao = (OracleJavaDAO)selection.getFirstElement();
+			if(MessageDialog.openConfirm(getWindow().getShell(), Messages.get().Confirm, "Drop java?")) {
+				try {
+					
+					executeSQL(userDB, "DROP JAVA SOURCE "+dao.getFullName()); //$NON-NLS-1$ //$NON-NLS-2$
+					
+					refreshJava();
 				} catch(Exception e) {
 					logger.error("drop job", e);
 					exeMessage(Messages.get().ObjectDeleteAction_1, e);

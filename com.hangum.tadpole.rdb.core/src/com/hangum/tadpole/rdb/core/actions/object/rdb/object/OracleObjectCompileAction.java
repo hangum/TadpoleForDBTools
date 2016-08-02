@@ -24,6 +24,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.OracleObjectCompileUtils;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -74,6 +75,9 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 			TriggerDAO dao = (TriggerDAO)selection.getFirstElement();
 			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.TRIGGER, "TRIGGER",  dao.getName(), userDB);			 //$NON-NLS-1$
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVA) {
+			OracleJavaDAO dao = (OracleJavaDAO)selection.getFirstElement();
+			otherObjectCompile(PublicTadpoleDefine.QUERY_DDL_TYPE.JAVA, dao.getObjectType(),  dao.getObjectName(), userDB);			 //$NON-NLS-1$
 		}
 	}
 	
