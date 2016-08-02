@@ -394,7 +394,7 @@ public class ExplorerViewer extends ViewPart {
 					this.refreshTable(true, "");
 				} catch (Exception e) {
 					comboSchema.setItems( new String[]{userDB.getSchema()} );
-					e.printStackTrace();
+					logger.error("get system schemas " + e.getMessage());
 				}
 			}else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 			
