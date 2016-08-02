@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -106,13 +108,23 @@ public class MySQLExtensionViewDialog extends Dialog {
 		
 		tvShowProfiller = createTitleTable(compositeBody, "SHOW PROFILE Result");
 		tvShowStatus 	= createTitleTable(compositeBody, "Change Of STATUS VARIABLES");
-		tvExecutePlan 	= createTitleTable(compositeBody, "Execute Plan");
 		
-		compositeBody.setWeights(new int[] {4, 4, 2});
+		Object mapQueryPlan = rsDAO.getMapExtendResult().get(MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name());;
+		if(mapQueryPlan != null) {
+			tvExecutePlan 	= createTitleTable(compositeBody, "Execute Plan");
+		}
+		
+		if(mapQueryPlan != null) {
+			compositeBody.setWeights(new int[] {4, 4, 2});
+		} else {
+			compositeBody.setWeights(new int[] {5, 5});
+		}
 		
 		showProfiller();
 		showDiffStatus();
-		showExecutePlan();
+		if(mapQueryPlan != null) {
+			showExecutePlan();
+		}
 		
 		scCompositeBody.setContent(compositeBody);
 		scCompositeBody.setMinSize(scCompositeBody.computeSize(SWT.DEFAULT, SWT.DEFAULT));
