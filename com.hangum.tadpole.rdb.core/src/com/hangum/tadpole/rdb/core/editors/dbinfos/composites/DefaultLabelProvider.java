@@ -58,7 +58,11 @@ public class DefaultLabelProvider extends LabelProvider implements ITableLabelPr
 			}else if (dao instanceof OracleDBLinkDAO){
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/database_link.png"); //$NON-NLS-1$
 			}else if (dao instanceof OracleJavaDAO){
-				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/java.png"); //$NON-NLS-1$
+				if (((OracleJavaDAO) dao).getObjectType().contains("SOURCE")){
+					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/java_source.png"); //$NON-NLS-1$
+				}else{
+					return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/java.png"); //$NON-NLS-1$
+				}
 			}else if (dao instanceof OracleSequenceDAO){
 				return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/sequence.png"); //$NON-NLS-1$
 			}else if (PublicTadpoleDefine.isPK(dao.getvalue("pk"))) {
