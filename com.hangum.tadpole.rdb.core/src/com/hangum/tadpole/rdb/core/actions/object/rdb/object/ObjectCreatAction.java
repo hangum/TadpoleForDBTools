@@ -19,7 +19,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -29,6 +29,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateConstraintsAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateDBLinkAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateFunctionAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateIndexAction;
+import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaScriptAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJobsAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreatePackageAction;
@@ -139,6 +140,10 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateJobsAction cia = new CreateJobsAction(new OracleJobDAO( userDB ));
 			cia.run(userDB, actionType);
 			this.refreshJobs();
+		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVA) {
+			CreateJavaAction cia = new CreateJavaAction(new OracleJavaDAO( userDB ));
+			cia.run(userDB, actionType);
+			this.refreshJava();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 			CreateFunctionAction cia = new CreateFunctionAction();
 			cia.run(userDB, actionType);

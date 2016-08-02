@@ -58,6 +58,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongo
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.dblink.TadpoleDBLinkComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.java.TadpoleJavaComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.jobs.TadpoleJobsComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage.TadpolePackageComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure.TadpoleProcedureComposite;
@@ -104,6 +105,7 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleSequenceComposite 	sequenceComposite 	= null;
 	private TadpoleDBLinkComposite 	    dblinkComposite 	= null;
 	private TadpoleJobsComposite 	    jobsComposite 	    = null;
+	private TadpoleJavaComposite 	    javaComposite 	    = null;
 	
 	private TadpoleProcedureComposite	procedureComposite 	= null;
 	private TadpolePackageComposite	    packageComposite 	= null;
@@ -246,6 +248,9 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
 			jobsComposite.filter(strSearchText);
 
+		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
+			javaComposite.filter(strSearchText);
+
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
 			viewComposite.filter(strSearchText);					
 		
@@ -315,6 +320,7 @@ public class ExplorerViewer extends ViewPart {
 		if(null != triggerComposite) triggerComposite.dispose(); 
 		if(null != dblinkComposite) dblinkComposite.dispose();
 		if(null != jobsComposite) jobsComposite.dispose();
+		if(null != javaComposite) javaComposite.dispose();
 		
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
@@ -494,6 +500,7 @@ public class ExplorerViewer extends ViewPart {
 			createDBLink();
 			if (dbDefine == DBDefine.ORACLE_DEFAULT ) {
 				createJobs();
+				createJava();
 				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					tableComposite.getTableListViewer(),
@@ -510,7 +517,8 @@ public class ExplorerViewer extends ViewPart {
 					functionCompostite.getTableviewer(),
 					triggerComposite.getTableViewer(),
 					dblinkComposite.getTableviewer(),
-					jobsComposite.getTableviewer()
+					jobsComposite.getTableviewer(),
+					javaComposite.getTableviewer()
 				};
 			}else{
 				arrayStructuredViewer = new StructuredViewer[] { 
@@ -623,6 +631,8 @@ public class ExplorerViewer extends ViewPart {
 			refreshDBLink(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
 			refreshJobs(true, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
+			refreshJava(true, strObjectName);
 		}
 		filterText();
 		
@@ -773,6 +783,21 @@ public class ExplorerViewer extends ViewPart {
 	}
 
 	/**
+	 * Java 정의
+	 */
+	private void createJava() {
+		javaComposite = new TadpoleJavaComposite(getSite(), tabFolderObject, userDB);
+		javaComposite.initAction();
+	}
+
+	/**
+	 * Job 정보를 최신으로 리프레쉬합니다.
+	 */
+	public void refreshJava(boolean boolRefresh, String strObjectName) {
+		javaComposite.refreshJava(getUserDB(), boolRefresh, strObjectName);
+	}
+
+	/**
 	 * view 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshView(boolean boolRefresh, String strObjectName) {
@@ -912,6 +937,10 @@ public class ExplorerViewer extends ViewPart {
 			refershSelectObject(OBJECT_TYPE.SEQUENCE.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.LINK ) {
 			refershSelectObject(OBJECT_TYPE.LINK.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.JOBS ) {
+			refershSelectObject(OBJECT_TYPE.JOBS.name(), strObjectName);
+		} else if(queryDDLType == QUERY_DDL_TYPE.JAVA ) {
+			refershSelectObject(OBJECT_TYPE.JAVA.name(), strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
 			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
 		} else {

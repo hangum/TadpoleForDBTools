@@ -156,7 +156,7 @@ public class OracleJobDAO extends AbstractDAO {
 		this.interval = interval;
 	}
 
-	@FieldNameAnnotationClass(fieldKey = "db_link")
+	@FieldNameAnnotationClass(fieldKey = "failures")
 	public long getFailures() {
 		return failures;
 	}
