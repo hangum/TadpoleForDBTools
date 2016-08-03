@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -82,18 +83,16 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 	private Combo comboLanguage;
 	
 	private Button btnLogin;
-	private Button btnNewUser;
-	private Button btnFindPasswd;
+	private Link btnNewUser;
+	private Link btnFindPasswd;
 	
-//	String strPaypal = "<form action='https://www.paypal.com/cgi-bin/webscr' method='post' target='_top'> " + //$NON-NLS-1$
-//						"	<input type='hidden' name='cmd' value='_s-xclick'> " + //$NON-NLS-1$
-//						"	<input type='hidden' name='encrypted' value='-----BEGIN PKCS7-----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-----END PKCS7-----'> " + //$NON-NLS-1$
-//						"	<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'> " + //$NON-NLS-1$
-//						"	</form>"; //$NON-NLS-1$
+	
+	private Label labelCompanyInfo;
+	private Label lblHangumtadpolehubcom;
+	private Label lblCompanyAddress;
+	private Label lblCompanyName;
+	
 	private Composite compositeHead;
-//	private Button btnNewButton;
-//	private Button btnNewButton_1;
-//	private Button btnNewButton_2;
 	private Composite compositeOtherBtn;
 	
 	public ServiceLoginDialog(Shell shell) {
@@ -201,7 +200,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 		compositeOtherBtn.setLayout(new GridLayout(2, false));
 		compositeOtherBtn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 3, 1));
 		
-		btnNewUser = new Button(compositeOtherBtn, SWT.NONE);
+		btnNewUser = new Link(compositeOtherBtn, SWT.NONE);
 		btnNewUser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -209,13 +208,13 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			}
 		});
 		btnNewUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
+		btnNewUser.setText(Messages.get().LoginDialog_button_new_user);
 		
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			if(smtpDto.isValid()) { //$NON-NLS-1$
-				btnFindPasswd = new Button(compositeOtherBtn, SWT.NONE); //ID_FINDPASSWORD,
-				btnFindPasswd.setText(Messages.get().FindPassword);
+				btnFindPasswd = new Link(compositeOtherBtn, SWT.NONE);
+				btnFindPasswd.setText("<a>" + Messages.get().ResetPassword + "</a>");
 				btnFindPasswd.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
@@ -232,26 +231,26 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 		compositeTailRight.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		compositeTailRight.setLayout(new GridLayout(2, false));
 		
-		Label labelCompanyInfo = new Label(compositeTailRight, SWT.NONE);
-		labelCompanyInfo.setText("사업자등록번호 : 460-86-00429 | 통신판매번호 : 제 2016-서울은평-0401호");
+		labelCompanyInfo = new Label(compositeTailRight, SWT.NONE);
+		labelCompanyInfo.setText(Messages.get().company_RegistrationNumber);
+		labelCompanyInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		
 		Label tail_lblLoginForm = new Label(compositeTailRight, SWT.NONE);
 		tail_lblLoginForm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 3));
 		tail_lblLoginForm.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TDB_64.png"));
 
-		
-		Label lblHangumtadpolehubcom = new Label(compositeTailRight, SWT.NONE);
-		lblHangumtadpolehubcom.setText("대표, 개인정보관리책임자 : 조현종 | email : hangum@tadpolehub.com");
+		lblHangumtadpolehubcom = new Label(compositeTailRight, SWT.NONE);
+		lblHangumtadpolehubcom.setText(Messages.get().company_information);
 	
-		Label label = new Label(compositeTailRight, SWT.NONE);
-		label.setText("서울시 은평구 불광로5가길 3-2 102호 (Tel. 02-2226-8291)");
+		lblCompanyAddress = new Label(compositeTailRight, SWT.NONE);
+		lblCompanyAddress.setText(Messages.get().company_address_tel);
 		
 		Label lblCopyrightcTadpolehub = new Label(compositeTailRight, SWT.NONE);
 		lblCopyrightcTadpolehub.setText("Copyright(c) 2016 TadpoleHub Co.,LTD ");
 	
-		Label tail_companyName = new Label(compositeTailRight, SWT.NONE);
-		tail_companyName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 3));
-		tail_companyName.setText("(주) 테드폴허브");
+		lblCompanyName = new Label(compositeTailRight, SWT.NONE);
+		lblCompanyName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 3));
+		lblCompanyName.setText(Messages.get().company_name);
 		
 		AnalyticCaller.track("ServiceLoginDialog"); //$NON-NLS-1$
 		
@@ -307,7 +306,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			String strAllowIP = userDao.getAllow_ip();
 //			String ip_servletRequest = getBrowserIP();
 //			if(!isBrowserIP()) {
-			String ip_servletRequest =ip_servletRequest = RequestInfoUtils.getRequestIP();
+			String ip_servletRequest = RequestInfoUtils.getRequestIP();
 //			}
 			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
@@ -330,7 +329,11 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			HttpSession httpSession = HttpSessionCollectorUtil.getInstance().findSession(strEmail);
 			if(httpSession != null) {
 				if(logger.isDebugEnabled()) logger.debug(String.format("Already login user %s", strEmail));
-				HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
+				if(MessageDialog.openConfirm(getShell(), Messages.get().OK, Messages.get().AlreadyLoginConfirm)) {
+					HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
+				} else {
+					return;
+				}
 			}
 			
 			// 로그인 유지.
@@ -484,10 +487,17 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 		lblPassword.setText(Messages.get().LoginDialog_4);
 		lblLanguage.setText(Messages.get().LoginDialog_lblLanguage_text);
 		
-		if(btnNewUser != null) btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
+		if(btnNewUser != null) btnNewUser.setText("<a>" + Messages.get().LoginDialog_button_new_user + "</a>");
 		if(btnFindPasswd != null) {
-			btnFindPasswd.setText(Messages.get().FindPassword);
+			btnFindPasswd.setText("<a>" + Messages.get().ResetPassword + "</a>");
 		}
+		
+		// 회사 정보 시작.
+		labelCompanyInfo.setText(Messages.get().company_RegistrationNumber);
+		lblHangumtadpolehubcom.setText(Messages.get().company_information);
+		lblCompanyAddress.setText(Messages.get().company_address_tel);
+		lblCompanyName.setText(Messages.get().company_name);
+		// 회사 정보 종료.
 		
 		compositeLogin.layout();
 	}
@@ -511,6 +521,6 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(520, 340);
+		return new Point(520, 350);
 	}
 }

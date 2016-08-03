@@ -15,6 +15,13 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.application.start.messages"; //$NON-NLS-1$
 
+	// 회사 관련 정보 표현 시작.
+	public String company_RegistrationNumber;
+	public String company_information;
+	public String company_address_tel;
+	public String company_name;
+	// 회사 관련 정보 표현 종료.
+
 	public String NewVersionCheckAction_0;
 	public String NewVersionCheckAction_2;
 	
@@ -68,7 +75,7 @@ public class Messages {
 	
 	public String LoginDialog_lblNewLabel_text_1;
 
-	public String LoginDialog_button_text_1;
+	public String LoginDialog_button_new_user;
 	public String SelectPerspectiveDialog_0;
 	public String SelectPerspectiveDialog_3;
 	public String SelectPerspectiveDialog_5;
@@ -94,9 +101,9 @@ public class Messages {
 	public String Error;
 	public String Close;
 
-	public String FindPassword;
+	public String ResetPassword;
 
-	public String SEND;
+	public String SendNewPassword;
 
 	public String SendMsg;
 
