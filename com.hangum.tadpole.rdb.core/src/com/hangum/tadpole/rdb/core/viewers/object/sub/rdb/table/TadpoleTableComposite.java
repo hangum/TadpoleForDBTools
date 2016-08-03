@@ -722,12 +722,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 									MessageDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_Drivernotfound, msg);
 									
 								} else {
-									Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-									ExceptionDetailsErrorDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_3, Messages.get().ExplorerViewer_86, errStatus);
+									MessageDialog.openError(getShell(), Messages.get().TadpoleTableComposite_3, jobEvent.getResult().getMessage());
 								}
 							} catch(Exception e) {
-								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-								ExceptionDetailsErrorDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_3, Messages.get().ExplorerViewer_86, errStatus);
+								MessageDialog.openError(getShell(), Messages.get().Error, jobEvent.getResult().getMessage());
 							}
 						}	// end else if
 						
