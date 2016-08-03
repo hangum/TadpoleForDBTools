@@ -37,5 +37,7 @@ public class CreateJobsAction extends AbstractQueryAction {
 	public void run(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		CreateJobDialog epd = new CreateJobDialog(null, userDB, jobDao);
 		epd.open();
+		
+		refreshExplorerViewer(actionType);
 	}
 }

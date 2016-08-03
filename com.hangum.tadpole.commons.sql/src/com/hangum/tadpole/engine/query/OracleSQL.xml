@@ -1436,4 +1436,124 @@ AND s.type = 'JAVA SOURCE'
 ORDER BY s.line
 </select>
 
+<select id="getTablespaceList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleTablespaceDAO">
+<![CDATA[
+  SELECT TS.TABLESPACE_NAME
+        ,TS.STATUS
+        ,TS.CONTENTS
+        ,TS.EXTENT_MANAGEMENT
+        ,TS.BIGFILE
+        ,SIZE_INFO.MB_SIZE
+        ,SIZE_INFO.MB_FREE
+        ,SIZE_INFO.MB_USED
+        ,SIZE_INFO.PCT_FREE
+        ,SIZE_INFO.PCT_USED
+        ,SIZE_INFO.MAX AS MB_MAX
+    FROM (SELECT A.TABLESPACE_NAME
+                ,ROUND (A.BYTES_ALLOC / 1024 / 1024) MB_SIZE
+                ,ROUND (NVL (B.BYTES_FREE, 0) / 1024 / 1024) MB_FREE
+                ,ROUND ( (A.BYTES_ALLOC - NVL (B.BYTES_FREE, 0)) / 1024 / 1024) MB_USED
+                ,ROUND ( (NVL (B.BYTES_FREE, 0) / A.BYTES_ALLOC) * 100) PCT_FREE
+                ,100 - ROUND ( (NVL (B.BYTES_FREE, 0) / A.BYTES_ALLOC) * 100) PCT_USED
+                ,ROUND (MAXBYTES / 1048576) MAX
+            FROM (  SELECT F.TABLESPACE_NAME, SUM (F.BYTES) BYTES_ALLOC, SUM (CASE F.AUTOEXTENSIBLE WHEN 'YES' THEN F.MAXBYTES WHEN 'NO' THEN F.BYTES ELSE 0 END) MAXBYTES
+                      FROM DBA_DATA_FILES F
+                  GROUP BY TABLESPACE_NAME) A
+                 LEFT JOIN (  SELECT F.TABLESPACE_NAME, SUM (F.BYTES) BYTES_FREE
+                                FROM DBA_FREE_SPACE F
+                            GROUP BY TABLESPACE_NAME) B
+                    ON A.TABLESPACE_NAME = B.TABLESPACE_NAME
+          UNION ALL
+            SELECT H.TABLESPACE_NAME
+                  ,ROUND (SUM (H.BYTES_FREE + H.BYTES_USED) / 1048576) MB_SIZE
+                  ,ROUND (SUM ( (H.BYTES_FREE + H.BYTES_USED) - NVL (P.BYTES_USED, 0)) / 1048576) MB_FREE
+                  ,ROUND (SUM (NVL (P.BYTES_USED, 0)) / 1048576) MB_USED
+                  ,ROUND ( (SUM ( (H.BYTES_FREE + H.BYTES_USED) - NVL (P.BYTES_USED, 0)) / SUM (H.BYTES_USED + H.BYTES_FREE)) * 100) PCT_FREE
+                  ,100 - ROUND ( (SUM ( (H.BYTES_FREE + H.BYTES_USED) - NVL (P.BYTES_USED, 0)) / SUM (H.BYTES_USED + H.BYTES_FREE)) * 100) PCT_USED
+                  ,ROUND (SUM (F.MAXBYTES) / 1048576) MAX
+              FROM SYS.V_$$TEMP_SPACE_HEADER H
+                   INNER JOIN DBA_TEMP_FILES F
+                      ON     F.FILE_ID = H.FILE_ID
+                         AND F.TABLESPACE_NAME = H.TABLESPACE_NAME
+                   LEFT JOIN SYS.V_$$TEMP_EXTENT_POOL P
+                      ON     P.FILE_ID = H.FILE_ID
+                         AND P.TABLESPACE_NAME = H.TABLESPACE_NAME
+          GROUP BY H.TABLESPACE_NAME) SIZE_INFO
+        ,SYS.DBA_TABLESPACES TS
+   WHERE TS.TABLESPACE_NAME = SIZE_INFO.TABLESPACE_NAME
+ORDER BY TABLESPACE_NAME
+]]>
+</select>
+
+<!--  DBA 시스템 테이블 접근 권한이 없는 일반유저. -->
+<select id="getUserTablespaceList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleTablespaceDAO">
+<![CDATA[
+  SELECT TS.TABLESPACE_NAME
+        ,TS.STATUS
+        ,TS.CONTENTS
+        ,TS.EXTENT_MANAGEMENT
+        ,TS.BIGFILE
+        ,0 MB_SIZE
+        ,SIZE_INFO.MB_FREE
+        ,0 MB_USED
+        ,0 PCT_FREE
+        ,0 PCT_USED
+        ,ROUND(TS.MAX_SIZE / 1048576,0)  AS MB_MAX
+    FROM (  SELECT F.TABLESPACE_NAME, ROUND(SUM (F.BYTES) / 1048576) MB_FREE
+                                FROM USER_FREE_SPACE F
+                            GROUP BY TABLESPACE_NAME) SIZE_INFO
+        ,SYS.USER_TABLESPACES TS
+   WHERE TS.TABLESPACE_NAME = SIZE_INFO.TABLESPACE_NAME
+ORDER BY TABLESPACE_NAME
+]]>
+</select>
+
+<!-- 테이블스페이스의 데이터 파일을 포함한 상세내역. -->
+<select id="getTablespaceDataFileList" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+  SELECT MAX (D.BYTES) "Total Bytes"
+        ,NVL (SUM (F.BYTES), 0) "Free Bytes"
+        ,D.FILE_NAME "Data File Name"
+        ,MAX (D.BYTES) - NVL (SUM (F.BYTES), 0) "Used Bytes"
+        ,MAX (D.BLOCKS) "Blocks"
+        ,ROUND (SQRT (MAX (F.BLOCKS) / SUM (F.BLOCKS)) * (100 / SQRT (SQRT (COUNT (F.BLOCKS)))), 2) "Fragmentation Index"
+        ,MAX (D.AUTOEXTENSIBLE) "Auto Extend"
+        ,MAX (NVL (INCREMENT_BY, 0)) "Increment By"
+        ,MAX (D.MAXBYTES) "Max Size"
+        ,MAX (D.MAXBLOCKS) "Max Blocks"
+        ,MAX (D.STATUS) "Status"
+        ,MAX (D.MAXBLOCKS) "Max Extend"
+        ,MAX (D.FILE_ID) "Datafile ID"
+    FROM DBA_DATA_FILES D
+         LEFT JOIN DBA_FREE_SPACE F
+            ON     F.TABLESPACE_NAME = D.TABLESPACE_NAME
+               AND F.FILE_ID = D.FILE_ID
+   WHERE D.TABLESPACE_NAME = #tablespace_name#
+GROUP BY D.FILE_NAME
+]]>
+</select>
+
+<!-- 테이블스페이스 DDL 스크립트 생성. -->
+<select id="getTablespaceScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+<![CDATA[
+  SELECT    'CREATE '
+         || DECODE (TS.BIGFILE, 'YES', 'BIGFILE ') 
+         || 'TABLESPACE "'
+         || TS.TABLESPACE_NAME || '" '
+         || CHR (13) || CHR (10) 
+         || 'DATAFILE ' 
+         || '''' || DF.FILE_NAME || ''''        
+         || CHR (13) || CHR (10) 
+         || LISTAGG ('  SIZE ' || DF.BYTES 
+         	|| DECODE (DF.AUTOEXTENSIBLE
+                    ,'YES',    CHR (13)|| CHR (10)|| '  AUTOEXTEND ON NEXT '|| DF.INCREMENT_BY * TS.BLOCK_SIZE || ' MAXSIZE '
+                    || CASE WHEN MAXBYTES < POWER (1024, 3) * 2 THEN TO_CHAR (MAXBYTES) ELSE TO_CHAR (FLOOR (MAXBYTES / POWER (1024, 2))) || 'M' END), ',' || CHR (13) || CHR (10)) WITHIN GROUP (ORDER BY DF.FILE_ID)
+         || CHR (13)|| CHR (10)|| '  '|| TS.LOGGING|| ' '|| TS.STATUS|| ' BLOCKSIZE '|| TS.BLOCK_SIZE as DDL
+    FROM DBA_TABLESPACES TS INNER JOIN DBA_DATA_FILES DF ON TS.TABLESPACE_NAME = DF.TABLESPACE_NAME
+   WHERE TS.TABLESPACE_NAME = #tablespace_name#
+GROUP BY TS.TABLESPACE_NAME,TS.BIGFILE,TS.LOGGING,TS.STATUS,TS.BLOCK_SIZE,DF.FILE_NAME
+ORDER BY TS.TABLESPACE_NAME
+]]>
+</select>
+
 </sqlMap>

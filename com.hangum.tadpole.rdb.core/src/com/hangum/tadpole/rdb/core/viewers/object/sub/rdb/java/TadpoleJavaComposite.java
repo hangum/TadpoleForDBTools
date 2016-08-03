@@ -132,6 +132,7 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 						OracleJavaDAO javaDao = (OracleJavaDAO) is.getFirstElement();
 						CreateJavaDialog epd = new CreateJavaDialog(null, userDB, javaDao);
 						epd.open();
+						refreshJava(userDB, true, "");
 					}
 				} catch (Exception e) {
 					logger.error("Open detail information view!", e);
