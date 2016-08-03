@@ -33,6 +33,10 @@
             name="%view.name.SQLTemplate"
             restorable="true">
       </view>
+      <category
+            id="com.hangum.tadpole.rdb.core"
+            name="Sample Category">
+      </category>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -96,6 +100,13 @@
             icon="resources/icons/editor/compile.png"
             id="com.hangum.tadpole.rdb.core.editor.main.procedure"
             name="%editor.name.8">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.rdb.core.actions.oracle.TableSapceManageEditor"
+            default="false"
+            icon="resources/icons/download.png"
+            id="com.hangum.tadpole.rdb.core.actions.oracle.tablespace"
+            name="Table space">
       </editor>
    </extension>
    <extension
@@ -822,6 +833,24 @@
                id="org.eclipse.ui.commands.toggleState">
          </state>
       </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="com.hangum.tadpole.rdb.core.actions.oracle.tablespace.TableSapceManageEditor"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
    </extension>
 
 </plugin>

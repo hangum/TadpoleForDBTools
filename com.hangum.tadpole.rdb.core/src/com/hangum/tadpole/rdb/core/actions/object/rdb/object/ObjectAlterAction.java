@@ -61,17 +61,11 @@ public class ObjectAlterAction extends AbstractObjectSelectAction {
 
 			CreateJobsAction cia = new CreateJobsAction(dao);
 			cia.run(userDB, actionType);
-
-			refreshJobs();
-
 		} else if (actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVA) {
 			OracleJavaDAO dao = (OracleJavaDAO) selection.getFirstElement();
 
 			CreateJavaAction cia = new CreateJavaAction(dao);
 			cia.run(userDB, actionType);
-
-			refreshJava();
-
 		}
 	} // end method
 

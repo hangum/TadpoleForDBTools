@@ -134,8 +134,8 @@ public class OracleJobDAO extends AbstractDAO {
 		return total_time;
 	}
 
-	public void setTotal_time(long total_time) {
-		this.total_time = total_time;
+	public void setTotal_time(String total_time) {
+		this.total_time = Long.parseLong(total_time==null?"0":total_time);;
 	}
 
 	@FieldNameAnnotationClass(fieldKey = "broken")
@@ -161,8 +161,8 @@ public class OracleJobDAO extends AbstractDAO {
 		return failures;
 	}
 
-	public void setFailures(long failures) {
-		this.failures = failures;
+	public void setFailures(String failures) {
+		this.failures = Long.parseLong(failures==null?"0":failures);
 	}
 
 	@FieldNameAnnotationClass(fieldKey = "nls_env")
@@ -179,8 +179,8 @@ public class OracleJobDAO extends AbstractDAO {
 		return instance;
 	}
 
-	public void setInstance(long instance) {
-		this.instance = instance;
+	public void setInstance(String instance) {
+		this.instance = Long.parseLong(instance==null?"0":instance);;
 	}
 
 	public int getNextYear() {

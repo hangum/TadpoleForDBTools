@@ -25,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
@@ -37,6 +38,7 @@ import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
  * query editor관련된 최상위 abstract class
@@ -57,6 +59,30 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
 		run(userDB);
+	}
+	
+	/**
+	 * explorer viewe
+	 * @return
+	 */
+	protected ExplorerViewer getExplorerView() {
+		try {
+			return (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
+		} catch(Exception e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * Java 최신정보로 갱신
+	 */
+	protected void refreshExplorerViewer(OBJECT_TYPE actionType) {
+		ExplorerViewer ev = getExplorerView();
+		if (actionType == PublicTadpoleDefine.OBJECT_TYPE.JOBS) {
+			if(ev != null) ev.refreshJobs(true, "");	
+		}else if (actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVA) {
+			if(ev != null) ev.refreshJava(true, "");	
+		}
 	}
 	
 	/**

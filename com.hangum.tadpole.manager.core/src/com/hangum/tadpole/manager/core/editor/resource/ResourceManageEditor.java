@@ -629,7 +629,7 @@ public class ResourceManageEditor extends EditorPart {
 		
 		ResourceManagerDAO resourceManagerDao = (ResourceManagerDAO) ss.getFirstElement();
 		
-		ResourceDetailDialog dialog = new ResourceDetailDialog(getSite().getShell(), resourceManagerDao, null);
+		ResourceDetailDialog dialog = new ResourceDetailDialog(getSite().getShell(), resourceManagerDao, new UserDBResourceDAO());
 		dialog.open();
 	}
 
