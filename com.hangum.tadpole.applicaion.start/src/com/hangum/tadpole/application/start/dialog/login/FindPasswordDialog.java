@@ -54,7 +54,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().FindPassword);
+		newShell.setText(Messages.get().ResetPassword);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -126,7 +126,7 @@ public class FindPasswordDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().SEND, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().SendNewPassword, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
 	}
 	

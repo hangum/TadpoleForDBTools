@@ -370,11 +370,11 @@ public class LoginDialog extends AbstractLoginDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		btnNewUser = createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_text_1, false);
+		btnNewUser = createButton(parent, ID_NEW_USER, Messages.get().LoginDialog_button_new_user, false);
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			if(smtpDto.isValid()) { //$NON-NLS-1$
-				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().FindPassword, false);
+				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, Messages.get().ResetPassword, false);
 			}
 		} catch (Exception e) {
 //			ignore exception
@@ -449,9 +449,9 @@ public class LoginDialog extends AbstractLoginDialog {
 		lblPassword.setText(Messages.get().LoginDialog_4);
 		lblLanguage.setText(Messages.get().LoginDialog_lblLanguage_text);
 		
-		if(btnNewUser != null) btnNewUser.setText(Messages.get().LoginDialog_button_text_1);
+		if(btnNewUser != null) btnNewUser.setText(Messages.get().LoginDialog_button_new_user);
 		if(btnFindPasswd != null) {
-			btnFindPasswd.setText(Messages.get().FindPassword);
+			btnFindPasswd.setText(Messages.get().ResetPassword);
 		}
 		
 		compositeLogin.layout();
