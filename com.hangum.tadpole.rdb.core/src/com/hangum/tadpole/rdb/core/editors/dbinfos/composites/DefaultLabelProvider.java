@@ -34,8 +34,8 @@ import com.swtdesigner.ResourceManager;
  */
 public class DefaultLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-	private TableViewer tableViewer;
-	private AbstractDAO dao = null;
+	protected TableViewer tableViewer;
+	protected AbstractDAO dao = null;
 
 	public DefaultLabelProvider(TableViewer tv) {
 		this.tableViewer = tv;

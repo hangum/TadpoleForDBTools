@@ -32,7 +32,6 @@ public class TablespaceExtInfoLabelProvider extends LabelProvider implements ITa
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		Map<String, String> map = (Map<String, String>) element;
-
 		switch (columnIndex) {
 		case 0: return map.get("key");
 		case 1: return map.get("value");
