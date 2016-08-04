@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.oracle;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +81,8 @@ public class TableSapceManageEditor extends EditorPart {
 
 	private Label lblDbname;
 	private TableViewer tableViewer;
-	private TableViewer tableViewer_datafile;
+	private TableViewer tableViewer_datafiles;
+	private TableViewer tableViewer_property;
 	private DefaultTableColumnFilter columnFilter;
 	private List<OracleTablespaceDAO> showTablespaceList;
 
@@ -91,6 +93,7 @@ public class TableSapceManageEditor extends EditorPart {
 	private Text textDropScript;
 	private Button btnIncludingContents;
 	private Button btnCascadeConstraints;
+	private Table table_datafiles;
 
 	public TableSapceManageEditor() {
 		super();
@@ -165,9 +168,9 @@ public class TableSapceManageEditor extends EditorPart {
 
 		tableViewer = new TableViewer(compositeTablespaceList, SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTablespace = tableViewer.getTable();
+		tableTablespace.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableTablespace.setHeaderVisible(true);
 		tableTablespace.setLinesVisible(true);
-		tableTablespace.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableViewer.addFilter(columnFilter);
 
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -180,31 +183,39 @@ public class TableSapceManageEditor extends EditorPart {
 				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 				tablespaceDao = (OracleTablespaceDAO) ss.getFirstElement();
 
-				List<Map<String, String>> datafileMapList = new ArrayList<Map<String, String>>();
-				String tablespaceScript = "";
+				List<HashMap<String, String>> datafileList = new ArrayList<HashMap<String, String>>();
+				List<Map<String, String>> tablespaceScript = new ArrayList<Map<String, String>>();
 
 				try {
 
 					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-					List<HashMap> datafileList = (List<HashMap>) sqlClient.queryForList("getTablespaceDataFileList", tablespaceDao.getTablespace_name()); //$NON-NLS-1$
-					tablespaceScript = (String) sqlClient.queryForObject("getTablespaceScript", tablespaceDao.getTablespace_name()); //$NON-NLS-1$
-
-					for (Map<String, String> datafileMap : datafileList) {
-						for (String key : datafileMap.keySet()) {
-							Map<String, String> map = new HashMap<String, String>();
-							map.put("key", key);
-							map.put("value", String.valueOf(datafileMap.get(key)));
-							datafileMapList.add(map);
-						}
-					}
+					datafileList = (List<HashMap<String, String>>) sqlClient.queryForList("getTablespaceDataFileList", tablespaceDao.getTablespace_name()); //$NON-NLS-1$
+					tablespaceScript = (List<Map<String, String>>) sqlClient.queryForList("getTablespaceScript", tablespaceDao.getTablespace_name()); //$NON-NLS-1$
 
 				} catch (Exception e) {
 					logger.error("Tablespace detail information loading...", e); //$NON-NLS-1$
 				}
-				textScript.setText(StringUtils.trimToEmpty(tablespaceScript));
+
+				String create_stmt = "";
+				for (Map<String, String> line : tablespaceScript) {
+					create_stmt += line.get("DDLSCRIPT") + "\n";
+				}
+
+				textScript.setText(StringUtils.trimToEmpty(create_stmt));
 				textDropScript.setText(StringUtils.trimToEmpty(getDropScript()));
-				tableViewer_datafile.setInput(datafileMapList);
-				tableViewer_datafile.refresh();
+
+				tableViewer_datafiles.setInput(datafileList);
+				tableViewer_datafiles.refresh();
+
+				if (datafileList.size() > 0) {
+					tableViewer_datafiles.setSelection(new StructuredSelection(tableViewer_datafiles.getElementAt(0)),true);
+					
+					refreshDatafileInformation();
+				} else {
+					// 테이블스페이스 선택을 변경하면 상세속성화면 초기화 한다.
+					tableViewer_property.setInput(new ArrayList<Map<String, String>>());
+					tableViewer_property.refresh();
+				}
 			}
 		});
 
@@ -224,27 +235,40 @@ public class TableSapceManageEditor extends EditorPart {
 
 		SashForm sashForm = new SashForm(composite, SWT.NONE);
 
-		Composite composite_2 = new Composite(sashForm, SWT.NONE);
-		composite_2.setLayout(new GridLayout(1, false));
+		SashForm sashForm_1 = new SashForm(sashForm, SWT.VERTICAL);
 
-		tableViewer_datafile = new TableViewer(composite_2, SWT.BORDER | SWT.FULL_SELECTION);
-		table = tableViewer_datafile.getTable();
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tableViewer_datafiles = new TableViewer(sashForm_1, SWT.BORDER | SWT.FULL_SELECTION);
+		table_datafiles = tableViewer_datafiles.getTable();
+		table_datafiles.setLinesVisible(true);
+		table_datafiles.setHeaderVisible(true);
+
+		tableViewer_datafiles.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (tableViewer_datafiles.getSelection().isEmpty()) {
+					return;
+				}
+				refreshDatafileInformation();
+			}
+		});
+
+		tableViewer_property = new TableViewer(sashForm_1, SWT.BORDER | SWT.FULL_SELECTION);
+		table = tableViewer_property.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 
-		TableViewerColumn tvPropertyName = new TableViewerColumn(tableViewer_datafile, SWT.NONE);
+		TableViewerColumn tvPropertyName = new TableViewerColumn(tableViewer_property, SWT.NONE);
 		TableColumn tcPropertyName = tvPropertyName.getColumn();
 		tcPropertyName.setWidth(180);
 		tcPropertyName.setText("Property");
 
-		TableViewerColumn tvPropertyValue = new TableViewerColumn(tableViewer_datafile, SWT.NONE);
+		TableViewerColumn tvPropertyValue = new TableViewerColumn(tableViewer_property, SWT.NONE);
 		TableColumn tcPropertyValue = tvPropertyValue.getColumn();
 		tcPropertyValue.setWidth(300);
 		tcPropertyValue.setText("Value");
 
-		tableViewer_datafile.setContentProvider(new ArrayContentProvider());
-		tableViewer_datafile.setLabelProvider(new TablespaceExtInfoLabelProvider());
+		tableViewer_property.setContentProvider(new ArrayContentProvider());
+		tableViewer_property.setLabelProvider(new TablespaceExtInfoLabelProvider());
+		sashForm_1.setWeights(new int[] { 1, 1 });
 
 		Composite composite_1 = new Composite(sashForm, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));
@@ -340,6 +364,7 @@ public class TableSapceManageEditor extends EditorPart {
 		sashForm.setWeights(new int[] { 1, 1 });
 
 		createTableColumn();
+		createTableDataFileColumn();
 
 		initUI();
 
@@ -359,6 +384,41 @@ public class TableSapceManageEditor extends EditorPart {
 
 		// google analytic
 		AnalyticCaller.track(TableSapceManageEditor.ID);
+	}
+
+	private void refreshDatafileInformation() {
+		StructuredSelection ss = (StructuredSelection) tableViewer_datafiles.getSelection();
+		
+		if (ss==null)return;
+		
+		HashMap<String, Object> datafileMap = (HashMap<String, Object>) ss.getFirstElement();
+
+		List<HashMap<String, Object>> datafileInformationList = new ArrayList<HashMap<String, Object>>();
+		List<Map<String, String>> datafilePropertyList = new ArrayList<Map<String, String>>();
+
+		try {
+
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			String file_id = ((BigDecimal) datafileMap.get("FILE_ID")).toString();
+
+			datafileInformationList = (List<HashMap<String, Object>>) sqlClient.queryForList("getTablespaceDataFileInfomation", file_id); //$NON-NLS-1$
+
+			for (Map<String, Object> informationMap : datafileInformationList) {
+				for (String key : informationMap.keySet()) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("key", key);
+					map.put("value", String.valueOf(informationMap.get(key)));
+					datafilePropertyList.add(map);
+				}
+			}
+
+		} catch (Exception e) {
+			logger.error("Tablespace detail information loading...", e); //$NON-NLS-1$
+		}
+		textDropScript.setText(StringUtils.trimToEmpty(getDropScript()));
+		tableViewer_property.setInput(datafilePropertyList);
+		tableViewer_property.refresh();
+
 	}
 
 	private String getDropScript() {
@@ -440,6 +500,23 @@ public class TableSapceManageEditor extends EditorPart {
 
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new TableSpaceManagerLabelProvider(tableViewer));
+	}
+
+	private void createTableDataFileColumn() {
+
+		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("FILE_NAME", "Datafile Name", 200, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("FILE_ID", "File ID", 70, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("USAGE", "Usage", 100, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("TOTAL_SIZE", "Size", 100, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("USED", "Used", 80, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("FREE", "Free", 80, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("FRAG_INDEX", "Fragementation Index", 100, SWT.RIGHT) //$NON-NLS-1$
+		};
+
+		ColumnHeaderCreator.createColumnHeader(tableViewer_datafiles, tableColumnDef);
+
+		tableViewer_datafiles.setContentProvider(new ArrayContentProvider());
+		tableViewer_datafiles.setLabelProvider(new TableSpaceManagerLabelProvider(tableViewer_datafiles));
 	}
 
 	@Override
