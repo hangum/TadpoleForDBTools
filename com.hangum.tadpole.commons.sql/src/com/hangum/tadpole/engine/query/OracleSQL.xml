@@ -1559,7 +1559,8 @@ WHERE TS.TABLESPACE_NAME = #tablespace_name#
 
 UNION ALL 
 
-SELECT   CHR(9) || '''' || DF.FILE_NAME || ''''         
+SELECT   CHR(9) || (CASE WHEN ROWNUM > 1 THEN ',' ELSE '' END)
+         ||  '''' || DF.FILE_NAME || ''''         
          || LISTAGG ('  SIZE ' || DF.BYTES 
          || DECODE (DF.AUTOEXTENSIBLE
               ,'YES', '  AUTOEXTEND ON NEXT '|| DF.INCREMENT_BY * TS.BLOCK_SIZE || ' MAXSIZE '
