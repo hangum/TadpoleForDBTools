@@ -70,6 +70,7 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDef
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * 오라클 테이블 스페이즈 정보를 조회하고 관리한다.
@@ -239,7 +240,7 @@ public class TableSapceManageEditor extends EditorPart {
 
 		SashForm sashForm_1 = new SashForm(sashForm, SWT.VERTICAL);
 
-		Composite composite_2 = new Composite(sashForm_1, SWT.NONE);
+		Composite composite_2 = new Composite(sashForm_1, SWT.BORDER);
 		GridLayout gl_composite_2 = new GridLayout(1, false);
 		gl_composite_2.verticalSpacing = 0;
 		gl_composite_2.horizontalSpacing = 0;
@@ -424,13 +425,14 @@ public class TableSapceManageEditor extends EditorPart {
 		tableViewer_property.setLabelProvider(new TablespaceExtInfoLabelProvider());
 		sashForm_1.setWeights(new int[] { 1, 1 });
 
-		Composite composite_1 = new Composite(sashForm, SWT.NONE);
+		Composite composite_1 = new Composite(sashForm, SWT.BORDER);
 		composite_1.setLayout(new GridLayout(1, false));
 
 		Label lblNewLabel_1 = new Label(composite_1, SWT.NONE);
 		lblNewLabel_1.setText("Drop Tablespace");
 
 		textDropScript = new Text(composite_1, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		textDropScript.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		GridData gd_textDropScript = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_textDropScript.minimumHeight = 20;
 		textDropScript.setLayoutData(gd_textDropScript);
