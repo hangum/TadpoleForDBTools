@@ -140,15 +140,14 @@ public class TadpoleSystemInitializer {
 	private static void initJDBCDriver() {
 		final String strJDBCDir = ApplicationArgumentUtils.JDBC_RESOURCE_DIR;
 		File jdbcLocationDir = new File(strJDBCDir);
-		logger.info("######### TDB JDBC Driver local Path : " + strJDBCDir);
+
 		if(!jdbcLocationDir.exists()) {
-			logger.info("\t##### Copying initialize JDBC Driver........");
 			try {
 				jdbcLocationDir.mkdirs();
 				
 				File fileEngine = FileLocator.getBundleFile(TadpoleEngineActivator.getDefault().getBundle());
 				String filePath = fileEngine.getAbsolutePath() + "/libs/driver";
-				logger.info("##### TDB JDBC URI: " + filePath);
+				if(logger.isInfoEnabled()) logger.info("##### TDB JDBC URI: " + filePath);
 				
 				FileUtils.copyDirectory(new File(filePath), new File(strJDBCDir));
 			} catch(Exception e) {
@@ -213,7 +212,7 @@ public class TadpoleSystemInitializer {
 				}
 
 			} catch (Exception ioe) {
-				logger.error("File not found exception or file encrypt exception. check the file." + dbServerPath, ioe);
+				logger.error("License File not found or file encrypt exception. check the file." + dbServerPath, ioe);
 				System.exit(0);
 			}
 

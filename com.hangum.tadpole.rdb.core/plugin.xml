@@ -104,7 +104,7 @@
       <editor
             class="com.hangum.tadpole.rdb.core.actions.oracle.TableSapceManageEditor"
             default="false"
-            icon="resources/icons/download.png"
+            icon="resources/icons/tablespace.png"
             id="com.hangum.tadpole.rdb.core.actions.oracle.tablespace"
             name="Table space">
       </editor>
@@ -429,7 +429,7 @@
             objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
          <action
                class="com.hangum.tadpole.rdb.core.actions.oracle.TableSpaceManagerAction"
-               icon="resources/icons/download.png"
+               icon="resources/icons/tablespace.png"
                id="com.hangum.tadpole.rdb.core.action.oracle.tablespace"
                label="Table space">
             <enablement>
