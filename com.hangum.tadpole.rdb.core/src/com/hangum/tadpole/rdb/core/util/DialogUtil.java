@@ -42,13 +42,12 @@ public class DialogUtil {
 	 * dialog util
 	 * 
 	 * @param userDB
-	 * @param strObject
+	 * @param paramMap
 	 */
 	public static void popupObjectInformationDialog(UserDBDAO userDB, Map<String, String> paramMap) {
 		//TODO: 디비엔진 종류별로 지원유무에 따라 처리해야 하나?
 		
 		Map<String, String> map = new HashMap<String,String>();
-		
 		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT || 
 		    userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
 			//TODO:SQLMap에 allObjects 가 정의되어 있어야 한다.

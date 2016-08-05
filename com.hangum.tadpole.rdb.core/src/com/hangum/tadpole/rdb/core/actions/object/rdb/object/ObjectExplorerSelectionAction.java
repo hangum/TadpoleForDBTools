@@ -17,7 +17,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.engine.query.dao.mysql.StructObjectDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
@@ -43,20 +44,25 @@ public class ObjectExplorerSelectionAction extends AbstractObjectSelectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		if(selection.isEmpty()) return;
 		
-		String strColumnName = "";
+		String strObjectName = "";
 		Object[] arryObj = selection.toArray();
-		for(int i=0; i<arryObj.length; i++) {
-			Object obj = arryObj[arryObj.length-i-1];
-			
-			StructObjectDAO tcDAO = (StructObjectDAO)obj;
-			strColumnName += tcDAO.getFullName() + ", "; //$NON-NLS-1$
-			if (i > 1 && i % 5 == 0){
-				strColumnName += "\n";
+		
+		// table dao
+		if(arryObj[0] instanceof TableDAO) {
+			for(int i=0; i<arryObj.length; i++) {
+				TableDAO tcDAO = (TableDAO)arryObj[i];
+				strObjectName += tcDAO.getFullName() + ", "; //$NON-NLS-1$
+			}
+		// column dao
+		} else {
+			for(int i=0; i<arryObj.length; i++) {
+				TableColumnDAO tcDAO = (TableColumnDAO)arryObj[i];
+				strObjectName += tcDAO.getField() + ", "; //$NON-NLS-1$
 			}
 		}
-		strColumnName = StringUtils.removeEnd(strColumnName, ", "); //$NON-NLS-1$
+		strObjectName = StringUtils.removeEnd(strObjectName, ", "); //$NON-NLS-1$
 		
-		FindEditorAndWriteQueryUtil.runAtPosition(strColumnName);
-	}// end method
+		FindEditorAndWriteQueryUtil.runAtPosition(strObjectName);
+	}	// end method
 	
 }
