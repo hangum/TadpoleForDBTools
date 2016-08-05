@@ -58,7 +58,7 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 	public static final String TMP_CREATE_SEQUENCE_STMT = "CREATE SEQUENCE {#schema#}.seq_sample START WITH 1;";
 
 	/** database link */
-	public static final String TMP_CREATE_LINK_STMT = "CREATE DATABASE LINK \"WORLD.US.ORACLE.COM\" CONNECT TO {#schema#} IDENTIFIED BY \"<password>\" USING 'XE' ";
+	public static final String TMP_CREATE_LINK_STMT = "CREATE DATABASE LINK \"TADPOLEHUB.COM\" CONNECT TO {#schema#} IDENTIFIED BY \"<password>\" USING 'XE' ";
 
 	/** package */
 	public static final String  TMP_CREATE_PACKAGE_STMT = "CREATE OR REPLACE PACKAGE {#schema#}.PKG_SAMPLE " + PublicTadpoleDefine.LINE_SEPARATOR +

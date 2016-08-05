@@ -106,7 +106,7 @@ public class TableColumnComposite extends AbstractTableComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 
-				if (null != is) {
+				if (!is.isEmpty()) {
 					TableColumnDAO tableDAO = (TableColumnDAO) is.getFirstElement();
 					FindEditorAndWriteQueryUtil.runAtPosition(StringUtils.trim(tableDAO.getField()));
 				}

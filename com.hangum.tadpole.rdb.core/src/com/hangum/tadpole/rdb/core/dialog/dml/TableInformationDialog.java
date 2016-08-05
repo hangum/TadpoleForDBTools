@@ -200,15 +200,15 @@ public class TableInformationDialog extends Dialog {
 				if (dialog.getSelectObject().isEmpty() && dialog.getObjectCount() > 1) {
 					//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
 					dialog.open();
-				} else if (dialog.getObjectCount() <= 0) {
+//				} else if (dialog.getObjectCount() <= 0) {
 					//해당 오브젝트를 찾을 수 없습니다.
-					MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
+//					MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
 				}
 				Map<String, String> map = dialog.getSelectObject();
 				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
 				tableDAO.setTable_name(map.get("OBJECT_NAME"));
 				tableDAO.setTab_name(map.get("OBJECT_NAME"));
-				this.lblTableName.setText(tableDAO.getSchema_name() + "." + tableDAO.getName());
+//				this.lblTableName.setText(tableDAO.getSchema_name() + "." + tableDAO.getName());
 				showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 			}else{
 				showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
