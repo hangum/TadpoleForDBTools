@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.rdb;
 
+import java.math.BigDecimal;
+
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -29,7 +31,7 @@ public class OracleJobDAO extends AbstractDAO {
 	String this_sec;
 	String next_date;
 	String next_sec;
-	long total_time;
+	BigDecimal total_time;
 	String broken;
 	String interval;
 	long failures;
@@ -130,12 +132,12 @@ public class OracleJobDAO extends AbstractDAO {
 	}
 
 	@FieldNameAnnotationClass(fieldKey = "total_time")
-	public long getTotal_time() {
+	public BigDecimal getTotal_time() {
 		return total_time;
 	}
 
-	public void setTotal_time(String total_time) {
-		this.total_time = Long.parseLong(total_time==null?"0":total_time);;
+	public void setTotal_time(BigDecimal total_time) {
+		this.total_time = total_time;//Long.parseLong(total_time==null?"0":total_time);;
 	}
 
 	@FieldNameAnnotationClass(fieldKey = "broken")
@@ -193,5 +195,10 @@ public class OracleJobDAO extends AbstractDAO {
 
 	public int getNextDay() {
 		return Integer.parseInt(this.next_date.substring(8, 10));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return this.getJob() == ((OracleJobDAO)obj).getJob();
 	}
 }

@@ -305,11 +305,11 @@ public class CreateJobDialog extends Dialog {
 		comboType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (StringUtils.startsWithIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name(), comboType.getText()) ||
-						StringUtils.startsWithIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name(), comboType.getText()) ) {
+				if (StringUtils.startsWithIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.name(), comboType.getText()) || StringUtils.startsWithIgnoreCase(PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.name(), comboType.getText())) {
 					initMainObject(comboType.getText());
-				}else{
+				} else {
 					//PL/SQL블럭 스크립트를 생성한다.
+					textScript.setText("DBMS_OUTPUT.PUT_LINE('today is ' || to_char(sysdate)); ");
 					createScript();
 				}
 			}
@@ -649,6 +649,14 @@ public class CreateJobDialog extends Dialog {
 			//Excute script
 			RequestResultDAO reqReResultDAO = new RequestResultDAO();
 			try {
+				String stmt = this.textPreview.getText().trim();
+
+				if (StringUtils.isBlank(this.textScript.getText().trim())) {
+					MessageDialog.openInformation(this.getShell(), Messages.get().Information, "job에서 실행할 작업내용을 작성하십시오.");
+					return;
+				}
+				stmt = StringUtils.removeEnd(stmt, ";") + ";";
+
 				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, this.textPreview.getText().trim());
 			} catch (Exception e) {
 				logger.error(e);
@@ -677,7 +685,7 @@ public class CreateJobDialog extends Dialog {
 			} //$NON-NLS-1$
 			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
 				MessageDialog.openError(this.parentShell, Messages.get().Error, "Job을 삭제하는중 오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
-			}else{
+			} else {
 				MessageDialog.openInformation(this.parentShell, Messages.get().Information, "Job을 삭제하였습니다.");
 				okPressed();
 			}

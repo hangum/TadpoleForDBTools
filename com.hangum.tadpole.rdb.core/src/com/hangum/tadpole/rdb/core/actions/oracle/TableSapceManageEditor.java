@@ -31,6 +31,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -92,8 +94,16 @@ public class TableSapceManageEditor extends EditorPart {
 	private OracleTablespaceDAO tablespaceDao = null;
 	private Text textDropScript;
 	private Button btnIncludingContents;
+	private Button btnAutoExtend;
 	private Button btnCascadeConstraints;
+	private Button btnMaximumSize;
 	private Table table_datafiles;
+	private Button btnDatafileName;
+	private Text textDataFileName;
+	private Text textDatafileSize;
+	private Text textAutoExtendSize;
+	private Text textMaximumSize;
+	private Button btnReuse;
 
 	public TableSapceManageEditor() {
 		super();
@@ -161,8 +171,8 @@ public class TableSapceManageEditor extends EditorPart {
 		columnFilter = new DefaultTableColumnFilter();
 
 		Composite compositeTablespaceList = new Composite(parent, SWT.NONE);
-		GridData gd_compositeTablespaceList = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		gd_compositeTablespaceList.heightHint = 140;
+		GridData gd_compositeTablespaceList = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_compositeTablespaceList.minimumHeight = 200;
 		compositeTablespaceList.setLayoutData(gd_compositeTablespaceList);
 		compositeTablespaceList.setLayout(new GridLayout(1, false));
 
@@ -184,32 +194,24 @@ public class TableSapceManageEditor extends EditorPart {
 				tablespaceDao = (OracleTablespaceDAO) ss.getFirstElement();
 
 				List<HashMap<String, String>> datafileList = new ArrayList<HashMap<String, String>>();
-				List<Map<String, String>> tablespaceScript = new ArrayList<Map<String, String>>();
-
 				try {
 
 					SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 					datafileList = (List<HashMap<String, String>>) sqlClient.queryForList("getTablespaceDataFileList", tablespaceDao.getTablespace_name()); //$NON-NLS-1$
-					tablespaceScript = (List<Map<String, String>>) sqlClient.queryForList("getTablespaceScript", tablespaceDao.getTablespace_name()); //$NON-NLS-1$
 
 				} catch (Exception e) {
 					logger.error("Tablespace detail information loading...", e); //$NON-NLS-1$
 				}
 
-				String create_stmt = "";
-				for (Map<String, String> line : tablespaceScript) {
-					create_stmt += line.get("DDLSCRIPT") + "\n";
-				}
-
-				textScript.setText(StringUtils.trimToEmpty(create_stmt));
 				textDropScript.setText(StringUtils.trimToEmpty(getDropScript()));
+				makeCreateScript();
 
 				tableViewer_datafiles.setInput(datafileList);
 				tableViewer_datafiles.refresh();
 
 				if (datafileList.size() > 0) {
-					tableViewer_datafiles.setSelection(new StructuredSelection(tableViewer_datafiles.getElementAt(0)),true);
-					
+					tableViewer_datafiles.setSelection(new StructuredSelection(tableViewer_datafiles.getElementAt(0)), true);
+
 					refreshDatafileInformation();
 				} else {
 					// 테이블스페이스 선택을 변경하면 상세속성화면 초기화 한다.
@@ -237,8 +239,17 @@ public class TableSapceManageEditor extends EditorPart {
 
 		SashForm sashForm_1 = new SashForm(sashForm, SWT.VERTICAL);
 
-		tableViewer_datafiles = new TableViewer(sashForm_1, SWT.BORDER | SWT.FULL_SELECTION);
+		Composite composite_2 = new Composite(sashForm_1, SWT.NONE);
+		GridLayout gl_composite_2 = new GridLayout(1, false);
+		gl_composite_2.verticalSpacing = 0;
+		gl_composite_2.horizontalSpacing = 0;
+		gl_composite_2.marginHeight = 0;
+		gl_composite_2.marginWidth = 0;
+		composite_2.setLayout(gl_composite_2);
+
+		tableViewer_datafiles = new TableViewer(composite_2, SWT.BORDER | SWT.FULL_SELECTION);
 		table_datafiles = tableViewer_datafiles.getTable();
+		table_datafiles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		table_datafiles.setLinesVisible(true);
 		table_datafiles.setHeaderVisible(true);
 
@@ -248,8 +259,151 @@ public class TableSapceManageEditor extends EditorPart {
 					return;
 				}
 				refreshDatafileInformation();
+				makeCreateScript();
 			}
 		});
+
+		Composite composite_6 = new Composite(composite_2, SWT.NONE);
+		composite_6.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_composite_6 = new GridLayout(2, false);
+		composite_6.setLayout(gl_composite_6);
+
+		btnDatafileName = new Button(composite_6, SWT.CHECK);
+		btnDatafileName.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textDataFileName.setEnabled(btnDatafileName.getSelection());
+				if (btnDatafileName.getSelection()) {
+					StructuredSelection ss = (StructuredSelection) tableViewer_datafiles.getSelection();
+					if (ss != null) {
+						HashMap<String, Object> datafileMap = (HashMap<String, Object>) ss.getFirstElement();
+						String fileName = (String) datafileMap.get("FILE_NAME");
+
+						int cnt = tableViewer_datafiles.getTable().getItemCount() + 1;
+
+						fileName = StringUtils.replaceOnce(fileName, ".", "_Copy" + cnt + ".");
+						textDataFileName.setText(fileName);
+					} else {
+						textDataFileName.setFocus();
+					}
+				}
+				makeAddDatafileScript();
+			}
+		});
+		btnDatafileName.setText("Datafile Name");
+		textDataFileName = new Text(composite_6, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
+		textDataFileName.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				makeAddDatafileScript();
+			}
+		});
+		textDataFileName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textDataFileName.setText("Auto");
+		textDataFileName.setEnabled(false);
+
+		Label lblNewLabel_2 = new Label(composite_6, SWT.NONE);
+		lblNewLabel_2.setText("Datafile Size(MB)");
+
+		Composite composite_7 = new Composite(composite_6, SWT.NONE);
+		GridLayout gl_composite_7 = new GridLayout(2, false);
+		gl_composite_7.verticalSpacing = 0;
+		gl_composite_7.horizontalSpacing = 0;
+		gl_composite_7.marginWidth = 0;
+		gl_composite_7.marginHeight = 0;
+		composite_7.setLayout(gl_composite_7);
+
+		textDatafileSize = new Text(composite_7, SWT.BORDER | SWT.RIGHT);
+		textDatafileSize.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				makeAddDatafileScript();
+			}
+		});
+		GridData gd_textDatafileSize = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_textDatafileSize.widthHint = 60;
+		textDatafileSize.setLayoutData(gd_textDatafileSize);
+		textDatafileSize.setText("5");
+
+		btnReuse = new Button(composite_7, SWT.CHECK);
+		btnReuse.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				makeAddDatafileScript();
+			}
+		});
+		btnReuse.setText("Reuse");
+
+		Composite composite_5 = new Composite(composite_2, SWT.NONE);
+		composite_5.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite_5.setLayout(new GridLayout(4, false));
+
+		btnAutoExtend = new Button(composite_5, SWT.CHECK);
+		btnAutoExtend.setSelection(true);
+		btnAutoExtend.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textAutoExtendSize.setEnabled(btnAutoExtend.getSelection());
+				btnMaximumSize.setEnabled(btnAutoExtend.getSelection());
+				textMaximumSize.setEnabled(btnAutoExtend.getSelection());
+
+				makeAddDatafileScript();
+			}
+		});
+		btnAutoExtend.setText("Auto Extend");
+
+		Label lblExtendSize = new Label(composite_5, SWT.NONE);
+		lblExtendSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblExtendSize.setText("Extend Size(MB)");
+
+		textAutoExtendSize = new Text(composite_5, SWT.BORDER | SWT.RIGHT);
+		textAutoExtendSize.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				makeAddDatafileScript();
+			}
+		});
+		textAutoExtendSize.setText("5");
+		textAutoExtendSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_5, SWT.NONE);
+
+		btnMaximumSize = new Button(composite_5, SWT.CHECK);
+		btnMaximumSize.setSelection(true);
+		btnMaximumSize.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textMaximumSize.setEnabled(!btnMaximumSize.getSelection());
+				textMaximumSize.setText((1024 * 5)+""); //5GB
+				textMaximumSize.setFocus();
+				textMaximumSize.setSelection(0, textMaximumSize.getText().length());
+				makeAddDatafileScript();
+			}
+		});
+		btnMaximumSize.setText("Maximum Unlimited");
+
+		Label lblMaximumSizemb = new Label(composite_5, SWT.NONE);
+		lblMaximumSizemb.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblMaximumSizemb.setText("Maximum Size(MB)");
+
+		textMaximumSize = new Text(composite_5, SWT.BORDER | SWT.RIGHT);
+		textMaximumSize.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				makeAddDatafileScript();
+			}
+		});
+		textMaximumSize.setEnabled(false);
+		textMaximumSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		Button btnAddDatafile = new Button(composite_5, SWT.NONE);
+		btnAddDatafile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				makeAddDatafileScript();
+			}
+		});
+		btnAddDatafile.setText("Add Datafile");
 
 		tableViewer_property = new TableViewer(sashForm_1, SWT.BORDER | SWT.FULL_SELECTION);
 		table = tableViewer_property.getTable();
@@ -278,7 +432,6 @@ public class TableSapceManageEditor extends EditorPart {
 
 		textDropScript = new Text(composite_1, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		GridData gd_textDropScript = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_textDropScript.heightHint = 50;
 		gd_textDropScript.minimumHeight = 20;
 		textDropScript.setLayoutData(gd_textDropScript);
 
@@ -290,6 +443,7 @@ public class TableSapceManageEditor extends EditorPart {
 		btnIncludingContents.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				// 데이터 파일을 함께 삭제한다.
 				btnCascadeConstraints.setEnabled(btnIncludingContents.getSelection());
 				textDropScript.setText(getDropScript());
 			}
@@ -300,6 +454,7 @@ public class TableSapceManageEditor extends EditorPart {
 		btnCascadeConstraints.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				// 제약조건을 함께 삭제한다.
 				textDropScript.setText(getDropScript());
 			}
 		});
@@ -331,7 +486,7 @@ public class TableSapceManageEditor extends EditorPart {
 		btnDrop.setText("Drop Tablespace");
 
 		Label lblNewLabel = new Label(composite_1, SWT.NONE);
-		lblNewLabel.setText("Create Tablespace");
+		lblNewLabel.setText("Create Tablespace && Add Datafile");
 
 		textScript = new Text(composite_1, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		textScript.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -356,11 +511,12 @@ public class TableSapceManageEditor extends EditorPart {
 				} else {
 					MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, "작업이 완료 되었습니다.");
 					refreshTablespaceList();
+					refreshDatafileInformation();
 				}
 			}
 		});
 		btnExecute.setBounds(0, 0, 150, 28);
-		btnExecute.setText("Create Tablespace");
+		btnExecute.setText("Execute Script");
 		sashForm.setWeights(new int[] { 1, 1 });
 
 		createTableColumn();
@@ -386,11 +542,65 @@ public class TableSapceManageEditor extends EditorPart {
 		AnalyticCaller.track(TableSapceManageEditor.ID);
 	}
 
+	private void makeCreateScript() {
+		StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
+		tablespaceDao = (OracleTablespaceDAO) ss.getFirstElement();
+
+		List<Map<String, String>> tablespaceScript = new ArrayList<Map<String, String>>();
+
+		try {
+
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			tablespaceScript = (List<Map<String, String>>) sqlClient.queryForList("getTablespaceScript", tablespaceDao.getTablespace_name()); //$NON-NLS-1$
+
+		} catch (Exception e) {
+			logger.error("Tablespace detail information loading...", e); //$NON-NLS-1$
+		}
+
+		String create_stmt = "";
+		for (Map<String, String> line : tablespaceScript) {
+			create_stmt += line.get("DDLSCRIPT") + "\n";
+		}
+
+		textScript.setText(StringUtils.trimToEmpty(create_stmt));
+	}
+
+	private void makeAddDatafileScript() {
+		StringBuffer script = new StringBuffer();
+
+		script.append("ALTER TABLESPACE " + tablespaceDao.getTablespace_name()).append("\n");
+		script.append(" ADD DATAFILE \n");
+
+		if (this.btnDatafileName.getSelection()) {
+			script.append(" '").append(this.textDataFileName.getText().trim()).append("' \n");
+		}
+
+		script.append(" SIZE " + this.textDatafileSize.getText() + "M ");
+		if (this.btnReuse.getSelection()) {
+			script.append(" REUSE \n");
+		}else{
+			script.append(" \n");
+		}		
+
+		if (this.btnAutoExtend.getSelection()) {
+			script.append(" AUTOEXTEND ON \n");
+			script.append(" NEXT ").append(this.textAutoExtendSize.getText().trim()).append("M \n");
+			if (this.btnMaximumSize.getSelection()) {
+				script.append(" MAXSIZE UNLIMITED \n");
+
+			} else {
+				script.append(" MAXSIZE ").append(this.textMaximumSize.getText().trim()).append("M \n");
+			}
+		}
+		textScript.setText(StringUtils.removeEnd(script.toString(), ";"));
+	}
+
 	private void refreshDatafileInformation() {
 		StructuredSelection ss = (StructuredSelection) tableViewer_datafiles.getSelection();
-		
-		if (ss==null)return;
-		
+
+		if (ss == null)
+			return;
+
 		HashMap<String, Object> datafileMap = (HashMap<String, Object>) ss.getFirstElement();
 
 		List<HashMap<String, Object>> datafileInformationList = new ArrayList<HashMap<String, Object>>();
