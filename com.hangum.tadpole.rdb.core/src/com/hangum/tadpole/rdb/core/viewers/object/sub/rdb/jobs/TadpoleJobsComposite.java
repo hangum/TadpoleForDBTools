@@ -269,25 +269,27 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public static List<OracleJobDAO> getJobsList(final UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
-		List<OracleJobDAO> DBAResult = new ArrayList<OracleJobDAO>();
-		List<OracleJobDAO> UserResult = new ArrayList<OracleJobDAO>();
+		List<OracleJobDAO> listDBAResult = new ArrayList<OracleJobDAO>();		
+		List<OracleJobDAO> listUserResult = sqlClient.queryForList("getJobList", userDB.getSchema()); //$NON-NLS-1$
 		
-		UserResult = sqlClient.queryForList("getJobList", userDB.getSchema()); //$NON-NLS-1$
+		// DBA권한이 없을경우 발생하는 Exception은 무시한다.
 		try{
-			DBAResult = sqlClient.queryForList("getDBAJobList", userDB.getSchema()); //$NON-NLS-1$
+			listDBAResult = sqlClient.queryForList("getDBAJobList", userDB.getSchema()); //$NON-NLS-1$
 		}catch(SQLException e){
-			// DBA권한이 없을경우 발생하는 Exception은 무시한다.
+			// ignore exception
 		}
-		for (OracleJobDAO dao:DBAResult){
-			if (!UserResult.contains(dao) ){
-				UserResult.add(dao);
+		
+		// 사용자 권한에 따라서 조회되는 job object목록이 중복되므로 id를 기준으로 중복을 제거한다.
+		for (OracleJobDAO oracleJobDAO : listUserResult) {
+			if(!listDBAResult.contains(oracleJobDAO)) {
+				listDBAResult.add(oracleJobDAO);
 			}
 		}
-		
-		return UserResult;
+		return listDBAResult;
 		
 	}
 
