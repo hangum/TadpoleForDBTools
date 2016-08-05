@@ -399,6 +399,17 @@ ORDER BY O.OWNER, O.OBJECT_NAME
 </select>
 
 <!-- 
+	시퀀스 목록을 조회한다.
+ -->
+<select id="sequenceList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO" parameterClass="java.lang.String">
+	select 
+		SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER,
+		SEQUENCE_OWNER as schema_name
+	from ALL_SEQUENCES
+	where SEQUENCE_OWNER = #schema_name#
+</select>
+
+<!-- 
 	index 상세 내역
 	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
 	
