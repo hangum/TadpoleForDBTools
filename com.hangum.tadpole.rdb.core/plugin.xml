@@ -155,6 +155,50 @@
             </objectState>
          </visibility>
       </objectContribution>
+            <objectContribution
+            adaptable="false"
+            id="com.hangum.tadpole.rdb.core.objectContribution.rdb.oracle.ext"
+            objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.oracle.TableSpaceManagerAction"
+               icon="resources/icons/tablespace.png"
+               id="com.hangum.tadpole.rdb.core.action.oracle.tablespace"
+               label="Table space">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <visibility>
+            <objectState
+                  name="db_type"
+                  value="oracle">
+            </objectState>
+         </visibility>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="com.hangum.tadpole.rdb.core.objectContribution.rdb.sqlite.ext"
+            objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.connections.ext.DownloadSQLiteDBAction"
+               icon="resources/icons/download.png"
+               id="com.hangum.tadpole.rdb.core.action.sqlite.download"
+               label="%action.label.29">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <visibility>
+            <objectState
+                  name="db_type"
+                  value="sqlite">
+            </objectState>
+         </visibility>
+      </objectContribution>
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.rdb"
@@ -400,51 +444,7 @@
             </objectState>
          </visibility>
       </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="com.hangum.tadpole.rdb.core.objectContribution.rdb.sqlite.ext"
-            objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
-         <action
-               class="com.hangum.tadpole.rdb.core.actions.connections.ext.DownloadSQLiteDBAction"
-               icon="resources/icons/download.png"
-               id="com.hangum.tadpole.rdb.core.action.sqlite.download"
-               label="%action.label.29">
-            <enablement>
-               <objectClass
-                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>
-         <visibility>
-            <objectState
-                  name="db_type"
-                  value="sqlite">
-            </objectState>
-         </visibility>
-      </objectContribution>
       <!-- oracle -->
-            <objectContribution
-            adaptable="false"
-            id="com.hangum.tadpole.rdb.core.objectContribution.rdb.oracle.ext"
-            objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
-         <action
-               class="com.hangum.tadpole.rdb.core.actions.oracle.TableSpaceManagerAction"
-               icon="resources/icons/tablespace.png"
-               id="com.hangum.tadpole.rdb.core.action.oracle.tablespace"
-               label="Table space">
-            <enablement>
-               <objectClass
-                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
-               </objectClass>
-            </enablement>
-         </action>
-         <visibility>
-            <objectState
-                  name="db_type"
-                  value="oracle">
-            </objectState>
-         </visibility>
-      </objectContribution>
       <objectContribution
             adaptable="false"
             id="com.hangum.tadpole.rdb.core.objectContribution.hive"
