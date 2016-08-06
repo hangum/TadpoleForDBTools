@@ -210,10 +210,15 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	 * @param strObjectName
 	 */
 	public void refreshJava(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
-		if (!boolRefresh)
-			if (selectUserDb == null)
-				return;
+		if (!boolRefresh) if (selectUserDb == null) return;
 		this.userDB = selectUserDb;
+		
+		try {
+			QueryUtils.executeQuery(userDB, "select 1 from javasnm where 1=0 ", 0, 1);
+		} catch (Exception e) {
+			MessageDialog.openInformation(getShell(), Messages.get().Information, "Java Object가 지원되지 않는 버전입니다.");
+			return;
+		}
 
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
@@ -221,26 +226,15 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
 				try {
-					boolean isNotSupport = false;
-
-					try {
-						QueryUtils.executeQuery(userDB, "select 1 from javasnm where 1=0 ", 0, 1);
-					} catch (Exception e) {
-						isNotSupport = true;
+					showJava = getJavaList(userDB);
+					for (OracleJavaDAO dao : showJava) {
+						dao.setSysName(dao.getObjectName() + "");
 					}
 
-					if (isNotSupport) {
-						MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, "Java Object가 지원되지 않습니다.");
-					} else {
-						showJava = getJavaList(userDB);
-						for (OracleJavaDAO dao : showJava) {
-							dao.setSysName(dao.getObjectName() + "");
-						}
-					}
 				} catch (Exception e) {
 					logger.error("Java Referesh", e); //$NON-NLS-1$
 
-					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+					return new Status(Status.ERROR, Activator.PLUGIN_ID, e.getMessage());
 				} finally {
 					monitor.done();
 				}
@@ -266,14 +260,12 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 
 							selectDataOfTable(strObjectName);
 						} else {
-							if (showJava != null)
-								showJava.clear();
+							if (showJava != null) showJava.clear();
 							javaListViewer.setInput(showJava);
 							javaListViewer.refresh();
 							TableUtil.packTable(javaListViewer.getTable());
 
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							MessageDialog.openError(getShell(), Messages.get().Error, jobEvent.getResult().getMessage());
 						}
 					}
 				}); // end display.asyncExec
