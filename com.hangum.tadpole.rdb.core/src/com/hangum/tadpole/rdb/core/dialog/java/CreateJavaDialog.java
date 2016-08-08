@@ -1,18 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     hangum - initial API and implementation
+ *     nilriri - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.java;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,58 +21,41 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.engine.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
- * procedure 실행 다이얼로그.
+ * Java object 실행 다이얼로그.
  * 
- * @author hangum
+ * @author nilriri
  * 
  */
 public class CreateJavaDialog extends Dialog {
-	/**
-	 * Logger for this class
-	 */
+	private static final Logger logger = Logger.getLogger(CreateJavaDialog.class);
+	
 	protected int ID_CREATE_JAVA = IDialogConstants.CLIENT_ID + 1;
 	protected int ID_CHANGE_JAVA = IDialogConstants.CLIENT_ID + 2;
 	protected int ID_DROP_JAVA = IDialogConstants.CLIENT_ID + 3;
-	private static final Logger logger = Logger.getLogger(CreateJavaDialog.class);
-	private ProcedureExecutor procedureExecutor;
 
-	private Shell parentShell;
 	private UserDBDAO userDB;
 	private OracleJavaDAO javaDao;
 
@@ -97,7 +77,6 @@ public class CreateJavaDialog extends Dialog {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 
-		this.parentShell = parentShell;
 		this.userDB = userDB;
 		this.javaDao = javaDao;
 	}
@@ -179,7 +158,7 @@ public class CreateJavaDialog extends Dialog {
 			}
 			return result.toString();
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("java object", e);
 			return "";
 		}
 	}
@@ -192,10 +171,10 @@ public class CreateJavaDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (StringUtils.isBlank(javaDao.getObjectName())) {
-			btnCreateJava = createButton(parent, ID_CREATE_JAVA, "Create Java", false);
+			btnCreateJava = createButton(parent, ID_CREATE_JAVA, Messages.get().CreateJava, false);
 		} else {
-			btnCreateJava = createButton(parent, ID_CREATE_JAVA, "Change Java", false);
-			btnDropJava = createButton(parent, ID_DROP_JAVA, "Drop Java", false);
+			btnCreateJava = createButton(parent, ID_CREATE_JAVA, Messages.get().ChangeJava, false);
+			btnDropJava = createButton(parent, ID_DROP_JAVA, Messages.get().DropJava, false);
 		}
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
@@ -231,9 +210,9 @@ public class CreateJavaDialog extends Dialog {
 				logger.error(e);
 			}
 			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				MessageDialog.openError(this.parentShell, Messages.get().Error, "Java Object 생성/변경 중 오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+				MessageDialog.openError(this.getShell(), Messages.get().Error, Messages.get().CreateOrChangedErrorJavaObject + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 			} else {
-				MessageDialog.openInformation(this.parentShell, Messages.get().Information, "Java Object가 생성/변경 되었습니다.");
+				MessageDialog.openInformation(this.getShell(), Messages.get().Information, Messages.get().CreateOrChangedJavaObject);
 				this.okPressed();
 			}
 		} else if (buttonId == ID_DROP_JAVA) {
@@ -246,9 +225,9 @@ public class CreateJavaDialog extends Dialog {
 				logger.error(e);
 			}
 			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				MessageDialog.openError(this.parentShell, Messages.get().Error, "Java Object 삭제 중 오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+				MessageDialog.openError(this.getShell(), Messages.get().Error, Messages.get().DeletedErrorJavaObject + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 			}else{
-				MessageDialog.openInformation(this.parentShell, Messages.get().Information, "Java Object가 삭제되었습니다.");
+				MessageDialog.openInformation(this.getShell(), Messages.get().Information, Messages.get().DeletedJavaObject);
 				this.okPressed();
 			}
 		} else {

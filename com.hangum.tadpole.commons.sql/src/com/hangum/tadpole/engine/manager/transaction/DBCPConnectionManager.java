@@ -57,7 +57,7 @@ public class DBCPConnectionManager {
 		connectionPool.setMaxActive(5);
 		connectionPool.setWhenExhaustedAction((byte)1);
 		connectionPool.setMaxWait(1000 * 60); 					// 1분대기.
-		connectionPool.setTimeBetweenEvictionRunsMillis(3 * 1000);
+		connectionPool.setTimeBetweenEvictionRunsMillis(10 * 1000);	// 3분한한번 테스트
 		connectionPool.setTestWhileIdle(true);
 		
 		String passwdDecrypt = "";

@@ -652,6 +652,47 @@ public class Messages {
 	public String ResultSetComposite_column_to_editor;
 
 	public String PleaseSelectRowData;
+
+	public String TableSpaceManager;
+	public String RiseError;
+	public String WorkHasCompleted;
+
+	public String CreateJob;
+	public String ChangeJob;
+	public String RemoveJob;
+	public String JobManager;
+	public String CreateJobDialog_FirstStartDatetime;
+	public String CreateJobDialog_specification;
+	public String CreateJobDialog_NextIterationExecutionCycle;
+	public String CreateJobDialog_IterationExecutionCycle;
+	public String CreateJobDialog_analysis;
+	public String CreateJobDialog_executedScript;
+	public String EveryNight;
+	public String Every7Days;
+	public String Every30Days;
+	public String EverySunday;
+	public String Every6Morning;
+	public String Every3Hours;
+	public String EveryFristDayMonth;
+	public String EveryFirstDayAm;
+	public String CreateJobDialog_JobSelectMsg;
+	public String CreateJobDialog_JobCompleted;
+	public String CreateJobDialog_RegException;
+	public String CreateJobDialog_DelException;
+	public String CreateJobDialog_DoesnotDeleteTarget;
+	public String CreateJobDialog_JobDeleted;
+
+	public String CreateJava;
+	public String ChangeJava;
+	public String DropJava;
+	public String Compilejava;
+	public String doesnotSupportJavaObject;
+	public String DeletedJavaObject;
+	public String CreateOrChangedJavaObject;
+	public String CreateOrChangedErrorJavaObject;
+	public String DeletedErrorJavaObject;
+
+	public String SessionListEditor_GreatThan10Sec;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

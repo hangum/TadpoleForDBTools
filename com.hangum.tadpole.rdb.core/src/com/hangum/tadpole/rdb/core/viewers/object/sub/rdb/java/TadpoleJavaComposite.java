@@ -40,13 +40,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
-import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -178,14 +176,13 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	 * create Table menu
 	 */
 	private void createJavaMenu() {
-		if (getUserDB() == null)
-			return;
+		if (getUserDB() == null) return;
 
-		creatAction_Java = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Create java");
-		alterAction_Java = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Change java");
-		dropAction_Java = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Drop java"); //$NON-NLS-1$
+		creatAction_Java = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().CreateJava);
+		alterAction_Java = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().ChangeJava);
+		dropAction_Java = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, 	Messages.get().DropJava); //$NON-NLS-1$
 		refreshAction_Java = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().Refresh); //$NON-NLS-1$
-		compileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, "Compile java");
+		compileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().Compilejava);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Java"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -216,7 +213,7 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 		try {
 			QueryUtils.executeQuery(userDB, "select 1 from javasnm where 1=0 ", 0, 1);
 		} catch (Exception e) {
-			MessageDialog.openInformation(getShell(), Messages.get().Information, "Java Object가 지원되지 않는 버전입니다.");
+			MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().doesnotSupportJavaObject);
 			return;
 		}
 

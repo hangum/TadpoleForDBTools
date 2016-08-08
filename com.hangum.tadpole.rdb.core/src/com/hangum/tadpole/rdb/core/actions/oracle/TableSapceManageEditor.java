@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 nilriri.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -476,9 +476,9 @@ public class TableSapceManageEditor extends EditorPart {
 					logger.error(ex);
 				} //$NON-NLS-1$
 				if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-					MessageDialog.openError(getSite().getShell(), Messages.get().Error, "오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+					MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().RiseError + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 				} else {
-					MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, "작업이 완료 되었습니다.");
+					MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().WorkHasCompleted);
 					refreshTablespaceList();
 				}
 
@@ -509,9 +509,9 @@ public class TableSapceManageEditor extends EditorPart {
 					logger.error(ex);
 				} //$NON-NLS-1$
 				if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-					MessageDialog.openError(getSite().getShell(), Messages.get().Error, "오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+					MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().RiseError + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 				} else {
-					MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, "작업이 완료 되었습니다.");
+					MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().WorkHasCompleted);
 					refreshTablespaceList();
 					refreshDatafileInformation();
 				}

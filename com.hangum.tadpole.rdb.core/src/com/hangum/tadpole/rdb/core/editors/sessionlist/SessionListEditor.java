@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,6 +31,8 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -91,7 +94,7 @@ public class SessionListEditor extends EditorPart {
 	private ToolItem tltmStart;
 	private ToolItem tltmStop;
 	private ToolItem tltmKillProcess;
-	private boolean isNotRefreshUi = true;
+	private boolean isNotRefreshUi = false;
 	
 	private UserDBDAO userDB;
 	
@@ -105,6 +108,10 @@ public class SessionListEditor extends EditorPart {
 	private List<HashMap> showLockBlockList;
 	private Table table;
 	private Text textSQL;
+	private Text textRefreshMil;
+	
+	/** SESSION INTERVAL */
+	private int SESSION_INTERVAL = 10;
 
 	public SessionListEditor() {
 		super();
@@ -152,14 +159,16 @@ public class SessionListEditor extends EditorPart {
 		
 		createSessionUI();
 		
-//		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-			createExtensionUI();
-			
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			createOracleExtensionUI();
 			mainSashForm.setWeights(new int[] {1, 1});
-//		}
+		}
 	}
 	
-	private void createExtensionUI() {
+	/**
+	 * crate extension oracle 
+	 */
+	private void createOracleExtensionUI() {
 		Composite compositeExtension = new Composite(mainSashForm, SWT.NONE);
 		compositeExtension.setLayout(new GridLayout(1, false));
 		
@@ -327,16 +336,40 @@ public class SessionListEditor extends EditorPart {
 	 * 기본 세션 모니터링 화면을 조회 합니다.
 	 */
 	private void createSessionUI() {
-		Composite compositeHead = new Composite(mainSashForm, SWT.NONE);
-		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Composite compositSessionUI = new Composite(mainSashForm, SWT.NONE);
+		compositSessionUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeHead = new GridLayout(1, false);
 		gl_compositeHead.marginHeight = 0;
 		gl_compositeHead.horizontalSpacing = 0;
 		gl_compositeHead.marginWidth = 0;
-		compositeHead.setLayout(gl_compositeHead);
+		compositSessionUI.setLayout(gl_compositeHead);
 		
-		ToolBar toolBar = new ToolBar(compositeHead, SWT.FLAT | SWT.RIGHT);
+		
+		Composite compositeSessionHead = new Composite(compositSessionUI, SWT.NONE);
+		compositeSessionHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeSessionHead.setLayout(new GridLayout(2, false));
+		
+		Composite compositeSessionBody = new Composite(compositSessionUI, SWT.NONE);
+		compositeSessionBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		textRefreshMil = new Text(compositeSessionHead, SWT.BORDER);
+		textRefreshMil.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent event) {
+				validateInterval();
+			}
+		});
+		textRefreshMil.setText("10");
+		GridData gd_textRefreshMil = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_textRefreshMil.widthHint = 30;
+		gd_textRefreshMil.minimumWidth = 30;
+		textRefreshMil.setLayoutData(gd_textRefreshMil);
+		
+		ToolBar toolBar = new ToolBar(compositeSessionHead, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		ToolItem tltmSecondsRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmSecondsRefresh.setText(Messages.get().SessionListEditor_4);
 		
 		tltmStart = new ToolItem(toolBar, SWT.NONE);
 		tltmStart.setToolTipText(Messages.get().Start);
@@ -344,17 +377,19 @@ public class SessionListEditor extends EditorPart {
 		tltmStart.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if(!validateInterval()) return;
+				
 				isNotRefreshUi = true;
 				
 				tltmStart.setEnabled(false);
 				tltmStop.setEnabled(true);
 			}
 		});
-		tltmStart.setEnabled(false);
+		tltmStart.setEnabled(true);
 		
 		tltmStop = new ToolItem(toolBar, SWT.NONE);
 		tltmStop.setToolTipText(Messages.get().Stop);
-		tltmStop.setImage(GlobalImageUtils.getStop()); //$NON-NLS-1$
+		tltmStop.setImage(GlobalImageUtils.getStop());
 		tltmStop.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -364,6 +399,21 @@ public class SessionListEditor extends EditorPart {
 				tltmStop.setEnabled(false);
 			} 
 		});
+		tltmStop.setEnabled(false);
+		
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
+		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
+		tltmRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initSessionListData();
+			} 
+		});
+		
+		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		tltmKillProcess = new ToolItem(toolBar, SWT.NONE);
 		tltmKillProcess.setToolTipText(Messages.get().SessionListEditor_3);
@@ -385,13 +435,9 @@ public class SessionListEditor extends EditorPart {
 			}
 		});
 		tltmKillProcess.setEnabled(false);
+		compositeSessionBody.setLayout(new GridLayout(1, false));
 		
-		ToolItem tltmSecondsRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmSecondsRefresh.setEnabled(false);
-		tltmSecondsRefresh.setSelection(true);
-		tltmSecondsRefresh.setText(Messages.get().SessionListEditor_4);
-		
-		SashForm sashForm = new SashForm(compositeHead, SWT.VERTICAL);
+		SashForm sashForm = new SashForm(compositeSessionBody, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBody = new Composite(sashForm, SWT.NONE);
@@ -441,6 +487,24 @@ public class SessionListEditor extends EditorPart {
 		thread.setDaemon(true);
 		thread.start();	
 	}
+	
+	/**
+	 * check validate interval
+	 * @return
+	 */
+	private boolean validateInterval() {
+		String strRefreshTerm = textRefreshMil.getText();
+		if(!NumberUtils.isNumber(strRefreshTerm)) {
+			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().SessionListEditor_GreatThan10Sec);
+			return false;
+		} else if(Integer.parseInt(strRefreshTerm) < 10) {
+			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().SessionListEditor_GreatThan10Sec);
+			return false;
+		}
+		
+		SESSION_INTERVAL = Integer.parseInt(strRefreshTerm);
+		return true;
+	}
 
 	/**
 	 *  start ui thread
@@ -463,7 +527,7 @@ public class SessionListEditor extends EditorPart {
 					});
 					
 					// 20 seconds
-					try{ Thread.sleep(1000 * 5); } catch(Exception e) {}
+					try{ Thread.sleep(1000 * SESSION_INTERVAL); } catch(Exception e) {}
 						
 				}	// end while 
 			};

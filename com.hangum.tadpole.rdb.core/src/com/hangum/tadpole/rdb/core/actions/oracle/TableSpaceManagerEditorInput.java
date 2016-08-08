@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 nilriri.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package com.hangum.tadpole.rdb.core.actions.oracle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * Tablespace Manager input
@@ -45,7 +47,7 @@ public class TableSpaceManagerEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return "Tablespace Manager";
+		return Messages.get().TableSpaceManager;
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class TableSpaceManagerEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return "Tablespace Manager";
+		return Messages.get().TableSpaceManager;
 	}
 
 }
