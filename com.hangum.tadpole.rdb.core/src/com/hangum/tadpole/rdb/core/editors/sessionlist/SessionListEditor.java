@@ -61,6 +61,7 @@ import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSess
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * DDB Session list editor
@@ -72,12 +73,9 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  *
  */
 public class SessionListEditor extends EditorPart {
-	/**
-	 * Logger for this class
-	 */
 	private static final Logger logger = Logger.getLogger(SessionListEditor.class);
-
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.sessionlist"; //$NON-NLS-1$
+	private SashForm mainSashForm;
 	
 	protected final int user_seq = SessionManager.getUserSeq();
 	
@@ -87,6 +85,7 @@ public class SessionListEditor extends EditorPart {
 	// set initialize button
 	private ToolItem tltmStart;
 	private ToolItem tltmStop;
+	private ToolItem tltmKillProcess;
 	private boolean isNotRefreshUi = true;
 	
 	private UserDBDAO userDB;
@@ -136,7 +135,38 @@ public class SessionListEditor extends EditorPart {
 		gl_parent.marginWidth = 0;
 		parent.setLayout(gl_parent);
 		
-		Composite compositeHead = new Composite(parent, SWT.NONE);
+		mainSashForm = new SashForm(parent, SWT.NONE);
+		mainSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		createSessionUI();
+		
+//		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			createExtensionUI();
+			
+			mainSashForm.setWeights(new int[] {1, 1});
+//		}
+	}
+	
+	private void createExtensionUI() {
+		Composite compositeExtension = new Composite(mainSashForm, SWT.NONE);
+		compositeExtension.setLayout(new GridLayout(1, false));
+		
+		SashForm sashFormExtension = new SashForm(compositeExtension, SWT.VERTICAL);
+		sashFormExtension.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Composite compositeExtHead = new Composite(sashFormExtension, SWT.NONE);
+		compositeExtHead.setLayout(new GridLayout(1, false));
+		
+		Composite compositeExtBody = new Composite(sashFormExtension, SWT.NONE);
+		compositeExtBody.setLayout(new GridLayout(1, false));
+		sashFormExtension.setWeights(new int[] {1, 1});
+	}
+	
+	/**
+	 * 기본 세션 모니터링 화면을 조회 합니다.
+	 */
+	private void createSessionUI() {
+		Composite compositeHead = new Composite(mainSashForm, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeHead = new GridLayout(1, false);
 		gl_compositeHead.marginHeight = 0;
@@ -174,7 +204,7 @@ public class SessionListEditor extends EditorPart {
 			} 
 		});
 		
-		final ToolItem tltmKillProcess = new ToolItem(toolBar, SWT.NONE);
+		tltmKillProcess = new ToolItem(toolBar, SWT.NONE);
 		tltmKillProcess.setToolTipText(Messages.get().SessionListEditor_3);
 		tltmKillProcess.setImage(GlobalImageUtils.getKilling());
 		tltmKillProcess.addSelectionListener(new SelectionAdapter() {
@@ -200,7 +230,7 @@ public class SessionListEditor extends EditorPart {
 		tltmSecondsRefresh.setSelection(true);
 		tltmSecondsRefresh.setText(Messages.get().SessionListEditor_4);
 		
-		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+		SashForm sashForm = new SashForm(compositeHead, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite compositeBody = new Composite(sashForm, SWT.NONE);
@@ -244,24 +274,18 @@ public class SessionListEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {7, 3});
 		
-		// google analytic
-		AnalyticCaller.track(this.getClass().getName());
-		
-		// init data
-//		initSessionListData();
-		
-		callbackui();
-	}
-	
-	private void callbackui() {
 		pushSession.start();
 		Thread thread = new Thread(startUIThread());
 		thread.setDaemon(true);
-		thread.start();
+		thread.start();	
 	}
-	
+
+	/**
+	 *  start ui thread
+	 *  
+	 * @return
+	 */
 	private Runnable startUIThread() {
-//		final String email = SessionManager.getEMAIL();
 		final Display display = tltmStart.getDisplay();
 
 		Runnable bgRunnable = new Runnable() {
@@ -272,9 +296,7 @@ public class SessionListEditor extends EditorPart {
 					display.syncExec(new Runnable() {
 						@Override
 						public void run() {
-							
 							if(isNotRefreshUi) initSessionListData();
-							
 						}
 					});
 					
@@ -324,6 +346,10 @@ public class SessionListEditor extends EditorPart {
 	 * editor init data
 	 */
 	private void initSessionListData() {
+		
+		// 버튼을 초기화 합니다.
+		tltmKillProcess.setEnabled(false);
+		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
