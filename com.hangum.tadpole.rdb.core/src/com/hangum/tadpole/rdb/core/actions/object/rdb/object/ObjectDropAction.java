@@ -236,6 +236,18 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 							constraintPath = String.format("%s.%s", SQLUtil.makeIdentifierName(userDB, constraintDAO.getSchema_name()), SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME())); 
 						}
 						executeSQL(userDB, "alter table "+ constraintPath +" drop constraint " + constraintDAO.getSysName() ); //$NON-NLS-1$ //$NON-NLS-2$
+					} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+						String constraintPath = "";
+						if (StringUtils.isBlank(constraintDAO.getSchema_name())){
+							constraintPath = SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME());
+						}else{
+							constraintPath = String.format("%s.%s", SQLUtil.makeIdentifierName(userDB, constraintDAO.getSchema_name()), SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME())); 
+						}
+						if(StringUtils.equalsIgnoreCase("PRIMARY KEY", constraintDAO.getConstraint_type())){
+							executeSQL(userDB, "alter table "+ constraintPath +" drop PRIMARY KEY " ); //$NON-NLS-1$ //$NON-NLS-2$
+						}else{
+							executeSQL(userDB, "alter table "+ constraintPath +" drop "+ constraintDAO.getConstraint_type() + " " + constraintDAO.getSysName() ); //$NON-NLS-1$ //$NON-NLS-2$
+						}
 					} else if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME() + " on " + constraintDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
