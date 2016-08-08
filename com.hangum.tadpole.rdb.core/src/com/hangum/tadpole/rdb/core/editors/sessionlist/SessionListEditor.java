@@ -10,10 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.sessionlist;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -32,9 +34,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -47,7 +51,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
-import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -56,12 +59,14 @@ import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
+import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListTableCompare;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import org.eclipse.swt.widgets.Label;
+import com.swtdesigner.SWTResourceManager;
 
 /**
  * DDB Session list editor
@@ -93,6 +98,13 @@ public class SessionListEditor extends EditorPart {
 	private TableViewer tableViewerSessionList;
 	private ObjectComparator comparator;
 	private Text textQuery;
+	private TableViewer tableViewerLocks;
+	private TableViewer tableViewerBlock;
+	private Table tableLocks;
+	private List<HashMap> showLocksList;
+	private List<HashMap> showLockBlockList;
+	private Table table;
+	private Text textSQL;
 
 	public SessionListEditor() {
 		super();
@@ -157,9 +169,158 @@ public class SessionListEditor extends EditorPart {
 		Composite compositeExtHead = new Composite(sashFormExtension, SWT.NONE);
 		compositeExtHead.setLayout(new GridLayout(1, false));
 		
+		Composite composite = new Composite(compositeExtHead, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		
+		Button btnAllLocks = new Button(composite, SWT.RADIO);
+		btnAllLocks.setText("All Locks");
+		btnAllLocks.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				refreshLocksList("");
+			}
+		});
+		
+		Button btnSessionLocks = new Button(composite, SWT.RADIO);
+		btnSessionLocks.setSelection(true);
+		btnSessionLocks.setText("Session Locks");
+		
+		 tableViewerLocks = new TableViewer(compositeExtHead, SWT.BORDER | SWT.FULL_SELECTION);
+		tableLocks = tableViewerLocks.getTable();
+		tableLocks.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(tableViewerLocks.getSelection().isEmpty()) return;
+				
+				StructuredSelection ss = (StructuredSelection)tableViewerLocks.getSelection();
+				HashMap map = (HashMap)ss.getFirstElement();
+				if(null != map) {
+					refreshLocksBlockList((String)map.get("LOCK_ID1"), (String)map.get("LOCK_ID2"));
+				}
+				
+			}
+		});
+		tableLocks.setHeaderVisible(true);
+		tableLocks.setLinesVisible(true);
+		tableLocks.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		createLocksTableColumn();
+		
 		Composite compositeExtBody = new Composite(sashFormExtension, SWT.NONE);
 		compositeExtBody.setLayout(new GridLayout(1, false));
+		
+		Label lblBlockedBlocking = new Label(compositeExtBody, SWT.NONE);
+		lblBlockedBlocking.setText("Blocked && Blocking");
+		
+		 tableViewerBlock = new TableViewer(compositeExtBody, SWT.BORDER | SWT.FULL_SELECTION);
+		table = tableViewerBlock.getTable();
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(tableViewerBlock.getSelection().isEmpty()) return;
+				
+				StructuredSelection ss = (StructuredSelection)tableViewerBlock.getSelection();
+				HashMap map = (HashMap)ss.getFirstElement();
+				if(null != map) {
+					textSQL.setText(StringUtils.trimToEmpty((String)map.get("SQL_TEXT")));
+				}else{
+					textSQL.setText(StringUtils.EMPTY);
+				}								
+			}
+		});
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		
+		textSQL = new Text(compositeExtBody, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		textSQL.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		GridData gd_textSQL = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_textSQL.heightHint = 80;
+		textSQL.setLayoutData(gd_textSQL);
 		sashFormExtension.setWeights(new int[] {1, 1});
+		
+		createLocksBlockTableColumn();
+	}
+	
+	private void createLocksTableColumn() {
+		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("LOCK_TYPE", "Lock Type", 80, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("MODE_HELD", "Mode Held", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("MODE_REQUESTED", "Mode Requested", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("OWNER", "Owner", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("OBJECT_TYPE", "Object Type", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("OBJECT_NAME", "Object Name", 100, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("BLOCK", "Blocking", 60, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("LOCKWAIT", "Blocked", 60, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
+		};
+
+		ColumnHeaderCreator.createColumnHeader(tableViewerLocks, tableColumnDef);
+
+		tableViewerLocks.setContentProvider(new ArrayContentProvider());
+		tableViewerLocks.setLabelProvider(new SessionLocksLabelProvider(tableViewerLocks));
+	}
+	
+	private void createLocksBlockTableColumn() {
+		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("BLOCK_TYPE", "Block Type", 80, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("STATUS", "Status", 80, SWT.CENTER) //$NON-NLS-1$
+				, new TableViewColumnDefine("SQL_TEXT", "SQL", 300, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("LOCK_TYPE", "Lock Type", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("MODE_HELD", "Mode Held", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("MODE_REQUESTED", "Mode Requested", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
+		};
+
+		ColumnHeaderCreator.createColumnHeader(tableViewerBlock, tableColumnDef);
+
+		tableViewerBlock.setContentProvider(new ArrayContentProvider());
+		tableViewerBlock.setLabelProvider(new SessionLocksLabelProvider(tableViewerBlock));
+	}
+	
+	public void refreshLocksList(String sid) {
+		try {
+
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			Map<String, String> param = new HashMap<String, String>();
+			param.put("sid", StringUtils.replace(sid, ",", ""));
+			showLocksList = (List<HashMap>) sqlClient.queryForList("getLockList", param); //$NON-NLS-1$
+
+			tableViewerLocks.setInput(showLocksList);
+			tableViewerBlock.setInput(new ArrayList<HashMap>());
+			tableViewerLocks.refresh();
+			tableViewerBlock.refresh();
+
+		} catch (Exception e) {
+			logger.error("refresh list", e); //$NON-NLS-1$
+
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+		}
+	}	
+	
+	public void refreshLocksBlockList(String lock_id1, String lock_id2) {
+		try {
+
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			Map<String, String> param = new HashMap<String, String>();
+			param.put("lock_id1", StringUtils.replace(lock_id1, ",", ""));
+			param.put("lock_id2", StringUtils.replace(lock_id2, ",", ""));
+			showLockBlockList = (List<HashMap>) sqlClient.queryForList("getLockBlockList", param); //$NON-NLS-1$
+
+			tableViewerBlock.setInput(showLockBlockList);
+			tableViewerBlock.refresh();
+
+		} catch (Exception e) {
+			logger.error("refresh list", e); //$NON-NLS-1$
+
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+		}
 	}
 	
 	/**
@@ -246,6 +407,7 @@ public class SessionListEditor extends EditorPart {
 				StructuredSelection ss = (StructuredSelection)tableViewerSessionList.getSelection();
 				SessionListDAO sl = (SessionListDAO)ss.getFirstElement();
 				if(null != sl.getInfo()) {
+					refreshLocksList( sl.getSID());
 					textQuery.setText(sl.getInfo());
 					textQuery.setFocus();
 				} else {

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.mysql;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * session list dao
  * ps) MySQL command result : SHOW PROCESSLIST;
@@ -132,6 +134,14 @@ public class SessionListDAO {
 		this.pg_time = pg_time;
 		
 		setTime(pg_time);
+	}
+	
+	public String getSID(){
+		if(StringUtils.contains(getId(), ",")){
+			return StringUtils.substringBefore(getId(), ",");
+		}else{
+			return getId();
+		}
 	}
 	
 }
