@@ -163,7 +163,7 @@
                class="com.hangum.tadpole.rdb.core.actions.oracle.TableSpaceManagerAction"
                icon="resources/icons/tablespace.png"
                id="com.hangum.tadpole.rdb.core.action.oracle.tablespace"
-               label="Table space">
+               label="%TableSpace">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
