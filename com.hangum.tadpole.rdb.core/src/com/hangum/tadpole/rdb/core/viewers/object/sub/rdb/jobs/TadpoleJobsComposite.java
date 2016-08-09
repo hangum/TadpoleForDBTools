@@ -174,9 +174,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 	private void createJobsMenu() {
 		if(getUserDB() == null) return;
 		
-		creatAction_Jobs = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Create job");
-		alterAction_Jobs = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Change job");
-		dropAction_Jobs = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, "Remove job"); //$NON-NLS-1$
+		creatAction_Jobs = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().CreateJob);
+		alterAction_Jobs = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().ChangeJob);
+		dropAction_Jobs = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().RemoveJob); //$NON-NLS-1$
 		refreshAction_Jobs = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, Messages.get().Refresh); //$NON-NLS-1$
 
 		// menu

@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2016 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * 
  * Contributors:
- *     hangum - initial API and implementation
+ *     nilriri - initial API and implementation
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.job;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -23,6 +22,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -41,7 +42,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
@@ -52,36 +52,29 @@ import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.engine.sql.util.executer.procedure.ProcedureExecutor;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.ibatis.sqlmap.client.SqlMapClient;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 
 /**
- * procedure 실행 다이얼로그.
+ * 잡 생성 다이얼로그.
  * 
- * @author hangum
+ * @author nilriri
  * 
  */
 public class CreateJobDialog extends Dialog {
 	/**
 	 * Logger for this class
 	 */
+	private static final Logger logger = Logger.getLogger(CreateJobDialog.class);
+	
 	protected int ID_CREATE_JOB = IDialogConstants.CLIENT_ID + 1;
 	protected int ID_CHANGE_JOB = IDialogConstants.CLIENT_ID + 2;
 	protected int ID_DROP_JOB = IDialogConstants.CLIENT_ID + 3;
-	private static final Logger logger = Logger.getLogger(CreateJobDialog.class);
-	private ProcedureExecutor procedureExecutor;
-
-	private Shell parentShell;
+	
 	private UserDBDAO userDB;
 	private OracleJobDAO jobDao;
 
 	private List<ProcedureFunctionDAO> showObjects;
-
-	private List<InOutParameterDAO> parameterList = new ArrayList<InOutParameterDAO>();
 
 	private Button btnCreateJob;
 	private Button btnSpecify;
@@ -116,7 +109,6 @@ public class CreateJobDialog extends Dialog {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 
-		this.parentShell = parentShell;
 		this.userDB = userDB;
 		this.jobDao = jobDao;
 	}
@@ -124,7 +116,7 @@ public class CreateJobDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Job Manager");
+		newShell.setText(Messages.get().JobManager);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -147,7 +139,6 @@ public class CreateJobDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(2, false));
 
 		lblJobId = new Label(compositeHead, SWT.NONE);
-		lblJobId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblJobId.setText("Job ID");
 
 		textJob = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY | SWT.RIGHT);
@@ -157,7 +148,7 @@ public class CreateJobDialog extends Dialog {
 		textJob.setText(this.jobDao.getJob() + "");
 
 		Label lblObjectType = new Label(compositeHead, SWT.NONE);
-		lblObjectType.setText("최초 시작일시");
+		lblObjectType.setText(Messages.get().CreateJobDialog_FirstStartDatetime);
 
 		Composite composite = new Composite(compositeHead, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
@@ -178,7 +169,7 @@ public class CreateJobDialog extends Dialog {
 				createScript();
 			}
 		});
-		btnSpecify.setText("직접지정");
+		btnSpecify.setText(Messages.get().CreateJobDialog_specification);
 
 		btnNext = new Button(composite, SWT.RADIO);
 		btnNext.addSelectionListener(new SelectionAdapter() {
@@ -189,7 +180,7 @@ public class CreateJobDialog extends Dialog {
 				createScript();
 			}
 		});
-		btnNext.setText("다음 반복 실행주기");
+		btnNext.setText(Messages.get().CreateJobDialog_NextIterationExecutionCycle);
 
 		if (this.jobDao.getJob() > 0) {
 			btnNext.setSelection(true);
@@ -221,12 +212,12 @@ public class CreateJobDialog extends Dialog {
 		dateStartTime.setSize(104, 27);
 
 		Label lblObjectName = new Label(compositeHead, SWT.NONE);
-		lblObjectName.setText("반복실행 주기");
+		lblObjectName.setText(Messages.get().CreateJobDialog_IterationExecutionCycle);
 
 		Composite composite_3 = new Composite(compositeHead, SWT.NONE);
 		composite_3.setLayout(new GridLayout(2, false));
 
-		comboRepeat = new Combo(composite_3, SWT.NONE);
+		comboRepeat = new Combo(composite_3, SWT.READ_ONLY);
 		comboRepeat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -234,10 +225,16 @@ public class CreateJobDialog extends Dialog {
 				createScript();
 			}
 		});
-		comboRepeat.setItems(new String[] { "매일 저녁 자정에", "7일마다 자정에", "30일마다 자정에", "일요일 마다 자정에", "매일 오전 6시에", "3시간에 한번씩", "매달 1일 자정에", "매달 1일 오전 6시 30분에" });
+		
+											//		"매일 저녁 자정에", 		"7일마다 자정에", 			"30일마다 자정에", 				"일요일 마다 자정에", 			"매일 오전 6시에",			  
+		comboRepeat.setItems(new String[] { Messages.get().EveryNight, Messages.get().Every7Days, Messages.get().Every30Days, Messages.get().EverySunday, Messages.get().Every6Morning,
+											// 		"3시간에 한번씩", 						"매달 1일 자정에", 			"매달 1일 오전 6시 30분에"
+											Messages.get().Every3Hours, Messages.get().EveryFristDayMonth, Messages.get().EveryFirstDayAm
+										});
 		GridData gd_comboRepeat = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_comboRepeat.widthHint = 250;
 		comboRepeat.setLayoutData(gd_comboRepeat);
+		comboRepeat.setVisibleItemCount(8);
 
 		textRepeat = new Text(composite_3, SWT.BORDER);
 		textRepeat.addFocusListener(new FocusAdapter() {
@@ -259,7 +256,7 @@ public class CreateJobDialog extends Dialog {
 		}
 
 		Label lblParsing = new Label(compositeHead, SWT.NONE);
-		lblParsing.setText("구문분석");
+		lblParsing.setText(Messages.get().CreateJobDialog_analysis);
 
 		Composite composite_2 = new Composite(compositeHead, SWT.NONE);
 		composite_2.setLayout(new GridLayout(2, false));
@@ -360,7 +357,7 @@ public class CreateJobDialog extends Dialog {
 		gl_grpTables.marginWidth = 2;
 		grpTables.setLayout(gl_grpTables);
 		grpTables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpTables.setText("실행할 스크립트");
+		grpTables.setText(Messages.get().CreateJobDialog_executedScript);
 
 		textScript = new Text(grpTables, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		textScript.addFocusListener(new FocusAdapter() {
@@ -383,7 +380,7 @@ public class CreateJobDialog extends Dialog {
 		textScript.setText(this.jobDao.getWhat());
 
 		label_1 = new Label(grpTables, SWT.NONE);
-		label_1.setText("미리보기");
+		label_1.setText(Messages.get().Preview);
 
 		textPreview = new Text(grpTables, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		textPreview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -513,12 +510,8 @@ public class CreateJobDialog extends Dialog {
 					comboObject.add(dao.getName());
 				}
 			}
-		} catch (TadpoleSQLManagerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error("Initialize object", e);
 		}
 
 	}
@@ -553,12 +546,8 @@ public class CreateJobDialog extends Dialog {
 				}
 
 			}
-		} catch (TadpoleSQLManagerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error("initialize package body", e);
 		}
 
 	}
@@ -606,25 +595,10 @@ public class CreateJobDialog extends Dialog {
 
 			this.textScript.setText(strWhat);
 
-		} catch (TadpoleSQLManagerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error("Initialize parameter body", e);
 		}
 
-	}
-
-	/**
-	 * initialize procedure IN information
-	 */
-	private List<InOutParameterDAO> getInParameter() throws Exception {
-		return procedureExecutor.getInParameters();
-	}
-
-	private List<InOutParameterDAO> getOutParameters() throws Exception {
-		return procedureExecutor.getOutParameters();
 	}
 
 	/**
@@ -635,10 +609,10 @@ public class CreateJobDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (this.jobDao.getJob() > 0) {
-			btnCreateJob = createButton(parent, ID_CREATE_JOB, "Change Job", false);
-			btnDropJob = createButton(parent, ID_DROP_JOB, "Drop Job", false);
+			btnCreateJob = createButton(parent, ID_CREATE_JOB, Messages.get().ChangeJob, false);
+			btnDropJob = createButton(parent, ID_DROP_JOB, Messages.get().RemoveJob, false);
 		} else {
-			btnCreateJob = createButton(parent, ID_CREATE_JOB, "Create Job", false);
+			btnCreateJob = createButton(parent, ID_CREATE_JOB, Messages.get().CreateJob, false);
 		}
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
 	}
@@ -652,20 +626,23 @@ public class CreateJobDialog extends Dialog {
 				String stmt = this.textPreview.getText().trim();
 
 				if (StringUtils.isBlank(this.textScript.getText().trim())) {
-					MessageDialog.openInformation(this.getShell(), Messages.get().Information, "job에서 실행할 작업내용을 작성하십시오.");
+					MessageDialog.openInformation(this.getShell(), Messages.get().Information, Messages.get().CreateJobDialog_JobSelectMsg);
 					return;
 				}
-				stmt = StringUtils.removeEnd(stmt, ";") + ";";
+				if(!StringUtils.endsWith(stmt, ";")) {
+					stmt += ";";
+				}
 
 				ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, this.textPreview.getText().trim());
 			} catch (Exception e) {
 				logger.error(e);
-			} //$NON-NLS-1$
-			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				MessageDialog.openError(this.parentShell, Messages.get().Error, "Job을 등록/변경 중 오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
-			} else {
-				MessageDialog.openInformation(this.parentShell, Messages.get().Information, "Job 등록 및 변경 작업이 완료 되었습니다.");
-				this.okPressed();
+			} finally {
+				if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
+					MessageDialog.openError(this.getShell(), Messages.get().Error, Messages.get().CreateJobDialog_RegException + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+				} else {
+					MessageDialog.openInformation(this.getShell(), Messages.get().Information, Messages.get().CreateJobDialog_JobCompleted);
+					this.okPressed();
+				}
 			}
 		} else if (buttonId == ID_DROP_JOB) {
 			//Excute script
@@ -674,7 +651,7 @@ public class CreateJobDialog extends Dialog {
 				String drop_stmp = "";
 				if (jobDao.getJob() <= 0) {
 					// job_id가 없으면 ...에러.
-					MessageDialog.openWarning(parentShell, Messages.get().Warning, "삭제 대상 job이 업습니다.");
+					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().CreateJobDialog_DoesnotDeleteTarget);
 					return;
 				} else {
 					drop_stmp = "begin sys.dbms_job.remove('" + jobDao.getJob() + "'); commit;end;";
@@ -682,12 +659,13 @@ public class CreateJobDialog extends Dialog {
 				}
 			} catch (Exception e) {
 				logger.error(e);
-			} //$NON-NLS-1$
-			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				MessageDialog.openError(this.parentShell, Messages.get().Error, "Job을 삭제하는중 오류가 발생했습니다.\n" + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
-			} else {
-				MessageDialog.openInformation(this.parentShell, Messages.get().Information, "Job을 삭제하였습니다.");
-				okPressed();
+			} finally {
+				if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
+					MessageDialog.openError(this.getShell(), Messages.get().Error, Messages.get().CreateJobDialog_DelException + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage()); 
+				} else {
+					MessageDialog.openInformation(this.getShell(), Messages.get().Information, Messages.get().CreateJobDialog_JobDeleted);
+					okPressed();
+				}
 			}
 		} else {
 			okPressed();
@@ -699,7 +677,7 @@ public class CreateJobDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(700, 700);
+		return new Point(730, 700);
 	}
 
 }

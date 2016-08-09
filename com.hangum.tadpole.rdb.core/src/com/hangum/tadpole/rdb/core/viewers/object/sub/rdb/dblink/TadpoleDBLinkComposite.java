@@ -103,7 +103,7 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 
 	private void createWidget(final CTabFolder tabFolderObject) {
 		tbtmDBLink = new CTabItem(tabFolderObject, SWT.NONE);
-		tbtmDBLink.setText("DBLink");
+		tbtmDBLink.setText("DB Link");
 		tbtmDBLink.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.LINK.name());
 
 		Composite compositeTables = new Composite(tabFolderObject, SWT.NONE);
@@ -151,8 +151,8 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 	}
 
 	private void createDBLinkListColumns() {
-		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
-		new TableViewColumnDefine("DB_LINK", "Link Name", 100, SWT.LEFT) // //$NON-NLS-1$
+		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] {
+				new TableViewColumnDefine("DB_LINK", "Link Name", 100, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("HOST", "Host", 120, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("CREATED", "Created", 80, SWT.LEFT) // //$NON-NLS-1$

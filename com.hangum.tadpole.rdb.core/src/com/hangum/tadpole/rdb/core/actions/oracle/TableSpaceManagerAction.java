@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -50,8 +49,6 @@ public class TableSpaceManagerAction implements IViewActionDelegate {
 	@Override
 	public void run(IAction action) {
 		final UserDBDAO userDB = (UserDBDAO) sel.getFirstElement();
-
-		//		MessageDialog.openConfirm(null, "Table space manager", "Table space manager");
 
 		try {
 			TableSpaceManagerEditorInput userMe = new TableSpaceManagerEditorInput();
