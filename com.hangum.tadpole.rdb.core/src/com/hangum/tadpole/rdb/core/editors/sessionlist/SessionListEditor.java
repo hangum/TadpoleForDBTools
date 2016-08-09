@@ -162,7 +162,7 @@ public class SessionListEditor extends EditorPart {
 		createSessionUI();
 		
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||
-				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT||
+				//userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT||
 				userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||
 				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			createOracleExtensionUI();
@@ -262,7 +262,7 @@ public class SessionListEditor extends EditorPart {
 	
 	private void createLocksTableColumn() {
 		TableViewColumnDefine[] tableColumnDef = null;
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT){
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
 			this.btnAllLocks.setEnabled(true);
 			this.btnSessionLocks.setEnabled(true);
 
@@ -305,7 +305,7 @@ public class SessionListEditor extends EditorPart {
 	
 	private void createLocksBlockTableColumn() {
 		TableViewColumnDefine[] tableColumnDef = null;
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT){
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
 			tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
 				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("BLOCK_TYPE", "Block Type", 80, SWT.CENTER) //$NON-NLS-1$
