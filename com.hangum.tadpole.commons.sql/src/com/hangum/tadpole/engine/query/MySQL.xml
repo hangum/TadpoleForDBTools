@@ -512,5 +512,21 @@ order by ordinal_position
   
 </select>    
 
+<!-- Lock정보 조회 -->
+<select id="getLockList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT lock_id, lock_trx_id, lock_mode, lock_type, lock_table, lock_index, lock_space, lock_page, lock_rec, lock_data 
+FROM information_schema.INNODB_LOCKS;
+</select>
+
+<!-- Lock정보 조회 -->
+<select id="getLockBlockList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT trx_id, trx_state, trx_started, trx_requested_lock_id, trx_wait_started, trx_weight
+, trx_mysql_thread_id, trx_query as SQL_TEXT, trx_operation_state, trx_tables_in_use, trx_tables_locked
+, trx_lock_structs, trx_lock_memory_bytes, trx_rows_locked, trx_rows_modified, trx_concurrency_tickets
+, trx_isolation_level, trx_unique_checks, trx_foreign_key_checks, trx_last_foreign_key_error
+, trx_adaptive_hash_latched, trx_adaptive_hash_timeout 
+FROM information_schema.INNODB_TRX
+WHERE trx_id = #lock_id1#
+</select>
 
 </sqlMap>
