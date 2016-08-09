@@ -1362,4 +1362,89 @@ and schema_user = #schema_name#
 ORDER BY job
 </select>
 
+<!-- Lock정보 조회 -->
+<select id="getLockList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT l.sid
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+      ,TO_CHAR (l.id1) lock_id1
+      ,TO_CHAR (l.id2) lock_id2
+      ,NULL owner
+      ,NULL object_type
+      ,NULL object_name
+      ,DECODE (block,  0, 'No',  1, 'Yes',  2, 'Global') block
+      ,s.lockwait
+  FROM v$$lock l INNER JOIN v$$session s ON l.sid = s.sid
+ WHERE l.TYPE = 'TX'
+<isNotEmpty property="sid">
+   AND l.sid = to_number(#sid#)
+</isNotEmpty> 
+UNION ALL
+SELECT l.sid
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+      ,TO_CHAR (l.id1) lock_id1
+      ,TO_CHAR (l.id2) lock_id2
+      ,o.owner
+      ,o.object_type
+      ,o.object_name
+      ,DECODE (l.block,  0, 'No',  1, 'Yes',  2, 'Global') block
+      ,s.lockwait
+  FROM v$$lock l
+       INNER JOIN v$$session s ON l.sid = s.sid
+       LEFT JOIN dba_objects o ON l.id1 = o.object_id
+ WHERE l.TYPE IN ('TM', 'UL')
+<isNotEmpty property="sid">
+   AND l.sid = to_number(#sid#)
+</isNotEmpty> 
+</select>
+
+<!-- Lock정보 조회 -->
+<select id="getLockBlockList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT s.sid
+      ,'Blocking' as block_type
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,s.status
+      , null as sql_text
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+  FROM v$$lock l, v$$session s
+ WHERE     l.block = 1
+       AND l.sid = s.sid
+       AND l.id1 = #lock_id1#
+       AND l.id2 = #lock_id2#
+
+union all
+
+SELECT s.sid
+	  ,'Blocked' as block_type
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,s.status
+      ,sql_text
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+  FROM v$$lock l, v$$session s, v$$sql q
+ WHERE     s.lockwait IS NOT NULL
+       AND s.lockwait = l.kaddr
+       AND l.sid = s.sid
+       AND l.id1 = #lock_id1#
+       AND l.id2 = #lock_id2#
+       AND s.sql_address = q.address
+       AND s.sql_hash_value = q.hash_value
+</select>
+
 </sqlMap>

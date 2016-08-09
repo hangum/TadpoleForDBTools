@@ -11,14 +11,14 @@
 package com.hangum.tadpole.rdb.core.editors.sessionlist;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.OracleTablespaceDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.swtdesigner.ResourceManager;
@@ -63,8 +63,12 @@ public class SessionLocksLabelProvider extends DefaultLabelProvider {
 			Object obj = map.get(columnName);
 			if (obj instanceof java.math.BigDecimal) {
 				return ((BigDecimal) obj).toString();
+			} else if (obj instanceof java.math.BigInteger) {
+				return ((BigInteger) obj).toString();
+			} else if (obj instanceof java.sql.Timestamp) {
+				return ((Timestamp) obj).toString();
 			} else {
-				return (String) obj;
+				return String.valueOf(obj);
 			}
 
 		} else {

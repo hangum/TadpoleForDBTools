@@ -109,6 +109,8 @@ public class SessionListEditor extends EditorPart {
 	private Table table;
 	private Text textSQL;
 	private Text textRefreshMil;
+	private Button btnSessionLocks;
+	private Button btnAllLocks;
 	
 	/** SESSION INTERVAL */
 	private int SESSION_INTERVAL = 10;
@@ -159,7 +161,10 @@ public class SessionListEditor extends EditorPart {
 		
 		createSessionUI();
 		
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||
+				//userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT||
+				userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||
+				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
 			createOracleExtensionUI();
 			mainSashForm.setWeights(new int[] {1, 1});
 		}
@@ -181,7 +186,7 @@ public class SessionListEditor extends EditorPart {
 		Composite composite = new Composite(compositeExtHead, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		
-		Button btnAllLocks = new Button(composite, SWT.RADIO);
+		btnAllLocks = new Button(composite, SWT.RADIO);
 		btnAllLocks.setText("All Locks");
 		btnAllLocks.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -190,11 +195,11 @@ public class SessionListEditor extends EditorPart {
 			}
 		});
 		
-		Button btnSessionLocks = new Button(composite, SWT.RADIO);
+		btnSessionLocks = new Button(composite, SWT.RADIO);
 		btnSessionLocks.setSelection(true);
 		btnSessionLocks.setText("Session Locks");
 		
-		 tableViewerLocks = new TableViewer(compositeExtHead, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewerLocks = new TableViewer(compositeExtHead, SWT.BORDER | SWT.FULL_SELECTION);
 		tableLocks = tableViewerLocks.getTable();
 		tableLocks.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -203,8 +208,12 @@ public class SessionListEditor extends EditorPart {
 				
 				StructuredSelection ss = (StructuredSelection)tableViewerLocks.getSelection();
 				HashMap map = (HashMap)ss.getFirstElement();
-				if(null != map) {
-					refreshLocksBlockList((String)map.get("LOCK_ID1"), (String)map.get("LOCK_ID2"));
+				if(null != map) {					
+					if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+						refreshLocksBlockList((String)map.get("lock_trx_id"), "");
+					}else{
+						refreshLocksBlockList((String)map.get("LOCK_ID1"), (String)map.get("LOCK_ID2"));
+					}
 				}
 				
 			}
@@ -221,7 +230,7 @@ public class SessionListEditor extends EditorPart {
 		Label lblBlockedBlocking = new Label(compositeExtBody, SWT.NONE);
 		lblBlockedBlocking.setText("Blocked && Blocking");
 		
-		 tableViewerBlock = new TableViewer(compositeExtBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewerBlock = new TableViewer(compositeExtBody, SWT.BORDER | SWT.FULL_SELECTION);
 		table = tableViewerBlock.getTable();
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -252,7 +261,12 @@ public class SessionListEditor extends EditorPart {
 	}
 	
 	private void createLocksTableColumn() {
-		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
+		TableViewColumnDefine[] tableColumnDef = null;
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			this.btnAllLocks.setEnabled(true);
+			this.btnSessionLocks.setEnabled(true);
+
+			tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
 				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("LOCK_TYPE", "Lock Type", 80, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("MODE_HELD", "Mode Held", 80, SWT.LEFT) //$NON-NLS-1$
@@ -264,7 +278,24 @@ public class SessionListEditor extends EditorPart {
 				, new TableViewColumnDefine("LOCKWAIT", "Blocked", 60, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
-		};
+			};
+		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			this.btnAllLocks.setEnabled(false);
+			this.btnSessionLocks.setEnabled(false);
+			
+			tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("lock_id", "Lock ID", 80, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_trx_id", "Transaction ID", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_mode", "Lock mode", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_type", "Lock type", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_table", "Lock table", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_index", "Lock index", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_space", "Lock space", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_page", "Lock page", 100, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_rec", "Lock rec", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("lock_data", "Lock data", 60, SWT.LEFT) //$NON-NLS-1$
+			};			
+		}
+
 
 		ColumnHeaderCreator.createColumnHeader(tableViewerLocks, tableColumnDef);
 
@@ -273,7 +304,9 @@ public class SessionListEditor extends EditorPart {
 	}
 	
 	private void createLocksBlockTableColumn() {
-		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
+		TableViewColumnDefine[] tableColumnDef = null;
+		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
 				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("BLOCK_TYPE", "Block Type", 80, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("STATUS", "Status", 80, SWT.CENTER) //$NON-NLS-1$
@@ -283,7 +316,32 @@ public class SessionListEditor extends EditorPart {
 				, new TableViewColumnDefine("MODE_REQUESTED", "Mode Requested", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
-		};
+			};
+		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+				tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("trx_id", "Transaction ID", 80, SWT.RIGHT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_state", "State", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_started", "Started", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_requested_lock_id", "Requested lock", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_wait_started", "Wait started", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_weight", "Weight", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_mysql_thread_id", "Thread ID", 80, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("SQL_TEXT", "SQL", 100, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_operation_state", "Operation state", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_tables_in_use", "In use", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_tables_locked", "Locked", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_lock_structs", "Structs", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_lock_memory_bytes", "Memory bytes", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_rows_locked", "Rows locked", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_rows_modified", "Rows modified", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_concurrency_tickets", "Concur..Tickets", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_isolation_level", "Isolation Level", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_unique_checks", "Unique check", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_foreign_key_checks", "ForeignKey check", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_last_foreign_key_error", "ForeignKey error", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_adaptive_hash_latched", "Hash latched", 60, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("trx_adaptive_hash_timeout", "Hash timeout", 60, SWT.LEFT) //$NON-NLS-1$
+			};			
+		}
 
 		ColumnHeaderCreator.createColumnHeader(tableViewerBlock, tableColumnDef);
 
@@ -299,9 +357,11 @@ public class SessionListEditor extends EditorPart {
 			param.put("sid", StringUtils.replace(sid, ",", ""));
 			showLocksList = (List<HashMap>) sqlClient.queryForList("getLockList", param); //$NON-NLS-1$
 
-			tableViewerLocks.setInput(showLocksList);
+			if (showLocksList!=null){
+				tableViewerLocks.setInput(showLocksList);
+				tableViewerLocks.refresh();
+			}
 			tableViewerBlock.setInput(new ArrayList<HashMap>());
-			tableViewerLocks.refresh();
 			tableViewerBlock.refresh();
 
 		} catch (Exception e) {
@@ -383,6 +443,8 @@ public class SessionListEditor extends EditorPart {
 				
 				tltmStart.setEnabled(false);
 				tltmStop.setEnabled(true);
+				
+				initSessionListData();
 			}
 		});
 		tltmStart.setEnabled(true);
@@ -486,6 +548,8 @@ public class SessionListEditor extends EditorPart {
 		Thread thread = new Thread(startUIThread());
 		thread.setDaemon(true);
 		thread.start();	
+		
+		initSessionListData();
 	}
 	
 	/**
