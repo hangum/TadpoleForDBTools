@@ -40,6 +40,22 @@ SELECT getdate()
 		order by o.name
 </select>
 
+<select id="allObjects" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+    Select 
+          user as "OBJECT_OWNER"
+        , O.name as "OBJECT_NAME"
+        , O.type as "OBJECT_TYPE"
+     from sysobjects O
+    where 1=1
+<isNotEmpty property="schema_name">
+	  and o.uid = user_id(#schema_name#)
+</isNotEmpty>    
+<isEmpty property="schema_name">
+	  and o.uid = user_id(user)
+</isEmpty>    
+      and o.type in ('U','V','F','K')
+	  and name in (#object_name#, upper(#object_name#))
+</select>
 <!-- 
 	table 이름
 	
