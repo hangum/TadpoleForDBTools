@@ -60,7 +60,7 @@
 //				refreshTableColumn();
 //			}
 //		} else {
-//			MessageDialog.openInformation(shell, Messages.get().Confirm, "Not support this database. But soon. wait for our team.");
+//			MessageDialog.openInformation(shell, CommonMessages.get().Confirm, "Not support this database. But soon. wait for our team.");
 //		}
 //	}
 //	

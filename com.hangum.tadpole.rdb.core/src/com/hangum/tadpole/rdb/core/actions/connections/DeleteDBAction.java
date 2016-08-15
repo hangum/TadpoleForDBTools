@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
@@ -57,11 +58,11 @@ public class DeleteDBAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().DeleteDBAction_2);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().DeleteDBAction_2);
 			return;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "[" + userDB.getDisplay_name() + "] " + Messages.get().DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, "[" + userDB.getDisplay_name() + "] " + Messages.get().DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
 		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		
@@ -101,7 +102,7 @@ public class DeleteDBAction implements IViewActionDelegate {
 			logger.error("disconnection exception", e);			 //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), CommonMessages.get().Error, "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

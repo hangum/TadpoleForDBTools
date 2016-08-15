@@ -54,6 +54,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
@@ -105,7 +106,7 @@ public class SQLAuditEditor extends EditorPart {
 	
 	private Text textMillis;
 	private Grid gridHistory;
-	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, Messages.get().Date, Messages.get().SQL, Messages.get().MS, Messages.get().ExecutedSQLEditor_7, Messages.get().ResultType, Messages.get().Message, Messages.get().IP}; //$NON-NLS-1$
+	private final String[] strArrHeader = {"#", Messages.get().Database, Messages.get().User, CommonMessages.get().Date, Messages.get().SQL, Messages.get().MS, Messages.get().ExecutedSQLEditor_7, Messages.get().ResultType, Messages.get().Message, Messages.get().IP}; //$NON-NLS-1$
 
 	private Button btnSearch;
 
@@ -204,7 +205,7 @@ public class SQLAuditEditor extends EditorPart {
 		////////////////////////////////////////////////////////////////////////////////////////////////
 
 		Group compositeHead = new Group(parent, SWT.NONE);
-		compositeHead.setText(Messages.get().Search);
+		compositeHead.setText(CommonMessages.get().Search);
 		GridLayout gl_compositeHead2 = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead2);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -240,7 +241,7 @@ public class SQLAuditEditor extends EditorPart {
 		comboTypes.select(0);
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText(Messages.get().Email);
+		lblEmail.setText(CommonMessages.get().Email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -297,7 +298,7 @@ public class SQLAuditEditor extends EditorPart {
 		compositeSearchDetail.setLayout(new GridLayout(3, false));
 		
 		Label lblSQL = new Label(compositeSearchDetail, SWT.NONE);
-		lblSQL.setText(Messages.get().Search);
+		lblSQL.setText(CommonMessages.get().Search);
 		
 		textSearch = new Text(compositeSearchDetail, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -319,7 +320,7 @@ public class SQLAuditEditor extends EditorPart {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.get().Search);
+		btnSearch.setText(CommonMessages.get().Search);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -392,7 +393,7 @@ public class SQLAuditEditor extends EditorPart {
 	 */
 	private void download() {
 		if(gridHistory.getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().ExecutedSQLEditor_28)) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ExecutedSQLEditor_28)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -414,7 +415,7 @@ public class SQLAuditEditor extends EditorPart {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("SQLAudit.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(getSite().getShell(), Messages.get().Confirm, Messages.get().ExecutedSQLEditor_31);
+			MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ExecutedSQLEditor_31);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		

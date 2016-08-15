@@ -59,6 +59,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -166,7 +167,7 @@ public class ResourceManageEditor extends EditorPart {
 		toolBar.setLayoutData(gd_toolBar);
 
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		tltmRefresh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 		
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -206,7 +207,7 @@ public class ResourceManageEditor extends EditorPart {
 
 		Label lblFilter = new Label(compositeFilter, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.get().Filter);
+		lblFilter.setText(CommonMessages.get().Filter);
 
 		textFilter = new Text(compositeFilter, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SEARCH | SWT.CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -340,7 +341,7 @@ public class ResourceManageEditor extends EditorPart {
 		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().ResourceManageEditor_18)) return;
+				if(!MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ResourceManageEditor_18)) return;
 				
 				try {
 					String share_type = comboShare.getCombo().getText();
@@ -360,10 +361,10 @@ public class ResourceManageEditor extends EditorPart {
 					TadpoleSystem_UserDBResource.updateResourceHeader(resourceManagerDao);
 					tableViewer.refresh(resourceManagerDao, true);
 					
-					MessageDialog.openInformation(getSite().getShell(), Messages.get().Confirm, Messages.get().ResourceManageEditor_23);
+					MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ResourceManageEditor_23);
 				} catch (Exception e1) {
 					logger.error("save resource", e1); //$NON-NLS-1$
-					MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ResourceManageEditor_26+ e1.getMessage());
+					MessageDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ResourceManageEditor_26+ e1.getMessage());
 				}
 			}
 			
@@ -374,7 +375,7 @@ public class ResourceManageEditor extends EditorPart {
 			private boolean isValid(ResourceManagerDAO dao) {
 				int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 				if(len < 3) {
-					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
+					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
 					textTitle.setFocus();
 					return false;
 				}
@@ -385,14 +386,14 @@ public class ResourceManageEditor extends EditorPart {
 						String strAPIURI = textAPIURL.getText().trim();
 						
 						if(strAPIURI.equals("")) { //$NON-NLS-1$
-							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_30);
+							MessageDialog.openWarning(getSite().getShell(), CommonMessages.get().Warning, Messages.get().ResourceManageEditor_30);
 							textAPIURL.setFocus();
 							return false;
 						}
 						
 						// check valid url. url pattern is must be /{parent}/{child}
 						if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-							MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_32);
+							MessageDialog.openWarning(getSite().getShell(), CommonMessages.get().Warning, Messages.get().ResourceManageEditor_32);
 							
 							textAPIURL.setFocus();
 							return false;
@@ -404,14 +405,14 @@ public class ResourceManageEditor extends EditorPart {
 					TadpoleSystem_UserDBResource.userDBResourceDupUpdate(userDB, dao);
 				} catch (Exception ee) {
 					logger.error("Resource validate", ee); //$NON-NLS-1$
-					MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
+					MessageDialog.openError(null,CommonMessages.get().Error, ee.getMessage()); //$NON-NLS-1$
 					return false;
 				}
 				
 				return true;
 			}
 		});
-		btnSave.setText(Messages.get().Save);
+		btnSave.setText(CommonMessages.get().Save);
 
 //		Button btnDelete = new Button(composite, SWT.NONE);
 //		btnDelete.addSelectionListener(new SelectionAdapter() {
@@ -419,7 +420,7 @@ public class ResourceManageEditor extends EditorPart {
 //			public void widgetSelected(SelectionEvent e) {
 //				if (tableViewer.getSelection().isEmpty()) return;
 //
-//				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, "Do you wont to delete?")) return;
+//				if(!MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, "Do you wont to delete?")) return;
 //				StructuredSelection ss = (StructuredSelection) tableViewer.getSelection();
 //				ResourceManagerDAO dao = (ResourceManagerDAO) ss.getFirstElement();
 //
@@ -587,7 +588,7 @@ public class ResourceManageEditor extends EditorPart {
 			logger.error("refresh list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ResourceManageEditor_45, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ResourceManageEditor_45, errStatus); //$NON-NLS-1$
 		}
 	}
 	

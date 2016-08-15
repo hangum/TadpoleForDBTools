@@ -16,6 +16,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,6 +32,7 @@ import com.hangum.tadpole.commons.dialogs.message.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -37,8 +40,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * Resource save dialog
@@ -111,7 +112,7 @@ public class ResourceSaveDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText(Messages.get().Name);
+		lblName.setText(CommonMessages.get().Name);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -204,7 +205,7 @@ public class ResourceSaveDialog extends Dialog {
 			TadpoleSystem_UserDBResource.userDBResourceDuplication(userDB, retResourceDao);
 		} catch (Exception e) {
 			logger.error("SQL Editor File validator", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage()); //$NON-NLS-1$
 			return;
 		}
 		
@@ -219,14 +220,14 @@ public class ResourceSaveDialog extends Dialog {
 		if(buttonId == BTN_SHOW_URL) {
 			String strApiURI = textAPIURI.getText();
 			if(strApiURI.equals("")) { //$NON-NLS-1$
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_8);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResourceSaveDialog_8);
 				textAPIURI.setFocus();
 				return;
 			} else if(RESOURCE_TYPE.ERD == resourceType) {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_10);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResourceSaveDialog_10);
 				return;
 			} else if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_21);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResourceSaveDialog_21);
 				
 				textAPIURI.setFocus();
 				return ;
@@ -247,8 +248,8 @@ public class ResourceSaveDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, BTN_SHOW_URL, Messages.get().ShowURL, true);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**
@@ -268,7 +269,7 @@ public class ResourceSaveDialog extends Dialog {
 	private boolean isValid() {
 		int len = StringUtils.trimToEmpty(textName.getText()).length();
 		if(len < 3) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceSaveDialog_16);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().ResourceSaveDialog_16);
 			textName.setFocus();
 			return false;
 		}
@@ -279,14 +280,14 @@ public class ResourceSaveDialog extends Dialog {
 				String strAPIURI = textAPIURI.getText().trim();
 				
 				if(strAPIURI.equals("")) { //$NON-NLS-1$
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_19);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResourceSaveDialog_19);
 					textAPIURI.setFocus();
 					return false;
 				}
 				
 				// check valid url. url pattern is must be /{parent}/{child}
 				if(!RESTfulAPIUtils.validateURL(textAPIURI.getText())) {
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceSaveDialog_21);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResourceSaveDialog_21);
 					
 					textAPIURI.setFocus();
 					return false;

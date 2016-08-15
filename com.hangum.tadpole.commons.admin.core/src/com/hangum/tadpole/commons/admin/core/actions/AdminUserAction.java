@@ -27,6 +27,7 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.editors.useranddb.UserMgmtEditor;
 import com.hangum.tadpole.commons.admin.core.editors.useranddb.UserMgntEditorInput;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -62,7 +63,7 @@ public class AdminUserAction extends Action implements ISelectionListener, IWork
 			logger.error("Database Management editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "User Action", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "User Action", errStatus); //$NON-NLS-1$
 		}
 	}
 

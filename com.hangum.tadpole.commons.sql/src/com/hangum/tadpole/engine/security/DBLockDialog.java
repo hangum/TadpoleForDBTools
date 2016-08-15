@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.security;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -100,7 +102,7 @@ public class DBLockDialog extends Dialog {
 		
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
 			if(!strPassword.equals(userDB.getPasswd())) {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DBLockDialog_3);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DBLockDialog_3);
 				textPassword.setFocus();
 				
 				return;
@@ -117,7 +119,13 @@ public class DBLockDialog extends Dialog {
 			try {
 				TadpoleSQLManager.getInstance(userDB);
 			} catch(Exception e) {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, e.getMessage());
+				String msg = e.getMessage();
+				if(StringUtils.contains(msg, "No more data to read from socket")) {
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg + CommonMessages.get().Check_DBAccessSystem);
+				} else {
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg);
+				}
+				
 				textPassword.setFocus();
 				
 				return;
@@ -133,8 +141,8 @@ public class DBLockDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

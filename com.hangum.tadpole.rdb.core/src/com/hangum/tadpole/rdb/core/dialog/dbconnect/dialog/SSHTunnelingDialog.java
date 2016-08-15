@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.mongodb.core.Messages;
 
 /**
@@ -99,8 +100,8 @@ public class SSHTunnelingDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Add, true);
-		createButton(parent, IDialogConstants.CANCEL_ID,  Messages.get().Cancel, false);
+		createButton(parent, IDialogConstants.OK_ID,  CommonMessages.get().Add, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,   CommonMessages.get().Cancel, false);
 	}
 
 	/**

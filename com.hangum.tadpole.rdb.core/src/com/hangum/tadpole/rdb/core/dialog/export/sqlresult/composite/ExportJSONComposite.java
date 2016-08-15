@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportJsonDAO;
 
@@ -162,12 +163,12 @@ public class ExportJSONComposite extends AbstractExportComposite {
 			
 			if (this.btnIncludeHeader.getSelection()){
 				if(StringUtils.isEmpty(this.textSchemeKey.getText()) ){
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportJSONCompositeSchemaMSG);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportJSONCompositeSchemaMSG);
 					this.textSchemeKey.setFocus();
 					return false;
 				}
 				if(StringUtils.isEmpty(this.textRecordKey.getText()) ){
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportJSONCompositeRecordMSG);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportJSONCompositeRecordMSG);
 					this.textRecordKey.setFocus();
 					return false;
 				}

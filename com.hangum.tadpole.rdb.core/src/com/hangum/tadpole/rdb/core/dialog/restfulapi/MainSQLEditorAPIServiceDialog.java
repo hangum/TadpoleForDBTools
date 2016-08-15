@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import com.google.gson.JsonArray;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.VelocityUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
@@ -233,7 +234,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 			
 		} catch(Exception e) {
 			logger.error("Template Exception", e); //$NON-NLS-1$
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().MainSQLEditorAPIServiceDialog_7);
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MainSQLEditorAPIServiceDialog_7);
 			
 			return;
 		} 
@@ -266,7 +267,7 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.get().Error, e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
@@ -307,8 +308,8 @@ public class MainSQLEditorAPIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().RUN, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().RUN, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 	
 	/**

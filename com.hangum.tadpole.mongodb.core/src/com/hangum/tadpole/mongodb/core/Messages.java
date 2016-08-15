@@ -14,7 +14,6 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.mongodb.core.messages"; //$NON-NLS-1$
-	public String Filter;
 	public String CollectionInformationComposite_2;
 	public String MongoDBInfosEditor_0;
 	public String MongoDBInfosEditor_1;
@@ -28,7 +27,6 @@ public class Messages {
 	public String MongodbResultComposite_15;
 	public String MongodbResultComposite_16;
 	public String MongodbResultComposite_17;
-	public String Date;
 	public String MongodbResultComposite_19;
 	public String MongodbResultComposite_20;
 	public String MongodbResultComposite_21;
@@ -40,13 +38,11 @@ public class Messages {
 	public String MongodbResultComposite_6;
 	public String MongodbResultComposite_7;
 	public String MongodbResultComposite_8;
-	public String Confirm;
 	public String MongoDBTableEditor_0;
 	public String MongoDBTableEditor_1;
 	public String MongoDBTableEditor_2;
 	public String MongoDBTableEditor_6;
 	public String MongoDBTableEditor_3;
-	public String Search;
 	public String NewCollectionDialog_0;
 	public String NewCollectionDialog_1;
 	public String NewCollectionDialog_10;
@@ -56,11 +52,9 @@ public class Messages {
 	public String NewDocumentDialog_0;
 	public String NewDocumentDialog_1;
 	public String Insert;
-	public String Cancel;
 	public String ShardingComposite_0;
 	public String ShardingComposite_4;
 	public String Message;
-	public String Close;
 	public String TreeViewerEditingSupport_3;
 	public String TreeViewerEditingSupport_4;
 	public String UserManagerDialog_0;
@@ -75,13 +69,8 @@ public class Messages {
 	public String Delete;
 	public String UserManagerDialog_5;
 	public String Input;
-	public String Refresh;
 	public String ViewSource;
 	public String DeleteMsg;
-	public String Error;
-	public String Add;
-	public String OK;
-	public String Warning;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -24,8 +24,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.monitoring.core.Activator;
-import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.editors.schedule.ScheduleEditor;
 import com.hangum.tadpole.monitoring.core.editors.schedule.ScheduleEditorInput;
 import com.swtdesigner.ResourceManager;
@@ -65,7 +65,7 @@ public class ScheduleAction extends Action implements ISelectionListener, IWorkb
 			logger.error("Schedule editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Schedule editor", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Schedule editor", errStatus); //$NON-NLS-1$
 		}
 	}
 

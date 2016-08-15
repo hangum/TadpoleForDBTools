@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.AbstractExportDAO;
 
@@ -35,12 +36,12 @@ public abstract class AbstractExportComposite extends Composite {
 	
 	public boolean isValidate() {
 		if ( StringUtils.isEmpty( textTargetName.getText() ) ){
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().AbstractExportCompositeFileEmpty);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().AbstractExportCompositeFileEmpty);
 			textTargetName.setFocus();
 			return false;
 		}
 		if ( StringUtils.isEmpty( comboEncoding.getText() ) ){
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().AbstractExportCompositeEncoding);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().AbstractExportCompositeEncoding);
 			comboEncoding.setFocus();
 			return false;
 		}

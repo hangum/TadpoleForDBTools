@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -128,18 +129,18 @@ public abstract class AbstractLoginComposite extends Composite {
 		port 	= StringUtils.trimToEmpty(port);
 		
 		if("".equals(host) || "".equals(port)) { //$NON-NLS-1$ //$NON-NLS-2$
-			MessageDialog.openWarning(null, Messages.get().Warning, String.format(Messages.get().DBLoginDialog_11, Messages.get().Host, Messages.get().Port));
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, String.format(Messages.get().DBLoginDialog_11, Messages.get().Host, Messages.get().Port));
 			return;
 		}
 		
 		try {
 			if(ValidChecker.isPing(host, port)) {
-				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().DBLoginDialog_13);
+				MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().DBLoginDialog_13);
 			} else {
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().DBLoginDialog_15);
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().DBLoginDialog_15);
 			}
 		} catch(NumberFormatException nfe) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MySQLLoginComposite_4);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().MySQLLoginComposite_4);
 		}
 	}
 
@@ -166,14 +167,14 @@ public abstract class AbstractLoginComposite extends Composite {
 		
 		// 기존 데이터 업데이트
 		if(getDataActionStatus() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
 				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error("DB moidfy data", e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -185,7 +186,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			} catch (Exception e) {
 				logger.error("Add database", e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MySQLLoginComposite_2, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -259,7 +260,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
 				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getUserSeq(), userDBDao, oldUserDB)) {
-					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AbstractLoginComposite_4);
+					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AbstractLoginComposite_4);
 					return false;
 				}
 				
@@ -267,7 +268,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
 				// 최소한 display_name이라도 틀려야 한다.
 				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getUserSeq(), userDBDao)) {
-					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AbstractLoginComposite_4);
+					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AbstractLoginComposite_4);
 					
 					return false;
 				}
@@ -276,7 +277,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getUserSeq(), userDBDao)){
 					
 					// 중복 디비 등록시 사용자의 의견을 묻습니다.
-					if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().AbstractLoginComposite_2)) {
+					if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().AbstractLoginComposite_2)) {
 						return true;
 					} 
 					
@@ -286,7 +287,7 @@ public abstract class AbstractLoginComposite extends Composite {
 			
 		} catch(Exception e) {
 			logger.error("DB Connecting... ", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().DBLoginDialog_27 + "\n" + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null,CommonMessages.get().Error, Messages.get().DBLoginDialog_27 + "\n" + e.getMessage()); //$NON-NLS-1$
 			
 			return false;
 		}

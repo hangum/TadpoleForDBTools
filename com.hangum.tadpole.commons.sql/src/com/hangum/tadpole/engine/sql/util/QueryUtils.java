@@ -148,7 +148,7 @@ public class QueryUtils {
 			return new QueryExecuteResultDTO(userDB, strSQL, false, resultSet, intSelectLimitCnt, intStartCnt);
 			
 		} catch(Exception e) {
-			logger.error("execute query", e);
+			logger.error(String.format("execute query %s", e.getMessage()));
 			throw e;
 		} finally {
 			if(statement != null) statement.close();

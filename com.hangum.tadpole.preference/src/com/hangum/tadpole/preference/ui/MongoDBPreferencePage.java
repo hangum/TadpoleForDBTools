@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -124,13 +125,13 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		try {
 			Integer.parseInt(txtLimitCount);
 		} catch(Exception e) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
 			return false;
 		}
 		try {
 			Integer.parseInt(txtMacCount);
 		} catch(Exception e) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().MongoDBPreferencePage_11);			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().MongoDBPreferencePage_11);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -158,7 +159,7 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		} catch(Exception e) {
 			logger.error("MongoDBreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.get().Confirm, e.getMessage());
+			MessageDialog.openError(getShell(), CommonMessages.get().Confirm, e.getMessage());
 			return false;
 		}
 		

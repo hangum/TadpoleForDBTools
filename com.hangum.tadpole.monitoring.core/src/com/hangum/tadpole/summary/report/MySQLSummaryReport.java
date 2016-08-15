@@ -32,7 +32,7 @@ public class MySQLSummaryReport {
 			is.close();
 			
 			retSQL = new String(dataByte);
-			logger.debug("summary sql" + retSQL);
+			if(logger.isDebugEnabled()) logger.debug("summary sql" + retSQL);
 			
 			retSQL = StringUtils.replace(retSQL, "#schemaName#", "'" + strSchema + "'" ); 
 		} catch (IOException e) {

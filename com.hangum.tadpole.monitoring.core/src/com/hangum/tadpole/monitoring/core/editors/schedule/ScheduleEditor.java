@@ -45,6 +45,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.engine.query.dao.system.ScheduleResultDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -134,7 +135,7 @@ public class ScheduleEditor extends EditorPart {
 					
 					ScheduleMainDAO dao = (ScheduleMainDAO)iss.getFirstElement();
 					
-					if(!MessageDialog.openQuestion(null, Messages.get().Confirm, Messages.get().ScheduleEditor_4)) return;
+					if(!MessageDialog.openQuestion(null, CommonMessages.get().Confirm, Messages.get().ScheduleEditor_4)) return;
 					try {
 						UserDBDAO userDB = TadpoleSystem_UserDBQuery.getUserDBInstance(dao.getDb_seq());
 						ScheduleManager.getInstance().deleteJob(userDB, dao);

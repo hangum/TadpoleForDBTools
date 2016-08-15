@@ -23,6 +23,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
 import com.swtdesigner.ResourceManager;
 
@@ -55,7 +56,7 @@ public class JDBCDriverManagerAction extends Action implements ISelectionListene
 		JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 		if(Dialog.OK ==  dialog.open()) {
 			if(dialog.isUploaded()) {
-				MessageDialog.openInformation(null, Messages.get().Information, Messages.get().jdbcdriver);
+				MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().jdbcdriver);
 			}
 		}
 	}

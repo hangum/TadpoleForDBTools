@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
@@ -125,13 +126,13 @@ public class NewCollectionDialog extends Dialog {
 		if("".equals(textName.getText().trim())) { //$NON-NLS-1$
 			
 			textName.setFocus();			
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_5);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().NewCollectionDialog_5);
 			return;
 			
 		} else if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_8);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 		
@@ -140,13 +141,13 @@ public class NewCollectionDialog extends Dialog {
 			DBCollection dbColl = MongoDBQuery.findCollection(userDB, textName.getText().trim());
 			if(dbColl == null) {
 				textName.setFocus();			
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_10);
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().NewCollectionDialog_10);
 				return;
 			}
 		} catch (Exception e) {
 			logger.error("mongodb find collection", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 			
 		// 내용이 정상인지 검사합니다.
@@ -157,7 +158,7 @@ public class NewCollectionDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb create collection", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			return;
 		}
@@ -173,8 +174,8 @@ public class NewCollectionDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID,  Messages.get().OK, true); //$NON-NLS-1$
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);	 //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID,  CommonMessages.get().Confirm, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);	 //$NON-NLS-1$
 	}
 
 	/**

@@ -29,6 +29,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.template.TemporaryPasswordMailBodyTemplate;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -95,7 +96,7 @@ public class FindPasswordDialog extends Dialog {
 		if(logger.isInfoEnabled()) logger.info("Find password dialog" + strEmail);
 
 		if (!checkValidation()) {
-			MessageDialog.openWarning(getShell(), Messages.get().Confirm, Messages.get().FindPasswordDialog_6);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Confirm, Messages.get().FindPasswordDialog_6);
 			textEmail.setFocus();
 			return;
 		}
@@ -108,11 +109,11 @@ public class FindPasswordDialog extends Dialog {
 		try {
 			TadpoleSystem_UserQuery.updateUserPasswordWithID(userDao);
 			sendEmailAccessKey(strEmail, strTmpPassword);
-			MessageDialog.openInformation(getShell(), Messages.get().Confirm, Messages.get().SendMsg);
+			MessageDialog.openInformation(getShell(), CommonMessages.get().Confirm, Messages.get().SendMsg);
 		} catch (Exception e) {
 			logger.error("password initialize and send email ", e);
 			
-			MessageDialog.openError(getShell(), Messages.get().Error, 
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, 
 					String.format(Messages.get().SendMsgErr, e.getMessage()));
 		}
 		
@@ -127,7 +128,7 @@ public class FindPasswordDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().SendNewPassword, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 	
 	/**

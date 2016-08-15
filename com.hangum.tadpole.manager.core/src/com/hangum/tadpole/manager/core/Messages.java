@@ -19,8 +19,6 @@ public class Messages {
 
 	public String APIURL;
 
-	public String RUN;
-
 	public String APIServiceDialog_11;
 
 	public String Argument;
@@ -35,15 +33,11 @@ public class Messages {
 
 	public String APIServiceDialog_7;
 
-	public String Close;
-
 	public String Download;
 
 	public String DBAccessControlDialog_0;
 
 	public String DBName;
-
-	public String Delete;
 
 	public String Table;
 
@@ -55,21 +49,9 @@ public class Messages {
 
 	public String DBAccessControlDialog_22;
 
-	public String Error;
-
-	public String Save;
-
-	public String CANCEL;
-
 	public String SELECT;
 
-	public String Add;
-
-	public String Confirm;
-
 	public String DBAccessControlDialog_9;
-
-	public String Refresh;
 
 	public String DBListComposite_1;
 
@@ -105,8 +87,6 @@ public class Messages {
 
 	public String DBListComposite_8;
 
-	public String Search;
-
 	public String DBOthresConfigDialog_0;
 
 	public String DBOthresConfigDialog_2;
@@ -116,8 +96,6 @@ public class Messages {
 	public String DBOthresConfigDialog_5;
 
 	public String DetailUserAndDBRoleDialog_0;
-
-	public String Email;
 
 	public String DetailUserAndDBRoleDialog_11;
 
@@ -161,8 +139,6 @@ public class Messages {
 
 	public String FindUserAndDBRoleDialog_15;
 
-	public String Name;
-
 	public String CreateTime;
 
 	public String FindUserAndDBRoleDialog_6;
@@ -185,8 +161,6 @@ public class Messages {
 
 	public String SchemaHistoryEditor_15;
 
-	public String Date;
-
 	public String SchemaHistoryEditor_2;
 
 	public String SchemaHistoryEditor_22;
@@ -208,8 +182,6 @@ public class Messages {
 	public String SQLAuditEditor_2;
 
 	public String SystemDBDataManager_8;
-
-	public String Filter;
 
 	public String ResourceManageEditor_18;
 
@@ -320,8 +292,6 @@ public class Messages {
 	public String Authority;
 
 	public String ID;
-
-	public String Warning;
 
 	public String ExecutedSQLEditor_26;
 	public String over;

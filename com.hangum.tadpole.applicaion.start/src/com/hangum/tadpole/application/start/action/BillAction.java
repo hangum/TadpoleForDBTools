@@ -16,6 +16,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.bill.UserBillEditorInput;
 import com.swtdesigner.ResourceManager;
@@ -55,7 +56,7 @@ public class BillAction  extends Action implements ISelectionListener, IWorkbenc
 			logger.error("open editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, BrowserActivator.ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Bill page open", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Bill page open", errStatus); //$NON-NLS-1$
 		}
 	}
 	

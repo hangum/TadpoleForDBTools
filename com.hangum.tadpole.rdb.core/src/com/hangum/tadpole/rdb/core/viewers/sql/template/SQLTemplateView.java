@@ -47,6 +47,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SQLTemplate;
@@ -102,7 +103,7 @@ public class SQLTemplateView extends ViewPart {
 			}
 		});
 		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		
 		
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
@@ -113,7 +114,7 @@ public class SQLTemplateView extends ViewPart {
 			}
 		});
 		tltmAdd.setImage(GlobalImageUtils.getAdd());
-		tltmAdd.setToolTipText(Messages.get().Add);
+		tltmAdd.setToolTipText(CommonMessages.get().Add);
 		
 
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
@@ -139,7 +140,7 @@ public class SQLTemplateView extends ViewPart {
 		tltmDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().SQLTemplateView_del_equestion)) return;
+				if(!MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().SQLTemplateView_del_equestion)) return;
 				
 				StructuredSelection ss = (StructuredSelection)tvSQLTemplate.getSelection();
 				if(ss.getFirstElement() instanceof SQLTemplateDAO) {
@@ -157,7 +158,7 @@ public class SQLTemplateView extends ViewPart {
 			}
 		});
 		tltmDelete.setImage(GlobalImageUtils.getDelete());
-		tltmDelete.setToolTipText(Messages.get().Delete);
+		tltmDelete.setToolTipText(CommonMessages.get().Delete);
 		tltmDelete.setEnabled(false);
 		
 		// admin menu
@@ -245,7 +246,7 @@ public class SQLTemplateView extends ViewPart {
 		TreeViewerColumn tvcName = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnDBName = tvcName.getColumn();
 		trclmnDBName.setWidth(100);
-		trclmnDBName.setText(Messages.get().Name);
+		trclmnDBName.setText(CommonMessages.get().Name);
 		
 		TreeViewerColumn treeViewerColumn_2 = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnDescription = treeViewerColumn_2.getColumn();

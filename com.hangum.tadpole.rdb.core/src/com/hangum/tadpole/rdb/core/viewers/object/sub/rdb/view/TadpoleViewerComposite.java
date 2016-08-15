@@ -46,6 +46,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -159,7 +160,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 							logger.error("get view listt", e);
 							
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().GenerateSQLSelectAction_0, errStatus); //$NON-NLS-1$
 						}
 					}
 				}
@@ -184,7 +185,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 				} catch (Exception e) {
 					logger.error("get view list", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_29, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_29, errStatus); //$NON-NLS-1$
 				} finally {
 					viewColumnViewer.setInput(showViewColumns);
 					tableColumnComparator = new TableColumnComparator();
@@ -206,7 +207,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(viewListViewer, SWT.NONE);
 		TableColumn tblclmnTableName = tableViewerColumn.getColumn();
 		tblclmnTableName.setWidth(200);
-		tblclmnTableName.setText(Messages.get().Name);
+		tblclmnTableName.setText(CommonMessages.get().Name);
 		tblclmnTableName.addSelectionListener(getSelectionAdapter(viewListViewer, viewComparator, tblclmnTableName, 0));
 
 		tableViewerColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -303,7 +304,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		
 		creatAction_View = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_1);
 		deleteAction_View = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_2);
-		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().Refresh);
+		refreshAction_View = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, CommonMessages.get().Refresh);
 //		modifyAction_View = new ObjectModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, "View");
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().ViewDDL);
@@ -360,7 +361,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			
 			logger.error("view refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_61, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_61, errStatus); //$NON-NLS-1$
 		}
 		
 		viewListViewer.setInput(showViews);

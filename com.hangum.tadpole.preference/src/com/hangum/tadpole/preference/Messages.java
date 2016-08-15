@@ -27,8 +27,6 @@ public class Messages {
 
 	public String ChangeUsePersonalToGrouprDialog_1;
 
-	public String Error;
-
 	public String ChangeUsePersonalToGrouprDialog_11;
 
 	public String ChangeUsePersonalToGrouprDialog_13;
@@ -47,17 +45,11 @@ public class Messages {
 
 	public String ChangeUsePersonalToGrouprDialog_26;
 
-	public String Save;
-
-	public String Cancel;
-
 	public String ChangeUsePersonalToGrouprDialog_3;
 
 	public String ChangeUsePersonalToGrouprDialog_4;
 
 	public String ChangeUsePersonalToGrouprDialog_5;
-
-//	public String ChangeUsePersonalToGrouprDialog_6;
 
 	public String ChangeUsePersonalToGrouprDialog_7;
 
@@ -65,8 +57,6 @@ public class Messages {
 
 	public String DefaultPreferencePage_0;
 	public String DefaultPreferencePage_2;
-
-//	public String UserInfoPerference_0;
 
 	public String UserInfoPerference_10;
 
@@ -148,8 +138,6 @@ public class Messages {
 
 	public String SQLFormatterPreferencePage_4;
 
-//	public String SQLFormatterPreferencePage_7;
-
 	public String SQLFormatterPreferencePage_8;
 	public String RDBPreferencePage_lblNumberColumnAdd_text;
 	public String SQLFormatterPreferencePage_btnCheckButton_text;
@@ -165,7 +153,6 @@ public class Messages {
 	public String GeneralPreferencePage_lblAccount_text;
 	public String GeneralPreferencePage_lblPassword_text;
 
-//	public String GetAdminPreference_5;
 	public String PerspectivePreferencePage_0;
 
 	public String PerspectivePreferencePage_3;
@@ -192,12 +179,6 @@ public class Messages {
 	public String EditorPreferencePage_lblTheme_text;
 
 	public String LoginDialog_lblLanguage_text;
-
-	public String Confirm;
-
-	public String Close;
-
-	public String Warning;
 
 	public String RESTAPI_Help;
 

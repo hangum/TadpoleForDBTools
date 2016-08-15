@@ -96,11 +96,6 @@ public class Messages {
 	public String NewVersionViewDialog_NewVersion;
 	public String NewVersionViewDialog_DoesnotCheck;
 
-	public String OK;
-	public String Confirm;
-	public String Error;
-	public String Close;
-
 	public String ResetPassword;
 
 	public String SendNewPassword;
@@ -110,8 +105,6 @@ public class Messages {
 	public String SendMsgErr;
 
 	public String AboutAction_TDB;
-
-	public String Warning;
 
 	public String OpenUserManuel;
 

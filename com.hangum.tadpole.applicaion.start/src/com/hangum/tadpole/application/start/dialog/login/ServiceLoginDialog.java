@@ -49,6 +49,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -297,7 +298,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_27);
+				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_27);
 				
 				return;
 			}
@@ -312,7 +313,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_28);
+				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_28);
 				return;
 			}
 			
@@ -329,7 +330,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			HttpSession httpSession = HttpSessionCollectorUtil.getInstance().findSession(strEmail);
 			if(httpSession != null) {
 				if(logger.isDebugEnabled()) logger.debug(String.format("Already login user %s", strEmail));
-				if(MessageDialog.openConfirm(getShell(), Messages.get().OK, Messages.get().AlreadyLoginConfirm)) {
+				if(MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().AlreadyLoginConfirm)) {
 					HttpSessionCollectorUtil.getInstance().sessionDestroyed(strEmail);
 				} else {
 					return;
@@ -345,20 +346,20 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 		} catch (TadpoleAuthorityException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setText("");
 			textPasswd.setFocus();
 			return;
 		} catch(TadpoleRuntimeException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();
 			return;
 		} catch (Exception e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage()), e); //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();
 			return;
@@ -395,11 +396,11 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 	private boolean validation(String strEmail, String strPass) {
 		// validation
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_11);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_11);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_14);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_14);
 			textPasswd.setFocus();
 			return false;
 		}
@@ -433,7 +434,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {
 			String errMsg = Messages.get().LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.get().UserInformationDialog_5 + "\n" + Messages.get().LoginDialog_lblNewLabel_text;  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, errMsg);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, errMsg);
 		}
 	}
 	

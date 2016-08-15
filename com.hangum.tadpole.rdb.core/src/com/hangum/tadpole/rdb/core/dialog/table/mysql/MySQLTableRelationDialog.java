@@ -18,6 +18,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -42,9 +45,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
-
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * mysql table relation
@@ -250,7 +250,7 @@ public class MySQLTableRelationDialog extends Dialog {
 		String strReferenceName = StringUtils.trimToEmpty(textRefName.getText());
 		
 		if(StringUtils.isEmpty(strReferenceName)) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Please input the reference name");
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, "Please input the reference name");
 			
 			textRefName.setFocus();
 			return ;
@@ -289,8 +289,8 @@ public class MySQLTableRelationDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -105,7 +106,7 @@ public class UserLoginHistoryDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(5, false));
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText(Messages.get().email);
+		lblEmail.setText(CommonMessages.get().Email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.addKeyListener(new KeyAdapter() {
@@ -123,7 +124,7 @@ public class UserLoginHistoryDialog extends Dialog {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.get().Search);
+		btnSearch.setText(CommonMessages.get().Search);
 		
 		Label lblDate = new Label(compositeHead, SWT.NONE);
 		lblDate.setText("로그인 시간");
@@ -191,7 +192,7 @@ public class UserLoginHistoryDialog extends Dialog {
 			listLoginHistory.clear();
 			tvHistory.setInput(listLoginHistory);
 			
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserLoginHistoryDialog_8);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserLoginHistoryDialog_8);
 			return;
 		}
 		
@@ -215,7 +216,7 @@ public class UserLoginHistoryDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

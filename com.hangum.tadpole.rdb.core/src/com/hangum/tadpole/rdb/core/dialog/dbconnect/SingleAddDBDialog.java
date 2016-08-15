@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
@@ -128,7 +129,7 @@ public class SingleAddDBDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		if(DBLoginDialog.TEST_CONNECTION_ID == buttonId) {
 			if(loginComposite.testConnection(true)) {
-				MessageDialog.openInformation(null, Messages.get().Confirm, "Connection Successful.");
+				MessageDialog.openInformation(null, CommonMessages.get().Confirm, "Connection Successful.");
 			}
 		}
 	}
@@ -140,8 +141,8 @@ public class SingleAddDBDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, DBLoginDialog.TEST_CONNECTION_ID,  Messages.get().TestConnection, false);
-		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Add, true);
-		createButton(parent, IDialogConstants.CANCEL_ID,  Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.OK_ID,  CommonMessages.get().Add, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,   CommonMessages.get().Cancel, false);
 	}
 
 	/**

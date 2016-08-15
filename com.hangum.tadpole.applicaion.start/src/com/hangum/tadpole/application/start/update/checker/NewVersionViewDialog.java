@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
@@ -129,7 +130,7 @@ public class NewVersionViewDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, true); //$NON-NLS-1$
 	}
 
 	/**

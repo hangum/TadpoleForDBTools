@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
@@ -186,7 +187,7 @@ public class UserManagerDialog extends Dialog {
 			logger.error("mongodb user list", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Get User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Get User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		} finally {
 			if(userCursor != null) userCursor.close();
 		}
@@ -201,19 +202,19 @@ public class UserManagerDialog extends Dialog {
 			boolean isReadOnly = btnReadOnly.getSelection();
 			
 			if("".equals(id)) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_11); //$NON-NLS-1$
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().UserManagerDialog_11); //$NON-NLS-1$
 				textID.setFocus();
 				return;
 			} else if("".equals(passwd)) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_14); //$NON-NLS-1$
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().UserManagerDialog_14); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			} else if("".equals(passwd2)) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_17); //$NON-NLS-1$
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().UserManagerDialog_17); //$NON-NLS-1$
 				textRePassword.setFocus();
 				return;
 			} else if(!passwd.equals(passwd2)) {
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().UserManagerDialog_19); //$NON-NLS-1$
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().UserManagerDialog_19); //$NON-NLS-1$
 				textPassword.setFocus();
 				return;
 			}
@@ -226,7 +227,7 @@ public class UserManagerDialog extends Dialog {
 				logger.error("mongodb add user", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Add User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Add User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 
 				return;
 			}
@@ -235,7 +236,7 @@ public class UserManagerDialog extends Dialog {
 			Object selElement = is.getFirstElement();
 			
 			if(selElement instanceof UserDTO) {
-				if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().UserManagerDialog_22)) { //$NON-NLS-1$
+				if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().UserManagerDialog_22)) { //$NON-NLS-1$
 					UserDTO user = (UserDTO)selElement;
 					try {
 						MongoDBQuery.deleteUser(userDB, user.getId());
@@ -246,11 +247,11 @@ public class UserManagerDialog extends Dialog {
 						logger.error("mongodb delete user", e1); //$NON-NLS-1$
 						
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Delete User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+						ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Delete User Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 			} else {
-				MessageDialog.openError(null, Messages.get().Error, Messages.get().DeleteMsg);
+				MessageDialog.openError(null,CommonMessages.get().Error, Messages.get().DeleteMsg);
 			}
 		} else if(buttonId == IDialogConstants.CANCEL_ID) {
 			super.cancelPressed();
@@ -264,10 +265,10 @@ public class UserManagerDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, DELETE_ID, Messages.get().Delete, false);
+		createButton(parent, DELETE_ID, CommonMessages.get().Delete, false);
 		createButton(parent, APPEND_USER_ID, "Add User", true);
 //		createButton(parent, IDialogConstants.OK_ID, Messages.get().UserManagerDialog_6, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

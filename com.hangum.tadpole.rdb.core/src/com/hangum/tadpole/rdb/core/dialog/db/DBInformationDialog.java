@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -110,14 +111,14 @@ public class DBInformationDialog extends Dialog {
 //		lblGroupValue.setText(SessionManager.getGroupName());
 		
 		Label lblEmail = new Label(grpOtherInformation, SWT.NONE);
-		lblEmail.setText(Messages.get().Email);
+		lblEmail.setText(CommonMessages.get().Email);
 		
 		Label lblEmailValue = new Label(grpOtherInformation, SWT.NONE);
 		lblEmailValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblEmailValue.setText(SessionManager.getEMAIL());
 		
 		Label lblName = new Label(grpOtherInformation, SWT.NONE);
-		lblName.setText(Messages.get().Name);
+		lblName.setText(CommonMessages.get().Name);
 		
 		Label lblNameValue = new Label(grpOtherInformation, SWT.NONE);
 		lblNameValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -168,7 +169,7 @@ public class DBInformationDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, true);
 	}
 
 	/**

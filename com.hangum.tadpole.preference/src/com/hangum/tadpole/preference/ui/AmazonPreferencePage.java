@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetAmazonPreference;
@@ -94,7 +95,7 @@ public class AmazonPreferencePage extends TadpoleDefaulPreferencePage implements
 			} catch(Exception e) {
 				logger.error("GeneralPreference saveing", e); //$NON-NLS-1$
 				
-				MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+				MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 				return false;
 			}
 		}

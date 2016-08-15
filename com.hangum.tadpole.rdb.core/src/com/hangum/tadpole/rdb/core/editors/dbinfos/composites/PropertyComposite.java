@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -102,7 +103,7 @@ public class PropertyComposite extends DBInfosComposite {
 		
 		Label lblNewLabel = new Label(compositeHead, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText(Messages.get().Filter);
+		lblNewLabel.setText(CommonMessages.get().Filter);
 		
 		text = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -120,7 +121,7 @@ public class PropertyComposite extends DBInfosComposite {
 				initUI(true);
 			}
 		});
-		btnRefresh.setText(Messages.get().Refresh);
+		btnRefresh.setText(CommonMessages.get().Refresh);
 		
 		propertyViewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = propertyViewer.getTable();
@@ -212,7 +213,7 @@ public class PropertyComposite extends DBInfosComposite {
 	 */
 	private void downloadCSVFile() {
 		if(propertyViewer.getTable().getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TablesComposite_3)) return;
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().TablesComposite_3)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -240,7 +241,7 @@ public class PropertyComposite extends DBInfosComposite {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile(userDB.getDisplay_name() + "_Properties.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().TablesComposite_5);
+			MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().TablesComposite_5);
 		} catch (Exception e) {
 			logger.error("An exception occurred while writing into a csv file.", e); //$NON-NLS-1$
 		}		

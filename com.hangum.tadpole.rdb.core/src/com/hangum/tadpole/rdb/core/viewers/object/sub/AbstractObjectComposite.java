@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -174,7 +175,7 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createProcedureFunctionColumn(TableViewer tv, ObjectComparator comparator) {
-		String[] name = {Messages.get().Name, Messages.get().Definer, Messages.get().Modified, Messages.get().Created,
+		String[] name = {CommonMessages.get().Name, Messages.get().Definer, Messages.get().Modified, Messages.get().Created,
 						Messages.get().AbstractObjectComposite_16, Messages.get().Comment, Messages.get().AbstractObjectComposite_18, Messages.get().AbstractObjectComposite_19, Messages.get().Database, 
 						Messages.get().Collation
 		};

@@ -19,11 +19,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -44,7 +45,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
-import org.eclipse.swt.custom.SashForm;
 
 /**
  * DMLGenerae Statement Dialog
@@ -82,7 +82,7 @@ public class TableInformationDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(tableDAO.getName() + " " + Messages.get().Information);
+		newShell.setText(tableDAO.getName() + " " + CommonMessages.get().Information);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -202,7 +202,7 @@ public class TableInformationDialog extends Dialog {
 					dialog.open();
 //				} else if (dialog.getObjectCount() <= 0) {
 					//해당 오브젝트를 찾을 수 없습니다.
-//					MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
+//					MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);
 				}
 				Map<String, String> map = dialog.getSelectObject();
 				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
@@ -306,7 +306,7 @@ public class TableInformationDialog extends Dialog {
 		if (isEditorAdd) {
 			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
 		}
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 
 	}
 

@@ -179,7 +179,7 @@
 //				addDatabase();
 //			}
 //		});
-//		btnAddDatabase.setText(Messages.get().AddDatabase);
+//		btnAddDatabase.setText(CommonMessages.get().AddDatabase);
 //		
 //		init();
 //	}
@@ -190,7 +190,7 @@
 //	private void addDatabase() {
 //		StructuredSelection ss = (StructuredSelection)tvRDS.getSelection();
 //		if(ss.isEmpty()) {
-//			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AWSRDSLoginComposite_8);
+//			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AWSRDSLoginComposite_8);
 //		} else {
 //			AWSRDSUserDBDAO amazonRDSDto = (AWSRDSUserDBDAO)ss.getFirstElement();
 //			
@@ -235,7 +235,7 @@
 //			logger.error("Get AmazonRDS information", e); //$NON-NLS-1$
 //			
 //			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//			ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, "Get AmazonRDS information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+//			ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, "Get AmazonRDS information", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 //		}
 //	}
 //	
@@ -283,11 +283,11 @@
 //		String strSecretkey = textSecretKey.getText().trim();
 //		
 //		if("".equals(strAccesskey)) { //$NON-NLS-1$
-//			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AWSRDSLoginComposite_7);
+//			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AWSRDSLoginComposite_7);
 //			textAccesskey.setFocus();
 //			return false;
 //		} else if("".equals(strSecretkey)) { //$NON-NLS-1$
-//			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AWSRDSLoginComposite_20);
+//			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AWSRDSLoginComposite_20);
 //			textSecretKey.setFocus();
 //			return false;
 //		}

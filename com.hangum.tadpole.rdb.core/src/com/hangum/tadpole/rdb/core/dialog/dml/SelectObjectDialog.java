@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -220,18 +221,18 @@ public class SelectObjectDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, SWT.CANCEL, Messages.get().CANCEL, false).addSelectionListener(new SelectionAdapter(){
+		createButton(parent, SWT.CANCEL,  CommonMessages.get().Cancel, false).addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent event) {
 				cancelPressed();
 			}			
 		});
-		Button ok = createButton(parent, SWT.PUSH, Messages.get().OK, false);
+		Button ok = createButton(parent, SWT.PUSH, CommonMessages.get().OK, false);
 
 		ok.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 
 				if (map.isEmpty()) {
-					MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().SelectSearchObject);
+					MessageDialog.openInformation(getShell(), CommonMessages.get().Information, Messages.get().SelectSearchObject);
 					return;
 				} else {
 					okPressed();

@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.ScheduleDAO;
 import com.hangum.tadpole.monitoring.core.Messages;
 
@@ -117,13 +118,13 @@ public class AddSQLDialog extends Dialog {
 		String txtSQL = StringUtils.trimToEmpty(textSQL.getText());
 		
 		if(StringUtils.isEmpty(txtTitle)) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AddSQLDialog_4);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AddSQLDialog_4);
 			textTitle.setFocus();
 			return;
 		}
 		
 		if(StringUtils.isEmpty(txtSQL)) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().AddSQLDialog_6);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AddSQLDialog_6);
 			textSQL.setFocus();
 			return;
 		}
@@ -145,8 +146,8 @@ public class AddSQLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

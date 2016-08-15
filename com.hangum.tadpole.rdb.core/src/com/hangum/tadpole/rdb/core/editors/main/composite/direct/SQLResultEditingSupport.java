@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.sql.util.DataTypeValidate;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
@@ -98,7 +99,7 @@ public class SQLResultEditingSupport extends EditingSupport {
 		// 입력 값이 올바른지 검사합니다.
 		String colType = RDBTypeToJavaTypeUtils.getRDBType(rsDAO.getColumnType().get(intColumnIndex));
 		if(!DataTypeValidate.isValid(rsDAO.getUserDB(), colType, value.toString())) {
-			MessageDialog.openError(getViewer().getControl().getShell(), Messages.get().Confirm, Messages.get().TextViewerEditingSupport_2 + " is " + colType + "."); 
+			MessageDialog.openError(getViewer().getControl().getShell(), CommonMessages.get().Confirm, Messages.get().TextViewerEditingSupport_2 + " is " + colType + "."); 
 			return;
 		} 
 

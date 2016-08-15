@@ -46,6 +46,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.manager.DBCPInfoDAO;
@@ -156,7 +157,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			}
 		});
 		tltmCRefresh.setImage(GlobalImageUtils.getRefresh());
-		tltmCRefresh.setToolTipText(Messages.get().Refresh);
+		tltmCRefresh.setToolTipText(CommonMessages.get().Refresh);
 		
 		final ToolItem tltmCReleaseConnection = new ToolItem(toolBar, SWT.NONE);
 		tltmCReleaseConnection.addSelectionListener(new SelectionAdapter() {
@@ -166,7 +167,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 				if(!iss.isEmpty()) {
 					DBCPInfoDAO dao = (DBCPInfoDAO)iss.getFirstElement();
 					
-					if(MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().ReleteConnectionPool)) {
+					if(MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ReleteConnectionPool)) {
 						TadpoleSQLManager.removeInstance(dao.getEngineKey());
 						initGeneral();
 						
@@ -254,14 +255,14 @@ public class TransactionConnectionListEditor extends EditorPart {
 				initTransactionUI();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		
 		tltmCommit = new ToolItem(toolBar, SWT.NONE);
 		tltmCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tvTransaction.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TransactionConnectionListEditor_5)) return;
+					if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().TransactionConnectionListEditor_5)) return;
 					
 					executTransaction(true);
 				}
@@ -275,7 +276,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!tvTransaction.getSelection().isEmpty()) {
-					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TransactionConnectionListEditor_8)) return;
+					if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().TransactionConnectionListEditor_8)) return;
 					
 					executTransaction(false);
 				}
@@ -335,7 +336,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			logger.error("Transaction is commit " + isCommit + "[user db]" +  tdao.getUserDB(), e1); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().Refresh, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, CommonMessages.get().Refresh, errStatus); //$NON-NLS-1$
 		}
 	}
 	

@@ -46,6 +46,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -239,7 +240,7 @@ public class MonitoringManagerEditor extends EditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tableVMonitoringList.getSelection();
 				if(!iss.isEmpty()) {
-					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "Do you want delete?")) return;
+					if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, "Do you want delete?")) return;
 					
 					MonitoringIndexDAO monitoringIndexDao = (MonitoringIndexDAO)iss.getFirstElement();
 					try {
@@ -495,7 +496,7 @@ public class MonitoringManagerEditor extends EditorPart {
 			logger.error("initialize Managerview", e);
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, "Can't load database.", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, "Can't load database.", errStatus); //$NON-NLS-1$
 		}
 
 		treeVUserDB.refresh();
@@ -585,7 +586,7 @@ public class MonitoringManagerEditor extends EditorPart {
 //				logger.error("main editor open", e); //$NON-NLS-1$
 //
 //				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, "Can't open resource. ", errStatus); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, "Can't open resource. ", errStatus); //$NON-NLS-1$
 //			}
 		}
 	}

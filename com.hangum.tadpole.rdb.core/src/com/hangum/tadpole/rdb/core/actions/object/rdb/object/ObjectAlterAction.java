@@ -17,10 +17,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJavaAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateJobsAction;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
@@ -52,7 +52,7 @@ public class ObjectAlterAction extends AbstractObjectSelectAction {
 			if (!GrantCheckerUtils.ifExecuteQuery(userDB))
 				return;
 		} catch (Exception e) {
-			MessageDialog.openError(getWindow().getShell(), Messages.get().Error, e.getMessage());
+			MessageDialog.openError(getWindow().getShell(),CommonMessages.get().Error, e.getMessage());
 			return;
 		}
 

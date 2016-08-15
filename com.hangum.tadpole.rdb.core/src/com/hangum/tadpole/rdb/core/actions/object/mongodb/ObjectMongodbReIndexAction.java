@@ -21,6 +21,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -51,7 +52,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		String originalName = selection.getFirstElement().toString();
 
-		if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Confirm, Messages.get().ObjectMongodbReIndexAction_2)) { //$NON-NLS-1$
+		if (MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectMongodbReIndexAction_2)) { //$NON-NLS-1$
 			try {
 				MongoDBQuery.reIndexCollection(userDB, originalName);
 
@@ -59,7 +60,7 @@ public class ObjectMongodbReIndexAction extends AbstractObjectAction {
 				logger.error("mongodb rename", e); //$NON-NLS-1$
 
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Rename Collection", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}

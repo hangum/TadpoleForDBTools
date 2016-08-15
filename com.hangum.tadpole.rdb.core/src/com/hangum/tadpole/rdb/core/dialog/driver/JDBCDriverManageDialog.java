@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -187,7 +188,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				if(ss.isEmpty()) return;
 				
 				String strFile = (String)ss.getFirstElement();
-				if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().DeleteDriver)) return;
+				if(!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().DeleteDriver)) return;
 				if(logger.isDebugEnabled()) logger.debug("File delete : " + jdbc_dir + strFile);
 				
 				try {
@@ -196,12 +197,12 @@ public class JDBCDriverManageDialog extends Dialog {
 					initDBFileList();
 				} catch (IOException e1) {
 					logger.error("File delete", e1);
-					MessageDialog.openError(getShell(), Messages.get().Error, "File deleteing: " + e1.getMessage());
+					MessageDialog.openError(getShell(),CommonMessages.get().Error, "File deleteing: " + e1.getMessage());
 				}
 				
 			}
 		});
-		btnDelete.setText(Messages.get().Delete);
+		btnDelete.setText(CommonMessages.get().Delete);
 		
 		final String url = startUploadReceiver();
 		pushSession = new ServerPushSession();
@@ -214,7 +215,7 @@ public class JDBCDriverManageDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
-				if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SQLiteLoginComposite_17)) return;
+				if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().SQLiteLoginComposite_17)) return;
 				
 				if(logger.isDebugEnabled()) logger.debug("=[file name]==> " + fileName);
 				
@@ -230,7 +231,7 @@ public class JDBCDriverManageDialog extends Dialog {
 				initDBFileList();
 			}
 		});
-		btnRefresh.setText(Messages.get().Refresh);
+		btnRefresh.setText(CommonMessages.get().Refresh);
 		
 		sashForm.setWeights(new int[] {3, 7});
 		initManager();
@@ -321,7 +322,7 @@ public class JDBCDriverManageDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

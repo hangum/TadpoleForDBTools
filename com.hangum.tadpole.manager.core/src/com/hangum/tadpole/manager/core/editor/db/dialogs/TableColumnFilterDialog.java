@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.manager.core.Messages;
@@ -133,13 +134,13 @@ public class TableColumnFilterDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTableName.getText())) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Check table name.");
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, "Check table name.");
 			textTableName.setFocus();
 			return;
 		}
 		
 		if("".equals(textColumnNames.getText())) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Check column name.");
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, "Check column name.");
 			textColumnNames.setFocus();
 			return;
 		}
@@ -165,8 +166,8 @@ public class TableColumnFilterDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Add, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Add, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

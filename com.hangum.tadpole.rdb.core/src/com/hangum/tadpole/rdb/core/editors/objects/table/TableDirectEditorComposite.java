@@ -53,6 +53,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -176,13 +177,13 @@ public class TableDirectEditorComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(tltmSave.getEnabled()) {
-					if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().TableDirectEditorComposite_1)) return;
+					if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().TableDirectEditorComposite_1)) return;
 				}
 				
 				refreshEditor();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		
 		tltmSave = new ToolItem(toolBar, SWT.NONE);
 		tltmSave.setImage(GlobalImageUtils.getSave());
@@ -193,7 +194,7 @@ public class TableDirectEditorComposite extends Composite {
 				saveTableData();
 			}
 		});
-		tltmSave.setToolTipText(Messages.get().Save);
+		tltmSave.setToolTipText(CommonMessages.get().Save);
 		
 		tltmInsert = new ToolItem(toolBar, SWT.NONE);
 		tltmInsert.setImage(GlobalImageUtils.getAdd());
@@ -203,7 +204,7 @@ public class TableDirectEditorComposite extends Composite {
 				insertRow();
 			}
 		});
-		tltmInsert.setToolTipText(Messages.get().Add);
+		tltmInsert.setToolTipText(CommonMessages.get().Add);
 		
 		tltmDelete = new ToolItem(toolBar, SWT.NONE);
 		tltmDelete.setImage(GlobalImageUtils.getDelete());
@@ -219,7 +220,7 @@ public class TableDirectEditorComposite extends Composite {
 			}
 		});
 		tltmDelete.setEnabled(false);
-		tltmDelete.setToolTipText(Messages.get().Delete);
+		tltmDelete.setToolTipText(CommonMessages.get().Delete);
 		
 		Composite compositeBody = new Composite(compositeBase, SWT.NONE);
 		GridLayout gl_compositeBody = new GridLayout(2, false);
@@ -256,7 +257,7 @@ public class TableDirectEditorComposite extends Composite {
 		textOrderBy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
-		lblNewLabel.setText(Messages.get().Filter);
+		lblNewLabel.setText(CommonMessages.get().Filter);
 		
 		textFilter = new Text(compositeBody, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.addKeyListener(new KeyAdapter() {
@@ -300,7 +301,7 @@ public class TableDirectEditorComposite extends Composite {
 					DDLScriptManager scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 					FindEditorAndWriteQueryUtil.run(userDB, scriptManager.getScript(tableDao), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 				} catch(Exception ee) {
-					MessageDialog.openError(null, Messages.get().Confirm, ee.getMessage());
+					MessageDialog.openError(null, CommonMessages.get().Confirm, ee.getMessage());
 				}
 			}
 		});
@@ -351,7 +352,7 @@ public class TableDirectEditorComposite extends Composite {
 			logger.error("Data moidfying..", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().TableViewerEditPart_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().TableViewerEditPart_2, errStatus); //$NON-NLS-1$
 			return;
 		}
 		

@@ -57,6 +57,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleTablespaceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -156,7 +157,7 @@ public class TableSapceManageEditor extends EditorPart {
 		toolBar.setLayoutData(gd_toolBar);
 
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		tltmRefresh.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/refresh.png")); //$NON-NLS-1$
 
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -476,9 +477,9 @@ public class TableSapceManageEditor extends EditorPart {
 					logger.error(ex);
 				} //$NON-NLS-1$
 				if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-					MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().RiseError + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+					MessageDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().RiseError + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 				} else {
-					MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().WorkHasCompleted);
+					MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Information, Messages.get().WorkHasCompleted);
 					refreshTablespaceList();
 				}
 
@@ -509,9 +510,9 @@ public class TableSapceManageEditor extends EditorPart {
 					logger.error(ex);
 				} //$NON-NLS-1$
 				if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-					MessageDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().RiseError + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+					MessageDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().RiseError + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 				} else {
-					MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().WorkHasCompleted);
+					MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Information, Messages.get().WorkHasCompleted);
 					refreshTablespaceList();
 					refreshDatafileInformation();
 				}
@@ -665,7 +666,7 @@ public class TableSapceManageEditor extends EditorPart {
 			QueryUtils.executeQuery(userDB, "SELECT 1 FROM SYS.DBA_DATA_FILES A,SYS.DBA_FREE_SPACE B,SYS.V_$TEMP_SPACE_HEADER C,SYS.V_$TEMP_EXTENT_POOL D,SYS.DBA_TEMP_FILES E,V$PARAMETER F WHERE 0=1", 0, 1);
 		} catch (Exception e) {
 			map_key = "getUserTablespaceList";
-			//MessageDialog.openError(this.getSite().getShell(), Messages.get().Error, "Tablespace 정보를 조회하기 위한 시스템 테이블 접근 권한이 부족합니다.\n" + e.getMessage() );
+			//MessageDialog.openError(this.getSite().getShell(),CommonMessages.get().Error, "Tablespace 정보를 조회하기 위한 시스템 테이블 접근 권한이 부족합니다.\n" + e.getMessage() );
 			//showTablespaceList = new ArrayList<OracleTablespaceDAO>();
 			//return;
 		}
@@ -682,7 +683,7 @@ public class TableSapceManageEditor extends EditorPart {
 			logger.error("refresh list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}
 

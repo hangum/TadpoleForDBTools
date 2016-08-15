@@ -30,10 +30,10 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
-import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 
 /**
@@ -135,12 +135,12 @@ public class CollectionCompactDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if(!NumberUtils.isNumber(textPaddingFactor.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, "padding factor is number.");
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, "padding factor is number.");
 			textPaddingFactor.setFocus();
 			return;
 		}
 		if(!NumberUtils.isNumber(textPaddingBytes.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, "padding Bytes is number.");
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, "padding Bytes is number.");
 			textPaddingBytes.setFocus();
 			return;
 		}
@@ -158,7 +158,7 @@ public class CollectionCompactDialog extends Dialog {
 			} catch (Exception e) {
 				logger.error("mongodb compact" + collName, e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Collection compact Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Collection compact Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				return;
 			}
@@ -173,8 +173,8 @@ public class CollectionCompactDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

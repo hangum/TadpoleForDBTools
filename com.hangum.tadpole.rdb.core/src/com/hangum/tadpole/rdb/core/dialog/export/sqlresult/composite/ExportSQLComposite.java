@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
 
@@ -189,7 +190,7 @@ public class ExportSQLComposite extends AbstractExportComposite {
 	public boolean isValidate() {
 		if(super.isValidate()) {
 			if (StringUtils.isEmpty(this.textTargetName.getText()) ){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_PleaseTargetInput);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportSQLComposite_PleaseTargetInput);
 				this.textTargetName.setFocus();
 				return false;
 			}
@@ -202,15 +203,15 @@ public class ExportSQLComposite extends AbstractExportComposite {
 
 			// fix https://github.com/hangum/TadpoleForDBTools/issues/807
 			if (this.btnUpdate.getSelection() && listWhereColumnName.size() <= 0){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_UpdateMsg);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportSQLComposite_UpdateMsg);
 				return false;
 			}else if (this.btnMerge.getSelection() && listWhereColumnName.size() <= 0){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_PleaseMergeMath);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportSQLComposite_PleaseMergeMath);
 				return false;
 			}
 			
 			if (!StringUtils.isNumeric(this.textCommit.getText())){
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportSQLComposite_PleaseCommitCount);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportSQLComposite_PleaseCommitCount);
 				textCommit.setText("0");
 				this.textCommit.setFocus();
 				return false;

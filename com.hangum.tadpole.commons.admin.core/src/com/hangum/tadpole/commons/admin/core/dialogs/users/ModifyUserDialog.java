@@ -37,6 +37,7 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -104,14 +105,14 @@ public class ModifyUserDialog extends Dialog {
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(Messages.get().email);
+		lblEmail.setText(CommonMessages.get().Email);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setEditable(false);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText(Messages.get().Name);
+		lblName.setText(CommonMessages.get().Name);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setEditable(false);
@@ -224,16 +225,16 @@ public class ModifyUserDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(BTN_INITIALIZE_PASSWORD == buttonId) {
-			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ModifyUserDialog_9, "tadpole"))) { //$NON-NLS-3$
+			if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, String.format(Messages.get().ModifyUserDialog_9, "tadpole"))) { //$NON-NLS-3$
 				userDAO.setPasswd("tadpole"); //$NON-NLS-1$
 				try {
 					TadpoleSystem_UserQuery.updateUserPassword(userDAO);
 					SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), userDAO.getPasswd());
 					
-					MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().ModifyUserDialog_17);
+					MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().ModifyUserDialog_17);
 				} catch(Exception e) {
 					logger.error("Changing password", e); //$NON-NLS-1$
-					MessageDialog.openError(getShell(), Messages.get().Error, e.getMessage());			 //$NON-NLS-1$
+					MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
 				}
 			}
 			
@@ -244,7 +245,7 @@ public class ModifyUserDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ModifyUserDialog_13)) {
+		if(MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().ModifyUserDialog_13)) {
 			UserDAO user = new UserDAO();
 			user.setSeq(userDAO.getSeq());
 			user.setAllow_ip(textAllowIP.getText());
@@ -272,7 +273,7 @@ public class ModifyUserDialog extends Dialog {
 				logger.error("data update", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, "User Info update", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, "User Info update", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				return;
 			}
@@ -290,10 +291,9 @@ public class ModifyUserDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, BTN_INITIALIZE_PASSWORD, Messages.get().ModifyUserDialog_19, false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Modify, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Modify, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
-
 	/**
 	 * Return the initial size of the dialog.
 	 */

@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
@@ -88,7 +89,7 @@ public class TreeViewerEditingSupport extends EditingSupport {
 			MongoDBQuery.updateDocument(userDB, collectionName, dto.getDbObject(), fullyKey, value.toString());
 			
 		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().TreeViewerEditingSupport_3 +  dto.getType() + Messages.get().TreeViewerEditingSupport_4);
+			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().TreeViewerEditingSupport_3 +  dto.getType() + Messages.get().TreeViewerEditingSupport_4);
 			return;
 		}
 		

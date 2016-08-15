@@ -23,11 +23,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.ext.editors.currentOp.CurrentOpEditorInput;
 import com.hangum.tadpole.mongodb.core.ext.editors.currentOp.CurrentOperationEditor;
 import com.hangum.tadpole.rdb.core.Activator;
-import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * mongodb currentOp action
@@ -59,7 +59,7 @@ public class MongodbCurrentOpAction implements IViewActionDelegate {
 			logger.error("Mongodb current operation", e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "current operation Exception", errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "current operation Exception", errStatus); //$NON-NLS-1$
 		}
 	}
 

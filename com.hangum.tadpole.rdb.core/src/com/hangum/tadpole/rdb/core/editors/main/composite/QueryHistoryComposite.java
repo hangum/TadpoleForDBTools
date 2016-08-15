@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.utils.TimeZoneUtil;
@@ -103,7 +104,7 @@ public class QueryHistoryComposite extends Composite {
 				if(gridItems.length != 0) {
 					appendText(Utils.convHtmlToLine(gridItems[0].getText(2)));
 				} else {
-					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MainEditor_29);
+					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().MainEditor_29);
 				}
 			}
 		});
@@ -118,7 +119,7 @@ public class QueryHistoryComposite extends Composite {
 					TadpoleSQLDialog dialog = new TadpoleSQLDialog(getShell(), Messages.get().ViewQuery, Utils.convHtmlToLine(gridItems[0].getText(2)));
 					dialog.open();
 				} else {
-					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MainEditor_29);
+					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().MainEditor_29);
 				}
 			}
 		});
@@ -133,7 +134,7 @@ public class QueryHistoryComposite extends Composite {
 				clearGrid();
 			}
 		});
-		btnHistoyClear.setText(Messages.get().Clear);
+		btnHistoyClear.setText(CommonMessages.get().Clear);
 		
 		Label labelDumyRecal = new Label(compositeRecallBtn, SWT.NONE);
 		labelDumyRecal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -156,7 +157,7 @@ public class QueryHistoryComposite extends Composite {
 				refreshSqlHistory();
 			}
 		});
-		btnRefresh.setText(Messages.get().Search);
+		btnRefresh.setText(CommonMessages.get().Search);
 	}
 	
 	/**
@@ -280,7 +281,7 @@ public class QueryHistoryComposite extends Composite {
 		GridColumn tvcDate = new GridColumn(gridSQLHistory, SWT.LEFT);
 		tvcDate.setWidth(150);
 		tvcDate.setMoveable(true);
-		tvcDate.setText(Messages.get().Date);
+		tvcDate.setText(CommonMessages.get().Date);
 		
 		// sql
 		GridColumn tvcSQL = new GridColumn(gridSQLHistory, SWT.LEFT);

@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
@@ -176,7 +177,7 @@ public class CreateJavaDialog extends Dialog {
 			btnCreateJava = createButton(parent, ID_CREATE_JAVA, Messages.get().ChangeJava, false);
 			btnDropJava = createButton(parent, ID_DROP_JAVA, Messages.get().DropJava, false);
 		}
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, false);
 	}
 
 	private String getCreateScript() {
@@ -210,9 +211,9 @@ public class CreateJavaDialog extends Dialog {
 				logger.error(e);
 			}
 			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				MessageDialog.openError(this.getShell(), Messages.get().Error, Messages.get().CreateOrChangedErrorJavaObject + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+				MessageDialog.openError(this.getShell(),CommonMessages.get().Error, Messages.get().CreateOrChangedErrorJavaObject + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 			} else {
-				MessageDialog.openInformation(this.getShell(), Messages.get().Information, Messages.get().CreateOrChangedJavaObject);
+				MessageDialog.openInformation(this.getShell(), CommonMessages.get().Information, Messages.get().CreateOrChangedJavaObject);
 				this.okPressed();
 			}
 		} else if (buttonId == ID_DROP_JAVA) {
@@ -225,9 +226,9 @@ public class CreateJavaDialog extends Dialog {
 				logger.error(e);
 			}
 			if (PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqReResultDAO.getResult())) {
-				MessageDialog.openError(this.getShell(), Messages.get().Error, Messages.get().DeletedErrorJavaObject + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
+				MessageDialog.openError(this.getShell(),CommonMessages.get().Error, Messages.get().DeletedErrorJavaObject + reqReResultDAO.getMesssage() + reqReResultDAO.getException().getMessage());
 			}else{
-				MessageDialog.openInformation(this.getShell(), Messages.get().Information, Messages.get().DeletedJavaObject);
+				MessageDialog.openInformation(this.getShell(), CommonMessages.get().Information, Messages.get().DeletedJavaObject);
 				this.okPressed();
 			}
 		} else {

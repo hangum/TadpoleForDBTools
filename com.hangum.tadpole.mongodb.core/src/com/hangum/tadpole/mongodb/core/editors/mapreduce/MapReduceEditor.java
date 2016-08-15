@@ -38,10 +38,10 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
-import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.composite.result.MongodbResultComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.mongodb.core.utils.CollectionUtils;
@@ -252,7 +252,7 @@ public class MapReduceEditor extends EditorPart {
 				} catch (Exception e1) {
 					logger.error("MapReduce Error", e1); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e1.getMessage(), e1); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "MapReduce Search exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+					ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "MapReduce Search exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		});
@@ -366,7 +366,7 @@ public class MapReduceEditor extends EditorPart {
 							} catch(Exception e) {
 								logger.error("MapReduce Error", e); //$NON-NLS-1$
 								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-								ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "MapReduce execute exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+								ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "MapReduce execute exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						} else {
 //							compositeResult.errorView(jobEvent.getResult().getMessage());

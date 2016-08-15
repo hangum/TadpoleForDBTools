@@ -42,6 +42,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
@@ -136,12 +137,12 @@ public class SendMessageDialog extends Dialog {
 	protected void okPressed() {
 
 		if(StringUtils.isEmpty(textTitle.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_8);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().SendMessageDialog_8);
 			textTitle.setFocus();
 			return;
 		}
 		if(StringUtils.isEmpty(textMessage.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SendMessageDialog_10);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().SendMessageDialog_10);
 			textMessage.setFocus();
 			return;
 		}
@@ -156,7 +157,7 @@ public class SendMessageDialog extends Dialog {
 			smtpDao = GetAdminPreference.getSessionSMTPINFO();
 		} catch (Exception e1) {
 			logger.error("not set email info" + e1);
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DoNotSettingEmailServer);
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().DoNotSettingEmailServer);
 			return;
 		}
 		final SMTPDTO finalSMTDao = smtpDao;
@@ -228,10 +229,10 @@ public class SendMessageDialog extends Dialog {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							MessageDialog.openInformation(shell, Messages.get().Confirm, Messages.get().SendMessageDialog_23);
+							MessageDialog.openInformation(shell, CommonMessages.get().Confirm, Messages.get().SendMessageDialog_23);
 						} else {
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(shell, Messages.get().Error, Messages.get().SendMessageDialog_11, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(shell,CommonMessages.get().Error, Messages.get().SendMessageDialog_11, errStatus); //$NON-NLS-1$
 						}
 					}
 				});	// end display.asyncExec
@@ -252,8 +253,8 @@ public class SendMessageDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Confirm, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Cancel, false);
 	}
 
 	/**

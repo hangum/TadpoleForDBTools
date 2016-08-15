@@ -21,9 +21,6 @@ public class Messages {
 	public String TadpoleEditor_1;
 	public String TadpoleEditor_3;
 	public String TadpoleModelUtils_2;
-	public String Confirm;
-	public String Error;
-	public String Warning;
 	public String Gullim;
 
 	public static Messages get() {

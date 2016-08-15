@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.Messages;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
 /**
@@ -121,7 +122,7 @@ public class SingleFileuploadDialog extends Dialog {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
-//				if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "Do you want file upload?")) return;
+//				if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, "Do you want file upload?")) return;
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();
@@ -137,7 +138,7 @@ public class SingleFileuploadDialog extends Dialog {
 		try {
 			if(!insert()) return;
 		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
+			MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage());
 			return;
 		}
 		
@@ -227,8 +228,8 @@ public class SingleFileuploadDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Confirm, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancle, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, false);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

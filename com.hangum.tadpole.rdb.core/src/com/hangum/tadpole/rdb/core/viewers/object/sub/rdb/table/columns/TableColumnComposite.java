@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Table;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -217,7 +218,7 @@ public class TableColumnComposite extends AbstractTableComposite {
 
 			// show error message
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		} finally {
 			tableColumnViewer.setInput(showTableColumns);
 			tableColumnComparator = new TableColumnComparator();

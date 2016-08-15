@@ -9,7 +9,6 @@ public class Messages {
 	public String AddScheduleDialog_15;
 	public String AddScheduleDialog_17;
 	public String AddScheduleDialog_19;
-	public String Confirm;
 	public String AddScheduleDialog_21;
 	public String AddScheduleDialog_23;
 	public String AddScheduleDialog_3;
@@ -21,11 +20,8 @@ public class Messages {
 	public String AddSQLDialog_0;
 	public String Description;
 	public String SQL;
-	public String Error;
 	public String AddSQLDialog_4;
 	public String AddSQLDialog_6;
-	public String OK;
-	public String Cancel;
 	public String ScheduleEditor_1;
 	public String ScheduleEditor_11;
 	public String ScheduleEditor_12;
@@ -36,7 +32,6 @@ public class Messages {
 	public String ScheduleEditor_8;
 	public String ScheduleEditor_9;
 	public String ScheduleEditor_tltmModify_text;
-	public String Warning;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

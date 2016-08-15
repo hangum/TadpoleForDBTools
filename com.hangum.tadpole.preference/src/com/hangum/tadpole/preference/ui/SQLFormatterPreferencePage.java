@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -130,7 +131,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		String strTextWidth = textWidth.getText();
 		
 		if(!NumberUtils.isNumber(textWidth.getText())) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
 			textWidth.setFocus();
 			return false;
 		}
@@ -158,7 +159,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		} catch(Exception e) {
 			logger.error("SQLFormatter preference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), CommonMessages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
 /**
@@ -179,7 +180,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      */
     protected void createButtonsForButtonBar(Composite parent) {
         // create OK and Details buttons
-        createButton(parent, IDialogConstants.OK_ID, Messages.get().Confirm, true);
+        createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
         createDetailsButton(parent);
     }
 

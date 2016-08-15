@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -58,7 +59,7 @@ public class DialogUtil {
 				objectSelector.open();
 			} else if (objectSelector.getObjectCount() <= 0) {
 				//해당 오브젝트를 찾을 수 없습니다.
-				MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
+				MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);
 				return;
 			}
 			map = objectSelector.getSelectObject();
@@ -87,10 +88,10 @@ public class DialogUtil {
 			popupIndexInformationDialog(userDB, indexDao);
 		} else if (!StringUtils.isEmpty( map.get("OBJECT_TYPE"))){
 
-			MessageDialog.openInformation(null , Messages.get().Information, Messages.get().DoNotSupportObject);
+			MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().DoNotSupportObject);
 		} else if (StringUtils.isEmpty( map.get("OBJECT_TYPE"))){
 
-			MessageDialog.openInformation(null , Messages.get().Information, Messages.get().NotFountObject);
+			MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);
 		}
 
 	}

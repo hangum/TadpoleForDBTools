@@ -16,7 +16,6 @@ public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
 
 	public String format;
-
 	public String AddTable;
 
 	public String ViewQuery;
@@ -32,7 +31,6 @@ public class Messages {
 	public String Event;
 	public String Database;
 	public String Collation;
-	public String Name;
 	public String Definer;
 	public String Modified;
 	public String Created;
@@ -74,9 +72,8 @@ public class Messages {
 	public String AWSRDSLoginComposite_8;
 	public String TableColumnSelectionAction_1;
 	public String TableEditPart_8;
-	public String Filter;
+	
 	public String ConnectDatabaseAction_1;
-	public String Email;
 	public String Detail;
 	public String Host;
 	public String DBLoginDialog_11;
@@ -96,7 +93,7 @@ public class Messages {
 	public String MainEditor_12;
 	public String MainEditor_19;
 	public String MainEditor_21;
-	public String Search;
+	
 	public String MainEditor_27;
 	public String MainEditor_29;
 	public String MainEditor_3;
@@ -143,9 +140,7 @@ public class Messages {
 	public String ExtensionBrowserURLDialog_0;
 	public String List;
 	public String Description;
-	public String Add;
-	public String Delete;
-	public String Save;
+	
 	public String IsUse;
 	public String URL;
 	public String GenerateSQLDeleteAction_0;
@@ -159,8 +154,7 @@ public class Messages {
 	public String ColumnName;
 	public String DataType;
 	public String GrantCheckerUtils_0;
-	public String YES;
-	public String NO;
+	
 	public String ObjectDeleteAction_0;
 	public String ObjectDeleteAction_1;
 	public String ObjectDeleteAction_10;
@@ -183,7 +177,7 @@ public class Messages {
 	public String QueryHistoryComposite_10;
 	public String Result;
 	public String Message;
-	public String Date;
+	
 	public String SQLiteLoginComposite_11;
 	public String SQLiteLoginComposite_12;
 	public String SQLiteLoginComposite_13;
@@ -313,15 +307,14 @@ public class Messages {
 	public String OthersConnectionRDBWithoutTunnelingGroup_4;
 	public String OthersConnectionRDBWithoutTunnelingGroup_5;
 	public String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1;
-	public String Start;
+	
 	public String SessionListEditor_13;
 	public String SessionListEditor_15;
-	public String Stop;
+	
 	public String PID;
 	public String Command;
 	public String Time;
 	public String State;
-	public String Info;
 	public String SessionListEditor_3;
 	public String SessionListEditor_4;
 	public String Query;
@@ -329,13 +322,13 @@ public class Messages {
 	public String SessionListEditorInput_0;
 	public String MongoDBLoginComposite_lblReplicaSet_text;
 	public String MongoDBLoginComposite_lblExLocalhostlocalhost_text;
-	public String Clear;
+	
 	public String MainSQLEditorAPIServiceDialog_0;
 	public String Argument;
 	public String MainSQLEditorAPIServiceDialog_2;
 	public String MainSQLEditorAPIServiceDialog_3;
 	public String MainSQLEditorAPIServiceDialog_7;
-	public String RUN;
+	
 	public String SystemMessage;
 	public String ErrorMessage;
 	public String MessageComposite_4;
@@ -406,7 +399,6 @@ public class Messages {
 	public String ResultSetComposite_3;
 
 	public String ResultSetComposite_6;
-	public String Warning;
 	public String ResultSetComposite_8;
 	public String JDBCOptions;
 	public String DBMSOutput;
@@ -454,19 +446,14 @@ public class Messages {
 	public String JDBCDriverSetting_DriverList;
 	public String JDBCDriverSetting_Path;
 	public String JDBCDriverSetting_FileList;
-	public String Confirm;
-	public String Error;
+	
 	public String JDBCDriverSetting_JARUpload;
-	public String Refresh;
-	public String Close;
+	
 	public String DoYouWnatDownload;
 	public String DatabaseInformation;
 	public String DriverInformation;
-	public String Information;
 	public String NotSupportDatabase;
 	public String ExecuteQuery;
-	public String OK;
-	public String CANCEL;
 	public String Column;
 
 	public String DBLoginDialog_13;

@@ -38,6 +38,7 @@ import com.google.gson.JsonArray;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.HTMLDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -194,7 +195,7 @@ public class UserAPIServiceDialog extends Dialog {
 		try {
 			String strAPIKEY = textAPIKey.getText();
 			if(strAPIKEY.equals("")) { //$NON-NLS-1$
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserAPIServiceDialog_10);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserAPIServiceDialog_10);
 				textAPIKey.setFocus();
 				
 				return;
@@ -204,7 +205,7 @@ public class UserAPIServiceDialog extends Dialog {
 			UserDBDAO userDB = null;
 			UserDBResourceDAO userDBResourceDao = TadpoleSystem_UserDBResource.findAPIKey(strAPIKEY);
 			if(userDBResourceDao == null) {
-				MessageDialog.openInformation(getShell(), Messages.get().Confirm, Messages.get().UserAPIServiceDialog_12);
+				MessageDialog.openInformation(getShell(), CommonMessages.get().Confirm, Messages.get().UserAPIServiceDialog_12);
 			} else {
 				
 				String strSQL = TadpoleSystem_UserDBResource.getResourceData(userDBResourceDao);
@@ -240,7 +241,7 @@ public class UserAPIServiceDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("api exception", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().APIServiceDialog_11 + "\n" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
@@ -335,9 +336,9 @@ public class UserAPIServiceDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 		createButton(parent, DOWNLOAD_BTN_ID, Messages.get().Download, false);
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().RUN, true);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().RUN, true);
 	}
 	
 	/**

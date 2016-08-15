@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -208,36 +209,36 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		String txtShownInTheColumn = textShowInTheColumn.getText();
 		
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textSelectLimit.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtResultPage)) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textResultPage.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtQueryTimtout)) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Query timeout is " + Messages.get().RDBPreferencePage_0);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, "Query timeout is " + Messages.get().RDBPreferencePage_0);
 			textQueryTimeout.setFocus();
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtCommitCount)) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, "Commit count is " + Messages.get().RDBPreferencePage_0);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, "Commit count is " + Messages.get().RDBPreferencePage_0);
 			textCommitCount.setFocus();
 			return false;
 		}
 		
 		if("".equals(txtOraclePlan)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().RDBPreferencePage_3);			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().RDBPreferencePage_3);			 //$NON-NLS-1$
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtShownInTheColumn)) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().RDBPreferencePage_0);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().RDBPreferencePage_0);
 			textShowInTheColumn.setFocus();
 			return false;
 		}
@@ -264,7 +265,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		} catch(Exception e) {
 			logger.error("RDBPreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), CommonMessages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

@@ -21,14 +21,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.manager.core.Messages;
-
-import org.eclipse.swt.widgets.Label;
 
 /**
  * <pre>
@@ -106,7 +106,7 @@ public class DBOthresConfigDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().DBOthresConfigDialog_5)) {
+		if(MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().DBOthresConfigDialog_5)) {
 			try {
 				userDB.setIs_visible(btnVisible.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 				userDB.setIs_lock(btnDbLock.getSelection()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
@@ -139,8 +139,8 @@ public class DBOthresConfigDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

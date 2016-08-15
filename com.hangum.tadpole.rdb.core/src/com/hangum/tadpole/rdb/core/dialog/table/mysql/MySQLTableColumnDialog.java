@@ -34,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -128,7 +129,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		Label lblColumnName = new Label(container, SWT.NONE);
-		lblColumnName.setText(Messages.get().Name);
+		lblColumnName.setText(CommonMessages.get().Name);
 		
 		textColumnName = new Text(container, SWT.BORDER);
 		textColumnName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -241,12 +242,12 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 		String strComment = textComment.getText();
 		
 		if(StringUtils.trimToEmpty(strName).equals("")) { //$NON-NLS-1$
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MySQLTableColumnDialog_20);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().MySQLTableColumnDialog_20);
 			textColumnName.setFocus();
 			
 			return;
 		} else if(StringUtils.trimToEmpty(strType).equals("")) { //$NON-NLS-1$
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().MySQLTableColumnDialog_23);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().MySQLTableColumnDialog_23);
 			textColumnName.setFocus();
 			
 			return;
@@ -266,7 +267,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 			try {
 				TableColumnObjectQuery.addColumn(userDB, tableDAO, metaDataDao);
 				refreshTableColumn();
-				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MySQLTableColumnDialog_25);
+				MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().MySQLTableColumnDialog_25);
 				
 				textColumnName.setText("");
 				textComment.setText("");
@@ -283,7 +284,7 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 			try {
 				TableColumnObjectQuery.updateColumn(userDB, tableDAO, tableColumnDAO, metaDataDao);
 				refreshTableColumn();
-				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MySQLTableColumnDialog_29);
+				MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().MySQLTableColumnDialog_29);
 				
 				super.okPressed();
 			} catch (Exception e) {
@@ -304,8 +305,8 @@ public class MySQLTableColumnDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

@@ -51,6 +51,7 @@ import org.eclipse.ui.PartInitException;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
@@ -169,7 +170,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 						logger.error("Load the table data", e); //$NON-NLS-1$
 
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, Messages.get().ExplorerViewer_39, errStatus); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_39, errStatus); //$NON-NLS-1$
 					}
 				}
 			}
@@ -203,7 +204,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
@@ -323,7 +324,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 		deleteAction_Table 	= new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_6);
 		collFindAndModifyAction = new ObjectMongodbCollFindAndModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_7);
 		
-		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().Refresh);
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, CommonMessages.get().Refresh);
 		insertStmtAction 	= new GenerateSQLInsertAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_9);
 
 		renameColAction 	= new ObjectMongodbRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleMongoDBCollectionComposite_10);
@@ -456,7 +457,7 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 							TableUtil.packTable(tableListViewer.getTable());
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				});	// end display.asyncExec

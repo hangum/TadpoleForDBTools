@@ -27,6 +27,7 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditor;
 import com.hangum.tadpole.commons.admin.core.editors.sqlaudit.AdminSQLAuditEditorInput;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -62,7 +63,7 @@ public class AdminSQLAuditAction extends Action implements ISelectionListener, I
 			logger.error("Admin SQL Audit editor", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AdminSQLAuditAction_2, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().AdminSQLAuditAction_2, errStatus); //$NON-NLS-1$
 		}
 	}
 

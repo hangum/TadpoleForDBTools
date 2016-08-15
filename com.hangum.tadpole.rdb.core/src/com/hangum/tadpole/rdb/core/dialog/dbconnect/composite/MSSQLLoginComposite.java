@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -260,14 +261,14 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 		
 		// 기존 데이터 업데이트
 		if(getDataActionStatus() == DATA_STATUS.MODIFY) {
-			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
+			if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().SQLiteLoginComposite_13)) return false; //$NON-NLS-1$
 			
 			try {
 				TadpoleSystem_UserDBQuery.updateUserDB(userDB, oldUserDB, SessionManager.getUserSeq());
 			} catch (Exception e) {
 				logger.error("MSSQL connection", e);
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().SQLiteLoginComposite_5, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}
@@ -290,7 +291,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 				} catch (Exception e) {
 					logger.error("MSSQL Connection", e); //$NON-NLS-1$
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MSSQLLoginComposite_8, errStatus); //$NON-NLS-1$
 					
 					return false;
 				}				
@@ -301,7 +302,7 @@ public class MSSQLLoginComposite extends AbstractLoginComposite {
 			} catch (Exception e) {
 				logger.error("MSSQL connection save", e); //$NON-NLS-1$
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getShell(), Messages.get().Error, Messages.get().MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MSSQLLoginComposite_10, errStatus); //$NON-NLS-1$
 				
 				return false;
 			}

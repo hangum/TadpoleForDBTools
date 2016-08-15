@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 
 /**
@@ -88,7 +89,7 @@ public class OTPLoginDialog extends Dialog {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
 		if(!NumberUtils.isNumber(strOTPCode)) {
 			textOTPCode.setFocus();
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
 			return;
 		}
 		
@@ -103,7 +104,7 @@ public class OTPLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, true); //$NON-NLS-1$
 	}
 
 	/**

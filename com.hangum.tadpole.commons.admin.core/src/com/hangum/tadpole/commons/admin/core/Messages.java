@@ -45,15 +45,9 @@ public class Messages {
 
 	public String AdminSQLAuditEditor_7;
 
-	public String Refresh;
-
-	public String Add;
-
 	public String AdminUserListComposite_11;
 
 	public String AdminUserListComposite_12;
-
-	public String Modify;
 
 	public String AdminUserListComposite_6;
 
@@ -141,8 +135,6 @@ public class Messages {
 	public String NewUserDialog_32;
 
 	public String NewUserDialog_34;
-	public String Name;
-
 	public String NewUserDialog_40;
 
 	public String NewUserDialog_42;
@@ -162,7 +154,6 @@ public class Messages {
 	
 	public String UserMgntEditorInput_0;
 
-	public  String Save;
 	public  String AdminSystemSettingEditor_2;
 	public  String AdminSystemSettingEditor_4;
 	
@@ -171,25 +162,10 @@ public class Messages {
 	public String JDBCDriverManagerAction_0;
 
 	public String User;
-	public String Information;
-	public String Search;
-	public String Confirm;
-
-	public String Error;
 
 	public String Database;
 
-	public String email;
-
-	public String Cancle;
-
-	public String Delete;
-
 	public String IP;
-
-	public String Close;
-
-	public String Warning;
 
 	public String mustBeNumber;
 
@@ -224,10 +200,6 @@ public class Messages {
 	public String DatabaseTimeZone;
 	
 	public String LogDirectory;
-	
-	public String Yes;
-	
-	public String No;
 	
 	public String APIServerURL;
 	

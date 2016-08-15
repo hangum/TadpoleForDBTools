@@ -12,6 +12,7 @@ package com.hangum.tadpole.commons.libs.core.mails.template;
 
 import com.hangum.tadpole.commons.libs.core.Messages;
 import com.hangum.tadpole.commons.libs.core.define.HTMLDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 
 /**
  * new user mail template
@@ -36,7 +37,7 @@ public class NewUserMailBodyTemplate extends MailBodyTemplate {
 		
 		strContent.append("<table class='tg'>");
 			strContent.append(mailBodyTemplate(Messages.get().UserName, strName));
-			strContent.append(mailBodyTemplate(Messages.get().Email, strEmail));
+			strContent.append(mailBodyTemplate(CommonMessages.get().Email, strEmail));
 			strContent.append(mailBodyTemplate(Messages.get().Confirmkey, strConfirmKey));
 		strContent.append("</table>");
 		
