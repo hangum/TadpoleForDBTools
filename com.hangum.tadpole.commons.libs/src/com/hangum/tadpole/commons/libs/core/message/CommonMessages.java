@@ -24,8 +24,8 @@ public class CommonMessages {
 	public String Error;
 	public String Close;
 	
-	public String YES;
-	public String NO;
+	public String Yes;
+	public String No;
 	
 	public String Start;
 	public String Stop;
@@ -37,7 +37,7 @@ public class CommonMessages {
 	public String Delete;
 	public String Modify;
 	public String Save;
-	public String RUN;
+	public String Run;
 	
 	public String Refresh;
 	public String Clear;

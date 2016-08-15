@@ -346,7 +346,7 @@ public class APIServiceDialog extends Dialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 		createButton(parent, DOWNLOAD_BTN_ID, Messages.get().Download, false);
-		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().RUN, true);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Run, true);
 	}
 	
 	/**

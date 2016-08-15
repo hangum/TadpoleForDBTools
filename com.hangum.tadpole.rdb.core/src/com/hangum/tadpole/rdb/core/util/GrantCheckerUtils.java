@@ -46,7 +46,7 @@ public class GrantCheckerUtils {
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getQuestion_dml())
 				|| PermissionChecker.isProductBackup(userDB)
 		) {
-			MessageDialog dialog = new MessageDialog(null, CommonMessages.get().Confirm, null, Messages.get().GrantCheckerUtils_0, MessageDialog.ERROR, new String[] {CommonMessages.get().YES, CommonMessages.get().NO}, 1);
+			MessageDialog dialog = new MessageDialog(null, CommonMessages.get().Confirm, null, Messages.get().GrantCheckerUtils_0, MessageDialog.ERROR, new String[] {CommonMessages.get().Yes, CommonMessages.get().No}, 1);
 			if(dialog.open() == 1) return false;
 		}
 		
@@ -85,7 +85,7 @@ public class GrantCheckerUtils {
 			}
 		
 			if(isDDLQuestion) {
-				MessageDialog dialog = new MessageDialog(null, Messages.get().Execute, null, Messages.get().GrantCheckerUtils_0, MessageDialog.QUESTION, new String[] {CommonMessages.get().YES, CommonMessages.get().NO}, 1);
+				MessageDialog dialog = new MessageDialog(null, Messages.get().Execute, null, Messages.get().GrantCheckerUtils_0, MessageDialog.QUESTION, new String[] {CommonMessages.get().Yes, CommonMessages.get().No}, 1);
 				if(dialog.open() != MessageDialog.OK) return false;
 			}
 		}
