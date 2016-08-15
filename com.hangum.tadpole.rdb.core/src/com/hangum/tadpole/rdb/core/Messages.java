@@ -20,7 +20,7 @@ public class Messages {
 
 	public String ViewQuery;
 	public String ResourceHistoryDialog_0;
-	public String Title;
+	
 	public String CreatTime;
 	public String Compare;
 	public String Sec;
@@ -139,7 +139,6 @@ public class Messages {
 	public String ExtensionBrowserAction_3;
 	public String ExtensionBrowserURLDialog_0;
 	public String List;
-	public String Description;
 	
 	public String IsUse;
 	public String URL;

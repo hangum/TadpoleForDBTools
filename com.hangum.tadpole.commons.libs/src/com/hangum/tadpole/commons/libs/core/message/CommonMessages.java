@@ -42,6 +42,8 @@ public class CommonMessages {
 	public String Refresh;
 	public String Clear;
 	
+	public String Title;
+	public String Description;
 	public String Email;
 	public String Name;
 	public String Date;

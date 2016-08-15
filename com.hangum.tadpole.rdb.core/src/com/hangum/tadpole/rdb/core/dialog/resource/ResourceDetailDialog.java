@@ -128,7 +128,7 @@ public class ResourceDetailDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
-		lblTitle.setText(Messages.get().Title);
+		lblTitle.setText(CommonMessages.get().Title);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY);
 		textTitle.setEditable(true);
@@ -147,7 +147,7 @@ public class ResourceDetailDialog extends Dialog {
 		comboSharedType.setText(originalResourceDB.getShared_type());
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
-		lblDescription.setText(Messages.get().Description);
+		lblDescription.setText(CommonMessages.get().Description);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDescription.setEditable(true);

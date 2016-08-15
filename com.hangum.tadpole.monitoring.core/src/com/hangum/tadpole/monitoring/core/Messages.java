@@ -4,7 +4,6 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.monitoring.core.messages"; //$NON-NLS-1$
-	public String Title;
 	public String AddScheduleDialog_12;
 	public String AddScheduleDialog_15;
 	public String AddScheduleDialog_17;
@@ -18,7 +17,6 @@ public class Messages {
 	public String AddScheduleDialog_8;
 	public String AddScheduleDialog_9;
 	public String AddSQLDialog_0;
-	public String Description;
 	public String SQL;
 	public String AddSQLDialog_4;
 	public String AddSQLDialog_6;

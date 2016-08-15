@@ -215,13 +215,9 @@ public class Messages {
 
 	public String URL;
 
-	public String Description;
-
 	public String DetailItem;
 
 	public String Share;
-
-	public String Title;
 
 	public String RESTFulAPIManagerEditor_22;
 

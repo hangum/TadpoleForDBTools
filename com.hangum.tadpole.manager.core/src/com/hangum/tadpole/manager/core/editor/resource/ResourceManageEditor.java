@@ -332,7 +332,7 @@ public class ResourceManageEditor extends EditorPart {
 		cShare.setItems(new String[] { "PUBLIC", "PRIVATE" }); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Label lblNewLabel_1 = new Label(compositeDetail, SWT.NONE);
-		lblNewLabel_1.setText(Messages.get().Title);
+		lblNewLabel_1.setText(CommonMessages.get().Title);
 
 		textTitle = new Text(compositeDetail, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -442,7 +442,7 @@ public class ResourceManageEditor extends EditorPart {
 //		btnDelete.setText("Delete");
 
 		Label lblDescription = new Label(compositeDetail, SWT.NONE);
-		lblDescription.setText(Messages.get().Description);
+		lblDescription.setText(CommonMessages.get().Description);
 
 		textDescription = new Text(compositeDetail, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 6, 1);
@@ -608,10 +608,10 @@ public class ResourceManageEditor extends EditorPart {
 		new TableViewColumnDefine("RESOURCE_SEQ", Messages.get().ID, 50, SWT.RIGHT) //$NON-NLS-1$
 				, new TableViewColumnDefine("RESOURCE_TYPES", Messages.get().Type, 60, SWT.CENTER) //$NON-NLS-1$
 				, new TableViewColumnDefine("USER_NAME", Messages.get().User, 90, SWT.CENTER) //$NON-NLS-1$
-				, new TableViewColumnDefine("RES_TITLE", Messages.get().Title, 150, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("RES_TITLE", CommonMessages.get().Title, 150, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("RESTAPI_URI", Messages.get().APIURL, 150, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("SHARED_TYPE", Messages.get().Share, 70, SWT.CENTER) //$NON-NLS-1$
-				, new TableViewColumnDefine("DESCRIPTION", Messages.get().Description, 250, SWT.LEFT) //$NON-NLS-1$
+				, new TableViewColumnDefine("DESCRIPTION", CommonMessages.get().Description, 250, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("CREATE_TIME", Messages.get().CreateDate, 120, SWT.LEFT) //$NON-NLS-1$
 		};
 

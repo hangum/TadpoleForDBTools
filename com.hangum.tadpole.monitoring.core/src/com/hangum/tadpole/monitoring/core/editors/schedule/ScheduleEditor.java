@@ -187,7 +187,7 @@ public class ScheduleEditor extends EditorPart {
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerList, SWT.NONE);
 		TableColumn tblclmnCreateDate = tableViewerColumn_1.getColumn();
 		tblclmnCreateDate.setWidth(200);
-		tblclmnCreateDate.setText(Messages.get().Description);
+		tblclmnCreateDate.setText(CommonMessages.get().Description);
 		
 		Group compositeResult = new Group(sashForm, SWT.NONE);
 		compositeResult.setLayout(new GridLayout(1, false));

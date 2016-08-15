@@ -251,7 +251,7 @@ public class SQLTemplateView extends ViewPart {
 		TreeViewerColumn treeViewerColumn_2 = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnDescription = treeViewerColumn_2.getColumn();
 		trclmnDescription.setWidth(100);
-		trclmnDescription.setText(Messages.get().Description);
+		trclmnDescription.setText(CommonMessages.get().Description);
 		
 		TreeViewerColumn treeViewerColumn_1 = new TreeViewerColumn(tvSQLTemplate, SWT.NONE);
 		TreeColumn trclmnName = treeViewerColumn_1.getColumn();

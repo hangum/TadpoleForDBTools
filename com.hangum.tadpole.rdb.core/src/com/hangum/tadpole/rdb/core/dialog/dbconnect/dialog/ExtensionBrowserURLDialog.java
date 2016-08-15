@@ -133,7 +133,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		TableColumn tblclmnComment = new TableColumn(table, SWT.NONE);
 		tblclmnComment.setWidth(100);
-		tblclmnComment.setText(Messages.get().Description);
+		tblclmnComment.setText(CommonMessages.get().Description);
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ExtensionBrowserLableProvider());
@@ -166,7 +166,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(grpAdd, SWT.NONE);
-		lblDescription.setText(Messages.get().Description);
+		lblDescription.setText(CommonMessages.get().Description);
 		
 		textComment = new Text(grpAdd, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);

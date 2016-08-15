@@ -216,7 +216,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt = tvColumnCmt.getColumn();
 		tcCmt.setWidth(300);
-		tcCmt.setText(Messages.get().Description);
+		tcCmt.setText(CommonMessages.get().Description);
 
 		Composite composite_3 = new Composite(compositeBody, SWT.NONE);
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

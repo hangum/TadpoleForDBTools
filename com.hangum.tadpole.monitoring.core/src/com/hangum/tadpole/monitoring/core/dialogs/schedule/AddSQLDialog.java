@@ -87,7 +87,7 @@ public class AddSQLDialog extends Dialog {
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDesc = new Label(container, SWT.NONE);
-		lblDesc.setText(Messages.get().Description);
+		lblDesc.setText(CommonMessages.get().Description);
 		
 		textDesc = new Text(container, SWT.BORDER);
 		textDesc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

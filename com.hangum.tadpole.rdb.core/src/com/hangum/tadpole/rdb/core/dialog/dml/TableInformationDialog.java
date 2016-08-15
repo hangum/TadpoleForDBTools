@@ -151,7 +151,7 @@ public class TableInformationDialog extends Dialog {
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt = tvColumnCmt.getColumn();
 		tcCmt.setWidth(300);
-		tcCmt.setText(Messages.get().Description);
+		tcCmt.setText(CommonMessages.get().Description);
 		
 		tableViewer_ext = new TableViewer(sashFormData, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table_ext = tableViewer_ext.getTable();

@@ -136,14 +136,14 @@ public class AddScheduleDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(3, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
-		lblTitle.setText(Messages.get().Title);
+		lblTitle.setText(CommonMessages.get().Title);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER);
 		textTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
-		lblDescription.setText(Messages.get().Description);
+		lblDescription.setText(CommonMessages.get().Description);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER);
 		textDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
