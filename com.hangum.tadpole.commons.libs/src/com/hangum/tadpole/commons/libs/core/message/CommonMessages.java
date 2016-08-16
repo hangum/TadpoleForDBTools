@@ -12,6 +12,12 @@ package com.hangum.tadpole.commons.libs.core.message;
 
 import org.eclipse.rap.rwt.RWT;
 
+/**
+ * Commons message
+ * 
+ * @author hangum
+ *
+ */
 public class CommonMessages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.message.messages"; //$NON-NLS-1$
 
