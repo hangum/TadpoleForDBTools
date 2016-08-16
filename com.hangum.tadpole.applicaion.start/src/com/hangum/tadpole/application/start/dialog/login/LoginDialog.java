@@ -183,6 +183,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		lblLanguage.setText(Messages.get().LoginDialog_lblLanguage_text);
 		
 		comboLanguage = new Combo(compositeLogin, SWT.READ_ONLY);
+		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -191,11 +192,8 @@ public class LoginDialog extends AbstractLoginDialog {
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
 		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
-
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
-		
-		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		compositeTail = new Composite(container, SWT.NONE);
 		GridLayout gl_compositeTail = new GridLayout(4, false);

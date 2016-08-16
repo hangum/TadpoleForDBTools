@@ -188,13 +188,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
-		
-		try {
-			Locale locale = Locale.forLanguageTag(SessionManager.getLangeage());
-			comboLanguage.setText(locale.getDisplayLanguage(locale));
-		} catch(Exception e) {
-			logger.error("initialize language", e);
-		}
+		comboLanguage.setText(SessionManager.getLangeage());
 		
 		Label lblTimezone = new Label(container_1, SWT.NONE);
 		lblTimezone.setText(Messages.get().TimeZone);

@@ -61,7 +61,7 @@ public class Application implements EntryPoint {
 				
 				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
 				if(Dialog.OK != dialog.open()) {
-					throw new Exception("Initialization failed.\n");
+					throw new Exception("System initialization failed.\n");
 				}
 			}
 		} catch(Exception e) {
