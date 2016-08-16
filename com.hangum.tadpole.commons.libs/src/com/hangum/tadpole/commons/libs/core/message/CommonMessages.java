@@ -54,6 +54,8 @@ public class CommonMessages {
 	public String Name;
 	public String Date;
 	
+	public String CompanyInfo;
+	
 	/** 접근제어 시스템 연동 오류 */
 	public String Check_DBAccessSystem;
 	

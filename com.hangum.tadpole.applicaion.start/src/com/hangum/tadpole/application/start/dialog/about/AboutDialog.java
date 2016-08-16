@@ -115,6 +115,10 @@ public class AboutDialog extends Dialog {
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabel4.setText(Messages.get().AboutAction_5);
+		
+		Label lblCompanyInfo = new Label(composite_1, SWT.NONE);
+		lblCompanyInfo.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false, 1, 1));
+		lblCompanyInfo.setText(CommonMessages.get().CompanyInfo);
 
 		return container;
 	}

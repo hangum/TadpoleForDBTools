@@ -237,7 +237,7 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 		labelCompanyInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		
 		Label tail_lblLoginForm = new Label(compositeTailRight, SWT.NONE);
-		tail_lblLoginForm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 3));
+		tail_lblLoginForm.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 2));
 		tail_lblLoginForm.setImage(ResourceManager.getPluginImage(BrowserActivator.ID, "resources/TDB_64.png"));
 
 		lblHangumtadpolehubcom = new Label(compositeTailRight, SWT.NONE);
@@ -245,9 +245,6 @@ public class ServiceLoginDialog extends AbstractLoginDialog {
 	
 		lblCompanyAddress = new Label(compositeTailRight, SWT.NONE);
 		lblCompanyAddress.setText(Messages.get().company_address_tel);
-		
-		Label lblCopyrightcTadpolehub = new Label(compositeTailRight, SWT.NONE);
-		lblCopyrightcTadpolehub.setText("Copyright(c) 2016 TadpoleHub Co.,LTD ");
 	
 		lblCompanyName = new Label(compositeTailRight, SWT.NONE);
 		lblCompanyName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 3));
