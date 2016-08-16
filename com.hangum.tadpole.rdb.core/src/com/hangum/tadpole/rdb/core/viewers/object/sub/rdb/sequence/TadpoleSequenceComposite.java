@@ -41,6 +41,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -153,7 +154,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 	//SEQUENCE_OWNER, SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER
 	private void createSequenceListColumns() {
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
-		new TableViewColumnDefine("SEQUENCE_NAME", Messages.get().Name, 100, SWT.LEFT) // //$NON-NLS-1$
+		new TableViewColumnDefine("SEQUENCE_NAME", CommonMessages.get().Name, 100, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("MIN_VALUE", "Min value", 80, SWT.RIGHT) // //$NON-NLS-1$
 				//, new TableViewColumnDefine("MAX_VALUE", "Max value", 80, SWT.RIGHT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("INCREMENT_BY", "Increment by", 40, SWT.RIGHT) // //$NON-NLS-1$
@@ -178,7 +179,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 		
 		creatAction_Sequence = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().SequenceCreated);
 		dropAction_Sequence = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().SequenceDelete); //$NON-NLS-1$
-		refreshAction_Sequence = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().Refresh); //$NON-NLS-1$
+		refreshAction_Sequence = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, CommonMessages.get().Refresh); //$NON-NLS-1$
 		//executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().Execute); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().ViewDDL); //$NON-NLS-1$
 
@@ -261,7 +262,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 							TableUtil.packTable(sequenceListViewer.getTable());
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				}); // end display.asyncExec

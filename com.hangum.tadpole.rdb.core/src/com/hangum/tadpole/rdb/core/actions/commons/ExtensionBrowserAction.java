@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExternalBrowser;
@@ -56,7 +57,7 @@ public class ExtensionBrowserAction implements IViewActionDelegate {
 				List<ExternalBrowserInfoDAO> listExternalBrowser = TadpoleSystem_ExternalBrowser.getExternalBrowser(userDB);
 				
 				if(listExternalBrowser.isEmpty()) {
-					MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ExtensionBrowserAction_1);					 //$NON-NLS-1$
+					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().ExtensionBrowserAction_1);					 //$NON-NLS-1$
 				} else {
 					ExternalBrowserInput exi = new ExternalBrowserInput(userDB, listExternalBrowser);
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -67,7 +68,7 @@ public class ExtensionBrowserAction implements IViewActionDelegate {
 				logger.error("Get external browser exception", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExtensionBrowserAction_3, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().ExtensionBrowserAction_3, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

@@ -17,12 +17,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.DDLScriptManager;
-import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 
@@ -107,7 +107,7 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 			FindEditorAndWriteQueryUtil.run(userDB, strObjectName, strScript, true, actionType);
 		} catch (Exception e) {
 			logger.error("view ddl", e);
-			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
+			MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage());
 		}
 	}
 

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.initialize.wizard;
 
+import java.util.Locale;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -84,8 +86,8 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.YES_NO.YES.name(),
 						"1005tadPole1206", 	
 						PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-						"Default Admin", 
-						"en_us", 
+						"Personal Admin", 
+						Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), 
 						PublicTadpoleDefine.DEFAULT_TIME_ZONE,
 						PublicTadpoleDefine.YES_NO.YES.name(), 
 						PublicTadpoleDefine.YES_NO.NO.name(), 
@@ -108,8 +110,13 @@ public class SystemInitializeWizard extends Wizard {
 				adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
 				adminDao.getPasswd(), 	
 				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-				"System Admin", "en_us", PublicTadpoleDefine.DEFAULT_TIME_ZONE,
-				PublicTadpoleDefine.YES_NO.YES.name(), PublicTadpoleDefine.YES_NO.NO.name(), "", "*"); //$NON-NLS-1$ //$NON-NLS-2$
+				"System Default Admin", 
+				Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), 
+				PublicTadpoleDefine.DEFAULT_TIME_ZONE,
+				PublicTadpoleDefine.YES_NO.YES.name(), 
+				PublicTadpoleDefine.YES_NO.NO.name(), 
+				"", 
+				"*"); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);

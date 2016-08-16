@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.swtdesigner.ResourceManager;
 
@@ -114,6 +115,10 @@ public class AboutDialog extends Dialog {
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabel4.setText(Messages.get().AboutAction_5);
+		
+		Label lblCompanyInfo = new Label(composite_1, SWT.NONE);
+		lblCompanyInfo.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false, 1, 1));
+		lblCompanyInfo.setText(CommonMessages.get().CompanyInfo);
 
 		return container;
 	}
@@ -124,7 +129,7 @@ public class AboutDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, true);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, true);
 	}
 
 	/**

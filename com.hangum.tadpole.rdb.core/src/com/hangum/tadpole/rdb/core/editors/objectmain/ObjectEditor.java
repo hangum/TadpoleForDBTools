@@ -41,6 +41,7 @@ import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
@@ -249,7 +250,7 @@ public class ObjectEditor extends MainEditor {
 		
 		// do not execute query
 		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {
-			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().MainEditorServiceEnd);
+			MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().MainEditorServiceEnd);
 			return;
 		}
 
@@ -263,7 +264,7 @@ public class ObjectEditor extends MainEditor {
 				return;
 			}
 			
-//			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().ObjectEditor_3)) {
+//			if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().ObjectEditor_3)) {
 //				setOrionTextFocus();
 //				return;
 //			}
@@ -378,7 +379,7 @@ public class ObjectEditor extends MainEditor {
 		if(strSQLState.equals("42000") && intSQLErrorCode == 1304) { //$NON-NLS-1$
 			
 			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+			if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
 					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, cmd); //$NON-NLS-1$
@@ -419,7 +420,7 @@ public class ObjectEditor extends MainEditor {
 		
 		if(strSQLState.equals("S0001") && intSQLErrorCode == 2714) { //$NON-NLS-1$
 			String cmd = String.format("DROP %s %s", reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName()); //$NON-NLS-1$
-			if(MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
+			if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, String.format(Messages.get().ObjectEditor_13, reqQuery.getSqlObjectName()))) {
 				RequestResultDAO reqReResultDAO = new RequestResultDAO();
 				try {
 					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, cmd); //$NON-NLS-1$

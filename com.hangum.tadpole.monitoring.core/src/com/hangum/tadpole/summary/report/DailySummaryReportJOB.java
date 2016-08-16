@@ -40,7 +40,7 @@ public class DailySummaryReportJOB implements Job {
 
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		logger.info("daily summary report");
+		if(logger.isInfoEnabled()) logger.info("daily summary report");
 		
 		try {
 			// db 종류를 얻습니다.

@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -145,7 +146,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		
 		Label lblFilter = new Label(compositeHead, SWT.NONE);
 		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblFilter.setText(Messages.get().Filter);
+		lblFilter.setText(CommonMessages.get().Filter);
 		
 		textFilter = new Text(compositeHead,SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -260,7 +261,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 						MySQLExtensionViewDialog profileDialog = new MySQLExtensionViewDialog(getShell(), reqQuery, rsDAO);
 						profileDialog.open();
 					} else {
-						MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().DoNotShowProfileResult);
+						MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DoNotShowProfileResult);
 					}
 				}
 			});
@@ -323,7 +324,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	public void selectRowToEditor() {
 		TableColumnDAO columnDao = findSelectRowData();
 		if(columnDao == null) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().PleaseSelectRowData);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectRowData);
 			return;
 		}
 		
@@ -336,7 +337,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	public void selectColumnToEditor() {
 		TableColumnDAO columnDao = findSelectColumnData();
 		if(columnDao == null) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().PleaseSelectRowData);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectRowData);
 			return;
 		}
 		
@@ -536,7 +537,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if (openSingleRowDataAction.isEnabled()) {
 			openSingleRowDataAction.run();
 		} else {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetComposite_8);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResultSetComposite_8);
 		}
 	}
 	
@@ -546,7 +547,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	public void openSinglColumViewDialog() {
 		TableColumnDAO columnDao = findSelectColumnData();
 		if(columnDao == null) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetComposite_6);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResultSetComposite_6);
 			return;
 		}
 			

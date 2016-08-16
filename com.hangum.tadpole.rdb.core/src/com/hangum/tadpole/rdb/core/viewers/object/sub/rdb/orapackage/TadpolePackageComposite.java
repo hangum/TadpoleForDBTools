@@ -42,6 +42,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -183,7 +184,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});		
@@ -226,7 +227,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		
 		creatAction_Package = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_3);
 		dropAction_Package = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().TadpolePackageComposite_4);
-		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().Refresh);
+		refreshAction_Package = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, CommonMessages.get().Refresh);
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES, Messages.get().ViewDDL);
 		executeAction_Package = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PACKAGES , Messages.get().TadpolePackageComposite_7);
@@ -288,7 +289,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * package procedure function list
 	 */
 	protected void createProcedureFunctionListColumne(final TableViewer tv) {
-		String[] name = {Messages.get().Type, Messages.get().Name, Messages.get().Overload};
+		String[] name = {Messages.get().Type, CommonMessages.get().Name, Messages.get().Overload};
 		int[] size = {120, 300, 120};
 
 		for (int i=0; i<name.length; i++) {
@@ -369,7 +370,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showPackage refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
 		}
 	}
 

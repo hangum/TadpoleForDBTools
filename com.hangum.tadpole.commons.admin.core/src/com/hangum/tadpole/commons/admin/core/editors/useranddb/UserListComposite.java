@@ -51,6 +51,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -129,7 +130,7 @@ public class UserListComposite extends Composite {
 				initUI();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		new ToolItem(toolBar, SWT.SEPARATOR);
 	
 		ToolItem tltmAdd = new ToolItem(toolBar, SWT.NONE);
@@ -140,12 +141,12 @@ public class UserListComposite extends Composite {
 				addUser();
 			}
 		});
-		tltmAdd.setToolTipText(Messages.get().Add);
+		tltmAdd.setToolTipText(CommonMessages.get().Add);
 	
 		tltmModify = new ToolItem(toolBar, SWT.NONE);
 		tltmModify.setImage(GlobalImageUtils.getModify());
 		tltmModify.setEnabled(false);
-		tltmModify.setToolTipText(Messages.get().Modify);
+		tltmModify.setToolTipText(CommonMessages.get().Modify);
 		tltmModify.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -192,7 +193,7 @@ public class UserListComposite extends Composite {
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSearch.setText(Messages.get().Search);
+		lblSearch.setText(CommonMessages.get().Search);
 		
 		textSearch = new Text(compositeHead, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		textSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -245,7 +246,7 @@ public class UserListComposite extends Composite {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] colNames = {Messages.get().email, Messages.get().Name, 
+		String[] colNames = {CommonMessages.get().Email, CommonMessages.get().Name, 
 							Messages.get().AdminUserListComposite_6, Messages.get().UserListComposite_6, 
 							Messages.get().IsSharedDB, Messages.get().DefaultAddDBCount, Messages.get().DefaultUseDay,
 							Messages.get().AdminUserListComposite_7, Messages.get().AdminUserListComposite_8, 
@@ -332,7 +333,7 @@ public class UserListComposite extends Composite {
 				logger.error("Database Management editor", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -352,7 +353,7 @@ public class UserListComposite extends Composite {
 				logger.error("SQL Audit open", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().UserListComposite_8, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().UserListComposite_8, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

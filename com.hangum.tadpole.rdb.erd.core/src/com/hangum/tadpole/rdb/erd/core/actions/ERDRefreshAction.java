@@ -23,6 +23,7 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -70,7 +71,7 @@ public class ERDRefreshAction extends SelectionAction {
 	
 	@Override
 	public void run() {
-		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), Messages.get().Confirm, Messages.get().ERDRefreshAction_4)) return;
+		if(!MessageDialog.openConfirm(getWorkbenchPart().getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ERDRefreshAction_4)) return;
 		
 		DB dbModel = rdbEditor.getDb();
 		

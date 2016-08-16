@@ -34,6 +34,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Messages;
@@ -231,7 +232,7 @@ public class MongoDBTableEditor extends EditorPart {
 				findBasic();
 			}
 		});
-		btnBasicSearch.setText(Messages.get().Search);
+		btnBasicSearch.setText(CommonMessages.get().Search);
 		
 		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, true);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

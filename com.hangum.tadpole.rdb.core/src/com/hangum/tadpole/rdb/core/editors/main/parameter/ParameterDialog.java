@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -176,7 +177,7 @@ public class ParameterDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteQuery, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

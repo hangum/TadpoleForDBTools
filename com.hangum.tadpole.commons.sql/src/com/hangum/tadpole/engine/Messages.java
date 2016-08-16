@@ -19,21 +19,16 @@ public class Messages {
 	public String AlreadyUseService;
 	public String DBLockDialog_0;
 	public String DBLockDialog_1;
-	public String Error;
 	public String DBLockDialog_3;
-	public String OK;
-	public String Cancle;
 	public String OracleObjectCompileUtils_0;
 	public String ProcedureExecuterManager_0;
 	public String ProcedureExecuterManager_4;
 	public String ProcedureExecuterManager_6;
 
-	public String Name;
 	public String SharedType;
 	public String ResourceSaveDialog_10;
 	public String ResourceSaveDialog_11;
 	public String ShowURL;
-	public String Save;
 	public String ResourceSaveDialog_16;
 	public String ResourceSaveDialog_19;
 	public String Description;
@@ -48,8 +43,6 @@ public class Messages {
 	public String TadpoleSystem_UserQuery_5;
 	public String APIURL;
 	public String IsUseAPI;
-	public String Warning;
-	public String Information;
 	public String ServiceBill;
 
 	public static Messages get() {

@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.dao.KeyValueDAO;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -72,7 +73,7 @@ public class RDBInformationComposite extends DBInfosComposite {
 		TableViewerColumn tableViewerColumn = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnName = tableViewerColumn.getColumn();
 		tblclmnName.setWidth(130);
-		tblclmnName.setText(Messages.get().Name);
+		tblclmnName.setText(CommonMessages.get().Name);
 		
 		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tvInformation, SWT.NONE);
 		TableColumn tblclmnValue = tableViewerColumn_1.getColumn();

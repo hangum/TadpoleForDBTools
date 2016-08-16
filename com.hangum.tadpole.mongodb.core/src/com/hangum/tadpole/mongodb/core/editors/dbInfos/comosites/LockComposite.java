@@ -21,9 +21,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailComposite;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.CommandResult;
@@ -93,7 +93,7 @@ public class LockComposite extends Composite {
 				initData();
 			}
 		});
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		
 		Group grpReplicaSet = new Group(compositeServerStatus, SWT.NONE);
 		GridLayout gl_grpReplicaSet = new GridLayout(1, false);

@@ -23,6 +23,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -70,7 +71,7 @@ public class SessionListAction implements IViewActionDelegate {
 				logger.error("open session list", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
 //		} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 //			try {
@@ -80,10 +81,10 @@ public class SessionListAction implements IViewActionDelegate {
 //				logger.error("open session list", e); //$NON-NLS-1$
 //				
 //				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+//				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 //			}
 		} else {
-			MessageDialog.openWarning(null, Messages.get().Information, Messages.get().NotSupportDatabase);
+			MessageDialog.openWarning(null, CommonMessages.get().Information, Messages.get().NotSupportDatabase);
 		}
 	}
 

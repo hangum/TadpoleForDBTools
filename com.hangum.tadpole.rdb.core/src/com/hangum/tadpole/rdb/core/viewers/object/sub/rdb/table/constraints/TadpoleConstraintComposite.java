@@ -35,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -141,7 +142,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		
 		creatAction_Constraint = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().CreateConstraints);
 		dropAction_Constraint = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().DropConstraints);
-		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, Messages.get().Refresh);
+		refreshAction_Constraint = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS, CommonMessages.get().Refresh);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -227,7 +228,7 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("index refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
 		}
 	}
 

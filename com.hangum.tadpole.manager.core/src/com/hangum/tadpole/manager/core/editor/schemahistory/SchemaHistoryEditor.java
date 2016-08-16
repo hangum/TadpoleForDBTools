@@ -45,6 +45,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleCompareWidget;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.SchemaHistoryDetailDAO;
@@ -136,7 +137,7 @@ public class SchemaHistoryEditor extends EditorPart {
 		composite.setLayout(gl_composite);
 		
 		Label lblStart = new Label(composite, SWT.NONE);
-		lblStart.setText(Messages.get().Date);
+		lblStart.setText(CommonMessages.get().Date);
 		
 		dateTimeStart = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN);
 		
@@ -153,7 +154,7 @@ public class SchemaHistoryEditor extends EditorPart {
 			}
 		});
 		btnSearch.setImage(ResourceManager.getPluginImage("com.hangum.tadpole.manager.core", "resources/icons/search.png")); //$NON-NLS-1$ //$NON-NLS-2$
-		btnSearch.setText(Messages.get().Search);
+		btnSearch.setText(CommonMessages.get().Search);
 		
 		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -314,7 +315,7 @@ public class SchemaHistoryEditor extends EditorPart {
 	 * create table columns
 	 */
 	private void createTableColumn() {
-		String[] names = {Messages.get().SchemaHistoryEditor_35, Messages.get().SchemaHistoryEditor_36, Messages.get().SchemaHistoryEditor_37, Messages.get().SchemaHistoryEditor_38, Messages.get().Date};
+		String[] names = {Messages.get().SchemaHistoryEditor_35, Messages.get().SchemaHistoryEditor_36, Messages.get().SchemaHistoryEditor_37, Messages.get().SchemaHistoryEditor_38, CommonMessages.get().Date};
 		int[] sizes = {120, 120, 100, 100, 200};
 				
 		for(int i=0; i<names.length; i++) {

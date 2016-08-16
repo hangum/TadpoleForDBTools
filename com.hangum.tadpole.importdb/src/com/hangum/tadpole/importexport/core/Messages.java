@@ -28,7 +28,6 @@ public class Messages {
 	public String CsvToRDBImportDialog_26;
 	public String CsvToRDBImportDialog_29;
 	public String CsvToRDBImportDialog_3;
-	public String Close;
 	public String CsvToRDBImportDialog_5;
 	public String CsvToRDBImportDialog_51;
 	public String CsvToRDBImportDialog_6;
@@ -38,7 +37,6 @@ public class Messages {
 	public String MongoDBImportEditor_1;
 	public String MongoDBImportEditor_11;
 	public String MongoDBImportEditor_12;
-	public String Confirm;
 	public String MongoDBImportEditor_2;
 	public String MongoDBImportEditor_4;
 	public String MongoDBImportEditor_5;
@@ -85,8 +83,6 @@ public class Messages {
 	public String CsvToRDBImportDialog_btnIgnore_toolTipText;
 	public String CsvToRDBImportDialog_btnStop_toolTipText;
 	public String CsvToRDBImportDialog_btnRadioButton_text;
-	public String Error;
-	public String Warning;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

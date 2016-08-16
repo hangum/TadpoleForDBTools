@@ -42,6 +42,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -177,7 +178,7 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		creatAction_Jobs = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().CreateJob);
 		alterAction_Jobs = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().ChangeJob);
 		dropAction_Jobs = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().RemoveJob); //$NON-NLS-1$
-		refreshAction_Jobs = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, Messages.get().Refresh); //$NON-NLS-1$
+		refreshAction_Jobs = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, CommonMessages.get().Refresh); //$NON-NLS-1$
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Jobs"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -249,7 +250,7 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 							TableUtil.packTable(jobsListViewer.getTable());
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				}); // end display.asyncExec

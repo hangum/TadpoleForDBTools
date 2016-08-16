@@ -28,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -133,7 +134,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtMyBatisDollar = ""+btnMybatisSupport.getSelection();
 	
 		if(!NumberUtils.isNumber(txtWrapLimit)) {
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().SQLFormatterPreferencePage_8);
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().SQLFormatterPreferencePage_8);
 			btnIsWrap.setFocus();
 			return false;
 		}
@@ -153,7 +154,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		} catch(Exception e) {
 			logger.error("Editor preference saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage());
+			MessageDialog.openError(getShell(), CommonMessages.get().Confirm, Messages.get().RDBPreferencePage_5 + e.getMessage());
 			return false;
 		}
 		

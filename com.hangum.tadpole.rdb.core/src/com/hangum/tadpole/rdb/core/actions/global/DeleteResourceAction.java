@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -51,7 +52,7 @@ public class DeleteResourceAction extends Action implements ISelectionListener, 
 	@Override
 	public void run() {
 		UserDBResourceDAO userResourceDB = (UserDBResourceDAO)iss.getFirstElement();
-		if(!MessageDialog.openConfirm(window.getShell(), Messages.get().Confirm, Messages.get().DeleteResourceAction_4)) return;
+		if(!MessageDialog.openConfirm(window.getShell(), CommonMessages.get().Confirm, Messages.get().DeleteResourceAction_4)) return;
 		
 		RDBERDDeleteAction erdDelete = new RDBERDDeleteAction();
 		erdDelete.run(userResourceDB);

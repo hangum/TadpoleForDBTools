@@ -41,6 +41,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -165,7 +166,7 @@ public class ExplorerViewer extends ViewPart {
 
 		Label labelFilter = new Label(compositeSearch, SWT.NONE);
 		labelFilter.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
-		labelFilter.setText(Messages.get().Filter);
+		labelFilter.setText(CommonMessages.get().Filter);
 		
 		// filter를 설정합니다.
 		textSearch = new Text(compositeSearch, SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);

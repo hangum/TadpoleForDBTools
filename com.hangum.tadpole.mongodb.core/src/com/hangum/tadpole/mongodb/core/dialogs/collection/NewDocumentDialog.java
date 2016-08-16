@@ -33,6 +33,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -114,7 +115,7 @@ public class NewDocumentDialog extends Dialog {
 		if("".equals(textContent.getText().trim())) { //$NON-NLS-1$
 			
 			textContent.setFocus();
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().NewCollectionDialog_8);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().NewCollectionDialog_8);
 			return;
 		}
 
@@ -123,7 +124,7 @@ public class NewDocumentDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb create collection", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Create Collection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 			
 			return;
 		}
@@ -153,7 +154,7 @@ public class NewDocumentDialog extends Dialog {
 		});
 		
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().Insert, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Cancel, false);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

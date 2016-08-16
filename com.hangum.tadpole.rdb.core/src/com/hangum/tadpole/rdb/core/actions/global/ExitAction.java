@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -58,8 +59,8 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	public void run() {
 		final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if(ApplicationArgumentUtils.isStandaloneMode()) {
-			MessageDialog dialog = new MessageDialog(shell, Messages.get().Confirm, null, Messages.get().ExitAction_4, 
-										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().Logout, Messages.get().CANCEL}, 1);
+			MessageDialog dialog = new MessageDialog(shell, CommonMessages.get().Confirm, null, Messages.get().ExitAction_4, 
+										MessageDialog.QUESTION, new String[]{Messages.get().ExitAction_5, Messages.get().Logout, CommonMessages.get().Cancel}, 1);
 			int intResult = dialog.open();
 			if(intResult == 0) {
 				serverLogout();
@@ -75,7 +76,7 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 //				System.exit(0);
 //			}
 		} else {
-			if( MessageDialog.openConfirm(shell, Messages.get().Confirm, Messages.get().ExitAction_3) ) {
+			if( MessageDialog.openConfirm(shell, CommonMessages.get().Confirm, Messages.get().ExitAction_3) ) {
 				serverLogout();
 			}
 		}

@@ -19,6 +19,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -46,7 +47,7 @@ public class DownloadSQLiteDBAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().DoYouWnatDownload, userDB.getDisplay_name()))) return;
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, String.format(Messages.get().DoYouWnatDownload, userDB.getDisplay_name()))) return;
 		
 		ManagerViewer view = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
 		view.download(userDB);

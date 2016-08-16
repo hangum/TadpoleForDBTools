@@ -8,12 +8,8 @@ public class Messages {
 	public String ExceptionDetailsErrorDialog_3;
 	public String ExceptionDetailsErrorDialog_5;
 	public String SingleFileuploadDialog_1;
-	public String Error;
 	public String SingleFileuploadDialog_5;
 	public String SingleFileuploadDialog_7;
-	public String Confirm;
-	public String Cancle;
-	public String Close;
 	public String ImageViewer;
 
 	public static Messages get() {

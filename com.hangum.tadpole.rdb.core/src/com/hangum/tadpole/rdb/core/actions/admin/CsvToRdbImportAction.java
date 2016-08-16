@@ -19,6 +19,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -44,7 +45,7 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
 		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_DoesnotSupport);
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), CommonMessages.get().Information, Messages.get().MainEditor_DoesnotSupport);
 		} else {
 			boolean isPossible = false;
 			if(PermissionChecker.isDBAdminRole(userDB)) isPossible = true;
@@ -56,7 +57,7 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 				CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 				dialog.open();
 			} else {
-				MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Information, Messages.get().MainEditor_21);
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), CommonMessages.get().Information, Messages.get().MainEditor_21);
 			}
 		}
 	}

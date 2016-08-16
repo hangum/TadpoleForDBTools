@@ -40,6 +40,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -271,7 +272,7 @@ public class MongoDBImportEditor extends EditorPart {
 			logger.error(Messages.get().MongoDBImportEditor_8, e);
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MongoDBImportEditor_8, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().MongoDBImportEditor_8, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -284,12 +285,12 @@ public class MongoDBImportEditor extends EditorPart {
 			if(tableColumnListComposite.getSelectListTables().isEmpty()) return;
 		} else if(tabFolderQuery.getSelectionIndex() == 1) {			
 			if("".equals(textCollectionName.getText().trim())) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().QueryToMongoDBImport_5);
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().QueryToMongoDBImport_5);
 				return;
 			}
 			
 			if("".equals(textQuery.getText().trim())) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().QueryToMongoDBImport_2);			
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().QueryToMongoDBImport_2);			
 				return;		
 			}
 		}
@@ -297,7 +298,7 @@ public class MongoDBImportEditor extends EditorPart {
 		// job make
 		final UserDBDAO sourceDBDAO = (UserDBDAO)comboDBList.getData(comboDBList.getText());
 		Job job = null;		
-		if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MongoDBImportEditor_1)) {	 //$NON-NLS-1$
+		if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().MongoDBImportEditor_1)) {	 //$NON-NLS-1$
 			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
 				DBImport dbImport = null;
@@ -312,7 +313,7 @@ public class MongoDBImportEditor extends EditorPart {
 				
 			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
 				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
-					MessageDialog.openInformation(null, Messages.get().Confirm, "Not support MongoDB.");
+					MessageDialog.openInformation(null, CommonMessages.get().Confirm, "Not support MongoDB.");
 					return;
 				} else {
 					QueryToMongoDBImport importData = new QueryToMongoDBImport(sourceDBDAO, targetDBDAO, textCollectionName.getText(), textQuery.getText(), btnExistOnDelete.getSelection());
@@ -329,9 +330,9 @@ public class MongoDBImportEditor extends EditorPart {
 				getSite().getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if(jobEvent.getResult().isOK()) {
-							MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().MongoDBImportEditor_11); //$NON-NLS-1$
+							MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().MongoDBImportEditor_11); //$NON-NLS-1$
 						} else {				
-							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().MongoDBImportEditor_12, jobEvent.getResult()); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().MongoDBImportEditor_12, jobEvent.getResult()); //$NON-NLS-1$
 						}						
 					}					
 				});	// end display.asyncExec

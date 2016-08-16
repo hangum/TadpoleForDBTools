@@ -48,6 +48,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -182,6 +183,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		lblLanguage.setText(Messages.get().LoginDialog_lblLanguage_text);
 		
 		comboLanguage = new Combo(compositeLogin, SWT.READ_ONLY);
+		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -190,11 +192,8 @@ public class LoginDialog extends AbstractLoginDialog {
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
 		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
-
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
-		
-		comboLanguage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		compositeTail = new Composite(container, SWT.NONE);
 		GridLayout gl_compositeTail = new GridLayout(4, false);
@@ -265,7 +264,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_27);
+				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_27);
 				
 				return;
 			}
@@ -279,7 +278,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			if(logger.isDebugEnabled())logger.debug(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(Messages.get().LoginDialog_21 + userDao.getEmail() + Messages.get().LoginDialog_22 + strAllowIP + Messages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-				MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_28);
+				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_28);
 				return;
 			}
 			
@@ -302,20 +301,20 @@ public class LoginDialog extends AbstractLoginDialog {
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
 		} catch (TadpoleAuthorityException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setText("");
 			textPasswd.setFocus();
 			return;
 		} catch(TadpoleRuntimeException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();
 			return;
 		} catch (Exception e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage()), e); //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, e.getMessage());
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setFocus();
 			return;
@@ -352,11 +351,11 @@ public class LoginDialog extends AbstractLoginDialog {
 	private boolean validation(String strEmail, String strPass) {
 		// validation
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_11);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_11);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, Messages.get().LoginDialog_14);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().LoginDialog_14);
 			textPasswd.setFocus();
 			return false;
 		}
@@ -395,7 +394,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		// check support browser
 		if(!RequestInfoUtils.isSupportBrowser()) {
 			String errMsg = Messages.get().LoginDialog_30 + RequestInfoUtils.getUserBrowser() + ".\n" + Messages.get().UserInformationDialog_5 + "\n" + Messages.get().LoginDialog_lblNewLabel_text;  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-			MessageDialog.openWarning(getParentShell(), Messages.get().Warning, errMsg);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, errMsg);
 		}
 	}
 	

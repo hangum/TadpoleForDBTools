@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -29,11 +30,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetSecurityCredentialPreference;
-import org.eclipse.swt.widgets.Group;
 
 /**
  * security credentials
@@ -156,7 +157,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		} catch(Exception e) {
 			logger.error("api security credential saveing", e); //$NON-NLS-1$
 			
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), CommonMessages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

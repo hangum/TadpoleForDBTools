@@ -39,12 +39,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringDashboardDAO;
 import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringResultDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
 import com.hangum.tadpole.monitoring.core.Activator;
-import com.hangum.tadpole.monitoring.core.Messages;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.MonitoringDetailStatusDialog;
 import com.hangum.tadpole.monitoring.core.dialogs.monitoring.ResultSetViewDialog;
 import com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerEditor;
@@ -131,7 +131,7 @@ public class MonitoringMainEditor extends EditorPart {
 					logger.error("Does not open monitoring manager", ee);
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, ee.getMessage(), ee); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Open monitoring manager", errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Open monitoring manager", errStatus); //$NON-NLS-1$
 				}
 			}
 		});

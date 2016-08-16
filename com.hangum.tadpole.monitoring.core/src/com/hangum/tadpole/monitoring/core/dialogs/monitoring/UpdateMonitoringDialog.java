@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringIndexDAO;
 import com.hangum.tadpole.engine.query.dao.system.monitoring.MonitoringMainDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_monitoring;
@@ -312,17 +313,17 @@ public class UpdateMonitoringDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTitle.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, "Please input the Title");//Title은 공백이 될 수 없습니다.");
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, "Please input the Title");//Title은 공백이 될 수 없습니다.");
 			textTitle.setFocus();
 			return;
 		}
 		if("".equals(textQuery.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, "Please input the Query");//Query은 공백이 될 수 없습니다.");
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, "Please input the Query");//Query은 공백이 될 수 없습니다.");
 			textQuery.setFocus();
 			return;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, "Do you want to modify?")) return;
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, "Do you want to modify?")) return;
 
 		 MonitoringMainDAO mainDao = new MonitoringMainDAO();
 		 mainDao.setSeq(monitoringIndexDao.getMonitoring_seq());

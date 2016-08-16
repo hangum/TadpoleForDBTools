@@ -42,6 +42,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
@@ -111,7 +112,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 				saveData();
 			}
 		});
-		tltmSave.setToolTipText(Messages.get().Save);
+		tltmSave.setToolTipText(CommonMessages.get().Save);
 		tltmSave.setImage(GlobalImageUtils.getSave());
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -122,7 +123,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 				JDBCDriverManageDialog dialog = new JDBCDriverManageDialog(getSite().getShell());
 				if(Dialog.OK ==  dialog.open()) {
 					if(dialog.isUploaded()) {
-						MessageDialog.openInformation(getSite().getShell(), Messages.get().Information, Messages.get().jdbcdriver);
+						MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Information, Messages.get().jdbcdriver);
 					}
 				}
 			}
@@ -337,20 +338,20 @@ public class AdminSystemSettingEditor extends EditorPart {
 		String txtPasswd		= textPasswd.getText();
 		
 		if(!NumberUtils.isDigits(textIntLimtCnt.getText())) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().mustBeNumber);
+			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().mustBeNumber);
 			textIntLimtCnt.setFocus();
 			return;
 		} else if(!NumberUtils.isNumber(textDefaultUseDay.getText())) {
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().mustBeNumber);
+			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().mustBeNumber);
 			textDefaultUseDay.setFocus();
 			return;
 		} else if(!NumberUtils.isNumber(txtPort)) {
 			textPort.setFocus();
-			MessageDialog.openError(null, Messages.get().Error, Messages.get().InputDigits);			 //$NON-NLS-1$
+			MessageDialog.openError(null,CommonMessages.get().Error, Messages.get().InputDigits);			 //$NON-NLS-1$
 			return;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().AdminSystemSettingEditor_4)) return;
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().AdminSystemSettingEditor_4)) return;
 		
 		try {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.DB_TIME_ZONE, comboTimezone.getText());
@@ -391,7 +392,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 			logger.error("save exception", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	

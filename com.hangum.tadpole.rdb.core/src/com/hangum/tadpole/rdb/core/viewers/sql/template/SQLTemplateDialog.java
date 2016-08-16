@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SQLTemplate;
@@ -86,13 +87,13 @@ public class SQLTemplateDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText(Messages.get().Name);
+		lblName.setText(CommonMessages.get().Name);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(container, SWT.NONE);
-		lblDescription.setText(Messages.get().Description);
+		lblDescription.setText(CommonMessages.get().Description);
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -134,11 +135,11 @@ public class SQLTemplateDialog extends Dialog {
 		
 		// check validation
 		if(strTextName.equals("")) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLTemplateDialog_NameEmpty);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().SQLTemplateDialog_NameEmpty);
 			textName.setFocus();
 			return;
 		} else if(strSQL.equals("")) {
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().SQLTemplateDialog_SQLEmpty);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().SQLTemplateDialog_SQLEmpty);
 			textSQL.setFocus();
 			return;
 		}
@@ -180,8 +181,8 @@ public class SQLTemplateDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().OK, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

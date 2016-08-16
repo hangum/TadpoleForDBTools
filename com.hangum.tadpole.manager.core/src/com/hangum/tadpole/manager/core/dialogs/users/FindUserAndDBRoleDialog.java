@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -134,7 +135,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.get().Search);
+		btnSearch.setText(CommonMessages.get().Search);
 		
 		Composite compositeBody = new Composite(container, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
@@ -212,7 +213,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		UserDAO userDAO = (UserDAO)iss.getFirstElement();
 		
 		if("NONE".equals(comboRoleType.getText())) { //$NON-NLS-1$
-			MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().FindUserAndDBRoleDialog_6);
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().FindUserAndDBRoleDialog_6);
 			comboRoleType.setFocus();
 			return;
 		}
@@ -221,7 +222,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		try {
 			boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
 			if(isAddDBRole) {
-				if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().FindUserDialog_4)) return;
+				if(!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().FindUserDialog_4)) return;
 				
 				Calendar calStart = Calendar.getInstance();
 				calStart.set(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDay(), 0, 0, 0);
@@ -234,15 +235,15 @@ public class FindUserAndDBRoleDialog extends Dialog {
 						new Timestamp(calEnd.getTimeInMillis())
 						);
 				
-				MessageDialog.openInformation(getShell(), Messages.get().Confirm, Messages.get().FindUserAndDBRoleDialog_10);
+				MessageDialog.openInformation(getShell(), CommonMessages.get().Confirm, Messages.get().FindUserAndDBRoleDialog_10);
 				
 //				super.okPressed();
 			} else {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().FindUserAndDBRoleDialog_12);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().FindUserAndDBRoleDialog_12);
 			}
 		} catch (Exception e) {
 			logger.error(Messages.get().RoleType, e);
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().FindUserAndDBRoleDialog_15 + e.getMessage());
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().FindUserAndDBRoleDialog_15 + e.getMessage());
 		}
 		
 	}
@@ -265,7 +266,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 			tableViewer.refresh();
 		} catch(Exception e) {
 			logger.error("search exception", e); //$NON-NLS-1$
-			MessageDialog.openInformation(getShell(), Messages.get().Error, e.getMessage());
+			MessageDialog.openInformation(getShell(),CommonMessages.get().Error, e.getMessage());
 		}
 	}
 	
@@ -273,7 +274,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 * crate columns
 	 */
 	private void createColumns() {
-		String[] colNames = {Messages.get().Name, Messages.get().Email, Messages.get().CreateTime};
+		String[] colNames = {CommonMessages.get().Name, CommonMessages.get().Email, Messages.get().CreateTime};
 		int[] colSize = {150, 150, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
@@ -294,8 +295,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Add, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Add, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.preference.Messages;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 
 /**
  * tadpole message dialog
@@ -90,7 +90,7 @@ public class TadpoleSimpleMessageDialog extends TitleAreaDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID,  Messages.get().Close, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID,  CommonMessages.get().Close, true); //$NON-NLS-1$
 	}
 
 	/**

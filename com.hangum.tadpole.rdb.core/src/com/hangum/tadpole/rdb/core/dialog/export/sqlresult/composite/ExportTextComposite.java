@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 
@@ -144,11 +145,11 @@ public class ExportTextComposite extends AbstractExportComposite {
 			
 		   if (btnEtc.getSelection()) {
 			   if (StringUtils.isEmpty( textSeparatorEtc.getText() )){
-				   MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportTextCompositeEmptySeparator);  
+				   MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportTextCompositeEmptySeparator);  
 				   textSeparatorEtc.setFocus();
 				   return false;
 			   }else if (textSeparatorEtc.getText().length() != 1 ) {
-				   MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ExportTextCompositeEmptySeparatorOne); 
+				   MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ExportTextCompositeEmptySeparatorOne); 
 				   textSeparatorEtc.setFocus();
 				   return false;
 			   }

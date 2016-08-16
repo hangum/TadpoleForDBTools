@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -158,7 +159,7 @@ public class SQLToDBImportDialog extends Dialog {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
-				if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_5)) return;
+				if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().CsvToRDBImportDialog_5)) return;
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();
@@ -231,11 +232,11 @@ public class SQLToDBImportDialog extends Dialog {
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().CsvToRDBImportDialog_21);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().CsvToRDBImportDialog_21);
 			return ;
 		}
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_UploadQuestion)) return;
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().SQLToDBImportDialog_UploadQuestion)) return;
 		bufferBatchResult = new StringBuffer();
 		
 		try{
@@ -262,14 +263,14 @@ public class SQLToDBImportDialog extends Dialog {
 			ret = runSQLExecuteBatch(Arrays.asList(strArrySQL));
 			
 			if (ret == 0 ) 
-				MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_StoreData); //$NON-NLS-1$
+				MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().SQLToDBImportDialog_StoreData); //$NON-NLS-1$
 		} catch (IOException e) {
 			logger.error(Messages.get().SQLToDBImportDialog_ReadError, e);
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
+			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
 			
 		} catch (Exception e) {
 			logger.error(Messages.get().SQLToDBImportDialog_ImportException, e);
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
+			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().SQLToDBImportDialog_LoadException + e.getMessage());
 		} finally {
 			if(bomInputStream != null) bomInputStream.close();
 		}
@@ -278,7 +279,7 @@ public class SQLToDBImportDialog extends Dialog {
 	private void saveLog(){
 		try {
 			if(bufferBatchResult == null || "".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SQLToDBImportDialog_LogEmpty);
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().SQLToDBImportDialog_LogEmpty);
 				return;
 			}
 			String filename = PublicTadpoleDefine.TEMP_DIR + userDB.getDisplay_name() + "_SQLImportResult.log"; //$NON-NLS-1$
@@ -373,7 +374,7 @@ public class SQLToDBImportDialog extends Dialog {
 			conn.setAutoCommit(true);
 			
 			if (result < 0 && !"".equals(bufferBatchResult.toString())) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, bufferBatchResult.toString());
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, bufferBatchResult.toString());
 			}
 		} catch (SQLException e) {
 			logger.error("Execute Batch error", e); //$NON-NLS-1$
@@ -478,7 +479,7 @@ public class SQLToDBImportDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

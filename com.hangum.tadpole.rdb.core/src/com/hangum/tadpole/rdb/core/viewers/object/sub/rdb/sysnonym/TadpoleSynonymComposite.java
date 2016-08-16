@@ -45,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO;
@@ -181,7 +182,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 					logger.error("get table column", e); //$NON-NLS-1$
 
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(tabFolderObject.getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 				}
 			}
 		});
@@ -243,7 +244,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	private void createSynonymDetailColumne() {
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
 		new TableViewColumnDefine("COLUMN_ID", Messages.get().SEQ, 50, SWT.RIGHT) // //$NON-NLS-1$
-				, new TableViewColumnDefine("COLUMN_NAME", Messages.get().Name, 100, SWT.LEFT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("COLUMN_NAME", CommonMessages.get().Name, 100, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("DATA_TYPE", Messages.get().DataType, 80, SWT.CENTER) // //$NON-NLS-1$
 				, new TableViewColumnDefine("NULLABLE", Messages.get().TadpoleSynonymComposite_21, 60, SWT.CENTER) // //$NON-NLS-1$
 				, new TableViewColumnDefine("KEY", Messages.get().TadpoleSynonymComposite_23, 50, SWT.CENTER) // //$NON-NLS-1$
@@ -264,7 +265,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		
 		creatAction_Synonym = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().Synonym + " " + Messages.get().Created);
 		dropAction_Synonym = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().DropSynonym); //$NON-NLS-1$
-		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().Refresh); //$NON-NLS-1$
+		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, CommonMessages.get().Refresh); //$NON-NLS-1$
 		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().Execute); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().ViewDDL); //$NON-NLS-1$
 
@@ -353,7 +354,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult()
 									.getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
 						}
 					}
 				}); // end display.asyncExec

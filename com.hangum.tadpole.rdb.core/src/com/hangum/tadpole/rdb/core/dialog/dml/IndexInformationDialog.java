@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -81,7 +82,7 @@ public class IndexInformationDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(indexDAO.getINDEX_NAME() + " " + Messages.get().Information);
+		newShell.setText(indexDAO.getINDEX_NAME() + " " + CommonMessages.get().Information);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -276,7 +277,7 @@ public class IndexInformationDialog extends Dialog {
 		if (isEditorAdd) {
 			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
 		}
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 
 	}
 

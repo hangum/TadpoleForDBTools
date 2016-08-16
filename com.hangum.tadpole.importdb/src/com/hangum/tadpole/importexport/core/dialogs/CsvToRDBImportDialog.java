@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.csv.CSVLoader;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -201,7 +202,7 @@ public class CsvToRDBImportDialog extends Dialog {
 				String fileName = fileUpload.getFileName();
 				if("".equals(fileName) || null == fileName) return; //$NON-NLS-1$
 				
-				if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_5)) return;
+				if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().CsvToRDBImportDialog_5)) return;
 				fileNameLabel.setText(fileName == null ? "" : fileName); //$NON-NLS-1$
 				
 				pushSession.start();
@@ -425,7 +426,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	private void saveLog(){
 		try {
 			if("".equals(textSQL.getText())) { //$NON-NLS-1$
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().SQLToDBImportDialog_LogEmpty);
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().SQLToDBImportDialog_LogEmpty);
 				return;
 			}
 			String filename = PublicTadpoleDefine.TEMP_DIR + userDB.getDisplay_name() + "_SQLImportResult.log"; //$NON-NLS-1$
@@ -619,7 +620,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			appendPreviewSQL(strGenerateSQL);
 		} catch (Exception e1) {
 			logger.error("CSV load error", e1); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_10 + e1.getMessage());
+			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().CsvToRDBImportDialog_10 + e1.getMessage());
 		}
 
 	}
@@ -631,19 +632,19 @@ public class CsvToRDBImportDialog extends Dialog {
 	 */
 	private boolean validate() {
 		if("".equals(textTableName.getText())) { //$NON-NLS-1$
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().CsvToRDBImportDialog_19);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().CsvToRDBImportDialog_19);
 			textTableName.setFocus();
 			return false;
 		}
 		
 		File[] arryFiles = receiver.getTargetFiles();
 		if(arryFiles.length == 0) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().CsvToRDBImportDialog_21);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().CsvToRDBImportDialog_21);
 			return false;
 		}
 		
 		if("".equals(textSeprator.getText())) { //$NON-NLS-1$
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().CsvToRDBImportDialog_24);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().CsvToRDBImportDialog_24);
 			textSeprator.setFocus();
 			return false;
 		}
@@ -698,10 +699,10 @@ public class CsvToRDBImportDialog extends Dialog {
 			
 			this.appendPreviewSQL(loader.getImportResultLog().toString());
 			
-			MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_26 + "\n count is "+ count); //$NON-NLS-1$
+			MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().CsvToRDBImportDialog_26 + "\n count is "+ count); //$NON-NLS-1$
 		} catch (Exception e1) {
 			logger.error("CSV load error", e1); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_29 + e1.getMessage());
+			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().CsvToRDBImportDialog_29 + e1.getMessage());
 			
 			return;
 		} finally {
@@ -758,7 +759,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		super.buttonPressed(buttonId);
 		
 		if(buttonId == ID_BTN_INSERT) {
-			if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().CsvToRDBImportDialog_14)) {
+			if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().CsvToRDBImportDialog_14)) {
 				insertData();
 			}
 		}
@@ -771,7 +772,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, ID_BTN_INSERT, Messages.get().CsvToRDBImportDialog_8, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
@@ -124,7 +125,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
 		tblclmnName.setWidth(100);
-		tblclmnName.setText(Messages.get().Name);
+		tblclmnName.setText(CommonMessages.get().Name);
 		
 		TableColumn tblclmnUrl = new TableColumn(table, SWT.NONE);
 		tblclmnUrl.setWidth(200);
@@ -132,7 +133,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		TableColumn tblclmnComment = new TableColumn(table, SWT.NONE);
 		tblclmnComment.setWidth(100);
-		tblclmnComment.setText(Messages.get().Description);
+		tblclmnComment.setText(CommonMessages.get().Description);
 		
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new ExtensionBrowserLableProvider());
@@ -140,7 +141,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		
 		Group grpAdd = new Group(grpList, SWT.NONE);
 		grpAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		grpAdd.setText(Messages.get().Add);
+		grpAdd.setText(CommonMessages.get().Add);
 		grpAdd.setLayout(new GridLayout(2, false));
 		
 		Label lblUse = new Label(grpAdd, SWT.NONE);
@@ -153,7 +154,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		comboUsed.select(0);
 		
 		Label lblName = new Label(grpAdd, SWT.NONE);
-		lblName.setText(Messages.get().Name);
+		lblName.setText(CommonMessages.get().Name);
 		
 		textName = new Text(grpAdd, SWT.BORDER);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -165,7 +166,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDescription = new Label(grpAdd, SWT.NONE);
-		lblDescription.setText(Messages.get().Description);
+		lblDescription.setText(CommonMessages.get().Description);
 		
 		textComment = new Text(grpAdd, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textDescription = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -185,7 +186,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 				addExtensionBrowserData();
 			}
 		});
-		btnAdd.setText(Messages.get().Add);
+		btnAdd.setText(CommonMessages.get().Add);
 		
 		Button btnDelete = new Button(composite, SWT.NONE);
 		btnDelete.addSelectionListener(new SelectionAdapter() {
@@ -194,7 +195,7 @@ public class ExtensionBrowserURLDialog extends Dialog {
 				deleteExtensionBrowserData();
 			}
 		});
-		btnDelete.setText(Messages.get().Delete);
+		btnDelete.setText(CommonMessages.get().Delete);
 
 		return container;
 	}
@@ -226,14 +227,14 @@ public class ExtensionBrowserURLDialog extends Dialog {
 		String strUrl = StringUtils.trimToEmpty(textURL.getText());
 		String strCmt = StringUtils.trimToEmpty(textComment.getText());
 		
-		if(!ValidChecker.checkTextCtl(textName, Messages.get().Name)) return;
+		if(!ValidChecker.checkTextCtl(textName, CommonMessages.get().Name)) return;
 		if(!ValidChecker.checkTextCtl(textURL, Messages.get().URL)) return;
 		
 		// url데이터가 이미 존재하는지 검사합니다.
 		List<ExternalBrowserInfoDAO> listCheckExterBroswer = (List)tableViewer.getInput();
 		for (ExternalBrowserInfoDAO externalBrowserInfoDAO : listCheckExterBroswer) {
 			if(strUrl.equals(externalBrowserInfoDAO.getUrl())) {
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().Name); //$NON-NLS-1$
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, CommonMessages.get().Name); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -266,8 +267,8 @@ public class ExtensionBrowserURLDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 	
 	@Override

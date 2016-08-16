@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.Activator;
 import com.hangum.tadpole.importexport.core.Messages;
@@ -60,11 +61,11 @@ public class QueryToMongoDBImport extends DBImport {
 	 */
 	public Job workTableImport() {
 		if("".equals(userQuery.trim())) { //$NON-NLS-1$
-			MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().QueryToMongoDBImport_2);			
+			MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().QueryToMongoDBImport_2);			
 			return null;		
 		}
 		if("".equals(colName.trim())) {
-			MessageDialog.openInformation(null, Messages.get().Confirm, Messages.get().QueryToMongoDBImport_5);			
+			MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().QueryToMongoDBImport_5);			
 			return null;		
 		}
 		

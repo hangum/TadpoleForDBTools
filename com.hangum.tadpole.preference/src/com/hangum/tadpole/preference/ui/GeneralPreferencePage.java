@@ -35,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -141,7 +142,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		
 		if(!NumberUtils.isNumber(txtSessionTime)) {
 			textSessionTime.setFocus();
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -154,7 +155,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		} catch(Exception e) {
 			logger.error("GeneralPreference saveing", e);
 			
-			MessageDialog.openError(getShell(), Messages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), CommonMessages.get().Confirm, Messages.get().GeneralPreferencePage_2 + e.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		

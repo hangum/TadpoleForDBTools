@@ -54,6 +54,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -368,7 +369,7 @@ public class SessionListEditor extends EditorPart {
 			logger.error("refresh list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}	
 	
@@ -388,7 +389,7 @@ public class SessionListEditor extends EditorPart {
 			logger.error("refresh list", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -432,7 +433,7 @@ public class SessionListEditor extends EditorPart {
 		tltmSecondsRefresh.setText(Messages.get().SessionListEditor_4);
 		
 		tltmStart = new ToolItem(toolBar, SWT.NONE);
-		tltmStart.setToolTipText(Messages.get().Start);
+		tltmStart.setToolTipText(CommonMessages.get().Start);
 		tltmStart.setImage(GlobalImageUtils.getStart()); //$NON-NLS-1$
 		tltmStart.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -450,7 +451,7 @@ public class SessionListEditor extends EditorPart {
 		tltmStart.setEnabled(true);
 		
 		tltmStop = new ToolItem(toolBar, SWT.NONE);
-		tltmStop.setToolTipText(Messages.get().Stop);
+		tltmStop.setToolTipText(CommonMessages.get().Stop);
 		tltmStop.setImage(GlobalImageUtils.getStop());
 		tltmStop.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -466,7 +467,7 @@ public class SessionListEditor extends EditorPart {
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
 		ToolItem tltmRefresh = new ToolItem(toolBar, SWT.NONE);
-		tltmRefresh.setToolTipText(Messages.get().Refresh);
+		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
 		tltmRefresh.setImage(GlobalImageUtils.getRefresh());
 		tltmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -492,7 +493,7 @@ public class SessionListEditor extends EditorPart {
 				if(isPossible) {
 					killProcess();
 				} else {
-					MessageDialog.openWarning(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().Warning, Messages.get().MainEditor_21);
+					MessageDialog.openWarning(PlatformUI.getWorkbench().getDisplay().getActiveShell(), CommonMessages.get().Warning, Messages.get().MainEditor_21);
 				}
 			}
 		});
@@ -559,10 +560,10 @@ public class SessionListEditor extends EditorPart {
 	private boolean validateInterval() {
 		String strRefreshTerm = textRefreshMil.getText();
 		if(!NumberUtils.isNumber(strRefreshTerm)) {
-			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().SessionListEditor_GreatThan10Sec);
+			MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().SessionListEditor_GreatThan10Sec);
 			return false;
 		} else if(Integer.parseInt(strRefreshTerm) < 10) {
-			MessageDialog.openInformation(null, Messages.get().Information, Messages.get().SessionListEditor_GreatThan10Sec);
+			MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().SessionListEditor_GreatThan10Sec);
 			return false;
 		}
 		
@@ -607,7 +608,7 @@ public class SessionListEditor extends EditorPart {
 		StructuredSelection ss = (StructuredSelection)tableViewerSessionList.getSelection();
 		SessionListDAO sl = (SessionListDAO)ss.getFirstElement();
 		
-		if(!MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().SessionListEditor_8)) return;
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().SessionListEditor_8)) return;
 		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
@@ -628,7 +629,7 @@ public class SessionListEditor extends EditorPart {
 			logger.error("killprocess exception", e); //$NON-NLS-1$
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}	
 	}
 	
@@ -648,7 +649,7 @@ public class SessionListEditor extends EditorPart {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -656,7 +657,7 @@ public class SessionListEditor extends EditorPart {
 					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
 				}catch (Exception e) {
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -670,7 +671,7 @@ public class SessionListEditor extends EditorPart {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().SessionListEditor_13, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -678,7 +679,7 @@ public class SessionListEditor extends EditorPart {
 					int getSessionView = (Integer) sqlClient.queryForObject("getSessionView"); //$NON-NLS-1$
 				}catch (Exception e) {
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().SessionListEditor_15, errStatus); //$NON-NLS-1$
 					return;
 				}
 				
@@ -694,7 +695,7 @@ public class SessionListEditor extends EditorPart {
 			
 			exitSession();
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 		}
 	}
 	
@@ -710,7 +711,7 @@ public class SessionListEditor extends EditorPart {
 	 * create column
 	 */
 	private void createColumn() {
-		String[] name = {Messages.get().PID, Messages.get().User, Messages.get().Host, Messages.get().Database, Messages.get().Command, Messages.get().Time, Messages.get().State, Messages.get().Info};
+		String[] name = {Messages.get().PID, Messages.get().User, Messages.get().Host, Messages.get().Database, Messages.get().Command, Messages.get().Time, Messages.get().State, CommonMessages.get().Information};
 		int[] size = {70, 70, 150, 70, 70, 100, 50, 200};
 
 		for (int i=0; i<name.length; i++) {

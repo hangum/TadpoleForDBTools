@@ -43,6 +43,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -215,7 +216,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt = tvColumnCmt.getColumn();
 		tcCmt.setWidth(300);
-		tcCmt.setText(Messages.get().Description);
+		tcCmt.setText(CommonMessages.get().Description);
 
 		Composite composite_3 = new Composite(compositeBody, SWT.NONE);
 		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -326,7 +327,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 					dialog.open();
 				} else if (dialog.getObjectCount() <= 0) {
 					//해당 오브젝트를 찾을 수 없습니다.
-					MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().NotFountObject);
+					MessageDialog.openInformation(getShell(), CommonMessages.get().Information, Messages.get().NotFountObject);
 				}
 				Map<String, String> map = dialog.getSelectObject();
 				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
@@ -635,7 +636,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 		if (isEditorAdd) {
 			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
 		}
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 
 	}
 

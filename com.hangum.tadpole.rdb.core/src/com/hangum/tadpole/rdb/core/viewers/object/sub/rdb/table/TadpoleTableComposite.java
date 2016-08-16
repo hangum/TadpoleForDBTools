@@ -59,6 +59,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -85,6 +86,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRenameAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnCreateAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableRelationAction;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.ITableDecorationExtension;
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.TableDecorationContributionHandler;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -548,7 +550,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		renameAction_Table= new ObjectRenameAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_18);
 		tableRelationAction = new TableRelationAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_Relation);
 		dropAction_Table = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_12);
-		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().Refresh);
+		refreshAction_Table = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, CommonMessages.get().Refresh);
 
 		// generation sample data
 		generateSampleData = new GenerateSampleDataAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, Messages.get().TadpoleTableComposite_14);
@@ -721,10 +723,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 									MessageDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_Drivernotfound, msg);
 									
 								} else {
-									MessageDialog.openError(getShell(), Messages.get().TadpoleTableComposite_3, jobEvent.getResult().getMessage());
+									message(Messages.get().TadpoleTableComposite_3, jobEvent.getResult().getMessage());
 								}
 							} catch(Exception e) {
-								MessageDialog.openError(getShell(), Messages.get().Error, jobEvent.getResult().getMessage());
+								message(Messages.get().TadpoleTableComposite_3, jobEvent.getResult().getMessage());
 							}
 						}	// end else if
 						
@@ -733,7 +735,25 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						
 					}	// end run
 				});	// end display.asyncExec
+				
 			}	// end done
+			
+			/**
+			 * 
+			 * No more data to read from socket
+			 * 
+			 * @param title
+			 * @param msg
+			 */
+			private void message(String title, String msg) {
+				if(StringUtils.contains(msg, "No more data to read from socket")) {
+					TDBErroDialog dialog = new TDBErroDialog(getShell(), Messages.get().TadpoleTableComposite_3, msg + CommonMessages.get().Check_DBAccessSystem);
+					dialog.open();
+				} else {
+					TDBErroDialog dialog = new TDBErroDialog(getShell(), Messages.get().TadpoleTableComposite_3, msg);
+					dialog.open();
+				}
+			}
 			
 		});	// end job
 		

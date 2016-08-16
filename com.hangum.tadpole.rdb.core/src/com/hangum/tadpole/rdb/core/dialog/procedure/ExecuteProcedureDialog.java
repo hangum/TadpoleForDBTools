@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -147,7 +148,7 @@ public class ExecuteProcedureDialog extends Dialog {
 			
 		} catch(Exception e) {
 			logger.error("get in parameter", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
+			MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage());
 			
 			super.okPressed();
 		}
@@ -353,7 +354,7 @@ public class ExecuteProcedureDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

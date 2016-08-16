@@ -37,6 +37,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -187,13 +188,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
-		
-		try {
-			Locale locale = Locale.forLanguageTag(SessionManager.getLangeage());
-			comboLanguage.setText(locale.getDisplayLanguage(locale));
-		} catch(Exception e) {
-			logger.error("initialize language", e);
-		}
+		comboLanguage.setText(SessionManager.getLangeage());
 		
 		Label lblTimezone = new Label(container_1, SWT.NONE);
 		lblTimezone.setText(Messages.get().TimeZone);
@@ -268,7 +263,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().UserInfoPerference_9)) { //$NON-NLS-1$
+					if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().UserInfoPerference_9)) { //$NON-NLS-1$
 						try {
 							TadpoleSystem_UserRole.withdrawal(SessionManager.getUserSeq());
 							
@@ -328,26 +323,26 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String timezone = comboTimezone.getText();
 			
 			if(StringUtils.length(pass) < 5) {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_14);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_14);
 				textPassword.setFocus();
 				return false;
 			}
 			
 			if(pass.equals("")) { //$NON-NLS-1$
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_17);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_17);
 				textPassword.setFocus();
 				return false;
 			} else if(!pass.equals(rePass)) {
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_6);
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_6);
 				textPassword.setFocus();
 				return false;
 			} else if(btnGetOptCode.getSelection()) {
 				if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_15); //$NON-NLS-1$
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_15); //$NON-NLS-1$
 					textOTPCode.setFocus();
 					return false;
 				} else if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().UserInfoPerference_16); //$NON-NLS-1$
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_16); //$NON-NLS-1$
 					textOTPCode.setFocus();
 					return false;
 				}
@@ -377,7 +372,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				SessionManager.setPassword(user.getPasswd());
 			} catch (Exception e) {
 				logger.error("password change", e); //$NON-NLS-1$
-				MessageDialog.openError(getShell(), Messages.get().Error, e.getMessage());			 //$NON-NLS-1$
+				MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
 				
 				return false;
 			}

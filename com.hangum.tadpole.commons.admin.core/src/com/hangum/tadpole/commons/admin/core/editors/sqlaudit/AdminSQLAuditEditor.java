@@ -54,6 +54,7 @@ import com.hangum.tadpole.commons.admin.core.Messages;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
@@ -176,7 +177,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		tltmSecondsRefresh.setText(Messages.get().AdminSQLAuditEditor_17);
 		
 		Group compositeHead = new Group(parent, SWT.NONE);
-		compositeHead.setText(Messages.get().Search);
+		compositeHead.setText(CommonMessages.get().Search);
 		GridLayout gl_compositeHead2 = new GridLayout(4, false);
 		compositeHead.setLayout(gl_compositeHead2);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -202,7 +203,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 		comboTypes.select(0);
 		
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
-		lblEmail.setText(Messages.get().email);
+		lblEmail.setText(CommonMessages.get().Email);
 		
 		textEmail = new Text(compositeHead, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -281,7 +282,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 				search();
 			}
 		});
-		btnSearch.setText(Messages.get().Search);
+		btnSearch.setText(CommonMessages.get().Search);
 		textSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -354,7 +355,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 	 */
 	private void download() {
 		if(gridHistory.getItemCount() == 0) return;
-		if(!MessageDialog.openConfirm(getSite().getShell(), Messages.get().Confirm, Messages.get().AdminSQLAuditEditor_22)) return;
+		if(!MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().AdminSQLAuditEditor_22)) return;
 			
 		List<String[]> listCsvData = new ArrayList<String[]>();
 		
@@ -376,7 +377,7 @@ public class AdminSQLAuditEditor extends EditorPart {
 			String strCVSContent = CSVFileUtils.makeData(listCsvData);
 			downloadExtFile("SQLAudit.csv", strCVSContent); //$NON-NLS-1$
 			
-			MessageDialog.openInformation(getSite().getShell(), Messages.get().Confirm, Messages.get().AdminSQLAuditEditor_24);
+			MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().AdminSQLAuditEditor_24);
 		} catch (Exception e) {
 			logger.error("Save CSV Data", e); //$NON-NLS-1$
 		}		

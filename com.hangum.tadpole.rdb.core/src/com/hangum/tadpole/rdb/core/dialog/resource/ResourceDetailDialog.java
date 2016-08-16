@@ -52,6 +52,7 @@ import com.hangum.tadpole.ace.editor.core.widgets.TadpoleCompareWidget;
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.Utils;
@@ -127,7 +128,7 @@ public class ResourceDetailDialog extends Dialog {
 		compositeHead.setLayout(new GridLayout(2, false));
 		
 		Label lblTitle = new Label(compositeHead, SWT.NONE);
-		lblTitle.setText(Messages.get().Title);
+		lblTitle.setText(CommonMessages.get().Title);
 		
 		textTitle = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY);
 		textTitle.setEditable(true);
@@ -146,7 +147,7 @@ public class ResourceDetailDialog extends Dialog {
 		comboSharedType.setText(originalResourceDB.getShared_type());
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
-		lblDescription.setText(Messages.get().Description);
+		lblDescription.setText(CommonMessages.get().Description);
 		
 		textDescription = new Text(compositeHead, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDescription.setEditable(true);
@@ -231,7 +232,7 @@ public class ResourceDetailDialog extends Dialog {
 		TableViewerColumn tvcDate = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnDate = tvcDate.getColumn();
 		tblclmnDate.setWidth(100);
-		tblclmnDate.setText(Messages.get().Date);
+		tblclmnDate.setText(CommonMessages.get().Date);
 		
 		TableViewerColumn tvcUser = new TableViewerColumn(tvHistory, SWT.NONE);
 		TableColumn tblclmnUser = tvcUser.getColumn();
@@ -270,7 +271,7 @@ public class ResourceDetailDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(buttonId == MODIFY_ID) {
-			if(MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().ResourceDetailDialog_delete)) {
+			if(MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().ResourceDetailDialog_delete)) {
 				resourceManagerDao.setName(textTitle.getText());
 				resourceManagerDao.setDescription(textDescription.getText());
 				resourceManagerDao.setShared_type(comboSharedType.getText());
@@ -300,7 +301,7 @@ public class ResourceDetailDialog extends Dialog {
 					}
 				} catch(Exception ee) {
 					logger.error("Resource title, desc saveing", ee);
-					MessageDialog.openError(getShell(), Messages.get().Confirm, "Save exception." + ee.getMessage());
+					MessageDialog.openError(getShell(), CommonMessages.get().Confirm, "Save exception." + ee.getMessage());
 				}
 			}
 		}
@@ -314,7 +315,7 @@ public class ResourceDetailDialog extends Dialog {
 	private boolean isValid(ResourceManagerDAO dao) {
 		int len = StringUtils.trimToEmpty(textTitle.getText()).length();
 		if(len < 3) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().ResourceManageEditor_27); //$NON-NLS-1$
 			textTitle.setFocus();
 			return false;
 		}
@@ -325,14 +326,14 @@ public class ResourceDetailDialog extends Dialog {
 				String strAPIURI = textAPIURL.getText().trim();
 				
 				if(strAPIURI.equals("")) { //$NON-NLS-1$
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_30);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResourceManageEditor_30);
 					textAPIURL.setFocus();
 					return false;
 				}
 				
 				// check valid url. url pattern is must be /{parent}/{child}
 				if(!RESTfulAPIUtils.validateURL(textAPIURL.getText())) {
-					MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResourceManageEditor_32);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResourceManageEditor_32);
 					
 					textAPIURL.setFocus();
 					return false;
@@ -344,7 +345,7 @@ public class ResourceDetailDialog extends Dialog {
 			TadpoleSystem_UserDBResource.userDBResourceDupUpdate(originalResourceDB.getParent(), dao);
 		} catch (Exception ee) {
 			logger.error("Resource validate", ee); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, ee.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null,CommonMessages.get().Error, ee.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -421,7 +422,7 @@ public class ResourceDetailDialog extends Dialog {
 		Button btnModify = createButton(parent, MODIFY_ID, Messages.get().Modified, false);
 		btnModify.setEnabled(SessionManager.getUserSeq() == resourceManagerDao.getUser_seq());
 		
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 
 	/**

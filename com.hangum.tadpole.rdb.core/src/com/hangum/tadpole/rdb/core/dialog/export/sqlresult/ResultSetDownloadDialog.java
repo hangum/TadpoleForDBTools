@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -205,7 +206,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		createButton(parent, PREVIEW_ID, Messages.get().Preview, true);
 		createButton(parent, SENDEDITOR_ID, Messages.get().SendEditor, false);
 		createButton(parent, IDialogConstants.OK_ID, Messages.get().Download, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().Close, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 
 	/**
@@ -264,12 +265,12 @@ public class ResultSetDownloadDialog extends Dialog {
 				}
 			}else{
 				if(logger.isDebugEnabled()) logger.debug("selection tab is " + selectionTab);	
-				MessageDialog.openWarning(getShell(), Messages.get().Warning, Messages.get().ResultSetDownloadDialog_notSelect); 
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResultSetDownloadDialog_notSelect); 
 				return;
 			}
 		} catch(Exception e) {
 			logger.error(selectionTab + "type export error", e);
-			MessageDialog.openError(getShell(), Messages.get().Error, e.getMessage());
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());
 		}
 	}
 	

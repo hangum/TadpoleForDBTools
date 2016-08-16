@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -181,7 +182,7 @@ public class DBAccessControlDialog extends Dialog {
 				}
 			}
 		});
-		btnSelectAdd.setText(Messages.get().Add);
+		btnSelectAdd.setText(CommonMessages.get().Add);
 		btnSelect.setEnabled(false);
 //		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT) btnSelect.setEnabled(true);
 		
@@ -191,7 +192,7 @@ public class DBAccessControlDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection iss = (IStructuredSelection)tvSelect.getSelection();
 				if(!iss.isEmpty()) {
-					if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().DBAccessControlDialog_9)) return;
+					if(!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().DBAccessControlDialog_9)) return;
 					
 					AccessCtlObjectDAO dao = (AccessCtlObjectDAO)iss.getFirstElement();
 					
@@ -200,7 +201,7 @@ public class DBAccessControlDialog extends Dialog {
 				}
 			}
 		});
-		btnSelectDelete.setText(Messages.get().Delete);
+		btnSelectDelete.setText(CommonMessages.get().Delete);
 		btnSelectDelete.setEnabled(false);
 		new Label(compositeSelectBtn, SWT.NONE);
 		
@@ -324,7 +325,7 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		if(!MessageDialog.openConfirm(getShell(), Messages.get().Confirm, Messages.get().DBAccessControlDialog_22)) return;
+		if(!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().DBAccessControlDialog_22)) return;
 		
 		DBAccessControlDAO dao = new DBAccessControlDAO();
 		dao.setSeq(dbAccessDetail.getSeq());
@@ -346,7 +347,7 @@ public class DBAccessControlDialog extends Dialog {
 			TadpoleSystem_AccessControl.updateDBAccessControl(dao);
 		} catch (Exception e) {
 			logger.error("Update dbAccessContorl error", e);
-			MessageDialog.openError(getShell(), Messages.get().Error, Messages.get().Authority + e.getMessage());
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().Authority + e.getMessage());
 			return;
 		}
 		
@@ -360,8 +361,8 @@ public class DBAccessControlDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().Save, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.get().CANCEL, false);
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Save, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Cancel, false);
 	}
 
 	/**

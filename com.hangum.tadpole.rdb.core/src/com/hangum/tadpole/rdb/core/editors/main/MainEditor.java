@@ -51,6 +51,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
@@ -227,7 +228,7 @@ public class MainEditor extends EditorExtension {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(!isAutoCommit()) {
-					MessageDialog.openWarning(getSite().getShell(), Messages.get().Warning, Messages.get().PleaseEndedTransaction);
+					MessageDialog.openWarning(getSite().getShell(), CommonMessages.get().Warning, Messages.get().PleaseEndedTransaction);
 				} else {
 					
 					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), userDB);
@@ -635,7 +636,7 @@ public class MainEditor extends EditorExtension {
 			
 			if(!isFirst) {
 				if(TadpoleSQLTransactionManager.isInstance(getUserEMail(), userDB)) {
-					if(MessageDialog.openConfirm(null, Messages.get().Confirm, Messages.get().MainEditor_47)) {
+					if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().MainEditor_47)) {
 						TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
 					} else {
 						TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
@@ -665,7 +666,7 @@ public class MainEditor extends EditorExtension {
 		// do not execute query
 		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {
 			if(ApplicationArgumentUtils.isOnlineServer()) {
-				if(MessageDialog.openConfirm(null, Messages.get().Information, Messages.get().MainEditorServiceEndGoPay)) {
+				if(MessageDialog.openConfirm(null, CommonMessages.get().Information, Messages.get().MainEditorServiceEndGoPay)) {
 					UserBillEditorInput mei = new UserBillEditorInput();
 					
 					try {
@@ -673,11 +674,11 @@ public class MainEditor extends EditorExtension {
 					} catch (PartInitException e) {
 						logger.error("open editor", e); //$NON-NLS-1$
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-						ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "Bill page open", errStatus); //$NON-NLS-1$
+						ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "Bill page open", errStatus); //$NON-NLS-1$
 					}
 				}
 			} else {
-				MessageDialog.openInformation(null, Messages.get().Information, Messages.get().MainEditorServiceEnd);
+				MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().MainEditorServiceEnd);
 			}
 			return;
 		}
@@ -843,7 +844,7 @@ public class MainEditor extends EditorExtension {
 		} catch (Exception e) {
 			logger.error("update file", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}
@@ -903,7 +904,7 @@ public class MainEditor extends EditorExtension {
 			logger.error("save data", e); //$NON-NLS-1$
 
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().MainEditor_19, errStatus); //$NON-NLS-1$
 			
 			return false;
 		}

@@ -36,6 +36,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
@@ -104,12 +105,12 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 
 			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
 			if(userDB.getSeq() != sourceDBSeq) {
-				MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
+				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
 				return;
 			}
 		} catch(Exception e) {
 			logger.error("dragger error", e); //$NON-NLS-1$
-			MessageDialog.openError(null, Messages.get().Error, "Draging exception : " + e.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(null,CommonMessages.get().Error, "Draging exception : " + e.getMessage()); //$NON-NLS-1$
 			return;
 		}
 		
@@ -160,7 +161,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						if(jobEvent.getResult().isOK()) {
 							paintingModel(nextTableX, nextTableY, arryTables, mapTable);
 						} else {
-							MessageDialog.openError(null, Messages.get().Confirm, jobEvent.getResult().getMessage());
+							MessageDialog.openError(null, CommonMessages.get().Confirm, jobEvent.getResult().getMessage());
 						}
 					}
 				});	// end display.asyncExec
@@ -248,7 +249,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 					logger.error("GEF Table Drag and Drop Exception", e); //$NON-NLS-1$
 					
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-					ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.get().Error, Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),CommonMessages.get().Error, Messages.get().TadpoleModelUtils_2, errStatus); //$NON-NLS-1$
 				}
 				
 				transferFactory.setTable(tableModel);

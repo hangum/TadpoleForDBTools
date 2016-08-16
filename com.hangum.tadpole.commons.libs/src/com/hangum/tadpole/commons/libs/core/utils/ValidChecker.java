@@ -13,9 +13,6 @@ package com.hangum.tadpole.commons.libs.core.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
 import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -24,6 +21,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.Messages;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 
 /**
  * email vilid utils
@@ -79,7 +77,7 @@ public class ValidChecker {
 	 */
 	public static boolean checkNumberCtl(Text text, String msg) {
 		if(!NumberUtils.isNumber(text.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, msg + Messages.get().CheckNumberString);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, msg + Messages.get().CheckNumberString);
 			text.setFocus();
 			
 			return false;
@@ -97,7 +95,7 @@ public class ValidChecker {
 	 */
 	public static boolean checkTextCtl(Text text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openWarning(null, Messages.get().Warning, msg + Messages.get().CheckTextString);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, msg + Messages.get().CheckTextString);
 			text.setFocus();
 			
 			return false;
@@ -115,7 +113,7 @@ public class ValidChecker {
 	 */
 	public static boolean checkTextCtl(Combo text, String msg) {
 		if("".equals(StringUtils.trimToEmpty(text.getText()))) { //$NON-NLS-1$
-			MessageDialog.openWarning(null, Messages.get().Warning, msg + Messages.get().CheckTextString);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, msg + Messages.get().CheckTextString);
 			text.setFocus();
 			
 			return false;

@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -94,11 +95,11 @@ public class ProcedureExecuterManager {
 	 */
 	public boolean isExecuted(ProcedureFunctionDAO procedureDAO, UserDBDAO selectUseDB) {
 		if(!isSupport()) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ProcedureExecuterManager_0);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().ProcedureExecuterManager_0);
 			return false;
 		}
 		if(!procedureDAO.isValid()) {
-			MessageDialog.openWarning(null, Messages.get().Warning, Messages.get().ProcedureExecuterManager_4);
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().ProcedureExecuterManager_4);
 			return false;
 		}
 		
@@ -110,7 +111,7 @@ public class ProcedureExecuterManager {
 				dbVersion = Double.parseDouble( StringUtils.substring(dbInfo.getProductversion(), 0, 3) );
 			
 				if (dbVersion < 5.5){
-					MessageDialog.openInformation(null, Messages.get().Information, Messages.get().ProcedureExecuterManager_6);
+					MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().ProcedureExecuterManager_6);
 					return false;
 				}
 			} catch (Exception e) {
@@ -125,7 +126,7 @@ public class ProcedureExecuterManager {
 			ProcedureExecutor procedureExecutor = getExecuter();
 			procedureExecutor.getInParameters();
 		} catch(Exception e) {
-			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
+			MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage());
 			return false;
 		}
 		

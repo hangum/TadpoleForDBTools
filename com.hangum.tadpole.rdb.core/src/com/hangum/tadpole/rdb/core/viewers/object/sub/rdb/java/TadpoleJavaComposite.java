@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -73,6 +74,9 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleJavaComposite.class);
+	
+	/** java object 지원 여부 */
+	private boolean isSupportJavaObject = false;
 
 	private CTabItem tbtmJava;
 
@@ -181,7 +185,7 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 		creatAction_Java = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().CreateJava);
 		alterAction_Java = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().ChangeJava);
 		dropAction_Java = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, 	Messages.get().DropJava); //$NON-NLS-1$
-		refreshAction_Java = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().Refresh); //$NON-NLS-1$
+		refreshAction_Java = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, CommonMessages.get().Refresh); //$NON-NLS-1$
 		compileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().Compilejava);
 
 		// menu
@@ -200,6 +204,23 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 		javaListViewer.getTable().setMenu(menuMgr.createContextMenu(javaListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, javaListViewer);
 	}
+	
+	/**
+	 * is support object
+	 * @return
+	 */
+	private boolean isSupportObject() {
+		try {
+			QueryUtils.executeQuery(userDB, "select 1 from javasnm where 1=0 ", 0, 1);
+			
+			isSupportJavaObject = true;
+		} catch (Exception e) {
+			isSupportJavaObject = false;
+			MessageDialog.openInformation(getShell(), CommonMessages.get().Information, Messages.get().doesnotSupportJavaObject);
+		}
+		
+		return isSupportJavaObject;
+	}
 
 	/**
 	 * 정보를 최신으로 리프레쉬합니다.
@@ -209,13 +230,7 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	public void refreshJava(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
 		if (!boolRefresh) if (selectUserDb == null) return;
 		this.userDB = selectUserDb;
-		
-		try {
-			QueryUtils.executeQuery(userDB, "select 1 from javasnm where 1=0 ", 0, 1);
-		} catch (Exception e) {
-			MessageDialog.openInformation(getShell(), Messages.get().Information, Messages.get().doesnotSupportJavaObject);
-			return;
-		}
+		if(!isSupportObject()) return;
 
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
@@ -262,7 +277,7 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 							javaListViewer.refresh();
 							TableUtil.packTable(javaListViewer.getTable());
 
-							MessageDialog.openError(getShell(), Messages.get().Error, jobEvent.getResult().getMessage());
+							MessageDialog.openError(getShell(),CommonMessages.get().Error, jobEvent.getResult().getMessage());
 						}
 					}
 				}); // end display.asyncExec

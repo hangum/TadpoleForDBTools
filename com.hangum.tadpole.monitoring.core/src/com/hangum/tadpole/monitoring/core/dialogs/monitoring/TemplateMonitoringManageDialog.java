@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.sql.template.TeadpoleMonitoringTemplateDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Template;
@@ -420,12 +421,12 @@ public class TemplateMonitoringManageDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		if("".equals(textTitle.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, "Please input the Title");//Title은 공백이 될 수 없습니다.");
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, "Please input the Title");//Title은 공백이 될 수 없습니다.");
 			textTitle.setFocus();
 			return;
 		}
 		if("".equals(textQuery.getText())) {
-			MessageDialog.openWarning(null, Messages.get().Warning, "Please input the Query");//Query은 공백이 될 수 없습니다.");
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, "Please input the Query");//Query은 공백이 될 수 없습니다.");
 			textQuery.setFocus();
 			return;
 		}
@@ -476,7 +477,7 @@ public class TemplateMonitoringManageDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("save monitoring index", e);
 			
-			MessageDialog.openError(null, Messages.get().Error, e.getMessage());
+			MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage());
 		}
 	}
 	

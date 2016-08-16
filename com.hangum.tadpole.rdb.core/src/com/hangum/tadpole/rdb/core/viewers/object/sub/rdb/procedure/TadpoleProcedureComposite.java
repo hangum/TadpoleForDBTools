@@ -38,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -121,7 +122,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 				if(!iss.isEmpty()) {
-					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), OBJECT_TYPE.PROCEDURES, Messages.get().Refresh);
+					ObjectExecuteProcedureAction action = new ObjectExecuteProcedureAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), OBJECT_TYPE.PROCEDURES, CommonMessages.get().Refresh);
 					action.run(iss, getUserDB(), OBJECT_TYPE.PROCEDURES);
 				}	// end iss.isempty
 			}
@@ -149,7 +150,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		if(getUserDB() == null) return;
 		creatAction_Procedure = new ObjectCreatAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().TadpoleProcedureComposite_1);
 		dropAction_Procedure = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().TadpoleProcedureComposite_3);
-		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().Refresh);
+		refreshAction_Procedure = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, CommonMessages.get().Refresh);
 
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().ViewDDL);
 
@@ -236,7 +237,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		} catch (Exception e) {
 			logger.error("showProcedure refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), Messages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
 		}
 	}
 

@@ -18,6 +18,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosEditor;
@@ -54,7 +55,7 @@ public class ShowDBInformationAction extends AbstractQueryAction{
 				logger.error("open DB Information editor", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
 		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB, MongoDBInfosEditor.PAGES.INSTANCE_INFORMATION);
@@ -64,7 +65,7 @@ public class ShowDBInformationAction extends AbstractQueryAction{
 				logger.error("open editor", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
 		}
 	}

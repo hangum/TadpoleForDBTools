@@ -15,13 +15,10 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.messages"; //$NON-NLS-1$
 	
-	public String Warning;
 	public String CheckNumberString;
 	public String CheckTextString;
 
 	public String UserName;
-
-	public String Email;
 
 	public String Confirmkey;
 

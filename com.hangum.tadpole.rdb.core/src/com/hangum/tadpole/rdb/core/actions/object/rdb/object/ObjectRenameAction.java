@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -59,7 +60,7 @@ public class ObjectRenameAction extends AbstractObjectSelectAction {
 		if(dialog.open() == Window.OK) {
 			String newTableNm = dialog.getValue();
 			
-			if(!MessageDialog.openConfirm(null, Messages.get().Confirm, String.format(Messages.get().ObjectRenameAction_2, newTableNm))) return;
+			if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, String.format(Messages.get().ObjectRenameAction_2, newTableNm))) return;
 			try {
 				TadpoleObjectQuery.renameTable(userDB, dao, newTableNm);
 				refreshTable(newTableNm);

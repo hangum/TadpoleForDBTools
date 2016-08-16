@@ -25,11 +25,11 @@ import org.eclipse.swt.widgets.Shell;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.help.HelpDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.HelpUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.Activator;
-import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.mongodb.DBObject;
@@ -100,7 +100,7 @@ public class CollValidateDialog extends Dialog {
 		} catch (Exception e) {
 			logger.error("mongodb collection validate", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(null, Messages.get().Error, "collection validate Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "collection validate Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 	
