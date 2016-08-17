@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.sql.SQLException;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
@@ -142,12 +143,12 @@ public class MessageComposite extends Composite {
 		textMessage.setText(strNewMessage);
 		
 		try {
-			String strDeleteWhiteSpace = StringUtils.replace(strSearchError, "\"", "'");
+			String strDeleteWhiteSpace = StringEscapeUtils.escapeXml(StringEscapeUtils.escapeHtml(strSearchError));
+			
 			lblGoogleSearch.setText("<a href=\"http://www.google.com/search?q=" + strDeleteWhiteSpace + "\" target='_blank'>" + strDeleteWhiteSpace + "</a>");
 			lblGoogleSearch.getParent().layout();
 		} catch(Exception e) {
-			logger.error("===" + strSearchError + "====");
-			logger.error("parse", e);
+			logger.error("find search string " + e.getMessage());
 		}
 //		} else {
 //			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);

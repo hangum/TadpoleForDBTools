@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -763,12 +762,12 @@ public class ResultSetComposite extends Composite {
 				// execute query
 				execServiceQuery = Executors.newSingleThreadExecutor();
 				if(intStartCnt == 0) {
-					resultSet = runSQLSelect(statement, strSQL);
+					resultSet = _runSQLSelect(statement, strSQL);
 				} else {
 					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
 					
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
-					resultSet = runSQLSelect(statement, strSQL);
+					resultSet = _runSQLSelect(statement, strSQL);
 				}
 				
 			} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
@@ -791,12 +790,12 @@ public class ResultSetComposite extends Composite {
 				// execute query
 				execServiceQuery = Executors.newSingleThreadExecutor();
 				if(intStartCnt == 0) {
-					resultSet = runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
+					resultSet = _runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
 				} else {
 					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
 					
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
-					resultSet = runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
+					resultSet = _runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
 				}
 			}
 			
@@ -826,7 +825,7 @@ public class ResultSetComposite extends Composite {
 	 * @param statementParameter
 	 * @return
 	 */
-	private ResultSet runSQLSelect(final PreparedStatement preparedStatement, final Object[] statementParameter) throws Exception {
+	private ResultSet _runSQLSelect(final PreparedStatement preparedStatement, final Object[] statementParameter) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
@@ -850,13 +849,16 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param strSQL
 	 */
-	private ResultSet runSQLSelect(final Statement statement, final String strSQL) throws Exception {
+	private ResultSet _runSQLSelect(final Statement statement, final String strSQL) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
 			public ResultSet call() throws SQLException {
-				if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT ){
-					// 오라클인 경우 PL/SQL 실행후 dbms_output 출력 메시지를 결과 메시지에 받아온다.
+				
+				// 오라클인 경우 PL/SQL 실행후 dbms_output 출력 메시지를 결과 메시지에 받아온다.
+				if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+						getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT)
+				{
 					try {
 						dbmsOutput = new OracleDbmsOutputUtil( statement.getConnection() );
 						dbmsOutput.enable( 1000000 ); 
@@ -866,7 +868,7 @@ public class ResultSetComposite extends Composite {
 					}finally {
 						try {if(dbmsOutput!=null)dbmsOutput.close();} catch (SQLException e) {}
 					}
-				}else{
+				} else {
 					dbms_output = "";
 					statement.execute(strSQL);
 				}
