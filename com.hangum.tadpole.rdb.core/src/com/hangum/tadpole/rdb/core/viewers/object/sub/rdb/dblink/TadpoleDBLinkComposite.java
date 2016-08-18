@@ -122,7 +122,7 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		dbLinkListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		dbLinkListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		dbLinkListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				try {
@@ -205,7 +205,7 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
 				try {
 					showDBLinks = getDBLinkList(userDB);

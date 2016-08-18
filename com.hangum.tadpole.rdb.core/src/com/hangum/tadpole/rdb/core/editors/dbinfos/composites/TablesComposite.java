@@ -120,7 +120,7 @@ public class TablesComposite extends DBInfosComposite {
 		});
 		btnRefresh.setText(CommonMessages.get().Refresh);
 		
-		tvTableInform = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
+		tvTableInform = new TableViewer(this, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvTableInform.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);

@@ -189,7 +189,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		tableListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
@@ -312,6 +312,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
 				final DBDefine selectDB = getUserDB().getDBDefine();
+				
 				if(selectDB == DBDefine.ORACLE_DEFAULT || 
 						selectDB == DBDefine.POSTGRE_DEFAULT ||
 						selectDB == DBDefine.MSSQL_DEFAULT ||
@@ -671,11 +672,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			return;
 		}
 		
-		final String strBeginMsg = Messages.get().TadpoleTableComposite_17;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(strBeginMsg, IProgressMonitor.UNKNOWN);
+				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
 				
 				try {
 					listTablesDAO = TadpoleObjectQuery.getTableList(userDB);

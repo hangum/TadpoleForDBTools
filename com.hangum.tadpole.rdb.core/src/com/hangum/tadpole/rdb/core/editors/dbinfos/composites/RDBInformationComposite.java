@@ -64,7 +64,7 @@ public class RDBInformationComposite extends DBInfosComposite {
 		
 		this.userDB = userDb;
 		
-		tvInformation = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION);
+		tvInformation = new TableViewer(this, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvInformation.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);

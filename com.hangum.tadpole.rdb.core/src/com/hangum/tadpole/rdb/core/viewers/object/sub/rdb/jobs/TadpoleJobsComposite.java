@@ -122,7 +122,7 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		jobsListViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		jobsListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		jobsListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				try {
@@ -206,7 +206,7 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connect database", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
 				try {
 					showJobs = getJobsList(userDB);

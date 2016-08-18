@@ -143,10 +143,14 @@ public class MessageComposite extends Composite {
 		textMessage.setText(strNewMessage);
 		
 		try {
-			String strDeleteWhiteSpace = StringEscapeUtils.escapeXml(StringEscapeUtils.escapeHtml(strSearchError));
-			
-			lblGoogleSearch.setText("<a href=\"http://www.google.com/search?q=" + strDeleteWhiteSpace + "\" target='_blank'>" + strDeleteWhiteSpace + "</a>");
+			if(StringUtils.isEmpty(StringUtils.deleteWhitespace(strSearchError))) {
+				lblGoogleSearch.setText("");
+			} else {
+				String strDeleteWhiteSpace = StringUtils.replace(strSearchError, "\"", "'");
+				lblGoogleSearch.setText("<a href=\"http://www.google.com/search?q=" + strDeleteWhiteSpace + "\" target='_blank'>" + strDeleteWhiteSpace + "</a>");
+			}
 			lblGoogleSearch.getParent().layout();
+				
 		} catch(Exception e) {
 			logger.error("find search string " + e.getMessage());
 		}
