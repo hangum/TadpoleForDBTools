@@ -52,7 +52,6 @@ public class LogConfiguration {
 	}
 	
 	public void init() throws Exception {
-		
 		fileAppender = new RollingFileAppender(new PatternLayout(filePattern), PublicTadpoleDefine.DEFAULT_LOG_FILE, true);
 		fileAppender.setMaxBackupIndex(10);
 		fileAppender.setMaxFileSize("10MB");
@@ -68,8 +67,10 @@ public class LogConfiguration {
 		logger.setLevel(this.level);
 		logger.addAppender(fileAppender);
 		logger.addAppender(consoleAppender);
-//		logger.setPriority(priority);
 		
+		// 특정 package 만 로그를 조절.
+//		logger.getLoggerRepository().getLogger("com.ibatis").setLevel(Level.WARN);
+		logger.getLoggerRepository().getLogger("java.sql.ResultSet").setLevel(Level.WARN);
 	}
 	
 	public void closeAppend() {
@@ -100,6 +101,13 @@ public class LogConfiguration {
 
 	public void setIsDevelopment(String isDevelopment) {
 		this.isDevelopment = isDevelopment;
+	}
+	
+	/**
+	 * check debug mode
+	 */
+	public static boolean getSQLDebugMode() {
+		return checkString("-sqlLogLevel");
 	}
 	
 	/**
