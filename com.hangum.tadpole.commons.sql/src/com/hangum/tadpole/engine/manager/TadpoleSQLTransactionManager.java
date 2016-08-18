@@ -67,34 +67,37 @@ public class TadpoleSQLTransactionManager {
 		final String searchKey = getKey(userId, userDB);
 		TransactionDAO transactionDAO = dbManager.get(searchKey);
 		if (transactionDAO == null) {
-			try {
-				DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(userId, userDB);
-
-				transactionDAO = new TransactionDAO();
-				Connection conn = ds.getConnection();
-				conn.setAutoCommit(false);
-
-				transactionDAO.setConn(conn);
-				transactionDAO.setUserId(userId);
-				transactionDAO.setUserDB(userDB);
-				transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
-
-				transactionDAO.setKey(searchKey);
-
-				dbManager.put(searchKey, transactionDAO);
-				if (logger.isDebugEnabled())
-					logger.debug("\t New connection SQLMapSession.");
-			} catch (Exception e) {
-				logger.error("transaction connection", e);
+			synchronized(dbManager) {
+				transactionDAO = dbManager.get(searchKey);
+				if(transactionDAO != null) return transactionDAO.getConn();
+				
+				try {
+					DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(userId, userDB);
+	
+					transactionDAO = new TransactionDAO();
+					Connection conn = ds.getConnection();
+					conn.setAutoCommit(false);
+	
+					transactionDAO.setConn(conn);
+					transactionDAO.setUserId(userId);
+					transactionDAO.setUserDB(userDB);
+					transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
+	
+					transactionDAO.setKey(searchKey);
+	
+					dbManager.put(searchKey, transactionDAO);
+					if (logger.isDebugEnabled())
+						logger.debug("\t New connection SQLMapSession.");
+				} catch (Exception e) {
+					logger.error("transaction connection", e);
+				}
 			}
 		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("\t Already register SQLMapSession.");
-				logger.debug("\t Is auto commit " + transactionDAO.getConn().getAutoCommit());
+				logger.debug("\t Already register SQLMapSession.\t Is auto commit " + transactionDAO.getConn().getAutoCommit());
 			}
 		}
-		if (logger.isDebugEnabled())
-			logger.debug("[conn code]" + transactionDAO.toString());
+		if (logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.toString());
 
 		return transactionDAO.getConn();
 	}

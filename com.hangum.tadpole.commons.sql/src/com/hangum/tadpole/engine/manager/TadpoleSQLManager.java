@@ -86,11 +86,11 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
 					synchronized(dbManager) {
-						sqlMapClient = dbManager.get( searchKey );
+						sqlMapClient = dbManager.get(searchKey);
 						if(sqlMapClient != null) return sqlMapClient;
 						
 						if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
-						// oracle 일 경우 설정 
+						// oracle 일 경우 locale 설정 
 						try { 
 							if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
 									userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
@@ -100,7 +100,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 								}
 							}
 						} catch(Exception e) {
-							logger.error("set locale error", e);
+							logger.error(String.format("set locale error: %s", e.getMessage()));
 						}
 						
 						// connection pool 을 가져옵니다.
@@ -115,7 +115,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 						} else {
 							listSearchKey.add(searchKey);
 						}
-					}
+					}	// end  synchronized
 						
 					// metadata를 가져와서 저장해 놓습니다.
 					conn = sqlMapClient.getDataSource().getConnection();
@@ -125,11 +125,10 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 					
 					// don't belive keyword. --;;
 					initializeConnection(searchKey, userDB, conn.getMetaData());
-					
 				}
 				
 			} catch(Exception e) {
-				logger.error("=== get DB Instance seq is " + userDB.getSeq() + "\n" , e);
+				logger.error("***** get DB Instance seq is " + userDB.getSeq() + "\n" , e);
 				dbManager.remove(searchKey);
 				
 				throw new TadpoleSQLManagerException(e);

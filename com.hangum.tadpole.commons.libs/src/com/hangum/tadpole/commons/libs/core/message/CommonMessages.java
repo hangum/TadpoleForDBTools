@@ -54,6 +54,9 @@ public class CommonMessages {
 	public String Name;
 	public String Date;
 	
+	// 공통 출력 메시지 정의 명령이 완료 되었습니다.
+	public String CommandCoompleted;
+	
 	public String CompanyInfo;
 	
 	/** 접근제어 시스템 연동 오류 */

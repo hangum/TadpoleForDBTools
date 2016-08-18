@@ -56,8 +56,8 @@ public class DBCPConnectionManager {
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(5);
 		connectionPool.setWhenExhaustedAction((byte)1);
-		connectionPool.setMaxWait(1000 * 60); 					// 1분대기.
-		connectionPool.setTimeBetweenEvictionRunsMillis(10 * 1000);	// 3분한한번 테스트
+		connectionPool.setMaxWait(1000 * 60); 						// 1분대기.
+		connectionPool.setTimeBetweenEvictionRunsMillis(10 * 1000);	// 10분한한번 테스트
 		connectionPool.setTestWhileIdle(true);
 		
 		String passwdDecrypt = "";
@@ -73,18 +73,14 @@ public class DBCPConnectionManager {
 		if(!"".equals(PublicTadpoleDefine.CERT_USER_INFO)) {
 			// initialize connection string
 			List<String> listInitializeSql = new ArrayList<String>();
-			String HELLO_SQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID());
+			String strFullHelloSQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID()) + "\n " + userDB.getDBDefine().getValidateQuery();
+			if(logger.isInfoEnabled()) logger.info(strFullHelloSQL);
+			
+			pcf.setValidationQuery(userDB.getDBDefine().getValidateQuery());
+			listInitializeSql.add(strFullHelloSQL);
+			
 			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-				pcf.setValidationQuery("select * from dual");
-				
-				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " select * from dual;");
-				listInitializeSql.add(HELLO_SQL + "\n select * from dual");
 				listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction(%s)', '')", userDB.getTdbUserID()));
-			} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-				pcf.setValidationQuery("select 1");
-				
-				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " SELECT 1;");
-				listInitializeSql.add(HELLO_SQL + "\n SELECT 1");
 			}
 			if(!listInitializeSql.isEmpty()) pcf.setConnectionInitSql(listInitializeSql);
 		}
