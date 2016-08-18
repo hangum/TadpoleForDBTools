@@ -20,23 +20,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
- * 지원하는 디비를 정의한다.
- * 
- * <pre>
- * db의 각 driver는 aquafold에 있는 db drvier를 사용한다(http://docs.aquafold.com/ads/7.0/F2A7423C-D740-9472-7FEB-46856150CB3E.html)
- * 
- * sqlite는 jdbc driver 			:	http://www.xerial.org/trac/Xerial/wiki/SQLiteJDBC
- * 			일반적인 내용 			:	http://en.wikibooks.org/wiki/Java_JDBC_using_SQLite/Introduction
- * 			sqlite meta data 	:	http://en.wikibooks.org/wiki/Java_JDBC_using_SQLite/Metadata
- *  를 참고합니다.
- *  
- * MSSQL 은 다음을 지원합니다.(http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=11774)
-	Microsoft® SQL Server® 2012
-	Microsoft® SQL Server® 2008 R2
-	Microsoft® SQL Server® 2008
-	Microsoft® SQL Server® 2005
-	Microsoft® SQL AzureTM
- * </pre>
+ * TadpoleDBHub에서 지원하는 디비를 정의한다.
  * 
  * @author hangum
  *
@@ -266,30 +250,24 @@ public enum DBDefine {
 	 * @return
 	 */
 	public String getValidateQuery() {
-		if(this == DBDefine.MYSQL_DEFAULT) {
+		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
 			return "select 1";
-		} else if(this == DBDefine.MARIADB_DEFAULT) {
-			return "select 1";
-		} else if(this == DBDefine.ORACLE_DEFAULT) {
+		} else if(this == DBDefine.ORACLE_DEFAULT || this == DBDefine.TIBERO_DEFAULT) {
 			return "SELECT 1 FROM dual";
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
-			return "SELECT getdate()";
+			return "SELECT 1";
 		} else if(this == DBDefine.SQLite_DEFAULT) {
 			return "SELECT name FROM sqlite_master where 1 = 0";
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			return "show databases";
 		} else if(this == DBDefine.POSTGRE_DEFAULT) {
-			return "SELECT version()";
-		} else if(this == DBDefine.CUBRID_DEFAULT) {
 			return "SELECT 1";
+		} else if(this == DBDefine.CUBRID_DEFAULT) {
+			return "select 1 from db_root";
 		} else if(this == DBDefine.TAJO_DEFAULT) {
 			return "\\d";
 		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
 			return "SELECT 1";
-		} else if(this == DBDefine.TIBERO_DEFAULT) {
-			return "SELECT 1 FROM dual";
-//		} else if(this == DBDefine.MONGODB_DEFAULT) {
-//			extension += "mongo";
 		} else {
 			return "SELECT 1";
 		}
