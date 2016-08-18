@@ -33,7 +33,7 @@
 				Use of the validation query can be problematic. If you have
 				difficulty, try without it.
 			-->
-			<property name="Pool.ValidationQuery" 	value="SELECT 1" />
+			<property name="Pool.ValidationQuery" 	value="select 1 from db_root" />
 			<property name="Pool.LogAbandoned" 		value="true" />
 			<property name="Pool.RemoveAbandoned" 	value="true" />
 			<property name="Pool.RemoveAbandonedTimeout" value="50000" />
