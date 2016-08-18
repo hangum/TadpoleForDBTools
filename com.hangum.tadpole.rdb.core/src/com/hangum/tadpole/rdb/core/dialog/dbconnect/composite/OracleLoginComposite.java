@@ -241,7 +241,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 					);
 		} else if(comboConnType.getText().equals("Service Name")) {
 			dbUrl = String.format(
-						"jdbc:oracle:thin:@%s:%s/%s", 
+						"jdbc:oracle:thin:@//%s:%s/%s", 
 						StringUtils.trimToEmpty(textHost.getText()), 
 						StringUtils.trimToEmpty(textPort.getText()), 
 						StringUtils.trimToEmpty(textDatabase.getText())
