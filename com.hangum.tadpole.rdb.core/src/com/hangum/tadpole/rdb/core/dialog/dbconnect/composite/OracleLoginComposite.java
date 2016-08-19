@@ -186,10 +186,10 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText("XE"); //$NON-NLS-1$
 			textUser.setText("HR"); //$NON-NLS-1$
 			textPassword.setText("tadpole"); //$NON-NLS-1$
-//			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=5000;oracle.jdbc.ReadTimeout=5000"); //$NON-NLS-1$
+			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=10000;oracle.jdbc.ReadTimeout=10000"); //$NON-NLS-1$
 		} else {
 			textPort.setText("1521"); //$NON-NLS-1$
-//			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=5000;oracle.jdbc.ReadTimeout=5000"); //$NON-NLS-1$
+			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=10000;oracle.jdbc.ReadTimeout=10000"); //$NON-NLS-1$
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
@@ -241,7 +241,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 					);
 		} else if(comboConnType.getText().equals("Service Name")) {
 			dbUrl = String.format(
-						"jdbc:oracle:thin:@%s:%s/%s", 
+						"jdbc:oracle:thin:@//%s:%s/%s", 
 						StringUtils.trimToEmpty(textHost.getText()), 
 						StringUtils.trimToEmpty(textPort.getText()), 
 						StringUtils.trimToEmpty(textDatabase.getText())

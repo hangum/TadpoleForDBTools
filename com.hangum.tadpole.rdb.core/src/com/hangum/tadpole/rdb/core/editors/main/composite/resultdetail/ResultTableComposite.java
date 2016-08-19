@@ -159,7 +159,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		});
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvQueryResult = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tvQueryResult = new TableViewer(compositeBody, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
 		GridData gd_tableResult = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		gd_tableResult.heightHint = 90;

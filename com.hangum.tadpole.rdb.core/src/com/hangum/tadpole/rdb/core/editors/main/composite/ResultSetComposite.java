@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -58,6 +57,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -106,6 +106,9 @@ public class ResultSetComposite extends Composite {
 
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
+	
+	/** 명령 완료 메시지 */
+	private static final String CMD_COMPLETE_MSG = CommonMessages.get().CommandCoompleted;
 	
 	/** 쿼리를 배치실행했을때 수행 할 수 있는 SQL 수 */
 	private int BATCH_EXECUTE_SQL_LIMIT = 5;
@@ -686,7 +689,7 @@ public class ResultSetComposite extends Composite {
 	private ExecutorService esCheckStop = null; 
 	private Button btnAddVertical;
 	private OracleDbmsOutputUtil dbmsOutput = null;
-	private String dbms_output = "";
+	private String tadpole_system_message = "";
 	/**
 	 * 실제쿼리를 호출한다.
 	 * 
@@ -707,6 +710,7 @@ public class ResultSetComposite extends Composite {
 			throw new Exception(Messages.get().MainEditor_21);
 		}
 		
+		tadpole_system_message = "";
 		QueryExecuteResultDTO queryResultDAO = null; 
 		
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
@@ -763,12 +767,12 @@ public class ResultSetComposite extends Composite {
 				// execute query
 				execServiceQuery = Executors.newSingleThreadExecutor();
 				if(intStartCnt == 0) {
-					resultSet = runSQLSelect(statement, strSQL);
+					resultSet = _runSQLSelect(statement, strSQL);
 				} else {
 					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
 					
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
-					resultSet = runSQLSelect(statement, strSQL);
+					resultSet = _runSQLSelect(statement, strSQL);
 				}
 				
 			} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
@@ -791,17 +795,23 @@ public class ResultSetComposite extends Composite {
 				// execute query
 				execServiceQuery = Executors.newSingleThreadExecutor();
 				if(intStartCnt == 0) {
-					resultSet = runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
+					resultSet = _runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
 				} else {
 					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
 					
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
-					resultSet = runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
+					resultSet = _runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
 				}
 			}
 			
 			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt);
-			queryResultDAO.setQueryMsg(dbms_output);
+			if(resultSet == null) {
+				if(StringUtils.isEmpty(StringUtils.deleteWhitespace(tadpole_system_message))) {
+					tadpole_system_message = CMD_COMPLETE_MSG;
+				}
+				
+			}
+			queryResultDAO.setQueryMsg(tadpole_system_message);
 
 		} catch(Exception e) {
 			throw e;
@@ -826,7 +836,7 @@ public class ResultSetComposite extends Composite {
 	 * @param statementParameter
 	 * @return
 	 */
-	private ResultSet runSQLSelect(final PreparedStatement preparedStatement, final Object[] statementParameter) throws Exception {
+	private ResultSet _runSQLSelect(final PreparedStatement preparedStatement, final Object[] statementParameter) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
@@ -850,24 +860,26 @@ public class ResultSetComposite extends Composite {
 	 * 
 	 * @param strSQL
 	 */
-	private ResultSet runSQLSelect(final Statement statement, final String strSQL) throws Exception {
+	private ResultSet _runSQLSelect(final Statement statement, final String strSQL) throws Exception {
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
 			public ResultSet call() throws SQLException {
-				if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT ){
-					// 오라클인 경우 PL/SQL 실행후 dbms_output 출력 메시지를 결과 메시지에 받아온다.
+				
+				// 오라클인 경우 PL/SQL 실행후 dbms_output 출력 메시지를 결과 메시지에 받아온다.
+				if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || 
+						getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT)
+				{
 					try {
 						dbmsOutput = new OracleDbmsOutputUtil( statement.getConnection() );
 						dbmsOutput.enable( 1000000 ); 
 						statement.execute(strSQL);
 						dbmsOutput.show();
-						dbms_output = dbmsOutput.getOutput();
+						tadpole_system_message = dbmsOutput.getOutput();
 					}finally {
 						try {if(dbmsOutput!=null)dbmsOutput.close();} catch (SQLException e) {}
 					}
-				}else{
-					dbms_output = "";
+				} else {
 					statement.execute(strSQL);
 				}
 				

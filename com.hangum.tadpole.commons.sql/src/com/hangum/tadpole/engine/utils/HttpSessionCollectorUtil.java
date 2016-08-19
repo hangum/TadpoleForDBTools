@@ -74,7 +74,7 @@ public class HttpSessionCollectorUtil {
 	 * @param id
 	 */
 	public void sessionDestroyed(String strEmail) {
-		if(logger.isDebugEnabled()) logger.debug(String.format("---> [login]%s", strEmail));
+		if(logger.isDebugEnabled()) logger.debug(String.format("---> [logout]%s", strEmail));
 		Map<String, Object> mapUserData = mapSession.remove(strEmail);
 		HttpSession httpSesssion = (HttpSession)mapUserData.get(COLLECT_KEY.SESSION.name());
 		
@@ -86,11 +86,10 @@ public class HttpSessionCollectorUtil {
 			logger.error("remove user connection", e);
 		}
 		
-		// 로그 아웃이 되었다면 exception이 나올것이ㅏ.
 		try {
 			httpSesssion.invalidate();
-		} catch(Exception e) {
-			logger.error(String.format("System invalidate user %s", strEmail), e);
+		} catch(Throwable e) {
+			logger.error(String.format("System invalidate user %s, messages %s", strEmail, e.getMessage()));
 		}
 	}
 
@@ -173,8 +172,8 @@ class SessionLiveChecker implements Runnable{
 				}
 			}
 			
-			// 30 분에 한번씩 Thread 검사.
-			try { Thread.sleep((60 * 1000) * 30); } catch(Exception e) {};
+			// 10 분에 한번씩 Thread 검사.
+			try { Thread.sleep((60 * 1000) * 10); } catch(Exception e) {};
 		}
 		
 	}

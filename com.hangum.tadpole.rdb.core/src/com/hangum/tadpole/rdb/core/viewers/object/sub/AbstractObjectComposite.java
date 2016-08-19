@@ -38,6 +38,9 @@ public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
 	protected CTabFolder tabFolderObject;
 	
+	/** 데이터를 가져오고 있습니다. 공통 메시지 정의 */
+	public static final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
+	
 	/** TAB DATA KEY */
 	public static String TAB_DATA_KEY = "DB_ACTION";
 	
