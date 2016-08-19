@@ -145,8 +145,8 @@ public abstract class MakeContentAssistUtil {
 		
 		try {
 			List<TableDAO> showTables = new ArrayList<TableDAO>();
-			if(userDB.getListTable().isEmpty()) showTables = getTableListOnlyTableName(userDB);
-			else showTables = userDB.getListTable();
+			if(userDB.getListTable(userDB.getSchema()).isEmpty()) showTables = getTableListOnlyTableName(userDB);
+			else showTables = userDB.getListTable(userDB.getSchema());
 			
 			for (TableDAO tableDao : showTables) {
 				strTablelist.append(makeObjectPattern(tableDao.getSchema_name(), tableDao.getSysName(), "Table")); //$NON-NLS-1$

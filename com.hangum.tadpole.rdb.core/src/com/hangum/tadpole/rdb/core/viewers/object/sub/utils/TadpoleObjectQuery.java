@@ -161,7 +161,7 @@ public class TadpoleObjectQuery {
 	 */
 	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
-				
+		
 		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 			showTables = new TajoConnectionManager().tableList(userDB);
 
@@ -169,17 +169,12 @@ public class TadpoleObjectQuery {
 			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
 				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
 			}
-			
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getSchema()); //$NON-NLS-1$			
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getSchema()); //$NON-NLS-1$			
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$			
-		}
+		} 
+
+		
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		showTables = sqlClient.queryForList("tableList", userDB.getDefaultSchemanName()); //$NON-NLS-1$	
 		
 		/** filter 정보가 있으면 처리합니다. */
 		return getTableAfterwork(showTables, userDB);
@@ -332,7 +327,7 @@ public class TadpoleObjectQuery {
 		userDB.setTableListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 		
 		// setting UserDBDAO 
-		userDB.setListTable(showTables);
+		userDB.setListTable(userDB.getDefaultSchemanName(), showTables);
 		
 		return showTables;
 	}

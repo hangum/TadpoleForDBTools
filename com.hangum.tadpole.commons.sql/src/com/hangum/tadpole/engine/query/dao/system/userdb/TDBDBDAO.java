@@ -10,8 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system.userdb;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 
@@ -31,7 +32,7 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	protected String functionLisstSeparator = null;
 	
 	/** table list */
-	protected List<TableDAO> listTable = new ArrayList<TableDAO>();
+	protected Map<String, List<TableDAO>> listTable = new HashMap<String, List<TableDAO>>();
 	
 	public TDBDBDAO() {
 	}
@@ -79,17 +80,20 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	}
 
 	/**
-	 * @return the listTable
+	 * @return the schemaname
 	 */
-	public List<TableDAO> getListTable() {
-		return listTable;
+	public List<TableDAO> getListTable(String schemaName) {
+		return listTable.get(schemaName);
 	}
 
+	
 	/**
+	 * 
+	 * @param schema name
 	 * @param listTable the listTable to set
 	 */
-	public void setListTable(List<TableDAO> listTable) {
-		this.listTable = listTable;
+	public void setListTable(String schemaName, List<TableDAO> listTable) {
+		this.listTable.put(schemaName, listTable);
 	}
 
 	/**

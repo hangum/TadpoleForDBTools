@@ -99,7 +99,7 @@ public class DialogUtil {
 	public static void popupTableInformationDialog(UserDBDAO userDB, TableDAO paramTableDAO) {
 		try {
 			TableDAO tableDao = null;
-			List<TableDAO> listTable = userDB.getListTable();
+			List<TableDAO> listTable = userDB.getListTable(paramTableDAO.getSchema_name());
 			if (listTable.isEmpty()) {
 				if (DBDefine.POSTGRE_DEFAULT != userDB.getDBDefine()) {
 					tableDao = TadpoleObjectQuery.getTable(userDB, paramTableDAO);

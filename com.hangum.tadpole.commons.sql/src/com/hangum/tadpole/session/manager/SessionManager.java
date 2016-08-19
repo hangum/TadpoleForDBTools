@@ -30,10 +30,13 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+
+import oracle.net.aso.s;
 
 /**
  * tadpole의 session manager입니다
@@ -81,9 +84,39 @@ public class SessionManager {
 														
 														UNLOCK_DB_LIST,
 														
-														PERSPECTIVE
+														PERSPECTIVE,
+														
+														ALL_MANAGER_DB_LIST
 														}
 
+	/**
+	 * UserManager Object list를 설정한다.
+	 * 
+	 * @param managerDTO
+	 */
+	public static void setManagerDBList(List<ManagerListDTO> listManagerDTO) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
+		
+		mapUserInfoData.put(NAME.ALL_MANAGER_DB_LIST.name(), listManagerDTO);
+	}
+
+	/**
+	 * UserManager object list를 가져온다.
+	 * 
+	 * @return
+	 */
+	public static List<ManagerListDTO> getManagerDBList() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
+		Object listObj = mapUserInfoData.get(NAME.ALL_MANAGER_DB_LIST.name());
+		if(listObj == null) {
+			return new ArrayList<ManagerListDTO>();
+		} else {
+			return (List<ManagerListDTO>)listObj;
+		}
+	}
+	
 	/**
 	 * is login?
 	 * 

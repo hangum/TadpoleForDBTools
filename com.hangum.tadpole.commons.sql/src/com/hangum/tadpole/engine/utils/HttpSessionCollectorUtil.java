@@ -74,11 +74,9 @@ public class HttpSessionCollectorUtil {
 	 * @param id
 	 */
 	public void sessionDestroyed(String strEmail) {
-		if(logger.isDebugEnabled()) logger.debug(String.format("---> [logout]%s", strEmail));
 		Map<String, Object> mapUserData = mapSession.remove(strEmail);
 		HttpSession httpSesssion = (HttpSession)mapUserData.get(COLLECT_KEY.SESSION.name());
 		
-		if(logger.isDebugEnabled()) logger.debug("=== remove user connection ");
 		try {
 			TadpoleSQLManager.removeAllInstance(strEmail);
 			TadpoleSQLTransactionManager.executeRollback(strEmail);
