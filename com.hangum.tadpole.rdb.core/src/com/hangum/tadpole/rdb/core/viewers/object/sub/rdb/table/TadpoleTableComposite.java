@@ -672,94 +672,102 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			return;
 		}
 		
-		Job job = new Job(Messages.get().MainEditor_45) {
-			@Override
-			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
-				
-				try {
-					listTablesDAO = TadpoleObjectQuery.getTableList(userDB);
-				} catch(Exception e) {
-					logger.error("Table Referesh", e); //$NON-NLS-1$
+		listTablesDAO = selectUserDb.getListTable(selectUserDb.getDefaultSchemanName());
+		if(!(listTablesDAO == null || listTablesDAO.isEmpty())) {
+			tableListViewer.setInput(listTablesDAO);
+			TableUtil.packTable(tableListViewer.getTable());
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmTable);
+		} else {
+			Job job = new Job(Messages.get().MainEditor_45) {
+				@Override
+				public IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
 					
-					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
-				} finally {
-					monitor.done();
+					try {
+						listTablesDAO = TadpoleObjectQuery.getTableList(userDB);
+					} catch(Exception e) {
+						logger.error("Table Referesh", e); //$NON-NLS-1$
+						
+						return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
+					} finally {
+						monitor.done();
+					}
+					
+					/////////////////////////////////////////////////////////////////////////////////////////
+					return Status.OK_STATUS;
 				}
-				
-				/////////////////////////////////////////////////////////////////////////////////////////
-				return Status.OK_STATUS;
-			}
-		};
-		
-		// job의 event를 처리해 줍니다.
-		job.addJobChangeListener(new JobChangeAdapter() {
+			};
 			
-			public void done(IJobChangeEvent event) {
-				final IJobChangeEvent jobEvent = event; 
+			// job의 event를 처리해 줍니다.
+			job.addJobChangeListener(new JobChangeAdapter() {
 				
-				final Display display = getSite().getShell().getDisplay();
-				display.asyncExec(new Runnable() {
-					public void run() {
-						if(jobEvent.getResult().isOK()) {
-							tableListViewer.setInput(listTablesDAO);
-							TableUtil.packTable(tableListViewer.getTable());
-							// select tabitem
-							getTabFolderObject().setSelection(tbtmTable);
-							
-							selectDataOfTable(strObjectName);
-						} else {
-							if (listTablesDAO != null) listTablesDAO.clear();
-							tableListViewer.setInput(listTablesDAO);
-							tableListViewer.refresh();
-							TableUtil.packTable(tableListViewer.getTable());
-							
-							try {
-								Throwable throwable = jobEvent.getResult().getException();
-								Throwable cause = throwable.getCause().getCause();
-								if(cause instanceof ClassNotFoundException) {
-									// admin 이 드라이버를 업로드 해야한다.
-									String msg = String.format(Messages.get().TadpoleTableComposite_driverMsg, userDB.getDbms_type(), throwable.getMessage());
-									MessageDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_Drivernotfound, msg);
-									
-								} else {
+				public void done(IJobChangeEvent event) {
+					final IJobChangeEvent jobEvent = event; 
+					
+					final Display display = getSite().getShell().getDisplay();
+					display.asyncExec(new Runnable() {
+						public void run() {
+							if(jobEvent.getResult().isOK()) {
+								tableListViewer.setInput(listTablesDAO);
+								TableUtil.packTable(tableListViewer.getTable());
+								// select tabitem
+								getTabFolderObject().setSelection(tbtmTable);
+								
+								selectDataOfTable(strObjectName);
+							} else {
+								if (listTablesDAO != null) listTablesDAO.clear();
+								tableListViewer.setInput(listTablesDAO);
+								tableListViewer.refresh();
+								TableUtil.packTable(tableListViewer.getTable());
+								
+								try {
+									Throwable throwable = jobEvent.getResult().getException();
+									Throwable cause = throwable.getCause().getCause();
+									if(cause instanceof ClassNotFoundException) {
+										// admin 이 드라이버를 업로드 해야한다.
+										String msg = String.format(Messages.get().TadpoleTableComposite_driverMsg, userDB.getDbms_type(), throwable.getMessage());
+										MessageDialog.openError(display.getActiveShell(), Messages.get().TadpoleTableComposite_Drivernotfound, msg);
+										
+									} else {
+										message(Messages.get().TadpoleTableComposite_3, jobEvent.getResult().getMessage());
+									}
+								} catch(Exception e) {
 									message(Messages.get().TadpoleTableComposite_3, jobEvent.getResult().getMessage());
 								}
-							} catch(Exception e) {
-								message(Messages.get().TadpoleTableComposite_3, jobEvent.getResult().getMessage());
-							}
-						}	// end else if
-						
-						// 컬럼, 인덱스,제약조건, 트리거 목록 초기화
-						initializeSubComposite();
-						
-					}	// end run
-				});	// end display.asyncExec
+							}	// end else if
+							
+							// 컬럼, 인덱스,제약조건, 트리거 목록 초기화
+							initializeSubComposite();
+							
+						}	// end run
+					});	// end display.asyncExec
+					
+				}	// end done
 				
-			}	// end done
-			
-			/**
-			 * 
-			 * No more data to read from socket
-			 * 
-			 * @param title
-			 * @param msg
-			 */
-			private void message(String title, String msg) {
-				if(StringUtils.contains(msg, "No more data to read from socket")) {
-					TDBErroDialog dialog = new TDBErroDialog(getShell(), Messages.get().TadpoleTableComposite_3, msg + CommonMessages.get().Check_DBAccessSystem);
-					dialog.open();
-				} else {
-					TDBErroDialog dialog = new TDBErroDialog(getShell(), Messages.get().TadpoleTableComposite_3, msg);
-					dialog.open();
+				/**
+				 * 
+				 * No more data to read from socket
+				 * 
+				 * @param title
+				 * @param msg
+				 */
+				private void message(String title, String msg) {
+					if(StringUtils.contains(msg, "No more data to read from socket")) {
+						TDBErroDialog dialog = new TDBErroDialog(getShell(), Messages.get().TadpoleTableComposite_3, msg + CommonMessages.get().Check_DBAccessSystem);
+						dialog.open();
+					} else {
+						TDBErroDialog dialog = new TDBErroDialog(getShell(), Messages.get().TadpoleTableComposite_3, msg);
+						dialog.open();
+					}
 				}
-			}
+				
+			});	// end job
 			
-		});	// end job
-		
-		job.setName(userDB.getDisplay_name());
-		job.setUser(true);
-		job.schedule();
+			job.setName(userDB.getDisplay_name());
+			job.setUser(true);
+			job.schedule();
+		}
 	}
 	
 	/**

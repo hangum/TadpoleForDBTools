@@ -276,8 +276,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		List<String> listKeyMap = managerKey.get(id);
 		if(listKeyMap == null) return;
 		for (String searchKey : listKeyMap) {
-			if(logger.isDebugEnabled()) logger.debug(String.format("remove connection: %s", searchKey));
-			
 			removeInstance(searchKey);
 		}
 	}

@@ -12,9 +12,7 @@ package com.hangum.tadpole.rdb.core.viewers.connections;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -86,9 +84,7 @@ public class ManagerViewer extends ViewPart {
 	
 	private Composite compositeMainComposite;
 	private List<ManagerListDTO> treeDataList = new ArrayList<ManagerListDTO>();
-	private Map<String, ManagerListDTO> mapTreeList = new HashMap<>();
 	private TreeViewer managerTV;
-	
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
 	
@@ -202,7 +198,7 @@ public class ManagerViewer extends ViewPart {
 		createPopupMenu();
 		
 		registerServiceHandler();
-		init();
+		setManagerDBList();
 		
 		// db에 erd가 추가되었을 경우 
 		PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
@@ -217,36 +213,45 @@ public class ManagerViewer extends ViewPart {
 		});
 	}
 	
+	private void setManagerDBList() {
+		treeDataList.clear();
+		
+		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
+		if(_tmpListManager.isEmpty()) {
+			try {
+				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
+					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
+					
+					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {
+						managerDTO.addLogin(userDBDAO);
+					}
+					
+					treeDataList.add(managerDTO);
+				}	// end last end
+	
+				// session 에 사용자 디비 리스트를 저장하다.
+				SessionManager.setManagerDBList(treeDataList);
+			} catch (Exception e) {
+				logger.error("initialize Managerview", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ManagerViewer_4, errStatus); //$NON-NLS-1$
+			}
+		} else {
+			treeDataList = _tmpListManager;
+		}
+		
+		managerTV.refresh();
+		managerTV.expandToLevel(2);
+		AnalyticCaller.track(ManagerViewer.ID);
+	}
+	
 	/**
 	 * 트리 데이터 초기화
 	 */
 	public void init() {
-		treeDataList.clear();
-		mapTreeList.clear();
-	
-		try {
-			for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
-				ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
-				
-				for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {
-					managerDTO.addLogin(userDBDAO);
-				}
-				
-				treeDataList.add(managerDTO);
-			}	// end last end
-
-			managerTV.refresh();
-			managerTV.expandToLevel(2);
-			
-		} catch (Exception e) {
-			logger.error("initialize Managerview", e); //$NON-NLS-1$
-			
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ManagerViewer_4, errStatus); //$NON-NLS-1$
-		}
-		
-		managerTV.refresh();
-		AnalyticCaller.track(ManagerViewer.ID);
+		SessionManager.setManagerDBList(new ArrayList());
+		setManagerDBList();
 	}
 
 	/**

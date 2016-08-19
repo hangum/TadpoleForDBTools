@@ -634,5 +634,18 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		
 		return super.equals(obj);
 	}
+	
+	/** 
+	 * get default schemaname
+	 */
+	public String getDefaultSchemanName() {
+		if(this.getDBDefine() == DBDefine.ORACLE_DEFAULT || this.getDBDefine() == DBDefine.TIBERO_DEFAULT
+				|| this.getDBDefine() == DBDefine.MYSQL_DEFAULT || this.getDBDefine() == DBDefine.MARIADB_DEFAULT
+		) {
+			return getSchema();
+		} else {
+			return getDb();
+		}
+	}
 
 }

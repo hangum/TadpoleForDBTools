@@ -393,7 +393,7 @@ public class ExplorerViewer extends ViewPart {
 							comboSchema.select(comboSchema.getItemCount()-1);	
 						}
 					}	
-					this.refreshTable(true, "");
+					this.refreshTable(false, "");
 				} catch (Exception e) {
 					comboSchema.setItems( new String[]{userDB.getSchema()} );
 					logger.error("get system schemas " + e.getMessage());
@@ -607,7 +607,7 @@ public class ExplorerViewer extends ViewPart {
 	private void refershSelectObject(String strSelectItemText, String strObjectName) {
 
 		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
-			refreshTable(true, strObjectName);
+			refreshTable(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
 			refreshIndexes(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
@@ -866,6 +866,7 @@ public class ExplorerViewer extends ViewPart {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {		
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
+			if(boolRefresh) userDB.setListTable(userDB.getDefaultSchemanName(), null);
 			tableComposite.refreshTable(userDB, boolRefresh, strObjectName);
 		}
 	}
