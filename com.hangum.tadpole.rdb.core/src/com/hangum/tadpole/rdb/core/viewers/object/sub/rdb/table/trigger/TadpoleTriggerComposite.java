@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -237,22 +238,26 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		if(!boolRefresh) if(showTrigger != null) return;
 		this.userDB = userDB;
 		
-		try {
-			showTrigger = DBSystemSchema.getTrigger(userDB, "");
+		showTrigger = (List<TriggerDAO>)userDB.getDBObject(OBJECT_TYPE.TRIGGERS, userDB.getDefaultSchemanName());
+		if(showTrigger == null || showTrigger.isEmpty()) {
+			try {
+				showTrigger = DBSystemSchema.getTrigger(userDB, "");
 
-			triggerTableViewer.setInput(showTrigger);
-			triggerTableViewer.refresh();
-			
-			TableUtil.packTable(triggerTableViewer.getTable());
-
-			// select tabitem
-			getTabFolderObject().setSelection(tbtmTriggers);
-			selectDataOfTable(strObjectName);
-		} catch (Exception e) {
-			logger.error("showTrigger refresh", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_76, errStatus); //$NON-NLS-1$
+				userDB.setDBObject(OBJECT_TYPE.TRIGGERS, userDB.getDefaultSchemanName(), showTrigger);
+			} catch (Exception e) {
+				logger.error("showTrigger refresh", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_76, errStatus); //$NON-NLS-1$
+			}
 		}
+		triggerTableViewer.setInput(showTrigger);
+		triggerTableViewer.refresh();
+		
+		TableUtil.packTable(triggerTableViewer.getTable());
+
+		// select tabitem
+		getTabFolderObject().setSelection(tbtmTriggers);
+		selectDataOfTable(strObjectName);
 	}
 
 	/**

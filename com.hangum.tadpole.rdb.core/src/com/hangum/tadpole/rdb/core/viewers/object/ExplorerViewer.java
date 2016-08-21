@@ -609,32 +609,32 @@ public class ExplorerViewer extends ViewPart {
 		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
 			refreshTable(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			refreshIndexes(true, strObjectName);
+			refreshIndexes(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
-			refreshConstraints(true, strObjectName);
+			refreshConstraints(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-			refreshTrigger(true, strObjectName);	
-			refreshAllTrigger(true, strObjectName);
+			refreshTrigger(false, strObjectName);	
+			refreshAllTrigger(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
-			refreshView(true, strObjectName);
+			refreshView(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
-			refreshSynonym(true, strObjectName);
+			refreshSynonym(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SEQUENCE.name())) {
-			refreshSequence(true, strObjectName);
+			refreshSequence(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
-			refreshProcedure(true, strObjectName);
+			refreshProcedure(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
-			refreshPackage(true, strObjectName);
+			refreshPackage(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
-			refreshFunction(true, strObjectName);
+			refreshFunction(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-			refreshJS(true, strObjectName);
+			refreshJS(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
-			refreshDBLink(true, strObjectName);
+			refreshDBLink(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
-			refreshJobs(true, strObjectName);
+			refreshJobs(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
-			refreshJava(true, strObjectName);
+			refreshJava(false, strObjectName);
 		}
 		filterText();
 		
@@ -736,6 +736,7 @@ public class ExplorerViewer extends ViewPart {
 	 * Synonym 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshSynonym(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.SYNONYM, userDB.getDefaultSchemanName(), null);
 		synonymComposite.refreshSynonym(getUserDB(), boolRefresh, strObjectName);
 	}
 
@@ -759,6 +760,7 @@ public class ExplorerViewer extends ViewPart {
 	 * Database Link 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshDBLink(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.LINK, userDB.getDefaultSchemanName(), null);
 		dblinkComposite.refreshDBLink(getUserDB(), boolRefresh, strObjectName);
 	}
 
@@ -766,6 +768,7 @@ public class ExplorerViewer extends ViewPart {
 	 * Sequence 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshSequence(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.SEQUENCE, userDB.getDefaultSchemanName(), null);
 		sequenceComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
 	}
 
@@ -781,6 +784,7 @@ public class ExplorerViewer extends ViewPart {
 	 * Job 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshJobs(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.JOBS, userDB.getDefaultSchemanName(), null);
 		jobsComposite.refreshJobs(getUserDB(), boolRefresh, strObjectName);
 	}
 
@@ -796,6 +800,7 @@ public class ExplorerViewer extends ViewPart {
 	 * Job 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshJava(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.JAVA, userDB.getDefaultSchemanName(), null);
 		javaComposite.refreshJava(getUserDB(), boolRefresh, strObjectName);
 	}
 
@@ -803,6 +808,7 @@ public class ExplorerViewer extends ViewPart {
 	 * view 정보를 최신으로 리프레쉬합니다.
 	 */
 	public void refreshView(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.VIEWS, userDB.getDefaultSchemanName(), null);
 		viewComposite.refreshView(getUserDB(), boolRefresh, strObjectName);
 	}
 
@@ -828,6 +834,7 @@ public class ExplorerViewer extends ViewPart {
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshProcedure(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.PROCEDURE_PARAMETER, userDB.getDefaultSchemanName(), null);
 		procedureComposite.refreshProcedure(userDB, boolRefresh, strObjectName);
 	}
 
@@ -835,6 +842,7 @@ public class ExplorerViewer extends ViewPart {
 	 * package 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshPackage(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.PACKAGES, userDB.getDefaultSchemanName(), null);
 		packageComposite.refreshPackage(userDB, boolRefresh, strObjectName);
 	}
 
@@ -849,6 +857,7 @@ public class ExplorerViewer extends ViewPart {
 	 * 전체 trigger 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshAllTrigger(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.TRIGGERS, userDB.getDefaultSchemanName(), null);
 		triggerComposite.refreshAllTrigger(userDB, boolRefresh, strObjectName); 
 	}
 
@@ -856,6 +865,7 @@ public class ExplorerViewer extends ViewPart {
 	 * function 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshFunction(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.FUNCTIONS, userDB.getDefaultSchemanName(), null);
 		functionCompostite.refreshFunction(userDB, boolRefresh, strObjectName);
 	}
 
@@ -866,7 +876,7 @@ public class ExplorerViewer extends ViewPart {
 		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {		
 			mongoCollectionComposite.refreshTable(userDB, boolRefresh);	
 		} else {
-			if(boolRefresh) userDB.setListTable(userDB.getDefaultSchemanName(), null);
+			if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.TABLES, userDB.getDefaultSchemanName(), null);
 			tableComposite.refreshTable(userDB, boolRefresh, strObjectName);
 		}
 	}

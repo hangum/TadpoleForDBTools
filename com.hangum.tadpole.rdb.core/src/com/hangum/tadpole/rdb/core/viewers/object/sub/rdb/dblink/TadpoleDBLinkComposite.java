@@ -41,6 +41,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
@@ -199,67 +200,82 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshDBLink(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
-		if (!boolRefresh) if (selectUserDb == null) return;
+		if (!boolRefresh) if (!showDBLinks.isEmpty()) return;
 		this.userDB = selectUserDb;
 
-		Job job = new Job(Messages.get().MainEditor_45) {
-			@Override
-			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		showDBLinks = (List<OracleDBLinkDAO>)selectUserDb.getDBObject(OBJECT_TYPE.LINK, selectUserDb.getDefaultSchemanName());
+		if(!(showDBLinks == null || showDBLinks.isEmpty())) {
+			dbLinkListViewer.setInput(showDBLinks);
+			dbLinkListViewer.refresh();
+			TableUtil.packTable(dbLinkListViewer.getTable());
 
-				try {
-					showDBLinks = getDBLinkList(userDB);
-					
-					for(OracleDBLinkDAO dao : showDBLinks) {
-						dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getDb_link() ));
-					}
-				} catch (Exception e) {
-					logger.error("DBLink Referesh", e); //$NON-NLS-1$
-
-					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
-				} finally {
-					monitor.done();
-				}
-
-				return Status.OK_STATUS;
-			}
-		};
-
-		job.addJobChangeListener(new JobChangeAdapter() {
-
-			public void done(IJobChangeEvent event) {
-				final IJobChangeEvent jobEvent = event;
-
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (jobEvent.getResult().isOK()) {
-							dbLinkListViewer.setInput(showDBLinks);
-							dbLinkListViewer.refresh();
-							TableUtil.packTable(dbLinkListViewer.getTable());
-
-							// select tabitem
-							getTabFolderObject().setSelection(tbtmDBLink);
-							
-							selectDataOfTable(strObjectName);
-						} else {
-							if (showDBLinks != null)
-								showDBLinks.clear();
-							dbLinkListViewer.setInput(showDBLinks);
-							dbLinkListViewer.refresh();
-							TableUtil.packTable(dbLinkListViewer.getTable());
-
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmDBLink);
+			
+			selectDataOfTable(strObjectName);
+		} else {
+			Job job = new Job(Messages.get().MainEditor_45) {
+				@Override
+				public IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+	
+					try {
+						showDBLinks = getDBLinkList(userDB);
+						
+						for(OracleDBLinkDAO dao : showDBLinks) {
+							dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getDb_link() ));
 						}
+						
+						// set push of cache
+						userDB.setDBObject(OBJECT_TYPE.LINK, userDB.getDefaultSchemanName(), showDBLinks);
+					} catch (Exception e) {
+						logger.error("DBLink Referesh", e); //$NON-NLS-1$
+	
+						return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+					} finally {
+						monitor.done();
 					}
-				}); // end display.asyncExec
-			} // end done
-
-		}); // end job
-
-		job.setName(userDB.getDisplay_name());
-		job.setUser(true);
-		job.schedule();
+	
+					return Status.OK_STATUS;
+				}
+			};
+	
+			job.addJobChangeListener(new JobChangeAdapter() {
+	
+				public void done(IJobChangeEvent event) {
+					final IJobChangeEvent jobEvent = event;
+	
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (jobEvent.getResult().isOK()) {
+								dbLinkListViewer.setInput(showDBLinks);
+								dbLinkListViewer.refresh();
+								TableUtil.packTable(dbLinkListViewer.getTable());
+	
+								// select tabitem
+								getTabFolderObject().setSelection(tbtmDBLink);
+								
+								selectDataOfTable(strObjectName);
+							} else {
+								if (showDBLinks != null)
+									showDBLinks.clear();
+								dbLinkListViewer.setInput(showDBLinks);
+								dbLinkListViewer.refresh();
+								TableUtil.packTable(dbLinkListViewer.getTable());
+	
+								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
+								ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							}
+						}
+					}); // end display.asyncExec
+				} // end done
+	
+			}); // end job
+	
+			job.setName(userDB.getDisplay_name());
+			job.setUser(true);
+			job.schedule();
+		}
 	}
 
 	/**

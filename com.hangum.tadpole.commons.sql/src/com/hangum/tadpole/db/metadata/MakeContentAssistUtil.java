@@ -10,13 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.db.metadata;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -144,9 +145,8 @@ public abstract class MakeContentAssistUtil {
 		StringBuffer strTablelist = new StringBuffer();
 		
 		try {
-			List<TableDAO> showTables = new ArrayList<TableDAO>();
-			if(userDB.getListTable(userDB.getSchema()).isEmpty()) showTables = getTableListOnlyTableName(userDB);
-			else showTables = userDB.getListTable(userDB.getSchema());
+			List<TableDAO> showTables = (List<TableDAO>)userDB.getDBObject(OBJECT_TYPE.TABLES, userDB.getSchema());
+			if(showTables.isEmpty()) showTables = getTableListOnlyTableName(userDB);
 			
 			for (TableDAO tableDao : showTables) {
 				strTablelist.append(makeObjectPattern(tableDao.getSchema_name(), tableDao.getSysName(), "Table")); //$NON-NLS-1$

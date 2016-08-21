@@ -400,7 +400,7 @@ public class DBListComposite extends Composite {
 		treeAdmin.setLinesVisible(true);
 		treeAdmin.setHeaderVisible(true);
 		treeAdmin.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		treeAdmin.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+//		treeAdmin.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
 		TreeViewerColumn colGroupName = new TreeViewerColumn(tvDBList, SWT.NONE);
 		colGroupName.getColumn().setWidth(250);

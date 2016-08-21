@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -73,7 +74,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	private CTabItem  tbtmFunctions;
 	private TableViewer functionTableViewer;
 	private ProcedureFunctionComparator functionComparator;
-	private List<ProcedureFunctionDAO> showFunction;
+	private List<ProcedureFunctionDAO> showFunction = new ArrayList<>();
 	private ProcedureFunctionViewFilter functionFilter;
 
 	private ObjectCreatAction creatAction_Function;
@@ -218,26 +219,31 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	 * function 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshFunction(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
-		if(!boolRefresh) if(showFunction != null) return;
+		if(!boolRefresh) if(!showFunction.isEmpty()) return;
 		this.userDB = userDB;
 		
-		try {
-			showFunction = DBSystemSchema.getFunctionList(userDB);
-
-			functionTableViewer.setInput(showFunction);
-			functionTableViewer.refresh();
-			
-			TableUtil.packTable(functionTableViewer.getTable());
-			
-			// select tabitem
-			getTabFolderObject().setSelection(tbtmFunctions);
-			
-			selectDataOfTable(strObjectName);
-		} catch (Exception e) {
-			logger.error("showFunction refresh", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_81, errStatus); //$NON-NLS-1$
+		showFunction = (List<ProcedureFunctionDAO>)userDB.getDBObject(OBJECT_TYPE.FUNCTIONS, userDB.getDefaultSchemanName());
+		if(showFunction == null || showFunction.isEmpty()) {
+			try {
+				showFunction = DBSystemSchema.getFunctionList(userDB);
+				
+				// set push of cache
+				userDB.setDBObject(OBJECT_TYPE.FUNCTIONS, userDB.getDefaultSchemanName(), showFunction);
+			} catch (Exception e) {
+				logger.error("showFunction refresh", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_81, errStatus); //$NON-NLS-1$
+			}
 		}
+		functionTableViewer.setInput(showFunction);
+		functionTableViewer.refresh();
+		
+		TableUtil.packTable(functionTableViewer.getTable());
+		
+		// select tabitem
+		getTabFolderObject().setSelection(tbtmFunctions);
+		
+		selectDataOfTable(strObjectName);
 	}
 	
 	/**

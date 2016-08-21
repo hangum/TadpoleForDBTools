@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
@@ -228,66 +229,81 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	 * @param strObjectName
 	 */
 	public void refreshJava(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
-		if (!boolRefresh) if (selectUserDb == null) return;
+		if (!boolRefresh) if (!showJava.isEmpty()) return;
 		this.userDB = selectUserDb;
 		if(!isSupportObject()) return;
 
-		Job job = new Job(Messages.get().MainEditor_45) {
-			@Override
-			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		showJava = (List<OracleJavaDAO>)userDB.getDBObject(OBJECT_TYPE.JAVA, userDB.getDefaultSchemanName());
+		if(!(showJava == null || showJava.isEmpty())) {
+			javaListViewer.setInput(showJava);
+			javaListViewer.refresh();
+			TableUtil.packTable(javaListViewer.getTable());
 
-				try {
-					showJava = getJavaList(userDB);
-					for (OracleJavaDAO dao : showJava) {
-						dao.setSysName(dao.getObjectName() + "");
-					}
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmJava);
 
-				} catch (Exception e) {
-					logger.error("Java Referesh", e); //$NON-NLS-1$
-
-					return new Status(Status.ERROR, Activator.PLUGIN_ID, e.getMessage());
-				} finally {
-					monitor.done();
-				}
-
-				return Status.OK_STATUS;
-			}
-		};
-
-		job.addJobChangeListener(new JobChangeAdapter() {
-
-			public void done(IJobChangeEvent event) {
-				final IJobChangeEvent jobEvent = event;
-
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (jobEvent.getResult().isOK()) {
-							javaListViewer.setInput(showJava);
-							javaListViewer.refresh();
-							TableUtil.packTable(javaListViewer.getTable());
-
-							// select tabitem
-							getTabFolderObject().setSelection(tbtmJava);
-
-							selectDataOfTable(strObjectName);
-						} else {
-							if (showJava != null) showJava.clear();
-							javaListViewer.setInput(showJava);
-							javaListViewer.refresh();
-							TableUtil.packTable(javaListViewer.getTable());
-
-							MessageDialog.openError(getShell(),CommonMessages.get().Error, jobEvent.getResult().getMessage());
+			selectDataOfTable(strObjectName);
+		} else {
+				
+			Job job = new Job(Messages.get().MainEditor_45) {
+				@Override
+				public IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+	
+					try {
+						showJava = getJavaList(userDB);
+						for (OracleJavaDAO dao : showJava) {
+							dao.setSysName(dao.getObjectName() + "");
 						}
+	
+						// set push of cache
+						userDB.setDBObject(OBJECT_TYPE.JAVA, userDB.getDefaultSchemanName(), showJava);
+					} catch (Exception e) {
+						logger.error("Java Referesh", e); //$NON-NLS-1$
+	
+						return new Status(Status.ERROR, Activator.PLUGIN_ID, e.getMessage());
+					} finally {
+						monitor.done();
 					}
-				}); // end display.asyncExec
-			} // end done
-
-		}); // end job
-
-		job.setName(userDB.getDisplay_name());
-		job.setUser(true);
-		job.schedule();
+	
+					return Status.OK_STATUS;
+				}
+			};
+	
+			job.addJobChangeListener(new JobChangeAdapter() {
+	
+				public void done(IJobChangeEvent event) {
+					final IJobChangeEvent jobEvent = event;
+	
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (jobEvent.getResult().isOK()) {
+								javaListViewer.setInput(showJava);
+								javaListViewer.refresh();
+								TableUtil.packTable(javaListViewer.getTable());
+	
+								// select tabitem
+								getTabFolderObject().setSelection(tbtmJava);
+	
+								selectDataOfTable(strObjectName);
+							} else {
+								if (showJava != null) showJava.clear();
+								javaListViewer.setInput(showJava);
+								javaListViewer.refresh();
+								TableUtil.packTable(javaListViewer.getTable());
+	
+								MessageDialog.openError(getShell(),CommonMessages.get().Error, jobEvent.getResult().getMessage());
+							}
+						}
+					}); // end display.asyncExec
+				} // end done
+	
+			}); // end job
+	
+			job.setName(userDB.getDisplay_name());
+			job.setUser(true);
+			job.schedule();
+		}
 	}
 
 	/**

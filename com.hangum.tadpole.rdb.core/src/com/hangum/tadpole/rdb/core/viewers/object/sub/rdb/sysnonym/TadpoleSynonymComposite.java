@@ -45,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -303,68 +304,81 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshSynonym(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
-		if (!boolRefresh) if (selectUserDb == null) return;
+		if (!boolRefresh) if (!showSynonyms.isEmpty()) return;
 		this.userDB = selectUserDb;
 
-		Job job = new Job(Messages.get().MainEditor_45) {
-			@Override
-			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+		showSynonyms = (List<OracleSynonymDAO>)selectUserDb.getDBObject(OBJECT_TYPE.SYNONYM, selectUserDb.getDefaultSchemanName());
+		if(!(showSynonyms == null || showSynonyms.isEmpty())) {
+			synonymListViewer.setInput(showSynonyms);
+			synonymListViewer.refresh();
+			TableUtil.packTable(synonymListViewer.getTable());
 
-				try {
-					showSynonyms = getSynonymList(userDB);
-					
-					for(OracleSynonymDAO dao : showSynonyms) {
-						dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getSynonym_name() ));
-					}
-				} catch (Exception e) {
-					logger.error("Synonym Referesh", e); //$NON-NLS-1$
-
-					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
-				} finally {
-					monitor.done();
-				}
-
-				return Status.OK_STATUS;
-			}
-		};
-
-		job.addJobChangeListener(new JobChangeAdapter() {
-
-			public void done(IJobChangeEvent event) {
-				final IJobChangeEvent jobEvent = event;
-
-				getSite().getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (jobEvent.getResult().isOK()) {
-							synonymListViewer.setInput(showSynonyms);
-							synonymListViewer.refresh();
-							TableUtil.packTable(synonymListViewer.getTable());
-
-							// select tabitem
-							getTabFolderObject().setSelection(tbtmSynonym);
-							
-							selectDataOfTable(strObjectName);
-						} else {
-							if (showSynonyms != null)
-								showSynonyms.clear();
-							synonymListViewer.setInput(showSynonyms);
-							synonymListViewer.refresh();
-							TableUtil.packTable(synonymListViewer.getTable());
-
-							Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult()
-									.getException()); //$NON-NLS-1$
-							ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+			// select tabitem
+			getTabFolderObject().setSelection(tbtmSynonym);
+			
+			selectDataOfTable(strObjectName);
+		} else {
+			Job job = new Job(Messages.get().MainEditor_45) {
+				@Override
+				public IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+	
+					try {
+						showSynonyms = getSynonymList(userDB);
+						
+						for(OracleSynonymDAO dao : showSynonyms) {
+							dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getSynonym_name() ));
 						}
+						
+						// set push of cache
+						userDB.setDBObject(OBJECT_TYPE.SYNONYM, userDB.getDefaultSchemanName(), showSynonyms);
+					} catch (Exception e) {
+						logger.error("Synonym Referesh", e); //$NON-NLS-1$
+	
+						return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage());
+					} finally {
+						monitor.done();
 					}
-				}); // end display.asyncExec
-			} // end done
-
-		}); // end job
-
-		job.setName(userDB.getDisplay_name());
-		job.setUser(true);
-		job.schedule();
+	
+					return Status.OK_STATUS;
+				}
+			};
+	
+			job.addJobChangeListener(new JobChangeAdapter() {
+	
+				public void done(IJobChangeEvent event) {
+					final IJobChangeEvent jobEvent = event;
+	
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (jobEvent.getResult().isOK()) {
+								synonymListViewer.setInput(showSynonyms);
+								synonymListViewer.refresh();
+								TableUtil.packTable(synonymListViewer.getTable());
+	
+								// select tabitem
+								getTabFolderObject().setSelection(tbtmSynonym);
+								
+								selectDataOfTable(strObjectName);
+							} else {
+								if (showSynonyms != null) showSynonyms.clear();
+								synonymListViewer.setInput(showSynonyms);
+								synonymListViewer.refresh();
+								TableUtil.packTable(synonymListViewer.getTable());
+	
+								Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, jobEvent.getResult().getMessage(), jobEvent.getResult().getException()); //$NON-NLS-1$
+								ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().ExplorerViewer_86, errStatus); //$NON-NLS-1$
+							}
+						}
+					}); // end display.asyncExec
+				} // end done
+	
+			}); // end job
+	
+			job.setName(userDB.getDisplay_name());
+			job.setUser(true);
+			job.schedule();
+		}
 	}
 
 	/**
