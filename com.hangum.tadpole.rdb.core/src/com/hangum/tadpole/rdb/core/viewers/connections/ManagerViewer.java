@@ -188,7 +188,7 @@ public class ManagerViewer extends ViewPart {
 		});
 		Tree tree = managerTV.getTree();
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tree.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+//		tree.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
 		managerTV.setContentProvider(new ManagerContentProvider());
 		managerTV.setLabelProvider(new ManagerLabelProvider());

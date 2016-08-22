@@ -10,11 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system.userdb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 
 /**
  * Define Tadpole DB Hub db.
@@ -31,8 +32,12 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	protected String viewListSeparator = null;
 	protected String functionLisstSeparator = null;
 	
-	/** table list */
-	protected Map<String, List<TableDAO>> listTable = new HashMap<String, List<TableDAO>>();
+	/** 
+	 * db object cache 
+	 *
+	 * {@code PublicTadpoleDefine#OBJECT_TYPE}, <SchemaName, Object> 
+	 */
+	protected Map<OBJECT_TYPE, Map<String, List<?>>> dbObjectCache= new HashMap<OBJECT_TYPE, Map<String, List<?>>>(); 
 	
 	public TDBDBDAO() {
 	}
@@ -78,22 +83,42 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	public void setTableListSeparator(String tableListSeparator) {
 		this.tableListSeparator = tableListSeparator;
 	}
-
-	/**
-	 * @return the schemaname
-	 */
-	public List<TableDAO> getListTable(String schemaName) {
-		return listTable.get(schemaName);
-	}
-
 	
 	/**
+	 * get db object
 	 * 
-	 * @param schema name
-	 * @param listTable the listTable to set
+	 * @param objecType
+	 * @param schemaName
+	 * @return
 	 */
-	public void setListTable(String schemaName, List<TableDAO> listTable) {
-		this.listTable.put(schemaName, listTable);
+	public List<?> getDBObject(OBJECT_TYPE objecType, String schemaName) {
+		Map<String, List<?>> mapDBObject = dbObjectCache.get(objecType);
+		if(mapDBObject == null) {
+			return new ArrayList();
+		} else {
+			List listObject = mapDBObject.get(schemaName);
+			if(listObject == null) return new ArrayList();
+			else return listObject;
+		}
+	}
+	
+	/**
+	 * set db object
+	 * 
+	 * @param objecType
+	 * @param schemaName
+	 * @param objectList
+	 */
+	public void setDBObject(OBJECT_TYPE objecType, String schemaName, List objectList) {
+		Map<String, List<?>> mapDBObject = dbObjectCache.get(objecType);
+		if(mapDBObject == null) {
+			Map<String, List<?>> map = new HashMap<String, List<?>>();
+			map.put(schemaName, objectList);
+		
+			dbObjectCache.put(objecType, map);
+		} else {
+			mapDBObject.put(schemaName, objectList);
+		}
 	}
 
 	/**

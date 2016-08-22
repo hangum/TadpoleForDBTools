@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -327,7 +328,7 @@ public class TadpoleObjectQuery {
 		userDB.setTableListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 		
 		// setting UserDBDAO 
-		userDB.setListTable(userDB.getDefaultSchemanName(), showTables);
+		userDB.setDBObject(OBJECT_TYPE.TABLES, userDB.getDefaultSchemanName(), showTables);
 		
 		return showTables;
 	}

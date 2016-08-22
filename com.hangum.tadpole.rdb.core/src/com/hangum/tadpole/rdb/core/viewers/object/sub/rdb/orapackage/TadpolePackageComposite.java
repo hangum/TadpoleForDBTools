@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.orapackage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -87,7 +89,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 
 	private TableViewer packageTableViewer;
 	private ProcedureFunctionComparator packageComparator;
-	private List<ProcedureFunctionDAO> showPackage;
+	private List<ProcedureFunctionDAO> showPackage = new ArrayList<>();
 	private ProcedureFunctionViewFilter packageFilter;
 
 	private ObjectCreatAction creatAction_Package;
@@ -348,30 +350,36 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshPackage(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
-		if (!boolRefresh) if (showPackage != null) return;
+		if (!boolRefresh) if (!showPackage.isEmpty()) return;
 		this.userDB = userDB;
 
-		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showPackage = sqlClient.queryForList("packageList", userDB.getSchema()); //$NON-NLS-1$
-
-			for(ProcedureFunctionDAO dao : showPackage) {
-				dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName()));
+		showPackage = (List<ProcedureFunctionDAO>)userDB.getDBObject(OBJECT_TYPE.PACKAGES, userDB.getDefaultSchemanName());
+		if(showPackage == null || showPackage.isEmpty()) {
+			try {
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				showPackage = sqlClient.queryForList("packageList", userDB.getSchema()); //$NON-NLS-1$
+	
+				for(ProcedureFunctionDAO dao : showPackage) {
+					dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getName()));
+				}
+		
+				// set push of cache
+				userDB.setDBObject(OBJECT_TYPE.PACKAGES, userDB.getDefaultSchemanName(), showPackage);
+			} catch (Exception e) {
+				logger.error("showPackage refresh", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
 			}
-			
-			packageTableViewer.setInput(showPackage);
-			packageTableViewer.refresh();
-			
-			TableUtil.packTable(packageTableViewer.getTable());
-			
-			// select tabitem
-			getTabFolderObject().setSelection(tbtmPackage);
-			selectDataOfTable(strObjectName);
-		} catch (Exception e) {
-			logger.error("showPackage refresh", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
 		}
+		
+		packageTableViewer.setInput(showPackage);
+		packageTableViewer.refresh();
+		
+		TableUtil.packTable(packageTableViewer.getTable());
+		
+		// select tabitem
+		getTabFolderObject().setSelection(tbtmPackage);
+		selectDataOfTable(strObjectName);
 	}
 
 	/**

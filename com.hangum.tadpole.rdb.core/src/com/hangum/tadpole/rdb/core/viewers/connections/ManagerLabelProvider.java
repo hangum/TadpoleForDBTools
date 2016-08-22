@@ -35,13 +35,13 @@ public class ManagerLabelProvider extends LabelProvider {
 	private static final Logger logger = Logger.getLogger(ManagerLabelProvider.class);
 	
 	/** production markup start tag */
-	public static String PRODUCTION_SERVER_START_TAG = "<em style='color:rgb(255, 0, 0)'>"; //$NON-NLS-1$
+//	public static String PRODUCTION_SERVER_START_TAG = "<em style='color:rgb(255, 0, 0)'>"; //$NON-NLS-1$
 //	/** development markup start tag */
 //	public static String DEVELOPMENT_SERVER_START_TAG = "<em style='color:rgb(224, 224, 224)'>"; //$NON-NLS-1$
 	/** development markup start tag */
-	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(145, 129, 129)'>"; //$NON-NLS-1$
-	
-	/** Markup end tag */
+//	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(145, 129, 129)'>"; //$NON-NLS-1$
+//	
+//	/** Markup end tag */
 	public static String END_TAG = "</em>"; //$NON-NLS-1$
 	
 	/**
@@ -62,7 +62,8 @@ public class ManagerLabelProvider extends LabelProvider {
 	public static String getDBText(UserDBDAO userDB) {
 		String retText = "";
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
-			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
+//			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
+			retText = String.format("[%s] ", StringUtils.substring(userDB.getOperation_type(), 0, 1));
 //		} else {
 //			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 		}
@@ -135,7 +136,8 @@ public class ManagerLabelProvider extends LabelProvider {
 			}
 			
 			String strSupportAPI = PublicTadpoleDefine.YES_NO.YES.name().equals(dao.getRestapi_yesno())?
-										String.format("%s [%s] %s", INFO_SERVER_START_TAG, dao.getRestapi_uri(), END_TAG):"";
+//										String.format("%s [%s] %s", INFO_SERVER_START_TAG, dao.getRestapi_uri(), END_TAG):"";
+					String.format("[%s]",  dao.getRestapi_uri()):"";
 			String strComment = "".equals(dao.getDescription())?"":" (" + dao.getDescription() + ")";
 			
 			return strShareType + dao.getName() + " " + strSupportAPI + strComment;

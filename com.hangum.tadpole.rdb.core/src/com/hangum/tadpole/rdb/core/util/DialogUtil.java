@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
@@ -99,7 +100,7 @@ public class DialogUtil {
 	public static void popupTableInformationDialog(UserDBDAO userDB, TableDAO paramTableDAO) {
 		try {
 			TableDAO tableDao = null;
-			List<TableDAO> listTable = userDB.getListTable(paramTableDAO.getSchema_name());
+			List<TableDAO> listTable = (List<TableDAO>)userDB.getDBObject(OBJECT_TYPE.TABLES, paramTableDAO.getSchema_name());
 			if (listTable.isEmpty()) {
 				if (DBDefine.POSTGRE_DEFAULT != userDB.getDBDefine()) {
 					tableDao = TadpoleObjectQuery.getTable(userDB, paramTableDAO);

@@ -35,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -193,8 +194,8 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 	public void refreshConstraints(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(listConstraints != null) return;
 		if(tableDao == null) return;
-		
 		this.userDB = userDB;
+		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
@@ -215,21 +216,22 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 			for(TableConstraintsDAO dao : listConstraints) {
 				dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getCONSTRAINT_NAME() ));
 			}
-
-			constraintTableViewer.setInput(listConstraints);
-			constraintTableViewer.refresh();
 			
-			TableUtil.packTable(constraintTableViewer.getTable());
-
-			// select tabitem
-			getTabFolderObject().setSelection(tbtmConstraint);
-			
-			selectDataOfTable(strObjectName);
 		} catch (Exception e) {
 			logger.error("index refresh", e); //$NON-NLS-1$
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_1, errStatus); //$NON-NLS-1$
 		}
+		
+		constraintTableViewer.setInput(listConstraints);
+		constraintTableViewer.refresh();
+		
+		TableUtil.packTable(constraintTableViewer.getTable());
+
+		// select tabitem
+		getTabFolderObject().setSelection(tbtmConstraint);
+		
+		selectDataOfTable(strObjectName);
 	}
 
 	/**

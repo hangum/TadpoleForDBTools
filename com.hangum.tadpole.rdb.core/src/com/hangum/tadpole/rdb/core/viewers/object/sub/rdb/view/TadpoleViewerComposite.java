@@ -46,6 +46,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -350,18 +351,23 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshView(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
-		if(!boolRefresh) if(showViews != null) return;
+		if(!boolRefresh) if(!showViews.isEmpty()) return;
 		showViews.clear();
 		this.userDB = userDB;
 		
-		try {
-			showViews = DBSystemSchema.getViewList(userDB);
-		} catch (Exception e) {
-			showViews.clear();
-			
-			logger.error("view refresh", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_61, errStatus); //$NON-NLS-1$
+		showViews = (List<TableDAO>)userDB.getDBObject(OBJECT_TYPE.VIEWS, userDB.getDefaultSchemanName());
+		if((showViews == null || showViews.isEmpty())) {
+			try {
+				showViews = DBSystemSchema.getViewList(userDB);
+				
+				userDB.setDBObject(OBJECT_TYPE.VIEWS, userDB.getDefaultSchemanName(), showViews);
+			} catch (Exception e) {
+				showViews.clear();
+				
+				logger.error("view refresh", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_61, errStatus); //$NON-NLS-1$
+			}
 		}
 		
 		viewListViewer.setInput(showViews);

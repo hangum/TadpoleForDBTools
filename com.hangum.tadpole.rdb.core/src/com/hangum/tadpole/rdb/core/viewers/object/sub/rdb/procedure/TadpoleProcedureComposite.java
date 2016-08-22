@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.procedure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -73,7 +74,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	
 	private TableViewer procedureTableViewer;
 	private ProcedureFunctionComparator procedureComparator;
-	private List<ProcedureFunctionDAO> showProcedure;
+	private List<ProcedureFunctionDAO> showProcedure = new ArrayList<>();
 	private ProcedureFunctionViewFilter procedureFilter;
 
 	private ObjectCreatAction creatAction_Procedure;
@@ -217,28 +218,32 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshProcedure(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
-		if (!boolRefresh) {
-			if (showProcedure != null) return;
-		}
-		
+		if (!boolRefresh) if (!showProcedure.isEmpty()) return;
 		this.userDB = userDB;
 
-		try {
-			showProcedure = DBSystemSchema.getProcedure(userDB);
-			procedureTableViewer.setInput(showProcedure);
-			procedureTableViewer.refresh();
-			
-			TableUtil.packTable(procedureTableViewer.getTable());
-			
-			// select tabitem
-			getTabFolderObject().setSelection(tbtmProcedures);
-
-			selectDataOfTable(strObjectName);
-		} catch (Exception e) {
-			logger.error("showProcedure refresh", e); //$NON-NLS-1$
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
+		showProcedure = (List<ProcedureFunctionDAO>)userDB.getDBObject(OBJECT_TYPE.PROCEDURES, userDB.getDefaultSchemanName());
+		if(showProcedure == null || showProcedure.isEmpty()) {
+			try {
+				showProcedure = DBSystemSchema.getProcedure(userDB);
+				
+				// set push of cache
+				userDB.setDBObject(OBJECT_TYPE.PROCEDURES, userDB.getDefaultSchemanName(), showProcedure);
+			} catch (Exception e) {
+				logger.error("showProcedure refresh", e); //$NON-NLS-1$
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ExplorerViewer_71, errStatus); //$NON-NLS-1$
+			}
 		}
+		
+		procedureTableViewer.setInput(showProcedure);
+		procedureTableViewer.refresh();
+		
+		TableUtil.packTable(procedureTableViewer.getTable());
+		
+		// select tabitem
+		getTabFolderObject().setSelection(tbtmProcedures);
+
+		selectDataOfTable(strObjectName);
 	}
 
 	/**
