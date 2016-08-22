@@ -69,7 +69,15 @@
 	<!--  update user service date -->
 	<update id="updateUserServiceDate" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO">
 		UPDATE tadpole_user 
-		SET service_end = #service_end_data#
+		SET 
+			service_end = #service_end_data#
+		WHERE seq = #user_seq#
+	</update>
+	
+	<update id="updateUserLimitDBCnt" parameterClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO">
+		UPDATE tadpole_user 
+		SET 
+			limit_add_db_cnt = 5
 		WHERE seq = #user_seq#
 	</update>
 	
@@ -80,6 +88,7 @@
 			 assigned_service b
 		WHERE a.seq = b.user_seq
 			AND b.bill_seq = #seq#
+			AND b.del_yn = 'NO'
 		ORDER BY b.create_time DESC
 	</select>
 	

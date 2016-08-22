@@ -65,7 +65,6 @@ public class TadpoleSystem_Bill {
 	 * 이미 서비스에 사용자가 추가되었는지 검사한다.
 	 * 
 	 * @param bill 
-	 * @param user
 	 * @param assignedService
 	 * @return
 	 * @throws TadpoleSQLManagerException
@@ -73,7 +72,7 @@ public class TadpoleSystem_Bill {
 	 */
 	public static void insertStartUserService(UserBillDAO bill, UserDAO user, AssignedServiceDAO assignedService) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-
+		
 		List<AssignedServiceDAO> list = sqlClient.queryForList("getAlreadyService", assignedService);
 		if(bill.getEa() > list.size()) {
 			for (AssignedServiceDAO asObj : list) {
@@ -83,12 +82,35 @@ public class TadpoleSystem_Bill {
 			}
 			sqlClient.insert("insertStartUserService", assignedService);
 			
-			// 사용자 서비스를 늘려준다.
-			if(user.getService_end().getTime() < assignedService.getService_end_data().getTime()) {
-				sqlClient.update("updateUserServiceDate", assignedService);
-			}
+			// 마지막 결제 정보를 변경한
+			updateUserInfo(user, assignedService);
+
 		} else {
 			throw new Exception(Messages.get().overflowUseService);
+		}
+	}
+	
+	/**
+	 * 마지막 사용자 정보를 업데이트한다.
+	 * 
+	 * @param user
+	 * @param assignedService
+	 * @throws Exception
+	 */
+	private static void updateUserInfo(UserDAO user, AssignedServiceDAO assignedService)  throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		
+		// user의 마지막 정보를 가져온다.
+		UserDAO userDaoLastInfo = TadpoleSystem_UserQuery.findUser(user.getEmail());
+
+		// 사용자 서비스를 늘려준다.
+		if(userDaoLastInfo.getService_end().getTime() < assignedService.getService_end_data().getTime()) {
+			sqlClient.update("updateUserServiceDate", assignedService);
+		}
+		
+		// 사용자 디비 추가 제한이 5보다 적으면..
+		if(userDaoLastInfo.getLimit_add_db_cnt() < 5) {
+			sqlClient.update("updateUserLimitDBCnt", assignedService);
 		}
 	}
 	
