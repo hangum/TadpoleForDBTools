@@ -382,7 +382,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tbTabType.setText(Messages.get().TableType);
 		tbTabType.addSelectionListener(getSelectionAdapter(tableListViewer, tableComparator, tbTabType, 1));
 		tvTableType.setLabelProvider(clpTableType);
-		tvTableType.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
+		//tvTableType.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 1));
 		layoutColumnLayout.addColumnData(new ColumnWeightData(200));
 
 		tableListViewer.getTable().setLayout(layoutColumnLayout);
