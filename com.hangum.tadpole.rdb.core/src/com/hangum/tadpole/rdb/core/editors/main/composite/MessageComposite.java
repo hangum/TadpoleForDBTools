@@ -12,7 +12,6 @@ package com.hangum.tadpole.rdb.core.editors.main.composite;
 
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
@@ -24,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -137,10 +137,11 @@ public class MessageComposite extends Composite {
 			textMessage.setBackground(SWTResourceManager.getColor(255, 228, 225));
 		}
 
-//		// first show last error message
-//		final String strOldText = textMessage.getText();
-//		if ("".equals(strOldText)) { //$NON-NLS-1$
-		textMessage.setText(strNewMessage);
+		if(StringUtils.contains(strNewMessage, "No more data to read from socket") || StringUtils.contains(strNewMessage, "[*]Permission denied")) {
+			textMessage.setText(strNewMessage + CommonMessages.get().Check_DBAccessSystem);
+		} else {
+			textMessage.setText(strNewMessage);
+		}
 		
 		try {
 			if(StringUtils.isEmpty(StringUtils.deleteWhitespace(strSearchError))) {
