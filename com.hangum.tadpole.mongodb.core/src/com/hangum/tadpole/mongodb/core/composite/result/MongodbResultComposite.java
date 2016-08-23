@@ -223,7 +223,7 @@ public class MongodbResultComposite extends Composite {
 		gl_compositeTreeView.marginWidth = 2;
 		compositeTreeView.setLayout(gl_compositeTreeView);
 		
-		treeViewerMongo = new TreeViewer(compositeTreeView, SWT.BORDER | SWT.VIRTUAL | SWT.FULL_SELECTION);
+		treeViewerMongo = new TreeViewer(compositeTreeView, SWT.BORDER /* | SWT.VIRTUAL */ | SWT.FULL_SELECTION);
 		treeViewerMongo.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection)treeViewerMongo.getSelection();
@@ -312,7 +312,7 @@ public class MongodbResultComposite extends Composite {
 		});
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		resultTableViewer = new TableViewer(compositeBodyTable, SWT.BORDER | SWT.VIRTUAL | SWT.FULL_SELECTION);
+		resultTableViewer = new TableViewer(compositeBodyTable, SWT.BORDER /* | SWT.VIRTUAL */ | SWT.FULL_SELECTION);
 		resultTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection iss = (IStructuredSelection)resultTableViewer.getSelection();

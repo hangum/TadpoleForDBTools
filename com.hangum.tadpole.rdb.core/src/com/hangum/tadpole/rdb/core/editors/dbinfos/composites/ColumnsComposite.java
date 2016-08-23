@@ -118,7 +118,7 @@ public class ColumnsComposite extends DBInfosComposite {
 		});
 		btnRefresh.setText(CommonMessages.get().Refresh);
 
-		tvColumnInform = new TableViewer(this, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		tvColumnInform = new TableViewer(this, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvColumnInform.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);

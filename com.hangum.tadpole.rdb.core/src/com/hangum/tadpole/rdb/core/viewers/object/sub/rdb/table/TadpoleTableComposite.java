@@ -189,7 +189,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		sashForm.setOrientation(SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		tableListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableListViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		tableListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
@@ -285,6 +285,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						if(extensionImage != null) {
 							Image baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$
 							return ResourceManager.decorateImage(baseImage, extensionImage, ResourceManager.BOTTOM_RIGHT);
+						} else {
+							return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$;
 						}
 					}else if(StringUtils.contains(table.getTable_type(), "PARTITION")){
 						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_partition.png"); //$NON-NLS-1$
@@ -678,6 +680,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			TableUtil.packTable(tableListViewer.getTable());
 			// select tabitem
 			getTabFolderObject().setSelection(tbtmTable);
+			
 		} else {
 			Job job = new Job(Messages.get().MainEditor_45) {
 				@Override

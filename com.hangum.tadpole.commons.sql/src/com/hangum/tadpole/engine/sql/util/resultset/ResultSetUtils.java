@@ -92,7 +92,7 @@ public class ResultSetUtils {
 						tmpRow.put(intShowColIndex, sb.toString());
 					} else if(java.sql.Types.BLOB == colType) {
 						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
-					}else{					
+					}else{
 						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
 					}
 				} catch(Exception e) {
@@ -382,25 +382,25 @@ public class ResultSetUtils {
 	public static Map<Integer, String> getColumnName(ResultSet rs) throws Exception {
 		return getColumnName(false, rs);
 	}
-	
-	/**
-	 * 쿼리결과의 실제 테이블 컬럼 정보를 넘겨 받습니다.
-	 * 현재는 pgsql 만 지원합니다.
-	 * 
-	 * mysql, maria, oracle의 경우는 테이블 alias가 붙은 경우 이름을 처리하지 못합니다.
-	 * 다른 디비는 테스트 해봐야합니다.
-	 * 2014-11-13 
-	 * 
-	 * @param rsm
-	 * @return
-	 * @throws SQLException
-	 */
-	public static Map<Integer, Map> getColumnTableColumnName(UserDBDAO userDB, ResultSetMetaData rsm) {
-		Map<Integer, Map> mapTableColumn = new HashMap<Integer, Map>();
-		
-		// 첫번째 컬럼 순번을 위해 삽입.
-		mapTableColumn.put(0, new HashMap());
-			
+
+//	/**
+//	 * 쿼리결과의 실제 테이블 컬럼 정보를 넘겨 받습니다.
+//	 * 현재는 pgsql 만 지원합니다.
+//	 * 
+//	 * mysql, maria, oracle의 경우는 테이블 alias가 붙은 경우 이름을 처리하지 못합니다.
+//	 * 다른 디비는 테스트 해봐야합니다.
+//	 * 2014-11-13 
+//	 * 
+//	 * @param rsm
+//	 * @return
+//	 * @throws SQLException
+//	 */
+//	public static Map<Integer, Map> getColumnTableColumnName(UserDBDAO userDB, ResultSetMetaData rsm) {
+//		Map<Integer, Map> mapTableColumn = new HashMap<Integer, Map>();
+//		
+//		// 첫번째 컬럼 순번을 위해 삽입.
+//		mapTableColumn.put(0, new HashMap());
+//			
 //		try {
 //			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 //				PGResultSetMetaData pgsqlMeta = (PGResultSetMetaData)rsm;
@@ -468,10 +468,7 @@ public class ResultSetUtils {
 //		} catch(Exception e) {
 //			logger.error("resultset metadata exception", e);
 //		}
-		
-		return mapTableColumn;
-	}
-
-	
-
+//		
+//		return mapTableColumn;
+//	}
 }

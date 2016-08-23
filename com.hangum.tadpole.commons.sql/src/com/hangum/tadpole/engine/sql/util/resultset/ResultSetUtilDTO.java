@@ -60,7 +60,7 @@ public class ResultSetUtilDTO {
 	 * 
 	 * result map is schema, table, column
 	 */
-	private Map<Integer, Map> columnMetaData = new HashMap<Integer, Map>();
+//	private Map<Integer, Map> columnMetaData = new HashMap<Integer, Map>();
 	
 	/**
 	 * data <columnIndex, data>
@@ -134,7 +134,7 @@ public class ResultSetUtilDTO {
 				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount, intLastIndex);
 			}
 			
-			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());
+//			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());
 		}
 	}
 	
@@ -212,13 +212,13 @@ public class ResultSetUtilDTO {
 		this.dataList.getData().addAll(resultToList);
 	}
 
-	public Map<Integer, Map> getColumnMetaData() {
-		return columnMetaData;
-	}
-
-	public void setColumnMetaData(Map<Integer, Map> columnMetaData) {
-		this.columnMetaData = columnMetaData;
-	}
+//	public Map<Integer, Map> getColumnMetaData() {
+//		return columnMetaData;
+//	}
+//
+//	public void setColumnMetaData(Map<Integer, Map> columnMetaData) {
+//		this.columnMetaData = columnMetaData;
+//	}
 
 	/**
 	 * @return the columnTableName

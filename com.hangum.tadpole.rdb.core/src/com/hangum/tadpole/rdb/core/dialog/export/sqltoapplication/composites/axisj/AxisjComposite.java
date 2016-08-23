@@ -216,7 +216,7 @@ public class AxisjComposite extends AbstractSQLToComposite {
 		SashForm sashForm = new SashForm(compositeBody, SWT.VERTICAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		tableViewer = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION /* | SWT.VIRTUAL */);
 		Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);

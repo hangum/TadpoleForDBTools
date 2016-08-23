@@ -317,7 +317,7 @@ public class DBListComposite extends Composite {
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		tvDBList = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		tvDBList = new TreeViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION /* | SWT.VIRTUAL */);
 		tvDBList.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				
