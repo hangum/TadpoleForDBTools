@@ -28,7 +28,7 @@
             favicon="icons/TadpoleDBHub.ico"
             id="com.hangum.tadpole.browser.rap.branding"
             themeId="org.eclipse.rap.design.example.business.theme"
-            title="Tadpole DB Hub-v1.7.3(b3)">
+            title="Tadpole DB Hub-v1.7.3(b5)">
       </branding>
    </extension>
    <extension

@@ -209,4 +209,13 @@ public class GlobalImageUtils {
 	public static Image getSQLEditor() {
 		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/sql-query.png");
 	}
+
+	/**
+	 * get block
+	 * @return
+	 */
+	public static Image getBlock() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/kill_process.png");
+	}
+	
 }

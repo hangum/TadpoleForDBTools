@@ -972,7 +972,9 @@ public class ResultSetComposite extends Composite {
 		if(extensions == null) return;
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			try {
-				iMainEditorExtension.queryEndedExecute(listRsDAO.get(0));
+				if(listRsDAO != null | listRsDAO.size() > 1) {
+					iMainEditorExtension.queryEndedExecute(listRsDAO.get(0));
+				}
 			} catch(Exception e) {
 				logger.error("sql result extension", e);
 			}

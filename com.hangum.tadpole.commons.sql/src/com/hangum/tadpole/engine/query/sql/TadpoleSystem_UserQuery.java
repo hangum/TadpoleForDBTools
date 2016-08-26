@@ -396,4 +396,18 @@ public class TadpoleSystem_UserQuery {
 		return (UserDAO)sqlClient.queryForObject("getUserInfo", userSeq); //$NON-NLS-1$
 	}
 
+	/**
+	 * 사용자 정보 값을 수정합니다. 
+	 * @param userDAO
+	 * @param name
+	 */
+	public static void updateUserApproval(UserDAO userDAO, String yesNo) throws TadpoleSQLManagerException, SQLException {
+		UserDAO tmpUser = new UserDAO();
+		tmpUser.setSeq(userDAO.getSeq());
+		tmpUser.setApproval_yn(yesNo);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserApproval", tmpUser); //$NON-NLS-1$
+	}
+
 }

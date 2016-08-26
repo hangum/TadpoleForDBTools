@@ -67,7 +67,7 @@ public class TadpoleSQLTransactionManager {
 		final String searchKey = getKey(userId, userDB);
 		TransactionDAO transactionDAO = dbManager.get(searchKey);
 		if (transactionDAO == null) {
-			synchronized(dbManager) {
+//			synchronized(dbManager) {
 				transactionDAO = dbManager.get(searchKey);
 				if(transactionDAO != null) return transactionDAO.getConn();
 				
@@ -91,7 +91,7 @@ public class TadpoleSQLTransactionManager {
 				} catch (Exception e) {
 					logger.error("transaction connection", e);
 				}
-			}
+//			}
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("\t Already register SQLMapSession.\t Is auto commit " + transactionDAO.getConn().getAutoCommit());

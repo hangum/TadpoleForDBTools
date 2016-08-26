@@ -88,17 +88,25 @@ public class SessionManager {
 														
 														ALL_MANAGER_DB_LIST
 														}
-
+	/**
+	 * UserManager Object list를 설정한다.
+	 * 
+	 * @param managerDTO
+	 */
+	public static void initManagerDBList() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		sStore.setAttribute(NAME.ALL_MANAGER_DB_LIST.name(), new ArrayList<ManagerListDTO>());
+	}
+	
 	/**
 	 * UserManager Object list를 설정한다.
 	 * 
 	 * @param managerDTO
 	 */
 	public static void setManagerDBList(List<ManagerListDTO> listManagerDTO) {
+		if(logger.isDebugEnabled()) logger.debug("========> " + listManagerDTO.size());
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
-		
-		mapUserInfoData.put(NAME.ALL_MANAGER_DB_LIST.name(), listManagerDTO);
+		sStore.setAttribute(NAME.ALL_MANAGER_DB_LIST.name(), listManagerDTO);
 	}
 
 	/**
@@ -108,8 +116,7 @@ public class SessionManager {
 	 */
 	public static List<ManagerListDTO> getManagerDBList() {
 		HttpSession sStore = RWT.getRequest().getSession();
-		Map<String, Object> mapUserInfoData = (Map<String, Object>)sStore.getAttribute(NAME.USER_INFO_DATA.name());
-		Object listObj = mapUserInfoData.get(NAME.ALL_MANAGER_DB_LIST.name());
+		Object listObj = sStore.getAttribute(NAME.ALL_MANAGER_DB_LIST.name());
 		if(listObj == null) {
 			return new ArrayList<ManagerListDTO>();
 		} else {

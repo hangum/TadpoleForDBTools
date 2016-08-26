@@ -74,10 +74,10 @@ Document
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
 Site
-*  http://tadpoledb.com
+* http://tadpoledb.com
 
 Chrome web store
-*  https://chrome.google.com/webstore/detail/tadpole-db-hub-db-client/nlelclofeoahhcfgfkcpbmhflfdimbie
+* https://chrome.google.com/webstore/detail/tadpole-db-hub-db-client/nlelclofeoahhcfgfkcpbmhflfdimbie
 
 Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
@@ -93,19 +93,22 @@ License
 Contacts
 -
 * Home : https://sites.google.com/site/tadpolefordb/
-* Email: adi.tadpole@gmail.com
+* Email: hangum@tadpolehub.com
 * google talk : hangum@gmail.com
 
 Contributor
 -
-* nilriri (jeongjaehong@gmail.com)
-* develo (suhyunjun@gmail.com)
-* hangum (hangum@gmail.com)
-* darkcanol@gmail.com
-* Billy (sangmo.gu@gmail.com)
-* BJJang (bjjang@gaia3d.com)
-* Wahyu Kristianto (w.kristories@gmail.com) : Indonesia localization
+* nilriri 	(jeongjaehong@gmail.com)
+* develo 	(suhyunjun@gmail.com)
+* hangum 	(hangum@gmail.com)
+* BillyGoo 	(sangmo.gu@gmail.com)
+* BJJang 	(bjjang@gaia3d.com)
 * SunYoung Han(sun.sy.han@gmail.com) : Altibase extension
+* Wahyu Kristianto (w.kristories@gmail.com) : Indonesia localization
+
+Special thanks
+-
+* KAKAO BANK InfraTeam.
 
 Donation
 - Paypal(paypal.com) : hangum@gmail.com

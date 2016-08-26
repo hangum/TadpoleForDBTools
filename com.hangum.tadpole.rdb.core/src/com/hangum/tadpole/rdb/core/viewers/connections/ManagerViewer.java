@@ -216,8 +216,9 @@ public class ManagerViewer extends ViewPart {
 	private void setManagerDBList() {
 		treeDataList.clear();
 		
-		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
-		if(_tmpListManager.isEmpty()) {
+//		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
+//		if(_tmpListManager.isEmpty()) {
+//			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer add user session................");
 			try {
 				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
@@ -230,16 +231,17 @@ public class ManagerViewer extends ViewPart {
 				}	// end last end
 	
 				// session 에 사용자 디비 리스트를 저장하다.
-				SessionManager.setManagerDBList(treeDataList);
+//				SessionManager.setManagerDBList(treeDataList);
 			} catch (Exception e) {
 				logger.error("initialize Managerview", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ManagerViewer_4, errStatus); //$NON-NLS-1$
 			}
-		} else {
-			treeDataList = _tmpListManager;
-		}
+//		} else {
+//			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer reuse user session................");
+//			treeDataList = _tmpListManager;
+//		}
 		
 		managerTV.refresh();
 		managerTV.expandToLevel(2);
@@ -250,7 +252,8 @@ public class ManagerViewer extends ViewPart {
 	 * 트리 데이터 초기화
 	 */
 	public void init() {
-		SessionManager.setManagerDBList(new ArrayList());
+		if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer init..............");
+//		SessionManager.initManagerDBList();
 		setManagerDBList();
 	}
 

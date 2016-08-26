@@ -302,8 +302,6 @@ public class Messages {
 	public String OthersConnectionRDBGroup_2;
 	public String OthersConnectionRDBGroup_5;
 	public String OthersConnectionRDBGroup_6;
-	public String OthersConnectionRDBWithoutTunnelingGroup_4;
-	public String OthersConnectionRDBWithoutTunnelingGroup_5;
 	public String ServerSideJavaScriptEditor_tbtmEvalJavaScript_text_1;
 	
 	public String SessionListEditor_13;
@@ -678,6 +676,8 @@ public class Messages {
 	public String DeletedErrorJavaObject;
 
 	public String SessionListEditor_GreatThan10Sec;
+
+	public String ObjectExecutionException;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

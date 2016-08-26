@@ -317,7 +317,7 @@ public class ExecuteProcedureDialog extends Dialog {
 		} catch(Exception e) {
 			logger.error("Procedure execute Result view", e); //$NON-NLS-1$
 			
-			TDBInfoDialog dialog = new TDBInfoDialog(null, "Object execution exception", e.getMessage());
+			TDBInfoDialog dialog = new TDBInfoDialog(null, Messages.get().ObjectExecutionException, e.getMessage());
 			dialog.open();
 		}
 	}

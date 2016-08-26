@@ -75,7 +75,13 @@ public class HttpSessionCollectorUtil {
 	 */
 	public void sessionDestroyed(String strEmail) {
 		Map<String, Object> mapUserData = mapSession.remove(strEmail);
-		HttpSession httpSesssion = (HttpSession)mapUserData.get(COLLECT_KEY.SESSION.name());
+		
+		try {
+			HttpSession httpSesssion = (HttpSession)mapUserData.get(COLLECT_KEY.SESSION.name());
+			httpSesssion.invalidate();
+		} catch(Throwable e) {
+			logger.error(String.format("System invalidate user %s, messages %s", strEmail, e.getMessage()));
+		}
 		
 		try {
 			TadpoleSQLManager.removeAllInstance(strEmail);
@@ -84,11 +90,6 @@ public class HttpSessionCollectorUtil {
 			logger.error("remove user connection", e);
 		}
 		
-		try {
-			httpSesssion.invalidate();
-		} catch(Throwable e) {
-			logger.error(String.format("System invalidate user %s, messages %s", strEmail, e.getMessage()));
-		}
 	}
 
 	/**
@@ -166,13 +167,14 @@ class SessionLiveChecker implements Runnable{
 					
 				// session 이 만료되어서 시간을 가져 올수 없는 상태이므로 세션과 커넥션을 처리합니다.
 				} catch(IllegalStateException e) {
+					if(logger.isDebugEnabled()) logger.debug("[ise][session invalidate is ]" + id);
 					HttpSessionCollectorUtil.getInstance().sessionDestroyed(id);
 				}
 			}
 			
 			// 10 분에 한번씩 Thread 검사.
 			try { Thread.sleep((60 * 1000) * 10); } catch(Exception e) {};
-		}
+		} // while 
 		
 	}
 }

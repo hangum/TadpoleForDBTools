@@ -354,62 +354,68 @@ public class ExplorerViewer extends ViewPart {
 			createTable();
 		}
 		
+	}
+	
+	/**
+	 * initialize schema
+	 */
+	private void initSchema() throws Exception {
+		if(userDB == null) return;
+		
 		/** schema list*/
 		comboSchema.removeAll();
-		if(userDB != null) {
-			if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-				try {
-					// 스키마 리스트를 초기화 시킨다.
-					for (Object object : DBSystemSchema.getSchemas(userDB)) {
-						HashMap mapData = (HashMap)object;
-						comboSchema.add(""+mapData.get("schema"));
-					}
-					comboSchema.setText("public");
-				} catch(Exception e) {
-					logger.error("Schema list", e);
+		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			try {
+				// 스키마 리스트를 초기화 시킨다.
+				for (Object object : DBSystemSchema.getSchemas(userDB)) {
+					HashMap mapData = (HashMap)object;
+					comboSchema.add(""+mapData.get("schema"));
 				}
-			}else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
-				
-				try {
-					for (Object object : DBSystemSchema.getSchemas(userDB)) {
-						HashMap<String, String> mapData = (HashMap)object;
-						comboSchema.add(mapData.get("SCHEMA"));
-					}
-
-					comboSchema.select(0);
-					//TODO: 최초 로그인시 userDB 설정시 기본 스키마 지정해 놓는 방법.
-					userDB.setSchema(comboSchema.getText());
-				} catch (Exception e) {
-					comboSchema.setItems( new String[]{userDB.getSchema()} );
-					e.printStackTrace();
-				}
-			}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
-				try {
-					for (Object object : DBSystemSchema.getSchemas(userDB)) {
-						HashMap<String, String> mapData = (HashMap)object;
-						comboSchema.add(mapData.get("SCHEMA"));
-						if (StringUtils.equalsIgnoreCase(mapData.get("SCHEMA"), userDB.getDb())) {
-							userDB.setSchema(mapData.get("SCHEMA"));
-							comboSchema.select(comboSchema.getItemCount()-1);	
-						}
-					}	
-					this.refreshTable(false, "");
-				} catch (Exception e) {
-					comboSchema.setItems( new String[]{userDB.getSchema()} );
-					logger.error("get system schemas " + e.getMessage());
-				}
-			}else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
-			
-				comboSchema.add(userDB.getDb());
-				comboSchema.setText(userDB.getDb());
-			}else{
-			
-				comboSchema.add(userDB.getDb());
-				comboSchema.setText(userDB.getDb());
+				comboSchema.setText("public");
+			} catch(Exception e) {
+				logger.error("get system schemas " + e.getMessage());
+				throw e;
 			}
+		}else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			
+			try {
+				for (Object object : DBSystemSchema.getSchemas(userDB)) {
+					HashMap<String, String> mapData = (HashMap)object;
+					comboSchema.add(mapData.get("SCHEMA"));
+				}
+
+				comboSchema.select(0);
+				//TODO: 최초 로그인시 userDB 설정시 기본 스키마 지정해 놓는 방법.
+				userDB.setSchema(comboSchema.getText());
+			} catch (Exception e) {
+				comboSchema.setItems( new String[]{userDB.getSchema()} );
+				throw e;
+			}
+		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			try {
+				for (Object object : DBSystemSchema.getSchemas(userDB)) {
+					HashMap<String, String> mapData = (HashMap)object;
+					comboSchema.add(mapData.get("SCHEMA"));
+					if (StringUtils.equalsIgnoreCase(mapData.get("SCHEMA"), userDB.getDb())) {
+						userDB.setSchema(mapData.get("SCHEMA"));
+						comboSchema.select(comboSchema.getItemCount()-1);	
+					}
+				}	
+				this.refreshTable(false, "");
+			} catch (Exception e) {
+				comboSchema.setItems( new String[]{userDB.getSchema()} );
+				logger.error("get system schemas " + e.getMessage());
+				throw e;
+			}
+		}else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		
+			comboSchema.add(userDB.getDb());
+			comboSchema.setText(userDB.getDb());
+		}else{
+			comboSchema.add(userDB.getDb());
+			comboSchema.setText(userDB.getDb());
 		}
 		comboSchema.setVisibleItemCount(comboSchema.getItemCount() > 15 ? 15 : comboSchema.getItemCount());
-		
 	}
 	
 	/**
@@ -424,7 +430,6 @@ public class ExplorerViewer extends ViewPart {
 		// 기존 디비가 중복 선택되었으면 리프레쉬 하지 않는다.
 		if (userDB != null) {
 			if (userDB.getSeq() == selectUserDb.getSeq()) {
-//				textSearch.setText(selectUserDb.getSchema());
 				filterText();
 				userDB = selectUserDb;		
 				return;
@@ -437,12 +442,18 @@ public class ExplorerViewer extends ViewPart {
 		for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 		
 		// is dblock
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) &&
-				!SessionManager.isUnlockDB(selectUserDb)) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) && !SessionManager.isUnlockDB(selectUserDb)) {
 			userDB = null;
 			createTable();
 		} else {
-			initObjectDetail(userDB.getDBDefine());
+			try { 
+				initSchema();
+				initObjectDetail(userDB.getDBDefine());
+			} catch(Exception e) {
+				logger.error("initialize database " + e.getMessage());
+				userDB = null;
+				createTable();
+			}
 		}
 	}
 	

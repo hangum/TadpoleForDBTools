@@ -155,8 +155,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private TadpoleConstraintComposite 	constraintsComposite;
 	private TadpoleTriggerComposite 	triggerComposite;
 
-//	private Object index;
-	
 	/**
 	 * Create the composite.
 	 * 

@@ -171,8 +171,6 @@ public class TadpoleObjectQuery {
 				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
 			}
 		} 
-
-		
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		showTables = sqlClient.queryForList("tableList", userDB.getDefaultSchemanName()); //$NON-NLS-1$	
