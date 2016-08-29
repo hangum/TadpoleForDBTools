@@ -14,11 +14,11 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -55,9 +55,9 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	static {
 		if(tadpoleSQLManager == null) {
 			tadpoleSQLManager = new TadpoleSQLManager();
-			dbManager = new ConcurrentHashMap<String, SqlMapClient>();
-			dbMetadata = new ConcurrentHashMap<String, TadpoleMetaData>();
-			managerKey = new ConcurrentHashMap<String, List<String>>();
+			dbManager = new HashMap<String, SqlMapClient>();
+			dbMetadata = new HashMap<String, TadpoleMetaData>();
+			managerKey = new HashMap<String, List<String>>();
 		} 
 	}
 	
@@ -85,7 +85,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			try {
 				sqlMapClient = dbManager.get( searchKey );
 				if(sqlMapClient == null) {
-					synchronized(dbManager) {
+//					synchronized(dbManager) {
 						sqlMapClient = dbManager.get(searchKey);
 						if(sqlMapClient != null) return sqlMapClient;
 						
@@ -115,7 +115,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 						} else {
 							listSearchKey.add(searchKey);
 						}
-					}	// end  synchronized
+//					}	// end  synchronized
 						
 					// metadata를 가져와서 저장해 놓습니다.
 					conn = sqlMapClient.getDataSource().getConnection();
@@ -129,6 +129,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				
 			} catch(Exception e) {
 				logger.error("***** get DB Instance seq is " + userDB.getSeq() + "\n" , e);
+				managerKey.remove(userDB.getTdbUserID());
 				dbManager.remove(searchKey);
 				
 				throw new TadpoleSQLManagerException(e);

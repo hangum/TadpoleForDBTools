@@ -84,7 +84,7 @@ public class FindOneDetailComposite extends Composite {
 		this.dbResultObject = dbResultObject;
 		this.isTypeShowing = isTypeShowing;
 		
-		treeViewerMongo = new TreeViewer(this, SWT.BORDER | SWT.VIRTUAL | SWT.FULL_SELECTION);		
+		treeViewerMongo = new TreeViewer(this, SWT.BORDER /* | SWT.VIRTUAL */ | SWT.FULL_SELECTION);		
 		Tree tree = treeViewerMongo.getTree();
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);

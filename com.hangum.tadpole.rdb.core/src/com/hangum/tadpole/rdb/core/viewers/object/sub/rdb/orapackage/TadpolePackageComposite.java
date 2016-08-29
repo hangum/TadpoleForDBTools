@@ -135,7 +135,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		packageTableViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		packageTableViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableList = packageTableViewer.getTable();
 		tableTableList.setLinesVisible(true);
 		tableTableList.setHeaderVisible(true);
@@ -204,7 +204,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 		packageTableViewer.addFilter(packageFilter);
 
 		// columns
-		packageProcFuncViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		packageProcFuncViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableColumn = packageProcFuncViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);

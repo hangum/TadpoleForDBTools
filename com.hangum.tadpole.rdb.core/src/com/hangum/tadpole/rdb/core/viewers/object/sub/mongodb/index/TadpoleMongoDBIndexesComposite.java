@@ -147,7 +147,7 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		createMenu();
 		
 		// index detail column
-		tableColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		tableColumnViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
 		Table tableTableColumn = tableColumnViewer.getTable();
 		tableTableColumn.setHeaderVisible(true);
 		tableTableColumn.setLinesVisible(true);

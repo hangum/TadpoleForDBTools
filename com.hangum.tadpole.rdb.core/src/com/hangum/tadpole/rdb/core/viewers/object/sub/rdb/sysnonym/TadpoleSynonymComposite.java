@@ -136,7 +136,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		synonymListViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		synonymListViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
 		synonymListViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				try {
@@ -202,7 +202,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		synonymListViewer.addFilter(synonymFilter);
 
 		// columns
-		synonymColumnViewer = new TableViewer(sashForm, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		synonymColumnViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		synonymColumnViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();

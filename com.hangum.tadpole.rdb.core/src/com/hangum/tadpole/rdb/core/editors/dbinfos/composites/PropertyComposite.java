@@ -123,7 +123,7 @@ public class PropertyComposite extends DBInfosComposite {
 		});
 		btnRefresh.setText(CommonMessages.get().Refresh);
 		
-		propertyViewer = new TableViewer(this, SWT.VIRTUAL | SWT.BORDER | SWT.FULL_SELECTION);
+		propertyViewer = new TableViewer(this, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = propertyViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);

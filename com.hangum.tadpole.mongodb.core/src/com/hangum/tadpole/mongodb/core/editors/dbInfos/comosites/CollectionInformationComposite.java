@@ -158,7 +158,7 @@ public class CollectionInformationComposite extends Composite {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 		
-		treeViewerCollections = new TreeViewer(compositeBody, SWT.BORDER | SWT.VIRTUAL | SWT.FULL_SELECTION);
+		treeViewerCollections = new TreeViewer(compositeBody, SWT.BORDER /* | SWT.VIRTUAL */ | SWT.FULL_SELECTION);
 		treeViewerCollections.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				try {

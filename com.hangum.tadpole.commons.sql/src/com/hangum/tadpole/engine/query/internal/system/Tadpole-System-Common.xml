@@ -228,6 +228,14 @@
 	WHERE seq = #seq#
 </select>
 
+<!-- 사용자 권한을 조절합니다. -->
+<update id="updateUserApproval" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user 
+	SET
+		approval_yn = #approval_yn#
+	WHERE seq = #seq#
+</update>
+
 <!-- 
 	유저의 권한 데이터를 수정합니다.
  -->

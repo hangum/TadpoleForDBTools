@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -55,6 +56,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 import com.hangum.tadpole.manager.core.editor.db.DBMgmtEditor;
 import com.hangum.tadpole.manager.core.editor.db.DBMgntEditorInput;
 import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
@@ -80,6 +82,9 @@ public class UserListComposite extends Composite {
 	private ToolItem tltmLoginHistory;
 	private ToolItem tltmDBList;
 	private ToolItem tltmSQLAudit;
+	
+	//
+	private ToolItem tltmUserBlock;
 	
 	/** search text */
 	private Text textSearch;
@@ -190,6 +195,18 @@ public class UserListComposite extends Composite {
 			}
 		});
 		tltmSQLAudit.setEnabled(false);
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		tltmUserBlock = new ToolItem(toolBar, SWT.NONE);
+		tltmUserBlock.setImage(GlobalImageUtils.getBlock());
+		tltmUserBlock.setToolTipText("Block");
+		tltmUserBlock.setEnabled(false);
+		tltmUserBlock.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				userBlock();
+			}
+		});
 		
 		Label lblSearch = new Label(compositeHead, SWT.NONE);
 		lblSearch.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -220,6 +237,7 @@ public class UserListComposite extends Composite {
 				 tltmLoginHistory.setEnabled(true);
 				 tltmDBList.setEnabled(true);
 				 tltmSQLAudit.setEnabled(true);
+				 tltmUserBlock.setEnabled(true);
 			}
 		});
 		Table table = userListViewer.getTable();
@@ -269,6 +287,8 @@ public class UserListComposite extends Composite {
 	private void initUI() {
 		listUserGroup.clear();
 		
+		initButton();
+		
 		try {
 			listUserGroup =  TadpoleSystem_UserQuery.getAllUser();
 			
@@ -277,6 +297,17 @@ public class UserListComposite extends Composite {
 		} catch(Exception e) {
 			logger.error(Messages.get().AdminUserListComposite_12, e);
 		}
+	}
+	
+	/**
+	 * initialize button
+	 */
+	private void initButton() {
+		tltmModify.setEnabled(false);
+		tltmLoginHistory.setEnabled(false);
+		tltmDBList.setEnabled(false);
+		tltmSQLAudit.setEnabled(false);
+		tltmUserBlock.setEnabled(false);
 	}
 	
 	/**
@@ -301,7 +332,6 @@ public class UserListComposite extends Composite {
 			if(Dialog.OK == dialog.open()) {
 				initUI();
 			}
-
 		}
 	}
 	
@@ -358,6 +388,31 @@ public class UserListComposite extends Composite {
 		}
 	}
 
+	/**
+	 * 사용자 블럭을 실행합니다.
+	 */
+	private void userBlock() {
+		IStructuredSelection ss = (IStructuredSelection)userListViewer.getSelection();
+		if(ss != null || !ss.isEmpty()) {
+			 UserDAO userDAO = ((UserDAO)ss.getFirstElement());
+			
+			 if(MessageDialog.openQuestion(null, CommonMessages.get().Confirm, Messages.get().ImmediatelyBlockUser)) {
+				 // http session 을 찾아 끊고, db 연결 정보를 찾아 끊는다.
+				 HttpSessionCollectorUtil.getInstance().sessionDestroyed(userDAO.getEmail());
+				 
+				 // 어드민 허락을 받을때까지 기다리게한다.
+				 try {
+					 TadpoleSystem_UserQuery.updateUserApproval(userDAO, PublicTadpoleDefine.YES_NO.NO.name());
+					 userDAO.setApproval_yn(PublicTadpoleDefine.YES_NO.NO.name());
+				 } catch (Exception e) {
+					 logger.error("update user data", e); //$NON-NLS-1$
+					 
+					 MessageDialog.openInformation(null, CommonMessages.get().Error, Messages.get().ImmediatelyBlockUser_error + e.getMessage());
+				 }				 
+			 }
+		}
+	}
+	
 	@Override
 	protected void checkSubclass() {
 	}

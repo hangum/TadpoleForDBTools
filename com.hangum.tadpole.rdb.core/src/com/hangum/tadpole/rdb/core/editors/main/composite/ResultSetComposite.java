@@ -405,12 +405,7 @@ public class ResultSetComposite extends Composite {
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
 		controlProgress(true);
 		
-//		if(logger.isDebugEnabled()) logger.debug("Start query time ==> " + System.currentTimeMillis() ); //$NON-NLS-1$
-//		this.rsDAO = new QueryExecuteResultDTO();
 		if(compositeResult != null) compositeResult.initUI();
-		
-//		// selected first tab request quring.
-//		rdbResultComposite.resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		
 		final List<QueryExecuteResultDTO> listRSDao = new ArrayList<>();
 		
@@ -419,7 +414,6 @@ public class ResultSetComposite extends Composite {
 		final String strUserEmail 	= SessionManager.getEMAIL();
 		final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 		final int intCommitCount 	= Integer.parseInt(GetPreferenceGeneral.getRDBCommitCount());
-//		final String strNullValue	= GetPreferenceGeneral.getResultNull();
 		final UserDBDAO tmpUserDB 	= getUserDB();
 		final String errMsg = Messages.get().MainEditor_21;
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
@@ -724,8 +718,8 @@ public class ResultSetComposite extends Composite {
 				}
 			}
 		}
+
 		// 확장 포인트가 있다면 확장 포인트의 쿼리로 대체합니다.
-		
 		ResultSet resultSet = null;
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
@@ -978,7 +972,9 @@ public class ResultSetComposite extends Composite {
 		if(extensions == null) return;
 		for (IMainEditorExtension iMainEditorExtension : extensions) {
 			try {
-				iMainEditorExtension.queryEndedExecute(listRsDAO.get(0));
+				if(listRsDAO != null | listRsDAO.size() > 1) {
+					iMainEditorExtension.queryEndedExecute(listRsDAO.get(0));
+				}
 			} catch(Exception e) {
 				logger.error("sql result extension", e);
 			}

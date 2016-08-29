@@ -70,7 +70,7 @@ public class TableColumnLIstComposite extends Composite {
 		super(parent, style);
 		setLayout(new GridLayout(1, false));
 		
-		tableViewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.VIRTUAL);
+		tableViewer = new TableViewer(this, SWT.BORDER | SWT.FULL_SELECTION /* | SWT.VIRTUAL */);
 		Table table = tableViewer.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);

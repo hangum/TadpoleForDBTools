@@ -104,14 +104,14 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		
 		btnProfiler = new Button(this, SWT.CHECK);
 		btnProfiler.setSelection(true);
-		btnProfiler.setText(Messages.get().OthersConnectionRDBWithoutTunnelingGroup_4);
+		btnProfiler.setText(Messages.get().OthersConnectionRDBGroup_5);
 		
 		btnShowTables = new Button(this, SWT.CHECK);
 		btnShowTables.setSelection(true);
 		btnShowTables.setText(Messages.get().ShowTables);
 		
 		btnExecuteQuestionDml = new Button(this, SWT.CHECK);
-		btnExecuteQuestionDml.setText(Messages.get().OthersConnectionRDBWithoutTunnelingGroup_5);
+		btnExecuteQuestionDml.setText(Messages.get().OthersConnectionRDBGroup_6);
 		
 //		btnIsVisible = new Button(this, SWT.CHECK);
 //		btnIsVisible.setSelection(true);
