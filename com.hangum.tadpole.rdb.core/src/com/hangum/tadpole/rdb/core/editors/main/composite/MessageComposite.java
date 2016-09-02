@@ -148,12 +148,13 @@ public class MessageComposite extends Composite {
 				lblGoogleSearch.setText("");
 			} else {
 				String strDeleteWhiteSpace = StringUtils.replace(strSearchError, "\"", "'");
+//				if(logger.isDebugEnabled()) logger.debug("<a href=\"http://www.google.com/search?q=" + strDeleteWhiteSpace + "\" target='_blank'>" + strDeleteWhiteSpace + "</a>");
 				lblGoogleSearch.setText("<a href=\"http://www.google.com/search?q=" + strDeleteWhiteSpace + "\" target='_blank'>" + strDeleteWhiteSpace + "</a>");
 			}
 			lblGoogleSearch.getParent().layout();
 				
 		} catch(Exception e) {
-			logger.error("find search string " + e.getMessage());
+			logger.error("find search string ", e);
 		}
 //		} else {
 //			textMessage.setText(strNewMessage + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + strOldText);

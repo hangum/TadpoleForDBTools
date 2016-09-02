@@ -618,34 +618,34 @@ public class ExplorerViewer extends ViewPart {
 	private void refershSelectObject(String strSelectItemText, String strObjectName) {
 
 		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
-			refreshTable(false, strObjectName);
+			refreshTable(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			refreshIndexes(false, strObjectName);
+			refreshIndexes(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
-			refreshConstraints(false, strObjectName);
+			refreshConstraints(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-			refreshTrigger(false, strObjectName);	
-			refreshAllTrigger(false, strObjectName);
+			refreshTrigger(true, strObjectName);	
+			refreshAllTrigger(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
-			refreshView(false, strObjectName);
+			refreshView(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
-			refreshSynonym(false, strObjectName);
+			refreshSynonym(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SEQUENCE.name())) {
-			refreshSequence(false, strObjectName);
+			refreshSequence(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
-			refreshProcedure(false, strObjectName);
+			refreshProcedure(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
-			refreshPackage(false, strObjectName);
+			refreshPackage(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
-			refreshFunction(false, strObjectName);
+			refreshFunction(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-			refreshJS(false, strObjectName);
+			refreshJS(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
-			refreshDBLink(false, strObjectName);
+			refreshDBLink(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
-			refreshJobs(false, strObjectName);
+			refreshJobs(true, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
-			refreshJava(false, strObjectName);
+			refreshJava(true, strObjectName);
 		}
 		filterText();
 		
@@ -657,7 +657,6 @@ public class ExplorerViewer extends ViewPart {
 	 * selected tab refresh
 	 */
 	private void refreshSelectTab() {
-//		if(logger.isDebugEnabled()) logger.debug("tabFolderObject.getSelection().getText()" + tabFolderObject.getSelection().getText());
 		refershSelectObject(tabFolderObject.getSelection().getText(), "");
 	}
 	
