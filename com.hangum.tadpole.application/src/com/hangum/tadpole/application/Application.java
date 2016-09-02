@@ -24,7 +24,7 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
-import com.hangum.tadpole.engine.initialize.License;
+import com.hangum.tadpole.engine.initialize.ApplicationLicenseInitialize;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 
 /**
@@ -53,7 +53,7 @@ public class Application implements EntryPoint {
 	 * If the system table does not exist, create a table.
 	 */
 	private void systemInitialize() {
-		License.load();
+		ApplicationLicenseInitialize.load();
 		try {
 			boolean isInitialize = TadpoleSystemInitializer.initSystem();
 			if(!isInitialize) {
