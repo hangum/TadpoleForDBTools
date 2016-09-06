@@ -13,7 +13,7 @@ package com.hangum.tadpole.engine.license;
 import java.io.File;
 
 /**
- * 시스템 메니저의 확장 포인
+ * 시스템 메니저의 확장 포인트
  * 
  * @author hangum
  *
@@ -31,5 +31,12 @@ public interface ILicenseExtension {
 	 * @return
 	 */
 	public String getCustomerInformation();
-
+	
+	/*
+	 * license validation
+	 */
+	public String getValidation();
+	
+	public boolean isValid();
+	
 }
