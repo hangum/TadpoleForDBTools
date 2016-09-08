@@ -24,16 +24,16 @@ import org.apache.commons.io.IOUtils;
  *
  */
 public class PublicTadpoleDefine {
-	/** url system verion information */
+	/** URL system version information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
-	/** sert user info */
+	/** set user info */
 	public static String CERT_USER_INFO = "";
 	
-	/** defiee default time zone*/
+	/** define default time zone*/
 	public static final String DEFAULT_TIME_ZONE = "Asia/Seoul";
 	
-	/** defualt log file name*/
+	/** default log file name*/
 	public static final String DEFAULT_LOG_FILE 		= "./logs/tadpole.log";
 	public static final String DEFAULT_VELOCITY_LOG_FILE = "./logs/tadpoleVelocity.log";
 	

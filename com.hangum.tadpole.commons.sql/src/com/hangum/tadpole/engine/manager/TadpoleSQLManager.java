@@ -89,7 +89,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 						sqlMapClient = dbManager.get(searchKey);
 						if(sqlMapClient != null) return sqlMapClient;
 						
-						if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
+//						if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
 						// oracle 일 경우 locale 설정 
 						try { 
 							if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||

@@ -2,5 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="com.hangum.tadpole.engine.license.extension" name="License extension" schema="schema/com.hangum.tadpole.engine.license.extension.exsd"/>
+   <extension-point id="com.hangum.tadpole.engine.initialize.engine" name="Initialze engine" schema="schema/com.hangum.tadpole.engine.initialize.engine.exsd"/>
 
 </plugin>

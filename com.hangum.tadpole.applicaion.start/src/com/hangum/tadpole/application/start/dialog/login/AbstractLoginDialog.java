@@ -9,6 +9,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -51,8 +52,9 @@ public class AbstractLoginDialog extends Dialog {
 	protected void preLogin() {
 		ApplicationContext context = RWT.getApplicationContext();
 		Object objValidateMsg = context.getAttribute("LicenseValidation");
-		if(objValidateMsg != null) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, (String)objValidateMsg);
+		String strValidateMsg = objValidateMsg == null?"":(String)objValidateMsg;
+		if(StringUtils.isNotEmpty(strValidateMsg)) {
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, strValidateMsg);
 		}
 	}
 	

@@ -8,39 +8,14 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.license;
-
-import java.io.File;
+package com.hangum.tadpole.engine.initialize;
 
 /**
- * 시스템 메니저의 확장 포인트
- * 
+ * initialzie engine
  * @author hangum
  *
  */
-public interface ILicenseExtension {
-	/**
-	 * 
-	 * @param strFile
-	 */
-	public void initExtension(File file);
+public interface InitializeEngine {
 	
-	/**
-	 * get host information
-	 * 
-	 * @return
-	 */
-	public String getCustomerInformation();
-	
-	/*
-	 * license validation
-	 */
-	public String getValidation();
-	
-	/**
-	 * is valid license
-	 * @return
-	 */
-	public boolean isValid();
-	
+	public void initialize();
 }

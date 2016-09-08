@@ -26,17 +26,17 @@ import com.hangum.tadpole.engine.license.LicenseExtensionHandler;
  */
 public class ApplicationLicenseInitialize {
 	private static final Logger logger = Logger.getLogger(ApplicationLicenseInitialize.class);
-	public static String tdbLicense = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
+	private static String TDB_License_FILE = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
 	
 	public static void load() {
 		if(ApplicationArgumentUtils.isInitialize) return;
 		
 		try {
-			File fileExist = new File(tdbLicense);
+			File fileExist = new File(TDB_License_FILE);
 			if(fileExist.isFile()) {
 				logger.info("******** Start enterprise version ");
 				LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
-				linceseHandler.evaluateCreateWidgetContribs(fileExist);
+				linceseHandler.license(fileExist);
 			}
 			ApplicationArgumentUtils.isInitialize = true;
 		} catch(Exception e) {
