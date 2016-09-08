@@ -305,7 +305,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			if(sqlMapClient == null) return;
 			DataSource ds = sqlMapClient.getDataSource();
 			if(ds != null) {
-				if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLManager] remove Instance: " + searchKey);
+//				if(logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLManager] remove Instance: " + searchKey);
 				BasicDataSource basicDataSource = (BasicDataSource)ds;
 				basicDataSource.close();
 				

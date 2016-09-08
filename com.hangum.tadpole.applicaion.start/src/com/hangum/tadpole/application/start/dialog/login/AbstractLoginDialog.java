@@ -9,13 +9,16 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start.dialog.login;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ApplicationContext;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -30,9 +33,6 @@ public class AbstractLoginDialog extends Dialog {
 	
 	protected int ID_NEW_USER	 	= IDialogConstants.CLIENT_ID 	+ 1;
 	protected int ID_FINDPASSWORD 	= IDialogConstants.CLIENT_ID 	+ 2;
-	
-//	/** 사용자가 브라우저로 접속한 ip*/
-//	private String browserIP = "";
 
 	protected AbstractLoginDialog(Shell parentShell) {
 		super(parentShell);
@@ -43,6 +43,17 @@ public class AbstractLoginDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
+	}
+	
+	/**
+	 * system message
+	 */
+	protected void preLogin() {
+		ApplicationContext context = RWT.getApplicationContext();
+		Object objValidateMsg = context.getAttribute("LicenseValidation");
+		if(objValidateMsg != null) {
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, (String)objValidateMsg);
+		}
 	}
 	
 	@Override

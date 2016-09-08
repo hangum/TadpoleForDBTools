@@ -88,7 +88,6 @@ public class TableColumnComposite extends AbstractTableComposite {
 		tbtmTable.setData(Messages.get().Columns);
 		tbtmTable.setData(TAB_DATA_KEY, PublicTadpoleDefine.OBJECT_TYPE.COLUMNS.name());
 
-		
 		Composite compositeColumn = new Composite(parentFolder, SWT.NONE);
 		tbtmTable.setControl(compositeColumn);
 		GridLayout gl_compositeTables = new GridLayout(1, false);
@@ -161,9 +160,9 @@ public class TableColumnComposite extends AbstractTableComposite {
 
 		if(getUserDB() == null) return;
 		// table column
-		tableColumnSelectionAction.setUserDB(getUserDB());
-		tableColumnDeleteAction.setUserDB(getUserDB());
-		tableColumnModifyAction.setUserDB(getUserDB());
+		if(tableColumnSelectionAction != null) tableColumnSelectionAction.setUserDB(getUserDB());
+		if(tableColumnDeleteAction!= null) tableColumnDeleteAction.setUserDB(getUserDB());
+		if(tableColumnModifyAction != null) tableColumnModifyAction.setUserDB(getUserDB());
 	}
 	
 	public TableViewer getTableColumnViewer() {
