@@ -193,6 +193,10 @@ public class Messages {
 	public String OTP;
 
 	public String QueryProfilling;
+
+	public String DefaultPreferencePage_3;
+
+	public String MongoDBPreferencePage_0_1;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

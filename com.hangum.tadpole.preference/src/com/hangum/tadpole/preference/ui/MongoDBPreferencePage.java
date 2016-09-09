@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.preference.ui;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -118,23 +119,30 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 	public boolean performOk() {
 
 		String txtLimitCount = textLimitCount.getText();
-		String txtMacCount = textMaxCount.getText();
+		String txtMaxCount = textMaxCount.getText();
 		String txtFindPage = ""; //$NON-NLS-1$
 		String txtResultPage = ""; //$NON-NLS-1$
 		
-		try {
-			Integer.parseInt(txtLimitCount);
-		} catch(Exception e) {
+		if(!NumberUtils.isNumber(txtLimitCount)) {
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
+			textLimitCount.setFocus();
 			return false;
-		}
-		try {
-			Integer.parseInt(txtMacCount);
-		} catch(Exception e) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().MongoDBPreferencePage_11);			 //$NON-NLS-1$
+		} else if(NumberUtils.toInt(txtLimitCount) > 10000) {
+			textLimitCount.setFocus();
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MongoDBPreferencePage_0 + Messages.get().MongoDBPreferencePage_0_1);			 //$NON-NLS-1$
 			return false;
 		}
 		
+		if(!NumberUtils.isNumber(txtMaxCount)) {
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
+			textMaxCount.setFocus();
+			return false;
+		} else if(NumberUtils.toInt(txtMaxCount) > 10000) {
+			textMaxCount.setFocus();
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MongoDBPreferencePage_1 + Messages.get().MongoDBPreferencePage_0_1);			 //$NON-NLS-1$
+			return false;
+		}
+
 //		if(btnBasicSearch.getSelection()) {
 			txtFindPage = btnBasicSearch.getData().toString();
 //		} else {
@@ -149,11 +157,11 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 		
 		// 테이블에 저장 
 		try {
-			TadpoleSystem_UserInfoData.updateMongoDBUserInfoData(txtLimitCount, txtMacCount, txtFindPage, txtResultPage);
+			TadpoleSystem_UserInfoData.updateMongoDBUserInfoData(txtLimitCount, txtMaxCount, txtFindPage, txtResultPage);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.MONGO_DEFAULT_LIMIT, txtLimitCount);
-			SessionManager.setUserInfo(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT, txtMacCount);
+			SessionManager.setUserInfo(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT, txtMaxCount);
 			SessionManager.setUserInfo(PreferenceDefine.MONGO_DEFAULT_FIND, txtFindPage);
 			SessionManager.setUserInfo(PreferenceDefine.MONGO_DEFAULT_RESULT, txtResultPage);
 		} catch(Exception e) {
