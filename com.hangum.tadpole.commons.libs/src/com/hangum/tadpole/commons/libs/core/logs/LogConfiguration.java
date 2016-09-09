@@ -29,7 +29,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 public class LogConfiguration {
 	
 	String filePattern 		= "%d %-5p [%t] %-17c{2} (%13F:%L) %3x - %m%n";
-	String defaultPattern 	= "%d{yyyy MMM dd HH:mm:ss, SSS} %p - %C{1} : %M %m %n";
+	String defaultPattern 	= "%d %-5p - %C{1} : %M %m %n";
 	
 	public static Logger logger = Logger.getRootLogger();
 	
