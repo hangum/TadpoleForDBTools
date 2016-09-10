@@ -130,9 +130,13 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		String txtWordbreak = ""+btnWordBreak.getSelection(); //$NON-NLS-1$
 		String strTextWidth = textWidth.getText();
 		
-		if(!NumberUtils.isNumber(textWidth.getText())) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
+		if(!NumberUtils.isNumber(strTextWidth)) {
 			textWidth.setFocus();
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
+			return false;
+		} else if(!(NumberUtils.toInt(strTextWidth) >= 40 && NumberUtils.toInt(strTextWidth) <= 1000)) {
+			textWidth.setFocus();
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().SQLFormatterPreferencePage_btnWordBreak_text, "40", "1,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		

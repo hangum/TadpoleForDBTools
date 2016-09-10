@@ -144,9 +144,9 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 			textSessionTime.setFocus();
 			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
 			return false;
-		} else if(NumberUtils.toInt(txtSessionTime) > 301) {
+		} else if(!(NumberUtils.toInt(txtSessionTime) >= 5 && NumberUtils.toInt(txtSessionTime) <= 300)) {
 			textSessionTime.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().DefaultPreferencePage_2 + Messages.get().DefaultPreferencePage_3);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_2, "5 min", "300 min"));			 //$NON-NLS-1$
 			return false;
 		}
 		

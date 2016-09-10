@@ -127,9 +127,9 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
 			textLimitCount.setFocus();
 			return false;
-		} else if(NumberUtils.toInt(txtLimitCount) > 10000) {
+		} else if(!(NumberUtils.toInt(txtLimitCount) >= 30 && NumberUtils.toInt(txtLimitCount) <= 10000)) {
 			textLimitCount.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MongoDBPreferencePage_0 + Messages.get().MongoDBPreferencePage_0_1);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().MongoDBPreferencePage_0, "30", "10,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -137,9 +137,9 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().MongoDBPreferencePage_10);			 //$NON-NLS-1$
 			textMaxCount.setFocus();
 			return false;
-		} else if(NumberUtils.toInt(txtMaxCount) > 10000) {
+		} else if(!(NumberUtils.toInt(txtMaxCount) >= 200 && NumberUtils.toInt(txtMaxCount) <= 10000)) {
 			textMaxCount.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().MongoDBPreferencePage_1 + Messages.get().MongoDBPreferencePage_0_1);			 //$NON-NLS-1$
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().MongoDBPreferencePage_1, "200", "10,000"));			 //$NON-NLS-1$
 			return false;
 		}
 
