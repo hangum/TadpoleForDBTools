@@ -134,7 +134,6 @@ public class TadpoleSystemInitializer {
 				is.close();
 			}
 		} else {
-			//	https://github.com/nassol/TadpoleForDBTools/blob/master/com.hangum.tadpole.commons.sql/src/com/hangum/tadpole/sql/query/TadpoleSystemInitializer.java
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 			try {
 				List listUserTable = sqlClient.queryForList("system_information"); //$NON-NLS-1$
@@ -235,7 +234,6 @@ public class TadpoleSystemInitializer {
 
 		// local db
 		if ("".equals(dbServerPath)) {
-
 			tadpoleEngineDB.setDbms_type(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString());
 			tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDB_URL_INFO(), DEFAULT_DB_FILE_LOCATION + DB_NAME));
 			tadpoleEngineDB.setDb("SQLite"); //$NON-NLS-1$

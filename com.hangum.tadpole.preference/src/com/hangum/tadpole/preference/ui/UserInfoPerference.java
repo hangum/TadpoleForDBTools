@@ -18,8 +18,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -148,37 +146,12 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textPassword.setText(SessionManager.getPassword());
-		// Because existed password do not decode, to save new password must clear text.
-		textPassword.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent event) {
-			}
-			
-			@Override
-			public void focusGained(FocusEvent event) {
-				textPassword.setText(""); //$NON-NLS-1$
-				textRePassword.setText(""); //$NON-NLS-1$
-			}
-		});
 		
 		Label lblRePassword = new Label(container, SWT.NONE);
 		lblRePassword.setText(Messages.get().UserInfoPerference_4);
 		
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textRePassword.setText(SessionManager.getPassword());
-		// Because existed password do not decode, to save new password must clear text.
-		textRePassword.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent event) {
-			}
-			
-			@Override
-			public void focusGained(FocusEvent event) {
-				textRePassword.setText(""); //$NON-NLS-1$
-			}
-		});
 		
 		Label lblLanguage = new Label(container_1, SWT.NONE);
 		lblLanguage.setText(Messages.get().Language);
@@ -188,7 +161,6 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		comboLanguage.add(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN));
 		comboLanguage.setData(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), Locale.ENGLISH);
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
-		comboLanguage.setText(SessionManager.getLangeage());
 		
 		Label lblTimezone = new Label(container_1, SWT.NONE);
 		lblTimezone.setText(Messages.get().TimeZone);
@@ -279,6 +251,20 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			buttonWithdrawal.setText(Messages.get().UserInfoPerference_button_text);
 			new Label(container, SWT.NONE);
 		}
+		
+		initUI();
+	}
+	
+	/**
+	 * initialize ui
+	 */
+	private void initUI() {
+		String userPaswd = SessionManager.getPassword();
+		textPassword.setText(userPaswd);
+		textRePassword.setText(userPaswd);
+		
+		String strLan = SessionManager.getLangeage();
+		comboLanguage.setText(new Locale(strLan).getDisplayLanguage());
 	}
 	
 	/**
@@ -311,28 +297,22 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	@Override
 	public boolean performOk() {
 		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
-			String pass = textPassword.getText().trim();
-			String rePass = textRePassword.getText().trim();
+			String pass = StringUtils.trim(textPassword.getText());
+			String rePass = StringUtils.trim(textRePassword.getText());
 			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$  
-			String otpSecretKey = textSecretKey.getText();
+			String otpSecretKey = StringUtils.trim(textSecretKey.getText());
 			Locale locale = Locale.ENGLISH;
+			String timezone = StringUtils.trim(comboTimezone.getText());
 			if(comboLanguage.getData(comboLanguage.getText()) != null) {
 				locale = (Locale)comboLanguage.getData(comboLanguage.getText());	
 			}
-			
-			String timezone = comboTimezone.getText();
-			
 			if(StringUtils.length(pass) < 5) {
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_14);
 				textPassword.setFocus();
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_14);
 				return false;
 			}
 			
-			if(pass.equals("")) { //$NON-NLS-1$
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_17);
-				textPassword.setFocus();
-				return false;
-			} else if(!pass.equals(rePass)) {
+			if(!pass.equals(rePass)) {
 				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_6);
 				textPassword.setFocus();
 				return false;
