@@ -209,32 +209,32 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		String txtShownInTheColumn = textShowInTheColumn.getText();
 		
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textSelectLimit.setFocus();
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		} else if(!(NumberUtils.toInt(txtSelectLimit) >= 100 && NumberUtils.toInt(txtSelectLimit) <= 5000)) {
 			textSelectLimit.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_0, "100", "5,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_0, "100", "5,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtResultPage)) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			textResultPage.setFocus();
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			return false;
 		} else if(!(NumberUtils.toInt(txtResultPage) >= 100 && NumberUtils.toInt(txtResultPage) <= 5000)) {
 			textResultPage.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_other_labelText_1, "100", "5,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_other_labelText_1, "100", "5,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
 		if(!NumberUtils.isNumber(txtQueryTimtout)) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().RDBPreferencePage_lblQueryTimeout_text + Messages.get().RDBPreferencePage_0);
 			textQueryTimeout.setFocus();
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().RDBPreferencePage_lblQueryTimeout_text + Messages.get().RDBPreferencePage_0);
 			return false;
 		} else if(!(NumberUtils.toInt(txtQueryTimtout) >= 5 && NumberUtils.toInt(txtQueryTimtout) <= 60000)) {
 			textQueryTimeout.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblQueryTimeout_text, "5", "60,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblQueryTimeout_text, "5", "60,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -244,7 +244,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			return false;
 		} else if(!(NumberUtils.toInt(txtCommitCount) >= 1000 && NumberUtils.toInt(txtCommitCount) <= 10000)) {
 			textCommitCount.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCommitCount_text, "1,000", "10,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCommitCount_text, "1,000", "10,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -254,7 +254,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			return false;
 		} else if(!(NumberUtils.toInt(txtShownInTheColumn) >= 5 && NumberUtils.toInt(txtShownInTheColumn) <= 1000)) {
 			textShowInTheColumn.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCharacterShownIn_text, "5", "1,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCharacterShownIn_text, "5", "1,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		

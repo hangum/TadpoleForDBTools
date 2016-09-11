@@ -313,17 +313,17 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			}
 			
 			if(!pass.equals(rePass)) {
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_6);
 				textPassword.setFocus();
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_6);
 				return false;
 			} else if(btnGetOptCode.getSelection()) {
 				if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_15); //$NON-NLS-1$
 					textOTPCode.setFocus();
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_15); //$NON-NLS-1$
 					return false;
 				} else if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_16); //$NON-NLS-1$
 					textOTPCode.setFocus();
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_16); //$NON-NLS-1$
 					return false;
 				}
 			}

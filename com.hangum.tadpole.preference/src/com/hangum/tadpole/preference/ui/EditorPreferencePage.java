@@ -135,11 +135,11 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	
 		if(!NumberUtils.isNumber(txtWrapLimit)) {
 			textWrapLimit.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().SQLFormatterPreferencePage_8);
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
 			return false;
 		} else if(!(NumberUtils.toInt(txtWrapLimit) >= 40 && NumberUtils.toInt(txtWrapLimit) <= 1000)) {
 			textWrapLimit.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().EditorPreferencePage_1, "40", "1,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().EditorPreferencePage_1, "40", "1,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		

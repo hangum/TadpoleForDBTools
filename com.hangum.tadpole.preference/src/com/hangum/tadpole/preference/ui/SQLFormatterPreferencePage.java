@@ -136,7 +136,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 			return false;
 		} else if(!(NumberUtils.toInt(strTextWidth) >= 40 && NumberUtils.toInt(strTextWidth) <= 1000)) {
 			textWidth.setFocus();
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().SQLFormatterPreferencePage_btnWordBreak_text, "40", "1,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().SQLFormatterPreferencePage_btnWordBreak_text, "40", "1,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
