@@ -275,7 +275,6 @@ public class AdminSQLAuditEditor extends EditorPart {
 		});
 		
 		btnSearch = new Button(compositeSearchDetail, SWT.NONE);
-//		btnSearch.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/search.png")); //$NON-NLS-1$
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -313,6 +312,8 @@ public class AdminSQLAuditEditor extends EditorPart {
 				showQueryEditor();
 			}
 		});
+		
+
 		
 		createTableHistoryColumn();
 		

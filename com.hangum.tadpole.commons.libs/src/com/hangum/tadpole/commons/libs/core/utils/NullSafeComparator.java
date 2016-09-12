@@ -27,7 +27,7 @@ public class NullSafeComparator {
 	 * @return
 	 */
 	public static int compare(final long long1, final long long2) {
-		return long1 > long2?0:1;
+		return ((Long)long1).compareTo((Long)long2);
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class NullSafeComparator {
 	 * @return
 	 */
 	public static int compare(final int int1, final int int2) {
-		return int1 > int2?0:1;
+		return ((Integer)int1).compareTo((Integer)int2);
 	}
 
 	/**

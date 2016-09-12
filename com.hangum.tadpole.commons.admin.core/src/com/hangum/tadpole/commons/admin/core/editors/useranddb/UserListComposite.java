@@ -91,6 +91,7 @@ public class UserListComposite extends Composite {
 	private TableViewer userListViewer;
 	private List<UserDAO> listUserGroup = new ArrayList<UserDAO>();
 	private UserCompFilter filter;
+	private UserDAOComparator comparator;
 
 	/**
 	 * Create the composite.
@@ -246,12 +247,15 @@ public class UserListComposite extends Composite {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		createColumn();
+
+		filter = new UserCompFilter();
+		userListViewer.addFilter(filter);
+		comparator = new UserDAOComparator();
+		comparator.setColumn(0);
+		userListViewer.setSorter(comparator);
 		
 		userListViewer.setContentProvider(new ArrayContentProvider());
 		userListViewer.setLabelProvider(new UserLabelProvider());
-		
-		filter = new UserCompFilter();
-		userListViewer.addFilter(filter);;
 		
 		initUI();
 		
@@ -269,15 +273,26 @@ public class UserListComposite extends Composite {
 							Messages.get().IsSharedDB, Messages.get().DefaultAddDBCount, Messages.get().DefaultUseDay,
 							Messages.get().AdminUserListComposite_7, Messages.get().AdminUserListComposite_8, 
 							Messages.get().AdminUserListComposite_9, 
-							
 							Messages.get().DeleteAccounts, Messages.get().AdminUserListComposite_11};
 		int[] colSize = {150, 120, 70, 70, 60, 60, 120, 60, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(userListViewer, SWT.NONE);
-			TableColumn tableColumn = tableViewerColumn.getColumn();
+			final TableViewerColumn tableViewerColumn = new TableViewerColumn(userListViewer, SWT.NONE);
+			final TableColumn tableColumn = tableViewerColumn.getColumn();
 			tableColumn.setWidth(colSize[i]);
 			tableColumn.setText(colNames[i]);
+			
+			final int falInt = i;
+			tableColumn.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent event) {
+					UserDAOComparator comparator = ((UserDAOComparator) userListViewer.getSorter());
+					comparator.setColumn(falInt);
+
+					userListViewer.getTable().setSortColumn(tableColumn);
+					userListViewer.getTable().setSortDirection(comparator.getDirection());
+					userListViewer.refresh();
+				}
+			});
 		}
 	}
 	
