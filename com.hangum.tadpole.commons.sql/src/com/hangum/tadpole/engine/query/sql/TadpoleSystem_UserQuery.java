@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -176,7 +177,12 @@ public class TadpoleSystem_UserQuery {
 	 */
 	public static UserDAO findUser(String email) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<UserDAO> listUser = sqlClient.queryForList("findUser", email); //$NON-NLS-1$
+		List<UserDAO> listUser = new ArrayList<UserDAO>();
+		if(ApplicationArgumentUtils.isOnlineServer()) {
+			listUser = sqlClient.queryForList("findEmailUser", email); //$NON-NLS-1$
+		} else {
+			listUser = sqlClient.queryForList("findLikeUser", "%" + email + "%"); //$NON-NLS-1$
+		}
 		
 		if(listUser.size() == 0) {
 			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_0);
