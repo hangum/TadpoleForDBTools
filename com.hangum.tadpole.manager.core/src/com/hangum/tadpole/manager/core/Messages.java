@@ -294,6 +294,10 @@ public class Messages {
 	public String MS;
 
 	public String ReleteConnectionPool;
+
+	public String PleaseSelectDB;
+
+	public String PleaseSelectUser;
 	
 
 	public static Messages get() {
