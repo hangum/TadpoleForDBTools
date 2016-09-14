@@ -14,6 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.sql.Statement;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -27,7 +29,9 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.TadpoleEngineActivator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * <pre>
@@ -129,10 +133,67 @@ public class TadpoleSystemInitializer {
 				fos.close();
 				is.close();
 			}
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+			try {
+				List listUserTable = sqlClient.queryForList("system_information"); //$NON-NLS-1$
+				// 초기 데이터를 넣는다.
+				if(listUserTable.size() == 0) {
+					logger.info("Initialize System table");
+					InitializeEngineHandler initializeEngine = new InitializeEngineHandler();
+					initializeEngine.initializeEngine();
+				}
+			} catch(Exception e) {
+				logger.info("Initialize System table");
+				InitializeEngineHandler initializeEngine = new InitializeEngineHandler();
+				initializeEngine.initializeEngine();
+			}
 		}
 		
 		return TadpoleApplicationContextManager.getSystemAdmin() == null?false:true;
 	}
+	
+//	/**
+//	 * system table의 존재 유무를 파악하여 생성합니다.
+//	 * 
+//	 */
+//	private static void createSystemTable() throws Exception {
+//
+//		java.sql.Connection javaConn = null;
+//		Statement stmt = null;
+//		String createMsg = "";
+//
+//		try {
+//			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+//			javaConn = sqlClient.getDataSource().getConnection();
+//
+//			// 테이블 생성
+//			stmt = javaConn.createStatement();
+//			Object obj = null;
+//			if (ApplicationArgumentUtils.isDBServer()) {
+//				logger.info("*** Remote DB System Teable creation ***");
+//
+//				obj = new TadpoleMySQLDDL();
+//			}
+//
+//			String targetDDL = "";
+//			for (java.lang.reflect.Field field : obj.getClass().getFields()) {
+//				targetDDL = obj.getClass().getField(field.getName()).get("").toString();
+//				//targetDDL = new String(targetDDL.getBytes(), "ISO-8859-1");
+//				createMsg = "System Table create [" + targetDDL + "]";
+//				stmt.execute(targetDDL);
+//				logger.info(" ==>> " + field.getName());
+//			}
+//
+//		} catch (Exception e) {
+//			logger.error(createMsg, e);
+//			throw e;
+//
+//		} finally {
+//			try { stmt.close(); } catch(Exception e) {}
+//			try { javaConn.close(); } catch (Exception e) {}
+//		}
+//	}
 	
 	/**
 	 * initialize jdbc driver
@@ -173,7 +234,6 @@ public class TadpoleSystemInitializer {
 
 		// local db
 		if ("".equals(dbServerPath)) {
-
 			tadpoleEngineDB.setDbms_type(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDBToString());
 			tadpoleEngineDB.setUrl(String.format(DBDefine.TADPOLE_SYSTEM_DEFAULT.getDB_URL_INFO(), DEFAULT_DB_FILE_LOCATION + DB_NAME));
 			tadpoleEngineDB.setDb("SQLite"); //$NON-NLS-1$
@@ -212,7 +272,7 @@ public class TadpoleSystemInitializer {
 				}
 
 			} catch (Exception ioe) {
-				logger.error("License File not found or file encrypt exception. check the file." + dbServerPath, ioe);
+				logger.error("License file encrypt exception. check the file." + dbServerPath, ioe);
 				System.exit(0);
 			}
 

@@ -110,7 +110,7 @@
 <!-- 
 	find user
  -->
-<select id="findUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.String">
+<select id="findEmailUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.String">
 	SELECT *
 	FROM tadpole_user 
 	WHERE 

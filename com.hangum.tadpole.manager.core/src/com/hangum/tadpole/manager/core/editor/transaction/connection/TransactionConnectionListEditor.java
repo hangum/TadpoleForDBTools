@@ -69,11 +69,12 @@ public class TransactionConnectionListEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.manager.core.editor.transaction.connection.db"; //$NON-NLS-1$
 
 	private TableViewer tvTransaction;
-	private TransactioonTableComparator tableComparator;
+	private TransactioonTableComparator transactionComparator;
 	
 	private ToolItem tltmCommit;
 	private ToolItem tltmRollback;
 	private TableViewer tvGeneral;
+	private GeneralConnectionTableComparator generalComparator;
 
 	public TransactionConnectionListEditor() {
 		super();
@@ -197,6 +198,10 @@ public class TransactionConnectionListEditor extends EditorPart {
 		tvGeneral.setContentProvider(new ArrayContentProvider());
 		tvGeneral.setLabelProvider(new GeneralConnecionPoolLabelprovider());
 		
+		generalComparator = new GeneralConnectionTableComparator();
+		generalComparator.setColumn(0);
+		tvGeneral.setSorter(generalComparator);
+		
 		initGeneral();
 	}
 	
@@ -225,7 +230,7 @@ public class TransactionConnectionListEditor extends EditorPart {
 			tblclmnEngine.setWidth(size);
 			tblclmnEngine.setText(name);
 			
-			tblclmnEngine.addSelectionListener(getSelectionAdapter(tblclmnEngine, i));
+			tblclmnEngine.addSelectionListener(getGeneralSelectionAdapter(tblclmnEngine, i));
 		}
 	}
 	
@@ -306,9 +311,9 @@ public class TransactionConnectionListEditor extends EditorPart {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		// sorter
-		tableComparator = new TransactioonTableComparator();
-		tvTransaction.setSorter(tableComparator);
-		tableComparator.setColumn(0);
+		transactionComparator = new TransactioonTableComparator();
+		tvTransaction.setSorter(transactionComparator);
+		transactionComparator.setColumn(0);
 		
 		createTransactionColumns();
 		
@@ -409,8 +414,8 @@ public class TransactionConnectionListEditor extends EditorPart {
 		SelectionAdapter adapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tableComparator.setColumn(index);
-				tvTransaction.getTable().setSortDirection(tableComparator.getDirection());
+				transactionComparator.setColumn(index);
+				tvTransaction.getTable().setSortDirection(transactionComparator.getDirection());
 				tvTransaction.getTable().setSortColumn(column);
 				tvTransaction.refresh();
 			}
@@ -418,7 +423,27 @@ public class TransactionConnectionListEditor extends EditorPart {
 		
 		return adapter;
 	}
-
+	
+	/**
+	 * general selection sorter
+	 * @param column
+	 * @param index
+	 * @return
+	 */
+	private SelectionAdapter getGeneralSelectionAdapter(final TableColumn column, final int index) {
+		SelectionAdapter adapter = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				generalComparator.setColumn(index);
+				tvGeneral.getTable().setSortDirection(generalComparator.getDirection());
+				tvGeneral.getTable().setSortColumn(column);
+				tvGeneral.refresh();
+			}
+		};
+		
+		return adapter;
+	}
+	
 	@Override
 	public void setFocus() {
 	}

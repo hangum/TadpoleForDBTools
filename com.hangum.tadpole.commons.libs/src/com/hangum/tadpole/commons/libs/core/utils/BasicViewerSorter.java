@@ -8,14 +8,13 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.util.tables;
+package com.hangum.tadpole.commons.libs.core.utils;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 
 /**
  * TableUtil에서 sorter의 columnindex를 지정하려고 만든 소터 
- * 
  * 
  * @author hangum
  *

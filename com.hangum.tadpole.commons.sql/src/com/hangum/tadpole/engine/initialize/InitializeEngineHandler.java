@@ -8,9 +8,8 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.license;
+package com.hangum.tadpole.engine.initialize;
 
-import java.io.File;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
@@ -20,40 +19,41 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 
+import com.hangum.tadpole.engine.license.LicenseExtensionHandler;
+
 /**
- * License extension handler
- * 
+ * initialize engine id
  * @author hangum
  *
  */
-public class LicenseExtensionHandler {
+public class InitializeEngineHandler {
 	private static final Logger logger = Logger.getLogger(LicenseExtensionHandler.class);
-	private static final String LICENSE_EXTENSION_ID = "com.hangum.tadpole.engine.license.extension";
+	private static final String INITIALIZE_ENGINE_ID = "com.hangum.tadpole.engine.initialize.engine";
 
 	/**
-	 * extension widget creation
+	 * extension initialize id
 	 * 
 	 * @return
 	 */
-	public ILicenseExtension[] license(final File file) {
+	public InitializeEngine[] initializeEngine() {
 		final LinkedList listReturn = new LinkedList();
 		
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(LICENSE_EXTENSION_ID);
+		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(INITIALIZE_ENGINE_ID);
 		try {
 			for (IConfigurationElement e : config) {
-				final Object licenseExtension = e.createExecutableExtension("class");
-				if (licenseExtension instanceof ILicenseExtension) {
+				final Object initializeExtension = e.createExecutableExtension("class");
+				if (initializeExtension instanceof InitializeEngine) {
 					ISafeRunnable runnable = new ISafeRunnable() {
 
 						@Override
 						public void handleException(Throwable exception) {
-							logger.error("Exception license extension", exception);
+							logger.error("Exception initialize engine", exception);
 						}
 
 						@Override
 						public void run() throws Exception {
-							ILicenseExtension compositeExt = (ILicenseExtension) licenseExtension;
-							compositeExt.initExtension(file);
+							InitializeEngine compositeExt = (InitializeEngine) initializeExtension;
+							compositeExt.initialize();
 						}
 					};
 					SafeRunner.run(runnable);
@@ -63,6 +63,6 @@ public class LicenseExtensionHandler {
 			logger.error("Create License extension exception", ex);
 		}
 		
-		return (ILicenseExtension[]) listReturn.toArray(new ILicenseExtension[listReturn.size()]);
+		return (InitializeEngine[]) listReturn.toArray(new InitializeEngine[listReturn.size()]);
 	}
 }

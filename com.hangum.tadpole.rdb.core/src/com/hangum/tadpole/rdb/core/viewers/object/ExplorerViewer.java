@@ -618,34 +618,34 @@ public class ExplorerViewer extends ViewPart {
 	private void refershSelectObject(String strSelectItemText, String strObjectName) {
 
 		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
-			refreshTable(true, strObjectName);
+			refreshTable(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			refreshIndexes(true, strObjectName);
+			refreshIndexes(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
-			refreshConstraints(true, strObjectName);
+			refreshConstraints(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-			refreshTrigger(true, strObjectName);	
-			refreshAllTrigger(true, strObjectName);
+			refreshTrigger(false, strObjectName);	
+			refreshAllTrigger(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
-			refreshView(true, strObjectName);
+			refreshView(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
-			refreshSynonym(true, strObjectName);
+			refreshSynonym(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SEQUENCE.name())) {
-			refreshSequence(true, strObjectName);
+			refreshSequence(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
-			refreshProcedure(true, strObjectName);
+			refreshProcedure(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
-			refreshPackage(true, strObjectName);
+			refreshPackage(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
-			refreshFunction(true, strObjectName);
+			refreshFunction(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-			refreshJS(true, strObjectName);
+			refreshJS(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
-			refreshDBLink(true, strObjectName);
+			refreshDBLink(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
-			refreshJobs(true, strObjectName);
+			refreshJobs(false, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
-			refreshJava(true, strObjectName);
+			refreshJava(false, strObjectName);
 		}
 		filterText();
 		

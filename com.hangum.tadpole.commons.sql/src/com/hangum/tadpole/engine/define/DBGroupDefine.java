@@ -8,39 +8,42 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.license;
+package com.hangum.tadpole.engine.define;
 
-import java.io.File;
+import org.apache.log4j.Logger;
 
 /**
- * 시스템 메니저의 확장 포인트
+ * Define database group
+ * reference {@code DBDefine}
  * 
  * @author hangum
  *
  */
-public interface ILicenseExtension {
-	/**
-	 * 
-	 * @param strFile
-	 */
-	public void initExtension(File file);
+public enum DBGroupDefine {
+	/* oracle, tibero */
+	ORACLE_GROUP,
+	/* mssql 8le, mssql */
+	MSSQL_GROUP,
+	/* mysql, mariadb */
+	MYSQL_GROUP,
+	/* postgre, agens */
+	POSTGRE_GROUP,
+	/* hive, hive2 */
+	HIVE_GROUP,
+	/* sqlite */
+	SQLITE_GROUP,
+	/* tajo */
+	TAJO_GROUP,
+	/* mongodb */
+	MONGODB_GROUP,
+	/* cubrid */
+	CUBRID_GROUP,
+	/* altibase */
+	ALTIBASE_GROUP
+	;
 	
-	/**
-	 * get host information
-	 * 
-	 * @return
-	 */
-	public String getCustomerInformation();
+	private static final Logger logger = Logger.getLogger(DBGroupDefine.class);
 	
-	/*
-	 * license validation
-	 */
-	public String getValidation();
 	
-	/**
-	 * is valid license
-	 * @return
-	 */
-	public boolean isValid();
 	
 }

@@ -20,7 +20,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 
-abstract public class DefaultViewerSorter extends BasicViewerSorter {
+import com.hangum.tadpole.commons.libs.core.utils.BasicViewerSorter;
+
+public abstract class DefaultViewerSorter extends BasicViewerSorter {
 
 	private static final Logger logger = Logger.getLogger(DefaultViewerSorter.class);
 			

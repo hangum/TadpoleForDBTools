@@ -53,6 +53,12 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		super("Sample PostgreSQL", DBDefine.POSTGRE_DEFAULT, parent, style, listGroupName, selGroupName, userDB); //$NON-NLS-1$
 	}
 	
+	public PostgresLoginComposite(String strDisplayName, DBDefine selectDB,
+			Composite parent, int style, List<String> listGroupName,
+			String selGroupName, UserDBDAO userDB) {
+		super(strDisplayName, selectDB, parent, style, listGroupName, selGroupName, userDB);
+	}
+	
 	@Override
 	public void crateComposite() {
 		GridLayout gridLayout = new GridLayout(1, false);

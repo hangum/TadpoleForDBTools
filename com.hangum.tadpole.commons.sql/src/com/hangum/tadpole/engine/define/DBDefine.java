@@ -41,6 +41,7 @@ public enum DBDefine {
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
 	POSTGRE_DEFAULT,
+	AGENSGRAPH_DEFAULT,
 	ALTIBASE_DEFAULT,
 	
 	/** hive */
@@ -74,23 +75,24 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT: return prefix_system + "TadpoleSystem-SQLite-Config.xml";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
 			
-			case ORACLE_DEFAULT:	return prefix + "OracleConfig.xml";
-			case TIBERO_DEFAULT:	return prefix + "TiberoConfig.xml";
-			case MSSQL_DEFAULT:		return prefix + "MSSQLConfig.xml";
-			case MSSQL_8_LE_DEFAULT: return prefix + "MSSQLConfig_8_LE.xml";
+			case ORACLE_DEFAULT:		return prefix + "OracleConfig.xml";
+			case TIBERO_DEFAULT:		return prefix + "TiberoConfig.xml";
+			case MSSQL_DEFAULT:			return prefix + "MSSQLConfig.xml";
+			case MSSQL_8_LE_DEFAULT: 	return prefix + "MSSQLConfig_8_LE.xml";
 			
-			case MYSQL_DEFAULT:		return prefix + "MySQLConfig.xml";
+			case MYSQL_DEFAULT:			return prefix + "MySQLConfig.xml";
 			case MARIADB_DEFAULT:		return prefix + "MariaDBConfig.xml";
 			
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
+			case AGENSGRAPH_DEFAULT:	return prefix + "AgensGraphConfig.xml";
 			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
 			case HIVE2_DEFAULT:			return prefix + "HIVE2Config.xml";
 			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
 			case ALTIBASE_DEFAULT:	    return prefix + "AltibaseConfig.xml";
 			default:
-				return "undefine db";
+				return "Doesn't define database configuration";
 		}
 	}
 	
@@ -116,7 +118,8 @@ public enum DBDefine {
 		
 		else if(type.equalsIgnoreCase("SQLite"))		return SQLite_DEFAULT;
 		else if(type.equalsIgnoreCase("Cubrid"))		return CUBRID_DEFAULT;
-		else if(type.equalsIgnoreCase("PostgreSQL"))		return POSTGRE_DEFAULT;
+		else if(type.equalsIgnoreCase("PostgreSQL"))	return POSTGRE_DEFAULT;
+		else if(type.equalsIgnoreCase("AgensGraph"))	return DBDefine.AGENSGRAPH_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
 //		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
@@ -154,7 +157,8 @@ public enum DBDefine {
 			
 			case SQLite_DEFAULT:	return "org.sqlite.JDBC";
 			case CUBRID_DEFAULT:	return "cubrid.jdbc.driver.CUBRIDDriver";
-			case POSTGRE_DEFAULT:	return "org.postgresql.Driver";	
+			case POSTGRE_DEFAULT:	return "org.postgresql.Driver";
+			case AGENSGRAPH_DEFAULT: return "net.bitnine.agensgraph.Driver";
 
 			case HIVE_DEFAULT:		return "org.apache.hadoop.hive.jdbc.HiveDriver";
 			case HIVE2_DEFAULT:		return "org.apache.hive.jdbc.HiveDriver";
@@ -192,7 +196,8 @@ public enum DBDefine {
 			/*
 			 * postgresql이 ssl 을 지원할 경우 는 ?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory 를 써줘야합니다. 
 			 */
-			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";	
+			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";
+			case AGENSGRAPH_DEFAULT: return "jdbc:agensgraph://%s:%s/%s";
 			
 			/* http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html
 			 *  
@@ -230,6 +235,7 @@ public enum DBDefine {
 			case SQLite_DEFAULT:		return "SQLite";
 			case CUBRID_DEFAULT:		return "Cubrid";
 			case POSTGRE_DEFAULT:		return "PostgreSQL";
+			case AGENSGRAPH_DEFAULT:	return "AgensGraph";
 			
 			case MONGODB_DEFAULT :  	return "MongoDB";
 			
@@ -260,7 +266,7 @@ public enum DBDefine {
 			return "SELECT name FROM sqlite_master where 1 = 0";
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			return "show databases";
-		} else if(this == DBDefine.POSTGRE_DEFAULT) {
+		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AGENSGRAPH_DEFAULT) {
 			return "SELECT 1";
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
 			return "select 1 from db_root";
@@ -294,6 +300,8 @@ public enum DBDefine {
 			extension += "hql"; //$NON-NLS-1$
 		} else if(this == DBDefine.POSTGRE_DEFAULT) {
 			extension += "pgsql"; //$NON-NLS-1$
+		} else if(this == DBDefine.AGENSGRAPH_DEFAULT) {
+			extension += "agens"; //$NON-NLS-1$
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
 			extension += "cubrid"; //$NON-NLS-1$
 		} else if(this == DBDefine.TAJO_DEFAULT) {
@@ -328,7 +336,9 @@ public enum DBDefine {
 		
 		case SQLite_DEFAULT:		return DBVariableDefine.SQLITE_VARIABLES;
 		case CUBRID_DEFAULT:		return DBVariableDefine.CUBRID_VARIABLES;
-		case POSTGRE_DEFAULT:		return DBVariableDefine.PGSQL_VARIABLES;
+		case POSTGRE_DEFAULT:		
+		case AGENSGRAPH_DEFAULT:
+									return DBVariableDefine.PGSQL_VARIABLES;
 		
 		case MONGODB_DEFAULT :  	return DBVariableDefine.MONGO_VARIABLE;		
 		case HIVE_DEFAULT: 			return DBVariableDefine.HIVE_VARIABLE;
@@ -414,6 +424,7 @@ public enum DBDefine {
 		
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(TIBERO_DEFAULT);
+//		supportDb.add(AGENSGRAPH_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
 		

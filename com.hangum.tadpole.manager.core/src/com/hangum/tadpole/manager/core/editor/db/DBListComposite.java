@@ -31,7 +31,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -191,7 +190,7 @@ public class DBListComposite extends Composite {
 				
 				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 				
-				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), (UserDBDAO)ss.getFirstElement());
+				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), tvDBList);
 				dialog.open();
 				
 				userDB.getListChildren().clear();
@@ -209,13 +208,6 @@ public class DBListComposite extends Composite {
 				} catch (Exception e3) {
 					logger.error(Messages.get().DBListComposite_10, e3);
 				}
-				
-//				TadpoleUserDbRoleDAO userRole = dialog.getUserRoleDAO();
-//				userRole.setParent(userDB);
-//				userDB.getListChildren().add(userRole);
-//				
-//				tvDBList.refresh(userDB);
-			
 			}
 		});
 		tltmAddUser.setToolTipText(Messages.get().DBListComposite_3);
@@ -327,20 +319,8 @@ public class DBListComposite extends Composite {
 				Object objSelect = ss.getFirstElement();
 				if(objSelect instanceof UserDBDAO) {
 					UserDBDAO userDB = (UserDBDAO)objSelect;
-					try {
-						List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
-						if(userDB.getListChildren().isEmpty()) {
-							for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
-								tadpoleUserDbRoleDAO.setParent(userDB);
-							}
-							
-							userDB.setListChildren(listUser);
-							tvDBList.refresh(userDB, true);
-							tvDBList.expandToLevel(3);
-						}
-					} catch (Exception e) {
-						logger.error(Messages.get().DBListComposite_10, e);
-					}
+					addDBUserList(userDB);
+					
 					
 					tltmConfigurationDB.setEnabled(true);
 					tltmOtherInformation.setEnabled(true);
@@ -394,6 +374,17 @@ public class DBListComposite extends Composite {
 		tvDBList.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				viewQueryHistory();
+				
+				// 디비 목록 이름을 눌렀을 경우 
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+				if(ss.isEmpty()) return;
+				Object objSelect = ss.getFirstElement();
+				if(objSelect instanceof ManagerListDTO) {
+					ManagerListDTO managerDto = (ManagerListDTO)objSelect;
+					for (UserDBDAO userDBDAO : managerDto.getManagerList()) {
+						addDBUserList(userDBDAO);	
+					}
+				}
 			}
 		});
 		Tree treeAdmin = tvDBList.getTree();
@@ -436,6 +427,28 @@ public class DBListComposite extends Composite {
 				
 	}
 	
+	/**
+	 * add db user list
+	 * 
+	 * @param userDB
+	 */
+	protected void addDBUserList(UserDBDAO userDB) {
+		try {
+			List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
+			if(userDB.getListChildren().isEmpty()) {
+				for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
+					tadpoleUserDbRoleDAO.setParent(userDB);
+				}
+				
+				userDB.setListChildren(listUser);
+				tvDBList.refresh(userDB, true);
+				tvDBList.expandToLevel(3);
+			}
+		} catch (Exception e) {
+			logger.error(Messages.get().DBListComposite_10, e);
+		}
+	}
+
 	/**
 	 * modify db
 	 */

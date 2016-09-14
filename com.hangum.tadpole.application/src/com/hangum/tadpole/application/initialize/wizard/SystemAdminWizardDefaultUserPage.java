@@ -66,7 +66,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		Group grpAdministratorUserInformation = new Group(container, SWT.NONE);
 		grpAdministratorUserInformation.setLayout(new GridLayout(2, false));
 		grpAdministratorUserInformation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpAdministratorUserInformation.setText(Messages.get().SystemAdminWizardPage_3);
+		grpAdministratorUserInformation.setText(Messages.get().SystemAdminWizardPage_1);
 		
 		Label lblEmail = new Label(grpAdministratorUserInformation, SWT.NONE);
 		lblEmail.setAlignment(SWT.RIGHT);

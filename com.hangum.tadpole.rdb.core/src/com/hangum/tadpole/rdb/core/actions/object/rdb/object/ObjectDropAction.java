@@ -249,6 +249,13 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						}else{
 							executeSQL(userDB, "alter table "+ constraintPath +" drop "+ constraintDAO.getConstraint_type() + " " + constraintDAO.getSysName() ); //$NON-NLS-1$ //$NON-NLS-2$
 						}
+					} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+						if (StringUtils.isBlank(constraintDAO.getSchema_name())){
+							executeSQL(userDB, "alter table " + constraintDAO.getTABLE_SCHEMA() + "." + constraintDAO.getTABLE_NAME() + " drop constraint " + constraintDAO.getCONSTRAINT_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
+						}else{
+							executeSQL(userDB, "alter table " + constraintDAO.getSchema_name() + "." + constraintDAO.getTABLE_SCHEMA() + "." + constraintDAO.getTABLE_NAME() + " drop constraint " + constraintDAO.getCONSTRAINT_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
+						}
+
 					} else if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
 						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME() + " on " + constraintDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
