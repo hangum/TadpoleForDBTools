@@ -49,18 +49,18 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	private static final Logger logger = Logger.getLogger(RDBPreferencePage.class);
 	
 	private Button btnQueryProfilling;
-	private Text textSelectLimit;
-	private Text textResultPage;
-	private Text textOraclePlan;
-	
-	private Label lblUserFont;
-	
 	private Combo comboRDBResultType;
 	private Combo comboRDBNumberComma;
+	private Text textSelectLimit;
+	private Text textResultPage;
+	private Text textNull;
+	private Label lblUserFont;
 	
 	private Text textQueryTimeout;
 	private Text textCommitCount;
 	private Text textShowInTheColumn;
+	
+	private Text textOraclePlan;
 
 	public RDBPreferencePage() {
 	}
@@ -212,9 +212,9 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			textSelectLimit.setFocus();
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			return false;
-		} else if(!(NumberUtils.toInt(txtSelectLimit) >= 100 && NumberUtils.toInt(txtSelectLimit) <= 5000)) {
+		} else if(!(NumberUtils.toInt(txtSelectLimit) >= 100 && NumberUtils.toInt(txtSelectLimit) <= 1000)) {
 			textSelectLimit.setFocus();
-			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_0, "100", "5,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_0, "100", "1,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -222,9 +222,9 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			textResultPage.setFocus();
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);			 //$NON-NLS-1$
 			return false;
-		} else if(!(NumberUtils.toInt(txtResultPage) >= 100 && NumberUtils.toInt(txtResultPage) <= 5000)) {
+		} else if(!(NumberUtils.toInt(txtResultPage) >= 100 && NumberUtils.toInt(txtResultPage) <= 1000)) {
 			textResultPage.setFocus();
-			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_other_labelText_1, "100", "5,000"));			 //$NON-NLS-1$
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_other_labelText_1, "100", "1,000"));			 //$NON-NLS-1$
 			return false;
 		}
 		
@@ -373,6 +373,5 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 					"         TIME               NUMERIC,         \r\n" + 
 					"         qblock_name        VARCHAR2(30)     \r\n" + 
 					" ) ";
-	private Text textNull;
 }
 

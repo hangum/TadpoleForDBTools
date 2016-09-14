@@ -130,13 +130,21 @@ public class AdminSystemSettingEditor extends EditorPart {
 		});
 		tltmJdbcDriverManage.setText(Messages.get().JDBCDriverManage);
 		
+		ToolItem tltmRdb = new ToolItem(toolBar, SWT.NONE);
+		tltmRdb.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().MsgRDBInitializeSetting)) {
+					ChangeUserPreferenceValue changePreferenceValue = new ChangeUserPreferenceValue();
+					changePreferenceValue.changeRDBValue();
+				}
+			}
+		});
+		tltmRdb.setText(Messages.get().RDBInitializeSetting);
+		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(2, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		new Label(compositeBody, SWT.NONE);
-		
-		Label lblApplicationServer = new Label(compositeBody, SWT.NONE);
-		lblApplicationServer.setText(Messages.get().AppServerDbServerTimeZone);
 		
 		Label lblDBTimezone = new Label(compositeBody, SWT.NONE);
 		lblDBTimezone.setText(Messages.get().DatabaseTimeZone);
@@ -147,6 +155,10 @@ public class AdminSystemSettingEditor extends EditorPart {
 		for (String timzon : TimeZoneUtil.getTimezoneList()) {
 			comboTimezone.add(timzon);
 		}
+		new Label(compositeBody, SWT.NONE);
+		
+		Label lblApplicationServer = new Label(compositeBody, SWT.NONE);
+		lblApplicationServer.setText(Messages.get().AppServerDbServerTimeZone);
 		
 		Label lblLogDir = new Label(compositeBody, SWT.NONE);
 		lblLogDir.setText(Messages.get().LogDirectory);
@@ -281,7 +293,6 @@ public class AdminSystemSettingEditor extends EditorPart {
 		textIntLimtCnt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDefaultUseDay = new Label(grpSettingDefaultUser, SWT.NONE);
-		lblDefaultUseDay.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDefaultUseDay.setText(Messages.get().DefaultUseDay);
 		
 		textDefaultUseDay = new Text(grpSettingDefaultUser, SWT.BORDER);

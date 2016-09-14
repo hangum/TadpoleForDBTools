@@ -64,7 +64,7 @@ public class QueryUtils {
 	 * @param reqQuery
 	 * @exception
 	 */
-	private static Object runSQLOther(
+	public static Object runSQLOther(
 			final UserDBDAO userDB,
 			String strQuery, 
 			final List<Object> listParam
