@@ -51,6 +51,7 @@ public class DBIconsUtils {
 		else if(DBDefine.TAJO_DEFAULT == dbType) strBaseImage = "tajo-add.jpg";
 		else if(DBDefine.TIBERO_DEFAULT == dbType) strBaseImage = "tibero_add.png";
 		else if(DBDefine.ALTIBASE_DEFAULT == dbType) strBaseImage = "altibase_add.png";
+		else if(DBDefine.AGENSGRAPH_DEFAULT == dbType) strBaseImage = "agens_add.png";
 		else  strBaseImage = "database-add.png";
 		
 		return "resources/icons/dbs/" + strBaseImage;
