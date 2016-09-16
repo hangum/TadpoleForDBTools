@@ -191,6 +191,18 @@ public class TadpoleSystem_UserQuery {
 		return listUser.get(0);
 	}
 	
+	public static List<UserDAO> findUserList(String email) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDAO> listUser = new ArrayList<UserDAO>();
+		
+			listUser = sqlClient.queryForList("findLikeUser", "%" + email + "%"); //$NON-NLS-1$
+		
+		if(listUser.size() == 0) {
+			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_0);
+		}
+		
+		return listUser;
+	}
 	
 	/**
 	 * 로그인시 email, passwd 확인 

@@ -59,6 +59,8 @@ public class UserDAO {
 	//------------------------------------------------------------------------
 	/** tadpole_user_db_role column */
 	String role_id;
+	
+	boolean select;
 
 	public UserDAO() {
 	}
@@ -299,6 +301,14 @@ public class UserDAO {
 	 */
 	public void setService_end(Timestamp service_end) {
 		this.service_end = service_end;
+	}
+
+	public boolean isSelect() {
+		return select;
+	}
+
+	public void setSelect(boolean select) {
+		this.select = select;
 	}
 	
 }
