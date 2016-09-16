@@ -23,10 +23,8 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -38,10 +36,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -49,10 +45,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -167,12 +161,6 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				
-				
-				
-				
-			
-				
 			}
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -186,13 +174,9 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				listUserGroup.remove(userDAO);
 				tableViewer.refresh();
 				
-				
 				listSelectUserGroup.add(userDAO);
-				
 				tableViewerSelectUser.setInput(listSelectUserGroup);
-				
 				tableViewerSelectUser.refresh();
-				
 			}
 		});
 		table.setLinesVisible(true);
@@ -230,7 +214,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		Label label_3 = new Label(compositeUser, SWT.NONE);
 		label_3.setText("권한부여 대상자");
 		
-		 tableViewerSelectUser = new TableViewer(compositeUser, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewerSelectUser = new TableViewer(compositeUser, SWT.BORDER | SWT.FULL_SELECTION);
 		tableUserRole = tableViewerSelectUser.getTable();
 		tableUserRole.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -257,8 +241,6 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		tableViewerSelectUser.setContentProvider(new ArrayContentProvider());
 		tableViewerSelectUser.setLabelProvider(new SelectUserLabelProvider());
 
-		
-		
 		sashForm.setWeights(new int[] {1, 1});
 		initData();
 		initUI();

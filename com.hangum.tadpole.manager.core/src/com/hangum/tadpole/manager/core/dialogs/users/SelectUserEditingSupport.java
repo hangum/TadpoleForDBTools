@@ -98,9 +98,7 @@ public class SelectUserEditingSupport extends EditingSupport {
 		UserDAO dao = (UserDAO) element;
 
 		if (columnIndex == 0 || columnIndex >= 3) {
-
 			return true;
-
 		} else {
 			return false;
 		}
@@ -133,6 +131,7 @@ public class SelectUserEditingSupport extends EditingSupport {
 		}else if (columnIndex == 3) {
 			dao.setRole_type(userRoleNames[(int)value]);
 		}else if (columnIndex == 4) {
+			Timestamp ts = (Timestamp) value;
 			dao.setService_start((Timestamp) value);
 		}else if (columnIndex == 5) {
 			dao.setService_end((Timestamp) value);
