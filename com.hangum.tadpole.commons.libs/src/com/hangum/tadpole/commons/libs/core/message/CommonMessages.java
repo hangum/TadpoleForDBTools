@@ -42,6 +42,7 @@ public class CommonMessages {
 	public String Add;
 	public String Delete;
 	public String Modify;
+	public String ModifyMessage;
 	public String Save;
 	public String Run;
 	

@@ -606,46 +606,47 @@ public class ExplorerViewer extends ViewPart {
 	 * @param strSelectItemText
 	 */
 	private void refershSelectObject(String strSelectItemText) {
-		refershSelectObject(strSelectItemText, "");
+		refershSelectObject(strSelectItemText, false, "");
 	}
 	
 	/**
 	 * 현재 선택된 tab을 리프레쉬합니다.
 	 * 
 	 * @param strSelectItemText TabItem text
+	 * @param isRefresh
 	 * @param strObjectName
 	 */
-	private void refershSelectObject(String strSelectItemText, String strObjectName) {
+	private void refershSelectObject(String strSelectItemText, boolean isRefresh, String strObjectName) {
 
 		if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TABLES.name())) {
-			refreshTable(false, strObjectName);
+			refreshTable(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			refreshIndexes(false, strObjectName);
+			refreshIndexes(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.CONSTRAINTS.name())) {
-			refreshConstraints(false, strObjectName);
+			refreshConstraints(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
-			refreshTrigger(false, strObjectName);	
-			refreshAllTrigger(false, strObjectName);
+			refreshTrigger(isRefresh, strObjectName);	
+			refreshAllTrigger(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VIEWS.name())) {
-			refreshView(false, strObjectName);
+			refreshView(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SYNONYM.name())) {
-			refreshSynonym(false, strObjectName);
+			refreshSynonym(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.SEQUENCE.name())) {
-			refreshSequence(false, strObjectName);
+			refreshSequence(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PROCEDURES.name())) {
-			refreshProcedure(false, strObjectName);
+			refreshProcedure(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.PACKAGES.name())) {
-			refreshPackage(false, strObjectName);
+			refreshPackage(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
-			refreshFunction(false, strObjectName);
+			refreshFunction(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-			refreshJS(false, strObjectName);
+			refreshJS(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
-			refreshDBLink(false, strObjectName);
+			refreshDBLink(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
-			refreshJobs(false, strObjectName);
+			refreshJobs(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
-			refreshJava(false, strObjectName);
+			refreshJava(isRefresh, strObjectName);
 		}
 		filterText();
 		
@@ -657,7 +658,7 @@ public class ExplorerViewer extends ViewPart {
 	 * selected tab refresh
 	 */
 	private void refreshSelectTab() {
-		refershSelectObject(tabFolderObject.getSelection().getText(), "");
+		refershSelectObject(tabFolderObject.getSelection().getText(), false, "");
 	}
 	
 	/**
@@ -941,31 +942,31 @@ public class ExplorerViewer extends ViewPart {
 		if (this.userDB.getSeq() != chgUserDB.getSeq())	return;
 		
 		if(queryDDLType == QUERY_DDL_TYPE.TABLE) {
-			refershSelectObject(OBJECT_TYPE.TABLES.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.TABLES.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.INDEX) {
-			refershSelectObject(OBJECT_TYPE.INDEXES.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.INDEXES.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
-			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.VIEW) {
-			refershSelectObject(OBJECT_TYPE.VIEWS.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.VIEWS.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.PROCEDURE) {
-			refershSelectObject(OBJECT_TYPE.PROCEDURES.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.PROCEDURES.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.FUNCTION) {
-			refershSelectObject(OBJECT_TYPE.FUNCTIONS.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.FUNCTIONS.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.PACKAGE) {
-			refershSelectObject(OBJECT_TYPE.PACKAGES.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.PACKAGES.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.SYNONYM) {
-			refershSelectObject(OBJECT_TYPE.SYNONYM.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.SYNONYM.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.SEQUENCE) {
-			refershSelectObject(OBJECT_TYPE.SEQUENCE.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.SEQUENCE.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.LINK ) {
-			refershSelectObject(OBJECT_TYPE.LINK.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.LINK.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.JOBS ) {
-			refershSelectObject(OBJECT_TYPE.JOBS.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.JOBS.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.JAVA ) {
-			refershSelectObject(OBJECT_TYPE.JAVA.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.JAVA.name(), true, strObjectName);
 		} else if(queryDDLType == QUERY_DDL_TYPE.TRIGGER) {
-			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), strObjectName);
+			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), true, strObjectName);
 		} else {
 			refreshSelectTab();
 		}
