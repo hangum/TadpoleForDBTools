@@ -190,7 +190,7 @@ public class DBListComposite extends Composite {
 				
 				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 				
-				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell(), tvDBList);
+				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell());
 				dialog.open();
 				
 				userDB.getListChildren().clear();

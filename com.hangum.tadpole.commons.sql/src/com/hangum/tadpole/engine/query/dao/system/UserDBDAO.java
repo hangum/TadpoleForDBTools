@@ -163,6 +163,8 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     /** db access control */
     protected DBAccessControlDAO dbAccessCtl = new DBAccessControlDAO();
     
+    private boolean select;
+    
     public UserDBDAO() {
     	setTdbUserID(SessionManager.getEMAIL());
     	setTdbLogingIP(SessionManager.getLoginIp());
@@ -646,6 +648,14 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		} else {
 			return getDb();
 		}
+	}
+
+	public boolean isSelect() {
+		return select;
+	}
+
+	public void setSelect(boolean select) {
+		this.select = select;
 	}
 
 }
