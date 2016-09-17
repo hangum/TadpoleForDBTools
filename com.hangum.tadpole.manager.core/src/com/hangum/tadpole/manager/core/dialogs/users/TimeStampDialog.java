@@ -10,8 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Multilin text dialog
+ * TimeStamp dialog
  * 
  * @author nilriri
  *
@@ -64,23 +64,22 @@ public class TimeStampDialog extends Dialog {
  
         GridDataFactory.fillDefaults().grab(true, true).applyTo(composite);
         
-         serviceDate = new DateTime(composite, SWT.DROP_DOWN | SWT.CALENDAR | SWT.LONG);
+        serviceDate = new DateTime(composite, SWT.DROP_DOWN | SWT.CALENDAR | SWT.LONG);
         serviceDate.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
         serviceDate.setDate(originalValue.getYear(), originalValue.getMonth(), originalValue.getDay());
         
-         serviceTime = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.TIME | SWT.LONG);
+        serviceTime = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.TIME | SWT.LONG);
         serviceTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
         serviceTime.setTime(originalValue.getHours(),  originalValue.getMinutes(),  originalValue.getSeconds());
 
- 
-        
         return parent; 
     } 
  
     @Override 
-    protected void okPressed() { 
-        value = new Timestamp( serviceDate.getYear(), serviceDate.getMonth(), serviceDate.getDay(), serviceTime.getHours(), serviceTime.getMinutes(), serviceTime.getSeconds() , 0); 
-        
+    protected void okPressed() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(serviceDate.getYear(), serviceDate.getMonth(), serviceDate.getDay(), serviceTime.getHours(), serviceTime.getMinutes(), serviceTime.getSeconds());
+        value = new Timestamp( cal.getTimeInMillis()); 
         super.okPressed(); 
     } 
  
