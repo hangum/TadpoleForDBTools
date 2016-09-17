@@ -114,7 +114,9 @@ public class ExportTextComposite extends AbstractExportComposite {
 		
 		comboEncoding = new Combo(compositeText, SWT.NONE);
 		comboEncoding.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboEncoding.setText("UTF-8");
+		comboEncoding.add("UTF-8");
+		comboEncoding.add("euc-kr");
+		comboEncoding.select(0);
 	}
 
 	@Override

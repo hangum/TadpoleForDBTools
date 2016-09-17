@@ -76,17 +76,18 @@ public class HTMLExporter extends AbstractTDBExporter {
 	 * 
 	 * @param tableName
 	 * @param rsDAO
+	 * @param encoding 
 	 * @return
 	 * @throws Exception
 	 */
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String encoding) throws Exception {
 		// full text
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".html";
 		String strFullPath = strTmpDir + strFile;
 		
-		FileUtils.writeStringToFile(new File(strFullPath), HTMLDefine.HTML_STYLE, true);
-		FileUtils.writeStringToFile(new File(strFullPath), "<table class='tg'>", true);
+		FileUtils.writeStringToFile(new File(strFullPath), HTMLDefine.HTML_STYLE, encoding, true);
+		FileUtils.writeStringToFile(new File(strFullPath), "<table class='tg'>", encoding, true);
 		
 		// make content
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
@@ -100,7 +101,7 @@ public class HTMLExporter extends AbstractTDBExporter {
 		String strLastColumnName = HTMLDefine.makeTR(sbHead.toString());
 		
 		// header
-		FileUtils.writeStringToFile(new File(strFullPath), strLastColumnName, true);
+		FileUtils.writeStringToFile(new File(strFullPath), strLastColumnName, encoding, true);
 		
 		// body start
 		StringBuffer sbBody = new StringBuffer("");
@@ -116,15 +117,15 @@ public class HTMLExporter extends AbstractTDBExporter {
 			sbBody.append(HTMLDefine.makeTR(sbTmp.toString()));
 			
 			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), true);
+				FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), encoding, true);
 				sbBody.delete(0, sbBody.length());
 			}
 		}
 		
 		if(sbBody.length() > 0) {
-			FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), true);
+			FileUtils.writeStringToFile(new File(strFullPath), sbBody.toString(), encoding, true);
 		}
-		FileUtils.writeStringToFile(new File(strFullPath), "</table>", true);
+		FileUtils.writeStringToFile(new File(strFullPath), "</table>", encoding, true);
 		
 		return strFullPath;
 	}

@@ -84,22 +84,15 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * @param tableName
 	 * @param rsDAO
 	 * @param seprator
+	 * @param encoding
 	 * @return 파일 위치
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeCSVFile(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator) throws Exception {
+	public static String makeCSVFile(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, String encoding) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
-		
-		// add bom character
-//	    ByteArrayOutputStream out = new ByteArrayOutputStream();
-//	    //Add BOM characters
-//	    out.write(0xEF);
-//	    out.write(0xBB);
-//	    out.write(0xBF);
-//	    out.write(csvData.getBytes("UTF-8"));
 		
 		FileUtils.writeByteArrayToFile(new File(strFullPath), 
 						(new byte[] {(byte) 0xEF,
@@ -118,7 +111,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			}
 			listCsvData.add(strArrys);
 			String strTitle = CSVFileUtils.makeData(listCsvData, seprator);
-			FileUtils.writeStringToFile(new File(strFullPath), strTitle, true);
+			FileUtils.writeStringToFile(new File(strFullPath), strTitle, encoding, true);
 			
 			listCsvData.clear();
 		}
@@ -134,14 +127,14 @@ public class CSVExpoter extends AbstractTDBExporter {
 			listCsvData.add(strArrys);
 			
 			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), true);
+				FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), encoding, true);
 				listCsvData.clear();
 			}
 		}
 		
 		// 컬럼 이름.
 		if(!listCsvData.isEmpty()) {
-			FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), true);
+			FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), encoding, true);
 		}
 		
 		return strFullPath;
