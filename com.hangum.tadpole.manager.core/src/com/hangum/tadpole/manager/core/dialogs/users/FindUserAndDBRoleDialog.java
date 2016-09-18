@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -67,9 +66,6 @@ import com.swtdesigner.SWTResourceManager;
 public class FindUserAndDBRoleDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(FindUserAndDBRoleDialog.class);
 	
-//	private UserDBDAO userDBDao;
-//	private TreeViewer tvDBList;
-	
 	private Text textUserEMail;
 	private TableViewer tableViewer;
 	private TableViewer tableViewerTargetDB;
@@ -91,8 +87,6 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	public FindUserAndDBRoleDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
-		//this.userDBDao = userDBDao; 
 	}
 	
 	@Override
@@ -127,7 +121,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		compositeUserSearch.setLayout(gl_compositeUserSearch);
 		
 		Label label_1 = new Label(compositeUserSearch, SWT.NONE);
-		label_1.setText("사용자 검색");
+		label_1.setText(Messages.get().userSearch);
 		
 		Composite compositeHead = new Composite(compositeUserSearch, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -212,7 +206,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		 composite.setLayout(gl_composite);
 		 
 		 Label lblDb = new Label(composite, SWT.NONE);
-		 lblDb.setText("권한부여 대상 DB");
+		 lblDb.setText(Messages.get().AuthorityTargetDB);
 		
 		 tableViewerTargetDB = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
 		 tableDB = tableViewerTargetDB.getTable();
@@ -226,7 +220,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		 composite_1.setLayout(gl_composite_1);
 		 
 		 Label label = new Label(composite_1, SWT.NONE);
-		 label.setText("처리결과");
+		 label.setText(Messages.get().ProcessResult);
 		 
 		 textLog = new Text(composite_1, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		 textLog.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -247,7 +241,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		compositeUser.setLayout(gl_compositeUser);
 		
 		Label label_3 = new Label(compositeUser, SWT.NONE);
-		label_3.setText("권한부여 대상자");
+		label_3.setText(Messages.get().AuthorityTargetUser);
 		
 		tableViewerSelectUser = new TableViewer(compositeUser, SWT.BORDER | SWT.FULL_SELECTION);
 		tableUserRole = tableViewerSelectUser.getTable();
@@ -334,12 +328,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 					if(isAddDBRole) {
 						if(!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().FindUserDialog_4)) return;
 						
-						Calendar calStart = Calendar.getInstance();
-						calStart.set(userDAO.getService_start().getYear(), userDAO.getService_start().getMonth(), userDAO.getService_start().getDay(), 0, 0, 0);
-	
-						
 						tadpoleUserRoleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), userDAO.getRole_type(), "*",  //$NON-NLS-1$
-								new Timestamp(calStart.getTimeInMillis()), 
+								userDAO.getService_start(), 
 								userDAO.getService_end()
 								);
 						
@@ -402,7 +392,6 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		listUserDBs.clear();
 		try {
 			listUserDBs = TadpoleSystem_UserDBQuery.getCreateUserDB();
-			
 			
 			tableViewerTargetDB.setInput(listUserDBs);
 			tableViewerTargetDB.refresh();
@@ -591,9 +580,6 @@ class TargetDBLabelProvider extends LabelProvider implements ITableLabelProvider
 			}
 
 		} 
-		
-		
-		
 		
 		return "*** not set column ***"; //$NON-NLS-1$
 	}

@@ -299,7 +299,14 @@ public class Messages {
 
 	public String PleaseSelectUser;
 	
+	public String userSearch;
 
+	public String ProcessResult;
+
+	public String AuthorityTargetDB;
+
+	public String AuthorityTargetUser;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
