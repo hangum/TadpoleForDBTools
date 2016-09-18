@@ -155,9 +155,8 @@ class SessionLiveChecker implements Runnable{
 				
 					if(logger.isDebugEnabled()) {
 						logger.debug("=========== session live checker ===============");
-						logger.debug("[session user is ]" + id);
-						logger.debug("[userTime]" + userTime);
-						logger.debug("[gapTime]" + gapTime);
+						logger.debug(String.format("[session user] id=%s", id));
+						logger.debug(String.format("[userTime]%s[gapTime]%s", userTime, gapTime));
 						logger.debug("=========== session live checker ===============");
 					}
 					

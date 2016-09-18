@@ -192,7 +192,7 @@ public class ManagerViewer extends ViewPart {
 		
 		managerTV.setContentProvider(new ManagerContentProvider());
 		managerTV.setLabelProvider(new ManagerLabelProvider());
-		managerTV.setInput(treeDataList);		
+		managerTV.setInput(treeDataList);
 		getSite().setSelectionProvider(managerTV);
 		
 		createPopupMenu();
@@ -213,12 +213,15 @@ public class ManagerViewer extends ViewPart {
 		});
 	}
 	
+	/**
+	 * initialize manager db list
+	 */
 	private void setManagerDBList() {
 		treeDataList.clear();
 		
-//		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
-//		if(_tmpListManager.isEmpty()) {
-//			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer add user session................");
+		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
+		if(_tmpListManager.isEmpty()) {
+			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer add user session................");
 			try {
 				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
@@ -231,19 +234,26 @@ public class ManagerViewer extends ViewPart {
 				}	// end last end
 	
 				// session 에 사용자 디비 리스트를 저장하다.
-//				SessionManager.setManagerDBList(treeDataList);
-			} catch (Exception e) {
+				SessionManager.setManagerDBList(treeDataList);
+			} catch (Exception e) {	
 				logger.error("initialize Managerview", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ManagerViewer_4, errStatus); //$NON-NLS-1$
 			}
-//		} else {
-//			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer reuse user session................");
-//			treeDataList = _tmpListManager;
-//		}
+		} else {
+			if(logger.isDebugEnabled()) {
+				logger.debug("===== Manager Viewer reuse user session................" + _tmpListManager.size());
+//				for (ManagerListDTO managerListDTO : _tmpListManager) {
+//					for (UserDBDAO dbDao : managerListDTO.getManagerList()) {
+//						logger.debug("\t======>> " + dbDao.getDisplay_name());
+//					}
+//				}
+			}
+			treeDataList = _tmpListManager;
+		}
 		
-		managerTV.refresh();
+		managerTV.setInput(treeDataList);
 		managerTV.expandToLevel(2);
 		AnalyticCaller.track(ManagerViewer.ID);
 	}
@@ -253,7 +263,7 @@ public class ManagerViewer extends ViewPart {
 	 */
 	public void init() {
 		if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer init..............");
-//		SessionManager.initManagerDBList();
+		SessionManager.initManagerDBList();
 		setManagerDBList();
 	}
 
