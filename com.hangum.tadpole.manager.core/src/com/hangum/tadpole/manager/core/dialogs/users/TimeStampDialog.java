@@ -66,11 +66,16 @@ public class TimeStampDialog extends Dialog {
         
         serviceDate = new DateTime(composite, SWT.DROP_DOWN | SWT.CALENDAR | SWT.LONG);
         serviceDate.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-        serviceDate.setDate(originalValue.getYear(), originalValue.getMonth(), originalValue.getDay());
         
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(originalValue.getTime());
+        serviceDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                
         serviceTime = new DateTime(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.TIME | SWT.LONG);
         serviceTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
         serviceTime.setTime(originalValue.getHours(),  originalValue.getMinutes(),  originalValue.getSeconds());
+        
+        parent.redraw();
 
         return parent; 
     } 

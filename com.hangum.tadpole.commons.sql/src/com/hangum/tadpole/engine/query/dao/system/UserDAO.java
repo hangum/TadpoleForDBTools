@@ -311,4 +311,8 @@ public class UserDAO {
 		this.select = select;
 	}
 	
+	public  boolean equals(UserDAO obj) {
+        return (this.name.equals(obj.name) && this.email.equals(obj.email));
+    }
+	
 }
