@@ -12,6 +12,7 @@ package com.hangum.tadpole.engine.utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -32,7 +33,7 @@ public class HttpSessionCollectorUtil {
 	public static enum COLLECT_KEY {SESSION, TIMEOUT};
 	
 	/** id, httpsession */
-	private final Map<String, Map<String, Object>> mapSession = new HashMap<String, Map<String, Object>>();
+	private final Map<String, Map<String, Object>> mapSession = new ConcurrentHashMap<String, Map<String, Object>>();
 	
 	private HttpSessionCollectorUtil() {};
 	
@@ -173,7 +174,7 @@ class SessionLiveChecker implements Runnable{
 			}
 			
 			// 10 분에 한번씩 Thread 검사.
-			try { Thread.sleep((60 * 1000) * 10); } catch(Exception e) {};
+			try { Thread.sleep((60 * 1000) * 1); } catch(Exception e) {};
 		} // while 
 		
 	}
