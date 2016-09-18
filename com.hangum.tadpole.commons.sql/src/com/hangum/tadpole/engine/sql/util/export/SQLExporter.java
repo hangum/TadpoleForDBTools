@@ -106,7 +106,7 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 	
-	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit) throws Exception {
+	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit, String encoding) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -171,7 +171,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			} 
 
 			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 				sbInsertInto.setLength(0);
 			}
 		}
@@ -180,7 +180,7 @@ public class SQLExporter extends AbstractTDBExporter {
 				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
 			} 
 
-			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 		}
 		
 		return strFullPath;
@@ -245,7 +245,7 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 
-	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit) throws Exception {
+	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit, String encoding) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -295,7 +295,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			} 
 
 			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 				sbInsertInto.setLength(0);
 			}
 		}
@@ -304,7 +304,7 @@ public class SQLExporter extends AbstractTDBExporter {
 				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
 			} 
 
-			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 		}
 		
 		return strFullPath;
@@ -364,7 +364,7 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 	
-	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit) throws Exception {
+	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit, String encoding) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -409,7 +409,7 @@ public class SQLExporter extends AbstractTDBExporter {
 			} 
 
 			if((i%DATA_COUNT) == 0) {
-				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 				sbInsertInto.setLength(0);
 			}
 		}
@@ -418,7 +418,7 @@ public class SQLExporter extends AbstractTDBExporter {
 				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
 			} 
 
-			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 		}
 		
 		return strFullPath;
@@ -494,7 +494,7 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 	
-	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit) throws Exception {
+	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit, String encoding) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".sql";
 		String strFullPath = strTmpDir + strFile;
@@ -551,7 +551,7 @@ public class SQLExporter extends AbstractTDBExporter {
 					sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
 				} 
 
-				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+				FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 				sbInsertInto.setLength(0);
 			}
 			
@@ -564,7 +564,7 @@ public class SQLExporter extends AbstractTDBExporter {
 				sbInsertInto.append("COMMIT" + PublicTadpoleDefine.SQL_DELIMITER + PublicTadpoleDefine.LINE_SEPARATOR);
 			} 
 			
-			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), true);
+			FileUtils.writeStringToFile(new File(strFullPath), sbInsertInto.toString(), encoding, true);
 		}
 		
 		return strFullPath;

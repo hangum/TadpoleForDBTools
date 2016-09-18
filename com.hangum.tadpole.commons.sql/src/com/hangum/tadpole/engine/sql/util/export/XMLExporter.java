@@ -106,10 +106,11 @@ public class XMLExporter extends AbstractTDBExporter {
 	 * 
 	 * @param tableName
 	 * @param rsDAO
+	 * @param encoding 
 	 * @return
 	 * @throws Exception
 	 */
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String encoding) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".xml";
 		String strFullPath = strTmpDir + strFile;
@@ -152,7 +153,7 @@ public class XMLExporter extends AbstractTDBExporter {
 		StreamResult sr = new StreamResult(stWriter);
 		transformer.transform(domSource, sr);
 		
-		FileUtils.writeStringToFile(new File(strFullPath), stWriter.toString(), true);
+		FileUtils.writeStringToFile(new File(strFullPath), stWriter.toString(), encoding, true);
 		
 		return strFullPath;
 	}

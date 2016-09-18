@@ -332,7 +332,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			targetEditor(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
-			downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, allResusltDto, seprator), encoding);
+			downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, allResusltDto, seprator, encoding), encoding);
 		}
 	}
 	
@@ -349,7 +349,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			targetEditor(HTMLExporter.makeContent(targetName, queryExecuteResultDTO));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
-			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, allResusltDto), encoding);
+			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, allResusltDto, encoding), encoding);
 		}
 	}
 	
@@ -371,7 +371,7 @@ public class ResultSetDownloadDialog extends Dialog {
 				targetEditor(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, -1));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
-				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, allResusltDto, schemeKey, recordKey, isFormat), encoding);
+				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, allResusltDto, schemeKey, recordKey, isFormat, encoding), encoding);
 			}
 		}else{
 			if (btnStatus == BTN_STATUS.PREVIEW) {
@@ -380,7 +380,7 @@ public class ResultSetDownloadDialog extends Dialog {
 				targetEditor(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, -1));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
-				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, allResusltDto, isFormat), encoding);
+				downloadFile(targetName, JsonExpoter.makeContentFile(targetName, allResusltDto, isFormat, encoding), encoding);
 			}
 		}
 	}
@@ -398,7 +398,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			targetEditor(XMLExporter.makeContent(targetName, queryExecuteResultDTO));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
-			downloadFile(targetName, XMLExporter.makeContentFile(targetName, allResusltDto), encoding);
+			downloadFile(targetName, XMLExporter.makeContentFile(targetName, allResusltDto, encoding), encoding);
 		}
 	}
 	
@@ -419,7 +419,7 @@ public class ResultSetDownloadDialog extends Dialog {
 				targetEditor(SQLExporter.makeBatchInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
-				downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, allResusltDto, commit), encoding);
+				downloadFile(targetName, SQLExporter.makeFileBatchInsertStatment(targetName, allResusltDto, commit, encoding), encoding);
 			}
 		}else if ("insert".equalsIgnoreCase(stmtType)) {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
@@ -428,7 +428,7 @@ public class ResultSetDownloadDialog extends Dialog {
 				targetEditor(SQLExporter.makeInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
-				downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, allResusltDto, commit), encoding);
+				downloadFile(targetName, SQLExporter.makeFileInsertStatment(targetName, allResusltDto, commit, encoding), encoding);
 			}
 		}else if ("update".equalsIgnoreCase(stmtType)) {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
@@ -437,7 +437,7 @@ public class ResultSetDownloadDialog extends Dialog {
 				targetEditor(SQLExporter.makeUpdateStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
-				downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, allResusltDto, listWhere, commit), encoding);
+				downloadFile(targetName, SQLExporter.makeFileUpdateStatment(targetName, allResusltDto, listWhere, commit, encoding), encoding);
 			}
 		}else if ("merge".equalsIgnoreCase(stmtType)) {
 			if (btnStatus == BTN_STATUS.PREVIEW) {
@@ -446,7 +446,7 @@ public class ResultSetDownloadDialog extends Dialog {
 				targetEditor(SQLExporter.makeMergeStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 			}else{
 				QueryExecuteResultDTO allResusltDto = makeAllResult();
-				downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, allResusltDto, listWhere, commit), encoding);
+				downloadFile(targetName, SQLExporter.makeFileMergeStatment(targetName, allResusltDto, listWhere, commit, encoding), encoding);
 			}
 		}
 	}

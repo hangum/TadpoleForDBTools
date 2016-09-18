@@ -125,30 +125,30 @@ public class JsonExpoter extends AbstractTDBExporter {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO) throws Exception {
-		return makeContentFile(tableName, rsDAO, true); 
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String encoding) throws Exception {
+		return makeContentFile(tableName, rsDAO, true, encoding); 
 	}
 	
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, boolean isFormat) throws Exception {
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, boolean isFormat, String encoding) throws Exception {
 		String strContent = makeContent(tableName, rsDAO, isFormat, -1);
 		
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".json";
 		String strFullPath = strTmpDir + strFile;
 		
-		FileUtils.writeStringToFile(new File(strFullPath), strContent, true);
+		FileUtils.writeStringToFile(new File(strFullPath), strContent, encoding, true);
 		
 		return strFullPath;
 	}
 	
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey, boolean isFormat) throws Exception {
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey, boolean isFormat, String encoding) throws Exception {
 		String strContent = makeContent(tableName, rsDAO, schemeKey, recordKey, isFormat, -1);
 		
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".json";
 		String strFullPath = strTmpDir + strFile;
 		
-		FileUtils.writeStringToFile(new File(strFullPath), strContent, true);
+		FileUtils.writeStringToFile(new File(strFullPath), strContent, encoding, true);
 		
 		return strFullPath;
 	}
