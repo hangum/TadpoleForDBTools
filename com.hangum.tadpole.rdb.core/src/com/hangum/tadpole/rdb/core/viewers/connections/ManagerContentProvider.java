@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
@@ -23,7 +24,7 @@ import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
  *
  */
 public class ManagerContentProvider extends ArrayContentProvider implements ITreeContentProvider {
-
+	private static final Logger logger = Logger.getLogger(ManagerContentProvider.class);
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		

@@ -12,6 +12,7 @@ package com.hangum.tadpole.engine.utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -32,7 +33,7 @@ public class HttpSessionCollectorUtil {
 	public static enum COLLECT_KEY {SESSION, TIMEOUT};
 	
 	/** id, httpsession */
-	private final Map<String, Map<String, Object>> mapSession = new HashMap<String, Map<String, Object>>();
+	private final Map<String, Map<String, Object>> mapSession = new ConcurrentHashMap<String, Map<String, Object>>();
 	
 	private HttpSessionCollectorUtil() {};
 	
@@ -154,9 +155,8 @@ class SessionLiveChecker implements Runnable{
 				
 					if(logger.isDebugEnabled()) {
 						logger.debug("=========== session live checker ===============");
-						logger.debug("[session user is ]" + id);
-						logger.debug("[userTime]" + userTime);
-						logger.debug("[gapTime]" + gapTime);
+						logger.debug(String.format("[session user] id=%s", id));
+						logger.debug(String.format("[userTime]%s[gapTime]%s", userTime, gapTime));
 						logger.debug("=========== session live checker ===============");
 					}
 					

@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.manager.core.dialogs.users;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -66,10 +65,7 @@ import com.swtdesigner.SWTResourceManager;
  */
 public class FindUserAndDBRoleDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(FindUserAndDBRoleDialog.class);
-	
-//	private UserDBDAO userDBDao;
-//	private TreeViewer tvDBList;
-	
+
 	private Text textUserEMail;
 	private TableViewer tableViewer;
 	private TableViewer tableViewerTargetDB;
@@ -77,7 +73,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	private List<UserDAO> listUserGroup = new ArrayList<UserDAO>();
 	private List<UserDAO> listSelectUserGroup = new ArrayList<UserDAO>();
 	private List<UserDBDAO> listUserDBs = new ArrayList<UserDBDAO>();
-	
+
 	private TadpoleUserDbRoleDAO tadpoleUserRoleDao;
 	private Table tableUserRole;
 	private Table tableDB;
@@ -85,16 +81,15 @@ public class FindUserAndDBRoleDialog extends Dialog {
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parentShell
 	 * @param tvDBList
 	 */
 	public FindUserAndDBRoleDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
-		
-		//this.userDBDao = userDBDao; 
 	}
-	
+
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
@@ -104,6 +99,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 
 	/**
 	 * Create contents of the dialog.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -115,42 +111,64 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		gridLayout.horizontalSpacing = 5;
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
-		
-		SashForm sashForm = new SashForm(container, SWT.VERTICAL);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		SashForm sashForm_1 = new SashForm(sashForm, SWT.NONE);
-		
-		Composite compositeUserSearch = new Composite(sashForm_1, SWT.NONE);
+
+		SashForm sashFormLayout = new SashForm(container, SWT.VERTICAL);
+		sashFormLayout.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		SashForm sashFormContent = new SashForm(sashFormLayout, SWT.NONE);
+		// ------------- left side start ----------------
+		Composite compositeDB = new Composite(sashFormContent, SWT.NONE);
+		GridLayout gl_compositeDB = new GridLayout(1, false);
+		gl_compositeDB.marginHeight = 0;
+		gl_compositeDB.verticalSpacing = 0;
+		compositeDB.setLayout(gl_compositeDB);
+
+		Label lblDb = new Label(compositeDB, SWT.NONE);
+		lblDb.setText(Messages.get().AuthorityTargetDB);
+
+		tableViewerTargetDB = new TableViewer(compositeDB, SWT.BORDER | SWT.FULL_SELECTION);
+		tableDB = tableViewerTargetDB.getTable();
+		tableDB.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tableDB.setLinesVisible(true);
+		tableDB.setHeaderVisible(true);
+		createTargetDBColumns();
+
+		tableViewerTargetDB.setContentProvider(new ArrayContentProvider());
+		tableViewerTargetDB.setLabelProvider(new TargetDBLabelProvider());
+		// ------------- left side end -----------------
+
+		// ------------- right side start -----------------
+		SashForm sashFormRight = new SashForm(sashFormContent, SWT.VERTICAL);
+		Composite compositeUserSearch = new Composite(sashFormRight, SWT.NONE);
 		GridLayout gl_compositeUserSearch = new GridLayout(1, false);
 		gl_compositeUserSearch.verticalSpacing = 0;
 		compositeUserSearch.setLayout(gl_compositeUserSearch);
-		
+
 		Label label_1 = new Label(compositeUserSearch, SWT.NONE);
-		label_1.setText("사용자 검색");
-		
+		label_1.setText(Messages.get().userSearch);
+
 		Composite compositeHead = new Composite(compositeUserSearch, SWT.NONE);
 		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		GridLayout gl_compositeHead = new GridLayout(3, false);
 		gl_compositeHead.verticalSpacing = 0;
 		gl_compositeHead.marginHeight = 0;
 		compositeHead.setLayout(gl_compositeHead);
-		
+
 		Label lblEmail = new Label(compositeHead, SWT.NONE);
 		lblEmail.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblEmail.setText(Messages.get().FindUserAndDBRoleDialog_1);
-		
+
 		textUserEMail = new Text(compositeHead, SWT.BORDER);
 		textUserEMail.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) {
+				if (e.keyCode == SWT.Selection) {
 					search();
 				}
 			}
 		});
 		textUserEMail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		Button btnSearch = new Button(compositeHead, SWT.NONE);
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -159,7 +177,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 			}
 		});
 		btnSearch.setText(CommonMessages.get().Search);
-		
+
 		Composite compositeBody = new Composite(compositeUserSearch, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeBody = new GridLayout(1, false);
@@ -168,25 +186,26 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		gl_compositeBody.marginHeight = 0;
 		gl_compositeBody.marginWidth = 0;
 		compositeBody.setLayout(gl_compositeBody);
-		
+
 		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tableViewer.getTable();
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection iss = (IStructuredSelection)tableViewer.getSelection();
-				if(iss.isEmpty()) {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectUser);
+				IStructuredSelection iss = (IStructuredSelection) tableViewer.getSelection();
+				if (iss.isEmpty()) {
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning,
+							Messages.get().PleaseSelectUser);
 					return;
 				}
-				UserDAO userDAO = (UserDAO)iss.getFirstElement();
-				
-				if (userDAO.isSelect()){
+				UserDAO userDAO = (UserDAO) iss.getFirstElement();
+
+				if (userDAO.isSelect()) {
 					listUserGroup.remove(userDAO);
 					tableViewer.refresh();
-					
+
 					listSelectUserGroup.add(userDAO);
-					
+
 					tableViewerSelectUser.setInput(listSelectUserGroup);
 					tableViewerSelectUser.refresh();
 				}
@@ -195,91 +214,72 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		createSearchColumns();
-		
+
 		tableViewer.setContentProvider(new ArrayContentProvider());
 		tableViewer.setLabelProvider(new UserLabelProvider());
-		
-		textUserEMail.setFocus();
-		
-		SashForm sashForm_2 = new SashForm(sashForm_1, SWT.VERTICAL);
-		 
-		 Composite composite = new Composite(sashForm_2, SWT.NONE);
-		 GridLayout gl_composite = new GridLayout(1, false);
-		 gl_composite.marginHeight = 0;
-		 gl_composite.verticalSpacing = 0;
-		 composite.setLayout(gl_composite);
-		 
-		 Label lblDb = new Label(composite, SWT.NONE);
-		 lblDb.setText("권한부여 대상 DB");
-		
-		 tableViewerTargetDB = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
-		 tableDB = tableViewerTargetDB.getTable();
-		 tableDB.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		 tableDB.setLinesVisible(true);
-		 tableDB.setHeaderVisible(true);
-		 
-		 Composite composite_1 = new Composite(sashForm_2, SWT.NONE);
-		 GridLayout gl_composite_1 = new GridLayout(1, false);
-		 gl_composite_1.verticalSpacing = 0;
-		 composite_1.setLayout(gl_composite_1);
-		 
-		 Label label = new Label(composite_1, SWT.NONE);
-		 label.setText("처리결과");
-		 
-		 textLog = new Text(composite_1, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		 textLog.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		 textLog.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW  ));
 
-		 createTargetDBColumns();
-		 
-		 tableViewerTargetDB.setContentProvider(new ArrayContentProvider());
-		 tableViewerTargetDB.setLabelProvider(new TargetDBLabelProvider());
-		sashForm_2.setWeights(new int[] {1, 1});
-		sashForm_1.setWeights(new int[] {1, 1});
-		
-		
-		Composite compositeUser = new Composite(sashForm, SWT.NONE);
-		GridLayout gl_compositeUser = new GridLayout(1, false);
-		gl_compositeUser.marginHeight = 0;
-		gl_compositeUser.verticalSpacing = 0;
-		compositeUser.setLayout(gl_compositeUser);
-		
-		Label label_3 = new Label(compositeUser, SWT.NONE);
-		label_3.setText("권한부여 대상자");
-		
-		tableViewerSelectUser = new TableViewer(compositeUser, SWT.BORDER | SWT.FULL_SELECTION);
+		textUserEMail.setFocus();
+		//
+
+		Composite compositeMsg = new Composite(sashFormRight, SWT.NONE);
+		GridLayout gl_compositeMsg = new GridLayout(1, false);
+		gl_compositeMsg.verticalSpacing = 0;
+		compositeMsg.setLayout(gl_compositeMsg);
+
+		Label label = new Label(compositeMsg, SWT.NONE);
+		label.setText(Messages.get().ProcessResult);
+
+		textLog = new Text(compositeMsg, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		textLog.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		textLog.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+
+		sashFormRight.setWeights(new int[] { 1, 1 });
+		sashFormContent.setWeights(new int[] { 1, 1 });
+		// ------------- right side start -----------------
+
+		Composite compositeApplyUser = new Composite(sashFormLayout, SWT.NONE);
+		GridLayout gl_compositeApplyUser = new GridLayout(1, false);
+		gl_compositeApplyUser.marginHeight = 0;
+		gl_compositeApplyUser.verticalSpacing = 0;
+		compositeApplyUser.setLayout(gl_compositeApplyUser);
+
+		Label label_3 = new Label(compositeApplyUser, SWT.NONE);
+		label_3.setText(Messages.get().AuthorityTargetUser);
+
+		tableViewerSelectUser = new TableViewer(compositeApplyUser, SWT.BORDER | SWT.FULL_SELECTION);
 		tableUserRole = tableViewerSelectUser.getTable();
 		tableUserRole.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection iss = (IStructuredSelection)tableViewerSelectUser.getSelection();
-				if(iss.isEmpty()) {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectUser);
+				IStructuredSelection iss = (IStructuredSelection) tableViewerSelectUser.getSelection();
+				if (iss.isEmpty()) {
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning,
+							Messages.get().PleaseSelectUser);
 					return;
 				}
-				UserDAO userDAO = (UserDAO)iss.getFirstElement();
-				if(!userDAO.isSelect()){
+				UserDAO userDAO = (UserDAO) iss.getFirstElement();
+				if (!userDAO.isSelect()) {
 					listSelectUserGroup.remove(userDAO);
 				}
 				tableViewerSelectUser.refresh();
-				
+
 			}
 		});
 		tableUserRole.setLinesVisible(true);
 		tableUserRole.setHeaderVisible(true);
 		tableUserRole.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
 		createSelectUserColumns();
-		
+
 		tableViewerSelectUser.setContentProvider(new ArrayContentProvider());
 		tableViewerSelectUser.setLabelProvider(new SelectUserLabelProvider());
 
-		sashForm.setWeights(new int[] {1, 1});
+		sashFormLayout.setWeights(new int[] { 1, 1 });
 		initData();
 		initUI();
-		
+
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 
@@ -291,173 +291,181 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	 */
 	private void initUI() {
 		Calendar cal = Calendar.getInstance();
-		
+
 		cal.add(Calendar.DAY_OF_YEAR, 365 * 10);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
 	protected void okPressed() {
-		
+
 		int cnt = 0;
-		
-		for (UserDBDAO userDBDao : listUserDBs){
-			if(userDBDao.isSelect())cnt++;
+
+		for (UserDBDAO userDBDao : listUserDBs) {
+			if (userDBDao.isSelect())
+				cnt++;
 		}
-		if(listUserDBs.size() <= 0 || cnt <= 0) {
+		if (listUserDBs.size() <= 0 || cnt <= 0) {
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectDB);
 			return;
 		}
-		
+
 		textLog.setText(StringUtils.EMPTY);
-		for (UserDBDAO userDBDao : listUserDBs ) {
-		
-			if(!userDBDao.isSelect()) continue;
-			
-			if(listSelectUserGroup.size() <= 0) {
+		for (UserDBDAO userDBDao : listUserDBs) {
+
+			if (!userDBDao.isSelect())
+				continue;
+
+			if (listSelectUserGroup.size() <= 0) {
 				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectUser);
 				return;
 			}
-			for (UserDAO userDAO : listSelectUserGroup ){
-				
-				if("NONE".equals(userDAO.getRole_type())) { //$NON-NLS-1$
+			for (UserDAO userDAO : listSelectUserGroup) {
+
+				if ("NONE".equals(userDAO.getRole_type())) { //$NON-NLS-1$
 					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().FindUserAndDBRoleDialog_6);
 					tableViewerSelectUser.getTable().setFocus();
 					return;
 				}
-				
-				// 사용자가 해당 디비에 추가 될수 있는지 검사합니다. 
+
+				// 사용자가 해당 디비에 추가 될수 있는지 검사합니다.
 				try {
 					boolean isAddDBRole = TadpoleSystem_UserRole.isDBAddRole(userDBDao, userDAO);
-					if(isAddDBRole) {
-						if(!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().FindUserDialog_4)) return;
-						
-						Calendar calStart = Calendar.getInstance();
-						calStart.set(userDAO.getService_start().getYear(), userDAO.getService_start().getMonth(), userDAO.getService_start().getDay(), 0, 0, 0);
-	
-						
-						tadpoleUserRoleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(), userDBDao.getSeq(), userDAO.getRole_type(), "*",  //$NON-NLS-1$
-								new Timestamp(calStart.getTimeInMillis()), 
-								userDAO.getService_end()
-								);
-						
-						//MessageDialog.openInformation(getShell(), CommonMessages.get().Confirm, Messages.get().FindUserAndDBRoleDialog_10);
-						textLog.append("\nInformation:"+userDAO.getName() + "이(가) " + userDBDao.getDisplay_name() + "의 " + userDAO.getRole_type() + "(으)로 " + Messages.get().FindUserAndDBRoleDialog_10);
-						
+					if (isAddDBRole) {
+						if (!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().FindUserDialog_4))
+							return;
+
+						tadpoleUserRoleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(),
+								userDBDao.getSeq(), userDAO.getRole_type(), "*", //$NON-NLS-1$
+								userDAO.getService_start(), userDAO.getService_end());
+
+						// MessageDialog.openInformation(getShell(),
+						// CommonMessages.get().Confirm,
+						// Messages.get().FindUserAndDBRoleDialog_10);
+						textLog.append("\nInformation:" + userDAO.getName() + "이(가) " + userDBDao.getDisplay_name()
+								+ "의 " + userDAO.getRole_type() + "(으)로 " + Messages.get().FindUserAndDBRoleDialog_10);
+
 					} else {
-						//MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().FindUserAndDBRoleDialog_12);
-						textLog.append("\nWarning:"+userDAO.getName() + "을(를) " + userDBDao.getDisplay_name() + "의 " + userDAO.getRole_type() + "(으)로 지정 : " + Messages.get().FindUserAndDBRoleDialog_12);
+						// MessageDialog.openWarning(getShell(),
+						// CommonMessages.get().Warning,
+						// Messages.get().FindUserAndDBRoleDialog_12);
+						textLog.append("\nWarning:" + userDAO.getName() + "을(를) " + userDBDao.getDisplay_name() + "의 "
+								+ userDAO.getRole_type() + "(으)로 지정 : " + Messages.get().FindUserAndDBRoleDialog_12);
 					}
 				} catch (Exception e) {
 					logger.error(Messages.get().RoleType, e);
-					//MessageDialog.openError(getShell(),CommonMessages.get().Error, Messages.get().FindUserAndDBRoleDialog_15 + e.getMessage());
-					textLog.append("\nError:"+userDAO.getName() + "을(를) " + userDBDao.getDisplay_name() + "의 " + userDAO.getRole_type() + "(으)로 지정 : " + Messages.get().FindUserAndDBRoleDialog_15 + e.getMessage());
+					// MessageDialog.openError(getShell(),CommonMessages.get().Error,
+					// Messages.get().FindUserAndDBRoleDialog_15 +
+					// e.getMessage());
+					textLog.append("\nError:" + userDAO.getName() + "을(를) " + userDBDao.getDisplay_name() + "의 "
+							+ userDAO.getRole_type() + "(으)로 지정 : " + Messages.get().FindUserAndDBRoleDialog_15
+							+ e.getMessage());
 				}
 			}
-		} 
+		}
 	}
-	
+
 	/**
 	 * 검색.
 	 */
 	private void search() {
 		String txtUserEmail = textUserEMail.getText();
 		boolean exists;
-		if("".equals(txtUserEmail)) return; //$NON-NLS-1$
+		if ("".equals(txtUserEmail)) return;
 		listUserGroup.clear();
-		
+
 		try {
-			List<UserDAO> searUserList  = TadpoleSystem_UserQuery.findUserList(txtUserEmail);
-			
-			if (listSelectUserGroup.size()==0){
+			List<UserDAO> searUserList = TadpoleSystem_UserQuery.findUserList(txtUserEmail);
+
+			if (listSelectUserGroup.size() == 0) {
 				listUserGroup = searUserList;
-			}else{
-				for(UserDAO userDAO : searUserList){
-					System.out.print("search source="+userDAO.getEmail());
+			} else {
+				for (UserDAO userDAO : searUserList) {
+					System.out.print("search source=" + userDAO.getEmail());
 					exists = false;
-					for(UserDAO selectUser : listSelectUserGroup){
-					    
-						if(selectUser.equals(userDAO)  ){
-							
+					for (UserDAO selectUser : listSelectUserGroup) {
+
+						if (selectUser.equals(userDAO)) {
 							exists = true;
-							
 						}
 					}
-					if (! exists) listUserGroup.add(userDAO);
-					
+					if (!exists)
+						listUserGroup.add(userDAO);
+
 				}
 			}
-			
+
 			tableViewer.setInput(listUserGroup);
 			tableViewer.refresh();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("search exception", e); //$NON-NLS-1$
-			MessageDialog.openInformation(getShell(),CommonMessages.get().Error, e.getMessage());
+			MessageDialog.openInformation(getShell(), CommonMessages.get().Error, e.getMessage());
 		}
 	}
-	
+
 	private void initData() {
 		listUserDBs.clear();
 		try {
 			listUserDBs = TadpoleSystem_UserDBQuery.getCreateUserDB();
-			
-			
+
 			tableViewerTargetDB.setInput(listUserDBs);
 			tableViewerTargetDB.refresh();
-			
+
 		} catch (Exception e) {
 			logger.error(Messages.get().DBListComposite_25, e);
 		}
 	}
-	
+
 	/**
 	 * crate columns
 	 */
 	private void createSearchColumns() {
-		String[] colNames = {CommonMessages.get().Name, CommonMessages.get().Email, Messages.get().CreateTime};
-		int[] colSize = {150, 150, 120};
-		
-		for (int i=0; i<colSize.length; i++) {
+		String[] colNames = { CommonMessages.get().Name, CommonMessages.get().Email, Messages.get().CreateTime };
+		int[] colSize = { 150, 150, 120 };
+
+		for (int i = 0; i < colSize.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 			TableColumn tableColumn = tableViewerColumn.getColumn();
 			tableColumn.setWidth(colSize[i]);
 			tableColumn.setText(colNames[i]);
-			
-			if (i==0){
+
+			if (i == 0) {
 				tableViewerColumn.setEditingSupport(new UserSearchEditingSupport(tableViewer, i));
 			}
 		}
 	}
-	
+
 	private void createSelectUserColumns() {
-		String[] colNames = {CommonMessages.get().Name, CommonMessages.get().Email, Messages.get().CreateTime, "Role", "Start Date", "End Date"};
-		int[] colSize = {150, 150, 120, 120, 200, 200};
-		
-		for (int i=0; i<colSize.length; i++) {
+		String[] colNames = { CommonMessages.get().Name, CommonMessages.get().Email, Messages.get().CreateTime, "Role",
+				"Start Date", "End Date" };
+		int[] colSize = { 150, 150, 120, 120, 200, 200 };
+
+		for (int i = 0; i < colSize.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerSelectUser, SWT.NONE);
 			TableColumn tableColumn = tableViewerColumn.getColumn();
 			tableColumn.setWidth(colSize[i]);
 			tableColumn.setText(colNames[i]);
-			
-			
+
 			tableViewerColumn.setEditingSupport(new SelectUserEditingSupport(tableViewerSelectUser, i));
-			
+
 		}
 	}
 
 	private void createTargetDBColumns() {
-		String[] colNames = {CommonMessages.get().Name, "데이터베이스 정보", Messages.get().User};
-		int[] colSize = {150, 150, 120};
-		
-		for (int i=0; i<colSize.length; i++) {
+		String[] colNames = { CommonMessages.get().Name, "데이터베이스 정보", Messages.get().User };
+		int[] colSize = { 150, 150, 120 };
+
+		for (int i = 0; i < colSize.length; i++) {
 			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerTargetDB, SWT.NONE);
 			TableColumn tableColumn = tableViewerColumn.getColumn();
 			tableColumn.setWidth(colSize[i]);
 			tableColumn.setText(colNames[i]);
-			
-			if (i==0){
+
+			if (i == 0) {
 				tableViewerColumn.setEditingSupport(new TargetDBEditingSupport(tableViewerTargetDB, i));
 			}
 		}
@@ -469,6 +477,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 
 	/**
 	 * Create contents of the button bar.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -487,115 +496,105 @@ public class FindUserAndDBRoleDialog extends Dialog {
 }
 
 /**
-* 유저 정보 레이블 
-* 
-* @author hangum
-*
-*/
+ * 유저 정보 레이블
+ * 
+ * @author hangum
+ *
+ */
 class UserLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		UserDAO dao = (UserDAO) element;
 
 		switch (columnIndex) {
 		case 0:
-			if (dao.isSelect())
-				return GlobalImageUtils.getCheck();
-			else
-				return GlobalImageUtils.getUnCheck();
+			if (dao.isSelect()) return GlobalImageUtils.getCheck();
+			else return GlobalImageUtils.getUnCheck();
 		}
 		return null;
 	}
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		UserDAO user = (UserDAO)element;
+		UserDAO user = (UserDAO) element;
 
-		switch(columnIndex) {
+		switch (columnIndex) {
 		case 0: return user.getName();
 		case 1: return user.getEmail();
 		case 2: return user.getCreate_time();
 		}
-		
+
 		return "*** not set column ***"; //$NON-NLS-1$
 	}
-	
+
 }
 
 class SelectUserLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		UserDAO dao = (UserDAO) element;
 
 		switch (columnIndex) {
 		case 0:
-			if (dao.isSelect())
-				return GlobalImageUtils.getCheck();
-			else
-				return GlobalImageUtils.getUnCheck();
+			if (dao.isSelect()) return GlobalImageUtils.getCheck();
+			else return GlobalImageUtils.getUnCheck();
 		}
 		return null;
 	}
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		UserDAO user = (UserDAO)element;
+		UserDAO user = (UserDAO) element;
 
-		switch(columnIndex) {
+		switch (columnIndex) {
 		case 0: return user.getName();
 		case 1: return user.getEmail();
 		case 2: return user.getCreate_time();
 		case 3: return user.getRole_type();
-		case 4: return user.getService_start()+"";
-		case 5: return user.getService_end()+"";
+		case 4: return user.getService_start() + "";
+		case 5: return user.getService_end() + "";
 		}
-		
+
 		return "*** not set column ***"; //$NON-NLS-1$
 	}
-	
+
 }
 
 class TargetDBLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
+
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		UserDBDAO dao = (UserDBDAO) element;
 
 		switch (columnIndex) {
 		case 0:
-			if (dao.isSelect())
-				return GlobalImageUtils.getCheck();
-			else
-				return GlobalImageUtils.getUnCheck();
+			if (dao.isSelect()) return GlobalImageUtils.getCheck();
+			else return GlobalImageUtils.getUnCheck();
 		}
 		return null;
 	}
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		UserDBDAO user = (UserDBDAO)element;
+		UserDBDAO user = (UserDBDAO) element;
 
-		
-		if(element instanceof UserDBDAO) {
-			UserDBDAO userDB = (UserDBDAO)element;
+		if (element instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO) element;
 
-			switch(columnIndex) {
-				case 0: return ManagerLabelProvider.getDBText(userDB);
-				case 1:
-					// sqlite
-					if("".equals(userDB.getHost())) return userDB.getUrl(); //$NON-NLS-1$
-					return userDB.getHost() + " : "  + userDB.getPort(); //$NON-NLS-1$
-				case 2: return userDB.getUsers();
+			switch (columnIndex) {
+			case 0: return ManagerLabelProvider.getDBText(userDB);
+			case 1:
+				// sqlite
+				if ("".equals(userDB.getHost())) //$NON-NLS-1$
+					return userDB.getUrl();
+				return userDB.getHost() + " : " + userDB.getPort(); //$NON-NLS-1$
+			case 2: return userDB.getUsers();
 			}
+		}
 
-		} 
-		
-		
-		
-		
 		return "*** not set column ***"; //$NON-NLS-1$
 	}
-	
+
 }
