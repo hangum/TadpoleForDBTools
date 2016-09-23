@@ -99,16 +99,9 @@ public class DBLockDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strPassword = textPassword.getText();
-		
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
-			if(!strPassword.equals(userDB.getPasswd())) {
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DBLockDialog_3);
-				textPassword.setFocus();
-				
-				return;
-			}
+
 		// 시스템 어드민이 사용자 패스워드를 저장하도록 해서 입력받고 디비에 입력한다.
-		} else if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
+		if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
 			if(!"".equals(textPassword.getText())) {
 				userDB.setPasswd(CipherManager.getInstance().encryption(textPassword.getText()));
 			} else {
@@ -130,6 +123,14 @@ public class DBLockDialog extends Dialog {
 				
 				return;
 			}
+		} else if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
+			if(!strPassword.equals(userDB.getPasswd())) {
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DBLockDialog_3);
+				textPassword.setFocus();
+				
+				return;
+			}
+
 		}
 		
 		super.okPressed();
