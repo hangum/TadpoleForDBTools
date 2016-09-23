@@ -206,8 +206,8 @@ public class ManagerViewer extends ViewPart {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty() ==  PublicTadpoleDefine.SAVE_FILE) {
 					addResource(Integer.parseInt( event.getNewValue().toString().split(":")[0] )); //$NON-NLS-1$
-				} else if (event.getProperty() ==  PublicTadpoleDefine.ADD_DB) {
-					init();
+//				} else if (event.getProperty() ==  PublicTadpoleDefine.ADD_DB) {
+//					init();
 				}
 			}
 		});
@@ -266,7 +266,7 @@ public class ManagerViewer extends ViewPart {
 		SessionManager.initManagerDBList();
 		setManagerDBList();
 	}
-
+	
 	/**
 	 * popup 화면을 오픈합니다.
 	 */
@@ -357,17 +357,13 @@ public class ManagerViewer extends ViewPart {
 	 */
 	public void addResource(int dbSeq) {
 		for(ManagerListDTO dto: treeDataList) {
-			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
 					userDB.getListResource().clear();
 					addManagerResouceData(userDB, true);
-					
 					return;
 				}	// if(userDB.getSeq() == dbSeq) {
-				
 			}	// for(UserDBDAO
-				
 		}
 	}
 	

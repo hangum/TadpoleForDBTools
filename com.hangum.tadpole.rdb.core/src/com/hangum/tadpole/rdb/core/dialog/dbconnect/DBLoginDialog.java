@@ -27,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -43,6 +44,7 @@ import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.driver.JDBCDriverManageDialog;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -281,9 +283,14 @@ public class DBLoginDialog extends Dialog {
 			}
 		} else if(ADD_NEW_CONNECTION_ID == buttonId) {
 			if(addDB()) {
-				PlatformUI.getPreferenceStore().setValue(PublicTadpoleDefine.ADD_DB, ""+retuserDb.getSeq() + ":" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				
-				MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().DBLoginDialog_47); //$NON-NLS-1$
+				final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
+				Display.getCurrent().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						managerView.addUserDB(retuserDb, false);
+					}
+				});	// end display
+				MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().DBLoginDialog_47); //$NON-NLS-1$				
 			}
 		}
 	}
