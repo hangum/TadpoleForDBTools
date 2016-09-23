@@ -3460,9 +3460,10 @@ var optionsProvider = {
     }
 };
 
+/** 경고메시지가 너무 많이 나와서 메시지 출력을 종료. */ 
 function warn(message) {
-    if (typeof console != "undefined" && console.warn)
-        console.warn.apply(console, arguments);
+//    if (typeof console != "undefined" && console.warn)
+//        console.warn.apply(console, arguments);
 }
 
 function reportError(msg, data) {
