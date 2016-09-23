@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
+import com.hangum.tadpole.db.metadata.constants.PostgreSQLConstant;
 import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
@@ -199,6 +200,10 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
 		) {
 			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MSSQL_KEYWORDS, ",") + "," + metaData.getSQLKeywords();
+			tadpoleMetaData.setKeywords(strFullKeywords);
+			
+		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			String strFullKeywords = StringUtils.join(PostgreSQLConstant.QUOTE_POSTGRES_KEYWORDS, ",") + "," + metaData.getSQLKeywords();
 			tadpoleMetaData.setKeywords(strFullKeywords);
 		} else {
 			tadpoleMetaData.setKeywords(metaData.getSQLKeywords());
