@@ -152,7 +152,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			for(int i=0; i<rsDAO.getColumnName().size(); i++) {
 				final int index = i;
 				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))?SWT.RIGHT:SWT.LEFT;
-				String strColumnName = rsDAO.getColumnLabelName().get(i);
+				String strColumnName = rsDAO.getColumnName().get(i);
 		
 				/** 표시 되면 안되는 컬럼을 제거 합니다 */
 				if(StringUtils.startsWithIgnoreCase(strColumnName, PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) continue;
@@ -182,8 +182,6 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 
 //				
 //				TODO 디비 스키마 명을 사용할 수있어서, 현재로서는 직접 수정하지 못하도록 코드를 막습니다. - hangum(16.07.26)
-//				
-//				
 				// if select statement update
 //				if(PublicTadpoleDefine.QUERY_DML_TYPE.SELECT == reqQuery.getSqlDMLType() && isEditable) {
 //					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
