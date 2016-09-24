@@ -19,13 +19,11 @@ public class HttpSessionCollectorListener implements HttpSessionListener {
 	@Override
 	public void sessionCreated(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
-		logger.debug("---> [login]" + session.getId());
 		sessions.put(session.getId(), session);
 	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent event) {
-		logger.debug("---> [logout]" + event.getSession().getId());
 		sessions.remove(event.getSession().getId());
 	}
 
