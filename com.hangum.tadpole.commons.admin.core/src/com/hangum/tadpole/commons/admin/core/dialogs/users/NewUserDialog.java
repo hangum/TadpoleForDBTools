@@ -448,8 +448,8 @@ public class NewUserDialog extends Dialog {
 			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().NewUserDialog_15);
 			textEMail.setFocus();
 			return false;
-		} else if(!ValidChecker.isSimplePasswordChecker(strPass)) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().NewUserDialog_25);
+		} else if(!ValidChecker.isPasswordLengthChecker(strPass)) {
+			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().NewUserDialog_3, "7", "30"));			 //$NON-NLS-1$
 			textPasswd.setFocus();
 			return false;
 		} else if("".equals(rePasswd)) {
