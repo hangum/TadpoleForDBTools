@@ -152,48 +152,6 @@ public class TadpoleSystemInitializer {
 		return TadpoleApplicationContextManager.getSystemAdmin() == null?false:true;
 	}
 	
-//	/**
-//	 * system table의 존재 유무를 파악하여 생성합니다.
-//	 * 
-//	 */
-//	private static void createSystemTable() throws Exception {
-//
-//		java.sql.Connection javaConn = null;
-//		Statement stmt = null;
-//		String createMsg = "";
-//
-//		try {
-//			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-//			javaConn = sqlClient.getDataSource().getConnection();
-//
-//			// 테이블 생성
-//			stmt = javaConn.createStatement();
-//			Object obj = null;
-//			if (ApplicationArgumentUtils.isDBServer()) {
-//				logger.info("*** Remote DB System Teable creation ***");
-//
-//				obj = new TadpoleMySQLDDL();
-//			}
-//
-//			String targetDDL = "";
-//			for (java.lang.reflect.Field field : obj.getClass().getFields()) {
-//				targetDDL = obj.getClass().getField(field.getName()).get("").toString();
-//				//targetDDL = new String(targetDDL.getBytes(), "ISO-8859-1");
-//				createMsg = "System Table create [" + targetDDL + "]";
-//				stmt.execute(targetDDL);
-//				logger.info(" ==>> " + field.getName());
-//			}
-//
-//		} catch (Exception e) {
-//			logger.error(createMsg, e);
-//			throw e;
-//
-//		} finally {
-//			try { stmt.close(); } catch(Exception e) {}
-//			try { javaConn.close(); } catch (Exception e) {}
-//		}
-//	}
-	
 	/**
 	 * initialize jdbc driver
 	 */

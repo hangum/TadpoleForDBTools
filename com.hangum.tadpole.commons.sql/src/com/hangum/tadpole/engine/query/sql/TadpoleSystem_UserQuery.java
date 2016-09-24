@@ -300,7 +300,7 @@ public class TadpoleSystem_UserQuery {
 	 */
 	public static UserDAO getSystemAdmin() throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return (UserDAO)sqlClient.queryForObject("getSystemAdmin"); //$NON-NLS-1$
+			return (UserDAO)sqlClient.queryForObject("getSystemAdmin"); //$NON-NLS-1$
 	}
 	
 	/**
