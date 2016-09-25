@@ -166,8 +166,13 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     private boolean select;
     
     public UserDBDAO() {
-    	setTdbUserID(SessionManager.getEMAIL());
-    	setTdbLogingIP(SessionManager.getLoginIp());
+    	try {
+	    	setTdbUserID(SessionManager.getEMAIL());
+	    	setTdbLogingIP(SessionManager.getLoginIp());
+    	} catch(Throwable t) {
+    		// ignore exception
+    		// ex) called api hub
+    	}
 	}
    
     public DBDefine getDBDefine() {
