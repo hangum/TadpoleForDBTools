@@ -7,7 +7,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.start.dialog.login;
+package com.hangum.tadpole.login.core.dialog;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

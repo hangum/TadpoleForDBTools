@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.start.dialog.login;
+package com.hangum.tadpole.login.core.dialog;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
@@ -34,6 +33,7 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.login.core.Messages;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
@@ -72,7 +72,7 @@ public class FindPasswordDialog extends Dialog {
 		gridLayout.marginWidth = 5;
 		
 		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(Messages.get().LoginDialog_1);
+		lblEmail.setText(CommonMessages.get().Email);
 		
 		textEmail = new Text(container, SWT.BORDER);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

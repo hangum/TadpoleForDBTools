@@ -19,8 +19,11 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  com.hangum.tadpole.compare.core;bundle-version="1.0.0",
  org.apache.commons.io;bundle-version="2.2.0",
  com.bitnine.agens.manager.core;bundle-version="1.0.0";resolution:=optional,
- com.hangum.tadpole.application.ext.core;bundle-version="1.0.0";resolution:=optional
-Export-Package: com.hangum.tadpole.application.start,
- com.hangum.tadpole.application.start.dialog.login
+ com.hangum.tadpole.login.service.core;bundle-version="1.0.0";resolution:=optional,
+ com.hangum.tadpole.application.ext.core;bundle-version="1.0.0";resolution:=optional,
+ com.hangum.tadpole.login.core;bundle-version="1.0.0";resolution:=optional,
+ com.hangum.tadpole.login.browserip.core;bundle-version="1.0.0";resolution:=optional,
+ com.hangum.tadpole.login.basic.core;bundle-version="1.0.0";resolution:=optional
+Export-Package: com.hangum.tadpole.application.start
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"

@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.application.start.dialog.login;
+package com.hangum.tadpole.login.core.otp;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -25,18 +25,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.login.core.Messages;
 
 /**
- * OTP Code Dialog
+ * Google OTP Dialog
  * 
  * @author hangum
  *
  */
-public class OTPLoginDialog extends Dialog {
+public class GoogleOTPLoginDialog extends Dialog {
 	private int intOTPCode;
 	private Text textOTPCode;
 	
@@ -45,7 +45,7 @@ public class OTPLoginDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public OTPLoginDialog(Shell parentShell) {
+	public GoogleOTPLoginDialog(Shell parentShell) {
 		super(parentShell);
 	}
 	
