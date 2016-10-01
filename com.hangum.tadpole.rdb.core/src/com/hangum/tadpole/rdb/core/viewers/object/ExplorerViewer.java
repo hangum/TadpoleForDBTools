@@ -55,6 +55,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.vertex.TadpoleVertexComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
@@ -117,6 +118,9 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
 	private TadpoleMongoDBIndexesComposite mongoIndexComposite 			= null;
 	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
+	
+	// agens graph
+	private TadpoleVertexComposite agensVertexComposite = null;
 
 	public ExplorerViewer() {
 		super();
@@ -449,7 +453,7 @@ public class ExplorerViewer extends ViewPart {
 		} else {
 			try { 
 				initSchema();
-				initObjectDetail(userDB.getDBDefine());
+				initObjectDetail(userDB);
 			} catch(Exception e) {
 				logger.error("initialize database " + e.getMessage());
 				userDB = null;
@@ -461,12 +465,12 @@ public class ExplorerViewer extends ViewPart {
 	/**
 	 * 다른 디비가 선택되어 지면 초기화 되어야 할 object 목록
 	 * 
-	 * @param dbDefine Manager에서 선택된 object
+	 * @param userDB Manager에서 선택된 object
 	 */
-	private void initObjectDetail(DBDefine dbDefine) {
+	private void initObjectDetail(final UserDBDAO userDB) {
 		
 		// sqlite
-		if (dbDefine == DBDefine.SQLite_DEFAULT) {
+		if (DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			createTable();
 			createView();
 			
@@ -480,7 +484,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 
 		// tajo, hive, hive2
-		} else if (dbDefine == DBDefine.TAJO_DEFAULT | dbDefine == DBDefine.HIVE_DEFAULT | dbDefine == DBDefine.HIVE2_DEFAULT) {
+		} else if (DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
@@ -490,7 +494,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 				
 		// mongodb
-		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
+		} else if (DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 			createMongoCollection();
 			createMongoIndex();
 			createMongoJavaScript();
@@ -503,7 +507,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, mongoCollectionComposite.getCollectionListViewer()));
 
 		// oracle , tibero
-		} else if (dbDefine == DBDefine.ORACLE_DEFAULT | dbDefine == DBDefine.TIBERO_DEFAULT) {
+		} else if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			createTable();
 			createView();
 			createSynonym();
@@ -513,7 +517,7 @@ public class ExplorerViewer extends ViewPart {
 			createFunction();
 			createTrigger();
 			createDBLink();
-			if (dbDefine == DBDefine.ORACLE_DEFAULT ) {
+			if (DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
 				createJobs();
 				createJava();
 				
@@ -556,26 +560,43 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 		// altibase, cubrid
-		} else if (dbDefine == DBDefine.CUBRID_DEFAULT | 
-				dbDefine == DBDefine.ALTIBASE_DEFAULT |
-				dbDefine == DBDefine.POSTGRE_DEFAULT
-		) { 
+		} else if (DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()
+		) {
 			createTable();
 			createView();
 			createProcedure();
 			createFunction();
 			createTrigger();
 			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(), 
-				tableComposite.getTableColumnViewer(),
-				tableComposite.getIndexComposite().getTableViewer(),
-				tableComposite.getTriggerComposite().getTableViewer(),
-				viewComposite.getTableViewer(), 
-				procedureComposite.getTableViewer(), 
-				functionCompostite.getTableviewer(),
-				triggerComposite.getTableViewer()
-			};
+			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
+				createVertex();
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+						tableComposite.getTableListViewer(), 
+						tableComposite.getTableColumnViewer(),
+						tableComposite.getIndexComposite().getTableViewer(),
+						tableComposite.getTriggerComposite().getTableViewer(),
+						viewComposite.getTableViewer(), 
+						procedureComposite.getTableViewer(), 
+						functionCompostite.getTableviewer(),
+						triggerComposite.getTableViewer(),
+						agensVertexComposite.getTableviewer()
+					};
+			} else {
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer(), 
+					tableComposite.getTableColumnViewer(),
+					tableComposite.getIndexComposite().getTableViewer(),
+					tableComposite.getTriggerComposite().getTableViewer(),
+					viewComposite.getTableViewer(), 
+					procedureComposite.getTableViewer(), 
+					functionCompostite.getTableviewer(),
+					triggerComposite.getTableViewer()
+				};
+			}
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 		// mysql, postgre, mssql
@@ -649,6 +670,8 @@ public class ExplorerViewer extends ViewPart {
 			refreshJobs(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
 			refreshJava(isRefresh, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VERTEX.name())) {
+			refreshAgensVertex(isRefresh, strObjectName);
 		}
 		filterText();
 		
@@ -808,6 +831,14 @@ public class ExplorerViewer extends ViewPart {
 		javaComposite = new TadpoleJavaComposite(getSite(), tabFolderObject, userDB);
 		javaComposite.initAction();
 	}
+	
+	/**
+	 * agens vertext정의 
+	 */
+	private void createVertex() {
+		agensVertexComposite = new TadpoleVertexComposite(getSite(), tabFolderObject, userDB);
+		agensVertexComposite.initAction();
+	}
 
 	/**
 	 * Job 정보를 최신으로 리프레쉬합니다.
@@ -864,6 +895,11 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
 		tableComposite.getTriggerComposite().refreshTrigger(userDB, boolRefresh, strObjectName);
+	}
+	
+	public void refreshAgensVertex(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.VERTEX, userDB.getDefaultSchemanName(), null);
+		agensVertexComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**

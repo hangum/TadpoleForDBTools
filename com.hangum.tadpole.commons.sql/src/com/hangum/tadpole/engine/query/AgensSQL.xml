@@ -20,5 +20,19 @@
  -->
 <sqlMap namespace="AgensGraph_query">
 
+<!-- 
+	vertex and edge list
+ -->
+<select id="agensVertex" resultClass="java.lang.String" parameterClass="java.lang.String">
+	select
+	    parentlab.labname, parentlab.relid, parentlab.labowner, parentlab.labkind, inhrelid, inhparent, inhseqno
+	from 
+	    ag_label AS parentlab, 
+	    ag_label AS childlab, 
+	    ag_inherits AS inh 
+	where 
+	        childlab.oid = inh.inhrelid 
+	    AND parentlab.oid = inh.inhparent
+</select>
 
 </sqlMap>

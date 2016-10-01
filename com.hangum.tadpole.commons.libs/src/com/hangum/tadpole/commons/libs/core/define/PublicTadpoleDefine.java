@@ -262,7 +262,10 @@ public class PublicTadpoleDefine {
 		SCHEDULE,
 		COLUMNS,
 		JOBS,
-		JAVA
+		JAVA,
+		
+		VERTEX,	/* agens graph vertex */
+		EDGE	/* agens graph edge */
 	};
 
 	/** sql type - http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands */
