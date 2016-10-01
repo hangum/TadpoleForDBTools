@@ -47,7 +47,7 @@ import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
@@ -230,7 +230,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		
 		// mysql, maria 일 경우  버튼에 프로파일 버튼을 붙인다.
 		final UserDBDAO userDB = rdbResultComposite.getUserDB();
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			
 			final Button btnQueryProfilling = new Button(compositeBtn, SWT.CHECK);
 			btnQueryProfilling.setText(Messages.get().WhetherProfile);

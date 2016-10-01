@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
@@ -59,7 +59,7 @@ public class ExecuteQueryPlan {
 		java.sql.Statement stmt = null;
 		
 		try {
-			if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+			if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 				TajoConnectionManager manager = new TajoConnectionManager();
 				rsDAO = manager.executeQueryPlan(userDB, reqQuery.getSql(), reqQuery.getSqlStatementType(), reqQuery.getStatementParameter());
 			} else {
@@ -67,14 +67,14 @@ public class ExecuteQueryPlan {
 				javaConn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
 								
 				// 큐브리드 디비이면 다음과 같아야 합니다.
-				if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
+				if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 					
 					rsDAO.setColumnName(CubridExecutePlanUtils.getMapColumns());
 					rsDAO.setDataList(CubridExecutePlanUtils.getMakeData(CubridExecutePlanUtils.plan(userDB, reqQuery)));
 					
 					return rsDAO;
 					
-				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+				} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 					String statement_id = "tadpole"; //$NON-NLS-1$
 					
 					try {
@@ -121,7 +121,7 @@ public class ExecuteQueryPlan {
 					pstmt = javaConn.prepareStatement(sbQuery.toString());
 					rs = pstmt.executeQuery(); 
 					
-				 } else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+				 } else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 					 stmt = javaConn.createStatement();
 					 stmt.execute(PartQueryUtil.makeExplainQuery(userDB, "ON")); //$NON-NLS-1$
 				

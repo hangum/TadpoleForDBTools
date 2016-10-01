@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -97,7 +97,7 @@ public class ExecuteOtherSQL {
 	{
 		
 		// is tajo
-		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			new TajoConnectionManager().executeUpdate(userDB,reqQuery.getSql());
 		} else { 
 		
@@ -116,7 +116,7 @@ public class ExecuteOtherSQL {
 				statement = javaConn.createStatement();
 				
 				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
-				if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 					final String checkSQL = reqQuery.getSql().trim().toUpperCase();
 					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
 						reqQuery.setSql(StringUtils.replaceOnce(reqQuery.getSql(), "(", " (")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -124,10 +124,7 @@ public class ExecuteOtherSQL {
 				}
 				
 				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
-				) { 
+				if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
 					
 					statement.execute(reqQuery.getSql());
 				

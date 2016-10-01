@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -50,8 +51,7 @@ public class DialogUtil {
 		//TODO: 디비엔진 종류별로 지원유무에 따라 처리해야 하나?
 		
 		Map<String, String> map = new HashMap<String,String>();
-		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT || 
-		    userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 			//TODO:SQLMap에 allObjects 가 정의되어 있어야 한다.
 			SelectObjectDialog objectSelector = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap);
 	
@@ -102,7 +102,7 @@ public class DialogUtil {
 			TableDAO tableDao = null;
 			List<TableDAO> listTable = (List<TableDAO>)userDB.getDBObject(OBJECT_TYPE.TABLES, paramTableDAO.getSchema_name());
 			if (listTable.isEmpty()) {
-				if (DBDefine.POSTGRE_DEFAULT != userDB.getDBDefine()) {
+				if (DBGroupDefine.POSTGRE_GROUP != userDB.getDBGroup()) {
 					tableDao = TadpoleObjectQuery.getTable(userDB, paramTableDAO);
 				} else {
 					tableDao = new TableDAO(paramTableDAO.getName(), "");

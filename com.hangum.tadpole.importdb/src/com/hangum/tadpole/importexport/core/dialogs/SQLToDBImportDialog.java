@@ -52,7 +52,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.core.Messages;
@@ -181,7 +181,7 @@ public class SQLToDBImportDialog extends Dialog {
 		lblBatchSize.setText(Messages.get().SQLToDBImportDialog_0);
 		
 		textBatchSize = new Text(compositeHead, SWT.BORDER | SWT.RIGHT);		
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
 			textBatchSize.setText(Messages.get().SQLToDBImportDialog_2);
@@ -467,18 +467,8 @@ public class SQLToDBImportDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button button1 = createButton(parent, ID_BTN_EXPORT, Messages.get().SQLToDBImportDialog_SaveLog, false);
-		button1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			}
-		});
-		Button button2 = createButton(parent, ID_BTN_INSERT, Messages.get().SQLToDBImportDialog_Insert, false);
-		button2.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			}
-		});
+		createButton(parent, ID_BTN_EXPORT, Messages.get().SQLToDBImportDialog_SaveLog, false);
+		createButton(parent, ID_BTN_INSERT, Messages.get().SQLToDBImportDialog_Insert, false);
 		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
 	}
 

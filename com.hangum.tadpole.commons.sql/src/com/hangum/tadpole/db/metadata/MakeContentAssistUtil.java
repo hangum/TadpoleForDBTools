@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.db.metadata;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
@@ -121,7 +120,7 @@ public abstract class MakeContentAssistUtil {
 	public String getAssistSchemaList(final UserDBDAO userDB) {
 		StringBuffer strSchemaList = new StringBuffer();
 		
-		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			try {
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
 					Map map = (Map)object;

@@ -32,6 +32,7 @@ import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.db.metadata.constants.PostgreSQLConstant;
 import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -93,8 +94,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 //						if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
 						// oracle 일 경우 locale 설정 
 						try { 
-							if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
-									userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+							if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 								DriverManager.setLoginTimeout(10);
 								if(userDB.getLocale() != null && !"".equals(userDB.getLocale())) {
 									Locale.setDefault(new Locale(userDB.getLocale()));
@@ -184,25 +184,20 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		}
 		
 		// set keyword
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP) {
 			// not support keyword http://sqlite.org/lang_keywords.html
 			tadpoleMetaData.setKeywords(StringUtils.join(SQLConstants.QUOTE_SQLITE_KEYWORDS, ","));
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		} else if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP || userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
 			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MYSQL_KEYWORDS, ",") + "," + dbMetadata;
 			tadpoleMetaData.setKeywords(strFullKeywords);
 		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			// not support this method
 			tadpoleMetaData.setKeywords("");
-		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT
-		) {
+		} else if(userDB.getDBGroup() == DBGroupDefine.MSSQL_GROUP) {
 			String strFullKeywords = StringUtils.join(SQLConstants.QUOTE_MSSQL_KEYWORDS, ",") + "," + metaData.getSQLKeywords();
 			tadpoleMetaData.setKeywords(strFullKeywords);
 			
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		} else if(userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP) {
 			String strFullKeywords = StringUtils.join(PostgreSQLConstant.QUOTE_POSTGRES_KEYWORDS, ",") + "," + metaData.getSQLKeywords();
 			tadpoleMetaData.setKeywords(strFullKeywords);
 		} else {

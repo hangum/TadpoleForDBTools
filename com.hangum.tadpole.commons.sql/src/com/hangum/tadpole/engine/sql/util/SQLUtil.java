@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -185,11 +185,10 @@ public class SQLUtil {
 
 		// 주석제거.
 		// oracle, tibero, altibase은 힌트가 주석 문법을 쓰므로 주석을 삭제하지 않는다.
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
-				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
+		
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()
+				|| DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()
+				|| DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()
 		) {
 			// ignore code
 		} else {
@@ -230,7 +229,7 @@ public class SQLUtil {
 		//
 		// mssql일 경우 시스템 테이블 스키서부터 "가 붙여 있는 경우 "가 있으면 []을 양쪽에 붙여 줍니다. --;;
 		//
-		if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+		if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			if(StringUtils.contains(name, "\"")) {
 				return name = String.format("[%s]", name);
 			}

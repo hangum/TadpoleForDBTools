@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 
@@ -42,7 +42,7 @@ public class DataTypeValidate {
 		type = type.toLowerCase();
 		if(logger.isDebugEnabled()) logger.debug("[type]" + type + "[value]" + value);
 				
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			if(type.equals("datetime") || type.indexOf("timestamp") >= 0) {
 				return strToData(value);
 			}
@@ -50,7 +50,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 			
-		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			
 			if(type.equals("date") || type.equals("timestamp")) {
 				return strToData(value);
@@ -59,7 +59,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 			
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			
 			if(type.equals("date") || type.equals("datetime")) {
 				return strToData(value);
@@ -68,7 +68,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 		
-		} else if(DBDefine.CUBRID_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 			
 			if(type.equals("date") || type.equals("datetime")) {
 				return strToData(value);
@@ -77,7 +77,7 @@ public class DataTypeValidate {
 				return strToNumber(value);
 			}
 			
-		} else if(DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 			if(type.equals("java.lang.Double")) {
 				return strToNumber(value);
 			} else if(type.equals("java.lang.Integer")) {

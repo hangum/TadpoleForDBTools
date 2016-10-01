@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.Messages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.DBInfoDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -56,15 +56,13 @@ public class ProcedureExecuterManager {
 	 * @throws Exception
 	 */
 	public ProcedureExecutor getExecuter() throws Exception {
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ) {
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			return new OracleProcedureExecuter(procedureDAO, userDB);
-		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			return new MSSQLProcedureExecuter(procedureDAO, userDB);
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			return new MySqlProcedureExecuter(procedureDAO, userDB);
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			return new PostgreSQLProcedureExecuter(procedureDAO, userDB);
 		} else {
 			throw new Exception(Messages.get().ProcedureExecuterManager_0);
@@ -103,7 +101,7 @@ public class ProcedureExecuterManager {
 			return false;
 		}
 		
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			double dbVersion = 0.0;
 			try {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);				

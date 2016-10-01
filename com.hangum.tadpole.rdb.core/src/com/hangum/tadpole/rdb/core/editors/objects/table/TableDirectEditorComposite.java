@@ -56,6 +56,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -371,9 +372,9 @@ public class TableDirectEditorComposite extends Composite {
 	private void runSQLSelect(String strWhere, String strOrderBy) throws Exception {
 		String requestQuery = "SELECT "; //$NON-NLS-1$
 		
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			requestQuery += " rowid, "; //$NON-NLS-1$
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			requestQuery += " ctid, "; //$NON-NLS-1$
 		}
 		List<TableColumnDAO> tmpTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDao);
@@ -565,11 +566,10 @@ public class TableDirectEditorComposite extends Composite {
 				
 		int isUpdateed = IDialogConstants.CANCEL_ID;
 		if(isUpdateOrDelete) {
-			DBDefine selectDB = userDB.getDBDefine();
-			if(selectDB == DBDefine.SQLite_DEFAULT || 
-				selectDB == DBDefine.CUBRID_DEFAULT ||
-				selectDB == DBDefine.MSSQL_DEFAULT ||
-				selectDB == DBDefine.MSSQL_8_LE_DEFAULT) {
+			DBGroupDefine selectDBGroup = userDB.getDBGroup();
+			if(DBGroupDefine.SQLITE_GROUP == selectDBGroup 
+				|| DBGroupDefine.CUBRID_GROUP == selectDBGroup 
+				|| DBGroupDefine.MSSQL_GROUP == selectDBGroup ) {
 				
 				DirectChangeDialog dialog = new DirectChangeDialog(getShell(), Messages.get().TableDirectEditorComposite_17, strShowEditor);
 				isUpdateed = dialog.open();
@@ -715,9 +715,9 @@ public class TableDirectEditorComposite extends Composite {
 		 * pgsql 은 cid 로 처리합니다.
 		 * 
 		 */
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			strWhere = " rowid = '" + orgRs.get(1) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-		} else if( userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			strWhere = " ctid = '" + orgRs.get(1) + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			if(!primaryKeyListIndex.isEmpty()) {
@@ -755,7 +755,7 @@ public class TableDirectEditorComposite extends Composite {
 		String deleteStmt = "DELETE FROM " + tableDao.getFullName(); //$NON-NLS-1$
 		deleteStmt += " WHERE  (" + getWhereMake(rowSeq, tmpRs) + ") "; //$NON-NLS-1$ //$NON-NLS-2$
 		
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			deleteStmt += "LIMIT 1"; //$NON-NLS-1$
 		}
 		
@@ -783,7 +783,7 @@ public class TableDirectEditorComposite extends Composite {
 		
 		updateStmt += " WHERE (" + getWhereMake(rowSeq, tmpRs) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			updateStmt += " LIMIT 1"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		

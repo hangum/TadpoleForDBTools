@@ -10,14 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.actions.connections;
 
-import org.eclipse.jface.action.IAction;
-
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.job.CreateJobDialog;
-import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
 
 /**
  * Oracle Database job create action

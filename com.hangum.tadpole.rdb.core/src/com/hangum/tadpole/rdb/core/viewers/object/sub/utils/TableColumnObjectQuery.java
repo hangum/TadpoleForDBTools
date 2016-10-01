@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -45,7 +46,7 @@ public class TableColumnObjectQuery {
 	 */
 	public static RequestResultDAO modifyColumnType(final UserDBDAO userDB, TableDAO tableDAO, TableColumnUpdateDAO metaDataDao) throws Exception {
 		RequestResultDAO reqReResultDAO = new RequestResultDAO();
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			// ALTER TABLE 테이블명 MODIFY 컬럼이름 새컬럼타입
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s", 
 					tableDAO.getSysName(), metaDataDao.getColumnName(), metaDataDao.getColumnName(), metaDataDao.getDataType());
@@ -69,7 +70,7 @@ public class TableColumnObjectQuery {
 	 */
 	public static RequestResultDAO renameColumn(final UserDBDAO userDB, TableDAO tableDAO, TableColumnUpdateDAO metaDataDao, String newColumnName) throws Exception {
 		RequestResultDAO reqReResultDAO = new RequestResultDAO();
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			//ALTER TABLE `dbtype` CHANGE `tesst` `cho` INT(11)  NULL  DEFAULT NULL;
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s", 
 												tableDAO.getSysName(), metaDataDao.getColumnName(), newColumnName, metaDataDao.getDataType()
@@ -103,11 +104,11 @@ public class TableColumnObjectQuery {
 	 */
 	public static RequestResultDAO deleteColumn(final UserDBDAO userDB, final List<TableColumnDAO> listTableColumnDao) throws Exception {
 		RequestResultDAO resultDao = null;
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()
 		) {
 			for(TableColumnDAO tableColumnDao: listTableColumnDao) {
 				//TODO: 테이블 컬럼명에 공백이나 특수문자가 있을경우 getSysName을 사용할 수 있도록 처리가 필요함.
@@ -224,7 +225,7 @@ public class TableColumnObjectQuery {
 		RequestResultDAO reqReResultDAO = new RequestResultDAO();
 		StringBuffer query = new StringBuffer();
 
-		if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			String strQuery = String.format("COMMENT ON COLUMN %s.%s IS %s", tableDAO.getSysName(), columnDAO.getField(), SQLUtil.makeQuote(columnDAO.getComment()));
 			
 			try{
@@ -265,7 +266,7 @@ public class TableColumnObjectQuery {
 			query.append(",'column', '").append(columnDAO.getSysName()).append("'");
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, query.toString());
 
-		} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		} else if (DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 
 			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s %s COMMENT %s", 
 											tableDAO.getFullName(),

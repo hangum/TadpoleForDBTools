@@ -57,6 +57,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
@@ -164,8 +165,7 @@ public class SessionListEditor extends EditorPart {
 		
 		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||
 				//userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT||
-				userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
 			createOracleExtensionUI();
 			mainSashForm.setWeights(new int[] {1, 1});
 		}
@@ -210,7 +210,7 @@ public class SessionListEditor extends EditorPart {
 				StructuredSelection ss = (StructuredSelection)tableViewerLocks.getSelection();
 				HashMap map = (HashMap)ss.getFirstElement();
 				if(null != map) {					
-					if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+					if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 						refreshLocksBlockList((String)map.get("lock_trx_id"), "");
 					}else{
 						refreshLocksBlockList((String)map.get("LOCK_ID1"), (String)map.get("LOCK_ID2"));
@@ -263,7 +263,7 @@ public class SessionListEditor extends EditorPart {
 	
 	private void createLocksTableColumn() {
 		TableViewColumnDefine[] tableColumnDef = null;
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 			this.btnAllLocks.setEnabled(true);
 			this.btnSessionLocks.setEnabled(true);
 
@@ -280,7 +280,7 @@ public class SessionListEditor extends EditorPart {
 				, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
 			};
-		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 			this.btnAllLocks.setEnabled(false);
 			this.btnSessionLocks.setEnabled(false);
 			
@@ -306,7 +306,7 @@ public class SessionListEditor extends EditorPart {
 	
 	private void createLocksBlockTableColumn() {
 		TableViewColumnDefine[] tableColumnDef = null;
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 			tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
 				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("BLOCK_TYPE", "Block Type", 80, SWT.CENTER) //$NON-NLS-1$
@@ -318,7 +318,7 @@ public class SessionListEditor extends EditorPart {
 				, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
 			};
-		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT||userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 				tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("trx_id", "Transaction ID", 80, SWT.RIGHT) //$NON-NLS-1$
 				, new TableViewColumnDefine("trx_state", "State", 80, SWT.LEFT) //$NON-NLS-1$
 				, new TableViewColumnDefine("trx_started", "Started", 80, SWT.LEFT) //$NON-NLS-1$
@@ -612,9 +612,9 @@ public class SessionListEditor extends EditorPart {
 		
 		try {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			if (userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			if (DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 				client.queryForObject("killProcess", Integer.parseInt(sl.getId())); //$NON-NLS-1$
-			} else if (userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT){
+			} else if (DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()){
 				 Map<String, String> parameters = new HashMap<String, String>(2);
 				 parameters.put("dbname", sl.getDb());
 				 parameters.put("session_id", sl.getId());
@@ -645,7 +645,7 @@ public class SessionListEditor extends EditorPart {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 
 			List<?> listSessionList = null;
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+			if (DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$
@@ -667,7 +667,7 @@ public class SessionListEditor extends EditorPart {
 				}else{
 					listSessionList = sqlClient.queryForList("sessionList"); //$NON-NLS-1$
 				}
-			} else if(userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			} else if(DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
 				int getSessionGrant = (Integer) sqlClient.queryForObject("getSessionGrant"); //$NON-NLS-1$
 				if (0 >= getSessionGrant){
 					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "In order to display a list of the session , you want to manage, and requires a authority.", null); //$NON-NLS-1$

@@ -42,7 +42,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.importexport.Activator;
@@ -302,7 +302,7 @@ public class MongoDBImportEditor extends EditorPart {
 			if(tabFolderQuery.getSelectionIndex() == 0) {
 				
 				DBImport dbImport = null;
-				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
+				if(targetDBDAO != null && DBGroupDefine.MONGODB_GROUP == sourceDBDAO.getDBGroup()) {
 					dbImport = new MongoDBCollectionToMongodBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
 				} else {
 					dbImport = new RDBTableToMongoDBImport(sourceDBDAO, targetDBDAO, tableColumnListComposite.getSelectListTables());
@@ -312,7 +312,7 @@ public class MongoDBImportEditor extends EditorPart {
 				
 				
 			} else if(tabFolderQuery.getSelectionIndex() == 1) {	
-				if(targetDBDAO != null && DBDefine.MONGODB_DEFAULT == sourceDBDAO.getDBDefine()) {
+				if(targetDBDAO != null && DBGroupDefine.MONGODB_GROUP == sourceDBDAO.getDBGroup()) {
 					MessageDialog.openInformation(null, CommonMessages.get().Confirm, "Not support MongoDB.");
 					return;
 				} else {

@@ -55,8 +55,6 @@ public class LoginDialogMessages {
 
 	public String ResetPassword;
 
-	public String AboutAction_TDB;
-
 	public String OpenUserManuel;
 
 	public String TemporayPassword;

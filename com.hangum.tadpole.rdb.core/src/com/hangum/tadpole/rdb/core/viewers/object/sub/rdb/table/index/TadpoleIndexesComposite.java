@@ -41,9 +41,8 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
@@ -130,11 +129,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
-				if (userDB.getDBDefine() == DBDefine.SQLite_DEFAULT 
-						//userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT 
-						//userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT
-				)  return;
-				
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) return;
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.
@@ -320,13 +315,14 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			HashMap<String, String> map = new HashMap<String, String>();
-			if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+
+			if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 				 map.put("user_name", 	StringUtils.substringBefore(tableDao.getName(), ".")); //$NON-NLS-1$
 				 map.put("table_name", 	StringUtils.substringAfter(tableDao.getName(), ".")); //$NON-NLS-1$
-			 } else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			 } else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 				 map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
 				 map.put("table_name", tableDao.getName());	 
-			 } else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			 } else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 				 map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
 				 map.put("table_name", tableDao.getName());	 
 			 } else {

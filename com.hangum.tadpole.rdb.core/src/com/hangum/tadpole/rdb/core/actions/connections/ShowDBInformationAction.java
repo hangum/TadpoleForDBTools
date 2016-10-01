@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosEditor;
 import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosInput;
@@ -47,17 +47,7 @@ public class ShowDBInformationAction extends AbstractQueryAction{
 	@Override
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
-			try {
-				RDBDBInfoEditorInput editorInput = new RDBDBInfoEditorInput(userDB);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, RDBDBInfosEditor.ID);
-			} catch (PartInitException e) {
-				logger.error("open DB Information editor", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-			}
-		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+		if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 			MongoDBInfosInput mongoInput = new MongoDBInfosInput(userDB, MongoDBInfosEditor.PAGES.INSTANCE_INFORMATION);
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mongoInput, MongoDBInfosEditor.ID);
@@ -67,6 +57,17 @@ public class ShowDBInformationAction extends AbstractQueryAction{
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
+		} else {
+			try {
+				RDBDBInfoEditorInput editorInput = new RDBDBInfoEditorInput(userDB);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, RDBDBInfosEditor.ID);
+			} catch (PartInitException e) {
+				logger.error("open DB Information editor", e); //$NON-NLS-1$
+				
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+			}
+			
 		}
 	}
 

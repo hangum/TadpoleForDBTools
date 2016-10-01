@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Table;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -155,7 +155,7 @@ public class TableColumnLIstComposite extends Composite {
 		this.userDB = userDB;
 
 		try {
-			if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
+			if(userDB != null && userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP) {
 				List<TableDAO> listCollection = MongoDBQuery.listCollection(userDB);
 				for (TableDAO tableDao : listCollection) {
 					listTables.add( new ModTableDAO(tableDao.getName()) );

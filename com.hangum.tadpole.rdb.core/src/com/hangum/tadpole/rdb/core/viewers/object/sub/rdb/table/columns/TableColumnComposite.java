@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Table;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
@@ -241,7 +241,7 @@ public class TableColumnComposite extends AbstractTableComposite {
 		
 		// menu	
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == getUserDB().getDBGroup()) {
 			menuMgr.add(tableColumnModifyAction);
 			menuMgr.add(tableColumnDeleteAction);
 			menuMgr.add(new Separator());

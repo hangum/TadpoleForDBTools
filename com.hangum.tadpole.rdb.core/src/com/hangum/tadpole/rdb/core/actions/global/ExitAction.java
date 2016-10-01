@@ -104,7 +104,11 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	 * </pre> 
 	 */
 	private void beforeLogoutAction() {
-		HttpSessionCollectorUtil.getInstance().sessionDestroyed(SessionManager.getEMAIL());
+		try {
+			HttpSessionCollectorUtil.getInstance().sessionDestroyed(SessionManager.getEMAIL());
+		} catch(Throwable t) {
+			if(logger.isDebugEnabled()) logger.error("user logout");
+		}
 		
 //		HttpServletResponse hsr = RWT.getResponse();
 //		try {

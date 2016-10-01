@@ -53,6 +53,7 @@ import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -156,23 +157,20 @@ public class TablesComposite extends DBInfosComposite {
 	 * table column head를 생성합니다.
 	 */
 	private void createColumn() {
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-		   userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
-		) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			String[] name = {"Name", "Engine", "Rows", "Auto Increment", "collation", "Size(MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			int[] size = {120, 70, 70, 100, 80, 80, 120, 220};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
 			
 			createColumn(name, size, align);
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
-				   userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			String[] name = {"Table Name","Tablespace Name","Pct Free","Ini Trans","Logging","Num Rows","Blocks","Avg Row Len","Degree","Sample Size","Last Analyzed","Partitioned","Buffer Pool","Row Movement","Duration","Compression","Dropped","Read Only","Temporary","Max Extents","Iot Type","Initial Extent","Next Extent","Min Extents"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			int[] size = {120, 120, 90, 90, 52 , 90, 90, 90, 80 , 90, 120, 52 , 68 , 72 , 100, 72 , 52 , 52 , 40 , 90, 88 , 90, 90, 90};
 			int[] align = {SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.LEFT ,SWT.RIGHT ,SWT.LEFT ,SWT.RIGHT ,SWT.RIGHT ,SWT.RIGHT};
 			
 			
 			createColumn(name, size, align);
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+		} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			String[] name = {"Table Name", "Owner", "Rows", "Tablespace Name", "Character Set", "Size (MB)", "Created", "Comment"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 			int[] size = {200, 70, 70, 200, 100, 80, 120, 250};
 			int[] align = {SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.LEFT, SWT.LEFT, SWT.RIGHT, SWT.RIGHT, SWT.LEFT};
@@ -213,11 +211,11 @@ public class TablesComposite extends DBInfosComposite {
 		
 		try {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 				HashMap<String, String>paramMap = new HashMap<String, String>();
 				paramMap.put("schema_name", userDB.getSchema()); //$NON-NLS-1$
 				listTableInform = sqlClient.queryForList("tableInformation", paramMap); //$NON-NLS-1$ //$NON-NLS-2$
-			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			} else if (DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 				HashMap<String, String>paramMap = new HashMap<String, String>();
 				paramMap.put("schema_name", userDB.getSchema()); //$NON-NLS-1$
 				listTableInform = sqlClient.queryForList("tableInformation", paramMap); //$NON-NLS-1$ //$NON-NLS-2$
@@ -330,9 +328,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 	public String getColumnText(Object element, int columnIndex) {
 		Map resultMap = (HashMap)element;
 		
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
-		) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			switch(columnIndex) {
 			case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
 			case 1: return ""+resultMap.get("ENGINE"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -343,8 +339,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 6: return ""+resultMap.get("CREATE_TIME"); //$NON-NLS-1$ //$NON-NLS-2$
 			case 7: return ""+resultMap.get("TABLE_COMMENT"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
-				   userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			switch(columnIndex) {
 			case 0 : return "" + resultMap.get("TABLE_NAME"      ); //$NON-NLS-1$ //$NON-NLS-2$
 			case 1 : return "" + resultMap.get("TABLESPACE_NAME" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -371,7 +366,7 @@ class TableInformLabelProvider extends LabelProvider implements ITableLabelProvi
 			case 22: return NumberFormatUtils.commaFormat("" + resultMap.get("NEXT_EXTENT"     )); //$NON-NLS-1$ //$NON-NLS-2$
 			case 23: return NumberFormatUtils.commaFormat("" + resultMap.get("MIN_EXTENTS"     )); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-		} else if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+		} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			switch(columnIndex) {
 				case 0: return ""+resultMap.get("TABLE_NAME"); //$NON-NLS-1$ //$NON-NLS-2$
 				case 1: return ""+resultMap.get("OWNER"); //$NON-NLS-1$ //$NON-NLS-2$

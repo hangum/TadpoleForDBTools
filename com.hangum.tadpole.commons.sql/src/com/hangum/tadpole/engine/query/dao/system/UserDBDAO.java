@@ -17,6 +17,7 @@ import java.util.List;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.TDBDBDAO;
@@ -177,6 +178,10 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
    
     public DBDefine getDBDefine() {
     	return DBDefine.getDBDefine(this);
+    }
+    
+    public DBGroupDefine getDBGroup() {
+    	return DBGroupDefine.getGroup(this.getDBDefine());
     }
     
 	public int getSeq() {

@@ -21,7 +21,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
@@ -63,7 +63,7 @@ public class FindEditorAndWriteQueryUtil {
 	 */
 	public static void run(UserDBDAO userDB, String strObjectName, String strScript, boolean isNewEditor, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		
-		if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
+		if(userDB != null && DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 			newMongoDBEditorOpen(userDB, strScript);
 		} else {
 

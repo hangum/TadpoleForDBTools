@@ -21,7 +21,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
@@ -56,7 +56,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-		if (userDB.getDBDefine() != DBDefine.ORACLE_DEFAULT && userDB.getDBDefine() != DBDefine.TIBERO_DEFAULT) return;
+		if (DBGroupDefine.ORACLE_GROUP != userDB.getDBGroup()) return;
 		
 		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {			
 			

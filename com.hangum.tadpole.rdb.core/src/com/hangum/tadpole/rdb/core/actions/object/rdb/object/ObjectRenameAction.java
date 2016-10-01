@@ -95,7 +95,7 @@ class ObjectRenameValidator implements IInputValidator {
 		if(oldName.equals(newText)) {
 			return Messages.get().ObjectRenameValidator_0;
 		}
-		if(len < 2) return Messages.get().FileNameValidator_0;
+		if(len < 5) return Messages.get().FileNameValidator_0;
 				
 		return null;
 	}

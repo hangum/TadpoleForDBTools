@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -52,11 +52,11 @@ public class TDBDataHandler {
 		Map<String, String> mapParam = new HashMap<String, String>();
 		mapParam.put("db", userDB.getDb());
 		String strTableName = "";
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) strTableName = tableDao.getSysName();
 		else 												strTableName = tableDao.getName();
 		
 
-		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+		if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			mapParam.put("user", StringUtils.substringBefore(strTableName, "."));
 			mapParam.put("table", StringUtils.substringAfter(strTableName, "."));
 		} else {
@@ -64,9 +64,9 @@ public class TDBDataHandler {
 			mapParam.put("table", strTableName);
 		}
 		
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if("".equals(mapParam.get("schema")) || null == mapParam.get("schema")) {
 				mapParam.put("schema", "public");
 			}
@@ -77,7 +77,7 @@ public class TDBDataHandler {
 			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		}
 		
-		if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()){
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
 			try{
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$

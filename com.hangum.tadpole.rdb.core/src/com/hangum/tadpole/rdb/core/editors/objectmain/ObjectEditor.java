@@ -43,6 +43,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
@@ -281,9 +282,9 @@ public class ObjectEditor extends MainEditor {
 				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 					
-					if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					if(DBGroupDefine.MYSQL_GROUP == getUserDB().getDBGroup()) {
 						mysqlAfterProcess(reqResultDAO, reqQuery);
-					} else if(getUserDB().getDBDefine() == DBDefine.MSSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+					} else if(DBGroupDefine.MSSQL_GROUP == getUserDB().getDBGroup()) {
 						mssqlAfterProcess(reqResultDAO, reqQuery);
 					}
 					

@@ -18,6 +18,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -81,21 +82,19 @@ public class DDLScriptManager {
 	 * @throws Exception
 	 */
 	private void initRDBScript() throws Exception {
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			rdbScript = new SQLiteDDLScript(userDB, actionType);
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
 			rdbScript = new OracleDDLScript(userDB, actionType);
-		} else if(userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		} else if(DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
 			rdbScript = new TiberoDDLScript(userDB, actionType);
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			rdbScript = new PostgreSQLDDLScript(userDB, actionType);
-		} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			rdbScript = new MSSQL_8_LE_DDLScript(userDB, actionType);
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 			rdbScript = new MySqlDDLScript(userDB, actionType);
-		} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+		} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			rdbScript = new AltibaseDDLScript(userDB, actionType);
 		} else {
 			throw new Exception(Messages.get().ProcedureExecuterManager_0);

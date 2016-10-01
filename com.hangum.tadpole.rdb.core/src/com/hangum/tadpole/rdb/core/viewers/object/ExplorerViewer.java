@@ -45,6 +45,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
@@ -256,7 +257,7 @@ public class ExplorerViewer extends ViewPart {
 			viewComposite.filter(strSearchText);					
 		
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
+			if(userDB != null && DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 				mongoIndexComposite.filter(strSearchText);
 			}					
 		
@@ -364,7 +365,7 @@ public class ExplorerViewer extends ViewPart {
 		
 		/** schema list*/
 		comboSchema.removeAll();
-		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		if(userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP) {
 			try {
 				// 스키마 리스트를 초기화 시킨다.
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
@@ -376,7 +377,7 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
-		}else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		}else if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP){
 			
 			try {
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
@@ -391,7 +392,7 @@ public class ExplorerViewer extends ViewPart {
 				comboSchema.setItems( new String[]{userDB.getSchema()} );
 				throw e;
 			}
-		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		}else if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP){
 			try {
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
 					HashMap<String, String> mapData = (HashMap)object;
@@ -407,7 +408,7 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
-		}else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		}else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP) {
 		
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
@@ -463,6 +464,7 @@ public class ExplorerViewer extends ViewPart {
 	 * @param dbDefine Manager에서 선택된 object
 	 */
 	private void initObjectDetail(DBDefine dbDefine) {
+		
 		// sqlite
 		if (dbDefine == DBDefine.SQLite_DEFAULT) {
 			createTable();

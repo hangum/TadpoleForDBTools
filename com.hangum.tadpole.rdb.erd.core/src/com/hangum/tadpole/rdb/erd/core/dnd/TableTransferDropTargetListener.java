@@ -37,7 +37,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -216,7 +216,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				tableModel.setName(tableName);
 				tableModel.setDb(db);
 				
-				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 					tableModel.setComment("");
 				} else {
 					String tableComment = StringUtils.trimToEmpty(arryTable[2]);

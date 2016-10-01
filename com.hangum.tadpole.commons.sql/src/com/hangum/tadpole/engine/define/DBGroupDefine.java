@@ -44,8 +44,7 @@ public enum DBGroupDefine {
 	
 	private static final Logger logger = Logger.getLogger(DBGroupDefine.class);
 	
-	public DBGroupDefine getGroup(DBDefine dbDefine) {
-		
+	public static DBGroupDefine getGroup(DBDefine dbDefine) {
 		if(dbDefine == DBDefine.ORACLE_DEFAULT || dbDefine == DBDefine.TIBERO_DEFAULT) {
 			return ORACLE_GROUP;
 		} else if(dbDefine == DBDefine.MSSQL_DEFAULT || dbDefine == DBDefine.MSSQL_8_LE_DEFAULT) {
@@ -68,6 +67,5 @@ public enum DBGroupDefine {
 			return MONGODB_GROUP;
 		}
 	}
-	
 	
 }

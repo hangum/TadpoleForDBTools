@@ -38,7 +38,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.ResultSetToHTMLUtil;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -72,7 +72,7 @@ public class QueryUtils {
 	{
 		
 		// is tajo
-		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			logger.error("Not support TAJO.");
 		} else { 
 			
@@ -84,7 +84,7 @@ public class QueryUtils {
 				prepareStatement = javaConn.prepareStatement(strQuery);
 				
 				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
-				if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 					final String checkSQL = strQuery.trim().toUpperCase();
 					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
 						strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$

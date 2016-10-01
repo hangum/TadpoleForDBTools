@@ -45,7 +45,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -144,11 +144,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
-				if (userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ||
-						userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT ||
-						userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT
-				)  return;
-				
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup() || DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup())  return;
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.
@@ -249,7 +245,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			menuMgr.add(viewDDLAction);
 		}
 
-		if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}

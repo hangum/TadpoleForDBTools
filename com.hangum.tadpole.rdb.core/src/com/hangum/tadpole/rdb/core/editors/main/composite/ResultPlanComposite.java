@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -115,7 +115,7 @@ public class ResultPlanComposite extends Composite {
 		if(compositeQueryPlan != null && !compositeQueryPlan.getCompositeTail().getBtnPinSelection()) {
 			compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
 		} else {
-			if(rsDAO.getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || rsDAO.getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			if(DBGroupDefine.ORACLE_GROUP == rsDAO.getUserDB().getDBGroup()) {
 				compositeQueryPlan = new OraclePlanComposite(sashFormResult, SWT.BORDER);
 			} else {
 				compositeQueryPlan = new GeneralPlanComposite(sashFormResult, SWT.BORDER);	

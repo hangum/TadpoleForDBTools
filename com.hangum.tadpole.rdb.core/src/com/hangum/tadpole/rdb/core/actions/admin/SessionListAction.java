@@ -24,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -56,14 +56,13 @@ public class SessionListAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT  ||
-				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT 	||
-				userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT
-		) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup() ||
+			DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
+			DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup() ||
+			DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||
+			DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) 
+		{
+			
 			try {
 				SessionListEditorInput sleInput = new SessionListEditorInput(userDB);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, SessionListEditor.ID);

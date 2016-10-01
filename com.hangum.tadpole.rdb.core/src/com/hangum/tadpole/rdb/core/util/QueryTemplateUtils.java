@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.template.AltibaseDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.CubridDMLTemplate;
@@ -42,9 +43,7 @@ public class QueryTemplateUtils {
 	 */
 	public static String getQuery(UserDBDAO userDB, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		String defaultStr = "";
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || 
-				DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()
-		) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -62,8 +61,7 @@ public class QueryTemplateUtils {
 				defaultStr =  MySQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() ||
-				DBDefine.TIBERO_DEFAULT ==  userDB.getDBDefine()
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()
 		) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -88,7 +86,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.LINK) {
 				defaultStr =  OracleDMLTemplate.TMP_CREATE_LINK_STMT;
 			}
-		} else if(DBDefine.SQLite_DEFAULT ==  userDB.getDBDefine()) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -100,7 +98,7 @@ public class QueryTemplateUtils {
 				defaultStr =  SQLiteDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 			
-		} else if(DBDefine.CUBRID_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
@@ -114,7 +112,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
@@ -128,17 +126,15 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine() || 
-				DBDefine.HIVE2_DEFAULT == userDB.getDBDefine()
-				) {
+		} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  HIVEDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 				defaultStr =  HIVEDMLTemplate.TMP_CREATE_VIEW_STMT;
 			}
-		} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			defaultStr =  TAJODMLTemplate.TMP_CREATE_TABLE_STMT;
-		} else if(DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 		
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_TABLE_STMT;
@@ -155,7 +151,7 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
 				defaultStr =  MSSQLDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
-		} else if(DBDefine.ALTIBASE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 				defaultStr =  AltibaseDMLTemplate.TMP_CREATE_TABLE_STMT;
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {

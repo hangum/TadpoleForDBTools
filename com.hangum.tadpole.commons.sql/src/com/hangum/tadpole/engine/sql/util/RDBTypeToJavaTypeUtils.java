@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -171,7 +172,7 @@ public class RDBTypeToJavaTypeUtils {
 	public static String[] supportParameterTypes(UserDBDAO userDB) {
 		if (DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
 			return oracleParams;
-		}else if (DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+		}else if (DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			return mssqlParams;
 		}else {
 			return etcParams;

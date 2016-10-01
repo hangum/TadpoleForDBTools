@@ -16,7 +16,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -52,9 +52,7 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 		if(logger.isDebugEnabled()) logger.debug("ObjectExecuteProcedureAction run...");
 
 		ProcedureFunctionDAO procedureDAO;
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT 
-				|| userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT 
-		) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup() || DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
 			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
 			pm.isExecuted(procedureDAO, userDB);
@@ -66,7 +64,7 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
-		} else if((userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ) && actionType == OBJECT_TYPE.FUNCTIONS) {
+		} else if((DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) && actionType == OBJECT_TYPE.FUNCTIONS) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
 			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
 			pm.isExecuted(procedureDAO, userDB);
@@ -78,7 +76,7 @@ public class ObjectExecuteProcedureAction extends AbstractObjectSelectAction {
 			} catch(Exception e) {
 				logger.error("procedure execute", e);
 			}
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			procedureDAO = (ProcedureFunctionDAO) selection.getFirstElement();
 			ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
 			pm.isExecuted(procedureDAO, userDB);

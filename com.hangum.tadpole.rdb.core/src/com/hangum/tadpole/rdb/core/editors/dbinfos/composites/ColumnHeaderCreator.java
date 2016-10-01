@@ -17,7 +17,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 public class ColumnHeaderCreator {
 
 	public ColumnHeaderCreator() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public static void createColumnHeader(TableViewer tableViewer, ObjectComparator tableComparator, TableViewColumnDefine[] colDef) {

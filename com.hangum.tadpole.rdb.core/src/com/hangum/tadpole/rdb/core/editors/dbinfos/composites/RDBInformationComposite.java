@@ -33,6 +33,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.dao.KeyValueDAO;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -96,7 +97,7 @@ public class RDBInformationComposite extends DBInfosComposite {
 		}
 		
 		// db information
-		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+		if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
 			rdbInfo();
 		}
 		
@@ -105,7 +106,7 @@ public class RDBInformationComposite extends DBInfosComposite {
 		listInfo.add(new KeyValueDAO(Messages.get().DisplayName, 	userDB.getDisplay_name()));
 		
 		listInfo.add(new KeyValueDAO(Messages.get().JDBCURL, 	userDB.getUrl(userDB.getRole_id())));
-		if(userDB.getDBDefine() != DBDefine.SQLite_DEFAULT) {
+		if(DBGroupDefine.SQLITE_GROUP != userDB.getDBGroup()) {
 			listInfo.add(new KeyValueDAO("Host/IP", 		userDB.getHost(userDB.getRole_id()) + "/" + userDB.getPort(userDB.getRole_id()))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		listInfo.add(new KeyValueDAO(Messages.get().Database, 	userDB.getDb(userDB.getRole_id())));
@@ -116,7 +117,7 @@ public class RDBInformationComposite extends DBInfosComposite {
 		listInfo.add(new KeyValueDAO(Messages.get().ReadOnly, 	userDB.getIs_readOnlyConnect()));
 
 		// 몽고디비는 없으므로.. 
-		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+		if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
 			listInfo.add(new KeyValueDAO(Messages.get().AutoCommit,		userDB.getIs_autocommit()));
 			listInfo.add(new KeyValueDAO(Messages.get().Profile, 		userDB.getIs_profile()));
 			listInfo.add(new KeyValueDAO(Messages.get().RDBInformationComposite_17, 	userDB.getQuestion_dml()));
