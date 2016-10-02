@@ -23,6 +23,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -41,6 +44,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.agens.AgensVertexDAO;
+import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -51,6 +55,7 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreato
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -109,19 +114,19 @@ public class TadpoleVertexComposite extends AbstractObjectComposite {
 
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		vertexListViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
-//		vertexListViewer.addDoubleClickListener(new IDoubleClickListener() {
-//			public void doubleClick(DoubleClickEvent event) {
-//				try {
-//					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-//					if (null != is) {
-//						OracleSequenceDAO sequenceDAO = (OracleSequenceDAO) is.getFirstElement();
-//						FindEditorAndWriteQueryUtil.run(userDB, "SELECT " + sequenceDAO.getFullName() + ".NEXTVAL FROM DUAL;" , PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE);
-//					}
-//				} catch (Exception e) {
-//					logger.error("create sequence", e);
-//				}
-//			}
-//		});
+		vertexListViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				try {
+					IStructuredSelection is = (IStructuredSelection) event.getSelection();
+					if (null != is) {
+						AgensVertexDAO vertexDAO = (AgensVertexDAO) is.getFirstElement();
+						FindEditorAndWriteQueryUtil.run(userDB, "Match (n: " + vertexDAO.getLabname() + ") return n;", PublicTadpoleDefine.OBJECT_TYPE.VERTEX);
+					}
+				} catch (Exception e) {
+					logger.error("create vertex statement", e);
+				}
+			}
+		});
 
 		Table tableTableList = vertexListViewer.getTable();
 		tableTableList.setLinesVisible(true);

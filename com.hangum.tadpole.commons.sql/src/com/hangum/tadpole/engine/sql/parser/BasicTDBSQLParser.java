@@ -47,6 +47,8 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	private static final String SQLITE_PATTERN_STATEMENT = "";
 	private static final String CUBRID_PATTERN_STATEMENT = "";
 	
+	private static final String AGENSGRAPH_PATTERN_STATEMENT = "|^MATCH.*";
+	
 	@Override
 	public QueryInfoDTO parser(String sql) {
 		String strCheckSQL = SQLUtil.removeComment(sql);
@@ -61,6 +63,7 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 						+ PGSQL_PATTERN_STATEMENT
 						+ SQLITE_PATTERN_STATEMENT
 						+ CUBRID_PATTERN_STATEMENT
+						+ AGENSGRAPH_PATTERN_STATEMENT
 				, ParserDefine.PATTERN_FLAG
 			);
 		

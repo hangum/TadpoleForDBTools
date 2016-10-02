@@ -58,6 +58,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
@@ -397,9 +398,12 @@ public class ResultSetComposite extends Composite {
 			executeErrorProgress(reqQuery, e, e.getMessage());
 			return false;
 		}
-		
-		// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
-		if(!ifIsParameterQuery(reqQuery)) return false;
+	
+		// agens graph는 preparement 가 없습니다.
+		if(DBDefine.AGENSGRAPH_DEFAULT != getUserDB().getDBDefine()){
+			// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
+			if(!ifIsParameterQuery(reqQuery)) return false;
+		}
 		
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
 		controlProgress(true);
@@ -819,7 +823,7 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * prepared statment 로 실행한다.
+	 * prepared statement 로 실행한다.
 	 * 
 	 * @param preparedStatement
 	 * @param statementParameter
