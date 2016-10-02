@@ -152,6 +152,19 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * vertex 최신 정보로 갱신.
+	 */
+	protected void refreshVertex() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshVertex(true, "");
+	}
+	
+	protected void refreshEdge() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshEdge(true, "");
+	}
+	
+	/**
 	 * Indexes 최신정보로 갱신
 	 */
 	protected void refreshIndexes() {

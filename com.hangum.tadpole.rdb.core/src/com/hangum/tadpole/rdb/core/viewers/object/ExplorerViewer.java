@@ -55,6 +55,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.edge.TadpoleEdgeComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.vertex.TadpoleVertexComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
@@ -121,6 +122,7 @@ public class ExplorerViewer extends ViewPart {
 	
 	// agens graph
 	private TadpoleVertexComposite agensVertexComposite = null;
+	private TadpoleEdgeComposite agensEdgeComposite = null;
 
 	public ExplorerViewer() {
 		super();
@@ -572,6 +574,7 @@ public class ExplorerViewer extends ViewPart {
 			
 			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
 				createVertex();
+				createEdge();
 				
 				arrayStructuredViewer = new StructuredViewer[] { 
 						tableComposite.getTableListViewer(), 
@@ -582,7 +585,8 @@ public class ExplorerViewer extends ViewPart {
 						procedureComposite.getTableViewer(), 
 						functionCompostite.getTableviewer(),
 						triggerComposite.getTableViewer(),
-						agensVertexComposite.getTableviewer()
+						agensVertexComposite.getTableviewer(),
+						agensEdgeComposite.getTableviewer()
 					};
 			} else {
 				
@@ -671,7 +675,9 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
 			refreshJava(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VERTEX.name())) {
-			refreshAgensVertex(isRefresh, strObjectName);
+			refreshVertex(isRefresh, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.EDGE.name())) {
+			refreshEdge(isRefresh, strObjectName);
 		}
 		filterText();
 		
@@ -839,6 +845,14 @@ public class ExplorerViewer extends ViewPart {
 		agensVertexComposite = new TadpoleVertexComposite(getSite(), tabFolderObject, userDB);
 		agensVertexComposite.initAction();
 	}
+	
+	/**
+	 * agens edge
+	 */
+	private void createEdge() {
+		agensEdgeComposite = new TadpoleEdgeComposite(getSite(), tabFolderObject, userDB);
+		agensEdgeComposite.initAction();
+	}
 
 	/**
 	 * Job 정보를 최신으로 리프레쉬합니다.
@@ -897,9 +911,24 @@ public class ExplorerViewer extends ViewPart {
 		tableComposite.getTriggerComposite().refreshTrigger(userDB, boolRefresh, strObjectName);
 	}
 	
-	public void refreshAgensVertex(boolean boolRefresh, String strObjectName) {
+	/**
+	 * vertex 정보를 최신으로 갱신 합니다.
+	 * @param boolRefresh
+	 * @param strObjectName
+	 */
+	public void refreshVertex(boolean boolRefresh, String strObjectName) {
 		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.VERTEX, userDB.getDefaultSchemanName(), null);
 		agensVertexComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
+	}
+	
+	/**
+	 * edge 정보를 최신으로 갱신 합니다.
+	 * @param boolRefresh
+	 * @param strObjectName
+	 */
+	public void refreshEdge(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.EDGE, userDB.getDefaultSchemanName(), null);
+		agensEdgeComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**
