@@ -90,7 +90,7 @@ public class ResultSetUtils {
 							while ((cnum = is.read(cbuf)) != -1) sb.append(cbuf, 0 ,cnum);
 						} // if
 						tmpRow.put(intShowColIndex, sb.toString());
-					} else if(java.sql.Types.BLOB == colType) {
+					} else if(java.sql.Types.BLOB == colType || java.sql.Types.STRUCT == colType) {
 						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 					}else{
 						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
