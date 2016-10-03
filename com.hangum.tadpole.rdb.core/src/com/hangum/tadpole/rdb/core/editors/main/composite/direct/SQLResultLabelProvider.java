@@ -201,11 +201,11 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	 * @return
 	 */
 	private static String addComma(Object value) {
-		if(value==null) return null;//GetPreferenceGeneral.getResultNull();
+		if(value==null) return null;
 		
 		try{
 			DecimalFormat nf = new DecimalFormat("###,###.#############");
-			return nf.format(Double.parseDouble(value.toString()));
+			return nf.format(Long.parseLong(value.toString()));
 		} catch(Exception e){
 			// ignore exception
 		}
