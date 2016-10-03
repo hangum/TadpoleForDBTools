@@ -46,7 +46,8 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	private static final String PGSQL_PATTERN_STATEMENT = "";
 	private static final String SQLITE_PATTERN_STATEMENT = "";
 	private static final String CUBRID_PATTERN_STATEMENT = "";
-	
+
+	/** agens graph statement */
 	private static final String AGENSGRAPH_PATTERN_STATEMENT = "|^MATCH.*";
 	
 	@Override
