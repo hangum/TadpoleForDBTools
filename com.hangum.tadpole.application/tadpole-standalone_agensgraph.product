@@ -44,6 +44,7 @@
    </vm>
 
    <plugins>
+      <plugin id="com.bitnine.tadpole.graph.core"/>
       <plugin id="com.hangum.tadpole.ace.editor.core"/>
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.applicattion.start"/>
