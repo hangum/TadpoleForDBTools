@@ -20,7 +20,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -76,14 +76,12 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<TableDAO> getViewList(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ) return new ArrayList<TableDAO>();
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) return new ArrayList<TableDAO>();
 		
 		List<TableDAO> listTblView = new ArrayList<TableDAO>();
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			List<TableDAO> listView = sqlClient.queryForList("viewList", userDB.getDb());
 			// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 			StringBuffer strViewList = new StringBuffer();
@@ -94,7 +92,7 @@ public class DBSystemSchema {
 			userDB.setTableListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
 			return listView;
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			List<HashMap<String,String>> listView = sqlClient.queryForList("viewList", userDB.getSchema());
 			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 			// 2. keyword 를 만든다.
@@ -113,7 +111,7 @@ public class DBSystemSchema {
 			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
 			return listTblView; 
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			List<HashMap<String,String>> listView = sqlClient.queryForList("viewList", userDB.getSchema());
 			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 			// 2. keyword 를 만든다.
@@ -164,7 +162,7 @@ public class DBSystemSchema {
 		List<TableColumnDAO> showViewColumns = new ArrayList<TableColumnDAO>();
 		
 		Map<String, String> param = new HashMap<String, String>();
-		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+		if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			param.put("user", StringUtils.substringBefore(tableDao.getName(), "."));
 			param.put("table", StringUtils.substringAfter(tableDao.getName(), "."));
 		} else {
@@ -193,18 +191,16 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<ProcedureFunctionDAO> getFunctionList(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.SQLite_DEFAULT 
-		) return new ArrayList<ProcedureFunctionDAO>();
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup())  {
+			return new ArrayList<ProcedureFunctionDAO>();
+		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		List<ProcedureFunctionDAO> listFunction;
 		
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 			listFunction = sqlClient.queryForList("functionList", userDB.getSchema()); //$NON-NLS-1$
-		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 			listFunction = sqlClient.queryForList("functionList", userDB.getSchema()); //$NON-NLS-1$
 		}else{
 			listFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
@@ -231,17 +227,15 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<ProcedureFunctionDAO> getProcedure(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.SQLite_DEFAULT 
-		) return new ArrayList<ProcedureFunctionDAO>();
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup())  {
+			return new ArrayList<ProcedureFunctionDAO>();
+		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		List<ProcedureFunctionDAO> listProcedure;
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
-		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
 		}else{
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
@@ -263,20 +257,17 @@ public class DBSystemSchema {
 	public static List<TriggerDAO> getTrigger(final UserDBDAO userDB, String strObjectName) throws TadpoleSQLManagerException, SQLException {
 		List<TriggerDAO> triggerList = null;
 		
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
-		) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) { 
 			triggerList = new ArrayList<TriggerDAO>();
 		}else {
 		
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 	
 			HashMap<String, String>paramMap = new HashMap<String, String>();
-			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
 				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
-			}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
 				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
 			}else{
@@ -302,10 +293,9 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<TriggerDAO> getAllTrigger(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
-		) return new ArrayList<TriggerDAO>();
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) { 
+			return new ArrayList<TriggerDAO>();
+		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		List<TriggerDAO> triggerList = sqlClient.queryForList("triggerAllList", userDB.getDb()); //$NON-NLS-1$

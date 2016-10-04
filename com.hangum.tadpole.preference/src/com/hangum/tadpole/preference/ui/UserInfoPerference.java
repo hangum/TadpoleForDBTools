@@ -306,9 +306,10 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			if(comboLanguage.getData(comboLanguage.getText()) != null) {
 				locale = (Locale)comboLanguage.getData(comboLanguage.getText());	
 			}
-			if(StringUtils.length(pass) < 5) {
+			
+			if(!(StringUtils.length(pass) >= 7 && StringUtils.length(pass) <= 30)) {
 				textPassword.setFocus();
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_14);
+				MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().UserInfoPerference_3, "7", "30"));			 //$NON-NLS-1$
 				return false;
 			}
 			

@@ -313,8 +313,6 @@ public class AdminSQLAuditEditor extends EditorPart {
 			}
 		});
 		
-
-		
 		createTableHistoryColumn();
 		
 		compositeTail = new Composite(compositeBody, SWT.NONE);

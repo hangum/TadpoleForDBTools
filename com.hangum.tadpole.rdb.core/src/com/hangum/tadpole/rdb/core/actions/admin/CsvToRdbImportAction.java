@@ -20,7 +20,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.core.dialogs.CsvToRDBImportDialog;
@@ -44,7 +44,7 @@ public class CsvToRdbImportAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
 		
-		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+		if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), CommonMessages.get().Information, Messages.get().MainEditor_DoesnotSupport);
 		} else {
 			boolean isPossible = false;

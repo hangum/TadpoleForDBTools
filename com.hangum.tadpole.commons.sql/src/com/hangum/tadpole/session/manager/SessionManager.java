@@ -104,7 +104,6 @@ public class SessionManager {
 	 * @param managerDTO
 	 */
 	public static void setManagerDBList(List<ManagerListDTO> listManagerDTO) {
-		if(logger.isDebugEnabled()) logger.debug("========> " + listManagerDTO.size());
 		HttpSession sStore = RWT.getRequest().getSession();
 		sStore.setAttribute(NAME.ALL_MANAGER_DB_LIST.name(), listManagerDTO);
 	}

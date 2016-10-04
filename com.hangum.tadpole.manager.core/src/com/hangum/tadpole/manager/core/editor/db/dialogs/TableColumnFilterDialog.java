@@ -28,7 +28,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
-import com.hangum.tadpole.manager.core.Messages;
 
 /**
  * table column filter dialog
@@ -146,9 +145,6 @@ public class TableColumnFilterDialog extends Dialog {
 		}
 		
 		// later check real table name
-		
-		// 
-		
 		returnObjectDao.setType("SELECT");
 		returnObjectDao.setAccess_seq(dbAccessDetail.getSeq());
 		returnObjectDao.setObj_name(textTableName.getText());

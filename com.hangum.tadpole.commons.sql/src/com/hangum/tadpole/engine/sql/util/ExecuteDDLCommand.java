@@ -24,7 +24,7 @@ import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_STATUS;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
@@ -105,7 +105,7 @@ public class ExecuteDDLCommand {
 				
 				stmt = javaConn.createStatement();
 				
-				if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+				if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 					dbmsOutput = new OracleDbmsOutputUtil( javaConn );
 					dbmsOutput.enable( 1000000 ); 
 					resultMap.put("result", stmt.execute(strSQL));

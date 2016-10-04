@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -130,7 +130,7 @@ public class MessageComposite extends Composite {
 			}
 			
 			// sqlite 는 상태,에러코드가 없다.--;;
-			if(userDBDAO.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			if(DBGroupDefine.SQLITE_GROUP == userDBDAO.getDBGroup()) {
 				strSearchError = throwable.getMessage();
 			}
 			

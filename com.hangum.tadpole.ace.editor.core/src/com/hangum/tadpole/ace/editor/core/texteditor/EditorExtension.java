@@ -20,7 +20,7 @@ import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionServ
 import com.hangum.tadpole.ace.editor.core.utils.TadpoleEditorUtils;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -93,9 +93,9 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	protected String findDefaultConstant() {
 		String strConstant = "";
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			strConstant = "by|bool|boolean|bit|blob|decimal|double|enum|float|long|longblob|longtext|medium|mediumblob|mediumint|mediumtext|time|timestamp|tinyblob|tinyint|tinytext|text|bigint|int|int1|int2|int3|int4|int8|integer|float|float4|float8|double|char|varbinary|varchar|varcharacter|precision|date|datetime|year|unsigned|signed|numeric";
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			strConstant = "getprotobynumber|getprotobyname|getservbyname|gethostbyaddr|" +
 			         "gethostbyname|getservbyport|getnetbyaddr|getnetbyname|getsockname|" +
 			         "getpeername|setpriority|getprotoent|setprotoent|getpriority|" +
@@ -118,10 +118,10 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			         "keys|getc|kill|seek|sqrt|send|wait|rand|tied|read|time|exec|recv|" +
 			         "eof|chr|int|ord|exp|pos|pop|sin|log|abs|oct|hex|tie|cos|vec|END|ref|" +
 			         "map|die|uc|lc|do";
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			strConstant = "typeof|int|integer|tinyint|smallint|mediumint|bigint|unsigned|big|int|int2|int8|character|varchar|varying|character|nchar|native||nvarchar|text|clob|blob|real|double|precision|float|numberic|decimal|boolean|date|datetime";
 		// 테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
-		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			strConstant =  "OPENDATASOURCE|OPENQUERY|OPENROWSET|OPENXML|" +
 			        "AVG|CHECKSUM_AGG|COUNT|COUNT_BIG|GROUPING|GROUPING_ID|MAX|MIN|STDEV|STDEVP|SUM|VAR|VARP|" +
 			        "DENSE_RANK|NTILE|RANK|ROW_NUMBER" +
@@ -151,9 +151,9 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	protected String findDefaultFunction() {
 		String strFunction = "";
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			strFunction = "by|bool|boolean|bit|blob|decimal|double|enum|float|long|longblob|longtext|medium|mediumblob|mediumint|mediumtext|time|timestamp|tinyblob|tinyint|tinytext|text|bigint|int|int1|int2|int3|int4|int8|integer|float|float4|float8|double|char|varbinary|varchar|varcharacter|precision|date|datetime|year|unsigned|signed|numeric";
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			strFunction = "getprotobynumber|getprotobyname|getservbyname|gethostbyaddr|" +
 			         "gethostbyname|getservbyport|getnetbyaddr|getnetbyname|getsockname|" +
 			         "getpeername|setpriority|getprotoent|setprotoent|getpriority|" +
@@ -176,10 +176,10 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			         "keys|getc|kill|seek|sqrt|send|wait|rand|tied|read|time|exec|recv|" +
 			         "eof|chr|int|ord|exp|pos|pop|sin|log|abs|oct|hex|tie|cos|vec|END|ref|" +
 			         "map|die|uc|lc|do";
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			strFunction = "typeof|int|integer|tinyint|smallint|mediumint|bigint|unsigned|big|int|int2|int8|character|varchar|varying|character|nchar|native||nvarchar|text|clob|blob|real|double|precision|float|numberic|decimal|boolean|date|datetime";
 		// 테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
-		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			strFunction =  "OPENDATASOURCE|OPENQUERY|OPENROWSET|OPENXML|" +
 			        "AVG|CHECKSUM_AGG|COUNT|COUNT_BIG|GROUPING|GROUPING_ID|MAX|MIN|STDEV|STDEVP|SUM|VAR|VARP|" +
 			        "DENSE_RANK|NTILE|RANK|ROW_NUMBER" +
@@ -208,11 +208,11 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 	 */
 	protected String findDefaultKeyword() {
 		String strKeyword = "";
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			strKeyword = "alter|and|as|asc|between|count|create|delete|desc|distinct|drop|from|having|in|insert|into|is|join|like|not|on|or|order|select|set|table|union|update|values|where" + 
 						"|accessible|action|add|after|algorithm|all|analyze|asensitive|at|authors|auto_increment|autocommit|avg|avg_row_length|before|binary|binlog|both|btree|cache|call|cascade|cascaded|case|catalog_name|chain|change|changed|character|check|checkpoint|checksum|class_origin|client_statistics|close|coalesce|code|collate|collation|collations|column|columns|comment|commit|committed|completion|concurrent|condition|connection|consistent|constraint|contains|continue|contributors|convert|cross|current_date|current_time|current_timestamp|current_user|cursor|data|database|databases|day_hour|day_microsecond|day_minute|day_second|deallocate|dec|declare|default|delay_key_write|delayed|delimiter|des_key_file|describe|deterministic|dev_pop|dev_samp|deviance|directory|disable|discard|distinctrow|div|dual|dumpfile|each|elseif|enable|enclosed|end|ends|engine|engines|enum|errors|escape|escaped|even|event|events|every|execute|exists|exit|explain|extended|fast|fetch|field|fields|first|flush|for|force|foreign|found_rows|full|fulltext|function|general|global|grant|grants|group|groupby_concat|handler|hash|help|high_priority|hosts|hour_microsecond|hour_minute|hour_second|if|ignore|ignore_server_ids|import|index|index_statistics|infile|inner|innodb|inout|insensitive|insert_method|install|interval|invoker|isolation|iterate|key|keys|kill|language|last|leading|leave|left|level|limit|linear|lines|list|load|local|localtime|localtimestamp|lock|logs|low_priority|master|master_heartbeat_period|master_ssl_verify_server_cert|masters|match|max|max_rows|maxvalue|message_text|middleint|migrate|min|min_rows|minute_microsecond|minute_second|mod|mode|modifies|modify|mutex|mysql_errno|natural|next|no|no_write_to_binlog|offline|offset|one|online|open|optimize|option|optionally|out|outer|outfile|pack_keys|parser|partition|partitions|password|phase|plugin|plugins|prepare|preserve|prev|primary|privileges|procedure|processlist|profile|profiles|purge|query|quick|range|read|read_write|reads|real|rebuild|recover|references|regexp|relaylog|release|remove|rename|reorganize|repair|repeatable|replace|require|resignal|restrict|resume|return|returns|revoke|right|rlike|rollback|rollup|row|row_format|rtree|savepoint|schedule|schema|schema_name|schemas|second_microsecond|security|sensitive|separator|serializable|server|session|share|show|signal|slave|slow|smallint|snapshot|soname|spatial|specific|sql|sql_big_result|sql_buffer_result|sql_cache|sql_calc_found_rows|sql_no_cache|sql_small_result|sqlexception|sqlstate|sqlwarning|ssl|start|starting|starts|status|std|stddev|stddev_pop|stddev_samp|storage|straight_join|subclass_origin|sum|suspend|table_name|table_statistics|tables|tablespace|temporary|terminated|to|trailing|transaction|trigger|triggers|truncate|uncommitted|undo|uninstall|unique|unlock|upgrade|usage|use|use_frm|user|user_resources|user_statistics|using|utc_date|utc_time|utc_timestamp|value|variables|varying|view|views|warnings|when|while|with|work|write|xa|xor|year_month|zerofill|begin|do|then|else|loop|repeat" +
 						"|substr|ifnull";
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			strKeyword = "abort|absolute|abstime|access|aclitem|action|add|admin|after|aggregate|all|also|alter|always|" +
 			        "analyse|analyze|and|any|anyarray|anyelement|anyenum|anynonarray|anyrange|array|as|asc|" +
 			        "assertion|assignment|asymmetric|at|attribute|authorization|backward|before|begin|between|" +
@@ -255,10 +255,10 @@ public abstract class EditorExtension extends EditorPart implements IEditorExten
 			        "varchar|variadic|varying|verbose|version|view|void|volatile|when|where|whitespace|window|" +
 			        "with|without|work|wrapper|write|xid|xml|xmlattributes|xmlconcat|xmlelement|xmlexists|" +
 			        "xmlforest|xmlparse|xmlpi|xmlroot|xmlserialize|year|yes|zone";
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			strKeyword = "abort|abs|action|add|after|all|alter|analyze|and|as|asc|attach|autoincrement|avg|before|begin|between|by|cascade|case|cast|check|collate|column|count|commit|conflict|constraint|create|cross|current_date|current_time|current_timestamp|database|default|deferrable|deferred|delete|desc|detach|distinct|drop|each|else|end|escape|except|exclusive|exists|explain|fail|for|foreign|from|full|glob|group|having|if|ignore|immediate|in|index|indexed|initially|inner|insert|instead|intersect|into|is|isnull|join|key|left|like|limit|lower|match|max|min|natural|no|not|notnull|null|of|offset|on|or|order|outer|plan|pragma|primary|query|raise|random|recursive|references|regexp|reindex|release|rename|replace|restrict|right|rollback|row|savepoint|select|set|sqlite_version|sum|table|temp|temporary|then|to|transaction|trigger|upper|union|unique|update|using|vacuum|values|view|virtual|when|where|with|without";
 		// 테이블명이 올바로 표시되지 않는 오류로 sql 확장자로 처리 할수 있도록 수정합니다. 	
-		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			strKeyword = "ABSOLUTE|ACTION|ADA|ADD|ADMIN|AFTER|AGGREGATE|ALIAS|ALL|ALLOCATE|ALTER|AND|ANY|ARE|ARRAY|AS|ASC|ASENSITIVE|ASSERTION|ASYMMETRIC|AT|ATOMIC|AUTHORIZATION|BACKUP|BEFORE|BEGIN|BETWEEN|BIT_LENGTH|BLOB|BOOLEAN|BOTH|BREADTH|BREAK|BROWSE|BULK|BY|CALL|CALLED|CARDINALITY|CASCADE|CASCADED|CASE|CATALOG|CHARACTER|CHARACTER_LENGTH|CHAR_LENGTH|CHECK|CHECKPOINT|CLASS|CLOB|CLOSE|CLUSTERED|COALESCE|COLLATE|COLLATION|COLLECT|COLUMN|COMMIT|COMPLETION|COMPUTE|CONDITION|CONNECT|CONNECTION|CONSTRAINT|CONSTRAINTS|CONSTRUCTOR|CONTAINS|CONTAINSTABLE|CONTINUE|CORR|CORRESPONDING|COVAR_POP|COVAR_SAMP|CREATE|CROSS|CUBE|CUME_DIST|CURRENT|CURRENT_CATALOG|CURRENT_DATE|CURRENT_DEFAULT_TRANSFORM_GROUP|CURRENT_PATH|CURRENT_ROLE|CURRENT_SCHEMA|CURRENT_TIME|CURRENT_TRANSFORM_GROUP_FOR_TYPE|CYCLE|DATA|DATABASE|DBCC|DEALLOCATE|DEC|DECLARE|DEFAULT|DEFERRABLE|DEFERRED|DELETE|DENY|DEPTH|DEREF|DESC|DESCRIBE|DESCRIPTOR|DESTROY|DESTRUCTOR|DETERMINISTIC|DIAGNOSTICS|DICTIONARY|DISCONNECT|DISK|DISTINCT|DISTRIBUTED|DOMAIN|DOUBLE|DROP|DUMP|DYNAMIC|EACH|ELEMENT|ELSE|END|END-EXEC|EQUALS|ERRLVL|ESCAPE|EVERY|EXCEPT|EXCEPTION|EXEC|EXECUTE|EXISTS|EXIT|EXTERNAL|EXTRACT|FETCH|FILE|FILLFACTOR|FILTER|FIRST|FOR|FOREIGN|FORTRAN|FOUND|FREE|FREETEXT|FREETEXTTABLE|FROM|FULL|FULLTEXTTABLE|FUNCTION|FUSION|GENERAL|GET|GLOBAL|GO|GOTO|GRANT|GROUP|HAVING|HOLD|HOLDLOCK|HOST|HOUR|IDENTITY|IDENTITYCOL|IDENTITY_INSERT|IF|IGNORE|IMMEDIATE|IN|INCLUDE|INDEX|INDICATOR|INITIALIZE|INITIALLY|INNER|INOUT|INPUT|INSENSITIVE|INSERT|INTEGER|INTERSECT|INTERSECTION|INTERVAL|INTO|IS|ISOLATION|ITERATE|JOIN|KEY|KILL|LANGUAGE|LARGE|LAST|LATERAL|LEADING|LESS|LEVEL|LIKE|LIKE_REGEX|LIMIT|LINENO|LN|LOAD|LOCAL|LOCALTIME|LOCALTIMESTAMP|LOCATOR|MAP|MATCH|MEMBER|MERGE|METHOD|MINUTE|MOD|MODIFIES|MODIFY|MODULE|MULTISET|NAMES|NATIONAL|NATURAL|NCLOB|NEW|NEXT|NO|NOCHECK|NONCLUSTERED|NONE|NORMALIZE|NOT|NULL|NULLIF|OBJECT|OCCURRENCES_REGEX|OCTET_LENGTH|OF|OFF|OFFSETS|OLD|ON|ONLY|OPEN|OPERATION|OPTION|OR|ORDER|ORDINALITY|OUT|OUTER|OUTPUT|OVER|OVERLAPS|OVERLAY|PAD|PARAMETER|PARAMETERS|PARTIAL|PARTITION|PASCAL|PATH|PERCENT|PERCENTILE_CONT|PERCENTILE_DISC|PERCENT_RANK|PIVOT|PLAN|POSITION|POSITION_REGEX|POSTFIX|PRECISION|PREFIX|PREORDER|PREPARE|PRESERVE|PRIMARY|PRINT|PRIOR|PRIVILEGES|PROC|PROCEDURE|PUBLIC|RAISERROR|RANGE|READ|READS|READTEXT|RECONFIGURE|RECURSIVE|REF|REFERENCES|REFERENCING|REGR_AVGX|REGR_AVGY|REGR_COUNT|REGR_INTERCEPT|REGR_R2|REGR_SLOPE|REGR_SXX|REGR_SXY|REGR_SYY|RELATIVE|RELEASE|REPLICATION|RESTORE|RESTRICT|RESULT|RETURN|RETURNS|REVERT|REVOKE|ROLE|ROLLBACK|ROLLUP|ROUTINE|ROW|ROWCOUNT|ROWGUIDCOL|ROWS|RULE|SAVE|SAVEPOINT|SCHEMA|SCOPE|SCROLL|SEARCH|SECOND|SECTION|SECURITYAUDIT|SELECT|SEMANTICKEYPHRASETABLE|SEMANTICSIMILARITYDETAILSTABLE|SEMANTICSIMILARITYTABLE|SENSITIVE|SEQUENCE|SESSION|SET|SETS|SETUSER|SHUTDOWN|SIMILAR|SIZE|SOME|SPECIFIC|SPECIFICTYPE|SQL|SQLCA|SQLCODE|SQLERROR|SQLEXCEPTION|SQLSTATE|SQLWARNING|START|STATE|STATEMENT|STATIC|STATISTICS|STDDEV_POP|STDDEV_SAMP|STRUCTURE|SUBMULTISET|SUBSTRING_REGEX|SYMMETRIC|SYSTEM|TABLESAMPLE|TEMPORARY|TERMINATE|TEXTSIZE|THAN|THEN|TIMEZONE_HOUR|TIMEZONE_MINUTE|TO|TOP|TRAILING|TRAN|TRANSACTION|TRANSLATE|TRANSLATE_REGEX|TRANSLATION|TREAT|TRIGGER|TRIM|TRUNCATE|TSEQUAL|UESCAPE|UNDER|UNION|UNIQUE|UNKNOWN|UNNEST|UNPIVOT|UPDATE|UPDATETEXT|USAGE|USE|USER|USING|VALUE|VALUES|VARIABLE|VARYING|VAR_POP|VAR_SAMP|VIEW|WAITFOR|WHEN|WHENEVER|WHERE|WHILE|WIDTH_BUCKET|WINDOW|WITH|WITHIN|WITHIN GROUP|WITHOUT|WORK|WRITE|WRITETEXT|XMLAGG|XMLATTRIBUTES|XMLBINARY|XMLCAST|XMLCOMMENT|XMLCONCAT|XMLDOCUMENT|XMLELEMENT|XMLEXISTS|XMLFOREST|XMLITERATE|XMLNAMESPACES|XMLPARSE|XMLPI|XMLQUERY|XMLSERIALIZE|XMLTABLE|XMLTEXT|XMLVALIDATE|ZONE" +
 		    		"|KEEPIDENTITY|KEEPDEFAULTS|IGNORE_CONSTRAINTS|IGNORE_TRIGGERS|XLOCK|FORCESCAN|FORCESEEK|HOLDLOCK|NOLOCK|NOWAIT|PAGLOCK|READCOMMITTED|READCOMMITTEDLOCK|READPAST|READUNCOMMITTED|REPEATABLEREAD|ROWLOCK|SERIALIZABLE|SNAPSHOT|SPATIAL_WINDOW_MAX_CELLS|TABLOCK|TABLOCKX|UPDLOCK|XLOCK|IGNORE_NONCLUSTERED_COLUMNSTORE_INDEX|EXPAND|VIEWS|FAST|FORCE|KEEP|KEEPFIXED|MAXDOP|MAXRECURSION|OPTIMIZE|PARAMETERIZATION|SIMPLE|FORCED|RECOMPILE|ROBUST|PLAN|SPATIAL_WINDOW_MAX_CELLS|NOEXPAND|HINT" +
 		    		"|LOOP|HASH|MERGE|REMOTE|TRY|CATCH|THROW|TYPE";

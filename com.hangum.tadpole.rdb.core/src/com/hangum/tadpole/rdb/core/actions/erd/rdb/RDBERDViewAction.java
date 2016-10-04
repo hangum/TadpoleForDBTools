@@ -24,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.mongodb.erd.core.editor.TadpoleMongoDBERDEditor;
@@ -60,7 +60,7 @@ public class RDBERDViewAction implements IViewActionDelegate {
 		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+			if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 				TadpoleMongoDBEditorInput input = new TadpoleMongoDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 				page.openEditor(input, TadpoleMongoDBERDEditor.ID, false);
 				
@@ -82,7 +82,7 @@ public class RDBERDViewAction implements IViewActionDelegate {
 		UserDBDAO userDB = userDBErd.getParent();
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+			if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 				TadpoleMongoDBEditorInput input = new TadpoleMongoDBEditorInput(userDB.getDisplay_name() + "(" + userDB.getDb() + ")", userDB, false);
 				page.openEditor(input, TadpoleMongoDBERDEditor.ID, false);
 			} else {

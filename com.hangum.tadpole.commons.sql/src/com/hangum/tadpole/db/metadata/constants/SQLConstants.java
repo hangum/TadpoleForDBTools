@@ -33,6 +33,7 @@ public abstract class SQLConstants {
 	// 에디터에서 '등을 붙여야하는 키워드를 정의합니다. 
 	public static final String[] QUOTE_MYSQL_KEYWORDS = {"TABLE", "SELECT", "OPTION", "DEFAULT", "FULLTEXT", "PACKAGE", "FUNCTION", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "KEY"};
 	public static final String[] QUOTE_MSSQL_KEYWORDS = {"GROUP"};
+	public static final String[] QUOTE_POSTGRES_KEYWORDS = {"END"};
 	public static final String[] QUOTE_SQLITE_KEYWORDS = {
 			"AND", "AS", "ASC", "ATTACH", "AUTOINCREMENT", "BEFORE", "BEGIN", "BETWEEN", "BY", "CASCADE", "CASE",
 			"CAST", "CHECK", "COLLATE", "COLUMN", "COMMIT", "CONFLICT", "CONSTRAINT", "CREATE", "CROSS",

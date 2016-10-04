@@ -116,9 +116,6 @@ public class PublicTadpoleDefine {
 	/** 외부 계정으로 올챙이가 접속 할때의 외부 계정 리스트. 현재는 external_account 의 type에 사용. */
 	public enum EXTERNAL_ACCOUNT {AMAZONRDS};
 	
-//	/** NULL VALUE */
-//	public static final String DEFINE_NULL_VALUE = "{null}";
-	
 	/** user login type */
 	public static enum INPUT_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};
 	
@@ -130,8 +127,6 @@ public class PublicTadpoleDefine {
 	
 	/** change resource save */
 	public static final String SAVE_FILE = "CHANGE_TADPOLE_RESOURE"; //$NON-NLS-1$
-	/** change add new db */
-	public static final String ADD_DB = "CHANGE_TADPOLE_ADD_DB";
 	
 	/** erd - select table */
 	public static final String SELECT_ERD_TABLE = "SELECT_ERD_TABLE_RESOURE"; //$NON-NLS-1$
@@ -267,7 +262,10 @@ public class PublicTadpoleDefine {
 		SCHEDULE,
 		COLUMNS,
 		JOBS,
-		JAVA
+		JAVA,
+		
+		VERTEX,	/* agens graph vertex */
+		EDGE	/* agens graph edge */
 	};
 
 	/** sql type - http://www.orafaq.com/faq/what_are_the_difference_between_ddl_dml_and_dcl_commands */

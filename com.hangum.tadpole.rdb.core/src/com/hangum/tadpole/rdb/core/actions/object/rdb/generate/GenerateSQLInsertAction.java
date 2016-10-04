@@ -23,7 +23,7 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -54,7 +54,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
 		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
 		
-		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+		if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
 			StringBuffer sbSQL = new StringBuffer();
 			try {
 				List<TableColumnDAO> showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
@@ -82,7 +82,7 @@ public class GenerateSQLInsertAction extends GenerateSQLSelectAction {
 				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().GenerateSQLInsertAction_0, errStatus); //$NON-NLS-1$
 			}
 		// mongo db
-		} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+		} else {
 			
 			NewDocumentDialog dialog = new NewDocumentDialog(Display.getCurrent().getActiveShell(), userDB, tableDAO.getName());
 			dialog.open();

@@ -17,7 +17,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO;
@@ -68,16 +68,16 @@ public class ObjectCreatAction extends AbstractObjectAction {
 		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 			
 			// others db
-			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+			if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
 				
 				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
-				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 					TableDAO tc = (TableDAO)selection.getFirstElement();
 					
 					CreateTableAction cta = new CreateTableAction();
 					if(tc == null) cta.run(userDB, actionType);
 					else cta.run(userDB, tc.getComment(), actionType);
-				} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 					MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), userDB);
 					if(Dialog.OK == dialog.open()) {
 						// 테이블이 정상생성 되었으면 컬럼 팝업 다이얼로그를 오픈한다.
@@ -100,7 +100,7 @@ public class ObjectCreatAction extends AbstractObjectAction {
 				}
 				
 			// moongodb
-			} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {				
+			} else if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {				
 				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == ncd.open() ) {
 					refreshTable();
@@ -111,11 +111,11 @@ public class ObjectCreatAction extends AbstractObjectAction {
 			CreateViewAction cva = new CreateViewAction();
 			cva.run(userDB, actionType);
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.INDEXES | actionType == PublicTadpoleDefine.OBJECT_TYPE.CONSTRAINTS) {
-			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+			if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
 				CreateIndexAction cia = new CreateIndexAction();
 				cia.run(userDB, actionType);
 			// moongodb
-			} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+			} else if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 				NewIndexDialog nid = new NewIndexDialog(Display.getCurrent().getActiveShell(), userDB);
 				if(Dialog.OK == nid.open()) {
 					refreshIndexes();

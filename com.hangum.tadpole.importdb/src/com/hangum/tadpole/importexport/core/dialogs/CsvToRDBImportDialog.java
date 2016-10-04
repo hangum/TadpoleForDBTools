@@ -53,7 +53,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.core.Messages;
@@ -229,7 +229,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		lblBatchSize.setText(Messages.get().CsvToRDBImportDialog_lblBatchSize_text);
 		
 		textBatchSize = new Text(composite_3, SWT.BORDER | SWT.RIGHT);
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
 			textBatchSize.setText("1"); //$NON-NLS-1$
@@ -490,14 +490,11 @@ public class CsvToRDBImportDialog extends Dialog {
 
 			if (btnPk.getSelection()){
 				Map<String, String> parameters = new HashMap<String, String>(2);
-				if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+				if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 					parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 					parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
-				} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT |
-						userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT|
-						userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT|
-						userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+				} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 					parameters.put("schema_name", userDB.getSchema());
 					parameters.put("table_name", tableName);
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
@@ -520,7 +517,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		String columns = ""; //$NON-NLS-1$
 		try{
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 				Map<String, String> parameters = new HashMap<String, String>(2);
 				parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 				parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
@@ -532,7 +529,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			
 			
 			for (HashMap dao: showIndexColumns){
-				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 					/* cid, name, type, notnull, dflt_value, pk */
 					if ("1".equals(dao.get("pk").toString())) { //$NON-NLS-1$ //$NON-NLS-2$
 						result.put(dao.get("name").toString(), (Integer) dao.get("cid") + 1);	 //$NON-NLS-1$ //$NON-NLS-2$

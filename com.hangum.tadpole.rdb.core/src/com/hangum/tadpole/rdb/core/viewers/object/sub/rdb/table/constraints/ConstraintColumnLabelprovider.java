@@ -33,11 +33,11 @@ public class ConstraintColumnLabelprovider extends LabelProvider implements ITab
 	public String getColumnText(Object element, int columnIndex) {
 		InformationSchemaDAO tc = (InformationSchemaDAO) element;
 			
-			switch(columnIndex) {
-			case 0: return tc.getSEQ_IN_INDEX();
-			case 1: return tc.getCOLUMN_NAME();
-			case 2: return tc.getCOMMENT();
-			}
+		switch(columnIndex) {
+		case 0: return tc.getSEQ_IN_INDEX();
+		case 1: return tc.getCOLUMN_NAME();
+		case 2: return tc.getCOMMENT();
+		}
 		return null;
 	}
 

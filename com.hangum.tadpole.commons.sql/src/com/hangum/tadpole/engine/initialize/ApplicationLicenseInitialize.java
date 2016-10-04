@@ -26,7 +26,7 @@ import com.hangum.tadpole.engine.license.LicenseExtensionHandler;
  */
 public class ApplicationLicenseInitialize {
 	private static final Logger logger = Logger.getLogger(ApplicationLicenseInitialize.class);
-	private static String TDB_License_FILE = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
+	public static String TDB_License_FILE = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
 	
 	public static void load() {
 		if(ApplicationArgumentUtils.isInitialize) return;

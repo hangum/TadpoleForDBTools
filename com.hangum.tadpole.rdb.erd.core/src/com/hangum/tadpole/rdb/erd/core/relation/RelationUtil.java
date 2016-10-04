@@ -19,10 +19,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteRefTableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.model.Column;
@@ -65,15 +64,15 @@ public class RelationUtil {
 		try {
 				
 			// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-			if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+			if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 				calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 				
-			} else if(DBDefine.CUBRID_DEFAULT  == userDB.getDBDefine()) {
+			} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 			
-			} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine() | DBDefine.HIVE2_DEFAULT == userDB.getDBDefine()) {
+			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 				// ignore relation code
-			} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 				// ignore relation code
 			} else {
 				calRelation(userDB, mapDBTables, db, getReferenceTable(userDB, refTableNames));
@@ -95,13 +94,13 @@ public class RelationUtil {
 
 		try {
 			// 현재 sqlite는 관계 정의를 못하겠는바 막습니다.
-			if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+			if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 				calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
-			} else if(DBDefine.CUBRID_DEFAULT == userDB.getDBDefine()) {
+			} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
-			} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine() | DBDefine.HIVE2_DEFAULT == userDB.getDBDefine()) {
+			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 				// ignore relation code
-			} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+			} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 				// ignore relation code
 			} else {
 				calRelation(userDB, mapDBTables, db, getReferenceTable(userDB));
@@ -353,7 +352,7 @@ public class RelationUtil {
 		paramMap.put("schema", userDB.getSchema());
 		paramMap.put("table", tableName);
 
-		if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() | DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			return sqlClient.queryForList("referencedTableList", paramMap);
 		}else{
 			return sqlClient.queryForList("referencedTableList", tableName);

@@ -23,6 +23,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBIndexDAO;
 import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
@@ -78,7 +79,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 			TableDAO dao = (TableDAO)selection.getFirstElement();
 
-			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+			if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_3)) {
 					for(Object selObjec : selection.toList()) {
 						TableDAO selTableDao = (TableDAO)selObjec;
@@ -86,7 +87,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						// 대.소문자 또는 특수문자를 포함하는 오브젝트 명을 사용하는 경우...
 						String strSQL = "drop table " + SQLUtil.getTableName(userDB, selTableDao);// dao.getSysName(); //$NON-NLS-1$
 						try {
-							if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+							if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 								new TajoConnectionManager().executeUpdate(userDB, strSQL);
 							} else {
 								executeSQL(userDB, strSQL);
@@ -100,7 +101,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					refreshTable();
 				}
 
-			} else if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
+			} else if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_3)) {
 					try {
 						MongoDBQuery.dropCollection(userDB, dao.getName());
@@ -196,11 +197,11 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 				if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_16)) {
 					
 					try {
-						if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+						if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 							executeSQL(userDB, "drop index " + indexDAO.getFullName() ); //$NON-NLS-1$ //$NON-NLS-2$
-						} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+						} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 							executeSQL(userDB, "drop index " + indexDAO.getSysName() + " on " + SQLUtil.makeIdentifierName(userDB, indexDAO.getSchema_name()) + "." + SQLUtil.makeIdentifierName(userDB, indexDAO.getTABLE_NAME()) ); //$NON-NLS-1$ //$NON-NLS-2$
-						} else if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+						} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							executeSQL(userDB, "drop index " + indexDAO.getFullName() + ";"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -229,7 +230,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().DeleteConstraint)) {
 				
 				try {
-					if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+					if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 						String constraintPath = "";
 						if (StringUtils.isBlank(constraintDAO.getSchema_name())){
 							constraintPath = SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME());
@@ -237,7 +238,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 							constraintPath = String.format("%s.%s", SQLUtil.makeIdentifierName(userDB, constraintDAO.getSchema_name()), SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME())); 
 						}
 						executeSQL(userDB, "alter table "+ constraintPath +" drop constraint " + constraintDAO.getSysName() ); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 						String constraintPath = "";
 						if (StringUtils.isBlank(constraintDAO.getSchema_name())){
 							constraintPath = SQLUtil.makeIdentifierName(userDB, constraintDAO.getTABLE_NAME());
@@ -249,14 +250,14 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						}else{
 							executeSQL(userDB, "alter table "+ constraintPath +" drop "+ constraintDAO.getConstraint_type() + " " + constraintDAO.getSysName() ); //$NON-NLS-1$ //$NON-NLS-2$
 						}
-					} else if(userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+					} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 						if (StringUtils.isBlank(constraintDAO.getSchema_name())){
 							executeSQL(userDB, "alter table " + constraintDAO.getTABLE_SCHEMA() + "." + constraintDAO.getTABLE_NAME() + " drop constraint " + constraintDAO.getCONSTRAINT_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						}else{
 							executeSQL(userDB, "alter table " + constraintDAO.getSchema_name() + "." + constraintDAO.getTABLE_SCHEMA() + "." + constraintDAO.getTABLE_NAME() + " drop constraint " + constraintDAO.getCONSTRAINT_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 
-					} else if(userDB.getDBDefine() != DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+					} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 						executeSQL(userDB, "drop constraints " + constraintDAO.getCONSTRAINT_NAME() + " on " + constraintDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
 						executeSQL(userDB, "drop constraints " + constraintDAO.getFullName()+ ";"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -273,7 +274,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_24)) {
 				
 				try {
-					if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+					if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 						StringBuffer sbQuery = new StringBuffer("drop function " + procedureDAO.getName() + "(");
 						
 						ProcedureExecuterManager pm = new ProcedureExecuterManager(userDB, procedureDAO);
@@ -323,7 +324,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			ProcedureFunctionDAO functionDAO = (ProcedureFunctionDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_30)) {
 				try {
-					if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+					if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 						executeSQL(userDB, "drop function " + functionDAO.getDefiner() + "." + functionDAO.getName());
 					} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
 						StringBuffer sbQuery = new StringBuffer("drop function " + functionDAO.getName() + "(");
@@ -357,7 +358,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			TriggerDAO triggerDAO = (TriggerDAO)selection.getFirstElement();
 			if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_36)) {
 				try {
-					if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+					if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger() + " on " + triggerDAO.getTable_name()); //$NON-NLS-1$
 					} else {
 						executeSQL(userDB, "drop trigger " + triggerDAO.getFullName()); //$NON-NLS-1$

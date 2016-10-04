@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
@@ -68,7 +69,7 @@ public class SQLMap {
 				HELLO_SQL = HELLO_SQL + "\n select * from dual";
 				
 				APPLICATION_NAME_SQL = String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub(%s)', '')", dbInfo.getTdbUserID());
-			} else if(dbInfo.getDBDefine() == DBDefine.MYSQL_DEFAULT || dbInfo.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			} else if(DBGroupDefine.MYSQL_GROUP == dbInfo.getDBGroup()) {
 				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " SELECT 1;");
 				HELLO_SQL = HELLO_SQL + "\n SELECT 1";
 			} else {

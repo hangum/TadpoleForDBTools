@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultLabelProvider;
 
@@ -41,7 +41,7 @@ public class TableEditorLabelProvider extends SQLResultLabelProvider {
 		
 		// 오라클, PGSQL인 경우 1 번째 컬럼은 업데이트를 위해 ROWID, CID를 조회 하여서 보내주지 않도록 하였다. 
 		int intShowColIndex = columnIndex;
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if(columnIndex != 0) intShowColIndex++;
 		}
 		

@@ -38,8 +38,8 @@ public class ValidChecker {
 	 * @param passwd
 	 * @return
 	 */
-	public static boolean isSimplePasswordChecker(String passwd) {
-		if(StringUtils.length(passwd) < 5) {
+	public static boolean isPasswordLengthChecker(String passwd) {
+		if(!(StringUtils.length(passwd) >= 7 && StringUtils.length(passwd) <= 30)) {
 			return false;
 		}
 		return true;

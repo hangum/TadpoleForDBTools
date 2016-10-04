@@ -24,6 +24,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -58,7 +59,7 @@ public class TadpoleObjectQuery {
 			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 			javaConn = client.getDataSource().getConnection();
 
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+			if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));
 				stmt = javaConn.prepareStatement(strSQL);
 				try{
@@ -102,7 +103,7 @@ public class TadpoleObjectQuery {
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
-			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+			} else if (DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 				String strSQL = String.format("ALTER TABLE %s COMMENT %s", dao.getFullName(), SQLUtil.makeQuote(dao.getComment()));
 				if(logger.isDebugEnabled()) logger.debug(strSQL);
 				stmt = javaConn.prepareStatement(strSQL);
@@ -127,23 +128,22 @@ public class TadpoleObjectQuery {
 	 */
 	public static RequestResultDAO renameTable(final UserDBDAO userDB, TableDAO tableDAO, String strNewname) throws Exception {
 		RequestResultDAO reqReResultDAO = new RequestResultDAO();
-		if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			String strQuery = String.format("ALTER TABLE %s RENAME %s", tableDAO.getFullName(), SQLUtil.makeIdentifierName(userDB, tableDAO.getSchema_name()) +"."+ SQLUtil.makeIdentifierName(userDB,strNewname));
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.SQLite_DEFAULT
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()
 		) {
 			if(!StringUtils.equals(strNewname, strNewname.toUpperCase() )){
 				strNewname = SQLUtil.makeIdentifierName(userDB, strNewname);
 			}
 			String strQuery = String.format("ALTER TABLE %s RENAME TO %s", tableDAO.getSysName(), strNewname);
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
-		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			String strQuery = String.format("sp_rename %s, %s", tableDAO.getSysName(), strNewname);
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
-		} else if(userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT) {
+		} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 			String strQuery = String.format("RENAME TABLE %s AS %s", tableDAO.getSysName(), strNewname);
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 		} else {
@@ -163,7 +163,7 @@ public class TadpoleObjectQuery {
 	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 		
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			showTables = new TajoConnectionManager().tableList(userDB);
 
 			// sql keyword를 설정합니다.
@@ -249,11 +249,10 @@ public class TadpoleObjectQuery {
 		Map<String, String> mapParam = new HashMap<String, String>();
 		mapParam.put("db", userDB.getDb());
 		String strTableName = "";
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) strTableName = tableDao.getSysName();
 		else 												strTableName = tableDao.getName();
 		
-
-		if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+		if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			mapParam.put("user", StringUtils.substringBefore(strTableName, "."));
 			mapParam.put("table", StringUtils.substringAfter(strTableName, "."));
 		} else {
@@ -261,9 +260,9 @@ public class TadpoleObjectQuery {
 			mapParam.put("table", strTableName);
 		}
 		
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
-		} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if("".equals(mapParam.get("schema")) || null == mapParam.get("schema")) {
 				mapParam.put("schema", "public");
 			}
@@ -274,7 +273,7 @@ public class TadpoleObjectQuery {
 			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		}
 		
-		if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()){
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
 			try{
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
@@ -340,7 +339,7 @@ public class TadpoleObjectQuery {
 		TableDAO tableDao = null;
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			List<TableDAO> tmpShowTables = new TajoConnectionManager().tableList(userDB);
 			
 			for(TableDAO dao : tmpShowTables) {
@@ -349,7 +348,7 @@ public class TadpoleObjectQuery {
 					break;
 				}
 			}
-		} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT || userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+		} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableDAO> tmpShowTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 			
@@ -359,7 +358,7 @@ public class TadpoleObjectQuery {
 					break;
 				}
 			}
-		} else if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+		} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			Map<String, Object> mapParam = new HashMap<String, Object>();
 			
 			mapParam.put("user_name", 	StringUtils.substringBefore(tableDAO.getSchema_name(), ".")); //$NON-NLS-1$
@@ -367,7 +366,7 @@ public class TadpoleObjectQuery {
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			showTables = sqlClient.queryForList("table", mapParam); //$NON-NLS-1$
-		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			Map<String, Object> mapParam = new HashMap<String, Object>();
 			mapParam.put("schema", 	tableDAO.getSchema_name()); //$NON-NLS-1$
 			mapParam.put("name", 	tableDAO.getName()); //$NON-NLS-1$

@@ -1001,7 +1001,7 @@ SELECT    'COMMENT ON TABLE '
        || C.COMMENTS
        || ''';'
           AS COMMENT_TEXT
-  FROM SYS.DBA_TAB_COMMENTS C
+  FROM SYS.$dba_role$_TAB_COMMENTS C
  WHERE     C.OWNER = (#schema_name#)
        AND C.COMMENTS IS NOT NULL
        AND C.TABLE_NAME = (#table_name#)
@@ -1015,7 +1015,7 @@ SELECT    'COMMENT ON COLUMN '
        || ' IS '''
        || C.COMMENTS
        || ''';'
-  FROM SYS.DBA_COL_COMMENTS C
+  FROM SYS.$dba_role$_COL_COMMENTS C
  WHERE     C.OWNER = (#schema_name#)
        AND C.COMMENTS IS NOT NULL
        AND C.TABLE_NAME = (#table_name#)

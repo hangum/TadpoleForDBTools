@@ -23,6 +23,7 @@ import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -207,7 +208,7 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 	public List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 				
-		if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			TajoConnectionManager manager = new TajoConnectionManager();
 			showTables = manager.tableList(userDB);			
 		} else {
@@ -231,7 +232,7 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 		
 		String strSchemaName = "";
 		String strTableName = tableName;
-		if(userDB.getDBDefine() != DBDefine.ALTIBASE_DEFAULT) {
+		if(DBGroupDefine.ALTIBASE_GROUP != userDB.getDBGroup()) {
 			if(StringUtils.contains(tableName, '.')) {
 				String[] arrTblInfo = StringUtils.split(tableName, ".");
 				strSchemaName = arrTblInfo[0];

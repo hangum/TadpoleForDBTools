@@ -14,6 +14,7 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.engine.messages"; //$NON-NLS-1$
+	
 	public String Gullim;
 	public String overflowUseService;
 	public String AlreadyUseService;
@@ -44,7 +45,8 @@ public class Messages {
 	public String APIURL;
 	public String IsUseAPI;
 	public String ServiceBill;
-
+	public String doesNotAutority;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

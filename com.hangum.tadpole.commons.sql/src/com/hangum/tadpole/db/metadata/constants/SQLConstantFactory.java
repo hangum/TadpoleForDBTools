@@ -10,7 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.db.metadata.constants;
 
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -25,14 +25,13 @@ public class SQLConstantFactory {
 	 */
 	public SQLConstants getDB(UserDBDAO userDB) {
 		
-		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			return new PostgreSQLConstant(userDB);
-		} else if(userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 			return new MSSQLConstants(userDB);
-		} else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT |
-				userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+		} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			return new MySQLConstants(userDB);
-		} else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			return new SQLiteConstants(userDB);
 		}
 		

@@ -36,7 +36,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
@@ -200,10 +200,10 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 
 			HashMap<String, String> map = new HashMap<String, String>();
 
-			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 				map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
 				map.put("table_name", tableDao.getName());
-			}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+			}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 				map.put("table_schema", StringUtils.isBlank(tableDao.getSchema_name())? userDB.getSchema():tableDao.getSchema_name());
 				map.put("table_name", tableDao.getName());
 			}else{

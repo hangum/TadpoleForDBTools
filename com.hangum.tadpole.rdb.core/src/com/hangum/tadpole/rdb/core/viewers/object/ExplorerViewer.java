@@ -45,6 +45,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
@@ -54,6 +55,8 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.edge.TadpoleEdgeComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.vertex.TadpoleVertexComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
@@ -116,6 +119,10 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
 	private TadpoleMongoDBIndexesComposite mongoIndexComposite 			= null;
 	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
+	
+	// agens graph
+	private TadpoleVertexComposite agensVertexComposite = null;
+	private TadpoleEdgeComposite agensEdgeComposite = null;
 
 	public ExplorerViewer() {
 		super();
@@ -256,7 +263,7 @@ public class ExplorerViewer extends ViewPart {
 			viewComposite.filter(strSearchText);					
 		
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.INDEXES.name())) {
-			if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
+			if(userDB != null && DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 				mongoIndexComposite.filter(strSearchText);
 			}					
 		
@@ -364,7 +371,7 @@ public class ExplorerViewer extends ViewPart {
 		
 		/** schema list*/
 		comboSchema.removeAll();
-		if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+		if(userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP) {
 			try {
 				// 스키마 리스트를 초기화 시킨다.
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
@@ -376,7 +383,7 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
-		}else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
+		}else if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP){
 			
 			try {
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
@@ -391,7 +398,7 @@ public class ExplorerViewer extends ViewPart {
 				comboSchema.setItems( new String[]{userDB.getSchema()} );
 				throw e;
 			}
-		}else if(userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
+		}else if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP){
 			try {
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
 					HashMap<String, String> mapData = (HashMap)object;
@@ -407,7 +414,7 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
-		}else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		}else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP) {
 		
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
@@ -448,7 +455,7 @@ public class ExplorerViewer extends ViewPart {
 		} else {
 			try { 
 				initSchema();
-				initObjectDetail(userDB.getDBDefine());
+				initObjectDetail(userDB);
 			} catch(Exception e) {
 				logger.error("initialize database " + e.getMessage());
 				userDB = null;
@@ -460,11 +467,12 @@ public class ExplorerViewer extends ViewPart {
 	/**
 	 * 다른 디비가 선택되어 지면 초기화 되어야 할 object 목록
 	 * 
-	 * @param dbDefine Manager에서 선택된 object
+	 * @param userDB Manager에서 선택된 object
 	 */
-	private void initObjectDetail(DBDefine dbDefine) {
+	private void initObjectDetail(final UserDBDAO userDB) {
+		
 		// sqlite
-		if (dbDefine == DBDefine.SQLite_DEFAULT) {
+		if (DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			createTable();
 			createView();
 			
@@ -478,7 +486,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 
 		// tajo, hive, hive2
-		} else if (dbDefine == DBDefine.TAJO_DEFAULT | dbDefine == DBDefine.HIVE_DEFAULT | dbDefine == DBDefine.HIVE2_DEFAULT) {
+		} else if (DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
@@ -488,7 +496,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 				
 		// mongodb
-		} else if (dbDefine == DBDefine.MONGODB_DEFAULT) {
+		} else if (DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 			createMongoCollection();
 			createMongoIndex();
 			createMongoJavaScript();
@@ -501,7 +509,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, mongoCollectionComposite.getCollectionListViewer()));
 
 		// oracle , tibero
-		} else if (dbDefine == DBDefine.ORACLE_DEFAULT | dbDefine == DBDefine.TIBERO_DEFAULT) {
+		} else if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			createTable();
 			createView();
 			createSynonym();
@@ -511,7 +519,7 @@ public class ExplorerViewer extends ViewPart {
 			createFunction();
 			createTrigger();
 			createDBLink();
-			if (dbDefine == DBDefine.ORACLE_DEFAULT ) {
+			if (DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
 				createJobs();
 				createJava();
 				
@@ -554,26 +562,45 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 		// altibase, cubrid
-		} else if (dbDefine == DBDefine.CUBRID_DEFAULT | 
-				dbDefine == DBDefine.ALTIBASE_DEFAULT |
-				dbDefine == DBDefine.POSTGRE_DEFAULT
-		) { 
+		} else if (DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()
+		) {
 			createTable();
 			createView();
 			createProcedure();
 			createFunction();
 			createTrigger();
 			
-			arrayStructuredViewer = new StructuredViewer[] { 
-				tableComposite.getTableListViewer(), 
-				tableComposite.getTableColumnViewer(),
-				tableComposite.getIndexComposite().getTableViewer(),
-				tableComposite.getTriggerComposite().getTableViewer(),
-				viewComposite.getTableViewer(), 
-				procedureComposite.getTableViewer(), 
-				functionCompostite.getTableviewer(),
-				triggerComposite.getTableViewer()
-			};
+			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
+				createVertex();
+				createEdge();
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+						tableComposite.getTableListViewer(), 
+						tableComposite.getTableColumnViewer(),
+						tableComposite.getIndexComposite().getTableViewer(),
+						tableComposite.getTriggerComposite().getTableViewer(),
+						viewComposite.getTableViewer(), 
+						procedureComposite.getTableViewer(), 
+						functionCompostite.getTableviewer(),
+						triggerComposite.getTableViewer(),
+						agensVertexComposite.getTableviewer(),
+						agensEdgeComposite.getTableviewer()
+					};
+			} else {
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer(), 
+					tableComposite.getTableColumnViewer(),
+					tableComposite.getIndexComposite().getTableViewer(),
+					tableComposite.getTriggerComposite().getTableViewer(),
+					viewComposite.getTableViewer(), 
+					procedureComposite.getTableViewer(), 
+					functionCompostite.getTableviewer(),
+					triggerComposite.getTableViewer()
+				};
+			}
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 			
 		// mysql, postgre, mssql
@@ -647,6 +674,10 @@ public class ExplorerViewer extends ViewPart {
 			refreshJobs(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
 			refreshJava(isRefresh, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VERTEX.name())) {
+			refreshVertex(isRefresh, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.EDGE.name())) {
+			refreshEdge(isRefresh, strObjectName);
 		}
 		filterText();
 		
@@ -806,6 +837,22 @@ public class ExplorerViewer extends ViewPart {
 		javaComposite = new TadpoleJavaComposite(getSite(), tabFolderObject, userDB);
 		javaComposite.initAction();
 	}
+	
+	/**
+	 * agens vertext정의 
+	 */
+	private void createVertex() {
+		agensVertexComposite = new TadpoleVertexComposite(getSite(), tabFolderObject, userDB);
+		agensVertexComposite.initAction();
+	}
+	
+	/**
+	 * agens edge
+	 */
+	private void createEdge() {
+		agensEdgeComposite = new TadpoleEdgeComposite(getSite(), tabFolderObject, userDB);
+		agensEdgeComposite.initAction();
+	}
 
 	/**
 	 * Job 정보를 최신으로 리프레쉬합니다.
@@ -862,6 +909,26 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
 		tableComposite.getTriggerComposite().refreshTrigger(userDB, boolRefresh, strObjectName);
+	}
+	
+	/**
+	 * vertex 정보를 최신으로 갱신 합니다.
+	 * @param boolRefresh
+	 * @param strObjectName
+	 */
+	public void refreshVertex(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.VERTEX, userDB.getDefaultSchemanName(), null);
+		agensVertexComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
+	}
+	
+	/**
+	 * edge 정보를 최신으로 갱신 합니다.
+	 * @param boolRefresh
+	 * @param strObjectName
+	 */
+	public void refreshEdge(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.EDGE, userDB.getDefaultSchemanName(), null);
+		agensEdgeComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
 	}
 
 	/**

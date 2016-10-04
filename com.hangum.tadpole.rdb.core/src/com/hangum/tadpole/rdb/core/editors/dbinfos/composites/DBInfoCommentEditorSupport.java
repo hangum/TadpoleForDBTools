@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -67,11 +68,10 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 		if (column == 1 || column == 3) {
 			if (logger.isDebugEnabled()) logger.debug("DBMS Type is " + userDB.getDBDefine());
 
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()  
+				|| DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()
+				|| DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()
+			) {
 				return true;
 			} else {
 				return false;
@@ -160,7 +160,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 
 				query.append(" COMMENT ON COLUMN ").append(dao.getTable_name() + ".").append(dao.getColumn_name()).append(" IS '").append(dao.getColumn_comment()).append("'");
 
@@ -170,7 +170,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
-			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+			} else if (DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine()) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers());
 				query.append(",'table' , '").append(dao.getTable_name()).append("'");
 				query.append(",'column' , '").append(dao.getColumn_name()).append("'");
@@ -198,7 +198,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
-			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+			} else if (DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo ");
 				query.append(",'table' , '").append(dao.getTable_name()).append("'");
 				query.append(",'column' , '").append(dao.getColumn_name()).append("'");
@@ -250,13 +250,13 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 
 			StringBuffer query = new StringBuffer();
 
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT||userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 				query.append(" COMMENT ON TABLE ").append(dao.getTable_name()).append(" IS '").append(dao.getTable_comment()).append("'");
 
 				stmt = javaConn.prepareStatement(query.toString());
 				stmt.execute();
 
-			} else if (userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT) {
+			} else if (DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine()) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' ,").append(userDB.getUsers()).append(",'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {
@@ -279,7 +279,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
 				}
-			} else if (userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT) {
+			} else if (DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
 				query.append(" exec sp_dropextendedproperty 'Caption' ").append(", 'user' , dbo,'table' ").append(" , '").append(dao.getTable_name()).append("'");
 				stmt = javaConn.prepareStatement(query.toString());
 				try {

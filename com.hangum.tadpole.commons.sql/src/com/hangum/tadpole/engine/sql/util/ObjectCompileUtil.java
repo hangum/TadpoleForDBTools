@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -37,9 +37,7 @@ public class ObjectCompileUtil {
 		if(StringUtils.isEmpty(objectName)) return "";
 		String retMsg = ""; //$NON-NLS-1$
 		
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | 
-				userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT
-		) {
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			try {
 				String strObjectName = StringUtils.upperCase(objectName);
 				if(ddlType == QUERY_DDL_TYPE.PROCEDURE) {

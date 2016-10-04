@@ -14,7 +14,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleJavaDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.java.CreateJavaDialog;
-import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 
 /**
  * Oracle Database job create action

@@ -50,7 +50,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
@@ -162,7 +162,7 @@ public class ManagerViewer extends ViewPart {
 					if( PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(dao.getResource_types())) {
 						UserDBDAO userDB = dao.getParent();
 						
-						if(userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {							
+						if(userDB != null && DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {							
 							MongoDBERDViewAction ea = new MongoDBERDViewAction();
 							ea.run(dao);
 						} else {
@@ -206,8 +206,6 @@ public class ManagerViewer extends ViewPart {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty() ==  PublicTadpoleDefine.SAVE_FILE) {
 					addResource(Integer.parseInt( event.getNewValue().toString().split(":")[0] )); //$NON-NLS-1$
-				} else if (event.getProperty() ==  PublicTadpoleDefine.ADD_DB) {
-					init();
 				}
 			}
 		});
@@ -266,7 +264,7 @@ public class ManagerViewer extends ViewPart {
 		SessionManager.initManagerDBList();
 		setManagerDBList();
 	}
-
+	
 	/**
 	 * popup 화면을 오픈합니다.
 	 */
@@ -334,8 +332,8 @@ public class ManagerViewer extends ViewPart {
 					userDB.getListResource().add(resourcesDAO);
 				}
 				
-				// pgsql, oracle, mssql 은 스키마를 추가한다.
-				if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				// pgsql은 익스텐스 을 보여준다.
+				if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 					PostgresqlConnectionEXT.connectionext(userDB);
 				}
 				managerTV.refresh(userDB, true);
@@ -357,17 +355,13 @@ public class ManagerViewer extends ViewPart {
 	 */
 	public void addResource(int dbSeq) {
 		for(ManagerListDTO dto: treeDataList) {
-			
 			for(UserDBDAO userDB : dto.getManagerList()) {
 				if(userDB.getSeq() == dbSeq) {
 					userDB.getListResource().clear();
 					addManagerResouceData(userDB, true);
-					
 					return;
 				}	// if(userDB.getSeq() == dbSeq) {
-				
 			}	// for(UserDBDAO
-				
 		}
 	}
 	
@@ -414,7 +408,7 @@ public class ManagerViewer extends ViewPart {
 		
 		if(!defaultOpen) return;
 		// mongodb 일경우 열지 않는다.
-		if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {
+		if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
 			MainEditorInput mei = new MainEditorInput(userDB);		
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {

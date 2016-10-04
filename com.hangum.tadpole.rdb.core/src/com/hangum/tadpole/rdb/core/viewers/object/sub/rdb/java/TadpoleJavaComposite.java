@@ -363,16 +363,11 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (creatAction_Java != null)
-			creatAction_Java.dispose();
-		if (alterAction_Java != null)
-			alterAction_Java.dispose();
-		if (dropAction_Java != null)
-			dropAction_Java.dispose();
-		if (refreshAction_Java != null)
-			refreshAction_Java.dispose();
-		if (compileAction != null)
-			compileAction.dispose();
+		if (creatAction_Java != null) creatAction_Java.dispose();
+		if (alterAction_Java != null) alterAction_Java.dispose();
+		if (dropAction_Java != null) dropAction_Java.dispose();
+		if (refreshAction_Java != null) refreshAction_Java.dispose();
+		if (compileAction != null) 	compileAction.dispose();
 	}
 
 	@Override
@@ -382,8 +377,7 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 
 	@Override
 	public void selectDataOfTable(String strObjectName) {
-		if ("".equals(strObjectName) || strObjectName == null)
-			return;
+		if ("".equals(strObjectName) || strObjectName == null) return;
 
 		getTableviewer().getTable().setFocus();
 

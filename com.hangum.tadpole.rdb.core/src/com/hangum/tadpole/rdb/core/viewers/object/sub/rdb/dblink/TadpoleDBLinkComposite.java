@@ -257,8 +257,7 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 								
 								selectDataOfTable(strObjectName);
 							} else {
-								if (showDBLinks != null)
-									showDBLinks.clear();
+								if (showDBLinks != null) showDBLinks.clear();
 								dbLinkListViewer.setInput(showDBLinks);
 								dbLinkListViewer.refresh();
 								TableUtil.packTable(dbLinkListViewer.getTable());

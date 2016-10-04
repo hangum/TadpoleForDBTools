@@ -59,6 +59,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESOURCE_
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ResourceManagerDAO;
@@ -196,7 +197,7 @@ public class RESTFulAPIManagerEditor extends EditorPart {
 			
 					// db object를 클릭하면 쿼리 창이 뜨도록하고.
 					if (PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals(rmDAO.getResource_types())) {
-						if (userDB != null && DBDefine.MONGODB_DEFAULT == userDB.getDBDefine()) {
+						if (userDB != null && DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 							 MongoDBERDViewAction ea = new MongoDBERDViewAction();
 							 ea.run(ad);
 						} else {

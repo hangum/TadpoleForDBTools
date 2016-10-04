@@ -29,6 +29,7 @@ import org.eclipse.ui.part.EditorPart;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnsComposite;
@@ -146,7 +147,7 @@ public class RDBDBInfosEditor extends EditorPart {
 		columnInformationComposite.setLayout(gl_compositeColumnInformation);
 		
 		/* Properties */
-		if(DBDefine.getDBDefine(userDB) == DBDefine.ALTIBASE_DEFAULT) {
+		if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			CTabItem tbtmPropertySummary = new CTabItem(tabFolder, SWT.NONE);
 			tbtmPropertySummary.setText(Messages.get().RDBDBInfosEditor_4);
 			

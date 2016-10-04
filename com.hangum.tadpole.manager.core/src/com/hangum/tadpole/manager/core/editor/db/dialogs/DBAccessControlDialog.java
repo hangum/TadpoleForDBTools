@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
@@ -283,12 +283,11 @@ public class DBAccessControlDialog extends Dialog {
 		
 		// oracle, tajo, hive, cubrid 는 사용하지 못하도록.
 		UserDBDAO userDB = userRoleDB.getParent();
-		if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.TAJO_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()
+				|| DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()
+				|| DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()
+				|| DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()
+				|| DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()
 		) {
 			btnSelectAdd.setEnabled(false);
 		}

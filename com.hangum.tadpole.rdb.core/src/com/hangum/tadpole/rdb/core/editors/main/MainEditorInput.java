@@ -19,6 +19,7 @@ import org.eclipse.ui.IPersistableElement;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
@@ -121,7 +122,7 @@ public class MainEditorInput implements IEditorInput {
 	public String getToolTipText() {
 
 		if(PermissionChecker.isShow(userDB.getRole_id())) {
-			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ) {
+			if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 				String fileName = new File(userDB.getDb()).getName();			
 				return String.format(userDB.getDbms_type() + " - %s", fileName);
 			} else {

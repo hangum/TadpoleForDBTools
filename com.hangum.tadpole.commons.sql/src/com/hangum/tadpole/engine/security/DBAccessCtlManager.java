@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -81,9 +81,8 @@ public class DBAccessCtlManager {
 		
 		List<TableColumnDAO> returnColumns = new ArrayList<TableColumnDAO>();
 		returnColumns.addAll(listTableColumns);
-		
 		String strTableName = "";
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) strTableName = tableDao.getSysName();
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) strTableName = tableDao.getSysName();
 		else 												strTableName = tableDao.getName();
 		
 		// db access control 
@@ -100,6 +99,4 @@ public class DBAccessCtlManager {
 		
 		return returnColumns;
 	}
-	
-
 }

@@ -10,20 +10,15 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
-import java.sql.PreparedStatement;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 
-import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * table comment editor
@@ -69,14 +64,11 @@ public class TableCommentEditorSupport extends EditingSupport {
 	@Override
 	protected boolean canEdit(Object element) {
 		if(column == 1) {
-			if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || 
-					userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.MSSQL_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.MSSQL_8_LE_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT
-			) {
+			
+			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup() ) {
 				return true;
 			}
 		}

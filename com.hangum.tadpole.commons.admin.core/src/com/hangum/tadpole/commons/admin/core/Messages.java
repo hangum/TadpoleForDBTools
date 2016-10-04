@@ -124,8 +124,6 @@ public class Messages {
 
 	public String NewUserDialog_2;
 
-	public String NewUserDialog_25;
-
 	public String NewUserDialog_29;
 
 	public String NewUserDialog_3;

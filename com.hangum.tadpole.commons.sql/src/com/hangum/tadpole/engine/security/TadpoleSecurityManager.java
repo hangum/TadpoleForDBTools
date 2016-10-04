@@ -15,7 +15,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -94,7 +94,7 @@ public class TadpoleSecurityManager {
 	 */
 	private boolean openPasswdDialog(final UserDBDAO userDB) {
 		// SQLite은 패스워드가 없으므로..
-		if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			SessionManager.setUnlokDB(userDB);
 			return true;
 		}

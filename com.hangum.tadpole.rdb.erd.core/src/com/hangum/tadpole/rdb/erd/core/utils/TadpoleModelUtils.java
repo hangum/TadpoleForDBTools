@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -101,7 +101,7 @@ public enum TadpoleModelUtils {
 			tableModel.setDb(db);
 			tableModel.setName(tableDao.getName());
 			
-			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+			if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 				tableModel.setComment("");	
 			} else {
 				String tableComment = tableDao.getComment();
@@ -182,7 +182,7 @@ public enum TadpoleModelUtils {
 	public List<TableDAO> getAllTables(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> listAllTables = null;
 		
-		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			listAllTables = new TajoConnectionManager().tableList(userDB);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -208,7 +208,7 @@ public enum TadpoleModelUtils {
 	 */
 	public List<TableDAO> getTable(final UserDBDAO userDB, List<String> listTableName) throws Exception {
 		List<TableDAO> listAllTables = null;
-		if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			listAllTables = new TajoConnectionManager().tableList(userDB);
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

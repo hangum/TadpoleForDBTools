@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -51,88 +52,30 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		StringBuilder result = new StringBuilder("");
 		
-		HashMap<String, String>paramMap = new HashMap<String, String>();
+		Map<String, String>paramMap = new HashMap<String, String>();
 		paramMap.put("schema_name", StringUtils.isBlank(tableDAO.getSchema_name()) ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
 		paramMap.put("object_type", "TABLE"); //$NON-NLS-1$
 		paramMap.put("object_name", tableDAO.getName()); //$NON-NLS-1$
 		paramMap.put("table_name", tableDAO.getName()); //$NON-NLS-1$
+		paramMap.put("dba_role", "DBA");
 		
 		String strDDLScript = (String)client.queryForObject("getDDLScript", paramMap);
 		
 		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
-		//result.append(SQLFormater.format(strDDLScript));
 		result.append(strDDLScript + ";\n\n");
 
-//		HashMap<String, String>paramMap = new HashMap<String, String>();
-//		paramMap.put("schema_name", StringUtils.isBlank(tableDAO.getSchema_name()) ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
-//		paramMap.put("table_name", tableDAO.getName()); //$NON-NLS-1$
-//
-//		
-//		List<HashMap> srcList = client.queryForList("getTableScript", paramMap);
-//				
-////		result.append("/* DROP TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
-//		result.append("CREATE TABLE " + tableDAO.getName() + "( \n");
-//		for (int i=0; i<srcList.size(); i++){
-//			HashMap<String, Object> source =  srcList.get(i);
-//			
-//			
-//			result.append("\t");
-//			if(i>0)result.append(",");
-//			result.append(source.get("COLUMN_NAME")).append(" ");
-//			result.append(source.get("DATA_TYPE"));
-//								
-//			if (source.get("DATA_PRECISION") != null && ((BigDecimal)source.get("DATA_PRECISION")).intValue() > 0 ){
-//				result.append("("+source.get("DATA_PRECISION"));
-//				if (source.get("DATA_SCALE") != null && ((BigDecimal)source.get("DATA_SCALE")).intValue() > 0 ){
-//					result.append(","+source.get("DATA_SCALE"));
-//				}
-//						
-//				result.append(")");
-//			}else if (!StringUtils.contains((String)source.get("DATA_TYPE"), "DATE") && !StringUtils.contains((String)source.get("DATA_TYPE"), "NUMBER")  && ((BigDecimal)source.get("DATA_LENGTH")).intValue() > 0  ){
-//				result.append("("+source.get("DATA_LENGTH")+")");
-//			}else{
-//				result.append(" ");
-//			}
-//			
-//			if (source.get("DATA_DEFAULT") != null ){
-//			
-//				if (StringUtils.contains((String)source.get("DATA_TYPE"), "CHAR")  ){
-//					result.append(" DEFAULT '"+source.get("DATA_DEFAULT")+"'");
-//				}else{
-//					result.append(" DEFAULT "+source.get("DATA_DEFAULT") );
-//				}
-//			}
-//				
-//			if("NO".equals(source.get("NULLABLE"))){
-//				result.append(" NOT NULL ");
-//			}
-//			
-//			result.append("\n");
-//			
-//		}
-//
-//		// primary key 
-//		List<HashMap> srcPkList = client.queryForList("getTableScript.pk", paramMap);				
-//		for (int i=0; i<srcPkList.size(); i++){
-//			HashMap<String, Object> source =  srcPkList.get(i);
-//			if(i==0){
-//				result.append("\t,CONSTRAINT ").append(source.get("CONSTRAINT_NAME")).append(" PRIMARY KEY ( ").append(source.get("COLUMN_NAME"));
-//			}else{
-//				result.append(", "+source.get("COLUMN_NAME"));
-//			}
-//			
-//			if(i == srcPkList.size()-1){
-//				result.append(") \n");
-//			}
-//		}
-//				
-//		result.append("); \n\n");
-
-
 		// table, column comments
-		List<String> srcCommentList = client.queryForList("getTableScript.comments", paramMap);				
-		for (int i=0; i<srcCommentList.size(); i++){
-			result.append( srcCommentList.get(i)+"\n");
+		try {
+			// DBA권한이 있는 경우에 
+			result.append(getTableComment(paramMap));
+		} catch(Exception e) {
+			try {
+				// DBA 권한이 없는 경우 
+				paramMap.put("dba_role", "USER");
+				result.append(getTableComment(paramMap));
+			} catch(Exception ee) {
+				result.append(Messages.get().doesNotAutority);
+			}
 		}
 		
 		// foreign key
@@ -151,6 +94,25 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		
 		// table synonyms 
 					
+		return result.toString();
+	}
+		
+	/**
+	 * 테이블,컬럼 코멘트
+	 * 
+	 * @param paramMap
+	 * @return
+	 * @throws Exception
+	 */
+	private String getTableComment(Map<String, String>paramMap) throws Exception {
+		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		StringBuilder result = new StringBuilder("");
+		
+		List<String> srcCommentList = client.queryForList("getTableScript.comments", paramMap);				
+		for (int i=0; i<srcCommentList.size(); i++){
+			result.append( srcCommentList.get(i)+"\n");
+		}
+		
 		return result.toString();
 	}
 

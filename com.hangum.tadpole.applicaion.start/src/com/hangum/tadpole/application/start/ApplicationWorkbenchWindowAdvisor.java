@@ -33,8 +33,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import com.hangum.tadpole.application.start.dialog.login.LoginDialog;
-import com.hangum.tadpole.application.start.dialog.login.ServiceLoginDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
@@ -47,6 +45,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
+import com.hangum.tadpole.login.core.dialog.LoginDialog;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -133,19 +132,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     			
     			initializeDefaultLocale();
     		} else {
-    			// Open login dialog
-    			if(ApplicationArgumentUtils.isOnlineServer()) {
-    				ServiceLoginDialog loginDialog = new ServiceLoginDialog(Display.getCurrent().getActiveShell());
-	    	    	if(Dialog.OK == loginDialog.open()) {
-	    	    		initializeUserSession();
-	    	    	}
-    			} else {
-    				LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
-//    				SpecialLoginDialog loginDialog = new SpecialLoginDialog(Display.getCurrent().getActiveShell());
-	    	    	if(Dialog.OK == loginDialog.open()) {
-	    	    		initializeUserSession();
-	    	    	}
-    			}
+				LoginDialog loginDialog = new LoginDialog(Display.getCurrent().getActiveShell());
+    	    	if(Dialog.OK == loginDialog.open()) {
+    	    		initializeUserSession();
+    	    	}
     		}
     		
 			// 중복 로그인 방지를 위해 세션을 기록합니다.

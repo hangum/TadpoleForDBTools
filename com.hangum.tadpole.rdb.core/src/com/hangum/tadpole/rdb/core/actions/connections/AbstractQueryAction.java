@@ -133,7 +133,6 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 		IEditorReference reference = EditorUtils.findSQLEditor(dao);
 		
 		if(reference == null) {
-					
 			try {
 				MainEditorInput mei = new MainEditorInput(dao);
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID);

@@ -12,7 +12,7 @@ package com.hangum.tadpole.engine.sql.util;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.template.AltibaseDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.CubridDMLTemplate;
@@ -41,17 +41,17 @@ public class PartQueryUtil {
 	public static String makeSelect(UserDBDAO userDB, String strQuery, int intStartPos, int intRowCnt) throws Exception {
 		String requestQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine() || DBDefine.MARIADB_DEFAULT == userDB.getDBDefine() ) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
-		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() || DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(SQLiteDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
-		} else if(DBDefine.CUBRID_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(CubridDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(PostgreDMLTemplate.TMP_GET_PARTDATA, strQuery,  intStartPos, intRowCnt);
-		} else if(DBDefine.ALTIBASE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(AltibaseDMLTemplate.TMP_GET_PARTDATA, strQuery,  intStartPos, intRowCnt);
 //		} else if(DBDefine.MSSQL_DEFAULT == userDB.getDBDefine() | DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine()) {
 //			requestQuery = String.format(MSSQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intRowCnt, intStartPos+intRowCnt);
@@ -76,25 +76,22 @@ public class PartQueryUtil {
 	public static String makeExplainQuery(UserDBDAO userDB, String query) throws Exception {
 		String resultQuery = "";
 		
-		if(DBDefine.MYSQL_DEFAULT == userDB.getDBDefine()
-				|| DBDefine.MARIADB_DEFAULT == userDB.getDBDefine()
-		) {
+		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
-		} else if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine() || DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
-		} else if(DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine() || DBDefine.MSSQL_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 	      resultQuery =  MSSQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
-		} else if(DBDefine.SQLite_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			resultQuery = SQLiteDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
-			
-		} else if(DBDefine.CUBRID_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 			resultQuery = query;
-		} else if(DBDefine.HIVE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			resultQuery = HIVEDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
-		} else if(DBDefine.TAJO_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			resultQuery = TAJODMLTemplate.TMP_EXPLAIN_EXTENDED + query;
-		} else if(DBDefine.POSTGRE_DEFAULT == userDB.getDBDefine()) {
+		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			resultQuery = PostgreDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
 		} else {

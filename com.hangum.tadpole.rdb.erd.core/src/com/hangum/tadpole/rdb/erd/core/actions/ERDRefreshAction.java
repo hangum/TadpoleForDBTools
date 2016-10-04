@@ -24,7 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -104,7 +104,7 @@ public class ERDRefreshAction extends SelectionAction {
 				tableModel.setDb(dbModel);
 				tableModel.setName(table.getName());
 				
-				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 					tableModel.setComment("");	 //$NON-NLS-1$
 				} else {
 					String tableComment = table.getComment();

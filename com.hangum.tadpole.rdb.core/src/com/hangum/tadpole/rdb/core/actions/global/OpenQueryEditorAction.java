@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
@@ -94,7 +94,7 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 	 */
 	private void isSelectEnable() {
 		if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
-			if(userDB.getDBDefine() != DBDefine.MONGODB_DEFAULT) {				
+			if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {				
 				setEnabled(true);
 			}
 		}

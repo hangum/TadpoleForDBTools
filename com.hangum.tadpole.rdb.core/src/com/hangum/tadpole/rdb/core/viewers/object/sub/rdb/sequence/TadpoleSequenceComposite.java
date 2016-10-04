@@ -82,9 +82,6 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 	private List<OracleSequenceDAO> showSequences = new ArrayList<OracleSequenceDAO>();
 	private DefaultTableColumnFilter sequenceFilter;
 
-	// column info
-	private TableViewer sequenceColumnViewer;
-	
 	private ObjectCreatAction creatAction_Sequence;
 	private AbstractObjectAction dropAction_Sequence;
 	private AbstractObjectAction refreshAction_Sequence;
@@ -323,15 +320,6 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 	 */
 	public TableViewer getTableviewer() {
 		return sequenceListViewer;
-	}
-
-	/**
-	 * get sequence column viewer
-	 * 
-	 * @return
-	 */
-	public TableViewer getSequenceColumnViewer() {
-		return sequenceColumnViewer;
 	}
 
 	/**

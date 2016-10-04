@@ -59,6 +59,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATE
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -276,13 +277,12 @@ public class ResultSetComposite extends Composite {
 	 */
 	private boolean ifIsParameterQuery(final RequestQuery reqQuery) {
 		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) return true;
-		final DBDefine selectDBDefine = getUserDB().getDBDefine();
-		if((selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
-				selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
-				selectDBDefine == DBDefine.TAJO_DEFAULT 	||
-				// not support this java.sql.ParameterMetaData 
-				selectDBDefine == DBDefine.CUBRID_DEFAULT)
-		) return true; 
+		final DBGroupDefine dbGroup = getUserDB().getDBGroup();
+		if(DBGroupDefine.HIVE_GROUP == dbGroup 
+				|| DBGroupDefine.TAJO_GROUP == dbGroup
+				|| DBGroupDefine.CUBRID_GROUP == dbGroup) return true; 
+		
+		
 
 		final Shell runShell = btnStopQuery.getShell();
 		
@@ -398,9 +398,12 @@ public class ResultSetComposite extends Composite {
 			executeErrorProgress(reqQuery, e, e.getMessage());
 			return false;
 		}
-		
-		// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
-		if(!ifIsParameterQuery(reqQuery)) return false;
+	
+		// agens graph는 preparement 가 없습니다.
+		if(DBDefine.AGENSGRAPH_DEFAULT != getUserDB().getDBDefine()){
+			// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
+			if(!ifIsParameterQuery(reqQuery)) return false;
+		}
 		
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
 		controlProgress(true);
@@ -481,7 +484,7 @@ public class ResultSetComposite extends Composite {
 								// SET, CALL 명령도 프로파일을 해야하는가? - hangum
 								//
 								//
-								if(getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+								if(DBGroupDefine.MYSQL_GROUP == getUserDB().getDBGroup()) {
 									if(isProfilling) {
 
 										QueryUtils.executeQuery(tmpUserDB, "SET PROFILING = 1", 0, 10);
@@ -726,7 +729,7 @@ public class ResultSetComposite extends Composite {
 		PreparedStatement preparedStatement = null;
 		
 		try {
-			if(DBDefine.TAJO_DEFAULT == getUserDB().getDBDefine()) {
+			if(DBGroupDefine.TAJO_GROUP == getUserDB().getDBGroup()) {
 				javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
 			} else {
 				if(reqQuery.isAutoCommit()) {
@@ -745,9 +748,7 @@ public class ResultSetComposite extends Composite {
 				statement = javaConn.createStatement();
 				
 				statement.setFetchSize(intSelectLimitCnt);
-				if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-						getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
-				) {
+				if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {
 					statement.setQueryTimeout(queryTimeOut);
 					statement.setMaxRows(intSelectLimitCnt);
 				}
@@ -773,9 +774,7 @@ public class ResultSetComposite extends Composite {
 				preparedStatement = javaConn.prepareStatement(strSQL);
 				
 				preparedStatement.setFetchSize(intSelectLimitCnt);
-				if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-						getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
-				) {
+				if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {
 					preparedStatement.setQueryTimeout(queryTimeOut);
 					preparedStatement.setMaxRows(intSelectLimitCnt);
 				}
@@ -824,7 +823,7 @@ public class ResultSetComposite extends Composite {
 	}
 	
 	/**
-	 * prepared statment 로 실행한다.
+	 * prepared statement 로 실행한다.
 	 * 
 	 * @param preparedStatement
 	 * @param statementParameter
@@ -861,9 +860,7 @@ public class ResultSetComposite extends Composite {
 			public ResultSet call() throws SQLException {
 				
 				// 오라클인 경우 PL/SQL 실행후 dbms_output 출력 메시지를 결과 메시지에 받아온다.
-				if(getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || 
-						getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT)
-				{
+				if(DBGroupDefine.ORACLE_GROUP == getUserDB().getDBGroup()) {
 					try {
 						dbmsOutput = new OracleDbmsOutputUtil( statement.getConnection() );
 						dbmsOutput.enable( 1000000 ); 
@@ -998,9 +995,7 @@ public class ResultSetComposite extends Composite {
 			progressBarQuery.setSelection(0);
 			
 			// HIVE는 CANCLE 기능이 없습니다. 
-			if(!(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT ||
-					getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT)
-			) {
+			if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {
 				btnStopQuery.setEnabled(true);
 			}
 		} else {

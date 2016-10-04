@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.engine.query.dao.rdb.AbstractDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleTablespaceDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;

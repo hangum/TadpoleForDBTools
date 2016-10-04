@@ -61,7 +61,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -311,14 +311,13 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				final DBDefine selectDB = getUserDB().getDBDefine();
+				final DBGroupDefine selectGroup = getUserDB().getDBGroup();
 				
-				if(selectDB == DBDefine.ORACLE_DEFAULT || 
-						selectDB == DBDefine.POSTGRE_DEFAULT ||
-						selectDB == DBDefine.MSSQL_DEFAULT ||
-						selectDB == DBDefine.TIBERO_DEFAULT ||
-						selectDB == DBDefine.MYSQL_DEFAULT ||
-						selectDB == DBDefine.MARIADB_DEFAULT) {
+				if(DBGroupDefine.ORACLE_GROUP == selectGroup ||
+					DBGroupDefine.POSTGRE_GROUP == selectGroup ||
+					DBGroupDefine.MSSQL_GROUP == selectGroup ||
+					DBGroupDefine.MYSQL_GROUP == selectGroup
+					) {
 					
 					if("".equals(table.getSchema_name()) || null == table.getSchema_name()) return table.getName();
 					return table.getSchema_name() + "."+ table.getName();
@@ -444,17 +443,15 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		createColumns();
 		
 		if(userDB != null) {
-			if(userDB.getDBDefine() == DBDefine.ALTIBASE_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.CUBRID_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.SQLite_DEFAULT ||
-				userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT
-			) {
+			if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup() ||
+				DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
+				
 				createIndexes();
 				createTrigger();
-			} else if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT ||
-					userDB.getDBDefine() == DBDefine.TAJO_DEFAULT
-			) {
+			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 				// do not show them
 			} else {
 				createIndexes();
@@ -571,9 +568,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		if(getUserDB().getDBDefine() == DBDefine.HIVE_DEFAULT || 
-				getUserDB().getDBDefine() == DBDefine.HIVE2_DEFAULT || 
-						getUserDB().getDBDefine() == DBDefine.TAJO_DEFAULT) {
+		final DBGroupDefine dbGroup = getUserDB().getDBGroup();
+		if(DBGroupDefine.HIVE_GROUP == dbGroup || DBGroupDefine.TAJO_GROUP == dbGroup) {
 			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
 				
 				if(!isDDLLock()) {
@@ -595,26 +591,24 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				if(!isDDLLock()) {
 					menuMgr.add(creatAction_Table);
 					menuMgr.add(new Separator());
-					if (getUserDB().getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+					if (DBGroupDefine.ALTIBASE_GROUP != dbGroup) { 
 						menuMgr.add(renameAction_Table);
 						
-						if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT ||
-								getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) 
-						{ 
+						if (DBGroupDefine.MYSQL_GROUP == dbGroup) { 
 							menuMgr.add(tableRelationAction);
 						}
 								
 					}
 					menuMgr.add(dropAction_Table);
 					menuMgr.add(new Separator());
-					if (getUserDB().getDBDefine() == DBDefine.MYSQL_DEFAULT || getUserDB().getDBDefine() == DBDefine.MARIADB_DEFAULT) {
+					if (DBGroupDefine.MYSQL_GROUP == dbGroup) {
 						menuMgr.add(addTableColumnAction);
 						menuMgr.add(new Separator());
 					}
 				}
 
 				// 현재는 oracle db만 데이터 수정 모드..
-				if (getUserDB().getDBDefine() == DBDefine.ORACLE_DEFAULT || getUserDB().getDBDefine() == DBDefine.TIBERO_DEFAULT) {
+				if (DBGroupDefine.ORACLE_GROUP == dbGroup) {
 					menuMgr.add(generateSampleData);
 					menuMgr.add(new Separator());
 				}
@@ -629,7 +623,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				if(!isUpdateLock()) menuMgr.add(updateStmtAction);
 				if(!isDeleteLock()) menuMgr.add(deleteStmtAction);
 				
-				if (getUserDB().getDBDefine() != DBDefine.ALTIBASE_DEFAULT) { 
+				if (DBGroupDefine.ALTIBASE_GROUP != dbGroup) { 
 					menuMgr.add(new Separator());
 					menuMgr.add(viewDDLAction);
 				}

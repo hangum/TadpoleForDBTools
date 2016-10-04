@@ -58,19 +58,14 @@ public class ConnectDatabase implements IViewActionDelegate {
 		final UserDBDAO userDB = dialog.getDTO();
 		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
 		
+		if(userDB == null || ret != Dialog.OK) return;
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if(ret == Dialog.OK) {
-					if(userDB == null) managerView.init();
-					else managerView.addUserDB(userDB, true);
-				}
-				else managerView.init();
+				managerView.addUserDB(userDB, true);
 			}
 		});	// end display
-
 	}
-	
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {

@@ -43,8 +43,6 @@ public class TableCreateAction extends AbstractObjectSelectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-//		TableDAO tableDAO = (TableDAO)selection.getFirstElement();
-		
 		MySQLTaableCreateDialog dialog = new MySQLTaableCreateDialog(window.getShell(), getUserDB());
 		dialog.open();
 	}
