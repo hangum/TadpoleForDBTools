@@ -306,6 +306,8 @@ public class Messages {
 	public String AuthorityTargetDB;
 
 	public String AuthorityTargetUser;
+
+	public String RemoveDatabase;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

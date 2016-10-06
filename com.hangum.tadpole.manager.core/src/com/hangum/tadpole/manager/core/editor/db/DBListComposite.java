@@ -196,7 +196,7 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmDeleteDB.setEnabled(false);
-		tltmDeleteDB.setToolTipText(CommonMessages.get().Delete);
+		tltmDeleteDB.setToolTipText(Messages.get().RemoveDatabase);
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 
