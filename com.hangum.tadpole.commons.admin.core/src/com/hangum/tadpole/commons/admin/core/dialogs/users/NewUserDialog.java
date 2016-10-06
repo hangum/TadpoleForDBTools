@@ -362,17 +362,19 @@ public class NewUserDialog extends Dialog {
 					btnGetOptCode.getSelection()?"YES":"NO",  //$NON-NLS-1$ //$NON-NLS-2$
 					textSecretKey.getText(),
 					"*"); //$NON-NLS-1$ //$NON-NLS-2$
+
+			if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().NewUserDialog_33)) {
+				try {
+					AddDefaultSampleDBToUser.addUserDefaultDB(userDao.getSeq(), userDao.getEmail());
+				} catch (Exception e) {
+					logger.error("Sample db copy error", e); //$NON-NLS-1$
+				}
+			}
 		
 			boolean isSentMail = false;
 			if(smtpDto.isValid()) {
 				sendEmailAccessKey(name, strEmail, strEmailConformKey);
 				isSentMail = true;
-			}
-			
-			try {
-				AddDefaultSampleDBToUser.addUserDefaultDB(userDao.getSeq(), userDao.getEmail());
-			} catch (Exception e) {
-				logger.error("Sample db copy error", e); //$NON-NLS-1$
 			}
 			
 			if(isSentMail) MessageDialog.openInformation(null, CommonMessages.get().Confirm, String.format(Messages.get().NewUserDialog_31, strEmail));
