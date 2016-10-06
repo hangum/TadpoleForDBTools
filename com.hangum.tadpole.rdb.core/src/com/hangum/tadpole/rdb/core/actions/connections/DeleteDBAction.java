@@ -57,12 +57,16 @@ public class DeleteDBAction implements IViewActionDelegate {
 	@Override
 	public void run(IAction action) {
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
+		removeDatabase(userDB);
+	}
+	
+	public boolean removeDatabase(final UserDBDAO userDB) {
 		if(userDB.getUser_seq() != SessionManager.getUserSeq()) {
 			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().DeleteDBAction_2);
-			return;
+			return false;
 		}
 		
-		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, "[" + userDB.getDisplay_name() + "] " + Messages.get().DeleteDBAction_1)) return; //$NON-NLS-2$ //$NON-NLS-3$
+		if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, "[" + userDB.getDisplay_name() + "] " + Messages.get().DeleteDBAction_1)) return false; //$NON-NLS-2$ //$NON-NLS-3$
 		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		
@@ -103,7 +107,11 @@ public class DeleteDBAction implements IViewActionDelegate {
 			
 			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), CommonMessages.get().Error, "Disconnection Exception", errStatus); //$NON-NLS-1$ //$NON-NLS-2$
+			
+			return false;
 		}
+		
+		return true;
 	}
 	
 	@Override
