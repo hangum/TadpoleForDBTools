@@ -20,6 +20,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -89,6 +91,11 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		lblNewLabel.setText(Messages.get().DefaultPreferencePage_2);
 		
 		textSessionTime = new Text(container, SWT.BORDER);
+		textSessionTime.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 		textSessionTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblExportDilimit = new Label(container, SWT.NONE);
@@ -117,6 +124,30 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		return container;
 	}
 	
+	@Override
+	public boolean isValid() {
+		String txtSessionTime 	= textSessionTime.getText();
+		
+		if(!NumberUtils.isNumber(txtSessionTime)) {
+			textSessionTime.setFocus();
+			setValid(false);
+			setErrorMessage(Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);
+
+			return false;
+		} else if(!(NumberUtils.toInt(txtSessionTime) >= 5 && NumberUtils.toInt(txtSessionTime) <= 300)) {
+			textSessionTime.setFocus();
+			setValid(false);
+			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_2, "5 min", "300 min"));
+			
+			return false;
+		}
+		
+		setErrorMessage(null);
+		setValid(true);
+		
+		return true;
+	}
+	
 	/**
 	 * change ui locale
 	 * 
@@ -129,6 +160,8 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 	
 	@Override
 	public boolean performOk() {
+		if(!isValid()) return false;
+		
 		String strLocale 		= comboLanguage.getText();
 		String txtSessionTime 	= textSessionTime.getText();
 		String txtExportDelimit = textExportDelimit.getText();
@@ -139,16 +172,6 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		Locale locale = (Locale)comboLanguage.getData(strLocale);
 		CookieUtils.saveCookie(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE, locale.toLanguageTag());
 		RWT.getUISession().setLocale(locale);
-		
-		if(!NumberUtils.isNumber(txtSessionTime)) {
-			textSessionTime.setFocus();
-			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);			 //$NON-NLS-1$
-			return false;
-		} else if(!(NumberUtils.toInt(txtSessionTime) >= 5 && NumberUtils.toInt(txtSessionTime) <= 300)) {
-			textSessionTime.setFocus();
-			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_2, "5 min", "300 min"));			 //$NON-NLS-1$
-			return false;
-		}
 		
 		// 테이블에 저장 
 		try {			

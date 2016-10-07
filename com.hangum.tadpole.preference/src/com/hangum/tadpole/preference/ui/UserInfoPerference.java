@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -145,12 +147,22 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		lblPassword.setText(Messages.get().UserInfoPerference_3);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		textPassword.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblRePassword = new Label(container, SWT.NONE);
 		lblRePassword.setText(Messages.get().UserInfoPerference_4);
 		
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		textRePassword.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblLanguage = new Label(container_1, SWT.NONE);
@@ -203,6 +215,11 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		
 		textSecretKey = new Text(grpGoogleAuth, SWT.BORDER);
 		textSecretKey.setText(SessionManager.getOTPSecretKey());
+		textSecretKey.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblQrcodeUrl = new Label(grpGoogleAuth, SWT.NONE);
@@ -228,6 +245,11 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		lblOptCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
+		textOTPCode.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		if(!SessionManager.isSystemAdmin()) {
@@ -295,6 +317,51 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	}
 	
 	@Override
+	public boolean isValid() {
+		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+			String pass = StringUtils.trim(textPassword.getText());
+			String rePass = StringUtils.trim(textRePassword.getText());
+			String otpSecretKey = StringUtils.trim(textSecretKey.getText());
+			
+			if(!(StringUtils.length(pass) >= 7 && StringUtils.length(pass) <= 30)) {
+				textPassword.setFocus();
+
+				setValid(false);
+				setErrorMessage(String.format(CommonMessages.get().Text_ValueIsLessThanOrOverThan, Messages.get().UserInfoPerference_3, "7", "30"));
+				return false;
+			}
+			
+			if(!pass.equals(rePass)) {
+//				textPassword.setFocus();
+
+				setValid(false);
+				setErrorMessage(Messages.get().UserInfoPerference_6);
+				return false;
+			} else if(btnGetOptCode.getSelection()) {
+				if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
+					textOTPCode.setFocus();
+
+					setValid(false);
+					setErrorMessage(Messages.get().UserInfoPerference_15);
+					return false;
+				} else if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
+					textOTPCode.setFocus();
+
+					setValid(false);
+					setErrorMessage(Messages.get().UserInfoPerference_16);
+					return false;
+				}
+			}
+			
+			setErrorMessage(null);
+			setValid(true);
+			
+		}
+		
+		return true;
+	}
+	
+	@Override
 	public boolean performOk() {
 		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 			String pass = StringUtils.trim(textPassword.getText());
@@ -305,28 +372,6 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String timezone = StringUtils.trim(comboTimezone.getText());
 			if(comboLanguage.getData(comboLanguage.getText()) != null) {
 				locale = (Locale)comboLanguage.getData(comboLanguage.getText());	
-			}
-			
-			if(!(StringUtils.length(pass) >= 7 && StringUtils.length(pass) <= 30)) {
-				textPassword.setFocus();
-				MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().UserInfoPerference_3, "7", "30"));			 //$NON-NLS-1$
-				return false;
-			}
-			
-			if(!pass.equals(rePass)) {
-				textPassword.setFocus();
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_6);
-				return false;
-			} else if(btnGetOptCode.getSelection()) {
-				if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-					textOTPCode.setFocus();
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_15); //$NON-NLS-1$
-					return false;
-				} else if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
-					textOTPCode.setFocus();
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().UserInfoPerference_16); //$NON-NLS-1$
-					return false;
-				}
 			}
 			
 			UserDAO user = new UserDAO();
