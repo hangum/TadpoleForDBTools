@@ -60,9 +60,9 @@ public class ModifyUserDialog extends Dialog {
 	private int BTN_INITIALIZE_PASSWORD = IDialogConstants.CLIENT_ID + 1;
 	
 	private UserDAO userDAO;
-	
-	private Text textEmail;
+
 	private Text textName;
+	private Text textEmail;
 	private Text textCreateDate;
 	
 	private Combo comboIsRegistDB;
@@ -104,19 +104,19 @@ public class ModifyUserDialog extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		container.setLayout(new GridLayout(2, false));
 		
-		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(CommonMessages.get().Email);
-		
-		textEmail = new Text(container, SWT.BORDER);
-		textEmail.setEditable(false);
-		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setText(CommonMessages.get().Name);
 		
 		textName = new Text(container, SWT.BORDER);
 		textName.setEditable(false);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblEmail = new Label(container, SWT.NONE);
+		lblEmail.setText(CommonMessages.get().Email);
+		
+		textEmail = new Text(container, SWT.BORDER);
+		textEmail.setEditable(false);
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblAllowIp = new Label(container, SWT.NONE);
 		lblAllowIp.setText(Messages.get().ModifyUserDialog_3);

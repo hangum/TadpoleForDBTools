@@ -63,11 +63,11 @@ import com.hangum.tadpole.preference.define.GetAdminPreference;
 public class NewUserDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(NewUserDialog.class);
 	private boolean isAdmin = false;
-	
+
+	private Text textName;
 	private Text textEMail;
 	private Text textPasswd;
 	private Text textRePasswd;
-	private Text textName;
 	
 	private Combo comboLanguage;
 	private Combo comboTimezone;
@@ -126,6 +126,12 @@ public class NewUserDialog extends Dialog {
 		gridLayout.marginWidth = 4;
 		gridLayout.numColumns = 2;
 		
+		Label lblName = new Label(container, SWT.NONE);
+		lblName.setText(CommonMessages.get().Name);
+		
+		textName = new Text(container, SWT.BORDER);
+		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Label lblIdemail = new Label(container, SWT.NONE);
 		lblIdemail.setText(CommonMessages.get().Email);
 		
@@ -143,13 +149,7 @@ public class NewUserDialog extends Dialog {
 		
 		textRePasswd = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label lblName = new Label(container, SWT.NONE);
-		lblName.setText(CommonMessages.get().Name);
-		
-		textName = new Text(container, SWT.BORDER);
-		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+				
 		Label lblLanguage = new Label(container, SWT.NONE);
 		lblLanguage.setText(Messages.get().NewUserDialog_lblLanguage_text);
 		
