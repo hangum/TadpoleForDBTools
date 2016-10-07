@@ -200,6 +200,7 @@ public class NewUserDialog extends Dialog {
 			}
 		});
 		btnServiceContract.setText(Messages.get().TermsOfService);
+		btnServiceContract.setSelection(isAdmin);
 		
 		btnPersonContract = new Button(composite, SWT.CHECK);
 		btnPersonContract.addSelectionListener(new SelectionAdapter() {
@@ -217,6 +218,7 @@ public class NewUserDialog extends Dialog {
 			}
 		});
 		btnPersonContract.setText(Messages.get().PrivacyTermsandConditions);
+		btnPersonContract.setSelection(isAdmin);
 		
 		btnGetOptCode = new Button(container, SWT.CHECK);
 		btnGetOptCode.addSelectionListener(new SelectionAdapter() {
@@ -254,7 +256,7 @@ public class NewUserDialog extends Dialog {
 		
 		textOTPCode = new Text(grpGoogleOtp, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textEMail.setFocus();
+		textName.setFocus();
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
