@@ -173,7 +173,11 @@ public class TadpoleObjectQuery {
 		} 
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		showTables = sqlClient.queryForList("tableList", userDB.getDefaultSchemanName()); //$NON-NLS-1$	
+		if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
+			showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getUsers())); //$NON-NLS-1$
+		} else {
+			showTables = sqlClient.queryForList("tableList", userDB.getDefaultSchemanName()); //$NON-NLS-1$
+		}
 		
 		/** filter 정보가 있으면 처리합니다. */
 		return getTableAfterwork(showTables, userDB);
