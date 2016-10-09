@@ -26,6 +26,12 @@ public interface ILicenseExtension {
 	public void initExtension(File file);
 	
 	/**
+	 * 
+	 * @param strString
+	 */
+	public void initExtension(String file);
+	
+	/**
 	 * get host information
 	 * 
 	 * @return

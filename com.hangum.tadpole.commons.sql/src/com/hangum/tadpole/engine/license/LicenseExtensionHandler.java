@@ -65,4 +65,40 @@ public class LicenseExtensionHandler {
 		
 		return (ILicenseExtension[]) listReturn.toArray(new ILicenseExtension[listReturn.size()]);
 	}
+	
+	/**
+	 * extension widget creation
+	 * 
+	 * @return
+	 */
+	public ILicenseExtension[] license(final String strLicense) {
+		final LinkedList listReturn = new LinkedList();
+		
+		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(LICENSE_EXTENSION_ID);
+		try {
+			for (IConfigurationElement e : config) {
+				final Object licenseExtension = e.createExecutableExtension("class");
+				if (licenseExtension instanceof ILicenseExtension) {
+					ISafeRunnable runnable = new ISafeRunnable() {
+
+						@Override
+						public void handleException(Throwable exception) {
+							logger.error("Exception license extension", exception);
+						}
+
+						@Override
+						public void run() throws Exception {
+							ILicenseExtension compositeExt = (ILicenseExtension) licenseExtension;
+							compositeExt.initExtension(strLicense);
+						}
+					};
+					SafeRunner.run(runnable);
+				}
+			}
+		} catch (CoreException ex) {
+			logger.error("Create License extension exception", ex);
+		}
+		
+		return (ILicenseExtension[]) listReturn.toArray(new ILicenseExtension[listReturn.size()]);
+	}
 }
