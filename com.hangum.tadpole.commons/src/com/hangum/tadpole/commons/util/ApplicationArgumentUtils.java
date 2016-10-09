@@ -53,13 +53,22 @@ public class ApplicationArgumentUtils {
 	}
 	
 	/**
+	 * initialize db server value
+	 * @throws Exception
+	 */
+	public static String initDBServer() throws Exception {
+		dbServer = getValue("-dbServer");
+		return dbServer;
+	}
+	
+	/**
 	 * <pre>
 	 * 	엔진이 디비를 공유 디비정보를 가져온다.
 	 * </pre>
 	 * 
 	 * @return
 	 */
-	public static String getDbServer() throws Exception {
+	public static String getDbServer() {
 		return dbServer;
 	}
 	

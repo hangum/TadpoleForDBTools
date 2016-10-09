@@ -33,15 +33,15 @@ public class ApplicationLicenseInitialize {
 		if(ApplicationArgumentUtils.isInitialize) return;
 		
 		try {
-			String strLicenseInfo = ApplicationArgumentUtils.getDbServer();
+			String strLicenseInfo = ApplicationArgumentUtils.initDBServer();
 			if(!StringUtils.isEmpty(strLicenseInfo)) {
-				logger.info("******** Start enterprise version ");
+				logger.info("******** [0] Start enterprise version ");
 				LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
 				linceseHandler.license(strLicenseInfo);
 			} else {
 				File fileExist = new File(TDB_License_FILE);
 				if(fileExist.isFile()) {
-					logger.info("******** Start enterprise version ");
+					logger.info("******** [1] Start enterprise version ");
 					LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
 					linceseHandler.license(fileExist);
 				}
