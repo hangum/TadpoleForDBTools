@@ -108,7 +108,7 @@ public class TableColumnComposite extends AbstractTableComposite {
 
 				if (!is.isEmpty()) {
 					TableColumnDAO tableDAO = (TableColumnDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.runAtPosition(StringUtils.trim(tableDAO.getField()));
+					FindEditorAndWriteQueryUtil.runAtPosition(String.format("%s, ", tableDAO.getField()));
 				}
 			}
 		});
