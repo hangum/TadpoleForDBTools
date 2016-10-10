@@ -636,7 +636,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt * 4, oldTadpoleResultSet.getData().size());
 						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
 						
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
