@@ -56,8 +56,12 @@ public class ApplicationArgumentUtils {
 	 * initialize db server value
 	 * @throws Exception
 	 */
-	public static String initDBServer() throws Exception {
-		dbServer = getValue("-dbServer");
+	public static String initDBServer() {
+		try {
+			dbServer = getValue("-dbServer");
+		} catch(Exception e) {
+			// igonre exception 
+		}
 		return dbServer;
 	}
 	
