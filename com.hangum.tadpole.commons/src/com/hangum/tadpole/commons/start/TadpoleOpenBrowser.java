@@ -31,8 +31,8 @@ public class TadpoleOpenBrowser  implements Runnable {
 		Runtime runtime = Runtime.getRuntime();
 		try {
 			// TODO 시스템 속도가 느려서 워크벤치가 정상적으로 동작하지 못했을 경우에 대비하여 기다립니다.
-			try { Thread.sleep(3000); } catch(Exception e) {};
-			int stats = PingTest.ping("127.0.0.1", 10081, 3000);
+			try { Thread.sleep(1000); } catch(Exception e) {};
+			int stats = PingTest.ping("127.0.0.1", Integer.parseInt(PublicTadpoleDefine.TADPOLE_DEFAULT_PORT), 5000);
 			if(stats != PingTest.SUCCESS) {
 				try { Thread.sleep(3000); } catch(Exception e) {};
 			}
