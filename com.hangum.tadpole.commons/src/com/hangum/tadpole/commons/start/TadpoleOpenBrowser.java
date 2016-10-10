@@ -51,7 +51,7 @@ public class TadpoleOpenBrowser  implements Runnable {
 			} else {
 				
 				// linux
-				String as[] = { "firefox", "mozilla-firefox", "mozilla", "konqueror", "netscape", "opera" };
+				String as[] = { "python -m webbrowser", "firefox", "mozilla-firefox", "mozilla", "konqueror", "netscape", "opera" };
 				boolean isSuccess = false;
 				
 				int i = 0;
@@ -60,7 +60,7 @@ public class TadpoleOpenBrowser  implements Runnable {
 					if (i >= as.length)
 						break;
 					try {
-						runtime.exec(new String[] { as[i], PublicTadpoleDefine.getTadpoleUrl() });
+						runtime.exec( ( as[i] + " " + PublicTadpoleDefine.getTadpoleUrl() ).split(" ") );
 						isSuccess = true;
 						break;
 					} catch (Exception exception) {
