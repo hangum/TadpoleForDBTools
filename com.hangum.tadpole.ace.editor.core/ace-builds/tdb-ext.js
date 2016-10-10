@@ -347,7 +347,7 @@ executeQuery = function() {
 	}
 };
 editor.commands.addCommand({
-    name: 'executeObjectViewer',
+    name: 'executeObjectViewer_f4',
     bindKey: {win: 'F4',  mac: 'F4'},
     exec: function(editor) {
     	try {
@@ -370,7 +370,7 @@ editor.commands.addCommand({
     readOnly: false
 });
 editor.commands.addCommand({
-    name: 'executeObjectViewer',
+    name: 'executeObjectViewer_alt_c',
     bindKey: {win: 'Alt-C',  mac: 'Alt-C'},
     exec: function(editor) {
     	try {
