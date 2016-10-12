@@ -11,7 +11,6 @@
 package com.hangum.tadpole.monitoring.core.manager.schedule;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.quartz.CronScheduleBuilder;
@@ -28,8 +27,6 @@ import org.quartz.impl.matchers.GroupMatcher;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.ScheduleMainDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_Schedule;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.monitoring.core.jobs.UserJOB;
 import com.hangum.tadpole.monitoring.core.jobs.monitoring.MonitoringJob;
 

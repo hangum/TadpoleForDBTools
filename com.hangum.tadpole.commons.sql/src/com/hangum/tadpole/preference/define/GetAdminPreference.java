@@ -163,6 +163,16 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * set session smtp info
+	 * 
+	 * @param dto
+	 */
+	public static void setSessionSmtpInfo(SMTPDTO smtpDto) {
+		ApplicationContext context = RWT.getApplicationContext();
+		context.setAttribute("smtpinfo", smtpDto);
+	}
+	
+	/**
 	 * get smtp
 	 * @return
 	 */

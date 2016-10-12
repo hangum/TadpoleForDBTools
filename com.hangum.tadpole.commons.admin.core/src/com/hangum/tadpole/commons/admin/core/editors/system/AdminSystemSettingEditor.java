@@ -76,7 +76,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Combo comboSaveDBPassword;
 	
 	// smtp server
-	private Text textSMTP;
+	private Text textSMTPHost;
 	private Text textPort;
 	private Text textEmail;
 	private Text textPasswd;
@@ -241,8 +241,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 		Label lblSmtpServer = new Label(grpSMTPServer, SWT.NONE);
 		lblSmtpServer.setText(Messages.get().SMTPServer);
 		
-		textSMTP = new Text(grpSMTPServer, SWT.BORDER);
-		textSMTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textSMTPHost = new Text(grpSMTPServer, SWT.BORDER);
+		textSMTPHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPort = new Label(grpSMTPServer, SWT.NONE);
 		lblPort.setText(Messages.get().Port);
@@ -326,13 +326,13 @@ public class AdminSystemSettingEditor extends EditorPart {
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			textSendGridAPI.setText(smtpDto.getSendgrid_api());
-			textSMTP.setText(smtpDto.getHost());
+			textSMTPHost.setText(smtpDto.getHost());
 			textPort.setText(smtpDto.getPort());
 			textEmail.setText(smtpDto.getEmail());
 			textPasswd.setText(smtpDto.getPasswd());
 		} catch (Exception e) {
 			logger.error("SMTP Initialization Failed." + e.getMessage());
-			textSMTP.setText(AdminPreferenceDefine.SMTP_HOST_NAME_VALUE);
+			textSMTPHost.setText(AdminPreferenceDefine.SMTP_HOST_NAME_VALUE);
 			textPort.setText(AdminPreferenceDefine.SMTP_PORT_VALUE);
 		}
 	}
@@ -343,7 +343,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 */
 	private void saveData() {
 		String txtSendGrid		= textSendGridAPI.getText();
-		String txtSmtp 			= textSMTP.getText();
+		String txtSmtpHost 		= textSMTPHost.getText();
 		String txtPort			= textPort.getText();
 		String txtEmail			= textEmail.getText();
 		String txtPasswd		= textPasswd.getText();
@@ -394,10 +394,19 @@ public class AdminSystemSettingEditor extends EditorPart {
 			
 			// update admin value
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SENDGRID_API_NAME, txtSendGrid);
-			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_HOST_NAME, txtSmtp);
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_HOST_NAME, txtSmtpHost);
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_PORT, txtPort);
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_EMAIL, txtEmail);
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_PASSWD, txtPasswd);
+			
+			// session에 정보를 설정한다.
+			SMTPDTO smtpDto = new SMTPDTO();
+			smtpDto.setSendgrid_api(txtSendGrid);
+			smtpDto.setHost(txtSmtpHost);
+			smtpDto.setPort(txtPort);
+			smtpDto.setEmail(txtEmail);
+			smtpDto.setPasswd(txtPasswd);
+			GetAdminPreference.setSessionSmtpInfo(smtpDto);
 			
 		} catch (Exception e) {
 			logger.error("save exception", e); //$NON-NLS-1$
