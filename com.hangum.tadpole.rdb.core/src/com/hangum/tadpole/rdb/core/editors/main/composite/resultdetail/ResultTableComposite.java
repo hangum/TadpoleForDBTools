@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +25,10 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -49,6 +53,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
@@ -74,6 +79,9 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQL
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.util.GenerateDDLScriptUtils;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -174,6 +182,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				logger.error("Fail setting the user font", e); //$NON-NLS-1$
 			}
 		}
+		//
+		// 더블클릭시 에디터에 데이터를 넣어준다.
+		//
+		tvQueryResult.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				selectColumnToEditor();
+			}
+		});
 		tableResult.addListener(SWT.MouseDown, new Listener() {
 		    public void handleEvent(final Event event) {
 		    	TableItem[] selection = tableResult.getSelection();
