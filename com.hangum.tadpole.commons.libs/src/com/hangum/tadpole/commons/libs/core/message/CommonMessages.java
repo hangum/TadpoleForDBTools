@@ -73,6 +73,8 @@ public class CommonMessages {
 
 	public String Text_ValueIsLessThanOrOverThan; 
 	
+	public String Please_InputText;
+	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
 	}

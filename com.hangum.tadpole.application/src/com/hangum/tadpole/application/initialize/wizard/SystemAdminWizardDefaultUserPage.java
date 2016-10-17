@@ -69,8 +69,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		grpAdministratorUserInformation.setText(Messages.get().SystemAdminWizardPage_1);
 		
 		Label lblEmail = new Label(grpAdministratorUserInformation, SWT.NONE);
-		lblEmail.setAlignment(SWT.RIGHT);
-		GridData gd_lblEmail = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_lblEmail = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblEmail.widthHint = 120;
 		lblEmail.setLayoutData(gd_lblEmail);
 		lblEmail.setText(Messages.get().SystemAdminWizardPage_4);
@@ -93,8 +92,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
-		lblPasswd.setAlignment(SWT.RIGHT);
-		lblPasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblPasswd.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblPasswd.setText(Messages.get().SystemAdminWizardPage_5);
 		
 		textPasswd = new Text(grpAdministratorUserInformation, SWT.BORDER | SWT.PASSWORD);
@@ -113,8 +111,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblRePasswd = new Label(grpAdministratorUserInformation, SWT.NONE);
-		lblRePasswd.setAlignment(SWT.RIGHT);
-		lblRePasswd.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblRePasswd.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblRePasswd.setText(Messages.get().SystemAdminWizardPage_6);
 		
 		textRePasswd = new Text(grpAdministratorUserInformation, SWT.BORDER | SWT.PASSWORD);

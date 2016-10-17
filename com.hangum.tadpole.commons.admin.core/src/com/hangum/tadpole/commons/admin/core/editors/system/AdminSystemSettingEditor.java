@@ -169,7 +169,6 @@ public class AdminSystemSettingEditor extends EditorPart {
 		lblApplicationServer.setText(Messages.get().AppServerDbServerTimeZone);
 		
 		Label lblLoginMethod = new Label(compositeBody, SWT.NONE);
-		lblLoginMethod.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblLoginMethod.setText("Login method");
 		
 		Composite compositeLoginMethodDetail = new Composite(compositeBody, SWT.NONE);
