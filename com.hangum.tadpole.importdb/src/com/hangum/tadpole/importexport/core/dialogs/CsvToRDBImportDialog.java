@@ -120,7 +120,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(userDB.getDisplay_name() + Messages.get().CsvToRDBImportDialog_3);
+		newShell.setText(Messages.get().CsvToRDBImportDialog_3);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 

@@ -45,6 +45,15 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * system login method
+	 * @return
+	 */
+	public static String getLoginMethod() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE);
+	}
+	
+	/**
 	 * api server uri
 	 * @return
 	 */

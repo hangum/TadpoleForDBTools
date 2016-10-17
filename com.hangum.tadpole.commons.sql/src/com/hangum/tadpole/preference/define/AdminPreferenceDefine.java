@@ -22,6 +22,10 @@ public class AdminPreferenceDefine {
 	/** DBMS timezone */
 	public static final String DB_TIME_ZONE = _PREFIX + "DB_TIME_ZONE";
 	public static final String DB_TIME_ZONE_VALUE = "";
+	
+	/** system login method */
+	public static final String SYSTEM_LOGIN_METHOD = _PREFIX + "SYSTEM_LOGIN_METHOD";
+	public static final String SYSTEM_LOGIN_METHOD_VALUE = "original";
 
 	/** 신규 사용자 허락 유무 */
 	public static final String NEW_USER_PERMIT = _PREFIX + "NEW_USER_PERMIT";
