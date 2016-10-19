@@ -103,7 +103,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	private TableViewer tvQueryResult;
 	
 	private SQLResultFilter sqlFilter = new SQLResultFilter();
-	private SQLResultSorter sqlSorter;
+//	private SQLResultSorter sqlSorter;
     
 	// 결과 로우 지정.
 	private SelectRowToEditorAction 	selectRowToEditorAction;
@@ -680,7 +680,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		tvQueryResult.addFilter( sqlFilter );
 	}
 	
-	private void appendTextAtPosition(String cmd) {
+	public void appendTextAtPosition(String cmd) {
 		getRdbResultComposite().getRdbResultComposite().appendTextAtPosition(cmd);
 	}
 	
@@ -713,11 +713,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		super.printUI(reqQuery, rsDAO, isMakePin);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
-		sqlSorter = new SQLResultSorter(-999);
 		
 		boolean isEditable = true;
 		if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
-		SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
+		SQLResultLabelProvider.createTableColumn(this, reqQuery, tvQueryResult, rsDAO, isEditable);
 		
 		tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
 		tvQueryResult.setContentProvider(new ArrayContentProvider());
@@ -728,7 +727,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		} else {
 			tvQueryResult.setInput(trs.getData());
 		}
-		tvQueryResult.setSorter(sqlSorter);
 		
 		// 메시지를 출력합니다.
 		compositeTail.execute(getTailResultMsg());

@@ -701,11 +701,10 @@ public class ResultSetComposite extends Composite {
 	 */
 	public QueryExecuteResultDTO runSelect(final RequestQuery reqQuery, final int queryTimeOut, final String strUserEmail, final int intSelectLimitCnt, final int intStartCnt) throws Exception {
 		String strSQL = reqQuery.getSql();
-		if(logger.isDebugEnabled()) logger.debug("==> real execute query : " + strSQL);
-		
 		if(!PermissionChecker.isExecute(getDbUserRoleType(), getUserDB(), strSQL)) {
 			throw new Exception(Messages.get().MainEditor_21);
 		}
+		if(logger.isDebugEnabled()) logger.debug("==> real execute query : " + strSQL);
 		
 		tadpole_system_message = "";
 		QueryExecuteResultDTO queryResultDAO = null; 
