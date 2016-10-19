@@ -245,6 +245,9 @@ public class PublicTadpoleDefine {
 	
 	/** 데이터 수정 상태를 가르킵니다 */
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
+	
+	/** 형태 */
+	public static enum BASIC_STATUS {NONE, START, DONE};
 
 	/** objec explorer에서 정의한 action */
 	public static enum OBJECT_TYPE {
