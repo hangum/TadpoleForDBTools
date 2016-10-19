@@ -246,6 +246,8 @@ public class Messages {
 	public String RDBInitializeSetting;
 
 	public String MsgRDBInitializeSetting;
+
+	public String NewUserDialog_33;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

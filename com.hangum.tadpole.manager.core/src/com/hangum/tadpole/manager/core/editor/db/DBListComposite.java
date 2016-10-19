@@ -40,6 +40,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -68,11 +69,14 @@ import com.hangum.tadpole.manager.core.editor.db.dialogs.DBAccessControlDialog;
 import com.hangum.tadpole.manager.core.editor.db.dialogs.DBOthresConfigDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
+import com.hangum.tadpole.rdb.core.actions.connections.DeleteDBAction;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -97,6 +101,9 @@ public class DBListComposite extends Composite {
 	
 	private AdminCompFilter filter;
 	private Text textSearch;
+	
+	// add, delete db
+	private ToolItem tltmDeleteDB;
 
 	// select database
 	private ToolItem tltmConfigurationDB;
@@ -146,6 +153,59 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
+
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmAddDB = new ToolItem(toolBar, SWT.NONE);
+		tltmAddDB.setImage(GlobalImageUtils.getAdd());
+		tltmAddDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String strGroupName = "";
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+				if(!ss.isEmpty())  {
+					if(ss.getFirstElement() instanceof UserDBDAO) {
+						strGroupName = ((UserDBDAO)ss.getFirstElement()).getGroup_name();
+					} else if(ss.getFirstElement() instanceof ManagerListDTO) {
+						strGroupName = ((ManagerListDTO)ss.getFirstElement()).getName();
+					}
+				}
+				
+				final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), strGroupName);
+				final int ret = dialog.open();
+				
+				final UserDBDAO userDB = dialog.getDTO();
+				final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
+				
+				if(userDB == null || ret != Dialog.OK) return;
+				Display.getCurrent().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						managerView.addUserDB(userDB, true);
+					}
+				});	// end display
+				
+				initData();
+			}
+		});
+		tltmAddDB.setToolTipText(CommonMessages.get().Add);
+		
+		tltmDeleteDB = new ToolItem(toolBar, SWT.NONE);
+		tltmDeleteDB.setImage(GlobalImageUtils.getDelete());
+		tltmDeleteDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+				if(ss.isEmpty()) return;
+				
+				DeleteDBAction deleteDB = new DeleteDBAction();
+				if(deleteDB.removeDatabase((UserDBDAO)ss.getFirstElement())) {
+					initData();
+				}
+			}
+		});
+		tltmDeleteDB.setEnabled(false);
+		tltmDeleteDB.setToolTipText(Messages.get().RemoveDatabase);
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -324,6 +384,7 @@ public class DBListComposite extends Composite {
 					
 					tltmConfigurationDB.setEnabled(true);
 					tltmOtherInformation.setEnabled(true);
+					tltmDeleteDB.setEnabled(true);
 					if("YES".equalsIgnoreCase(SessionManager.getIsSharedDB())) tltmAddUser.setEnabled(true);
 					else tltmAddUser.setEnabled(false);
 					
@@ -347,6 +408,7 @@ public class DBListComposite extends Composite {
 					tltmAddUser.setEnabled(false);
 					tltmConfigurationDB.setEnabled(false);
 					tltmOtherInformation.setEnabled(false);
+					tltmDeleteDB.setEnabled(false);
 					
 					tltmQueryHistory.setEnabled(false);
 					tltmSQLEditor.setEnabled(false);
@@ -360,6 +422,7 @@ public class DBListComposite extends Composite {
 
 					tltmConfigurationDB.setEnabled(false);
 					tltmOtherInformation.setEnabled(false);
+					tltmDeleteDB.setEnabled(false);
 					
 					tltmAddUser.setEnabled(false);
 					tltmUserDelete.setEnabled(false);

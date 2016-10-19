@@ -24,6 +24,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -56,7 +58,6 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
-import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -88,14 +89,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	private static final Logger logger = Logger.getLogger(ResultTableComposite.class);
 	
 	/** 이미 결과를 마지막까지 그렸는지 유무 */
-	private boolean isLastReadData = false;
+	private PublicTadpoleDefine.BASIC_STATUS STATUS_LastReadData = PublicTadpoleDefine.BASIC_STATUS.NONE;;
 	
 	private Text textFilter;
 	
 	private TableViewer tvQueryResult;
 	
 	private SQLResultFilter sqlFilter = new SQLResultFilter();
-	private SQLResultSorter sqlSorter;
+//	private SQLResultSorter sqlSorter;
     
 	// 결과 로우 지정.
 	private SelectRowToEditorAction 	selectRowToEditorAction;
@@ -174,6 +175,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				logger.error("Fail setting the user font", e); //$NON-NLS-1$
 			}
 		}
+		//
+		// 더블클릭시 에디터에 데이터를 넣어준다.
+		//
+		tvQueryResult.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				selectColumnToEditor();
+			}
+		});
 		tableResult.addListener(SWT.MouseDown, new Listener() {
 		    public void handleEvent(final Event event) {
 		    	TableItem[] selection = tableResult.getSelection();
@@ -615,7 +624,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	 */
 	private void calcTableData() {
 		if(getRsDAO() == null) return;
-		if(isLastReadData) return;
+		if(STATUS_LastReadData == PublicTadpoleDefine.BASIC_STATUS.DONE || STATUS_LastReadData == PublicTadpoleDefine.BASIC_STATUS.START) return;
 		
 		final Table tableResult = tvQueryResult.getTable();
 		int tableRowCnt = tableResult.getBounds().height / tableResult.getItemHeight();
@@ -631,21 +640,28 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				}
 				
 				if(oldTadpoleResultSet.getData().size() >= tableResult.getItemCount()) {
+					STATUS_LastReadData = PublicTadpoleDefine.BASIC_STATUS.START;
 					// 나머지 데이터를 가져온다.
 					final String strUserEmail 	= SessionManager.getEMAIL();
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt, oldTadpoleResultSet.getData().size());
-						if(newRsDAO.getDataList().getData().isEmpty()) isLastReadData = true;
-						
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt * 4, oldTadpoleResultSet.getData().size());
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
 					
 						tvQueryResult.setInput(oldTadpoleResultSet.getData());
 						compositeTail.execute(getTailResultMsg());
 						tvQueryResult.getTable().setToolTipText(getTailResultMsg());
+						
+						if(newRsDAO.getDataList().getData().isEmpty()) {
+							STATUS_LastReadData = PublicTadpoleDefine.BASIC_STATUS.DONE;
+						} else {
+							STATUS_LastReadData = PublicTadpoleDefine.BASIC_STATUS.NONE;
+						}
+						
 					} catch(Exception e) {
+						STATUS_LastReadData = PublicTadpoleDefine.BASIC_STATUS.DONE;
 						logger.error("continue result set : " + e.getMessage());
 					}
 					
@@ -664,7 +680,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		tvQueryResult.addFilter( sqlFilter );
 	}
 	
-	private void appendTextAtPosition(String cmd) {
+	public void appendTextAtPosition(String cmd) {
 		getRdbResultComposite().getRdbResultComposite().appendTextAtPosition(cmd);
 	}
 	
@@ -690,18 +706,19 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	
 	@Override
 	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePin) {
-		isLastReadData = false;
 		if(rsDAO == null) return;
 		if(rsDAO.getDataList() == null) return;
-		
+		STATUS_LastReadData = PublicTadpoleDefine.BASIC_STATUS.NONE;		
 		super.printUI(reqQuery, rsDAO, isMakePin);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
-		sqlSorter = new SQLResultSorter(-999);
 		
 		boolean isEditable = true;
 		if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
-		SQLResultLabelProvider.createTableColumn(reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
+		SQLResultLabelProvider.createTableColumn(this, reqQuery, tvQueryResult, rsDAO, isEditable);
+
+		// 연속 쿼리 실행시 쿼리 스크롤이 최 상위로 가도록 테이블 인덱스를 수정.  이렇게 하지 않으면 쿼리 결과가 많을 경우 제일 하단으로 가서 쿼리를 여러번 호출할 여지가 있습니다.  
+		tvQueryResult.getTable().setTopIndex(0);
 		
 		tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
 		tvQueryResult.setContentProvider(new ArrayContentProvider());
@@ -712,7 +729,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		} else {
 			tvQueryResult.setInput(trs.getData());
 		}
-		tvQueryResult.setSorter(sqlSorter);
 		
 		// 메시지를 출력합니다.
 		compositeTail.execute(getTailResultMsg());

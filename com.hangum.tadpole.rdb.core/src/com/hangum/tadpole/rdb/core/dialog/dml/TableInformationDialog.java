@@ -44,7 +44,11 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 
 /**
  * DMLGenerae Statement Dialog
@@ -127,6 +131,16 @@ public class TableInformationDialog extends Dialog {
 		sashFormData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		tableViewer = new TableViewer(sashFormData, SWT.BORDER | SWT.FULL_SELECTION);
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection is = (IStructuredSelection) event.getSelection();
+
+				if (!is.isEmpty()) {
+					ExtendTableColumnDAO tableDAO = (ExtendTableColumnDAO) is.getFirstElement();
+					FindEditorAndWriteQueryUtil.runAtPosition(String.format("%s, ", tableDAO.getName()));
+				}
+			}
+		});
 		Table table = tableViewer.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);

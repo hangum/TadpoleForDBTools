@@ -361,6 +361,7 @@
  	FROM tadpole_db
  	WHERE user_seq = #user_seq# AND
  		display_name = #display_name# AND
+ 		url = #url# AND 
  		seq <> #seq# AND 
 		delYn = 'NO'
 ]]>
@@ -373,7 +374,8 @@
  	SELECT *
  	FROM tadpole_db
  	WHERE user_seq = #user_seq# AND
- 		display_name = #display_name# AND 
+ 		display_name = #display_name# AND
+ 		url = #url# AND  
 		delYn = 'NO'
  </select>
  

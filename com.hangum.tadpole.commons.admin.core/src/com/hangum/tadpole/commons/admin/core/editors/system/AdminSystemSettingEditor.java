@@ -24,6 +24,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -38,6 +39,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.admin.core.Activator;
 import com.hangum.tadpole.commons.admin.core.Messages;
+import com.hangum.tadpole.commons.admin.core.dialogs.LDAPConfigurationDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -63,6 +65,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 	public static final String ID = "com.hangum.tadpole.admin.editor.admn.system.setting"; //$NON-NLS-1$
 	
 	private Combo comboTimezone;
+	private Combo comboLoginMethod;
+	private Button btnLdapConfiguration;
 	private Combo comboNewUserPermit;
 	private Text textResourceHome;
 	
@@ -76,12 +80,12 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Combo comboSaveDBPassword;
 	
 	// smtp server
-	private Text textSMTP;
+	private Text textSMTPHost;
 	private Text textPort;
 	private Text textEmail;
 	private Text textPasswd;
 	private Text textSendGridAPI;
-
+	
 	public AdminSystemSettingEditor() {
 		super();
 	}
@@ -143,7 +147,11 @@ public class AdminSystemSettingEditor extends EditorPart {
 		tltmRdb.setText(Messages.get().RDBInitializeSetting);
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeBody = new GridLayout(2, false);
+		gl_compositeBody.horizontalSpacing = 1;
+		gl_compositeBody.marginHeight = 1;
+		gl_compositeBody.marginWidth = 1;
+		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblDBTimezone = new Label(compositeBody, SWT.NONE);
@@ -159,6 +167,35 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		Label lblApplicationServer = new Label(compositeBody, SWT.NONE);
 		lblApplicationServer.setText(Messages.get().AppServerDbServerTimeZone);
+		
+		Label lblLoginMethod = new Label(compositeBody, SWT.NONE);
+		lblLoginMethod.setText("Login method");
+		
+		Composite compositeLoginMethodDetail = new Composite(compositeBody, SWT.NONE);
+		compositeLoginMethodDetail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeLoginMethodDetail.setLayout(new GridLayout(2, false));
+		
+		// login type
+		comboLoginMethod = new Combo(compositeLoginMethodDetail, SWT.READ_ONLY);
+		comboLoginMethod.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				initializeLoginMethodBtn();
+			}
+		});
+		comboLoginMethod.add("original");
+		comboLoginMethod.add("LDAP");
+		comboLoginMethod.select(0);
+		
+		btnLdapConfiguration = new Button(compositeLoginMethodDetail, SWT.NONE);
+		btnLdapConfiguration.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				LDAPConfigurationDialog dialog = new LDAPConfigurationDialog(getSite().getShell());
+				dialog.open();
+			}
+		});
+		btnLdapConfiguration.setText("LDAP Configuration");
 		
 		Label lblLogDir = new Label(compositeBody, SWT.NONE);
 		lblLogDir.setText(Messages.get().LogDirectory);
@@ -241,8 +278,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 		Label lblSmtpServer = new Label(grpSMTPServer, SWT.NONE);
 		lblSmtpServer.setText(Messages.get().SMTPServer);
 		
-		textSMTP = new Text(grpSMTPServer, SWT.BORDER);
-		textSMTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textSMTPHost = new Text(grpSMTPServer, SWT.BORDER);
+		textSMTPHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPort = new Label(grpSMTPServer, SWT.NONE);
 		lblPort.setText(Messages.get().Port);
@@ -312,6 +349,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 */
 	private void initUI() {
 		comboTimezone.setText(GetAdminPreference.getDBTimezone());
+		comboLoginMethod.setText(GetAdminPreference.getLoginMethod());
+		initializeLoginMethodBtn();
 		comboIsAddDB.setText(GetAdminPreference.getIsAddDB());
 		comboIsSharedDB.setText(GetAdminPreference.getIsSharedDB());
 		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
@@ -326,14 +365,25 @@ public class AdminSystemSettingEditor extends EditorPart {
 		try {
 			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
 			textSendGridAPI.setText(smtpDto.getSendgrid_api());
-			textSMTP.setText(smtpDto.getHost());
+			textSMTPHost.setText(smtpDto.getHost());
 			textPort.setText(smtpDto.getPort());
 			textEmail.setText(smtpDto.getEmail());
 			textPasswd.setText(smtpDto.getPasswd());
 		} catch (Exception e) {
 			logger.error("SMTP Initialization Failed." + e.getMessage());
-			textSMTP.setText(AdminPreferenceDefine.SMTP_HOST_NAME_VALUE);
+			textSMTPHost.setText(AdminPreferenceDefine.SMTP_HOST_NAME_VALUE);
 			textPort.setText(AdminPreferenceDefine.SMTP_PORT_VALUE);
+		}
+	}
+	
+	/**
+	 * initialize login method button
+	 */
+	private void initializeLoginMethodBtn() {
+		if("LDAP".equals(comboLoginMethod.getText())) {
+			btnLdapConfiguration.setEnabled(true);
+		} else {
+			btnLdapConfiguration.setEnabled(false);
 		}
 	}
 	
@@ -342,8 +392,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 	 * 
 	 */
 	private void saveData() {
+		String txtLoginMethod 	= comboLoginMethod.getText();
 		String txtSendGrid		= textSendGridAPI.getText();
-		String txtSmtp 			= textSMTP.getText();
+		String txtSmtpHost 		= textSMTPHost.getText();
 		String txtPort			= textPort.getText();
 		String txtEmail			= textEmail.getText();
 		String txtPasswd		= textPasswd.getText();
@@ -367,6 +418,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 		try {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.DB_TIME_ZONE, comboTimezone.getText());
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.DB_TIME_ZONE, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, txtLoginMethod);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, userInfoDao);
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.NEW_USER_PERMIT, comboNewUserPermit.getText());
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.NEW_USER_PERMIT, userInfoDao);
@@ -394,10 +448,19 @@ public class AdminSystemSettingEditor extends EditorPart {
 			
 			// update admin value
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SENDGRID_API_NAME, txtSendGrid);
-			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_HOST_NAME, txtSmtp);
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_HOST_NAME, txtSmtpHost);
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_PORT, txtPort);
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_EMAIL, txtEmail);
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SMTP_PASSWD, txtPasswd);
+			
+			// session에 정보를 설정한다.
+			SMTPDTO smtpDto = new SMTPDTO();
+			smtpDto.setSendgrid_api(txtSendGrid);
+			smtpDto.setHost(txtSmtpHost);
+			smtpDto.setPort(txtPort);
+			smtpDto.setEmail(txtEmail);
+			smtpDto.setPasswd(txtPasswd);
+			GetAdminPreference.setSessionSmtpInfo(smtpDto);
 			
 		} catch (Exception e) {
 			logger.error("save exception", e); //$NON-NLS-1$

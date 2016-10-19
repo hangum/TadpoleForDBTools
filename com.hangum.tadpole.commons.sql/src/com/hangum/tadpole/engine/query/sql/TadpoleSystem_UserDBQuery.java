@@ -80,6 +80,7 @@ public class TadpoleSystem_UserDBQuery {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
 		queryMap.put("seq", oldUserDBDao.getSeq());
+		queryMap.put("url", CipherManager.getInstance().encryption(userDBDao.getUrl()));
 		queryMap.put("display_name", userDBDao.getDisplay_name());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -100,6 +101,7 @@ public class TadpoleSystem_UserDBQuery {
 	public static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
+		queryMap.put("url", CipherManager.getInstance().encryption(userDBDao.getUrl()));
 		queryMap.put("display_name", userDBDao.getDisplay_name());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());

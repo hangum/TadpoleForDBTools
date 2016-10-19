@@ -100,6 +100,9 @@ public class PublicTadpoleDefine {
 	/**  쿼리 구분자 */
 	public static final String SQL_DELIMITER = ";"; //$NON-NLS-1$
 	
+	/** tadpole default port */
+	public static final String TADPOLE_DEFAULT_PORT = "10081";
+	
 	/** tadpole url */
 	public static final String TADPOLE_URL = "http://127.0.0.1:%s";
 	
@@ -109,7 +112,7 @@ public class PublicTadpoleDefine {
 	 * @return
 	 */
 	public static String getTadpoleUrl() {
-		String tadpolePort = System.getProperty("org.osgi.service.http.port", "10081"); //$NON-NLS-1$ //$NON-NLS-2$
+		String tadpolePort = System.getProperty("org.osgi.service.http.port", TADPOLE_DEFAULT_PORT); //$NON-NLS-1$ //$NON-NLS-2$
 		return String.format(TADPOLE_URL, tadpolePort);
 	}
 	
@@ -242,6 +245,9 @@ public class PublicTadpoleDefine {
 	
 	/** 데이터 수정 상태를 가르킵니다 */
 	public static enum DATA_STATUS {NEW, MODIFY, DEL};
+	
+	/** 기본 상태 정의 */
+	public static enum BASIC_STATUS {NONE, START, DONE};
 
 	/** objec explorer에서 정의한 action */
 	public static enum OBJECT_TYPE {

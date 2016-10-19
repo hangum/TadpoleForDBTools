@@ -14,6 +14,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -101,6 +103,11 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		btnIsWrap.setText(Messages.get().EditorPreferencePage_1);
 		
 		textWrapLimit = new Text(container, SWT.BORDER);
+		textWrapLimit.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 		textWrapLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnShowGutter = new Button(container, SWT.CHECK);
@@ -124,7 +131,33 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	}
 	
 	@Override
+	public boolean isValid() {
+		String txtWrapLimit = textWrapLimit.getText();
+				
+		if(!NumberUtils.isNumber(txtWrapLimit)) {
+			textWrapLimit.setFocus();
+			
+			setValid(false);
+			setErrorMessage(Messages.get().SQLFormatterPreferencePage_8);
+			return false;
+		} else if(!(NumberUtils.toInt(txtWrapLimit) >= 40 && NumberUtils.toInt(txtWrapLimit) <= 1000)) {
+			textWrapLimit.setFocus();
+			
+			setValid(false);
+			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().EditorPreferencePage_1, "40", "1,000"));
+			return false;
+		}
+		
+		setErrorMessage(null);
+		setValid(true);
+		
+		return true;
+	}
+	
+	@Override
 	public boolean performOk() {
+		if(!isValid()) return false;
+		
 		String txtAutoSave	= ""+btnAutoSave.getSelection();
 		String txtTheme 	= comboTheme.getText();
 		String txtFontSize 	= comboFontSize.getText();
@@ -132,16 +165,6 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtWrapLimit = textWrapLimit.getText();
 		String txtIsGutter 	= ""+btnShowGutter.getSelection(); //$NON-NLS-1$
 		String txtMyBatisDollar = ""+btnMybatisSupport.getSelection();
-	
-		if(!NumberUtils.isNumber(txtWrapLimit)) {
-			textWrapLimit.setFocus();
-			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
-			return false;
-		} else if(!(NumberUtils.toInt(txtWrapLimit) >= 40 && NumberUtils.toInt(txtWrapLimit) <= 1000)) {
-			textWrapLimit.setFocus();
-			MessageDialog.openWarning(getShell(),CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().EditorPreferencePage_1, "40", "1,000"));			 //$NON-NLS-1$
-			return false;
-		}
 		
 		// 테이블에 저장 
 		try {

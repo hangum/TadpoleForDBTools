@@ -14,6 +14,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -107,6 +109,11 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		btnWordBreak.setText(Messages.get().SQLFormatterPreferencePage_btnWordBreak_text);
 		
 		textWidth = new Text(container, SWT.BORDER);
+		textWidth.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 		textWidth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		initDefaultValue();
@@ -118,7 +125,33 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 	}
 	
 	@Override
+	public boolean isValid() {
+		String strTextWidth = textWidth.getText();
+		
+		if(!NumberUtils.isNumber(strTextWidth)) {
+			textWidth.setFocus();
+			
+			setValid(false);
+			setErrorMessage(Messages.get().SQLFormatterPreferencePage_8);
+			return false;
+		} else if(!(NumberUtils.toInt(strTextWidth) >= 40 && NumberUtils.toInt(strTextWidth) <= 1000)) {
+			textWidth.setFocus();
+
+			setValid(false);
+			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().SQLFormatterPreferencePage_btnWordBreak_text, "40", "1,000"));
+			return false;
+		}
+		
+		setErrorMessage(null);
+		setValid(true);
+		
+		return true;
+	}
+	
+	@Override
 	public boolean performOk() {
+		if(!isValid()) return false;
+		
 		String txtTabSize = comboTabsize.getText();
 		String txtNoInsertDecode = ""+btnNoInsertNewDecode.getSelection(); //$NON-NLS-1$
 		String txtNoInsertIn = ""+btnNoInsertNewIn.getSelection(); //$NON-NLS-1$
@@ -129,16 +162,6 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		
 		String txtWordbreak = ""+btnWordBreak.getSelection(); //$NON-NLS-1$
 		String strTextWidth = textWidth.getText();
-		
-		if(!NumberUtils.isNumber(strTextWidth)) {
-			textWidth.setFocus();
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().SQLFormatterPreferencePage_8);
-			return false;
-		} else if(!(NumberUtils.toInt(strTextWidth) >= 40 && NumberUtils.toInt(strTextWidth) <= 1000)) {
-			textWidth.setFocus();
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().SQLFormatterPreferencePage_btnWordBreak_text, "40", "1,000"));			 //$NON-NLS-1$
-			return false;
-		}
 		
 		// 테이블에 저장 
 		try {

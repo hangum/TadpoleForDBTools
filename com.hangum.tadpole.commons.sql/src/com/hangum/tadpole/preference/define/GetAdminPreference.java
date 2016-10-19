@@ -45,6 +45,33 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * system login method
+	 * @return
+	 */
+	public static String getLoginMethod() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE);
+	}
+	
+	/**
+	 * system LDAP url
+	 * @return
+	 */
+	public static String getLDAPURL() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_LDAP_URL, AdminPreferenceDefine.SYSTEM_LDAP_URL_VALUE);
+	}
+	
+	/**
+	 * system LDAP authentication
+	 * @return
+	 */
+	public static String getLDAPAuthentication() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_LDAP_AUTHENTICATION, AdminPreferenceDefine.SYSTEM_LDAP_AUTHENTICATION_VALUE);
+	}
+	
+	/**
 	 * api server uri
 	 * @return
 	 */
@@ -160,6 +187,16 @@ public class GetAdminPreference extends AbstractPreference {
 		}
 		
 		return dto;
+	}
+	
+	/**
+	 * set session smtp info
+	 * 
+	 * @param dto
+	 */
+	public static void setSessionSmtpInfo(SMTPDTO smtpDto) {
+		ApplicationContext context = RWT.getApplicationContext();
+		context.setAttribute("smtpinfo", smtpDto);
 	}
 	
 	/**

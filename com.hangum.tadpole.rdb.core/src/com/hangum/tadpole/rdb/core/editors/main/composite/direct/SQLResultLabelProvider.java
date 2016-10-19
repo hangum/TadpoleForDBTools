@@ -37,6 +37,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtilDTO;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
@@ -133,8 +134,62 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 	/**
 	 * table의 Column을 생성한다.
 	 */
-	public static void createTableColumn(
+	public static void createTableColumn(final ResultTableComposite rtComposite,
 										final RequestQuery reqQuery,
+										final TableViewer tableViewer,
+										final ResultSetUtilDTO rsDAO,
+										final boolean isEditable) {
+		// 기존 column을 삭제한다.
+		Table table = tableViewer.getTable();
+		int columnCount = table.getColumnCount();
+		for(int i=0; i<columnCount; i++) {
+			table.getColumn(0).dispose();
+		}
+		
+		if(rsDAO.getColumnName() == null) return;
+			
+		try {			
+			for(int i=0; i<rsDAO.getColumnName().size(); i++) {
+				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))?SWT.RIGHT:SWT.LEFT;
+				String strColumnName = rsDAO.getColumnName().get(i);
+		
+				/** 표시 되면 안되는 컬럼을 제거 합니다 */
+				if(StringUtils.startsWithIgnoreCase(strColumnName, PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) continue;
+				
+				final TableViewerColumn tv = new TableViewerColumn(tableViewer, columnAlign);
+				final TableColumn tc = tv.getColumn();
+				
+				tc.setText(strColumnName);
+				tc.setResizable(true);
+				tc.setMoveable(true);
+				
+				tc.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						String strLabel = tc.getText();
+						if(!StringUtils.isEmpty(strLabel)) {
+							rtComposite.appendTextAtPosition(String.format("%s, ", tc.getText()));
+						}
+					}
+				});
+//				
+//				TODO 디비 스키마 명을 사용할 수있어서, 현재로서는 직접 수정하지 못하도록 코드를 막습니다. - hangum(16.07.26)
+				// if select statement update
+//				if(PublicTadpoleDefine.QUERY_DML_TYPE.SELECT == reqQuery.getSqlDMLType() && isEditable) {
+//					if(i != 0) tv.setEditingSupport(new SQLResultEditingSupport(tableViewer, rsDAO, i));
+//				}
+				
+			}	// end for
+			
+		} catch(Exception e) { 
+			logger.error("SQLResult TableViewer", e);
+		}		
+	}
+	
+	/**
+	 * table의 Column을 생성한다.
+	 */
+	public static void createTableColumn(final RequestQuery reqQuery,
 										final TableViewer tableViewer,
 										final ResultSetUtilDTO rsDAO,
 										final SQLResultSorter tableSorter, 

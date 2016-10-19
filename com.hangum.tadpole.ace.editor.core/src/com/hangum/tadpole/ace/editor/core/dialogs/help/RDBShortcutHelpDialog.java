@@ -129,6 +129,7 @@ public class RDBShortcutHelpDialog extends AbstractShortCutDialog {
 	 */
 	private void initData() {
 		listShortcut.add(new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_5, 	"F4")); //$NON-NLS-2$
+		listShortcut.add(new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_5, 	prefixAltShortcut + "C")); //$NON-NLS-2$
 		listShortcut.add(new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_8, 	prefixCtrlShortcut +"+ I")); //$NON-NLS-2$
 		
 		listShortcut.add( new ShortcutHelpDAO(Messages.get().RDBShortcutHelpDialog_4, 			prefixCtrlShortcut + "+ S") 		); //$NON-NLS-1$

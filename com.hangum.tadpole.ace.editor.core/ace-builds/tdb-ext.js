@@ -347,8 +347,31 @@ executeQuery = function() {
 	}
 };
 editor.commands.addCommand({
-    name: 'executeObjectViewer',
+    name: 'executeObjectViewer_f4',
     bindKey: {win: 'F4',  mac: 'F4'},
+    exec: function(editor) {
+    	try {
+    		var varSelectionContent = editor.getSelectedText();
+    		if(varSelectionContent != "") {
+    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, varSelectionContent);
+    		} else {
+    			// 현재 행의 텍스트.
+    			var startQueryLine = editor.session.getLine(editor.getCursorPosition().row);
+    			if(startQueryLine != "") {
+	    			// 공백 배열로 만들어  제일 마지막 텍스트를 가져온다. 
+    				var strObjectName = parseCursorObject();
+	    			AceEditorBrowserHandler(editorService.F4_DML_OPEN, strObjectName);
+    			}
+    		}
+    	} catch(e) {
+    		console.log(e);
+    	}
+    },
+    readOnly: false
+});
+editor.commands.addCommand({
+    name: 'executeObjectViewer_alt_c',
+    bindKey: {win: 'Alt-C',  mac: 'Alt-C'},
     exec: function(editor) {
     	try {
     		var varSelectionContent = editor.getSelectedText();
