@@ -126,7 +126,7 @@ public class ResourceSaveDialog extends Dialog {
 		for(PublicTadpoleDefine.SHARED_TYPE type : PublicTadpoleDefine.SHARED_TYPE.values()) {
 			comboSharedType.add(type.toString());
 		}
-		comboSharedType.select(0);
+		comboSharedType.select(1);
 		
 		Label lblDescription = new Label(container, SWT.NONE);
 		lblDescription.setText(CommonMessages.get().Description);
