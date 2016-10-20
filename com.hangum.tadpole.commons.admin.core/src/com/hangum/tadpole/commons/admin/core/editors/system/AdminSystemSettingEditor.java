@@ -223,9 +223,11 @@ public class AdminSystemSettingEditor extends EditorPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().DownloadMsg)) return;
+					
 					String strLogDir = StringUtils.removeEnd(textLog.getText(), "tadpole.log");
 					if(logger.isDebugEnabled()) logger.debug(strLogDir);
-					downloadFile("TadpoleLog", strLogDir, "euc_kr");
+					downloadFile("TadpoleHub_Log", strLogDir, "euc_kr");
 				} catch(Exception ee) {
 					logger.error("download log file", ee);
 				}
