@@ -163,16 +163,30 @@ public class RecordViewDialog extends Dialog {
 
 		// LOOP -------------------------------------------------------
 		Map<Integer, String> column = dto.getColumnName();
+		Map<Integer, Object> record = resultSet.get(loc);
 		for (Integer index : column.keySet()) {
 			Label lblValueName = new Label(compositeContent, SWT.NONE);
 			lblValueName.setText(column.get(index));
 			Label lblSeperator = new Label(compositeContent, SWT.NONE);
 			lblSeperator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			lblSeperator.setText(":"); //$NON-NLS-1$
-			Text txtValue = new Text(compositeContent, SWT.BORDER | SWT.READ_ONLY);
-			txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			controlList.put(index, txtValue);
+			
+			// 텍스트가 50자가 넘으면 멀티로우 텍스트를 엽니다.
+			String strFirstObject = record.get(index)==null?"":record.get(index).toString();
+			if(strFirstObject.length() <= 50) {
+				Text txtValue = new Text(compositeContent, SWT.BORDER | SWT.READ_ONLY);
+				txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+				controlList.put(index, txtValue);
+			} else {
+				Text txtValue = new Text(compositeContent, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+				GridData gd_txtValue = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+				gd_txtValue.heightHint = 50;
+				gd_txtValue.minimumHeight = 50;
+				txtValue.setLayoutData(gd_txtValue);
+				controlList.put(index, txtValue);
+			}
 		}
+		
 		compositeScrolled.setContent(compositeContent);
 		compositeScrolled.setMinSize(compositeContent.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		compositeScrolled.setExpandHorizontal(true);
@@ -188,11 +202,8 @@ public class RecordViewDialog extends Dialog {
 
 	private void setValue(int loc) {
 		int limit = resultSet.size();
-		if (loc >= limit) {
-			return;
-		} else if (loc < 0) {
-			loc = 0;
-		}
+		if (loc >= limit) return;
+		else if (loc < 0) loc = 0;
 		this.loc = loc;
 		
 		lblCurrentCount.setText(String.valueOf(loc+1));
