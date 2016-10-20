@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-tadpolea-1.7.3" sequenceNumber="288">
+<?pde version="3.8"?><target name="target-tadpolea-1.7.3" sequenceNumber="290">
 <locations>
 <location path="${project_loc:/targetProject}/ext" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
@@ -57,13 +57,13 @@
 <repository location="http://download.eclipse.org/rt/rap/incubator/nightly/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.rap.gef.feature.feature.group" version="0.1.0.20151228-1339"/>
-<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>
 <repository location="http://download.eclipse.org/releases/mars"/>
 </location>
-<location path="${project_loc:/targetProject}/rap-3.2.0-N-20160917-2331" type="Directory"/>
+<location path="${project_loc:/targetProject}/rap-3.2.0-N-20161019-2331" type="Directory"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rap.gef.feature.feature.group" version="0.1.0.20161013-1425"/>
+<repository location="http://download.eclipse.org/rt/rap/incubator/nightly/"/>
+</location>
 </locations>
 </target>
