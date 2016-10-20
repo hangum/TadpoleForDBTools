@@ -12,6 +12,8 @@ package com.hangum.tadpole.commons.admin.core.editors.system;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,6 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -47,6 +50,9 @@ import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
+import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.utils.TimeZoneUtil;
@@ -85,6 +91,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Text textEmail;
 	private Text textPasswd;
 	private Text textSendGridAPI;
+	
+	// download service
+	private DownloadServiceHandler downloadServiceHandler;
 	
 	public AdminSystemSettingEditor() {
 		super();
@@ -200,11 +209,29 @@ public class AdminSystemSettingEditor extends EditorPart {
 		Label lblLogDir = new Label(compositeBody, SWT.NONE);
 		lblLogDir.setText(Messages.get().LogDirectory);
 		
-		textLog = new Text(compositeBody, SWT.BORDER);
-		textLog.setEditable(false);
-		textLog.setEnabled(false);
+		Composite compositeLogs = new Composite(compositeBody, SWT.NONE);
+		compositeLogs.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeLogs.setLayout(new GridLayout(2, false));
+		
+		textLog = new Text(compositeLogs, SWT.BORDER);
 		textLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textLog.setEditable(false);
 		textLog.setText(new File(PublicTadpoleDefine.DEFAULT_LOG_FILE).getAbsolutePath());
+		
+		Button btnDownload = new Button(compositeLogs, SWT.NONE);
+		btnDownload.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					String strLogDir = StringUtils.removeEnd(textLog.getText(), "tadpole.log");
+					if(logger.isDebugEnabled()) logger.debug(strLogDir);
+					downloadFile("TadpoleLog", strLogDir, "euc_kr");
+				} catch(Exception ee) {
+					logger.error("download log file", ee);
+				}
+			}
+		});
+		btnDownload.setText("Download");
 		
 		Label lblResourceHome = new Label(compositeBody, SWT.NONE);
 		lblResourceHome.setText(Messages.get().ResourceHome);
@@ -338,6 +365,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 //		Composite compositeTail = new Composite(parent, SWT.NONE);
 //		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 //		compositeTail.setLayout(new GridLayout(1, false));
+		
+		registerServiceHandler();
 		
 		initUI();
 		
@@ -490,5 +519,48 @@ public class AdminSystemSettingEditor extends EditorPart {
 
 	@Override
 	public void setFocus() {
+	}
+	
+	@Override
+	public void dispose() {
+		unregisterServiceHandler();
+		super.dispose();
+	}
+	
+	/**
+	 * download file
+	 * @param strFileLocation
+	 * @throws Exception
+	 */
+	protected void downloadFile(String fileName, String strFileLocation, String encoding) throws Exception {
+		String strZipFile = ZipUtils.pack(strFileLocation);
+		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+		
+		_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
+	}
+	
+	/** registery service handler */
+	private void registerServiceHandler() {
+		downloadServiceHandler = new DownloadServiceHandler();
+		RWT.getServiceManager().registerServiceHandler(downloadServiceHandler.getId(), downloadServiceHandler);
+	}
+	
+	/** download service handler call */
+	private  void unregisterServiceHandler() {
+		RWT.getServiceManager().unregisterServiceHandler(downloadServiceHandler.getId());
+		downloadServiceHandler = null;
+	}
+	
+	/**
+	 * download external file
+	 * 
+	 * @param fileName
+	 * @param newContents
+	 */
+	private  void _downloadExtFile(String fileName, byte[] newContents) {
+		downloadServiceHandler.setName(fileName);
+		downloadServiceHandler.setByteContent(newContents);
+		
+		DownloadUtils.provideDownload(getSite().getShell(), downloadServiceHandler.getId());
 	}
 }
