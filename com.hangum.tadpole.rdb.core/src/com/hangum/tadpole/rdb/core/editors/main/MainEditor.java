@@ -49,6 +49,7 @@ import com.hangum.tadpole.ace.editor.core.texteditor.function.IEditorFunction;
 import com.hangum.tadpole.commons.dialogs.fileupload.SingleFileuploadDialog;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.DefineExternalPlguin;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
@@ -670,7 +671,7 @@ public class MainEditor extends EditorExtension {
 					UserBillEditorInput mei = new UserBillEditorInput();
 					
 					try {
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, "com.hangum.tadpole.bill.core.editor.user");
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, DefineExternalPlguin.BILL_PLUGIN);
 					} catch (PartInitException e) {
 						logger.error("open editor", e); //$NON-NLS-1$
 						Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$

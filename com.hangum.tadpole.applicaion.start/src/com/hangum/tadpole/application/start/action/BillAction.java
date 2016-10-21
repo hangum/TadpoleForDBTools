@@ -16,6 +16,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.DefineExternalPlguin;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.bill.UserBillEditorInput;
@@ -51,7 +52,7 @@ public class BillAction  extends Action implements ISelectionListener, IWorkbenc
 		UserBillEditorInput mei = new UserBillEditorInput();
 		
 		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, "com.hangum.tadpole.bill.core.editor.user");
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, DefineExternalPlguin.BILL_PLUGIN);
 		} catch (PartInitException e) {
 			logger.error("open editor", e); //$NON-NLS-1$
 			
