@@ -200,6 +200,20 @@
             id="com.hangum.tadpole.rdb.core.objectContribution.rdb"
             objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
          <menu
+               icon="resources/icons/user.png"
+               id="menu.admin"
+               label="%menu.label.2">
+            <groupMarker
+                  name="admin">
+            </groupMarker>
+            <separator
+                  name="groupAdminSeparator0">
+            </separator>
+            <separator
+                  name="groupAdminSeparator2">
+            </separator>
+         </menu>
+         <menu
                icon="resources/icons/create-dml.png"
                id="menu.create"
                label="%menu.label">
@@ -216,28 +230,19 @@
             </groupMarker>
          </menu>
          <menu
-               icon="resources/icons/user.png"
-               id="menu.admin"
-               label="%menu.label.2">
+               icon="resources/icons/commons/ImportAExport.png"
+               id="com.hangum.tadpole.rdb.core.menu.importAExport"
+               label="%menu.label.ImportAExport">
             <groupMarker
-                  name="admin">
+                  name="ImportAExport">
             </groupMarker>
-            <separator
-                  name="groupAdminSeparator0">
-            </separator>
-            <separator
-                  name="groupAdminSeparator1">
-            </separator>
-            <separator
-                  name="groupAdminSeparator2">
-            </separator>
          </menu>
          <action
                class="com.hangum.tadpole.rdb.core.actions.admin.CsvToRdbImportAction"
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import.csv"
                label="%action.label.24"
-               menubarPath="menu.admin/groupAdminSeparator1">
+               menubarPath="com.hangum.tadpole.rdb.core.menu.importAExport/ImportAExport">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -249,7 +254,7 @@
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import.sql"
                label="%action.label.25"
-               menubarPath="menu.admin/groupAdminSeparator1">
+               menubarPath="com.hangum.tadpole.rdb.core.menu.importAExport/ImportAExport">
             <enablement>
                <objectClass
                      name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
