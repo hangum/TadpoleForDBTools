@@ -75,6 +75,8 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.engine.utils.LicenseDAO;
+import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -1052,22 +1054,25 @@ public class ResultSetComposite extends Composite {
 				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			}
 			
-			if(reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE ||
-					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
-					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
-			) {
-				// working schema_history 에 history 를 남깁니다.
-				try {
-					TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
-							getUserDB(),
-							reqQuery.getQueryStatus().name(), //$NON-NLS-1$
-							reqQuery.getSqlDDLType().name(),
-							reqQuery.getSqlObjectName(),
-							reqQuery.getSql());
-				} catch(Exception e) {
-					logger.error("save schemahistory", e); //$NON-NLS-1$
+			LicenseDAO licenseDAO = LicenseValidator.getLicense();
+			if(licenseDAO.isEnterprise()) {
+				if(reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE ||
+						reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
+						reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
+				) {
+					// working schema_history 에 history 를 남깁니다.
+					try {
+						TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
+								getUserDB(),
+								reqQuery.getQueryStatus().name(), //$NON-NLS-1$
+								reqQuery.getSqlDDLType().name(),
+								reqQuery.getSqlObjectName(),
+								reqQuery.getSql());
+					} catch(Exception e) {
+						logger.error("save schemahistory", e); //$NON-NLS-1$
+					}
 				}
-			}
+			}	// 정식 라이선스만 저장.
 		}
 	}
 		

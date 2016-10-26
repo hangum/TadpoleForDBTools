@@ -38,6 +38,8 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
+import com.hangum.tadpole.engine.utils.LicenseDAO;
+import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -183,15 +185,18 @@ public class QueryHistoryComposite extends Composite {
 	 * 쿼리 후 실행결과를 히스토리화면과 프로파일에 저장합니다.
 	 */
 	public void afterQueryInit(RequestResultDAO reqResultDAO) {
-		try {
-			TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
-							getRdbResultComposite().getUserDB(), 
-							PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
-							reqResultDAO);
-		
-			addRowData(reqResultDAO);
-		} catch(Exception e) {
-			logger.error("save the user query", e); //$NON-NLS-1$
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		if(licenseDAO.isEnterprise()) {
+			try {
+				TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
+								getRdbResultComposite().getUserDB(), 
+								PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
+								reqResultDAO);
+			
+				addRowData(reqResultDAO);
+			} catch(Exception e) {
+				logger.error("save the user query", e); //$NON-NLS-1$
+			}
 		}
 	}
 	

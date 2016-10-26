@@ -60,6 +60,8 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
+import com.hangum.tadpole.engine.utils.LicenseDAO;
+import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
@@ -248,25 +250,35 @@ public class DBListComposite extends Composite {
 				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 				if(ss.isEmpty()) return;
 				
-				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-				
-				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell());
-				dialog.open();
-				
-				userDB.getListChildren().clear();
-				try {
-					List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
-					if(userDB.getListChildren().isEmpty()) {
-						for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
-							tadpoleUserDbRoleDAO.setParent(userDB);
+				LicenseDAO licenseDAO = LicenseValidator.getLicense();
+				if(licenseDAO.isEnterprise() && licenseDAO.isValidate()) {
+					
+					UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
+					
+					FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell());
+					dialog.open();
+					
+					userDB.getListChildren().clear();
+					try {
+						List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
+						if(userDB.getListChildren().isEmpty()) {
+							for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
+								tadpoleUserDbRoleDAO.setParent(userDB);
+							}
+							
+							userDB.setListChildren(listUser);
+							tvDBList.refresh(userDB, true);
+							tvDBList.expandToLevel(3);
 						}
-						
-						userDB.setListChildren(listUser);
-						tvDBList.refresh(userDB, true);
-						tvDBList.expandToLevel(3);
+					} catch (Exception e3) {
+						logger.error(Messages.get().DBListComposite_10, e3);
 					}
-				} catch (Exception e3) {
-					logger.error(Messages.get().DBListComposite_10, e3);
+				} else {
+					if(licenseDAO.isEnterprise() && !licenseDAO.isValidate()) {
+						MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, licenseDAO.getMsg());	
+					} else {
+						MessageDialog.openInformation(null, CommonMessages.get().Confirm, CommonMessages.get().ThisFunctionEnterprise);
+					}
 				}
 			}
 		});
