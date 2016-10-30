@@ -251,34 +251,33 @@ public class DBListComposite extends Composite {
 				if(ss.isEmpty()) return;
 				
 				LicenseDAO licenseDAO = LicenseValidator.getLicense();
-				if(licenseDAO.isEnterprise() && licenseDAO.isValidate()) {
-					
-					UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-					
-					FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell());
-					dialog.open();
-					
-					userDB.getListChildren().clear();
-					try {
-						List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
-						if(userDB.getListChildren().isEmpty()) {
-							for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
-								tadpoleUserDbRoleDAO.setParent(userDB);
+				if(licenseDAO.isEnterprise()) {
+					if(licenseDAO.isValidate()) {
+						UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
+						
+						FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell());
+						dialog.open();
+						
+						userDB.getListChildren().clear();
+						try {
+							List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
+							if(userDB.getListChildren().isEmpty()) {
+								for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
+									tadpoleUserDbRoleDAO.setParent(userDB);
+								}
+								
+								userDB.setListChildren(listUser);
+								tvDBList.refresh(userDB, true);
+								tvDBList.expandToLevel(3);
 							}
-							
-							userDB.setListChildren(listUser);
-							tvDBList.refresh(userDB, true);
-							tvDBList.expandToLevel(3);
+						} catch (Exception e3) {
+							logger.error(Messages.get().DBListComposite_10, e3);
 						}
-					} catch (Exception e3) {
-						logger.error(Messages.get().DBListComposite_10, e3);
+					} else {
+						MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, licenseDAO.getMsg());
 					}
 				} else {
-					if(licenseDAO.isEnterprise() && !licenseDAO.isValidate()) {
-						MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, licenseDAO.getMsg());	
-					} else {
-						MessageDialog.openInformation(null, CommonMessages.get().Confirm, CommonMessages.get().ThisFunctionEnterprise);
-					}
+					MessageDialog.openInformation(null, CommonMessages.get().Confirm, CommonMessages.get().ThisFunctionEnterprise);
 				}
 			}
 		});
