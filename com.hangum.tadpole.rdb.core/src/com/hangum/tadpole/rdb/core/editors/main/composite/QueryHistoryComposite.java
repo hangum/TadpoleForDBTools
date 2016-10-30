@@ -193,11 +193,12 @@ public class QueryHistoryComposite extends Composite {
 								PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
 								reqResultDAO);
 			
-				addRowData(reqResultDAO);
 			} catch(Exception e) {
 				logger.error("save the user query", e); //$NON-NLS-1$
 			}
 		}
+		
+		addRowData(reqResultDAO);
 	}
 	
 	/**
