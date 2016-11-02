@@ -51,7 +51,7 @@ Environment
 -
 * more than Java 1.7.x
 * support system standalone : linux.gtk.x86, linux.gtk.x86_64, acosx.cocoa.x86, macosx.cocoa.x86_64, win32.x86, win32.x86_64
-* support system server : Apache Tomcat 7.1
+* support system server : Apache Tomcat 7.1 ~ 8.0
 
 Demo Video
 -
@@ -83,7 +83,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.1/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.3/
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License

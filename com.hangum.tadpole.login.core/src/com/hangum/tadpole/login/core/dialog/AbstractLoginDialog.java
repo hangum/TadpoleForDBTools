@@ -9,18 +9,17 @@
  ******************************************************************************/
 package com.hangum.tadpole.login.core.dialog;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.service.ApplicationContext;
 import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.utils.LicenseDAO;
+import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -50,11 +49,9 @@ public class AbstractLoginDialog extends Dialog {
 	 * system message
 	 */
 	protected void preLogin() {
-		ApplicationContext context = RWT.getApplicationContext();
-		Object objValidateMsg = context.getAttribute("LicenseValidation");
-		String strValidateMsg = objValidateMsg == null?"":(String)objValidateMsg;
-		if(StringUtils.isNotEmpty(strValidateMsg)) {
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, strValidateMsg);
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		if(licenseDAO.isEnterprise() && !licenseDAO.isValidate()) {
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, licenseDAO.getMsg());
 		}
 	}
 	
