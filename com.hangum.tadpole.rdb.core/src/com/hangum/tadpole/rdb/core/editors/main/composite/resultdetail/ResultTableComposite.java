@@ -67,7 +67,7 @@ import com.hangum.tadpole.rdb.core.actions.resultView.ColumnRowDataDialogAction;
 import com.hangum.tadpole.rdb.core.actions.resultView.OpenSingleRowDataDialogAction;
 import com.hangum.tadpole.rdb.core.actions.resultView.SelectColumnToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.resultView.SelectRowToEditorAction;
-import com.hangum.tadpole.rdb.core.dialog.msg.TDBInfoDialog;
+import com.hangum.tadpole.rdb.core.dialog.msg.TDBClipboardDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQLExtensionViewDialog;
@@ -155,12 +155,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		textFilter.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == SWT.Selection) setFilter();
+				if(e.keyCode == SWT.Selection) {
+					setFilter();
+				}
 			}
 		});
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvQueryResult = new TableViewer(compositeBody, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
+		tvQueryResult = new TableViewer(compositeBody, /* SWT.VIRTUAL | */ SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 		final Table tableResult = tvQueryResult.getTable();
 		GridData gd_tableResult = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		gd_tableResult.heightHint = 90;
@@ -181,6 +183,18 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		tvQueryResult.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				selectColumnToEditor();
+			}
+		});
+		tableResult.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.stateMask == 0) return;
+				
+				if(e.stateMask == SWT.CTRL && e.keyCode == 'c') {
+					openSinglColumViewDialog();
+				} else if(e.stateMask == SWT.COMMAND && e.keyCode == 'c') {
+					openSinglColumViewDialog();
+				}
 			}
 		});
 		tableResult.addListener(SWT.MouseDown, new Listener() {
@@ -212,7 +226,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		sqlFilter.setTable(tableResult);
 		
 		// single column select start
-		TableUtil.makeSelectSingleColumn(tvQueryResult);
+//		TableUtil.makeSelectSingleColumn(tvQueryResult);
 	    // single column select end
 		
 		tableResult.getVerticalBar().addListener(SWT.Selection, new Listener() {
@@ -448,7 +462,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 							// if select value is null can 
 							if(columnObject == null) strText = "0"; //$NON-NLS-1$
 							else strText = columnObject.toString();
-							columnDao.setCol_value(columnDao.getCol_value() + strText + ", ");
+							columnDao.setCol_value(columnDao.getCol_value() + strText + SWT.TAB);
 						} else if("BLOB".equalsIgnoreCase(columnDao.getData_type())) { //$NON-NLS-1$
 							// ignore blob type
 						} else {
@@ -457,10 +471,10 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 							// if select value is null can 
 							if(columnObject == null) strText = ""; //$NON-NLS-1$
 							else strText = columnObject.toString();
-							columnDao.setCol_value(columnDao.getCol_value() + SQLUtil.makeQuote(strText) + ", ");
+							columnDao.setCol_value(columnDao.getCol_value() + SQLUtil.makeQuote(strText) + SWT.TAB);
 						}
 					}
-					columnDao.setCol_value(StringUtils.removeEnd(""+columnDao.getCol_value(), ", "));
+//					columnDao.setCol_value(StringUtils.removeEnd(""+columnDao.getCol_value(), SWT.TAB));
 
 					break;
 				} else {
@@ -566,16 +580,19 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			dialog.open();
 		} else if("BLOB".equalsIgnoreCase(strType)) { //$NON-NLS-1$
 			if (columnDao.getCol_value() instanceof String){
-				TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
+				TDBClipboardDialog dialog = new TDBClipboardDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
 				dialog.open();
 			}else{
 				TadpoleImageViewDialog dlg = new TadpoleImageViewDialog(getShell(), Messages.get().ResultSetComposite_16, (InputStream)columnDao.getCol_value());
 				dlg.open();
 			}
 		} else {
-			TDBInfoDialog dialog = new TDBInfoDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
+			TDBClipboardDialog dialog = new TDBClipboardDialog(getShell(), Messages.get().ResultSetComposite_16, ""+columnDao.getCol_value());
 			dialog.open();
 		}
+		
+		// 
+		rdbResultComposite.getRdbResultComposite().getMainEditor().setFocus();
 	}
 
 	/**
