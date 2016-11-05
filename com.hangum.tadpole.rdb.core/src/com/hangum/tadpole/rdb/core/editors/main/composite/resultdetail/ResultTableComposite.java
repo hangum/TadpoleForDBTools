@@ -195,8 +195,6 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					openSinglColumViewDialog();
 				} else if(e.stateMask == SWT.COMMAND && e.keyCode == 'c') {
 					openSinglColumViewDialog();
-				} else if(e.stateMask == 262144 && e.keyCode == 99) {
-					openSinglColumViewDialog();
 				}
 			}
 		});
