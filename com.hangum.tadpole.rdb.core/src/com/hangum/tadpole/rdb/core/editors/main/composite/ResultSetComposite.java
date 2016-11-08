@@ -284,8 +284,6 @@ public class ResultSetComposite extends Composite {
 				|| DBGroupDefine.TAJO_GROUP == dbGroup
 				|| DBGroupDefine.CUBRID_GROUP == dbGroup) return true; 
 		
-		
-
 		final Shell runShell = btnStopQuery.getShell();
 		
 		// java named parameter (오라클 디비의 경우는 :parameter도 변수 취급합니다.)

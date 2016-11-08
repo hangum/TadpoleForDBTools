@@ -678,6 +678,8 @@ public class Messages {
 	public String SessionListEditor_GreatThan10Sec;
 
 	public String ObjectExecutionException;
+
+	public String ClipboardDialog;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
