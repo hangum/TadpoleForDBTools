@@ -77,6 +77,10 @@ public class CommonMessages {
 
 	public String ThisFunctionEnterprise;
 	
+	public String CantModifyPreferenc;
+	
+	public String Download;
+	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
 	}

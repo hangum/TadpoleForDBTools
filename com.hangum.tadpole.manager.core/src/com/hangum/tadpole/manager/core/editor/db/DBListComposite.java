@@ -243,7 +243,7 @@ public class DBListComposite extends Composite {
 
 		tltmAddUser = new ToolItem(toolBar, SWT.NONE);
 		tltmAddUser.setImage(GlobalImageUtils.getUserAdd());
-		tltmAddUser.setEnabled(false);//"YES".equalsIgnoreCase(SessionManager.getIsSharedDB()));
+		tltmAddUser.setEnabled(false);
 		tltmAddUser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -391,7 +391,6 @@ public class DBListComposite extends Composite {
 				if(objSelect instanceof UserDBDAO) {
 					UserDBDAO userDB = (UserDBDAO)objSelect;
 					addDBUserList(userDB);
-					
 					
 					tltmConfigurationDB.setEnabled(true);
 					tltmOtherInformation.setEnabled(true);

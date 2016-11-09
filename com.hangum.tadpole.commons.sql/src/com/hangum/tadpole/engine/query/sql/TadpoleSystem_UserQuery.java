@@ -125,6 +125,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setLanguage(language);
 		loginDAO.setTimezone(timezone);
 		loginDAO.setApproval_yn(approvalYn);
+		
 		loginDAO.setUse_otp(use_otp);
 		loginDAO.setOtp_secret(otp_secret);
 		loginDAO.setAllow_ip(strAllowIP);
@@ -132,6 +133,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setIs_regist_db(GetAdminPreference.getIsAddDB());
 		loginDAO.setIs_shared_db(GetAdminPreference.getIsAddDB());
 		loginDAO.setLimit_add_db_cnt(NumberUtils.toInt(GetAdminPreference.getDefaultAddDBCnt()));
+		loginDAO.setIs_modify_perference(GetAdminPreference.getIsPreferenceModify());
 		loginDAO.setService_start(new Timestamp(System.currentTimeMillis()));
 		loginDAO.setService_end(new Timestamp(DateUtil.afterMonthToMillis(NumberUtils.toInt(GetAdminPreference.getServiceDurationDay()))));
 		

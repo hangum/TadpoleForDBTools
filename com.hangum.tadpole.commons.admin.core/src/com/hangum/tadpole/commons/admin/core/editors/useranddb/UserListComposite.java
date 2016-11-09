@@ -270,11 +270,13 @@ public class UserListComposite extends Composite {
 	private void createColumn() {
 		String[] colNames = {CommonMessages.get().Email, CommonMessages.get().Name, 
 							Messages.get().AdminUserListComposite_6, Messages.get().UserListComposite_6, 
-							Messages.get().IsSharedDB, Messages.get().DefaultAddDBCount, Messages.get().DefaultUseDay,
+							Messages.get().IsSharedDB, 
+							Messages.get().PreferenceMod,
+							Messages.get().DefaultAddDBCount, Messages.get().DefaultUseDay,
 							Messages.get().AdminUserListComposite_7, Messages.get().AdminUserListComposite_8, 
 							Messages.get().AdminUserListComposite_9, 
 							Messages.get().DeleteAccounts, Messages.get().AdminUserListComposite_11};
-		int[] colSize = {150, 120, 70, 70, 60, 60, 120, 60, 60, 60, 60, 120};
+		int[] colSize = {150, 120, 95, 95, 95, 95, 60, 120, 60, 60, 60, 60, 120};
 		
 		for (int i=0; i<colSize.length; i++) {
 			final TableViewerColumn tableViewerColumn = new TableViewerColumn(userListViewer, SWT.NONE);

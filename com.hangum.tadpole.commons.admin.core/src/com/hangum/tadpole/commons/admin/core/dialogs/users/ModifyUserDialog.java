@@ -69,6 +69,7 @@ public class ModifyUserDialog extends Dialog {
 	
 	private Combo comboIsSharedDB;
 	private Text textIntLimtCnt;
+	private Combo comboIsPreference;
 	private DateTime endDate;
 	private DateTime endTime;
 	
@@ -148,6 +149,13 @@ public class ModifyUserDialog extends Dialog {
 		textIntLimtCnt = new Text(container, SWT.BORDER);
 		textIntLimtCnt.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label lblPreferenceMod = new Label(container, SWT.NONE);
+		lblPreferenceMod.setText(Messages.get().PreferenceMod);
+		comboIsPreference = new Combo(container, SWT.READ_ONLY);
+		comboIsPreference.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboIsPreference.add("YES"); //$NON-NLS-1$
+		comboIsPreference.add("NO"); //$NON-NLS-1$
+		
 		Label lblDefaultUseDay = new Label(container, SWT.NONE);
 		lblDefaultUseDay.setText(Messages.get().DefaultUseDay);
 		
@@ -212,6 +220,9 @@ public class ModifyUserDialog extends Dialog {
 		
 		comboIsSharedDB.setText(userDAO.getIs_shared_db());
 		textIntLimtCnt.setText(""+userDAO.getLimit_add_db_cnt());
+		
+		comboIsPreference.setText(""+userDAO.getIs_modify_perference());
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(userDAO.getService_end().getTime());
 		endDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONDAY), cal.get(Calendar.DAY_OF_MONTH));
@@ -253,6 +264,7 @@ public class ModifyUserDialog extends Dialog {
 			
 			user.setIs_shared_db(comboIsSharedDB.getText());
 			user.setLimit_add_db_cnt(NumberUtils.toInt(textIntLimtCnt.getText()));
+			user.setIs_modify_perference(comboIsPreference.getText());
 			
 			Calendar cal = Calendar.getInstance();
 			cal.set(endDate.getYear(), endDate.getMonth(), endDate.getDay(), endTime.getHours(), endTime.getMinutes(), endTime.getSeconds());

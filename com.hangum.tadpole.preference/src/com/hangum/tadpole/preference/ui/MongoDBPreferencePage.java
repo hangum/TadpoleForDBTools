@@ -27,6 +27,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
@@ -165,6 +166,11 @@ public class MongoDBPreferencePage extends TadpoleDefaulPreferencePage implement
 	
 	@Override
 	public boolean performOk() {
+		if(PublicTadpoleDefine.YES_NO.NO.name().equals(SessionManager.getIsModifyPerference())) {
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, CommonMessages.get().CantModifyPreferenc);
+			return false;
+		}
+		
 		if(!isValid()) return false;
 		
 		String txtLimitCount = textLimitCount.getText();

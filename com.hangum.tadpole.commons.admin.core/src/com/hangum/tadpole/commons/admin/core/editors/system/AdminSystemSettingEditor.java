@@ -84,6 +84,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 	private Combo comboSupportMonitoring;
 	private Text textAPIServerURL;
 	private Combo comboSaveDBPassword;
+	private Combo comboIsPreferenceModify;
+	private Combo comboResourceDownload;
 	
 	// smtp server
 	private Text textSMTPHost;
@@ -94,6 +96,8 @@ public class AdminSystemSettingEditor extends EditorPart {
 	
 	// download service
 	private DownloadServiceHandler downloadServiceHandler;
+	private Text textHomePage;
+	private Button btnHomePageOpen;
 	
 	public AdminSystemSettingEditor() {
 		super();
@@ -143,46 +147,75 @@ public class AdminSystemSettingEditor extends EditorPart {
 		});
 		tltmJdbcDriverManage.setText(Messages.get().JDBCDriverManage);
 		
-		ToolItem tltmRdb = new ToolItem(toolBar, SWT.NONE);
-		tltmRdb.addSelectionListener(new SelectionAdapter() {
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmPreferenceInitialize = new ToolItem(toolBar, SWT.NONE);
+		tltmPreferenceInitialize.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(MessageDialog.openConfirm(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().MsgRDBInitializeSetting)) {
 					ChangeUserPreferenceValue changePreferenceValue = new ChangeUserPreferenceValue();
-					changePreferenceValue.changeRDBValue();
+					changePreferenceValue.changePreferenceValue();
 				}
 			}
 		});
-		tltmRdb.setText(Messages.get().RDBInitializeSetting);
+		tltmPreferenceInitialize.setText(Messages.get().RDBInitializeSetting);
+		
+//		new ToolItem(toolBar, SWT.SEPARATOR);
+//		ToolItem tltmRdb = new ToolItem(toolBar, SWT.NONE);
+//		tltmRdb.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				
+//			}
+//		});
+//		tltmRdb.setText(Messages.get().UnuseDBMaanagement);
 		
 		Composite compositeBody = new Composite(parent, SWT.NONE);
-		GridLayout gl_compositeBody = new GridLayout(2, false);
+		GridLayout gl_compositeBody = new GridLayout(1, false);
 		gl_compositeBody.horizontalSpacing = 1;
 		gl_compositeBody.marginHeight = 1;
 		gl_compositeBody.marginWidth = 1;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Label lblDBTimezone = new Label(compositeBody, SWT.NONE);
+		Group grpSystemSetting = new Group(compositeBody, SWT.NONE);
+		GridLayout gl_grpSystemSetting = new GridLayout(2, false);
+		grpSystemSetting.setLayout(gl_grpSystemSetting);
+		grpSystemSetting.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		grpSystemSetting.setText(Messages.get().SystemSetting);
+		
+		Label lblDBTimezone = new Label(grpSystemSetting, SWT.NONE);
 		lblDBTimezone.setText(Messages.get().DatabaseTimeZone);
 		
-		comboTimezone = new Combo(compositeBody, SWT.NONE);
-		comboTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		Composite compositeTimezone = new Composite(grpSystemSetting, SWT.NONE);
+		compositeTimezone.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeTimezone = new GridLayout(2, false);
+		gl_compositeTimezone.verticalSpacing = 0;
+		gl_compositeTimezone.marginHeight = 0;
+		gl_compositeTimezone.marginWidth = 5;
+		compositeTimezone.setLayout(gl_compositeTimezone);
+		
+		comboTimezone = new Combo(compositeTimezone, SWT.NONE);
 		comboTimezone.add("");
 		for (String timzon : TimeZoneUtil.getTimezoneList()) {
 			comboTimezone.add(timzon);
 		}
-		new Label(compositeBody, SWT.NONE);
 		
-		Label lblApplicationServer = new Label(compositeBody, SWT.NONE);
+		Label lblApplicationServer = new Label(compositeTimezone, SWT.NONE);
+		lblApplicationServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblApplicationServer.setText(Messages.get().AppServerDbServerTimeZone);
 		
-		Label lblLoginMethod = new Label(compositeBody, SWT.NONE);
-		lblLoginMethod.setText("Login method");
+		Label lblLoginMethod = new Label(grpSystemSetting, SWT.NONE);
+		lblLoginMethod.setText(Messages.get().LoginMethod);
 		
-		Composite compositeLoginMethodDetail = new Composite(compositeBody, SWT.NONE);
+		Composite compositeLoginMethodDetail = new Composite(grpSystemSetting, SWT.NONE);
 		compositeLoginMethodDetail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeLoginMethodDetail.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeLoginMethodDetail = new GridLayout(2, false);
+		gl_compositeLoginMethodDetail.verticalSpacing = 0;
+		gl_compositeLoginMethodDetail.marginHeight = 0;
+		gl_compositeLoginMethodDetail.marginWidth = 5;
+		compositeLoginMethodDetail.setLayout(gl_compositeLoginMethodDetail);
 		
 		// login type
 		comboLoginMethod = new Combo(compositeLoginMethodDetail, SWT.READ_ONLY);
@@ -206,12 +239,32 @@ public class AdminSystemSettingEditor extends EditorPart {
 		});
 		btnLdapConfiguration.setText("LDAP Configuration");
 		
-		Label lblLogDir = new Label(compositeBody, SWT.NONE);
+		Label lblDefaultHome = new Label(grpSystemSetting, SWT.NONE);
+		lblDefaultHome.setText(Messages.get().DefaultHome);
+		
+		Composite compositeHome = new Composite(grpSystemSetting, SWT.NONE);
+		compositeHome.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_compositeHome = new GridLayout(2, false);
+		gl_compositeHome.horizontalSpacing = 0;
+		gl_compositeHome.verticalSpacing = 0;
+		gl_compositeHome.marginHeight = 0;
+		compositeHome.setLayout(gl_compositeHome);
+		
+		textHomePage = new Text(compositeHome, SWT.BORDER);
+		textHomePage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		btnHomePageOpen = new Button(compositeHome, SWT.CHECK);
+		btnHomePageOpen.setText("Open");
+		
+		Label lblLogDir = new Label(grpSystemSetting, SWT.NONE);
 		lblLogDir.setText(Messages.get().LogDirectory);
 		
-		Composite compositeLogs = new Composite(compositeBody, SWT.NONE);
+		Composite compositeLogs = new Composite(grpSystemSetting, SWT.NONE);
 		compositeLogs.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		compositeLogs.setLayout(new GridLayout(2, false));
+		GridLayout gl_compositeLogs = new GridLayout(2, false);
+		gl_compositeLogs.verticalSpacing = 0;
+		gl_compositeLogs.marginHeight = 0;
+		compositeLogs.setLayout(gl_compositeLogs);
 		
 		textLog = new Text(compositeLogs, SWT.BORDER);
 		textLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -225,7 +278,7 @@ public class AdminSystemSettingEditor extends EditorPart {
 				try {
 					if(!MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().DownloadMsg)) return;
 					
-					String strLogDir = StringUtils.removeEnd(textLog.getText(), "tadpole.log");
+					String strLogDir = StringUtils.removeEnd(textLog.getText(), "TadpoleHub_log.txt");
 					if(logger.isDebugEnabled()) logger.debug(strLogDir);
 					downloadFile("TadpoleHub_Log", strLogDir, "euc_kr");
 				} catch(Exception ee) {
@@ -233,59 +286,53 @@ public class AdminSystemSettingEditor extends EditorPart {
 				}
 			}
 		});
-		btnDownload.setText("Download");
+		btnDownload.setText(CommonMessages.get().Download);
 		
-		Label lblResourceHome = new Label(compositeBody, SWT.NONE);
+		Label lblResourceHome = new Label(grpSystemSetting, SWT.NONE);
 		lblResourceHome.setText(Messages.get().ResourceHome);
 		
-		textResourceHome = new Text(compositeBody, SWT.BORDER);
+		textResourceHome = new Text(grpSystemSetting, SWT.BORDER);
+		textResourceHome.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textResourceHome.setEnabled(false);
 		textResourceHome.setEditable(false);
-		textResourceHome.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textResourceHome.setText(ApplicationArgumentUtils.getResourcesDir());
 		
-		Label lblNewLabel = new Label(compositeBody, SWT.NONE);
+		Label lblNewLabel = new Label(grpSystemSetting, SWT.NONE);
 		lblNewLabel.setText(Messages.get().AdminSystemSettingEditor_2);
 		
-		comboNewUserPermit = new Combo(compositeBody, SWT.READ_ONLY);
+		Composite compositeShare = new Composite(grpSystemSetting, SWT.NONE);
+		GridLayout gl_compositeShare = new GridLayout(3, false);
+		gl_compositeShare.verticalSpacing = 0;
+		gl_compositeShare.marginHeight = 0;
+		compositeShare.setLayout(gl_compositeShare);
+		compositeShare.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		comboNewUserPermit = new Combo(compositeShare, SWT.READ_ONLY);
 		comboNewUserPermit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
 			comboNewUserPermit.add(yesNo.name());
 		}
 		
-		Label lblSupportMonitoring = new Label(compositeBody, SWT.NONE);
+		Label lblSupportMonitoring = new Label(compositeShare, SWT.NONE);
 		lblSupportMonitoring.setText(Messages.get().AdminSystemSettingEditor_SupportMonitoring);
 		
-		comboSupportMonitoring = new Combo(compositeBody, SWT.READ_ONLY);
+		comboSupportMonitoring = new Combo(compositeShare, SWT.READ_ONLY);
 		comboSupportMonitoring.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
 			comboSupportMonitoring.add(yesNo.name());
 		}
 		
-		Label lblApiServerUrl = new Label(compositeBody, SWT.NONE);
+		Label lblApiServerUrl = new Label(grpSystemSetting, SWT.NONE);
 		lblApiServerUrl.setText(Messages.get().APIServerURL);
 		
-		textAPIServerURL = new Text(compositeBody, SWT.BORDER);
+		textAPIServerURL = new Text(grpSystemSetting, SWT.BORDER);
 		textAPIServerURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Label label = new Label(compositeBody, SWT.NONE);
-		label.setText(Messages.get().SaveDBPassword);
-		
-		comboSaveDBPassword = new Combo(compositeBody, SWT.READ_ONLY);
-		comboSaveDBPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
-			comboSaveDBPassword.add(yesNo.name());
-		}
-		comboSaveDBPassword.setText(PublicTadpoleDefine.YES_NO.YES.name());
-		new Label(compositeBody, SWT.NONE);
 		
 		Label labelHorizontal = new Label(compositeBody, SWT.SEPARATOR | SWT.HORIZONTAL);
 		labelHorizontal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeBody, SWT.NONE);
 		
 		Label lblSendgrid = new Label(compositeBody, SWT.NONE);
 		lblSendgrid.setText(Messages.get().UseSendGridFirst);
-		new Label(compositeBody, SWT.NONE);
 		
 		Group grpSendGrid = new Group(compositeBody, SWT.NONE);
 		grpSendGrid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -297,12 +344,11 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		textSendGridAPI = new Text(grpSendGrid, SWT.BORDER);
 		textSendGridAPI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(compositeBody, SWT.NONE);
 		
 		Group grpSMTPServer = new Group(compositeBody, SWT.NONE);
 		grpSMTPServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpSMTPServer.setText(Messages.get().SMTPSettings);
-		grpSMTPServer.setLayout(new GridLayout(2, false));
+		grpSMTPServer.setLayout(new GridLayout(4, false));
 		
 		Label lblSmtpServer = new Label(grpSMTPServer, SWT.NONE);
 		lblSmtpServer.setText(Messages.get().SMTPServer);
@@ -327,8 +373,6 @@ public class AdminSystemSettingEditor extends EditorPart {
 		
 		textPasswd = new Text(grpSMTPServer, SWT.BORDER | SWT.PASSWORD);
 		textPasswd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		new Label(compositeBody, SWT.NONE);
 		
 		Group grpSettingDefaultUser = new Group(compositeBody, SWT.NONE);
 		grpSettingDefaultUser.setLayout(new GridLayout(4, false));
@@ -364,6 +408,37 @@ public class AdminSystemSettingEditor extends EditorPart {
 		textDefaultUseDay = new Text(grpSettingDefaultUser, SWT.BORDER);
 		textDefaultUseDay.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		Label label = new Label(grpSettingDefaultUser, SWT.NONE);
+		label.setText(Messages.get().SaveDBPassword);
+		
+		comboSaveDBPassword = new Combo(grpSettingDefaultUser, SWT.READ_ONLY);
+		comboSaveDBPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboSaveDBPassword.setText(PublicTadpoleDefine.YES_NO.YES.name());
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboSaveDBPassword.add(yesNo.name());
+		}
+		
+		Label label_1 = new Label(grpSettingDefaultUser, SWT.NONE);
+		label_1.setText(Messages.get().IsPerferenceModify);
+		
+		comboIsPreferenceModify = new Combo(grpSettingDefaultUser, SWT.READ_ONLY);
+		comboIsPreferenceModify.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboIsPreferenceModify.add(yesNo.name());
+		}
+		
+		Label lblResourceDownload = new Label(grpSettingDefaultUser, SWT.NONE);
+		lblResourceDownload.setText(Messages.get().ResourceDownload);
+		
+		comboResourceDownload = new Combo(grpSettingDefaultUser, SWT.READ_ONLY);
+		comboResourceDownload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for(PublicTadpoleDefine.YES_NO yesNo : PublicTadpoleDefine.YES_NO.values()) {
+			comboResourceDownload.add(yesNo.name());
+		}
+		
+		new Label(grpSettingDefaultUser, SWT.NONE);
+		new Label(grpSettingDefaultUser, SWT.NONE);
+		
 //		Composite compositeTail = new Composite(parent, SWT.NONE);
 //		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 //		compositeTail.setLayout(new GridLayout(1, false));
@@ -382,6 +457,10 @@ public class AdminSystemSettingEditor extends EditorPart {
 		comboTimezone.setText(GetAdminPreference.getDBTimezone());
 		comboLoginMethod.setText(GetAdminPreference.getLoginMethod());
 		initializeLoginMethodBtn();
+		
+		textHomePage.setText(GetAdminPreference.getHomePage());
+		btnHomePageOpen.setSelection(Boolean.getBoolean(GetAdminPreference.getHomePageOpen()));
+		
 		comboIsAddDB.setText(GetAdminPreference.getIsAddDB());
 		comboIsSharedDB.setText(GetAdminPreference.getIsSharedDB());
 		comboNewUserPermit.setText(GetAdminPreference.getNewUserPermit());
@@ -391,6 +470,9 @@ public class AdminSystemSettingEditor extends EditorPart {
 		textIntLimtCnt.setText(GetAdminPreference.getDefaultAddDBCnt());
 		textDefaultUseDay.setText(GetAdminPreference.getServiceDurationDay());
 		comboSupportMonitoring.setText(GetAdminPreference.getSupportMonitoring());
+		comboIsPreferenceModify.setText(GetAdminPreference.getIsPreferenceModify());
+		
+		comboResourceDownload.setText(GetAdminPreference.getIsDefaultDonwload());
 		
 		// email
 		try {
@@ -429,6 +511,11 @@ public class AdminSystemSettingEditor extends EditorPart {
 		String txtPort			= textPort.getText();
 		String txtEmail			= textEmail.getText();
 		String txtPasswd		= textPasswd.getText();
+		
+		String strHomePage		= textHomePage.getText();
+		String strHomePageOpen	= ""+btnHomePageOpen.getSelection();
+		
+		String strResourceDownload = comboResourceDownload.getText();
 		
 		if(!NumberUtils.isDigits(textIntLimtCnt.getText())) {
 			MessageDialog.openError(null, CommonMessages.get().Confirm, Messages.get().mustBeNumber);
@@ -476,6 +563,21 @@ public class AdminSystemSettingEditor extends EditorPart {
 			
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SUPPORT_MONITORING, comboSupportMonitoring.getText());
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SUPPORT_MONITORING, userInfoDao);
+			
+			// 프리퍼런스 수정여부
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.DEFAULT_HOME, strHomePage);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.DEFAULT_HOME, userInfoDao);
+			
+			// 홈페이지
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.DEFAULT_HOME_OPEN, strHomePageOpen);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.DEFAULT_HOME_OPEN, userInfoDao);
+			
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_PREFERENCE_MODIFY, comboIsPreferenceModify.getText());
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.IS_PREFERENCE_MODIFY, userInfoDao);
+			
+			// 리소스 다운로드
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.IS_RESOURCE_DOWNLOAD, strResourceDownload);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.IS_RESOURCE_DOWNLOAD, userInfoDao);
 			
 			// update admin value
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SENDGRID_API_NAME, txtSendGrid);

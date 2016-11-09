@@ -33,16 +33,17 @@ public class UserLabelProvider extends LabelProvider implements ITableLabelProvi
 		case 3: return user.getIs_regist_db();
 
 		case 4: return user.getIs_shared_db();
-		case 5: return ""+user.getLimit_add_db_cnt();
-		case 6: return TimeZoneUtil.dateToStr(user.getService_end());
+		case 5: return ""+user.getIs_modify_perference();
+		case 6: return ""+user.getLimit_add_db_cnt();
+		case 7: return TimeZoneUtil.dateToStr(user.getService_end());
 
-		case 7: return user.getEmail_key();
-		case 8: return user.getApproval_yn();
-		case 9: return user.getIs_email_certification();
+		case 8: return user.getEmail_key();
+		case 9: return user.getApproval_yn();
+		case 10: return user.getIs_email_certification();
 		
 
-		case 10: return user.getDelYn();
-		case 11: return user.getCreate_time();
+		case 11: return user.getDelYn();
+		case 12: return user.getCreate_time();
 		}
 		
 		return "*** not set column ***";

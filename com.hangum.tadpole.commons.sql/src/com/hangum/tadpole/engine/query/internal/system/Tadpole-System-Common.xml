@@ -124,9 +124,9 @@
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, timezone, approval_yn, use_otp, otp_secret, allow_ip
-	,is_regist_db, is_shared_db, limit_add_db_cnt, service_start, service_end)
+	,is_regist_db, is_shared_db, limit_add_db_cnt, is_modify_perference, service_start, service_end)
 	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #timezone#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#
-	,#is_regist_db#, #is_shared_db#, #limit_add_db_cnt#, #service_start#, #service_end#)
+	,#is_regist_db#, #is_shared_db#, #limit_add_db_cnt#, #is_modify_perference#, #service_start#, #service_end#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 		SELECT * 
@@ -260,7 +260,9 @@
 		is_regist_db = #is_regist_db#,
 		
 		is_shared_db = #is_shared_db#, 
-		limit_add_db_cnt = #limit_add_db_cnt#, 
+		limit_add_db_cnt = #limit_add_db_cnt#,
+		is_modify_perference = #is_modify_perference#,
+		 
 		service_end = #service_end#,
 		
 		approval_yn = #approval_yn#,

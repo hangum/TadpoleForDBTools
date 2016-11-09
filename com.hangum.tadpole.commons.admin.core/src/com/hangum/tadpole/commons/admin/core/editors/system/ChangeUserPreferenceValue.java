@@ -40,7 +40,7 @@ public class ChangeUserPreferenceValue {
 	/**
 	 * RDB 설정 값을 바꾸어준다.
 	 */
-	public void changeRDBValue() {
+	public void changePreferenceValue() {
 		
 		try {
 			// 시스템 어드민을 찾는다.
@@ -53,61 +53,14 @@ public class ChangeUserPreferenceValue {
 				mapUserInfo.put(userInfoDataDAO.getName(), userInfoDataDAO.getValue0());
 			}
 			
-			// 일반 모든 유저의 설정 갑슬 바꾸어준다.
-			List<Object> listParameter = new ArrayList<>();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_QUERY_PROFILLING));
-			listParameter.add(PreferenceDefine.RDB_QUERY_PROFILLING);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+			// change rdb value
+			rdbChangeValue(mapUserInfo);
 			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_TYPE));
-			listParameter.add(PreferenceDefine.RDB_RESULT_TYPE);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+			// change mongo db
+			mongoChangeValue(mapUserInfo);
 			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.SELECT_LIMIT_COUNT));
-			listParameter.add(PreferenceDefine.SELECT_LIMIT_COUNT);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE));
-			listParameter.add(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_NULL));
-			listParameter.add(PreferenceDefine.RDB_RESULT_NULL);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.SELECT_QUERY_TIMEOUT));
-			listParameter.add(PreferenceDefine.SELECT_QUERY_TIMEOUT);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.ORACLE_PLAN_TABLE));
-			listParameter.add(PreferenceDefine.ORACLE_PLAN_TABLE);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA));
-			listParameter.add(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_FONT));
-			listParameter.add(PreferenceDefine.RDB_RESULT_FONT);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_COMMIT_COUNT));
-			listParameter.add(PreferenceDefine.RDB_COMMIT_COUNT);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
-			
-			listParameter.clear();
-			listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN));
-			listParameter.add(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
-			QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+			// change session time out
+			userChangeValue(mapUserInfo);
 			
 			MessageDialog.openInformation(null, CommonMessages.get().Confirm, CommonMessages.get().ModifyMessage);
 			
@@ -116,5 +69,108 @@ public class ChangeUserPreferenceValue {
 			MessageDialog.openError(null, CommonMessages.get().Error, "수정하는 중에 " + e.getMessage());
 		}
 		
+	}
+	
+	/**
+	 * 사용자 값 변경
+	 * @param mapUserInfo
+	 * @throws Exception
+	 */
+	private void userChangeValue(Map<String, String> mapUserInfo) throws Exception {
+		List<Object> listParameter = new ArrayList<>();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.SESSION_DFEAULT_PREFERENCE));
+		listParameter.add(PreferenceDefine.SESSION_DFEAULT_PREFERENCE);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+	}
+	
+	/**
+	 * change value
+	 * 
+	 * @param mapUserInfo
+	 * @throws Exception
+	 */
+	private void mongoChangeValue(Map<String, String> mapUserInfo) throws Exception {
+		List<Object> listParameter = new ArrayList<>();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.MONGO_DEFAULT_LIMIT));
+		listParameter.add(PreferenceDefine.MONGO_DEFAULT_LIMIT);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT));
+		listParameter.add(PreferenceDefine.MONGO_DEFAULT_MAX_COUNT);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.MONGO_DEFAULT_FIND));
+		listParameter.add(PreferenceDefine.MONGO_DEFAULT_FIND);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.MONGO_DEFAULT_RESULT));
+		listParameter.add(PreferenceDefine.MONGO_DEFAULT_RESULT);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+	}
+	
+	/**
+	 * Change rdb value
+	 * 
+	 * @param mapUserInfo
+	 * @throws Exception
+	 */
+	private void rdbChangeValue(Map<String, String> mapUserInfo) throws Exception {
+		List<Object> listParameter = new ArrayList<>();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_QUERY_PROFILLING));
+		listParameter.add(PreferenceDefine.RDB_QUERY_PROFILLING);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_TYPE));
+		listParameter.add(PreferenceDefine.RDB_RESULT_TYPE);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.SELECT_LIMIT_COUNT));
+		listParameter.add(PreferenceDefine.SELECT_LIMIT_COUNT);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE));
+		listParameter.add(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_NULL));
+		listParameter.add(PreferenceDefine.RDB_RESULT_NULL);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.SELECT_QUERY_TIMEOUT));
+		listParameter.add(PreferenceDefine.SELECT_QUERY_TIMEOUT);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.ORACLE_PLAN_TABLE));
+		listParameter.add(PreferenceDefine.ORACLE_PLAN_TABLE);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA));
+		listParameter.add(PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_RESULT_FONT));
+		listParameter.add(PreferenceDefine.RDB_RESULT_FONT);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_COMMIT_COUNT));
+		listParameter.add(PreferenceDefine.RDB_COMMIT_COUNT);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
+		
+		listParameter.clear();
+		listParameter.add(mapUserInfo.get(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN));
+		listParameter.add(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN);
+		QueryUtils.runSQLOther(TadpoleSystemInitializer.getUserDB(), strUpdate, listParameter);
 	}
 }

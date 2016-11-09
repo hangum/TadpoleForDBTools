@@ -103,6 +103,24 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * 사용자 디폴트 홈페이지.
+	 * @return
+	 */
+	public static String getHomePage() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.DEFAULT_HOME, AdminPreferenceDefine.DEFAULT_HOME_VALUE);
+	}
+	
+	/**
+	 * 사용자 디폴트 홈페이지 오픈 여부
+	 * @return
+	 */
+	public static String getHomePageOpen() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.DEFAULT_HOME_OPEN, AdminPreferenceDefine.DEFAULT_HOME_OPEN_VALUE);
+	}
+	
+	/**
 	 * 사용자가 디비를 추가 할 수 있는지 여부
 	 * @return
 	 */
@@ -153,6 +171,25 @@ public class GetAdminPreference extends AbstractPreference {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		
 		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SUPPORT_MONITORING, AdminPreferenceDefine.SUPPORT_MONITORING_VALUE);
+	}
+	
+	/**
+	 * 사용자가 프리퍼런스를 수정 여부 지정.
+	 * @return
+	 */
+	public static String getIsPreferenceModify() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.IS_PREFERENCE_MODIFY, AdminPreferenceDefine.IS_PREFERENCE_MODIFY_VALUE);
+	}
+	
+	/**
+	 * 사용자가 리소스 다운로드 받을수 없는지 유무
+	 * @return
+	 */
+	public static String getIsDefaultDonwload() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.IS_RESOURCE_DOWNLOAD, AdminPreferenceDefine.IS_RESOURCE_DOWNLOAD_VALUE);
 	}
 	
 	/**

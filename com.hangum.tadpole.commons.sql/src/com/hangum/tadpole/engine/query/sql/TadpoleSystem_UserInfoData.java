@@ -23,6 +23,7 @@ import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -155,7 +156,9 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtResultType 
 	 */
 	public static void updateRDBUserInfoData(boolean txtQueryProfilling, String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
-			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultType) throws TadpoleSQLManagerException, SQLException {
+			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultType,
+			String textNull
+	) throws TadpoleSQLManagerException, SQLException {
 		
 		updateUserInfoData(PreferenceDefine.RDB_QUERY_PROFILLING, ""+txtQueryProfilling);
 		updateUserInfoData(PreferenceDefine.SELECT_LIMIT_COUNT, limitSelect);
@@ -167,6 +170,7 @@ public class TadpoleSystem_UserInfoData {
 		updateUserInfoData(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
 		updateUserInfoData(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, txtShownInTheColumn);
 		updateUserInfoData(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
+		updateUserInfoData(PreferenceDefine.RDB_RESULT_NULL, textNull);
 	}
 	
 	/**
@@ -260,6 +264,9 @@ public class TadpoleSystem_UserInfoData {
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE, PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE_VALUE));
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE, PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE_VALUE));
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE, PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE_VALUE));
+		
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.DEFAULT_HOME_PAGE, GetAdminPreference.getHomePage()));
+		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.DEFAULT_HOME_PAGE_USE, GetAdminPreference.getHomePageOpen()));
 		
 		sqlClient.executeBatch();
 		sqlClient.commitTransaction();
