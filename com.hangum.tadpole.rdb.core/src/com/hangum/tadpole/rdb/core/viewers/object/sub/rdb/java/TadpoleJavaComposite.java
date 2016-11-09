@@ -390,4 +390,9 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 			}
 		}
 	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showJava != null) this.showJava.clear();
+	}
 }

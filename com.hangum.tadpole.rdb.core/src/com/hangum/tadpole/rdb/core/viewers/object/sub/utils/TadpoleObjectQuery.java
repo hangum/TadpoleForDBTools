@@ -174,7 +174,10 @@ public class TadpoleObjectQuery {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
-			showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getUsers())); //$NON-NLS-1$
+			//showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getUsers())); //$NON-NLS-1$
+			// 오라클의 경우 로그인 유저로 하는게 아니라 스키마 변경 선택한걸로 해야함.
+			// changeSchema할때 변경 안됨...
+			showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getDefaultSchemanName())); //$NON-NLS-1$			
 		} else {
 			showTables = sqlClient.queryForList("tableList", userDB.getDefaultSchemanName()); //$NON-NLS-1$
 		}

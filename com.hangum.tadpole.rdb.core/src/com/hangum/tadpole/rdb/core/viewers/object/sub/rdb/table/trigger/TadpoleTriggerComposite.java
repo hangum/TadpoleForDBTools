@@ -298,5 +298,10 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 			}
 		}
 	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showTrigger != null) this.showTrigger.clear();
+	}
 	
 }

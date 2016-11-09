@@ -423,5 +423,11 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 				break;
 			}
 		}
+	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showPackage != null) this.showPackage.clear();
+		if(showPackageProcFuncColumns != null) this.showPackageProcFuncColumns.clear();	
 	}	
 }

@@ -23,6 +23,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -51,6 +54,7 @@ import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreato
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultTableColumnFilter;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -109,19 +113,19 @@ public class TadpoleEdgeComposite extends AbstractObjectComposite {
 
 		// SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
 		edgeListViewer = new TableViewer(sashForm, /* SWT.VIRTUAL | */ SWT.BORDER | SWT.FULL_SELECTION);
-//		vertexListViewer.addDoubleClickListener(new IDoubleClickListener() {
-//			public void doubleClick(DoubleClickEvent event) {
-//				try {
-//					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-//					if (null != is) {
-//						OracleSequenceDAO sequenceDAO = (OracleSequenceDAO) is.getFirstElement();
-//						FindEditorAndWriteQueryUtil.run(userDB, "SELECT " + sequenceDAO.getFullName() + ".NEXTVAL FROM DUAL;" , PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE);
-//					}
-//				} catch (Exception e) {
-//					logger.error("create sequence", e);
-//				}
-//			}
-//		});
+		edgeListViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				try {
+					IStructuredSelection is = (IStructuredSelection) event.getSelection();
+					if (null != is) {
+						AgensVertexDAO edgeDAO = (AgensVertexDAO) is.getFirstElement();
+						FindEditorAndWriteQueryUtil.run(userDB, "Match ()-[e: " + edgeDAO.getLabname() + "]-() return e;", PublicTadpoleDefine.OBJECT_TYPE.EDGE);
+					}
+				} catch (Exception e) {
+					logger.error("edge match statement", e);
+				}
+			}
+		});
 
 		Table tableTableList = edgeListViewer.getTable();
 		tableTableList.setLinesVisible(true);
@@ -174,7 +178,9 @@ public class TadpoleEdgeComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshSequence(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
-		if (!boolRefresh) if (!showEdge.isEmpty()) return;
+		if (!boolRefresh)
+			if(selectUserDb == null) return;
+			//if (!showEdge.isEmpty()) return;
 		this.userDB = selectUserDb;
 
 		showEdge = (List<AgensVertexDAO>)selectUserDb.getDBObject(OBJECT_TYPE.EDGE, selectUserDb.getDefaultSchemanName());
@@ -311,5 +317,10 @@ public class TadpoleEdgeComposite extends AbstractObjectComposite {
 				break;
 			}
 		}
+	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showEdge != null) this.showEdge.clear();
 	}
 }

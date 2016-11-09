@@ -75,6 +75,7 @@ FROM pg_catalog.pg_class a,
 WHERE 1=1
     AND a.relkind IN ('r','')
     AND b.table_schema NOT IN ('pg_catalog', 'information_schema')
+    AND b.table_schema = #schema_name#
     AND b.table_type = 'BASE TABLE'
     AND a.relname = b.table_name
 GROUP BY name
@@ -91,6 +92,7 @@ FROM pg_catalog.pg_class a,
 WHERE 1=1
     AND a.relkind IN ('r','')
     AND b.table_schema NOT IN ('pg_catalog', 'information_schema')
+    AND b.table_schema = #schema_name#
     AND b.table_type = 'BASE TABLE'
     AND a.relname = b.table_name
 GROUP BY schema_name, realname, name, comment
@@ -212,6 +214,7 @@ FROM
 	WHERE  
 		    table_type = 'VIEW'
 		AND table_schema NOT IN ('pg_catalog', 'information_schema')
+		AND table_schema = #schema_name#
 	ORDER BY table_name
 </select>
 	
@@ -317,6 +320,7 @@ FROM
 	ON      pronamespace = n.oid 
 	WHERE    
 			nspname NOT IN ('pg_catalog', 'information_schema')
+		AND nspname = #schema_name#
 		AND pronargs = 0
 		AND prorettype = 2278; 
 </select>
@@ -347,6 +351,7 @@ FROM
 	ON      pronamespace = n.oid 
 	WHERE   
 			nspname NOT IN ('pg_catalog', 'information_schema')
+		AND nspname = #schema_name#
 		AND pronargs > 0; 
 </select>
 
@@ -442,6 +447,7 @@ AND (NOT pg_is_other_temp_schema(n.oid)))
 <isNotEmpty property="table_name">
 AND lower(c.relname) = lower(#table_name#)
 </isNotEmpty>
+AND n.nspname = #schema_name#
 AND ((pg_has_role(c.relowner, 'USAGE'::text) 
  OR has_table_privilege(c.oid, 'INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER'::text)) 
  OR has_any_column_privilege(c.oid, 'INSERT, UPDATE, REFERENCES'::text)));
@@ -643,7 +649,7 @@ UNION ALL
 	SELECT 
 		'COMMENT ON COLUMN ' ||#object_name#||'.'|| ATTNAME || ' IS ''' || pg_catalog.col_description(attrelid, attnum) || '''' 
 		FROM   pg_catalog.pg_attribute
-		WHERE attrelid = (select oid from pg_catalog.pg_class where relname = #object_name#) 
+		WHERE attrelid in (select oid from pg_catalog.pg_class where relname = #object_name#) 
 		AND attnum > 0 
 		AND NOT attisdropped
 		AND pg_catalog.col_description(attrelid, attnum) > ''

@@ -379,4 +379,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 			}
 		}
 	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showJobs != null) this.showJobs.clear();
+	}
 }

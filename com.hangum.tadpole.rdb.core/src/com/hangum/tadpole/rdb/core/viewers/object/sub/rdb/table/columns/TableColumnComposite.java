@@ -261,4 +261,8 @@ public class TableColumnComposite extends AbstractTableComposite {
 		if(tableColumnSelectionAction != null) tableColumnSelectionAction.dispose();
 	}
 
+	public void clearList() {
+		this.showTableColumns.clear();
+	}
+
 }

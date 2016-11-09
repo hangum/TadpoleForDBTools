@@ -152,6 +152,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	}
 	
 	/**
+	 * graph 최신 정보로 갱신.
+	 */
+	protected void refreshGraph() {
+		ExplorerViewer ev = getExplorerView();
+		if(ev != null) ev.refreshGraph(true, "");
+	}
+	
+	/**
 	 * vertex 최신 정보로 갱신.
 	 */
 	protected void refreshVertex() {

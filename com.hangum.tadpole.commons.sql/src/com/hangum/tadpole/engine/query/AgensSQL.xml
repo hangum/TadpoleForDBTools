@@ -21,19 +21,28 @@
 <sqlMap namespace="AgensGraph_query">
 
 <!-- 
+	graph list
+ -->
+<select id="agensGraphPath" resultClass="com.hangum.tadpole.engine.query.dao.agens.AgensGraphPathDAO" parameterClass="java.lang.String">
+	select
+	    g.graphname as graphname
+	    , g.nspid as nspid
+	from ag_graph as g
+	where 1=1   
+</select>
+
+<!-- 
 	vertex and edge list
  -->
 <select id="agensVertex" resultClass="com.hangum.tadpole.engine.query.dao.agens.AgensVertexDAO" parameterClass="java.lang.String">
 	select
-	    childlab.labname, childlab.relid, childlab.labowner, childlab.labkind, inhrelid, inhparent, inhseqno
-	from 
-	    ag_label AS parentlab, 
-	    ag_label AS childlab, 
-	    ag_inherits AS inh 
-	where 
-	        childlab.oid = inh.inhrelid 
-	    AND parentlab.oid = inh.inhparent
-	    AND parentlab.labname = 'vertex'
+	    labname, relid, pg_get_userbyid(c.relowner), labkind, inhrelid, inhparent, inhseqno
+	from ag_label AS l 
+	   left join pg_class AS c ON l.relid = c.oid
+	   inner join pg_inherits AS i on l.relid = i.inhrelid
+	where 1=1
+	  AND l.labkind='v'	
+	  and c.relnamespace = (select g.nspid from ag_graph g where g.graphname = #schema_name#)  
 </select>
 
 <!-- 
@@ -41,15 +50,13 @@
  -->
 <select id="agensEdge" resultClass="com.hangum.tadpole.engine.query.dao.agens.AgensVertexDAO" parameterClass="java.lang.String">
 	select
-	    childlab.labname, childlab.relid, childlab.labowner, childlab.labkind, inhrelid, inhparent, inhseqno
-	from 
-	    ag_label AS parentlab, 
-	    ag_label AS childlab, 
-	    ag_inherits AS inh 
-	where 
-	        childlab.oid = inh.inhrelid 
-	    AND parentlab.oid = inh.inhparent
-	    AND parentlab.labname = 'edge'
+	    labname, relid, pg_get_userbyid(c.relowner), labkind, inhrelid, inhparent, inhseqno
+	from ag_label AS l 
+	    left join pg_class AS c ON l.relid = c.oid
+	    inner join pg_inherits AS i on l.relid = i.inhrelid
+	where 1=1
+	  AND l.labkind='e'	
+	  and c.relnamespace = (select g.nspid from ag_graph g where g.graphname = #schema_name#)  
 </select>
 
 </sqlMap>
