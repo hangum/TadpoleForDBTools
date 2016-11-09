@@ -485,4 +485,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			}
 		}		
 	}
+
+	public void clearList() {
+		if(showViews != null) this.showViews.clear();
+	}
 }

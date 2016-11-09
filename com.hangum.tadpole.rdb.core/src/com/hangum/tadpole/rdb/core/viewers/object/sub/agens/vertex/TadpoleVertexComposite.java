@@ -44,8 +44,10 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.agens.AgensVertexDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -120,10 +122,10 @@ public class TadpoleVertexComposite extends AbstractObjectComposite {
 					IStructuredSelection is = (IStructuredSelection) event.getSelection();
 					if (null != is) {
 						AgensVertexDAO vertexDAO = (AgensVertexDAO) is.getFirstElement();
-						FindEditorAndWriteQueryUtil.run(userDB, "Match (n: " + vertexDAO.getLabname() + ") return n;", PublicTadpoleDefine.OBJECT_TYPE.VERTEX);
+						FindEditorAndWriteQueryUtil.run(userDB, "Match (n: " + vertexDAO.getSysName() + ") return n;", PublicTadpoleDefine.OBJECT_TYPE.VERTEX);
 					}
 				} catch (Exception e) {
-					logger.error("create vertex statement", e);
+					logger.error("vertex match statement", e);
 				}
 			}
 		});
@@ -179,7 +181,9 @@ public class TadpoleVertexComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshSequence(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
-		if (!boolRefresh) if (!showVertex.isEmpty()) return;
+		if (!boolRefresh)
+			if(selectUserDb == null) return;
+			//if (!showVertex.isEmpty()) return;
 		this.userDB = selectUserDb;
 
 		showVertex = (List<AgensVertexDAO>)selectUserDb.getDBObject(OBJECT_TYPE.VERTEX, selectUserDb.getDefaultSchemanName());
@@ -261,7 +265,18 @@ public class TadpoleVertexComposite extends AbstractObjectComposite {
 	 */
 	public static List<AgensVertexDAO> getVertexList(final UserDBDAO userDB) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		return sqlClient.queryForList("agensVertex", userDB.getSchema()); //$NON-NLS-1$
+		
+		List<AgensVertexDAO> vertexList = 
+		
+		 sqlClient.queryForList("agensVertex", userDB.getSchema()); //$NON-NLS-1$
+		
+		for(AgensVertexDAO td : vertexList) {
+			td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getLabname() ));
+		}
+		
+		return vertexList;
+		
+		
 	}
 
 	/**
@@ -316,5 +331,10 @@ public class TadpoleVertexComposite extends AbstractObjectComposite {
 				break;
 			}
 		}
+	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showVertex != null) this.showVertex.clear();
 	}
 }

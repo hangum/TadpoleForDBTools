@@ -287,4 +287,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			}
 		}		
 	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showProcedure != null) this.showProcedure.clear();	
+	}
 }

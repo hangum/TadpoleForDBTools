@@ -468,4 +468,9 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 			}
 		}
 	}
+
+	public void clearList() {
+		if(showSynonymColumns != null) this.showSynonymColumns.clear();
+		if(showSynonyms != null) this.showSynonyms.clear();	
+	}
 }

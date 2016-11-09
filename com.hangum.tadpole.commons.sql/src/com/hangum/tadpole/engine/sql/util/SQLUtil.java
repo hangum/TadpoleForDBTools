@@ -237,6 +237,13 @@ public class SQLUtil {
 		
 		// 정의 된 형태로 오브젝트 명을 변경한다.
 		switch(tmd.getSTORE_TYPE()) {
+		case NONE: 
+			// 오브젝트명이 전부 대문자로 변경한것과도 틀리고 전부 소문자로 변경한것과도 틀린경우 대, 소문자가 혼합된 명칭으로 간주하고 구분자를 추가해 준다.
+			if(!StringUtils.equals(name, StringUtils.lowerCase(name)) && !StringUtils.equals(name, StringUtils.upperCase(name)) ) {
+				isChanged = true;
+				retStr = makeFullyTableName(name, tmd.getIdentifierQuoteString());
+			}
+			break;
 		case BLANK: 
 			if(name.matches(".*\\s.*")) {
 				isChanged = true;
@@ -360,6 +367,7 @@ public class SQLUtil {
 				dbAction == OBJECT_TYPE.LINK ||
 				dbAction == OBJECT_TYPE.JOBS ||
 				dbAction == OBJECT_TYPE.VERTEX ||
+				dbAction == OBJECT_TYPE.GRAPHPATH ||
 				dbAction == OBJECT_TYPE.EDGE
 				) {
 			return true;

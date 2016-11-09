@@ -82,7 +82,7 @@ public class DBSystemSchema {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
-			List<TableDAO> listView = sqlClient.queryForList("viewList", userDB.getDb());
+			List<TableDAO> listView = sqlClient.queryForList("viewList", userDB.getSchema());
 			// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 			StringBuffer strViewList = new StringBuffer();
 			for(TableDAO td : listView) {
@@ -198,7 +198,7 @@ public class DBSystemSchema {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		List<ProcedureFunctionDAO> listFunction;
 		
-		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()){
 			listFunction = sqlClient.queryForList("functionList", userDB.getSchema()); //$NON-NLS-1$
 		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 			listFunction = sqlClient.queryForList("functionList", userDB.getSchema()); //$NON-NLS-1$
@@ -233,7 +233,7 @@ public class DBSystemSchema {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		List<ProcedureFunctionDAO> listProcedure;
-		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ){
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
 		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
@@ -264,7 +264,7 @@ public class DBSystemSchema {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 	
 			HashMap<String, String>paramMap = new HashMap<String, String>();
-			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
+			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()){
 				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
 				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
 			}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){

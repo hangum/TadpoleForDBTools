@@ -55,6 +55,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.TadpoleGraphPathComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.edge.TadpoleEdgeComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.vertex.TadpoleVertexComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
@@ -121,6 +122,7 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
 	
 	// agens graph
+	private TadpoleGraphPathComposite agensGraphPathComposite = null;
 	private TadpoleVertexComposite agensVertexComposite = null;
 	private TadpoleEdgeComposite agensEdgeComposite = null;
 
@@ -156,7 +158,7 @@ public class ExplorerViewer extends ViewPart {
 		comboSchema.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeSchema();
+				changeSchema(comboSchema.getText());
 			}
 		});
 		comboSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -287,12 +289,40 @@ public class ExplorerViewer extends ViewPart {
 	/**
 	 *  change schema name
 	 */
-	private void changeSchema() {
-		String strSchemaName = comboSchema.getText();
+	public void changeSchema(String strSchemaName) {
+		this.comboSchema.setText(strSchemaName);
+		 
 		this.userDB.setSchema(strSchemaName);
 		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);
 		
-		tableComposite.refreshTable(userDB, true, "");
+		// 기존 스키마에 대해 조회되어 있던 내용을 초기화 한다.
+		
+		if(null != tableComposite) tableComposite.clearList(); 
+		if(null != viewComposite) viewComposite.clearList(); 
+		if(null != synonymComposite) synonymComposite.clearList();
+		if(null != sequenceComposite) sequenceComposite.clearList();
+		if(null != procedureComposite) procedureComposite.clearList(); 
+		if(null != packageComposite) packageComposite.clearList(); 
+		if(null != functionCompostite) functionCompostite.clearList(); 
+		if(null != triggerComposite) triggerComposite.clearList(); 
+		if(null != dblinkComposite) dblinkComposite.clearList();
+		if(null != jobsComposite) jobsComposite.clearList();
+		if(null != javaComposite) javaComposite.clearList();
+		
+		if(null != this.agensGraphPathComposite) agensGraphPathComposite.clearList();
+		if(null != this.agensVertexComposite) agensVertexComposite.clearList();
+		if(null != this.agensEdgeComposite) agensEdgeComposite.clearList();
+
+
+		
+		// 아젠스 그래프 디비인 경우는 첫번째 탭이 그래프 패스 이므로 그래프 패스가 선택 되도록 한다.
+		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
+			//refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
+			this.agensGraphPathComposite.refreshGraphPath(userDB, true, "");
+		}else{
+			tableComposite.refreshTable(userDB, true, "");
+		}
+		
 	}
 
 	/**
@@ -330,6 +360,10 @@ public class ExplorerViewer extends ViewPart {
 		if(null != dblinkComposite) dblinkComposite.dispose();
 		if(null != jobsComposite) jobsComposite.dispose();
 		if(null != javaComposite) javaComposite.dispose();
+		
+		if(null != this.agensGraphPathComposite) agensGraphPathComposite.dispose();
+		if(null != this.agensVertexComposite) agensVertexComposite.dispose();
+		if(null != this.agensEdgeComposite) agensEdgeComposite.dispose();
 		
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
@@ -566,6 +600,12 @@ public class ExplorerViewer extends ViewPart {
 				DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup() ||
 				DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()
 		) {
+			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
+				createGraphPath();
+				createVertex();
+				createEdge();
+			}
+			
 			createTable();
 			createView();
 			createProcedure();
@@ -573,23 +613,20 @@ public class ExplorerViewer extends ViewPart {
 			createTrigger();
 			
 			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
-				createVertex();
-				createEdge();
-				
 				arrayStructuredViewer = new StructuredViewer[] { 
-						tableComposite.getTableListViewer(), 
-						tableComposite.getTableColumnViewer(),
-						tableComposite.getIndexComposite().getTableViewer(),
-						tableComposite.getTriggerComposite().getTableViewer(),
-						viewComposite.getTableViewer(), 
-						procedureComposite.getTableViewer(), 
-						functionCompostite.getTableviewer(),
-						triggerComposite.getTableViewer(),
-						agensVertexComposite.getTableviewer(),
-						agensEdgeComposite.getTableviewer()
-					};
+					agensGraphPathComposite.getTableviewer(),
+					agensVertexComposite.getTableviewer(),
+					agensEdgeComposite.getTableviewer(),
+					tableComposite.getTableListViewer(), 
+					tableComposite.getTableColumnViewer(),
+					tableComposite.getIndexComposite().getTableViewer(),
+					tableComposite.getTriggerComposite().getTableViewer(),
+					viewComposite.getTableViewer(), 
+					procedureComposite.getTableViewer(), 
+					functionCompostite.getTableviewer(),
+					triggerComposite.getTableViewer()
+				};
 			} else {
-				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					tableComposite.getTableListViewer(), 
 					tableComposite.getTableColumnViewer(),
@@ -600,9 +637,8 @@ public class ExplorerViewer extends ViewPart {
 					functionCompostite.getTableviewer(),
 					triggerComposite.getTableViewer()
 				};
-			}
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
-			
+			}						
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));			
 		// mysql, postgre, mssql
 		} else {
 			createTable();
@@ -624,7 +660,11 @@ public class ExplorerViewer extends ViewPart {
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
-		refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name());
+		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
+			refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
+		}else{
+			refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name());
+		}
 	}
 	
 	/**
@@ -678,6 +718,8 @@ public class ExplorerViewer extends ViewPart {
 			refreshVertex(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.EDGE.name())) {
 			refreshEdge(isRefresh, strObjectName);
+		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.GRAPHPATH.name())) {
+			refreshGraph(isRefresh, strObjectName);
 		}
 		filterText();
 		
@@ -839,6 +881,14 @@ public class ExplorerViewer extends ViewPart {
 	}
 	
 	/**
+	 * Graph Path
+	 */
+	private void createGraphPath() {
+		agensGraphPathComposite = new TadpoleGraphPathComposite(getSite(), tabFolderObject, userDB, this);
+		agensGraphPathComposite.initAction();
+	}
+	
+	/**
 	 * agens vertext정의 
 	 */
 	private void createVertex() {
@@ -909,6 +959,16 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshTrigger(boolean boolRefresh, String strObjectName) {
 		tableComposite.getTriggerComposite().refreshTrigger(userDB, boolRefresh, strObjectName);
+	}
+	
+	/**
+	 * graph 정보를 최신으로 갱신 합니다.
+	 * @param boolRefresh
+	 * @param strObjectName
+	 */
+	public void refreshGraph(boolean boolRefresh, String strObjectName) {
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.GRAPHPATH, userDB.getDefaultSchemanName(), null);
+		agensGraphPathComposite.refreshGraphPath(getUserDB(), boolRefresh, strObjectName);
 	}
 	
 	/**

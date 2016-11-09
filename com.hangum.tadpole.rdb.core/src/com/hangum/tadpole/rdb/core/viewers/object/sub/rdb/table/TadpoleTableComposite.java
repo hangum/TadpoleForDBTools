@@ -641,6 +641,14 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	}
 	
 	/**
+	 * 스키마가 변경될 경우 현재 로딩된 목록을 제거한다.
+	 */
+	public void clearList() {
+		if(tableColumnComposite != null) this.tableColumnComposite.clearList();
+		if(listTablesDAO != null) this.listTablesDAO.clear();
+	}
+	
+	/**
 	 * table 정보를 최신으로 리프레쉬합니다.
 	 * 
 	 * @param selectUserDb

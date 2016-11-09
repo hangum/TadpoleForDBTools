@@ -362,4 +362,9 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 			}
 		}
 	}
+
+	public void clearList() {
+		// TODO Auto-generated method stub
+		if(showSequences != null) this.showSequences.clear();	
+	}
 }
