@@ -250,6 +250,18 @@ public class Messages {
 	public String NewUserDialog_33;
 
 	public String DownloadMsg;
+
+	public String PreferenceMod;
+
+	public String IsPerferenceModify;
+
+	public String LoginMethod;
+
+	public String ResourceDownload;
+
+	public String DefaultHome;
+
+	public String UnuseDBMaanagement;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -52,14 +52,13 @@ public class UserDAO {
 	String is_shared_db = PublicTadpoleDefine.YES_NO.YES.name();
 	/** 디비 추가 할 수있는 한계 */
 	int limit_add_db_cnt = 5;
+	/** 쿼리와 관련된 부분의 프리퍼런스 수정할 수 있는지? */
+	String is_modify_perference = PublicTadpoleDefine.YES_NO.YES.name();
 	
 	Timestamp service_start = new Timestamp(System.currentTimeMillis());
-	Timestamp service_end = new Timestamp(DateUtil.afterMonthToMillis(30));
+	Timestamp service_end = new Timestamp(DateUtil.afterMonthToMillis(12));
 	
-	//------------------------------------------------------------------------
-	/** tadpole_user_db_role column */
-	String role_id;
-	
+	// 사용자 검색시 채크 용도로 사용.
 	boolean select;
 
 	public UserDAO() {
@@ -187,14 +186,6 @@ public class UserDAO {
 		this.otp_secret = otp_secret;
 	}
 
-	public String getRole_id() {
-		return role_id;
-	}
-
-	public void setRole_id(String role_id) {
-		this.role_id = role_id;
-	}
-
 	public String getEmail_key() {
 		return email_key;
 	}
@@ -314,5 +305,19 @@ public class UserDAO {
 	public  boolean equals(UserDAO obj) {
         return (this.name.equals(obj.name) && this.email.equals(obj.email));
     }
+
+	/**
+	 * @return the is_modify_perference
+	 */
+	public String getIs_modify_perference() {
+		return is_modify_perference;
+	}
+
+	/**
+	 * @param is_modify_perference the is_modify_perference to set
+	 */
+	public void setIs_modify_perference(String is_modify_perference) {
+		this.is_modify_perference = is_modify_perference;
+	}
 	
 }

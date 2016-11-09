@@ -308,6 +308,10 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	
 	@Override
 	public boolean performOk() {
+		if(PublicTadpoleDefine.YES_NO.NO.name().equals(SessionManager.getIsModifyPerference())) {
+			MessageDialog.openWarning(null, CommonMessages.get().Warning, CommonMessages.get().CantModifyPreferenc);
+			return false;
+		}
 		if(!isValid()) return false;
 		
 		boolean txtQueryProfilling = btnQueryProfilling.getSelection();
@@ -325,7 +329,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtQueryProfilling,
-					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn, txtResultType);
+					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn, txtResultType, txtNull);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, ""+txtQueryProfilling);

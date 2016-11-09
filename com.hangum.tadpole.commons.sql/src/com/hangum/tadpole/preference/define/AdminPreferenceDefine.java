@@ -69,6 +69,12 @@ public class AdminPreferenceDefine {
 	public static final String SUPPORT_MONITORING = _PREFIX + "SUPPORT_MONITORING";
 	public static final String SUPPORT_MONITORING_VALUE = "NO";
 	
+	/**
+	 * 사용자 프리퍼런스 지정 여부
+	 */
+	public static final String IS_PREFERENCE_MODIFY = _PREFIX + "IS_PREFERENCE_MODIFY";
+	public static final String IS_PREFERENCE_MODIFY_VALUE = "YES";
+	
 	// set smtp information
 		public static final String SENDGRID_API_NAME 		= "SENDGRID_API_NAME";
 		public static final String SENDGRID_API_VALUE 		= "";
@@ -85,4 +91,18 @@ public class AdminPreferenceDefine {
 		public static final String SMTP_PASSWD 			= "SMTP_PASSWD";
 		public static final String SMTP_PASSWD_VALUE 	= "";
 
+	/** 홈페이지 */
+	public static final String DEFAULT_HOME = _PREFIX + "DEFAULT_HOME";
+	public static final String DEFAULT_HOME_VALUE = "https://github.com/hangum/TadpoleForDBTools";
+	/** 홈페이지 오픈 여부 */
+	public static final String DEFAULT_HOME_OPEN = _PREFIX + "DEFAULT_HOME_OPEN";
+	public static final String DEFAULT_HOME_OPEN_VALUE = "false";
+
+	/** 
+	 * 리소스 다운로드 여부
+	 */
+	public static final String IS_RESOURCE_DOWNLOAD = _PREFIX + "IS_RESOURCE_DOWNLOAD";
+	public static final String IS_RESOURCE_DOWNLOAD_VALUE = "YES";
+	
+	
 }

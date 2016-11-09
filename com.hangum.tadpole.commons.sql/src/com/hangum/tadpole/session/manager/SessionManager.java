@@ -36,8 +36,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 
-import oracle.net.aso.s;
-
 /**
  * tadpole의 session manager입니다
  * 
@@ -73,6 +71,7 @@ public class SessionManager {
 														
 														IS_SHARED_DB,
 														LIMIT_ADD_DB_CNT,
+														IS_MODIFY_PERFERENCE,
 														SERVICE_END,
 														LANGUAGE,
 														TIMEZONE,
@@ -170,6 +169,7 @@ public class SessionManager {
 		sStore.setAttribute(NAME.TIMEZONE.name(), userDao.getTimezone());
 		
 		sStore.setAttribute(NAME.IS_SHARED_DB.name(), userDao.getIs_shared_db());
+		sStore.setAttribute(NAME.IS_MODIFY_PERFERENCE.name(), userDao.getIs_modify_perference());
 		sStore.setAttribute(NAME.LIMIT_ADD_DB_CNT.name(), userDao.getLimit_add_db_cnt());
 		sStore.setAttribute(NAME.SERVICE_END.name(), userDao.getService_end());
 		
@@ -250,6 +250,11 @@ public class SessionManager {
 	public static Integer getLimitAddDBCnt() {
 		HttpSession sStore = RWT.getRequest().getSession();
 		return (Integer)sStore.getAttribute(NAME.LIMIT_ADD_DB_CNT.name());
+	}
+	
+	public static String getIsModifyPerference() {
+		HttpSession sStore = RWT.getRequest().getSession();
+		return (String)sStore.getAttribute(NAME.IS_MODIFY_PERFERENCE.name());
 	}
 	
 	public static Timestamp getServiceEnd() {

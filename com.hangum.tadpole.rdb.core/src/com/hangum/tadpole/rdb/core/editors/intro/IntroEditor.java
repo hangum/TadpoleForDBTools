@@ -111,7 +111,7 @@ public class IntroEditor extends EditorPart {
 		});
 		textURL.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Composite compositeBody = new Composite(parent, SWT.BORDER);
+		Composite compositeBody = new Composite(parent, SWT.NONE);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setLayout(new GridLayout(1, false));
 		
@@ -163,8 +163,9 @@ public class IntroEditor extends EditorPart {
 		if(logger.isDebugEnabled()) logger.debug("Default home url is " + url);
 		
 		boolean boolStartHttp = StringUtils.startsWith(url, "http"); //$NON-NLS-1$
-		if(boolStartHttp) browser.setUrl(url);
-		else {
+		if(boolStartHttp) {
+			browser.setUrl(url);
+		} else {
 			textURL.setText("http://" + url);
 			browser.setUrl("http://" + url); //$NON-NLS-1$
 		}

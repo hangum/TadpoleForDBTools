@@ -54,7 +54,9 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
 import com.hangum.tadpole.manager.core.Messages;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
 /**
@@ -67,17 +69,23 @@ public class FindUserAndDBRoleDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(FindUserAndDBRoleDialog.class);
 
 	private Text textUserEMail;
-	private TableViewer tableViewer;
-	private TableViewer tableViewerTargetDB;
-	private TableViewer tableViewerSelectUser;
+	private TableViewer tvUserList;
+	private TableViewer tvTargetDB;
+	private TableViewer tvSelectUser;
+	
+	/** 사용자 리스트 */
 	private List<UserDAO> listUserGroup = new ArrayList<UserDAO>();
-	private List<UserDAO> listSelectUserGroup = new ArrayList<UserDAO>();
+	/** 디비 리스트 */
 	private List<UserDBDAO> listUserDBs = new ArrayList<UserDBDAO>();
+	/** 권한 부여 대상자 */
+	private List<TadpoleUserDbRoleDAO> listSelectUserGroup = new ArrayList<TadpoleUserDbRoleDAO>();
 
-	private TadpoleUserDbRoleDAO tadpoleUserRoleDao;
 	private Table tableUserRole;
 	private Table tableDB;
 	private Text textLog;
+	
+	/** 마지막 입력한 사용자 롤 정보 */
+	private TadpoleUserDbRoleDAO tadpoleUserRoleDao;
 
 	/**
 	 * Create the dialog.
@@ -126,15 +134,15 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		Label lblDb = new Label(compositeDB, SWT.NONE);
 		lblDb.setText(Messages.get().AuthorityTargetDB);
 
-		tableViewerTargetDB = new TableViewer(compositeDB, SWT.BORDER | SWT.FULL_SELECTION);
-		tableDB = tableViewerTargetDB.getTable();
+		tvTargetDB = new TableViewer(compositeDB, SWT.BORDER | SWT.FULL_SELECTION);
+		tableDB = tvTargetDB.getTable();
 		tableDB.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableDB.setLinesVisible(true);
 		tableDB.setHeaderVisible(true);
 		createTargetDBColumns();
 
-		tableViewerTargetDB.setContentProvider(new ArrayContentProvider());
-		tableViewerTargetDB.setLabelProvider(new TargetDBLabelProvider());
+		tvTargetDB.setContentProvider(new ArrayContentProvider());
+		tvTargetDB.setLabelProvider(new TargetDBLabelProvider());
 		// ------------- left side end -----------------
 
 		// ------------- right side start -----------------
@@ -187,27 +195,32 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		gl_compositeBody.marginWidth = 0;
 		compositeBody.setLayout(gl_compositeBody);
 
-		tableViewer = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
-		Table table = tableViewer.getTable();
+		tvUserList = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		Table table = tvUserList.getTable();
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection iss = (IStructuredSelection) tableViewer.getSelection();
+				IStructuredSelection iss = (IStructuredSelection) tvUserList.getSelection();
 				if (iss.isEmpty()) {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning,
-							Messages.get().PleaseSelectUser);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectUser);
 					return;
 				}
 				UserDAO userDAO = (UserDAO) iss.getFirstElement();
 
 				if (userDAO.isSelect()) {
 					listUserGroup.remove(userDAO);
-					tableViewer.refresh();
+					tvUserList.refresh();
+					
+					TadpoleUserDbRoleDAO userRoleDao = new TadpoleUserDbRoleDAO();
+					userRoleDao.setSeq(userDAO.getSeq());
+					userRoleDao.setEmail(userDAO.getEmail());
+					userRoleDao.setName(userDAO.getName());
+					userRoleDao.setIs_resource_download(GetAdminPreference.getIsDefaultDonwload());
 
-					listSelectUserGroup.add(userDAO);
+					listSelectUserGroup.add(userRoleDao);
 
-					tableViewerSelectUser.setInput(listSelectUserGroup);
-					tableViewerSelectUser.refresh();
+					tvSelectUser.setInput(listSelectUserGroup);
+					tvSelectUser.refresh();
 				}
 			}
 		});
@@ -217,10 +230,9 @@ public class FindUserAndDBRoleDialog extends Dialog {
 
 		createSearchColumns();
 
-		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setLabelProvider(new UserLabelProvider());
+		tvUserList.setContentProvider(new ArrayContentProvider());
+		tvUserList.setLabelProvider(new UserLabelProvider());
 
-		textUserEMail.setFocus();
 		//
 
 		Composite compositeMsg = new Composite(sashFormRight, SWT.NONE);
@@ -248,22 +260,21 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		Label label_3 = new Label(compositeApplyUser, SWT.NONE);
 		label_3.setText(Messages.get().AuthorityTargetUser);
 
-		tableViewerSelectUser = new TableViewer(compositeApplyUser, SWT.BORDER | SWT.FULL_SELECTION);
-		tableUserRole = tableViewerSelectUser.getTable();
+		tvSelectUser = new TableViewer(compositeApplyUser, SWT.BORDER | SWT.FULL_SELECTION);
+		tableUserRole = tvSelectUser.getTable();
 		tableUserRole.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection iss = (IStructuredSelection) tableViewerSelectUser.getSelection();
+				IStructuredSelection iss = (IStructuredSelection) tvSelectUser.getSelection();
 				if (iss.isEmpty()) {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning,
-							Messages.get().PleaseSelectUser);
+					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().PleaseSelectUser);
 					return;
 				}
 				UserDAO userDAO = (UserDAO) iss.getFirstElement();
 				if (!userDAO.isSelect()) {
 					listSelectUserGroup.remove(userDAO);
 				}
-				tableViewerSelectUser.refresh();
+				tvSelectUser.refresh();
 
 			}
 		});
@@ -273,12 +284,14 @@ public class FindUserAndDBRoleDialog extends Dialog {
 
 		createSelectUserColumns();
 
-		tableViewerSelectUser.setContentProvider(new ArrayContentProvider());
-		tableViewerSelectUser.setLabelProvider(new SelectUserLabelProvider());
+		tvSelectUser.setContentProvider(new ArrayContentProvider());
+		tvSelectUser.setLabelProvider(new SelectUserLabelProvider());
 
 		sashFormLayout.setWeights(new int[] { 1, 1 });
 		initData();
 		initUI();
+		
+		textUserEMail.setFocus();
 
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
@@ -328,7 +341,7 @@ public class FindUserAndDBRoleDialog extends Dialog {
 
 				if ("NONE".equals(userDAO.getRole_type())) { //$NON-NLS-1$
 					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().FindUserAndDBRoleDialog_6);
-					tableViewerSelectUser.getTable().setFocus();
+					tvSelectUser.getTable().setFocus();
 					return;
 				}
 
@@ -339,28 +352,17 @@ public class FindUserAndDBRoleDialog extends Dialog {
 						if (!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().FindUserDialog_4))
 							return;
 
-						tadpoleUserRoleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(),
-								userDBDao.getSeq(), userDAO.getRole_type(), "*", //$NON-NLS-1$
-								userDAO.getService_start(), userDAO.getService_end());
+//						tadpoleUserRoleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userDAO.getSeq(),
+//								userDBDao.getSeq(), userDAO.getRole_type(), "*", //$NON-NLS-1$
+//								userDAO.getService_start(), userDAO.getService_end());
 
-						// MessageDialog.openInformation(getShell(),
-						// CommonMessages.get().Confirm,
-						// Messages.get().FindUserAndDBRoleDialog_10);
-						textLog.append("\nInformation:" + userDAO.getName() + "이(가) " + userDBDao.getDisplay_name()
-								+ "의 " + userDAO.getRole_type() + "(으)로 " + Messages.get().FindUserAndDBRoleDialog_10);
-
+						textLog.append("\nInformation:" + userDAO.getName() + "이(가) " + userDBDao.getDisplay_name() + "의 " + userDAO.getRole_type() + "(으)로 " + Messages.get().FindUserAndDBRoleDialog_10);
 					} else {
-						// MessageDialog.openWarning(getShell(),
-						// CommonMessages.get().Warning,
-						// Messages.get().FindUserAndDBRoleDialog_12);
-						textLog.append("\nWarning:" + userDAO.getName() + "을(를) " + userDBDao.getDisplay_name() + "의 "
-								+ userDAO.getRole_type() + "(으)로 지정 : " + Messages.get().FindUserAndDBRoleDialog_12);
+						textLog.append("\nWarning:" + userDAO.getName() + "을(를) " + userDBDao.getDisplay_name() + "의 " + userDAO.getRole_type() + "(으)로 지정 : " + Messages.get().FindUserAndDBRoleDialog_12);
 					}
 				} catch (Exception e) {
 					logger.error(Messages.get().RoleType, e);
-					// MessageDialog.openError(getShell(),CommonMessages.get().Error,
-					// Messages.get().FindUserAndDBRoleDialog_15 +
-					// e.getMessage());
+
 					textLog.append("\nError:" + userDAO.getName() + "을(를) " + userDBDao.getDisplay_name() + "의 "
 							+ userDAO.getRole_type() + "(으)로 지정 : " + Messages.get().FindUserAndDBRoleDialog_15
 							+ e.getMessage());
@@ -399,8 +401,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 				}
 			}
 
-			tableViewer.setInput(listUserGroup);
-			tableViewer.refresh();
+			tvUserList.setInput(listUserGroup);
+			tvUserList.refresh();
 		} catch (Exception e) {
 			logger.error("search exception", e); //$NON-NLS-1$
 			MessageDialog.openInformation(getShell(), CommonMessages.get().Error, e.getMessage());
@@ -412,8 +414,8 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		try {
 			listUserDBs = TadpoleSystem_UserDBQuery.getCreateUserDB();
 
-			tableViewerTargetDB.setInput(listUserDBs);
-			tableViewerTargetDB.refresh();
+			tvTargetDB.setInput(listUserDBs);
+			tvTargetDB.refresh();
 
 		} catch (Exception e) {
 			logger.error(Messages.get().DBListComposite_25, e);
@@ -428,13 +430,13 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		int[] colSize = { 150, 150, 120 };
 
 		for (int i = 0; i < colSize.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvUserList, SWT.NONE);
 			TableColumn tableColumn = tableViewerColumn.getColumn();
 			tableColumn.setWidth(colSize[i]);
 			tableColumn.setText(colNames[i]);
 
 			if (i == 0) {
-				tableViewerColumn.setEditingSupport(new UserSearchEditingSupport(tableViewer, i));
+				tableViewerColumn.setEditingSupport(new UserSearchEditingSupport(tvUserList, i));
 			}
 		}
 	}
@@ -445,12 +447,12 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		int[] colSize = { 150, 150, 120, 120, 200, 200 };
 
 		for (int i = 0; i < colSize.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerSelectUser, SWT.NONE);
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvSelectUser, SWT.NONE);
 			TableColumn tableColumn = tableViewerColumn.getColumn();
 			tableColumn.setWidth(colSize[i]);
 			tableColumn.setText(colNames[i]);
 
-			tableViewerColumn.setEditingSupport(new SelectUserEditingSupport(tableViewerSelectUser, i));
+			tableViewerColumn.setEditingSupport(new SelectUserEditingSupport(tvSelectUser, i));
 
 		}
 	}
@@ -460,13 +462,13 @@ public class FindUserAndDBRoleDialog extends Dialog {
 		int[] colSize = { 150, 150, 120 };
 
 		for (int i = 0; i < colSize.length; i++) {
-			TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerTargetDB, SWT.NONE);
+			TableViewerColumn tableViewerColumn = new TableViewerColumn(tvTargetDB, SWT.NONE);
 			TableColumn tableColumn = tableViewerColumn.getColumn();
 			tableColumn.setWidth(colSize[i]);
 			tableColumn.setText(colNames[i]);
 
 			if (i == 0) {
-				tableViewerColumn.setEditingSupport(new TargetDBEditingSupport(tableViewerTargetDB, i));
+				tableViewerColumn.setEditingSupport(new TargetDBEditingSupport(tvTargetDB, i));
 			}
 		}
 	}

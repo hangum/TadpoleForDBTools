@@ -42,6 +42,7 @@ import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * general preference
@@ -97,6 +98,10 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 			}
 		});
 		textSessionTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		if(PublicTadpoleDefine.YES_NO.NO.name().equals(SessionManager.getIsModifyPerference())) {
+			textSessionTime.setEditable(false);
+			textSessionTime.setEnabled(false);
+		}
 		
 		Label lblExportDilimit = new Label(container, SWT.NONE);
 		lblExportDilimit.setText(Messages.get().GeneralPreferencePage_lblExportDilimit_text);

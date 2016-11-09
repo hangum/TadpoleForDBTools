@@ -1,7 +1,8 @@
 package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Timestamp;
-import java.util.Date;
+
+import com.hangum.tadpole.commons.csv.DateUtil;
 
 /**
  * Define tadpole_user_db_role table
@@ -9,7 +10,7 @@ import java.util.Date;
  * @author hangum
  *
  */
-public class TadpoleUserDbRoleDAO {
+public class TadpoleUserDbRoleDAO extends UserDAO {
 	int seq;
 	int user_seq;
 	int db_seq;
@@ -18,18 +19,14 @@ public class TadpoleUserDbRoleDAO {
 	// all access ip
 	String access_ip = "*";
 	
+	/** 리소스 다운로드 여부 */
+	String is_resource_download	= "YES";
+	
 	// default value is 00:00
 	Timestamp terms_of_use_starttime 	= new Timestamp(System.currentTimeMillis());
 
 	// default value is 100 years after
-	Timestamp terms_of_use_endtime  	= new Timestamp(System.currentTimeMillis());// + (10 * 365 * 24 * 60 * 60 * 1000));
-	
-	String delYn;
-	Date create_time;
-	
-	/////////////////////////
-	String email;
-	String name;
+	Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillis(12));
 	
 	//
 	UserDBDAO parent;
@@ -69,38 +66,6 @@ public class TadpoleUserDbRoleDAO {
 		this.role_id = role_id;
 	}
 
-	public String getDelYn() {
-		return delYn;
-	}
-
-	public void setDelYn(String delYn) {
-		this.delYn = delYn;
-	}
-
-	public Date getCreate_time() {
-		return create_time;
-	}
-
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	/**
 	 * @return the access_ip
 	 */
@@ -156,6 +121,19 @@ public class TadpoleUserDbRoleDAO {
 	public void setParent(UserDBDAO parent) {
 		this.parent = parent;
 	}
-	
+
+	/**
+	 * @return the is_resource_download
+	 */
+	public String getIs_resource_download() {
+		return is_resource_download;
+	}
+
+	/**
+	 * @param is_resource_download the is_resource_download to set
+	 */
+	public void setIs_resource_download(String is_resource_download) {
+		this.is_resource_download = is_resource_download;
+	}
 	
 }
