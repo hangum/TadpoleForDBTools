@@ -82,26 +82,10 @@ public class TadpoleSystem_UserRole {
 	/**
 	 * insert tadpole_user_db_role table
 	 * 
-	 * @param userSeq
-	 * @param dbSeq
-	 * @param roleId
-	 * @param accessIp
-	 * @param isDownload
-	 * @param terms_of_use_starttime
-	 * @param terms_of_use_endtime
-	 * 
+	 * @param userDBRoleDao
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static TadpoleUserDbRoleDAO insertTadpoleUserDBRole(int userSeq, int dbSeq, String roleType, String accessIp, String isDownload, Timestamp terms_of_use_starttime, Timestamp terms_of_use_endtime) throws TadpoleSQLManagerException, SQLException {
-		TadpoleUserDbRoleDAO userDBRoleDao = new TadpoleUserDbRoleDAO();
-		userDBRoleDao.setUser_seq(userSeq);
-		userDBRoleDao.setDb_seq(dbSeq);
-		userDBRoleDao.setRole_id(roleType);
-		userDBRoleDao.setAccess_ip(accessIp);
-		userDBRoleDao.setIs_resource_download(isDownload);
-		userDBRoleDao.setTerms_of_use_starttime(terms_of_use_starttime);
-		userDBRoleDao.setTerms_of_use_endtime(terms_of_use_endtime);
-		
+	public static TadpoleUserDbRoleDAO insertTadpoleUserDBRole(TadpoleUserDbRoleDAO userDBRoleDao) throws TadpoleSQLManagerException, SQLException {
 		// Insert tadpole_user_db_role table. 
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		userDBRoleDao = (TadpoleUserDbRoleDAO)sqlClient.insert("userDBRoleInsert", userDBRoleDao);

@@ -58,7 +58,9 @@ public class UserDAO {
 	Timestamp service_start = new Timestamp(System.currentTimeMillis());
 	Timestamp service_end = new Timestamp(DateUtil.afterMonthToMillis(12));
 	
-	// 사용자 검색시 채크 용도로 사용.
+	// 
+	// table viewer 에서 사용자 검색에서 사용하려고 채크 박스 선택 유무로 사용하는 컬럼.
+	// 
 	boolean select;
 
 	public UserDAO() {

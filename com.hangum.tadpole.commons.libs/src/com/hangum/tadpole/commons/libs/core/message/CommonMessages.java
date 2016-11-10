@@ -20,6 +20,8 @@ import org.eclipse.rap.rwt.RWT;
  */
 public class CommonMessages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.message.messages"; //$NON-NLS-1$
+	
+	public String User;
 
 	public String OK;
 	public String Confirm;
@@ -54,6 +56,7 @@ public class CommonMessages {
 	public String Email;
 	public String Name;
 	public String Date;
+	public String CreateTime;
 	
 	// 공통 출력 메시지. 
 		// 정의 명령이 완료 되었습니다.)
@@ -80,6 +83,14 @@ public class CommonMessages {
 	public String CantModifyPreferenc;
 	
 	public String Download;
+
+	public String Role;
+
+	public String DatabaseInformation;
+
+	public String StartDate;
+
+	public String EndDate;
 	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

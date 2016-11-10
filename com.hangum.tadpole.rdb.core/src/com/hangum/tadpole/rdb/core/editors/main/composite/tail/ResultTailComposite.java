@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
@@ -37,8 +38,8 @@ public class ResultTailComposite extends AbstractTailComposite {
 	 * @param style
 	 * @param isMakePing 
 	 */
-	public ResultTailComposite(Composite reqAbstractResult, Composite compositeBtn, int style) {
-		super(compositeBtn, style);
+	public ResultTailComposite(UserDBDAO userDB, Composite reqAbstractResult, Composite compositeBtn, int style) {
+		super(userDB, compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
 		abstractResultComp = (AbstractResultDetailComposite)reqAbstractResult;

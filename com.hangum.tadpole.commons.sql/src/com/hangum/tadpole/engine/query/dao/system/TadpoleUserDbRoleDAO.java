@@ -26,7 +26,7 @@ public class TadpoleUserDbRoleDAO extends UserDAO {
 	Timestamp terms_of_use_starttime 	= new Timestamp(System.currentTimeMillis());
 
 	// default value is 100 years after
-	Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillis(12));
+	Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillsMonth(12));
 	
 	//
 	UserDBDAO parent;
