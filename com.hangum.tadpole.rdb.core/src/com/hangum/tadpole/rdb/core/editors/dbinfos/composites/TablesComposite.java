@@ -52,7 +52,6 @@ import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -148,6 +147,7 @@ public class TablesComposite extends DBInfosComposite {
 		});
 		btnCsvExport.setBounds(0, 0, 94, 28);
 		btnCsvExport.setText(Messages.get().TablesComposite_btnCsvExport_text);
+		btnCsvExport.setEnabled("YES".equals(userDB.getIs_resource_download()));
 
 //		initUI();
 		registerServiceHandler();

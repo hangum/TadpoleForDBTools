@@ -138,6 +138,7 @@ public class ColumnsComposite extends DBInfosComposite {
 		btnDownload.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnDownload.setBounds(0, 0, 94, 28);
 		btnDownload.setText(Messages.get().ColumnsComposite_btnDownload_text);
+		btnDownload.setEnabled("YES".equals(userDB.getIs_resource_download()));
 
 		createTableColumn();
 

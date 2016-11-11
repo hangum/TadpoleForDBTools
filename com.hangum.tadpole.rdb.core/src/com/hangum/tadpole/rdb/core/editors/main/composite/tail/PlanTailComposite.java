@@ -36,7 +36,7 @@ public class PlanTailComposite extends AbstractTailComposite {
 	 * @param style
 	 */
 	public PlanTailComposite(Composite reqAbstractResult, Composite compositeBtn, int style) {
-		super(compositeBtn, style);
+		super(((AbstractPlanComposite)reqAbstractResult).getRsDAO().getUserDB(), compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
 		abstractResultComp = (AbstractPlanComposite)reqAbstractResult;

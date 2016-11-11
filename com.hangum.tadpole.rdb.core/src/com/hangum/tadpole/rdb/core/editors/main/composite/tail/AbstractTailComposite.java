@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -46,7 +48,7 @@ public abstract class AbstractTailComposite extends Composite {
 	protected Button btnPin;
 	protected Button btnViewQuery;
 	
-	public AbstractTailComposite(Composite compositeBtn, int style) {
+	public AbstractTailComposite(UserDBDAO userDB, Composite compositeBtn, int style) {
 		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
@@ -106,6 +108,7 @@ public abstract class AbstractTailComposite extends Composite {
 			
 		});
 		btnSQLResultDownload.setText(Messages.get().Download);
+		btnSQLResultDownload.setEnabled("YES".equals(userDB.getIs_resource_download()));
 		
 		Label label = new Label(compositeDownloadAMsg, SWT.NONE);
 		label.setText("");

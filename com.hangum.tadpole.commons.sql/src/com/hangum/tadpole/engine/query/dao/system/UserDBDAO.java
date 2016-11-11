@@ -48,6 +48,8 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	// TadpoleUserDbRoleDAO start ======================================
 	protected int role_seq;
 	protected String role_id;
+	protected String access_ip;
+	protected String is_resource_download;
 	
 	/**
 	 * @return the role_seq
@@ -76,6 +78,34 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	public void setRole_id(String role_id) {
 		this.role_id = role_id;
 	}
+	
+	/**
+	 * @return the access_ip
+	 */
+	public String getAccess_ip() {
+		return access_ip;
+	}
+
+	/**
+	 * @param access_ip the access_ip to set
+	 */
+	public void setAccess_ip(String access_ip) {
+		this.access_ip = access_ip;
+	}
+
+	/**
+	 * @return the is_resource_download
+	 */
+	public String getIs_resource_download() {
+		return is_resource_download;
+	}
+
+	/**
+	 * @param is_resource_download the is_resource_download to set
+	 */
+	public void setIs_resource_download(String is_resource_download) {
+		this.is_resource_download = is_resource_download;
+	}	
 	// ====================================== end
 
 	protected int seq = -999;

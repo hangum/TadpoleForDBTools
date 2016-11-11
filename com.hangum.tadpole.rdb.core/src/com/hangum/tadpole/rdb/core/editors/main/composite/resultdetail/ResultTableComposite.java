@@ -10,11 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.math.BigInteger;
-import java.sql.Blob;
-import java.sql.Clob;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -54,7 +50,6 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
@@ -331,8 +326,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			}
 		});
 		btnColumnDetail.setText(Messages.get().ResultSetComposite_btnColumnDetail_text);
+		btnColumnDetail.setEnabled("YES".equals(userDB.getIs_resource_download()));
 		
-		compositeTail = new ResultTailComposite(this, compositeBtn, SWT.NONE);
+		compositeTail = new ResultTailComposite(rdbResultComposite.getUserDB(), this, compositeBtn, SWT.NONE);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;

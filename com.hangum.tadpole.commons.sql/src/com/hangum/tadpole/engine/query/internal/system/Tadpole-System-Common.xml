@@ -427,7 +427,7 @@
 </select>
 
 <select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
-	SELECT a.*, b.ROLE_ID role_id, 
+	SELECT a.*, b.ROLE_ID role_id, b.access_ip, b.is_resource_download,
 			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
 	FROM tadpole_db a, tadpole_user_db_role b, user_db_ext c
 	WHERE a.seq = b.db_seq
@@ -566,8 +566,8 @@
 
 <insert id="userDBRoleInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 	INSERT INTO tadpole_user_db_role
-		(user_seq,db_seq, role_id, access_ip, terms_of_use_starttime, terms_of_use_endtime)
-	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #terms_of_use_starttime#, #terms_of_use_endtime#);
+		(user_seq,db_seq, role_id, access_ip, is_resource_download,  terms_of_use_starttime, terms_of_use_endtime)
+	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #is_resource_download#, #terms_of_use_starttime#, #terms_of_use_endtime#);
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 		SELECT a.*, b.email, b.name
@@ -576,6 +576,7 @@
 		WHERE a.user_seq 	= #user_seq#  
 			AND a.db_seq 		= #db_seq# 
 			AND a.access_ip 	= #access_ip# 
+			AND a.is_resource_download = #is_resource_download#
 			AND a.user_seq = b.seq
 			AND a.delYn = 'NO'
 	</selectKey>
