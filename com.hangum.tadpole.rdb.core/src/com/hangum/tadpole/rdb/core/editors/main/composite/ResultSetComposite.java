@@ -834,7 +834,7 @@ public class ResultSetComposite extends Composite {
 			@Override
 			public ResultSet call() throws SQLException {
 				for (int i=1; i<=statementParameter.length; i++) {
-					preparedStatement.setObject(i, statementParameter[i-1]);					
+					preparedStatement.setObject(i, statementParameter[i-1]);			
 				}
 				return preparedStatement.executeQuery();
 			}

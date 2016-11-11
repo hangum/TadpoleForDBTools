@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -106,6 +108,7 @@ public class ExecuteOtherSQL {
 			
 			java.sql.Connection javaConn = null;
 			Statement statement = null;
+			PreparedStatement preparedStatement = null;
 			try {
 				if(reqQuery.isAutoCommit()) {
 					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
@@ -113,7 +116,6 @@ public class ExecuteOtherSQL {
 				} else {
 					javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
 				}
-				statement = javaConn.createStatement();
 				
 				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
 				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
@@ -123,17 +125,32 @@ public class ExecuteOtherSQL {
 					}
 				}
 				
-				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-				if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
+				if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
+					statement = javaConn.createStatement();
+					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
+						statement.execute(reqQuery.getSql());
+					} else {
+						statement.executeUpdate(reqQuery.getSql());
+					}
+				} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
+					preparedStatement = javaConn.prepareStatement(reqQuery.getSql());
+					final Object[] statementParameter = reqQuery.getStatementParameter();
+					for (int i=1; i<=statementParameter.length; i++) {
+						preparedStatement.setObject(i, statementParameter[i-1]);			
+					}
 					
-					statement.execute(reqQuery.getSql());
-				
-				} else {
-					statement.executeUpdate(reqQuery.getSql());
+					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
+						preparedStatement.execute();
+					} else {
+						preparedStatement.executeUpdate();
+					}
 				}
 				
 			} finally {
 				try { if(statement != null) statement.close();} catch(Exception e) {}
+				try { if(preparedStatement != null) preparedStatement.close();} catch(Exception e) {}
 	
 				if(reqQuery.isAutoCommit()) {
 					try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
