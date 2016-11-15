@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -49,15 +48,12 @@ public class DBCPConnectionManager {
 		return instance;
 	}
 	
-	private DataSource makePool(final String userId, UserDBDAO userDB) {
-		String searchKey = TadpoleSQLTransactionManager.getKey(userId, userDB);
-		
-		//
+	private DataSource makePool(final String searchKey, UserDBDAO userDB) {
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(5);
 		connectionPool.setWhenExhaustedAction((byte)1);
-		connectionPool.setMaxWait(1000 * 60); 						// 1분대기.
-		connectionPool.setTimeBetweenEvictionRunsMillis(10 * 1000);	// 10분한한번 테스트
+		connectionPool.setMaxWait(1000 * 60); 							// 1분대기.
+		connectionPool.setTimeBetweenEvictionRunsMillis(60 * 1000L);	// 60초에 한번씩 테스트
 		connectionPool.setTestWhileIdle(true);
 		
 		String passwdDecrypt = "";
@@ -93,10 +89,10 @@ public class DBCPConnectionManager {
 		return ds;
 	}
 	
-	public DataSource makeDataSource(final String userId, final UserDBDAO userDB) {
-		DataSource retDataSource = mapDataSource.get(TadpoleSQLTransactionManager.getKey(userId, userDB));
+	public DataSource makeDataSource(final String searchKey, final UserDBDAO userDB) {
+		DataSource retDataSource = mapDataSource.get(searchKey);
 		if(retDataSource == null) { 
-			return makePool(userId, userDB);
+			return makePool(searchKey, userDB);
 		}
 		
 		return retDataSource;
@@ -107,28 +103,16 @@ public class DBCPConnectionManager {
 	}
 	
 	public void releaseConnectionPool(final String searchKey) {
-		GenericObjectPool connectionPool = mapGenericObject.get(searchKey);
+		GenericObjectPool connectionPool = mapGenericObject.remove(searchKey);
 		try {
 			if(connectionPool != null) {
 				connectionPool.clear();
 				connectionPool.close();
-				
-				mapDataSource.remove(searchKey);
-				mapGenericObject.remove(searchKey);
 			}
-			
 		} catch(Exception e) {
 			logger.error(String.format("**** release connection key is %s", searchKey), e);
+		} finally {
+			mapDataSource.remove(searchKey);
 		}
 	}
-	
-	/**
-	 * map의 카를 가져옵니다.
-	 * @param userDB
-	 * @return
-	 */
-	private static String getPoolKey(final String userId, final UserDBDAO userDB) {
-		return userId + userDB.getSeq() + userDB.getDisplay_name();
-	}
-
 }

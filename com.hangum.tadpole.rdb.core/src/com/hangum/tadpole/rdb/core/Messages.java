@@ -24,7 +24,6 @@ public class Messages {
 	public String CreatTime;
 	public String Compare;
 	public String Sec;
-	public String AbstractLoginComposite_2;
 	public String AbstractLoginComposite_3;
 	public String AbstractLoginComposite_4;
 	public String Trigger;

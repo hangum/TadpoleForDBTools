@@ -14,7 +14,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
+
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
+import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
@@ -150,7 +153,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 		return PermissionChecker.isShow(userType)?getUsers():"********";
 	}
 	
-	protected Timestamp create_time;
+	protected Timestamp create_time = new Timestamp(DateUtil.getDateSecond());
 	protected String delYn;
 	
 	protected String ext1 = "";

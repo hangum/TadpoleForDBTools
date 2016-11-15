@@ -80,7 +80,7 @@ public class TadpoleSystem_UserDBQuery {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
 		queryMap.put("seq", oldUserDBDao.getSeq());
-		queryMap.put("url", CipherManager.getInstance().encryption(userDBDao.getUrl()));
+		queryMap.put("group_name", userDBDao.getGroup_name());
 		queryMap.put("display_name", userDBDao.getDisplay_name());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
@@ -101,32 +101,11 @@ public class TadpoleSystem_UserDBQuery {
 	public static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("user_seq", 	user_seq);
-		queryMap.put("url", CipherManager.getInstance().encryption(userDBDao.getUrl()));
+		queryMap.put("group_name", userDBDao.getGroup_name());
 		queryMap.put("display_name", userDBDao.getDisplay_name());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<Object> listUserDB = sqlClient.queryForList("isNewDBValidate", queryMap);
-		
-		if(listUserDB.isEmpty()) return false;
-		else return true;
-	}
-	
-	/**
-	 * 신규디비 등록시 이미 등록되어 있는지 검사합니다.
-	 * 
-	 * @param user_seq
-	 * @param userDBDao
-	 * @return
-	 * @throws TadpoleSQLManagerException, SQLException 
-	 */
-	public static boolean isAlreadyExistDB(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
-		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put("user_seq", 	user_seq);
-		queryMap.put("url", 	userDBDao.getUrl());
-		queryMap.put("users", 	userDBDao.getUsers());
-		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<Object> listUserDB = sqlClient.queryForList("isAlreadyExistDB", queryMap);
 		
 		if(listUserDB.isEmpty()) return false;
 		else return true;

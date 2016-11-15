@@ -257,31 +257,19 @@ public abstract class AbstractLoginComposite extends Composite {
 		try {
 			// 기존 데이터 업데이트
 			if(getDataActionStatus() == DATA_STATUS.MODIFY) {
-				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
-				// 최소한 display_name이라도 틀려야 한다.
+				// 그룹 이름과 디스플레이스 이름이 같은지 검사한다.
 				if(TadpoleSystem_UserDBQuery.isOldDBValidate(SessionManager.getUserSeq(), userDBDao, oldUserDB)) {
-					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AbstractLoginComposite_4);
-					return false;
+					if(!MessageDialog.openConfirm(null, CommonMessages.get().Warning, Messages.get().AbstractLoginComposite_4)) {
+						return false;
+					}
 				}
 				
 			} else {
-				// 정보가 완전 같아 입력이 안되는 아이가 있는지 검사합니다.
-				// 최소한 같은 url을 가진디비는 display_name이라도 틀려야 한다.
+				// 그룹 이름과 디스플레이스 이름이 같은지 검사한다.
 				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getUserSeq(), userDBDao)) {
-					MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().AbstractLoginComposite_4);
-					
-					return false;
-				}
-				
-				// 이름은 틀리지만, 다른 정보는 같은 이미 등록된 디비 인지 검사합니다.
-				if(TadpoleSystem_UserDBQuery.isAlreadyExistDB(SessionManager.getUserSeq(), userDBDao)){
-					
-					// 중복 디비 등록시 사용자의 의견을 묻습니다.
-					if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().AbstractLoginComposite_2)) {
-						return true;
-					} 
-					
-					return false;
+					if(!MessageDialog.openConfirm(null, CommonMessages.get().Warning, Messages.get().AbstractLoginComposite_4)) {
+						return false;
+					}
 				}
 			}
 			
