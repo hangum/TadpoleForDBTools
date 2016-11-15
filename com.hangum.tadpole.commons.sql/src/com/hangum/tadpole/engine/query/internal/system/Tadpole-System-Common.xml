@@ -575,7 +575,8 @@
 
 <update id="userDBRoleUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 	UPDATE tadpole_user_db_role
-	SET role_id = #role_id#, 
+	SET role_id = #role_id#,
+		is_resource_download = #is_resource_download#,
 		terms_of_use_starttime = #terms_of_use_starttime#, 
 		terms_of_use_endtime = #terms_of_use_endtime#
 	WHERE seq = #seq# 

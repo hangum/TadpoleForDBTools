@@ -83,6 +83,7 @@ public class CommonMessages {
 	public String CantModifyPreferenc;
 	
 	public String Download;
+	public String ResourceDownload;
 
 	public String Role;
 
