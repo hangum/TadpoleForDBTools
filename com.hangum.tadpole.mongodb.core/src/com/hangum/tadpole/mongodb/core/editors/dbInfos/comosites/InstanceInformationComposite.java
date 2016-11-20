@@ -562,7 +562,7 @@ public class InstanceInformationComposite extends Composite {
 	    	logger.error("Crate Connection chart", e);
 	    }
 	    
-	    logger.debug("=============start create newtrok Information [end]================================================");
+	    if(logger.isDebugEnabled()) logger.debug("=============start create newtrok Information [end]================================================");
 	}
 	
 	/**

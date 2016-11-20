@@ -331,10 +331,15 @@ public class ManagerViewer extends ViewPart {
 					resourcesDAO.setListResource(listUserDBResources);
 					userDB.getListResource().add(resourcesDAO);
 				}
-				
-				// pgsql은 익스텐스 을 보여준다.
-				if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
-					PostgresqlConnectionEXT.connectionext(userDB);
+
+				// pg_extension 이 없는 경우가 있습니다.
+				try {
+					// pgsql은 익스텐스 을 보여준다.
+					if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
+						PostgresqlConnectionEXT.connectionext(userDB);
+					}
+				} catch(Exception e) {
+					logger.error("pg_extension", e);
 				}
 				managerTV.refresh(userDB, true);
 				managerTV.expandToLevel(userDB, 1);
