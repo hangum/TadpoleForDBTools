@@ -68,39 +68,41 @@ public class TadpoleSQLTransactionManager {
 		TransactionDAO transactionDAO = dbManager.get(searchKey);
 		if (transactionDAO == null) {
 //			synchronized(dbManager) {
-				transactionDAO = dbManager.get(searchKey);
-				if(transactionDAO != null) {
-					if(logger.isInfoEnabled()) logger.info("Return Transaction connection. [connection is]" + transactionDAO.getConn());
-					return transactionDAO.getConn();
-				}
+//				transactionDAO = dbManager.get(searchKey);
+//				if(transactionDAO != null) {
+//					if(logger.isInfoEnabled()) logger.info("Return Transaction connection. [connection is]" + transactionDAO.getConn());
+//					return transactionDAO.getConn();
+//				}
 				
-				try {
+//				try {
 					DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
 	
-					transactionDAO = new TransactionDAO();
+					TransactionDAO _transactionDAO = new TransactionDAO();
 					Connection conn = ds.getConnection();
 					conn.setAutoCommit(false);
 	
-					transactionDAO.setConn(conn);
-					transactionDAO.setUserId(userId);
-					transactionDAO.setUserDB(userDB);
-					transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
+					_transactionDAO.setConn(conn);
+					_transactionDAO.setUserId(userId);
+					_transactionDAO.setUserDB(userDB);
+					_transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
 	
-					transactionDAO.setKey(searchKey);
+					_transactionDAO.setKey(searchKey);
 	
-					dbManager.put(searchKey, transactionDAO);
+					dbManager.put(searchKey, _transactionDAO);
 					if (logger.isDebugEnabled()) logger.debug("\t New connection SQLMapSession......");
-				} catch (Exception e) {
-					logger.error("transaction connection", e);
-					throw e;
-				}
+					
+					return _transactionDAO.getConn();
+//				} catch (Exception e) {
+//					logger.error("transaction connection", e);
+//					throw e;
+//				}
 //			}
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("\t Already register SQLMapSession.\t Is auto commit connection information " + transactionDAO.getConn());
-			}
+//		} else {
+//			if (logger.isDebugEnabled()) {
+//				logger.debug("\t Already register SQLMapSession.\t Is auto commit connection information " + transactionDAO.getConn());
+//			}
 		}
-		if (logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.getConn());
+//		if (logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.getConn());
 
 		return transactionDAO.getConn();
 	}
@@ -124,19 +126,14 @@ public class TadpoleSQLTransactionManager {
 		if (transactionDAO != null) {
 			Connection conn = transactionDAO.getConn();
 			try {
-				logger.debug("\tIs auto commit " + conn.getAutoCommit());
 				conn.commit();
 			} catch (Exception e) {
 				logger.error("commit exception", e);
 			} finally {
-				try {
-					if (conn != null)
-						conn.close();
-				} catch (Exception e) {
-				}
+				try { if(conn != null) conn.close();} catch (Exception e) {}
+				
+				removeInstance(userId, searchKey);
 			}
-
-			removeInstance(userId, searchKey);
 		}
 	}
 
@@ -159,20 +156,14 @@ public class TadpoleSQLTransactionManager {
 		if (transactionDAO != null) {
 			Connection conn = transactionDAO.getConn();
 			try {
-				if (logger.isDebugEnabled())
-					logger.debug("\tIs auto commit " + conn.getAutoCommit());
+				if (logger.isDebugEnabled()) logger.debug("\tIs auto commit " + conn.getAutoCommit());
 				conn.rollback();
 			} catch (Exception e) {
 				logger.error("rollback exception", e);
 			} finally {
-				try {
-					if (conn != null)
-						conn.close();
-				} catch (Exception e) {
-				}
+				try { if(conn != null) conn.close(); } catch (Exception e) {}
+				removeInstance(userId, searchKey);
 			}
-
-			removeInstance(userId, searchKey);
 		}
 	}
 
@@ -195,11 +186,10 @@ public class TadpoleSQLTransactionManager {
 					} catch (Exception e) {
 						logger.error("logout transaction commit", e);
 					} finally {
-						try {
-							if (conn != null) conn.close();
-						} catch (Exception e) {}
+						try { if (conn != null) conn.close(); } catch (Exception e) {}
+						removeInstance(userId, searchKey);
 					}
-					removeInstance(userId, searchKey);
+					
 				} // end trsansaction dao
 			} //
 		}

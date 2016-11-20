@@ -738,9 +738,9 @@ public class ResultSetComposite extends Composite {
 					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEmail, getUserDB());
 				}
 			}
-			if(javaConn == null) {
-				throw new Exception("Cann't create session. Please check system.");
-			}
+//			if(javaConn == null) {
+//				throw new Exception("Cann't create session. Please check system.");
+//			}
 			
 			// if statement type is prepared statement?
 			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {

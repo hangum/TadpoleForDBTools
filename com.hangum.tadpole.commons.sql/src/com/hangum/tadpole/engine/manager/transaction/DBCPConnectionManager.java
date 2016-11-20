@@ -112,6 +112,7 @@ public class DBCPConnectionManager {
 		} catch(Exception e) {
 			logger.error(String.format("**** release connection key is %s", searchKey), e);
 		} finally {
+			connectionPool = null; 
 			mapDataSource.remove(searchKey);
 		}
 	}
