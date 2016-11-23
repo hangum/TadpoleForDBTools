@@ -11,10 +11,8 @@
 package com.hangum.tadpole.login.core.otp;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -31,13 +29,13 @@ import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.login.core.Messages;
 
 /**
- * Google OTP Dialog
+ * OTP input Dialog
  * 
  * @author hangum
  *
  */
-public class GoogleOTPLoginDialog extends Dialog {
-	private int intOTPCode;
+public class OTPInputDialog extends Dialog {
+	private String strOTPCode;
 	private Text textOTPCode;
 	
 
@@ -45,7 +43,7 @@ public class GoogleOTPLoginDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public GoogleOTPLoginDialog(Shell parentShell) {
+	public OTPInputDialog(Shell parentShell) {
 		super(parentShell);
 	}
 	
@@ -87,13 +85,14 @@ public class GoogleOTPLoginDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
-		if(!NumberUtils.isNumber(strOTPCode)) {
-			textOTPCode.setFocus();
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
-			return;
-		}
+//		if(!NumberUtils.isNumber(strOTPCode)) {
+//			textOTPCode.setFocus();
+//			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
+//			return;
+//		}
 		
-		setIntOTPCode(NumberUtils.toInt(strOTPCode));
+//		setIntOTPCode(NumberUtils.toInt(strOTPCode));
+		setIntOTPCode(strOTPCode);
 		
 		super.okPressed();
 	}
@@ -115,12 +114,12 @@ public class GoogleOTPLoginDialog extends Dialog {
 		return new Point(450, 115);
 	}
 
-	public int getIntOTPCode() {
-		return intOTPCode;
+	public String getIntOTPCode() {
+		return strOTPCode;
 	}
 
-	public void setIntOTPCode(int intOTPCode) {
-		this.intOTPCode = intOTPCode;
+	public void setIntOTPCode(String strOTPCode) {
+		this.strOTPCode = strOTPCode;
 	}
 
 }

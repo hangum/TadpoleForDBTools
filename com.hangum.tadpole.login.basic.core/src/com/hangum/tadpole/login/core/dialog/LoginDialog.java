@@ -53,7 +53,7 @@ import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.login.core.message.LoginDialogMessages;
-import com.hangum.tadpole.login.core.otp.GoogleOTPLoginDialog;
+import com.hangum.tadpole.login.core.otp.OTPInputDialog;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -283,7 +283,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
-				GoogleOTPLoginDialog otpDialog = new GoogleOTPLoginDialog(getShell());
+				OTPInputDialog otpDialog = new OTPInputDialog(getShell());
 				otpDialog.open(); 
 
 				if(!GoogleAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
