@@ -30,7 +30,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.AWSRDSUserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.ext.aws.rds.ExtensionUserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -44,7 +44,7 @@ import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 public class SingleAddDBDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(SingleAddDBDialog.class);
 	
-	private AWSRDSUserDBDAO amazonRDSDto;
+	private ExtensionUserDBDAO amazonRDSDto;
 	/** group name */
 	protected List<String> listGroupName;
 	/** 초기 선택한 그룹 */
@@ -61,7 +61,7 @@ public class SingleAddDBDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public SingleAddDBDialog(Shell parentShell, AWSRDSUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName) {
+	public SingleAddDBDialog(Shell parentShell, ExtensionUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		

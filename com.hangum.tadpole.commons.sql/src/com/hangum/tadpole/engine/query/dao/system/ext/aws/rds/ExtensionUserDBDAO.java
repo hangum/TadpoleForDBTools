@@ -13,12 +13,13 @@ package com.hangum.tadpole.engine.query.dao.system.ext.aws.rds;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
- * AmazonRDS 를 사용하기위한 DAO
+ * 외부에 정의되어 있는 데이터 베이스를 가져오기 DAO
+ * ex) AmazonRDS, DBSAFER
  * 
  * @author hangum
  *
  */
-public class AWSRDSUserDBDAO extends UserDBDAO {
+public class ExtensionUserDBDAO extends UserDBDAO {
 	String userTadpoleDisplayName = "";
 	
 	String endPoint 	= "";
@@ -28,7 +29,7 @@ public class AWSRDSUserDBDAO extends UserDBDAO {
 	String strGroup 	= "";
 	String strName 	= "";
 	
-	public AWSRDSUserDBDAO() {
+	public ExtensionUserDBDAO() {
 		super();
 	}
 	
