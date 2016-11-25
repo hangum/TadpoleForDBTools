@@ -15,5 +15,4 @@ Bundle-ActivationPolicy: lazy
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0"
 Export-Package: com.hangum.tadpole.login.core.dialog,
- com.hangum.tadpole.login.core.message,
- com.hangum.tadpole.login.core.otp
+ com.hangum.tadpole.login.core.message

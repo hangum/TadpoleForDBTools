@@ -8,11 +8,13 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.login.core.otp;
+package com.hangum.tadpole.engine.security;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -25,8 +27,9 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.login.core.Messages;
+import com.hangum.tadpole.engine.Messages;
 
 /**
  * OTP input Dialog
@@ -35,16 +38,23 @@ import com.hangum.tadpole.login.core.Messages;
  *
  */
 public class OTPInputDialog extends Dialog {
-	private String strOTPCode;
+	private static final Logger logger = Logger.getLogger(OTPInputDialog.class);
+	private String userID;
+	private String secretKey;
 	private Text textOTPCode;
 	
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param secretKey 
+	 * @param userID 
 	 */
-	public OTPInputDialog(Shell parentShell) {
+	public OTPInputDialog(Shell parentShell, String userID, String secretKey) {
 		super(parentShell);
+		
+		this.userID = userID;
+		this.secretKey = secretKey;
 	}
 	
 	@Override
@@ -85,17 +95,19 @@ public class OTPInputDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
-//		if(!NumberUtils.isNumber(strOTPCode)) {
-//			textOTPCode.setFocus();
-//			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
-//			return;
-//		}
-		
-//		setIntOTPCode(NumberUtils.toInt(strOTPCode));
-		setIntOTPCode(strOTPCode);
+	
+		try {
+			GetOTPCode.isValidate(userID, secretKey, strOTPCode);
+		} catch(Exception e) {
+			logger.error("OTP check", e);
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
+			return;
+		}
 		
 		super.okPressed();
 	}
+	
+	
 	
 	/**
 	 * Create contents of the button bar.
@@ -103,7 +115,8 @@ public class OTPInputDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().OK, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false); //$NON-NLS-1$
 	}
 
 	/**
@@ -113,13 +126,4 @@ public class OTPInputDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(450, 115);
 	}
-
-	public String getIntOTPCode() {
-		return strOTPCode;
-	}
-
-	public void setIntOTPCode(String strOTPCode) {
-		this.strOTPCode = strOTPCode;
-	}
-
 }

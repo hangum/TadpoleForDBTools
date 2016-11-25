@@ -44,7 +44,6 @@ import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.CookieUtils;
@@ -52,8 +51,8 @@ import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.security.OTPInputDialog;
 import com.hangum.tadpole.login.core.message.LoginDialogMessages;
-import com.hangum.tadpole.login.core.otp.OTPInputDialog;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -286,9 +285,9 @@ public class LoginDialog extends AbstractLoginDialog {
 				OTPInputDialog otpDialog = new OTPInputDialog(getShell());
 				otpDialog.open(); 
 
-				if(!GoogleAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
-					throw new Exception(LoginDialogMessages.get().LoginDialog_2);
-				}
+//				if(!OTPAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
+//					throw new Exception(LoginDialogMessages.get().LoginDialog_2);
+//				}
 			}
 			
 			// 로그인 유지.

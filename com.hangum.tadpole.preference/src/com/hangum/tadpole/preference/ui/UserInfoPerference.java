@@ -13,7 +13,6 @@ package com.hangum.tadpole.preference.ui;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rap.rwt.RWT;
@@ -36,8 +35,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -235,7 +234,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		if(btnGetOptCode.getSelection()) {
 			String strEmail = textEmail.getText();
 			String[] strUserDomain = StringUtils.split(strEmail, "@"); //$NON-NLS-1$
-			String strURL = GoogleAuthManager.getInstance().getURL(strUserDomain[0], strUserDomain[1], secretKey);
+			String strURL = GetOTPCode.getURL(strUserDomain[0], strUserDomain[1], secretKey);
 			
 			textQRCodeURL.setText(strURL);
 		}
@@ -299,11 +298,11 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			
 			return;
 		}
-		secretKey = GoogleAuthManager.getInstance().getSecretKey();
+		secretKey = GetOTPCode.getSecretKey();
 		
 		String strEmail = textEmail.getText();
 		String[] strUserDomain = StringUtils.split(strEmail, "@"); //$NON-NLS-1$
-		String strURL = GoogleAuthManager.getInstance().getURL(strUserDomain[0], strUserDomain[1], secretKey);
+		String strURL = GetOTPCode.getURL(strUserDomain[0], strUserDomain[1], secretKey);
 		if(logger.isDebugEnabled()) {
 			logger.debug("user is " + strUserDomain[0] + ", domain is " + strUserDomain[1] + ", secretkey is " + secretKey); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			logger.debug("url is " + strURL); //$NON-NLS-1$
@@ -344,7 +343,12 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 					setValid(false);
 					setErrorMessage(Messages.get().UserInfoPerference_15);
 					return false;
-				} else if(!GoogleAuthManager.getInstance().isValidate(otpSecretKey, NumberUtils.toInt(textOTPCode.getText()))) {
+				}
+				
+				
+				try {
+					GetOTPCode.isValidate(SessionManager.getEMAIL(), otpSecretKey, textOTPCode.getText());
+				} catch(Exception e) {
 					textOTPCode.setFocus();
 
 					setValid(false);

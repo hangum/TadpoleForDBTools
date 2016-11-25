@@ -79,6 +79,16 @@ public class GetAdminPreference extends AbstractPreference {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.API_SERVER_URL, AdminPreferenceDefine.API_SERVER_URL_VALUE);
 	}
+
+	/**
+	 * 디비 연결시 묻는 타입
+	 * 
+	 * @return
+	 */
+	public static String getConnectionAskType() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.DB_CONNECTION_ASK, AdminPreferenceDefine.DB_CONNECTION_ASK_VALUE);
+	}
 	
 	/**
 	 * 신규 사용자 등록이 어드민의 허락이 필요하면 디비에 등록할때는 NO를 입력, 필요치 않으면 YES를 입력.
@@ -262,5 +272,7 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		return dto;
 	}
+
+	
 
 }

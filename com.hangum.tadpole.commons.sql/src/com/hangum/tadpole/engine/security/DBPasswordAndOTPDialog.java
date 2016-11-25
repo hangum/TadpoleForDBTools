@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.security;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,10 +30,12 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * DB Lock Dialog
@@ -43,15 +46,17 @@ import com.hangum.tadpole.preference.define.GetAdminPreference;
  * @since 2015. 3. 24.
  *
  */
-public class DBLockDialog extends Dialog {
+public class DBPasswordAndOTPDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(DBPasswordAndOTPDialog.class);
 	private UserDBDAO userDB;
 	private Text textPassword;
+	private Text textOTP;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public DBLockDialog(Shell parentShell, UserDBDAO userDB) {
+	public DBPasswordAndOTPDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
 		
 		this.userDB = userDB;
@@ -81,11 +86,25 @@ public class DBLockDialog extends Dialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if(e.keyCode == SWT.Selection) {
-					okPressed();
+					textOTP.setFocus();
 				}
 			}
 		});
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblOtp = new Label(container, SWT.NONE);
+		lblOtp.setText("OTP Code");
+		
+		textOTP = new Text(container, SWT.BORDER);
+		textOTP.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textOTP.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.keyCode == SWT.Selection) {
+					okPressed();
+				}
+			}
+		});
 		
 		
 		textPassword.setFocus();
@@ -99,11 +118,12 @@ public class DBLockDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strPassword = textPassword.getText();
+		String strOTPCode = textOTP.getText();
 
-		// 시스템 어드민이 사용자 패스워드를 저장하도록 해서 입력받고 디비에 입력한다.
-		if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
-			if(!"".equals(textPassword.getText())) {
-				userDB.setPasswd(CipherManager.getInstance().encryption(textPassword.getText()));
+//		// 시스템 어드민이 사용자 패스워드를 저장하도록 해서 입력받고 디비에 입력한다.
+//		if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
+			if(!"".equals(strPassword)) {
+				userDB.setPasswd(CipherManager.getInstance().encryption(strPassword));
 			} else {
 				userDB.setPasswd("");
 			}
@@ -123,14 +143,23 @@ public class DBLockDialog extends Dialog {
 				
 				return;
 			}
-		} else if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
-			if(!strPassword.equals(userDB.getPasswd())) {
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DBLockDialog_3);
-				textPassword.setFocus();
-				
-				return;
-			}
-
+//		} else if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
+//			if(!strPassword.equals(userDB.getPasswd())) {
+//				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DBLockDialog_3);
+//				textPassword.setFocus();
+//				
+//				return;
+//			}
+//
+//		}
+		
+		try {
+			GetOTPCode.isValidate(SessionManager.getEMAIL(), SessionManager.getOTPSecretKey(), strOTPCode);
+		} catch(Exception e) {
+			logger.error("OTP check", e);
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
+			textOTP.setFocus();
+			return;
 		}
 		
 		super.okPressed();
@@ -151,7 +180,7 @@ public class DBLockDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(402, 118);
+		return new Point(402, 148);
 	}
 
 }

@@ -64,6 +64,12 @@ public class AdminPreferenceDefine {
 	public static final String API_SERVER_URL_VALUE = "http://localhost:8080/api";
 	
 	/**
+	 * 디비연결시 사용자에게 묻기.
+	 */
+	public static final String DB_CONNECTION_ASK = _PREFIX + "DB_CONNECTION_ASK";
+	public static final String DB_CONNECTION_ASK_VALUE = "NO";
+	
+	/**
 	 * Define monitoring
 	 */
 	public static final String SUPPORT_MONITORING = _PREFIX + "SUPPORT_MONITORING";
