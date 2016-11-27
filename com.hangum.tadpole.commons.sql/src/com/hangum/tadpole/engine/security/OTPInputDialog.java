@@ -79,7 +79,6 @@ public class OTPInputDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblOtpCode = new Label(container, SWT.NONE);
-		lblOtpCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblOtpCode.setText(Messages.get().OTP); //$NON-NLS-1$
 		
 		textOTPCode = new Text(container, SWT.BORDER);
@@ -95,7 +94,12 @@ public class OTPInputDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
-	
+		if("".equals(strOTPCode)) {
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, Messages.get().OTPEmpty);//"OTP 값을 입력해 주십시오.");
+			textOTPCode.setFocus();
+			return;
+		}
+		
 		try {
 			GetOTPCode.isValidate(userID, secretKey, strOTPCode);
 		} catch(Exception e) {

@@ -73,7 +73,6 @@ public class DBPasswordDialog extends Dialog {
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblDbPassword = new Label(container, SWT.NONE);
-		lblDbPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDbPassword.setText(Messages.get().DBLockDialog_1);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);

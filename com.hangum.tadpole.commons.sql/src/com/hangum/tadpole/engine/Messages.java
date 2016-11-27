@@ -50,6 +50,8 @@ public class Messages {
 	public String OTP;
 
 	public String OTPLoginDialog_0;
+
+	public String OTPEmpty;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -76,7 +76,6 @@ public class DBPasswordAndOTPDialog extends Dialog {
 		container.setLayout(new GridLayout(2, false));
 		
 		Label lblDbPassword = new Label(container, SWT.NONE);
-		lblDbPassword.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDbPassword.setText(Messages.get().DBLockDialog_1);
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
@@ -117,6 +116,13 @@ public class DBPasswordAndOTPDialog extends Dialog {
 	protected void okPressed() {
 		String strPassword = textPassword.getText();
 		String strOTPCode = textOTP.getText();
+		
+		if("".equals(strOTPCode)) {
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, Messages.get().OTPEmpty);//"OTP 값을 입력해 주십시오.");
+			textOTP.setFocus();
+			return;
+		}
+		
 
 //		// 시스템 어드민이 사용자 패스워드를 저장하도록 해서 입력받고 디비에 입력한다.
 //		if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
