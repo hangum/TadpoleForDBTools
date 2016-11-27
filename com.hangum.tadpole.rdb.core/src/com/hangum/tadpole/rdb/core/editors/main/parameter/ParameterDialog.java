@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -33,6 +35,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -44,11 +48,6 @@ import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.ResultSetComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 /**
  * 
@@ -80,6 +79,8 @@ import org.eclipse.swt.events.SelectionEvent;
  */
 public class ParameterDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ParameterDialog.class);
+	/** 쿼리 실행 후 닫기 버튼 정의 */
+	private int EXECUTE_AND_CLOSE = IDialogConstants.CLIENT_ID + 1;
 	
 	private ResultSetComposite resultSetComposite;
 	private PARAMETER_TYPE parameterType;
@@ -189,7 +190,26 @@ public class ParameterDialog extends Dialog {
 	}
 	
 	@Override
+	protected void buttonPressed(int buttonId) {
+		if(buttonId == EXECUTE_AND_CLOSE) {
+			executeQuery();
+			return;
+		}
+		super.buttonPressed(buttonId);
+	}
+	
+	
+	@Override
 	protected void okPressed() {
+		executeQuery();
+		
+		super.okPressed();
+	}
+	
+	/**
+	 * 쿼리 실행
+	 */
+	private void executeQuery() {
 		reqQuery.setSqlStatementType(PublicTadpoleDefine.SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
 		reqQuery.setSql(strSQL);
 		
@@ -246,7 +266,8 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteQuery, true);
+		createButton(parent, EXECUTE_AND_CLOSE, Messages.get().ExecuteQuery, true);
+		createButton(parent, IDialogConstants.OK_ID, Messages.get().ExecuteQueryAndClose, false);
 		createButton(parent, IDialogConstants.CANCEL_ID,  CommonMessages.get().Close, false);
 	}
 
