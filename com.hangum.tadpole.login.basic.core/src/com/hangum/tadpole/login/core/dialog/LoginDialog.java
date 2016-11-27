@@ -282,12 +282,10 @@ public class LoginDialog extends AbstractLoginDialog {
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
-				OTPInputDialog otpDialog = new OTPInputDialog(getShell());
-				otpDialog.open(); 
-
-//				if(!OTPAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
-//					throw new Exception(LoginDialogMessages.get().LoginDialog_2);
-//				}
+				OTPInputDialog otpDialog = new OTPInputDialog(getShell(), userDao.getEmail(), userDao.getOtp_secret());
+				if(Dialog.CANCEL == otpDialog.open()) {
+					return;
+				}
 			}
 			
 			// 로그인 유지.

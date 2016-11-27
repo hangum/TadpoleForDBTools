@@ -1,4 +1,4 @@
-package cco.hangum.tadpole.commons.otp;
+package com.hangum.tadpole.commons.otp;
 
 /*******************************************************************************
 

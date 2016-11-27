@@ -1,4 +1,4 @@
-package cco.hangum.tadpole.commons.otp.google.code;
+package com.hangum.tadpole.commons.otp.google.code;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

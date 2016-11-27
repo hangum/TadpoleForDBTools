@@ -12,7 +12,6 @@ package com.hangum.tadpole.engine.security;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.ui.PlatformUI;
-import org.omg.PortableServer.SERVANT_RETENTION_POLICY_ID;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.Utils;

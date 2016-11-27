@@ -8,7 +8,7 @@ Bundle-Vendor: TadpoleDBHUB
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="3.1.0",
  com.hangum.tadpole.commons.otp.activesheild.core;bundle-version="1.0.0";resolution:=optional,
- comhangum.tadpole.commons.otp.google.core;bundle-version="1.0.0";resolution:=optional
+ com.hangum.tadpole.commons.otp.google.core;bundle-version="1.0.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.commons.otp.core
