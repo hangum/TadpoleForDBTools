@@ -105,6 +105,7 @@ public class OTPInputDialog extends Dialog {
 		} catch(Exception e) {
 			logger.error("OTP check", e);
 			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
+			textOTPCode.setFocus();
 			return;
 		}
 		

@@ -123,39 +123,26 @@ public class DBPasswordAndOTPDialog extends Dialog {
 			return;
 		}
 		
-
-//		// 시스템 어드민이 사용자 패스워드를 저장하도록 해서 입력받고 디비에 입력한다.
-//		if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
-			if(!"".equals(strPassword)) {
-				userDB.setPasswd(CipherManager.getInstance().encryption(strPassword));
+		if(!"".equals(strPassword)) {
+			userDB.setPasswd(CipherManager.getInstance().encryption(strPassword));
+		} else {
+			userDB.setPasswd("");
+		}
+		
+		// 실제 접속 되는지 테스트해봅니다.
+		try {
+			TadpoleSQLManager.getInstance(userDB);
+		} catch(Exception e) {
+			String msg = e.getMessage();
+			if(StringUtils.contains(msg, "No more data to read from socket")) {
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg + CommonMessages.get().Check_DBAccessSystem);
 			} else {
-				userDB.setPasswd("");
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg);
 			}
+			textPassword.setFocus();
 			
-			// 실제 접속 되는지 테스트해봅니다.
-			try {
-				TadpoleSQLManager.getInstance(userDB);
-			} catch(Exception e) {
-				String msg = e.getMessage();
-				if(StringUtils.contains(msg, "No more data to read from socket")) {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg + CommonMessages.get().Check_DBAccessSystem);
-				} else {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg);
-				}
-				
-				textPassword.setFocus();
-				
-				return;
-			}
-//		} else if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
-//			if(!strPassword.equals(userDB.getPasswd())) {
-//				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DBLockDialog_3);
-//				textPassword.setFocus();
-//				
-//				return;
-//			}
-//
-//		}
+			return;
+		}
 		
 		try {
 			GetOTPCode.isValidate(SessionManager.getEMAIL(), SessionManager.getOTPSecretKey(), strOTPCode);

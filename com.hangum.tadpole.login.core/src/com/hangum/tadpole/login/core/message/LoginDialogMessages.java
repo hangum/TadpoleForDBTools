@@ -31,7 +31,6 @@ public class LoginDialogMessages {
 	
 	public String LoginDialog_17;
 	public String LoginDialog_19;
-	public String LoginDialog_2;
 	public String LoginDialog_20;
 	public String LoginDialog_21;
 	public String LoginDialog_22;

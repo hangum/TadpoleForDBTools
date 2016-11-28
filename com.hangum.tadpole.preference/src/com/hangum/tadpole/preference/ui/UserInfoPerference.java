@@ -302,9 +302,16 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		
 		String strEmail = textEmail.getText();
 		String[] strUserDomain = StringUtils.split(strEmail, "@"); //$NON-NLS-1$
-		String strURL = GetOTPCode.getURL(strUserDomain[0], strUserDomain[1], secretKey);
+		String strID = strUserDomain[0];
+		String strDomain = "";
+		if(strUserDomain.length == 1) {
+			strDomain = "tadpolehub.com";
+		} else {
+			strDomain = strUserDomain[1];
+		}
+		String strURL = GetOTPCode.getURL(strID, strDomain, secretKey);
 		if(logger.isDebugEnabled()) {
-			logger.debug("user is " + strUserDomain[0] + ", domain is " + strUserDomain[1] + ", secretkey is " + secretKey); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			logger.debug("user is " + strID + ", domain is " + strDomain + ", secretkey is " + secretKey); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			logger.debug("url is " + strURL); //$NON-NLS-1$
 		}
 		

@@ -27,12 +27,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * DB Lock Dialog
@@ -97,39 +95,28 @@ public class DBPasswordDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		String strPassword = textPassword.getText();
+		String strPassword = StringUtils.trim(textPassword.getText());
 
-		// 시스템 어드민이 사용자 패스워드를 저장하도록 해서 입력받고 디비에 입력한다.
-		if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())){
-			if(!"".equals(textPassword.getText())) {
-				userDB.setPasswd(CipherManager.getInstance().encryption(textPassword.getText()));
+		if(!"".equals(strPassword)) {
+			userDB.setPasswd(CipherManager.getInstance().encryption(strPassword));
+		} else {
+			userDB.setPasswd("");
+		}
+		
+		// 실제 접속 되는지 테스트해봅니다.
+		try {
+			TadpoleSQLManager.getInstance(userDB);
+		} catch(Exception e) {
+			String msg = e.getMessage();
+			if(StringUtils.contains(msg, "No more data to read from socket")) {
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg + CommonMessages.get().Check_DBAccessSystem);
 			} else {
-				userDB.setPasswd("");
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg);
 			}
 			
-			// 실제 접속 되는지 테스트해봅니다.
-			try {
-				TadpoleSQLManager.getInstance(userDB);
-			} catch(Exception e) {
-				String msg = e.getMessage();
-				if(StringUtils.contains(msg, "No more data to read from socket")) {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg + CommonMessages.get().Check_DBAccessSystem);
-				} else {
-					MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg);
-				}
-				
-				textPassword.setFocus();
-				
-				return;
-			}
-		} else if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())) {
-			if(!strPassword.equals(userDB.getPasswd())) {
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().DBLockDialog_3);
-				textPassword.setFocus();
-				
-				return;
-			}
-
+			textPassword.setFocus();
+			
+			return;
 		}
 		
 		super.okPressed();

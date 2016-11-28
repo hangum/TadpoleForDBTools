@@ -1,5 +1,7 @@
 package com.hangum.tadpole.commons.otp;
 
+import com.hangum.tadpole.commons.otp.google.core.Messages;
+
 /*******************************************************************************
 
  * Copyright (c) 2014 hangum.
@@ -70,7 +72,7 @@ public class OTPAuthManager {
 	 * @param strOTPCode 
 	 * @return
 	 */
-	public boolean isValidate(String email, String secret, String strOTPCode) {
+	public boolean isValidate(String email, String secret, String strOTPCode) throws Exception {
 		GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
 		googleAuthenticator.setWindowSize(10);  //should give 5 * 30 seconds of grace...
 		
@@ -80,6 +82,7 @@ public class OTPAuthManager {
 		} catch(Exception e){}
 		
         boolean isCodeValid = googleAuthenticator.authorize(secret, intCode);
+        if(!isCodeValid)  throw new Exception(Messages.get().OTP_invalid);
         return isCodeValid;
 	}
 	

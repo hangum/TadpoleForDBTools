@@ -412,7 +412,8 @@ public class ExplorerViewer extends ViewPart {
 					HashMap mapData = (HashMap)object;
 					comboSchema.add(""+mapData.get("schema"));
 				}
-				comboSchema.setText("public");
+				comboSchema.select(0);
+				userDB.setSchema(comboSchema.getText());
 			} catch(Exception e) {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;

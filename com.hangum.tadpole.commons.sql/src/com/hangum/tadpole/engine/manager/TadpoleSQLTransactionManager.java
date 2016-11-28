@@ -74,7 +74,7 @@ public class TadpoleSQLTransactionManager {
 //					return transactionDAO.getConn();
 //				}
 				
-//				try {
+				try {
 					DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
 	
 					TransactionDAO _transactionDAO = new TransactionDAO();
@@ -92,10 +92,12 @@ public class TadpoleSQLTransactionManager {
 					if (logger.isDebugEnabled()) logger.debug("\t New connection SQLMapSession......");
 					
 					return _transactionDAO.getConn();
-//				} catch (Exception e) {
-//					logger.error("transaction connection", e);
-//					throw e;
-//				}
+				} catch (Exception e) {
+					logger.error("transaction connection", e);
+					removeInstance(userId, searchKey);
+					
+					throw e;
+				}
 //			}
 //		} else {
 //			if (logger.isDebugEnabled()) {

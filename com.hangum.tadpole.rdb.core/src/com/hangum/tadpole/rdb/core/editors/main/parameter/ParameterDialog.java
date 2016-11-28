@@ -121,6 +121,7 @@ public class ParameterDialog extends Dialog {
 		this.parameterType = parameterType;
 		this.reqQuery = reqQuery;
 		this.userDB = userDB;
+		
 		this.strSQL = strSQL;
 		this.mapIndex = mapIndex;
 		this.makeParamCount(mapIndex);

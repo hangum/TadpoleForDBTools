@@ -20,16 +20,36 @@ import com.hangum.tadpole.commons.otp.OTPAuthManager;
  */
 public class GetOTPCode {
 
+	/**
+	 * otp validate
+	 *  
+	 * @param userID
+	 * @param secretKEY
+	 * @param otpCode
+	 * @throws Exception
+	 */
 	public static void isValidate(String userID, String secretKEY, String otpCode) throws Exception{
 		OTPAuthManager.getInstance().isValidate(userID, secretKEY, otpCode);
 	}
 	
+	/**
+	 * get secret key
+	 * @return
+	 */
 	public static String getSecretKey() {
-		return "";
+		return OTPAuthManager.getInstance().getSecretKey();
 	}
 	
+	/**
+	 * get url
+	 * 
+	 * @param user
+	 * @param host
+	 * @param secret
+	 * @return
+	 */
 	public static String getURL(String user, String host, String secret) {
-		return "";
+		return OTPAuthManager.getInstance().getURL(user, host, secret);
 	}
 	
 }
