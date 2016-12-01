@@ -116,9 +116,9 @@ public class ResultPlanComposite extends Composite {
 			compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
 		} else {
 			if(DBGroupDefine.ORACLE_GROUP == rsDAO.getUserDB().getDBGroup()) {
-				compositeQueryPlan = new OraclePlanComposite(sashFormResult, SWT.BORDER);
+				compositeQueryPlan = new OraclePlanComposite(sashFormResult, SWT.BORDER, rsDAO);
 			} else {
-				compositeQueryPlan = new GeneralPlanComposite(sashFormResult, SWT.BORDER);	
+				compositeQueryPlan = new GeneralPlanComposite(sashFormResult, SWT.BORDER, rsDAO);	
 			}
 			compositeQueryPlan.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 			GridLayout gl_compositeResult = new GridLayout(1, false);

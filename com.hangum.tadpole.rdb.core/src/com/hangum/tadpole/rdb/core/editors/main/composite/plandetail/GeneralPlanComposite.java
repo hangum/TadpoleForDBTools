@@ -47,8 +47,8 @@ public class GeneralPlanComposite extends AbstractPlanComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public GeneralPlanComposite(Composite parent, int style) {
-		super(parent, style);
+	public GeneralPlanComposite(Composite parent, int style, QueryExecuteResultDTO rsDAO) {
+		super(parent, style, rsDAO);
 		setLayout(new GridLayout(1, false));
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeHead = new GridLayout(2, false);

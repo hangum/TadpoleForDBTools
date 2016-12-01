@@ -86,6 +86,7 @@ public class LoginDialog extends AbstractLoginDialog {
 	
 	private Composite compositeHead;
 	private Composite compositeTail;
+	private Label lblLicense;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -203,7 +204,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		compositeTail.setLayout(gl_compositeTail);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblLicense = new Label(compositeTail, SWT.NONE);
+		lblLicense = new Label(compositeTail, SWT.NONE);
 		lblLicense.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblLicense.setText("License is GNU Lesser General Public License v.3");
 		
@@ -212,10 +213,10 @@ public class LoginDialog extends AbstractLoginDialog {
 		lblDocument.setText("<a href='" + LoginDialogMessages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Document</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblDocument.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblIssue = new Label(compositeTail, SWT.NONE);
-		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>Feedback</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+//		Label lblIssue = new Label(compositeTail, SWT.NONE);
+//		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>Feedback</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+//		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
@@ -380,10 +381,14 @@ public class LoginDialog extends AbstractLoginDialog {
 		}
 	}
 	
+
+	
 	/**
 	 * initialize ui
 	 */
 	private void initUI() {
+		lblLicense.setText(getCustomerInfo());
+		
 		initCookieData();
 		if("".equals(textEMail.getText())) {
 			textEMail.setFocus();

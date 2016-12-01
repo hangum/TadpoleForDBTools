@@ -209,7 +209,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 */
 	public void refreshTrigger(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(tableDao == null) return;
-		if(!boolRefresh) if(showTrigger != null) return;
+		if(!boolRefresh) if(!showTrigger.isEmpty()) return;
 		this.userDB = userDB;
 		
 		try {
@@ -235,7 +235,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshAllTrigger(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
-		if(!boolRefresh) if(showTrigger != null) return;
+		if(!boolRefresh) if(!showTrigger.isEmpty()) return;
 		this.userDB = userDB;
 		
 		showTrigger = (List<TriggerDAO>)userDB.getDBObject(OBJECT_TYPE.TRIGGERS, userDB.getDefaultSchemanName());

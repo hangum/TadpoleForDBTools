@@ -131,7 +131,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setAllow_ip(strAllowIP);
 		
 		loginDAO.setIs_regist_db(GetAdminPreference.getIsAddDB());
-		loginDAO.setIs_shared_db(GetAdminPreference.getIsAddDB());
+		loginDAO.setIs_shared_db(GetAdminPreference.getIsSharedDB());
 		loginDAO.setLimit_add_db_cnt(NumberUtils.toInt(GetAdminPreference.getDefaultAddDBCnt()));
 		loginDAO.setIs_modify_perference(GetAdminPreference.getIsPreferenceModify());
 		loginDAO.setService_start(new Timestamp(System.currentTimeMillis()));

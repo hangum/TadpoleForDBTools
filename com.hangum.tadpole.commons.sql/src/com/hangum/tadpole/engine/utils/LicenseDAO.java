@@ -11,6 +11,8 @@ public class LicenseDAO {
 	boolean isEnterprise = false;
 	String msg = "";
 	
+	String customer = "";
+	
 	public LicenseDAO() {
 	}
 	
@@ -55,6 +57,19 @@ public class LicenseDAO {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	
+
+	/**
+	 * @return the customer
+	 */
+	public String getCustomer() {
+		return customer;
+	}
+
+	/**
+	 * @param customer the customer to set
+	 */
+	public void setCustomer(String customer) {
+		this.customer = customer;
+	}
 	
 }

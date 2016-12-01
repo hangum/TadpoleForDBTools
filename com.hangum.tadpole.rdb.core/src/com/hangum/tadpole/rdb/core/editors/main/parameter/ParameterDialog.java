@@ -52,30 +52,6 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 /**
  * 
  * @author nilriri
- * example code
-   1065
-		
-		// Parameter Object init.
-		param = null;
-		if(intExecuteQueryType != ALL_QUERY_EXECUTE) {
-			ParameterDialog epd = new ParameterDialog(this.getSite().getWorkbenchWindow().getShell(), this.userDB, finalExecuteSQL);
-			if (epd.getParamCount() > 0){
-				epd.open();
-				param = epd.getParameterObject();
-				epd.close();
-			}
-		}
-
-
-
-1249				
-				if (param != null && param.getParameter().length > 0 ){
-					int i = 1;
-					for (Object obj : param.getParameter()){
-						stmt.setObject(i++, obj);
-					}
-				}
-
  */
 public class ParameterDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ParameterDialog.class);
@@ -277,7 +253,7 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(420, 300);
+		return new Point(420, 350);
 	}
 
 	/**

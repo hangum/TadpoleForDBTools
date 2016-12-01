@@ -23,6 +23,7 @@ import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.plan.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.editors.main.utils.plan.OracleExecutePlanUtils;
@@ -36,7 +37,7 @@ import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
  */
 public class ExecuteQueryPlan {
 	private static final Logger logger = Logger.getLogger(ExecuteQueryPlan.class);
-
+//	private static final String PLAN_TABLE_NOT_FOUND = Messages.get().PLAN_TABLE_NOT_FOUND;
 	/**
 	 * execute plan 을 실행합니다.
 	 * 
@@ -90,6 +91,9 @@ public class ExecuteQueryPlan {
 					try {
 						pstmt = javaConn.prepareStatement("delete from " + planTableName + " where statement_id = '"+statement_id+"' "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						pstmt.execute();
+					} catch(Exception e) {
+						logger.error("Plan table query", e);
+//						throw new Exception(String.format(PLAN_TABLE_NOT_FOUND, planTableName));
 					} finally {
 						if(pstmt != null) pstmt.close();
 					}

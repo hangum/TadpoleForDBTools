@@ -209,7 +209,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		new Label(grpGoogleAuth, SWT.NONE);
 		
 		Label lblSecretKey = new Label(grpGoogleAuth, SWT.NONE);
-		lblSecretKey.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSecretKey.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblSecretKey.setText(Messages.get().UserInfoPerference_lblSecretKey_text_1);
 		
 		textSecretKey = new Text(grpGoogleAuth, SWT.BORDER);
@@ -222,7 +222,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblQrcodeUrl = new Label(grpGoogleAuth, SWT.NONE);
-		lblQrcodeUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblQrcodeUrl.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblQrcodeUrl.setText("<a href='https://code.google.com/p/google-authenticator/' target='_blank'>" + Messages.get().UserInfoPerference_lblQrcodeUrl_text + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblQrcodeUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
@@ -241,7 +241,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		
 		Label lblOptCode = new Label(grpGoogleAuth, SWT.NONE);
 		lblOptCode.setText(Messages.get().OTP); //$NON-NLS-1$
-		lblOptCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblOptCode.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		
 		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
 		textOTPCode.addModifyListener(new ModifyListener() {
@@ -305,7 +305,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		String strID = strUserDomain[0];
 		String strDomain = "";
 		if(strUserDomain.length == 1) {
-			strDomain = "tadpolehub.com";
+			strDomain = "gen.tadpolehub.com";
 		} else {
 			strDomain = strUserDomain[1];
 		}
@@ -398,15 +398,15 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			try {
 				TadpoleSystem_UserQuery.updateUserBasic(user);
 				
-				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.toString(), user.getPasswd());			
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.name(), user.getPasswd());			
 				TadpoleSystem_UserQuery.updateUserOTPCode(user);
-				SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.toString(), useOTP);			
-				SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.toString(), otpSecretKey);
-				SessionManager.updateSessionAttribute(SessionManager.NAME.LANGUAGE.toString(), locale.toLanguageTag());
-				SessionManager.updateSessionAttribute(SessionManager.NAME.TIMEZONE.toString(), timezone);
+				SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.name(), useOTP);			
+				SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.name(), otpSecretKey);
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LANGUAGE.name(), locale.toLanguageTag());
+				SessionManager.updateSessionAttribute(SessionManager.NAME.TIMEZONE.name(), timezone);
 				
 				//fix https://github.com/hangum/TadpoleForDBTools/issues/243
-				SessionManager.setPassword(user.getPasswd());
+				SessionManager.setPassword(rePass);
 			} catch (Exception e) {
 				logger.error("password change", e); //$NON-NLS-1$
 				MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$

@@ -57,7 +57,6 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 	private static final Logger logger = Logger.getLogger(OraclePlanComposite.class);
 	
 	private TreeViewer tvQueryPlan;
-//	private SQLResultSorter sqlSorter;
 	private List<OraclePlanDAO> listOraclePlanDao = new ArrayList<>();
 
 	/**
@@ -65,8 +64,8 @@ public class OraclePlanComposite extends AbstractPlanComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public OraclePlanComposite(Composite parent, int style) {
-		super(parent, style);
+	public OraclePlanComposite(Composite parent, int style, QueryExecuteResultDTO rsDAO) {
+		super(parent, style, rsDAO);
 		setLayout(new GridLayout(1, false));
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		GridLayout gl_compositeHead = new GridLayout(2, false);
