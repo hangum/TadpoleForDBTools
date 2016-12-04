@@ -330,7 +330,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			String otpSecretKey = StringUtils.trim(textSecretKey.getText());
 			
 			if(!(StringUtils.length(pass) >= 7 && StringUtils.length(pass) <= 30)) {
-				textPassword.setFocus();
+//				textPassword.setFocus();
 
 				setValid(false);
 				setErrorMessage(String.format(CommonMessages.get().Text_ValueIsLessThanOrOverThan, Messages.get().UserInfoPerference_3, "7", "30"));
@@ -338,7 +338,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			}
 			
 			if(!pass.equals(rePass)) {
-				textPassword.setFocus();
+//				textPassword.setFocus();
 
 				setValid(false);
 				setErrorMessage(Messages.get().UserInfoPerference_6);
