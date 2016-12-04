@@ -54,6 +54,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectAlterAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.dialog.java.CreateJavaDialog;
@@ -188,6 +189,9 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 		dropAction_Java = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, 	Messages.get().DropJava); //$NON-NLS-1$
 		refreshAction_Java = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, CommonMessages.get().Refresh); //$NON-NLS-1$
 		compileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JAVA, Messages.get().Compilejava);
+		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Java"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -201,6 +205,9 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 		}
 		menuMgr.add(new Separator());
 		menuMgr.add(compileAction);
+		
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		javaListViewer.getTable().setMenu(menuMgr.createContextMenu(javaListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, javaListViewer);
@@ -322,14 +329,15 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	 * initialize action
 	 */
 	public void initAction() {
-		if (getUserDB() == null)
-			return;
+		if (getUserDB() == null) return;
 
 		creatAction_Java.setUserDB(getUserDB());
 		alterAction_Java.setUserDB(getUserDB());
 		dropAction_Java.setUserDB(getUserDB());
 		refreshAction_Java.setUserDB(getUserDB());
 		compileAction.setUserDB(getUserDB());
+		
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 
 	/**

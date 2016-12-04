@@ -17,8 +17,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
-import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
+import com.hangum.tadpole.engine.query.dao.mysql.StructObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
@@ -30,11 +29,11 @@ import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
  * @author hangum
  *
  */
-public class ObjectExplorerSelectionAction extends AbstractObjectSelectAction {
-	private static final Logger logger = Logger.getLogger(ObjectExplorerSelectionAction.class);
+public class ObjectExplorerSelectionToEditorAction extends AbstractObjectSelectAction {
+	private static final Logger logger = Logger.getLogger(ObjectExplorerSelectionToEditorAction.class);
 	public final static String ID = "com.hangum.db.browser.rap.core.actions.object.selection"; //$NON-NLS-1$
 
-	public ObjectExplorerSelectionAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType) {
+	public ObjectExplorerSelectionToEditorAction(IWorkbenchWindow window, PublicTadpoleDefine.OBJECT_TYPE actionType) {
 		super(window, actionType);
 		setId(ID + actionType.toString());
 		setText(Messages.get().TableColumnSelectionAction_1);
@@ -47,21 +46,14 @@ public class ObjectExplorerSelectionAction extends AbstractObjectSelectAction {
 		String strObjectName = "";
 		Object[] arryObj = selection.toArray();
 		
-		// table dao
-		if(arryObj[0] instanceof TableDAO) {
+		if(arryObj[0] instanceof StructObjectDAO) {
 			for(int i=0; i<arryObj.length; i++) {
-				TableDAO tcDAO = (TableDAO)arryObj[i];
+				StructObjectDAO tcDAO = (StructObjectDAO)arryObj[i];
 				strObjectName += tcDAO.getFullName() + ", "; //$NON-NLS-1$
 			}
-		// column dao
-		} else {
-			for(int i=0; i<arryObj.length; i++) {
-				TableColumnDAO tcDAO = (TableColumnDAO)arryObj[i];
-				strObjectName += tcDAO.getField() + ", "; //$NON-NLS-1$
-			}
 		}
-		strObjectName = StringUtils.removeEnd(strObjectName, ", "); //$NON-NLS-1$
 		
+		strObjectName = StringUtils.removeEnd(strObjectName, ", "); //$NON-NLS-1$
 		FindEditorAndWriteQueryUtil.runAtPosition(strObjectName);
 	}	// end method
 	

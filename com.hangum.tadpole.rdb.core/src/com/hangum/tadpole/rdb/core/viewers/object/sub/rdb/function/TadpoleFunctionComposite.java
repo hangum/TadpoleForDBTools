@@ -52,6 +52,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
@@ -159,6 +160,9 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_5);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS, Messages.get().TadpoleFunctionComposite_6);
+		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -182,6 +186,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		functionTableViewer.getTable().setMenu(menuMgr.createContextMenu(functionTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, functionTableViewer);
@@ -213,6 +219,8 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 
 		executeAction_Procedure.setUserDB(getUserDB());
 		objectCompileAction.setUserDB(getUserDB());
+		
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 	
 	/**

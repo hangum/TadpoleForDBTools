@@ -61,6 +61,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
@@ -102,7 +103,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	private AbstractObjectAction refreshAction_Synonym;
 	private GenerateViewDDLAction viewDDLAction;
 	private ObjectExecuteProcedureAction executeAction;
-
+	
 	/**
 	 * Create the composite.
 	 * 
@@ -269,6 +270,9 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		refreshAction_Synonym = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, CommonMessages.get().Refresh); //$NON-NLS-1$
 		executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().Execute); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SYNONYM, Messages.get().ViewDDL); //$NON-NLS-1$
+		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Synonym"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -294,6 +298,8 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 				menuMgr.add(viewDDLAction);
 			}
 		}
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		synonymListViewer.getTable().setMenu(menuMgr.createContextMenu(synonymListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, synonymListViewer);
@@ -408,6 +414,8 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 		refreshAction_Synonym.setUserDB(getUserDB());
 		executeAction.setUserDB(getUserDB());
 		viewDDLAction.setUserDB(getUserDB());
+		
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 
 	/**

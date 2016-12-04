@@ -81,7 +81,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateSampleDat
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRenameAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnCreateAction;
@@ -145,8 +145,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	private AbstractObjectAction tableDataEditorAction;
 	
 	private AbstractObjectAction addTableColumnAction;
-	/** object select action */
-	private AbstractObjectAction objectSelectionAction;
 	
 	// table column
 	private CTabFolder tabTableFolder;
@@ -564,7 +562,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableDataEditorAction = new TableDataEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 		
 		// object copy to query editor
-		objectSelectionAction = new ObjectExplorerSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -634,7 +632,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			}
 		}	// if rdb
 		menuMgr.add(new Separator());
-		menuMgr.add(objectSelectionAction);
+		menuMgr.add(objectSelectionToEditorAction);
 
 		tableListViewer.getTable().setMenu(menuMgr.createContextMenu(tableListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, tableListViewer);
@@ -812,7 +810,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		tableDataEditorAction.setUserDB(getUserDB());
 		
 		tableColumnComposite.initAction();
-		objectSelectionAction.setUserDB(getUserDB());
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -882,7 +880,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		
 		if(viewDDLAction != null) viewDDLAction.dispose();
 		if(tableDataEditorAction != null) tableDataEditorAction.dispose();
-		if(objectSelectionAction != null) objectSelectionAction.dispose();
 	}
 
 	@Override

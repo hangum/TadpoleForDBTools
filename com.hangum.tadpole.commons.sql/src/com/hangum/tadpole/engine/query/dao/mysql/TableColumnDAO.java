@@ -253,8 +253,7 @@ public class TableColumnDAO extends StructObjectDAO {
 
 	@Override
 	public String getFullName() {
-		// TODO Auto-generated method stub
-		return null;
+		return getField();
 	}
 
 }

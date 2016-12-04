@@ -26,6 +26,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 
 /**
@@ -37,6 +38,9 @@ import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 public abstract class AbstractObjectComposite extends Composite {
 	protected IWorkbenchPartSite site;
 	protected CTabFolder tabFolderObject;
+	
+	/** object select action */
+	protected AbstractObjectAction objectSelectionToEditorAction;
 	
 	/** 데이터를 가져오고 있습니다. 공통 메시지 정의 */
 	public static final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
@@ -252,6 +256,12 @@ public abstract class AbstractObjectComposite extends Composite {
 		};
 		
 		return adapter;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		if(objectSelectionToEditorAction != null) objectSelectionToEditorAction.dispose();
 	}
 	
 	/**
