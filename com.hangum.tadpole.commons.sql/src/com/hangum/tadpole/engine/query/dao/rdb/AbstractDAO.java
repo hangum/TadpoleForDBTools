@@ -12,6 +12,8 @@ package com.hangum.tadpole.engine.query.dao.rdb;
 
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
+
 import com.hangum.tadpole.engine.query.dao.mysql.StructObjectDAO;
 
 
@@ -22,6 +24,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.StructObjectDAO;
  * 
  */
 public abstract class AbstractDAO extends StructObjectDAO {
+	private static final Logger logger = Logger.getLogger(AbstractDAO.class);
 	
 	/**
 	 * 컬럼명을 인수로 넘겨서 값을 조회한다.
@@ -44,7 +47,7 @@ public abstract class AbstractDAO extends StructObjectDAO {
 						}
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(" method invoke error: " + columnName);
 				}
 			}
 		}
