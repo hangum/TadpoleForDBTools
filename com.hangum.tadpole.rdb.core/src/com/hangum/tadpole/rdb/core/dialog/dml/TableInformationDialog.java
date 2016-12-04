@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -39,6 +40,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -203,29 +205,44 @@ public class TableInformationDialog extends Dialog {
 
 	private void initData() {
 		try {
-			List<TableColumnDAO> showTableColumns;
+			List<TableColumnDAO> showTableColumns = new ArrayList<>();
 
-			//조회된 내용이 없고 스키마 정보가 없으면
-			if (StringUtils.isEmpty(tableDAO.getSchema_name()) ){//&& showTableColumns.size() <= 0) {
-				Map<String,String> paramMap = new HashMap<String,String>();
-				paramMap.put("OBJECT_NAME", tableDAO.getName());
-				SelectObjectDialog dialog = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap);
-
-				if (dialog.getSelectObject().isEmpty() && dialog.getObjectCount() > 1) {
-					//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
-					dialog.open();
-//				} else if (dialog.getObjectCount() <= 0) {
-					//해당 오브젝트를 찾을 수 없습니다.
-//					MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);
+			// 현재 allObject로 조회하는 것은 
+			// oracle, mysql, maria, mssql, tibero 이면 모든 오브젝트를 조회하여 보여주도록하고 나머지는 
+			if(userDB.getDBGroup() == DBGroupDefine.MSSQL_GROUP || 
+					userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP ||
+					userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP
+			) { 
+				
+				//조회된 내용이 없고 스키마 정보가 없으면
+				if (StringUtils.isEmpty(tableDAO.getSchema_name()) ){//&& showTableColumns.size() <= 0) {
+					Map<String,String> paramMap = new HashMap<String,String>();
+					paramMap.put("OBJECT_NAME", tableDAO.getName());
+					SelectObjectDialog dialog = new SelectObjectDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB, paramMap);
+	
+					if (dialog.getSelectObject().isEmpty() && dialog.getObjectCount() > 1) {
+						//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
+						dialog.open();
+	//				} else if (dialog.getObjectCount() <= 0) {
+						//해당 오브젝트를 찾을 수 없습니다.
+	//					MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);
+					}
+					Map<String, String> map = dialog.getSelectObject();
+					tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
+					tableDAO.setTable_name(map.get("OBJECT_NAME"));
+					tableDAO.setTab_name(map.get("OBJECT_NAME"));
+	//				this.lblTableName.setText(tableDAO.getSchema_name() + "." + tableDAO.getName());
+					showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
+				}else{
+					showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
 				}
-				Map<String, String> map = dialog.getSelectObject();
-				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));
-				tableDAO.setTable_name(map.get("OBJECT_NAME"));
-				tableDAO.setTab_name(map.get("OBJECT_NAME"));
-//				this.lblTableName.setText(tableDAO.getSchema_name() + "." + tableDAO.getName());
+			} else {
 				showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
-			}else{
-				showTableColumns = TadpoleObjectQuery.getTableColumns(userDB, tableDAO);
+			}
+			
+			if(showTableColumns.isEmpty()) {
+				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().CantnotFoundTable);
+				super.close();
 			}
 			
 			List<ExtendTableColumnDAO> newTableColumns = new ArrayList<ExtendTableColumnDAO>();
@@ -246,7 +263,7 @@ public class TableInformationDialog extends Dialog {
 
 			tableViewer.refresh();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("find table object", e);
 		}
 
 	}
@@ -257,21 +274,9 @@ public class TableInformationDialog extends Dialog {
 			Map<String, String> statInfoMap = new HashMap<String,String>();
 			Map<String, String> statViewInfoMap = new HashMap<String,String>();
 
-			try{
-				sizeInfoMap = (Map<String, String>) TadpoleObjectQuery.getTableSizeInfo(userDB, tableDAO);
-			}catch(Exception e){
-				logger.error(e);
-			}
-			try{
-				statInfoMap = (Map<String, String>) TadpoleObjectQuery.getStatisticsInfo(userDB, tableDAO);
-			}catch(Exception e){
-				logger.error(e);
-			}
-			try{
-				statViewInfoMap = (Map<String, String>) TadpoleObjectQuery.getViewStatisticsInfo(userDB, tableDAO);
-			}catch(Exception e){
-				logger.error(e);
-			}
+			sizeInfoMap = (Map<String, String>) TadpoleObjectQuery.getTableSizeInfo(userDB, tableDAO);
+			statInfoMap = (Map<String, String>) TadpoleObjectQuery.getStatisticsInfo(userDB, tableDAO);
+			statViewInfoMap = (Map<String, String>) TadpoleObjectQuery.getViewStatisticsInfo(userDB, tableDAO);
 
 			List<Map<String, String>> extendsInfoList = new ArrayList<Map<String, String>>();
 
@@ -305,7 +310,7 @@ public class TableInformationDialog extends Dialog {
 			tableViewer_ext.setInput(extendsInfoList);
 			tableViewer_ext.refresh();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("initialize data", e);
 		}
 
 	}

@@ -12,6 +12,7 @@ package com.hangum.tadpole.commons.util;
 
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 /**
@@ -20,7 +21,7 @@ import org.eclipse.rap.rwt.RWT;
  *
  */
 public class RAPLocaleUtils {
-
+	private static final Logger logger = Logger.getLogger(RAPLocaleUtils.class);
 	public static void changeLocale( Locale locale ) {
 		
 		try {
@@ -43,7 +44,7 @@ public class RAPLocaleUtils {
 //			// Uses a non-public API, see http://bugs.eclipse.org/342995
 //			JSExecutor.executeJS( "parent.window.location.href=\"" + url + "\";" );
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error("change locale", e);
 		}
 	}
 		 

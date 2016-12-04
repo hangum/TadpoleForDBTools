@@ -275,7 +275,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			String strAllowIP = userDao.getAllow_ip();
 			String ip_servletRequest = RequestInfoUtils.getRequestIP();
 			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
-			if(logger.isDebugEnabled())logger.debug(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
+			if(logger.isDebugEnabled()) logger.debug(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
 				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_28);

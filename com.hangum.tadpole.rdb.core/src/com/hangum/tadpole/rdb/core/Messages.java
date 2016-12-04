@@ -681,6 +681,8 @@ public class Messages {
 	public String ClipboardDialog;
 
 	public String ExecuteQueryAndClose;
+
+	public String CantnotFoundTable;
 	
 //	public String PLAN_TABLE_NOT_FOUND;
 	

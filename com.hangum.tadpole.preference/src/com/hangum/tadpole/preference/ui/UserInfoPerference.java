@@ -338,7 +338,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			}
 			
 			if(!pass.equals(rePass)) {
-//				textPassword.setFocus();
+				textPassword.setFocus();
 
 				setValid(false);
 				setErrorMessage(Messages.get().UserInfoPerference_6);
@@ -351,7 +351,6 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 					setErrorMessage(Messages.get().UserInfoPerference_15);
 					return false;
 				}
-				
 				
 				try {
 					GetOTPCode.isValidate(SessionManager.getEMAIL(), otpSecretKey, textOTPCode.getText());
@@ -366,7 +365,6 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			
 			setErrorMessage(null);
 			setValid(true);
-			
 		}
 		
 		return true;
@@ -398,7 +396,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			try {
 				TadpoleSystem_UserQuery.updateUserBasic(user);
 				
-				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.name(), user.getPasswd());			
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.name(), rePass);			
 				TadpoleSystem_UserQuery.updateUserOTPCode(user);
 				SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.name(), useOTP);			
 				SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.name(), otpSecretKey);

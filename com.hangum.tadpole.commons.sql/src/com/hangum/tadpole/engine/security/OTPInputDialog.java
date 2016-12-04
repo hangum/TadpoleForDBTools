@@ -120,7 +120,7 @@ public class OTPInputDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().OK, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false); //$NON-NLS-1$
 	}
 

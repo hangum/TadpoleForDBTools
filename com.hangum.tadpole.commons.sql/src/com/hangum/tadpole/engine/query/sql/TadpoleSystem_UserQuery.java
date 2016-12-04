@@ -241,7 +241,7 @@ public class TadpoleSystem_UserQuery {
 	public static UserDAO login(String email, String passwd) throws TadpoleAuthorityException, TadpoleSQLManagerException, SQLException {
 		UserDAO login = new UserDAO();
 		login.setEmail(email);
-		login.setPasswd(CipherManager.getInstance().encryption(passwd));
+//		login.setPasswd(CipherManager.getInstance().encryption(passwd));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$

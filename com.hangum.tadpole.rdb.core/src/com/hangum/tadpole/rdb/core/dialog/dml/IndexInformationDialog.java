@@ -224,7 +224,7 @@ public class IndexInformationDialog extends Dialog {
 
 			indexTableViewer.refresh();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("initialize data", e);
 		}
 
 	}
@@ -245,7 +245,7 @@ public class IndexInformationDialog extends Dialog {
 			tableViewer_ext.setInput(extendsInfoList);
 			tableViewer_ext.refresh();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("initialize data", e);
 		}
 
 	}
@@ -278,7 +278,6 @@ public class IndexInformationDialog extends Dialog {
 			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
 		}
 		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
-
 	}
 
 	/**
