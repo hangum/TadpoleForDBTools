@@ -51,7 +51,7 @@ public class AdminPreferenceDefine {
 	
 	/** 사용자가 디비를 추가 할수 있는 카운트 */
 	public static final String DEFAULT_ADD_DB_CNT = _PREFIX + "DEFAULT_ADD_DB_CNT";
-	public static final String DEFAULT_ADD_DB_CNT_VALUE = "10";
+	public static final String DEFAULT_ADD_DB_CNT_VALUE = "50";
 	
 	/** 가입 일 부터 서비스 사용 제한 일 */
 	public static final String SERVICE_DURATION_DAY = _PREFIX + "SERVICE_DURATION_DAY";
