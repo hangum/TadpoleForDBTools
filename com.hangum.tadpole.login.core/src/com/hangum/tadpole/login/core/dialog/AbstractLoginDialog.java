@@ -55,23 +55,6 @@ public class AbstractLoginDialog extends Dialog {
 		}
 	}
 	
-	/**
-	 * get customer info
-	 * @return
-	 */
-	protected String getCustomerInfo() {
-		try {
-			LicenseDAO licenseDAO = LicenseValidator.getLicense();
-			if(!"".equals(licenseDAO.getCustomer())) {
-				return "    " + licenseDAO.getCustomer();
-			}
-		} catch(Exception e) {
-			logger.error("get licenseinfo", e);
-		}
-		
-		return "License is GNU Lesser General Public License v.3";
-	}
-	
 	@Override
 	public boolean close() {
 		//  로그인이 안되었을 경우 로그인 창이 남아 있도록...(https://github.com/hangum/TadpoleForDBTools/issues/31)

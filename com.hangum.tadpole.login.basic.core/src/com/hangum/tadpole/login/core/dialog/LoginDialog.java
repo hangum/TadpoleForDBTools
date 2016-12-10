@@ -52,6 +52,7 @@ import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.security.OTPInputDialog;
+import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.login.core.message.LoginDialogMessages;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -387,7 +388,7 @@ public class LoginDialog extends AbstractLoginDialog {
 	 * initialize ui
 	 */
 	private void initUI() {
-		lblLicense.setText(getCustomerInfo());
+		lblLicense.setText(LicenseValidator.getCustomerInfo());
 		
 		initCookieData();
 		if("".equals(textEMail.getText())) {
