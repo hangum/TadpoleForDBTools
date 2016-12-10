@@ -29,7 +29,7 @@ import com.hangum.tadpole.sendgrid.core.utils.SendgridUtils;
  */
 public class SendEmails {
 	private static final Logger logger = Logger.getLogger(SendEmails.class);
-	private SMTPDTO smtpDto;
+	private SMTPDTO smtpDto = new SMTPDTO();
 	
 	// send grid로 보내지지 않는 리스트.
 	private String[] OLD_TYPE_DOMAIN = {"@daum.net", "@hanmail.net", "kakao"};
@@ -45,7 +45,7 @@ public class SendEmails {
 	 */
 	public void sendMail(EmailDTO emailDao) throws Exception {
 		if(!smtpDto.isValid()) {
-			throw new Exception("Valid smtp information." + emailDao);
+			throw new Exception("Invalid smtp information." + emailDao);
 		}
 		if(logger.isDebugEnabled()) logger.debug("Add new message");
 
@@ -88,10 +88,12 @@ public class SendEmails {
 			email.setCharset("euc-kr");
 			email.setHostName(smtpDto.getHost());
 			email.setSmtpPort(NumberUtils.toInt(smtpDto.getPort()));
-			email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));
+			if(!"".equals(smtpDto.getEmail()) || !"".equals(smtpDto.getPasswd())) {
+				email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));	
+			}
 			email.setSSLOnConnect(true);
 			
-			email.setFrom(smtpDto.getEmail(), "Tadpole Hub");
+			email.setFrom(smtpDto.getEmail(), "Tadpole DB Hub");
 			email.addTo(emailDao.getTo());
 			email.setSubject(emailDao.getSubject());
 			email.setHtmlMsg(emailDao.getContent());
