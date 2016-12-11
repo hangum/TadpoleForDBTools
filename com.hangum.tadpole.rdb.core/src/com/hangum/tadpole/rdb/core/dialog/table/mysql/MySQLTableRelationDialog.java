@@ -270,7 +270,7 @@ public class MySQLTableRelationDialog extends Dialog {
 			ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strCreateIndex);
 			
 			ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
-			if(ev != null) ev.refreshTable(false, tableDAO.getName());
+			if(ev != null) ev.refreshTable(true, tableDAO.getName());
 	
 			super.okPressed();
 		} catch (Exception e) {
