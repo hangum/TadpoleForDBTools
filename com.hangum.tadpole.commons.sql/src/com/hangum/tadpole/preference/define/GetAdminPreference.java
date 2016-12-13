@@ -63,6 +63,15 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * system LDAP User
+	 * @return
+	 */
+	public static String getLDAPUser() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_LDAP_USER, AdminPreferenceDefine.SYSTEM_LDAP_USER_VALUE);
+	}
+	
+	/**
 	 * system LDAP authentication
 	 * @return
 	 */

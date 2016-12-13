@@ -92,6 +92,10 @@ public class CommonMessages {
 	public String StartDate;
 
 	public String EndDate;
+
+	public String Authentication;
+
+	public String ID;
 	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

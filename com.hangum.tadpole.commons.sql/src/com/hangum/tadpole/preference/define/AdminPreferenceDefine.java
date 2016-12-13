@@ -30,6 +30,9 @@ public class AdminPreferenceDefine {
 	public static final String SYSTEM_LDAP_URL = _PREFIX + "SYSTEM_LDAP_URL";
 	public static final String SYSTEM_LDAP_URL_VALUE = "";
 	
+	public static final String SYSTEM_LDAP_USER = _PREFIX + "SYSTEM_LDAP_USER";
+	public static final String SYSTEM_LDAP_USER_VALUE = "";
+	
 	public static final String SYSTEM_LDAP_AUTHENTICATION = _PREFIX + "SYSTEM_LDAP_AUTHENTICATION";
 	public static final String SYSTEM_LDAP_AUTHENTICATION_VALUE = "simple";
 

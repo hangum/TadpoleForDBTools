@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.login.core.dialog;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
@@ -131,7 +132,11 @@ public class LoginDialog extends AbstractLoginDialog {
 		compositeLogin.setLayout(new GridLayout(3, false));
 		
 		lblEmail = new Label(compositeLogin, SWT.NONE);
-		lblEmail.setText(LoginDialogMessages.get().LoginDialog_1);
+		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+			lblEmail.setText(CommonMessages.get().Email);	
+		} else {
+			lblEmail.setText(CommonMessages.get().ID);
+		}
 		
 		textEMail = new Text(compositeLogin, SWT.BORDER);
 		textEMail.addKeyListener(new KeyAdapter() {
@@ -248,26 +253,42 @@ public class LoginDialog extends AbstractLoginDialog {
 		if(!validation(strEmail, strPass)) return;
 		
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
-			
-			// firsttime email confirm
-			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
-				InputDialog inputDialog=new InputDialog(getShell(), LoginDialogMessages.get().LoginDialog_10, String.format(LoginDialogMessages.get().LoginDialog_17, strEmail), "", null); //$NON-NLS-3$ //$NON-NLS-1$
-				if(inputDialog.open() == Window.OK) {
-					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
-						throw new Exception(LoginDialogMessages.get().LoginDialog_19);
-					} else {
-						TadpoleSystem_UserQuery.updateEmailConfirm(strEmail);
-					}
-				} else {
-					throw new Exception(LoginDialogMessages.get().LoginDialog_20);
-				}
-			}
-			
-			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
-				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_27);
+			UserDAO userDao = new UserDAO();
+			if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+				userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
 				
-				return;
+				// firsttime email confirm
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
+					InputDialog inputDialog=new InputDialog(getShell(), LoginDialogMessages.get().LoginDialog_10, String.format(LoginDialogMessages.get().LoginDialog_17, strEmail), "", null); //$NON-NLS-3$ //$NON-NLS-1$
+					if(inputDialog.open() == Window.OK) {
+						if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
+							throw new Exception(LoginDialogMessages.get().LoginDialog_19);
+						} else {
+							TadpoleSystem_UserQuery.updateEmailConfirm(strEmail);
+						}
+					} else {
+						throw new Exception(LoginDialogMessages.get().LoginDialog_20);
+					}
+				}
+				
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
+					MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_27);
+					
+					return;
+				}
+				
+			// ldap login
+			} else {
+				
+				ldapLogin(strEmail, strPass);
+				
+				List<UserDAO> listUserDAO = TadpoleSystem_UserQuery.findExistUser(strEmail);
+				if(listUserDAO.isEmpty()) {
+					// 신규 사용자로 추가하고 user 리스트를 가져옵니다.
+					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail);
+				} else {
+					userDao = listUserDAO.get(0);
+				}
 			}
 			
 			// login
@@ -371,18 +392,18 @@ public class LoginDialog extends AbstractLoginDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		btnNewUser = createButton(parent, ID_NEW_USER, LoginDialogMessages.get().LoginDialog_button_new_user, false);
-		try {
-			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(smtpDto.isValid()) { //$NON-NLS-1$
-				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
+		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+			btnNewUser = createButton(parent, ID_NEW_USER, LoginDialogMessages.get().LoginDialog_button_new_user, false);
+			try {
+				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+				if(smtpDto.isValid()) { //$NON-NLS-1$
+					btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
+				}
+			} catch (Exception e) {
+	//			ignore exception
 			}
-		} catch (Exception e) {
-//			ignore exception
 		}
 	}
-	
-
 	
 	/**
 	 * initialize ui
@@ -450,7 +471,12 @@ public class LoginDialog extends AbstractLoginDialog {
 		btnLogin.setText(LoginDialogMessages.get().LoginDialog_15);
 		
 		btnCheckButton.setText(LoginDialogMessages.get().LoginDialog_9);
-		lblEmail.setText(LoginDialogMessages.get().LoginDialog_1);
+		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+			lblEmail.setText(CommonMessages.get().Email);	
+		} else {
+			lblEmail.setText(CommonMessages.get().ID);
+		}
+		
 		lblPassword.setText(LoginDialogMessages.get().LoginDialog_4);
 		lblLanguage.setText(LoginDialogMessages.get().LoginDialog_lblLanguage_text);
 		
