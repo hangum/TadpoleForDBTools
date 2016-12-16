@@ -80,7 +80,8 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 			public void keyReleased(KeyEvent e) {
 				if(e.keyCode == SWT.TAB) {
 					String strEmail =  textEmail.getText() + e.character;
-					if(!ValidChecker.isValidEmailAddress(strEmail)) {
+//					if(!ValidChecker.isValidEmailAddress(strEmail)) {
+					if("".equals(strEmail)) {
 						errorSet(textEmail, Messages.get().SystemAdminWizardPage_35);
 					} else {
 						setErrorMessage(null);
