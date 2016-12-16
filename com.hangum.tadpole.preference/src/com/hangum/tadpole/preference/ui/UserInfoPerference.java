@@ -44,6 +44,8 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
 import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.preference.Messages;
+import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.dialogs.user.ChangeUsePersonalToGrouprDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -86,17 +88,37 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	public Control createContents(Composite parent) {
 		container_1 = new Composite(parent, SWT.NULL);
 		container_1.setLayout(new GridLayout(2, false));
-		
-//		if(TadpoleApplicationContextManager.isPersonOperationType()) {
-//			personView(container);
-//		} else {
-			groupView(container_1);
-//		}
+
+		if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_LDAP)) {
+			ldapView(container_1);
+		} else {
+			if(TadpoleApplicationContextManager.isPersonOperationType()) {
+				personView(container_1);
+			} else {
+				groupView(container_1);
+			}
+		}
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
 		
 		return container_1;
+	}
+	
+	/**
+	 * 그룹 사용
+	 * 
+	 * @param container
+	 */
+	private void ldapView(Composite container) {
+		Label lblEmail = new Label(container, SWT.NONE);
+		lblEmail.setText(Messages.get().UserInfoPerference_2);
+		
+		textEmail = new Text(container, SWT.BORDER);
+		textEmail.setEditable(false);
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textEmail.setText(SessionManager.getEMAIL());
+		
 	}
 	
 	/**
@@ -324,47 +346,51 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	
 	@Override
 	public boolean isValid() {
-		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
-			String pass = StringUtils.trim(textPassword.getText());
-			String rePass = StringUtils.trim(textRePassword.getText());
-			String otpSecretKey = StringUtils.trim(textSecretKey.getText());
+		if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_LDAP)) {
 			
-			if(!(StringUtils.length(pass) >= 7 && StringUtils.length(pass) <= 30)) {
-//				textPassword.setFocus();
-
-				setValid(false);
-				setErrorMessage(String.format(CommonMessages.get().Text_ValueIsLessThanOrOverThan, Messages.get().UserInfoPerference_3, "7", "30"));
-				return false;
-			}
-			
-			if(!pass.equals(rePass)) {
-//				textPassword.setFocus();
-
-				setValid(false);
-				setErrorMessage(Messages.get().UserInfoPerference_6);
-				return false;
-			} else if(btnGetOptCode.getSelection()) {
-				if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
-					textOTPCode.setFocus();
-
+		} else {
+			if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+				String pass = StringUtils.trim(textPassword.getText());
+				String rePass = StringUtils.trim(textRePassword.getText());
+				String otpSecretKey = StringUtils.trim(textSecretKey.getText());
+				
+				if(!(StringUtils.length(pass) >= 7 && StringUtils.length(pass) <= 30)) {
+	//				textPassword.setFocus();
+	
 					setValid(false);
-					setErrorMessage(Messages.get().UserInfoPerference_15);
+					setErrorMessage(String.format(CommonMessages.get().Text_ValueIsLessThanOrOverThan, Messages.get().UserInfoPerference_3, "7", "30"));
 					return false;
 				}
 				
-				try {
-					GetOTPCode.isValidate(SessionManager.getEMAIL(), otpSecretKey, textOTPCode.getText());
-				} catch(Exception e) {
-					textOTPCode.setFocus();
-
+				if(!pass.equals(rePass)) {
+	//				textPassword.setFocus();
+	
 					setValid(false);
-					setErrorMessage(Messages.get().UserInfoPerference_16);
+					setErrorMessage(Messages.get().UserInfoPerference_6);
 					return false;
+				} else if(btnGetOptCode.getSelection()) {
+					if("".equals(textOTPCode.getText())) { //$NON-NLS-1$
+						textOTPCode.setFocus();
+	
+						setValid(false);
+						setErrorMessage(Messages.get().UserInfoPerference_15);
+						return false;
+					}
+					
+					try {
+						GetOTPCode.isValidate(SessionManager.getEMAIL(), otpSecretKey, textOTPCode.getText());
+					} catch(Exception e) {
+						textOTPCode.setFocus();
+	
+						setValid(false);
+						setErrorMessage(Messages.get().UserInfoPerference_16);
+						return false;
+					}
 				}
+				
+				setErrorMessage(null);
+				setValid(true);
 			}
-			
-			setErrorMessage(null);
-			setValid(true);
 		}
 		
 		return true;
@@ -372,44 +398,50 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	
 	@Override
 	public boolean performOk() {
-		if(!TadpoleApplicationContextManager.isPersonOperationType()) {
-			String pass = StringUtils.trim(textPassword.getText());
-			String rePass = StringUtils.trim(textRePassword.getText());
-			String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$  
-			String otpSecretKey = StringUtils.trim(textSecretKey.getText());
-			Locale locale = Locale.ENGLISH;
-			String timezone = StringUtils.trim(comboTimezone.getText());
-			if(comboLanguage.getData(comboLanguage.getText()) != null) {
-				locale = (Locale)comboLanguage.getData(comboLanguage.getText());	
-			}
+		
+		if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_LDAP)) {
 			
-			UserDAO user = new UserDAO();
-			user.setSeq(SessionManager.getUserSeq());
-			user.setPasswd(pass);
 			
-			user.setUse_otp(useOTP);
-			user.setOtp_secret(otpSecretKey);
-			
-			user.setLanguage(locale.toLanguageTag());
-			user.setTimezone(timezone);
-			
-			try {
-				TadpoleSystem_UserQuery.updateUserBasic(user);
+		} else {
+			if(!TadpoleApplicationContextManager.isPersonOperationType()) {
+				String pass = StringUtils.trim(textPassword.getText());
+				String rePass = StringUtils.trim(textRePassword.getText());
+				String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$  
+				String otpSecretKey = StringUtils.trim(textSecretKey.getText());
+				Locale locale = Locale.ENGLISH;
+				String timezone = StringUtils.trim(comboTimezone.getText());
+				if(comboLanguage.getData(comboLanguage.getText()) != null) {
+					locale = (Locale)comboLanguage.getData(comboLanguage.getText());	
+				}
 				
-				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.name(), rePass);			
-				TadpoleSystem_UserQuery.updateUserOTPCode(user);
-				SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.name(), useOTP);			
-				SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.name(), otpSecretKey);
-				SessionManager.updateSessionAttribute(SessionManager.NAME.LANGUAGE.name(), locale.toLanguageTag());
-				SessionManager.updateSessionAttribute(SessionManager.NAME.TIMEZONE.name(), timezone);
+				UserDAO user = new UserDAO();
+				user.setSeq(SessionManager.getUserSeq());
+				user.setPasswd(pass);
 				
-				//fix https://github.com/hangum/TadpoleForDBTools/issues/243
-				SessionManager.setPassword(rePass);
-			} catch (Exception e) {
-				logger.error("password change", e); //$NON-NLS-1$
-				MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
+				user.setUse_otp(useOTP);
+				user.setOtp_secret(otpSecretKey);
 				
-				return false;
+				user.setLanguage(locale.toLanguageTag());
+				user.setTimezone(timezone);
+				
+				try {
+					TadpoleSystem_UserQuery.updateUserBasic(user);
+					
+					SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_PASSWORD.name(), rePass);			
+					TadpoleSystem_UserQuery.updateUserOTPCode(user);
+					SessionManager.updateSessionAttribute(SessionManager.NAME.USE_OTP.name(), useOTP);			
+					SessionManager.updateSessionAttribute(SessionManager.NAME.OTP_SECRET_KEY.name(), otpSecretKey);
+					SessionManager.updateSessionAttribute(SessionManager.NAME.LANGUAGE.name(), locale.toLanguageTag());
+					SessionManager.updateSessionAttribute(SessionManager.NAME.TIMEZONE.name(), timezone);
+					
+					//fix https://github.com/hangum/TadpoleForDBTools/issues/243
+					SessionManager.setPassword(rePass);
+				} catch (Exception e) {
+					logger.error("password change", e); //$NON-NLS-1$
+					MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
+					
+					return false;
+				}
 			}
 		}
 		

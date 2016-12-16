@@ -9,12 +9,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.login.core.dialog;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -25,9 +19,9 @@ import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.commons.util.LDAPUtil;
 import com.hangum.tadpole.engine.utils.LicenseDAO;
 import com.hangum.tadpole.engine.utils.LicenseValidator;
-import com.hangum.tadpole.login.core.message.LoginDialogMessages;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 
@@ -61,22 +55,7 @@ public class AbstractLoginDialog extends Dialog {
 	 * @param strPass
 	 */
 	protected void ldapLogin(String strEmail, String strPass) throws TadpoleAuthorityException {
-		Hashtable<String, String> properties = new Hashtable<String, String>();
-		properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		properties.put(Context.PROVIDER_URL, GetAdminPreference.getLDAPURL());
-		properties.put(Context.SECURITY_AUTHENTICATION, GetAdminPreference.getLDAPAuthentication());
-		properties.put(Context.SECURITY_PRINCIPAL, String.format(GetAdminPreference.getLDAPUser(), strEmail));
-		properties.put(Context.SECURITY_CREDENTIALS, strPass);
-		
-		DirContext con = null;
-		try {
-			con = new InitialDirContext(properties);
-		} catch (Exception e) {
-			logger.error("LDAP Login fail" + e.getMessage());
-			throw new TadpoleAuthorityException(LoginDialogMessages.get().PleaseCheckIDpassword);
-		} finally {
-			 if(con != null) try { con.close(); } catch(Exception e) {}
-		}
+		LDAPUtil.ldapLogin(strEmail, strPass, GetAdminPreference.getLDAPURL(), GetAdminPreference.getLDAPAuthentication(), GetAdminPreference.getLDAPUser());
 	}
 	
 	/**

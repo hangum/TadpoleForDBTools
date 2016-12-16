@@ -55,6 +55,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.security.OTPInputDialog;
 import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.login.core.message.LoginDialogMessages;
+import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -254,7 +255,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		
 		try {
 			UserDAO userDao = new UserDAO();
-			if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+			if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
 				userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
 				
 				// firsttime email confirm

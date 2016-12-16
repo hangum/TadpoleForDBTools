@@ -83,8 +83,6 @@ public class DBPasswordDialog extends Dialog {
 			}
 		});
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		
 		textPassword.setFocus();
 
 		return container;

@@ -26,6 +26,7 @@ public class AdminPreferenceDefine {
 	/** system login method */
 	public static final String SYSTEM_LOGIN_METHOD = _PREFIX + "SYSTEM_LOGIN_METHOD";
 	public static final String SYSTEM_LOGIN_METHOD_VALUE = "original";
+	public static final String SYSTEM_LOGIN_METHOD_LDAP = "LDAP";
 	
 	public static final String SYSTEM_LDAP_URL = _PREFIX + "SYSTEM_LDAP_URL";
 	public static final String SYSTEM_LDAP_URL_VALUE = "";

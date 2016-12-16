@@ -96,6 +96,8 @@ public class CommonMessages {
 	public String Authentication;
 
 	public String ID;
+
+	public String Test;
 	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
