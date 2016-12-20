@@ -12,6 +12,9 @@ package com.hangum.tadpold.commons.libs.core.mails;
 
 import static org.junit.Assert.fail;
 
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.HtmlEmail;
 import org.junit.Test;
 
 import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
@@ -37,22 +40,51 @@ public class SendEmailsTest {
 		EmailDTO emailDao = new EmailDTO();
 		emailDao.setTo("hangum@gmail.com");
 		emailDao.setSubject("Testcase title");
-		emailDao.setContent("Testcase content");
+		emailDao.setContent("Testcase --- content");
 		
 		SMTPDTO smtpDto = new SMTPDTO();
 		smtpDto.setHost("smtp.googlemail.com");
-		smtpDto.setPort("465");
+		smtpDto.setPort("25");
 		smtpDto.setEmail("hangum@gmail.com");
 		smtpDto.setPasswd("atkgbvxcpqdbhtfv");
 		
-		SendEmails sendMail = new SendEmails(smtpDto);
+//		SendEmails sendMail = new SendEmails(smtpDto);
 		try {
-			sendMail.sendMail(emailDao);
+			sendSTMT(smtpDto, emailDao);
+			System.out.println("보냈습니다.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("" + e.getMessage());
 		}
-		
+	}
+	
+	/**
+	 * using smtp server send 
+	 * @param emailDao
+	 * @throws Exception
+	 */
+	private static void sendSTMT(SMTPDTO smtpDto, EmailDTO emailDao) throws Exception {
+		try {			
+			HtmlEmail email = new HtmlEmail();
+			email.setCharset("euc-kr");
+			email.setHostName(smtpDto.getHost());
+			email.setSmtpPort(NumberUtils.toInt(smtpDto.getPort()));
+			if(!"".equals(smtpDto.getEmail()) || !"".equals(smtpDto.getPasswd())) {
+				email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));
+				email.setSSLOnConnect(true);
+			}
+			
+			email.setFrom(smtpDto.getEmail(), "Tadpole DB Hub");
+			email.addTo(emailDao.getTo());
+			email.setSubject(emailDao.getSubject());
+			email.setHtmlMsg(emailDao.getContent());
+			
+			email.send();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 }

@@ -233,11 +233,11 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		if(dto == null) {
 			dto = getSMTPINFO();
-			if("".equals(dto.getSendgrid_api())) {
-				if("".equals(dto.getEmail()) || "".equals(dto.getPasswd())) {
-					throw new Exception("Doesn't setting is SMTP Server.");
-				}
-			}
+//			if("".equals(dto.getSendgrid_api())) {
+//				if("".equals(dto.getEmail()) || "".equals(dto.getPasswd())) {
+//					throw new Exception("Doesn't setting is SMTP Server.");
+//				}
+//			}
 			
 			context.setAttribute("smtpinfo", dto); //$NON-NLS-1$
 		}
