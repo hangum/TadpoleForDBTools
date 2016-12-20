@@ -11,6 +11,8 @@
 package com.hangum.tadpole.commons.libs.core.mails.template;
 
 import com.hangum.tadpole.commons.libs.core.Messages;
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 
 /**
  * default mail template
@@ -56,7 +58,7 @@ public abstract class MailBodyTemplate {
 		StringBuffer strContent = new StringBuffer();
 		strContent.append("<tr>");
 		strContent.append(String.format("<th width='100' class='tg-yw4l'>%s</th>", title));
-		strContent.append(String.format("<td width='260' class='tg-yw4l'>%s</td>", content));
+		strContent.append(String.format("<td width='700' class='tg-yw4l'>%s</td>", content));
 		strContent.append("</tr>");
 		
 		return strContent.toString();
@@ -73,8 +75,14 @@ public abstract class MailBodyTemplate {
 		strContent.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
 			strContent.append(String.format("<tr><td>%s</td></tr>", Messages.get().Thanks));
 			strContent.append("<br>");
-			strContent.append(String.format("<tr><td width='100' valign='top'>%s%s</td></tr>", Messages.get().MailBodyTempAdmin, "hangum@tadpolehub.com"));
-			strContent.append("<tr><td>" + Messages.get().HomePage +"https://tadpolehub.com</td></tr>");
+			if(LicenseValidator.getLicense().isEnterprise()) {
+				LicenseDAO licenseDao = LicenseValidator.getLicense();
+				strContent.append(String.format("<tr><td width='100' valign='top'>%s%s</td></tr>", Messages.get().MailBodyTempAdmin, licenseDao.getCustomer_email()));
+				strContent.append("<tr><td>" + licenseDao.getCustomer() +"</td></tr>");
+			} else {
+				strContent.append(String.format("<tr><td width='100' valign='top'>%s%s</td></tr>", Messages.get().MailBodyTempAdmin, "hangum@tadpolehub.com"));
+				strContent.append("<tr><td>" + Messages.get().HomePage +"https://tadpolehub.com</td></tr>");
+			}
 		strContent.append("</table>");
 		
 		return strContent.toString();

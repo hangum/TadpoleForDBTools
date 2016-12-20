@@ -1,4 +1,4 @@
-package com.hangum.tadpole.engine.utils;
+package com.hangum.tadpole.commons.libs.core.dao;
 
 /**
  * License dao
@@ -11,6 +11,7 @@ public class LicenseDAO {
 	boolean isEnterprise = false;
 	String msg = "";
 	
+	String customer_email = "";
 	String customer = "";
 	
 	public LicenseDAO() {
@@ -56,6 +57,20 @@ public class LicenseDAO {
 	 */
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	/**
+	 * @return the customer_email
+	 */
+	public String getCustomer_email() {
+		return customer_email;
+	}
+
+	/**
+	 * @param customer_email the customer_email to set
+	 */
+	public void setCustomer_email(String customer_email) {
+		this.customer_email = customer_email;
 	}
 
 	/**

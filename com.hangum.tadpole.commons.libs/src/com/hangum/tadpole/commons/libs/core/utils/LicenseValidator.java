@@ -1,8 +1,10 @@
-package com.hangum.tadpole.engine.utils;
+package com.hangum.tadpole.commons.libs.core.utils;
 
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ApplicationContext;
+
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 
 /**
  * Get user license info

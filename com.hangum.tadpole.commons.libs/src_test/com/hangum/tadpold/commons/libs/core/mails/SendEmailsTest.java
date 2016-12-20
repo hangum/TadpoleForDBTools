@@ -29,7 +29,6 @@ import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
  */
 public class SendEmailsTest {
 	
-
 	/**
 	 * Test method for {@link com.hangum.tadpole.commons.libs.core.mails.SendEmails#sendMail(com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO)}.
 	 */
@@ -44,12 +43,13 @@ public class SendEmailsTest {
 		smtpDto.setHost("smtp.googlemail.com");
 		smtpDto.setPort("465");
 		smtpDto.setEmail("hangum@gmail.com");
-		smtpDto.setPasswd("question");
+		smtpDto.setPasswd("atkgbvxcpqdbhtfv");
 		
 		SendEmails sendMail = new SendEmails(smtpDto);
 		try {
 			sendMail.sendMail(emailDao);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail("" + e.getMessage());
 		}
 		
