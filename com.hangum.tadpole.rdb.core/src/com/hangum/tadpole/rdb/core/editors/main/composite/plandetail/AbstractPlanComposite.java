@@ -46,8 +46,9 @@ public abstract class AbstractPlanComposite extends Composite {
 	/** tail composite */
 	protected PlanTailComposite compositeTail;
 	
-	public AbstractPlanComposite(Composite parent, int style) {
+	public AbstractPlanComposite(Composite parent, int style, QueryExecuteResultDTO rsDAO) {
 		super(parent, style);
+		this.rsDAO = rsDAO;
 	}
 
 	/**

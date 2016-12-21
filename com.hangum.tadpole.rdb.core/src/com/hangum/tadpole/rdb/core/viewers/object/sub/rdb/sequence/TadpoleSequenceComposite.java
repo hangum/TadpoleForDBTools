@@ -54,6 +54,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
@@ -180,6 +181,9 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 		refreshAction_Sequence = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, CommonMessages.get().Refresh); //$NON-NLS-1$
 		//executeAction = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().Execute); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.SEQUENCE, Messages.get().ViewDDL); //$NON-NLS-1$
+		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Sequence"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -200,6 +204,9 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 			menuMgr.add(viewDDLAction);
 			//menuMgr.add(executeAction);
 		//}
+			
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		sequenceListViewer.getTable().setMenu(menuMgr.createContextMenu(sequenceListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, sequenceListViewer);
@@ -311,6 +318,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 		refreshAction_Sequence.setUserDB(getUserDB());
 		//executeAction.setUserDB(getUserDB());
 		viewDDLAction.setUserDB(getUserDB());
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 
 	/**

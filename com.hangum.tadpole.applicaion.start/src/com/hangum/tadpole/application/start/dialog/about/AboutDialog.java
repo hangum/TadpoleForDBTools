@@ -27,6 +27,7 @@ import com.hangum.tadpole.application.start.BrowserActivator;
 import com.hangum.tadpole.application.start.Messages;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.swtdesigner.ResourceManager;
 
@@ -109,8 +110,7 @@ public class AboutDialog extends Dialog {
 		lblNewLabel3.setText(Messages.get().AboutDialog_7);
 		
 		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
-		lblLicenseLgpl.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblLicenseLgpl.setText(Messages.get().AboutDialog_8);
+		lblLicenseLgpl.setText(String.format("License : %s", LicenseValidator.getCustomerInfo()));
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

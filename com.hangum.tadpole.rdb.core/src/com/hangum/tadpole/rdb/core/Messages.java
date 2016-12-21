@@ -24,7 +24,6 @@ public class Messages {
 	public String CreatTime;
 	public String Compare;
 	public String Sec;
-	public String AbstractLoginComposite_2;
 	public String AbstractLoginComposite_3;
 	public String AbstractLoginComposite_4;
 	public String Trigger;
@@ -680,6 +679,12 @@ public class Messages {
 	public String ObjectExecutionException;
 
 	public String ClipboardDialog;
+
+	public String ExecuteQueryAndClose;
+
+	public String CantnotFoundTable;
+	
+//	public String PLAN_TABLE_NOT_FOUND;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

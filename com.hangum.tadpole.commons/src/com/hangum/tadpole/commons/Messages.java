@@ -11,6 +11,8 @@ public class Messages {
 	public String SingleFileuploadDialog_5;
 	public String SingleFileuploadDialog_7;
 	public String ImageViewer;
+	
+	public String PleaseCheckIDpassword;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

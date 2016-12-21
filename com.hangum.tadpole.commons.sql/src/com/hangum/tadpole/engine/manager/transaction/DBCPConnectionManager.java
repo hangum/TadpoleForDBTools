@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -41,7 +40,7 @@ public class DBCPConnectionManager {
 	
 	public static DBCPConnectionManager instance = new DBCPConnectionManager();
 	private Map<String, DataSource> mapDataSource = new ConcurrentHashMap<String, DataSource>();
-	private Map<String, GenericObjectPool> mapGenericObject = new ConcurrentHashMap<String, GenericObjectPool>();
+//	private Map<String, GenericObjectPool> mapGenericObject = new ConcurrentHashMap<String, GenericObjectPool>();
 	
 	private DBCPConnectionManager() {}
 	
@@ -49,15 +48,12 @@ public class DBCPConnectionManager {
 		return instance;
 	}
 	
-	private DataSource makePool(final String userId, UserDBDAO userDB) {
-		String searchKey = TadpoleSQLTransactionManager.getKey(userId, userDB);
-		
-		//
+	private DataSource makePool(final String searchKey, UserDBDAO userDB) {
 		GenericObjectPool connectionPool = new GenericObjectPool();
-		connectionPool.setMaxActive(5);
+		connectionPool.setMaxActive(2);
 		connectionPool.setWhenExhaustedAction((byte)1);
-		connectionPool.setMaxWait(1000 * 60); 						// 1분대기.
-		connectionPool.setTimeBetweenEvictionRunsMillis(10 * 1000);	// 10분한한번 테스트
+		connectionPool.setMaxWait(1000 * 60); 							// 1분대기.
+		connectionPool.setTimeBetweenEvictionRunsMillis(60L * 1000L * 1L);	// 60초에 한번씩 테스트
 		connectionPool.setTestWhileIdle(true);
 		
 		String passwdDecrypt = "";
@@ -68,35 +64,43 @@ public class DBCPConnectionManager {
 		}
 		
 		ConnectionFactory cf = new DriverManagerConnectionFactory(userDB.getUrl(), userDB.getUsers(), passwdDecrypt);
-		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, userDB.getDBDefine().getValidateQuery(), false, false);
+		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
+		pcf.setValidationQuery(userDB.getDBDefine().getValidateQuery());
 		
 		if(!"".equals(PublicTadpoleDefine.CERT_USER_INFO)) {
 			// initialize connection string
 			List<String> listInitializeSql = new ArrayList<String>();
 			String strFullHelloSQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID()) + "\n " + userDB.getDBDefine().getValidateQuery();
-			if(logger.isInfoEnabled()) logger.info(strFullHelloSQL);
+//			if(logger.isInfoEnabled()) logger.info(strFullHelloSQL);
 			
-			pcf.setValidationQuery(userDB.getDBDefine().getValidateQuery());
 			listInitializeSql.add(strFullHelloSQL);
 			
 			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 				listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction(%s)', '')", userDB.getTdbUserID()));
 			}
-			if(!listInitializeSql.isEmpty()) pcf.setConnectionInitSql(listInitializeSql);
+			
+			pcf.setConnectionInitSql(listInitializeSql);
 		}
 		
 		// setting poolable connection factory
 		DataSource ds = new PoolingDataSource(connectionPool);
 		mapDataSource.put(searchKey, ds);
-		mapGenericObject.put(searchKey, connectionPool);
+//		mapGenericObject.put(searchKey, connectionPool);
+		
+//		try {
+//			Connection conn = ds.getConnection();
+//			if(logger.isDebugEnabled()) logger.debug("\t catalog is " + conn.getCatalog());
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		return ds;
 	}
 	
-	public DataSource makeDataSource(final String userId, final UserDBDAO userDB) {
-		DataSource retDataSource = mapDataSource.get(TadpoleSQLTransactionManager.getKey(userId, userDB));
+	public DataSource makeDataSource(final String searchKey, final UserDBDAO userDB) {
+		DataSource retDataSource = mapDataSource.get(searchKey);
 		if(retDataSource == null) { 
-			return makePool(userId, userDB);
+			return makePool(searchKey, userDB);
 		}
 		
 		return retDataSource;
@@ -107,28 +111,18 @@ public class DBCPConnectionManager {
 	}
 	
 	public void releaseConnectionPool(final String searchKey) {
-		GenericObjectPool connectionPool = mapGenericObject.get(searchKey);
-		try {
-			if(connectionPool != null) {
-				connectionPool.clear();
-				connectionPool.close();
-				
-				mapDataSource.remove(searchKey);
-				mapGenericObject.remove(searchKey);
-			}
-			
-		} catch(Exception e) {
-			logger.error(String.format("**** release connection key is %s", searchKey), e);
-		}
+//		GenericObjectPool connectionPool = mapGenericObject.remove(searchKey);
+//		try {
+//			if(connectionPool != null) {
+//				connectionPool.clear();
+//				connectionPool.close();
+//			}
+//		} catch(Exception e) {
+//			logger.error(String.format("**** release connection key is %s", searchKey), e);
+//		} finally {
+//			connectionPool = null; 
+//			mapDataSource.remove(searchKey);
+//		}
+		mapDataSource.remove(searchKey);
 	}
-	
-	/**
-	 * map의 카를 가져옵니다.
-	 * @param userDB
-	 * @return
-	 */
-	private static String getPoolKey(final String userId, final UserDBDAO userDB) {
-		return userId + userDB.getSeq() + userDB.getDisplay_name();
-	}
-
 }

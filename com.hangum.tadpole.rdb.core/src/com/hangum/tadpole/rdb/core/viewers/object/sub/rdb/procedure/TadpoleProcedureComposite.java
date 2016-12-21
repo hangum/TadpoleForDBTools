@@ -53,6 +53,7 @@ import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAc
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExecuteProcedureAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ProcedureFunctionComparator;
@@ -83,6 +84,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	private AbstractObjectSelectAction viewDDLAction;
 	private AbstractObjectSelectAction executeAction_Procedure;
 	private AbstractObjectSelectAction objectCompileAction;
+	
 
 	/**
 	 * procedure
@@ -157,6 +159,9 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 
 		executeAction_Procedure = new ObjectExecuteProcedureAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().TadpoleProcedureComposite_6);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES, Messages.get().TadpoleProcedureComposite_7);
+		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -179,6 +184,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		procedureTableViewer.getTable().setMenu(menuMgr.createContextMenu(procedureTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, procedureTableViewer);
@@ -211,6 +218,8 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 		objectCompileAction.setUserDB(getUserDB());
 
 		viewDDLAction.setUserDB(getUserDB());
+		
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 
 	/**

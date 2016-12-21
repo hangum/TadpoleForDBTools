@@ -22,7 +22,6 @@ public class LoginDialogMessages {
 	public String company_name;
 	// 회사 관련 정보 표현 종료.
 	
-	public String LoginDialog_1;
 	public String LoginDialog_10;
 	public String LoginDialog_11;
 	
@@ -31,7 +30,6 @@ public class LoginDialogMessages {
 	
 	public String LoginDialog_17;
 	public String LoginDialog_19;
-	public String LoginDialog_2;
 	public String LoginDialog_20;
 	public String LoginDialog_21;
 	public String LoginDialog_22;
@@ -64,6 +62,8 @@ public class LoginDialogMessages {
 	public String LoginDialog_userIP;
 
 	public String AlreadyLoginConfirm;
+
+	public String PleaseCheckIDpassword;
 
 	public static LoginDialogMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, LoginDialogMessages.class);

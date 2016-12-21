@@ -16,12 +16,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -57,7 +57,9 @@ public class DialogUtil {
 	
 			if (objectSelector.getObjectCount() > 1) {
 				//이름으로 검색한 결과가 1개이상이면 선택화면을 띄운다.
-				objectSelector.open();
+				if(Dialog.CANCEL == objectSelector.open()) {
+					return;
+				}
 			} else if (objectSelector.getObjectCount() <= 0) {
 				//해당 오브젝트를 찾을 수 없습니다.
 				MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);

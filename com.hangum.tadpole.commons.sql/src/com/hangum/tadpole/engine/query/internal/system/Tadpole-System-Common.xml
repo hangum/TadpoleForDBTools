@@ -362,8 +362,8 @@
  	SELECT *
  	FROM tadpole_db
  	WHERE user_seq = #user_seq# AND
+ 		group_name = #group_name# AND
  		display_name = #display_name# AND
- 		url = #url# AND 
  		seq <> #seq# AND 
 		delYn = 'NO'
 ]]>
@@ -376,20 +376,8 @@
  	SELECT *
  	FROM tadpole_db
  	WHERE user_seq = #user_seq# AND
+ 		group_name = #group_name# AND
  		display_name = #display_name# AND
- 		url = #url# AND  
-		delYn = 'NO'
- </select>
- 
- <!-- 
- 		신규디비 등록시 이미 등록되어 있는지 검사합니다.
-  -->
- <select id="isAlreadyExistDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.util.Map">
- 	SELECT *
- 	FROM tadpole_db
- 	WHERE user_seq = #user_seq# AND
- 		url = #url# AND
- 		users = #users#  AND
 		delYn = 'NO'
  </select>
 
@@ -452,13 +440,15 @@
 <insert id="userDBInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDBOriginalDAO">
 	INSERT INTO tadpole_db( 
 		user_seq, operation_type, dbms_type, url, url_user_parameter, db, group_name, display_name, host, port, locale, passwd, users, 
-		is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser, is_monitoring, is_visible, is_summary_report, 
-		is_lock
+		is_profile, profile_select_mill, question_dml, is_readOnlyConnect, is_autocommit, is_showtables, is_external_browser, is_monitoring, is_visible, 
+		is_summary_report, 
+		is_lock,
+		create_time
 	)
 	VALUES(
 		#user_seq#, #operation_type#, #dbms_type#, #url#, #url_user_parameter#, #db#, #group_name#, #display_name#, #host#, #port#, #locale#, #passwd#, #users#, 
 		#is_profile#, #profile_select_mill#, #question_dml#, #is_readOnlyConnect#, #is_autocommit#, #is_showtables#, #is_external_browser#, #is_monitoring#, #is_visible#, #is_summary_report#,
-		#is_lock#
+		#is_lock#, #create_time#
 	);
 		
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
@@ -469,6 +459,7 @@
 			dbms_type = #dbms_type# AND
 			group_name = #group_name# AND
 			display_name = #display_name# AND
+			create_time = #create_time# AND 
 			delYn = 'NO'
 	</selectKey>
 </insert>
@@ -584,7 +575,8 @@
 
 <update id="userDBRoleUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 	UPDATE tadpole_user_db_role
-	SET role_id = #role_id#, 
+	SET role_id = #role_id#,
+		is_resource_download = #is_resource_download#,
 		terms_of_use_starttime = #terms_of_use_starttime#, 
 		terms_of_use_endtime = #terms_of_use_endtime#
 	WHERE seq = #seq# 

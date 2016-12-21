@@ -48,8 +48,11 @@
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.applicattion.start"/>
       <plugin id="com.hangum.tadpole.cipher.core"/>
+      <plugin id="com.hangum.tadpole.cipher.old.core"/>
       <plugin id="com.hangum.tadpole.commons.admin.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
+      <plugin id="com.hangum.tadpole.commons.otp.core"/>
+      <plugin id="com.hangum.tadpole.commons.otp.google.core"/>
       <plugin id="com.hangum.tadpole.commons.utils"/>
       <plugin id="com.hangum.tadpole.commons.utils.zip"/>
       <plugin id="com.hangum.tadpole.compare.core"/>

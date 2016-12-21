@@ -1,4 +1,9 @@
+package com.hangum.tadpole.commons.otp;
+
+import com.hangum.tadpole.commons.otp.google.core.Messages;
+
 /*******************************************************************************
+
  * Copyright (c) 2014 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
@@ -8,7 +13,6 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.commons.libs.core.googleauth;
 
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
@@ -22,15 +26,15 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
  * @author hangum
  *
  */
-public class GoogleAuthManager {
+public class OTPAuthManager {
 
-	private static GoogleAuthManager instance = null;
+	private static OTPAuthManager instance = null;
 	
-	private GoogleAuthManager() {}
+	private OTPAuthManager() {}
 	
-	public static GoogleAuthManager getInstance() {
+	public static OTPAuthManager getInstance() {
 		if(instance == null) {
-			instance = new GoogleAuthManager();
+			instance = new OTPAuthManager();
 		}
 		return instance;
 	}
@@ -65,13 +69,20 @@ public class GoogleAuthManager {
 	 * 
 	 * @param secret
 	 * @param code
+	 * @param strOTPCode 
 	 * @return
 	 */
-	public boolean isValidate(String secret, int code) {
+	public boolean isValidate(String email, String secret, String strOTPCode) throws Exception {
 		GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
 		googleAuthenticator.setWindowSize(10);  //should give 5 * 30 seconds of grace...
 		
-        boolean isCodeValid = googleAuthenticator.authorize(secret, code);
+		int intCode = 0;
+		try {
+			intCode = Integer.parseInt(strOTPCode);
+		} catch(Exception e){}
+		
+        boolean isCodeValid = googleAuthenticator.authorize(secret, intCode);
+        if(!isCodeValid)  throw new Exception(Messages.get().OTP_invalid);
         return isCodeValid;
 	}
 	

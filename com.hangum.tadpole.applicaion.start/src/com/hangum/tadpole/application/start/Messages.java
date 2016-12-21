@@ -41,7 +41,6 @@ public class Messages {
 	public String AboutDialog_5;
 	public String AboutDialog_6;
 	public String AboutDialog_7;
-	public String AboutDialog_8;
 	public String AboutDialog_lblReleaseDate_text;
 	public String UserInformationDialog_5;
 	public String SelectPerspectiveDialog_0;

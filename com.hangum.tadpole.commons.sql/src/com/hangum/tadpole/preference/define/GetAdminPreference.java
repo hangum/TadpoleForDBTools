@@ -63,6 +63,15 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * system LDAP User
+	 * @return
+	 */
+	public static String getLDAPUser() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_LDAP_USER, AdminPreferenceDefine.SYSTEM_LDAP_USER_VALUE);
+	}
+	
+	/**
 	 * system LDAP authentication
 	 * @return
 	 */
@@ -78,6 +87,16 @@ public class GetAdminPreference extends AbstractPreference {
 	public static String getApiServerURL() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.API_SERVER_URL, AdminPreferenceDefine.API_SERVER_URL_VALUE);
+	}
+
+	/**
+	 * 디비 연결시 묻는 타입
+	 * 
+	 * @return
+	 */
+	public static String getConnectionAskType() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.DB_CONNECTION_ASK, AdminPreferenceDefine.DB_CONNECTION_ASK_VALUE);
 	}
 	
 	/**
@@ -214,11 +233,11 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		if(dto == null) {
 			dto = getSMTPINFO();
-			if("".equals(dto.getSendgrid_api())) {
-				if("".equals(dto.getEmail()) || "".equals(dto.getPasswd())) {
-					throw new Exception("Doesn't setting is SMTP Server.");
-				}
-			}
+//			if("".equals(dto.getSendgrid_api())) {
+//				if("".equals(dto.getEmail()) || "".equals(dto.getPasswd())) {
+//					throw new Exception("Doesn't setting is SMTP Server.");
+//				}
+//			}
 			
 			context.setAttribute("smtpinfo", dto); //$NON-NLS-1$
 		}
@@ -262,5 +281,7 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		return dto;
 	}
+
+	
 
 }

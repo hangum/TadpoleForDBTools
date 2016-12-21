@@ -47,7 +47,7 @@ import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
-import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnDeleteAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.TableColumnModifyAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -237,7 +237,7 @@ public class TableColumnComposite extends AbstractTableComposite {
 		tableColumnModifyAction = new TableColumnModifyAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES, "Table"); //$NON-NLS-1$
 		
 		//  컬럼을 에디터로 복사하기 
-		tableColumnSelectionAction = new ObjectExplorerSelectionAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES); //$NON-NLS-1$
+		tableColumnSelectionAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES); //$NON-NLS-1$
 		
 		// menu	
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$

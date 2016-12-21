@@ -188,8 +188,8 @@ public class TadpoleSystem_UserInfoData {
 		updateUserInfoData(PreferenceDefine.DEFAULT_TAB_SIZE_PREFERENCE, tabSize);
 		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_DECODE_PREFERENCE, sqlFormatDecode);
 		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_IN_PREFERENCE, sqlFormatIn);
-		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE, tabSize);
-		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE, txtNewLineBefeoreAndOr);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_AND_OR_PREFERENCE, txtNewLineBefeoreAndOr);
+		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_NEWLINE_BEFAORE_COMMA_PREFERENCE, txtNewLineBefeoreComma);
 		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_REMOVE_EMPTY_LINE_PREFERENCE, txtRemoveEmptyLine);
 		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_WORD_BREAK_PREFERENCE, txtWordbreak);
 		updateUserInfoData(PreferenceDefine.SQL_FORMATTER_WORD_WIDTH_PREFERENCE, strTextWidth);

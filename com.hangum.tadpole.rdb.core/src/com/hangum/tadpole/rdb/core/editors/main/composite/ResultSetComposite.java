@@ -34,7 +34,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -54,10 +53,12 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -75,8 +76,6 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
-import com.hangum.tadpole.engine.utils.LicenseDAO;
-import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -88,7 +87,6 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
-import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterObject;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
@@ -109,6 +107,9 @@ public class ResultSetComposite extends Composite {
 
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(ResultSetComposite.class);
+	
+	/** parameter dialog */
+	private List<ParameterDialog> listParameterDialog = new ArrayList<>();
 	
 	/** 명령 완료 메시지 */
 	private static final String CMD_COMPLETE_MSG = CommonMessages.get().CommandCoompleted;
@@ -291,16 +292,11 @@ public class ResultSetComposite extends Composite {
 			JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
 			int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
 			if(paramCnt > 0) {
-				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), paramCnt);
-				if(Dialog.OK == epd.open()) {
-					ParameterObject paramObj = epd.getParameterObject();
-					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
-					reqQuery.setStatementParameter(paramObj.getParameter());
-					
-					return true;
-				} else {
-					return false;
-				}
+		
+				ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.JAVA_BASIC, reqQuery, getUserDB(), reqQuery.getSql(), paramCnt);
+				epd.open();
+				listParameterDialog.add(epd);
+				return false;
 			}
 		} catch(Exception e) {
 			logger.error("Java style parameter parse", e); //$NON-NLS-1$
@@ -314,18 +310,10 @@ public class ResultSetComposite extends Composite {
 			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
 			if(!mapIndexToName.isEmpty()) {
 				
-				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
-				if(Dialog.OK == epd.open()) {
-					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-					reqQuery.setSql(strSQL);
-					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
-					reqQuery.setStatementParameter(paramObj.getParameter());
-					
-					if(logger.isDebugEnabled()) logger.debug("[Oracle Type] User parameter query is  " + strSQL); //$NON-NLS-1$
-					return true;
-				} else {
-					return false;
-				}
+				ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.ORACLE, reqQuery, getUserDB(), strSQL, mapIndexToName);
+				epd.open();
+				listParameterDialog.add(epd);
+				return false;
 			}
 		} catch(Exception e) {
 			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
@@ -337,18 +325,10 @@ public class ResultSetComposite extends Composite {
 		Map<Integer, String> mapIndexToName = mybatisShapeUtil.getMapIndexToName();
 		if(!mapIndexToName.isEmpty()) {
 			
-			ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
-			if(Dialog.OK == epd.open()) {
-				ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-				reqQuery.setSql(strSQL);
-				reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
-				reqQuery.setStatementParameter(paramObj.getParameter());
-				
-				if(logger.isDebugEnabled()) logger.debug("[mybatisShapeUtil] User parameter query is  " + strSQL); //$NON-NLS-1$
-				return true;
-			} else {
-				return false;
-			}
+			ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.MYBATIS_SHARP, reqQuery, getUserDB(), strSQL, mapIndexToName);
+			epd.open();
+			listParameterDialog.add(epd);
+			return false;
 		}
 		
 		if(GetPreferenceGeneral.getIsMyBatisDollor()) {
@@ -356,18 +336,11 @@ public class ResultSetComposite extends Composite {
 			strSQL = mybatisDollarUtil.parse(reqQuery.getSql());
 			mapIndexToName = mybatisDollarUtil.getMapIndexToName();
 			if(!mapIndexToName.isEmpty()) {
-				ParameterDialog epd = new ParameterDialog(runShell, getUserDB(), mapIndexToName);
-				if(Dialog.OK == epd.open()) {
-					ParameterObject paramObj = epd.getOracleParameterObject(mapIndexToName);
-					reqQuery.setSql(strSQL);
-					reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
-					reqQuery.setStatementParameter(paramObj.getParameter());
-					
-					if(logger.isDebugEnabled()) logger.debug("[mybatisDollarUtil] User parameter query is  " + strSQL); //$NON-NLS-1$
-					return true;
-				} else {
-					return false;
-				}
+			
+				ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.MYBATIS_DOLLAR, reqQuery, getUserDB(), strSQL, mapIndexToName);
+				epd.open();
+				listParameterDialog.add(epd);
+				return false;
 			}
 		}
 
@@ -405,6 +378,16 @@ public class ResultSetComposite extends Composite {
 			if(!ifIsParameterQuery(reqQuery)) return false;
 		}
 		
+		return _executeQuery(reqQuery);
+	}
+	
+	/**
+	 * 실제 쿼리를 호출한다.
+	 * 
+	 * @param reqQuery
+	 * @return
+	 */
+	public boolean _executeQuery(final RequestQuery reqQuery) {
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
 		controlProgress(true);
 		
@@ -738,9 +721,9 @@ public class ResultSetComposite extends Composite {
 					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEmail, getUserDB());
 				}
 			}
-			if(javaConn == null) {
-				throw new Exception("Cann't create session. Please check system.");
-			}
+//			if(javaConn == null) {
+//				throw new Exception("Cann't create session. Please check system.");
+//			}
 			
 			// if statement type is prepared statement?
 			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
@@ -1098,6 +1081,9 @@ public class ResultSetComposite extends Composite {
 	@Override
 	public void dispose() {
 		super.dispose();
+		for (ParameterDialog parameterDialog : listParameterDialog) {
+			if(parameterDialog != null) parameterDialog.close();
+		}
 	}
 
 	/**
@@ -1129,4 +1115,5 @@ public class ResultSetComposite extends Composite {
 	public boolean isSelect() {
 		return isSelect;
 	}
+	
 }

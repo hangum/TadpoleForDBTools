@@ -245,7 +245,7 @@ public class MySQLTaableCreateDialog extends TitleAreaDialog {
 				isCreated = true;
 				
 				ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ExplorerViewer.ID);
-				if(ev != null) ev.refreshTable(false, strTableName);
+				if(ev != null) ev.refreshTable(true, strTableName);
 		
 				super.okPressed();
 			} catch (Exception e) {

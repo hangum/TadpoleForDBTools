@@ -29,8 +29,7 @@ import org.eclipse.rap.rwt.service.ServiceHandler;
  */
 public class DownloadServiceHandler implements ServiceHandler {
 	public static final String ID = "com.hangum.db.browser.rap.core.editors.main.internals.DownloadServiceHandler";
-	private static final Logger logger = Logger
-			.getLogger(DownloadServiceHandler.class);
+	private static final Logger logger = Logger.getLogger(DownloadServiceHandler.class);
 	private String name;
 	private String contentType = "";
 	private byte[] byteContent;
@@ -70,8 +69,7 @@ public class DownloadServiceHandler implements ServiceHandler {
 		try {
 			name = URLEncoder.encode(name, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("download make exception", e);
 		}
 		this.name = name;
 	}

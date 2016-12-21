@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.login.core.dialog;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
@@ -44,16 +45,17 @@ import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.commons.libs.core.googleauth.GoogleAuthManager;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
+import com.hangum.tadpole.engine.security.OTPInputDialog;
 import com.hangum.tadpole.login.core.message.LoginDialogMessages;
-import com.hangum.tadpole.login.core.otp.GoogleOTPLoginDialog;
+import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
@@ -87,6 +89,7 @@ public class LoginDialog extends AbstractLoginDialog {
 	
 	private Composite compositeHead;
 	private Composite compositeTail;
+	private Label lblLicense;
 	
 	public LoginDialog(Shell shell) {
 		super(shell);
@@ -130,7 +133,11 @@ public class LoginDialog extends AbstractLoginDialog {
 		compositeLogin.setLayout(new GridLayout(3, false));
 		
 		lblEmail = new Label(compositeLogin, SWT.NONE);
-		lblEmail.setText(LoginDialogMessages.get().LoginDialog_1);
+		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+			lblEmail.setText(CommonMessages.get().Email);	
+		} else {
+			lblEmail.setText(CommonMessages.get().ID);
+		}
 		
 		textEMail = new Text(compositeLogin, SWT.BORDER);
 		textEMail.addKeyListener(new KeyAdapter() {
@@ -204,7 +211,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		compositeTail.setLayout(gl_compositeTail);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Label lblLicense = new Label(compositeTail, SWT.NONE);
+		lblLicense = new Label(compositeTail, SWT.NONE);
 		lblLicense.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblLicense.setText("License is GNU Lesser General Public License v.3");
 		
@@ -213,10 +220,10 @@ public class LoginDialog extends AbstractLoginDialog {
 		lblDocument.setText("<a href='" + LoginDialogMessages.get().LoginDialog_lblNewLabel_text_1 + "' target='_blank'>Document</a>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		lblDocument.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
-		Label lblIssue = new Label(compositeTail, SWT.NONE);
-		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>Feedback</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+//		Label lblIssue = new Label(compositeTail, SWT.NONE);
+//		lblIssue.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+//		lblIssue.setText("<a href='https://github.com/hangum/TadpoleForDBTools/issues' target='_blank'>Feedback</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+//		lblIssue.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 
 		AnalyticCaller.track("login"); //$NON-NLS-1$
 		
@@ -247,26 +254,42 @@ public class LoginDialog extends AbstractLoginDialog {
 		if(!validation(strEmail, strPass)) return;
 		
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
-			
-			// firsttime email confirm
-			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
-				InputDialog inputDialog=new InputDialog(getShell(), LoginDialogMessages.get().LoginDialog_10, String.format(LoginDialogMessages.get().LoginDialog_17, strEmail), "", null); //$NON-NLS-3$ //$NON-NLS-1$
-				if(inputDialog.open() == Window.OK) {
-					if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
-						throw new Exception(LoginDialogMessages.get().LoginDialog_19);
-					} else {
-						TadpoleSystem_UserQuery.updateEmailConfirm(strEmail);
-					}
-				} else {
-					throw new Exception(LoginDialogMessages.get().LoginDialog_20);
-				}
-			}
-			
-			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
-				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_27);
+			UserDAO userDao = new UserDAO();
+			if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
+				userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
 				
-				return;
+				// firsttime email confirm
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getIs_email_certification())) {
+					InputDialog inputDialog=new InputDialog(getShell(), LoginDialogMessages.get().LoginDialog_10, String.format(LoginDialogMessages.get().LoginDialog_17, strEmail), "", null); //$NON-NLS-3$ //$NON-NLS-1$
+					if(inputDialog.open() == Window.OK) {
+						if(!userDao.getEmail_key().equals(inputDialog.getValue())) {
+							throw new Exception(LoginDialogMessages.get().LoginDialog_19);
+						} else {
+							TadpoleSystem_UserQuery.updateEmailConfirm(strEmail);
+						}
+					} else {
+						throw new Exception(LoginDialogMessages.get().LoginDialog_20);
+					}
+				}
+				
+				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDao.getApproval_yn())) {
+					MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_27);
+					
+					return;
+				}
+				
+			// ldap login
+			} else {
+				
+				ldapLogin(strEmail, strPass);
+				
+				List<UserDAO> listUserDAO = TadpoleSystem_UserQuery.findExistUser(strEmail);
+				if(listUserDAO.isEmpty()) {
+					// 신규 사용자로 추가하고 user 리스트를 가져옵니다.
+					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail);
+				} else {
+					userDao = listUserDAO.get(0);
+				}
 			}
 			
 			// login
@@ -275,7 +298,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			String strAllowIP = userDao.getAllow_ip();
 			String ip_servletRequest = RequestInfoUtils.getRequestIP();
 			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
-			if(logger.isDebugEnabled())logger.debug(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
+			if(logger.isDebugEnabled()) logger.debug(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
 				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_28);
@@ -283,11 +306,9 @@ public class LoginDialog extends AbstractLoginDialog {
 			}
 			
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
-				GoogleOTPLoginDialog otpDialog = new GoogleOTPLoginDialog(getShell());
-				otpDialog.open(); 
-
-				if(!GoogleAuthManager.getInstance().isValidate(userDao.getOtp_secret(), otpDialog.getIntOTPCode())) {
-					throw new Exception(LoginDialogMessages.get().LoginDialog_2);
+				OTPInputDialog otpDialog = new OTPInputDialog(getShell(), userDao.getEmail(), userDao.getOtp_secret());
+				if(Dialog.CANCEL == otpDialog.open()) {
+					return;
 				}
 			}
 			
@@ -372,14 +393,16 @@ public class LoginDialog extends AbstractLoginDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		btnNewUser = createButton(parent, ID_NEW_USER, LoginDialogMessages.get().LoginDialog_button_new_user, false);
-		try {
-			SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-			if(smtpDto.isValid()) { //$NON-NLS-1$
-				btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
+		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+			btnNewUser = createButton(parent, ID_NEW_USER, LoginDialogMessages.get().LoginDialog_button_new_user, false);
+			try {
+				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+				if(smtpDto.isValid()) { //$NON-NLS-1$
+					btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
+				}
+			} catch (Exception e) {
+	//			ignore exception
 			}
-		} catch (Exception e) {
-//			ignore exception
 		}
 	}
 	
@@ -387,6 +410,8 @@ public class LoginDialog extends AbstractLoginDialog {
 	 * initialize ui
 	 */
 	private void initUI() {
+		lblLicense.setText(LicenseValidator.getCustomerInfo());
+		
 		initCookieData();
 		if("".equals(textEMail.getText())) {
 			textEMail.setFocus();
@@ -447,7 +472,12 @@ public class LoginDialog extends AbstractLoginDialog {
 		btnLogin.setText(LoginDialogMessages.get().LoginDialog_15);
 		
 		btnCheckButton.setText(LoginDialogMessages.get().LoginDialog_9);
-		lblEmail.setText(LoginDialogMessages.get().LoginDialog_1);
+		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+			lblEmail.setText(CommonMessages.get().Email);	
+		} else {
+			lblEmail.setText(CommonMessages.get().ID);
+		}
+		
 		lblPassword.setText(LoginDialogMessages.get().LoginDialog_4);
 		lblLanguage.setText(LoginDialogMessages.get().LoginDialog_lblLanguage_text);
 		

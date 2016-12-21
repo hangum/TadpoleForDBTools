@@ -80,7 +80,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 			public void keyReleased(KeyEvent e) {
 				if(e.keyCode == SWT.TAB) {
 					String strEmail =  textEmail.getText() + e.character;
-					if(!ValidChecker.isValidEmailAddress(strEmail)) {
+					if("".equals(strEmail)){//!ValidChecker.isValidEmailAddress(strEmail)) {
 						errorSet(textEmail, Messages.get().SystemAdminWizardPage_35);
 					} else {
 						setErrorMessage(null);
@@ -157,9 +157,9 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 		if("".equals(strEmail)) { //$NON-NLS-1$
 			errorSet(textEmail, Messages.get().SystemAdminWizardPage_35);
 			return;
-		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
-			errorSet(textEmail, Messages.get().SystemAdminWizardPage_48);
-			return;
+//		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
+//			errorSet(textEmail, Messages.get().SystemAdminWizardPage_48);
+//			return;
 		} else if(!ValidChecker.isPasswordLengthChecker(strPass)) { //$NON-NLS-1$
 			errorSet(textPasswd, Messages.get().SystemAdminWizardPage_37);
 			return;

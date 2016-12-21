@@ -54,6 +54,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
@@ -178,6 +179,9 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 		dropAction_DBLink = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, Messages.get().DBLinkDrop); //$NON-NLS-1$
 		refreshAction_DBLink = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, CommonMessages.get().Refresh); //$NON-NLS-1$
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.LINK, Messages.get().ViewDDL); //$NON-NLS-1$
+		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "DBLink"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -188,8 +192,12 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 		}
 		menuMgr.add(refreshAction_DBLink);
 		menuMgr.add(new Separator());
+		
 		viewDDLAction.setEnabled(true);
 		menuMgr.add(viewDDLAction);
+		
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		dbLinkListViewer.getTable().setMenu(menuMgr.createContextMenu(dbLinkListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, dbLinkListViewer);
@@ -300,6 +308,8 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 		refreshAction_DBLink.setUserDB(getUserDB());
 		//executeAction.setUserDB(getUserDB());
 		viewDDLAction.setUserDB(getUserDB());
+		
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 
 	/**

@@ -26,9 +26,13 @@ public class AdminPreferenceDefine {
 	/** system login method */
 	public static final String SYSTEM_LOGIN_METHOD = _PREFIX + "SYSTEM_LOGIN_METHOD";
 	public static final String SYSTEM_LOGIN_METHOD_VALUE = "original";
+	public static final String SYSTEM_LOGIN_METHOD_LDAP = "LDAP";
 	
 	public static final String SYSTEM_LDAP_URL = _PREFIX + "SYSTEM_LDAP_URL";
 	public static final String SYSTEM_LDAP_URL_VALUE = "";
+	
+	public static final String SYSTEM_LDAP_USER = _PREFIX + "SYSTEM_LDAP_USER";
+	public static final String SYSTEM_LDAP_USER_VALUE = "";
 	
 	public static final String SYSTEM_LDAP_AUTHENTICATION = _PREFIX + "SYSTEM_LDAP_AUTHENTICATION";
 	public static final String SYSTEM_LDAP_AUTHENTICATION_VALUE = "simple";
@@ -51,7 +55,7 @@ public class AdminPreferenceDefine {
 	
 	/** 사용자가 디비를 추가 할수 있는 카운트 */
 	public static final String DEFAULT_ADD_DB_CNT = _PREFIX + "DEFAULT_ADD_DB_CNT";
-	public static final String DEFAULT_ADD_DB_CNT_VALUE = "10";
+	public static final String DEFAULT_ADD_DB_CNT_VALUE = "50";
 	
 	/** 가입 일 부터 서비스 사용 제한 일 */
 	public static final String SERVICE_DURATION_DAY = _PREFIX + "SERVICE_DURATION_DAY";
@@ -62,6 +66,12 @@ public class AdminPreferenceDefine {
 	 */
 	public static final String API_SERVER_URL = _PREFIX + "API_SERVER_URL";
 	public static final String API_SERVER_URL_VALUE = "http://localhost:8080/api";
+	
+	/**
+	 * 디비연결시 사용자에게 묻기.
+	 */
+	public static final String DB_CONNECTION_ASK = _PREFIX + "DB_CONNECTION_ASK";
+	public static final String DB_CONNECTION_ASK_VALUE = "NO";
 	
 	/**
 	 * Define monitoring

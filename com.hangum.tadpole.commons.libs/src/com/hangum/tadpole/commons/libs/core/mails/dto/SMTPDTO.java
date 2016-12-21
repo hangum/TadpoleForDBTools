@@ -31,7 +31,7 @@ public class SMTPDTO {
 	 * @return
 	 */
 	public boolean isSMTPValid() {
-		if("".equals(getEmail()) || "".equals(getPasswd())) {
+		if("".equals(getEmail())) {
 			return false;
 		}
 		
@@ -48,11 +48,11 @@ public class SMTPDTO {
 	}
 	
 	public boolean isValid() {
-		if("".equals(getSendgrid_api())) {
-			if("".equals(getEmail()) || "".equals(getPasswd())) {
-				return false;
-			}
-		}
+//		if("".equals(getSendgrid_api())) {
+//			if("".equals(getEmail()) || "".equals(getPasswd())) {
+//				return false;
+//			}
+//		}
 		
 		return true;
 	}
@@ -126,6 +126,13 @@ public class SMTPDTO {
 	public final void setPasswd(String passwd) {
 		this.passwd = passwd;
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SMTPDTO [sendgrid_api=" + sendgrid_api + ", host=" + host + ", port=" + port + ", email=" + email
+				+ ", passwd=" + "]";
+	}
 }

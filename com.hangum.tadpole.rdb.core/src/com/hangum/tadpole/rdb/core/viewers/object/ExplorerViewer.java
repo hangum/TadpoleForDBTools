@@ -412,7 +412,8 @@ public class ExplorerViewer extends ViewPart {
 					HashMap mapData = (HashMap)object;
 					comboSchema.add(""+mapData.get("schema"));
 				}
-				comboSchema.setText("public");
+				comboSchema.select(0);
+				userDB.setSchema(comboSchema.getText());
 			} catch(Exception e) {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
@@ -942,7 +943,7 @@ public class ExplorerViewer extends ViewPart {
 	 * procedure 정보를 최신으로 갱신 합니다.
 	 */
 	public void refreshProcedure(boolean boolRefresh, String strObjectName) {
-		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.PROCEDURE_PARAMETER, userDB.getDefaultSchemanName(), null);
+		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.PROCEDURES, userDB.getDefaultSchemanName(), null);
 		procedureComposite.refreshProcedure(userDB, boolRefresh, strObjectName);
 	}
 

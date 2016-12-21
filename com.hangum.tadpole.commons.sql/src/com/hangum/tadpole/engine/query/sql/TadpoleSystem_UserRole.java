@@ -104,7 +104,7 @@ public class TadpoleSystem_UserRole {
 	 */
 	public static void updateTadpoleUserDBRole(TadpoleUserDbRoleDAO userDBRoleDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.insert("userDBRoleUpdate", userDBRoleDao);
+		sqlClient.update("userDBRoleUpdate", userDBRoleDao);
 	}
 
 	/**

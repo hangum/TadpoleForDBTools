@@ -64,7 +64,10 @@ public class TadpoleSecurityManager {
 	public boolean isLock(final UserDBDAO userDB) {
 		if(userDB == null) return false;
 		
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) || PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword())) {
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock())		// 디비가 잠겨 있거나  
+				|| PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getSaveDBPassword()) 		// 패스워드를 저장하지 않거나
+				|| !PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getConnectionAskType()) 	// 어드민이 디비 연결시 마다 묻도록 했거나
+		) {
 			if(!SessionManager.isUnlockDB(userDB)) {
 				return false;
 			}
@@ -81,25 +84,86 @@ public class TadpoleSecurityManager {
 	 */
 	public boolean ifLockOpenDialog(final UserDBDAO userDB) {
 		if(!isLock(userDB)) {
-			return openPasswdDialog(userDB);
+			return openAskDialog(userDB);
 		}
 		
 		return true;
 	}
 	
 	/**
-	 * Open password dialog
+	 * 패스워드, otp, 패드워드 + otp 다이얼로그를 열지 결정한다.
+	 * 
 	 * @param userDB
 	 * @return
 	 */
-	private boolean openPasswdDialog(final UserDBDAO userDB) {
+	private boolean openAskDialog(final UserDBDAO userDB) {
 		// SQLite은 패스워드가 없으므로..
 		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			SessionManager.setUnlokDB(userDB);
 			return true;
 		}
 		
-		DBLockDialog dialog = new DBLockDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
+		
+		// PublicTadpoleDefine#DB_CONNECTION_ASK  NO, PASSWORD, OTP, PASSWORD_OTP
+		final String strConnectionASK = GetAdminPreference.getConnectionAskType();
+		if(!"NO".equals(strConnectionASK)) {
+			// password
+			if(strConnectionASK.equals(PublicTadpoleDefine.DB_CONNECTION_ASK.PASSWORD.toString())) {
+				return checkPasswd(userDB);	
+			} else if(strConnectionASK.equals(PublicTadpoleDefine.DB_CONNECTION_ASK.OTP.toString())) {
+				return checkOTP(userDB);
+			} else if(strConnectionASK.equals(PublicTadpoleDefine.DB_CONNECTION_ASK.PASSWORD_OTP.toString())) {
+				return checkPasswordOTP(userDB);
+			}
+			
+			return true;
+		} else {
+			return checkPasswd(userDB);
+		}
+	}
+	
+	/**
+	 * check password dialog
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	private boolean checkPasswordOTP(final UserDBDAO userDB) {
+		DBPasswordAndOTPDialog dialog = new DBPasswordAndOTPDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
+		if(Dialog.OK == dialog.open()) {
+			SessionManager.setUnlokDB(userDB);
+			return true;
+		} else {
+			userDB.setPasswd(Utils.getUniqueDigit(7));
+			return false;
+		}
+	}
+	
+	/**
+	 * check password dialog
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	private boolean checkOTP(final UserDBDAO userDB) {
+		OTPInputDialog dialog = new OTPInputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SessionManager.getEMAIL(), SessionManager.getOTPSecretKey());
+		if(Dialog.OK == dialog.open()) {
+			SessionManager.setUnlokDB(userDB);
+			return true;
+		} else {
+			userDB.setPasswd(Utils.getUniqueDigit(7));
+			return false;
+		}
+	}
+	
+	/**
+	 * check password dialog
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	private boolean checkPasswd(final UserDBDAO userDB) {
+		DBPasswordDialog dialog = new DBPasswordDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), userDB);
 		if(Dialog.OK == dialog.open()) {
 			SessionManager.setUnlokDB(userDB);
 			return true;

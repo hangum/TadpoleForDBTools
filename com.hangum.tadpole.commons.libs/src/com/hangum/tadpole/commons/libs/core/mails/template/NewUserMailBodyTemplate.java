@@ -45,6 +45,4 @@ public class NewUserMailBodyTemplate extends MailBodyTemplate {
 		strContent.append(makeTail());
 		return strContent.toString();
 	}
-	
-	
 }

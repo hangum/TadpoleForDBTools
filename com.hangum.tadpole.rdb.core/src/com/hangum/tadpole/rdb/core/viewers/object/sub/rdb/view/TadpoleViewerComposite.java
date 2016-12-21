@@ -60,6 +60,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -311,6 +312,9 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().ViewDDL);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS, Messages.get().TadpoleViewerComposite_6);
 		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.VIEWS);
+		
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
@@ -330,6 +334,8 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		viewListViewer.getTable().setMenu(menuMgr.createContextMenu(viewListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, viewListViewer);
@@ -403,6 +409,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		
 		// table column
 //		tableColumnSelectionAction.setUserDB(getUserDB());
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -427,7 +434,6 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 		if(refreshAction_View != null) refreshAction_View.dispose();
 		if(viewDDLAction != null) viewDDLAction.dispose();
 		if(objectCompileAction != null) objectCompileAction.dispose();
-		
 //		if(tableColumnSelectionAction != null) tableColumnSelectionAction.dispose();
 	}
 	

@@ -47,6 +47,12 @@ public class PublicTadpoleDefine {
 
 	/** 시스템 사용 그룹 정의 */
 	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  
+	
+	/** 디비 연결시 엑션 */
+	public static enum DB_CONNECTION_ASK {NO, PASSWORD, OTP, PASSWORD_OTP};
+	
+	/** 사용자 쿼리를 프리페어 스테이트 먼트로 처리하는 파라미터 타입 */
+	public static enum PARAMETER_TYPE {JAVA_BASIC, ORACLE, MYBATIS_SHARP, MYBATIS_DOLLAR};
 
 	/** rest api service key */
 	public static final String SERVICE_KEY_NAME = "serviceID";
@@ -117,7 +123,7 @@ public class PublicTadpoleDefine {
 	}
 	
 	/** 외부 계정으로 올챙이가 접속 할때의 외부 계정 리스트. 현재는 external_account 의 type에 사용. */
-	public enum EXTERNAL_ACCOUNT {AMAZONRDS};
+	public enum EXTERNAL_ACCOUNT {AMAZONRDS, DBSAFER};
 	
 	/** user login type */
 	public static enum INPUT_TYPE {NORMAL, GOOGLE_OAUTH, LDAP};

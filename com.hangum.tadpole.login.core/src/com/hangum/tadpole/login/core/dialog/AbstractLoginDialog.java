@@ -15,11 +15,14 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.engine.utils.LicenseDAO;
-import com.hangum.tadpole.engine.utils.LicenseValidator;
+import com.hangum.tadpole.commons.util.LDAPUtil;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -43,6 +46,16 @@ public class AbstractLoginDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText(String.format("%s", SystemDefine.NAME)); //$NON-NLS-1$
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
+	}
+	
+	/**
+	 * LDAP Login
+	 * 
+	 * @param strEmail
+	 * @param strPass
+	 */
+	protected void ldapLogin(String strEmail, String strPass) throws TadpoleAuthorityException {
+		LDAPUtil.ldapLogin(strEmail, strPass, GetAdminPreference.getLDAPURL(), GetAdminPreference.getLDAPAuthentication(), GetAdminPreference.getLDAPUser());
 	}
 	
 	/**

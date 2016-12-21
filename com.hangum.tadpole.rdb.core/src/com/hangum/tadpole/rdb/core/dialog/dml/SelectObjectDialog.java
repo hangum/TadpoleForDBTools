@@ -209,7 +209,7 @@ public class SelectObjectDialog extends Dialog {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("initialize data", e);
 		}
 
 	}

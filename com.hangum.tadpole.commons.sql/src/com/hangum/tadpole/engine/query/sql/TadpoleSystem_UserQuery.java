@@ -131,7 +131,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setAllow_ip(strAllowIP);
 		
 		loginDAO.setIs_regist_db(GetAdminPreference.getIsAddDB());
-		loginDAO.setIs_shared_db(GetAdminPreference.getIsAddDB());
+		loginDAO.setIs_shared_db(GetAdminPreference.getIsSharedDB());
 		loginDAO.setLimit_add_db_cnt(NumberUtils.toInt(GetAdminPreference.getDefaultAddDBCnt()));
 		loginDAO.setIs_modify_perference(GetAdminPreference.getIsPreferenceModify());
 		loginDAO.setService_start(new Timestamp(System.currentTimeMillis()));
@@ -241,7 +241,7 @@ public class TadpoleSystem_UserQuery {
 	public static UserDAO login(String email, String passwd) throws TadpoleAuthorityException, TadpoleSQLManagerException, SQLException {
 		UserDAO login = new UserDAO();
 		login.setEmail(email);
-		login.setPasswd(CipherManager.getInstance().encryption(passwd));
+//		login.setPasswd(CipherManager.getInstance().encryption(passwd));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$

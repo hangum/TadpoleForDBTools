@@ -8,10 +8,10 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.login.core.otp;
+package com.hangum.tadpole.engine.security;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -27,26 +27,34 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.login.core.Messages;
+import com.hangum.tadpole.engine.Messages;
 
 /**
- * Google OTP Dialog
+ * OTP input Dialog
  * 
  * @author hangum
  *
  */
-public class GoogleOTPLoginDialog extends Dialog {
-	private int intOTPCode;
+public class OTPInputDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(OTPInputDialog.class);
+	private String userID;
+	private String secretKey;
 	private Text textOTPCode;
 	
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param secretKey 
+	 * @param userID 
 	 */
-	public GoogleOTPLoginDialog(Shell parentShell) {
+	public OTPInputDialog(Shell parentShell, String userID, String secretKey) {
 		super(parentShell);
+		
+		this.userID = userID;
+		this.secretKey = secretKey;
 	}
 	
 	@Override
@@ -71,7 +79,6 @@ public class GoogleOTPLoginDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblOtpCode = new Label(container, SWT.NONE);
-		lblOtpCode.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblOtpCode.setText(Messages.get().OTP); //$NON-NLS-1$
 		
 		textOTPCode = new Text(container, SWT.BORDER);
@@ -87,16 +94,25 @@ public class GoogleOTPLoginDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
-		if(!NumberUtils.isNumber(strOTPCode)) {
+		if("".equals(strOTPCode)) {
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, Messages.get().OTPEmpty);//"OTP 값을 입력해 주십시오.");
 			textOTPCode.setFocus();
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().OTPLoginDialog_3); //$NON-NLS-1$
 			return;
 		}
 		
-		setIntOTPCode(NumberUtils.toInt(strOTPCode));
+		try {
+			GetOTPCode.isValidate(userID, secretKey, strOTPCode);
+		} catch(Exception e) {
+			logger.error("OTP check", e);
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
+			textOTPCode.setFocus();
+			return;
+		}
 		
 		super.okPressed();
 	}
+	
+	
 	
 	/**
 	 * Create contents of the button bar.
@@ -104,7 +120,8 @@ public class GoogleOTPLoginDialog extends Dialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Close, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Confirm, true); //$NON-NLS-1$
+		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false); //$NON-NLS-1$
 	}
 
 	/**
@@ -114,13 +131,4 @@ public class GoogleOTPLoginDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(450, 115);
 	}
-
-	public int getIntOTPCode() {
-		return intOTPCode;
-	}
-
-	public void setIntOTPCode(int intOTPCode) {
-		this.intOTPCode = intOTPCode;
-	}
-
 }

@@ -54,6 +54,7 @@ import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectAlterAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.DefaultLabelProvider;
@@ -180,7 +181,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		alterAction_Jobs = new ObjectAlterAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().ChangeJob);
 		dropAction_Jobs = new ObjectDropAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, 	Messages.get().RemoveJob); //$NON-NLS-1$
 		refreshAction_Jobs = new ObjectRefreshAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.JOBS, CommonMessages.get().Refresh); //$NON-NLS-1$
-
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+				
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu", "Jobs"); //$NON-NLS-1$ //$NON-NLS-2$
 		if(!isDDLLock()) {
@@ -191,6 +194,9 @@ public class TadpoleJobsComposite extends AbstractObjectComposite {
 		}
 		menuMgr.add(refreshAction_Jobs);
 		menuMgr.add(new Separator());
+		
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		jobsListViewer.getTable().setMenu(menuMgr.createContextMenu(jobsListViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, jobsListViewer);

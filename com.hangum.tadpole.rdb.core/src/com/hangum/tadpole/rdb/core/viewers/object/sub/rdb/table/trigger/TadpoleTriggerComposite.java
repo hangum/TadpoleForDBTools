@@ -48,6 +48,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.generate.GenerateViewDDLAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectCreatAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectDropAction;
+import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectExplorerSelectionToEditorAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.ObjectRefreshAction;
 import com.hangum.tadpole.rdb.core.actions.object.rdb.object.OracleObjectCompileAction;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.TriggerComparator;
@@ -142,6 +143,9 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		
 		viewDDLAction = new GenerateViewDDLAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().ViewDDL);
 		objectCompileAction = new OracleObjectCompileAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS, Messages.get().TadpoleTriggerComposite_5);
+		
+		// object copy to query editor
+		objectSelectionToEditorAction = new ObjectExplorerSelectionToEditorAction(getSite().getWorkbenchWindow(), PublicTadpoleDefine.OBJECT_TYPE.TABLES);
 
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -159,6 +163,8 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
 		}
+		menuMgr.add(new Separator());
+		menuMgr.add(objectSelectionToEditorAction);
 
 		triggerTableViewer.getTable().setMenu(menuMgr.createContextMenu(triggerTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, triggerTableViewer);
@@ -188,6 +194,8 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 		
 		viewDDLAction.setUserDB(getUserDB());
 		objectCompileAction.setUserDB(getUserDB());
+		
+		objectSelectionToEditorAction.setUserDB(getUserDB());
 	}
 	
 	/**
@@ -209,7 +217,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 */
 	public void refreshTrigger(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(tableDao == null) return;
-		if(!boolRefresh) if(showTrigger != null) return;
+		if(!boolRefresh) if(!showTrigger.isEmpty()) return;
 		this.userDB = userDB;
 		
 		try {
@@ -235,7 +243,7 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 	 * @param strObjectName 
 	 */
 	public void refreshAllTrigger(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
-		if(!boolRefresh) if(showTrigger != null) return;
+		if(!boolRefresh) if(!showTrigger.isEmpty()) return;
 		this.userDB = userDB;
 		
 		showTrigger = (List<TriggerDAO>)userDB.getDBObject(OBJECT_TYPE.TRIGGERS, userDB.getDefaultSchemanName());

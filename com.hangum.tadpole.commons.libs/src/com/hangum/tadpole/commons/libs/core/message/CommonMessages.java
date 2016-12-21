@@ -83,6 +83,7 @@ public class CommonMessages {
 	public String CantModifyPreferenc;
 	
 	public String Download;
+	public String ResourceDownload;
 
 	public String Role;
 
@@ -91,6 +92,12 @@ public class CommonMessages {
 	public String StartDate;
 
 	public String EndDate;
+
+	public String Authentication;
+
+	public String ID;
+
+	public String Test;
 	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

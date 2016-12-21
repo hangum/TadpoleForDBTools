@@ -13,6 +13,15 @@ import java.util.List;
  * @see original file location is (http://viralpatel.net/blogs/java-load-csv-file-to-database/)
  */
 public class DateUtil {
+
+	/**
+	 * 현재 시간의 세컨드 
+	 * @return
+	 */
+	public static long getDateSecond() {
+		Calendar _cal = Calendar.getInstance();
+		return (_cal.getTimeInMillis() % 1000) * 1000;
+	}
 	
 	/**
 	 * 몇개월 후

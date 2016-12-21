@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.zeroturnaround.zip.NameMapper;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -27,7 +28,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  *
  */
 public class ZipUtils {
-	
+	private static final Logger logger = Logger.getLogger(ZipUtils.class);
 	public static String pack(String fullPath) throws Exception {
 		int intlastSep = fullPath.lastIndexOf(File.separator);
 		
@@ -55,8 +56,7 @@ public class ZipUtils {
 							}
 							name = new String(name.getBytes(), "UTF-8");
 						} catch (UnsupportedEncodingException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							logger.error("zip pack", e);
 						}
 						return name;
 					}

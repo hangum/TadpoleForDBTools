@@ -33,6 +33,8 @@ public class Messages {
 	public String SendTemporaryPassword;
 
 	public String TadpoleHub;
+
+	public String operationResult;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
