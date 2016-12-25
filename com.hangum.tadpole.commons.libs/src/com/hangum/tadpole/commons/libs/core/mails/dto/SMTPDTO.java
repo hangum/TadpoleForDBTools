@@ -22,8 +22,8 @@ public class SMTPDTO {
 	
 	String sendgrid_api = "";
 	
-	String starttls_enable;
-	String isAuth;
+	String starttls_enable = "";
+	String isAuth = "";
 	String host = "";
 	String port = "";
 	String email = "";
