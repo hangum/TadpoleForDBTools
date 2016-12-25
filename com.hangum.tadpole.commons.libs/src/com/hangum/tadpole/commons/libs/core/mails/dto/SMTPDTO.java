@@ -11,21 +11,44 @@
 package com.hangum.tadpole.commons.libs.core.mails.dto;
 
 /**
- * SMTP DTO
+ * 메일 로그인 {@code PublicTadpoleDefine#MAIL_TYPE} (NONE, SENDGRID, SMTP)과 정보를 정의합니다. 
  * 
  * @author hangum
  *
  */
 public class SMTPDTO {
+	/** 로그인 타입 비정 {@code PublicTadpoleDefine#MAIL_TYPE} */
+	String loginMethodType = "";
+	
 	String sendgrid_api = "";
+	
+	String starttls_enable;
+	String isAuth;
 	String host = "";
 	String port = "";
 	String email = "";
 	String passwd = "";
 	
+	/** ldap domain에서 설정한 이름 */
+	String domain = "";
+	
 	public SMTPDTO() {
 	}
-	
+
+	/**
+	 * @return the loginMethodType
+	 */
+	public String getLoginMethodType() {
+		return loginMethodType;
+	}
+
+	/**
+	 * @param loginMethodType the loginMethodType to set
+	 */
+	public void setLoginMethodType(String loginMethodType) {
+		this.loginMethodType = loginMethodType;
+	}
+
 	/**
 	 * is smtp valid
 	 * @return
@@ -47,16 +70,6 @@ public class SMTPDTO {
 		else return false;
 	}
 	
-	public boolean isValid() {
-//		if("".equals(getSendgrid_api())) {
-//			if("".equals(getEmail()) || "".equals(getPasswd())) {
-//				return false;
-//			}
-//		}
-		
-		return true;
-	}
-
 	/**
 	 * @return the sendgrid_api
 	 */
@@ -69,6 +82,34 @@ public class SMTPDTO {
 	 */
 	public void setSendgrid_api(String sendgrid_api) {
 		this.sendgrid_api = sendgrid_api;
+	}
+	
+	/**
+	 * @return the starttls_enable
+	 */
+	public String getStarttls_enable() {
+		return starttls_enable;
+	}
+
+	/**
+	 * @param starttls_enable the starttls_enable to set
+	 */
+	public void setStarttls_enable(String starttls_enable) {
+		this.starttls_enable = starttls_enable;
+	}
+
+	/**
+	 * @return the isAuth
+	 */
+	public String getIsAuth() {
+		return isAuth;
+	}
+
+	/**
+	 * @param isAuth the isAuth to set
+	 */
+	public void setIsAuth(String isAuth) {
+		this.isAuth = isAuth;
 	}
 
 	/**
@@ -126,13 +167,24 @@ public class SMTPDTO {
 	public final void setPasswd(String passwd) {
 		this.passwd = passwd;
 	}
+	
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "SMTPDTO [sendgrid_api=" + sendgrid_api + ", host=" + host + ", port=" + port + ", email=" + email
-				+ ", passwd=" + "]";
+		return "SMTPDTO [loginMethodType=" + loginMethodType + ", sendgrid_api=" + sendgrid_api + ", starttls_enable="
+				+ starttls_enable + ", isAuth=" + isAuth + ", host=" + host + ", port=" + port + ", email=" + email
+				+ "]";
 	}
+
+	
 }

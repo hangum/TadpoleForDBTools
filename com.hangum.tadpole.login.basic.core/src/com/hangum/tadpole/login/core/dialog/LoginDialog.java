@@ -45,7 +45,6 @@ import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.CookieUtils;
@@ -395,14 +394,14 @@ public class LoginDialog extends AbstractLoginDialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
 			btnNewUser = createButton(parent, ID_NEW_USER, LoginDialogMessages.get().LoginDialog_button_new_user, false);
-			try {
-				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-				if(smtpDto.isValid()) { //$NON-NLS-1$
+//			try {
+//				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
+//				if(smtpDto.isValid()) { //$NON-NLS-1$
 					btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
-				}
-			} catch (Exception e) {
-	//			ignore exception
-			}
+//				}
+//			} catch (Exception e) {
+//	//			ignore exception
+//			}
 		}
 	}
 	

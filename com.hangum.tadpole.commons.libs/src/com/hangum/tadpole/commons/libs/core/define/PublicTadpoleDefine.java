@@ -44,6 +44,9 @@ public class PublicTadpoleDefine {
 	
 	/** Default resource name */
 	public static final String DEFAUL_RESOURCE_NAME = "_TDB_DEF_NAME_";
+	
+	/** mail type */
+	public static enum MAIL_TYPE {NONE, SEND_GRID, SMTP};
 
 	/** 시스템 사용 그룹 정의 */
 	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  

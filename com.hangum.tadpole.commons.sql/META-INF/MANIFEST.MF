@@ -24,8 +24,7 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/apache/dbcp/commons-dbcp-1.4.jar,
  libs/apache/dbcp/commons-pool-1.6.jar,
  libs/driver/oracle/ojdbc6.jar,
- libs/driver/oracle/orai18n.jar,
- libs/driver/agensgraph/agensgraph-jdbc-0.1.0-SNAPSHOT.jar
+ libs/driver/oracle/orai18n.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.db.metadata.constants,
@@ -102,12 +101,6 @@ Export-Package:
  com.mongodb.selector,
  com.mongodb.util,
  cubrid.jdbc.driver,
- net.bitnine.agensgraph,
- net.bitnine.agensgraph.deps.org.json.simple,
- net.bitnine.agensgraph.deps.org.json.simple.parser,
- net.bitnine.agensgraph.graph,
- net.bitnine.agensgraph.graph.property,
- net.bitnine.agensgraph.util,
  org.bson,
  org.bson.diagnostics,
  org.bson.io,

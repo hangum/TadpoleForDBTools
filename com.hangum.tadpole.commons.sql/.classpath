@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/driver/agensgraph/agensgraph-jdbc-0.1.0-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ibatis-2.3.4.726-patched-tadpole.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/orai18n.jar"/>

@@ -36,7 +36,7 @@ public class AdminPreferenceDefine {
 	
 	public static final String SYSTEM_LDAP_AUTHENTICATION = _PREFIX + "SYSTEM_LDAP_AUTHENTICATION";
 	public static final String SYSTEM_LDAP_AUTHENTICATION_VALUE = "simple";
-
+	
 	/** 신규 사용자 허락 유무 */
 	public static final String NEW_USER_PERMIT = _PREFIX + "NEW_USER_PERMIT";
 	public static final String NEW_USER_PERMIT_VALUE = "YES";
@@ -86,14 +86,26 @@ public class AdminPreferenceDefine {
 	public static final String IS_PREFERENCE_MODIFY_VALUE = "YES";
 	
 	// set smtp information
+		public static final String MAIL_LOGIN_TYPE			= "MAIL_LOGIN_TYPE";
+		public static final String MAIL_LOGIN_TYPE_VALUE	= "NONE";
+		
+		public static final String MAIN_DOMAIN				= "MAIN_DOMAIN";
+		public static final String MAIN_DOMAIN_VALUE		= "";
+		
 		public static final String SENDGRID_API_NAME 		= "SENDGRID_API_NAME";
 		public static final String SENDGRID_API_VALUE 		= "";
+		
+		public static final String SMTP_STARTTLS_ENABLE		= "SMTP_STARTTLS_ENABLE";
+		public static final String SMTP_STARTTLS_ENABLE_VALUE	= "NO";
+		
+		public static final String SMTP_IS_AUTH 			= "SMTP_IS_AUTH";
+		public static final String SMTP_IS_AUTH_VALUE 		= "NO";
 	
 		public static final String SMTP_HOST_NAME 		= "SMTP_HOST_NAME";
-		public static final String SMTP_HOST_NAME_VALUE = "smtp.googlemail.com";
+		public static final String SMTP_HOST_NAME_VALUE = "smtp.gmail.com";
 		
 		public static final String SMTP_PORT 			= "SMTP_PORT";
-		public static final String SMTP_PORT_VALUE 		= "465";
+		public static final String SMTP_PORT_VALUE 		= "587";
 		
 		public static final String SMTP_EMAIL 			= "SMTP_EMAIL";
 		public static final String SMTP_EMAIL_VALUE 	= "";

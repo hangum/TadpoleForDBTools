@@ -27,6 +27,7 @@ import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.initialize.ApplicationLicenseInitialize;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 
 /**
  * This class controls all aspects of the application's execution
@@ -56,13 +57,15 @@ public class Application implements EntryPoint {
 	private void systemInitialize() {
 		ApplicationLicenseInitialize.load();
 		try {
-			boolean isInitialize = TadpoleSystemInitializer.initSystem();
-			if(!isInitialize) {
-				if(logger.isInfoEnabled()) logger.info("Initialize System default setting.");
-				
-				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
-				if(Dialog.OK != dialog.open()) {
-					throw new Exception("System initialization failed.\n");
+			if(!TadpoleApplicationContextManager.isSystemInitialize())  {
+				boolean isInitialize = TadpoleSystemInitializer.initSystem();
+				if(!isInitialize) {
+					if(logger.isInfoEnabled()) logger.info("Initialize System default setting.");
+					
+					WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
+					if(Dialog.OK != dialog.open()) {
+						throw new Exception("System initialization failed.\n");
+					}
 				}
 			}
 		} catch(Exception e) {

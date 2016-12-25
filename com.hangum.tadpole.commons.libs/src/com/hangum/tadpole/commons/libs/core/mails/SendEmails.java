@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.libs.core.mails;
 
-import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -18,16 +17,17 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.HtmlEmail;
 import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.service.ApplicationContext;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
@@ -41,119 +41,115 @@ import com.hangum.tadpole.sendgrid.core.utils.SendgridUtils;
  */
 public class SendEmails {
 	private static final Logger logger = Logger.getLogger(SendEmails.class);
-	private SMTPDTO smtpDto = new SMTPDTO();
+	private static SMTPDTO _smtpInfoDto = new SMTPDTO();
+	public static SendEmails instance;
 	
 	// send grid로 보내지지 않는 리스트.
 	private String[] OLD_TYPE_DOMAIN = {"@daum.net", "@hanmail.net", "kakao"};
 	
-	public SendEmails(SMTPDTO smtpDto) {
-		this.smtpDto = smtpDto;
+	private SendEmails() {};
+	
+	public static SendEmails getInstance() {
+		if(instance == null) {
+			instance = new SendEmails();
+			
+			ApplicationContext context = RWT.getApplicationContext();
+			_smtpInfoDto = (SMTPDTO)context.getAttribute("smtpinfo");
+		}
+		
+		return instance;
 	}
-
+	
 	/**
 	 * send email
 	 * 
 	 * @param emailDao
 	 */
 	public void sendMail(EmailDTO emailDao) throws Exception {
-//		if(!smtpDto.isValid()) {
-//			throw new Exception("Invalid smtp information." + emailDao);
-//		}
 		if(logger.isDebugEnabled()) logger.debug("Add new message");
-
-		// send grid 와 둘다 살려있다면.
-		if(!"".equals(smtpDto.getSendgrid_api())) {
+		
+		if(!StringUtils.contains(emailDao.getTo(), "@")) {
+			if(StringUtils.contains(_smtpInfoDto.getDomain(), "@")) {
+				emailDao.setTo(emailDao.getTo() + _smtpInfoDto.getDomain());
+			} else {
+				emailDao.setTo(emailDao.getTo() + "@" + _smtpInfoDto.getDomain());
+			}
+		}
+		
+		String strLoginMehtod = _smtpInfoDto.getLoginMethodType();
+		if(PublicTadpoleDefine.MAIL_TYPE.SEND_GRID.name().equals(strLoginMehtod)) {
 			for(String strDomain : OLD_TYPE_DOMAIN) {
 				if(StringUtils.contains(emailDao.getTo(), strDomain)) {
 					if(logger.isDebugEnabled()) logger.debug(String.format("=== sendind SMTP=>%s", emailDao.getTo()));
-					sendSTMT(emailDao);
+					sendSTMT(emailDao, _smtpInfoDto);
 					return;
 				}
 			}
 			
 			// 메일을 보내지 못했다면 sendgrid 를 이용해서 보낸다.
 			if(logger.isDebugEnabled()) logger.debug(String.format("=== sending SENDGRID=>%s", emailDao.getTo()));
-			sendSendgrid(emailDao);
-		} else {
+			sendSendgrid(emailDao, _smtpInfoDto);
+		} else if(PublicTadpoleDefine.MAIL_TYPE.SMTP.name().equals(strLoginMehtod)) {
 			if(logger.isDebugEnabled()) logger.debug(String.format("=== sending SMTP=>%s", emailDao.getTo()));
-			sendSTMT(emailDao);
+			sendSTMT(emailDao, _smtpInfoDto);
+		}
+	}
+	
+	/**
+	 * test email
+	 * 
+	 * @param _testSmtpInfoDto
+	 * @param strTo
+	 * @throws Exception
+	 */
+	public void testMail(SMTPDTO _testSmtpInfoDto, String strTo) throws Exception {
+		String strLoginMehtod = _testSmtpInfoDto.getLoginMethodType();
+		EmailDTO emailDao = new EmailDTO();
+		emailDao.setSubject("Mail test");
+		emailDao.setContent("Mail test body");
+		emailDao.setTo(strTo);
+		
+		if(PublicTadpoleDefine.MAIL_TYPE.SEND_GRID.name().equals(strLoginMehtod)) {
+			sendSendgrid(emailDao, _testSmtpInfoDto);
+		} else if(PublicTadpoleDefine.MAIL_TYPE.SMTP.name().equals(strLoginMehtod)) {
+			sendSTMT(emailDao, _testSmtpInfoDto);
 		}
 	}
 	
 	/**
 	 * using sendgrid server
 	 * @param emailDao
+	 * @param _smtpInfoDto
 	 * @throws Exception
 	 */
-	private void sendSendgrid(EmailDTO emailDao) throws Exception {
-		SendgridUtils.send(smtpDto.getSendgrid_api(), SystemDefine.ADMIN_EMAIL, emailDao.getTo(), emailDao.getSubject(), emailDao.getContent());
+	private void sendSendgrid(EmailDTO emailDao, SMTPDTO _smtpInfoDto) throws Exception {
+		SendgridUtils.send(_smtpInfoDto.getSendgrid_api(), SystemDefine.ADMIN_EMAIL, emailDao.getTo(), emailDao.getSubject(), emailDao.getContent());
 	}
 	
 	/**
 	 * using smtp server send 
 	 * @param emailDao
+	 * @param _smtpInfoDto
 	 * @throws Exception
 	 */
-	private void sendSTMT(EmailDTO emailDao) throws Exception {
-//		try {			
-//			HtmlEmail email = new HtmlEmail();
-//			email.setCharset("euc-kr");
-//			email.setHostName(smtpDto.getHost());
-//			email.setSmtpPort(NumberUtils.toInt(smtpDto.getPort()));
-//			if(!"".equals(smtpDto.getEmail()) || !"".equals(smtpDto.getPasswd())) {
-//				email.setAuthenticator(new DefaultAuthenticator(smtpDto.getEmail(), smtpDto.getPasswd()));
-//				email.setSSLOnConnect(true);
-//			}
-//			
-//			email.setFrom(smtpDto.getEmail(), "Tadpole DB Hub");
-//			email.addTo(emailDao.getTo());
-//			email.setSubject(emailDao.getSubject());
-//			email.setHtmlMsg(emailDao.getContent());
-//			
-//			email.send();
-//			
-//		} catch(Exception e) {
-//			logger.error("send email", e);
-//			throw e;
-//		}
-//	}
-//	
-//	private void sendMail(EmailDTO emailDao) throws Exception {
-		Properties p = System.getProperties();
-		p.put("mail.smtp.starttls.enable", "false");
-		p.put("mail.smtp.host", smtpDto.getHost());
-		p.put("mail.smtp.auth", "false");
-		p.put("mail.smtp.port", smtpDto.getPort());
+	private void sendSTMT(EmailDTO emailDao, SMTPDTO _smtpInfoDto) throws Exception {
+		Properties propSMTP = System.getProperties();
+		propSMTP.put("mail.smtp.starttls.enable", "YES".equals(_smtpInfoDto.getStarttls_enable())?"true":"false");
+		propSMTP.put("mail.smtp.host", _smtpInfoDto.getHost());
+		propSMTP.put("mail.smtp.auth", "YES".equals(_smtpInfoDto.getIsAuth())?"true":"false");
+		propSMTP.put("mail.smtp.port", _smtpInfoDto.getPort());
 		
-		Authenticator auth = new MyAuthentication(smtpDto.getEmail(), smtpDto.getPasswd());
-
-		// session 생성 및 MimeMessage생성
-		Session session = Session.getDefaultInstance(p, auth);
-		MimeMessage msg = new MimeMessage(session);
+		Authenticator auth = new MailAuthentication(_smtpInfoDto.getEmail(), _smtpInfoDto.getPasswd());
+		MimeMessage msg = new MimeMessage(Session.getDefaultInstance(propSMTP, auth));
 
 		try {
-			// 편지보낸시간
-			msg.setSentDate(new Date());
-			InternetAddress from = new InternetAddress();
-			from = new InternetAddress(smtpDto.getEmail());
-			// 이메일 발신자
-			msg.setFrom(from);
+			msg.setFrom(new InternetAddress(_smtpInfoDto.getEmail()));
+			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(emailDao.getTo()));
 
-			// 이메일 수신자
-			InternetAddress to = new InternetAddress(emailDao.getTo());
-			msg.setRecipient(Message.RecipientType.TO, to);
-
-			// 이메일 제목
 			msg.setSubject(emailDao.getSubject(), "UTF-8");
-
-			// 이메일 내용
 			msg.setText(emailDao.getContent(), "UTF-8");
-
-			// 이메일 헤더
 			msg.setHeader("content-Type", "text/html");
-
-			// 메일보내기
-			javax.mail.Transport.send(msg);
+			Transport.send(msg);
 
 		} catch (AddressException addr_e) {
 			logger.error("send eail", addr_e);
@@ -163,16 +159,22 @@ public class SendEmails {
 			throw msg_e;
 		}
 	}
+	
 }
 
-class MyAuthentication extends Authenticator {
+/**
+ * my authentication
+ * 
+ * @author hangum
+ *
+ */
+class MailAuthentication extends Authenticator {
 	PasswordAuthentication pa;
 
-	public MyAuthentication(String id, String pw) {
+	public MailAuthentication(String id, String pw) {
 		pa = new PasswordAuthentication(id, pw);
 	}
 
-	// 시스템에서 사용하는 인증정보
 	public PasswordAuthentication getPasswordAuthentication() {
 		return pa;
 	}
