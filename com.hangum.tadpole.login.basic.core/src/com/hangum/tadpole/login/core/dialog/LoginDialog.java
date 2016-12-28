@@ -318,7 +318,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
 			
 			// session 관리
-			preLogin();
+			preLogin(userDao);
 			
 			// save login_history
 			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());

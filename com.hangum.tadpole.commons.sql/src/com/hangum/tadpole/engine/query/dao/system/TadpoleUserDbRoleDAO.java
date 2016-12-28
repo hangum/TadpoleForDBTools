@@ -2,7 +2,7 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpole.commons.csv.DateUtil;
+import com.hangum.tadpole.commons.util.DateUtil;
 
 /**
  * Define tadpole_user_db_role table

@@ -30,23 +30,19 @@ public class ApplicationLicenseInitialize {
 	public static String TDB_License_FILE = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
 	
 	public static void load() {
-		if(ApplicationArgumentUtils.isInitialize) return;
-		
+		LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
 		try {
 			String strLicenseInfo = ApplicationArgumentUtils.initDBServer();
 			if(!StringUtils.isEmpty(strLicenseInfo)) {
 				logger.info("******** [0] Start enterprise version ");
-				LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
 				linceseHandler.license(strLicenseInfo);
 			} else {
 				File fileExist = new File(TDB_License_FILE);
 				if(fileExist.isFile()) {
 					logger.info("******** [1] Start enterprise version ");
-					LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
 					linceseHandler.license(fileExist);
 				}
 			}
-			ApplicationArgumentUtils.isInitialize = true;
 		} catch(Exception e) {
 			logger.error("System initialize exception", e);
 			MessageDialog.openError(null, "Error", "License validation exception\n" + e.getMessage());

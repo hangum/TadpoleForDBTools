@@ -35,6 +35,10 @@ public class Messages {
 	public String TadpoleHub;
 
 	public String operationResult;
+
+	public String MailSubject;
+
+	public String MailBody;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

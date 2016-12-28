@@ -45,6 +45,18 @@ public class AdminPreferenceDefine {
 	public static final String SAVE_DB_PASSWORD = _PREFIX + "SAVE_DB_PASSWORD";
 	public static final String SAVE_DB_PASSWORD_VALUE = "YES";
 	
+	/** 패스워드 복잡도 유무 */
+	public static final String PASSWD_COMPLEXITY = _PREFIX + "PASSWD_COMPLEXITY";
+	public static final String PASSWD_COMPLEXITY_VALUE = "NO";
+	
+	/** 패스워드 최하 길이 */
+	public static final String PASSWD_LENGTH_LIMIT = _PREFIX + "PASSWD_LENGTH_LIMIT";
+	public static final String PASSWD_LENGTH_LIMIT_VALUE = "7";
+	
+	/** 패스워드 최하 길이 */
+	public static final String PASSWD_DATE_LIMIT = _PREFIX + "PASSWD_DATE_LIMIT";
+	public static final String PASSWD_DATE_LIMIT_VALUE = "3650";
+	
 	/** 사용자가 디비 추가 여부 */
 	public static final String IS_ADD_DB = _PREFIX + "IS_ADD_DB";
 	public static final String IS_ADD_DB_VALUE = "YES";

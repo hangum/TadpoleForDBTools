@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ApplicationContext;
 
+import com.hangum.tadpole.commons.libs.core.Messages;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.mails.dto.EmailDTO;
@@ -105,8 +106,8 @@ public class SendEmails {
 	public void testMail(SMTPDTO _testSmtpInfoDto, String strTo) throws Exception {
 		String strLoginMehtod = _testSmtpInfoDto.getLoginMethodType();
 		EmailDTO emailDao = new EmailDTO();
-		emailDao.setSubject("Mail test");
-		emailDao.setContent("Mail test body");
+		emailDao.setSubject(Messages.get().MailSubject);
+		emailDao.setContent(Messages.get().MailBody);
 		emailDao.setTo(strTo);
 		
 		if(PublicTadpoleDefine.MAIL_TYPE.SEND_GRID.name().equals(strLoginMehtod)) {

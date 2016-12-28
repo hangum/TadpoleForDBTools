@@ -28,7 +28,6 @@ import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -65,7 +64,7 @@ public class SessionManager {
 														
 								/* 자신의 유저 seq */		USER_SEQ, 
 														LOGIN_EMAIL, 
-														LOGIN_PASSWORD, 
+//														LOGIN_PASSWORD, 
 														LOGIN_NAME,
 														IS_REGIST_DB,
 														
@@ -162,7 +161,7 @@ public class SessionManager {
 		sStore.setAttribute(NAME.REPRESENT_ROLE_TYPE.name(), userDao.getRole_type());
 		sStore.setAttribute(NAME.USER_SEQ.name(), userDao.getSeq());
 		sStore.setAttribute(NAME.LOGIN_EMAIL.name(), userDao.getEmail());
-		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), CipherManager.getInstance().decryption(userDao.getPasswd()));
+//		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), userDao.getPasswd());
 		sStore.setAttribute(NAME.LOGIN_NAME.name(), userDao.getName());
 		sStore.setAttribute(NAME.IS_REGIST_DB.name(), userDao.getIs_regist_db());
 		sStore.setAttribute(NAME.LANGUAGE.name(), userDao.getLanguage());
@@ -200,15 +199,15 @@ public class SessionManager {
 		return (String)sStore.getAttribute(NAME.LOGIN_IP.name());
 	}
 	
-	/**
-	 * set password
-	 * 
-	 * @param strPasswd
-	 */
-	public static void setPassword(String strPasswd) {
-		HttpSession sStore = RWT.getRequest().getSession();
-		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), strPasswd);
-	}
+//	/**
+//	 * set password
+//	 * 
+//	 * @param strPasswd
+//	 */
+//	public static void setPassword(String strPasswd) {
+//		HttpSession sStore = RWT.getRequest().getSession();
+//		sStore.setAttribute(NAME.LOGIN_PASSWORD.name(), strPasswd);
+//	}
 	
 	public static void setUesrSeq(int seq) {
 		HttpSession sStore = RWT.getRequest().getSession();
@@ -228,10 +227,10 @@ public class SessionManager {
 		return (String)sStore.getAttribute(NAME.LOGIN_EMAIL.name());
 	}
 	
-	public static String getPassword() {
-		HttpSession sStore = RWT.getRequest().getSession();
-		return (String)sStore.getAttribute(NAME.LOGIN_PASSWORD.name());
-	}
+//	public static String getPassword() {
+//		HttpSession sStore = RWT.getRequest().getSession();
+//		return (String)sStore.getAttribute(NAME.LOGIN_PASSWORD.name());
+//	}
 	
 	public static String getName() {
 		HttpSession sStore = RWT.getRequest().getSession();

@@ -12,8 +12,8 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.DateUtil;
 
 /**
  * user 정보 정의
@@ -33,6 +33,7 @@ public class UserDAO {
 	String is_email_certification;
 
 	String passwd;
+	Timestamp changed_passwd_time = new Timestamp(System.currentTimeMillis());
 	String role_type;
 	String name;
 	String language;
@@ -106,6 +107,14 @@ public class UserDAO {
 
 	public String getName() {
 		return name;
+	}
+
+	public Timestamp getChanged_passwd_time() {
+		return changed_passwd_time;
+	}
+
+	public void setChanged_passwd_time(Timestamp changed_passwd_time) {
+		this.changed_passwd_time = changed_passwd_time;
 	}
 
 	public void setName(String name) {

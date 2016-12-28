@@ -140,6 +140,33 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * 패스워드 복잡도 유무(NO)
+	 * @return
+	 */
+	public static String getPasswdComplexity() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.PASSWD_COMPLEXITY, AdminPreferenceDefine.PASSWD_COMPLEXITY_VALUE);
+	}
+	
+	/**
+	 * 패스워드 최소 길이
+	 * @return
+	 */
+	public static String getPasswdLengthLimit() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.PASSWD_LENGTH_LIMIT, AdminPreferenceDefine.PASSWD_LENGTH_LIMIT_VALUE);
+	}
+	
+	/**
+	 * 패스워드 변경 최하 일자
+	 * @return
+	 */
+	public static String getPasswdDateLimit() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.PASSWD_DATE_LIMIT, AdminPreferenceDefine.PASSWD_DATE_LIMIT_VALUE);
+	}
+	
+	/**
 	 * 사용자가 디비를 추가 할 수 있는지 여부
 	 * @return
 	 */

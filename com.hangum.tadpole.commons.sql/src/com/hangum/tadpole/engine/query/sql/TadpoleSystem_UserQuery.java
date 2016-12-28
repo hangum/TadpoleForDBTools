@@ -24,13 +24,13 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
-import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.utils.SHA256Utils;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.commons.util.DateUtil;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -79,7 +79,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static UserDAO newLDAPUser(String email) throws TadpoleSQLManagerException, SQLException {
+	public static UserDAO newLDAPUser(String email) throws TadpoleSQLManagerException, SQLException, Exception {
 		return newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(), email, "LDAP", "YES", "TadpoleLDAPLogin", PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
 				"LDAP", "KO", "Asia/Seoul", "YES", "NO", "", "*");
 	}
@@ -111,14 +111,15 @@ public class TadpoleSystem_UserQuery {
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
 								String roleType, String name, String language, String timezone, String approvalYn, String use_otp, String otp_secret,
 								String strAllowIP
-	) throws TadpoleSQLManagerException, SQLException {
+	) throws TadpoleSQLManagerException, SQLException, Exception {
 		UserDAO loginDAO = new UserDAO();
 		loginDAO.setInput_type(inputType);
 		loginDAO.setEmail(email);
 		loginDAO.setEmail_key(email_key);
 		loginDAO.setIs_email_certification(is_email_certification);
 		
-		loginDAO.setPasswd(CipherManager.getInstance().encryption(passwd));
+		loginDAO.setPasswd(SHA256Utils.getSHA256(passwd));
+		loginDAO.setChanged_passwd_time(new Timestamp(System.currentTimeMillis()));
 		loginDAO.setRole_type(roleType);
 		
 		loginDAO.setName(name);
@@ -238,20 +239,20 @@ public class TadpoleSystem_UserQuery {
 	 * @param passwd
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static UserDAO login(String email, String passwd) throws TadpoleAuthorityException, TadpoleSQLManagerException, SQLException {
+	public static UserDAO login(String email, String passwd) throws TadpoleAuthorityException, TadpoleSQLManagerException, SQLException, Exception {
 		UserDAO login = new UserDAO();
 		login.setEmail(email);
-//		login.setPasswd(CipherManager.getInstance().encryption(passwd));
+		login.setPasswd(SHA256Utils.getSHA256(passwd));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDAO userInfo = (UserDAO)sqlClient.queryForObject("login", login); //$NON-NLS-1$
 	
 		if(null == userInfo) {
-			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_5);
-		} else {
-			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
-				throw new TadpoleAuthorityException(Messages.get().TadpoleSystem_UserQuery_5);
-			}
+			throw new TadpoleAuthorityException(Messages.get().TadpoleSystem_UserQuery_5);
+//		} else {
+//			if(!passwd.equals(CipherManager.getInstance().decryption(userInfo.getPasswd()))) {
+//				throw new TadpoleAuthorityException(Messages.get().TadpoleSystem_UserQuery_5);
+//			}
 		}
 	
 		return userInfo;
@@ -366,9 +367,10 @@ public class TadpoleSystem_UserQuery {
 	 * @param user
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static void updateUserPersonToGroup(UserDAO user) throws TadpoleSQLManagerException, SQLException {
+	public static void updateUserPersonToGroup(UserDAO user) throws TadpoleSQLManagerException, SQLException, Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+		user.setPasswd(SHA256Utils.getSHA256(user.getPasswd()));
+		user.setChanged_passwd_time(new Timestamp(System.currentTimeMillis()));
 		sqlClient.update("updateUserPersonToGroup", user); //$NON-NLS-1$
 	}
 	
@@ -387,9 +389,7 @@ public class TadpoleSystem_UserQuery {
 	 * @param user
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static void updateUserBasic(UserDAO user) throws TadpoleSQLManagerException, SQLException {
-		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
-		
+	public static void updateUserBasic(UserDAO user) throws TadpoleSQLManagerException, SQLException, Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserBasic", user); //$NON-NLS-1$
 	}
@@ -399,8 +399,9 @@ public class TadpoleSystem_UserQuery {
 	 * @param user
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static void updateUserPassword(UserDAO user) throws TadpoleSQLManagerException, SQLException {
-		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+	public static void updateUserPassword(UserDAO user) throws TadpoleSQLManagerException, SQLException, Exception {
+		user.setPasswd(SHA256Utils.getSHA256(user.getPasswd()));
+		user.setChanged_passwd_time(new Timestamp(System.currentTimeMillis()));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
@@ -411,8 +412,9 @@ public class TadpoleSystem_UserQuery {
 	 * @param user
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	public static void updateUserPasswordWithID(UserDAO user) throws TadpoleSQLManagerException, SQLException {
-		user.setPasswd(CipherManager.getInstance().encryption(user.getPasswd()));
+	public static void updateUserPasswordWithID(UserDAO user) throws TadpoleSQLManagerException, SQLException, Exception {
+		user.setPasswd(SHA256Utils.getSHA256(user.getPasswd()));
+		user.setChanged_passwd_time(new Timestamp(System.currentTimeMillis()));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("updateUserPasswordWithID", user); //$NON-NLS-1$

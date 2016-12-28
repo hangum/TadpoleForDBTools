@@ -160,7 +160,7 @@ public class SystemAdminWizardDefaultUserPage extends WizardPage {
 //		} else if(!ValidChecker.isValidEmailAddress(strEmail)) {
 //			errorSet(textEmail, Messages.get().SystemAdminWizardPage_48);
 //			return;
-		} else if(!ValidChecker.isPasswordLengthChecker(strPass)) { //$NON-NLS-1$
+		} else if(!ValidChecker.isPasswordLengthChecker(7, strPass)) { //$NON-NLS-1$
 			errorSet(textPasswd, Messages.get().SystemAdminWizardPage_37);
 			return;
 		} else if(!strPass.equals(strRePass)) { //$NON-NLS-1$

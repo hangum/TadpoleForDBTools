@@ -18,6 +18,7 @@ import org.eclipse.jface.wizard.Wizard;
 import com.hangum.tadpole.application.Messages;
 import com.hangum.tadpole.application.initialize.wizard.dao.SystemAdminWizardUserDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.utils.SHA256Utils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.initialize.AddDefaultSampleDBToUser;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;

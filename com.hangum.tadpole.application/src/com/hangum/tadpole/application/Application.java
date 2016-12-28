@@ -52,20 +52,23 @@ public class Application implements EntryPoint {
 	
 	/**
 	 * System initialize
-	 * If the system table does not exist, create a table.
+	 * 
+	 * 0. License load
+	 * 1. jdbc driver load
+	 * 2. If the system table does not exist, create a table.
+	 * 2.1 System initialize
 	 */
 	private void systemInitialize() {
-		ApplicationLicenseInitialize.load();
+		if(TadpoleApplicationContextManager.isSystemInitialize()) return;
+		
 		try {
-			if(!TadpoleApplicationContextManager.isSystemInitialize())  {
-				boolean isInitialize = TadpoleSystemInitializer.initSystem();
-				if(!isInitialize) {
-					if(logger.isInfoEnabled()) logger.info("Initialize System default setting.");
-					
-					WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
-					if(Dialog.OK != dialog.open()) {
-						throw new Exception("System initialization failed.\n");
-					}
+			ApplicationLicenseInitialize.load();
+			if(!TadpoleSystemInitializer.initSystem()) {
+				if(logger.isInfoEnabled()) logger.info("Initialize System default setting.");
+				
+				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
+				if(Dialog.OK != dialog.open()) {
+					throw new Exception("System initialization failed.\n");
 				}
 			}
 		} catch(Exception e) {
@@ -75,5 +78,4 @@ public class Application implements EntryPoint {
 			System.exit(0);
 		}
 	}
-	
 }

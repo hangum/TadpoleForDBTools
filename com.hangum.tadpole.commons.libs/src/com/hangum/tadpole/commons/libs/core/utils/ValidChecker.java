@@ -13,8 +13,8 @@ package com.hangum.tadpole.commons.libs.core.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Combo;
@@ -31,15 +31,16 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
  */
 public class ValidChecker {
 	
-
 	/**
+	 * 최하 패스워드 길이 검사.
 	 * 
-	 * 
+	 * @param intLengthLimit 
 	 * @param passwd
 	 * @return
 	 */
-	public static boolean isPasswordLengthChecker(String passwd) {
-		if(!(StringUtils.length(passwd) >= 7 && StringUtils.length(passwd) <= 30)) {
+	public static boolean isPasswordLengthChecker(int intLengthLimit, String passwd) {
+		
+		if(!(StringUtils.length(passwd) >= intLengthLimit && StringUtils.length(passwd) <= 30)) {
 			return false;
 		}
 		return true;

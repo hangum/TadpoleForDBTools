@@ -1,4 +1,4 @@
-package com.hangum.tadpole.commons.csv;
+package com.hangum.tadpole.commons.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,6 +44,21 @@ public class DateUtil {
 	 */
 	public static long afterMonthToMillis(int day) {
 		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, day);
+		
+		return cal.getTimeInMillis();
+	}
+	
+	/**
+	 * 주어진 시간 기준으로 몇일 후
+	 * 
+	 * @param time
+	 * @param intMaxDay
+	 * @return
+	 */
+	public static long afterMonthToMillis(long time, int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
 		cal.add(Calendar.DAY_OF_YEAR, day);
 		
 		return cal.getTimeInMillis();
@@ -104,5 +119,5 @@ public class DateUtil {
         } 
         return date;
     }
-    
+
 }
