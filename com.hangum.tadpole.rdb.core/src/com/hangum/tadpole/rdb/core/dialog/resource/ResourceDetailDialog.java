@@ -64,6 +64,8 @@ import com.hangum.tadpole.engine.restful.RESTfulAPIUtils;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * Resource history dialog
@@ -210,8 +212,23 @@ public class ResourceDetailDialog extends Dialog {
 		CTabItem tabHistory = new CTabItem(tabFolder, SWT.NONE);
 		tabHistory.setText("History");
 		
-		SashForm sashForm = new SashForm(tabFolder, SWT.BORDER | SWT.VERTICAL);
-		tabHistory.setControl(sashForm);
+		Composite compositeHistory = new Composite(tabFolder, SWT.NONE);
+		tabHistory.setControl(compositeHistory);
+		compositeHistory.setLayout(new GridLayout(1, false));
+		
+		ToolBar toolBar = new ToolBar(compositeHistory, SWT.FLAT | SWT.RIGHT);
+		
+		ToolItem tltmCompare = new ToolItem(toolBar, SWT.NONE);
+		tltmCompare.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				compare();
+			}
+		});
+		tltmCompare.setText(Messages.get().Compare);
+		
+		SashForm sashForm = new SashForm(compositeHistory, SWT.BORDER | SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		sashForm.setLayout(new GridLayout(1, false));
 		
 		tvHistory = new TableViewer(sashForm, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
@@ -221,7 +238,15 @@ public class ResourceDetailDialog extends Dialog {
 				if(sss.isEmpty()) return;
 				
 				UserDBResourceDataDAO userDBResource = (UserDBResourceDataDAO)sss.getFirstElement();
-				compareWidget.changeDiff(userDBResource.getDatas(), "");
+				
+				List listSelect = sss.toList();
+				if(listSelect.size() >= 2) {
+					UserDBResourceDataDAO userDBResourceLast = (UserDBResourceDataDAO)listSelect.get(listSelect.size()-1);
+					compareWidget.changeDiff(userDBResource.getDatas(), userDBResourceLast.getDatas());
+				} else {
+					compareWidget.changeDiff(userDBResource.getDatas(), "");	
+				}
+				
 			}
 		});
 		Table table = tvHistory.getTable();
@@ -250,17 +275,7 @@ public class ResourceDetailDialog extends Dialog {
 		compareWidget = new TadpoleCompareWidget(sashForm, SWT.BORDER);
 		compareWidget.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Button btnCompare = new Button(compareWidget, SWT.NONE);
-		btnCompare.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		btnCompare.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				compare();
-			}
-		});
-		btnCompare.setText(Messages.get().Compare);
-		
-		sashForm.setWeights(new int[] {6, 4});
+		sashForm.setWeights(new int[] {4, 6});
 		tabFolder.setSelection(0);
 		
 		initUIData();
@@ -430,7 +445,7 @@ public class ResourceDetailDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(650, 600);
+		return new Point(650, 700);
 	}
 }
 
