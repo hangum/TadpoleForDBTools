@@ -120,13 +120,24 @@
 </select>
 
 <!-- 
+	find user
+ -->
+<select id="findExternalUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.String">
+	SELECT *
+	FROM tadpole_user 
+	WHERE 
+			external_id = #external_id#
+		AND delyn = 'NO'
+</select>
+
+<!-- 
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, changed_passwd_time, role_type, name, language, timezone, approval_yn, use_otp, otp_secret, allow_ip
-	,is_regist_db, is_shared_db, limit_add_db_cnt, is_modify_perference, service_start, service_end)
+	,is_regist_db, is_shared_db, limit_add_db_cnt, is_modify_perference, service_start, service_end, external_id)
 	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #changed_passwd_time#, #role_type#, #name#, #language#, #timezone#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#
-	,#is_regist_db#, #is_shared_db#, #limit_add_db_cnt#, #is_modify_perference#, #service_start#, #service_end#)
+	,#is_regist_db#, #is_shared_db#, #limit_add_db_cnt#, #is_modify_perference#, #service_start#, #service_end#, #external_id#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 		SELECT * 

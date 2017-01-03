@@ -59,6 +59,8 @@ public class UserDAO {
 	Timestamp service_start = new Timestamp(System.currentTimeMillis());
 	Timestamp service_end = new Timestamp(DateUtil.afterMonthToMillis(12));
 	
+	String external_id;
+	
 	// 
 	// table viewer 에서 사용자 검색에서 사용하려고 채크 박스 선택 유무로 사용하는 컬럼.
 	// 
@@ -329,6 +331,20 @@ public class UserDAO {
 	 */
 	public void setIs_modify_perference(String is_modify_perference) {
 		this.is_modify_perference = is_modify_perference;
+	}
+
+	/**
+	 * @return the external_id
+	 */
+	public String getExternal_id() {
+		return external_id;
+	}
+
+	/**
+	 * @param external_id the external_id to set
+	 */
+	public void setExternal_id(String external_id) {
+		this.external_id = external_id;
 	}
 	
 }

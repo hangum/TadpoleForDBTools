@@ -85,7 +85,7 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.SYSTEM_DEFAULT_USER, 
 						Utils.getUniqueDigit(7), 
 						PublicTadpoleDefine.YES_NO.YES.name(),
-						"1005tadPole1206", 	
+						SHA256Utils.getSHA256("1005tadPole1206"), 	
 						PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
 						"Personal Admin", 
 						Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), 
@@ -93,7 +93,8 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.YES_NO.YES.name(), 
 						PublicTadpoleDefine.YES_NO.NO.name(), 
 						"",
-						"*"); //$NON-NLS-1$ //$NON-NLS-2$
+						"*",
+						PublicTadpoleDefine.SYSTEM_DEFAULT_USER); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
@@ -109,7 +110,7 @@ public class SystemInitializeWizard extends Wizard {
 				// 사용자 등록
 				systeUser = TadpoleSystem_UserQuery.newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(),
 				adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
-				adminDao.getPasswd(), 	
+				SHA256Utils.getSHA256(adminDao.getPasswd()), 	
 				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
 				"System Default Admin", 
 				Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), 
@@ -117,18 +118,19 @@ public class SystemInitializeWizard extends Wizard {
 				PublicTadpoleDefine.YES_NO.YES.name(), 
 				PublicTadpoleDefine.YES_NO.NO.name(), 
 				"", 
-				"*"); //$NON-NLS-1$ //$NON-NLS-2$
+				"*",
+				adminDao.getEmail()); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
 			}
 		}
 		
-		// savmpe database 를 생성합니다.
+		// save database 를 생성합니다.
 		try {
 			AddDefaultSampleDBToUser.addUserDefaultDB(systeUser.getSeq(), systeUser.getEmail());
 		} catch (Exception e) {
-			logger.error("Sample db copy error", e);
+			logger.error("Sample SQLite file copy error", e);
 		}
 		
 		return true;

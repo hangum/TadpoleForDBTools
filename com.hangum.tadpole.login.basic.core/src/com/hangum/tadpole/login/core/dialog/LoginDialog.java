@@ -254,7 +254,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		
 		try {
 			UserDAO userDao = new UserDAO();
-			if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
+			if(StringUtils.equalsIgnoreCase(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
 				userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
 				
 				// firsttime email confirm
@@ -282,10 +282,10 @@ public class LoginDialog extends AbstractLoginDialog {
 				
 				ldapLogin(strEmail, strPass);
 				
-				List<UserDAO> listUserDAO = TadpoleSystem_UserQuery.findExistUser(strEmail);
+				List<UserDAO> listUserDAO = TadpoleSystem_UserQuery.findExistExternalUser(strEmail);
 				if(listUserDAO.isEmpty()) {
 					// 신규 사용자로 추가하고 user 리스트를 가져옵니다.
-					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail);
+					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail, strEmail, strEmail);
 				} else {
 					userDao = listUserDAO.get(0);
 				}
@@ -392,16 +392,13 @@ public class LoginDialog extends AbstractLoginDialog {
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+		if(StringUtils.equalsIgnoreCase(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
 			btnNewUser = createButton(parent, ID_NEW_USER, LoginDialogMessages.get().LoginDialog_button_new_user, false);
-//			try {
-//				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-//				if(smtpDto.isValid()) { //$NON-NLS-1$
-					btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
-//				}
-//			} catch (Exception e) {
-//	//			ignore exception
-//			}
+			btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
+		} else {
+			GridLayout layout = (GridLayout)parent.getLayout();
+			layout.marginHeight = 0;
+			parent.setLayout(layout);
 		}
 	}
 	

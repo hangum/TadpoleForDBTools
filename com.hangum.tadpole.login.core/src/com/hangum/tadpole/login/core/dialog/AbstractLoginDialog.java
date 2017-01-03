@@ -62,7 +62,7 @@ public class AbstractLoginDialog extends Dialog {
 	 * @param strPass
 	 */
 	protected void ldapLogin(String strEmail, String strPass) throws TadpoleAuthorityException {
-		LDAPUtil.ldapLogin(strEmail, strPass, GetAdminPreference.getLDAPURL(), GetAdminPreference.getLDAPAuthentication(), GetAdminPreference.getLDAPUser());
+		LDAPUtil.getInstance().ldapLogin(strEmail, strPass);
 	}
 	
 	/**

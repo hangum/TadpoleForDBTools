@@ -79,9 +79,9 @@ public class TadpoleSystem_UserQuery {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static UserDAO newLDAPUser(String email) throws TadpoleSQLManagerException, SQLException, Exception {
+	public static UserDAO newLDAPUser(String userName, String email, String external_id) throws TadpoleSQLManagerException, SQLException, Exception {
 		return newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(), email, "LDAP", "YES", "TadpoleLDAPLogin", PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
-				"LDAP", "KO", "Asia/Seoul", "YES", "NO", "", "*");
+				userName, "KO", "Asia/Seoul", "YES", "NO", "", "*", external_id);
 	}
 	
 	/**
@@ -105,12 +105,13 @@ public class TadpoleSystem_UserQuery {
 	 * @param intLimitAddDBCnt
 	 * @param serviceStart
 	 * @param serviceEnd
+	 * @param external_id
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
 								String roleType, String name, String language, String timezone, String approvalYn, String use_otp, String otp_secret,
-								String strAllowIP
+								String strAllowIP, String external_id
 	) throws TadpoleSQLManagerException, SQLException, Exception {
 		UserDAO loginDAO = new UserDAO();
 		loginDAO.setInput_type(inputType);
@@ -137,6 +138,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setIs_modify_perference(GetAdminPreference.getIsPreferenceModify());
 		loginDAO.setService_start(new Timestamp(System.currentTimeMillis()));
 		loginDAO.setService_end(new Timestamp(DateUtil.afterMonthToMillis(NumberUtils.toInt(GetAdminPreference.getServiceDurationDay()))));
+		loginDAO.setExternal_id(external_id);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List isUser = sqlClient.queryForList("isUser", email); //$NON-NLS-1$
@@ -193,6 +195,19 @@ public class TadpoleSystem_UserQuery {
 	public static List<UserDAO> findExistUser(String email) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDAO> listUser = sqlClient.queryForList("findEmailUser", email); //$NON-NLS-1$
+		return listUser;
+	}
+	
+	/**
+	 * 유저를 넘겨 받는다.
+	 * @param email
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<UserDAO> findExistExternalUser(String external_id) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserDAO> listUser = sqlClient.queryForList("findExternalUser", external_id); //$NON-NLS-1$
 		return listUser;
 	}
 	

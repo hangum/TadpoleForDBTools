@@ -65,6 +65,8 @@ public class LoginDialogMessages {
 
 	public String PleaseCheckIDpassword;
 
+	public String LoginDialog_PleaseInputID;
+
 	public static LoginDialogMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, LoginDialogMessages.class);
 	}

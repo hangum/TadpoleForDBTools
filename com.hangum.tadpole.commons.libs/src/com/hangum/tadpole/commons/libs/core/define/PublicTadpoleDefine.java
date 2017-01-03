@@ -37,6 +37,11 @@ public class PublicTadpoleDefine {
 	public static final String DEFAULT_LOG_FILE 		= "./logs/tadpole.log";
 	public static final String DEFAULT_VELOCITY_LOG_FILE = "./logs/tadpoleVelocity.log";
 	
+	/**
+	 * 환경 정보 파일
+	 */
+	public static final String TDB_CONFIG_FILE = "tadpole_interface.properties";
+	
 	/** cookie path */
 	public static String _cookiePath = "/";
 	
