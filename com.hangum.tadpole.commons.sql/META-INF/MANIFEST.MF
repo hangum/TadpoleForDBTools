@@ -14,8 +14,9 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0";resolution:=optional,
  com.hangum.tadpole.hive.core;bundle-version="1.0.0",
  org.apache.commons.io;bundle-version="2.2.0",
  com.hangum.tadpole.commons.otp.core;bundle-version="1.0.0",
- com.hangum.tadpole.interface.appm.goodmit.core;bundle-version="1.0.0";resolution:=optional,
- com.hangum.tadpole.ext.appm.basic.core;bundle-version="1.0.0"
+ com.hangum.tadpole.ext.appm.basic.core;bundle-version="1.0.0";resolution:=optional,
+ com.hangum.tadpole.ext.appm.goodmit.core;bundle-version="1.0.0";resolution:=optional,
+ com.hangum.tadpole.ext.appm.core;bundle-version="1.0.0"
 Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/dbutils/commons-dbutils-1.6.jar,
  .,
