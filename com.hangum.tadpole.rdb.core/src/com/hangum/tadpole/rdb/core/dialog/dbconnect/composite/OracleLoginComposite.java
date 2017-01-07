@@ -275,6 +275,9 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 //		userDB.setLocale(comboLocale.getText().trim());
+		
+		// set ext value
+		setExtValue();
 
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();

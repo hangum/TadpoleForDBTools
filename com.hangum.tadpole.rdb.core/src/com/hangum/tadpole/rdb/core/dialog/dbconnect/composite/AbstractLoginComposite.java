@@ -416,6 +416,24 @@ public abstract class AbstractLoginComposite extends Composite {
 	}
 	
 	/**
+	 * set ext value
+	 */
+	protected void setExtValue() {
+		if(oldUserDB != null) {
+			userDB.setExt1(oldUserDB.getExt1());
+			userDB.setExt2(oldUserDB.getExt2());
+			userDB.setExt3(oldUserDB.getExt3());
+			userDB.setExt4(oldUserDB.getExt4());
+			userDB.setExt5(oldUserDB.getExt5());
+			userDB.setExt6(oldUserDB.getExt6());
+			userDB.setExt7(oldUserDB.getExt7());
+			userDB.setExt8(oldUserDB.getExt8());
+			userDB.setExt9(oldUserDB.getExt9());
+			userDB.setExt10(oldUserDB.getExt10());
+		}
+	}
+	
+	/**
 	 * Set others connection info
 	 */
 	protected void setOtherConnectionInfo() {

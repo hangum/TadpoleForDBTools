@@ -273,9 +273,12 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 		
 //		userDB.setLocale(comboLocale.getText().trim());
 
+		// set ext value
+		setExtValue();
+				
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();
-
+		
 		return true;
 	}
 	

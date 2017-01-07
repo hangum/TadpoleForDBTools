@@ -391,6 +391,9 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		// 처음 등록자는 권한이 어드민입니다.
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
+		// set ext value
+		setExtValue();
+		
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();
 		
