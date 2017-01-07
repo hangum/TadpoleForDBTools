@@ -10,7 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,11 +30,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.ext.appm.APPMHandler;
 
 /**
  * DB Lock Dialog
@@ -42,6 +46,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public class DBPasswordDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(DBPasswordDialog.class);
 	private UserDBDAO userDB;
 	private Text textPassword;
 
@@ -84,8 +89,29 @@ public class DBPasswordDialog extends Dialog {
 		});
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textPassword.setFocus();
+		
+		initUI();
 
 		return container;
+	}
+	
+	/**
+	 * initialize UI
+	 */
+	private void initUI() {
+		try {
+			Map<String, String> mapAppm = new HashMap<String, String>();
+			mapAppm.put("hostName", 	userDB.getExt8());
+			mapAppm.put("sid", 			userDB.getExt9());
+			mapAppm.put("accountid", 	userDB.getExt10());
+			
+			String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
+			textPassword.setText(strAMMPPassword);
+		} catch (Exception e) {
+			logger.error("appm error", e);
+			textPassword.setText("");
+		}
+		userDB.setPasswd("");
 	}
 	
 	/* (non-Javadoc)
@@ -94,9 +120,8 @@ public class DBPasswordDialog extends Dialog {
 	@Override
 	protected void okPressed() {
 		String strPassword = StringUtils.trim(textPassword.getText());
-
 		if(!"".equals(strPassword)) {
-			userDB.setPasswd(CipherManager.getInstance().encryption(strPassword));
+			userDB.setPasswd(strPassword);
 		} else {
 			userDB.setPasswd("");
 		}

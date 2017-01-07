@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -33,6 +36,7 @@ import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.ext.appm.APPMHandler;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -103,11 +107,31 @@ public class DBPasswordAndOTPDialog extends Dialog {
 			}
 		});
 		
-		
-		textPassword.setFocus();
+		initUI();
+		textOTP.setFocus();
 
 		return container;
 	}
+	
+	/**
+	 * initialize UI
+	 */
+	private void initUI() {
+		try {
+			Map<String, String> mapAppm = new HashMap<String, String>();
+			mapAppm.put("hostName", 	userDB.getExt8());
+			mapAppm.put("sid", 			userDB.getExt9());
+			mapAppm.put("accountid", 	userDB.getExt10());
+			
+			String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
+			textPassword.setText(strAMMPPassword);
+		} catch (Exception e) {
+			logger.error("appm error", e);
+			textPassword.setText("");
+		}
+		userDB.setPasswd("");
+	}
+
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
