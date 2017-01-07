@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Basic APPM core
+Bundle-SymbolicName: com.hangum.tadpole.ext.appm.basic.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.ext.appm.basic.core.Activator
+Bundle-Vendor: TadpoleHUB Co.
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.rap.ui;bundle-version="3.1.0",
+ com.hangum.tadpole.ext.appm.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: com.hangum.tadpole.ext.appm,
+ com.hangum.tadpole.ext.appm.basic.core
