@@ -280,8 +280,8 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 						try {
 							TadpoleSystem_UserRole.withdrawal(SessionManager.getUserSeq());
 							
-							TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
-							SessionManager.logout();
+//							TadpoleSQLTransactionManager.executeRollback(SessionManager.getEMAIL());
+							SessionManager.logout(SessionManager.getEMAIL());
 						} catch (Exception e1) {
 							logger.error("user withdrawal", e1); //$NON-NLS-1$
 						}

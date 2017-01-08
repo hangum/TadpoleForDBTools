@@ -84,13 +84,6 @@ public class HttpSessionCollectorUtil {
 			logger.error(String.format("System invalidate user %s, messages %s", strEmail, e.getMessage()));
 		}
 		
-		try {
-			TadpoleSQLManager.removeAllInstance(strEmail);
-			TadpoleSQLTransactionManager.executeRollback(strEmail);
-		} catch(Exception e) {
-			logger.error("remove user connection", e);
-		}
-		
 	}
 
 	/**

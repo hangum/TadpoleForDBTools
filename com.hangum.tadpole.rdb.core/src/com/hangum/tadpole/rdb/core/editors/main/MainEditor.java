@@ -98,6 +98,9 @@ public class MainEditor extends EditorExtension {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(MainEditor.class);
 	
+	/** connection URL */
+	private ToolItem tltmConnectURL;
+	
 	/** auto save를 위해 마지막 콘텐츠 를 남겨 놓는다. */
 	private String strLastContent = "";
 	
@@ -209,10 +212,10 @@ public class MainEditor extends EditorExtension {
 		compositeEditor.setLayout(gl_compositeEditor);
 		
 		ToolBar toolBar = new ToolBar(compositeEditor, SWT.NONE | SWT.FLAT | SWT.RIGHT);
-		final ToolItem tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
+		tltmConnectURL = new ToolItem(toolBar, SWT.NONE);
 		tltmConnectURL.setToolTipText(Messages.get().DatabaseInformation);
 		tltmConnectURL.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/connect.png")); //$NON-NLS-1$
-		tltmConnectURL.setText(userDB.getDisplay_name());
+		refreshConnectionTitle();
 		
 		tltmConnectURL.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -244,7 +247,7 @@ public class MainEditor extends EditorExtension {
 								logger.error("get table list", e1);
 							}
 							
-							tltmConnectURL.setText(userDB.getDisplay_name());
+							refreshConnectionTitle();
 						}
 					}
 				}
@@ -516,7 +519,17 @@ public class MainEditor extends EditorExtension {
 				}
 			} //
 		}); // end property change
+	}
 	
+	/**
+	 * refresh connection title
+	 */
+	private void refreshConnectionTitle() {
+		if("".equals(userDB.getSchema())) {
+			tltmConnectURL.setText(String.format("%s", userDB.getDisplay_name()));
+		} else {
+			tltmConnectURL.setText(String.format("%s - %s", userDB.getDisplay_name(), userDB.getSchema()));	
+		}
 	}
 	
 	public Browser getBrowserQueryEditor() {
@@ -663,6 +676,16 @@ public class MainEditor extends EditorExtension {
 	public void executeCommand(final RequestQuery reqQuery) {
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
+		
+		//
+		//  schema test code start
+		//
+		final UserDBDAO userDB = getUserDB();
+		if(logger.isDebugEnabled()) {
+			logger.debug("################################################################################");
+			logger.debug("userDB schema is " + userDB.getSchema());
+			logger.debug("################################################################################");
+		}
 		
 		// do not execute query
 		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {

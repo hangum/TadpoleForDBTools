@@ -1,11 +1,19 @@
 package com.hangum.tadpole.engine.connect;
 
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 
 public class AbstractDriverInfo {
 
 	protected static void printMetaData(DatabaseMetaData dmd) throws Exception {
 		
+		ResultSet rsCatalogs = dmd.getCatalogs();
+		System.out.println("catalog list is ");
+		while(rsCatalogs.next()) {
+			System.out.println("==> schema : " + rsCatalogs.getString(0));
+		}
+		
+		System.out.println("user name is " + dmd.getUserName());
 		System.out.println(dmd.getDatabaseProductName() + " " + dmd.getDatabaseProductVersion() );
 		System.out.println(dmd.getDriverName() + " " + dmd.getDriverVersion());
 		System.out.println("");

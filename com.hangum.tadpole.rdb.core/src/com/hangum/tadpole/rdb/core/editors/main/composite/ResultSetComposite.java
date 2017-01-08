@@ -721,6 +721,13 @@ public class ResultSetComposite extends Composite {
 					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEmail, getUserDB());
 				}
 			}
+			
+//			if(logger.isDebugEnabled())  {
+//				logger.debug("################# ################# ################# ################# ################# ################# ################# ################# ################# ################# ");
+//				logger.debug("################# schema name is : " + javaConn.getCatalog() );
+//				logger.debug("################# schema name is : " + javaConn.getSchema() );
+//				logger.debug("################# ################# ################# ################# ################# ################# ################# ################# ################# ################# ");
+//			}
 //			if(javaConn == null) {
 //				throw new Exception("Cann't create session. Please check system.");
 //			}

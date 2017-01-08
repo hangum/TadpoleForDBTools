@@ -160,7 +160,7 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 				
 				MessageDialog.openInformation(getShell(), CommonMessages.get().Confirm, Messages.get().ChangeUsePersonalToGrouprDialog_9);
 				TadpoleApplicationContextManager.initSystem();
-				SessionManager.logout();
+				SessionManager.logout(SessionManager.getEMAIL());
 				
 			} catch (Exception e) {
 				logger.error("data update", e); //$NON-NLS-1$
