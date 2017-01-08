@@ -110,14 +110,29 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	 * @param container
 	 */
 	private void ldapView(Composite container) {
+		Label lblName = new Label(container, SWT.NONE);
+		lblName.setText(Messages.get().UserInfoPerference_5);
+		
+		textName = new Text(container, SWT.BORDER);
+		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textName.setText(SessionManager.getName());
+		textName.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
+		
 		Label lblEmail = new Label(container, SWT.NONE);
 		lblEmail.setText(Messages.get().UserInfoPerference_2);
 		
 		textEmail = new Text(container, SWT.BORDER);
-		textEmail.setEditable(false);
 		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textEmail.setText(SessionManager.getEMAIL());
-		
+		textEmail.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				isValid();
+			}
+		});
 	}
 	
 	/**
@@ -147,14 +162,6 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	 * @param container
 	 */
 	private void groupView(Composite container) {
-		Label lblEmail = new Label(container, SWT.NONE);
-		lblEmail.setText(Messages.get().UserInfoPerference_2);
-		
-		textEmail = new Text(container, SWT.BORDER);
-		textEmail.setEditable(false);
-		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		textEmail.setText(SessionManager.getEMAIL());
-		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setText(Messages.get().UserInfoPerference_5);
 		
@@ -162,6 +169,14 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		textName.setEditable(false);
 		textName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textName.setText(SessionManager.getName());
+		
+		Label lblEmail = new Label(container, SWT.NONE);
+		lblEmail.setText(Messages.get().UserInfoPerference_2);
+		
+		textEmail = new Text(container, SWT.BORDER);
+		textEmail.setEditable(false);
+		textEmail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textEmail.setText(SessionManager.getEMAIL());
 		
 		Label lblLanguage = new Label(container_1, SWT.NONE);
 		lblLanguage.setText(Messages.get().Language);
@@ -326,6 +341,22 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	@Override
 	public boolean isValid() {
 		if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_LDAP)) {
+			if("".equals(textName.getText())) {
+				textName.setFocus();
+				
+				setValid(false);
+				setErrorMessage(Messages.get().PleaseInputName);
+				return false;	
+			} else if("".equals(textEmail.getText())) {
+				textEmail.setFocus();
+				
+				setValid(false);
+				setErrorMessage(Messages.get().PleaseInputEamil);
+				return false;
+			}
+			
+			setErrorMessage(null);
+			setValid(true);
 			
 		} else {
 			if(!TadpoleApplicationContextManager.isPersonOperationType()) {
@@ -364,6 +395,23 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_LDAP)) {
 			
 			
+			UserDAO user = new UserDAO();
+			user.setSeq(SessionManager.getUserSeq());
+			user.setName(textName.getText());
+			user.setEmail(textEmail.getText());
+			
+			try {
+				TadpoleSystem_UserQuery.updateUserNameEmail(user);
+				
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_NAME.name(), textName.getText());			
+				SessionManager.updateSessionAttribute(SessionManager.NAME.LOGIN_EMAIL.name(), textEmail.getText());
+			} catch (Exception e) {
+				logger.error("user info change", e); //$NON-NLS-1$
+				MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
+				
+				return false;
+			}
+			
 		} else {
 			if(!TadpoleApplicationContextManager.isPersonOperationType()) {
 				String useOTP = btnGetOptCode.getSelection()?"YES":"NO"; //$NON-NLS-1$ //$NON-NLS-2$  
@@ -396,7 +444,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 					//fix https://github.com/hangum/TadpoleForDBTools/issues/243
 //					SessionManager.setPassword(rePass);
 				} catch (Exception e) {
-					logger.error("password change", e); //$NON-NLS-1$
+					logger.error("user info change", e); //$NON-NLS-1$
 					MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
 					
 					return false;

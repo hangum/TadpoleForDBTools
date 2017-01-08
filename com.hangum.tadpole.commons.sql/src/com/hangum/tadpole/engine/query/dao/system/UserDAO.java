@@ -36,13 +36,13 @@ public class UserDAO {
 	Timestamp changed_passwd_time = new Timestamp(System.currentTimeMillis());
 	String role_type;
 	String name;
-	String language;
-	String timezone;
-	String delYn;
+	String language = "";
+	String timezone = "";
+	String delYn = "";
 	String create_time;
 	String approval_yn;
 	
-	String use_otp;
+	String use_otp = "";
 	String otp_secret;
 	
 	String allow_ip = "*";

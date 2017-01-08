@@ -295,6 +295,17 @@
 </update>
 
 <!-- 
+	Change user name and password
+	*) just use LDAP User
+ -->
+<update id="updateUserNameEmail" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user 
+	SET name = #name#,
+		email = #email#
+	WHERE seq = #seq#
+</update>
+
+<!-- 
 	Change user password
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
@@ -326,13 +337,13 @@
 
 <!-- 
 	유저를 삭제합니다.
- -->
+ 
 <delete id="deleteUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	DELETE 
 	FROM tadpole_user 
 	WHERE email = #email#
 </delete>
-
+-->
 <!-- 
 	============================================================================================================================
 	user db
