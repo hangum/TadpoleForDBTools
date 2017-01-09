@@ -20,6 +20,9 @@ import org.eclipse.rap.rwt.RWT;
  */
 public class CommonMessages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.message.messages"; //$NON-NLS-1$
+
+	/** 저장 하시겠습니까? */
+	public String doYouWantTosave;
 	
 	public String User;
 
@@ -64,7 +67,6 @@ public class CommonMessages {
 		// 데이터를 가져오는 중입니다.
 		public String DataIsBeginAcquired;
 		
-		
 	// 회사 정보
 	public String CompanyInfo;
 	
@@ -98,6 +100,8 @@ public class CommonMessages {
 	public String ID;
 
 	public String Test;
+
+	public String IsIncorrect;
 
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

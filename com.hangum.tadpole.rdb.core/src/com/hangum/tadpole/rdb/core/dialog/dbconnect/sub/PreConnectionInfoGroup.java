@@ -75,7 +75,7 @@ public class PreConnectionInfoGroup extends Group {
 		for (PublicTadpoleDefine.DBOperationType opType : PublicTadpoleDefine.DBOperationType.values()) {
 			comboOperationType.add(opType.getTypeName());
 		}
-		comboOperationType.select(1);
+		comboOperationType.select(2);
 		
 		Label lblConnectName = new Label(this, SWT.NONE);
 		lblConnectName.setText(Messages.get().DisplayName);

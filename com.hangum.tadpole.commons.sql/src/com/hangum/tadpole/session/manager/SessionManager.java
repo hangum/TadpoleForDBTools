@@ -421,7 +421,8 @@ public class SessionManager {
 		} catch(Exception e) {
 			logger.error("loguout", e);
 		} finally {
-			removeInstance(strID);
+			removeTransactionInstance(strID);
+			removeNonTransactionInstance(strID);
 		}
 		
 	}
@@ -431,14 +432,41 @@ public class SessionManager {
 	 * 
 	 * @param strID
 	 */
-	private static void removeInstance(final String strID) {
-		Job job = new Job("remove user connection instance") { //$NON-NLS-1$
+	private static void removeTransactionInstance(final String strID) {
+		Job job = new Job("Remove transaction instance") { //$NON-NLS-1$
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				
+				try {
+					TadpoleSQLTransactionManager.executeRollback(strID);
+				} catch(Exception e) {
+					logger.error("removeTransactionInstance connection instance", e);
+					return new Status(Status.WARNING, TadpoleEngineActivator.PLUGIN_ID, e.getMessage(), e);
+				} finally {
+					monitor.done();
+				}
+				return Status.OK_STATUS;
+			}
+			
+		};
+		
+		job.setName("RemoveTransaction instance");
+		job.setUser(false);
+		job.schedule();
+	}
+	
+	/**
+	 * remove instance
+	 * 
+	 * @param strID
+	 */
+	private static void removeNonTransactionInstance(final String strID) {
+		Job job = new Job("Remove non transaction connection instance") { //$NON-NLS-1$
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				
 				try {
 					TadpoleSQLManager.removeAllInstance(strID);
-					TadpoleSQLTransactionManager.executeRollback(strID);
 				} catch(Exception e) {
 					logger.error("remove user connection instance", e);
 					return new Status(Status.WARNING, TadpoleEngineActivator.PLUGIN_ID, e.getMessage(), e);
@@ -450,7 +478,7 @@ public class SessionManager {
 			
 		};
 		
-		job.setName("remove instance");
+		job.setName("Remove normal instance");
 		job.setUser(false);
 		job.schedule();
 	}

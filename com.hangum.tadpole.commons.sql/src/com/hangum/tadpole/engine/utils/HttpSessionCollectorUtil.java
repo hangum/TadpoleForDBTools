@@ -18,9 +18,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-
 /**
  * 사용자 session 을 저장하고 관리하는 유틸 클래스이다.
  * 

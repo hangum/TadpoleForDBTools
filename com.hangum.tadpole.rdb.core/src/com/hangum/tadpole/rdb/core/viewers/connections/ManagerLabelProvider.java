@@ -70,7 +70,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		}
 		
 		if(PermissionChecker.isDBAdminRole(userDB)) {
-			retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			retText += String.format("%s (%s)", userDB.getDisplay_name(), userDB.getUsers()); //$NON-NLS-3$
 		} else {
 			
 			// 프러덕이나 백업디비이면디비 이름만보이면 됨.
@@ -78,7 +78,7 @@ public class ManagerLabelProvider extends LabelProvider {
 				retText += userDB.getDisplay_name();
 			// 기타 디비 이면 다 보이면 됨.
 			} else {
-				retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$				
+				retText += String.format("%s (%s)", userDB.getDisplay_name(), userDB.getUsers()); //$NON-NLS-1$				
 			}
 		}
 		
