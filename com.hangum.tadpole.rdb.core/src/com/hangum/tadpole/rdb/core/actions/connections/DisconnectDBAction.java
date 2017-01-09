@@ -25,7 +25,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -54,23 +53,6 @@ public class DisconnectDBAction implements IViewActionDelegate {
 	public void run(IAction action) {
 
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
-
-//		// 실제 db connection 삭제 
-//		try {
-//			TadpoleSQLManager.removeInstance(userDB);			
-//		} catch (Exception e) {
-//			logger.error("remove Instnce db", e);
-//		}
-		
-		// Connection tree 삭제
-//		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
-//		Display.getCurrent().asyncExec(new Runnable() {
-//			@Override
-//			public void run() {
-//				managerView.removeTreeList(userDB.getTypes(), userDB);
-//			}
-//		});	// end display
-		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
