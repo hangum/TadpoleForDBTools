@@ -964,7 +964,7 @@ SELECT
 	VALUES(#user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#, #ipAddress#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO">
-		SELECT max(seq) seq 
+		SELECT max(seq) seq, user_seq, startDateExecute
 		FROM executed_sql_resource 
 		WHERE user_seq = #user_seq# 
 			AND db_seq = #db_seq#
@@ -976,8 +976,8 @@ SELECT
 	execute sql resource data를 저장합니다.
  -->
 <insert id="userExecuteSQLResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDataDAO">
-	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, datas)
-	VALUES(#executed_sql_resource_seq#, #datas#)
+	INSERT INTO executed_sql_resource_data(startDateExecute, executed_sql_resource_seq, datas)
+	VALUES(#startDateExecute#, #executed_sql_resource_seq#, #datas#)
 </insert>
 
 <!-- 

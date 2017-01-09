@@ -107,7 +107,7 @@ public class TadpoleSystem_ExecutedSQL {
 		}
 		
 		for (Map resultMap : listResourceData) {
-			int seq = (Integer)resultMap.get("executed_sql_resource_seq");
+			long seq = (Long)resultMap.get("executed_sql_resource_seq");
 
 			Long startdateexecute = 0l;
 			String strSQLText = (String)resultMap.get("datas");
@@ -171,7 +171,7 @@ public class TadpoleSystem_ExecutedSQL {
 		List<java.util.Map> listResourceData =  sqlClient.queryForList("getExecuteQueryHistory", queryMap);
 		
 		for (Map resultMap : listResourceData) {
-			int seq 				= (Integer)resultMap.get("executed_sql_resource_seq");
+			long seq 				= (Long)resultMap.get("executed_sql_resource_seq");
 			
 			Long startdateexecute 	= 0l;
 			// This case sqlite
@@ -254,6 +254,7 @@ public class TadpoleSystem_ExecutedSQL {
 		// content data를 저장합니다.
 		ExecutedSqlResourceDataDAO dataDao = new ExecutedSqlResourceDataDAO();
 		dataDao.setExecuted_sql_resource_seq(userDBResource.getSeq());
+		dataDao.setStartDateExecute(new Timestamp(userDBResource.getStartDateExecute().getTime()));
 		dataDao.setDatas(contents);		
 		sqlClient.insert("userExecuteSQLResourceDataInsert", dataDao); //$NON-NLS-1$				
 	}

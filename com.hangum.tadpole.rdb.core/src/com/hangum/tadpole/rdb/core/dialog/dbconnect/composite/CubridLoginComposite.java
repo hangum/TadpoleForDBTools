@@ -87,14 +87,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
-				comboGroup.setText(strOtherGroupName);
-			} else {
-				// 콤보 선택 
-				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
-				}
-			}
+			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
 		}
 		
 		preDBInfo.getTextDisplayName().setFocus();

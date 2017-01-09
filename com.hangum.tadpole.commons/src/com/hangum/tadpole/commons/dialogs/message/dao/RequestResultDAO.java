@@ -22,7 +22,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class RequestResultDAO {
 	
-	int seq;
+	long seq;
 	
 	/** Execute start time */
 	Timestamp startDateExecute;
@@ -110,11 +110,11 @@ public class RequestResultDAO {
 		this.dbSeq = dbSeq;
 	}
 
-	public int getSeq() {
+	public long getSeq() {
 		return seq;
 	}
 
-	public void setSeq(int seq) {
+	public void setSeq(long seq) {
 		this.seq = seq;
 	}
 

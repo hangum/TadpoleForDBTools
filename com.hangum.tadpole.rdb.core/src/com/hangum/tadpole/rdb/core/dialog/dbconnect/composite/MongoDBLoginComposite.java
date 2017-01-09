@@ -220,13 +220,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) { //$NON-NLS-1$
-				comboGroup.setText(strOtherGroupName);
-			} else {
-				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(comboGroup.getItem(i).equals(selGroupName)) comboGroup.select(i);
-				}
-			}
+			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
 		}
 		
 		//
