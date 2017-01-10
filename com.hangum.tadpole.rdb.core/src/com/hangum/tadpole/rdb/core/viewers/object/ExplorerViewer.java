@@ -293,7 +293,7 @@ public class ExplorerViewer extends ViewPart {
 		this.comboSchema.setText(strSchemaName);
 		 
 		this.userDB.setSchema(strSchemaName);
-		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);
+		if(logger.isDebugEnabled()) logger.debug("*** Change schema name is " + strSchemaName);
 		
 		// 기존 스키마에 대해 조회되어 있던 내용을 초기화 한다.
 		
@@ -313,8 +313,6 @@ public class ExplorerViewer extends ViewPart {
 		if(null != this.agensVertexComposite) agensVertexComposite.clearList();
 		if(null != this.agensEdgeComposite) agensEdgeComposite.clearList();
 
-
-		
 		// 아젠스 그래프 디비인 경우는 첫번째 탭이 그래프 패스 이므로 그래프 패스가 선택 되도록 한다.
 		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
 			//refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());

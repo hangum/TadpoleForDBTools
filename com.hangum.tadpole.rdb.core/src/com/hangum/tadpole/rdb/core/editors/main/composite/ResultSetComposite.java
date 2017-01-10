@@ -93,7 +93,6 @@ import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -715,8 +714,7 @@ public class ResultSetComposite extends Composite {
 				javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
 			} else {
 				if(reqQuery.isAutoCommit()) {
-					SqlMapClient client = TadpoleSQLManager.getInstance(getUserDB());
-					javaConn = client.getDataSource().getConnection();
+					javaConn = TadpoleSQLManager.getConnection(getUserDB());
 				} else {
 					javaConn = TadpoleSQLTransactionManager.getInstance(strUserEmail, getUserDB());
 				}

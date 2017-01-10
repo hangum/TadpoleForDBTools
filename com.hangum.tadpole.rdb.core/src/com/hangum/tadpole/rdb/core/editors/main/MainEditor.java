@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +59,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
@@ -137,7 +140,12 @@ public class MainEditor extends EditorExtension {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		MainEditorInput qei = (MainEditorInput)input;
-		userDB = qei.getUserDB();
+		try {
+			userDB = (UserDBDAO)qei.getUserDB().clone();
+		} catch(Exception e) {
+			logger.error("set define default userDB", e);
+		}
+		
 		initDefaultEditorStr = qei.getDefaultStr();
 		strLastContent = qei.getDefaultStr();
 		dbAction = qei.getDbAction();
@@ -167,6 +175,8 @@ public class MainEditor extends EditorExtension {
 
 		strRoleType = userDB.getRole_id();
 		super.setUserType(strRoleType);
+		
+		// schema 변경
 		
 		setSite(site);
 		setInput(input);
@@ -681,12 +691,10 @@ public class MainEditor extends EditorExtension {
 		//  schema test code start
 		//
 		final UserDBDAO userDB = getUserDB();
-		if(logger.isDebugEnabled()) {
-			logger.debug("################################################################################");
-			logger.debug("userDB schema is " + userDB.getSchema());
-			logger.debug("################################################################################");
-		}
-		
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("======= schema name : " + userDB.getSchema());
+//		}
+
 		// do not execute query
 		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {
 			if(ApplicationArgumentUtils.isOnlineServer()) {
@@ -721,12 +729,46 @@ public class MainEditor extends EditorExtension {
 			}
 
 			DialogUtil.popupObjectInformationDialog(getUserDB(), paramMap);
+		} else if(StringUtils.startsWithIgnoreCase(strCheckSQL, "use ") && getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			try {
+				testChangeSchema(strCheckSQL);
+				String strSchema = StringUtils.remove(strCheckSQL, "use ");
+				userDB.setSchema(strSchema);
+				refreshConnectionTitle();
+			} catch(Exception e) {
+				MessageDialog.openError(null, CommonMessages.get().Error, e.getMessage());
+				setFocus();
+			}
 		} else {
 			resultMainComposite.executeCommand(reqQuery);
 		}
 
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, "executeCommand"); //$NON-NLS-1$
+	}
+	
+	/**
+	 * schema 변경시 올바른지 검증한다.
+	 * @param strCheckSQL
+	 * @throws Exception
+	 */
+	private void testChangeSchema(String strCheckSQL) throws Exception {
+		Connection javaConn = TadpoleSQLManager.getConnection(userDB);
+		
+		Statement statement = null;
+		try {
+			if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+				if(logger.isDebugEnabled()) logger.debug(String.format("=set define schema %s ", userDB.getSchema()));
+				
+				statement = javaConn.createStatement();
+				statement.executeUpdate(strCheckSQL);
+			}
+		} catch(Exception e) {
+			logger.error("change scheman ", e);
+			throw e;
+		} finally {
+			if(statement != null) statement.close();
+		}
 	}
 	/**
 	 * auto commit 

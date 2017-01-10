@@ -19,7 +19,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * sql query util
@@ -32,7 +31,7 @@ public class SQLQueryUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLQueryUtil.class);
 	
-	private int DATA_COUNT = 100000;
+	private int DATA_COUNT = 10000;
 	
 	private UserDBDAO userDB;
 	private String requestQuery;
@@ -66,8 +65,7 @@ public class SQLQueryUtil {
 		java.sql.Connection javaConn = null;
 		
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			stmt = javaConn.prepareStatement(thisTimeQuery); 
 			rs = stmt.executeQuery();//Query( selText );
