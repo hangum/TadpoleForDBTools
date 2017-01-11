@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -40,7 +41,7 @@ public class DBCPConnectionManager {
 	
 	public static DBCPConnectionManager instance = new DBCPConnectionManager();
 	private Map<String, DataSource> mapDataSource = new HashMap<String, DataSource>();
-//	private Map<String, GenericObjectPool> mapGenericObject = new ConcurrentHashMap<String, GenericObjectPool>();
+	private Map<String, GenericObjectPool> mapGenericObject = new HashMap<String, GenericObjectPool>();
 	
 	private DBCPConnectionManager() {}
 	
@@ -84,6 +85,7 @@ public class DBCPConnectionManager {
 		// setting poolable connection factory
 		DataSource ds = new PoolingDataSource(connectionPool);
 		mapDataSource.put(searchKey, ds);
+		mapGenericObject.put(searchKey, connectionPool);
 		
 		return ds;
 	}
@@ -102,18 +104,19 @@ public class DBCPConnectionManager {
 	}
 	
 	public void releaseConnectionPool(final String searchKey) {
-//		GenericObjectPool connectionPool = mapGenericObject.remove(searchKey);
-//		try {
-//			if(connectionPool != null) {
-//				connectionPool.clear();
-//				connectionPool.close();
-//			}
-//		} catch(Exception e) {
-//			logger.error(String.format("**** release connection key is %s", searchKey), e);
-//		} finally {
-//			connectionPool = null; 
-//			mapDataSource.remove(searchKey);
-//		}
-		mapDataSource.remove(searchKey);
+		GenericObjectPool connectionPool = mapGenericObject.remove(searchKey);
+		try {
+			if(connectionPool != null) {
+				connectionPool.clear();
+				connectionPool.close();
+			}
+		} catch(Exception e) {
+			logger.error(String.format("**** release connection key is %s", searchKey), e);
+		} finally {
+			connectionPool = null; 
+			DataSource ds = mapDataSource.remove(searchKey);
+			ds = null;
+		}
+		
 	}
 }

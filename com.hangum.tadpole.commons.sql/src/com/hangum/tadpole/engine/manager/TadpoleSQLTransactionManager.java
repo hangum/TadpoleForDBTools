@@ -127,6 +127,9 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 					logger.info("\t result => " + rs.getRow());
 				} catch(Exception e) {
 					logger.error("test connection query", e);
+					
+					// 세션이 종료 되었거나 하여서 세션이 강제로 끊겼다. 
+					rollback(userId, userDB);
 				} finally {
 					if(rs != null) rs.close();
 					if(ps != null) ps.close();
@@ -263,7 +266,8 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		if (logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLTransactionManager] remove Instance: " + searchKey);
 
 		try {
-			dbManager.remove(searchKey);
+			TransactionDAO transactionDAO = dbManager.remove(searchKey);
+			transactionDAO =null;
 
 			DBCPConnectionManager.getInstance().releaseConnectionPool(searchKey);
 		} catch (Exception e) {
