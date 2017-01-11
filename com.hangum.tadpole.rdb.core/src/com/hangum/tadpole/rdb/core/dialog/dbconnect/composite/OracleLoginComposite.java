@@ -120,7 +120,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		comboConnType.setLayoutData(gd_comboConnType);
 		comboConnType.add("SID");
 		comboConnType.add("Service Name");
-		comboConnType.select(1);
+		comboConnType.select(0);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
@@ -169,6 +169,11 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
+			if("".equals(oldUserDB.getExt1())) {
+				comboConnType.select(0);
+			} else {
+				comboConnType.setText(oldUserDB.getExt1());
+			}
 			textDatabase.setText(oldUserDB.getDb());
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
@@ -269,6 +274,10 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 //		userDB.setLocale(comboLocale.getText().trim());
+		
+		// sid or service name
+		userDB.setExt1(comboConnType.getText());
+		if(oldUserDB != null) oldUserDB.setExt1(comboConnType.getText());
 		
 		// set ext value
 		setExtValue();

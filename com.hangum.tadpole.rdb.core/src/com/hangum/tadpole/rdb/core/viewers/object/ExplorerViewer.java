@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
