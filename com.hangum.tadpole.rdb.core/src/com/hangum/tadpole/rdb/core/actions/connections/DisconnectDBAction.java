@@ -31,6 +31,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * database disconnect
@@ -73,6 +74,9 @@ public class DisconnectDBAction implements IViewActionDelegate {
 				explorerView.initObjectHead(new ManagerListDTO(null));
 			}
 		});	// end display
+		
+		// session 에 접근 가능한 디비임을 표시한다.
+		SessionManager.removeUnlockDB(userDB);
 		
 		// realdb disconnect
 		try {

@@ -120,7 +120,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		comboConnType.setLayoutData(gd_comboConnType);
 		comboConnType.add("SID");
 		comboConnType.add("Service Name");
-		comboConnType.select(0);
+		comboConnType.select(1);
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));

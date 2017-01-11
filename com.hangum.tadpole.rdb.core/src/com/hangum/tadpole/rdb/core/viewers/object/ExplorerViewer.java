@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -162,7 +164,6 @@ public class ExplorerViewer extends ViewPart {
 			}
 		});
 		comboSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -456,6 +457,9 @@ public class ExplorerViewer extends ViewPart {
 			comboSchema.setText(userDB.getDb());
 		}
 		comboSchema.setVisibleItemCount(comboSchema.getItemCount() > 15 ? 15 : comboSchema.getItemCount());
+		
+		// 스키마 목록을 재상용하기 위해 기록합니다. 
+		userDB.setSchemas(Arrays.asList(comboSchema.getItems()));
 	}
 	
 	/**

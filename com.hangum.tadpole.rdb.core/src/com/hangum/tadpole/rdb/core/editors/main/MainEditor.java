@@ -35,6 +35,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -67,6 +68,7 @@ import com.hangum.tadpole.engine.query.dao.system.bill.UserBillEditorInput;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.sql.dialog.save.ResourceSaveDialog;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -100,6 +102,11 @@ public class MainEditor extends EditorExtension {
 	public static final String ID = "com.hangum.tadpole.rdb.core.editor.main"; //$NON-NLS-1$
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(MainEditor.class);
+	
+	/**
+	 * MySQL 그룹은 스키마를 콤보박스 
+	 */
+	private Combo comboSchema;
 	
 	/** connection URL */
 	private ToolItem tltmConnectURL;
@@ -235,38 +242,67 @@ public class MainEditor extends EditorExtension {
 				setFocus();
 			}
 		});
-		final ToolItem tltmSelectDB = new ToolItem(toolBar, SWT.NONE);
-		tltmSelectDB.setToolTipText(Messages.get().SelectOthersDB);
-		tltmSelectDB.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/arrow_down.png")); //$NON-NLS-1$
-		tltmSelectDB.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(!isAutoCommit()) {
-					MessageDialog.openWarning(getSite().getShell(), CommonMessages.get().Warning, Messages.get().PleaseEndedTransaction);
-				} else {
-					
-					UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), userDB);
-					if(Dialog.OK == dialog.open()) {
-						UserDBDAO selectedUserDB = dialog.getUserDB();
-						if(selectedUserDB != null) {
-							userDB = selectedUserDB;
-							
-							try {
-								TadpoleObjectQuery.getTableList(userDB);
-							} catch (Exception e1) {
-								logger.error("get table list", e1);
-							}
-							
-							refreshConnectionTitle();
-						}
-					}
-				}
-				
-				setFocus();
-			}
-		});
-		new ToolItem(toolBar, SWT.SEPARATOR);
 		
+		// 패스워드를 물어야 하면 화면에서 보이지 않도록 수정.
+//		if(PublicTadpoleDefine.YES_NO.NO.name().equals(GetAdminPreference.getConnectionAskType())) {
+//			final ToolItem tltmSelectDB = new ToolItem(toolBar, SWT.NONE);
+//			tltmSelectDB.setToolTipText(Messages.get().SelectOthersDB);
+//			tltmSelectDB.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/arrow_down.png")); //$NON-NLS-1$
+//			tltmSelectDB.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					if(!isAutoCommit()) {
+//						MessageDialog.openWarning(getSite().getShell(), CommonMessages.get().Warning, Messages.get().PleaseEndedTransaction);
+//					} else {
+//						
+//						UserDBGroupDialog dialog = new UserDBGroupDialog(getSite().getShell(), userDB);
+//						if(Dialog.OK == dialog.open()) {
+//							UserDBDAO selectedUserDB = dialog.getUserDB();
+//							if(selectedUserDB != null) {
+//								userDB = selectedUserDB;
+//								
+//								try {
+//									TadpoleObjectQuery.getTableList(userDB);
+//								} catch (Exception e1) {
+//									logger.error("get table list", e1);
+//								}
+//								
+//								refreshConnectionTitle();
+//							}
+//						}
+//					}
+//					
+//					setFocus();
+//				}
+//			});
+//			new ToolItem(toolBar, SWT.SEPARATOR);
+//		}
+		
+		// mysql group 이면 스키마 목록이 보이도록 합니다.
+		if(getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			ToolItem sep = new ToolItem(toolBar, SWT.SEPARATOR);
+			
+			comboSchema = new Combo(toolBar, SWT.READ_ONLY);
+			comboSchema.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					userDB.setSchema(comboSchema.getText());
+				}
+			});
+			
+			for (String schema : userDB.getSchemas()) {
+				comboSchema.add(schema);
+			}
+			comboSchema.setVisibleItemCount(userDB.getSchemas().size());
+			comboSchema.setText(userDB.getSchema());
+			comboSchema.pack();
+			new ToolItem(toolBar, SWT.SEPARATOR);
+			
+			sep.setWidth(comboSchema.getSize().x);
+		    sep.setControl(comboSchema);
+		    toolBar.pack();
+		}
+
 		// fileupload 
 		ToolItem tltmOpen = new ToolItem(toolBar, SWT.NONE);
 		tltmOpen.setToolTipText(Messages.get().MainEditor_35);
@@ -535,11 +571,12 @@ public class MainEditor extends EditorExtension {
 	 * refresh connection title
 	 */
 	private void refreshConnectionTitle() {
-		if("".equals(userDB.getSchema())) {
-			tltmConnectURL.setText(String.format("%s", userDB.getDisplay_name()));
-		} else {
-			tltmConnectURL.setText(String.format("%s - %s", userDB.getDisplay_name(), userDB.getSchema()));	
-		}
+//		if("".equals(userDB.getSchema())) {
+//			tltmConnectURL.setText(String.format("%s", userDB.getDisplay_name()));
+//		} else {
+//			tltmConnectURL.setText(String.format("%s - %s", userDB.getDisplay_name(), userDB.getSchema()));	
+//		}
+		tltmConnectURL.setText(String.format("%s", userDB.getDisplay_name()));
 	}
 	
 	public Browser getBrowserQueryEditor() {
@@ -724,17 +761,18 @@ public class MainEditor extends EditorExtension {
 				paramMap.put("OBJECT_OWNER", StringUtils.substringBefore(strObject, "."));
 				paramMap.put("OBJECT_NAME", StringUtils.substringAfter(strObject, "."));
 			}else{
-				//paramMap.put("OBJECT_OWNER", userDB.getSchema());
+				paramMap.put("OBJECT_OWNER", userDB.getSchema());
 				paramMap.put("OBJECT_NAME", strObject);
 			}
-
+			
 			DialogUtil.popupObjectInformationDialog(getUserDB(), paramMap);
 		} else if(StringUtils.startsWithIgnoreCase(strCheckSQL, "use ") && getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
 			try {
 				testChangeSchema(strCheckSQL);
 				String strSchema = StringUtils.remove(strCheckSQL, "use ");
 				userDB.setSchema(strSchema);
-				refreshConnectionTitle();
+
+				comboSchema.setText(strSchema);
 			} catch(Exception e) {
 				MessageDialog.openError(null, CommonMessages.get().Error, e.getMessage());
 				setFocus();

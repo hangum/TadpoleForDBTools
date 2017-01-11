@@ -379,9 +379,9 @@ public class SessionManager {
 	 */
 	public static boolean setUnlokDB(final UserDBDAO userDB) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		List<Integer> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		List<UserDBDAO> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
 		
-		return listUnlockDB.add(userDB.getSeq());
+		return listUnlockDB.add(userDB);
 	}
 	
 	/**
@@ -391,9 +391,21 @@ public class SessionManager {
 	 */
 	public static boolean isUnlockDB(final UserDBDAO userDB) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		List<Integer> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		List<UserDBDAO> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
 		
-		return listUnlockDB.contains(userDB.getSeq());
+		return listUnlockDB.contains(userDB);
+	}
+	
+	/**
+	 * unlock session
+	 * 
+	 * @param userDB
+	 */
+	public static void removeUnlockDB(final UserDBDAO userDB) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		List<UserDBDAO> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		
+		listUnlockDB.remove(userDB);
 	}
 	
 	/**
