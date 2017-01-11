@@ -68,9 +68,7 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
 		final String searchKey = getKey(userId, userDB);
 		
-		if (logger.isInfoEnabled()) {
-			logger.info("[userId]" + searchKey);
-		}
+		if (logger.isDebugEnabled()) logger.debug("[userId]" + searchKey);
 
 		Connection _conn = null;;
 		TransactionDAO transactionDAO = dbManager.get(searchKey);
@@ -88,23 +86,22 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 				_transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
 				_transactionDAO.setKey(searchKey);
 				
-				if (logger.isInfoEnabled()) {
-					logger.info("\t New connection strt......");
-
-					PreparedStatement ps = null;
-					ResultSet rs = null;
-					try {
-						ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
-						rs = ps.executeQuery();
-						logger.info("\t result => " + rs.getRow());
-					} catch(Exception e) {
-						logger.error("test connection query", e);
-					} finally {
-						if(rs != null) rs.close();
-						if(ps != null) ps.close();
-					}
-					logger.info("\t New connection end......");
+				// --------[Test start]----------------------
+				if (logger.isDebugEnabled()) logger.debug("\t New connection strt......");
+				PreparedStatement ps = null;
+				ResultSet rs = null;
+				try {
+					ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+					rs = ps.executeQuery();
+					if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
+				} catch(Exception e) {
+					logger.error("first test connection query", e);
+				} finally {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
 				}
+				if (logger.isDebugEnabled()) logger.debug("\t New connection end......");
+				// --------[Test end]----------------------
 				
 				dbManager.put(searchKey, _transactionDAO);
 				
@@ -117,25 +114,26 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		} else {
 			_conn = transactionDAO.getConn();
 			
-			if (logger.isInfoEnabled()) {
-				logger.info("\t Already connection start......");
-				PreparedStatement ps = null;
-				ResultSet rs = null;
-				try {
-					ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
-					rs = ps.executeQuery();
-					logger.info("\t result => " + rs.getRow());
-				} catch(Exception e) {
-					logger.error("test connection query", e);
-					
-					// 세션이 종료 되었거나 하여서 세션이 강제로 끊겼다. 
-					rollback(userId, userDB);
-				} finally {
-					if(rs != null) rs.close();
-					if(ps != null) ps.close();
-				}
-				logger.info("\t Already connection end......");
+			// --------[Test start]----------------------
+			if (logger.isDebugEnabled()) logger.debug("\t Already connection start......");
+				
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+			try {
+				ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+				rs = ps.executeQuery();
+				if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
+			} catch(Exception e) {
+				logger.error("test connection query", e);
+				
+				// 세션이 종료 되었거나 하여서 세션이 강제로 끊겼다. 
+				rollback(userId, userDB);
+			} finally {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
 			}
+			if (logger.isDebugEnabled()) logger.debug("\t Already connection end......");
+			// --------[Test end]----------------------
 		}
 		
 		// 변경시 마다 커넥션을 수정한다.
@@ -146,24 +144,24 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	 * 사용자 커넥션을 얻는다.
 	 * 
 	 * @param userDB
+	 * @param javaConn
 	 * @return
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
 	private static Connection changeScheema(final UserDBDAO userDB, final Connection javaConn) throws TadpoleSQLManagerException, SQLException {
-
-		Statement statement = null;
-		try {
-			if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			Statement statement = null;
+			try {
 				statement = javaConn.createStatement();
 				statement.executeUpdate("use " + userDB.getSchema());
+			} catch(Exception e) {
+				logger.error("change scheman ", e);
+				throw new SQLException(e);
+			} finally {
+				if(statement != null) statement.close();
 			}
-		} catch(Exception e) {
-			logger.error("change scheman ", e);
-			throw new SQLException(e);
-		} finally {
-			if(statement != null) statement.close();
-		}
+		}	// end mysql group
 		
 		return javaConn;
 	}
