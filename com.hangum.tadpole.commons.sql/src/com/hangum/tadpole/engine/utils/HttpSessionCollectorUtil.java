@@ -18,9 +18,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
-
 /**
  * 사용자 session 을 저장하고 관리하는 유틸 클래스이다.
  * 
@@ -82,13 +79,6 @@ public class HttpSessionCollectorUtil {
 			httpSesssion.invalidate();
 		} catch(Throwable e) {
 			logger.error(String.format("System invalidate user %s, messages %s", strEmail, e.getMessage()));
-		}
-		
-		try {
-			TadpoleSQLManager.removeAllInstance(strEmail);
-			TadpoleSQLTransactionManager.executeRollback(strEmail);
-		} catch(Exception e) {
-			logger.error("remove user connection", e);
 		}
 		
 	}

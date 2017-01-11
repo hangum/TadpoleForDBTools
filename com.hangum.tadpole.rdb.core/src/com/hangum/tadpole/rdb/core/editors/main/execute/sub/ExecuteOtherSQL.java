@@ -29,7 +29,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Execute ddl, insert, update, delete etc..
@@ -111,8 +110,8 @@ public class ExecuteOtherSQL {
 			PreparedStatement preparedStatement = null;
 			try {
 				if(reqQuery.isAutoCommit()) {
-					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-					javaConn = client.getDataSource().getConnection();
+//					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+					javaConn = TadpoleSQLManager.getConnection(userDB);
 				} else {
 					javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
 				}

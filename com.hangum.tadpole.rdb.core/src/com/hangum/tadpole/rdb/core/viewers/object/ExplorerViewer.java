@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -163,7 +165,6 @@ public class ExplorerViewer extends ViewPart {
 		});
 		comboSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_compositeSearch = new GridLayout(2, false);
@@ -293,7 +294,7 @@ public class ExplorerViewer extends ViewPart {
 		this.comboSchema.setText(strSchemaName);
 		 
 		this.userDB.setSchema(strSchemaName);
-		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);
+		if(logger.isDebugEnabled()) logger.debug("*** Change schema name is " + strSchemaName);
 		
 		// 기존 스키마에 대해 조회되어 있던 내용을 초기화 한다.
 		
@@ -313,8 +314,6 @@ public class ExplorerViewer extends ViewPart {
 		if(null != this.agensVertexComposite) agensVertexComposite.clearList();
 		if(null != this.agensEdgeComposite) agensEdgeComposite.clearList();
 
-
-		
 		// 아젠스 그래프 디비인 경우는 첫번째 탭이 그래프 패스 이므로 그래프 패스가 선택 되도록 한다.
 		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
 			//refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
@@ -458,6 +457,9 @@ public class ExplorerViewer extends ViewPart {
 			comboSchema.setText(userDB.getDb());
 		}
 		comboSchema.setVisibleItemCount(comboSchema.getItemCount() > 15 ? 15 : comboSchema.getItemCount());
+		
+		// 스키마 목록을 재상용하기 위해 기록합니다. 
+		userDB.setSchemas(Arrays.asList(comboSchema.getItems()));
 	}
 	
 	/**

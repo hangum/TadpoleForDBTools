@@ -11,9 +11,9 @@
 package com.hangum.tadpole.engine.manager.transaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -39,7 +39,7 @@ public class DBCPConnectionManager {
 	private static final Logger logger = Logger.getLogger(DBCPConnectionManager.class);
 	
 	public static DBCPConnectionManager instance = new DBCPConnectionManager();
-	private Map<String, DataSource> mapDataSource = new ConcurrentHashMap<String, DataSource>();
+	private Map<String, DataSource> mapDataSource = new HashMap<String, DataSource>();
 //	private Map<String, GenericObjectPool> mapGenericObject = new ConcurrentHashMap<String, GenericObjectPool>();
 	
 	private DBCPConnectionManager() {}
@@ -52,7 +52,7 @@ public class DBCPConnectionManager {
 		GenericObjectPool connectionPool = new GenericObjectPool();
 		connectionPool.setMaxActive(2);
 		connectionPool.setWhenExhaustedAction((byte)1);
-		connectionPool.setMaxWait(1000 * 60); 							// 1분대기.
+		connectionPool.setMaxWait(1000 * 60); 								// 1분대기.
 		connectionPool.setTimeBetweenEvictionRunsMillis(60L * 1000L * 1L);	// 60초에 한번씩 테스트
 		connectionPool.setTestWhileIdle(true);
 		
@@ -71,7 +71,6 @@ public class DBCPConnectionManager {
 			// initialize connection string
 			List<String> listInitializeSql = new ArrayList<String>();
 			String strFullHelloSQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID()) + "\n " + userDB.getDBDefine().getValidateQuery();
-//			if(logger.isInfoEnabled()) logger.info(strFullHelloSQL);
 			
 			listInitializeSql.add(strFullHelloSQL);
 			
@@ -85,14 +84,6 @@ public class DBCPConnectionManager {
 		// setting poolable connection factory
 		DataSource ds = new PoolingDataSource(connectionPool);
 		mapDataSource.put(searchKey, ds);
-//		mapGenericObject.put(searchKey, connectionPool);
-		
-//		try {
-//			Connection conn = ds.getConnection();
-//			if(logger.isDebugEnabled()) logger.debug("\t catalog is " + conn.getCatalog());
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
 		
 		return ds;
 	}

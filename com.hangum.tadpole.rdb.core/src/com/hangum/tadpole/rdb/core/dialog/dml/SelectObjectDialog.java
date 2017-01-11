@@ -68,8 +68,6 @@ public class SelectObjectDialog extends Dialog {
 	private Label lblTableName;
 	private Map<String,String> object_map = new HashMap<String,String>();
 
-	private Shell shell;
-
 	/**
 	 * Create the dialog.
 	 * 
@@ -91,8 +89,7 @@ public class SelectObjectDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		this.shell = newShell;
-		newShell.setText(object_map.get("object_name"));
+		newShell.setText(Messages.get().SelectObject);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -174,13 +171,26 @@ public class SelectObjectDialog extends Dialog {
 		tableViewer.refresh();
 		
 		tableViewer.getTable().setSelection(0);
-
+		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
+
+		tableViewer.getTable().setFocus();
 		
 		return container;
 	}
+	
+	/**
+	 * selected object
+	 */
+	private void selectObject() {
+		
+	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getObjectCount() {
 		return extendsInfoList == null ? 0 : extendsInfoList.size();
 	}
@@ -191,8 +201,6 @@ public class SelectObjectDialog extends Dialog {
 
 	private void initData() {
 		try {
-			
-
 			List<HashMap> Objects = TadpoleObjectQuery.getObjectInfo(userDB, object_map);
 			for (HashMap map : Objects) {
 				extendsInfoList.add(map);

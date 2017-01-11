@@ -83,6 +83,8 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 	}
 	
 	private void serverLogout() {
+		final String strID = SessionManager.getEMAIL();
+		
 		// https://github.com/hangum/TadpoleForDBTools/issues/157 (종료하기 전에 에디터에 내용이 있다면 묻도록 수정.)
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();	
 		IEditorReference[] references = page.getEditorReferences();
@@ -90,47 +92,47 @@ public class ExitAction extends Action implements ISelectionListener, IWorkbench
 			page.closeEditor(iEditorReference.getEditor(false), true);
 		}
 		
-		beforeLogoutAction();
-		SessionManager.logout();
+//		beforeLogoutAction(strID);
+		SessionManager.logout(strID);
 	}
 	
-	/**
-	 * 로그아웃 전처리를 합니다 
-	 * 
-	 * <pre>
-	 * 1. 사용자의 Transaction connection 이 있을 경우 rollbak 처리한다.
-	 * 2. 페이지를 다른 쪽으로 이동합니다.
-	 * 
-	 * </pre> 
-	 */
-	private void beforeLogoutAction() {
-		try {
-			HttpSessionCollectorUtil.getInstance().sessionDestroyed(SessionManager.getEMAIL());
-		} catch(Throwable t) {
-			if(logger.isDebugEnabled()) logger.error("user logout");
-		}
-		
-//		HttpServletResponse hsr = RWT.getResponse();
-//		try {
-////			hsr.setHeader("Pragma","no-cache");
-////			hsr.setHeader("Cache-Control","no-cache");
-////			hsr.addHeader("Cache-Control","no-store");
-////			hsr.setDateHeader("Expires", 0);
-//			
-////			hsr.sendRedirect("http://daum.net");
-//			
-//			Client client = RWT.getClient();
-//			JavaScriptExecutor executor = client.getService( JavaScriptExecutor.class );
-//			if( executor != null ) {
-//			  executor.execute("parent.window.location.href=\"" + "http://daum.net" + "\";");
-//			}
-//		} catch (Exception e) {
-//			logger.error("logout redirect", e);
-//			
-//			// ignore message
-//		}
-		
-	}
+//	/**
+//	 * 로그아웃 전처리를 합니다 
+//	 * 
+//	 * <pre>
+//	 * 1. 사용자의 Transaction connection 이 있을 경우 rollbak 처리한다.
+//	 * 2. 페이지를 다른 쪽으로 이동합니다.
+//	 * 
+//	 * </pre> 
+//	 */
+//	private void beforeLogoutAction(final String strID) {
+////		try {
+////			HttpSessionCollectorUtil.getInstance().sessionDestroyed(strID);
+////		} catch(Throwable t) {
+////			if(logger.isDebugEnabled()) logger.error("user logout");
+////		}
+//		
+////		HttpServletResponse hsr = RWT.getResponse();
+////		try {
+//////			hsr.setHeader("Pragma","no-cache");
+//////			hsr.setHeader("Cache-Control","no-cache");
+//////			hsr.addHeader("Cache-Control","no-store");
+//////			hsr.setDateHeader("Expires", 0);
+////			
+//////			hsr.sendRedirect("http://daum.net");
+////			
+////			Client client = RWT.getClient();
+////			JavaScriptExecutor executor = client.getService( JavaScriptExecutor.class );
+////			if( executor != null ) {
+////			  executor.execute("parent.window.location.href=\"" + "http://daum.net" + "\";");
+////			}
+////		} catch (Exception e) {
+////			logger.error("logout redirect", e);
+////			
+////			// ignore message
+////		}
+//		
+//	}
 	
 	@Override
 	public void dispose() {

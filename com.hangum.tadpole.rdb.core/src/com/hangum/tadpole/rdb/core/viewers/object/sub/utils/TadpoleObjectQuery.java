@@ -201,8 +201,7 @@ public class TadpoleObjectQuery {
 		}
 		mapParam.put("table", tableDao.getName());
 		
-		 return  client.queryForObject("getTableSizeInfo", mapParam);
-		
+		return  client.queryForObject("getTableSizeInfo", mapParam);
 	}
 	
 	/**
@@ -408,7 +407,6 @@ public class TadpoleObjectQuery {
 	 */
 	
 	public static List<HashMap> getObjectInfo(UserDBDAO userDB, Map<String,String> object_map) throws Exception {
-
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		
 		return sqlClient.queryForList("allObjects", object_map); //$NON-NLS-1$

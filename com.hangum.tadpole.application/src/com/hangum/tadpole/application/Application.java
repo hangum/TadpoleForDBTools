@@ -92,9 +92,6 @@ public class Application implements EntryPoint {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, txtLoginMethod);
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, userInfoDao);
 			
-//			logger.info(String.format("======1==> ldap searbase is %s", prop.getProperty("LDAP.SEARCHBASE")));
-//			logger.info(String.format("======2==> ldap searbase is %s", new String(properties.getProperty("LDAP.SEARCHBASE").getBytes("ISO-8859-1"), "UTF-8")));
-			
 		} catch(Exception e) {
 			logger.error("Initialization failed.", e); //$NON-NLS-1$
 			MessageDialog.openError(null, CommonMessages.get().Error, com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2);

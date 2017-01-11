@@ -11,17 +11,23 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.transaction.DBCPConnectionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -32,7 +38,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  * @author hangum
  *
  */
-public class TadpoleSQLTransactionManager {
+public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	/**
 	 * Logger for this class
 	 */
@@ -46,7 +52,7 @@ public class TadpoleSQLTransactionManager {
 	static {
 		if (transactionManager == null) {
 			transactionManager = new TadpoleSQLTransactionManager();
-			dbManager = new ConcurrentHashMap<String, TransactionDAO>();
+			dbManager = new HashMap<String, TransactionDAO>();
 		}
 	}
 
@@ -60,53 +66,103 @@ public class TadpoleSQLTransactionManager {
 	 * @throws Exception
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
-		if (logger.isDebugEnabled()) {
-			logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + "/" + userDB.getUsers());
+		final String searchKey = getKey(userId, userDB);
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("[userId]" + searchKey);
 		}
 
-		final String searchKey = getKey(userId, userDB);
+		Connection _conn = null;;
 		TransactionDAO transactionDAO = dbManager.get(searchKey);
 		if (transactionDAO == null) {
-//			synchronized(dbManager) {
-//				transactionDAO = dbManager.get(searchKey);
-//				if(transactionDAO != null) {
-//					if(logger.isInfoEnabled()) logger.info("Return Transaction connection. [connection is]" + transactionDAO.getConn());
-//					return transactionDAO.getConn();
-//				}
 				
-				try {
-					DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
-	
-					TransactionDAO _transactionDAO = new TransactionDAO();
-					Connection conn = ds.getConnection();
-					conn.setAutoCommit(false);
-	
-					_transactionDAO.setConn(conn);
-					_transactionDAO.setUserId(userId);
-					_transactionDAO.setUserDB(userDB);
-					_transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
-	
-					_transactionDAO.setKey(searchKey);
-	
-					dbManager.put(searchKey, _transactionDAO);
-					if (logger.isDebugEnabled()) logger.debug("\t New connection SQLMapSession......");
-					
-					return _transactionDAO.getConn();
-				} catch (Exception e) {
-					logger.error("transaction connection", e);
-					removeInstance(userId, searchKey);
-					
-					throw e;
-				}
-//			}
-//		} else {
-//			if (logger.isDebugEnabled()) {
-//				logger.debug("\t Already register SQLMapSession.\t Is auto commit connection information " + transactionDAO.getConn());
-//			}
-		}
-//		if (logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.getConn());
+			try {
+				DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
+				_conn = ds.getConnection();
+				_conn.setAutoCommit(false);
+				
+				final TransactionDAO _transactionDAO = new TransactionDAO();
+				_transactionDAO.setConn(_conn);
+				_transactionDAO.setUserId(userId);
+				_transactionDAO.setUserDB(userDB);
+				_transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
+				_transactionDAO.setKey(searchKey);
+				
+				if (logger.isInfoEnabled()) {
+					logger.info("\t New connection strt......");
 
-		return transactionDAO.getConn();
+					PreparedStatement ps = null;
+					ResultSet rs = null;
+					try {
+						ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+						rs = ps.executeQuery();
+						logger.info("\t result => " + rs.getRow());
+					} catch(Exception e) {
+						logger.error("test connection query", e);
+					} finally {
+						if(rs != null) rs.close();
+						if(ps != null) ps.close();
+					}
+					logger.info("\t New connection end......");
+				}
+				
+				dbManager.put(searchKey, _transactionDAO);
+				
+			} catch (Exception e) {
+				logger.error("transaction connection", e);
+				removeInstance(userId, searchKey);
+				
+				throw e;
+			}
+		} else {
+			_conn = transactionDAO.getConn();
+			
+			if (logger.isInfoEnabled()) {
+				logger.info("\t Already connection start......");
+				PreparedStatement ps = null;
+				ResultSet rs = null;
+				try {
+					ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+					rs = ps.executeQuery();
+					logger.info("\t result => " + rs.getRow());
+				} catch(Exception e) {
+					logger.error("test connection query", e);
+				} finally {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+				}
+				logger.info("\t Already connection end......");
+			}
+		}
+		
+		// 변경시 마다 커넥션을 수정한다.
+		return changeScheema(userDB, _conn);
+	}
+	
+	/**
+	 * 사용자 커넥션을 얻는다.
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	private static Connection changeScheema(final UserDBDAO userDB, final Connection javaConn) throws TadpoleSQLManagerException, SQLException {
+
+		Statement statement = null;
+		try {
+			if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+				statement = javaConn.createStatement();
+				statement.executeUpdate("use " + userDB.getSchema());
+			}
+		} catch(Exception e) {
+			logger.error("change scheman ", e);
+			throw new SQLException(e);
+		} finally {
+			if(statement != null) statement.close();
+		}
+		
+		return javaConn;
 	}
 	
 	/**

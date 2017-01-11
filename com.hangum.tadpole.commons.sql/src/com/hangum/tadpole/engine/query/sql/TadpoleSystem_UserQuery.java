@@ -400,6 +400,16 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
+	 * 유저의 name, password 를 수정한다.
+	 * @param user
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static void updateUserNameEmail(UserDAO user) throws TadpoleSQLManagerException, SQLException, Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserNameEmail", user); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 유저의 기본정보를 수정
 	 * @param user
 	 * @throws TadpoleSQLManagerException, SQLException

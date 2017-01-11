@@ -23,17 +23,25 @@ import javax.servlet.http.HttpSessionContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.client.service.JavaScriptExecutor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.TadpoleEngineActivator;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.engine.utils.HttpSessionCollectorUtil;
 
 /**
  * tadpole의 session manager입니다
@@ -371,9 +379,9 @@ public class SessionManager {
 	 */
 	public static boolean setUnlokDB(final UserDBDAO userDB) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		List<Integer> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		List<UserDBDAO> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
 		
-		return listUnlockDB.add(userDB.getSeq());
+		return listUnlockDB.add(userDB);
 	}
 	
 	/**
@@ -383,31 +391,108 @@ public class SessionManager {
 	 */
 	public static boolean isUnlockDB(final UserDBDAO userDB) {
 		HttpSession sStore = RWT.getRequest().getSession();
-		List<Integer> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		List<UserDBDAO> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
 		
-		return listUnlockDB.contains(userDB.getSeq());
+		return listUnlockDB.contains(userDB);
+	}
+	
+	/**
+	 * unlock session
+	 * 
+	 * @param userDB
+	 */
+	public static void removeUnlockDB(final UserDBDAO userDB) {
+		HttpSession sStore = RWT.getRequest().getSession();
+		List<UserDBDAO> listUnlockDB = (List)sStore.getAttribute(NAME.UNLOCK_DB_LIST.name());
+		
+		listUnlockDB.remove(userDB);
 	}
 	
 	/**
 	 * logout 처리를 합니다.
 	 */
-	public static void logout() {
+	public static void logout(final String strID) {
+		HttpSessionCollectorUtil.getInstance().sessionDestroyed(strID);
+		
 		HttpServletRequest request = RWT.getRequest();
 		try {
 			HttpSession sStore = request.getSession();			
-			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
+//			sStore.setAttribute(NAME.USER_SEQ.toString(), 0);
 			sStore.invalidate();
 		} catch(Throwable e) {
 			// ignore exception
 		}
 		
-		// fixed https://github.com/hangum/TadpoleForDBTools/issues/708
-		// ps - 사용자 session id를 보여주고 싶지 않아서 배열을 이용해서 뺐어요. - hangum
-		String[] arryRequestURL = StringUtils.split(request.getRequestURL().toString(), ";");
-     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", arryRequestURL[0]);
-     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
-     	executor.execute("setTimeout('"+browserText+"', 100)" );
+		try {
+			// fixed https://github.com/hangum/TadpoleForDBTools/issues/708
+			// ps - 사용자 session id를 보여주고 싶지 않아서 배열을 이용해서 뺐어요. - hangum
+			String[] arryRequestURL = StringUtils.split(request.getRequestURL().toString(), ";");
+	     	String browserText = MessageFormat.format("parent.window.location.href = \"{0}\";", arryRequestURL[0]);
+	     	JavaScriptExecutor executor = RWT.getClient().getService( JavaScriptExecutor.class );
+	     	executor.execute("setTimeout('"+browserText+"', 100)" );
+		} catch(Exception e) {
+			logger.error("loguout", e);
+		} finally {
+			removeTransactionInstance(strID);
+			removeNonTransactionInstance(strID);
+		}
 		
+	}
+	
+	/**
+	 * remove instance
+	 * 
+	 * @param strID
+	 */
+	private static void removeTransactionInstance(final String strID) {
+		Job job = new Job("Remove transaction instance") { //$NON-NLS-1$
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				
+				try {
+					TadpoleSQLTransactionManager.executeRollback(strID);
+				} catch(Exception e) {
+					logger.error("removeTransactionInstance connection instance", e);
+					return new Status(Status.WARNING, TadpoleEngineActivator.PLUGIN_ID, e.getMessage(), e);
+				} finally {
+					monitor.done();
+				}
+				return Status.OK_STATUS;
+			}
+			
+		};
+		
+		job.setName("RemoveTransaction instance");
+		job.setUser(false);
+		job.schedule();
+	}
+	
+	/**
+	 * remove instance
+	 * 
+	 * @param strID
+	 */
+	private static void removeNonTransactionInstance(final String strID) {
+		Job job = new Job("Remove non transaction connection instance") { //$NON-NLS-1$
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				
+				try {
+					TadpoleSQLManager.removeAllInstance(strID);
+				} catch(Exception e) {
+					logger.error("remove user connection instance", e);
+					return new Status(Status.WARNING, TadpoleEngineActivator.PLUGIN_ID, e.getMessage(), e);
+				} finally {
+					monitor.done();
+				}
+				return Status.OK_STATUS;
+			}
+			
+		};
+		
+		job.setName("Remove normal instance");
+		job.setUser(false);
+		job.schedule();
 	}
 	
 	/**

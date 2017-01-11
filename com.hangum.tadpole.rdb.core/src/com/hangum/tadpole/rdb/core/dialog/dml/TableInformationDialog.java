@@ -88,7 +88,7 @@ public class TableInformationDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(tableDAO.getName() + " " + CommonMessages.get().Information);
+		newShell.setText(CommonMessages.get().Information);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -269,6 +269,8 @@ public class TableInformationDialog extends Dialog {
 	}
 
 	private void initExtendedData() {
+		if(userDB.getDBGroup() != DBGroupDefine.ORACLE_GROUP) return;
+			
 		try {
 			Map<String, String> sizeInfoMap = new HashMap<String,String>();
 			Map<String, String> statInfoMap = new HashMap<String,String>();

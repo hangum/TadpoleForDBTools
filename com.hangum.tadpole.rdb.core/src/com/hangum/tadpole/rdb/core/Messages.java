@@ -683,6 +683,8 @@ public class Messages {
 	public String ExecuteQueryAndClose;
 
 	public String CantnotFoundTable;
+
+	public String SelectObject;
 	
 //	public String PLAN_TABLE_NOT_FOUND;
 	

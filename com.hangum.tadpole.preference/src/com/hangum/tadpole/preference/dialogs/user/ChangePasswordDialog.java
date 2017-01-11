@@ -40,9 +40,12 @@ import com.hangum.tadpole.session.manager.SessionManager;
  */
 public class ChangePasswordDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ChangePasswordDialog.class);
+
+	private Text textOldPassword;
 	
 	private Text textPassword;
 	private Text textRePassword;
+
 
 	/**
 	 * Create the dialog.
@@ -68,7 +71,21 @@ public class ChangePasswordDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
+		gridLayout.verticalSpacing = 5;
+		gridLayout.horizontalSpacing = 5;
+		gridLayout.marginHeight = 5;
+		gridLayout.marginWidth = 5;
 		gridLayout.numColumns = 2;
+		
+		Label lblOldPassword = new Label(container, SWT.NONE);
+		lblOldPassword.setText(Messages.get().OldPassword);
+		
+		textOldPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		textOldPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(container, SWT.NONE);
+		
+		Label labelSeparator = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
+		labelSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblPassword = new Label(container, SWT.NONE);
 		lblPassword.setText(Messages.get().Password);
@@ -89,32 +106,42 @@ public class ChangePasswordDialog extends Dialog {
 	protected void okPressed() {
 		String strPasswdComplexity = GetAdminPreference.getPasswdComplexity();
 		int intLengthLimit = Integer.parseInt(GetAdminPreference.getPasswdLengthLimit());
+
+		try {
+			TadpoleSystem_UserQuery.login(SessionManager.getEMAIL(), textOldPassword.getText());
+		} catch(Exception e) {
+			textOldPassword.setFocus();
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, String.format(CommonMessages.get().IsIncorrect, Messages.get().OldPassword));
+			return;
+		}
 		
-		String strPass = textPassword.getText();
-		String rePasswd = textRePassword.getText();
+		String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().Password, intLengthLimit, "30");
 		
-		if("".equals(strPass)) { //$NON-NLS-1$
+		String strPasswd 	= textPassword.getText();
+		String strRePasswd 	= textRePassword.getText();
+		
+		if("".equals(strPasswd)) { //$NON-NLS-1$
 			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().EnterYourPasswd);
 			textPassword.setFocus();
 			return;
-		} else if (!ValidChecker.isPasswordLengthChecker(intLengthLimit, strPass)) {
+		} else if (!ValidChecker.isPasswordLengthChecker(intLengthLimit, strPasswd)) {
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning,
 					String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().Password, intLengthLimit, "30")); //$NON-NLS-1$
 			textPassword.setFocus();
 			return;
-		} else if (!strPass.equals(rePasswd)) {
+		} else if (!strPasswd.equals(strRePasswd)) {
 			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().PasswordDoNotMatch);
 			textPassword.setFocus();
 			return;
 		} else if ("YES".equals(strPasswdComplexity)) {
-			if (!ValidChecker.isPasswordChecker(strPass)) {
+			if (!ValidChecker.isPasswordChecker(strPasswd)) {
 				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().inValidComplextyPasswd);
 				textPassword.setFocus();
 				return;
 			}
 		}
 		
-		if(MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, "저장하시겠습니까?")) {
+		if(MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, CommonMessages.get().doYouWantTosave)) {
 			UserDAO userDAO = new UserDAO();
 			userDAO.setSeq(SessionManager.getUserSeq());
 			userDAO.setPasswd(textPassword.getText()); 
@@ -147,7 +174,7 @@ public class ChangePasswordDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(350, 180);
+		return new Point(350, 200);
 	}
 
 }

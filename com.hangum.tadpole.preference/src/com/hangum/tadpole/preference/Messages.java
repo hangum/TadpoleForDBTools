@@ -204,6 +204,12 @@ public class Messages {
 	public String inValidComplextyPasswd;
 
 	public String ChangedPassword;
+
+	public String PleaseInputName;
+
+	public String PleaseInputEamil;
+
+	public String OldPassword;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

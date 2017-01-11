@@ -13,6 +13,8 @@ package com.hangum.tadpole.engine.manager;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,6 +141,36 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			}
 
 		return sqlMapClient;
+	}
+	
+	/**
+	 * 사용자 커넥션을 얻는다.
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static Connection getConnection(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient client = getInstance(userDB);
+		Connection javaConn = client.getDataSource().getConnection();
+		
+		Statement statement = null;
+		try {
+			if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+				if(logger.isDebugEnabled()) logger.debug(String.format("****************** set define schema %s ", userDB.getSchema()));
+				
+				statement = javaConn.createStatement();
+				statement.executeUpdate("use " + userDB.getSchema());
+			}
+		} catch(Exception e) {
+			logger.error("change scheman ", e);
+			throw new SQLException(e);
+		} finally {
+			if(statement != null) statement.close();
+		}
+		
+		return javaConn;
 	}
 	
 	/**

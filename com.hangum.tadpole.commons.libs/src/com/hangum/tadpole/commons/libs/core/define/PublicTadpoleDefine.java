@@ -214,7 +214,8 @@ public class PublicTadpoleDefine {
 	 *
 	 */
 	public enum DBOperationType {
-		PRODUCTION("Production Sever"), 
+		PRODUCTION("Production Sever"),
+		DR("Disaster recovery"), 
 		DEVELOP("Develop Sever"), 
 		TEST("Test Sever"),
 		BACKUP("Backup Sever"),
@@ -232,6 +233,7 @@ public class PublicTadpoleDefine {
 		
 		public static DBOperationType getNameToType(String name) {
 			if(PRODUCTION.typeName.equals(name)) 	return PRODUCTION;
+			else if(DR.typeName.equals(name)) 	return DR;
 			else if(DEVELOP.typeName.equals(name)) 	return DEVELOP;
 			else if(TEST.typeName.equals(name)) 	return TEST;
 			else if(BACKUP.typeName.equals(name)) 	return BACKUP;

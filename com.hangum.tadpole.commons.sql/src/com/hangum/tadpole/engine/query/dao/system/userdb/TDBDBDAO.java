@@ -24,6 +24,9 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
  *
  */
 public class TDBDBDAO extends ManagerListViewDAO {
+	/** schema list */
+	protected List<String> schemas = new ArrayList<String>();
+	
 	/** This variable is schema assist */
 	protected String schemaListSeparator = "";
 	/** This variable is content assist */
@@ -133,6 +136,30 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	 */
 	public void setFunctionLisstSeparator(String functionLisstSeparator) {
 		this.functionLisstSeparator = functionLisstSeparator;
+	}
+
+	/**
+	 * get schemas
+	 * @return
+	 */
+	public List<String> getSchemas() {
+		return schemas;
+	}
+
+	/**
+	 * set schema 
+	 * @param schemas
+	 */
+	public void setSchemas(List<String> schemas) {
+		this.schemas = schemas;
+	}
+
+	/**
+	 * list schema list
+	 * @param strSchema
+	 */
+	public void addSchema(String strSchema) {
+		this.schemas.add(strSchema);
 	}
 	
 }
