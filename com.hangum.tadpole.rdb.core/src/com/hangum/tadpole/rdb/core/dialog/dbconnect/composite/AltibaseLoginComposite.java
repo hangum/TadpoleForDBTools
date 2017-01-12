@@ -51,9 +51,9 @@ public class AltibaseLoginComposite extends MySQLLoginComposite
 			int style, 
 			List<String> listGroupName, 
 			String selGroupName, 
-			UserDBDAO userDB) 
+			UserDBDAO userDB, boolean isReadOnly) 
 	{
-		super("Sample Altibase", DBDefine.ALTIBASE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+		super("Sample Altibase", DBDefine.ALTIBASE_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override

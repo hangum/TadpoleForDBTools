@@ -152,7 +152,10 @@ public class PublicTadpoleDefine {
 	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE"; //$NON-NLS-1$
 	
 	/** Tadpole support browser list  */
-	public static enum TADPOLE_SUPPORT_BROWSER {EDGE, FIREFOX, CHROME, SAFARI, IE};
+	public static enum TADPOLE_SUPPORT_BROWSER {EDGE, FIREFOX, CHROME, SAFARI, IE, OPERA};
+	
+	/** Tadpole support browser list  */
+	public static enum TADPOLE_SUPPORT_BROWSERIP {FIREFOX, CHROME, OPERA};
 	
 	/** 
 	 * This variable is user_role_table. 
@@ -240,7 +243,7 @@ public class PublicTadpoleDefine {
 			else return OTHERS;
 		}
 	};
-
+	
 	/** 에디터를 열때 오픈하는 타입을 적습니다. */
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	

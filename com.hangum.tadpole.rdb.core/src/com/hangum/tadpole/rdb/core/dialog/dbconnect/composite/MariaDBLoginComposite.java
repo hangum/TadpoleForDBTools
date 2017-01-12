@@ -31,8 +31,8 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 public class MariaDBLoginComposite extends MySQLLoginComposite {
 	private static final Logger logger = Logger.getLogger(MariaDBLoginComposite.class);
 	
-	public MariaDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MariaDB", DBDefine.MARIADB_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public MariaDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample MariaDB", DBDefine.MARIADB_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 }

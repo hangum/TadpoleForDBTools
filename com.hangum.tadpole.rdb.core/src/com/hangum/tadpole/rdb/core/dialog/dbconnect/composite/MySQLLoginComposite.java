@@ -58,14 +58,14 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public MySQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MySQL", DBDefine.MYSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public MySQLLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample MySQL", DBDefine.MYSQL_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 
 	public MySQLLoginComposite(String strDisplayName, DBDefine selectDB,
 			Composite parent, int style, List<String> listGroupName,
-			String selGroupName, UserDBDAO userDB) {
-		super(strDisplayName, selectDB, parent, style, listGroupName, selGroupName, userDB);
+			String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super(strDisplayName, selectDB, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 
 	@Override
@@ -86,6 +86,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setEnabled(isReadOnly);
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
@@ -161,6 +162,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		othersConnectionInfo.setEnabled(isReadOnly);
 
 		init();
 	}

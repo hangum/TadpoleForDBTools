@@ -77,8 +77,8 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super(Messages.get().SQLiteLoginComposite_11, DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public SQLiteLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super(Messages.get().SQLiteLoginComposite_11, DBDefine.SQLite_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override
@@ -94,6 +94,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setEnabled(isReadOnly);
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
@@ -167,6 +168,7 @@ public class SQLiteLoginComposite extends AbstractLoginComposite {
 		
 		othersConnectionInfo = new OthersConnectionRDBWithoutTunnelingGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		othersConnectionInfo.setEnabled(isReadOnly);
 		
 		init();
 	}

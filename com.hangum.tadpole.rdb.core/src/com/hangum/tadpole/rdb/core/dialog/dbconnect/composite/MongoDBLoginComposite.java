@@ -69,8 +69,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MongoDB", DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample MongoDB", DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override
@@ -91,6 +91,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		gl_compositeBody.marginWidth = 0;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setEnabled(isReadOnly);
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
@@ -174,6 +175,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		othersConnectionInfo.setEnabled(isReadOnly);
 		
 		init();
 	}

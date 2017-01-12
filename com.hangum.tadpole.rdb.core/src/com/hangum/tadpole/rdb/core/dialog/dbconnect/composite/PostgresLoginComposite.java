@@ -49,14 +49,14 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public PostgresLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample PostgreSQL", DBDefine.POSTGRE_DEFAULT, parent, style, listGroupName, selGroupName, userDB); //$NON-NLS-1$
+	public PostgresLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample PostgreSQL", DBDefine.POSTGRE_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly); //$NON-NLS-1$
 	}
 	
 	public PostgresLoginComposite(String strDisplayName, DBDefine selectDB,
 			Composite parent, int style, List<String> listGroupName,
-			String selGroupName, UserDBDAO userDB) {
-		super(strDisplayName, selectDB, parent, style, listGroupName, selGroupName, userDB);
+			String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super(strDisplayName, selectDB, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override
@@ -77,6 +77,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		gl_compositeBody.marginWidth = 2;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setEnabled(isReadOnly);
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
@@ -148,6 +149,7 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		othersConnectionInfo.setEnabled(isReadOnly);
 
 		init();
 	}
