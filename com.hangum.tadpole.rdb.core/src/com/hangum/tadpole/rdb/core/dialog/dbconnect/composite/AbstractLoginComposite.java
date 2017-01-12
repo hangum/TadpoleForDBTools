@@ -57,6 +57,9 @@ public abstract class AbstractLoginComposite extends Composite {
 	 */
 	private static final long serialVersionUID = -3434604591881525231L;
 	private static final Logger logger = Logger.getLogger(AbstractLoginComposite.class);
+	
+	/** 입력 항목을 읽기 전용으로 만들것인지 여무 */
+	protected boolean isReadOnly = false;
 
 	/** 현재 창의 저장, 수정 상태인지 상태. */
 	protected DATA_STATUS dataActionStatus = DATA_STATUS.NEW;
@@ -89,7 +92,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public AbstractLoginComposite(String displayName, DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB) {
+	public AbstractLoginComposite(String displayName, DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB, boolean isReadOnly) {
 		super(parent, style);
 		
 		this.displayName = displayName;
@@ -97,6 +100,7 @@ public abstract class AbstractLoginComposite extends Composite {
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
 		this.oldUserDB = oldUserDB;
+		this.isReadOnly = isReadOnly;
 		
 		crateComposite();
 	}
@@ -142,6 +146,14 @@ public abstract class AbstractLoginComposite extends Composite {
 		} catch(NumberFormatException nfe) {
 			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().MySQLLoginComposite_4);
 		}
+	}
+	
+	/**
+	 * 화면을 읽기 전용으로 만들것인지 여부
+	 * @return
+	 */
+	public boolean isReadOnly() {
+		return isReadOnly;
 	}
 
 	/**

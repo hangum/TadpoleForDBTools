@@ -237,7 +237,7 @@ public class DBLoginDialog extends Dialog {
 	 */
 	private void createDBWidget(UserDBDAO userDB) {
 		DBDefine dbDefine = (DBDefine) comboDBList.getData(comboDBList.getText());
-		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB);
+		loginComposite = DBConnectionUtils.getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB, true);
 	}
 
 	@Override

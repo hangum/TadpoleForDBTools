@@ -249,6 +249,16 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * 어드민이 지정한 프러럭타입 필터 값을 뺀다. 
+	 * 
+	 * @return
+	 */
+	public static String getViewProductTypeFilter() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER_VALUE);		
+	}
+	
+	/**
 	 * update admin data
 	 * @param key
 	 * @param userInfoDao

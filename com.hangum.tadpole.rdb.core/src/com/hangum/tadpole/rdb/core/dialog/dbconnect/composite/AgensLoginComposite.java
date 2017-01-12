@@ -34,8 +34,8 @@ public class AgensLoginComposite extends PostgresLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public AgensLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample AgensGraph", DBDefine.AGENSGRAPH_DEFAULT, parent, style, listGroupName, selGroupName, userDB); //$NON-NLS-1$
+	public AgensLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample AgensGraph", DBDefine.AGENSGRAPH_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly); //$NON-NLS-1$
 	}
 
 }

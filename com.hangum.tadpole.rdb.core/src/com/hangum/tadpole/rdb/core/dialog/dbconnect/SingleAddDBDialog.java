@@ -50,6 +50,8 @@ public class SingleAddDBDialog extends Dialog {
 	/** 초기 선택한 그룹 */
 	private String selGroupName;
 	
+	private boolean isReadOnly;
+	
 	private Composite compositeBody;
 
 	private AbstractLoginComposite loginComposite;
@@ -60,14 +62,17 @@ public class SingleAddDBDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
+	 * @param isReadOnly 
 	 */
-	public SingleAddDBDialog(Shell parentShell, ExtensionUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName) {
+	public SingleAddDBDialog(Shell parentShell, ExtensionUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName, boolean isReadOnly) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.amazonRDSDto = amazonRDSDto;
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
+		
+		this.isReadOnly = isReadOnly;
 	}
 
 	@Override
@@ -103,7 +108,9 @@ public class SingleAddDBDialog extends Dialog {
 				compositeBody, 
 				listGroupName, 
 				selGroupName, 
-				(UserDBDAO)amazonRDSDto);
+				(UserDBDAO)amazonRDSDto,
+				isReadOnly
+				);
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());

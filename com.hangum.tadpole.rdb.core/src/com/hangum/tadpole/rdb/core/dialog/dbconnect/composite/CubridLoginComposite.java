@@ -40,8 +40,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample Cubrid", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample Cubrid", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override

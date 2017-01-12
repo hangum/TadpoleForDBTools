@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**
@@ -70,11 +72,17 @@ public class PreConnectionInfoGroup extends Group {
 		Label lblOperationType = new Label(this, SWT.NONE);
 		lblOperationType.setText(Messages.get().OperationType);
 		
+		String []strProductTypeFilters = StringUtils.split(GetAdminPreference.getViewProductTypeFilter(), ",");
 		comboOperationType = new Combo(this, SWT.READ_ONLY);
 		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (PublicTadpoleDefine.DBOperationType opType : PublicTadpoleDefine.DBOperationType.values()) {
-			comboOperationType.add(opType.getTypeName());
+			boolean isShow = true;
+			for (String strFilter : strProductTypeFilters) {
+				if(strFilter.equals(opType.name())) isShow = false;
+			}
+			if(isShow) comboOperationType.add(opType.getTypeName());
 		}
+		comboOperationType.setVisibleItemCount(PublicTadpoleDefine.DBOperationType.values().length);
 		comboOperationType.select(2);
 		
 		Label lblConnectName = new Label(this, SWT.NONE);

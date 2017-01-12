@@ -50,8 +50,8 @@ public class DBConnectionUtils {
 	 * @param userDB
 	 * @return
 	 */
-	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		return getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB, PublicTadpoleDefine.DATA_STATUS.NEW);
+	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		return getDBConnection(dbDefine, compositeBody, listGroupName, selGroupName, userDB, PublicTadpoleDefine.DATA_STATUS.NEW, isReadOnly);
 	}
 
 	/**
@@ -67,37 +67,37 @@ public class DBConnectionUtils {
 	 * @return
 	 */
 	public static AbstractLoginComposite getDBConnection(DBDefine dbDefine, Composite compositeBody, List<String> listGroupName, String selGroupName, UserDBDAO userDB, 
-			PublicTadpoleDefine.DATA_STATUS dataStatus) {
+			PublicTadpoleDefine.DATA_STATUS dataStatus, boolean isReadOnly) {
 		AbstractLoginComposite loginComposite = null;
 		
 		if (dbDefine == DBDefine.MYSQL_DEFAULT) {
-			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new MySQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if (dbDefine == DBDefine.MARIADB_DEFAULT) {	
-			loginComposite = new MariaDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new MariaDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if (dbDefine == DBDefine.ORACLE_DEFAULT) {
-			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new OracleLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if (dbDefine == DBDefine.SQLite_DEFAULT) {
-			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new SQLiteLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if (dbDefine == DBDefine.MSSQL_DEFAULT) {
-			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new MSSQLLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if (dbDefine == DBDefine.CUBRID_DEFAULT) {
-			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
-			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.AGENSGRAPH_DEFAULT) {
-			loginComposite = new AgensLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new AgensLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
-			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 //		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {
-//			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+//			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT || dbDefine == DBDefine.HIVE2_DEFAULT) {
-			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.TAJO_DEFAULT) {
-			loginComposite = new TajoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new TajoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.TIBERO_DEFAULT) {
-			loginComposite = new TiberoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new TiberoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.ALTIBASE_DEFAULT) {
-			loginComposite = new AltibaseLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB);
+			loginComposite = new AltibaseLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		}
 		
 		loginComposite.setDataActionStatus(dataStatus);

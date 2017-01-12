@@ -85,12 +85,16 @@ public class Application implements EntryPoint {
 				}
 			}
 			
-			// define login type
+			/* define login type */
 			Properties prop = LoadConfigFile.getConfig();
-			String txtLoginMethod = prop.getProperty("LOGIN_METHOD");
-			if(txtLoginMethod == null || StringUtils.equalsIgnoreCase(txtLoginMethod, "")) txtLoginMethod = AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE;
+			String txtLoginMethod = prop.getProperty("LOGIN_METHOD", AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE);
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, txtLoginMethod);
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, userInfoDao);
+			
+			/** 뷰에 보여주어야할 필터 값을 가져온다 */
+			String strProductFilter = prop.getProperty("tadpole.db.producttype.remove.filter", "");
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, strProductFilter);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, userInfoDao);
 			
 		} catch(Exception e) {
 			logger.error("Initialization failed.", e); //$NON-NLS-1$
