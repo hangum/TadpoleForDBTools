@@ -53,9 +53,6 @@ public class SendEmails {
 	public static SendEmails getInstance() {
 		if(instance == null) {
 			instance = new SendEmails();
-			
-			ApplicationContext context = RWT.getApplicationContext();
-			_smtpInfoDto = (SMTPDTO)context.getAttribute("smtpinfo");
 		}
 		
 		return instance;
@@ -68,6 +65,9 @@ public class SendEmails {
 	 */
 	public void sendMail(EmailDTO emailDao) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("Add new message");
+		
+		ApplicationContext context = RWT.getApplicationContext();
+		_smtpInfoDto = (SMTPDTO)context.getAttribute("smtpinfo");
 		
 		if(!StringUtils.contains(emailDao.getTo(), "@")) {
 			if(StringUtils.contains(_smtpInfoDto.getDomain(), "@")) {
