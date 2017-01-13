@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -161,6 +162,7 @@ public class TadpoleSystem_UserDBQuery {
 		//
 		
 		userEncryptDao.setExt1(userDb.getExt1());
+		userEncryptDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDBDAO insertedUserDB = (UserDBDAO)sqlClient.insert("userDBInsert", userEncryptDao); //$NON-NLS-1$

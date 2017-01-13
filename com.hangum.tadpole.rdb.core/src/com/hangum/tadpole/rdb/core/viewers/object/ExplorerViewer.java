@@ -52,6 +52,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -73,7 +74,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * object explorer viewer
@@ -400,6 +400,8 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void initSchema() throws Exception {
 		if(userDB == null) return;
+		// 디비 락이 있을 경우에 커넥션 시도를 하지 못하도록 합니다. 
+		if(!TadpoleSecurityManager.getInstance().isLock(userDB)) return;
 		
 		/** schema list*/
 		comboSchema.removeAll();
@@ -484,8 +486,8 @@ public class ExplorerViewer extends ViewPart {
 		// 존재하는 tadfolder를 삭제한다.
 		for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 		
-		// is dblock
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) && !SessionManager.isUnlockDB(selectUserDb)) {
+		// 디비 락이 있을 경우에 커넥션 시도를 하지 못하도록 합니다. 
+		if(!TadpoleSecurityManager.getInstance().isLock(selectUserDb)) {
 			userDB = null;
 			createTable();
 		} else {

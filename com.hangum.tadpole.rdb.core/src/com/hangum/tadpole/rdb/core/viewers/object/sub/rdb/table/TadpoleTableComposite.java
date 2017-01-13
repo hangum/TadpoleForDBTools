@@ -655,6 +655,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	public void refreshTable(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
 		if(!boolRefresh) if(selectUserDb == null) return;
+		
 		this.userDB = selectUserDb;
 		
 		selectTableName = ""; //$NON-NLS-1$
