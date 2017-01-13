@@ -148,9 +148,19 @@ public class DBPasswordAndOTPDialog extends Dialog {
 		}
 		
 		if(!"".equals(strPassword)) {
-			userDB.setPasswd(CipherManager.getInstance().encryption(strPassword));
+			userDB.setPasswd(strPassword);
 		} else {
 			userDB.setPasswd("");
+		}
+		
+		try {
+			GetOTPCode.isValidate(SessionManager.getEMAIL(), SessionManager.getOTPSecretKey(), strOTPCode);
+		} catch(Exception e) {
+			logger.error("OTP check", e);
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
+			textOTP.setFocus();
+			
+			return;
 		}
 		
 		// 실제 접속 되는지 테스트해봅니다.
@@ -165,15 +175,6 @@ public class DBPasswordAndOTPDialog extends Dialog {
 			}
 			textPassword.setFocus();
 			
-			return;
-		}
-		
-		try {
-			GetOTPCode.isValidate(SessionManager.getEMAIL(), SessionManager.getOTPSecretKey(), strOTPCode);
-		} catch(Exception e) {
-			logger.error("OTP check", e);
-			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
-			textOTP.setFocus();
 			return;
 		}
 		
