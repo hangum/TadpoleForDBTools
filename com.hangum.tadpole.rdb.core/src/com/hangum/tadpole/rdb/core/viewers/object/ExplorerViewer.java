@@ -74,7 +74,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * object explorer viewer
