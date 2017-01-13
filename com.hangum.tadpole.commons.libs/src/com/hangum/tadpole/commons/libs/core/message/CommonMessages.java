@@ -77,6 +77,8 @@ public class CommonMessages {
 	public String ValueIsLessThanOrOverThan;
 
 	public String Text_ValueIsLessThanOrOverThan; 
+	public String ValueIsOverThan;
+	public String mustBeNumber;
 	
 	public String Please_InputText;
 
@@ -102,6 +104,8 @@ public class CommonMessages {
 	public String Test;
 
 	public String IsIncorrect;
+
+	public String ChangingErrorMsg;
 
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
