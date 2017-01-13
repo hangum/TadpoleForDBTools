@@ -66,6 +66,7 @@ import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.sql.util.tables.AutoResizeTableLayout;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -655,6 +656,10 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	 */
 	public void refreshTable(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
 		if(!boolRefresh) if(selectUserDb == null) return;
+		
+		// 디비 락이 있을 경우에 커넥션 시도를 하지 못하도록 합니다. 
+		if(!TadpoleSecurityManager.getInstance().isLock(selectUserDb)) return;
+		
 		this.userDB = selectUserDb;
 		
 		selectTableName = ""; //$NON-NLS-1$
