@@ -657,9 +657,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void refreshTable(final UserDBDAO selectUserDb, final boolean boolRefresh, final String strObjectName) {
 		if(!boolRefresh) if(selectUserDb == null) return;
 		
-		// 디비 락이 있을 경우에 커넥션 시도를 하지 못하도록 합니다. 
-		if(!TadpoleSecurityManager.getInstance().isLock(selectUserDb)) return;
-		
 		this.userDB = selectUserDb;
 		
 		selectTableName = ""; //$NON-NLS-1$
