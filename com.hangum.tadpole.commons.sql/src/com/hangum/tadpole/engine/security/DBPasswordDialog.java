@@ -99,19 +99,20 @@ public class DBPasswordDialog extends Dialog {
 	 * initialize UI
 	 */
 	private void initUI() {
+		Map<String, String> mapAppm = new HashMap<String, String>();
+		mapAppm.put("hostName", 	userDB.getExt8());
+		mapAppm.put("sid", 			userDB.getExt9());
+		mapAppm.put("accountid", 	userDB.getExt10());
+		
 		try {
-			Map<String, String> mapAppm = new HashMap<String, String>();
-			mapAppm.put("hostName", 	userDB.getExt8());
-			mapAppm.put("sid", 			userDB.getExt9());
-			mapAppm.put("accountid", 	userDB.getExt10());
-			
 			String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
 			textPassword.setText(strAMMPPassword);
 		} catch (Exception e) {
 			logger.error("appm error", e);
 			textPassword.setText("");
+		} finally {
+			userDB.setPasswd("");
 		}
-		userDB.setPasswd("");
 	}
 	
 	/* (non-Javadoc)
@@ -119,17 +120,13 @@ public class DBPasswordDialog extends Dialog {
 	 */
 	@Override
 	protected void okPressed() {
-		String strPassword = StringUtils.trim(textPassword.getText());
-		if(!"".equals(strPassword)) {
-			userDB.setPasswd(strPassword);
-		} else {
-			userDB.setPasswd("");
-		}
-		
 		// 실제 접속 되는지 테스트해봅니다.
 		try {
+			userDB.setPasswd(StringUtils.trim(textPassword.getText()));
 			TadpoleSQLManager.getInstance(userDB);
 		} catch(Exception e) {
+			logger.error("Test Passwd Connection error ");
+			
 			String msg = e.getMessage();
 			if(StringUtils.contains(msg, "No more data to read from socket")) {
 				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg + CommonMessages.get().Check_DBAccessSystem);
