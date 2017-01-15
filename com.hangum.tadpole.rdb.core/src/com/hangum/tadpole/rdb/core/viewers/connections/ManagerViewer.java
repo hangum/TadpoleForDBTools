@@ -114,8 +114,6 @@ public class ManagerViewer extends ViewPart {
 				if(objSelect instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)objSelect;
 					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
-
-					addManagerResouceData(userDB, false);
 					
 					// Rice lock icode change event
 					managerTV.refresh(userDB, true);

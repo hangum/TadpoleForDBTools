@@ -484,7 +484,6 @@
 			dbms_type = #dbms_type# AND
 			group_name = #group_name# AND
 			display_name = #display_name# AND
-			create_time = #create_time# AND 
 			delYn = 'NO'
 	</selectKey>
 </insert>

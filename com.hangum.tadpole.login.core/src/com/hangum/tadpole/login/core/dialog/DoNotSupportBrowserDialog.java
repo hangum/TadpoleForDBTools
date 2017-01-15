@@ -48,8 +48,8 @@ public class DoNotSupportBrowserDialog extends Dialog {
 		super(parentShell);
 
 		Properties prop = LoadConfigFile.getConfig();
-		strDwnContextMac = prop.getProperty("tadpole.browser.download.context.mac", "");
-		strDwnContextWin = prop.getProperty("tadpole.browser.download.context.win", "");
+		strDwnContextMac = prop.getProperty("tadpole.browser.download.context.mac", "https://www.mozilla.org/firefox/new/?scene=2");
+		strDwnContextWin = prop.getProperty("tadpole.browser.download.context.win", "https://www.mozilla.org/firefox/new/?scene=2");
 	}
 	
 	@Override
