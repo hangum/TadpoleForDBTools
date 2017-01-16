@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -39,7 +38,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
@@ -48,11 +46,9 @@ import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.engine.security.OTPInputDialog;
 import com.hangum.tadpole.login.core.message.LoginDialogMessages;
 import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
@@ -76,11 +72,8 @@ public class LoginDialog extends AbstractLoginDialog {
 	private Label lblEmail;
 	
 	private Button btnCheckButton;
-	private Text textEMail;
 	private Label lblPassword;
-	private Text textPasswd;
 	private Label lblLanguage;
-	private Combo comboLanguage;
 	
 	private Button btnLogin;
 	private Button btnNewUser;
@@ -295,25 +288,10 @@ public class LoginDialog extends AbstractLoginDialog {
 			// login
 			
 			// Check the allow ip
-			final String strAllowIP = userDao.getAllow_ip();
-			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
-			if(logger.isDebugEnabled()) logger.debug(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
-			if(!isAllow) {
-				logger.error(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-				saveLoginHistory(userDao.getSeq(), ip_servletRequest, PublicTadpoleDefine.YES_NO.NO.name(), String.format("IP : Access ip %s, User IP %s", strAllowIP, ip_servletRequest));
-				
-				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_28);
-				return;
-			}
-			
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
-				OTPInputDialog otpDialog = new OTPInputDialog(getShell(), userDao.getEmail(), userDao.getOtp_secret());
-				if(Dialog.CANCEL == otpDialog.open()) {
-					saveLoginHistory(userDao.getSeq(), ip_servletRequest, PublicTadpoleDefine.YES_NO.NO.name(), String.format("OTP Fail"));
-					
-					return;
-				}
-			}
+			if(!isAllowIP(userDao, userDao.getAllow_ip(), ip_servletRequest)) return;
+
+			// otp 
+			if(!isQuestOTP(userDao, ip_servletRequest)) return;
 			
 			// 로그인 유지.
 			registLoginID();
@@ -367,27 +345,6 @@ public class LoginDialog extends AbstractLoginDialog {
 		} catch(Exception e) {
 			logger.error("registe cookie", e);
 		}
-	}
-	
-	/**
-	 * validation
-	 * 
-	 * @param strEmail
-	 * @param strPass
-	 */
-	private boolean validation(String strEmail, String strPass) {
-		// validation
-		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_11);
-			textEMail.setFocus();
-			return false;
-		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_14);
-			textPasswd.setFocus();
-			return false;
-		}
-		
-		return true;
 	}
 	
 	/**
@@ -487,20 +444,6 @@ public class LoginDialog extends AbstractLoginDialog {
 		}
 		
 		compositeLogin.layout();
-	}
-
-	private void newUser() {
-		NewUserDialog newUser = new NewUserDialog(getParentShell());
-		if(Dialog.OK == newUser.open()) {
-			String strEmail = newUser.getUserDao().getEmail();
-			textEMail.setText(strEmail);
-			textPasswd.setFocus();
-		}
-	}
-	
-	private void findPassword() {
-		FindPasswordDialog dlg = new FindPasswordDialog(getShell(), textEMail.getText());
-		dlg.open();
 	}
 
 	/**
