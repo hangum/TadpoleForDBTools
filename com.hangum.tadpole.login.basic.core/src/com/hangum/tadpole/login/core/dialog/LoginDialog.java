@@ -249,6 +249,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String strPass = StringUtils.trimToEmpty(textPasswd.getText());
+		String ip_servletRequest = RequestInfoUtils.getRequestIP();
 
 		if(!validation(strEmail, strPass)) return;
 		
@@ -294,12 +295,13 @@ public class LoginDialog extends AbstractLoginDialog {
 			// login
 			
 			// Check the allow ip
-			String strAllowIP = userDao.getAllow_ip();
-			String ip_servletRequest = RequestInfoUtils.getRequestIP();
+			final String strAllowIP = userDao.getAllow_ip();
 			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
 			if(logger.isDebugEnabled()) logger.debug(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
 			if(!isAllow) {
 				logger.error(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
+				saveLoginHistory(userDao.getSeq(), ip_servletRequest, PublicTadpoleDefine.YES_NO.NO.name(), String.format("IP : Access ip %s, User IP %s", strAllowIP, ip_servletRequest));
+				
 				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_28);
 				return;
 			}
@@ -307,6 +309,8 @@ public class LoginDialog extends AbstractLoginDialog {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
 				OTPInputDialog otpDialog = new OTPInputDialog(getShell(), userDao.getEmail(), userDao.getOtp_secret());
 				if(Dialog.CANCEL == otpDialog.open()) {
+					saveLoginHistory(userDao.getSeq(), ip_servletRequest, PublicTadpoleDefine.YES_NO.NO.name(), String.format("OTP Fail"));
+					
 					return;
 				}
 			}
@@ -321,7 +325,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			preLogin(userDao);
 			
 			// save login_history
-			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
+			saveLoginHistory(userDao.getSeq(), ip_servletRequest, PublicTadpoleDefine.YES_NO.YES.name(), "");
 		} catch (TadpoleAuthorityException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
 			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());

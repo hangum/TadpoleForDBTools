@@ -56,7 +56,7 @@ public class SessionManager {
 	private static final Logger logger = Logger.getLogger(SessionManager.class);
 	
 	/** login ip를 가져온 경로를 지정한다 */
-	public static enum LOGIN_IP_TYPE {WEB_RTC, SERVLET_REQUEST};
+	public static enum LOGIN_IP_TYPE {BROWSER_IP, SERVLET_REQUEST};
 
 	/**
 	 * <pre>

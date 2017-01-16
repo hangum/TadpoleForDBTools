@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
@@ -37,6 +36,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -289,11 +289,24 @@ public class TadpoleSystem_UserQuery {
 	 * 
 	 * @param userSeq
 	 */
-	public static void saveLoginHistory(int userSeq) {
+	public static void saveLoginHistory(int userSeq, String strIP) {
+		saveLoginHistory(userSeq, strIP, "YES", "");
+	}
+	
+	/**
+	 * save login history
+	 * 
+	 * @param userSeq
+	 * @param strYesNo
+	 * @param strReason
+	 */
+	public static void saveLoginHistory(int userSeq, String strIP, String strYesNo, String strReason) {
 		try {
 			UserLoginHistoryDAO historyDao = new UserLoginHistoryDAO();
-			historyDao.setLogin_ip(RWT.getRequest().getRemoteAddr());
+			historyDao.setLogin_ip(strIP);
 			historyDao.setUser_seq(userSeq);
+			historyDao.setSucces_yn(strYesNo);
+			historyDao.setFail_reason(strReason);
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 			sqlClient.insert("saveLoginHistory", historyDao);
@@ -306,14 +319,16 @@ public class TadpoleSystem_UserQuery {
 	 * get login history
 	 * 
 	 * @param strEmail
+	 * @param strYesNo
 	 * @param startTime
 	 * @param endTime
 	 */
-	public static List<UserLoginHistoryDAO> getLoginHistory(String strEmail, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
+	public static List<UserLoginHistoryDAO> getLoginHistory(String strEmail, String strYesNo, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("email",		strEmail);
+		queryMap.put("succes_yn", 	strYesNo);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date dateSt = new Date(startTime);

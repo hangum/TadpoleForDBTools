@@ -27,6 +27,7 @@ import com.hangum.tadpole.commons.util.DateUtil;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.LDAPUtil;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.dialogs.user.ChangePasswordDialog;
@@ -63,6 +64,18 @@ public class AbstractLoginDialog extends Dialog {
 	 */
 	protected void ldapLogin(String strEmail, String strPass) throws TadpoleAuthorityException {
 		LDAPUtil.getInstance().ldapLogin(strEmail, strPass);
+	}
+	
+	/**
+	 * 로그인 사유
+	 * 
+	 * @param userSeq
+	 * @param strIP
+	 * @param strYesNO
+	 * @param strReason
+	 */
+	protected void saveLoginHistory(int userSeq, String strIP, String strYesNO, String strReason) {
+		TadpoleSystem_UserQuery.saveLoginHistory(userSeq, strIP, strYesNO, strReason);
 	}
 	
 	/**

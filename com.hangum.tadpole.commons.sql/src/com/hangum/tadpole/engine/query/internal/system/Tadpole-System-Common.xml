@@ -189,8 +189,8 @@
 	save login history
  -->
 <insert id="saveLoginHistory" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO">
-	INSERT INTO login_history(user_seq, login_ip) 
-	VALUES (#user_seq#, #login_ip#);
+	INSERT INTO login_history(user_seq, login_ip, succes_yn, fail_reason) 
+	VALUES (#user_seq#, #login_ip#, #succes_yn#, #fail_reason#);
 </insert>
 
 <!-- 
