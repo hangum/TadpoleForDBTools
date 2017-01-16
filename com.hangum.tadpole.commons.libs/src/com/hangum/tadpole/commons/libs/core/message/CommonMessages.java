@@ -76,7 +76,9 @@ public class CommonMessages {
 	/** ?값은 ?보다 크고 ?보다 적어야 합니다.*/
 	public String ValueIsLessThanOrOverThan;
 
-	public String Text_ValueIsLessThanOrOverThan; 
+	public String Text_ValueIsLessThanOrOverThan;
+	
+	/* ?보다 커야 합니다 */
 	public String ValueIsOverThan;
 	public String mustBeNumber;
 	
@@ -106,6 +108,8 @@ public class CommonMessages {
 	public String IsIncorrect;
 
 	public String ChangingErrorMsg;
+
+	public String ChangingValue;
 
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
