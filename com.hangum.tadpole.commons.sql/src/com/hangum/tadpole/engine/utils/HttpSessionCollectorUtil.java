@@ -86,7 +86,6 @@ public class HttpSessionCollectorUtil {
 			if(logger.isDebugEnabled()) logger.debug("========= remove connection start " + strEmail);
 			SessionManager.removeConnection(strEmail);
 			if(logger.isDebugEnabled()) logger.debug("========= remove connection end ");
-			
 		}
 		
 	}
