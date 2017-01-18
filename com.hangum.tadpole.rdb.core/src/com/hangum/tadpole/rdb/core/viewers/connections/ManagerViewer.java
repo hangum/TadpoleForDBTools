@@ -37,6 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
@@ -114,6 +115,13 @@ public class ManagerViewer extends ViewPart {
 				if(objSelect instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)objSelect;
 					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					
+					// 싱글 클릭일때 에디터에 오픈된 화면이 없으면 에디터 화면이 열리도록 수정.
+					IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+					if(editor == null) {
+						QueryEditorAction qea = new QueryEditorAction();
+						qea.run(userDB);
+					}
 					
 					// Rice lock icode change event
 					managerTV.refresh(userDB, true);
