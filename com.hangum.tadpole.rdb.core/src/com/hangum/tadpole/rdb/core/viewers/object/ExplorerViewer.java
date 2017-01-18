@@ -1103,6 +1103,20 @@ public class ExplorerViewer extends ViewPart {
 		}
 	}
 	
+	/**
+	 * mysql 일 경우 오브젝트 탐색기의 스키마를 변경한다.
+	 * 
+	 * @param userDB
+	 * @param strSchema
+	 */
+	public void changeSchema(UserDBDAO userDB, String strSchema) {
+		if(getUserDB() == null) return;
+		
+		if(getUserDB().getSeq() == userDB.getSeq()) {
+			changeSchema(strSchema);
+		}
+	}
+	
 	@Override
 	public void setFocus() {
 	}

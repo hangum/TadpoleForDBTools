@@ -87,6 +87,7 @@ import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContribution
 import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
+import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.sql.format.SQLFormater;
@@ -307,10 +308,22 @@ public class MainEditor extends EditorExtension {
 			comboSchema.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					userDB.setSchema(comboSchema.getText());
+					final String strSchema = comboSchema.getText();
+					userDB.setSchema(strSchema);
 					
 					//오브젝트 익스플로어가 같은 스키마 일경우 스키마가 변경되도록.
-					
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
+								ev.changeSchema(userDB, strSchema);
+							} catch (PartInitException e) {
+								logger.error("ExplorerView show", e); //$NON-NLS-1$
+							}
+						}
+						
+					});
 				}
 			});
 			
@@ -325,7 +338,6 @@ public class MainEditor extends EditorExtension {
 						userDB.addSchema(mapData.get("SCHEMA"));
 					}
 					
-					comboSchema.setText(userDB.getDb());	
 				} catch(Exception e) {
 					logger.error("get mysql schema list " + e.getMessage());
 				}
