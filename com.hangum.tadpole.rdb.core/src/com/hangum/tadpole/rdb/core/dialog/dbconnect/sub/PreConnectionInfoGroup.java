@@ -72,7 +72,7 @@ public class PreConnectionInfoGroup extends Group {
 		Label lblOperationType = new Label(this, SWT.NONE);
 		lblOperationType.setText(Messages.get().OperationType);
 		
-		String []strProductTypeFilters = StringUtils.split(GetAdminPreference.getViewProductTypeFilter(), ",");
+		String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
 		comboOperationType = new Combo(this, SWT.READ_ONLY);
 		comboOperationType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		for (PublicTadpoleDefine.DBOperationType opType : PublicTadpoleDefine.DBOperationType.values()) {

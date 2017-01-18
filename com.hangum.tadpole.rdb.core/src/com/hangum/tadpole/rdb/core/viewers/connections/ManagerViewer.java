@@ -232,7 +232,7 @@ public class ManagerViewer extends ViewPart {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
 					
 					// product type filter
-					String []strProductTypeFilters = StringUtils.split(GetAdminPreference.getViewProductTypeFilter(), ",");
+					String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
 					// product type filter
 					
 					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {

@@ -114,6 +114,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	
 	protected String group_name = "";
 	protected String operation_type = "";
+	protected String duplication_type = "";
 	protected String dbms_type;
 	protected String url;
 	protected String url_user_parameter = "";
@@ -431,6 +432,20 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 
 	public void setOperation_type(String operation_type) {
 		this.operation_type = operation_type;
+	}
+
+	/**
+	 * @return the duplication_type
+	 */
+	public String getDuplication_type() {
+		return duplication_type;
+	}
+
+	/**
+	 * @param duplication_type the duplication_type to set
+	 */
+	public void setDuplication_type(String duplication_type) {
+		this.duplication_type = duplication_type;
 	}
 
 	public String getIs_profile() {

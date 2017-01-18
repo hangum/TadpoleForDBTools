@@ -65,9 +65,14 @@ public class ManagerLabelProvider extends LabelProvider {
 		
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
 //			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
-			retText = String.format("[%s] ", StringUtils.substring(userDB.getOperation_type(), 0, 1));
+			retText = String.format("[%s]", StringUtils.substring(userDB.getOperation_type(), 0, 1));
 //		} else {
 //			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
+		}
+		
+		// master, slave 표시
+		if(!"".equals(userDB.getDuplication_type())) {
+			retText += String.format("[%s]", StringUtils.substring(userDB.getDuplication_type(), 0, 1)); //$NON-NLS-3$
 		}
 		
 		if(PermissionChecker.isDBAdminRole(userDB)) {

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ApplicationContext;
@@ -253,9 +254,11 @@ public class GetAdminPreference extends AbstractPreference {
 	 * 
 	 * @return
 	 */
-	public static String getViewProductTypeFilter() {
+	public static String[] getViewProductTypeFilter() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
-		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER_VALUE);		
+		String productFilter =  getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER_VALUE);
+		
+		return StringUtils.split(productFilter, ",");
 	}
 	
 	/**
