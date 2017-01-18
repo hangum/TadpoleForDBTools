@@ -442,7 +442,7 @@ public class ExplorerViewer extends ViewPart {
 						userDB.setSchema(mapData.get("SCHEMA"));
 						comboSchema.select(comboSchema.getItemCount()-1);	
 					}
-				}	
+				}
 				this.refreshTable(false, "");
 			} catch (Exception e) {
 				comboSchema.setItems( new String[]{userDB.getSchema()} );

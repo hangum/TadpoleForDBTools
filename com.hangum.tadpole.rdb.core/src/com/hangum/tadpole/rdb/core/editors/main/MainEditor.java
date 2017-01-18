@@ -308,11 +308,32 @@ public class MainEditor extends EditorExtension {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					userDB.setSchema(comboSchema.getText());
+					
+					//오브젝트 익스플로어가 같은 스키마 일경우 스키마가 변경되도록.
+					
 				}
 			});
 			
-			for (String schema : userDB.getSchemas()) {
-				comboSchema.add(schema);
+			//
+			// 스키마리스트가 없는 경우 스키마 리스트를 가지고 넣는다.
+			//
+			if(userDB.getSchemas().isEmpty()) {
+				try {
+					for (Object object : DBSystemSchema.getSchemas(userDB)) {
+						HashMap<String, String> mapData = (HashMap)object;
+						comboSchema.add(mapData.get("SCHEMA"));
+						userDB.addSchema(mapData.get("SCHEMA"));
+					}
+					
+					comboSchema.setText(userDB.getDb());	
+				} catch(Exception e) {
+					logger.error("get mysql schema list " + e.getMessage());
+				}
+			} else {
+			
+				for (String schema : userDB.getSchemas()) {
+					comboSchema.add(schema);
+				}
 			}
 			comboSchema.setVisibleItemCount(userDB.getSchemas().size());
 			comboSchema.setText(userDB.getSchema());
