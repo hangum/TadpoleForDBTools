@@ -91,6 +91,7 @@
 		    AND a.is_visible = 'YES'
 		    AND b.terms_of_use_starttime <= #thisTime#
         	AND b.terms_of_use_endtime >= #thisTime#
+        ORDER BY display_name, operation_type, dbms_type
 	]]>	
 	</select>
 	
@@ -109,6 +110,7 @@
 		    AND a.is_visible = 'YES'
 		    AND b.terms_of_use_starttime <= #thisTime#
         	AND b.terms_of_use_endtime >= #thisTime#
+        ORDER BY group_name
 	]]>	
 	</select>
 

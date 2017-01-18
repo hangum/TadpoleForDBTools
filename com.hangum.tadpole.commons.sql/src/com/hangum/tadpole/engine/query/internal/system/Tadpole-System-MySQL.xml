@@ -65,6 +65,7 @@
 		    AND b.delyn = 'NO'
 		    AND a.is_visible = 'YES'
 		    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
+		ORDER BY display_name, operation_type, dbms_type
 	]]>	
 	</select>
 	
@@ -82,6 +83,7 @@
 		    AND b.delyn = 'NO'
 		    AND a.is_visible = 'YES'
 		    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
+		ORDER BY group_name
 	]]>	
 	</select>
 	
