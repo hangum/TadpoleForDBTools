@@ -36,7 +36,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
-import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 
@@ -238,7 +237,7 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDAO> listUser = new ArrayList<UserDAO>();
 		
-			listUser = sqlClient.queryForList("findLikeUser", "%" + email + "%"); //$NON-NLS-1$
+		listUser = sqlClient.queryForList("findLikeUser", "%" + email + "%"); //$NON-NLS-1$
 		
 		if(listUser.size() == 0) {
 			throw new TadpoleRuntimeException(Messages.get().TadpoleSystem_UserQuery_0);

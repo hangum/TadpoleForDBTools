@@ -9,7 +9,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.login.core.dialog;
 
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -22,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
@@ -171,6 +174,26 @@ public abstract class AbstractLoginDialog extends Dialog {
 	protected void saveLoginHistory(int userSeq, String strIP, String strYesNO, String strReason) {
 		TadpoleSystem_UserQuery.saveLoginHistory(userSeq, strIP, strYesNO, strReason);
 	}
+	
+	/**
+	 * 로그인시 패스워드가 틀림.
+	 * @param strEmail
+	 * @param ip_servletRequest
+	 * @param strYesNO
+	 * @param strReason
+	 */
+	protected void saveLoginHistory(String strEmail, String ip_servletRequest, String strYesNO, String strReason) {
+		try {
+			List<UserDAO> listUser = TadpoleSystem_UserQuery.findExistUser(strEmail);
+			if(!listUser.isEmpty()) {
+				saveLoginHistory(listUser.get(0).getSeq(), ip_servletRequest, strYesNO, strReason);
+			}
+		} catch (Exception e) {
+			logger.error("get userlist", e);
+		}
+		
+	}
+
 	
 	/**
 	 * system message
