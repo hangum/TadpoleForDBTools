@@ -17,6 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.widgets.Display;
+
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * 사용자 session 을 저장하고 관리하는 유틸 클래스이다.
@@ -71,7 +74,7 @@ public class HttpSessionCollectorUtil {
 	 * 
 	 * @param id
 	 */
-	public void sessionDestroyed(String strEmail) {
+	public void sessionDestroyed(final String strEmail) {
 		Map<String, Object> mapUserData = mapSession.remove(strEmail);
 		
 		try {
@@ -79,6 +82,11 @@ public class HttpSessionCollectorUtil {
 			httpSesssion.invalidate();
 		} catch(Throwable e) {
 			logger.error(String.format("System invalidate user %s, messages %s", strEmail, e.getMessage()));
+		} finally {
+			if(logger.isDebugEnabled()) logger.debug("========= remove connection start " + strEmail);
+			SessionManager.removeConnection(strEmail);
+			if(logger.isDebugEnabled()) logger.debug("========= remove connection end ");
+			
 		}
 		
 	}
@@ -163,7 +171,7 @@ class SessionLiveChecker implements Runnable{
 			}
 			
 			// 10 분에 한번씩 Thread 검사.
-			try { Thread.sleep((60 * 1000) * 10); } catch(Exception e) {};
+			try { Thread.sleep((60 * 1000) * 3); } catch(Exception e) {};
 		} // while 
 		
 	}

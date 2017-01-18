@@ -433,10 +433,18 @@ public class SessionManager {
 		} catch(Exception e) {
 			logger.error("loguout", e);
 		} finally {
-			removeTransactionInstance(strID);
-			removeNonTransactionInstance(strID);
+			removeConnection(strID);
 		}
-		
+	}
+	
+	/**
+	 * 사용자 커넥션을 삭제한다.
+	 * 
+	 * @param strID
+	 */
+	public static void removeConnection(final String strID) {
+		removeTransactionInstance(strID);
+		removeNonTransactionInstance(strID);
 	}
 	
 	/**
