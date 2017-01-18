@@ -309,21 +309,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				final DBGroupDefine selectGroup = getUserDB().getDBGroup();
-				
-				if(DBGroupDefine.ORACLE_GROUP == selectGroup ||
-					DBGroupDefine.POSTGRE_GROUP == selectGroup ||
-					DBGroupDefine.MSSQL_GROUP == selectGroup ||
-					DBGroupDefine.MYSQL_GROUP == selectGroup
-					) {
-					
-					if("".equals(table.getSchema_name()) || null == table.getSchema_name()) return table.getName();
-					return table.getSchema_name() + "."+ table.getName();
-					
-				} else {
-					return table.getName();
-				}
-				
+				return table.getName();
 			}
 		});
 		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
