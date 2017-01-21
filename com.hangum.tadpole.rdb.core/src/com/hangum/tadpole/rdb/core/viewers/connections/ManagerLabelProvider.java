@@ -71,7 +71,7 @@ public class ManagerLabelProvider extends LabelProvider {
 		}
 		
 		// master, slave 표시
-		if(!"".equals(userDB.getDuplication_type())) {
+		if(!StringUtils.isBlank(userDB.getDuplication_type())) {
 			retText += String.format("[%s]", StringUtils.substring(userDB.getDuplication_type(), 0, 1)); //$NON-NLS-3$
 		}
 		

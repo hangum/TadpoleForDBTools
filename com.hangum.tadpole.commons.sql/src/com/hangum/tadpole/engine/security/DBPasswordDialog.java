@@ -125,7 +125,7 @@ public class DBPasswordDialog extends Dialog {
 			userDB.setPasswd(StringUtils.trim(textPassword.getText()));
 			TadpoleSQLManager.getInstance(userDB);
 		} catch(Exception e) {
-			logger.error("Test Passwd Connection error ");
+			logger.error("test passwd Connection error ");
 			
 			String msg = e.getMessage();
 			if(StringUtils.contains(msg, "No more data to read from socket")) {

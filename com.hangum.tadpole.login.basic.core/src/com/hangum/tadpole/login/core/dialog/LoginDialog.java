@@ -186,7 +186,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeUILocale(comboLanguage.getText());
+				changeUILocale();
 			}
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
@@ -403,7 +403,7 @@ public class LoginDialog extends AbstractLoginDialog {
 				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
 					Locale locale = Locale.forLanguageTag(cookie.getValue());
 					comboLanguage.setText(locale.getDisplayLanguage(locale));
-					changeUILocale(comboLanguage.getText());
+					changeUILocale();
 					intCount++;
 				}
 				
@@ -413,15 +413,14 @@ public class LoginDialog extends AbstractLoginDialog {
 		
 		// 세션에 발견되지 않았으면.
 		comboLanguage.select(0);
-		changeUILocale(comboLanguage.getText());
+		changeUILocale();
 	}
 	
 	/**
 	 * change ui locale
-	 * 
-	 * @param strComoboStr
 	 */
-	private void changeUILocale(String strComoboStr) {
+	private void changeUILocale() {
+		String strComoboStr = comboLanguage.getText();
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
 		RWT.getUISession().setLocale(localeSelect);
 		

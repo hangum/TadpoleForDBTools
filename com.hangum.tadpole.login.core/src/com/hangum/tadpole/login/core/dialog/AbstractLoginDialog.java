@@ -9,7 +9,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.login.core.dialog;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
-import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
