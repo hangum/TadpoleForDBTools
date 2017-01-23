@@ -18,7 +18,6 @@ package com.hangum.tadpole.commons.libs.core.mails.dto;
  */
 public class EmailDTO {
 	
-//	String from = "";
 	String to = "";
 	
 	String subject = "";
@@ -26,20 +25,6 @@ public class EmailDTO {
 
 	public EmailDTO() {
 	}
-
-//	/**
-//	 * @return the from
-//	 */
-//	public final String getFrom() {
-//		return from;
-//	}
-//
-//	/**
-//	 * @param from the from to set
-//	 */
-//	public final void setFrom(String from) {
-//		this.from = from;
-//	}
 
 	/**
 	 * @return the to
@@ -66,7 +51,7 @@ public class EmailDTO {
 	 * @param subject the subject to set
 	 */
 	public final void setSubject(String subject) {
-		this.subject = subject;
+		this.subject = "[TadpoleHUB] " + subject;
 	}
 
 	/**

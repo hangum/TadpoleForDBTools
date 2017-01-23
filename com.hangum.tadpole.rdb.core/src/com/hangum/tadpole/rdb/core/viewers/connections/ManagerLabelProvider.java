@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -64,13 +65,22 @@ public class ManagerLabelProvider extends LabelProvider {
 		
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
 //			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
-			retText = String.format("[%s] ", StringUtils.substring(userDB.getOperation_type(), 0, 1));
+			retText = String.format("[%s]", StringUtils.substring(userDB.getOperation_type(), 0, 1));
 //		} else {
 //			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 		}
 		
+		// master, slave 표시
+		if(!StringUtils.isBlank(userDB.getDuplication_type())) {
+			retText += String.format("[%s]", StringUtils.substring(userDB.getDuplication_type(), 0, 1)); //$NON-NLS-3$
+		}
+		
 		if(PermissionChecker.isDBAdminRole(userDB)) {
-			retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+				retText += String.format("%s", userDB.getDisplay_name()); //$NON-NLS-3$
+			} else {
+				retText += String.format("%s (%s)", userDB.getDisplay_name(), userDB.getUsers()); //$NON-NLS-3$	
+			}
 		} else {
 			
 			// 프러덕이나 백업디비이면디비 이름만보이면 됨.
@@ -78,7 +88,11 @@ public class ManagerLabelProvider extends LabelProvider {
 				retText += userDB.getDisplay_name();
 			// 기타 디비 이면 다 보이면 됨.
 			} else {
-				retText += String.format("%s (%s@%s)", userDB.getDisplay_name(), userDB.getUsers(), userDB.getDb()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$				
+				if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
+					retText += String.format("%s", userDB.getDisplay_name()); //$NON-NLS-3$
+				} else {
+					retText += String.format("%s (%s)", userDB.getDisplay_name(), userDB.getUsers()); //$NON-NLS-3$	
+				}	
 			}
 		}
 		

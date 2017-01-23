@@ -2,8 +2,12 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Timestamp;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * UserLoginHistory table dao
+ * 
+ * succes_yn, fail_reason 컬럼 추가 - 17.1.16 로그인 실패 이력 확인
  * 
  * @author hangum
  *
@@ -18,6 +22,9 @@ public class UserLoginHistoryDAO {
 	
 	String sqliteConnet_time;
 	String sqliteDisconnect_time;
+	
+	String succes_yn = PublicTadpoleDefine.YES_NO.YES.name();
+	String fail_reason;
 	
 	public UserLoginHistoryDAO() {
 	}
@@ -120,5 +127,32 @@ public class UserLoginHistoryDAO {
 		this.sqliteDisconnect_time = sqliteDisconnect_time;
 	}
 
-	
+	/**
+	 * @return the succes_yn
+	 */
+	public String getSucces_yn() {
+		return succes_yn;
+	}
+
+	/**
+	 * @param succes_yn the succes_yn to set
+	 */
+	public void setSucces_yn(String succes_yn) {
+		this.succes_yn = succes_yn;
+	}
+
+	/**
+	 * @return the fail_reason
+	 */
+	public String getFail_reason() {
+		return fail_reason;
+	}
+
+	/**
+	 * @param fail_reason the fail_reason to set
+	 */
+	public void setFail_reason(String fail_reason) {
+		this.fail_reason = fail_reason;
+	}
+
 }

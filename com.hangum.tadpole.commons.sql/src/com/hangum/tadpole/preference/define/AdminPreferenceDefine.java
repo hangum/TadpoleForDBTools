@@ -23,6 +23,10 @@ public class AdminPreferenceDefine {
 	public static final String DB_TIME_ZONE = _PREFIX + "DB_TIME_ZONE";
 	public static final String DB_TIME_ZONE_VALUE = "";
 	
+	/** PRODUCT FILTER */
+	public static final String SYSTEM_VIEW_PRODUCT_TYPE_FILTER = _PREFIX + "SYSTEM_VIEW_PRODUCT_TYPE_FILTER";
+	public static final String SYSTEM_VIEW_PRODUCT_TYPE_FILTER_VALUE = "";
+	
 	/** system login method */
 	public static final String SYSTEM_LOGIN_METHOD = _PREFIX + "SYSTEM_LOGIN_METHOD";
 	public static final String SYSTEM_LOGIN_METHOD_VALUE = "original";
@@ -36,7 +40,7 @@ public class AdminPreferenceDefine {
 	
 	public static final String SYSTEM_LDAP_AUTHENTICATION = _PREFIX + "SYSTEM_LDAP_AUTHENTICATION";
 	public static final String SYSTEM_LDAP_AUTHENTICATION_VALUE = "simple";
-
+	
 	/** 신규 사용자 허락 유무 */
 	public static final String NEW_USER_PERMIT = _PREFIX + "NEW_USER_PERMIT";
 	public static final String NEW_USER_PERMIT_VALUE = "YES";
@@ -44,6 +48,18 @@ public class AdminPreferenceDefine {
 	/** 신규 디비 등록시 패스워드 저장 유무(YES이면 패스워드 저장) */
 	public static final String SAVE_DB_PASSWORD = _PREFIX + "SAVE_DB_PASSWORD";
 	public static final String SAVE_DB_PASSWORD_VALUE = "YES";
+	
+	/** 패스워드 복잡도 유무 */
+	public static final String PASSWD_COMPLEXITY = _PREFIX + "PASSWD_COMPLEXITY";
+	public static final String PASSWD_COMPLEXITY_VALUE = "NO";
+	
+	/** 패스워드 최하 길이 */
+	public static final String PASSWD_LENGTH_LIMIT = _PREFIX + "PASSWD_LENGTH_LIMIT";
+	public static final String PASSWD_LENGTH_LIMIT_VALUE = "7";
+	
+	/** 패스워드 최하 길이 */
+	public static final String PASSWD_DATE_LIMIT = _PREFIX + "PASSWD_DATE_LIMIT";
+	public static final String PASSWD_DATE_LIMIT_VALUE = "3650";
 	
 	/** 사용자가 디비 추가 여부 */
 	public static final String IS_ADD_DB = _PREFIX + "IS_ADD_DB";
@@ -86,14 +102,26 @@ public class AdminPreferenceDefine {
 	public static final String IS_PREFERENCE_MODIFY_VALUE = "YES";
 	
 	// set smtp information
+		public static final String MAIL_LOGIN_TYPE			= "MAIL_LOGIN_TYPE";
+		public static final String MAIL_LOGIN_TYPE_VALUE	= "NONE";
+		
+		public static final String MAIN_DOMAIN				= "MAIN_DOMAIN";
+		public static final String MAIN_DOMAIN_VALUE		= "";
+		
 		public static final String SENDGRID_API_NAME 		= "SENDGRID_API_NAME";
 		public static final String SENDGRID_API_VALUE 		= "";
+		
+		public static final String SMTP_STARTTLS_ENABLE		= "SMTP_STARTTLS_ENABLE";
+		public static final String SMTP_STARTTLS_ENABLE_VALUE	= "NO";
+		
+		public static final String SMTP_IS_AUTH 			= "SMTP_IS_AUTH";
+		public static final String SMTP_IS_AUTH_VALUE 		= "NO";
 	
 		public static final String SMTP_HOST_NAME 		= "SMTP_HOST_NAME";
-		public static final String SMTP_HOST_NAME_VALUE = "smtp.googlemail.com";
+		public static final String SMTP_HOST_NAME_VALUE = "smtp.gmail.com";
 		
 		public static final String SMTP_PORT 			= "SMTP_PORT";
-		public static final String SMTP_PORT_VALUE 		= "465";
+		public static final String SMTP_PORT_VALUE 		= "587";
 		
 		public static final String SMTP_EMAIL 			= "SMTP_EMAIL";
 		public static final String SMTP_EMAIL_VALUE 	= "";

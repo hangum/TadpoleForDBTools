@@ -12,8 +12,8 @@ package com.hangum.tadpole.engine.query.dao.system;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.DateUtil;
 
 /**
  * user 정보 정의
@@ -33,15 +33,16 @@ public class UserDAO {
 	String is_email_certification;
 
 	String passwd;
+	Timestamp changed_passwd_time = new Timestamp(System.currentTimeMillis());
 	String role_type;
 	String name;
-	String language;
-	String timezone;
-	String delYn;
+	String language = "";
+	String timezone = "";
+	String delYn = "";
 	String create_time;
 	String approval_yn;
 	
-	String use_otp;
+	String use_otp = "";
 	String otp_secret;
 	
 	String allow_ip = "*";
@@ -57,6 +58,8 @@ public class UserDAO {
 	
 	Timestamp service_start = new Timestamp(System.currentTimeMillis());
 	Timestamp service_end = new Timestamp(DateUtil.afterMonthToMillis(12));
+	
+	String external_id;
 	
 	// 
 	// table viewer 에서 사용자 검색에서 사용하려고 채크 박스 선택 유무로 사용하는 컬럼.
@@ -106,6 +109,14 @@ public class UserDAO {
 
 	public String getName() {
 		return name;
+	}
+
+	public Timestamp getChanged_passwd_time() {
+		return changed_passwd_time;
+	}
+
+	public void setChanged_passwd_time(Timestamp changed_passwd_time) {
+		this.changed_passwd_time = changed_passwd_time;
 	}
 
 	public void setName(String name) {
@@ -320,6 +331,20 @@ public class UserDAO {
 	 */
 	public void setIs_modify_perference(String is_modify_perference) {
 		this.is_modify_perference = is_modify_perference;
+	}
+
+	/**
+	 * @return the external_id
+	 */
+	public String getExternal_id() {
+		return external_id;
+	}
+
+	/**
+	 * @param external_id the external_id to set
+	 */
+	public void setExternal_id(String external_id) {
+		this.external_id = external_id;
 	}
 	
 }

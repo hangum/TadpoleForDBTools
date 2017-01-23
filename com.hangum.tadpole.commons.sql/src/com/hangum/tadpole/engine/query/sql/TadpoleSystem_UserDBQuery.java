@@ -11,6 +11,7 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -161,6 +162,7 @@ public class TadpoleSystem_UserDBQuery {
 		//
 		
 		userEncryptDao.setExt1(userDb.getExt1());
+		userEncryptDao.setCreate_time(new Timestamp(System.currentTimeMillis()));
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		UserDBDAO insertedUserDB = (UserDBDAO)sqlClient.insert("userDBInsert", userEncryptDao); //$NON-NLS-1$
@@ -238,6 +240,15 @@ public class TadpoleSystem_UserDBQuery {
 		userEncryptDao.setIs_monitoring(newUserDb.getIs_monitoring());
 		
 		userEncryptDao.setExt1(newUserDb.getExt1());
+		userEncryptDao.setExt2(newUserDb.getExt2());
+		userEncryptDao.setExt3(newUserDb.getExt3());
+		userEncryptDao.setExt4(newUserDb.getExt4());
+		userEncryptDao.setExt5(newUserDb.getExt5());
+		userEncryptDao.setExt6(newUserDb.getExt6());
+		userEncryptDao.setExt7(newUserDb.getExt7());
+		userEncryptDao.setExt8(newUserDb.getExt8());
+		userEncryptDao.setExt9(newUserDb.getExt9());
+		userEncryptDao.setExt10(newUserDb.getExt10());
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		sqlClient.update("userDBUpdate", userEncryptDao); //$NON-NLS-1$

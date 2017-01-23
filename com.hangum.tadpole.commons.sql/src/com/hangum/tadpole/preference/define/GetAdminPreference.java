@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ApplicationContext;
@@ -140,6 +141,33 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * 패스워드 복잡도 유무(NO)
+	 * @return
+	 */
+	public static String getPasswdComplexity() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.PASSWD_COMPLEXITY, AdminPreferenceDefine.PASSWD_COMPLEXITY_VALUE);
+	}
+	
+	/**
+	 * 패스워드 최소 길이
+	 * @return
+	 */
+	public static String getPasswdLengthLimit() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.PASSWD_LENGTH_LIMIT, AdminPreferenceDefine.PASSWD_LENGTH_LIMIT_VALUE);
+	}
+	
+	/**
+	 * 패스워드 변경 최하 일자
+	 * @return
+	 */
+	public static String getPasswdDateLimit() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.PASSWD_DATE_LIMIT, AdminPreferenceDefine.PASSWD_DATE_LIMIT_VALUE);
+	}
+	
+	/**
 	 * 사용자가 디비를 추가 할 수 있는지 여부
 	 * @return
 	 */
@@ -212,6 +240,28 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * 메일 사용 타입을 지정한다. 
+	 * 없음, sendgrid, smtp
+	 * @return
+	 */
+	public static String getMailUsingType() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.MAIL_LOGIN_TYPE, AdminPreferenceDefine.MAIL_LOGIN_TYPE_VALUE);		
+	}
+	
+	/**
+	 * 어드민이 지정한 프러럭타입 필터 값을 뺀다. 
+	 * 
+	 * @return
+	 */
+	public static String[] getViewProductTypeFilter() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		String productFilter =  getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER_VALUE);
+		
+		return StringUtils.split(productFilter, ",");
+	}
+	
+	/**
 	 * update admin data
 	 * @param key
 	 * @param userInfoDao
@@ -225,7 +275,7 @@ public class GetAdminPreference extends AbstractPreference {
 	 * 
 	 * @return
 	 */
-	public static SMTPDTO getSessionSMTPINFO() throws Exception {
+	public static SMTPDTO getSessionSMTPINFO() {
 		SMTPDTO dto = new SMTPDTO();
 		
 		ApplicationContext context = RWT.getApplicationContext();
@@ -233,12 +283,6 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		if(dto == null) {
 			dto = getSMTPINFO();
-//			if("".equals(dto.getSendgrid_api())) {
-//				if("".equals(dto.getEmail()) || "".equals(dto.getPasswd())) {
-//					throw new Exception("Doesn't setting is SMTP Server.");
-//				}
-//			}
-			
 			context.setAttribute("smtpinfo", dto); //$NON-NLS-1$
 		}
 		
@@ -269,7 +313,13 @@ public class GetAdminPreference extends AbstractPreference {
 				mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 			}
 		
+			dto.setLoginMethodType(getAdminValue(mapUserInfoData, AdminPreferenceDefine.MAIL_LOGIN_TYPE, AdminPreferenceDefine.MAIL_LOGIN_TYPE_VALUE));
+			dto.setDomain(getAdminValue(mapUserInfoData, AdminPreferenceDefine.MAIN_DOMAIN, AdminPreferenceDefine.MAIN_DOMAIN_VALUE));
 			dto.setSendgrid_api(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SENDGRID_API_NAME, AdminPreferenceDefine.SENDGRID_API_VALUE));
+			
+			dto.setStarttls_enable(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_STARTTLS_ENABLE, AdminPreferenceDefine.SMTP_STARTTLS_ENABLE_VALUE));
+			dto.setIsAuth(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_IS_AUTH, AdminPreferenceDefine.SMTP_IS_AUTH_VALUE));
+			
 			dto.setHost(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_HOST_NAME, AdminPreferenceDefine.SMTP_HOST_NAME_VALUE));
 			dto.setPort(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_PORT, AdminPreferenceDefine.SMTP_PORT_VALUE));
 			dto.setEmail(getAdminValue(mapUserInfoData, AdminPreferenceDefine.SMTP_EMAIL, AdminPreferenceDefine.SMTP_EMAIL_VALUE));
@@ -281,7 +331,4 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		return dto;
 	}
-
-	
-
 }

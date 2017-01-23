@@ -109,7 +109,8 @@ public class ModifyDBDialog extends Dialog {
 															listGroupName, 
 															userDBDAO.getGroup_name(), 
 															userDBDAO,
-															DATA_STATUS.MODIFY
+															DATA_STATUS.MODIFY,
+															true
 				);
 
 		// google analytic

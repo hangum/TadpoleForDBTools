@@ -69,8 +69,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample MongoDB", DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public MongoDBLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample MongoDB", DBDefine.MONGODB_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override
@@ -91,6 +91,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		gl_compositeBody.marginWidth = 0;
 		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setEnabled(isReadOnly);
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
@@ -174,6 +175,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		othersConnectionInfo = new OthersConnectionMongoDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		othersConnectionInfo.setEnabled(isReadOnly);
 		
 		init();
 	}
@@ -220,13 +222,8 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) { //$NON-NLS-1$
-				comboGroup.setText(strOtherGroupName);
-			} else {
-				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(comboGroup.getItem(i).equals(selGroupName)) comboGroup.select(i);
-				}
-			}
+			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
 		}
 		
 		//
@@ -297,6 +294,9 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		
 		// 처음 등록자는 권한이 어드민입니다.
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+
+		// set ext value
+		setExtValue();
 		
 		return true;
 	}

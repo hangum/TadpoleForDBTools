@@ -65,7 +65,7 @@ public class ExecuteQueryPlan {
 				rsDAO = manager.executeQueryPlan(userDB, reqQuery.getSql(), reqQuery.getSqlStatementType(), reqQuery.getStatementParameter());
 			} else {
 				
-				javaConn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
+				javaConn = TadpoleSQLManager.getConnection(userDB);
 								
 				// 큐브리드 디비이면 다음과 같아야 합니다.
 				if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {

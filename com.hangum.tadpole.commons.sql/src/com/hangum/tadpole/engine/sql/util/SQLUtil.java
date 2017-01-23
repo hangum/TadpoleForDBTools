@@ -21,9 +21,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -304,50 +301,6 @@ public class SQLUtil {
 		return strIdentifier + tableName + strIdentifier;
 	}
 	
-//	컬럼을 2천바이트까지만 저장하는 컬럼이 있을 경우 사용하였으나, 사용하지 않아서 삭제한다. - hangum
-//	/**
-//	 * db resource data를 저장할때 2000byte 단위로 저장하도록 합니다.
-//	 * 이 이슈( https://github.com/hangum/TadpoleForDBTools/issues/864 )로 컬럼을 하나로 만들고 수정합니다.
-//	 * 
-//	 * @param resource data
-//	 * @return
-//	 */
-//	public static String[] makeResourceDataArays(String resourceContent)  {
-//		int cutsize = 1998;
-//		String[] tmpRetArryStr = new String[2000];
-//		resourceContent = resourceContent == null ? "" : resourceContent;
-//		byte[] byteSqlText = resourceContent.getBytes();
-//		
-//		int isEndTextHangul = 0;
-//		int workCnt = 0;
-//
-//		while (byteSqlText.length > cutsize) {
-//			isEndTextHangul = 0;
-//			for (int i=0; i<cutsize; i++) {
-//				if (byteSqlText[i] < 0) isEndTextHangul++;
-//			}
-//
-//			if (isEndTextHangul%2 != 0) {
-//				tmpRetArryStr[workCnt] = new String(byteSqlText, 0, cutsize + 1);
-//				byteSqlText = new String(byteSqlText, cutsize + 1, byteSqlText.length - (cutsize + 1)).getBytes();
-//			} else {
-//				tmpRetArryStr[workCnt] = new String(byteSqlText, 0, cutsize);
-//				byteSqlText = new String(byteSqlText, cutsize, byteSqlText.length - cutsize).getBytes();
-//			}
-//
-//			workCnt++;
-//		}
-//		tmpRetArryStr[workCnt] = new String(byteSqlText);
-//		
-//		// 결과가 있는 만큼 담기위해
-//		String[] returnDataArry = new String[workCnt+1];
-//		for (int i=0; i<=workCnt; i++) {
-//			returnDataArry[i] = tmpRetArryStr[i];
-//		}
-//		
-//		return returnDataArry;
-//	}
-	
 	/**
 	 * 에디터에서 쿼리 실행 단위 조절.
 	 * 
@@ -420,38 +373,7 @@ public class SQLUtil {
 			return String.format("'%s'", StringEscapeUtils.escapeSql(value));
 		}
 	}
-	
-	/**
-	 * index name
-	 * @param tc
-	 * @return
-	 */
-	public static String getIndexName(InformationSchemaDAO tc) {
-		if("".equals(tc.getSchema_name()) | null == tc.getSchema_name()) return tc.getINDEX_NAME();
-		else return String.format("%s.%s", tc.getSchema_name(), tc.getINDEX_NAME());
-	}
-	
-	/**
-	 * constraint name
-	 * @param tc
-	 * @return
-	 */
-	public static String getConstraintName(TableConstraintsDAO tc) {
-		if("".equals(tc.getSchema_name()) || null == tc.getSchema_name()) return tc.getTABLE_NAME();
-		else return String.format("%s.%s", tc.getSchema_name(), tc.getTABLE_NAME());
-	}
-	
-	/**
-	 * get procedure name
-	 * 
-	 * @param tc
-	 * @return
-	 */
-	public static String getProcedureName(ProcedureFunctionDAO tc) {
-		if("".equals(tc.getSchema_name()) || null == tc.getSchema_name()) return tc.getName();
-		else return String.format("%s.%s", tc.getSchema_name(), tc.getName());
-	}
-	
+
 	/**
 	 * Table name
 	 * @param userDB 

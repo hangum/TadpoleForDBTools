@@ -24,12 +24,14 @@ import org.eclipse.core.runtime.FileLocator;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.commons.libs.core.mails.SendEmails;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.TadpoleEngineActivator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -111,8 +113,8 @@ public class TadpoleSystemInitializer {
 	 */
 	public static boolean initSystem() throws Exception {
 		
-		// move to driver file
-		if(!TadpoleApplicationContextManager.isSystemInitialize()) initJDBCDriver();
+		// initialize jdbc driver
+		initJDBCDriver();
 		
 		// Is SQLite?
 		if (!ApplicationArgumentUtils.isDBServer()) {
@@ -148,6 +150,10 @@ public class TadpoleSystemInitializer {
 				initializeEngine.initializeEngine();
 			}
 		}
+		
+		// initialize email information
+		GetAdminPreference.getSessionSMTPINFO();
+		SendEmails.getInstance();
 		
 		return TadpoleApplicationContextManager.getSystemAdmin() == null?false:true;
 	}

@@ -37,6 +37,11 @@ public class PublicTadpoleDefine {
 	public static final String DEFAULT_LOG_FILE 		= "./logs/tadpole.log";
 	public static final String DEFAULT_VELOCITY_LOG_FILE = "./logs/tadpoleVelocity.log";
 	
+	/**
+	 * 환경 정보 파일
+	 */
+	public static final String TDB_CONFIG_FILE = "tadpole_interface.properties";
+	
 	/** cookie path */
 	public static String _cookiePath = "/";
 	
@@ -44,6 +49,9 @@ public class PublicTadpoleDefine {
 	
 	/** Default resource name */
 	public static final String DEFAUL_RESOURCE_NAME = "_TDB_DEF_NAME_";
+	
+	/** mail type */
+	public static enum MAIL_TYPE {NONE, SEND_GRID, SMTP};
 
 	/** 시스템 사용 그룹 정의 */
 	public static enum SYSTEM_USE_GROUP {PERSONAL, GROUP}  
@@ -144,7 +152,10 @@ public class PublicTadpoleDefine {
 	public static final String AUTOCOMMIT_USE = "_AUTOCOMMIT_USE"; //$NON-NLS-1$
 	
 	/** Tadpole support browser list  */
-	public static enum TADPOLE_SUPPORT_BROWSER {EDGE, FIREFOX, CHROME, SAFARI, IE};
+	public static enum TADPOLE_SUPPORT_BROWSER {EDGE, FIREFOX, CHROME, SAFARI, IE, OPERA};
+	
+	/** Tadpole support browser list  */
+	public static enum TADPOLE_SUPPORT_BROWSERIP {FIREFOX, CHROME, OPERA};
 	
 	/** 
 	 * This variable is user_role_table. 
@@ -206,7 +217,8 @@ public class PublicTadpoleDefine {
 	 *
 	 */
 	public enum DBOperationType {
-		PRODUCTION("Production Sever"), 
+		PRODUCTION("Production Sever"),
+		DR("Disaster recovery"), 
 		DEVELOP("Develop Sever"), 
 		TEST("Test Sever"),
 		BACKUP("Backup Sever"),
@@ -224,13 +236,14 @@ public class PublicTadpoleDefine {
 		
 		public static DBOperationType getNameToType(String name) {
 			if(PRODUCTION.typeName.equals(name)) 	return PRODUCTION;
+			else if(DR.typeName.equals(name)) 	return DR;
 			else if(DEVELOP.typeName.equals(name)) 	return DEVELOP;
 			else if(TEST.typeName.equals(name)) 	return TEST;
 			else if(BACKUP.typeName.equals(name)) 	return BACKUP;
 			else return OTHERS;
 		}
 	};
-
+	
 	/** 에디터를 열때 오픈하는 타입을 적습니다. */
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	

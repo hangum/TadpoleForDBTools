@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.utils;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
@@ -26,6 +28,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.parser.BasicTDBSQLParser;
 import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -97,7 +100,10 @@ public class RequestQuery implements Cloneable {
 	 * @param isAutoCommit autocommit
 	 */
 	public RequestQuery(UserDBDAO userDB, String originalSql, OBJECT_TYPE dbAction, EditorDefine.QUERY_MODE mode, EditorDefine.EXECUTE_TYPE type, boolean isAutoCommit) {
-		this.userIp = RWT.getRequest().getRemoteAddr();
+		//
+		// 사용자가 네트웍을 바꾸어서 사용하면 어떻게 되지???
+		//
+		this.userIp = SessionManager.getLoginIp();// RWT.getRequest().getRemoteAddr();
 		
 		this.originalSql = originalSql;
 		this.dbAction = dbAction;

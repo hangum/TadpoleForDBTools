@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +52,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
@@ -72,7 +74,6 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * object explorer viewer
@@ -162,7 +163,6 @@ public class ExplorerViewer extends ViewPart {
 			}
 		});
 		comboSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
 		
 		Composite compositeSearch = new Composite(parent, SWT.NONE);
 		compositeSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -293,7 +293,7 @@ public class ExplorerViewer extends ViewPart {
 		this.comboSchema.setText(strSchemaName);
 		 
 		this.userDB.setSchema(strSchemaName);
-		if(logger.isDebugEnabled()) logger.debug("Change schema name is " + strSchemaName);
+		if(logger.isDebugEnabled()) logger.debug("*** Change schema name is " + strSchemaName);
 		
 		// 기존 스키마에 대해 조회되어 있던 내용을 초기화 한다.
 		
@@ -313,8 +313,6 @@ public class ExplorerViewer extends ViewPart {
 		if(null != this.agensVertexComposite) agensVertexComposite.clearList();
 		if(null != this.agensEdgeComposite) agensEdgeComposite.clearList();
 
-
-		
 		// 아젠스 그래프 디비인 경우는 첫번째 탭이 그래프 패스 이므로 그래프 패스가 선택 되도록 한다.
 		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
 			//refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
@@ -402,6 +400,8 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void initSchema() throws Exception {
 		if(userDB == null) return;
+		// 디비 락이 있을 경우에 커넥션 시도를 하지 못하도록 합니다. 
+		if(!TadpoleSecurityManager.getInstance().isLock(userDB)) return;
 		
 		/** schema list*/
 		comboSchema.removeAll();
@@ -442,7 +442,7 @@ public class ExplorerViewer extends ViewPart {
 						userDB.setSchema(mapData.get("SCHEMA"));
 						comboSchema.select(comboSchema.getItemCount()-1);	
 					}
-				}	
+				}
 				this.refreshTable(false, "");
 			} catch (Exception e) {
 				comboSchema.setItems( new String[]{userDB.getSchema()} );
@@ -458,6 +458,9 @@ public class ExplorerViewer extends ViewPart {
 			comboSchema.setText(userDB.getDb());
 		}
 		comboSchema.setVisibleItemCount(comboSchema.getItemCount() > 15 ? 15 : comboSchema.getItemCount());
+		
+		// 스키마 목록을 재상용하기 위해 기록합니다. 
+		userDB.setSchemas(Arrays.asList(comboSchema.getItems()));
 	}
 	
 	/**
@@ -483,8 +486,8 @@ public class ExplorerViewer extends ViewPart {
 		// 존재하는 tadfolder를 삭제한다.
 		for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 		
-		// is dblock
-		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_lock()) && !SessionManager.isUnlockDB(selectUserDb)) {
+		// 디비 락이 있을 경우에 커넥션 시도를 하지 못하도록 합니다. 
+		if(!TadpoleSecurityManager.getInstance().isLock(selectUserDb)) {
 			userDB = null;
 			createTable();
 		} else {
@@ -1097,6 +1100,20 @@ public class ExplorerViewer extends ViewPart {
 			refershSelectObject(OBJECT_TYPE.TRIGGERS.name(), true, strObjectName);
 		} else {
 			refreshSelectTab();
+		}
+	}
+	
+	/**
+	 * mysql 일 경우 오브젝트 탐색기의 스키마를 변경한다.
+	 * 
+	 * @param userDB
+	 * @param strSchema
+	 */
+	public void changeSchema(UserDBDAO userDB, String strSchema) {
+		if(getUserDB() == null) return;
+		
+		if(getUserDB().getSeq() == userDB.getSeq()) {
+			changeSchema(strSchema);
 		}
 	}
 	

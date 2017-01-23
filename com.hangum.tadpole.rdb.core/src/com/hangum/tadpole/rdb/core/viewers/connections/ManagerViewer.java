@@ -37,6 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
@@ -60,6 +61,7 @@ import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURC
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
@@ -113,8 +115,13 @@ public class ManagerViewer extends ViewPart {
 				if(objSelect instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)objSelect;
 					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
-
-					addManagerResouceData(userDB, false);
+					
+					// 싱글 클릭일때 에디터에 오픈된 화면이 없으면 에디터 화면이 열리도록 수정.
+					IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+					if(editor == null) {
+						QueryEditorAction qea = new QueryEditorAction();
+						qea.run(userDB);
+					}
 					
 					// Rice lock icode change event
 					managerTV.refresh(userDB, true);
@@ -224,11 +231,23 @@ public class ManagerViewer extends ViewPart {
 				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
 					
+					// product type filter
+					String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
+					// product type filter
+					
 					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {
-						managerDTO.addLogin(userDBDAO);
+						boolean isFilter = false;
+						for (String strProductType : strProductTypeFilters) {
+							if(strProductType.equals(userDBDAO.getOperation_type())) isFilter = true; 
+						}
+						
+						if(!isFilter) managerDTO.addLogin(userDBDAO);
+						else {
+							if(logger.isDebugEnabled()) logger.debug(String.format("Filter db is %s", userDBDAO.getOperation_type()));
+						}
 					}
 					
-					treeDataList.add(managerDTO);
+					if(!managerDTO.getManagerList().isEmpty()) treeDataList.add(managerDTO);
 				}	// end last end
 	
 				// session 에 사용자 디비 리스트를 저장하다.

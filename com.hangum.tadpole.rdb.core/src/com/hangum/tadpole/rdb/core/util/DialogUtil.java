@@ -101,34 +101,43 @@ public class DialogUtil {
 
 	public static void popupTableInformationDialog(UserDBDAO userDB, TableDAO paramTableDAO) {
 		try {
-			TableDAO tableDao = null;
-			List<TableDAO> listTable = (List<TableDAO>)userDB.getDBObject(OBJECT_TYPE.TABLES, paramTableDAO.getSchema_name());
-			if (listTable.isEmpty()) {
-				if (DBGroupDefine.POSTGRE_GROUP != userDB.getDBGroup()) {
-					tableDao = TadpoleObjectQuery.getTable(userDB, paramTableDAO);
-				} else {
-					tableDao = new TableDAO(paramTableDAO.getName(), "");
-				}
-			} else {
-				//TODO: F4상세정보 조회에서도 테이블필터에 의해서 조회가 제한된 테이블인 경우는 조회하지 못하게 해야 하는가?
-				// 스키마가 다른경우는 예외로? 
-				for (TableDAO tmpTableDAO : listTable) {
-					if (StringUtils.equalsIgnoreCase(paramTableDAO.getName(), tmpTableDAO.getName()) && StringUtils.equalsIgnoreCase(paramTableDAO.getSchema_name(), tmpTableDAO.getSchema_name())) {
-						tableDao = tmpTableDAO;
-						break;
-					}
-				}
-			}
+//			TableDAO tableDao = null;
+//			List<TableDAO> listTable = (List<TableDAO>)userDB.getDBObject(OBJECT_TYPE.TABLES, paramTableDAO.getSchema_name());
+//			if (listTable.isEmpty()) {
+//				if (DBGroupDefine.POSTGRE_GROUP != userDB.getDBGroup()) {
+//					tableDao = TadpoleObjectQuery.getTable(userDB, paramTableDAO);
+//				} else {
+//					tableDao = new TableDAO(paramTableDAO.getName(), "");
+//				}
+//			} else {
+//				//TODO: F4상세정보 조회에서도 테이블필터에 의해서 조회가 제한된 테이블인 경우는 조회하지 못하게 해야 하는가?
+//				// 스키마가 다른경우는 예외로? 
+//				for (TableDAO tmpTableDAO : listTable) {
+//					if (StringUtils.equalsIgnoreCase(paramTableDAO.getName(), tmpTableDAO.getName()) && StringUtils.equalsIgnoreCase(paramTableDAO.getSchema_name(), tmpTableDAO.getSchema_name())) {
+//						tableDao = tmpTableDAO;
+//						break;
+//					}
+//				}
+//			}
+//
+//			if (tableDao == null && (!StringUtils.equalsIgnoreCase(userDB.getSchema(), paramTableDAO.getSchema_name()) | StringUtils.isEmpty(paramTableDAO.getSchema_name()))) {
+//				// 현재 스키마와 다른경우
+//				TableInformationDialog dialog = new TableInformationDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, userDB, paramTableDAO);
+//				dialog.open();
+//			} else {
+//				TableInformationDialog dialog = new TableInformationDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, userDB, tableDao);
+//				dialog.open();
+//			}
 
-			if (tableDao == null && (!StringUtils.equalsIgnoreCase(userDB.getSchema(), paramTableDAO.getSchema_name()) | StringUtils.isEmpty(paramTableDAO.getSchema_name()))) {
+			//
+//			if (paramTableDAO != null) {
 				// 현재 스키마와 다른경우
 				TableInformationDialog dialog = new TableInformationDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, userDB, paramTableDAO);
 				dialog.open();
-			} else {
-				TableInformationDialog dialog = new TableInformationDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, userDB, tableDao);
-				dialog.open();
-			}
-
+//			} else {
+//				TableInformationDialog dialog = new TableInformationDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), false, userDB, tableDao);
+//				dialog.open();
+//			}
 		} catch (Exception e) {
 			logger.error("f4 function", e);
 		}

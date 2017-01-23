@@ -11,17 +11,23 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.transaction.DBCPConnectionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -32,7 +38,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  * @author hangum
  *
  */
-public class TadpoleSQLTransactionManager {
+public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	/**
 	 * Logger for this class
 	 */
@@ -46,7 +52,7 @@ public class TadpoleSQLTransactionManager {
 	static {
 		if (transactionManager == null) {
 			transactionManager = new TadpoleSQLTransactionManager();
-			dbManager = new ConcurrentHashMap<String, TransactionDAO>();
+			dbManager = new HashMap<String, TransactionDAO>();
 		}
 	}
 
@@ -60,53 +66,104 @@ public class TadpoleSQLTransactionManager {
 	 * @throws Exception
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
-		if (logger.isDebugEnabled()) {
-			logger.debug("[userId]" + userId + "[userDB]" + userDB.getUrl() + "/" + userDB.getUsers());
-		}
-
 		final String searchKey = getKey(userId, userDB);
+		
+		if (logger.isDebugEnabled()) logger.debug("[userId]" + searchKey);
+
+		Connection _conn = null;;
 		TransactionDAO transactionDAO = dbManager.get(searchKey);
 		if (transactionDAO == null) {
-//			synchronized(dbManager) {
-//				transactionDAO = dbManager.get(searchKey);
-//				if(transactionDAO != null) {
-//					if(logger.isInfoEnabled()) logger.info("Return Transaction connection. [connection is]" + transactionDAO.getConn());
-//					return transactionDAO.getConn();
-//				}
 				
+			try {
+				DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
+				_conn = ds.getConnection();
+				_conn.setAutoCommit(false);
+				
+				final TransactionDAO _transactionDAO = new TransactionDAO();
+				_transactionDAO.setConn(_conn);
+				_transactionDAO.setUserId(userId);
+				_transactionDAO.setUserDB(userDB);
+				_transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
+				_transactionDAO.setKey(searchKey);
+				
+				// --------[Test start]----------------------
+				if (logger.isDebugEnabled()) logger.debug("\t New connection strt......");
+				PreparedStatement ps = null;
+				ResultSet rs = null;
 				try {
-					DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
-	
-					TransactionDAO _transactionDAO = new TransactionDAO();
-					Connection conn = ds.getConnection();
-					conn.setAutoCommit(false);
-	
-					_transactionDAO.setConn(conn);
-					_transactionDAO.setUserId(userId);
-					_transactionDAO.setUserDB(userDB);
-					_transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
-	
-					_transactionDAO.setKey(searchKey);
-	
-					dbManager.put(searchKey, _transactionDAO);
-					if (logger.isDebugEnabled()) logger.debug("\t New connection SQLMapSession......");
-					
-					return _transactionDAO.getConn();
-				} catch (Exception e) {
-					logger.error("transaction connection", e);
-					removeInstance(userId, searchKey);
-					
-					throw e;
+					ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+					rs = ps.executeQuery();
+					if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
+				} catch(Exception e) {
+					logger.error("first test connection query", e);
+				} finally {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
 				}
-//			}
-//		} else {
-//			if (logger.isDebugEnabled()) {
-//				logger.debug("\t Already register SQLMapSession.\t Is auto commit connection information " + transactionDAO.getConn());
-//			}
+				if (logger.isDebugEnabled()) logger.debug("\t New connection end......");
+				// --------[Test end]----------------------
+				
+				dbManager.put(searchKey, _transactionDAO);
+				
+			} catch (Exception e) {
+				logger.error("transaction connection", e);
+				removeInstance(userId, searchKey);
+				
+				throw e;
+			}
+		} else {
+			_conn = transactionDAO.getConn();
+			
+			// --------[Test start]----------------------
+			if (logger.isDebugEnabled()) logger.debug("\t Already connection start......");
+				
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+			try {
+				ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+				rs = ps.executeQuery();
+				if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
+			} catch(Exception e) {
+				logger.error("test connection query", e);
+				
+				// 세션이 종료 되었거나 하여서 세션이 강제로 끊겼다. 
+				rollback(userId, userDB);
+			} finally {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+			}
+			if (logger.isDebugEnabled()) logger.debug("\t Already connection end......");
+			// --------[Test end]----------------------
 		}
-//		if (logger.isDebugEnabled()) logger.debug("[conn code]" + transactionDAO.getConn());
-
-		return transactionDAO.getConn();
+		
+		// 변경시 마다 커넥션을 수정한다.
+		return changeScheema(userDB, _conn);
+	}
+	
+	/**
+	 * 사용자 커넥션을 얻는다.
+	 * 
+	 * @param userDB
+	 * @param javaConn
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	private static Connection changeScheema(final UserDBDAO userDB, final Connection javaConn) throws TadpoleSQLManagerException, SQLException {
+		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			Statement statement = null;
+			try {
+				statement = javaConn.createStatement();
+				statement.executeUpdate("use " + userDB.getSchema());
+			} catch(Exception e) {
+				logger.error("change scheman ", e);
+				throw new SQLException(e);
+			} finally {
+				if(statement != null) statement.close();
+			}
+		}	// end mysql group
+		
+		return javaConn;
 	}
 	
 	/**
@@ -207,7 +264,8 @@ public class TadpoleSQLTransactionManager {
 		if (logger.isDebugEnabled()) logger.debug("\t #### [TadpoleSQLTransactionManager] remove Instance: " + searchKey);
 
 		try {
-			dbManager.remove(searchKey);
+			TransactionDAO transactionDAO = dbManager.remove(searchKey);
+			transactionDAO =null;
 
 			DBCPConnectionManager.getInstance().releaseConnectionPool(searchKey);
 		} catch (Exception e) {

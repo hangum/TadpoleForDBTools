@@ -40,8 +40,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample Cubrid", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public CubridLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample Cubrid", DBDefine.CUBRID_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override
@@ -87,14 +87,8 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
-				comboGroup.setText(strOtherGroupName);
-			} else {
-				// 콤보 선택 
-				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
-				}
-			}
+			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
 		}
 		
 		preDBInfo.getTextDisplayName().setFocus();
@@ -152,6 +146,9 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		
 		// 처음 등록자는 권한이 어드민입니다.
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+
+		// set ext value
+		setExtValue();
 		
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();

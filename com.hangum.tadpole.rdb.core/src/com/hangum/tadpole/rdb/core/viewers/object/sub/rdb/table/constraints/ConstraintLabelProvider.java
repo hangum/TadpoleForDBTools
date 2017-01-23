@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 
@@ -38,7 +37,7 @@ public class ConstraintLabelProvider extends LabelProvider implements ITableLabe
 		TableConstraintsDAO tc = (TableConstraintsDAO) element;
 		
 		switch(columnIndex) {
-		case 0: return SQLUtil.getConstraintName(tc);
+		case 0: return tc.getTABLE_NAME();
 		case 1: return tc.getCONSTRAINT_NAME();
 		case 2: return tc.getConstraint_type();		
 		case 3: return tc.getCOMMENT();

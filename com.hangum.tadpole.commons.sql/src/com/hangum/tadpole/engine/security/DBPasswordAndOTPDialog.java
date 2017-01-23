@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -27,12 +30,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.ext.appm.APPMHandler;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -103,18 +106,37 @@ public class DBPasswordAndOTPDialog extends Dialog {
 			}
 		});
 		
-		
-		textPassword.setFocus();
+		initUI();
+		textOTP.setFocus();
 
 		return container;
 	}
 	
+	/**
+	 * initialize UI
+	 */
+	private void initUI() {
+		Map<String, String> mapAppm = new HashMap<String, String>();
+		mapAppm.put("hostName", 	userDB.getExt8());
+		mapAppm.put("sid", 			userDB.getExt9());
+		mapAppm.put("accountid", 	userDB.getExt10());
+		
+		try {
+			String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
+			textPassword.setText(strAMMPPassword);
+		} catch (Exception e) {
+			logger.error("appm error", e);
+			textPassword.setText("");
+		} finally {
+			userDB.setPasswd("");
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	@Override
 	protected void okPressed() {
-		String strPassword = textPassword.getText();
 		String strOTPCode = textOTP.getText();
 		
 		if("".equals(strOTPCode)) {
@@ -122,17 +144,23 @@ public class DBPasswordAndOTPDialog extends Dialog {
 			textOTP.setFocus();
 			return;
 		}
-		
-		if(!"".equals(strPassword)) {
-			userDB.setPasswd(CipherManager.getInstance().encryption(strPassword));
-		} else {
-			userDB.setPasswd("");
+		try {
+			GetOTPCode.isValidate(SessionManager.getEMAIL(), SessionManager.getOTPSecretKey(), strOTPCode);
+		} catch(Exception e) {
+			logger.error("OTP check", e);
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
+			textOTP.setFocus();
+			
+			return;
 		}
 		
 		// 실제 접속 되는지 테스트해봅니다.
 		try {
+			userDB.setPasswd(StringUtils.trim(textPassword.getText()));
 			TadpoleSQLManager.getInstance(userDB);
 		} catch(Exception e) {
+			logger.error("Test Passwd+opt Connection error ");
+			
 			String msg = e.getMessage();
 			if(StringUtils.contains(msg, "No more data to read from socket")) {
 				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, msg + CommonMessages.get().Check_DBAccessSystem);
@@ -141,15 +169,6 @@ public class DBPasswordAndOTPDialog extends Dialog {
 			}
 			textPassword.setFocus();
 			
-			return;
-		}
-		
-		try {
-			GetOTPCode.isValidate(SessionManager.getEMAIL(), SessionManager.getOTPSecretKey(), strOTPCode);
-		} catch(Exception e) {
-			logger.error("OTP check", e);
-			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage());
-			textOTP.setFocus();
 			return;
 		}
 		

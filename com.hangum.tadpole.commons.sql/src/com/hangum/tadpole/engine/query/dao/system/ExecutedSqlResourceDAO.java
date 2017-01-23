@@ -20,7 +20,7 @@ import java.util.Date;
  *
  */
 public class ExecutedSqlResourceDAO {
-	 int seq;
+	 long seq;
      int user_seq;
      int db_seq;
 
@@ -50,14 +50,14 @@ public class ExecutedSqlResourceDAO {
 	/**
 	 * @return the seq
 	 */
-	public int getSeq() {
+	public long getSeq() {
 		return seq;
 	}
 
 	/**
 	 * @param seq the seq to set
 	 */
-	public void setSeq(int seq) {
+	public void setSeq(long seq) {
 		this.seq = seq;
 	}
 

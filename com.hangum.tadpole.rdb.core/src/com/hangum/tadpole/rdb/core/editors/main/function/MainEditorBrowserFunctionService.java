@@ -167,6 +167,7 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 			//paramMap.put("OBJECT_OWNER", userDB.getSchema());
 			paramMap.put("OBJECT_NAME", strObject);
 		}
+		paramMap.put("_SCHEMA", getUserDB().getSchema());
 
 		DialogUtil.popupObjectInformationDialog(editor.getUserDB(), paramMap);
 	}
@@ -199,5 +200,9 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 		}
 		
 		return strObject;
+	}
+	
+	public UserDBDAO getUserDB() {
+		return userDB;
 	}
 }

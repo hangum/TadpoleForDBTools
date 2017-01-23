@@ -11,6 +11,7 @@
 package com.hangum.tadpole.commons.util;
 
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.directory.DirContext;
@@ -30,21 +31,36 @@ import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 public class LDAPUtil {
 	private static final Logger logger = Logger.getLogger(LDAPUtil.class);
 	
+	public static LDAPUtil instance = null;
+	private static String ldapHost;		 // LDAP 호스트
+	private static String principal;	 // LDAP 쿼리
+	
+	private LDAPUtil() {}
+	
+	public static LDAPUtil getInstance() {
+		if(instance == null) {
+			Properties prop = LoadConfigFile.getConfig();
+			
+			ldapHost	= prop.getProperty("LDAP.HOST.URL");
+			principal	= prop.getProperty("LDAP.PRINCIPAL");
+			
+			instance = new LDAPUtil();
+		}
+		
+		return instance;
+	}
+	
 	/**
 	 * LDAP Login
 	 * 
 	 * @param strEmail
 	 * @param strPass
-	 * 
-	 * @param url
-	 * @param authentication
-	 * @param principal
 	 */
-	public static void ldapLogin(String strEmail, String strPass, String url, String authentication, String principal) throws TadpoleAuthorityException {
+	public static void ldapLogin(String strEmail, String strPass) throws TadpoleAuthorityException {
 		Hashtable<String, String> properties = new Hashtable<String, String>();
 		properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		properties.put(Context.PROVIDER_URL, url);
-		properties.put(Context.SECURITY_AUTHENTICATION, authentication);
+		properties.put(Context.PROVIDER_URL, ldapHost);
+		properties.put(Context.SECURITY_AUTHENTICATION, "simple");
 		properties.put(Context.SECURITY_PRINCIPAL, String.format(principal, strEmail));
 		properties.put(Context.SECURITY_CREDENTIALS, strPass);
 		

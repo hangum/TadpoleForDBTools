@@ -11,7 +11,9 @@
 package com.hangum.tadpole.application;
 
 import java.util.Locale;
+import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -25,8 +27,14 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import com.hangum.tadpole.application.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.engine.initialize.ApplicationLicenseInitialize;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
+import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
+import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * This class controls all aspects of the application's execution
@@ -51,20 +59,43 @@ public class Application implements EntryPoint {
 	
 	/**
 	 * System initialize
-	 * If the system table does not exist, create a table.
+	 * 
+	 * 0. License load
+	 * 1. jdbc driver load
+	 * 2. If the system table does not exist, create a table.
+	 * 2.1 System initialize
 	 */
 	private void systemInitialize() {
-		ApplicationLicenseInitialize.load();
+		if(TadpoleApplicationContextManager.isSystemInitialize()) return;
+		
 		try {
-			boolean isInitialize = TadpoleSystemInitializer.initSystem();
-			if(!isInitialize) {
+			// load license 
+			ApplicationLicenseInitialize.load();
+			
+			// load default config file
+			LoadConfigFile.initializeConfigFile();
+			
+			// initialize system 
+			if(!TadpoleSystemInitializer.initSystem()) {
 				if(logger.isInfoEnabled()) logger.info("Initialize System default setting.");
 				
 				WizardDialog dialog = new WizardDialog(null, new SystemInitializeWizard());
 				if(Dialog.OK != dialog.open()) {
-					throw new Exception("System initialization failed.\n");
+					throw new Exception("System initialization failed. Please restart system.\n");
 				}
 			}
+			
+			/* define login type */
+			Properties prop = LoadConfigFile.getConfig();
+			String txtLoginMethod = prop.getProperty("LOGIN_METHOD", AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE);
+			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, txtLoginMethod);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, userInfoDao);
+			
+			/** 뷰에 보여주어야할 필터 값을 가져온다 */
+			String strProductFilter = prop.getProperty("tadpole.db.producttype.remove.filter", "");
+			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, strProductFilter);
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, userInfoDao);
+			
 		} catch(Exception e) {
 			logger.error("Initialization failed.", e); //$NON-NLS-1$
 			MessageDialog.openError(null, CommonMessages.get().Error, com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2);
@@ -72,5 +103,4 @@ public class Application implements EntryPoint {
 			System.exit(0);
 		}
 	}
-	
 }

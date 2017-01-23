@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
-import com.hangum.tadpole.commons.csv.DateUtil;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.DateUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -114,6 +114,7 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	
 	protected String group_name = "";
 	protected String operation_type = "";
+	protected String duplication_type = "";
 	protected String dbms_type;
 	protected String url;
 	protected String url_user_parameter = "";
@@ -431,6 +432,20 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 
 	public void setOperation_type(String operation_type) {
 		this.operation_type = operation_type;
+	}
+
+	/**
+	 * @return the duplication_type
+	 */
+	public String getDuplication_type() {
+		return duplication_type;
+	}
+
+	/**
+	 * @param duplication_type the duplication_type to set
+	 */
+	public void setDuplication_type(String duplication_type) {
+		this.duplication_type = duplication_type;
 	}
 
 	public String getIs_profile() {

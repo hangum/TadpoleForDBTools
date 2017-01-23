@@ -65,6 +65,7 @@
 		    AND b.delyn = 'NO'
 		    AND a.is_visible = 'YES'
 		    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
+		ORDER BY display_name, operation_type, dbms_type
 	]]>	
 	</select>
 	
@@ -82,6 +83,7 @@
 		    AND b.delyn = 'NO'
 		    AND a.is_visible = 'YES'
 		    AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
+		ORDER BY group_name
 	]]>	
 	</select>
 	
@@ -91,12 +93,13 @@
 	<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" 
 														parameterClass="java.util.Map">
 	<![CDATA[
-		SELECT b.seq, b.user_seq, b.login_ip, b.connet_time, b.disconnect_time
+		SELECT b.seq, b.user_seq, b.login_ip, b.connet_time, b.disconnect_time, b.succes_yn, b.fail_reason
 		FROM tadpole_user a,
 		    login_history b
 		WHERE
 		    	a.email = #email#
 		    AND a.seq = b.user_seq
+		    AND b.succes_yn = #succes_yn#
 		    AND b.connet_time >= #startTime#
 	       	AND b.connet_time <= #endTime#
 		ORDER BY b.connet_time DESC

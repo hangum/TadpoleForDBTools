@@ -120,13 +120,24 @@
 </select>
 
 <!-- 
+	find user
+ -->
+<select id="findExternalUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.String">
+	SELECT *
+	FROM tadpole_user 
+	WHERE 
+			external_id = #external_id#
+		AND delyn = 'NO'
+</select>
+
+<!-- 
 	신규 유저 등록
  -->
 <insert id="newUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
-	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, role_type, name, language, timezone, approval_yn, use_otp, otp_secret, allow_ip
-	,is_regist_db, is_shared_db, limit_add_db_cnt, is_modify_perference, service_start, service_end)
-	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #role_type#, #name#, #language#, #timezone#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#
-	,#is_regist_db#, #is_shared_db#, #limit_add_db_cnt#, #is_modify_perference#, #service_start#, #service_end#)
+	INSERT INTO tadpole_user(input_type, email, email_key, is_email_certification, passwd, changed_passwd_time, role_type, name, language, timezone, approval_yn, use_otp, otp_secret, allow_ip
+	,is_regist_db, is_shared_db, limit_add_db_cnt, is_modify_perference, service_start, service_end, external_id)
+	VALUES(#input_type#, #email#, #email_key#, #is_email_certification#, #passwd#, #changed_passwd_time#, #role_type#, #name#, #language#, #timezone#, #approval_yn#, #use_otp#, #otp_secret#, #allow_ip#
+	,#is_regist_db#, #is_shared_db#, #limit_add_db_cnt#, #is_modify_perference#, #service_start#, #service_end#, #external_id#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 		SELECT * 
@@ -159,7 +170,8 @@
 	SELECT * 
 	FROM tadpole_user 
 	WHERE 
-			email = #email#
+			email = #email# 
+		AND passwd = #passwd#
 		AND delyn = 'NO'
 </select>
 
@@ -177,8 +189,8 @@
 	save login history
  -->
 <insert id="saveLoginHistory" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO">
-	INSERT INTO login_history(user_seq, login_ip) 
-	VALUES (#user_seq#, #login_ip#);
+	INSERT INTO login_history(user_seq, login_ip, succes_yn, fail_reason) 
+	VALUES (#user_seq#, #login_ip#, #succes_yn#, #fail_reason#);
 </insert>
 
 <!-- 
@@ -244,6 +256,7 @@
 	SET
 		email = #email#,
 		passwd = #passwd#,
+		changed_passwd_time = #changed_passwd_time#,
 		name = #name#,
 		allow_ip = #allow_ip#
 	WHERE seq = #seq#
@@ -275,10 +288,20 @@
  -->
 <update id="updateUserBasic" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
-	SET passwd = #passwd#,
+	SET 
 		language = #language#,
-		timezone = #timezone#, 
-		use_otp = 'NO'
+		timezone = #timezone#
+	WHERE seq = #seq#
+</update>
+
+<!-- 
+	Change user name and password
+	*) just use LDAP User
+ -->
+<update id="updateUserNameEmail" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
+	UPDATE tadpole_user 
+	SET name = #name#,
+		email = #email#
 	WHERE seq = #seq#
 </update>
 
@@ -287,7 +310,8 @@
  -->
 <update id="updateUserPassword" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
-	SET passwd = #passwd#
+	SET passwd = #passwd#,
+		changed_passwd_time = #changed_passwd_time#
 	WHERE seq = #seq#
 </update>
 
@@ -296,7 +320,8 @@
  -->
 <update id="updateUserPasswordWithID" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
-	SET passwd = #passwd#
+	SET passwd = #passwd#,
+		changed_passwd_time = #changed_passwd_time#
 	WHERE email = #email#
 </update>
 
@@ -312,13 +337,13 @@
 
 <!-- 
 	유저를 삭제합니다.
- -->
+ 
 <delete id="deleteUser" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	DELETE 
 	FROM tadpole_user 
 	WHERE email = #email#
 </delete>
-
+-->
 <!-- 
 	============================================================================================================================
 	user db
@@ -459,7 +484,6 @@
 			dbms_type = #dbms_type# AND
 			group_name = #group_name# AND
 			display_name = #display_name# AND
-			create_time = #create_time# AND 
 			delYn = 'NO'
 	</selectKey>
 </insert>
@@ -939,7 +963,7 @@ SELECT
 	VALUES(#user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#, #ipAddress#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO">
-		SELECT max(seq) seq 
+		SELECT max(seq) seq, user_seq, startDateExecute
 		FROM executed_sql_resource 
 		WHERE user_seq = #user_seq# 
 			AND db_seq = #db_seq#
@@ -951,8 +975,8 @@ SELECT
 	execute sql resource data를 저장합니다.
  -->
 <insert id="userExecuteSQLResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDataDAO">
-	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, datas)
-	VALUES(#executed_sql_resource_seq#, #datas#)
+	INSERT INTO executed_sql_resource_data(startDateExecute, executed_sql_resource_seq, datas)
+	VALUES(#startDateExecute#, #executed_sql_resource_seq#, #datas#)
 </insert>
 
 <!-- 

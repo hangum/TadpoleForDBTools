@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.system;
 
+import java.sql.Timestamp;
+
 /**
  * 실행쿼리의 쿼리를 담는다.
  * 
@@ -17,8 +19,9 @@ package com.hangum.tadpole.engine.query.dao.system;
  *
  */
 public class ExecutedSqlResourceDataDAO {
-	int seq;
-    int executed_sql_resource_seq;
+	long seq;
+	Timestamp startDateExecute;
+	long executed_sql_resource_seq;
     String datas;
 	
 	public ExecutedSqlResourceDataDAO() {
@@ -27,28 +30,36 @@ public class ExecutedSqlResourceDataDAO {
 	/**
 	 * @return the seq
 	 */
-	public int getSeq() {
+	public long getSeq() {
 		return seq;
 	}
 
 	/**
 	 * @param seq the seq to set
 	 */
-	public void setSeq(int seq) {
+	public void setSeq(long seq) {
 		this.seq = seq;
+	}
+
+	public Timestamp getStartDateExecute() {
+		return startDateExecute;
+	}
+
+	public void setStartDateExecute(Timestamp startDateExecute) {
+		this.startDateExecute = startDateExecute;
 	}
 
 	/**
 	 * @return the executed_sql_resource_seq
 	 */
-	public int getExecuted_sql_resource_seq() {
+	public long getExecuted_sql_resource_seq() {
 		return executed_sql_resource_seq;
 	}
 
 	/**
 	 * @param executed_sql_resource_seq the executed_sql_resource_seq to set
 	 */
-	public void setExecuted_sql_resource_seq(int executed_sql_resource_seq) {
+	public void setExecuted_sql_resource_seq(long executed_sql_resource_seq) {
 		this.executed_sql_resource_seq = executed_sql_resource_seq;
 	}
 

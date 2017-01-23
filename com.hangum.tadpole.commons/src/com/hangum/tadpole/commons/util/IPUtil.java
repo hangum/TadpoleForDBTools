@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.chimi.ipfilter.Config;
 import org.chimi.ipfilter.IpFilters;
@@ -53,23 +54,27 @@ public class IPUtil {
 	/**
 	 * ip filter
 	 * 
-	 * usage : IPFilter.ifFilterString("1.2.*.*", "1.2.1.1")
+	 * usage : IPUtil.ifFilterString("1.2.*.*,10.10.*", "1.2.1.1")
 	 * 
 	 * @param strAllowIP
 	 * @param strCheckIP
 	 * @return
 	 */
 	public static boolean ifFilterString(String strAllowIP, String strCheckIP) {
-		try {
-			Config config = new Config();
-			config.setAllowFirst(true);
-			config.setDefaultAllow(false);
-			config.allow(strAllowIP);
-			
-			return IpFilters.create(config).accept(strCheckIP);
-		} catch(Exception e) {
-			logger.error("check user ip", e);
+		String[] strArryIP = StringUtils.split(strAllowIP, ",");
+		for (String strIP : strArryIP) {
+			try {
+				Config config = new Config();
+				config.setAllowFirst(true);
+				config.setDefaultAllow(false);
+				config.allow(strIP);
+				
+				if(IpFilters.create(config).accept(strCheckIP)) return true;
+			} catch(Exception e) {
+				logger.error("check user ip", e);
+			}	
 		}
-		return true;
+		
+		return false;
 	}
 }

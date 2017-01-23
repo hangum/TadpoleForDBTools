@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
-import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.swtdesigner.ResourceManager;
 
@@ -57,7 +56,7 @@ public class ProcedureFunctionLabelProvicer extends LabelProvider implements ITa
 		ProcedureFunctionDAO tc = (ProcedureFunctionDAO) element;
 
 		switch(columnIndex) {
-		case 0: return SQLUtil.getProcedureName(tc);
+		case 0: return tc.getName();
 		case 1: return tc.getDefiner();
 		case 2: return tc.getModified();
 		case 3: return tc.getCreated();

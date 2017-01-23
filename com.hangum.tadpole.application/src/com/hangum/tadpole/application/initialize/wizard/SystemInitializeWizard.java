@@ -92,7 +92,8 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.YES_NO.YES.name(), 
 						PublicTadpoleDefine.YES_NO.NO.name(), 
 						"",
-						"*"); //$NON-NLS-1$ //$NON-NLS-2$
+						"*",
+						PublicTadpoleDefine.SYSTEM_DEFAULT_USER); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
@@ -116,18 +117,19 @@ public class SystemInitializeWizard extends Wizard {
 				PublicTadpoleDefine.YES_NO.YES.name(), 
 				PublicTadpoleDefine.YES_NO.NO.name(), 
 				"", 
-				"*"); //$NON-NLS-1$ //$NON-NLS-2$
+				"*",
+				adminDao.getEmail()); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
 			}
 		}
 		
-		// savmpe database 를 생성합니다.
+		// save database 를 생성합니다.
 		try {
 			AddDefaultSampleDBToUser.addUserDefaultDB(systeUser.getSeq(), systeUser.getEmail());
 		} catch (Exception e) {
-			logger.error("Sample db copy error", e);
+			logger.error("Sample SQLite file copy error", e);
 		}
 		
 		return true;

@@ -132,7 +132,7 @@
             id="com.hangum.tadpole.rdb.core.objectContribution.connection"
             objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
          <action
-               class="com.hangum.tadpole.rdb.core.actions.connections.DeleteDBAction"
+               class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"
                icon="resources/icons/delete_database.png"
                id="com.hangum.tadpole.rdb.core.action2"
                label="%action.label.23"

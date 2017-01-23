@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -39,21 +38,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.admin.core.dialogs.users.NewUserDialog;
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
-import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.CookieUtils;
-import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
-import com.hangum.tadpole.engine.security.OTPInputDialog;
 import com.hangum.tadpole.login.core.message.LoginDialogMessages;
 import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
@@ -77,11 +72,8 @@ public class LoginDialog extends AbstractLoginDialog {
 	private Label lblEmail;
 	
 	private Button btnCheckButton;
-	private Text textEMail;
 	private Label lblPassword;
-	private Text textPasswd;
 	private Label lblLanguage;
-	private Combo comboLanguage;
 	
 	private Button btnLogin;
 	private Button btnNewUser;
@@ -194,7 +186,7 @@ public class LoginDialog extends AbstractLoginDialog {
 		comboLanguage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeUILocale(comboLanguage.getText());
+				changeUILocale();
 			}
 		});
 		comboLanguage.add(Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH));
@@ -250,12 +242,13 @@ public class LoginDialog extends AbstractLoginDialog {
 		
 		String strEmail = StringUtils.trimToEmpty(textEMail.getText());
 		String strPass = StringUtils.trimToEmpty(textPasswd.getText());
+		String ip_servletRequest = RequestInfoUtils.getRequestIP();
 
 		if(!validation(strEmail, strPass)) return;
 		
 		try {
 			UserDAO userDao = new UserDAO();
-			if(StringUtils.equals(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
+			if(StringUtils.equalsIgnoreCase(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
 				userDao = TadpoleSystem_UserQuery.login(strEmail, strPass);
 				
 				// firsttime email confirm
@@ -283,10 +276,10 @@ public class LoginDialog extends AbstractLoginDialog {
 				
 				ldapLogin(strEmail, strPass);
 				
-				List<UserDAO> listUserDAO = TadpoleSystem_UserQuery.findExistUser(strEmail);
+				List<UserDAO> listUserDAO = TadpoleSystem_UserQuery.findExistExternalUser(strEmail);
 				if(listUserDAO.isEmpty()) {
 					// 신규 사용자로 추가하고 user 리스트를 가져옵니다.
-					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail);
+					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail, strEmail, strEmail);
 				} else {
 					userDao = listUserDAO.get(0);
 				}
@@ -295,22 +288,10 @@ public class LoginDialog extends AbstractLoginDialog {
 			// login
 			
 			// Check the allow ip
-			String strAllowIP = userDao.getAllow_ip();
-			String ip_servletRequest = RequestInfoUtils.getRequestIP();
-			boolean isAllow = IPUtil.ifFilterString(strAllowIP, ip_servletRequest);
-			if(logger.isDebugEnabled()) logger.debug(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_23+ RequestInfoUtils.getRequestIP());
-			if(!isAllow) {
-				logger.error(LoginDialogMessages.get().LoginDialog_21 + userDao.getEmail() + LoginDialogMessages.get().LoginDialog_22 + strAllowIP + LoginDialogMessages.get().LoginDialog_26+ RequestInfoUtils.getRequestIP());
-				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_28);
-				return;
-			}
-			
-			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
-				OTPInputDialog otpDialog = new OTPInputDialog(getShell(), userDao.getEmail(), userDao.getOtp_secret());
-				if(Dialog.CANCEL == otpDialog.open()) {
-					return;
-				}
-			}
+			if(!isAllowIP(userDao, userDao.getAllow_ip(), ip_servletRequest)) return;
+
+			// otp 
+			if(!isQuestOTP(userDao, ip_servletRequest)) return;
 			
 			// 로그인 유지.
 			registLoginID();
@@ -319,12 +300,13 @@ public class LoginDialog extends AbstractLoginDialog {
 			SessionManager.addSession(userDao, SessionManager.LOGIN_IP_TYPE.SERVLET_REQUEST.name(), ip_servletRequest);
 			
 			// session 관리
-			preLogin();
+			preLogin(userDao);
 			
 			// save login_history
-			TadpoleSystem_UserQuery.saveLoginHistory(userDao.getSeq());
+			saveLoginHistory(userDao.getSeq(), ip_servletRequest, PublicTadpoleDefine.YES_NO.YES.name(), "");
 		} catch (TadpoleAuthorityException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
+			saveLoginHistory(strEmail, ip_servletRequest, PublicTadpoleDefine.YES_NO.NO.name(), "Password wrong.");
 			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setText("");
@@ -367,42 +349,18 @@ public class LoginDialog extends AbstractLoginDialog {
 	}
 	
 	/**
-	 * validation
-	 * 
-	 * @param strEmail
-	 * @param strPass
-	 */
-	private boolean validation(String strEmail, String strPass) {
-		// validation
-		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_11);
-			textEMail.setFocus();
-			return false;
-		} else if("".equals(strPass)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, LoginDialogMessages.get().LoginDialog_14);
-			textPasswd.setFocus();
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
 	 * Create contents of the button bar.
 	 * @param parent
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		if(StringUtils.isEmpty(GetAdminPreference.getLDAPURL())) {
+		if(StringUtils.equalsIgnoreCase(GetAdminPreference.getLoginMethod(), AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE)) {
 			btnNewUser = createButton(parent, ID_NEW_USER, LoginDialogMessages.get().LoginDialog_button_new_user, false);
-			try {
-				SMTPDTO smtpDto = GetAdminPreference.getSessionSMTPINFO();
-				if(smtpDto.isValid()) { //$NON-NLS-1$
-					btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
-				}
-			} catch (Exception e) {
-	//			ignore exception
-			}
+			btnFindPasswd = createButton(parent, ID_FINDPASSWORD, LoginDialogMessages.get().ResetPassword, false);
+		} else {
+			GridLayout layout = (GridLayout)parent.getLayout();
+			layout.marginHeight = 0;
+			parent.setLayout(layout);
 		}
 	}
 	
@@ -445,7 +403,7 @@ public class LoginDialog extends AbstractLoginDialog {
 				} else if(PublicTadpoleDefine.TDB_COOKIE_USER_LANGUAGE.equals(cookie.getName())) {
 					Locale locale = Locale.forLanguageTag(cookie.getValue());
 					comboLanguage.setText(locale.getDisplayLanguage(locale));
-					changeUILocale(comboLanguage.getText());
+					changeUILocale();
 					intCount++;
 				}
 				
@@ -455,15 +413,14 @@ public class LoginDialog extends AbstractLoginDialog {
 		
 		// 세션에 발견되지 않았으면.
 		comboLanguage.select(0);
-		changeUILocale(comboLanguage.getText());
+		changeUILocale();
 	}
 	
 	/**
 	 * change ui locale
-	 * 
-	 * @param strComoboStr
 	 */
-	private void changeUILocale(String strComoboStr) {
+	private void changeUILocale() {
+		String strComoboStr = comboLanguage.getText();
 		Locale localeSelect = (Locale)comboLanguage.getData(strComoboStr);
 		RWT.getUISession().setLocale(localeSelect);
 		
@@ -487,20 +444,6 @@ public class LoginDialog extends AbstractLoginDialog {
 		}
 		
 		compositeLogin.layout();
-	}
-
-	private void newUser() {
-		NewUserDialog newUser = new NewUserDialog(getParentShell());
-		if(Dialog.OK == newUser.open()) {
-			String strEmail = newUser.getUserDao().getEmail();
-			textEMail.setText(strEmail);
-			textPasswd.setFocus();
-		}
-	}
-	
-	private void findPassword() {
-		FindPasswordDialog dlg = new FindPasswordDialog(getShell(), textEMail.getText());
-		dlg.open();
 	}
 
 	/**

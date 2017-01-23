@@ -49,6 +49,27 @@ public class RequestInfoUtils {
 	}
 	
 	/**
+	 * browser support
+	 * @return
+	 */
+	public static boolean isSupportBrowserIP() {
+		ServletUserAgent sua = new ServletUserAgent();
+		sua.detect(RWT.getRequest());
+
+		String strBrowser = sua.getBrowserType().toString();
+		if(logger.isDebugEnabled()) {
+			logger.debug("Browser is " + strBrowser);
+			logger.debug("version is " + sua.getMajorVersion());
+		}
+		
+		for(PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSERIP supportBrowser: PublicTadpoleDefine.TADPOLE_SUPPORT_BROWSERIP.values()) {
+			if(strBrowser.equalsIgnoreCase(supportBrowser.toString())) return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * 올챙이가 동작 할 수 없는 브라우저라면, 사용자 브라우저 를 리턴합니다.
 	 * 
 	 * @return

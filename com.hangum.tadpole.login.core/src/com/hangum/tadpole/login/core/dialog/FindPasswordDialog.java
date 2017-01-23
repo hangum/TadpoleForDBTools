@@ -34,7 +34,6 @@ import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.login.core.Messages;
-import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * find password
@@ -150,8 +149,7 @@ public class FindPasswordDialog extends Dialog {
 		emailDao.setContent(strContent);
 		emailDao.setTo(email);
 		
-		SendEmails sendEmail = new SendEmails(GetAdminPreference.getSessionSMTPINFO());
-		sendEmail.sendMail(emailDao);
+		SendEmails.getInstance().sendMail(emailDao);
 
 	}
 }

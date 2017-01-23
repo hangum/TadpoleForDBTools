@@ -12,8 +12,6 @@ package com.hangum.tadpole.engine.connect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -27,7 +25,7 @@ public class OracleConnectTest extends AbstractDriverInfo {
 	public static void main(String args[]) {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@192.168.29.128:1521:XE";
+			String url = "jdbc:oracle:thin:@192.168.216.129:1521:XE";
 	
 			Properties props = new Properties();
 			props.put("user", "HR");
@@ -35,21 +33,23 @@ public class OracleConnectTest extends AbstractDriverInfo {
 			//props.put("ResultSetMetaDataOptions", "1");
 	
 			Connection conn = DriverManager.getConnection(url, props);
-//			printMetaData(conn.getMetaData());
-	
-			PreparedStatement preStatement = conn.prepareStatement(
-"begin execute immediate 'CREATE OR REPLACE and RESOLVE JAVA SOURCE NAMED TESTJ AS public class TESTJ { public static String helloworld(String str) { return str;}}'; end; ");//select * from v$version");
-			ResultSet result = preStatement.executeQuery();
+			
+//			System.out.println("===> catalog : " + conn.getCatalog() );
+//			System.out.println("===> schema : " + conn.getSchema() );
+			printMetaData(conn.getMetaData());
+//	
+//			PreparedStatement preStatement = conn.prepareStatement(
+//"begin execute immediate 'CREATE OR REPLACE and RESOLVE JAVA SOURCE NAMED TESTJ AS public class TESTJ { public static String helloworld(String str) { return str;}}'; end; ");//select * from v$version");
+//			ResultSet result = preStatement.executeQuery();
 			
 //			ResultSetMetaData rsm = result.getMetaData();
 //			OracleResultSetMetaData orsm = (OracleResultSetMetaData)rsm;
 //			System.out.println("Table name is " + rsm.getTableName(1) + "." + " column is " + rsm.getColumnName(1)) ;
 //			System.out.println("Table name is " + orsm.getTableName(1) + "." + orsm.getCatalogName(1)) ;
 			
-	
-			while (result.next()) {
-				System.out.println("Information is : " + result.getString(1) + ", table name is " + result.getString(1));
-			}
+//			while (result.next()) {
+//				System.out.println("Information is : " + result.getString(1) + ", table name is " + result.getString(1));
+//			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

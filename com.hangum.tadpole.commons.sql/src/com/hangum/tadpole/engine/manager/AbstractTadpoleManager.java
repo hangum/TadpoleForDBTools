@@ -15,10 +15,25 @@ import java.sql.Connection;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 public class AbstractTadpoleManager {
 	private static final Logger logger = Logger.getLogger(AbstractTadpoleManager.class);
+	
+	/**
+	 * change schema
+	 * 
+	 * @param conn
+	 * @param strSchema
+	 */
+	protected void changeSchema(UserDBDAO userDB, Connection conn) {
+		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+//			PreparedStatement ps = conn.prepareStatement("use " + userDB.getSchema());
+//			ps.get
+		}
+	}
+	
 	/**
 	 * 
 	 * @param userDB

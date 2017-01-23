@@ -72,9 +72,9 @@ public class Messages {
 
 	public String UserInfoPerference_2;
 
-	public String UserInfoPerference_3;
+	public String Password;
 
-	public String UserInfoPerference_4;
+	public String ConfirmPassword;
 
 	public String UserInfoPerference_5;
 	public String UserInfoPerference_6;
@@ -196,7 +196,20 @@ public class Messages {
 
 	public String DefaultPreferencePage_3;
 
-//	public String MongoDBPreferencePage_0_1;
+	public String PasswordChange;
+
+	public String EnterYourPasswd;
+
+	public String PasswordDoNotMatch;
+	public String inValidComplextyPasswd;
+
+	public String ChangedPassword;
+
+	public String PleaseInputName;
+
+	public String PleaseInputEamil;
+
+	public String OldPassword;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

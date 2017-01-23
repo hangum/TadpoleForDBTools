@@ -65,8 +65,8 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB) {
-		super("Sample Oracle", DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName, userDB);
+	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
+		super("Sample Oracle", DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
 	}
 	
 	@Override
@@ -82,6 +82,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeBody.setEnabled(isReadOnly);
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
@@ -149,6 +150,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		othersConnectionInfo.setEnabled(isReadOnly);
 
 		init();
 	}
@@ -169,6 +171,11 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			
 			textHost.setText(oldUserDB.getHost());
 			textPort.setText(oldUserDB.getPort());
+			if("".equals(oldUserDB.getExt1())) {
+				comboConnType.select(0);
+			} else {
+				comboConnType.setText(oldUserDB.getExt1());
+			}
 			textDatabase.setText(oldUserDB.getDb());
 			textUser.setText(oldUserDB.getUsers());
 			textPassword.setText(oldUserDB.getPasswd());
@@ -197,14 +204,8 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			comboGroup.add(strOtherGroupName);
 			comboGroup.select(0);
 		} else {
-			if("".equals(selGroupName)) {
-				comboGroup.setText(strOtherGroupName);
-			} else {
-				// 콤보 선택 
-				for(int i=0; i<comboGroup.getItemCount(); i++) {
-					if(selGroupName.equals(comboGroup.getItem(i))) comboGroup.select(i);
-				}
-			}
+			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
 		}
 		
 		preDBInfo.getTextDisplayName().setFocus();
@@ -275,6 +276,13 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 //		userDB.setLocale(comboLocale.getText().trim());
+		
+		// sid or service name
+		userDB.setExt1(comboConnType.getText());
+		if(oldUserDB != null) oldUserDB.setExt1(comboConnType.getText());
+		
+		// set ext value
+		setExtValue();
 
 		// others connection 정보를 입력합니다.
 		setOtherConnectionInfo();

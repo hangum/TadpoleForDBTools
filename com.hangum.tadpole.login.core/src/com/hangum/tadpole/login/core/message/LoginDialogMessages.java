@@ -42,7 +42,9 @@ public class LoginDialogMessages {
 	
 	public String LoginDialog_9;
 	public String LoginDialog_lblNewLabel_text;
+	public String LoginDialog_support_browserip;
 	public String UserInformationDialog_5;
+	public String CouldNotGetTheIP;
 	
 	public String LoginDialog_lblNewLabel_text_1;
 
@@ -64,6 +66,8 @@ public class LoginDialogMessages {
 	public String AlreadyLoginConfirm;
 
 	public String PleaseCheckIDpassword;
+
+	public String LoginDialog_PleaseInputID;
 
 	public static LoginDialogMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, LoginDialogMessages.class);
