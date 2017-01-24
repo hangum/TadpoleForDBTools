@@ -108,7 +108,12 @@ Contributor
 
 Special thanks
 -
-* KAKAO BANK InfraTeam.
+* Kakao Bank InfraTeam.
+
+Customer
+- 
+* Kakao Bank
+* LOEN ENTERTAINMENT
 
 Donation
 - Paypal(paypal.com) : hangum@gmail.com
