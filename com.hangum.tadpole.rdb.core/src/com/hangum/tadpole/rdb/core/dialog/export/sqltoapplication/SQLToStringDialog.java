@@ -103,7 +103,7 @@ public class SQLToStringDialog extends Dialog {
 //		RealGridComposite compositeRealgrid = new RealGridComposite(tabFolder, userDB, "RealGrid", sql, EditorDefine.SQL_TO_APPLICATION.REAL_GRID);
 //		compositeRealgrid.setLayout(new GridLayout(1, false));
 
-		tabFolder.setSelection(0);
+		tabFolder.setSelection(2);
 		
 		// google analytic
 		AnalyticCaller.track(this.getClass().getName());
