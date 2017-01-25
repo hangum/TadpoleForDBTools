@@ -312,7 +312,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 					
 					ProcedureExecuterManager pm = new ProcedureExecuterManager(getUserDB(), procedureDAO);
 					if(pm.isExecuted(procedureDAO, getUserDB())) {
-						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(null, getUserDB(), procedureDAO);
+						ExecuteProcedureDialog epd = new ExecuteProcedureDialog(getShell(), getUserDB(), procedureDAO);
 						epd.open();
 					}
 				}	// end iss.isempty
