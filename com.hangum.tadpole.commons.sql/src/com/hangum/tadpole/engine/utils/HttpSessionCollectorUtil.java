@@ -170,7 +170,7 @@ class SessionLiveChecker implements Runnable{
 			}
 			
 			// 10 분에 한번씩 Thread 검사.
-			try { Thread.sleep((60 * 1000) * 3); } catch(Exception e) {};
+			try { Thread.sleep((60 * 1000) * 10); } catch(Exception e) {};
 		} // while 
 		
 	}
