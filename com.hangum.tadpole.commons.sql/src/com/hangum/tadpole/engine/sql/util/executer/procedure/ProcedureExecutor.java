@@ -98,11 +98,6 @@ public abstract class ProcedureExecutor {
 	public String getMakeExecuteScript() throws Exception {
 		StringBuffer sbQuery = new StringBuffer();
 		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
-//			if(!"".equals(procedureDAO.getPackagename())){
-//				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
-//			}else{
-//				sbQuery.append("SELECT " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
-//			}
 			sbQuery.append("SELECT " + procedureDAO.getFullName( !StringUtils.isBlank(procedureDAO.getPackagename()) ) + "(");
 			
 			List<InOutParameterDAO> inList = getInParameters();
@@ -113,11 +108,6 @@ public abstract class ProcedureExecutor {
 			}
 			sbQuery.append(") from dual");
 		} else {
-//			if(!"".equals(procedureDAO.getPackagename())){
-//				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getPackagename() + "." + procedureDAO.getName() + "(");
-//			}else{
-//				sbQuery.append("{call " + procedureDAO.getSchema_name() +"."+ procedureDAO.getName() + "(");
-//			}
 			sbQuery.append("{call " + procedureDAO.getFullName( !StringUtils.isBlank(procedureDAO.getPackagename()) ) + "(");
 			
 			// in script
