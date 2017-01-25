@@ -290,9 +290,10 @@ public class ExplorerViewer extends ViewPart {
 	 *  change schema name
 	 */
 	public void changeSchema(String strSchemaName) {
-		this.comboSchema.setText(strSchemaName);
-		 
-		this.userDB.setSchema(strSchemaName);
+		if(strSchemaName.equals(comboSchema.getText())) return;
+		
+		comboSchema.setText(strSchemaName);
+		userDB.setSchema(strSchemaName);
 		if(logger.isDebugEnabled()) logger.debug("*** Change schema name is " + strSchemaName);
 		
 		// 기존 스키마에 대해 조회되어 있던 내용을 초기화 한다.
