@@ -68,7 +68,7 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("BINARY", java.sql.Types.BINARY);
 		mapTypes.put("VARBINARY", java.sql.Types.VARBINARY);
 		mapTypes.put("NUMBER", java.sql.Types.DECIMAL);
-//		mapTypes.put("SYS_REFCURSOR", OracleTypes.CURSOR);
+		mapTypes.put("SYS_REFCURSOR", -10);// OracleTypes.CURSOR);
 
 		// pgsql JSON type
 		mapTypes.put("JSON", 1111);
@@ -81,6 +81,8 @@ public class RDBTypeToJavaTypeUtils {
 	 * @return
 	 */
 	public static Integer getJavaType(String rdbType) {
+		if(logger.isDebugEnabled()) logger.debug("rdb type is " + rdbType);
+		
 		Integer javaType = mapTypes.get(rdbType);
 		if (javaType == null) {
 //			logger.info("SQL type to Java type not found is" + rdbType);
