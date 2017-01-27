@@ -23,6 +23,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -36,6 +37,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -198,6 +200,7 @@ public class ManagerViewer extends ViewPart {
 //		tree.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
 		managerTV.setContentProvider(new ManagerContentProvider());
+		ColumnViewerToolTipSupport.enableFor(managerTV);
 		managerTV.setLabelProvider(new ManagerLabelProvider());
 		managerTV.setInput(treeDataList);
 		getSite().setSelectionProvider(managerTV);

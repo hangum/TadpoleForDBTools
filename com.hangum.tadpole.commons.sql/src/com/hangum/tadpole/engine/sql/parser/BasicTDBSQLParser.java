@@ -50,24 +50,22 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	/** agens graph statement */
 	private static final String AGENSGRAPH_PATTERN_STATEMENT = "|^MATCH.*";
 	
+	private static final Pattern PATTERN_DML_BASIC = Pattern.compile(REGEXP_STATEMENT
+			+ MSSQL_PATTERN_STATEMENT
+			+ ORACLE_PATTERN_STATEMENT
+			+ MYSQL_PATTERN_STATEMENT
+			+ PGSQL_PATTERN_STATEMENT
+			+ SQLITE_PATTERN_STATEMENT
+			+ CUBRID_PATTERN_STATEMENT
+			+ AGENSGRAPH_PATTERN_STATEMENT
+			, ParserDefine.PATTERN_FLAG
+	);
+	
 	@Override
 	public QueryInfoDTO parser(String sql) {
-		String strCheckSQL = SQLUtil.removeComment(sql);
-		strCheckSQL = StringUtils.trimToEmpty(strCheckSQL);
+		String strCheckSQL = SQLUtil.makeSQLTestString(sql);
+		
 		QueryInfoDTO queryInfoDTO = new QueryInfoDTO();
-		
-		// if isStatement
-		Pattern PATTERN_DML_BASIC = Pattern.compile(REGEXP_STATEMENT
-						+ MSSQL_PATTERN_STATEMENT
-						+ ORACLE_PATTERN_STATEMENT
-						+ MYSQL_PATTERN_STATEMENT
-						+ PGSQL_PATTERN_STATEMENT
-						+ SQLITE_PATTERN_STATEMENT
-						+ CUBRID_PATTERN_STATEMENT
-						+ AGENSGRAPH_PATTERN_STATEMENT
-				, ParserDefine.PATTERN_FLAG
-			);
-		
 		if(PATTERN_DML_BASIC.matcher(strCheckSQL).matches()) {
 			queryInfoDTO.setStatement(true);
 			queryInfoDTO.setSqlType(SQL_TYPE.DML);
