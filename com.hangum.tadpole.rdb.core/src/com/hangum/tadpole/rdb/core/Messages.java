@@ -685,6 +685,12 @@ public class Messages {
 	public String CantnotFoundTable;
 
 	public String SelectObject;
+
+	public String DBType;
+
+	public String DBReplication;
+
+	public String DBReadOnly;
 	
 //	public String PLAN_TABLE_NOT_FOUND;
 	
