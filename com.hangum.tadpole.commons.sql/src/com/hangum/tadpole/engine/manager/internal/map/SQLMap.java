@@ -72,6 +72,9 @@ public class SQLMap {
 			} else if(DBGroupDefine.MYSQL_GROUP == dbInfo.getDBGroup()) {
 //				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " SELECT 1;");
 				HELLO_SQL = HELLO_SQL + "\n SELECT 1";
+			} else if(DBGroupDefine.POSTGRE_GROUP == dbInfo.getDBGroup()) {
+				HELLO_SQL = HELLO_SQL + "\n SELECT 1";
+				APPLICATION_NAME_SQL = String.format("SET application_name = 'Tadpole Hub(%s)'", dbInfo.getTdbUserID());
 			} else {
 //				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " Do not execute query.");
 			}

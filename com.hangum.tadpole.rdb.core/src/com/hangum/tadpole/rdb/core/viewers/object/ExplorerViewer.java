@@ -290,7 +290,7 @@ public class ExplorerViewer extends ViewPart {
 	 *  change schema name
 	 */
 	public void changeSchema(String strSchemaName) {
-		if(strSchemaName.equals(comboSchema.getText())) return;
+//		if(strSchemaName.equals(comboSchema.getText())) return;
 		
 		comboSchema.setText(strSchemaName);
 		userDB.setSchema(strSchemaName);
