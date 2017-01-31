@@ -18,6 +18,12 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -30,6 +36,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -47,6 +54,7 @@ import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
 import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportHTMLComposite;
@@ -54,6 +62,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportJSONC
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportSQLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportTextComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportXMLComposite;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.AbstractExportDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportHtmlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportJsonDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
@@ -61,6 +70,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 
 /**
  * Resultset to download
@@ -106,7 +116,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	public ResultSetDownloadDialog(Shell parentShell, RequestQuery requestQuery, String strDefTableName, QueryExecuteResultDTO queryExecuteResultDTO) {
 		super(parentShell);
-		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
 		this.requestQuery = requestQuery;
 		this.defaultTargetName = strDefTableName;
@@ -225,53 +235,89 @@ public class ResultSetDownloadDialog extends Dialog {
 
 	/** execute button */
 	private void executeButton() {
-		String selectionTab = ""+tabFolder.getSelection().getData();
-
-		try {
-			if("text".equalsIgnoreCase(selectionTab)) {			
-				if(compositeText.isValidate()) {
-					ExportTextDAO dao = (ExportTextDAO)compositeText.getLastData();
-					exportResultCSVType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSeparatorType(), dao.getComboEncoding());
-				}else{
-					return;
-				}
-			}else if("html".equalsIgnoreCase(selectionTab)) {			
-				if(compositeHTML.isValidate()) {
-					ExportHtmlDAO dao = (ExportHtmlDAO)compositeHTML.getLastData();
-					exportResultHtmlType(dao.getTargetName(), dao.getComboEncoding());
-				}else{
-					return;
-				}
-			}else if("json".equalsIgnoreCase(selectionTab)) {			
-				if(compositeJSON.isValidate()) {
-					ExportJsonDAO dao = (ExportJsonDAO)compositeJSON.getLastData();
-					exportResultJSONType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSchemeKey(), dao.getRecordKey(), dao.getComboEncoding(), dao.isFormat());
-				}else{
-					return;
-				}
-			}else if("xml".equalsIgnoreCase(selectionTab)) {			
-				if(compositeXML.isValidate()) {
-					ExportXmlDAO dao = (ExportXmlDAO)compositeXML.getLastData();
-					exportResultXmlType(dao.getTargetName(), dao.getComboEncoding());
-				}else{
-					return;
-				}
-			}else if("sql".equalsIgnoreCase(selectionTab)) {			
-				if(compositeSQL.isValidate()) {
-					ExportSqlDAO dao = (ExportSqlDAO)compositeSQL.getLastData();
-					exportResultSqlType(dao.getTargetName(), dao.getComboEncoding(), dao.getListWhere(),  dao.getStatementType(), dao.getCommit());
-				}else{
-					return;
-				}
-			}else{
-				if(logger.isDebugEnabled()) logger.debug("selection tab is " + selectionTab);	
-				MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResultSetDownloadDialog_notSelect); 
-				return;
-			}
-		} catch(Exception e) {
-			logger.error(selectionTab + "type export error", e);
-			MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());
+		final String selectionTab = ""+tabFolder.getSelection().getData();
+		AbstractExportDAO exportDAO = null;
+		
+		// validation
+		if("text".equalsIgnoreCase(selectionTab)) {
+			if(!compositeText.isValidate()) return;
+			exportDAO = compositeText.getLastData();
+		}else if("html".equalsIgnoreCase(selectionTab)) {
+			if(!compositeHTML.isValidate()) return;
+			exportDAO = compositeHTML.getLastData();
+		}else if("json".equalsIgnoreCase(selectionTab)) {			
+			if(!compositeJSON.isValidate()) return;
+			exportDAO = compositeJSON.getLastData();
+		}else if("xml".equalsIgnoreCase(selectionTab)) {			
+			if(!compositeXML.isValidate()) return;
+			exportDAO = compositeXML.getLastData();
+		}else if("sql".equalsIgnoreCase(selectionTab)) {			
+			if(!compositeSQL.isValidate()) return;
+			exportDAO = compositeSQL.getLastData();
+		}else{
+			if(logger.isDebugEnabled()) logger.debug("selection tab is " + selectionTab);	
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().ResultSetDownloadDialog_notSelect); 
+			return;
 		}
+		
+		// job
+		final AbstractExportDAO _dao = exportDAO;
+		Job job = new Job(Messages.get().MainEditor_45) {
+			@Override
+			public IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask(AbstractObjectComposite.MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
+				
+				try {
+					if("text".equalsIgnoreCase(selectionTab)) {			
+						ExportTextDAO dao = (ExportTextDAO)_dao;
+						exportResultCSVType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSeparatorType(), dao.getComboEncoding());
+					}else if("html".equalsIgnoreCase(selectionTab)) {			
+						ExportHtmlDAO dao = (ExportHtmlDAO)_dao;
+						exportResultHtmlType(dao.getTargetName(), dao.getComboEncoding());
+					}else if("json".equalsIgnoreCase(selectionTab)) {			
+						ExportJsonDAO dao = (ExportJsonDAO)_dao;
+						exportResultJSONType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSchemeKey(), dao.getRecordKey(), dao.getComboEncoding(), dao.isFormat());
+					}else if("xml".equalsIgnoreCase(selectionTab)) {			
+						ExportXmlDAO dao = (ExportXmlDAO)_dao;
+						exportResultXmlType(dao.getTargetName(), dao.getComboEncoding());
+					}else if("sql".equalsIgnoreCase(selectionTab)) {			
+						ExportSqlDAO dao = (ExportSqlDAO)_dao;
+						exportResultSqlType(dao.getTargetName(), dao.getComboEncoding(), dao.getListWhere(),  dao.getStatementType(), dao.getCommit());
+					}
+				} catch(Exception e) {
+					logger.error(selectionTab + "type export error", e);
+					return new Status(Status.WARNING, Activator.PLUGIN_ID, e.getMessage(), e);
+				} finally {
+					monitor.done();
+				}
+				
+				return Status.OK_STATUS;
+			}
+		};
+		
+		// job의 event를 처리해 줍니다.
+		job.addJobChangeListener(new JobChangeAdapter() {
+			
+			public void done(IJobChangeEvent event) {
+				final IJobChangeEvent jobEvent = event; 
+				
+				final Display display = getShell().getDisplay();
+				display.asyncExec(new Runnable() {
+					public void run() {
+						if(jobEvent.getResult().isOK()) {
+//							MessageDialog.openInformation(getShell(), CommonMessages.get().OK, CommonMessages.get().DownloadIsComplete);
+						} else {
+							MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, jobEvent.getResult().getMessage());
+						}
+					}	// end run
+				});	// end display.asyncExec
+				
+			}	// end done
+		});	// end job
+		
+		job.setName(Messages.get().DownloadQueryResult);
+		job.setUser(true);
+		job.schedule();
 	}
 	
 	/**
@@ -456,8 +502,13 @@ public class ResultSetDownloadDialog extends Dialog {
 	 * 
 	 * @param strContetn
 	 */
-	private void targetEditor(String strContetn) {
-		FindEditorAndWriteQueryUtil.run(queryExecuteResultDTO.getUserDB(), strContetn, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+	private void targetEditor(final String strContetn) {
+		getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				FindEditorAndWriteQueryUtil.run(queryExecuteResultDTO.getUserDB(), strContetn, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+			}
+		});
 	}
 	
 	/**
@@ -476,8 +527,13 @@ public class ResultSetDownloadDialog extends Dialog {
 	 * @param encoding
 	 * @throws Exception
 	 */
-	protected void previewDataLoad(String fileName, String previewData, String encoding) throws Exception {
-		this.textPreview.setText(previewData);
+	protected void previewDataLoad(final String fileName, final String previewData, final String encoding) throws Exception {
+		getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				textPreview.setText(previewData);		
+			}
+		});
 	}
 	
 	/**
@@ -485,12 +541,20 @@ public class ResultSetDownloadDialog extends Dialog {
 	 * @param strFileLocation
 	 * @throws Exception
 	 */
-	protected void downloadFile(String fileName, String strFileLocation, String encoding) throws Exception {
-		//TODO: 결과 파일 인코딩 하기...
-		String strZipFile = ZipUtils.pack(strFileLocation);
-		byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
-		
-		_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
+	protected void downloadFile(final String fileName, final String strFileLocation, final String encoding) throws Exception {
+		getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					String strZipFile = ZipUtils.pack(strFileLocation);
+					byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+					
+					_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
+				} catch(Exception e) {
+					logger.error("download file", e);
+				}
+			}
+		});
 	}
 	
 	/** registery service handler */

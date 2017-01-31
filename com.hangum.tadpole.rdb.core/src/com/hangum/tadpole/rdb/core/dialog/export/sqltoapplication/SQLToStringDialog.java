@@ -50,7 +50,7 @@ public class SQLToStringDialog extends Dialog {
 	 */
 	public SQLToStringDialog(Shell parentShell, UserDBDAO userDB, String sql) {
 		super(parentShell);
-		setShellStyle(SWT.RESIZE | SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
 		this.userDB = userDB;
 		this.sql = sql;

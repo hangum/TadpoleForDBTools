@@ -36,10 +36,17 @@ public class PartQueryUtil {
 	/**
 	 *  각 DBMS에 맞는 SELECT 문을 만들어줍니다.
 	 *  
+	 *  @param userDB 사용디비
+	 *  @param strQuery 사용 쿼리
+	 *  @param intStartPosition 시작 포인트
+	 *  @param intRowCnt 몇 건 데이터
+	 *  
 	 * @return
 	 */
 	public static String makeSelect(UserDBDAO userDB, String strQuery, int intStartPos, int intRowCnt) throws Exception {
 		String requestQuery = "";
+		
+//		if(logger.isDebugEnabled()) logger.debug("make select : " + intStartPos + ", " + intRowCnt);
 		
 		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);

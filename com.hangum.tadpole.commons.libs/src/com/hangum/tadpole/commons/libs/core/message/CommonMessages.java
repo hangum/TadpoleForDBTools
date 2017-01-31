@@ -111,6 +111,8 @@ public class CommonMessages {
 
 	public String ChangingValue;
 
+	public String DownloadIsComplete;
+
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
 	}
