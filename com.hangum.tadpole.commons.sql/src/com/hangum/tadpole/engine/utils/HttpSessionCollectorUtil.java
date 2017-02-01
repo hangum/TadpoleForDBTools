@@ -17,9 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -172,8 +169,8 @@ class SessionLiveChecker implements Runnable{
 				}
 			}
 			
-//			// 엔진의 설정 정보를 디비에서 가져와서 동기화(?)
-//			// TDDO 여기서 해야하나도 싶고요.(hangum)
+			// 엔진의 설정 정보를 디비에서 가져와서 동기화(?)
+			// TDDO 여기서 해야하나도 싶고요.(hangum)
 //			final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 //			shell.getDisplay().asyncExec(new Runnable() {
 //				@Override

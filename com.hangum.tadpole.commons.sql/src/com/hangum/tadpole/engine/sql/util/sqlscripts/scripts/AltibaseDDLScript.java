@@ -38,6 +38,7 @@ public class AltibaseDDLScript extends MySqlDDLScript {
 		
 		Map srcList = (HashMap)client.queryForObject("getViewScript", parameters);
 		String strSource = ""+srcList.get("Create View");
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) strSource = strMSG_BlankScript;
 		
 		return strSource;
 	}
@@ -54,7 +55,10 @@ public class AltibaseDDLScript extends MySqlDDLScript {
 		parameters.put("object_name", functionDAO.getName());
 		
 		Map srcList = (HashMap)client.queryForObject("getFunctionScript", parameters);
-		return ""+srcList.get("Create Function");
+		String strSource = ""+srcList.get("Create Function");
+		
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) strSource = strMSG_BlankScript;
+		return strSource;
 	}
 	
 	/* (non-Javadoc)
@@ -69,6 +73,9 @@ public class AltibaseDDLScript extends MySqlDDLScript {
 		parameters.put("object_name", procedureDAO.getName());
 		
 		Map srcList = (HashMap)client.queryForObject("getProcedureScript", parameters);
-		return ""+srcList.get("Create Procedure");
+		String strSource = ""+srcList.get("Create Procedure");
+		
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) strSource = strMSG_BlankScript;
+		return strSource;
 	}
 }

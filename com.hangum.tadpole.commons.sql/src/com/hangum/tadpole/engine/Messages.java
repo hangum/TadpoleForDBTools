@@ -14,6 +14,8 @@ import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.engine.messages"; //$NON-NLS-1$
+
+	public String DoesNotGetDBScript;
 	
 	public String Gullim;
 	public String overflowUseService;

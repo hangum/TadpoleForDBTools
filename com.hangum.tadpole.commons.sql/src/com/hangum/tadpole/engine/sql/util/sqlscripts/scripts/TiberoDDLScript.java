@@ -20,7 +20,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
-import com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -54,12 +53,16 @@ public class TiberoDDLScript extends OracleDDLScript {
 
 		StringBuilder result = new StringBuilder("");
 
-		List<String> srcScriptList = client.queryForList("getFunctionScript", paramMap);				
-		for (int i=0; i<srcScriptList.size(); i++){
-			result.append( srcScriptList.get(i));
+		List<String> srcScriptList = client.queryForList("getFunctionScript", paramMap);
+		if(srcScriptList.isEmpty()) {
+			return strMSG_BlankScript;
+		} else {
+			for (int i=0; i<srcScriptList.size(); i++){
+				result.append( srcScriptList.get(i));
+			}
+			
+			return result.toString();
 		}
-		
-		return result.toString();				
 	}
 
 	/* (non-Javadoc)
@@ -79,25 +82,33 @@ public class TiberoDDLScript extends OracleDDLScript {
 							
 		List<String> srcScriptList = null;
 		if (StringUtils.contains(objType, "PROCEDURE")){
-			srcScriptList = client.queryForList("getProcedureScript", paramMap);				
-			for (int i=0; i<srcScriptList.size(); i++){
-				result.append( srcScriptList.get(i));
+			srcScriptList = client.queryForList("getProcedureScript", paramMap);
+			if(srcScriptList.isEmpty()) {
+				return strMSG_BlankScript;
+			} else {
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
 			}
 		}else if (StringUtils.contains(objType, "PACKAGE")){
 			result.append("/* STATEMENT PACKAGE BODY " + procedureDAO.getName() + "; */ \n\n");
 			result.append("/* STATEMENT PACKAGE " + procedureDAO.getName() + "; */ \n\n");
 			
-			srcScriptList = client.queryForList("getPackageScript.head", paramMap);				
-			for (int i=0; i<srcScriptList.size(); i++){
-				result.append( srcScriptList.get(i));
+			srcScriptList = client.queryForList("getPackageScript.head", paramMap);
+			if(srcScriptList.isEmpty()) {
+				return strMSG_BlankScript;
+			} else {
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
+				result.append("/ \n\n ");
+				srcScriptList = client.queryForList("getPackageScript.body", paramMap);				
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
+				
+				result.append("/ \n\n ");
 			}
-			result.append("/ \n\n ");
-			srcScriptList = client.queryForList("getPackageScript.body", paramMap);				
-			for (int i=0; i<srcScriptList.size(); i++){
-				result.append( srcScriptList.get(i));
-			}
-			
-			result.append("/ \n\n ");
 		}
 		
 		return result.toString();
@@ -119,12 +130,16 @@ public class TiberoDDLScript extends OracleDDLScript {
 		
 		StringBuilder result = new StringBuilder("");
 
-		List<String> srcScriptList = client.queryForList("getTriggerScript", paramMap);				
-		for (int i=0; i<srcScriptList.size(); i++){
-			result.append( srcScriptList.get(i));
+		List<String> srcScriptList = client.queryForList("getTriggerScript", paramMap);
+		if(srcScriptList.isEmpty()) {
+			return strMSG_BlankScript;
+		} else {
+			for (int i=0; i<srcScriptList.size(); i++){
+				result.append( srcScriptList.get(i));
+			}
+			
+			return result.toString();
 		}
-		
-		return result.toString();				
 	}
 
 }

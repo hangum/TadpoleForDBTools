@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -30,6 +31,9 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public abstract class AbstractRDBDDLScript {
+	/** 사용자 권한이 없을 경우에 나타내는 메시지 */
+	protected final static String strMSG_BlankScript = Messages.get().DoesNotGetDBScript;
+	
 	protected UserDBDAO userDB;
 	protected OBJECT_TYPE actionType;
 
