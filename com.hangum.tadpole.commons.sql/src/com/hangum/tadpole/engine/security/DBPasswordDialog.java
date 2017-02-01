@@ -109,6 +109,8 @@ public class DBPasswordDialog extends Dialog {
 			textPassword.setText(strAMMPPassword);
 		} catch (Exception e) {
 			logger.error("appm error", e);
+			
+			MessageDialog.openInformation(getShell(), CommonMessages.get().Error, "APPM interface error :" + e.getMessage());
 			textPassword.setText("");
 		} finally {
 			userDB.setPasswd("");
