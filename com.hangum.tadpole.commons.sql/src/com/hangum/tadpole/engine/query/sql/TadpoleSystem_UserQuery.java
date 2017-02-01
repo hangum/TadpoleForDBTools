@@ -74,13 +74,19 @@ public class TadpoleSystem_UserQuery {
 	
 	/**
 	 * add ldap user
+	 * 
+	 * @param userName
+	 * @param email
+	 * @param external_id
+	 * @param useOTP
+	 * 
 	 * @return
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static UserDAO newLDAPUser(String userName, String email, String external_id) throws TadpoleSQLManagerException, SQLException, Exception {
+	public static UserDAO newLDAPUser(String userName, String email, String external_id, String useOPT) throws TadpoleSQLManagerException, SQLException, Exception {
 		return newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(), email, "LDAP", "YES", "TadpoleLDAPLogin", PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
-				userName, "KO", "Asia/Seoul", "YES", "NO", "", "*", external_id);
+				userName, "KO", "Asia/Seoul", "YES", useOPT, "", "*", external_id);
 	}
 	
 	/**
