@@ -13,7 +13,6 @@ package com.hangum.tadpole.application;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
