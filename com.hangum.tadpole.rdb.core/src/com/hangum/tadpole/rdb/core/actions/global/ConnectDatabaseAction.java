@@ -80,7 +80,7 @@ public class ConnectDatabaseAction extends Action implements ISelectionListener,
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				managerView.addUserDB(userDB, true);
+				managerView.addUserDB(userDB, false);
 			}
 		});	// end display
 	}
