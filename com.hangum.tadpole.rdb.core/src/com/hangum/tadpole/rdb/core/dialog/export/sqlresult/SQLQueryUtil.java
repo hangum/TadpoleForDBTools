@@ -31,7 +31,7 @@ public class SQLQueryUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLQueryUtil.class);
 	
-	private int DATA_COUNT = 10000;
+	private int DATA_COUNT = 3000;
 	
 	private UserDBDAO userDB;
 	private String requestQuery;
@@ -39,18 +39,18 @@ public class SQLQueryUtil {
 	/** 처음한번은 반듯이 동작해야 하므로 */
 	private boolean isFirst = true;
 	private int startPoint = 0;
-	private int nextPoint = -1;
 	
 	private QueryExecuteResultDTO queryResultDAO = new QueryExecuteResultDTO();
 	
 	public SQLQueryUtil(UserDBDAO userDB, String requestQuery) {
 		this.userDB = userDB;
 		this.requestQuery = requestQuery;
+		
+		this.isFirst = true;
+		this.startPoint = 0;
 	}
 	
 	public QueryExecuteResultDTO nextQuery() throws Exception {
-		startPoint = nextPoint+1;
-		nextPoint = nextPoint + DATA_COUNT;
 		return runSQLSelect();
 	}
 	
@@ -59,7 +59,8 @@ public class SQLQueryUtil {
 	 */
 	private QueryExecuteResultDTO runSQLSelect() throws Exception {
 		queryResultDAO = new QueryExecuteResultDTO();
-		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, nextPoint);		
+		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, DATA_COUNT);
+//		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		java.sql.Connection javaConn = null;
@@ -71,7 +72,7 @@ public class SQLQueryUtil {
 			rs = stmt.executeQuery();//Query( selText );
 			
 			// table column의 정보
-			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, true, rs, startPoint, nextPoint);
+			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, true, rs, startPoint, DATA_COUNT);
 		} finally {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			try { if(stmt != null) stmt.close();} catch(Exception e) {}
@@ -85,11 +86,26 @@ public class SQLQueryUtil {
 		if(isFirst) {
 			isFirst = false;
 		} else {
+			startPoint = startPoint + DATA_COUNT;
 			if(queryResultDAO.getDataList().getData().isEmpty()) return false;
 		}
 		 
 		return true;		
 	}
-	
-	
+
+	public String getRequestQuery() {
+		return requestQuery;
+	}
+
+	public void setRequestQuery(String requestQuery) {
+		this.requestQuery = requestQuery;
+	}
+
+	public int getStartPoint() {
+		return startPoint;
+	}
+
+	public void setStartPoint(int startPoint) {
+		this.startPoint = startPoint;
+	}
 }

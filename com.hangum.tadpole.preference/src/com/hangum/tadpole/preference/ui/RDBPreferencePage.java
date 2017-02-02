@@ -287,12 +287,13 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			setValid(false);
 			setErrorMessage(Messages.get().RDBPreferencePage_lblCharacterShownIn_text + Messages.get().RDBPreferencePage_0);
 			return false;
-		} else if(!(NumberUtils.toInt(txtShownInTheColumn) >= 5 && NumberUtils.toInt(txtShownInTheColumn) <= 1000)) {
-			textShowInTheColumn.setFocus();
-
-			setValid(false);
-			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCharacterShownIn_text, "5", "1,000"));
-			return false;
+//			
+//		} else if(!(NumberUtils.toInt(txtShownInTheColumn) >= 5 && NumberUtils.toInt(txtShownInTheColumn) <= 1000)) {
+//			textShowInTheColumn.setFocus();
+//
+//			setValid(false);
+//			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCharacterShownIn_text, "5", "1,000"));
+//			return false;
 		} else if("".equals(txtOraclePlan)) { //$NON-NLS-1$
 
 			setValid(false);

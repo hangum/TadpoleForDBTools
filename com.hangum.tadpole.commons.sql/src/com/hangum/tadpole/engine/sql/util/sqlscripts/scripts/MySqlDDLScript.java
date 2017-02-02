@@ -56,11 +56,18 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
 		Map srcList = (HashMap)client.queryForObject("getTableScript", tableDAO.getFullName());
-		if(StringUtils.isBlank(tableDAO.getSchema_name())){
-			return srcList.get("Create Table")+"";
-		}else{
-			return StringUtils.replaceOnce(srcList.get("Create Table")+"", "CREATE TABLE ", "CREATE TABLE " + tableDAO.getSchema_name() + ".");
-		}
+		
+		String strSource = ""+srcList.get("Create Table");
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) {
+			return strMSG_BlankScript;
+		} else {
+			if(StringUtils.isBlank(tableDAO.getSchema_name())){
+				return srcList.get("Create Table")+"";
+			}else{
+				return StringUtils.replaceOnce(srcList.get("Create Table")+"", "CREATE TABLE ", "CREATE TABLE " + tableDAO.getSchema_name() + ".");
+			}
+		}			
+		
 	}
 
 	/* (non-Javadoc)
@@ -73,13 +80,16 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		Map srcList = (HashMap)client.queryForObject("getViewScript", tableDao.getFullName());
 		String strSource = ""+srcList.get("Create View");
 		strSource = StringUtils.substringAfterLast(strSource, "VIEW");
-		
-		String schema_name = SQLUtil.makeIdentifierName(userDB, tableDao.getSchema_name());
-		
-		if ( strSource.indexOf(schema_name.trim(), 0) > 1 ){
-			return "CREATE VIEW " + strSource.trim();
-		}else{
-			return "CREATE VIEW " + schema_name +"."+ strSource.trim();
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) {
+			return strMSG_BlankScript;
+		} else {
+			String schema_name = SQLUtil.makeIdentifierName(userDB, tableDao.getSchema_name());
+			
+			if ( strSource.indexOf(schema_name.trim(), 0) > 1 ){
+				return "CREATE VIEW " + strSource.trim();
+			}else{
+				return "CREATE VIEW " + schema_name +"."+ strSource.trim();
+			}
 		}
 	}
 
@@ -105,10 +115,14 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		String strSource = ""+srcList.get("Create Function");
 		strSource = StringUtils.substringAfterLast(strSource, "FUNCTION");
 		
-		if(StringUtils.isBlank(functionDAO.getSchema_name())){
-			return "CREATE FUNCTION " + strSource.trim();
-		}else{
-			return "CREATE FUNCTION " + functionDAO.getSchema_name() + "." + strSource.trim();
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) {
+			return strMSG_BlankScript;
+		} else {
+			if(StringUtils.isBlank(functionDAO.getSchema_name())){
+				return "CREATE FUNCTION " + strSource.trim();
+			}else{
+				return "CREATE FUNCTION " + functionDAO.getSchema_name() + "." + strSource.trim();
+			}
 		}
 	}
 
@@ -119,13 +133,17 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 	public String getProcedureScript(ProcedureFunctionDAO procedureDAO)	throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		Map srcList = (HashMap)client.queryForObject("getProcedureScript", procedureDAO.getFullName());
+		
 		String strSource = ""+srcList.get("Create Procedure");
 		strSource = StringUtils.substringAfterLast(strSource, "PROCEDURE");
-		
-		if(StringUtils.isBlank(procedureDAO.getSchema_name())){
-			return "CREATE PROCEDURE " + strSource.trim();
-		}else{
-			return "CREATE PROCEDURE " + procedureDAO.getSchema_name() + "." + strSource.trim();
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) {
+			return strMSG_BlankScript;
+		} else {
+			if(StringUtils.isBlank(procedureDAO.getSchema_name())){
+				return "CREATE PROCEDURE " + strSource.trim();
+			}else{
+				return "CREATE PROCEDURE " + procedureDAO.getSchema_name() + "." + strSource.trim();
+			}
 		}
 	}
 	
@@ -139,11 +157,14 @@ public class MySqlDDLScript extends AbstractRDBDDLScript {
 		Map srcList = (HashMap)client.queryForObject("getTriggerScript", triggerDAO.getFullName());	
 		String strSource = ""+srcList.get("SQL Original Statement");
 		strSource = StringUtils.substringAfterLast(strSource, "TRIGGER");
-		
-		if(StringUtils.isBlank(triggerDAO.getSchema_name())){
-			return "CREATE TRIGGER " + strSource.trim();
-		}else{
-			return "CREATE TRIGGER " + triggerDAO.getSchema_name() + "." + strSource.trim();
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strSource))) {
+			return strMSG_BlankScript;
+		} else {
+			if(StringUtils.isBlank(triggerDAO.getSchema_name())){
+				return "CREATE TRIGGER " + strSource.trim();
+			}else{
+				return "CREATE TRIGGER " + triggerDAO.getSchema_name() + "." + strSource.trim();
+			}
 		}
 	}
 

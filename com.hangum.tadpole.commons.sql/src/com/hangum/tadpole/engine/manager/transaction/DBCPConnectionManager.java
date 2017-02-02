@@ -77,6 +77,8 @@ public class DBCPConnectionManager {
 			
 			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 				listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction(%s)', '')", userDB.getTdbUserID()));
+			} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+				listInitializeSql.add(String.format("SET application_name = 'Tadpole Hub-Transaction(%s)'", userDB.getTdbUserID()));				
 			}
 			
 			pcf.setConnectionInitSql(listInitializeSql);

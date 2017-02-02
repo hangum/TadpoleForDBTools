@@ -29,11 +29,14 @@ public abstract class AbstractExportComposite extends Composite {
 	protected Text textTargetName;
 	protected Combo comboEncoding;
 
-
 	public AbstractExportComposite(Composite parent, int style) {
 		super(parent, style);
 	}
 	
+	/**
+	 * is validate
+	 * @return
+	 */
 	public boolean isValidate() {
 		if ( StringUtils.isEmpty( textTargetName.getText() ) ){
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, Messages.get().AbstractExportCompositeFileEmpty);

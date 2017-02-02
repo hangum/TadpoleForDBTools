@@ -37,7 +37,7 @@ public class SQLQueryUtil {
 	 */
 	private static final Logger logger = Logger.getLogger(SQLQueryUtil.class);
 	
-	private int DATA_COUNT = 1000;
+	private int DATA_COUNT = 3000;
 	
 	private UserDBDAO userDB;
 	private String requestQuery;
@@ -52,17 +52,17 @@ public class SQLQueryUtil {
 	/** 처음한번은 반듯이 동작해야 하므로 */
 	private boolean isFirst = true;
 	private int startPoint = 0;
-	private int nextPoint = -1;
 	
 	public SQLQueryUtil(UserDBDAO userDB, String requestQuery) {
 		this.userDB = userDB;
 		this.requestQuery = requestQuery;
+		
+		this.isFirst = true;
+		this.startPoint = 0;
 	}
 	
 	
 	public void nextQuery() throws Exception {
-		startPoint = nextPoint+1;
-		nextPoint = nextPoint + DATA_COUNT;
 		runSQLSelect();
 	}
 	
@@ -73,7 +73,7 @@ public class SQLQueryUtil {
 		tableDataTypeList.clear();
 		tableDataList.clear();		
 
-		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, nextPoint);		
+		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, DATA_COUNT);		
 		ResultSet rs = null;
 		java.sql.Connection javaConn = null;
 		
@@ -122,6 +122,7 @@ public class SQLQueryUtil {
 		if(isFirst) {
 			isFirst = false;
 		} else {
+			startPoint = startPoint + DATA_COUNT;
 			if(tableDataList.size() < DATA_COUNT) return false;
 		}
 		 

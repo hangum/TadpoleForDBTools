@@ -67,19 +67,31 @@ public class TadpoleApplicationContextManager {
 
 		try {
 	    	if(mapUserInfoData == null) {
-	    		List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(PublicTadpoleDefine.systemAdminId);
-	    		mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
-	    		for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
-	    			mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
-	    		}
-	    		
-	    		context.setAttribute("adminSystemEnv", mapUserInfoData);
+	    		mapUserInfoData = initAdminSystemSetting();
 	    	}
 		} catch(Exception e) {
 			logger.error("admin system env", e);
 		}
     	
     	return mapUserInfoData;
+	}
+	
+	/**
+	 * 어드민 시스템 환경을 초기화 한다.
+	 * 
+	 * @throws Exception
+	 */
+	public static Map<String, UserInfoDataDAO> initAdminSystemSetting() throws Exception {
+		List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(PublicTadpoleDefine.systemAdminId);
+		Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
+		for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
+			mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
+		}
+		
+		ApplicationContext context = RWT.getApplicationContext();
+		context.setAttribute("adminSystemEnv", mapUserInfoData);
+		
+		return mapUserInfoData;
 	}
 	
 	/**

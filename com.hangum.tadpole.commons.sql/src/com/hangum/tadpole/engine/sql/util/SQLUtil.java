@@ -88,7 +88,21 @@ public class SQLUtil {
 	 */
 	public static String removeComment(String strSQL) {
 		if(null == strSQL) return "";
-		return strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
+		String strCheckSQL = strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
+		strCheckSQL = StringUtils.trimToEmpty(strCheckSQL);
+		return strCheckSQL;
+	}
+	
+	/**
+	 * SQL의 DML, DDL 을 테스트 하기위 사용하는 
+	 * @param strSQL
+	 * @return
+	 */
+	public static String makeSQLTestString(String strSQL) {
+		String strCheckSQL = removeComment(strSQL);
+		strCheckSQL = StringUtils.removeStart(strCheckSQL, "(");
+		strCheckSQL = StringUtils.trimToEmpty(strCheckSQL);
+		return strCheckSQL;
 	}
 	
 	/**
@@ -100,7 +114,7 @@ public class SQLUtil {
 	 */
 	public static boolean isNotAllowed(String strSQL) {
 		boolean isRet = false;
-		String cmpSql = StringUtils.trim(removeComment(strSQL));
+		String cmpSql = removeComment(strSQL);
 		
 		for (String strNAllSQL : NOT_ALLOWED_SQL) {
 			if(StringUtils.startsWithIgnoreCase(cmpSql, strNAllSQL)) {
@@ -118,7 +132,7 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static boolean isStatement(String strSQL) {
-		strSQL = removeComment(strSQL);
+		strSQL = makeSQLTestString(strSQL);
 		if((PATTERN_DML_BASIC.matcher(strSQL)).matches()) {
 			return true;
 //		} else {

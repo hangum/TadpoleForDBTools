@@ -12,8 +12,9 @@ package com.hangum.tadpole.rdb.core.viewers.connections;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -24,6 +25,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.rdb.core.Activator;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -32,7 +34,7 @@ import com.swtdesigner.ResourceManager;
  * @author hangum
  *
  */
-public class ManagerLabelProvider extends LabelProvider {
+public class ManagerLabelProvider extends ColumnLabelProvider {
 	private static final Logger logger = Logger.getLogger(ManagerLabelProvider.class);
 	
 //	/** production markup start tag */
@@ -43,8 +45,47 @@ public class ManagerLabelProvider extends LabelProvider {
 //	public static String INFO_SERVER_START_TAG = "<em style='color:rgb(145, 129, 129)'>"; //$NON-NLS-1$
 //	
 //	/** Markup end tag */
-	public static String END_TAG = "</em>"; //$NON-NLS-1$
+//	public static String END_TAG = "</em>"; //$NON-NLS-1$
+//	
+	@Override
+	public String getToolTipText(Object element) {
+		if(element instanceof UserDBDAO) {
+			UserDBDAO userDB = (UserDBDAO)element;
+			String retText = "";
+			
+			if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
+				retText += String.format(Messages.get().DBType, userDB.getOperation_type());
+			}
+			
+			// master, slave 표시
+			if(!StringUtils.isBlank(userDB.getDuplication_type())) {
+				retText += String.format(Messages.get().DBReplication, userDB.getDuplication_type());
+			}
+			
+			if("YES".equals(userDB.getReadonly())) {
+				retText += String.format(Messages.get().DBReadOnly, userDB.getReadonly());
+			}
+			
+			return retText;
+		}
+		return null;
+	}
 	
+	@Override
+	public Point getToolTipShift(Object object) {
+		return new Point(1, 1);
+	}
+	
+	@Override
+	public int getToolTipDisplayDelayTime(Object object) {
+		return 0;
+	}
+
+	@Override
+	public int getToolTipTimeDisplayed(Object object) {
+		return 5000;
+	}
+
 	/**
 	 * get group image
 	 * 
@@ -73,6 +114,11 @@ public class ManagerLabelProvider extends LabelProvider {
 		// master, slave 표시
 		if(!StringUtils.isBlank(userDB.getDuplication_type())) {
 			retText += String.format("[%s]", StringUtils.substring(userDB.getDuplication_type(), 0, 1)); //$NON-NLS-3$
+		}
+		
+		String strReadOnly = userDB.getReadonly();
+		if(strReadOnly.equalsIgnoreCase("YES")) {
+			retText += String.format("[R]"); //$NON-NLS-3$
 		}
 		
 		if(PermissionChecker.isDBAdminRole(userDB)) {

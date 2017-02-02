@@ -60,41 +60,45 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		paramMap.put("dba_role", "DBA");
 		
 		String strDDLScript = (String)client.queryForObject("getDDLScript", paramMap);
-		
-		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
-		result.append(strDDLScript + ";\n\n");
-
-		// table, column comments
-		try {
-			// DBA권한이 있는 경우에 
-			result.append(getTableComment(paramMap));
-		} catch(Exception e) {
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strDDLScript))) {
+			return strMSG_BlankScript;
+		} else {
+			
+			//TODO : DDL 스크립트 포맷팅 처리 후 적용.
+			result.append(strDDLScript + ";\n\n");
+	
+			// table, column comments
 			try {
-				// DBA 권한이 없는 경우 
-				paramMap.put("dba_role", "USER");
+				// DBA권한이 있는 경우에 
 				result.append(getTableComment(paramMap));
-			} catch(Exception ee) {
-				result.append(Messages.get().doesNotAutority);
+			} catch(Exception e) {
+				try {
+					// DBA 권한이 없는 경우 
+					paramMap.put("dba_role", "USER");
+					result.append(getTableComment(paramMap));
+				} catch(Exception ee) {
+					result.append(Messages.get().doesNotAutority);
+				}
 			}
+			
+			// foreign key
+			
+			// column constraint (사용자 정의 컬럼 제약조건)
+			
+			// partition table define
+			
+			// storage option
+			
+			// iot_type table define
+			
+			// table grant
+			
+			// table trigger
+			
+			// table synonyms 
+						
+			return result.toString();
 		}
-		
-		// foreign key
-		
-		// column constraint (사용자 정의 컬럼 제약조건)
-		
-		// partition table define
-		
-		// storage option
-		
-		// iot_type table define
-		
-		// table grant
-		
-		// table trigger
-		
-		// table synonyms 
-					
-		return result.toString();
 	}
 		
 	/**
@@ -146,11 +150,16 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		
 		String strDDLScript = (String)client.queryForObject("getDDLScript", paramMap);
 		
-		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
-		//result.append(SQLFormater.format(strDDLScript));
-		result.append(strDDLScript);
-		
-		return result.toString();
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strDDLScript))) {
+			return strMSG_BlankScript;
+		} else {
+				
+			//TODO : DDL 스크립트 포맷팅 처리 후 적용.
+			//result.append(SQLFormater.format(strDDLScript));
+			result.append(strDDLScript);
+			
+			return result.toString();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -240,12 +249,16 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 //		result.append("/* DROP FUNCTION " + functionDAO.getName() + "; */ \n\n");
 		result.append("CREATE OR REPLACE ");
 
-		List<String> srcScriptList = client.queryForList("getFunctionScript", paramMap);				
-		for (int i=0; i<srcScriptList.size(); i++){
-			result.append( srcScriptList.get(i));
+		List<String> srcScriptList = client.queryForList("getFunctionScript", paramMap);
+		if(srcScriptList.isEmpty()) {
+			return strMSG_BlankScript;
+		} else {
+			for (int i=0; i<srcScriptList.size(); i++){
+				result.append( srcScriptList.get(i));
+			}
+			
+			return result.toString();
 		}
-		
-		return result.toString();				
 	}
 
 	/* (non-Javadoc)
@@ -267,17 +280,25 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		if (StringUtils.contains(objType, "PROCEDURE")){
 //			result.append("/* DROP PROCEDURE " + procedureDAO.getName() + "; */ \n\n");
 			result.append("CREATE OR REPLACE ");
-			srcScriptList = client.queryForList("getProcedureScript", paramMap);				
-			for (int i=0; i<srcScriptList.size(); i++){
-				result.append( srcScriptList.get(i));
+			srcScriptList = client.queryForList("getProcedureScript", paramMap);
+			if(srcScriptList.isEmpty()) {
+				return strMSG_BlankScript;
+			} else {
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
 			}
 		}else if (StringUtils.contains(objType, "PACKAGE")){
 			result.append("/* STATEMENT PACKAGE " + procedureDAO.getName() + "; */ \n");
 			
 			result.append("CREATE OR REPLACE ");
-			srcScriptList = client.queryForList("getPackageScript.head", paramMap);				
-			for (int i=0; i<srcScriptList.size(); i++){
-				result.append( srcScriptList.get(i));
+			srcScriptList = client.queryForList("getPackageScript.head", paramMap);	
+			if(srcScriptList.isEmpty()) {
+				return strMSG_BlankScript;
+			} else {
+				for (int i=0; i<srcScriptList.size(); i++){
+					result.append( srcScriptList.get(i));
+				}
 			}
 			result.append("\n/\n ");
 
@@ -307,8 +328,6 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		String objectName = triggerDAO.getTrigger();
 
-		if(logger.isDebugEnabled()) logger.debug("\n Trigger DDL Generation...");
-
 		HashMap<String, String>paramMap = new HashMap<String, String>();
 		paramMap.put("schema_name", triggerDAO.getSchema_name() == null ? userDB.getSchema() : triggerDAO.getSchema_name()); //$NON-NLS-1$
 		paramMap.put("object_name", triggerDAO.getTrigger()); //$NON-NLS-1$
@@ -317,12 +336,16 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 //		result.append("/* DROP TRIGGER " + objectName + "; */ \n\n");
 		result.append("CREATE OR REPLACE ");
 
-		List<String> srcScriptList = client.queryForList("getTriggerScript", paramMap);				
-		for (int i=0; i<srcScriptList.size(); i++){
-			result.append( srcScriptList.get(i));
+		List<String> srcScriptList = client.queryForList("getTriggerScript", paramMap);	
+		if(srcScriptList.isEmpty()) {
+			return strMSG_BlankScript;
+		} else {
+			for (int i=0; i<srcScriptList.size(); i++){
+				result.append( srcScriptList.get(i));
+			}
+			
+			return result.toString();
 		}
-		
-		return result.toString();				
 	}
 
 	@Override
@@ -367,12 +390,16 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		paramMap.put("object_name", sequenceDao.getSequence_name()); //$NON-NLS-1$
 		
 		String strDDLScript = (String)client.queryForObject("getSequenceScript", paramMap);
-		
-		//TODO : DDL 스크립트 포맷팅 처리 후 적용.
-		//result.append(SQLFormater.format(strDDLScript));
-		result.append(strDDLScript);
-		
-		return result.toString();
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strDDLScript))) {
+			return strMSG_BlankScript;
+		} else {
+			
+			//TODO : DDL 스크립트 포맷팅 처리 후 적용.
+			//result.append(SQLFormater.format(strDDLScript));
+			result.append(strDDLScript);
+			
+			return result.toString();
+		}
 	}
 
 	@Override
@@ -385,9 +412,13 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 		paramMap.put("object_name", dblinkDAO.getDb_link()); //$NON-NLS-1$
 		
 		String strDDLScript = (String)client.queryForObject("getDatabaseLinkScript", paramMap);
-		result.append(strDDLScript);
-		
-		return result.toString();
+		if(StringUtils.isBlank(StringUtils.trimToEmpty(strDDLScript))) {
+			return strMSG_BlankScript;
+		} else {
+			result.append(strDDLScript);
+			
+			return result.toString();
+		}
 	}
 
 

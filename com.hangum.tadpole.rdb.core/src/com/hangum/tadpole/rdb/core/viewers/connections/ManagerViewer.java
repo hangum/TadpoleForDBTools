@@ -23,6 +23,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -116,6 +117,9 @@ public class ManagerViewer extends ViewPart {
 					final UserDBDAO userDB = (UserDBDAO)objSelect;
 					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
 					
+					// 리소스 가져온다.
+					addManagerResouceData(userDB, false);
+					
 					// 싱글 클릭일때 에디터에 오픈된 화면이 없으면 에디터 화면이 열리도록 수정.
 					IEditorPart editor = EditorUtils.findSQLEditor(userDB);
 					if(editor == null) {
@@ -198,6 +202,7 @@ public class ManagerViewer extends ViewPart {
 //		tree.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		
 		managerTV.setContentProvider(new ManagerContentProvider());
+		ColumnViewerToolTipSupport.enableFor(managerTV);
 		managerTV.setLabelProvider(new ManagerLabelProvider());
 		managerTV.setInput(treeDataList);
 		getSite().setSelectionProvider(managerTV);
