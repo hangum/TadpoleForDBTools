@@ -51,9 +51,13 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	
 	/** db 인스턴스를 가지고 있는 아이 */
 	private static Map<String, SqlMapClient> dbManager = null;
+	
+	/** db의 메타데이터를 가지고 있다 */
 	private static Map<String, TadpoleMetaData> dbMetadata = null;
+	
 	/** dbManager 의 키를 가지고 있는 친구 - logout시에 키를 사용하여 인스턴스를 삭제하기 위해 */
 	private static Map<String, List<String>> managerKey = null;//
+	
 	private static TadpoleSQLManager tadpoleSQLManager = null;
 	
 	static {
@@ -188,7 +192,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				
 		String strIdentifierQuoteString = "";
 		try {
-			strIdentifierQuoteString = metaData.getIdentifierQuoteString();
+			strIdentifierQuoteString = null;//StringUtils.stripToEmpty(metaData.getIdentifierQuoteString());
 		} catch(Exception e) {
 			// ignore exception, not support quoteString
 		}
@@ -306,7 +310,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * 사용자의 모든 인스턴스를 삭제한다.
 	 */
 	public static void removeAllInstance(String id) {
-		List<String> listKeyMap = managerKey.get(id);
+		final List<String> listKeyMap = managerKey.remove(id);
 		if(listKeyMap == null) return;
 		for (String searchKey : listKeyMap) {
 			removeInstance(searchKey);

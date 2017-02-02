@@ -127,8 +127,7 @@ public class RequestInfoUtils {
 		String strBrowser = sua.getBrowserType().toString();
 		String strFullVersion = sua.getFullVersion() + sua.getMajorVersion();
 		
-		retMsg.append("[email]" + email + "[ip]" + RWT.getRequest().getLocalAddr() + "\r\n");
-		retMsg.append("[os]" + strOs + "[browser]" + strBrowser + "[full version]" + strFullVersion);
+		retMsg.append("[email]" + email + "[os]" + strOs + "[browser]" + strBrowser + "[full version]" + strFullVersion);
 		
 		return retMsg.toString();
 	}
