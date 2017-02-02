@@ -279,7 +279,7 @@ public class LoginDialog extends AbstractLoginDialog {
 				List<UserDAO> listUserDAO = TadpoleSystem_UserQuery.findExistExternalUser(strEmail);
 				if(listUserDAO.isEmpty()) {
 					// 신규 사용자로 추가하고 user 리스트를 가져옵니다.
-					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail, strEmail, strEmail);
+					userDao = TadpoleSystem_UserQuery.newLDAPUser(strEmail, strEmail, strEmail, "NO");
 				} else {
 					userDao = listUserDAO.get(0);
 				}
