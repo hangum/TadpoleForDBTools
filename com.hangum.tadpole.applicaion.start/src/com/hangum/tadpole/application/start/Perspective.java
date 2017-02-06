@@ -11,7 +11,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.start;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
@@ -53,31 +52,34 @@ public class Perspective implements IPerspectiveFactory {
 	private static final Logger logger = Logger.getLogger(Perspective.class);
 
 	public void createInitialLayout(IPageLayout layout) {
-		boolean errFlag = false;
-		try {
-			String pesp = SessionManager.getPerspective();
-			Method method = getClass().getMethod(pesp + "Perspective", IPageLayout.class);
-			method.invoke(this, layout);
-		} catch (SecurityException e) {
-			errFlag = true;
-			logger.error(e);
-		} catch (NoSuchMethodException e) {
-			errFlag = true;
-			logger.error(e);
-		} catch (IllegalArgumentException e) {
-			errFlag = true;
-			logger.error(e);
-		} catch (IllegalAccessException e) {
-			errFlag = true;
-			logger.error(e);
-		} catch (InvocationTargetException e) {
-			errFlag = true;
-			logger.error(e);
-		} finally {
-			if (errFlag) {
+//		boolean errFlag = false;
+//		try {
+//			String pesp = SessionManager.getPerspective();
+//			Method method = getClass().getMethod(pesp + "Perspective", IPageLayout.class);
+//			method.invoke(this, layout);
+//		} catch (SecurityException e) {
+//			errFlag = true;
+//			logger.error(e);
+//		} catch (NoSuchMethodException e) {
+//			errFlag = true;
+//			logger.error(e);
+//		} catch (IllegalArgumentException e) {
+//			errFlag = true;
+//			logger.error(e);
+//		} catch (IllegalAccessException e) {
+//			errFlag = true;
+//			logger.error(e);
+//		} catch (InvocationTargetException e) {
+//			errFlag = true;
+//			logger.error(e);
+//		} catch(Exception e) {
+//			errFlag = true;
+//			logger.error("Perspective exception", e);
+//		} finally {
+//			if (errFlag) {
 				defaultPerspective(layout);
-			}
-		}
+//			}
+//		}
 	
 //		get의 outline을 보일것인지? 현재는 썸네일이 블렉으로 보여주어서 블럭을 해 놓습니다. 
 //		layout.addStandaloneView(IPageLayout.ID_OUTLINE, true, IPageLayout.LEFT, 0.3f, layout.getEditorArea());

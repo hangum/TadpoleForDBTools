@@ -104,6 +104,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         login();
     }
     
+    
+    
     /**
      * login 
      */

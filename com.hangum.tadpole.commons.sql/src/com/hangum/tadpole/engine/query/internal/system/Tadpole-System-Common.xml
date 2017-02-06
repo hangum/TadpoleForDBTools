@@ -484,7 +484,11 @@
 			dbms_type = #dbms_type# AND
 			group_name = #group_name# AND
 			display_name = #display_name# AND
+			url = #url# AND
+			users = #users# AND 
 			delYn = 'NO'
+		ORDER BY seq desc
+		LIMIT 1
 	</selectKey>
 </insert>
  
