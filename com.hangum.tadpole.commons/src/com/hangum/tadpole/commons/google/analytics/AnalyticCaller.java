@@ -52,12 +52,12 @@ public class AnalyticCaller {
 	 * @param event
 	 */
 	public static void track(String action, String event) {
-		if(!ApplicationArgumentUtils.isGAOFF()) {
-			JavaScriptExecutor executor = RWT.getClient().getService(JavaScriptExecutor.class);
-			
-			String strJs = "ga('send', 'pageview', {'" + action + "':'" + event + "'});";
-			
-			executor.execute(strJs);
-		}
+//		if(!ApplicationArgumentUtils.isGAOFF()) {
+//			JavaScriptExecutor executor = RWT.getClient().getService(JavaScriptExecutor.class);
+//			
+//			String strJs = "ga('send', 'pageview', {'" + action + "':'" + event + "'});";
+//			
+//			executor.execute(strJs);
+//		}
 	}
 }
