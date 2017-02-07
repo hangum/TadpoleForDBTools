@@ -299,8 +299,8 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	 * initialize ui
 	 */
 	private void initUI() {
-		String strLan = SessionManager.getLangeage();
-		comboLanguage.setText(new Locale(strLan).getDisplayLanguage());
+		Locale objLocale = new Locale(SessionManager.getLangeage());
+		comboLanguage.setText(objLocale.getDisplayLanguage(objLocale));
 	}
 	
 	/**
