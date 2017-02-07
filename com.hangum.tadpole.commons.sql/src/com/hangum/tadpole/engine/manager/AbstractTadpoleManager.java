@@ -54,7 +54,7 @@ public class AbstractTadpoleManager {
 				QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(userDB, "SHOW global variables like 'read_only'", 0, 500);
 				List<Map<Integer, Object>> tdbResultSet = endStatus.getDataList().getData();
 				String strReadonly = ""+tdbResultSet.get(0).get(1);
-				if(!"OFF".equals(strReadonly)) userDB.setReadonly("NO"); 
+				if("OFF".equals(strReadonly)) userDB.setReadonly("NO"); 
 				else userDB.setReadonly("YES");
 			} catch (Exception e) {
 				logger.error("mysql connection initialize: " + e.getMessage());
