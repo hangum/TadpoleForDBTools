@@ -92,7 +92,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public AbstractLoginComposite(String displayName, DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB, boolean isReadOnly) {
+	public AbstractLoginComposite(String displayName, DBDefine dbDefine, Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO oldUserDB, boolean isUIReadOnly) {
 		super(parent, style);
 		
 		this.displayName = displayName;
@@ -100,7 +100,7 @@ public abstract class AbstractLoginComposite extends Composite {
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
 		this.oldUserDB = oldUserDB;
-		this.isReadOnly = isReadOnly;
+		this.isReadOnly = isUIReadOnly;
 		
 		crateComposite();
 	}

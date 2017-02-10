@@ -65,8 +65,8 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isReadOnly) {
-		super("Sample Oracle", DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isReadOnly);
+	public OracleLoginComposite(Composite parent, int style, List<String> listGroupName, String selGroupName, UserDBDAO userDB, boolean isUIReadOnly) {
+		super("Sample Oracle", DBDefine.ORACLE_DEFAULT, parent, style, listGroupName, selGroupName, userDB, isUIReadOnly);
 	}
 	
 	@Override
@@ -82,11 +82,11 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		Composite compositeBody = new Composite(this, SWT.NONE);
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeBody.setEnabled(isReadOnly);
 		
 		preDBInfo = new PreConnectionInfoGroup(compositeBody, SWT.NONE, listGroupName);
 		preDBInfo.setText(Messages.get().MSSQLLoginComposite_preDBInfo_text);
 		preDBInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+		preDBInfo.setEnabled(isReadOnly);
 		
 		grpConnectionType = new Group(compositeBody, SWT.NONE);
 		grpConnectionType.setLayout(new GridLayout(5, false));
@@ -98,12 +98,14 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		
 		textHost = new Text(grpConnectionType, SWT.BORDER);
 		textHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textHost.setEnabled(isReadOnly);
 		
 		Label lblNewLabelPort = new Label(grpConnectionType, SWT.NONE);
 		lblNewLabelPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
 		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textPort.setEnabled(isReadOnly);
 		
 		Button btnPing = new Button(grpConnectionType, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
@@ -125,18 +127,21 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		
 		textDatabase = new Text(grpConnectionType, SWT.BORDER);
 		textDatabase.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		textDatabase.setEnabled(isReadOnly);
 		
 		Label lblUser = new Label(grpConnectionType, SWT.NONE);
 		lblUser.setText(Messages.get().User);
 		
 		textUser = new Text(grpConnectionType, SWT.BORDER);
 		textUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textUser.setEnabled(isReadOnly);
 		
 		Label lblPassword = new Label(grpConnectionType, SWT.NONE);
 		lblPassword.setText(Messages.get().Password);
 		
 		textPassword = new Text(grpConnectionType, SWT.BORDER | SWT.PASSWORD);
 		textPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		textPassword.setEnabled(isReadOnly);
 		new Label(grpConnectionType, SWT.NONE);
 		
 		Label label = new Label(grpConnectionType, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -147,6 +152,7 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 		
 		textJDBCOptions = new Text(grpConnectionType, SWT.BORDER);
 		textJDBCOptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		textJDBCOptions.setEnabled(isReadOnly);
 		
 		othersConnectionInfo = new OthersConnectionRDBGroup(this, SWT.NONE, getSelectDB());
 		othersConnectionInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
