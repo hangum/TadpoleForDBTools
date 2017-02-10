@@ -102,6 +102,7 @@ public class DbcpConfiguration {
       String url = (String) map.get("JDBC.ConnectionURL");
       String username = (String) map.get("JDBC.Username");
       String password = (String) map.get("JDBC.Password");
+      
       String validationQuery = (String) map.get("Pool.ValidationQuery");
       String maxActive = (String) map.get("Pool.MaximumActiveConnections");
       String maxIdle = (String) map.get("Pool.MaximumIdleConnections");
@@ -111,7 +112,7 @@ public class DbcpConfiguration {
       basicDataSource.setDriverClassName(driver);
       basicDataSource.setUsername(username);
       basicDataSource.setPassword(password);
-
+      
       if (notEmpty(validationQuery)) {
         basicDataSource.setValidationQuery(validationQuery);
       }
@@ -127,6 +128,60 @@ public class DbcpConfiguration {
       if (notEmpty(maxWait)) {
         basicDataSource.setMaxWait(Integer.parseInt(maxWait));
       }
+      
+      //
+      //
+      // tdb setting initialize start
+      String initialSize = (String) map.get("initialSize");
+      String testOnBorrow = (String) map.get("testOnBorrow");
+      String testOnReturn = (String) map.get("testOnReturn");
+      String testWhileIdle = (String) map.get("testWhileIdle");
+      String timeBetweenEvictionRunsMillis = (String) map.get("timeBetweenEvictionRunsMillis");
+      String minEvictableIdleTimeMillis = (String) map.get("minEvictableIdleTimeMillis");
+      String numTestsPerEvictionRun = (String) map.get("numTestsPerEvictionRun");
+      String removeAbandonedTimeout = (String) map.get("removeAbandonedTimeout");
+      String removeAbandoned = (String) map.get("removeAbandoned");
+      String logAbandoned = (String) map.get("logAbandoned");
+      String minIdle = (String) map.get("minIdle");
+      
+      
+      if (notEmpty(initialSize)) {
+        basicDataSource.setInitialSize(Integer.parseInt(initialSize));
+      }
+      
+      if (notEmpty(testOnBorrow)) {
+          basicDataSource.setTestOnBorrow(Boolean.parseBoolean(testOnBorrow));
+      }
+      if (notEmpty(testOnReturn)) {
+          basicDataSource.setTestOnReturn(Boolean.parseBoolean(testOnReturn));
+      }
+      if (notEmpty(testWhileIdle)) {
+          basicDataSource.setTestWhileIdle(Boolean.parseBoolean(testWhileIdle));
+      }
+      if (notEmpty(timeBetweenEvictionRunsMillis)) {
+          basicDataSource.setTimeBetweenEvictionRunsMillis(Integer.parseInt(timeBetweenEvictionRunsMillis));
+      }
+      if (notEmpty(minEvictableIdleTimeMillis)) {
+          basicDataSource.setMinEvictableIdleTimeMillis(Integer.parseInt(minEvictableIdleTimeMillis));
+      }
+      if (notEmpty(numTestsPerEvictionRun)) {
+          basicDataSource.setNumTestsPerEvictionRun(Integer.parseInt(numTestsPerEvictionRun));
+      }
+      if (notEmpty(removeAbandonedTimeout)) {
+          basicDataSource.setRemoveAbandonedTimeout(Integer.parseInt(removeAbandonedTimeout));
+      }
+      if (notEmpty(removeAbandoned)) {
+          basicDataSource.setRemoveAbandoned(Boolean.parseBoolean(removeAbandoned));
+      }
+      if (notEmpty(logAbandoned)) {
+          basicDataSource.setLogAbandoned(Boolean.parseBoolean(logAbandoned));
+      }
+      if (notEmpty(minIdle)) {
+          basicDataSource.setMinIdle(Integer.parseInt(minIdle));
+      }
+      // tdb setting initialize end
+      //
+      //
       
       // add tdb properties - hangum
       List<String> listConnectionInitialize = new ArrayList<String>();
@@ -156,6 +211,5 @@ public class DbcpConfiguration {
   private boolean notEmpty(String s) {
     return s != null && s.length() > 0;
   }
-
 
 }

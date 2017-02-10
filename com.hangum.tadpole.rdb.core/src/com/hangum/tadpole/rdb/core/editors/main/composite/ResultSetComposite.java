@@ -305,7 +305,7 @@ public class ResultSetComposite extends Composite {
 		// oracle parameter
 		try {
 			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
-			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+			String strSQL = oracleNamedParamUtil.parse(SQLUtil.removeComment(reqQuery.getSql()));
 			
 			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
 			if(!mapIndexToName.isEmpty()) {

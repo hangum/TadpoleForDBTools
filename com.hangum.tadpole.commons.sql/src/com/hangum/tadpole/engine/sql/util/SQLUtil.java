@@ -87,6 +87,19 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String removeComment(String strSQL) {
+
+//		try {
+//			Pattern regex = Pattern.compile("(?:/\\*[^;]*?\\*/)|(?:--[^;]*?$)", Pattern.DOTALL | Pattern.MULTILINE);
+//		    Matcher regexMatcher = regex.matcher(subjectString);
+//		    while (regexMatcher.find()) {
+//		        // matched text: regexMatcher.group()
+//		        // match start: regexMatcher.start()
+//		        // match end: regexMatcher.end()
+//		    } 
+//		} catch (PatternSyntaxException ex) {
+//		    // Syntax error in the regular expression
+//		}
+
 		if(null == strSQL) return "";
 		String strCheckSQL = strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
 		strCheckSQL = StringUtils.trimToEmpty(strCheckSQL);
