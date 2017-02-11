@@ -54,6 +54,7 @@ import com.hangum.tadpole.engine.sql.util.export.JsonExpoter;
 import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
@@ -79,6 +80,9 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
  */
 public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
+	
+	/** null 기본값 */
+	private String strDefaultNullValue = GetPreferenceGeneral.getResultNull();
 	
 	/** button status */
 	public enum BTN_STATUS {PREVIEW, SENDEDITOR, DOWNLOAD};
@@ -373,12 +377,12 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) throws Exception {
 		if (btnStatus == BTN_STATUS.PREVIEW) {
-			previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT), encoding);
+			previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT, strDefaultNullValue), encoding);
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-			targetEditor(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator));
+			targetEditor(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, strDefaultNullValue));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
-			downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, allResusltDto, seprator, encoding), encoding);
+			downloadFile(targetName, CSVExpoter.makeCSVFile(isAddHead, targetName, allResusltDto, seprator, encoding, strDefaultNullValue), encoding);
 		}
 	}
 	
@@ -390,12 +394,12 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	protected void exportResultHtmlType(String targetName, String encoding) throws Exception {
 		if (btnStatus == BTN_STATUS.PREVIEW) {
-			previewDataLoad(targetName, HTMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT), encoding);
+			previewDataLoad(targetName, HTMLExporter.makeContent(targetName, queryExecuteResultDTO, PREVIEW_COUNT, strDefaultNullValue), encoding);
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-			targetEditor(HTMLExporter.makeContent(targetName, queryExecuteResultDTO));
+			targetEditor(HTMLExporter.makeContent(targetName, queryExecuteResultDTO, strDefaultNullValue));
 		}else{
 			QueryExecuteResultDTO allResusltDto = makeAllResult();
-			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, allResusltDto, encoding), encoding);
+			downloadFile(targetName, HTMLExporter.makeContentFile(targetName, allResusltDto, encoding, strDefaultNullValue), encoding);
 		}
 	}
 	

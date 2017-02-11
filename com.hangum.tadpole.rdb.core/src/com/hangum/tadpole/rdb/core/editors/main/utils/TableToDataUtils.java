@@ -25,6 +25,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 
 /**
  * Table to data utils
@@ -70,7 +71,7 @@ public class TableToDataUtils {
 	 */
 	public static TableColumnDAO getTableRowData(Table tableResult, Map<Integer, Object> mapColumns, Map<Integer, Integer> mapColumnType) {
 		TableColumnDAO columnDao = new TableColumnDAO();
-		
+		String strNullValue = GetPreferenceGeneral.getResultNull();
 		columnDao.setName(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO);
 		columnDao.setType(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO_TYPE);
 		
@@ -81,7 +82,7 @@ public class TableToDataUtils {
 				String strText = ""; //$NON-NLS-1$
 				
 				// if select value is null can 
-				if(columnObject == null) strText = "0"; //$NON-NLS-1$
+				if(columnObject == null) strText = strNullValue;
 				else strText = columnObject.toString();
 				columnDao.setCol_value(columnDao.getCol_value() + strText + PublicTadpoleDefine.DELIMITER_DBL);
 			} else if("BLOB".equalsIgnoreCase(columnDao.getData_type())) { //$NON-NLS-1$
@@ -90,9 +91,14 @@ public class TableToDataUtils {
 				String strText = ""; //$NON-NLS-1$
 				
 				// if select value is null can 
-				if(columnObject == null) strText = ""; //$NON-NLS-1$
-				else strText = columnObject.toString();
-				columnDao.setCol_value(columnDao.getCol_value() + SQLUtil.makeQuote(strText) + PublicTadpoleDefine.DELIMITER_DBL);
+				if(columnObject == null) {
+					strText = strNullValue;
+					columnDao.setCol_value(columnDao.getCol_value() + strText + PublicTadpoleDefine.DELIMITER_DBL);
+				} else {
+					strText = columnObject.toString();
+					columnDao.setCol_value(columnDao.getCol_value() + SQLUtil.makeQuote(strText) + PublicTadpoleDefine.DELIMITER_DBL);
+				}
+				
 			}
 		}
 		columnDao.setCol_value(StringUtils.removeEnd(""+columnDao.getCol_value(), PublicTadpoleDefine.DELIMITER_DBL));
@@ -160,15 +166,11 @@ public class TableToDataUtils {
 					logger.error("Clob column echeck", e); //$NON-NLS-1$
 				}
 			}else{
-				String strText = ""; //$NON-NLS-1$
-				
-				// if select value is null can 
-				if(columnObject == null) strText = ""; //$NON-NLS-1$
-				else strText = columnObject.toString();
-				
-				columnDao.setCol_value(strText);
+				columnDao.setCol_value(columnObject.toString());
 			}
-		} 	// end object null
+		} else {
+			columnDao.setCol_value(GetPreferenceGeneral.getResultNull());
+		}
 		
 		return columnDao;
 	}

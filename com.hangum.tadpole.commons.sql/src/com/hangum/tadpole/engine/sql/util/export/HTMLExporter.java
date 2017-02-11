@@ -30,8 +30,8 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  */
 public class HTMLExporter extends AbstractTDBExporter {
 	
-	public static String makeContent(String targetName, QueryExecuteResultDTO queryExecuteResultDTO) {
-		return makeContent(targetName, queryExecuteResultDTO, -1);
+	public static String makeContent(String targetName, QueryExecuteResultDTO queryExecuteResultDTO, String strDefaultNullValue) {
+		return makeContent(targetName, queryExecuteResultDTO, -1, strDefaultNullValue);
 	}
 
 	/**
@@ -40,9 +40,10 @@ public class HTMLExporter extends AbstractTDBExporter {
 	 * @param tableName
 	 * @param rsDAO
 	 * @param intLimitCnt
+	 * @param strDefaultNullValue
 	 * @return
 	 */
-	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, int intLimitCnt) {
+	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, int intLimitCnt, String strDefaultNullValue) {
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		// make column header
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
@@ -60,7 +61,7 @@ public class HTMLExporter extends AbstractTDBExporter {
 			StringBuffer sbTmp = new StringBuffer();
 			sbTmp.append(HTMLDefine.makeTH(""+(i+1)) ); //$NON-NLS-1$
 			for(int j=1; j<mapColumns.size(); j++) {
-				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
+				String strValue = mapColumns.get(j)==null?strDefaultNullValue:""+mapColumns.get(j);
 				sbTmp.append( HTMLDefine.makeTD(StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
 			}
 			sbBody.append(HTMLDefine.makeTR(sbTmp.toString()));
@@ -77,10 +78,11 @@ public class HTMLExporter extends AbstractTDBExporter {
 	 * @param tableName
 	 * @param rsDAO
 	 * @param encoding 
+	 * @param strDefaultNullValue
 	 * @return
 	 * @throws Exception
 	 */
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String encoding) throws Exception {
+	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String encoding, String strDefaultNullValue) throws Exception {
 		// full text
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".html";
@@ -111,7 +113,7 @@ public class HTMLExporter extends AbstractTDBExporter {
 			StringBuffer sbTmp = new StringBuffer();
 			sbTmp.append( HTMLDefine.makeTH(""+(i+1)) ); //$NON-NLS-1$
 			for(int j=1; j<mapColumns.size(); j++) {
-				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
+				String strValue = mapColumns.get(j)==null?strDefaultNullValue:""+mapColumns.get(j);
 				sbTmp.append( HTMLDefine.makeTD(StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
 			}
 			sbBody.append(HTMLDefine.makeTR(sbTmp.toString()));

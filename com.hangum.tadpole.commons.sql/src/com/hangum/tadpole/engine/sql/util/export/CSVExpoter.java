@@ -29,8 +29,8 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  */
 public class CSVExpoter extends AbstractTDBExporter {
 	
-	public static String makeContent(boolean isAddHead, String targetName, QueryExecuteResultDTO queryExecuteResultDTO, char seprator) throws Exception {
-		return makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, -1);
+	public static String makeContent(boolean isAddHead, String targetName, QueryExecuteResultDTO queryExecuteResultDTO, char seprator, String strDefaultNullValue) throws Exception {
+		return makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, -1, strDefaultNullValue);
 	}
 
 	/**
@@ -41,7 +41,8 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * @param intLimitCnt
 	 * @return
 	 */
-	public static String makeContent(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, int intLimitCnt) throws Exception {
+	public static String makeContent(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, int intLimitCnt, String strDefaultNullValue) throws Exception {
+				
 		StringBuffer sbReturn = new StringBuffer();
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		List<String[]> listCsvData = new ArrayList<String[]>();
@@ -66,7 +67,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			
 			strArrys = new String[mapColumns.size()-1];
 			for(int j=1; j<mapColumns.size(); j++) {
-				strArrys[j-1] = mapColumns.get(j) == null?"":""+mapColumns.get(j); //$NON-NLS-1$
+				strArrys[j-1] = mapColumns.get(j) == null?strDefaultNullValue:""+mapColumns.get(j); //$NON-NLS-1$
 			}
 			listCsvData.add(strArrys);
 
@@ -86,10 +87,11 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * @param seprator
 	 * @param encoding
 	 * @return 파일 위치
+	 * @return strDefaultNullValue
 	 * 
 	 * @throws Exception
 	 */
-	public static String makeCSVFile(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, String encoding) throws Exception {
+	public static String makeCSVFile(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, String encoding, String strDefaultNullValue) throws Exception {
 		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
 		String strFile = tableName + ".csv";
 		String strFullPath = strTmpDir + strFile;
@@ -122,7 +124,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			
 			strArrys = new String[mapColumns.size()-1];
 			for(int j=1; j<mapColumns.size(); j++) {
-				strArrys[j-1] = mapColumns.get(j) == null?"":""+mapColumns.get(j); //$NON-NLS-1$
+				strArrys[j-1] = mapColumns.get(j) == null?strDefaultNullValue:""+mapColumns.get(j); //$NON-NLS-1$
 			}
 			listCsvData.add(strArrys);
 			
