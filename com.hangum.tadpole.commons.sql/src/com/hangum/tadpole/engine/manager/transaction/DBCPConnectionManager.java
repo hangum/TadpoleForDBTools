@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp.AbandonedConfig;
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
@@ -40,21 +41,17 @@ public class DBCPConnectionManager {
 	
 	public static DBCPConnectionManager instance = new DBCPConnectionManager();
 	private Map<String, DataSource> mapDataSource = new HashMap<String, DataSource>();
-	private Map<String, GenericObjectPool> mapGenericObject = new HashMap<String, GenericObjectPool>();
+	private Map<String, GenericObjectPool<Object> > mapGenericObject = new HashMap<String, GenericObjectPool<Object> >();
 	
-	private DBCPConnectionManager() {}
+	private DBCPConnectionManager() {
+	}
 	
 	public static DBCPConnectionManager getInstance() {
 		return instance;
 	}
 	
 	private DataSource makePool(final String searchKey, UserDBDAO userDB) {
-		GenericObjectPool connectionPool = new GenericObjectPool();
-		connectionPool.setMaxActive(2);
-		connectionPool.setWhenExhaustedAction((byte)1);
-		connectionPool.setMaxWait(1000 * 60); 								// 1분대기.
-		connectionPool.setTimeBetweenEvictionRunsMillis(60L * 1000L * 1L);	// 60초에 한번씩 테스트
-		connectionPool.setTestWhileIdle(true);
+		GenericObjectPool<Object>  connectionPool = _makeGenericObjectPool();
 		
 		String passwdDecrypt = "";
 		try {
@@ -63,9 +60,21 @@ public class DBCPConnectionManager {
 			passwdDecrypt = userDB.getPasswd();
 		}
 		
-		ConnectionFactory cf = new DriverManagerConnectionFactory(userDB.getUrl(), userDB.getUsers(), passwdDecrypt);
-		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
+		ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(userDB.getUrl(), userDB.getUsers(), passwdDecrypt);
+		PoolableConnectionFactory pcf = new PoolableConnectionFactory(
+				connectionFactory, 
+				connectionPool, 
+				null, 
+				userDB.getDBDefine().getValidateQuery(), 
+				false, 
+				false,
+				-1,					// defaultTransactionIsolation
+				_makeAbandonedConfig()
+			);
+		connectionPool.setFactory(pcf);
+
 		pcf.setValidationQuery(userDB.getDBDefine().getValidateQuery());
+		pcf.setValidationQueryTimeout(1000);
 		
 		if(!"".equals(PublicTadpoleDefine.CERT_USER_INFO)) {
 			// initialize connection string
@@ -91,6 +100,44 @@ public class DBCPConnectionManager {
 		return ds;
 	}
 	
+	/**
+	 * make abandoned config
+	 * 
+	 * @return
+	 */
+	private static AbandonedConfig _makeAbandonedConfig() {
+		AbandonedConfig abandonedConfig = new AbandonedConfig();
+		abandonedConfig.setLogAbandoned(false);
+		abandonedConfig.setRemoveAbandoned(true);
+		abandonedConfig.setRemoveAbandonedTimeout(300);
+		
+		return abandonedConfig;
+	}
+	
+	/**
+	 * make GenericObjectPool
+	 * 
+	 * @return
+	 */
+	private static GenericObjectPool<Object> _makeGenericObjectPool() {
+		GenericObjectPool<Object> connectionPool = new GenericObjectPool<Object>();
+		connectionPool.setMaxActive(2);
+		connectionPool.setMaxIdle(5);
+		connectionPool.setMaxWait(1000 * 60); 								// 1분대기.
+//		connectionPool.setWhenExhaustedAction((byte)1);
+		
+		connectionPool.setTestOnBorrow(true);
+		connectionPool.setTestOnReturn(false);
+		connectionPool.setTestWhileIdle(true);
+		
+		connectionPool.setTimeBetweenEvictionRunsMillis(60L * 1000L * 3L);	// 60초에 한번씩 테스트
+		connectionPool.setMinEvictableIdleTimeMillis(180L * 1000L * 10L);
+		connectionPool.setNumTestsPerEvictionRun(5);
+		connectionPool.setMinIdle(0);
+//		connectionPool.setSoftMinEvictableIdleTimeMillis(60L * 1000L * 1L);
+		return connectionPool;
+	}
+	
 	public DataSource makeDataSource(final String searchKey, final UserDBDAO userDB) {
 		DataSource retDataSource = mapDataSource.get(searchKey);
 		if(retDataSource == null) { 
@@ -100,7 +147,7 @@ public class DBCPConnectionManager {
 		return retDataSource;
 	}
 	
-	public DataSource getDataSource(final String searchKey) {
+	private DataSource getDataSource(final String searchKey) {
 		return mapDataSource.get(searchKey);
 	}
 	

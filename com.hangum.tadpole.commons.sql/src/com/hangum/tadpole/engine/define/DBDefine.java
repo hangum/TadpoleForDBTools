@@ -257,23 +257,23 @@ public enum DBDefine {
 	 */
 	public String getValidateQuery() {
 		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
-			return "select 1";
+			return "select 'TadpoleHub_Transaction'";
 		} else if(this == DBDefine.ORACLE_DEFAULT || this == DBDefine.TIBERO_DEFAULT) {
-			return "SELECT 1 FROM dual";
+			return "SELECT 'TadpoleHub_Transaction' FROM dual";
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
-			return "SELECT 1";
+			return "SELECT 'TadpoleHub_Transaction'";
 		} else if(this == DBDefine.SQLite_DEFAULT) {
 			return "SELECT name FROM sqlite_master where 1 = 0";
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			return "show databases";
 		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AGENSGRAPH_DEFAULT) {
-			return "SELECT 1";
+			return "SELECT 'TadpoleHub_Transaction'";
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
-			return "select 1 from db_root";
+			return "select 'TadpoleHub_Transaction' from db_root";
 		} else if(this == DBDefine.TAJO_DEFAULT) {
 			return "\\d";
 		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
-			return "SELECT 1";
+			return "SELECT 'TadpoleHub_Transaction'";
 		} else {
 			return "SELECT 1";
 		}
