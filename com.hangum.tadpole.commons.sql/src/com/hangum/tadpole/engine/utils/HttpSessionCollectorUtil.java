@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.eclipse.rap.rwt.RWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -187,7 +187,7 @@ class SessionLiveChecker implements Runnable {
 //					}
 //				}
 //			});
-				
+			
 			// 10 분에 한번씩 Thread 검사.
 			try { Thread.sleep((60 * 1000) * 10); } catch(Exception e) {};
 		} // while 

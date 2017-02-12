@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,9 +23,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -250,26 +248,37 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	 * 
 	 * @param userId
 	 */
-	public static void executeRollback(final String userId) {
-		Set<String> keys = dbManager.keySet();
-		for (String searchKey : keys) {
-			if (StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
-				if (logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
+	public static void executeAllRollback(final String userId) {
+		Iterator iteratorEntrySet = dbManager.entrySet().iterator();
+		while(iteratorEntrySet.hasNext()) {
+			Map.Entry mapObject = (Map.Entry)iteratorEntrySet.next();
+			String searchKey = (String)mapObject.getKey();
+			
+			try {
+				if (StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
+					if (logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
+	
+					TransactionDAO transactionDAO = (TransactionDAO)mapObject.getValue();
+					if (transactionDAO != null) {
+						Connection conn = transactionDAO.getConn();
+						
+						try {
+							conn.rollback();
+						} catch (Exception e) {
+							logger.error("logout transaction commit", e);
+						} finally {
+							try { if (conn != null) conn.close(); } catch (Exception e) {}
+						}
+					} // end trsansaction dao
 
-				TransactionDAO transactionDAO = dbManager.get(searchKey);
-				if (transactionDAO != null) {
-					Connection conn = transactionDAO.getConn();
-					try {
-						conn.rollback();
-					} catch (Exception e) {
-						logger.error("logout transaction commit", e);
-					} finally {
-						try { if (conn != null) conn.close(); } catch (Exception e) {}
-						removeInstance(userId, searchKey);
-					}
-					
-				} // end trsansaction dao
-			} //
+					// 기존 object와 커넥션 풀을 삭제한다.
+					iteratorEntrySet.remove();
+					transactionDAO =null;
+					DBCPConnectionManager.getInstance().releaseConnectionPool(searchKey);
+				}
+			} catch(Exception e) {
+				logger.error("********************** Release connection pool exception", e);
+			}
 		}
 	}
 
