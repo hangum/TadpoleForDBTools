@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -39,7 +40,9 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 public class DBCPConnectionManager {
 	private static final Logger logger = Logger.getLogger(DBCPConnectionManager.class);
 	
-	public static DBCPConnectionManager instance = new DBCPConnectionManager();
+	private static Properties propertiesObjectPool = new Properties();
+	
+	public static DBCPConnectionManager instance = null;
 	private Map<String, DataSource> mapDataSource = new HashMap<String, DataSource>();
 	private Map<String, GenericObjectPool<Object> > mapGenericObject = new HashMap<String, GenericObjectPool<Object> >();
 	
@@ -47,6 +50,15 @@ public class DBCPConnectionManager {
 	}
 	
 	public static DBCPConnectionManager getInstance() {
+		if(instance == null) {
+			instance = new DBCPConnectionManager();
+
+			try {
+				propertiesObjectPool.load(DBCPConnectionManager.class.getResourceAsStream("ObjectPool.properties"));
+			} catch (Exception e) {
+				logger.error("Not found Transaction poolinfo config files. File name is ObjectPool.properties.");
+			}
+		}
 		return instance;
 	}
 	
@@ -74,7 +86,7 @@ public class DBCPConnectionManager {
 		connectionPool.setFactory(pcf);
 
 		pcf.setValidationQuery(userDB.getDBDefine().getValidateQuery());
-		pcf.setValidationQueryTimeout(1000);
+		pcf.setValidationQueryTimeout(10000);
 		
 		if(!"".equals(PublicTadpoleDefine.CERT_USER_INFO)) {
 			// initialize connection string
@@ -121,20 +133,21 @@ public class DBCPConnectionManager {
 	 */
 	private static GenericObjectPool<Object> _makeGenericObjectPool() {
 		GenericObjectPool<Object> connectionPool = new GenericObjectPool<Object>();
-		connectionPool.setMaxActive(2);
-		connectionPool.setMaxIdle(5);
-		connectionPool.setMaxWait(1000 * 60); 								// 1분대기.
-//		connectionPool.setWhenExhaustedAction((byte)1);
+		connectionPool.setMaxActive(Integer.parseInt(propertiesObjectPool.getProperty("connectionPool.setMaxActive")));
+		connectionPool.setMaxIdle(Integer.parseInt(propertiesObjectPool.getProperty("connectionPool.setMaxIdle")));
+		connectionPool.setMaxWait(Integer.parseInt(propertiesObjectPool.getProperty("connectionPool.setMaxWait"))); 								// 1분대기.
+//		connectionPool.setWhenExhaustedAction(Integer.parseInt(propertiesObjectPool.getProperty("connectionPool.setWhenExhaustedAction")));
 		
-		connectionPool.setTestOnBorrow(true);
-		connectionPool.setTestOnReturn(false);
-		connectionPool.setTestWhileIdle(true);
+		connectionPool.setTestOnBorrow(Boolean.parseBoolean(propertiesObjectPool.getProperty("connectionPool.setTestOnBorrow")));
+		connectionPool.setTestOnReturn(Boolean.parseBoolean(propertiesObjectPool.getProperty("connectionPool.setTestOnReturn")));
+		connectionPool.setTestWhileIdle(Boolean.parseBoolean(propertiesObjectPool.getProperty("connectionPool.setTestWhileIdle")));
 		
-		connectionPool.setTimeBetweenEvictionRunsMillis(60L * 1000L * 3L);	// 60초에 한번씩 테스트
-		connectionPool.setMinEvictableIdleTimeMillis(180L * 1000L * 10L);
-		connectionPool.setNumTestsPerEvictionRun(5);
-		connectionPool.setMinIdle(0);
-//		connectionPool.setSoftMinEvictableIdleTimeMillis(60L * 1000L * 1L);
+		connectionPool.setTimeBetweenEvictionRunsMillis(Long.parseLong(propertiesObjectPool.getProperty("connectionPool.setTimeBetweenEvictionRunsMillis")));	// 60초에 한번씩 테스트
+		connectionPool.setMinEvictableIdleTimeMillis(Long.parseLong(propertiesObjectPool.getProperty("connectionPool.setMinEvictableIdleTimeMillis")));
+		connectionPool.setNumTestsPerEvictionRun(Integer.parseInt(propertiesObjectPool.getProperty("connectionPool.setNumTestsPerEvictionRun")));
+		connectionPool.setMinIdle(Integer.parseInt(propertiesObjectPool.getProperty("connectionPool.setMinIdle")));
+//		connectionPool.setSoftMinEvictableIdleTimeMillis(Integer.parseInt(propertiesObjectPool.getProperty("connectionPool.setSoftMinEvictableIdleTimeMillis")));
+		
 		return connectionPool;
 	}
 	

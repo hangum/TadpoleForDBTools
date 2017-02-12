@@ -163,7 +163,7 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		Statement statement = null;
 		try {
 			statement = javaConn.createStatement();
-			statement.executeUpdate("use " + userDB.getSchema());
+			statement.executeUpdate(strSQL);
 		} catch(Exception e) {
 			logger.error("Transaction Connection disconnected. and now connect of newone. user id is " + userId);
 			
