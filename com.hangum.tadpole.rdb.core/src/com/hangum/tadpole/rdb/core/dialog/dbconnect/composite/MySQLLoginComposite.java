@@ -197,11 +197,11 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("14.63.212.152"); //$NON-NLS-1$
-			textUser.setText("tester"); //$NON-NLS-1$
-			textPassword.setText("1234"); //$NON-NLS-1$
-			textDatabase.setText("tester"); //$NON-NLS-1$
-			textPort.setText("13306");	 //$NON-NLS-1$
+			textHost.setText("192.168.216.129"); //$NON-NLS-1$
+			textUser.setText("root"); //$NON-NLS-1$
+			textPassword.setText(""); //$NON-NLS-1$
+			textDatabase.setText("tadpole20"); //$NON-NLS-1$
+			textPort.setText("3306");	 //$NON-NLS-1$
 			
 			textJDBCOptions.setText("connectTimeout=10000"); //$NON-NLS-1$
 		} else {
