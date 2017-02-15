@@ -605,7 +605,7 @@ public class ResultSetComposite extends Composite {
 						Map<Integer, Object> mapData = new HashMap<>();
 						mapData.put(0, mapStartObject.get(0));
 				
-						Long longDiff = NumberUtils.createLong(""+mapEndObject.get(1)) - NumberUtils.createLong(""+mapStartObject.get(1));  
+						double longDiff = NumberUtils.createDouble(""+mapEndObject.get(1)) - NumberUtils.createDouble(""+mapStartObject.get(1));  
 						mapData.put(1, longDiff);
 						
 						diffData.add(mapData);
