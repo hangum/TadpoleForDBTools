@@ -21,10 +21,18 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,18 +47,19 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
+import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 
 /**
  * DMLGenerae Statement Dialog
@@ -61,6 +70,8 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 public class TableInformationDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(TableInformationDialog.class);
 	private boolean isEditorAdd = false;
+//	private InformationComparator comparator;
+	private InformationFilter filter;
 
 	private UserDBDAO userDB;
 	private TableDAO tableDAO;
@@ -68,6 +79,7 @@ public class TableInformationDialog extends Dialog {
 	private TableViewer tableViewer_ext;
 	private Text textTBNameCmt;
 	private Label lblTableName;
+	private Text textFilter;
 
 	/**
 	 * Create the dialog.
@@ -129,6 +141,23 @@ public class TableInformationDialog extends Dialog {
 		textTBNameCmt.setLayoutData(gd_textTBNameCmt);
 		textTBNameCmt.setText(tableDAO.getComment());
 		
+		Composite compositeFilter = new Composite(compositeBody, SWT.NONE);
+		compositeFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		compositeFilter.setLayout(new GridLayout(2, false));
+		
+		Label lblFilter = new Label(compositeFilter, SWT.NONE);
+		lblFilter.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblFilter.setText(CommonMessages.get().Filter);
+		
+		textFilter = new Text(compositeFilter, SWT.BORDER);
+		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textFilter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				filterText();
+			}
+		});
+		
 		SashForm sashFormData = new SashForm(compositeBody, SWT.VERTICAL);
 		sashFormData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -139,7 +168,11 @@ public class TableInformationDialog extends Dialog {
 
 				if (!is.isEmpty()) {
 					ExtendTableColumnDAO tableDAO = (ExtendTableColumnDAO) is.getFirstElement();
-					FindEditorAndWriteQueryUtil.runAtPosition(String.format("%s, ", tableDAO.getName()));
+					if(GetPreferenceGeneral.getAddComma()) {
+						FindEditorAndWriteQueryUtil.runAtPosition(String.format("%s ", tableDAO.getName()));
+					} else {
+						FindEditorAndWriteQueryUtil.runAtPosition(String.format("%s, ", tableDAO.getName()));
+					}
 				}
 			}
 		});
@@ -147,27 +180,40 @@ public class TableInformationDialog extends Dialog {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		
+//		// sorter
+//		comparator = new InformationComparator();
+//		tableViewer.setSorter(comparator);
+		
 		TableViewerColumn tvColumnName = new TableViewerColumn(tableViewer,	SWT.NONE);
 		TableColumn tcColumnName = tvColumnName.getColumn();
 		tcColumnName.setWidth(150);
 		tcColumnName.setText(Messages.get().ColumnName);
-		// tvColumnName.setEditingSupport(new
-		// DMLColumnEditingSupport(tableViewer, 0, this));
+//		tcColumnName.addSelectionListener(getSelectionAdapter(tcColumnName, 0));
 
 		TableViewerColumn tvColumnDataType = new TableViewerColumn(tableViewer,	SWT.LEFT);
 		TableColumn tcDataType = tvColumnDataType.getColumn();
 		tcDataType.setWidth(100);
 		tcDataType.setText(Messages.get().DataType);
+//		tcDataType.addSelectionListener(getSelectionAdapter(tcDataType, 1));
 				
 		TableViewerColumn tvColumnKey = new TableViewerColumn(tableViewer, SWT.CENTER);
 		TableColumn tcKey = tvColumnKey.getColumn();
 		tcKey.setWidth(50);
 		tcKey.setText(Messages.get().Key);
+//		tcKey.addSelectionListener(getSelectionAdapter(tcKey, 2));
 		
 		TableViewerColumn tvColumnCmt = new TableViewerColumn(tableViewer, SWT.LEFT);
 		TableColumn tcCmt = tvColumnCmt.getColumn();
 		tcCmt.setWidth(300);
 		tcCmt.setText(CommonMessages.get().Description);
+//		tcCmt.addSelectionListener(getSelectionAdapter(tcCmt, 3));
+		
+		tableViewer.setContentProvider(new ArrayContentProvider());
+		tableViewer.setLabelProvider(new TableInformationLabelProvider());
+		
+		// add filter
+		filter = new InformationFilter();
+		tableViewer.addFilter(filter);
 		
 		tableViewer_ext = new TableViewer(sashFormData, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table_ext = tableViewer_ext.getTable();
@@ -189,8 +235,6 @@ public class TableInformationDialog extends Dialog {
 		tableViewer_ext.setContentProvider(new ArrayContentProvider());
 		tableViewer_ext.setLabelProvider(new TableStatisticsLabelProvider());
 
-		tableViewer.setContentProvider(new ArrayContentProvider());
-		tableViewer.setLabelProvider(new TableInformationLabelProvider());
 		sashFormData.setWeights(new int[] {6, 4});
 
 		initData();
@@ -202,6 +246,34 @@ public class TableInformationDialog extends Dialog {
 
 		return container;
 	}
+	
+	/**
+	 * filter text
+	 */
+	private void filterText() {
+		filter.setSearchText(textFilter.getText());
+		tableViewer.refresh();
+	}
+
+//	/**
+//	 * column select event
+//	 * 
+//	 * @param column
+//	 * @param index
+//	 * @return
+//	 */
+//	private SelectionAdapter getSelectionAdapter(final TableColumn column, final int index) {
+//		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				comparator.setColumn(index);
+//				tableViewer.getTable().setSortDirection(comparator.getDirection());
+//				tableViewer.getTable().setSortColumn(column);
+//				tableViewer.refresh();
+//			}
+//		};
+//		return selectionAdapter;
+//	}
 
 	private void initData() {
 		try {
@@ -260,8 +332,6 @@ public class TableInformationDialog extends Dialog {
 			}
 
 			tableViewer.setInput(newTableColumns);
-
-			tableViewer.refresh();
 		} catch (Exception e) {
 			logger.error("find table object", e);
 		}
@@ -328,7 +398,6 @@ public class TableInformationDialog extends Dialog {
 			createButton(parent, IDialogConstants.OK_ID, Messages.get().GenerateStatmentDMLDialog_2, false);
 		}
 		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Close, false);
-
 	}
 
 	/**
@@ -339,3 +408,62 @@ public class TableInformationDialog extends Dialog {
 		return new Point(500, 600);
 	}
 }
+///*
+//	table information comparator
+// */
+//class InformationComparator extends ObjectComparator {
+//	public InformationComparator() {
+//		super();
+//	}
+//	
+//	@Override
+//	public int compare(Viewer viewer, Object e1, Object e2) {
+//		ExtendTableColumnDAO tableDAO1 = (ExtendTableColumnDAO) e1;
+//		ExtendTableColumnDAO tableDAO2 = (ExtendTableColumnDAO) e2;
+//		
+//		int rc = DESCENDING;
+//		switch (this.propertyIndex) {
+//		case 0:
+//			rc = NullSafeComparator.compare(tableDAO1.getName(), tableDAO2.getName());
+//			break;
+//		case 1:
+//			rc = NullSafeComparator.compare(tableDAO1.getType(), tableDAO2.getType());
+//			break;
+//		case 2:
+//			rc = NullSafeComparator.compare(tableDAO1.getKey(), tableDAO2.getKey());
+//			break;
+//		case 3:
+//			rc = NullSafeComparator.compare(tableDAO1.getComment(), tableDAO2.getComment());
+//			break;
+//		}
+//		
+//		if (direction == DESCENDING) {
+//			rc = -rc;
+//		}
+//		return rc;
+//	}
+//}
+
+/**
+ * information filter
+ * 
+ * @author hangum
+ *
+ */
+class InformationFilter extends TadpoleViewrFilter {
+
+	@Override
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		if(searchString == null || searchString.length() == 0) return true;
+		
+		searchString = StringUtils.lowerCase(searchString);
+		
+		ExtendTableColumnDAO dao = (ExtendTableColumnDAO)element;
+		if(StringUtils.lowerCase((""+dao.getName())).matches(searchString)) 		return true;
+		else if(StringUtils.lowerCase((""+dao.getType())).matches(searchString)) 		return true;
+		else if(StringUtils.lowerCase((""+dao.getKey())).matches(searchString)) 	return true;
+		else if(StringUtils.lowerCase((""+dao.getComment())).matches(searchString)) 	return true;
+		else return false;
+	}
+
+} 
