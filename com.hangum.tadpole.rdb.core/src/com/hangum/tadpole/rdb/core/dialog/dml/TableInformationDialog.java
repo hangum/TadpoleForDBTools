@@ -31,8 +31,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -47,7 +45,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.utils.NullSafeComparator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleViewrFilter;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
@@ -58,7 +55,6 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
-import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 
 /**
