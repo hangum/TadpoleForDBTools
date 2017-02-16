@@ -196,5 +196,9 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	
 	public static final String EDITOR_MYBatisDollart = "EDITOR_MYBatisDollart";
 	public static final String EDITOR_MYBatisDollart_VALUE = "false";
+	
+	// 에디터에 콤마 포함여부.
+	public static final String EDITOR_AddComma = "EDITOR_AddComma";
+	public static final String EDITOR_AddComma_VALUE = "false";
 		
 }

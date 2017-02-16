@@ -53,6 +53,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 	private Text textWrapLimit;
 	private Combo comboTheme;
 	private Button btnMybatisSupport;
+	private Button btnAddComma;
 
 	/**
 	 * Create the preference page.
@@ -122,6 +123,10 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		btnAutoSave.setText(Messages.get().EditorPreferencePage_3);
 		new Label(container, SWT.NONE);
 		
+		btnAddComma = new Button(container, SWT.CHECK);
+		btnAddComma.setText(Messages.get().EditorPreferen_AddComma);
+		new Label(container, SWT.NONE);
+		
 		initDefaultValue();
 		
 		// google analytic
@@ -166,6 +171,8 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		String txtIsGutter 	= ""+btnShowGutter.getSelection(); //$NON-NLS-1$
 		String txtMyBatisDollar = ""+btnMybatisSupport.getSelection();
 		
+		String txtButtonAddComma = ""+btnAddComma.getSelection();
+		
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_AUTOSAVE, txtAutoSave);
@@ -175,6 +182,8 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_WRAP_LIMIT, txtWrapLimit);
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_SHOW_GUTTER, txtIsGutter);
 			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_MYBatisDollart, txtMyBatisDollar);
+			
+			TadpoleSystem_UserInfoData.updateValue(PreferenceDefine.EDITOR_AddComma, txtButtonAddComma);
 			
 			PlatformUI.getPreferenceStore().setValue(PreferenceDefine.EDITOR_CHANGE_EVENT, "EDITOR_CHANGE_EVENT" + System.currentTimeMillis());
 	
@@ -207,6 +216,8 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		textWrapLimit.setText(GetPreferenceGeneral.getEditorWarpLimitValue());
 		btnShowGutter.setSelection(GetPreferenceGeneral.getEditorShowGutter());
 		btnMybatisSupport.setSelection(GetPreferenceGeneral.getIsMyBatisDollor());
+		
+		btnAddComma.setSelection(GetPreferenceGeneral.getAddComma());
 	}
 
 	@Override

@@ -168,7 +168,11 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 					public void widgetSelected(SelectionEvent e) {
 						String strLabel = tc.getText();
 						if(!StringUtils.isEmpty(strLabel)) {
-							rtComposite.appendTextAtPosition(String.format("%s, ", tc.getText()));
+							if(GetPreferenceGeneral.getAddComma()) {
+								rtComposite.appendTextAtPosition(String.format("%s, ", tc.getText()));
+							} else {
+								rtComposite.appendTextAtPosition(String.format("%s ", tc.getText()));
+							}
 						}
 					}
 				});

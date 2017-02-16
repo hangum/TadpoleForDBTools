@@ -366,10 +366,18 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			if(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO.equals(columnDao.getName())) {
 				appendTextAtPosition(strData); //$NON-NLS-1$
 			} else {
-				if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
-					appendTextAtPosition(strData);
+				if(GetPreferenceGeneral.getAddComma()) {
+					if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
+						appendTextAtPosition(strData + ", ");
+					} else {
+						appendTextAtPosition(String.format(" '%s', ", strData)); //$NON-NLS-1$
+					}
 				} else {
-					appendTextAtPosition(String.format(" '%s'", strData)); //$NON-NLS-1$
+					if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
+						appendTextAtPosition(strData + " ");
+					} else {
+						appendTextAtPosition(String.format(" '%s' ", strData)); //$NON-NLS-1$
+					}
 				}
 			}
 		}
