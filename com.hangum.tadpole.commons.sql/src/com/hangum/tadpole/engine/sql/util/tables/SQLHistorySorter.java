@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.tables;
 
-import com.hangum.tadpole.engine.sql.util.tables.DefaultViewerSorter;
-
 /**
  * sql history, message sorter 
  * 

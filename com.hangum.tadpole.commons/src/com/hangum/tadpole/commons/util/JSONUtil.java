@@ -48,7 +48,7 @@ public class JSONUtil {
 			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			String strGson = gson.toJson(je);
-			System.out.println(StringUtils.trimToEmpty(strGson));
+//			System.out.println(StringUtils.trimToEmpty(strGson));
 			
 			if(strGson == null || "null".equals(strGson)) strGson = "";
 			

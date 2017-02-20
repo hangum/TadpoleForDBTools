@@ -35,6 +35,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * mysql login composite
@@ -289,6 +290,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		userDB.setLocale(selectLocale);
+//		userDB.setIs_resource_download(SessionManager.get);
 		
 		// 처음 등록자는 권한이 어드민입니다.
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());

@@ -78,7 +78,22 @@ public class SQLUtil {
 	private static final String[] NOT_ALLOWED_SQL = {
 		/* MSSQL- USE DATABASE명 */
 //		"USE"
-		};
+	};
+	
+	/**
+	 * tadpole 에서 사용하는 특수 컬럼여부 
+	 * 0번째 컬럼 #과 {@code PublicTadpoleDefine#SPECIAL_USER_DEFINE_HIDE_COLUMN}
+	 * 
+	 * @param strColumnName
+	 * @return
+	 */
+	public static boolean isTDBSpecialColumn(String strColumnName) {
+		if(StringUtils.equals(strColumnName, "#") || StringUtils.startsWithIgnoreCase(strColumnName, PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 	/**
 	 * remove comment

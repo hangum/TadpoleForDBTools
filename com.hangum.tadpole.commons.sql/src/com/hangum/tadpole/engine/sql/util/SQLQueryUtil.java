@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.rdb.core.dialog.export.sqlresult;
+package com.hangum.tadpole.engine.sql.util;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -72,7 +71,7 @@ public class SQLQueryUtil {
 			rs = stmt.executeQuery();//Query( selText );
 			
 			// table column의 정보
-			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, true, rs, startPoint, DATA_COUNT);
+			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, false, rs, startPoint, DATA_COUNT);
 		} finally {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			try { if(stmt != null) stmt.close();} catch(Exception e) {}
