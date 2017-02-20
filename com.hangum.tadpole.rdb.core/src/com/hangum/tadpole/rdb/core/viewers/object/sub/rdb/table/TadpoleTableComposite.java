@@ -659,7 +659,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			return;
 		}
 		
-		listTablesDAO = (List<TableDAO>)selectUserDb.getDBObject(OBJECT_TYPE.TABLES, selectUserDb.getDefaultSchemanName());
+		listTablesDAO = (List<TableDAO>)selectUserDb.getDBObject(OBJECT_TYPE.TABLES, userDB.getDefaultSchemanName());
 		if(!(listTablesDAO == null || listTablesDAO.isEmpty())) {
 			tableListViewer.setInput(listTablesDAO);
 			TableUtil.packTable(tableListViewer.getTable());

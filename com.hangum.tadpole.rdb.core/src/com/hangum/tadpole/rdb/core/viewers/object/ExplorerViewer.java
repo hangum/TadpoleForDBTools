@@ -47,6 +47,7 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.InitializeDB;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
@@ -462,8 +463,22 @@ public class ExplorerViewer extends ViewPart {
 		
 		// 스키마 목록을 재상용하기 위해 기록합니다. 
 		userDB.setSchemas(Arrays.asList(comboSchema.getItems()));
+		
+		// initialize UserDB
+		InitializeDB.dbInfo(userDB);
+		
+		// refresh manager viewer
+		refreshManagerViewUserDB();
 	}
 	
+	/**
+	 * refresh manager viewer
+	 */
+	private void refreshManagerViewUserDB() {
+		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+		managerView.getManagerTV().refresh(userDB, true);
+	}
+
 	/**
 	 * select user databse
 	 * @param selectElement
