@@ -42,7 +42,7 @@ public class InitializeDB {
 				//
 				// db readonly 여부
 				//
-				QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(userDB, "SHOW global variables like 'read_only'", 0, 500);
+				QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(userDB, "SHOW global variables like 'read_only'", 0, 20);
 				List<Map<Integer, Object>> tdbResultSet = endStatus.getDataList().getData();
 				String strReadonly = ""+tdbResultSet.get(0).get(1);
 				if("OFF".equals(strReadonly)) userDB.setReadonly("NO"); 
