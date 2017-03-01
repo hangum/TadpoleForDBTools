@@ -48,13 +48,30 @@ public class TableToDataUtils {
 		TableColumnDAO columnDao = new TableColumnDAO();
 		
 		int[] intSelection = tableResult.getSelectionIndices();
-		for(int i=0; i<intSelection.length; i++) {
-			Map<Integer, Object> mapColumns = dataList.getData().get(intSelection[i]);
-			TableColumnDAO _columnDao = TableToDataUtils.getTableRowData(tableResult, mapColumns, mapColumnType);
-			if("".equals(columnDao.getCol_value())) {
-				columnDao.setCol_value(_columnDao.getCol_value());
-			} else {
-				columnDao.setCol_value(columnDao.getCol_value() + PublicTadpoleDefine.LINE_SEPARATOR + _columnDao.getCol_value());
+		
+		// 순서가 위에서 아래로 되도록 합니다.
+		if(intSelection[0] > intSelection[intSelection.length-1]) {
+			
+			for(int i=0; i<tableResult.getSelectionCount(); i++) {
+				Map<Integer, Object> mapColumns = dataList.getData().get(intSelection[intSelection.length-(i+1)]);
+				TableColumnDAO _columnDao = TableToDataUtils.getTableRowData(tableResult, mapColumns, mapColumnType);
+				if("".equals(columnDao.getCol_value())) {
+					columnDao.setCol_value(_columnDao.getCol_value());
+				} else {
+					columnDao.setCol_value(columnDao.getCol_value() + PublicTadpoleDefine.LINE_SEPARATOR + _columnDao.getCol_value());
+				}
+			}
+			
+		} else {
+			
+			for(int i=0; i<tableResult.getSelectionCount(); i++) {
+				Map<Integer, Object> mapColumns = dataList.getData().get(intSelection[i]);
+				TableColumnDAO _columnDao = TableToDataUtils.getTableRowData(tableResult, mapColumns, mapColumnType);
+				if("".equals(columnDao.getCol_value())) {
+					columnDao.setCol_value(_columnDao.getCol_value());
+				} else {
+					columnDao.setCol_value(columnDao.getCol_value() + PublicTadpoleDefine.LINE_SEPARATOR + _columnDao.getCol_value());
+				}
 			}
 		}
 		
