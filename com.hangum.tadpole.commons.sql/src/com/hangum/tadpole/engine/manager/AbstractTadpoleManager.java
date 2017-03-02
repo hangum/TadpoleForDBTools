@@ -12,13 +12,11 @@ package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
-
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 public class AbstractTadpoleManager {
-	private static final Logger logger = Logger.getLogger(AbstractTadpoleManager.class);
+//	private static final Logger logger = Logger.getLogger(AbstractTadpoleManager.class);
 	
 	/**
 	 * change schema

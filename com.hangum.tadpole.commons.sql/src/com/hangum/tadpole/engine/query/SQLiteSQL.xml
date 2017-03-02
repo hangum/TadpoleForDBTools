@@ -25,7 +25,7 @@
 	database connection test 
  -->
 <select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
-SELECT name FROM sqlite_master where 1 = 0 
+	SELECT name FROM sqlite_master limit 1 
 </select>
 
 <!-- 
