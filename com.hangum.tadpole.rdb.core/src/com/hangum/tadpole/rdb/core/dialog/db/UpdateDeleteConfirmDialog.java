@@ -93,13 +93,6 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		gridLayout.marginHeight = 5;
 		gridLayout.marginWidth = 5;
 		
-//		Composite compositeHead = new Composite(container, SWT.NONE);
-//		compositeHead.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-//		compositeHead.setLayout(new GridLayout(1, false));
-//		
-//		Label lblQuestion = new Label(compositeHead, SWT.NONE);
-//		lblQuestion.setText(Messages.get().GrantCheckerUtils_0);
-		
 		Composite compositeInfo = new Composite(container, SWT.NONE);
 		compositeInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeInfo.setLayout(new GridLayout(1, false));
