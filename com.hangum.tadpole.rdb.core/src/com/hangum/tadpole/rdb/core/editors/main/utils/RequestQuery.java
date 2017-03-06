@@ -56,6 +56,9 @@ public class RequestQuery implements Cloneable {
 	/** 에디터가 실행 가능한 쿼리로 수정한 */
 	private String sql = "";
 	
+	/** {@link PublicTadpoleDefine.SQL_STATEMENT_TYPE#PREPARED_STATEMENT} 일경우에 변수에 값이 들어간 전체 퀄기ㅏ 들어가 있다 */
+	private String sqlAddParameter = "";
+	
 	/** 현재 실행 중인 sql statement type */
 	private PublicTadpoleDefine.SQL_STATEMENT_TYPE sqlStatementType = PublicTadpoleDefine.SQL_STATEMENT_TYPE.NONE;
 	/** SQL이 preparedStatement일 경우 SQL_STATEMENT_TYPE.PREPARED_STATEMENT 상태일때의 파라미터 종류 */ 
@@ -395,6 +398,20 @@ public class RequestQuery implements Cloneable {
 	 */
 	public void setStatementParameter(Object[] statementParameter) {
 		this.statementParameter = statementParameter;
+	}
+	
+	/**
+	 * @return the sqlAddParameter
+	 */
+	public String getSqlAddParameter() {
+		return sqlAddParameter;
+	}
+
+	/**
+	 * @param sqlAddParameter the sqlAddParameter to set
+	 */
+	public void setSqlAddParameter(String sqlAddParameter) {
+		this.sqlAddParameter = sqlAddParameter;
 	}
 
 	/* (non-Javadoc)

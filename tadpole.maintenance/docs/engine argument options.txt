@@ -10,9 +10,7 @@
 #-------------------------------------------------------------------------------
 
 -console -test -testDB -forceSystemInitialize -defaultDB MySQL  -nl en -debuglog  -passwd tadpole.jong
--dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
- -dbPath /Users/hangum/Documents/tadpole/tadpole-system.db
- 
+-dbServer 
  Admin setting
  -newUserPermit : 신규 유저등록시 어드민의 허락이 필요한지 유무. 허락이 필요하면 YES, 옵션이 없으면 NO 입니다. 
  					-newUserPermit YES|NO
@@ -21,9 +19,6 @@ Program Argument
   -standalone 	: 독립 실행모드인지 (ex: 서버 종료 모드, 시작시 브라우저 자동 노출)
   -debuglog 	: log4j 로그레벨이 debug모드. 아니면 info
   -dbPath		: local db(sqlite)일 경우 path 
-  -dbServer 	1ibTSnsOX6v+woJWhstZCuMYCEMsmdpCZZw6ypS4REiSeyy2XzIW2Y3XGkRZ9mihsT2BWqzmUkKSmzkMJ/j/W7wTr8ZAI5gdNQaF/OrHnCDP0aWm76MfgxweBk8Xmn1fMxJGMLkh9eUEmZ0bgo1gXg==
-  				: 엔진디비를 지정한 디비 정보를 사용합니다. 디폴트는 내부 sqlite 디비를 사용합니다. 
-  
  /* 더이상 사용하지 않는다. -forceSystemInitialize : 시스테의 초기테이블 데이터 생성을 항상 점검합니다.  일반적으로 한번만 합니다.  검사는 프리퍼런스에 하구요. */
 
   -resourcesDir  : resource directory 를 설정합니다.    

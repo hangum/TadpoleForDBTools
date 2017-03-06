@@ -361,22 +361,12 @@ public class ResultSetComposite extends Composite {
 			}
 		}
 
-		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
-		try {
-			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) {
-				return false;
-			}
-		} catch(Exception e) {
-			executeErrorProgress(reqQuery, e, e.getMessage());
-			return false;
-		}
-	
 		// agens graph는 preparement 가 없습니다.
 		if(DBDefine.AGENSGRAPH_DEFAULT != getUserDB().getDBDefine()){
 			// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
 			if(!ifIsParameterQuery(reqQuery)) return false;
 		}
-		
+
 		return _executeQuery(reqQuery);
 	}
 	
@@ -387,6 +377,16 @@ public class ResultSetComposite extends Composite {
 	 * @return
 	 */
 	public boolean _executeQuery(final RequestQuery reqQuery) {
+		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
+		try {
+			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) {
+				return false;
+			}
+		} catch(Exception e) {
+			executeErrorProgress(reqQuery, e, e.getMessage());
+			return false;
+		}
+		
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
 		controlProgress(true);
 		

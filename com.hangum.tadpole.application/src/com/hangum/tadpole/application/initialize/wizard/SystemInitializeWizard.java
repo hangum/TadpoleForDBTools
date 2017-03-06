@@ -125,12 +125,12 @@ public class SystemInitializeWizard extends Wizard {
 			}
 		}
 		
-		// save database 를 생성합니다.
-		try {
-			AddDefaultSampleDBToUser.addUserDefaultDB(systeUser.getSeq(), systeUser.getEmail());
-		} catch (Exception e) {
-			logger.error("Sample SQLite file copy error", e);
-		}
+//		// save database 를 생성합니다.
+//		try {
+//			AddDefaultSampleDBToUser.addUserDefaultDB(systeUser.getSeq(), systeUser.getEmail());
+//		} catch (Exception e) {
+//			logger.error("Sample SQLite file copy error", e);
+//		}
 		
 		return true;
 	}

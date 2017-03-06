@@ -43,6 +43,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.PARAMETER_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.ParameterUtils;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSQLDialog;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -189,6 +190,11 @@ public class ParameterDialog extends Dialog {
 	private void executeQuery() {
 		reqQuery.setSqlStatementType(PublicTadpoleDefine.SQL_STATEMENT_TYPE.PREPARED_STATEMENT);
 		reqQuery.setSql(strSQL);
+		
+		ParameterObject paramObj = getParameterObject();
+		String repSQL = ParameterUtils.fillParameters(reqQuery.getSql(), paramObj.getParameter());
+		
+		reqQuery.setSqlAddParameter(repSQL);
 		
 		if(PARAMETER_TYPE.JAVA_BASIC == parameterType) {
 			reqQuery.setStatementParameter(getParameterObject().getParameter());

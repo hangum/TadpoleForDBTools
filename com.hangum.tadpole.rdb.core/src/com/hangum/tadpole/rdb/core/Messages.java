@@ -693,6 +693,8 @@ public class Messages {
 	public String DBReadOnly;
 
 	public String DownloadQueryResult;
+
+	public String CheckDataAndRunQeury;
 	
 //	public String PLAN_TABLE_NOT_FOUND;
 	
