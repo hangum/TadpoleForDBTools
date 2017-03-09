@@ -695,6 +695,16 @@ public class Messages {
 	public String DownloadQueryResult;
 
 	public String CheckDataAndRunQeury;
+
+	public String AreYouModifyAllData;
+
+	public String UpdateDeleteConfirmDialog_Message;
+
+	public String UpdateDeleteConfirmDialog_PleaseSelect;
+
+	public String UpdateDeleteConfirmDialog_findData;
+
+	public String UpdateDeleteConfirmDialog_findDataOver;
 	
 //	public String PLAN_TABLE_NOT_FOUND;
 	

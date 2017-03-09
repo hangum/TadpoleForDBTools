@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -45,6 +46,7 @@ import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import org.eclipse.swt.widgets.Button;
 
 /**
  * Update delete confirm dialog
@@ -58,6 +60,13 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 	private RequestQuery reqQuery;
 	private TableViewer tvQueryResult;
 	private Text textQuery;
+	
+	// 결과를 출력하기 위한 테이블 
+	private boolean isWhere = false;
+	private Composite compositeData;
+	private Label labelSummaryText;
+	private Composite compositeWhere;
+	private Button btnAllDataDelete;
 	
 	/**
 	 * Create the dialog.
@@ -105,23 +114,47 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		gd_textQuery.minimumHeight = 80;
 		gd_textQuery.heightHint = 80;
 		textQuery.setLayoutData(gd_textQuery);
+
+		// 모든 데이터 수정 컴포짖 ui
+		compositeWhere = new Composite(container, SWT.NONE);
+		compositeWhere.setLayout(new GridLayout(1, false));
+		compositeWhere.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
 		
-		Composite compositeBody = new Composite(container, SWT.NONE);
-		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		compositeBody.setLayout(new GridLayout(1, false));
+		btnAllDataDelete = new Button(compositeWhere, SWT.CHECK);
+		btnAllDataDelete.setText(Messages.get().AreYouModifyAllData);
+
+		// 수정 예상 데이터 리스트 ui
+		compositeData = new Composite(container, SWT.NONE);
+		compositeData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		compositeData.setLayout(new GridLayout(1, false));
 		
-		Label label = new Label(compositeBody, SWT.NONE);
-		label.setText(Messages.get().CheckDataAndRunQeury);
+		labelSummaryText = new Label(compositeData, SWT.NONE);
+		labelSummaryText.setText(Messages.get().CheckDataAndRunQeury);
 		
-		tvQueryResult = new TableViewer(compositeBody, SWT.BORDER | SWT.FULL_SELECTION);
+		tvQueryResult = new TableViewer(compositeData, SWT.BORDER | SWT.FULL_SELECTION);
 		Table table = tvQueryResult.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
+		Label lblAaa = new Label(compositeData, SWT.NONE);
+		lblAaa.setText(String.format(Messages.get().UpdateDeleteConfirmDialog_Message, GetPreferenceGeneral.getPageCount()));
+		
 		initData();
 
 		return container;
+	}
+	
+	@Override
+	protected void okPressed() {
+		if(!isWhere) {
+			if(!btnAllDataDelete.getSelection()) {
+				MessageDialog.openInformation(getShell(), CommonMessages.get().Information, Messages.get().UpdateDeleteConfirmDialog_PleaseSelect);
+				btnAllDataDelete.setFocus();
+				return;
+			}
+		}
+		super.okPressed();
 	}
 
 	/**
@@ -149,17 +182,39 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 				logger.debug("=============================================================================");
 			}
 			
-			String sqlSelect = "select * from " + strObjecName + " where " + strWhereAfter;
-			QueryExecuteResultDTO rsDAO = QueryUtils.executeQuery(userDB, sqlSelect, 0, GetPreferenceGeneral.getPageCount());
-			createTableColumn(reqQuery, tvQueryResult, rsDAO, false);
+			String sqlSelect = "select * from " + strObjecName;
+			if(!StringUtils.trimToEmpty(strWhereAfter).equals("")) {
+				sqlSelect += " where " + strWhereAfter;
+				
+				isWhere = true;
+			}
 			
-			tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
-			tvQueryResult.setContentProvider(new ArrayContentProvider());
-			final TadpoleResultSet trs = rsDAO.getDataList();
-			tvQueryResult.setInput(trs.getData());
-			TableUtil.packTable(tvQueryResult.getTable());
-			
-			tvQueryResult.getTable().setToolTipText(sqlSelect);
+			if(isWhere) {
+				QueryExecuteResultDTO rsDAO = QueryUtils.executeQuery(userDB, sqlSelect, 0, GetPreferenceGeneral.getPageCount());
+				createTableColumn(reqQuery, tvQueryResult, rsDAO, false);
+				
+				tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
+				tvQueryResult.setContentProvider(new ArrayContentProvider());
+				final TadpoleResultSet trs = rsDAO.getDataList();
+				tvQueryResult.setInput(trs.getData());
+				TableUtil.packTable(tvQueryResult.getTable());
+				
+				if(trs.getData().size() < GetPreferenceGeneral.getPageCount()) {
+					labelSummaryText.setText(Messages.get().CheckDataAndRunQeury + " (" + String.format(Messages.get().UpdateDeleteConfirmDialog_findData, trs.getData().size()) + ")");
+				} else {
+					labelSummaryText.setText(Messages.get().CheckDataAndRunQeury + " (" + String.format(Messages.get().UpdateDeleteConfirmDialog_findDataOver, trs.getData().size()) + ")");
+				}
+				
+				tvQueryResult.getTable().setToolTipText(sqlSelect);
+			} else {
+				if(logger.isDebugEnabled()) logger.debug("mabe all data delete");
+			}
+		
+			// 젠처 ui를 초기화 한다.
+			compositeData.setVisible(isWhere);
+			compositeWhere.setVisible(!isWhere);
+			compositeWhere.getParent().layout(true);
+		
 		} catch(Exception e) {
 			logger.error("initialize sql", e);
 		}
@@ -219,5 +274,4 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(714, 484);
 	}
-
 }

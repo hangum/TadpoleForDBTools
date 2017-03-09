@@ -13,6 +13,8 @@ package com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail;
 import java.io.InputStream;
 import java.util.Map;
 
+import javax.swing.plaf.synth.Region;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IMenuListener;
@@ -30,6 +32,9 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -158,7 +163,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		});
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvQueryResult = new TableViewer(compositeBody, /* SWT.VIRTUAL | */ SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+		tvQueryResult = new TableViewer(compositeBody, /* SWT.VIRTUAL | */ SWT.MULTI | SWT.BORDER ); //| SWT.FULL_SELECTION
 		final Table tableResult = tvQueryResult.getTable();
 		GridData gd_tableResult = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		gd_tableResult.heightHint = 90;
@@ -534,12 +539,23 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		// 또한, 쿼리 실행할 때 마다 rsDAO 값도 변경되므로, selectoin이 변경될때 마다 같이
 		// 전달해 준다. 
 		tvQueryResult.addSelectionChangedListener(new ISelectionChangedListener() {
+//			private boolean update;
+//		    private ISelection lastSelection;
+		    
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				openSingleRowDataAction.selectionChanged(getRsDAO(), event.getSelection());
 				selectRowToEditorAction.selectionChanged(event.getSelection());
 				selectColumntoEditorAction.selectionChanged(event.getSelection());
 				columnRowDataDialogAction.selectionChanged(event.getSelection());
+				
+//				if (event.getSelection().isEmpty() && !update) {
+//		            update = true;
+//		            v.setSelection(lastSelection);
+//		            update = false;
+//		        } else if (!event.getSelection().isEmpty()) {
+//		            lastSelection = event.getSelection();
+//		        }
 			}
 		});
 	}
