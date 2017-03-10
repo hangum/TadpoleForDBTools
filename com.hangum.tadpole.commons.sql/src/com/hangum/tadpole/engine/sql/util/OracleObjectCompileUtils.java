@@ -24,7 +24,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * oracle object utils
@@ -65,8 +64,7 @@ public class OracleObjectCompileUtils {
 		Statement statement = null;
 		ResultSet rs = null;
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			statement = javaConn.createStatement();
 			statement.execute(sqlQuery);
@@ -137,8 +135,7 @@ public class OracleObjectCompileUtils {
 		Statement statement = null;
 		ResultSet rs = null;
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			statement = javaConn.createStatement();
 			statement.execute(sqlQuery);
@@ -202,8 +199,7 @@ public class OracleObjectCompileUtils {
 		Statement statement = null;
 		ResultSet rs = null;
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			statement = javaConn.createStatement();
 			statement.execute(sqlQuery);

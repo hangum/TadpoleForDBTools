@@ -38,7 +38,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.RDBDBInfosEditor;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * RDB 디비 summary 정보를 출력하는 composite.
@@ -135,8 +134,7 @@ public class RDBInformationComposite extends DBInfosComposite {
 	private void rdbInfo() {
 		Connection conn = null;
 		try {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			conn = sqlClient.getDataSource().getConnection();
+			conn = TadpoleSQLManager.getConnection(userDB);
 			DatabaseMetaData dmd = conn.getMetaData();
 			
 			listInfo.add(new KeyValueDAO(Messages.get().DatabaseInformation, dmd.getDatabaseProductName() + " " + dmd.getDatabaseProductVersion()));

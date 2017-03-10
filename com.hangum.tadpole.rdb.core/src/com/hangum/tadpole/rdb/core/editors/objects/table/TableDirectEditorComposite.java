@@ -79,7 +79,6 @@ import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Table data direct editor
@@ -395,8 +394,7 @@ public class TableDirectEditorComposite extends Composite {
 		java.sql.Connection javaConn = null;
 		
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			stmt = javaConn.prepareStatement(requestQuery);
 			stmt.setMaxRows(GetPreferenceGeneral.getSelectLimitCount());

@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * mysql, marai utils
@@ -34,8 +33,7 @@ public class MySQLUtils {
 		
 		List<String> listCollation = new ArrayList<String>();
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			statement = javaConn.createStatement();
 			
 			resultSet = statement.executeQuery(strSQL);

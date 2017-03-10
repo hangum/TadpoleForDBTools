@@ -56,8 +56,7 @@ public class TadpoleObjectQuery {
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 
 			if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 				String strSQL = String.format("COMMENT ON TABLE %s IS %s", dao.getSysName(), SQLUtil.makeQuote(dao.getComment()));

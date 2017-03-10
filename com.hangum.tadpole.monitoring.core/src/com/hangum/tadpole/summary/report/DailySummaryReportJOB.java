@@ -94,8 +94,7 @@ public class DailySummaryReportJOB implements Job {
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			stmt = javaConn.createStatement();
 			rs = stmt.executeQuery(strDML);
 			

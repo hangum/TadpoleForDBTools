@@ -156,14 +156,13 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * @throws SQLException
 	 */
 	public static Connection getConnection(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		SqlMapClient client = getInstance(userDB);
-		Connection javaConn = client.getDataSource().getConnection();
+		Connection javaConn = getInstance(userDB).getDataSource().getConnection();
 		
 		Statement statement = null;
 		try {
 			if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
 				if("".equals(userDB.getSchema())) userDB.setSchema(userDB.getDb());
-				if(logger.isDebugEnabled()) logger.debug(String.format("****************** set define schema %s ", userDB.getSchema()));
+				if(logger.isDebugEnabled()) logger.debug(String.format("**** set define schema %s ", userDB.getSchema()));
 				
 				statement = javaConn.createStatement();
 				statement.executeUpdate("use " + userDB.getSchema());

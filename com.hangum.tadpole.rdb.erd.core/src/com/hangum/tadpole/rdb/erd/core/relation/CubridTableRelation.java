@@ -51,8 +51,7 @@ public class CubridTableRelation {
 			table = StringUtils.replace(table, "'", "");
 			
 			try {
-				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-				conn = sqlClient.getDataSource().getConnection();
+				conn = TadpoleSQLManager.getConnection(userDB);
 				
 				rs = conn.getMetaData().getImportedKeys("", "", table);
 				while (rs.next()) {

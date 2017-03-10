@@ -31,7 +31,6 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_SchemaHistory;
 import com.hangum.tadpole.engine.sql.parser.ddl.ParserDDL;
 import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * tadpole system에서 공통으로 사용하는 모듈
@@ -100,8 +99,7 @@ public class ExecuteDDLCommand {
 			OracleDbmsOutputUtil dbmsOutput = null;
 			Statement stmt = null;
 			try {
-				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-				javaConn = client.getDataSource().getConnection();
+				javaConn = TadpoleSQLManager.getConnection(userDB);
 				
 				stmt = javaConn.createStatement();
 				

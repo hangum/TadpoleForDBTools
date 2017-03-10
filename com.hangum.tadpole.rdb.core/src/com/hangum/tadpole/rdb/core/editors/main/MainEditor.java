@@ -108,7 +108,7 @@ public class MainEditor extends EditorExtension {
 	/**
 	 * MySQL 그룹은 스키마를 콤보박스 
 	 */
-	private Combo comboSchema;
+	protected Combo comboSchema;
 	
 	/** connection URL */
 	private ToolItem tltmConnectURL;

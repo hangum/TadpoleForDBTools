@@ -70,7 +70,7 @@ public class CubridExecutePlanUtils {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
+			conn = TadpoleSQLManager.getConnection(userDB);
 			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.
 
 			sql = StringUtils.trim(sql).substring(6);

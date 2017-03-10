@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,6 +26,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -42,9 +44,9 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -168,6 +170,63 @@ public class ObjectEditor extends MainEditor {
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		// mysql group 이면 스키마 목록이 보이도록 합니다.
+		if(getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			ToolItem sep = new ToolItem(toolBar, SWT.SEPARATOR);
+			
+			comboSchema = new Combo(toolBar, SWT.READ_ONLY);
+			comboSchema.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					final String strSchema = comboSchema.getText();
+					userDB.setSchema(strSchema);
+					
+					//오브젝트 익스플로어가 같은 스키마 일경우 스키마가 변경되도록.
+					getSite().getShell().getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
+								ev.changeSchema(userDB, strSchema);
+							} catch (PartInitException e) {
+								logger.error("ExplorerView show", e); //$NON-NLS-1$
+							}
+						}
+						
+					});
+				}
+			});
+			
+			//
+			// 스키마리스트가 없는 경우 스키마 리스트를 가지고 넣는다.
+			//
+			if(userDB.getSchemas().isEmpty()) {
+				try {
+					for (Object object : DBSystemSchema.getSchemas(userDB)) {
+						HashMap<String, String> mapData = (HashMap)object;
+						comboSchema.add(mapData.get("SCHEMA"));
+						userDB.addSchema(mapData.get("SCHEMA"));
+					}
+					
+				} catch(Exception e) {
+					logger.error("get mysql schema list " + e.getMessage());
+				}
+			} else {
+			
+				for (String schema : userDB.getSchemas()) {
+					comboSchema.add(schema);
+				}
+			}
+			comboSchema.setVisibleItemCount(userDB.getSchemas().size());
+			comboSchema.setText(userDB.getSchema());
+			comboSchema.pack();
+			new ToolItem(toolBar, SWT.SEPARATOR);
+			
+			sep.setWidth(comboSchema.getSize().x);
+		    sep.setControl(comboSchema);
+		    toolBar.pack();
+		}
 		
 //		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 //		tltmExecute.setToolTipText(Messages.get().ObjectEditor_5);
