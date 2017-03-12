@@ -68,7 +68,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 		if(isAddHead) {
 			// column .
 			Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
-			List<String> listLabel = new ArrayList<>();
+			List<String> listLabel = new ArrayList<String>();
 			
 			for(int i=0; i<mapLabelName.size(); i++) {
 				String strLabelName = mapLabelName.get(i);
@@ -99,7 +99,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 		// data
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		List<String[]> listCsvData = new ArrayList<String[]>();
-		List<String> listLabel = new ArrayList<>();
+		List<String> listLabel = new ArrayList<String>();
 		
 		for(int i=0; i<dataList.size(); i++) {
 			Map<Integer, Object> mapColumns = dataList.get(i);
@@ -134,7 +134,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 		// data
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		List<String[]> listCsvData = new ArrayList<String[]>();
-		List<String> listValues = new ArrayList<>();
+		List<String> listValues = new ArrayList<String>();
 
 		// column name
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
