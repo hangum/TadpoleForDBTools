@@ -237,24 +237,25 @@ public class TadpoleSystem_ExecutedSQL {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 			ExecutedSqlResourceDAO executeSQL =  (ExecutedSqlResourceDAO)sqlClient.insert("userExecuteSQLResourceInsert", executeSQLResourceDao); //$NON-NLS-1$
 			
-			insertResourceData(executeSQL, requestResultDAO.getStrSQLText());
+			insertResourceData(executeSQL.getSeq(), requestResultDAO.getStartDateExecute(), requestResultDAO.getStrSQLText());
 		}
 	}
 	
 	/**
 	 * resource data 
 	 * 
-	 * @param userDBResource
+	 * @param seq
+	 * @param startDateExecute
 	 * @param contents
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
-	private static void insertResourceData(ExecutedSqlResourceDAO userDBResource, String contents) throws TadpoleSQLManagerException, SQLException {
+	private static void insertResourceData(long seq, Timestamp startDateExecute, String contents) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		// content data를 저장합니다.
 		ExecutedSqlResourceDataDAO dataDao = new ExecutedSqlResourceDataDAO();
-		dataDao.setExecuted_sql_resource_seq(userDBResource.getSeq());
-		dataDao.setStartDateExecute(new Timestamp(userDBResource.getStartDateExecute().getTime()));
+		dataDao.setExecuted_sql_resource_seq(seq);
+		dataDao.setStartDateExecute(startDateExecute);
 		dataDao.setDatas(contents);		
 		sqlClient.insert("userExecuteSQLResourceDataInsert", dataDao); //$NON-NLS-1$				
 	}

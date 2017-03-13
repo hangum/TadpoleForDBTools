@@ -100,9 +100,9 @@ public class DBPasswordDialog extends Dialog {
 	 */
 	private void initUI() {
 		Map<String, String> mapAppm = new HashMap<String, String>();
-		mapAppm.put("hostName", 	userDB.getExt8());
-		mapAppm.put("sid", 			userDB.getExt9());
-		mapAppm.put("accountid", 	userDB.getExt10());
+		mapAppm.put("ip", 		userDB.getExt8());
+		mapAppm.put("port", 	userDB.getExt9());
+		mapAppm.put("account",	userDB.getExt10());
 		
 		try {
 			String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);

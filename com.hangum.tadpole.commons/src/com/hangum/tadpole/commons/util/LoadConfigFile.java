@@ -26,33 +26,47 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  *
  */
 public class LoadConfigFile {
-	private static final Logger logger = Logger.getLogger(LoadConfigFile.class); 
-	
+	private static final Logger logger = Logger.getLogger(LoadConfigFile.class);
+
 	/**
 	 * get configuration files
 	 * 
 	 * @throws Exception
 	 */
 	public static void initializeConfigFile() {
-		
+
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream(ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
+			properties.load(new FileInputStream(
+					ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
 		} catch (Exception e) {
-			logger.error(String.format("Not found config files. %s", ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
+			logger.error(String.format("Not found config files. %s",
+					ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
 		}
-		
+
 		ApplicationContext context = RWT.getApplicationContext();
 		context.setAttribute("TDB_CONFIG_FILE", properties);
 	}
-	
+
 	/**
-	 * Get TadpoleDBHub config 
+	 * Get TadpoleDBHub config
 	 * 
 	 * @return
 	 */
 	public static Properties getConfig() {
 		ApplicationContext context = RWT.getApplicationContext();
-		return (Properties)context.getAttribute("TDB_CONFIG_FILE");
+		return (Properties) context.getAttribute("TDB_CONFIG_FILE");
+	}
+
+	/**
+	 * is use otp
+	 * @return
+	 */
+	public static boolean isUseOPT() {
+		String otpUse = getConfig().getProperty("otp.use");
+
+		if (otpUse == null) return true;
+		else if ("YES".equalsIgnoreCase(otpUse)) return true;
+		else return false;
 	}
 }

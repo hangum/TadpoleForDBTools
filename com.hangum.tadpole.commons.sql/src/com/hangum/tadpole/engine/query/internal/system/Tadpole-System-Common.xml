@@ -967,7 +967,7 @@ SELECT
 	VALUES(#user_seq#, #db_seq#, #types#, #startDateExecute#, #endDateExecute#, #duration#, #row#, #result#, #message#, #ipAddress#)
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO">
-		SELECT max(seq) seq, user_seq, startDateExecute
+		SELECT max(seq) seq
 		FROM executed_sql_resource 
 		WHERE user_seq = #user_seq# 
 			AND db_seq = #db_seq#

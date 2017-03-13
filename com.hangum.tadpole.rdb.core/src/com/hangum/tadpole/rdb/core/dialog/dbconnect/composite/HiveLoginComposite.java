@@ -211,7 +211,9 @@ public class HiveLoginComposite extends AbstractLoginComposite {
 		
 		 Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {
-			comboGroup.add(strOtherGroupName);
+			if("".equals(selGroupName)) comboGroup.add(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
+
 			comboGroup.select(0);
 		} else {
 			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);

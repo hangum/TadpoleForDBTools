@@ -35,7 +35,6 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
 import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * mysql login composite
@@ -212,7 +211,9 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {
-			comboGroup.add(strOtherGroupName);
+			if("".equals(selGroupName)) comboGroup.add(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
+
 			comboGroup.select(0);
 		} else {
 			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);

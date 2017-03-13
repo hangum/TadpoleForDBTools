@@ -104,7 +104,9 @@ public class AltibaseLoginComposite extends MySQLLoginComposite
 		
 		if(comboGroup.getItems().length == 0) 
 		{
-			comboGroup.add(strOtherGroupName);
+			if("".equals(selGroupName)) comboGroup.add(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
+
 			comboGroup.select(0);
 		} 
 		else 
