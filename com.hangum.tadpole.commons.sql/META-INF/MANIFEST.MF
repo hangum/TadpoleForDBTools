@@ -21,13 +21,16 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/dbutils/commons-dbutils-1.6.jar,
  .,
  libs/driver/cubrid/JDBC-9.3.0.0206-cubrid.jar,
- libs/driver/mongo/mongo-java-driver-3.2.0.jar,
  libs/driver/sqlite/sqlite-jdbc-3.7.2.jar,
  libs/apache/joda-time-2.3.jar,
  libs/apache/dbcp/commons-dbcp-1.4.jar,
  libs/apache/dbcp/commons-pool-1.6.jar,
  libs/driver/oracle/ojdbc6.jar,
- libs/driver/oracle/orai18n.jar
+ libs/driver/oracle/orai18n.jar,
+ libs/driver/mongo/bson-3.4.2.jar,
+ libs/driver/mongo/mongodb-driver-3.4.2.jar,
+ libs/driver/mongo/mongodb-driver-async-3.4.2.jar,
+ libs/driver/mongo/mongodb-driver-core-3.4.2.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.db.metadata.constants,
