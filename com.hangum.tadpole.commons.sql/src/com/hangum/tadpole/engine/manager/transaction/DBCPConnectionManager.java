@@ -71,13 +71,14 @@ public class DBCPConnectionManager {
 		} catch(Exception e) {
 			passwdDecrypt = userDB.getPasswd();
 		}
+		final String strValidateQuery = userDB.getDBDefine().getValidateQuery(true);
 		
 		ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(userDB.getUrl(), userDB.getUsers(), passwdDecrypt);
 		PoolableConnectionFactory pcf = new PoolableConnectionFactory(
 				connectionFactory, 
 				connectionPool, 
 				null, 
-				userDB.getDBDefine().getValidateQuery(), 
+				strValidateQuery, 
 				false, 
 				false,
 				-1,					// defaultTransactionIsolation
@@ -85,20 +86,20 @@ public class DBCPConnectionManager {
 			);
 		connectionPool.setFactory(pcf);
 
-		pcf.setValidationQuery(userDB.getDBDefine().getValidateQuery());
+		pcf.setValidationQuery(strValidateQuery);
 		pcf.setValidationQueryTimeout(10000);
 		
 		if(!"".equals(PublicTadpoleDefine.CERT_USER_INFO)) {
 			// initialize connection string
 			List<String> listInitializeSql = new ArrayList<String>();
-			String strFullHelloSQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID()) + "\n " + userDB.getDBDefine().getValidateQuery();
-			
-			listInitializeSql.add(strFullHelloSQL);
+			listInitializeSql.add(
+					String.format(PublicTadpoleDefine.CERT_USER_INFO, userDB.getTdbLogingIP(), userDB.getTdbUserID()) + " " + strValidateQuery
+				);
 			
 			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-				listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub-Transaction(%s)', '')", userDB.getTdbUserID()));
+				listInitializeSql.add(String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('TadpoleHub-Tran(%s)', '')", userDB.getTdbUserID()));
 			} else if(userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
-				listInitializeSql.add(String.format("SET application_name = 'Tadpole Hub-Transaction(%s)'", userDB.getTdbUserID()));				
+				listInitializeSql.add(String.format("SET application_name = 'TadpoleHub-Tran(%s)'", userDB.getTdbUserID()));				
 			}
 			
 			pcf.setConnectionInitSql(listInitializeSql);

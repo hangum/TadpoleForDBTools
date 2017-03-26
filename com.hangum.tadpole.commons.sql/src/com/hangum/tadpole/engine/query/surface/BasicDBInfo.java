@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2017 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -8,11 +8,10 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.tajo.core.connections;
+package com.hangum.tadpole.engine.query.surface;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -26,44 +25,28 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATE
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.surface.ConnectionInterfact;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
-import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 
 /**
- * apache tajo connection manager
- * 현재는 jdbc이지만, 나중에는 native driver를 쓸수 있도록 별로 분리..
+ * JDBC 메타데이터를 이용하여 스키마, 테이블, 컬럼 정보를 요청합니다, 
  * 
  * @author hangum
  *
  */
-public class TajoConnectionManager {//implements ConnectionInterfact {
-	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
+public abstract class BasicDBInfo implements ConnectionInterfact {
+	private static final Logger logger = Logger.getLogger(BasicDBInfo.class);
+	
+	public abstract Connection getInstance(final UserDBDAO userDB) throws Exception;
 	
 	/**
-	 * java.sql.connection을 생성하고 관리합니다.
-	 * 
-	 * @param userDB
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public static Connection getInstance(final UserDBDAO userDB) throws Exception {
-		java.sql.Connection javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
-			
-		return javaConn;
-	}
-	
-	/**
-	 * 
+	 * @param javaConn
 	 * @param userDB
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getKeyworkd(final UserDBDAO userDB) throws Exception {
+	public static String getKeyworkd(final Connection javaConn, final UserDBDAO userDB) throws Exception {
 		String strKeyWord = "";
-		java.sql.Connection javaConn = getInstance(userDB);
 		try {
 			strKeyWord = javaConn.getMetaData().getSQLKeywords();
 		} finally {
@@ -76,16 +59,15 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	/**
 	 * not select 
 	 * 
+	 * @param javaConn
 	 * @param userDB
 	 * @param sqlQuery
 	 * @return
 	 */
-	public void executeUpdate(UserDBDAO userDB, String sqlQuery) throws Exception {
-		java.sql.Connection javaConn = null;
+	public void executeUpdate(final Connection javaConn, UserDBDAO userDB, String sqlQuery) throws Exception {
 		Statement statement = null;
 		
 		try {
-			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			statement = javaConn.createStatement();
 			statement.executeUpdate(sqlQuery);
 		} finally {
@@ -96,6 +78,8 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	
 	/**
 	 * execute query plan
+	 * 
+	 * @param javaConn
 	 * @param objects 
 	 * @param sql_STATEMENT_TYPE
 	 * @param statementParameter
@@ -103,24 +87,23 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	 * @return
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO executeQueryPlan(UserDBDAO userDB, String strQuery, SQL_STATEMENT_TYPE sql_STATEMENT_TYPE, Object[] statementParameter) throws Exception {
-		return select(userDB, PartQueryUtil.makeExplainQuery(userDB, strQuery), statementParameter, 1000);
+	public QueryExecuteResultDTO executeQueryPlan(final Connection javaConn, UserDBDAO userDB, String strQuery, SQL_STATEMENT_TYPE sql_STATEMENT_TYPE, Object[] statementParameter) throws Exception {
+		return select(javaConn, userDB, PartQueryUtil.makeExplainQuery(userDB, strQuery), statementParameter, 1000);
 	}
 	
 	/**
 	 * execute update
 	 * 
+	 * @param javaConn
 	 * @param userDB
 	 * @param string
 	 * @param name
 	 * @throws Exception
 	 */
-	public void executeUpdate(UserDBDAO userDB, String string, String name) throws Exception {
-		java.sql.Connection javaConn = null;
+	public void executeUpdate(final Connection javaConn, UserDBDAO userDB, String string, String name) throws Exception {
 		Statement statement = null;
 		
 		try {
-			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			String quoteString = javaConn.getMetaData().getIdentifierQuoteString();
 			
 			statement = javaConn.createStatement();
@@ -136,12 +119,11 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	 * 
 	 * @param userDB
 	 */
-	public void connectionCheck(UserDBDAO userDB) throws Exception {
+	public void connectionCheck(final Connection javaConn, UserDBDAO userDB) throws Exception {
 		Connection conn = null;
 		ResultSet rs = null;
 		
 		try {
-			conn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			DatabaseMetaData dbmd = conn.getMetaData();
 	    	rs = dbmd.getTables(null, null, null, null);
 	    	
@@ -160,14 +142,13 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	 * @param userDB
 	 * @throws Exception
 	 */
-	public List<TableDAO> tableList(UserDBDAO userDB) throws Exception {
+	public List<TableDAO> tableList(final Connection javaConn, UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
 		Connection conn = null;
 		ResultSet rs = null;
 		
 		try {
-			conn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			DatabaseMetaData dbmd = conn.getMetaData();
 	    	rs = dbmd.getTables(userDB.getDb(), null, null, null);
 
@@ -198,18 +179,17 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	/**
 	 * table의 컬컴 정보를 리턴합니다.
 	 * 
+	 * @param javaConn
 	 * @param userDB
 	 * @param tbName
 	 * @throws Exception
 	 */
-	public List<TableColumnDAO> tableColumnList(UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
+	public List<TableColumnDAO> tableColumnList(final Connection javaConn, UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
 		List<TableColumnDAO> showTableColumns = new ArrayList<TableColumnDAO>();
-		Connection conn = null;
 		ResultSet rs = null;
 		
 		try {
-			conn = DriverManager.getConnection(userDB.getUrl());
-			DatabaseMetaData dbmd = conn.getMetaData();
+			DatabaseMetaData dbmd = javaConn.getMetaData();
 	    	rs = dbmd.getColumns(userDB.getDb(), null, mapParam.get("table"), null);
 
 	    	while(rs.next()) {
@@ -227,7 +207,7 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 			throw e;
 		} finally {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
-			try { if(conn != null) conn.close(); } catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 		}
 		
 		return showTableColumns;
@@ -236,6 +216,7 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	/**
 	 * select
 	 * 
+	 * @param javaConn
 	 * @param userDB
 	 * @param requestQuery
 	 * @param statementParameter 
@@ -243,15 +224,13 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 	 * 
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, Object[] statementParameter, int limitCount) throws Exception {
+	public QueryExecuteResultDTO select(final Connection javaConn, UserDBDAO userDB, String requestQuery, Object[] statementParameter, int limitCount) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
-		java.sql.Connection javaConn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
 		try {
-			javaConn = ConnectionPoolManager.getDataSource(userDB).getConnection();
 			pstmt = javaConn.prepareStatement(requestQuery);
 			if(statementParameter != null) {
 				for (int i=1; i<=statementParameter.length; i++) {
@@ -271,5 +250,4 @@ public class TajoConnectionManager {//implements ConnectionInterfact {
 			try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 		}
 	}
-
 }

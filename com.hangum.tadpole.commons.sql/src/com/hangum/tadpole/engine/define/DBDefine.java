@@ -255,25 +255,28 @@ public enum DBDefine {
 	 * 디비의 기본 validate 쿼리를 정의합니다.
 	 * @return
 	 */
-	public String getValidateQuery() {
+	public String getValidateQuery(boolean isTransaction) {
+		String strConnection = "TadpoleHub_None";
+		if(isTransaction) strConnection = "TadpoleHub_Tran";
+		
 		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
-			return "select 'TadpoleHub_Transaction'";
+			return String.format("SELECT '%s'", strConnection);
 		} else if(this == DBDefine.ORACLE_DEFAULT || this == DBDefine.TIBERO_DEFAULT) {
-			return "SELECT 'TadpoleHub_Transaction' FROM dual";
+			return String.format("SELECT '%s' FROM dual", strConnection);
 		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
-			return "SELECT 'TadpoleHub_Transaction'";
+			return String.format("SELECT '%s'", strConnection);
 		} else if(this == DBDefine.SQLite_DEFAULT) {
 			return "SELECT name FROM sqlite_master where 1 = 0";
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			return "show databases";
 		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AGENSGRAPH_DEFAULT) {
-			return "SELECT 'TadpoleHub_Transaction'";
+			return String.format("SELECT '%s'", strConnection);
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
-			return "select 'TadpoleHub_Transaction' from db_root";
+			return String.format("select '%s' from db_root", strConnection);
 		} else if(this == DBDefine.TAJO_DEFAULT) {
 			return "\\d";
 		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
-			return "SELECT 'TadpoleHub_Transaction'";
+			return String.format("SELECT '%s'", strConnection);
 		} else {
 			return "SELECT 1";
 		}

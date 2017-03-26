@@ -135,7 +135,7 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		}
 		
 		// 변경시 마다 커넥션을 수정한다.
-		return changeScheema(userId, searchKey, userDB, _conn);
+		return changeSchema(userId, searchKey, userDB, _conn);
 	}
 	
 	/**
@@ -148,13 +148,13 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	private static Connection changeScheema(final String userId, final String searchKey, final UserDBDAO userDB, Connection javaConn) throws TadpoleSQLManagerException, SQLException {
+	private static Connection changeSchema(final String userId, final String searchKey, final UserDBDAO userDB, Connection javaConn) throws TadpoleSQLManagerException, SQLException {
 		
 		String strSQL = "";
 		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
 			strSQL = "use " + userDB.getSchema();
 		} else {
-			strSQL = userDB.getDBDefine().getValidateQuery();
+			strSQL = userDB.getDBDefine().getValidateQuery(false);
 		}
 
 		Statement statement = null;

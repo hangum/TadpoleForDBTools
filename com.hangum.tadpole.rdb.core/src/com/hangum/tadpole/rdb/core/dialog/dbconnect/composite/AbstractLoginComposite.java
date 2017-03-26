@@ -33,6 +33,7 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
+import com.hangum.tadpole.hive.core.connections.HiveJDBC2Manager;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -309,7 +310,9 @@ public abstract class AbstractLoginComposite extends Composite {
 				
 			} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 				new TajoConnectionManager().connectionCheck(userDB);
-				
+			} else if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
+				HiveJDBC2Manager hiveM = new HiveJDBC2Manager();
+				hiveM.connectionCheck(hiveM.getInstance(userDB), userDB);
 			} else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 				String strFileLoc = StringUtils.difference(StringUtils.remove(userDB.getDBDefine().getDB_URL_INFO(), "%s"), userDB.getUrl());
 				File fileDB = new File(strFileLoc);
