@@ -56,7 +56,10 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	private static Map<String, TadpoleMetaData> dbMetadata = null;
 	
 	/** dbManager 의 키를 가지고 있는 친구 - logout시에 키를 사용하여 인스턴스를 삭제하기 위해 */
-	private static Map<String, List<String>> managerKey = null;//
+	private static Map<String, List<String>> managerKey = null;
+	
+	/** password manager */
+	private static Map<String, String> pwdManager = null;
 	
 	private static TadpoleSQLManager tadpoleSQLManager = null;
 	
@@ -66,6 +69,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			dbManager = new HashMap<String, SqlMapClient>();
 			dbMetadata = new HashMap<String, TadpoleMetaData>();
 			managerKey = new HashMap<String, List<String>>();
+			pwdManager = new HashMap<String, String>();
 		} 
 	}
 	
@@ -124,6 +128,9 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 						}
 //					}	// end  synchronized
 						
+					// cache에서 사용하기 위해 패스워드를 기록해 놓는다.
+					pwdManager.put(getDBPasswdKey(userDB), userDB.getPasswd());
+						
 					// metadata를 가져와서 저장해 놓습니다.
 					conn = sqlMapClient.getDataSource().getConnection();
 					
@@ -138,6 +145,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				logger.error("***** get DB Instance seq is " + userDB.getSeq() + "\n" , e);
 				managerKey.remove(userDB.getTdbUserID());
 				dbManager.remove(searchKey);
+				pwdManager.remove(pwdManager);
 				
 				throw new TadpoleSQLManagerException(e);
 			} finally {
@@ -367,6 +375,27 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				userDB.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
+	}
+	
+	/**
+	 * db password 의 키를 가지고 있는다.
+	 *
+	 * @param userDB
+	 * @return
+	 */
+	public static String getDBPasswdKey(final UserDBDAO userDB) {
+		return		userDB.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUrl()  		+ PublicTadpoleDefine.DELIMITER;
+	}
+	
+	/**
+	 * cache password 
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static String getPassword(final UserDBDAO userDB) {
+		return pwdManager.get(getDBPasswdKey(userDB));
 	}
 
 }

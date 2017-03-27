@@ -10,12 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.security;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -34,7 +30,6 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.ext.appm.APPMHandler;
 
 /**
  * DB Lock Dialog
@@ -45,19 +40,15 @@ import com.hangum.tadpole.ext.appm.APPMHandler;
  * @since 2015. 3. 24.
  *
  */
-public class DBPasswordDialog extends Dialog {
+public class DBPasswordDialog extends PasswordDialog {
 	private static final Logger logger = Logger.getLogger(DBPasswordDialog.class);
-	private UserDBDAO userDB;
-	private Text textPassword;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
 	public DBPasswordDialog(Shell parentShell, UserDBDAO userDB) {
-		super(parentShell);
-		
-		this.userDB = userDB;
+		super(parentShell, userDB);
 	}
 	
 	@Override
@@ -93,28 +84,6 @@ public class DBPasswordDialog extends Dialog {
 		initUI();
 
 		return container;
-	}
-	
-	/**
-	 * initialize UI
-	 */
-	private void initUI() {
-		Map<String, String> mapAppm = new HashMap<String, String>();
-		mapAppm.put("ip", 		userDB.getExt8());
-		mapAppm.put("port", 	userDB.getExt9());
-		mapAppm.put("account",	userDB.getExt10());
-		
-		try {
-			String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
-			textPassword.setText(strAMMPPassword);
-		} catch (Exception e) {
-			logger.error("appm error", e);
-			
-			MessageDialog.openInformation(getShell(), CommonMessages.get().Error, "APPM interface error :" + e.getMessage());
-			textPassword.setText("");
-		} finally {
-			userDB.setPasswd("");
-		}
 	}
 	
 	/* (non-Javadoc)
