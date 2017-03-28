@@ -25,6 +25,7 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 
 import com.hangum.tadpole.application.initialize.wizard.SystemInitializeWizard;
 import com.hangum.tadpole.application.start.ApplicationWorkbenchAdvisor;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.engine.initialize.ApplicationLicenseInitialize;
@@ -94,6 +95,9 @@ public class Application implements EntryPoint {
 			String strProductFilter = prop.getProperty("tadpole.db.producttype.remove.filter", "");
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, strProductFilter);
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, userInfoDao);
+			
+			/** cert user info */
+			PublicTadpoleDefine.CERT_USER_INFO = prop.getProperty("CERT_USER_INFO", "");
 			
 		} catch(Exception e) {
 			logger.error("Initialization failed.", e); //$NON-NLS-1$
