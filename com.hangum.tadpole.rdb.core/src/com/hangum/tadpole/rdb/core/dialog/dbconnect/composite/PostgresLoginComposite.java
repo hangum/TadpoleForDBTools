@@ -98,7 +98,9 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		lblNewLabelPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
-		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_textPort = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_textPort.widthHint = 50;
+		textPort.setLayoutData(gd_textPort);
 		
 		Button btnPing = new Button(grpConnectionType, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
