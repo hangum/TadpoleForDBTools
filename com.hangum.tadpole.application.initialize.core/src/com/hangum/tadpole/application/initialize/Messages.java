@@ -3,7 +3,7 @@ package com.hangum.tadpole.application.initialize;
 import org.eclipse.rap.rwt.RWT;
 
 public class Messages {
-	private static final String BUNDLE_NAME = "com.hangum.tadpole.application.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "com.hangum.tadpole.application.initialize.messages"; //$NON-NLS-1$
 
 	public String SystemAdminTermsPage_0;
 	public String SystemAdminTermsPage_1;
