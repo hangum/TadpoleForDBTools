@@ -45,4 +45,13 @@ public class LicenseValidator {
 		
 		return "License is GNU Lesser General Public License v.3";
 	}
+	
+	/**
+	 * 엔터프라이즈 여부
+	 * @return
+	 */
+	public static boolean isEnterprise() {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		return licenseDAO.isEnterprise();
+	}
 }
