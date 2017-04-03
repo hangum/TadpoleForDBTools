@@ -40,6 +40,7 @@ public enum DBDefine {
 	MARIADB_DEFAULT,
 	SQLite_DEFAULT,
 	CUBRID_DEFAULT,
+	AMAZON_REDSHIFT_DEFAULT,
 	POSTGRE_DEFAULT,
 	AGENSGRAPH_DEFAULT,
 	ALTIBASE_DEFAULT,
@@ -91,6 +92,7 @@ public enum DBDefine {
 			case HIVE2_DEFAULT:			return prefix + "HIVE2Config.xml";
 			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
 			case ALTIBASE_DEFAULT:	    return prefix + "AltibaseConfig.xml";
+			case AMAZON_REDSHIFT_DEFAULT: return prefix + "AmazonRedshiftConfig.xml";
 			default:
 				return "Doesn't define database configuration";
 		}
@@ -128,6 +130,7 @@ public enum DBDefine {
 		
 		else if(type.equalsIgnoreCase("Apache Tajo")) 	return TAJO_DEFAULT;
 		else if(type.equalsIgnoreCase("Altibase"))       return ALTIBASE_DEFAULT;
+		else if(type.equalsIgnoreCase("RedShift"))       return AMAZON_REDSHIFT_DEFAULT;
 		else return null;
 	}
 	
@@ -164,7 +167,8 @@ public enum DBDefine {
 			case HIVE2_DEFAULT:		return "org.apache.hive.jdbc.HiveDriver";
 			case TAJO_DEFAULT:		return "org.apache.tajo.jdbc.TajoDriver";
 			
-			case ALTIBASE_DEFAULT:   return "Altibase.jdbc.driver.AltibaseDriver"; 
+			case ALTIBASE_DEFAULT:   return "com.amazon.redshift.jdbc.Driver";
+			case AMAZON_REDSHIFT_DEFAULT : return "";
 			
 			default:
 				return "undefine class";
@@ -211,7 +215,9 @@ public enum DBDefine {
 			case TAJO_DEFAULT:		return "jdbc:tajo://%s:%s/%s";
 			
 			/* Altibase JDBC connection string: jdbc:Altibase://ipaddr.port/dbname */
-			case ALTIBASE_DEFAULT:   return "jdbc:Altibase://%s:%s/%s"; 
+			case ALTIBASE_DEFAULT:   return "jdbc:Altibase://%s:%s/%s";
+
+			case AMAZON_REDSHIFT_DEFAULT : return "jdbc:redshift://%s:%s/%s";
 			
 			default:
 				return "undefine db";
@@ -246,6 +252,7 @@ public enum DBDefine {
 			
 			case TAJO_DEFAULT: 			return "Apache Tajo";
 			case ALTIBASE_DEFAULT:      return "Altibase";
+			case AMAZON_REDSHIFT_DEFAULT : return "RedShift";
 			default:
 				return "undefine db";
 		}
@@ -269,7 +276,7 @@ public enum DBDefine {
 			return "SELECT name FROM sqlite_master where 1 = 0";
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			return "show databases";
-		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AGENSGRAPH_DEFAULT) {
+		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AGENSGRAPH_DEFAULT || this == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
 			return String.format("SELECT '%s'", strConnection);
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
 			return String.format("select '%s' from db_root", strConnection);
@@ -289,32 +296,34 @@ public enum DBDefine {
 	public String getExt() {
 		String extension = ""; //$NON-NLS-1$
 		
-		if(this == DBDefine.MYSQL_DEFAULT) {
+		if(this == MYSQL_DEFAULT) {
 			extension += "mysql"; //$NON-NLS-1$
-		} else if(this == DBDefine.MARIADB_DEFAULT) {
+		} else if(this == MARIADB_DEFAULT) {
 			extension += "mariadb"; //$NON-NLS-1$
-		} else if(this == DBDefine.ORACLE_DEFAULT) {
+		} else if(this == ORACLE_DEFAULT) {
 			extension += "oracle"; //$NON-NLS-1$
-		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
+		} else if(this == MSSQL_DEFAULT || this == MSSQL_8_LE_DEFAULT) {
 			extension += "mssql"; //$NON-NLS-1$
-		} else if(this == DBDefine.SQLite_DEFAULT) {
+		} else if(this == SQLite_DEFAULT) {
 			extension += "sqlite"; //$NON-NLS-1$
-		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
+		} else if(this == HIVE_DEFAULT || this == HIVE2_DEFAULT) {
 			extension += "hql"; //$NON-NLS-1$
-		} else if(this == DBDefine.POSTGRE_DEFAULT) {
+		} else if(this == POSTGRE_DEFAULT) {
 			extension += "pgsql"; //$NON-NLS-1$
-		} else if(this == DBDefine.AGENSGRAPH_DEFAULT) {
+		} else if(this == AGENSGRAPH_DEFAULT) {
 			extension += "agens"; //$NON-NLS-1$
-		} else if(this == DBDefine.CUBRID_DEFAULT) {
+		} else if(this == CUBRID_DEFAULT) {
 			extension += "cubrid"; //$NON-NLS-1$
-		} else if(this == DBDefine.TAJO_DEFAULT) {
+		} else if(this == TAJO_DEFAULT) {
 			extension += "tajo"; //$NON-NLS-1$
-		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
+		} else if(this == ALTIBASE_DEFAULT) {
 			extension += "altibase";
-		} else if(this == DBDefine.TIBERO_DEFAULT) {
+		} else if(this == TIBERO_DEFAULT) {
 			extension += "tibero";
-		} else if(this == DBDefine.MONGODB_DEFAULT) {
+		} else if(this == MONGODB_DEFAULT) {
 			extension += "mongo";
+		} else if(this == AMAZON_REDSHIFT_DEFAULT) {
+			extension += "RedShift";
 		} else {
 			extension += "sql"; //$NON-NLS-1$
 		}
@@ -341,6 +350,7 @@ public enum DBDefine {
 		case CUBRID_DEFAULT:		return DBVariableDefine.CUBRID_VARIABLES;
 		case POSTGRE_DEFAULT:		
 		case AGENSGRAPH_DEFAULT:
+		case AMAZON_REDSHIFT_DEFAULT:
 									return DBVariableDefine.PGSQL_VARIABLES;
 		
 		case MONGODB_DEFAULT :  	return DBVariableDefine.MONGO_VARIABLE;		
@@ -399,9 +409,9 @@ public enum DBDefine {
 	public static List<DBDefine> getDriver() {
 		List<DBDefine> listSupportDb = userDBValues();
 		
-//		listSupportDb.remove(DBDefine.AMAZONRDS_DEFAULT);
-		listSupportDb.remove(DBDefine.TAJO_DEFAULT);
-		listSupportDb.remove(DBDefine.HIVE_DEFAULT);
+//		listSupportDb.remove(AMAZONRDS_DEFAULT);
+		listSupportDb.remove(TAJO_DEFAULT);
+		listSupportDb.remove(HIVE_DEFAULT);
 		return listSupportDb;
 	}
 	
@@ -430,6 +440,7 @@ public enum DBDefine {
 //		supportDb.add(AGENSGRAPH_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 		supportDb.add(SQLite_DEFAULT);
+		supportDb.add(AMAZON_REDSHIFT_DEFAULT);
 		
 		return supportDb;
 	}

@@ -29,6 +29,7 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginCompos
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.RedShiftLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.TajoLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.TiberoLoginComposite;
@@ -98,6 +99,8 @@ public class DBConnectionUtils {
 			loginComposite = new TiberoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.ALTIBASE_DEFAULT) {
 			loginComposite = new AltibaseLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
+		} else if(dbDefine == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
+			loginComposite = new RedShiftLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		}
 		
 		loginComposite.setDataActionStatus(dataStatus);

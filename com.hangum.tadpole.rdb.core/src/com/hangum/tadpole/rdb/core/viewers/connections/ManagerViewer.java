@@ -52,6 +52,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -360,7 +361,7 @@ public class ManagerViewer extends ViewPart {
 				try {
 					// pgsql은 익스텐스 을 보여준다.
 					if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
-						PostgresqlConnectionEXT.connectionext(userDB);
+						if(userDB.getDBDefine() != DBDefine.AMAZON_REDSHIFT_DEFAULT) PostgresqlConnectionEXT.connectionext(userDB);
 					}
 				} catch(Exception e) {
 					logger.error("pg_extension", e);

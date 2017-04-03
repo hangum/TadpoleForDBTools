@@ -42,6 +42,11 @@ public class PublicTadpoleDefine {
 	 */
 	public static final String TDB_CONFIG_FILE = "tadpole_interface.properties";
 	
+	/**
+	 * Define gateway db list key
+	 */
+	public static final String GATEWAY_DB_LIST = "GATEWAY_DB_LIST";
+	
 	/** cookie path */
 	public static String _cookiePath = "/";
 	

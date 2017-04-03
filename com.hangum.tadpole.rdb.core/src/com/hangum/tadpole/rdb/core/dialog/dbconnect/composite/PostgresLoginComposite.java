@@ -193,9 +193,14 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textJDBCOptions.setText("&loginTimeout=10"); //$NON-NLS-1$
 			
 		} else {
-			textPort.setText("5432"); //$NON-NLS-1$
+			if(DBDefine.AMAZON_REDSHIFT_DEFAULT == getSelectDB()) {
+				textPort.setText("5439"); //$NON-NLS-1$
+				textJDBCOptions.setText("&loginTimeout=30&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"); //&socketTimeout=30
+			} else {
+				textPort.setText("5432"); //$NON-NLS-1$
+				textJDBCOptions.setText("&loginTimeout=30"); //&socketTimeout=30
+			}
 			comboSSL.setText("NO"); //$NON-NLS-1$
-			textJDBCOptions.setText("&loginTimeout=30"); //&socketTimeout=30
 		}
 
 		Combo comboGroup = preDBInfo.getComboGroup();

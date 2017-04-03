@@ -415,7 +415,7 @@ public class ExplorerViewer extends ViewPart {
 					comboSchema.add(""+mapData.get("schema"));
 				}
 				comboSchema.select(0);
-				userDB.setSchema(comboSchema.getText());
+				userDB.setSchema("public");
 			} catch(Exception e) {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
@@ -624,15 +624,15 @@ public class ExplorerViewer extends ViewPart {
 				createGraphPath();
 				createVertex();
 				createEdge();
-			}
+				
+				createTable();
+				createView();
+				createProcedure();
+				createFunction();
+				createTrigger();
 			
-			createTable();
-			createView();
-			createProcedure();
-			createFunction();
-			createTrigger();
-			
-			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
+				
+				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					agensGraphPathComposite.getTableviewer(),
 					agensVertexComposite.getTableviewer(),
@@ -646,7 +646,22 @@ public class ExplorerViewer extends ViewPart {
 					functionCompostite.getTableviewer(),
 					triggerComposite.getTableViewer()
 				};
+			} else if(DBDefine.AMAZON_REDSHIFT_DEFAULT == userDB.getDBDefine()) {
+				createTable();
+				createView();
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+						tableComposite.getTableListViewer(), 
+						tableComposite.getTableColumnViewer(),
+						tableComposite.getIndexComposite().getTableViewer(),
+						tableComposite.getTriggerComposite().getTableViewer(),
+						viewComposite.getTableViewer()
+					};
 			} else {
+				createProcedure();
+				createFunction();
+				createTrigger();
+				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					tableComposite.getTableListViewer(), 
 					tableComposite.getTableColumnViewer(),
