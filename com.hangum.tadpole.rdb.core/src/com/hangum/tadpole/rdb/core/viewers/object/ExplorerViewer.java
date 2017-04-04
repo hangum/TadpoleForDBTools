@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -514,6 +515,8 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("initialize database " + e.getMessage());
 				userDB = null;
 				createTable();
+
+				MessageDialog.openError(getSite().getShell(), CommonMessages.get().Error, Messages.get().doNotConnectionDB +  e.getMessage().toString());
 			}
 		}
 	}

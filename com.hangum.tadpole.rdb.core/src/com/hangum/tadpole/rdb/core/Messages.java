@@ -15,6 +15,8 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
 
+	public String doNotConnectionDB;
+
 	public String format;
 	public String AddTable;
 

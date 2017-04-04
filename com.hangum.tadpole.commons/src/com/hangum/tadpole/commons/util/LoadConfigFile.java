@@ -71,11 +71,20 @@ public class LoadConfigFile {
 	}
 	
 	/**
-	 * is engine gateway
+	 * is use engine gateway
 	 * 
 	 * @return
 	 */
 	public static boolean isEngineGateway() {
 		return "YES".equalsIgnoreCase(getConfig().getProperty("ENGINE.GATEWAY.USE"))?true:false;
+	}
+
+	/**
+	 * is gateway user id check
+	 * 
+	 * @return
+	 */
+	public static boolean isGateWayIDCheck() {
+		return "YES".equalsIgnoreCase(getConfig().getProperty("ENGINE.GATEWAY.ID_CHECK"))?true:false;
 	}
 }
