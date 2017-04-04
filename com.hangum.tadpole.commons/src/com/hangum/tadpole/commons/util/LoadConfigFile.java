@@ -69,4 +69,13 @@ public class LoadConfigFile {
 		else if ("YES".equalsIgnoreCase(otpUse)) return true;
 		else return false;
 	}
+	
+	/**
+	 * is engine gateway
+	 * 
+	 * @return
+	 */
+	public static boolean isEngineGateway() {
+		return "YES".equalsIgnoreCase(getConfig().getProperty("ENGINE.GATEWAY.USE"))?true:false;
+	}
 }
