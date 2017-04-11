@@ -15,8 +15,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.AbstractPlanComposite;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * plan 의 결과 정보를보여주는 컴포짖

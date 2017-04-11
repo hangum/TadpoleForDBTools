@@ -19,14 +19,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.hangum.tadpole.engine.utils.EditorDefine;
+import com.hangum.tadpole.engine.utils.EditorDefine.EXECUTE_TYPE;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.sql.format.SQLFormater;
 

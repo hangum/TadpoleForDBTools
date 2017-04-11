@@ -16,8 +16,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * 결과 화면의 다운로드 부분과 결과 상태를  컴포짖

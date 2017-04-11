@@ -19,7 +19,7 @@ import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 
 /**
  * execute sql 
