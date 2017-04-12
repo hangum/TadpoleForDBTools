@@ -57,9 +57,9 @@ public abstract class PasswordDialog extends Dialog {
 				textPassword.setText(strCacchPassword);
 			} else {
 				Map<String, String> mapAppm = new HashMap<String, String>();
-				mapAppm.put("ip", 		userDB.getExt8());
-				mapAppm.put("port", 	userDB.getExt9());
-				mapAppm.put("account",	userDB.getExt10());
+				mapAppm.put("ip", 		userDB.getHost());
+				mapAppm.put("port", 	userDB.getPort());
+				mapAppm.put("account",	userDB.getUsers());
 				
 				String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
 				textPassword.setText(strAMMPPassword);

@@ -74,4 +74,9 @@ public class TadpoleSystem_ExtensionDB {
 //		sqlClient.commitTransaction();
 
 	}
+
+	public static List<ExtensionDBDAO> getUserDBs(String userId) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("findUserExtensionDB", userId); //$NON-NLS-1$
+	}
 }

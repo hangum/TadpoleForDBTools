@@ -21,9 +21,9 @@
 	<!--  save extension db -->
 	<insert id="saveExtensionDB" parameterClass="com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO">
 		INSERT INTO gateway_db_list
-			(id, search_key, db_type, host, port, instance, db_user, oracle_name, gate_host, gate_port) 
+			(dev_nm, id, search_key, db_type, host, port, instance, db_user, oracle_name, gate_host, gate_port) 
 		VALUES 
-			(#id#, #search_key#, #db_type#, #host#, #port#, #instance#, #db_user#, #oracle_name#, #gate_host#, #gate_port#);
+			(#dev_nm#, #id#, #search_key#, #db_type#, #host#, #port#, #instance#, #db_user#, #oracle_name#, #gate_host#, #gate_port#);
 	</insert>
 	
 	<!--   -->
@@ -38,4 +38,10 @@
 			search_key = #search_key#
 	</select>
 	
+	
+	<select id="findUserExtensionDB" resultClass="com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO" parameterClass="java.lang.String">
+		SELECT * FROM gateway_db_list 
+		WHERE 
+			id = #id#
+	</select>
 </sqlMap>

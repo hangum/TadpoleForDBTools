@@ -10,6 +10,7 @@ package com.hangum.tadpole.engine.query.dao.gateway;
  */
 public class ExtensionDBDAO {
 	private String id = "";
+	private String dev_nm = "";
 	private String search_key;
 	private String db_type;
 	private String host;
@@ -37,6 +38,21 @@ public class ExtensionDBDAO {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+
+	/**
+	 * @return the dev_nm
+	 */
+	public String getDev_nm() {
+		return dev_nm;
+	}
+
+	/**
+	 * @param dev_nm the dev_nm to set
+	 */
+	public void setDev_nm(String dev_nm) {
+		this.dev_nm = dev_nm;
 	}
 
 	/**
