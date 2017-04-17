@@ -15,10 +15,8 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
-import com.hangum.tadpole.commons.libs.core.define.SystemDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
-import com.hangum.tadpole.engine.query.dao.system.TadpoleSystemDAO;
 import com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 

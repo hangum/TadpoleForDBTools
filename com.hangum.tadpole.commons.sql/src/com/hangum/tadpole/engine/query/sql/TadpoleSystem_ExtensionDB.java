@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.sql;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapSession;
 
 /**
  * 외부 확장시스템 
@@ -46,6 +48,18 @@ public class TadpoleSystem_ExtensionDB {
 	}
 	
 	/**
+	 * 접근이 허락된 디비 리스트를 가져온다.
+	 * 
+	 * @param userID
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<ExtensionDBDAO> getUserDBs(String userId) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getExtensionUserDBs", userId); //$NON-NLS-1$
+	}
+	
+	/**
 	 * delete extension
 	 * 
 	 * @throws TadpoleSQLManagerException
@@ -64,19 +78,26 @@ public class TadpoleSystem_ExtensionDB {
 	 */
 	public static void insertExtensionDB(List<ExtensionDBDAO> listExtensionDB) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-
-//		sqlClient.startTransaction();
-		sqlClient.startBatch();
-		for (ExtensionDBDAO extensionDBDAO : listExtensionDB) {
-			sqlClient.insert("saveExtensionDB", extensionDBDAO); //$NON-NLS-1$	
+		Connection connection = sqlClient.getDataSource().getConnection();
+		connection.setAutoCommit(false);
+		SqlMapSession session = sqlClient.openSession(connection);
+		
+		if(logger.isDebugEnabled()) logger.debug(" deleted before gateway data");
+		try {
+			session.delete("deleteExtensionDB"); //$NON-NLS-1$
+			for (ExtensionDBDAO extensionDBDAO : listExtensionDB) {
+				session.insert("saveExtensionDB", extensionDBDAO); //$NON-NLS-1$	
+			}
+			
+			connection.commit();
+		} catch(Exception sqle) {
+			logger.error("extension db list", sqle);
+			connection.rollback();
+			throw new SQLException(sqle.getMessage());
+		} finally {
+			try { if(session != null) session.close(); } catch(Exception e) {}
+			try { if(connection != null) connection.close(); } catch(Exception e) {}
 		}
-		sqlClient.executeBatch();
-//		sqlClient.commitTransaction();
-
-	}
-
-	public static List<ExtensionDBDAO> getUserDBs(String userId) throws TadpoleSQLManagerException, SQLException {
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("findUserExtensionDB", userId); //$NON-NLS-1$
+	
 	}
 }
