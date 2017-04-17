@@ -33,5 +33,15 @@
 	</selectKey>
 </insert>
 
+<!-- 사용처를 수정합니다. -->
+<update id="update_ledger_result" parameterClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO">
+	UPDATE ledger_head
+	SET 
+		 result_yn 		= #result_yn#
+		,result_msg 	= #result_msg#
+	WHERE 
+		seq = #seq#
+</update>
+
 
 </sqlMap>

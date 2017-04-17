@@ -9,6 +9,8 @@ public class LedgerDAO {
 	String comment;
 	String request_query;
 	Timestamp create_time;
+	String result_yn;
+	String result_msg;
 	
 	public LedgerDAO() {
 	}
@@ -96,6 +98,33 @@ public class LedgerDAO {
 	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
 	}
-	
+
+	/**
+	 * @return the result_yn
+	 */
+	public String getResult_yn() {
+		return result_yn;
+	}
+
+	/**
+	 * @param result_yn the result_yn to set
+	 */
+	public void setResult_yn(String result_yn) {
+		this.result_yn = result_yn;
+	}
+
+	/**
+	 * @return the result_msg
+	 */
+	public String getResult_msg() {
+		return result_msg;
+	}
+
+	/**
+	 * @param result_msg the result_msg to set
+	 */
+	public void setResult_msg(String result_msg) {
+		this.result_msg = result_msg;
+	}
 	
 }

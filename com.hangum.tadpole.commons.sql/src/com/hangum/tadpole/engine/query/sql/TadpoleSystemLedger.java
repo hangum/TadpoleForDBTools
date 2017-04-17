@@ -47,18 +47,15 @@ public class TadpoleSystemLedger {
 		
 		return ledger;
 	}
-	
+
 	/**
-	 * update system information
+	 * 원장 데이터 저장 상태를 기록한다.
 	 * 
-	 * @param useType
-	 * @throws TadpoleSQLManagerException, SQLException
+	 * @param ledgerDAO
 	 */
-	public static void updateSystemInformation(String useType) throws TadpoleSQLManagerException, SQLException {
-		TadpoleSystemDAO dao = new TadpoleSystemDAO(SystemDefine.NAME, SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.INFORMATION, useType);
-		
+	public static void insertLedgerResult(LedgerDAO ledgerDAO) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		sqlClient.update("update_system", dao);
+		sqlClient.update("update_ledger_result", ledgerDAO);
 	}
 	
 }
