@@ -65,6 +65,8 @@ public abstract class PasswordDialog extends Dialog {
 				textPassword.setText(strAMMPPassword);
 			}
 		} catch (Exception e) {
+			TadpoleSQLManager.removePassword(userDB);
+			
 			logger.error("appm error", e);
 			MessageDialog.openInformation(getShell(), CommonMessages.get().Error, "APPM interface error :" + e.getMessage());
 			

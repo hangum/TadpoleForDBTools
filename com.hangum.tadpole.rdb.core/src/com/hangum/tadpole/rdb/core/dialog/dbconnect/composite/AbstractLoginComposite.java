@@ -13,7 +13,9 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -24,13 +26,16 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.hive.core.connections.HiveJDBC2Manager;
@@ -279,7 +284,7 @@ public abstract class AbstractLoginComposite extends Composite {
 				
 			} else {
 				// 그룹 이름과 디스플레이스 이름이 같은지 검사한다.
-				if(TadpoleSystem_UserDBQuery.isNewDBValidate(SessionManager.getUserSeq(), userDBDao)) {
+				if(isNewDBValidate(SessionManager.getUserSeq(), userDBDao)) {
 					if(!MessageDialog.openConfirm(null, CommonMessages.get().Warning, Messages.get().AbstractLoginComposite_4)) {
 						return false;
 					}
@@ -294,6 +299,26 @@ public abstract class AbstractLoginComposite extends Composite {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * 이미 등록 되어 있는 디비 중에 ip, port, user가 같은 것이 있는지 검사합니다.
+	 * 
+	 * @param user_seq
+	 * @param userDBDao
+	 * @return
+	 * @throws TadpoleSQLManagerException, SQLException 
+	 */
+	private static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
+		for (ManagerListDTO managerListDTO : SessionManager.getManagerDBList()) {
+			for (UserDBDAO tmpUserDB : managerListDTO.getManagerList()) {
+				if(StringUtils.equals(userDBDao.getHost(), tmpUserDB.getHost()) && StringUtils.equals(userDBDao.getPort(), tmpUserDB.getPort()) && StringUtils.equals(userDBDao.getUsers(), tmpUserDB.getUsers())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

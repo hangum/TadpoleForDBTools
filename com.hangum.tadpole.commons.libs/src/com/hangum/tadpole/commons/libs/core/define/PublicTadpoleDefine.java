@@ -325,7 +325,7 @@ public class PublicTadpoleDefine {
 											"MUL",
 											"PRIMARY KEY,FOREIGN KEY"	// pgsql
 										};
-	
+
 	/**
 	 * is primary key
 	 * @param key

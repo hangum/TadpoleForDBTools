@@ -91,26 +91,26 @@ public class TadpoleSystem_UserDBQuery {
 		else return true;
 	}
 	
-	/**
-	 * 신규디비 등록할 수 있는지 검사합니다.
-	 * 
-	 * @param user_seq
-	 * @param userDBDao
-	 * @return
-	 * @throws TadpoleSQLManagerException, SQLException 
-	 */
-	public static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
-		Map<String, Object> queryMap = new HashMap<String, Object>();
-		queryMap.put("user_seq", 	user_seq);
-		queryMap.put("group_name", userDBDao.getGroup_name());
-		queryMap.put("display_name", userDBDao.getDisplay_name());
-		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		List<Object> listUserDB = sqlClient.queryForList("isNewDBValidate", queryMap);
-		
-		if(listUserDB.isEmpty()) return false;
-		else return true;
-	}
+//	/**
+//	 * 신규디비 등록할 수 있는지 검사합니다.
+//	 * 
+//	 * @param user_seq
+//	 * @param userDBDao
+//	 * @return
+//	 * @throws TadpoleSQLManagerException, SQLException 
+//	 */
+//	public static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
+//		Map<String, Object> queryMap = new HashMap<String, Object>();
+//		queryMap.put("user_seq", 	user_seq);
+//		queryMap.put("group_name", userDBDao.getGroup_name());
+//		queryMap.put("display_name", userDBDao.getDisplay_name());
+//		
+//		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+//		List<Object> listUserDB = sqlClient.queryForList("isNewDBValidate", queryMap);
+//		
+//		if(listUserDB.isEmpty()) return false;
+//		else return true;
+//	}
 	
 	/**
 	 * 신규 유저디비를 등록합니다.

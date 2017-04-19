@@ -99,7 +99,8 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
-		String searchKey = getKey(userDB);
+		final String searchKey = getKey(userDB);
+		final String pwdCacheKey = getDBPasswdKey(userDB);
 		
 		try {
 			sqlMapClient = dbManager.get( searchKey );
@@ -139,7 +140,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				}
 					
 				// cache에서 사용하기 위해 패스워드를 기록해 놓는다.
-				pwdManager.put(getDBPasswdKey(userDB), userDB.getPasswd());
+				pwdManager.put(pwdCacheKey, userDB.getPasswd());
 					
 				// metadata를 가져와서 저장해 놓습니다.
 				conn = sqlMapClient.getDataSource().getConnection();
@@ -155,7 +156,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			logger.error("***** get DB Instance seq is " + userDB.getSeq() + "\n" , e);
 			managerKey.remove(userDB.getTdbUserID());
 			dbManager.remove(searchKey);
-			pwdManager.remove(pwdManager);
+			pwdManager.remove(pwdCacheKey);
 			
 			throw new TadpoleSQLManagerException(e);
 		} finally {
@@ -407,5 +408,15 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	public static String getPassword(final UserDBDAO userDB) {
 		return pwdManager.get(getDBPasswdKey(userDB));
 	}
+	
+	/**
+	 * 패스워드가 틀렸을 경우 패스워드를 초기화 한다.
+	 * @param userDB
+	 * @return
+	 */
+	public static String removePassword(final UserDBDAO userDB) {
+		return pwdManager.remove(getDBPasswdKey(userDB));
+	}
+	
 	
 }
