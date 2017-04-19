@@ -37,10 +37,7 @@ import com.hangum.tadpole.db.metadata.constants.SQLConstants;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
-import com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExtensionDB;
-import com.hangum.tadpole.engine.utils.MakeJDBCConnectionStringUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -86,63 +83,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	private TadpoleSQLManager() {}
 	
 	/**
-	 * make gateway server
-	 * 
-	 * @param userDB
-	 * @return
-	 * @throws TadpoleSQLManagerException
-	 */
-	private static UserDBDAO makeGatewayServer(final UserDBDAO userDB) throws TadpoleSQLManagerException {
-		List<ExtensionDBDAO> listExtensionInfo = new ArrayList<ExtensionDBDAO>();
-		try {
-			listExtensionInfo = TadpoleSystem_ExtensionDB.getExtensionInfo(getExtensionKey(userDB));
-		} catch (Exception e) {
-			logger.error("get gateway serverlist", e);
-		}
-		
-		if(listExtensionInfo.isEmpty()) return userDB;
-
-		// 사용자 id까지 검사하면.
-		if(isGateWayIDCheck) {
-			final String strUserID = SessionManager.getEMAIL();
-			boolean isFindUser = false;
-			for (ExtensionDBDAO extensionDAO : listExtensionInfo) {
-				if(strUserID.equals(extensionDAO.getId())) {
-					userDB.setHost(extensionDAO.getGate_host());
-					userDB.setPort(extensionDAO.getGate_port());
-					userDB.setUrl(MakeJDBCConnectionStringUtil.makeConnectionUrl(userDB));
-					if(logger.isDebugEnabled()) {
-						logger.debug("**** renew url is " + userDB.getUrl());
-					}
-					
-					isFindUser = true;
-					break;
-				}
-			}
-			
-			//
-			//
-			//
-			if(!isFindUser) {
-				String strErrMsg = String.format("%s user is do not accesss db %s", strUserID, userDB.getHost());
-				logger.info(strErrMsg);
-				throw new TadpoleSQLManagerException(strErrMsg);
-			}
-		} else {
-			ExtensionDBDAO extensionDAO = listExtensionInfo.get(0);
-			
-			userDB.setHost(extensionDAO.getGate_host());
-			userDB.setPort(extensionDAO.getGate_port());
-			userDB.setUrl(MakeJDBCConnectionStringUtil.makeConnectionUrl(userDB));
-			if(logger.isDebugEnabled()) {
-				logger.debug("**** renew url is " + userDB.getUrl());
-			}
-		}
-		
-		return userDB;
-	}
-	
-	/**
 	 * <pre>
 	 * DB 정보를 생성한다.
 	 * 
@@ -169,7 +109,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				
 				// gate way 서버에 연결하려는 디비 정보가 있는지
 				if(isGatewayConnection && userDB.getDBDefine() != DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) {
-					makeGatewayServer(userDB);	
+					TDBGatewayManager.makeGatewayServer(userDB, isGateWayIDCheck);	
 				}
 				
 //				if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
@@ -445,16 +385,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				userDB.getDisplay_name()+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
-	}
-	
-	/**
-	 * 확장 디비를 사용 할 경우 사용자 키를 정의합니다.
-	 * 
-	 * @param userDB
-	 * @return
-	 */
-	private static String getExtensionKey(final UserDBDAO userDB) {
-		return 	userDB.getHost() + userDB.getPort() + userDB.getDb() + userDB.getUsers();
 	}
 	
 	/**

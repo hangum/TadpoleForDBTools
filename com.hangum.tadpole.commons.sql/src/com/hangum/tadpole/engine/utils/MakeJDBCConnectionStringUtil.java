@@ -48,6 +48,7 @@ public class MakeJDBCConnectionStringUtil {
 			}
 		} else if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
 			if(userDB.getExt1().equals("SID")) {
+//				return "jdbc:oracle:thin:@%s:%s:%s";
 				dbUrl = getPueURL(userDB.getDBDefine().getDB_URL_INFO(), userDB);
 			} else if(userDB.getExt1().equals("Service Name")) {
 				dbUrl = getPueURL("jdbc:oracle:thin:@//%s:%s/%s", userDB);

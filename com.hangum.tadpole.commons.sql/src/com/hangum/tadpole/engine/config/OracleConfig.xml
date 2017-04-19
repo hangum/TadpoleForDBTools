@@ -23,7 +23,7 @@
 			<property name="JDBC.ConnectionURL" value="${JDBC.ConnectionURL}" />
 			<property name="JDBC.Username" value="${JDBC.Username}" />
 			<property name="JDBC.Password" value="${JDBC.Password}" />
-
+			
 			<!--OPTIONAL PROPERTIES BELOW -->
 			<property name="Pool.MaximumActiveConnections" value="5" />
 			<property name="Pool.MaximumIdleConnections" value="5" />

@@ -25,6 +25,8 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.transaction.DBCPConnectionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
@@ -43,6 +45,9 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	private static final Logger logger = Logger.getLogger(TadpoleSQLTransactionManager.class);
 	private static Map<String, TransactionDAO> dbManager = null;
 	private static TadpoleSQLTransactionManager transactionManager = null;
+	
+	private static boolean isGatewayConnection = false;
+	private static boolean isGateWayIDCheck = false;
 
 	private TadpoleSQLTransactionManager() {
 	}
@@ -51,6 +56,9 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		if (transactionManager == null) {
 			transactionManager = new TadpoleSQLTransactionManager();
 			dbManager = new HashMap<String, TransactionDAO>();
+			
+			isGatewayConnection = LoadConfigFile.isEngineGateway();
+			isGateWayIDCheck = LoadConfigFile.isGateWayIDCheck();
 		}
 	}
 
@@ -73,6 +81,11 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		if (transactionDAO == null) {
 				
 			try {
+				// gate way 서버에 연결하려는 디비 정보가 있는지
+				if(isGatewayConnection && userDB.getDBDefine() != DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) {
+					TDBGatewayManager.makeGatewayServer(userDB, isGateWayIDCheck);	
+				}
+				
 				DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
 				_conn = ds.getConnection();
 				_conn.setAutoCommit(false);

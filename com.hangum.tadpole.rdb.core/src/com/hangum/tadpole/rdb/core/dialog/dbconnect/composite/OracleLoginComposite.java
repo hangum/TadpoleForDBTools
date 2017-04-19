@@ -38,6 +38,8 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionR
 /**
  * oracle login composite
  * 
+ * 오라클은 jdbc
+ * 
  * SID   jdbc:oracle:thin:@//hostname:port:sid
  * Service Name  jdbc:oracle:thin:@//hostname:port/serviceName
  * 
@@ -201,12 +203,13 @@ public class OracleLoginComposite extends AbstractLoginComposite {
 			textDatabase.setText("XE"); //$NON-NLS-1$
 			textUser.setText("HR"); //$NON-NLS-1$
 			textPassword.setText("tadpole"); //$NON-NLS-1$
+//			
+//			오라클은 옵션을 프로퍼티로 설정해야합니다. 
+//			
 //			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=10000;oracle.jdbc.ReadTimeout=10000"); //$NON-NLS-1$
-			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=5000"); //$NON-NLS-1$
 		} else {
 			textPort.setText("1521"); //$NON-NLS-1$
 //			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=10000;oracle.jdbc.ReadTimeout=10000"); //$NON-NLS-1$
-			textJDBCOptions.setText("oracle.net.CONNECT_TIMEOUT=5000"); //$NON-NLS-1$
 		}
 		
 		Combo comboGroup = preDBInfo.getComboGroup();

@@ -179,6 +179,7 @@ public class DbcpConfiguration {
       if (notEmpty(minIdle)) {
           basicDataSource.setMinIdle(Integer.parseInt(minIdle));
       }
+      
       // tdb setting initialize end
       //
       //
