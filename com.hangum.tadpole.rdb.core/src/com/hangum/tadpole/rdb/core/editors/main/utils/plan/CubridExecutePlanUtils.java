@@ -25,7 +25,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATE
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 
 import cubrid.jdbc.driver.CUBRIDStatement;
 
@@ -70,7 +70,7 @@ public class CubridExecutePlanUtils {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
+			conn = TadpoleSQLManager.getConnection(userDB);
 			conn.setAutoCommit(false); // 플랜 정보를 가져오기 위해서는 auto commit을 false로 설정해야 함.
 
 			sql = StringUtils.trim(sql).substring(6);

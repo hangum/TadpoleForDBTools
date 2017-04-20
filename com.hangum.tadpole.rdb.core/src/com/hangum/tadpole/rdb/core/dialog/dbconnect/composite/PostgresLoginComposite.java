@@ -98,7 +98,9 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 		lblNewLabelPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
-		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_textPort = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_textPort.widthHint = 50;
+		textPort.setLayoutData(gd_textPort);
 		
 		Button btnPing = new Button(grpConnectionType, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
@@ -191,15 +193,23 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			textJDBCOptions.setText("&loginTimeout=10"); //$NON-NLS-1$
 			
 		} else {
-			textPort.setText("5432"); //$NON-NLS-1$
+			if(DBDefine.AMAZON_REDSHIFT_DEFAULT == getSelectDB()) {
+				textPort.setText("5439"); //$NON-NLS-1$
+				textJDBCOptions.setText("&loginTimeout=30&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"); //&socketTimeout=30
+			} else {
+				textPort.setText("5432"); //$NON-NLS-1$
+				textJDBCOptions.setText("&loginTimeout=30"); //&socketTimeout=30
+			}
 			comboSSL.setText("NO"); //$NON-NLS-1$
-			textJDBCOptions.setText("&loginTimeout=30"); //&socketTimeout=30
 		}
 
 		Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {
-			comboGroup.add(strOtherGroupName);
+			if("".equals(selGroupName)) comboGroup.add(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
+
 			comboGroup.select(0);
+
 		} else {
 			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);
 			else comboGroup.setText(selGroupName);

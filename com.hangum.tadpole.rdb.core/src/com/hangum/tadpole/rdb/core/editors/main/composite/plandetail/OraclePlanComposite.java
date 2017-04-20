@@ -40,11 +40,11 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.dialog.dml.IndexInformationDialog;
 import com.hangum.tadpole.rdb.core.dialog.dml.TableInformationDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.oracle.OraclePlanDAO;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 
 /**
  * Oracle plan composite

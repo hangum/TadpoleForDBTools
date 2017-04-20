@@ -433,7 +433,7 @@ public class SessionManager {
 		} catch(Exception e) {
 			logger.error("loguout", e);
 		} finally {
-			removeConnection(strID);
+//			removeConnection(strID);
 		}
 	}
 	
@@ -458,7 +458,7 @@ public class SessionManager {
 			public IStatus run(IProgressMonitor monitor) {
 				
 				try {
-					TadpoleSQLTransactionManager.executeRollback(strID);
+					TadpoleSQLTransactionManager.executeAllRollback(strID);
 				} catch(Exception e) {
 					logger.error("removeTransactionInstance connection instance", e);
 					return new Status(Status.WARNING, TadpoleEngineActivator.PLUGIN_ID, e.getMessage(), e);

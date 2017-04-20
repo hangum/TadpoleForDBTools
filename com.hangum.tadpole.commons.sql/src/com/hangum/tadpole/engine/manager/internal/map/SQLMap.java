@@ -62,21 +62,13 @@ public class SQLMap {
 		config = config.replace(PASSWORD, StringEscapeUtils.escapeXml(dbInfo.getPasswd()));
 		
 		if(!"".equals(PublicTadpoleDefine.CERT_USER_INFO)) {
-			String HELLO_SQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, dbInfo.getTdbLogingIP(), dbInfo.getTdbUserID());
+			String HELLO_SQL = String.format(PublicTadpoleDefine.CERT_USER_INFO, dbInfo.getTdbLogingIP(), dbInfo.getTdbUserID()) + " " + dbInfo.getDBDefine().getValidateQuery(false);
+			
 			String APPLICATION_NAME_SQL = "";
 			if(dbInfo.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-//				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " select * from dual;");
-				HELLO_SQL = HELLO_SQL + "\n select * from dual";
-				
-				APPLICATION_NAME_SQL = String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('Tadpole Hub(%s)', '')", dbInfo.getTdbUserID());
-			} else if(DBGroupDefine.MYSQL_GROUP == dbInfo.getDBGroup()) {
-//				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " SELECT 1;");
-				HELLO_SQL = HELLO_SQL + "\n SELECT 1";
+				APPLICATION_NAME_SQL = String.format("CALL DBMS_APPLICATION_INFO.SET_MODULE('TadpoleHub_None(%s)', '')", dbInfo.getTdbUserID());
 			} else if(DBGroupDefine.POSTGRE_GROUP == dbInfo.getDBGroup()) {
-				HELLO_SQL = HELLO_SQL + "\n SELECT 1";
-				APPLICATION_NAME_SQL = String.format("SET application_name = 'Tadpole Hub(%s)'", dbInfo.getTdbUserID());
-			} else {
-//				if(logger.isInfoEnabled()) logger.info(HELLO_SQL + " Do not execute query.");
+				APPLICATION_NAME_SQL = String.format("SET application_name = 'TadpoleHub_None(%s)'", dbInfo.getTdbUserID());
 			}
 			config = config.replace(TDB_SPECIAL_INITIALSTRING_0, StringEscapeUtils.escapeXml(HELLO_SQL)) ;
 			config = config.replace(TDB_SPECIAL_INITIALSTRING_1, StringEscapeUtils.escapeXml(APPLICATION_NAME_SQL)) ;

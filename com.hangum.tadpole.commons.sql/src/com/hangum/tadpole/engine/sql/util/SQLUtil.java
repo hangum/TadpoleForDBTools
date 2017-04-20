@@ -78,7 +78,22 @@ public class SQLUtil {
 	private static final String[] NOT_ALLOWED_SQL = {
 		/* MSSQL- USE DATABASE명 */
 //		"USE"
-		};
+	};
+	
+	/**
+	 * tadpole 에서 사용하는 특수 컬럼여부 
+	 * 0번째 컬럼 #과 {@code PublicTadpoleDefine#SPECIAL_USER_DEFINE_HIDE_COLUMN}
+	 * 
+	 * @param strColumnName
+	 * @return
+	 */
+	public static boolean isTDBSpecialColumn(String strColumnName) {
+		if(StringUtils.equals(strColumnName, "#") || StringUtils.startsWithIgnoreCase(strColumnName, PublicTadpoleDefine.SPECIAL_USER_DEFINE_HIDE_COLUMN)) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 	/**
 	 * remove comment
@@ -87,6 +102,19 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String removeComment(String strSQL) {
+
+//		try {
+//			Pattern regex = Pattern.compile("(?:/\\*[^;]*?\\*/)|(?:--[^;]*?$)", Pattern.DOTALL | Pattern.MULTILINE);
+//		    Matcher regexMatcher = regex.matcher(subjectString);
+//		    while (regexMatcher.find()) {
+//		        // matched text: regexMatcher.group()
+//		        // match start: regexMatcher.start()
+//		        // match end: regexMatcher.end()
+//		    } 
+//		} catch (PatternSyntaxException ex) {
+//		    // Syntax error in the regular expression
+//		}
+
 		if(null == strSQL) return "";
 		String strCheckSQL = strSQL.replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?:--.*)", "");
 		strCheckSQL = StringUtils.trimToEmpty(strCheckSQL);

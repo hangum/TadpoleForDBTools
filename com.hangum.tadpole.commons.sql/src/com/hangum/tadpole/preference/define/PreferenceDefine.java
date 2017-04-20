@@ -59,14 +59,14 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	/** select 제한  갯수 */ 
 	public static final String SELECT_LIMIT_COUNT = "SELECT_LIMIT_COUNT";
 	/** select 디폴트 값 */
-	public static final int SELECT_SELECT_LIMIT_COUNT_VALUE = 500;
+	public static final int SELECT_SELECT_LIMIT_COUNT_VALUE = 501;
 //	/** 한번에 select 할수 있는 최대 값 */
 //	public static final int SELECT_SELECT_LIMIT_COUNT_MAX_PREFERENCE_VALUE = 200;
 	
 	/** 검색 결과 페이지 당 보여주는 갯수 */
 	public static final String SELECT_RESULT_PAGE_PREFERENCE = "SELECT_RESULT_PAGE_PREFERENCE";
 	/** select 결과를 페이지에 출력 디폴트 값 */
-	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 500;
+	public static final int SELECT_RESULT_PAGE_PREFERENCE_VALUE = 501;
 //	/** select 결과를 페이지에 출력 최대 값 */
 //	public static final int SELECT_RESULT_PAGE_MAX_PREFERENCE_VALUE = 400;
 	
@@ -196,5 +196,9 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	
 	public static final String EDITOR_MYBatisDollart = "EDITOR_MYBatisDollart";
 	public static final String EDITOR_MYBatisDollart_VALUE = "false";
+	
+	// 에디터에 콤마 포함여부.
+	public static final String EDITOR_AddComma = "EDITOR_AddComma";
+	public static final String EDITOR_AddComma_VALUE = "false";
 		
 }

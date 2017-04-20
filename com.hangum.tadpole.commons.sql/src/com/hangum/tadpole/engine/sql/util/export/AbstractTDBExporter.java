@@ -10,12 +10,24 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.export;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * abstract exporter
  * 
  * @author hangum
  *
  */
-public class AbstractTDBExporter {
+public abstract class AbstractTDBExporter {
 	protected static int DATA_COUNT = 3000;
+
+	public static String makeFileName(String strFileName, String strExt) {
+		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + strFileName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
+		return strTmpDir + strFileName + "." + strExt;
+	}
+	
+//	public abstract void beforeMakeFile();
+//	
+//	public abstract String makeHeader();
+//	public abstract String makeContent();
 }

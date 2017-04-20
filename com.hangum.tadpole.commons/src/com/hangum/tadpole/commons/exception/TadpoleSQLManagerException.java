@@ -18,6 +18,10 @@ package com.hangum.tadpole.commons.exception;
  */
 public class TadpoleSQLManagerException extends Exception {
 	
+	public TadpoleSQLManagerException(String msg) {
+		super(msg);
+	}
+	
 	public TadpoleSQLManagerException(Throwable t) {
 		super(t);
 	}

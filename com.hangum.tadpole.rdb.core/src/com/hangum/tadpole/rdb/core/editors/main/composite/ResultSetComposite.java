@@ -50,12 +50,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
@@ -77,6 +75,8 @@ import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
+import com.hangum.tadpole.engine.utils.EditorDefine;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -88,7 +88,6 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
@@ -305,7 +304,7 @@ public class ResultSetComposite extends Composite {
 		// oracle parameter
 		try {
 			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
-			String strSQL = oracleNamedParamUtil.parse(reqQuery.getSql());
+			String strSQL = oracleNamedParamUtil.parse(SQLUtil.removeComment(reqQuery.getSql()));
 			
 			Map<Integer, String> mapIndexToName = oracleNamedParamUtil.getMapIndexToName();
 			if(!mapIndexToName.isEmpty()) {
@@ -362,22 +361,12 @@ public class ResultSetComposite extends Composite {
 			}
 		}
 
-		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
-		try {
-			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) {
-				return false;
-			}
-		} catch(Exception e) {
-			executeErrorProgress(reqQuery, e, e.getMessage());
-			return false;
-		}
-	
 		// agens graph는 preparement 가 없습니다.
 		if(DBDefine.AGENSGRAPH_DEFAULT != getUserDB().getDBDefine()){
 			// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
 			if(!ifIsParameterQuery(reqQuery)) return false;
 		}
-		
+
 		return _executeQuery(reqQuery);
 	}
 	
@@ -388,6 +377,16 @@ public class ResultSetComposite extends Composite {
 	 * @return
 	 */
 	public boolean _executeQuery(final RequestQuery reqQuery) {
+		// 쿼리가 실행 가능한 상태인지(디비 락상태인지?, 프러덕디비이고 select가 아닌지?,설정인지?) 
+		try {
+			if(!GrantCheckerUtils.ifExecuteQuery(getUserDB(), reqQuery)) {
+				return false;
+			}
+		} catch(Exception e) {
+			executeErrorProgress(reqQuery, e, e.getMessage());
+			return false;
+		}
+		
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
 		controlProgress(true);
 		
@@ -606,7 +605,7 @@ public class ResultSetComposite extends Composite {
 						Map<Integer, Object> mapData = new HashMap<>();
 						mapData.put(0, mapStartObject.get(0));
 				
-						Long longDiff = NumberUtils.createLong(""+mapEndObject.get(1)) - NumberUtils.createLong(""+mapStartObject.get(1));  
+						double longDiff = NumberUtils.createDouble(""+mapEndObject.get(1)) - NumberUtils.createDouble(""+mapStartObject.get(1));  
 						mapData.put(1, longDiff);
 						
 						diffData.add(mapData);
@@ -738,7 +737,12 @@ public class ResultSetComposite extends Composite {
 				statement.setFetchSize(intSelectLimitCnt);
 				if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {
 					statement.setQueryTimeout(queryTimeOut);
-					statement.setMaxRows(intSelectLimitCnt);
+					//
+					// setMaxRows 를 설정하면 SET SQL_SELECT_LIMIT=500 를 호출하게되고 그 후 풀텍스트 검색을하면 mysql 디비가 죽는다.
+					// 
+					if(DBGroupDefine.MYSQL_GROUP != getUserDB().getDBGroup()) {
+						statement.setMaxRows(intSelectLimitCnt);	
+					}
 				}
 				
 				// check stop thread
@@ -749,14 +753,14 @@ public class ResultSetComposite extends Composite {
 				
 				// execute query
 				execServiceQuery = Executors.newSingleThreadExecutor();
-				if(intStartCnt == 0) {
-					resultSet = _runSQLSelect(statement, strSQL);
-				} else {
+//				if(intStartCnt == 0) {
+//					resultSet = _runSQLSelect(statement, strSQL);
+//				} else {
 					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
 					
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
 					resultSet = _runSQLSelect(statement, strSQL);
-				}
+//				}
 				
 			} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
 				preparedStatement = javaConn.prepareStatement(strSQL);
@@ -764,7 +768,9 @@ public class ResultSetComposite extends Composite {
 				preparedStatement.setFetchSize(intSelectLimitCnt);
 				if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {
 					preparedStatement.setQueryTimeout(queryTimeOut);
-					preparedStatement.setMaxRows(intSelectLimitCnt);
+					if(DBGroupDefine.MYSQL_GROUP != getUserDB().getDBGroup()) {
+						preparedStatement.setMaxRows(intSelectLimitCnt);	
+					}
 				}
 				
 				// check stop thread
@@ -775,14 +781,14 @@ public class ResultSetComposite extends Composite {
 				
 				// execute query
 				execServiceQuery = Executors.newSingleThreadExecutor();
-				if(intStartCnt == 0) {
-					resultSet = _runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
-				} else {
+//				if(intStartCnt == 0) {
+//					resultSet = _runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
+//				} else {
 					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
 					
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
 					resultSet = _runSQLSelect(preparedStatement, reqQuery.getStatementParameter());
-				}
+//				}
 			}
 			
 			queryResultDAO = new QueryExecuteResultDTO(getUserDB(), reqQuery.getSql(), true, resultSet, intSelectLimitCnt, intStartCnt);

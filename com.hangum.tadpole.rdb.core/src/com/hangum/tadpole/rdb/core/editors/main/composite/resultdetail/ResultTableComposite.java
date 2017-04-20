@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
@@ -54,6 +53,8 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
+import com.hangum.tadpole.engine.utils.EditorDefine;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
@@ -68,7 +69,6 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelP
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQLExtensionViewDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQLExtensionViewDialog.MYSQL_EXTENSION_VIEW;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.TableToDataUtils;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.session.manager.SessionManager;
@@ -158,7 +158,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		});
 		
 		//  SWT.VIRTUAL 일 경우 FILTER를 적용하면 데이터가 보이지 않는 오류수정.
-		tvQueryResult = new TableViewer(compositeBody, /* SWT.VIRTUAL | */ SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+		tvQueryResult = new TableViewer(compositeBody, /* SWT.VIRTUAL | */ SWT.MULTI | SWT.BORDER ); //| SWT.FULL_SELECTION
 		final Table tableResult = tvQueryResult.getTable();
 		GridData gd_tableResult = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		gd_tableResult.heightHint = 90;
@@ -366,10 +366,18 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			if(PublicTadpoleDefine.DEFINE_TABLE_COLUMN_BASE_ZERO.equals(columnDao.getName())) {
 				appendTextAtPosition(strData); //$NON-NLS-1$
 			} else {
-				if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
-					appendTextAtPosition(strData);
+				if(GetPreferenceGeneral.getAddComma()) {
+					if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
+						appendTextAtPosition(strData + ", ");
+					} else {
+						appendTextAtPosition(String.format(" '%s', ", strData)); //$NON-NLS-1$
+					}
 				} else {
-					appendTextAtPosition(String.format(" '%s'", strData)); //$NON-NLS-1$
+					if(RDBTypeToJavaTypeUtils.isNumberType(columnDao.getType())) {
+						appendTextAtPosition(strData + " ");
+					} else {
+						appendTextAtPosition(String.format(" '%s' ", strData)); //$NON-NLS-1$
+					}
 				}
 			}
 		}
@@ -526,12 +534,23 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		// 또한, 쿼리 실행할 때 마다 rsDAO 값도 변경되므로, selectoin이 변경될때 마다 같이
 		// 전달해 준다. 
 		tvQueryResult.addSelectionChangedListener(new ISelectionChangedListener() {
+//			private boolean update;
+//		    private ISelection lastSelection;
+		    
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				openSingleRowDataAction.selectionChanged(getRsDAO(), event.getSelection());
 				selectRowToEditorAction.selectionChanged(event.getSelection());
 				selectColumntoEditorAction.selectionChanged(event.getSelection());
 				columnRowDataDialogAction.selectionChanged(event.getSelection());
+				
+//				if (event.getSelection().isEmpty() && !update) {
+//		            update = true;
+//		            v.setSelection(lastSelection);
+//		            update = false;
+//		        } else if (!event.getSelection().isEmpty()) {
+//		            lastSelection = event.getSelection();
+//		        }
 			}
 		});
 	}

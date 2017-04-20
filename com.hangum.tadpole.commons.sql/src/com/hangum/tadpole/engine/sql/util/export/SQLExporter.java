@@ -106,10 +106,8 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 	
-	public static String makeFileMergeStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit, String encoding) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".sql";
-		String strFullPath = strTmpDir + strFile;
+	public static String makeFileMergeStatment(String strFullPath, String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit, String encoding) throws Exception {
+//		String strFullPath = makeFileName(tableName, "sql");
 		
 		final String MERGE_STMT = "MERGE INTO " + tableName + " A USING (\n SELECT %s FROM DUAL) B \n ON ( %s ) \n WHEN NOT MATCHED THEN \n INSERT ( %s ) \n VALUES ( %s ) \n WHEN MATCHED THEN \n UPDATE SET %s ;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
 		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
@@ -245,10 +243,8 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 
-	public static String makeFileUpdateStatment(String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit, String encoding) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".sql";
-		String strFullPath = strTmpDir + strFile;
+	public static String makeFileUpdateStatment(String strFullPath, String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit, String encoding) throws Exception {
+//		String strFullPath = makeFileName(tableName, "sql");
 		
 		final String UPDATE_STMT = "UPDATE " + tableName + " SET %s WHERE 1=1 and %s;" + PublicTadpoleDefine.LINE_SEPARATOR; 		
 		Map<Integer, String> mapColumnName = rsDAO.getColumnLabelName();
@@ -364,10 +360,8 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 	
-	public static String makeFileInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit, String encoding) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".sql";
-		String strFullPath = strTmpDir + strFile;
+	public static String makeFileInsertStatment(String strFullPath, String tableName, QueryExecuteResultDTO rsDAO, int commit, String encoding) throws Exception {
+//		String strFullPath = makeFileName(tableName, "sql");
 		
 		final String INSERT_INTO_STMT = "INSERT INTO " + tableName + " (%s) VALUES (%S);" + PublicTadpoleDefine.LINE_SEPARATOR; 
 		
@@ -494,10 +488,8 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 	
-	public static String makeFileBatchInsertStatment(String tableName, QueryExecuteResultDTO rsDAO, int commit, String encoding) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".sql";
-		String strFullPath = strTmpDir + strFile;
+	public static String makeFileBatchInsertStatment(String strFullPath, String tableName, QueryExecuteResultDTO rsDAO, int commit, String encoding) throws Exception {
+//		String strFullPath = makeFileName(tableName, "sql");
 		boolean isFirst = true;
 		
 		final String INSERT_INTO_STMT = "INSERT INTO " + tableName + " (%s) VALUES (%S)" ;

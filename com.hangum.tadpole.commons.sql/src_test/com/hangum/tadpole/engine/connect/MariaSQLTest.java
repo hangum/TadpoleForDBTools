@@ -11,7 +11,6 @@
 package com.hangum.tadpole.engine.connect;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 
 public class MariaSQLTest extends AbstractDriverInfo {

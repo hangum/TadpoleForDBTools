@@ -2,8 +2,6 @@ package com.hangum.tadpole.engine.query.dao.system.bill;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpole.engine.query.dao.system.UserDAO;
-
 /**
  * assigned service 
  * 

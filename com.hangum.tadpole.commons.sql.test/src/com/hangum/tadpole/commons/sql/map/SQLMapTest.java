@@ -12,12 +12,11 @@ package com.hangum.tadpole.commons.sql.map;
 
 import java.sql.Statement;
 
-import junit.framework.TestCase;
-
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
-import com.hangum.tadpole.engine.manager.internal.map.SQLMap;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
+
+import junit.framework.TestCase;
 
 /**
  * {@link com.hangum.tadpole.engine.manager.internal.map.SQLMap SQLMap을 테스트합니다.}
@@ -36,8 +35,7 @@ public class SQLMapTest extends TestCase {
 		try {
 			final UserDBDAO userDB = TadpoleSystemInitializer.getUserDB();
 			System.out.println(userDB);
-			SqlMapClient client = SQLMap.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			Statement stmt = javaConn.createStatement();
 			

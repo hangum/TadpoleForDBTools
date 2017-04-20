@@ -13,8 +13,8 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication;
 import java.util.List;
 import java.util.Map;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.utils.EditorDefine;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToASPConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToAxisjConvert;
 import com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.application.SQLToJavaConvert;

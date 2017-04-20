@@ -23,7 +23,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.CommentCellEditor;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * column comment editor
@@ -149,9 +148,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 			if (logger.isDebugEnabled())
 				logger.debug("userDB is " + userDB.toString());
 
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 
 			// IStructuredSelection is = (IStructuredSelection)
 			// viewer.getSelection();
@@ -193,7 +190,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
@@ -206,7 +203,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				try {
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
@@ -220,7 +217,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
@@ -242,11 +239,8 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 		PreparedStatement stmt = null;
 		try {
 
-			logger.debug("userDB is " + userDB.toString());
-
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-
-			javaConn = client.getDataSource().getConnection();
+			if(logger.isDebugEnabled()) logger.debug("userDB is " + userDB.toString());
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 
 			StringBuffer query = new StringBuffer();
 
@@ -262,7 +256,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				try {
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
@@ -274,7 +268,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
@@ -285,7 +279,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 				try {
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment drop error ", e);
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }
@@ -297,7 +291,7 @@ public class DBInfoCommentEditorSupport extends EditingSupport {
 					stmt = javaConn.prepareStatement(query.toString());
 					stmt.execute();
 				} catch (Exception e) {
-					logger.debug("query is " + query.toString());
+					if(logger.isDebugEnabled()) logger.debug("query is " + query.toString());
 					logger.error("Comment add error ", e);
 				} finally {
 					try { if(stmt != null) stmt.close(); } catch (Exception e) { }

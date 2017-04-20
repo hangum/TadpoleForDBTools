@@ -12,10 +12,10 @@ package com.hangum.tadpole.rdb.core.dialog.export.sqltoapplication.composites;
 
 import org.eclipse.swt.widgets.Composite;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine.SQL_TO_APPLICATION;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.utils.EditorDefine;
+import com.hangum.tadpole.engine.utils.EditorDefine.SQL_TO_APPLICATION;
 
 /**
  * abstract sql to composite

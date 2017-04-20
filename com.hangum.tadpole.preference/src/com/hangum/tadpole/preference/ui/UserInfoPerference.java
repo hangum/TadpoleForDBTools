@@ -38,7 +38,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
-import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
@@ -300,8 +299,8 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 	 * initialize ui
 	 */
 	private void initUI() {
-		String strLan = SessionManager.getLangeage();
-		comboLanguage.setText(new Locale(strLan).getDisplayLanguage());
+		Locale objLocale = new Locale(SessionManager.getLangeage());
+		comboLanguage.setText(objLocale.getDisplayLanguage(objLocale));
 	}
 	
 	/**

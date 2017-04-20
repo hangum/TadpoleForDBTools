@@ -12,6 +12,7 @@ package com.hangum.tadpole.engine.sql.util;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.template.AltibaseDMLTemplate;
@@ -21,6 +22,7 @@ import com.hangum.tadpole.engine.sql.template.MSSQLDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.MySQLDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.OracleDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.PostgreDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.RedShiftDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.TAJODMLTemplate;
 
@@ -99,7 +101,11 @@ public class PartQueryUtil {
 		} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			resultQuery = TAJODMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
-			resultQuery = PostgreDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			if(userDB.getDBDefine() == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
+				resultQuery = RedShiftDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			} else {
+				resultQuery = PostgreDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			}
 			
 		} else {
 			throw new Exception("Not Support DBMS Query Plan.");

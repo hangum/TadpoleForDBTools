@@ -56,7 +56,6 @@ import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.importexport.core.Messages;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * SQL to db import dialog
@@ -333,8 +332,7 @@ public class SQLToDBImportDialog extends Dialog {
 		int result = 0;
 		
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			conn = client.getDataSource().getConnection();
+			conn = TadpoleSQLManager.getConnection(userDB);
 			conn.setAutoCommit(false);
 			statement = conn.createStatement();
 			int count = 0;

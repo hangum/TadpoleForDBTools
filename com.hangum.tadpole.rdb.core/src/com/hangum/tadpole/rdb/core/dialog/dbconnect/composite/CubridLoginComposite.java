@@ -20,8 +20,8 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.utils.DBLocaleUtils;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 
 /**
  * cubrid login composite
@@ -84,7 +84,9 @@ public class CubridLoginComposite extends MySQLLoginComposite {
 		
 		 Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {
-			comboGroup.add(strOtherGroupName);
+			if("".equals(selGroupName)) comboGroup.add(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
+
 			comboGroup.select(0);
 		} else {
 			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);

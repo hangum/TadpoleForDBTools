@@ -10,9 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.connect;
 
-import java.sql.DatabaseMetaData;
-
-
 public class MSSQLTest extends AbstractDriverInfo {
 	private java.sql.Connection con = null;
 	private final String url = "jdbc:jtds:sqlserver://";

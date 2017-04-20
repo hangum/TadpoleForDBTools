@@ -46,7 +46,7 @@ public class TDBClipboardDialog extends TitleAreaDialog {
 	protected Text textMessage;
 
 	protected String title;
-	protected String message;
+	protected String strResultData;
 	protected Label lblMessage;
 	private Label label;
 	private Text txtSeperate;
@@ -57,12 +57,12 @@ public class TDBClipboardDialog extends TitleAreaDialog {
 	 * 
 	 * @param parentShell
 	 */
-	public TDBClipboardDialog(Shell parentShell, String title, String message) {
+	public TDBClipboardDialog(Shell parentShell, String title, String strResultData) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 
 		this.title = Messages.get().ClipboardDialog;
-		this.message = message;
+		this.strResultData = strResultData;
 	}
 
 	@Override
@@ -145,7 +145,12 @@ public class TDBClipboardDialog extends TitleAreaDialog {
 		if(strSep.equals("\\t")) {
 			strSep = "	";
 		}
-		String strMsg = StringUtils.replace(message, PublicTadpoleDefine.DELIMITER_DBL, strSep) + PublicTadpoleDefine.LINE_SEPARATOR;
+		String strMsg = StringUtils.replace(strResultData, PublicTadpoleDefine.DELIMITER_DBL, strSep) + PublicTadpoleDefine.LINE_SEPARATOR;
+		
+		//
+		if(strSep.equals(",")) {
+			strMsg = StringUtils.replace(strMsg, ",''", ",") + PublicTadpoleDefine.LINE_SEPARATOR;
+		}
 
 		textMessage.setText(strMsg);
 		textMessage.setFocus();

@@ -13,7 +13,6 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.columns;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

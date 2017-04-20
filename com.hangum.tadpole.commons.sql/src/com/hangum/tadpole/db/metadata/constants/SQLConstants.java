@@ -31,7 +31,7 @@ public abstract class SQLConstants {
 	public static final List<String> listColumnKeywords = Arrays.asList(SQLConstants.DEFAULT_COLUMN_KEYWORDS);
 	
 	// 에디터에서 '등을 붙여야하는 키워드를 정의합니다. 
-	public static final String[] QUOTE_MYSQL_KEYWORDS = {"TABLE", "SELECT", "OPTION", "DEFAULT", "FULLTEXT", "PACKAGE", "FUNCTION", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "KEY"};
+	public static final String[] QUOTE_MYSQL_KEYWORDS = {"SCHEMA", "TABLE", "SELECT", "OPTION", "DEFAULT", "FULLTEXT", "PACKAGE", "FUNCTION", "TRIGGER", "MATERIALIZED", "IF", "EACH", "RETURN", "KEY"};
 	public static final String[] QUOTE_MSSQL_KEYWORDS = {"GROUP"};
 	public static final String[] QUOTE_POSTGRES_KEYWORDS = {"END"};
 	public static final String[] QUOTE_SQLITE_KEYWORDS = {

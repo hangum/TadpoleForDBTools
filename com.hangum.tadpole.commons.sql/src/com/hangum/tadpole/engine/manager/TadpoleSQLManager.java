@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.db.metadata.constants.PostgreSQLConstant;
 import com.hangum.tadpole.db.metadata.constants.SQLConstants;
@@ -51,10 +52,20 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	
 	/** db 인스턴스를 가지고 있는 아이 */
 	private static Map<String, SqlMapClient> dbManager = null;
+	
+	/** db의 메타데이터를 가지고 있다 */
 	private static Map<String, TadpoleMetaData> dbMetadata = null;
+	
 	/** dbManager 의 키를 가지고 있는 친구 - logout시에 키를 사용하여 인스턴스를 삭제하기 위해 */
-	private static Map<String, List<String>> managerKey = null;//
+	private static Map<String, List<String>> managerKey = null;
+	
+	/** password manager */
+	private static Map<String, String> pwdManager = null;
+	
 	private static TadpoleSQLManager tadpoleSQLManager = null;
+	
+	private static boolean isGatewayConnection = false;
+	private static boolean isGateWayIDCheck = false;
 	
 	static {
 		if(tadpoleSQLManager == null) {
@@ -62,6 +73,10 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			dbManager = new HashMap<String, SqlMapClient>();
 			dbMetadata = new HashMap<String, TadpoleMetaData>();
 			managerKey = new HashMap<String, List<String>>();
+			pwdManager = new HashMap<String, String>();
+			
+			isGatewayConnection = LoadConfigFile.isEngineGateway();
+			isGateWayIDCheck = LoadConfigFile.isGateWayIDCheck();
 		} 
 	}
 	
@@ -84,61 +99,69 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		
-		String searchKey = getKey(userDB);
+		final String searchKey = getKey(userDB);
+		final String pwdCacheKey = getDBPasswdKey(userDB);
 		
-			try {
-				sqlMapClient = dbManager.get( searchKey );
-				if(sqlMapClient == null) {
-//					synchronized(dbManager) {
-						sqlMapClient = dbManager.get(searchKey);
-						if(sqlMapClient != null) return sqlMapClient;
-						
-//						if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
-						// oracle 일 경우 locale 설정 
-						try { 
-							if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
-								DriverManager.setLoginTimeout(10);
-								if(userDB.getLocale() != null && !"".equals(userDB.getLocale())) {
-									Locale.setDefault(new Locale(userDB.getLocale()));
-								}
-							}
-						} catch(Exception e) {
-							logger.error(String.format("set locale error: %s", e.getMessage()));
-						}
-						
-						// connection pool 을 가져옵니다.
-						sqlMapClient = SQLMap.getInstance(userDB);
-						dbManager.put(searchKey, sqlMapClient);
-						List<String> listSearchKey = managerKey.get(userDB.getTdbUserID());
-						if(listSearchKey == null) {
-							listSearchKey = new ArrayList<String>();
-							listSearchKey.add(searchKey);
-							
-							managerKey.put(userDB.getTdbUserID(), listSearchKey);
-						} else {
-							listSearchKey.add(searchKey);
-						}
-//					}	// end  synchronized
-						
-					// metadata를 가져와서 저장해 놓습니다.
-					conn = sqlMapClient.getDataSource().getConnection();
-					
-					// connection initialize
-					setConnectionInitialize(userDB, conn);
-					
-					// don't belive keyword. --;;
-					initializeConnection(searchKey, userDB, conn.getMetaData());
+		try {
+			sqlMapClient = dbManager.get( searchKey );
+			if(sqlMapClient == null) {
+				sqlMapClient = dbManager.get(searchKey);
+				if(sqlMapClient != null) return sqlMapClient;
+				
+				// gate way 서버에 연결하려는 디비 정보가 있는지
+				if(isGatewayConnection && userDB.getDBDefine() != DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) {
+					TDBGatewayManager.makeGatewayServer(userDB, isGateWayIDCheck);	
 				}
 				
-			} catch(Exception e) {
-				logger.error("***** get DB Instance seq is " + userDB.getSeq() + "\n" , e);
-				managerKey.remove(userDB.getTdbUserID());
-				dbManager.remove(searchKey);
+//				if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
+				// oracle 일 경우 locale 설정 
+				try { 
+					if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
+						DriverManager.setLoginTimeout(10);
+						if(userDB.getLocale() != null && !"".equals(userDB.getLocale())) {
+							Locale.setDefault(new Locale(userDB.getLocale()));
+						}
+					}
+				} catch(Exception e) {
+					logger.error(String.format("set locale error: %s", e.getMessage()));
+				}
 				
-				throw new TadpoleSQLManagerException(e);
-			} finally {
-				if(conn != null) try {conn.close();} catch(Exception e) {}
+				// connection pool 을 가져옵니다.
+				sqlMapClient = SQLMap.getInstance(userDB);
+				dbManager.put(searchKey, sqlMapClient);
+				List<String> listSearchKey = managerKey.get(userDB.getTdbUserID());
+				if(listSearchKey == null) {
+					listSearchKey = new ArrayList<String>();
+					listSearchKey.add(searchKey);
+					
+					managerKey.put(userDB.getTdbUserID(), listSearchKey);
+				} else {
+					listSearchKey.add(searchKey);
+				}
+					
+				// cache에서 사용하기 위해 패스워드를 기록해 놓는다.
+				pwdManager.put(pwdCacheKey, userDB.getPasswd());
+					
+				// metadata를 가져와서 저장해 놓습니다.
+				conn = sqlMapClient.getDataSource().getConnection();
+				
+				// connection initialize
+				setConnectionInitialize(userDB, conn);
+				
+				// don't belive keyword. --;;
+				initializeConnection(searchKey, userDB, conn.getMetaData());
 			}
+			
+		} catch(Exception e) {
+			logger.error("***** get DB Instance seq is " + userDB.getSeq() + "\n" , e);
+			managerKey.remove(userDB.getTdbUserID());
+			dbManager.remove(searchKey);
+			pwdManager.remove(pwdCacheKey);
+			
+			throw new TadpoleSQLManagerException(e);
+		} finally {
+			if(conn != null) try {conn.close();} catch(Exception e) {}
+		}
 
 		return sqlMapClient;
 	}
@@ -152,13 +175,13 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * @throws SQLException
 	 */
 	public static Connection getConnection(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		SqlMapClient client = getInstance(userDB);
-		Connection javaConn = client.getDataSource().getConnection();
+		Connection javaConn = getInstance(userDB).getDataSource().getConnection();
 		
 		Statement statement = null;
 		try {
 			if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
-				if(logger.isDebugEnabled()) logger.debug(String.format("****************** set define schema %s ", userDB.getSchema()));
+				if("".equals(userDB.getSchema())) userDB.setSchema(userDB.getDb());
+				if(logger.isDebugEnabled()) logger.debug(String.format("**** set define schema %s ", userDB.getSchema()));
 				
 				statement = javaConn.createStatement();
 				statement.executeUpdate("use " + userDB.getSchema());
@@ -188,7 +211,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				
 		String strIdentifierQuoteString = "";
 		try {
-			strIdentifierQuoteString = metaData.getIdentifierQuoteString();
+			strIdentifierQuoteString = StringUtils.stripToEmpty(metaData.getIdentifierQuoteString());
 		} catch(Exception e) {
 			// ignore exception, not support quoteString
 		}
@@ -306,7 +329,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	 * 사용자의 모든 인스턴스를 삭제한다.
 	 */
 	public static void removeAllInstance(String id) {
-		List<String> listKeyMap = managerKey.get(id);
+		final List<String> listKeyMap = managerKey.remove(id);
 		if(listKeyMap == null) return;
 		for (String searchKey : listKeyMap) {
 			removeInstance(searchKey);
@@ -364,5 +387,36 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				userDB.getUrl()  		+ PublicTadpoleDefine.DELIMITER +
 				userDB.getUsers()  		+ PublicTadpoleDefine.DELIMITER;
 	}
-
+	
+	/**
+	 * db password 의 키를 가지고 있는다.
+	 *
+	 * @param userDB
+	 * @return
+	 */
+	public static String getDBPasswdKey(final UserDBDAO userDB) {
+		return		userDB.getDbms_type()  	+ PublicTadpoleDefine.DELIMITER +
+				userDB.getUrl()  		+ PublicTadpoleDefine.DELIMITER;
+	}
+	
+	/**
+	 * cache password 
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static String getPassword(final UserDBDAO userDB) {
+		return pwdManager.get(getDBPasswdKey(userDB));
+	}
+	
+	/**
+	 * 패스워드가 틀렸을 경우 패스워드를 초기화 한다.
+	 * @param userDB
+	 * @return
+	 */
+	public static String removePassword(final UserDBDAO userDB) {
+		return pwdManager.remove(getDBPasswdKey(userDB));
+	}
+	
+	
 }

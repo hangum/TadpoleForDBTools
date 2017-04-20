@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -129,7 +128,7 @@ public class HttpSessionCollectorUtil {
  * @author hangum
  *
  */
-class SessionLiveChecker implements Runnable{
+class SessionLiveChecker implements Runnable {
 	private static final Logger logger = Logger.getLogger(HttpSessionCollectorListener.class);
 	
 	public SessionLiveChecker() {
@@ -139,6 +138,8 @@ class SessionLiveChecker implements Runnable{
 	public void run() {
 		
 		while(true) {
+//			// 10 분에 한번씩 Thread 검사.
+//			try { Thread.sleep((60 * 1000) * 1); } catch(Exception e) {};
 			
 			Map<String, Map<String, Object>> allUserSession = HttpSessionCollectorUtil.getInstance().getSessions();
 			Set<String> keys = allUserSession.keySet();
@@ -172,19 +173,19 @@ class SessionLiveChecker implements Runnable{
 			// 엔진의 설정 정보를 디비에서 가져와서 동기화(?)
 			// TDDO 여기서 해야하나도 싶고요.(hangum)
 //			final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-//			shell.getDisplay().asyncExec(new Runnable() {
+//			shell.getDisplay().syncExec(new Runnable() {
 //				@Override
 //				public void run() {
 //					try{
 //						TadpoleApplicationContextManager.initAdminSystemSetting();
 //					} catch(Exception e) {
 //						logger.error("re initialize system setting", e);
-//					}			
+//					}
 //				}
 //			});
-				
+			
 			// 10 분에 한번씩 Thread 검사.
-			try { Thread.sleep((60 * 1000) * 5); } catch(Exception e) {};
+			try { Thread.sleep((60 * 1000) * 10); } catch(Exception e) {};
 		} // while 
 		
 	}

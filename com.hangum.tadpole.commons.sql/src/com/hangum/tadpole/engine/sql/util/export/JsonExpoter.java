@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -71,15 +70,15 @@ public class JsonExpoter extends AbstractTDBExporter {
 		return jsonArry;
 	}
 	
-	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey) throws SQLException {
-		return makeContent( tableName,  rsDAO,  schemeKey,  recordKey, true, -1);
+	public static String makeHeadContent(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey) throws SQLException {
+		return makeHeadContent( tableName,  rsDAO,  schemeKey,  recordKey, true, -1);
 	}
 	
-	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey, boolean isFormat, int intLimitCnt) throws SQLException {
+	public static String makeHeadContent(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey, boolean isFormat, int intLimitCnt) throws SQLException {
 		
 		JsonObject jsonObj = new JsonObject();
 		
-		jsonObj.add(schemeKey, makeMetaArray(rsDAO));
+		jsonObj.add(schemeKey, makeHead(rsDAO));
 		jsonObj.add(recordKey, makeContentArray(tableName, rsDAO, intLimitCnt));		
 		
 		if(isFormat){
@@ -89,10 +88,8 @@ public class JsonExpoter extends AbstractTDBExporter {
 		}
 	}
 
-	public static JsonArray makeMetaArray(QueryExecuteResultDTO rsDAO) throws SQLException {
+	public static JsonArray makeHead(QueryExecuteResultDTO rsDAO) throws SQLException {
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
-	
-		//ResultSetMetaData rsm = rsDAO.getColumnMetaData();	
 			
 		JsonArray jsonMetaArry = new JsonArray();
 			for (int j = 1; j < mapLabelName.size(); j++) {
@@ -116,25 +113,10 @@ public class JsonExpoter extends AbstractTDBExporter {
 		return	jsonMetaArry;
 		
 	}
-			
-	/**
-	 * make content file
-	 * 
-	 * @param tableName
-	 * @param rsDAO
-	 * @return
-	 * @throws Exception
-	 */
-	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String encoding) throws Exception {
-		return makeContentFile(tableName, rsDAO, true, encoding); 
-	}
 	
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, boolean isFormat, String encoding) throws Exception {
+		String strFullPath = makeFileName(tableName, "json");
 		String strContent = makeContent(tableName, rsDAO, isFormat, -1);
-		
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".json";
-		String strFullPath = strTmpDir + strFile;
 		
 		FileUtils.writeStringToFile(new File(strFullPath), strContent, encoding, true);
 		
@@ -142,11 +124,8 @@ public class JsonExpoter extends AbstractTDBExporter {
 	}
 	
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String schemeKey, String recordKey, boolean isFormat, String encoding) throws Exception {
-		String strContent = makeContent(tableName, rsDAO, schemeKey, recordKey, isFormat, -1);
-		
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".json";
-		String strFullPath = strTmpDir + strFile;
+		String strFullPath = makeFileName(tableName, "json");
+		String strContent = makeHeadContent(tableName, rsDAO, schemeKey, recordKey, isFormat, -1);
 		
 		FileUtils.writeStringToFile(new File(strFullPath), strContent, encoding, true);
 		

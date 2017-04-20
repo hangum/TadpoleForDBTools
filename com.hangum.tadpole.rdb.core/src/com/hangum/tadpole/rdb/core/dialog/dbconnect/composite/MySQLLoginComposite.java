@@ -31,10 +31,10 @@ import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.utils.DBLocaleUtils;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
-import com.hangum.tadpole.rdb.core.util.DBLocaleUtils;
 
 /**
  * mysql login composite
@@ -107,7 +107,9 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		lblNewLabelPort.setText(Messages.get().Port);
 		
 		textPort = new Text(grpConnectionType, SWT.BORDER);
-		textPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_textPort = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_textPort.widthHint = 50;
+		textPort.setLayoutData(gd_textPort);
 		
 		Button btnPing = new Button(grpConnectionType, SWT.NONE);
 		btnPing.addSelectionListener(new SelectionAdapter() {
@@ -197,11 +199,11 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 			
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
-			textHost.setText("14.63.212.152"); //$NON-NLS-1$
-			textUser.setText("tester"); //$NON-NLS-1$
-			textPassword.setText("1234"); //$NON-NLS-1$
-			textDatabase.setText("tester"); //$NON-NLS-1$
-			textPort.setText("13306");	 //$NON-NLS-1$
+			textHost.setText("192.168.216.129"); //$NON-NLS-1$
+			textUser.setText("root"); //$NON-NLS-1$
+			textPassword.setText(""); //$NON-NLS-1$
+			textDatabase.setText("tadpole20"); //$NON-NLS-1$
+			textPort.setText("3306");	 //$NON-NLS-1$
 			
 			textJDBCOptions.setText("connectTimeout=10000"); //$NON-NLS-1$
 		} else {
@@ -211,7 +213,9 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		
 		Combo comboGroup = preDBInfo.getComboGroup();
 		if(comboGroup.getItems().length == 0) {
-			comboGroup.add(strOtherGroupName);
+			if("".equals(selGroupName)) comboGroup.add(strOtherGroupName);
+			else comboGroup.setText(selGroupName);
+
 			comboGroup.select(0);
 		} else {
 			if("".equals(selGroupName)) comboGroup.setText(strOtherGroupName);
@@ -289,6 +293,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setUsers(StringUtils.trimToEmpty(textUser.getText()));
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		userDB.setLocale(selectLocale);
+//		userDB.setIs_resource_download(SessionManager.get);
 		
 		// 처음 등록자는 권한이 어드민입니다.
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());

@@ -220,19 +220,38 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	FROM information_schema.statistics 
 	WHERE TABLE_SCHEMA = #table_schema#
 	  AND TABLE_NAME = #table_name#
-	GROUP BY TABLE_NAME, INDEX_NAME
+	GROUP BY table_catalog
+	    , table_schema
+	    ,  schema_name
+	    , table_name
+	    , non_unique
+	    , index_schema
+	    , index_name
+	    , seq_in_index
+	    , column_name
+	    , collation
+	    , cardinality
+	    , sub_part
+	    , packed
+	    , nullable
+	    , index_type
+	    , comment
 </select>
 
 <!-- 
 	index의 디테일 정보
  -->
  <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
-	SELECT * 
+	SELECT TABLE_CATALOG,TABLE_SCHEMA,TABLE_NAME,
+	NON_UNIQUE,INDEX_SCHEMA,INDEX_NAME,SEQ_IN_INDEX,COLUMN_NAME,COLLATION,
+	CARDINALITY,SUB_PART,PACKED,NULLABLE,INDEX_TYPE,COMMENT,INDEX_COMMENT 
 	FROM information_schema.statistics 
 	WHERE TABLE_SCHEMA = #table_schema# 
 		AND TABLE_NAME = #table_name# 
 		AND INDEX_NAME = #index_name#
-	GROUP BY TABLE_NAME, INDEX_NAME
+	GROUP BY TABLE_CATALOG,TABLE_SCHEMA,TABLE_NAME,
+	NON_UNIQUE,INDEX_SCHEMA,INDEX_NAME,SEQ_IN_INDEX,COLUMN_NAME,COLLATION,
+	CARDINALITY,SUB_PART,PACKED,NULLABLE,INDEX_TYPE,COMMENT,INDEX_COMMENT
 </select>
  
 <!--

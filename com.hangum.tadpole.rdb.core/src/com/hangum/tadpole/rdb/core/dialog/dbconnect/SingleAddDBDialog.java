@@ -50,7 +50,8 @@ public class SingleAddDBDialog extends Dialog {
 	/** 초기 선택한 그룹 */
 	private String selGroupName;
 	
-	private boolean isReadOnly;
+	/** UI를 수정할수 없도록 만들것인지 여부 */
+	private boolean isUIReadOnly;
 	
 	private Composite compositeBody;
 
@@ -62,9 +63,9 @@ public class SingleAddDBDialog extends Dialog {
 	/**
 	 * Create the dialog.
 	 * @param parentShell
-	 * @param isReadOnly 
+	 * @param isUIReadOnly 
 	 */
-	public SingleAddDBDialog(Shell parentShell, ExtensionUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName, boolean isReadOnly) {
+	public SingleAddDBDialog(Shell parentShell, ExtensionUserDBDAO amazonRDSDto, List<String> listGroupName, String selGroupName, boolean isUIReadOnly) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE | SWT.APPLICATION_MODAL);
 		
@@ -72,7 +73,7 @@ public class SingleAddDBDialog extends Dialog {
 		this.listGroupName = listGroupName;
 		this.selGroupName = selGroupName;
 		
-		this.isReadOnly = isReadOnly;
+		this.isUIReadOnly = isUIReadOnly;
 	}
 
 	@Override
@@ -109,7 +110,7 @@ public class SingleAddDBDialog extends Dialog {
 				listGroupName, 
 				selGroupName, 
 				(UserDBDAO)amazonRDSDto,
-				isReadOnly
+				isUIReadOnly
 				);
 		
 		// google analytic

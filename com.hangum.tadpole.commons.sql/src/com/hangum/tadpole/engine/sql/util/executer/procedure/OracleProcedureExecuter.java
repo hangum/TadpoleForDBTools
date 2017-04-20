@@ -27,7 +27,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.OracleDbmsOutputUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * oracle procedure executer
@@ -85,8 +84,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 		try {
 			if(listOutParamValues == null) getOutParameters();
 
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			try {
 				dbmsOutput = new OracleDbmsOutputUtil( javaConn );

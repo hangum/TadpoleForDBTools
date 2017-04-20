@@ -47,8 +47,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine.EXECUTE_TYPE;
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine.QUERY_MODE;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -68,18 +66,19 @@ import com.hangum.tadpole.engine.sql.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
+import com.hangum.tadpole.engine.utils.EditorDefine.EXECUTE_TYPE;
+import com.hangum.tadpole.engine.utils.EditorDefine.QUERY_MODE;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.msg.DirectChangeDialog;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * Table data direct editor
@@ -395,8 +394,7 @@ public class TableDirectEditorComposite extends Composite {
 		java.sql.Connection javaConn = null;
 		
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			stmt = javaConn.prepareStatement(requestQuery);
 			stmt.setMaxRows(GetPreferenceGeneral.getSelectLimitCount());

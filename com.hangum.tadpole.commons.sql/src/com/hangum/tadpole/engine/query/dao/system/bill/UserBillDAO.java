@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hangum.tadpole.engine.query.dao.system.UserDAO;
-
 /**
  * User bill dao
  * @author hangum

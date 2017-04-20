@@ -217,5 +217,12 @@ public class GlobalImageUtils {
 	public static Image getBlock() {
 		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/kill_process.png");
 	}
-	
+
+	/**
+	 * report
+	 * @return
+	 */
+	public static Image getReport() {
+		return ResourceManager.getPluginImage(GlobalImageUtils.IMAGE_Activator_ID, "resources/icons/report.png");
+	}
 }

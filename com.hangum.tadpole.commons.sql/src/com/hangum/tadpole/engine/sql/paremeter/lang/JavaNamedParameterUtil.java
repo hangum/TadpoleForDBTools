@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * java named parameter(?)
@@ -41,8 +40,7 @@ public class JavaNamedParameterUtil {
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			stmt = javaConn.prepareStatement(executeQuery);
 			java.sql.ParameterMetaData pmd = stmt.getParameterMetaData();
 			if(pmd != null) {

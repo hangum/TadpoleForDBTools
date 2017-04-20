@@ -10,12 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.security;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -35,7 +31,6 @@ import com.hangum.tadpole.commons.otp.core.GetOTPCode;
 import com.hangum.tadpole.engine.Messages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.ext.appm.APPMHandler;
 import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
@@ -47,10 +42,8 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @since 2015. 3. 24.
  *
  */
-public class DBPasswordAndOTPDialog extends Dialog {
+public class DBPasswordAndOTPDialog extends PasswordDialog {
 	private static final Logger logger = Logger.getLogger(DBPasswordAndOTPDialog.class);
-	private UserDBDAO userDB;
-	private Text textPassword;
 	private Text textOTP;
 
 	/**
@@ -58,9 +51,7 @@ public class DBPasswordAndOTPDialog extends Dialog {
 	 * @param parentShell
 	 */
 	public DBPasswordAndOTPDialog(Shell parentShell, UserDBDAO userDB) {
-		super(parentShell);
-		
-		this.userDB = userDB;
+		super(parentShell, userDB);
 	}
 	
 	@Override
@@ -111,28 +102,6 @@ public class DBPasswordAndOTPDialog extends Dialog {
 
 		return container;
 	}
-	
-	/**
-	 * initialize UI
-	 */
-	private void initUI() {
-		Map<String, String> mapAppm = new HashMap<String, String>();
-		mapAppm.put("hostName", 	userDB.getExt8());
-		mapAppm.put("sid", 			userDB.getExt9());
-		mapAppm.put("accountid", 	userDB.getExt10());
-		
-		try {
-			String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
-			textPassword.setText(strAMMPPassword);
-		} catch (Exception e) {
-			logger.error("appm error", e);
-			MessageDialog.openInformation(getShell(), CommonMessages.get().Error, "APPM interface error :" + e.getMessage());
-			
-			textPassword.setText("");
-		} finally {
-			userDB.setPasswd("");
-		}
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
@@ -142,7 +111,7 @@ public class DBPasswordAndOTPDialog extends Dialog {
 		String strOTPCode = textOTP.getText();
 		
 		if("".equals(strOTPCode)) {
-			MessageDialog.openError(getShell(), CommonMessages.get().Error, Messages.get().OTPEmpty);//"OTP 값을 입력해 주십시오.");
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, Messages.get().OTPEmpty);
 			textOTP.setFocus();
 			return;
 		}

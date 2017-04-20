@@ -82,8 +82,8 @@ public class TadpoleApplicationContextManager {
 	 * @throws Exception
 	 */
 	public static Map<String, UserInfoDataDAO> initAdminSystemSetting() throws Exception {
-		List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(PublicTadpoleDefine.systemAdminId);
-		Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
+		final List<UserInfoDataDAO> listUserInfo = TadpoleSystem_UserInfoData.getUserInfoData(PublicTadpoleDefine.systemAdminId);
+		final Map<String, UserInfoDataDAO> mapUserInfoData = new HashMap<String, UserInfoDataDAO>();
 		for (UserInfoDataDAO userInfoDataDAO : listUserInfo) {						
 			mapUserInfoData.put(userInfoDataDAO.getName(), userInfoDataDAO);
 		}

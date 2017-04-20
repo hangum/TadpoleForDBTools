@@ -258,5 +258,9 @@ public class GetPreferenceGeneral extends AbstractPreference {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_MYBatisDollart, PreferenceDefine.EDITOR_MYBatisDollart_VALUE);
 		return Boolean.parseBoolean(userInfo.getValue0());
 	}
+	public static boolean getAddComma() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.EDITOR_AddComma, PreferenceDefine.EDITOR_AddComma_VALUE);
+		return Boolean.parseBoolean(userInfo.getValue0());
+	}
 	
 }

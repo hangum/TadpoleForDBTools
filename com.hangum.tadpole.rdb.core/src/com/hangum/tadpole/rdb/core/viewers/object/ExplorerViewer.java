@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
@@ -47,14 +48,15 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.InitializeDB;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.Messages;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.TadpoleGraphPathComposite;
@@ -414,7 +416,7 @@ public class ExplorerViewer extends ViewPart {
 					comboSchema.add(""+mapData.get("schema"));
 				}
 				comboSchema.select(0);
-				userDB.setSchema(comboSchema.getText());
+				userDB.setSchema("public");
 			} catch(Exception e) {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
@@ -462,8 +464,22 @@ public class ExplorerViewer extends ViewPart {
 		
 		// 스키마 목록을 재상용하기 위해 기록합니다. 
 		userDB.setSchemas(Arrays.asList(comboSchema.getItems()));
+		
+		// initialize UserDB
+		InitializeDB.dbInfo(userDB);
+		
+		// refresh manager viewer
+		refreshManagerViewUserDB();
 	}
 	
+	/**
+	 * refresh manager viewer
+	 */
+	private void refreshManagerViewUserDB() {
+		final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);
+		managerView.getManagerTV().refresh(userDB, true);
+	}
+
 	/**
 	 * select user databse
 	 * @param selectElement
@@ -499,6 +515,8 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("initialize database " + e.getMessage());
 				userDB = null;
 				createTable();
+
+				MessageDialog.openError(getSite().getShell(), CommonMessages.get().Error, Messages.get().doNotConnectionDB +  e.getMessage().toString());
 			}
 		}
 	}
@@ -609,15 +627,15 @@ public class ExplorerViewer extends ViewPart {
 				createGraphPath();
 				createVertex();
 				createEdge();
-			}
+				
+				createTable();
+				createView();
+				createProcedure();
+				createFunction();
+				createTrigger();
 			
-			createTable();
-			createView();
-			createProcedure();
-			createFunction();
-			createTrigger();
-			
-			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
+				
+				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					agensGraphPathComposite.getTableviewer(),
 					agensVertexComposite.getTableviewer(),
@@ -631,7 +649,22 @@ public class ExplorerViewer extends ViewPart {
 					functionCompostite.getTableviewer(),
 					triggerComposite.getTableViewer()
 				};
+			} else if(DBDefine.AMAZON_REDSHIFT_DEFAULT == userDB.getDBDefine()) {
+				createTable();
+				createView();
+				
+				arrayStructuredViewer = new StructuredViewer[] { 
+						tableComposite.getTableListViewer(), 
+						tableComposite.getTableColumnViewer(),
+						tableComposite.getIndexComposite().getTableViewer(),
+						tableComposite.getTriggerComposite().getTableViewer(),
+						viewComposite.getTableViewer()
+					};
 			} else {
+				createProcedure();
+				createFunction();
+				createTrigger();
+				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					tableComposite.getTableListViewer(), 
 					tableComposite.getTableColumnViewer(),

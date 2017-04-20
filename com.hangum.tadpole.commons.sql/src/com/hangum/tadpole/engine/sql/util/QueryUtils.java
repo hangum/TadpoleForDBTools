@@ -79,8 +79,7 @@ public class QueryUtils {
 			java.sql.Connection javaConn = null;
 			PreparedStatement prepareStatement = null;
 			try {
-				SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-				javaConn = client.getDataSource().getConnection();
+				javaConn = TadpoleSQLManager.getConnection(userDB);
 				prepareStatement = javaConn.prepareStatement(strQuery);
 				
 				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.

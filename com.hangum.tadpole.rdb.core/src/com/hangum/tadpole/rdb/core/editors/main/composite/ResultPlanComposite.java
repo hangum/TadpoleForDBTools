@@ -29,13 +29,13 @@ import org.eclipse.swt.widgets.Control;
 
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.AbstractPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.GeneralPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.OraclePlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
-import com.hangum.tadpole.rdb.core.editors.main.utils.RequestQuery;
 import com.swtdesigner.ResourceManager;
 
 /**

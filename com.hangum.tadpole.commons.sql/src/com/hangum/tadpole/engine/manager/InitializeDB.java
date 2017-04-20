@@ -1,0 +1,57 @@
+/*******************************************************************************
+ * Copyright (c) 2017 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
+package com.hangum.tadpole.engine.manager;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+
+/**
+ * Initialize UserDB
+ * 
+ * @author hangum
+ *
+ */
+public class InitializeDB {
+	private static final Logger logger = Logger.getLogger(InitializeDB.class);
+	
+	/**
+	 * initialize DB information
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static UserDBDAO dbInfo(UserDBDAO userDB) {
+		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			
+			try {
+				//
+				// db readonly 여부
+				//
+				QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(userDB, "SHOW global variables like 'read_only'", 0, 20);
+				List<Map<Integer, Object>> tdbResultSet = endStatus.getDataList().getData();
+				String strReadonly = ""+tdbResultSet.get(0).get(1);
+				if("OFF".equals(strReadonly)) userDB.setReadonly("NO"); 
+				else userDB.setReadonly("YES");
+			} catch (Exception e) {
+				logger.error("mysql connection initialize: " + e.getMessage());
+			}
+		}
+		
+		return userDB;
+	}
+}

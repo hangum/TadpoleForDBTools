@@ -78,8 +78,7 @@ public class SQLQueryUtil {
 		java.sql.Connection javaConn = null;
 		
 		try {
-			SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-			javaConn = client.getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
 			PreparedStatement stmt = null;
 			stmt = javaConn.prepareStatement(thisTimeQuery); 

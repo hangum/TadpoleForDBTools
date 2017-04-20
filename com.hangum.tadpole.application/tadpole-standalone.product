@@ -48,7 +48,7 @@
       <plugin id="com.hangum.tadpole.application"/>
       <plugin id="com.hangum.tadpole.applicattion.start"/>
       <plugin id="com.hangum.tadpole.cipher.core"/>
-      <plugin id="com.hangum.tadpole.cipher.old.core"/>
+      <plugin id="com.hangum.tadpole.cipher.renew.core"/>
       <plugin id="com.hangum.tadpole.commons.admin.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.otp.core"/>
@@ -57,6 +57,8 @@
       <plugin id="com.hangum.tadpole.commons.utils.zip"/>
       <plugin id="com.hangum.tadpole.compare.core"/>
       <plugin id="com.hangum.tadpole.engine"/>
+      <plugin id="com.hangum.tadpole.ext.appm.basic.core"/>
+      <plugin id="com.hangum.tadpole.ext.appm.core"/>
       <plugin id="com.hangum.tadpole.help.core"/>
       <plugin id="com.hangum.tadpole.hive.core"/>
       <plugin id="com.hangum.tadpole.importexport.db"/>

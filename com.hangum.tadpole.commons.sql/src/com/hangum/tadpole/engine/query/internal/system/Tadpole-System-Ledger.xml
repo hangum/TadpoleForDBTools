@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2017 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!-- 
+
+ -->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Tadpole-System-Ledger">
+
+
+<!-- 
+ 	Ledger list
+ -->
+<select id="getOracleDetailListLedger" resultClass="com.hangum.tadpole.engine.query.dao.system.ledger.DelegerHistoryDAO"  parameterClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO">
+	SELECT SEQ, REFERENCE_KEY, CR_NUMBER, ID, REQ_QUERY, EXE_QUERY, PR_KEY, BEFORE_RESULT, AFTER_RESULT, CREATE_TIME, PR_ROWID 
+	FROM DELGER_HISTORY
+	WHERE REFERENCE_KEY = #seq#
+	ORDER BY SEQ
+</select>
+
+<!-- 
+ 	Ledger list
+ -->
+<select id="getMySQLListLedger" resultClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO"  parameterClass="java.util.Map">
+	SELECT a.*, b.email AS userID
+	FROM ledger_head a,
+	 	tadpole_user b
+	WHERE a.user_seq = b.seq
+		AND b.email like #strUser#
+		AND a.cp_seq like #crNumber#
+	ORDER BY create_time DESC
+</select>
+
+
+<!-- 
+	template insert
+ -->
+<insert id="insert_ledger" parameterClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO">
+	INSERT INTO ledger_head (user_seq, cp_seq, comment, request_query) 
+	VALUES (#user_seq#, #cp_seq#, #comment#, #request_query#);
+	
+	<selectKey resultClass="java.lang.Integer">
+		SELECT max(seq) seq
+		FROM ledger_head 
+		WHERE user_seq = #user_seq# 
+	</selectKey>
+</insert>
+
+<!-- 사용처를 수정합니다. -->
+<update id="update_ledger_result" parameterClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO">
+	UPDATE ledger_head
+	SET 
+		 result_yn 		= #result_yn#
+		,result_msg 	= #result_msg#
+	WHERE 
+		seq = #seq#
+</update>
+
+
+</sqlMap>

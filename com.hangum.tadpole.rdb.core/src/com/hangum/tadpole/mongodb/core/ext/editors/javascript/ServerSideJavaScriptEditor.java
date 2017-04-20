@@ -42,7 +42,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.hangum.tadpole.ace.editor.core.define.EditorDefine;
 import com.hangum.tadpole.ace.editor.core.dialogs.help.MongoDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.EditorExtension;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
@@ -57,6 +56,7 @@ import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBServerSideJavaScriptDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.utils.EditorDefine;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.browserfunction.JavaScriptBrowserFunctionService;
 import com.hangum.tadpole.mongodb.core.ext.editors.javascript.dialog.EvalInputDialog;
 import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;

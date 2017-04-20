@@ -32,6 +32,7 @@ import com.hangum.tadpole.commons.util.DateUtil;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.IPUtil;
 import com.hangum.tadpole.commons.util.LDAPUtil;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
@@ -131,10 +132,12 @@ public abstract class AbstractLoginDialog extends Dialog {
 	 */
 	protected boolean isQuestOTP(UserDAO userDao, String strUserIP) {
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDao.getUse_otp())) {
-			OTPInputDialog otpDialog = new OTPInputDialog(getShell(), userDao.getEmail(), userDao.getOtp_secret());
-			if(Dialog.CANCEL == otpDialog.open()) {
-				saveLoginHistory(userDao.getSeq(), strUserIP, PublicTadpoleDefine.YES_NO.NO.name(), String.format("OTP Fail"));
-				return false;
+			if(LoadConfigFile.isUseOPT()) {
+				OTPInputDialog otpDialog = new OTPInputDialog(getShell(), userDao.getEmail(), userDao.getOtp_secret());
+				if(Dialog.CANCEL == otpDialog.open()) {
+					saveLoginHistory(userDao.getSeq(), strUserIP, PublicTadpoleDefine.YES_NO.NO.name(), String.format("OTP Fail"));
+					return false;
+				}
 			}
 		}
 		
@@ -170,7 +173,9 @@ public abstract class AbstractLoginDialog extends Dialog {
 	 * @param strReason
 	 */
 	protected void saveLoginHistory(int userSeq, String strIP, String strYesNO, String strReason) {
-		TadpoleSystem_UserQuery.saveLoginHistory(userSeq, strIP, strYesNO, strReason);
+		if(LicenseValidator.getLicense().isEnterprise()) {
+			TadpoleSystem_UserQuery.saveLoginHistory(userSeq, strIP, strYesNO, strReason);
+		}
 	}
 	
 	/**

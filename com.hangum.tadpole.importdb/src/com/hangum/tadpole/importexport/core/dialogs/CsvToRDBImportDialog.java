@@ -659,7 +659,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		File userDBFile = arryFiles[arryFiles.length-1];
 		
 		CSVLoader loader = new CSVLoader(textSeprator.getText(), textBatchSize.getText(), btnStop.getSelection());
-		Connection conn =  null;
+		Connection javaConn =  null;
 		HashMap<String,Object> keyColumns = new HashMap<String,Object>();
 		String stmtType = "i"; //$NON-NLS-1$
 		String workType = "n"; //$NON-NLS-1$
@@ -689,10 +689,9 @@ public class CsvToRDBImportDialog extends Dialog {
 			
 
 			keyColumns = loadPrimaryKeyColumns(textTableName.getText().trim());
-			conn = TadpoleSQLManager.getInstance(userDB).getDataSource().getConnection();
+			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
-			
-			int count = loader.loadCSV(conn, userDBFile, textTableName.getText(), workType, stmtType, keyColumns, disableObjectResults);
+			int count = loader.loadCSV(javaConn, userDBFile, textTableName.getText(), workType, stmtType, keyColumns, disableObjectResults);
 			
 			this.appendPreviewSQL(loader.getImportResultLog().toString());
 			
@@ -703,7 +702,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			
 			return;
 		} finally {
-			if(conn != null) try { conn.close(); } catch(Exception e) {} 
+			if(javaConn != null) try { javaConn.close(); } catch(Exception e) {} 
 		}
 		
 		//super.okPressed();

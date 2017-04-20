@@ -41,7 +41,6 @@ public enum DefineDDL {
 	
 	// jobs
 	JOBS_CREATE("\\s+([A-Z0-9_\\.\"'`]+)SYS.DBMS_JOB.ISUBMIT\\s+([A-Z0-9_\\.\"'`]+)", QUERY_DDL_TYPE.JOBS, QUERY_DDL_STATUS.CREATE),
-	JOBS_CREATE2("\\s+([A-Z0-9_\\.\"'`]+)SYS.DBMS_JOB.SUBMIT\\s+([A-Z0-9_\\.\"'`]+)", QUERY_DDL_TYPE.JOBS, QUERY_DDL_STATUS.CREATE),
 	JOBS_ALTER("\\s+([A-Z0-9_\\.\"'`]+)SYS.DBMS_JOB.REMOVE\\s+([A-Z0-9_\\.\"'`]+)", QUERY_DDL_TYPE.JOBS, QUERY_DDL_STATUS.ALTER),
 	JOBS_DROP("\\s+([A-Z0-9_\\.\"'`]+)SYS.DBMS_JOB.REMOVE\\s+([A-Z0-9_\\.\"'`]+)", QUERY_DDL_TYPE.JOBS, QUERY_DDL_STATUS.DROP),
 	

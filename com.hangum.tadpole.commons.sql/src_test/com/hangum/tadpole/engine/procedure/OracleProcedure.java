@@ -15,8 +15,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.commons.lang.StringUtils;
-
 
 /**
  * http://www.mkyong.com/oracle/oracle-stored-procedures-hello-world-examples/

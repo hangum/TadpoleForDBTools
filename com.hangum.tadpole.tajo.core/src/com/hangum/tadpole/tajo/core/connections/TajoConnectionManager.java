@@ -38,7 +38,7 @@ import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
  * @author hangum
  *
  */
-public class TajoConnectionManager implements ConnectionInterfact {
+public class TajoConnectionManager {//implements ConnectionInterfact {
 	private static final Logger logger = Logger.getLogger(TajoConnectionManager.class);
 	
 	/**

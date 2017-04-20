@@ -51,7 +51,7 @@ public enum DBGroupDefine {
 			return MSSQL_GROUP;
 		} else if(dbDefine == DBDefine.MYSQL_DEFAULT || dbDefine == DBDefine.MARIADB_DEFAULT) {
 			return MYSQL_GROUP;
-		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT || dbDefine == DBDefine.AGENSGRAPH_DEFAULT) {
+		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT || dbDefine == DBDefine.AGENSGRAPH_DEFAULT || dbDefine == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
 			return POSTGRE_GROUP;
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT || dbDefine == DBDefine.HIVE2_DEFAULT) {
 			return HIVE_GROUP;

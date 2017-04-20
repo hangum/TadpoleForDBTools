@@ -101,8 +101,10 @@
 	
 	<!-- 사용자의 서비스 가능 날짜를 구한다. -->
 	<select id="calcMaxServiceDate" resultClass="com.hangum.tadpole.engine.query.dao.system.bill.AssignedServiceDAO" parameterClass="java.lang.Integer">
-		select seq, max(service_end_data) service_end_data from assigned_service
+		select seq, max(service_end_data) service_end_data 
+		from assigned_service
 		where user_seq = #user_seq#
+		group by seq
 	</select>
 	
 </sqlMap>

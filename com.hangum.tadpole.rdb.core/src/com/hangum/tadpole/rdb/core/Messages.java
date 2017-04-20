@@ -15,6 +15,8 @@ import org.eclipse.rap.rwt.RWT;
 public class Messages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.rdb.core.messages"; //$NON-NLS-1$
 
+	public String doNotConnectionDB;
+
 	public String format;
 	public String AddTable;
 
@@ -693,6 +695,18 @@ public class Messages {
 	public String DBReadOnly;
 
 	public String DownloadQueryResult;
+
+	public String CheckDataAndRunQeury;
+
+	public String AreYouModifyAllData;
+
+	public String UpdateDeleteConfirmDialog_Message;
+
+	public String UpdateDeleteConfirmDialog_PleaseSelect;
+
+	public String UpdateDeleteConfirmDialog_findData;
+
+	public String UpdateDeleteConfirmDialog_findDataOver;
 	
 //	public String PLAN_TABLE_NOT_FOUND;
 	

@@ -11,14 +11,12 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -27,6 +25,8 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.transaction.DBCPConnectionManager;
 import com.hangum.tadpole.engine.manager.transaction.TransactionDAO;
@@ -45,6 +45,9 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	private static final Logger logger = Logger.getLogger(TadpoleSQLTransactionManager.class);
 	private static Map<String, TransactionDAO> dbManager = null;
 	private static TadpoleSQLTransactionManager transactionManager = null;
+	
+	private static boolean isGatewayConnection = false;
+	private static boolean isGateWayIDCheck = false;
 
 	private TadpoleSQLTransactionManager() {
 	}
@@ -53,6 +56,9 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		if (transactionManager == null) {
 			transactionManager = new TadpoleSQLTransactionManager();
 			dbManager = new HashMap<String, TransactionDAO>();
+			
+			isGatewayConnection = LoadConfigFile.isEngineGateway();
+			isGateWayIDCheck = LoadConfigFile.isGateWayIDCheck();
 		}
 	}
 
@@ -75,6 +81,11 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		if (transactionDAO == null) {
 				
 			try {
+				// gate way 서버에 연결하려는 디비 정보가 있는지
+				if(isGatewayConnection && userDB.getDBDefine() != DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) {
+					TDBGatewayManager.makeGatewayServer(userDB, isGateWayIDCheck);	
+				}
+				
 				DataSource ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
 				_conn = ds.getConnection();
 				_conn.setAutoCommit(false);
@@ -86,22 +97,22 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 				_transactionDAO.setStartTransaction(new Timestamp(System.currentTimeMillis()));
 				_transactionDAO.setKey(searchKey);
 				
-				// --------[Test start]----------------------
-				if (logger.isDebugEnabled()) logger.debug("\t New connection strt......");
-				PreparedStatement ps = null;
-				ResultSet rs = null;
-				try {
-					ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
-					rs = ps.executeQuery();
-					if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
-				} catch(Exception e) {
-					logger.error("first test connection query", e);
-				} finally {
-					if(rs != null) rs.close();
-					if(ps != null) ps.close();
-				}
-				if (logger.isDebugEnabled()) logger.debug("\t New connection end......");
-				// --------[Test end]----------------------
+//				// --------[Test start]----------------------
+//				if (logger.isDebugEnabled()) logger.debug("\t New connection strt......");
+//				PreparedStatement ps = null;
+//				ResultSet rs = null;
+//				try {
+//					ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+//					rs = ps.executeQuery();
+//					if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
+//				} catch(Exception e) {
+//					logger.error("first test connection query", e);
+//				} finally {
+//					if(rs != null) rs.close();
+//					if(ps != null) ps.close();
+//				}
+//				if (logger.isDebugEnabled()) logger.debug("\t New connection end......");
+//				// --------[Test end]----------------------
 				
 				dbManager.put(searchKey, _transactionDAO);
 				
@@ -114,54 +125,72 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		} else {
 			_conn = transactionDAO.getConn();
 			
-			// --------[Test start]----------------------
-			if (logger.isDebugEnabled()) logger.debug("\t Already connection start......");
-				
-			PreparedStatement ps = null;
-			ResultSet rs = null;
-			try {
-				ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
-				rs = ps.executeQuery();
-				if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
-			} catch(Exception e) {
-				logger.error("test connection query", e);
-				
-				// 세션이 종료 되었거나 하여서 세션이 강제로 끊겼다. 
-				rollback(userId, userDB);
-			} finally {
-				if(rs != null) rs.close();
-				if(ps != null) ps.close();
-			}
-			if (logger.isDebugEnabled()) logger.debug("\t Already connection end......");
+//			// --------[Test start]----------------------
+//			if (logger.isDebugEnabled()) logger.debug("\t Already connection start......");
+//				
+//			PreparedStatement ps = null;
+//			ResultSet rs = null;
+//			try {
+//				ps = _conn.prepareStatement(userDB.getDBDefine().getValidateQuery());
+//				rs = ps.executeQuery();
+//				if (logger.isDebugEnabled()) logger.debug("\t result => " + rs.getRow());
+//			} catch(Exception e) {
+//				logger.error("test connection query", e);
+//				
+//				// 세션이 종료 되었거나 하여서 세션이 강제로 끊겼다. 
+//				rollback(userId, userDB);
+//			} finally {
+//				if(rs != null) rs.close();
+//				if(ps != null) ps.close();
+//			}
+//			if (logger.isDebugEnabled()) logger.debug("\t Already connection end......");
 			// --------[Test end]----------------------
 		}
 		
 		// 변경시 마다 커넥션을 수정한다.
-		return changeScheema(userDB, _conn);
+		return changeSchema(userId, searchKey, userDB, _conn);
 	}
 	
 	/**
 	 * 사용자 커넥션을 얻는다.
 	 * 
+	 * @param searchKey
 	 * @param userDB
 	 * @param javaConn
 	 * @return
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	private static Connection changeScheema(final UserDBDAO userDB, final Connection javaConn) throws TadpoleSQLManagerException, SQLException {
+	private static Connection changeSchema(final String userId, final String searchKey, final UserDBDAO userDB, Connection javaConn) throws TadpoleSQLManagerException, SQLException {
+		
+		String strSQL = "";
 		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
-			Statement statement = null;
-			try {
-				statement = javaConn.createStatement();
-				statement.executeUpdate("use " + userDB.getSchema());
-			} catch(Exception e) {
-				logger.error("change scheman ", e);
-				throw new SQLException(e);
-			} finally {
-				if(statement != null) statement.close();
-			}
-		}	// end mysql group
+			strSQL = "use " + userDB.getSchema();
+		} else {
+			strSQL = userDB.getDBDefine().getValidateQuery(false);
+		}
+
+		Statement statement = null;
+		try {
+			statement = javaConn.createStatement();
+			statement.executeUpdate(strSQL);
+		} catch(Exception e) {
+			logger.error("Transaction Connection disconnected. and now connect of newone. user id is " + userId);
+			
+//			Display display = PlatformUI.getWorkbench().getDisplay();
+//			if(MessageDialog.openConfirm(display.getActiveShell(), "error", "디비연결시 오류가 발생했습니다.  기존 연결을 지우고 새롭게 연결하시겠습니까?")) {
+				removeInstance(userId, searchKey);
+				try {
+					javaConn = getInstance(userId, userDB);
+				} catch (Exception e1) {
+					logger.error("user connection disconnect" + e1);
+				}
+//			} else {
+//				throw new SQLException(e);
+//			}
+		} finally {
+			if(statement != null) statement.close();
+		}
 		
 		return javaConn;
 	}
@@ -231,26 +260,37 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	 * 
 	 * @param userId
 	 */
-	public static void executeRollback(final String userId) {
-		Set<String> keys = dbManager.keySet();
-		for (String searchKey : keys) {
-			if (StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
-				if (logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
+	public static void executeAllRollback(final String userId) {
+		Iterator iteratorEntrySet = dbManager.entrySet().iterator();
+		while(iteratorEntrySet.hasNext()) {
+			Map.Entry mapObject = (Map.Entry)iteratorEntrySet.next();
+			String searchKey = (String)mapObject.getKey();
+			
+			try {
+				if (StringUtils.startsWith(searchKey, userId + PublicTadpoleDefine.DELIMITER)) {
+					if (logger.isDebugEnabled()) logger.debug(String.format("== logout executeRollback start== [%s]", searchKey));
+	
+					TransactionDAO transactionDAO = (TransactionDAO)mapObject.getValue();
+					if (transactionDAO != null) {
+						Connection conn = transactionDAO.getConn();
+						
+						try {
+							conn.rollback();
+						} catch (Exception e) {
+							logger.error("logout transaction commit", e);
+						} finally {
+							try { if (conn != null) conn.close(); } catch (Exception e) {}
+						}
+					} // end trsansaction dao
 
-				TransactionDAO transactionDAO = dbManager.get(searchKey);
-				if (transactionDAO != null) {
-					Connection conn = transactionDAO.getConn();
-					try {
-						conn.rollback();
-					} catch (Exception e) {
-						logger.error("logout transaction commit", e);
-					} finally {
-						try { if (conn != null) conn.close(); } catch (Exception e) {}
-						removeInstance(userId, searchKey);
-					}
-					
-				} // end trsansaction dao
-			} //
+					// 기존 object와 커넥션 풀을 삭제한다.
+					iteratorEntrySet.remove();
+					transactionDAO =null;
+					DBCPConnectionManager.getInstance().releaseConnectionPool(searchKey);
+				}
+			} catch(Exception e) {
+				logger.error("********************** Release connection pool exception", e);
+			}
 		}
 	}
 

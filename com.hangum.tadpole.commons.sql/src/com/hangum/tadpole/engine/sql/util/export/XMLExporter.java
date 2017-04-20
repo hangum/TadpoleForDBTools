@@ -27,7 +27,6 @@ import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -111,9 +110,7 @@ public class XMLExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeContentFile(String tableName, QueryExecuteResultDTO rsDAO, String encoding) throws Exception {
-		String strTmpDir = PublicTadpoleDefine.TEMP_DIR + tableName + System.currentTimeMillis() + PublicTadpoleDefine.DIR_SEPARATOR;
-		String strFile = tableName + ".xml";
-		String strFullPath = strTmpDir + strFile;
+		String strFullPath = makeFileName(tableName, "xml");
 		
 		final StringWriter stWriter = new StringWriter();
 		final List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
