@@ -20,6 +20,30 @@
 
 
 <!-- 
+ 	Ledger list
+ -->
+<select id="getOracleDetailListLedger" resultClass="com.hangum.tadpole.engine.query.dao.system.ledger.DelegerHistoryDAO"  parameterClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO">
+	SELECT SEQ, REFERENCE_KEY, CR_NUMBER, ID, REQ_QUERY, EXE_QUERY, PR_KEY, BEFORE_RESULT, AFTER_RESULT, CREATE_TIME, PR_ROWID 
+	FROM DELGER_HISTORY
+	WHERE REFERENCE_KEY = #seq#
+	ORDER BY SEQ
+</select>
+
+<!-- 
+ 	Ledger list
+ -->
+<select id="getMySQLListLedger" resultClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO"  parameterClass="java.util.Map">
+	SELECT a.*, b.email AS userID
+	FROM ledger_head a,
+	 	tadpole_user b
+	WHERE a.user_seq = b.seq
+		AND b.email like #strUser#
+		AND a.cp_seq like #crNumber#
+	ORDER BY create_time DESC
+</select>
+
+
+<!-- 
 	template insert
  -->
 <insert id="insert_ledger" parameterClass="com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO">

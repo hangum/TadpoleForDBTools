@@ -70,4 +70,6 @@
 	</transactionManager>
 
 	<sqlMap resource="com/hangum/tadpole/engine/query/OracleSQL.xml" />
+	<!-- ledger list -->
+	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Ledger.xml" />
 </sqlMapConfig>

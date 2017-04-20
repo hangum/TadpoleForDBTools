@@ -11,12 +11,17 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.ledger.DelegerHistoryDAO;
 import com.hangum.tadpole.engine.query.dao.system.ledger.LedgerDAO;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -31,6 +36,38 @@ public class TadpoleSystemLedger {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSystemLedger.class);
+	
+	/**
+	 * 오라클 변경이력데이터 
+	 * @param userDBDAO 
+	 * 
+	 * @param ledgerDAO
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<DelegerHistoryDAO> getOracleDetailListLedger(UserDBDAO userDBDAO, LedgerDAO ledgerDAO) throws TadpoleSQLManagerException, SQLException {
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDBDAO);
+		return sqlClient.queryForList("getOracleDetailListLedger", ledgerDAO);
+	}
+	
+	/**
+	 * 
+	 * @param strUser
+	 * @param crNumber
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static List<LedgerDAO> getMySQLListLedger(String strUser, String crNumber) throws TadpoleSQLManagerException, SQLException {
+		Map<String, Object> mapParam = new HashMap<String, Object>();
+		mapParam.put("strUser", "%" + strUser + "%");
+		mapParam.put("crNumber", "%" + crNumber + "%");
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getMySQLListLedger", mapParam);
+	}
 	
 	/**
 	 * ledger 정보를 저장한다.
