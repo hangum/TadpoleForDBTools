@@ -92,10 +92,10 @@ public abstract class MakeContentAssistUtil {
 	 * @return
 	 */
 	protected String getContentAssist(final UserDBDAO userDB) {
-		final String strSchema = "".equals(userDB.getSchemaListSeparator())?getAssistSchemaList(userDB):userDB.getSchemaListSeparator();
-		final String strTableList = "".equals(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
-		final String strViewList = "".equals(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
-		final String strFunction = "".equals(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
+		final String strSchema = StringUtils.isEmpty(userDB.getSchemaListSeparator())?getAssistSchemaList(userDB):userDB.getSchemaListSeparator();
+		final String strTableList = StringUtils.isEmpty(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
+		final String strViewList = StringUtils.isEmpty(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
+		final String strFunction = StringUtils.isEmpty(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
 		
 		String strContentAssistList = strSchema;
 		if(!StringUtils.isEmpty(strTableList)) {

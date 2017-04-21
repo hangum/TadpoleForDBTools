@@ -17,7 +17,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -57,6 +59,21 @@ public class QueryUtils {
 	
 	/** SUPPORT RESULT TYPE */
 	public static enum RESULT_TYPE {JSON, CSV, XML, HTML_TABLE};
+	
+	/**
+	 * columnname to index
+	 * 
+	 * @param mapColumnLableName
+	 * @return
+	 */
+	public static Map<String, Integer> columnNameToIndex(Map<Integer, String> mapColumnLableName) {
+		Map<String, Integer> _reverseColumnName = new HashMap<String, Integer>();
+		for(int i=0; i<mapColumnLableName.size(); i++) {
+			_reverseColumnName.put(mapColumnLableName.get(i).toUpperCase(), i);	
+		}
+		
+		return _reverseColumnName;
+	}
 	
 	/**
 	 * select문 이외의 쿼리를 실행합니다

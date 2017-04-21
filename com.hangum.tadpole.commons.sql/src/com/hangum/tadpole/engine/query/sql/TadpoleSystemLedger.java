@@ -11,6 +11,9 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -56,14 +60,33 @@ public class TadpoleSystemLedger {
 	 * 
 	 * @param strUser
 	 * @param crNumber
+	 * @param endTime 
+	 * @param startTime 
 	 * @return
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static List<LedgerDAO> getMySQLListLedger(String strUser, String crNumber) throws TadpoleSQLManagerException, SQLException {
+	public static List<LedgerDAO> getMySQLListLedger(String strUser, String crNumber, long startTime, long endTime) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> mapParam = new HashMap<String, Object>();
 		mapParam.put("strUser", "%" + strUser + "%");
 		mapParam.put("crNumber", "%" + crNumber + "%");
+		
+		if(ApplicationArgumentUtils.isDBServer()) {
+			Date dateSt = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			mapParam.put("startTime",  formatter.format(dateSt));
+			
+			Date dateEd = new Date(endTime);
+			mapParam.put("endTime", formatter.format(dateEd));			
+		} else {
+			Date dateSt = new Date(startTime);
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			
+			mapParam.put("startTime",  formatter.format(dateSt));
+			
+			Date dateEd = new Date(endTime);
+			mapParam.put("endTime", formatter.format(dateEd));
+		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		return sqlClient.queryForList("getMySQLListLedger", mapParam);
