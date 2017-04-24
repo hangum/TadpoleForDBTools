@@ -145,7 +145,9 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 			public void selectionChanged(SelectionChangedEvent event) {
 
 				// 인덱스 디테일한 정보를 확인할동안은 블럭으로 만들어 놓습니다.
-				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup() || DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup())  return;
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup() 
+						//|| DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()
+						)  return;
 				if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getIs_showtables())) return;
 				
 				// 테이블의 컬럼 목록을 출력합니다.

@@ -126,29 +126,35 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 	@Override
 	public String getViewScript(TableDAO tableDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
+		String strDDLScript = "";
+		
 		StringBuilder result = new StringBuilder("");
-//		result.append("/* DROP VIEW " + strName + "; */ \n\n");
+		result.append("/* DROP VIEW " + tableDAO.getFullName() + "; */ \n\n");
 		
-//		HashMap<String, String>paramMap = new HashMap<String, String>();
-//		paramMap.put("schema_name", tableDAO.getSchema_name() == null ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
-//		paramMap.put("view_name", tableDAO.getName()); //$NON-NLS-1$
-//
-//		List<String> srcViewHeadList = client.queryForList("getViewScript.head", paramMap);				
-//		for (int i=0; i<srcViewHeadList.size(); i++){
-//			result.append( srcViewHeadList.get(i)+"\n");
-//		}
-//		List<String> srcViewBodyList = client.queryForList("getViewScript.body", paramMap);				
-//		for (int i=0; i<srcViewBodyList.size(); i++){
-//			result.append( srcViewBodyList.get(i)+"\n");
-//		}
+		HashMap<String, String>paramMap = new HashMap<String, String>();
+		paramMap.put("schema_name", tableDAO.getSchema_name() == null ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("view_name", tableDAO.getName()); //$NON-NLS-1$
+
+		List<String> srcViewHeadList = client.queryForList("getViewScript.head", paramMap);				
+		for (int i=0; i<srcViewHeadList.size(); i++){
+			result.append( srcViewHeadList.get(i)+"\n");
+		}
+		List<String> srcViewBodyList = client.queryForList("getViewScript.body", paramMap);				
+		for (int i=0; i<srcViewBodyList.size(); i++){
+			result.append( srcViewBodyList.get(i)+"\n");
+		}
 		
+		strDDLScript = result.toString();
+
+/*		
 		HashMap<String, String>paramMap = new HashMap<String, String>();
 		paramMap.put("schema_name", StringUtils.isBlank(tableDAO.getSchema_name()) ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
 		paramMap.put("object_type", "VIEW"); //$NON-NLS-1$
 		paramMap.put("object_name", tableDAO.getName()); //$NON-NLS-1$
 		paramMap.put("view_name", tableDAO.getName()); //$NON-NLS-1$
 		
-		String strDDLScript = (String)client.queryForObject("getDDLScript", paramMap);
+		strDDLScript = (String)client.queryForObject("getDDLScript", paramMap);
+*/
 		
 		if(StringUtils.isBlank(StringUtils.trimToEmpty(strDDLScript))) {
 			return strMSG_BlankScript;
@@ -156,6 +162,7 @@ public class OracleDDLScript extends AbstractRDBDDLScript {
 				
 			//TODO : DDL 스크립트 포맷팅 처리 후 적용.
 			//result.append(SQLFormater.format(strDDLScript));
+			result = new StringBuilder("");
 			result.append(strDDLScript);
 			
 			return result.toString();

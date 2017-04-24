@@ -356,7 +356,12 @@ public class ColumnsComposite extends DBInfosComposite {
 			} else if (userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT | userDB.getDBDefine() == DBDefine.TIBERO_DEFAULT){
 				HashMap<String, String>paramMap = new HashMap<String, String>();
 				paramMap.put("schema_name", userDB.getSchema()); //$NON-NLS-1$
-				listTableInform = sqlClient.queryForList("columnInformation", paramMap); //$NON-NLS-1$ //$NON-NLS-2$
+				try{
+					listTableInform = sqlClient.queryForList("columnInformation", paramMap); //$NON-NLS-1$ //$NON-NLS-2$
+				}catch(Exception e){
+					// 권한이 없을경우 해당 유저(스키마)에서 접근가능한 컬럼 목록만 조회한다.
+					listTableInform = sqlClient.queryForList("userColumnInformation", paramMap); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 			} else if (userDB.getDBDefine() == DBDefine.MYSQL_DEFAULT | userDB.getDBDefine() == DBDefine.MARIADB_DEFAULT){
 				HashMap<String, String>paramMap = new HashMap<String, String>();
 				paramMap.put("schema_name", userDB.getSchema()); //$NON-NLS-1$

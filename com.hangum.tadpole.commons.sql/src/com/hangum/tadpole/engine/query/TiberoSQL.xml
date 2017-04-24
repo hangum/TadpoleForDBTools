@@ -385,7 +385,7 @@ ORDER BY O.OWNER, O.OBJECT_NAME
         ,p.owner
         ,p.object_name
         ,p.procedure_name
-        ,(case when s.functionable = 'YES' then 'FUNCTION' else 'PROCEDURE' end) as object_type
+        ,(case when p.functionable = 'YES' then 'FUNCTION' else 'PROCEDURE' end) as object_type
         ,NULL
         ,NULL
         ,NULL
@@ -469,7 +469,7 @@ ORDER BY i.table_name, i.index_name
          m.column_name,
          m.column_position as seq_in_index,
          m.column_length,
-         null as char_length,
+         0 as char_length,
          m.descend as "comment",
          i.uniqueness,
          i.table_owner,
@@ -873,7 +873,7 @@ SELECT TO_NUMBER(SUBSTR (version, 1, INSTR (version, '.') - 1)) AS version
 <!-- 
 	column information
  -->
-<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.util.HashMap">
  select cols.table_name as table_name,
         tbls.comments as table_comment,
         cols.column_name as column_name,
@@ -886,24 +886,48 @@ SELECT TO_NUMBER(SUBSTR (version, 1, INSTR (version, '.') - 1)) AS version
         'NVARCHAR2') then '(' || to_char(cols.char_length) || ')' else '(' || to_char(cols.data_length) || ')' end ) as data_type,
         cols.data_default as data_default,
         coms.comments as column_comment,
-        NULL as data_type_mod,
+        null as data_type_mod,
         cols.char_used as char_used,
         decode(st.density, null, 'No', 'Yes') as histogram,
         st.num_distinct as num_distinct,
         st.num_nulls as num_nulls,
-        round(st.density,
-        5) as density,
+        round(st.density,5) as density,
         st.last_analyzed as last_analyzed
  from all_tab_columns cols 
-   left join all_col_comments coms on cols.owner = coms.owner and coms.table_name = cols.table_name
-    and coms.column_name = cols.column_name 
+    left join all_col_comments coms on cols.owner = coms.owner and coms.table_name = cols.table_name and coms.column_name = cols.column_name 
     left join all_tab_comments tbls on tbls_owner = cols.owner and tbls.table_name = cols.table_name
-    left join all_tab_col_statistics st on st.owner = cols.owner and st.table_name = cols.table_name 
-    and st.column_name = cols.column_name
+    left join all_tab_col_statistics st on st.owner = cols.owner and st.table_name = cols.table_name and st.column_name = cols.column_name
   where 1 = 1
     and cols.owner = (#schema_name#)
-  order by cols.table_name,
-        cols.column_id
+  order by cols.table_name, cols.column_id
+</select>
+
+<select id="userColumnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.util.HashMap">
+ select cols.table_name as table_name,
+        tbls.comments as table_comment,
+        cols.column_name as column_name,
+        cols.nullable as nullable,
+        cols.data_type || (case when cols.data_type = 'NUMBER' then '(' || cols.data_precision || ',' || cols.data_scale || ')' when cols.data_type = 'DATA' then null when cols.data_type in('CHAR',
+        'VARCHAR',
+        'VARCHAR2',
+        'NCHAR',
+        'NVARCHAR',
+        'NVARCHAR2') then '(' || to_char(cols.char_length) || ')' else '(' || to_char(cols.data_length) || ')' end ) as data_type,
+        cols.data_default as data_default,
+        coms.comments as column_comment,
+        null as data_type_mod,
+        cols.char_used as char_used,
+        decode(st.density, null, 'No', 'Yes') as histogram,
+        st.num_distinct as num_distinct,
+        st.num_nulls as num_nulls,
+        round(st.density,5) as density,
+        st.last_analyzed as last_analyzed
+ from user_tab_columns cols 
+    left join user_col_comments coms     on coms.table_name = cols.table_name and coms.column_name = cols.column_name 
+    left join user_tab_comments tbls     on tbls.table_name = cols.table_name
+    left join user_tab_col_statistics st on st.table_name = cols.table_name and st.column_name = cols.column_name
+  where 1 = 1
+  order by cols.table_name, cols.column_id
 </select>
 
 <select id="getDDLScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
@@ -1003,8 +1027,8 @@ SELECT    'COMMENT ON COLUMN '
   SELECT CASE
             WHEN COLUMN_ID = 0
             THEN
-               'CREATE OR REPLACE VIEW ' || TABLE_NAME || ' ( ' || COLUMN_NAME
-            WHEN COLUMN_ID >= 1 AND COLUMN_ID < COUNT (COLUMN_ID) OVER ()
+               'CREATE OR REPLACE VIEW ' || C.OWNER || '.' || TABLE_NAME || ' ( ' || COLUMN_NAME
+            WHEN COLUMN_ID >= 1 AND COLUMN_ID < COUNT (COLUMN_ID) OVER () - 1
             THEN
                ', ' || COLUMN_NAME
             ELSE
@@ -1364,46 +1388,46 @@ ORDER BY job
 
 <!-- Lock정보 조회 -->
 <select id="getLockList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
-SELECT l.sid
+SELECT l.sess_id as sid
       ,s.username
       ,s.osuser
       ,s.machine
       ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
       ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
-      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+      ,null as mode_requested
       ,TO_CHAR (l.id1) lock_id1
       ,TO_CHAR (l.id2) lock_id2
-      ,NULL owner
-      ,NULL object_type
-      ,NULL object_name
-      ,DECODE (block,  0, 'No',  1, 'Yes',  2, 'Global') block
-      ,s.lockwait
-  FROM v$$lock l INNER JOIN v$$session s ON l.sid = s.sid
+      ,NULL as owner
+      ,NULL as object_type
+      ,NULL as object_name
+      ,null as block
+      ,null as lockwait
+  FROM v$$lock l INNER JOIN v$$session s ON l.sess_id = s.sid
  WHERE l.TYPE = 'TX'
 <isNotEmpty property="sid">
-   AND l.sid = to_number(#sid#)
+   AND l.sess_id = to_number(#sid#)
 </isNotEmpty> 
 UNION ALL
-SELECT l.sid
+SELECT l.sess_id as sid
       ,s.username
       ,s.osuser
       ,s.machine
       ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
       ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
-      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+      ,null as mode_requested
       ,TO_CHAR (l.id1) lock_id1
       ,TO_CHAR (l.id2) lock_id2
       ,o.owner
       ,o.object_type
       ,o.object_name
-      ,DECODE (l.block,  0, 'No',  1, 'Yes',  2, 'Global') block
-      ,s.lockwait
+      ,null as block
+      ,null as lockwait
   FROM v$$lock l
-       INNER JOIN v$$session s ON l.sid = s.sid
+       INNER JOIN v$$session s ON l.sess_id = s.sid
        LEFT JOIN dba_objects o ON l.id1 = o.object_id
  WHERE l.TYPE IN ('TM', 'UL')
 <isNotEmpty property="sid">
-   AND l.sid = to_number(#sid#)
+   AND l.sess_id = to_number(#sid#)
 </isNotEmpty> 
 </select>
 
@@ -1421,7 +1445,7 @@ SELECT s.sid
       ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
   FROM v$$lock l, v$$session s
  WHERE     l.block = 1
-       AND l.sid = s.sid
+       AND l.sess_id = s.sid
        AND l.id1 = #lock_id1#
        AND l.id2 = #lock_id2#
 
@@ -1440,7 +1464,7 @@ SELECT s.sid
   FROM v$$lock l, v$$session s, v$$sql q
  WHERE     s.lockwait IS NOT NULL
        AND s.lockwait = l.kaddr
-       AND l.sid = s.sid
+       AND l.sess_id = s.sid
        AND l.id1 = #lock_id1#
        AND l.id2 = #lock_id2#
        AND s.sql_address = q.address

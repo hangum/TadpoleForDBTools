@@ -192,8 +192,8 @@ public class OracleObjectCompileUtils {
 		String withDebugOption = "";
 		if(isDebug) withDebugOption = "DEBUG";
 		
-		String sqlQuery = "ALTER PACKAGE " + packageDao.getFullName(true/*isPackage*/) + " COMPILE "+withDebugOption+" SPECIFICATION "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		String sqlBodyQuery = "ALTER PACKAGE " + packageDao.getFullName(true/*isPackage*/) + " COMPILE "+withDebugOption+" BODY "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String sqlQuery = "ALTER PACKAGE " + packageDao.getFullName() + " COMPILE "+withDebugOption+" SPECIFICATION "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String sqlBodyQuery = "ALTER PACKAGE " + packageDao.getFullName() + " COMPILE "+withDebugOption+" BODY "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		java.sql.Connection javaConn = null;
 		Statement statement = null;

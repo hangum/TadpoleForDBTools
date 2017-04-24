@@ -41,7 +41,7 @@ public class SessionListDAO {
 	}
 
 	public String getId() {
-		return id;
+		return id == null?"":id;
 	}
 
 	public void setId(String id) {
