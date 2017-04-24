@@ -308,11 +308,11 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDropAction_1)) {
 				try {
 					try{
-						executeSQL(userDB, "drop package body " + procedureDAO.getFullName(true/*isPackage*/)); //$NON-NLS-1$
+						executeSQL(userDB, "drop package body " + procedureDAO.getFullName() ); //$NON-NLS-1$
 					}catch(Exception e){
 						// package body는 없을 수도 있음.
 					}
-					executeSQL(userDB, "drop package " + procedureDAO.getFullName(true)); //$NON-NLS-1$
+					executeSQL(userDB, "drop package " + procedureDAO.getFullName() ); //$NON-NLS-1$
 					
 					refreshPackage();
 				} catch(Exception e) {

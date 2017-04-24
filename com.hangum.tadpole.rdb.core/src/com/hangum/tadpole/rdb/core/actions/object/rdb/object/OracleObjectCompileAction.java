@@ -134,7 +134,7 @@ public class OracleObjectCompileAction extends AbstractObjectSelectAction {
 	 */
 	public void packageCompile(ProcedureFunctionDAO procedureDAO, UserDBDAO userDB) {
 		try {
-			String result = OracleObjectCompileUtils.packageCompile(procedureDAO.getFullName(true), userDB);
+			String result = OracleObjectCompileUtils.packageCompile(procedureDAO.getFullName(), userDB);
 			showMessage(result);
 			
 		} catch (Exception e) {

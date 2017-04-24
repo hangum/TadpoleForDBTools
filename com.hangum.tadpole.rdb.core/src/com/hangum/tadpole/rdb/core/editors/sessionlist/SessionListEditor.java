@@ -358,12 +358,12 @@ public class SessionListEditor extends EditorPart {
 			param.put("sid", StringUtils.replace(sid, ",", ""));
 			showLocksList = (List<HashMap>) sqlClient.queryForList("getLockList", param); //$NON-NLS-1$
 
-			if (showLocksList!=null){
+			if (showLocksList!=null && showLocksList.size() > 0){
 				tableViewerLocks.setInput(showLocksList);
 				tableViewerLocks.refresh();
 			}
-			tableViewerBlock.setInput(new ArrayList<HashMap>());
-			tableViewerBlock.refresh();
+			//tableViewerBlock.setInput(new ArrayList<HashMap<String, Object>>());
+			//tableViewerBlock.refresh();
 
 		} catch (Exception e) {
 			logger.error("refresh list", e); //$NON-NLS-1$
