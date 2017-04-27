@@ -38,7 +38,7 @@ public class LedgerSQLResultLabelProvider extends LabelProvider implements ITabl
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(LedgerSQLResultLabelProvider.class);
-	public static final String STR_NEW_LABEL_COLUMN = "_NEW_";
+	public static final String STR_NEW_LABEL_COLUMN = "(변경후)"; //Messages.LEDGER_AFTER_LABEL
 	private EditorDefine.QUERY_MODE queryMode = QUERY_MODE.QUERY;
 	private ResultSetUtilDTO rsDAO;
 	private Map<Integer, Integer> _showColumnIndex;

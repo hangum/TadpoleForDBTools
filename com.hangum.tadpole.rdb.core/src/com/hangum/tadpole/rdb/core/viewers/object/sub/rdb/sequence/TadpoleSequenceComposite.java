@@ -155,7 +155,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 		TableViewColumnDefine[] tableColumnDef = new TableViewColumnDefine[] { //
 		new TableViewColumnDefine("SEQUENCE_NAME", CommonMessages.get().Name, 100, SWT.LEFT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("MIN_VALUE", "Min value", 80, SWT.RIGHT) // //$NON-NLS-1$
-				//, new TableViewColumnDefine("MAX_VALUE", "Max value", 80, SWT.RIGHT) // //$NON-NLS-1$
+				, new TableViewColumnDefine("MAX_VALUE", "Max value", 80, SWT.RIGHT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("INCREMENT_BY", "Increment by", 40, SWT.RIGHT) // //$NON-NLS-1$
 				, new TableViewColumnDefine("CYCLE_FLAG", "Cycle flag", 40, SWT.CENTER) // //$NON-NLS-1$
 				, new TableViewColumnDefine("ORDER_FLAG", "Order flag", 40, SWT.CENTER) // //$NON-NLS-1$

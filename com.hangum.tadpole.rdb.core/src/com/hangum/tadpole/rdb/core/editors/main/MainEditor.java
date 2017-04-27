@@ -311,6 +311,11 @@ public class MainEditor extends EditorExtension {
 					final String strSchema = comboSchema.getText();
 					userDB.setSchema(strSchema);
 					
+					// 기존에 설정되어 있는 테이블 목록등을 삭제한다.
+					userDB.setTableListSeparator(null);
+					userDB.setViewListSeparator(null);
+					userDB.setFunctionLisstSeparator(null);
+					
 					//오브젝트 익스플로어가 같은 스키마 일경우 스키마가 변경되도록.
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						@Override
