@@ -498,7 +498,7 @@ ORDER BY m.column_position
         ,I.SEARCH_CONDITION as comments
         ,i.R_OWNER
         ,I.R_CONSTRAINT_NAME 
-        ,i.index_owner as schema_name       
+        ,nvl(i.index_owner, i.owner) as schema_name       
     FROM all_constraints i
          LEFT JOIN all_indexes c
             ON     i.owner = c.owner
@@ -506,7 +506,7 @@ ORDER BY m.column_position
                AND c.index_name = i.constraint_name
                AND c.status = 'ENABLED'
    WHERE 1=1
-     AND i.index_owner = (#table_schema#)
+     AND (#table_schema#) IN (i.owner, i.index_owner)
      AND i.table_name = (#table_name#)
 ORDER BY i.table_name, i.index_name
 </select>
