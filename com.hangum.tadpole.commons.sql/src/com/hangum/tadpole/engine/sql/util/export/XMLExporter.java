@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -76,9 +77,12 @@ public class XMLExporter extends AbstractTDBExporter {
 				String columnName = mapLabelName.get(j);
 				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
 				
-				Element node = doc.createElement(columnName);
-				node.appendChild(doc.createTextNode(strValue));
-				row.appendChild(node);
+				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
+				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {
+					Element node = doc.createElement(columnName);
+					node.appendChild(doc.createTextNode(strValue));
+					row.appendChild(node);
+				}
 			}
 			
 			if(i == intLimitCnt) break;
@@ -131,9 +135,12 @@ public class XMLExporter extends AbstractTDBExporter {
 				String columnName = mapLabelName.get(j);
 				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
 				
-				Element node = doc.createElement(columnName);
-				node.appendChild(doc.createTextNode(strValue));
-				row.appendChild(node);
+				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
+				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {
+					Element node = doc.createElement(columnName);
+					node.appendChild(doc.createTextNode(strValue));
+					row.appendChild(node);
+				}
 			}
 		}
 		

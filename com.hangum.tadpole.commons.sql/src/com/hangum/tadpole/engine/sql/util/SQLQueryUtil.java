@@ -32,6 +32,9 @@ public class SQLQueryUtil {
 	
 	private int DATA_COUNT = 3000;
 	
+	/** DATA MAX COUNT */
+	private int MAX_DATA_COUNT = 10000;
+	
 	private UserDBDAO userDB;
 	private String requestQuery;
 	
@@ -39,14 +42,28 @@ public class SQLQueryUtil {
 	private boolean isFirst = true;
 	private int startPoint = 0;
 	
+	private boolean isOneTime = false;
+	
 	private QueryExecuteResultDTO queryResultDAO = new QueryExecuteResultDTO();
 	
 	public SQLQueryUtil(UserDBDAO userDB, String requestQuery) {
+		this(userDB, requestQuery, false);
+	}
+	
+	/**
+	 * 
+	 * @param userDB
+	 * @param requestQuery
+	 * @param isOneTime
+	 */
+	public SQLQueryUtil(UserDBDAO userDB, String requestQuery, boolean isOneTime) {
 		this.userDB = userDB;
 		this.requestQuery = requestQuery;
 		
 		this.isFirst = true;
 		this.startPoint = 0;
+		
+		this.isOneTime = isOneTime;
 	}
 	
 	public QueryExecuteResultDTO nextQuery() throws Exception {
@@ -58,7 +75,11 @@ public class SQLQueryUtil {
 	 */
 	private QueryExecuteResultDTO runSQLSelect() throws Exception {
 		queryResultDAO = new QueryExecuteResultDTO();
-		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, DATA_COUNT);
+		// 한번에 데이터 가져오기를 실행하면 가져올수 있는데이터만큼 가져온다.
+		int GET_DATA_COUNT = DATA_COUNT;
+		if(this.isOneTime) GET_DATA_COUNT = MAX_DATA_COUNT;
+		
+		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, GET_DATA_COUNT);
 //		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
@@ -84,12 +105,14 @@ public class SQLQueryUtil {
 	public boolean hasNext() {
 		if(isFirst) {
 			isFirst = false;
+			return true;
 		} else {
 			startPoint = startPoint + DATA_COUNT;
 			if(queryResultDAO.getDataList().getData().isEmpty()) return false;
+			if(this.isOneTime) return false;
 		}
 		 
-		return true;		
+		return true;
 	}
 
 	public String getRequestQuery() {

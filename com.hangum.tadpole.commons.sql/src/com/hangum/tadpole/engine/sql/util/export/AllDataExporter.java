@@ -44,7 +44,7 @@ public class AllDataExporter {
 		String strFullPath = AbstractTDBExporter.makeFileName(fileName, "csv");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 				if(isFirst) {
@@ -78,7 +78,7 @@ public class AllDataExporter {
 		String strFullPath = AbstractTDBExporter.makeFileName(fileName, "html");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 				if(isFirst) {
@@ -146,7 +146,7 @@ public class AllDataExporter {
 	private static QueryExecuteResultDTO makeAllResult(UserDBDAO userDB, String strSQL) throws Exception {
 		QueryExecuteResultDTO allResultDto = null; 
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO partResultDto = sqlUtil.nextQuery();
 				if(allResultDto == null) {
@@ -174,7 +174,7 @@ public class AllDataExporter {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -194,7 +194,7 @@ public class AllDataExporter {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -214,7 +214,7 @@ public class AllDataExporter {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -235,7 +235,7 @@ public class AllDataExporter {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					

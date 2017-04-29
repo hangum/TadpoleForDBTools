@@ -53,7 +53,6 @@ import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.utils.RequestQuery;
-import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
@@ -80,7 +79,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
 	
 	/** null 기본값 */
-	private String strDefaultNullValue = GetPreferenceGeneral.getResultNull();
+	private String strDefaultNullValue = "";//GetPreferenceGeneral.getResultNull();
 	
 	/** button status */
 	public enum BTN_STATUS {PREVIEW, SENDEDITOR, DOWNLOAD};
