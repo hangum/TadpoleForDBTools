@@ -240,6 +240,24 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * 쿼리 결과 다운로드 할때 한계값 지정
+	 * @return
+	 */
+	public static String getQueryResultDownloadLimit() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.QUERY_RESULT_DOWNLOAD_LIMIT, AdminPreferenceDefine.QUERY_RESULT_DOWNLOAD_LIMIT_VALUE);
+	}
+	
+	/**
+	 * 패스워드 관리 시스템을 사용할 경우 패스워드 캐쉬 사용 여부 설정
+	 * @return
+	 */
+	public static String getIsPasswdCacheUse() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.IS_PASSWD_CACHE, AdminPreferenceDefine.IS_PASSWD_CACHE_VALUE);
+	}
+	
+	/**
 	 * 메일 사용 타입을 지정한다. 
 	 * 없음, sendgrid, smtp
 	 * @return

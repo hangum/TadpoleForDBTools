@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * sql query util
@@ -33,7 +34,7 @@ public class SQLQueryUtil {
 	private int DATA_COUNT = 3000;
 	
 	/** DATA MAX COUNT */
-	private int MAX_DATA_COUNT = 10000;
+	private int MAX_DATA_COUNT = -1;//Integer.parseInt(GetAdminPreference.getQueryResultDownloadLimit());
 	
 	private UserDBDAO userDB;
 	private String requestQuery;
@@ -47,7 +48,7 @@ public class SQLQueryUtil {
 	private QueryExecuteResultDTO queryResultDAO = new QueryExecuteResultDTO();
 	
 	public SQLQueryUtil(UserDBDAO userDB, String requestQuery) {
-		this(userDB, requestQuery, false);
+		this(userDB, requestQuery, false, -1);
 	}
 	
 	/**
@@ -56,7 +57,7 @@ public class SQLQueryUtil {
 	 * @param requestQuery
 	 * @param isOneTime
 	 */
-	public SQLQueryUtil(UserDBDAO userDB, String requestQuery, boolean isOneTime) {
+	public SQLQueryUtil(UserDBDAO userDB, String requestQuery, boolean isOneTime, int intMaxCount) {
 		this.userDB = userDB;
 		this.requestQuery = requestQuery;
 		
@@ -64,6 +65,7 @@ public class SQLQueryUtil {
 		this.startPoint = 0;
 		
 		this.isOneTime = isOneTime;
+		this.MAX_DATA_COUNT = intMaxCount;
 	}
 	
 	public QueryExecuteResultDTO nextQuery() throws Exception {
@@ -77,7 +79,11 @@ public class SQLQueryUtil {
 		queryResultDAO = new QueryExecuteResultDTO();
 		// 한번에 데이터 가져오기를 실행하면 가져올수 있는데이터만큼 가져온다.
 		int GET_DATA_COUNT = DATA_COUNT;
-		if(this.isOneTime) GET_DATA_COUNT = MAX_DATA_COUNT;
+		if(this.isOneTime) {
+			if(MAX_DATA_COUNT != -1) {
+				GET_DATA_COUNT = MAX_DATA_COUNT;
+			}
+		}
 		
 		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, GET_DATA_COUNT);
 //		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
@@ -109,7 +115,9 @@ public class SQLQueryUtil {
 		} else {
 			startPoint = startPoint + DATA_COUNT;
 			if(queryResultDAO.getDataList().getData().isEmpty()) return false;
-			if(this.isOneTime) return false;
+			
+			// -1 이면 전체 데이터를 넘겨 받는다.
+			if("-1".equals(MAX_DATA_COUNT)) if(this.isOneTime) return false;
 		}
 		 
 		return true;

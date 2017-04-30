@@ -56,6 +56,7 @@ public class ExportSQLComposite extends AbstractExportComposite {
 	private Text textCommit;
 	private Label label;
 	private Group grpWhere;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -147,12 +148,20 @@ public class ExportSQLComposite extends AbstractExportComposite {
 		grpWhere.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpWhere.setText(Messages.get().SelectWhereColumn);
 		
-		btnWhereColumn = new Button[mapColumnName.size()-2];
+		int intCompWhere = 0;
 		for(int i=1; i<mapColumnName.size(); i++) {
 			// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
+			if(!SQLUtil.isTDBSpecialColumn(mapColumnName.get(i))) intCompWhere++;
+		}
+		
+		int j=0;
+		btnWhereColumn = new Button[intCompWhere];
+		for(int i=0; i<mapColumnName.size(); i++) {
+			// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
 			if(!SQLUtil.isTDBSpecialColumn(mapColumnName.get(i))) {
-				btnWhereColumn[i-1] = new Button(grpWhere, SWT.CHECK);
-				btnWhereColumn[i-1].setText(mapColumnName.get(i));
+				btnWhereColumn[j] = new Button(grpWhere, SWT.CHECK);
+				btnWhereColumn[j].setText(mapColumnName.get(i));
+				j++;
 			}
 		}
 		

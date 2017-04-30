@@ -63,7 +63,10 @@ public class JsonExpoter extends AbstractTDBExporter {
 			for (int j = 1; j < mapLabelName.size(); j++) {
 				String columnName = mapLabelName.get(j);
 				if(!SQLUtil.isTDBSpecialColumn(columnName)) {
-					jsonObj.addProperty(StringUtils.trimToEmpty(columnName), ""+mapColumns.get(j));
+					String strValue = ""+mapColumns.get(j);
+					if(mapColumns.get(j) == null) strValue = "";
+				
+					jsonObj.addProperty(StringUtils.trimToEmpty(columnName), strValue);
 				}
 			}
 			jsonArry.add(jsonObj);

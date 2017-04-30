@@ -33,11 +33,33 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 public class SQLExporter extends AbstractTDBExporter {
 
 	/**
+	 * make value object
+	 * 
+	 * @param obVal
+	 * @param intColumnType
+	 * @return
+	 */
+	private static Object _makeValueObject(Object obVal, int intColumnType) {
+		if(obVal == null) return "null";
+		
+		Object strValue = obVal;
+		if(!RDBTypeToJavaTypeUtils.isNumberType(intColumnType)) {
+			String strStrValue = strValue.toString();
+			strValue = StringEscapeUtils.escapeSql(strStrValue);
+			strValue = SQLUtil.makeQuote(strStrValue);
+		}
+		
+		return strValue;
+	}
+
+	/**
 	 * MERGE 문을 생성합니다. (대상 자료가 있으면 update, 없으면 insert할 수 있습니다. 오라클, MSSQL등에서 지원됩니다.)
 	 * 
 	 * @param tableName
 	 * @param rsDAO
 	 * @param listWhere  where 조건
+	 * @param intLimitCnt
+	 * @param commit
 	 * 
 	 * @throws Exception
 	 */
@@ -65,14 +87,14 @@ public class SQLExporter extends AbstractTDBExporter {
 			for(int j=0; j<mapColumnName.size(); j++) {
 				String strColumnName = mapColumnName.get(j);
 				
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
+//				strValue = strValue == null?"null":strValue;
+//				
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
 				
 				boolean isWhere = false;
 				for (String strTmpColumn : listWhere) {
@@ -110,6 +132,17 @@ public class SQLExporter extends AbstractTDBExporter {
 		return sbInsertInto.toString();
 	}
 	
+	/**
+	 * 
+	 * @param strFullPath
+	 * @param tableName
+	 * @param rsDAO
+	 * @param listWhere
+	 * @param commit
+	 * @param encoding
+	 * @return
+	 * @throws Exception
+	 */
 	public static String makeFileMergeStatment(String strFullPath, String tableName, QueryExecuteResultDTO rsDAO, List<String> listWhere, int commit, String encoding) throws Exception {
 //		String strFullPath = makeFileName(tableName, "sql");
 		
@@ -137,14 +170,15 @@ public class SQLExporter extends AbstractTDBExporter {
 			for(int j=0; j<mapColumnName.size(); j++) {
 				String strColumnName = mapColumnName.get(j);
 				
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+//				Object strValue = mapColumns.get(j);
+//				strValue = strValue == null?"null":strValue;
+//				
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
 				
 				boolean isWhere = false;
 				for (String strTmpColumn : listWhere) {
@@ -198,6 +232,8 @@ public class SQLExporter extends AbstractTDBExporter {
 	 * @param tableName
 	 * @param rsDAO
 	 * @param listWhere  where 조건
+	 * @param intLimitCnt
+	 * @param commit
 	 * 
 	 * @throws Exception
 	 */
@@ -219,13 +255,14 @@ public class SQLExporter extends AbstractTDBExporter {
 			for(int j=0; j<mapColumnName.size(); j++) {
 				String strColumnName = mapColumnName.get(j);
 				
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+//				Object strValue = mapColumns.get(j);
+//				strValue = strValue == null?"null":strValue;
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
 				
 				boolean isWhere = false;
 				for (String strTmpColumn : listWhere) {
@@ -276,13 +313,14 @@ public class SQLExporter extends AbstractTDBExporter {
 			for(int j=0; j<mapColumnName.size(); j++) {
 				String strColumnName = mapColumnName.get(j);
 				
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+//				Object strValue = mapColumns.get(j);
+//				strValue = strValue == null?"null":strValue;
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
 				
 				boolean isWhere = false;
 				for (String strTmpColumn : listWhere) {
@@ -354,14 +392,15 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			strResult = "";
 			for(int j=0; j<mapColumnType.size(); j++) {
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+//				Object strValue = mapColumns.get(j);
+//				strValue = strValue == null?"null":strValue;
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
 				
 				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
 				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {
@@ -422,14 +461,15 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			strResult = "";
 			for(int j=0; j<mapColumnType.size(); j++) {
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+//				Object strValue = mapColumns.get(j);
+//				strValue = strValue == null?"null":strValue;
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
 				
 				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
 				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {
@@ -498,14 +538,15 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			strResult = "";
 			for(int j=0; j<mapColumnType.size(); j++) {
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+//				Object strValue = mapColumns.get(j);
+//				strValue = strValue == null?"null":strValue;
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
 				
 				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
 				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {
@@ -569,14 +610,15 @@ public class SQLExporter extends AbstractTDBExporter {
 			
 			strResult = "";
 			for(int j=0; j<mapColumnType.size(); j++) {
-				Object strValue = mapColumns.get(j);
-				strValue = strValue == null?"":strValue;
-				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
-					strValue = StringEscapeUtils.escapeSql(strValue.toString());
-					strValue = StringHelper.escapeSQL(strValue.toString());
-					
-					strValue = SQLUtil.makeQuote(strValue.toString());
-				}
+//				Object strValue = mapColumns.get(j);
+//				strValue = strValue == null?"null":strValue;
+//				if(!RDBTypeToJavaTypeUtils.isNumberType(mapColumnType.get(j))) {
+//					strValue = StringEscapeUtils.escapeSql(strValue.toString());
+//					strValue = StringHelper.escapeSQL(strValue.toString());
+//					
+//					strValue = SQLUtil.makeQuote(strValue.toString());
+//				}
+				Object strValue = _makeValueObject(mapColumns.get(j), mapColumnType.get(j));
 				
 				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
 				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {

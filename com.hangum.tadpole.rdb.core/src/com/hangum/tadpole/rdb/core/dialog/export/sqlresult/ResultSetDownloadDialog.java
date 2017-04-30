@@ -53,6 +53,7 @@ import com.hangum.tadpole.engine.sql.util.export.SQLExporter;
 import com.hangum.tadpole.engine.sql.util.export.XMLExporter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.utils.RequestQuery;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
@@ -80,6 +81,10 @@ public class ResultSetDownloadDialog extends Dialog {
 	
 	/** null 기본값 */
 	private String strDefaultNullValue = "";//GetPreferenceGeneral.getResultNull();
+
+	// define max download limit
+	final int intMaxDownloadCnt = Integer.parseInt(GetAdminPreference.getQueryResultDownloadLimit());
+	
 	
 	/** button status */
 	public enum BTN_STATUS {PREVIEW, SENDEDITOR, DOWNLOAD};
@@ -335,7 +340,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 			targetEditor(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, strDefaultNullValue));
 		}else{
-			String strFullPath = AllDataExporter.makeCSVAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), isAddHead, targetName, seprator, encoding, strDefaultNullValue);
+			String strFullPath = AllDataExporter.makeCSVAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), isAddHead, targetName, seprator, encoding, strDefaultNullValue, intMaxDownloadCnt);
 			downloadFile(targetName, strFullPath, encoding);
 		}
 	}
@@ -352,7 +357,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 			targetEditor(HTMLExporter.makeContent(targetName, queryExecuteResultDTO, strDefaultNullValue));
 		}else{
-			String strFullPath = AllDataExporter.makeHTMLAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, encoding, strDefaultNullValue);
+			String strFullPath = AllDataExporter.makeHTMLAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, encoding, strDefaultNullValue, intMaxDownloadCnt);
 			downloadFile(targetName, strFullPath, encoding);
 		}
 	}
@@ -374,7 +379,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 				targetEditor(JsonExpoter.makeHeadContent(targetName, queryExecuteResultDTO, schemeKey, recordKey, isFormat, -1));
 			}else{
-				String strFullPath = AllDataExporter.makeJSONHeadAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, schemeKey, recordKey, isFormat, encoding, strDefaultNullValue);
+				String strFullPath = AllDataExporter.makeJSONHeadAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, schemeKey, recordKey, isFormat, encoding, strDefaultNullValue, intMaxDownloadCnt);
 				downloadFile(targetName, strFullPath, encoding);
 			}
 		}else{
@@ -383,7 +388,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 				targetEditor(JsonExpoter.makeContent(targetName, queryExecuteResultDTO, isFormat, -1));
 			}else{
-				String strFullPath = AllDataExporter.makeJSONAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, isFormat, encoding, strDefaultNullValue);
+				String strFullPath = AllDataExporter.makeJSONAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, isFormat, encoding, strDefaultNullValue, intMaxDownloadCnt);
 				downloadFile(targetName, strFullPath, encoding);
 			}
 		}
@@ -401,7 +406,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 			targetEditor(XMLExporter.makeContent(targetName, queryExecuteResultDTO));
 		}else{
-			String strFullPath = AllDataExporter.makeXMLResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, encoding, strDefaultNullValue);
+			String strFullPath = AllDataExporter.makeXMLResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, encoding, strDefaultNullValue, intMaxDownloadCnt);
 			downloadFile(targetName, strFullPath, encoding);
 		}
 	}
@@ -422,7 +427,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 				targetEditor(SQLExporter.makeBatchInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 			}else{
-				String strFullPath = AllDataExporter.makeFileBatchInsertStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, commit, encoding, strDefaultNullValue);
+				String strFullPath = AllDataExporter.makeFileBatchInsertStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, commit, encoding, strDefaultNullValue, intMaxDownloadCnt);
 				downloadFile(targetName, strFullPath, encoding);
 			}
 		}else if ("insert".equalsIgnoreCase(stmtType)) {
@@ -431,7 +436,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 				targetEditor(SQLExporter.makeInsertStatment(targetName, queryExecuteResultDTO, -1, commit));
 			}else{
-				String strFullPath = AllDataExporter.makeFileInsertStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, commit, encoding, strDefaultNullValue);
+				String strFullPath = AllDataExporter.makeFileInsertStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, commit, encoding, strDefaultNullValue, intMaxDownloadCnt);
 				downloadFile(targetName, strFullPath, encoding);
 			}
 		}else if ("update".equalsIgnoreCase(stmtType)) {
@@ -440,7 +445,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 				targetEditor(SQLExporter.makeUpdateStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 			}else{
-				String strFullPath = AllDataExporter.makeFileUpdateStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, listWhere, commit, encoding, strDefaultNullValue);
+				String strFullPath = AllDataExporter.makeFileUpdateStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, listWhere, commit, encoding, strDefaultNullValue, intMaxDownloadCnt);
 				downloadFile(targetName, strFullPath, encoding);
 			}
 		}else if ("merge".equalsIgnoreCase(stmtType)) {
@@ -449,7 +454,7 @@ public class ResultSetDownloadDialog extends Dialog {
 			}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
 				targetEditor(SQLExporter.makeMergeStatment(targetName, queryExecuteResultDTO, listWhere, -1, commit));
 			}else{
-				String strFullPath = AllDataExporter.makeFileMergeStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, listWhere, commit, encoding, strDefaultNullValue);
+				String strFullPath = AllDataExporter.makeFileMergeStatment(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, listWhere, commit, encoding, strDefaultNullValue, intMaxDownloadCnt);
 				downloadFile(targetName, strFullPath, encoding);
 			}
 		}

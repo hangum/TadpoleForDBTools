@@ -408,11 +408,11 @@ public class SQLUtil {
 	 * @param value
 	 * @return
 	 */
-	public static String makeQuote(String value) {
+	public static String makeQuote(Object value) {
 		if (null == value){
 			return null;
 		}else{
-			return String.format("'%s'", StringEscapeUtils.escapeSql(value));
+			return String.format("'%s'", StringEscapeUtils.escapeSql(value.toString()));
 		}
 	}
 
