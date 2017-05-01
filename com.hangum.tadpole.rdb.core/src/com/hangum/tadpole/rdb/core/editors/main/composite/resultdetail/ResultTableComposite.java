@@ -52,6 +52,7 @@ import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
+import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.engine.utils.EditorDefine;
 import com.hangum.tadpole.engine.utils.RequestQuery;
@@ -92,7 +93,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	private TableViewer tvQueryResult;
 	
 	private SQLResultFilter sqlFilter = new SQLResultFilter();
-//	private SQLResultSorter sqlSorter;
+	private SQLResultSorter sqlSorter;
     
 	// 결과 로우 지정.
 	private SelectRowToEditorAction 	selectRowToEditorAction;
@@ -648,10 +649,11 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		super.printUI(reqQuery, rsDAO, isMakePin);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
+		sqlSorter = new SQLResultSorter(-999);
 		
 		boolean isEditable = true;
 		if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
-		SQLResultLabelProvider.createTableColumn(this, reqQuery, tvQueryResult, rsDAO, isEditable);
+		SQLResultLabelProvider.createTableColumn(this, reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
 
 		// 연속 쿼리 실행시 쿼리 스크롤이 최 상위로 가도록 테이블 인덱스를 수정.  이렇게 하지 않으면 쿼리 결과가 많을 경우 제일 하단으로 가서 쿼리를 여러번 호출할 여지가 있습니다.  
 		tvQueryResult.getTable().setTopIndex(0);
@@ -665,6 +667,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		} else {
 			tvQueryResult.setInput(trs.getData());
 		}
+		tvQueryResult.setSorter(sqlSorter);
 		
 		// 메시지를 출력합니다.
 		compositeTail.execute(getTailResultMsg());
