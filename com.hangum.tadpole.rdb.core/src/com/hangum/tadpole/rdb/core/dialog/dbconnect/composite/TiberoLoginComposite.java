@@ -31,6 +31,7 @@ import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
@@ -272,6 +273,7 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
 		
 //		userDB.setLocale(comboLocale.getText().trim());
+		userDB.setIs_resource_download(GetAdminPreference.getIsDefaultDonwload());
 
 		// set ext value
 		setExtValue();

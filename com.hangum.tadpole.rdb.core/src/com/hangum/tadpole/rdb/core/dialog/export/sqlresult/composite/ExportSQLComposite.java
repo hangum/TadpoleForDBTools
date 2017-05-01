@@ -148,20 +148,20 @@ public class ExportSQLComposite extends AbstractExportComposite {
 		grpWhere.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpWhere.setText(Messages.get().SelectWhereColumn);
 		
-		int intCompWhere = 0;
+		int intWhereColumn = 0;
 		for(int i=1; i<mapColumnName.size(); i++) {
 			// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
-			if(!SQLUtil.isTDBSpecialColumn(mapColumnName.get(i))) intCompWhere++;
+			if(!SQLUtil.isTDBSpecialColumn(mapColumnName.get(i))) intWhereColumn++;
 		}
 		
-		int j=0;
-		btnWhereColumn = new Button[intCompWhere];
+		btnWhereColumn = new Button[intWhereColumn];
+		int intWidgetCnt = 0;
 		for(int i=0; i<mapColumnName.size(); i++) {
 			// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
 			if(!SQLUtil.isTDBSpecialColumn(mapColumnName.get(i))) {
-				btnWhereColumn[j] = new Button(grpWhere, SWT.CHECK);
-				btnWhereColumn[j].setText(mapColumnName.get(i));
-				j++;
+				btnWhereColumn[intWidgetCnt] = new Button(grpWhere, SWT.CHECK);
+				btnWhereColumn[intWidgetCnt].setText(mapColumnName.get(i));
+				intWidgetCnt++;
 			}
 		}
 		
