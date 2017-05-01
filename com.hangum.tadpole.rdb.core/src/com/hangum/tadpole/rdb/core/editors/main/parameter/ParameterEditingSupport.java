@@ -11,6 +11,8 @@
 package com.hangum.tadpole.rdb.core.editors.main.parameter;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
@@ -41,15 +43,20 @@ public class ParameterEditingSupport extends EditingSupport {
 	private final TableViewer viewer;
 	private int columnIndex;
 	private UserDBDAO userDB;
+
+	/** 입력 파라미터 */
+	private List<Map<Integer, Object>> parameters = null;
+	
 	private final String[] types;
 
-	public ParameterEditingSupport(TableViewer viewer, int columnIndex, UserDBDAO userDB) {
+	public ParameterEditingSupport(TableViewer viewer, int columnIndex, UserDBDAO userDB, List<Map<Integer, Object>> parameters) {
 		super(viewer);
 
 		this.viewer = viewer;
 		this.columnIndex = columnIndex;
 		this.userDB = userDB;
 		this.types = RDBTypeToJavaTypeUtils.supportParameterTypes(userDB);
+		this.parameters = parameters;
 	}
 
 	@Override
@@ -93,14 +100,43 @@ public class ParameterEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		HashMap<Integer, Object> map = (HashMap<Integer, Object>) element;
+		HashMap<Integer, Object> mapChangeElement = (HashMap<Integer, Object>) element;
 		if (columnIndex == 2) {
-			map.put(2, this.types[(Integer) value]);
+			mapChangeElement.put(2, this.types[(Integer) value]);
+			_chageNameChage(mapChangeElement, 2, this.types[(Integer) value]);
 		} else if (columnIndex == 3) {
-			map.put(3, value);
+			mapChangeElement.put(3, value);
+			_chageNameChage(mapChangeElement, 3, value);
 		}
 
-		viewer.update(element, null);
+//		viewer.update(element, null);
+	}
+	
+	/**
+	 * 파라미터 이름이 같은 경우 모든 이름을 바꾸어준다.
+	 * 
+	 * @param mapChangeElement
+	 * @param changeObject
+	 */
+	private void _chageNameChage(HashMap<Integer, Object> mapChangeElement, int intIndex, Object changeObject) {
+		boolean isUpdate = false;
+		
+		List<Map<Integer, Object>> parameters = (List<Map<Integer, Object>>)viewer.getInput();
+		String strOriKey = ""+mapChangeElement.get(1);
+		for(Map<Integer, Object> mapOld : parameters) {
+			String _tmpKey = ""+mapOld.get(1);
+			if(strOriKey.equals(_tmpKey)) {
+				mapOld.put(intIndex, changeObject);
+				
+//				viewer.update(mapOld, null);
+				isUpdate = true;
+			}
+		}
+		
+		if(isUpdate) viewer.refresh(parameters, true);
+		logger.debug("======================================================================================================================================================");
+		logger.debug("========================> " + parameters.size());
+		logger.debug("======================================================================================================================================================");
 	}
 
 }

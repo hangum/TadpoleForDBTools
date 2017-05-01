@@ -81,7 +81,7 @@ public class RDBTypeToJavaTypeUtils {
 	 * @return
 	 */
 	public static Integer getJavaType(String rdbType) {
-		if(logger.isDebugEnabled()) logger.debug("rdb type is " + rdbType);
+//		if(logger.isDebugEnabled()) logger.debug("rdb type is " + rdbType);
 		
 		Integer javaType = mapTypes.get(rdbType);
 		if (javaType == null) {

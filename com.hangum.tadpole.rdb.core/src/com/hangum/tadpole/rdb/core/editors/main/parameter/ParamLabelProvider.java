@@ -11,6 +11,8 @@
 package com.hangum.tadpole.rdb.core.editors.main.parameter;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
