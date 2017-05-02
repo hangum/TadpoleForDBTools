@@ -70,6 +70,7 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * Resultset to download
@@ -276,13 +277,13 @@ public class ResultSetDownloadDialog extends Dialog {
 				try {
 					if("text".equalsIgnoreCase(selectionTab)) {			
 						ExportTextDAO dao = (ExportTextDAO)_dao;
-						exportResultCSVType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSeparatorType(), dao.getComboEncoding());
+						exportResultCSVType(dao.isIsncludeHeader(), dao.getTargetName(), dao.getSeparatorType(), dao.getComboEncoding());
 					}else if("html".equalsIgnoreCase(selectionTab)) {			
 						ExportHtmlDAO dao = (ExportHtmlDAO)_dao;
 						exportResultHtmlType(dao.getTargetName(), dao.getComboEncoding());
 					}else if("json".equalsIgnoreCase(selectionTab)) {			
 						ExportJsonDAO dao = (ExportJsonDAO)_dao;
-						exportResultJSONType( dao.isIsncludeHeader(), dao.getTargetName(), dao.getSchemeKey(), dao.getRecordKey(), dao.getComboEncoding(), dao.isFormat());
+						exportResultJSONType(dao.isIsncludeHeader(), dao.getTargetName(), dao.getSchemeKey(), dao.getRecordKey(), dao.getComboEncoding(), dao.isFormat());
 					}else if("xml".equalsIgnoreCase(selectionTab)) {			
 						ExportXmlDAO dao = (ExportXmlDAO)_dao;
 						exportResultXmlType(dao.getTargetName(), dao.getComboEncoding());
@@ -516,10 +517,13 @@ public class ResultSetDownloadDialog extends Dialog {
 					String strZipFile = ZipUtils.pack(strFileLocation);
 					byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
 					
+					if(logger.isDebugEnabled()) logger.debug("zipFile is " + strZipFile + ", file name is " + fileName +".zip");
+					
 					_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
 					
 					// 사용후 파일을 삭제한다.
 					FileUtils.deleteDirectory(new File(new File(strFileLocation).getParent()));
+					FileUtils.forceDelete(new File(strZipFile));
 				} catch(Exception e) {
 					logger.error("download file", e);
 				}
