@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
 
@@ -55,6 +56,7 @@ public class ExportSQLComposite extends AbstractExportComposite {
 	private Text textCommit;
 	private Label label;
 	private Group grpWhere;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -146,10 +148,21 @@ public class ExportSQLComposite extends AbstractExportComposite {
 		grpWhere.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpWhere.setText(Messages.get().SelectWhereColumn);
 		
-		btnWhereColumn = new Button[mapColumnName.size()-1];
+		int intWhereColumn = 0;
 		for(int i=1; i<mapColumnName.size(); i++) {
-			btnWhereColumn[i-1] = new Button(grpWhere, SWT.CHECK);
-			btnWhereColumn[i-1].setText(mapColumnName.get(i));
+			// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
+			if(!SQLUtil.isTDBSpecialColumn(mapColumnName.get(i))) intWhereColumn++;
+		}
+		
+		btnWhereColumn = new Button[intWhereColumn];
+		int intWidgetCnt = 0;
+		for(int i=0; i<mapColumnName.size(); i++) {
+			// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
+			if(!SQLUtil.isTDBSpecialColumn(mapColumnName.get(i))) {
+				btnWhereColumn[intWidgetCnt] = new Button(grpWhere, SWT.CHECK);
+				btnWhereColumn[intWidgetCnt].setText(mapColumnName.get(i));
+				intWidgetCnt++;
+			}
 		}
 		
 	}

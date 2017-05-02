@@ -19,10 +19,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.ext.appm.APPMHandler;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * password dialog
@@ -52,7 +55,11 @@ public abstract class PasswordDialog extends Dialog {
 	 */
 	protected void initUI() {
 		try {
-			String strCacchPassword = TadpoleSQLManager.getPassword(userDB);
+			String strCacchPassword = null;
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(GetAdminPreference.getIsPasswdCacheUse())) {
+				strCacchPassword = TadpoleSQLManager.getPassword(userDB);	
+			}
+			
 			if(strCacchPassword != null) {
 				textPassword.setText(strCacchPassword);
 			} else {
@@ -60,6 +67,7 @@ public abstract class PasswordDialog extends Dialog {
 				mapAppm.put("ip", 		userDB.getHost());
 				mapAppm.put("port", 	userDB.getPort());
 				mapAppm.put("account",	userDB.getUsers());
+				mapAppm.put("session.user", SessionManager.getEMAIL());
 				
 				String strAMMPPassword = APPMHandler.getInstance().getPassword(mapAppm);
 				textPassword.setText(strAMMPPassword);

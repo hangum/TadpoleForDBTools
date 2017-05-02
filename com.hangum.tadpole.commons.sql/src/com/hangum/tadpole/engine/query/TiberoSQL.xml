@@ -101,6 +101,7 @@
 	TNAME 		: 테이블 명
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<![CDATA[
   SELECT 
       T.table_name AS "NAME"
       , S.COMMENTS AS "COMMENT"   
@@ -110,8 +111,9 @@
       LEFT JOIN all_TAB_COMMENTS S
             ON T.OWNER = S.OWNER AND S.TABLE_NAME = T.TABLE_NAME
 WHERE T.OWNER = (NVL(#schema_name#, USER))
-  AND NVL(T.IOT_TYPE,'NONE') != 'IOT_OVERFLOW'
+  AND (t.iot_type is null or t.iot_type <> 'IOT_OVERFLOW')
 ORDER BY T.table_name
+ ]]>
 </select>
 
 <!-- 

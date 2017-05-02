@@ -36,15 +36,17 @@ public class AllDataExporter {
 	 * @param seprator
 	 * @param encoding
 	 * @param strDefaultNullValue
+	 * @param intMaxCount
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public static String makeCSVAllResult(UserDBDAO userDB, String strSQL, boolean isAddHead, String fileName, char seprator, String encoding, String strDefaultNullValue) throws Exception {
+	public static String makeCSVAllResult(UserDBDAO userDB, String strSQL, boolean isAddHead, String fileName, char seprator, String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		boolean isFirst = true;
 		String strFullPath = AbstractTDBExporter.makeFileName(fileName, "csv");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 				if(isFirst) {
@@ -73,12 +75,12 @@ public class AllDataExporter {
 	 * @param encoding2
 	 * @return
 	 */
-	public static String makeHTMLAllResult(UserDBDAO userDB, String strSQL, String fileName, String encoding, String strDefaultNullValue) throws Exception {
+	public static String makeHTMLAllResult(UserDBDAO userDB, String strSQL, String fileName, String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		boolean isFirst = true;
 		String strFullPath = AbstractTDBExporter.makeFileName(fileName, "html");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 				if(isFirst) {
@@ -115,9 +117,9 @@ public class AllDataExporter {
 	 * @throws Exception
 	 */
 	public static String makeJSONHeadAllResult(UserDBDAO userDB, String strSQL, String fileName, String schemeKey,
-			String recordKey, boolean isFormat, String encoding, String strDefaultNullValue) throws Exception {
+			String recordKey, boolean isFormat, String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		
-		QueryExecuteResultDTO allResusltDto = makeAllResult(userDB, strSQL);
+		QueryExecuteResultDTO allResusltDto = makeAllResult(userDB, strSQL, intMaxCount);
 		return JsonExpoter.makeContentFile(fileName, allResusltDto, schemeKey, recordKey, isFormat, encoding);
 	}
 
@@ -133,8 +135,8 @@ public class AllDataExporter {
 	 * @throws Exception
 	 */
 	public static String makeJSONAllResult(UserDBDAO userDB, String strSQL, String targetName, boolean isFormat,
-			String encoding, String strDefaultNullValue)  throws Exception {
-		QueryExecuteResultDTO allResusltDto = makeAllResult(userDB, strSQL);
+			String encoding, String strDefaultNullValue, int intMaxCount)  throws Exception {
+		QueryExecuteResultDTO allResusltDto = makeAllResult(userDB, strSQL, intMaxCount);
 		return JsonExpoter.makeContentFile(targetName, allResusltDto, isFormat, encoding);
 	}
 	
@@ -143,10 +145,10 @@ public class AllDataExporter {
 	 *  
 	 * @return
 	 */
-	private static QueryExecuteResultDTO makeAllResult(UserDBDAO userDB, String strSQL) throws Exception {
+	private static QueryExecuteResultDTO makeAllResult(UserDBDAO userDB, String strSQL, int intMaxCount) throws Exception {
 		QueryExecuteResultDTO allResultDto = null; 
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO partResultDto = sqlUtil.nextQuery();
 				if(allResultDto == null) {
@@ -164,17 +166,17 @@ public class AllDataExporter {
 	}
 
 	public static String makeXMLResult(UserDBDAO userDB, String strSQL, String targetName, String encoding,
-			String strDefaultNullValue) throws Exception {
-		QueryExecuteResultDTO allResusltDto = makeAllResult(userDB, strSQL);
+			String strDefaultNullValue, int intMaxCount) throws Exception {
+		QueryExecuteResultDTO allResusltDto = makeAllResult(userDB, strSQL, intMaxCount);
 		return XMLExporter.makeContentFile(targetName, allResusltDto, encoding);
 	}
 
 	public static String makeFileBatchInsertStatment(UserDBDAO userDB, String strSQL, String targetName, int commit,
-			String encoding, String strDefaultNullValue) throws Exception {
+			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -190,11 +192,11 @@ public class AllDataExporter {
 	}
 	
 	public static String makeFileInsertStatment(UserDBDAO userDB, String strSQL, String targetName, int commit,
-			String encoding, String strDefaultNullValue) throws Exception {
+			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -210,11 +212,11 @@ public class AllDataExporter {
 	}
 	
 	public static String makeFileUpdateStatment(UserDBDAO userDB, String strSQL, String targetName, List<String> listWhere, int commit,
-			String encoding, String strDefaultNullValue) throws Exception {
+			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -231,11 +233,11 @@ public class AllDataExporter {
 	
 	
 	public static String makeFileMergeStatment(UserDBDAO userDB, String strSQL, String targetName, List<String> listWhere, int commit,
-			String encoding, String strDefaultNullValue) throws Exception {
+			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					

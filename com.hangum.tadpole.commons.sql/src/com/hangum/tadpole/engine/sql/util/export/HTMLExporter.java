@@ -60,7 +60,10 @@ public class HTMLExporter extends AbstractTDBExporter {
 		StringBuffer sbHead = new StringBuffer();
 
 		for(int i=0; i<mapLabelName.size(); i++) {
-			sbHead.append( HTMLDefine.makeTH( mapLabelName.get(i)) );
+			String strLabelName = mapLabelName.get(i);
+			if(!SQLUtil.isTDBSpecialColumn(strLabelName)) {
+				sbHead.append( HTMLDefine.makeTH(strLabelName) );
+			}
 		}
 		String strLastColumnName = HTMLDefine.makeTR(sbHead.toString());
 		
@@ -79,7 +82,8 @@ public class HTMLExporter extends AbstractTDBExporter {
 	public static String makeContent(String tableName, QueryExecuteResultDTO rsDAO, int intLimitCnt, String strDefaultNullValue) {
 		// make column header
 		String strHeader = makeHeader(rsDAO);
-
+		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
+		
 		List<Map<Integer, Object>> dataList = rsDAO.getDataList().getData();
 		// body
 		StringBuffer sbBody = new StringBuffer("");
@@ -87,10 +91,13 @@ public class HTMLExporter extends AbstractTDBExporter {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			StringBuffer sbTmp = new StringBuffer();
-			sbTmp.append(HTMLDefine.makeTH(""+(i+1)) ); //$NON-NLS-1$
-			for(int j=1; j<mapColumns.size(); j++) {
-				String strValue = mapColumns.get(j)==null?strDefaultNullValue:""+mapColumns.get(j);
-				sbTmp.append( HTMLDefine.makeTD(StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
+			for(int j=0; j<mapColumns.size(); j++) {
+				
+				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
+				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {
+					String strValue = mapColumns.get(j)==null?strDefaultNullValue:""+mapColumns.get(j);
+					sbTmp.append( HTMLDefine.makeTD(StringEscapeUtils.unescapeHtml(strValue)) ); //$NON-NLS-1$
+				}
 			}
 			sbBody.append(HTMLDefine.makeTR(sbTmp.toString()));
 			
@@ -124,7 +131,6 @@ public class HTMLExporter extends AbstractTDBExporter {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			StringBuffer sbTmp = new StringBuffer();
-			sbTmp.append( HTMLDefine.makeTH(""+(i+1)) ); //$NON-NLS-1$
 			for(int j=0; j<mapColumns.size(); j++) {
 				
 				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.

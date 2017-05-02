@@ -233,13 +233,13 @@ public class ParameterDialog extends Dialog {
 		TableColumn tcType = tvcType.getColumn();
 		tcl_composite.setColumnData(tcType, new ColumnPixelData(80, true, true));
 		tcType.setText(Messages.get().DataType);
-		tvcType.setEditingSupport(new ParameterEditingSupport(tableViewer, 2, this.userDB));
+		tvcType.setEditingSupport(new ParameterEditingSupport(tableViewer, 2, this.userDB, parameters));
 
 		TableViewerColumn tvcValue = new TableViewerColumn(tableViewer, SWT.NONE);
 		TableColumn tcValue = tvcValue.getColumn();
 		tcl_composite.setColumnData(tcValue, new ColumnPixelData(150, true, true));
 		tcValue.setText(Messages.get().ParameterDialog_4);
-		tvcValue.setEditingSupport(new ParameterEditingSupport(tableViewer, 3, this.userDB));
+		tvcValue.setEditingSupport(new ParameterEditingSupport(tableViewer, 3, this.userDB, parameters));
 	}
 	
 	/**
@@ -306,7 +306,10 @@ public class ParameterDialog extends Dialog {
 					default:
 						param.setObject(mapParam.get(3));
 						break;
-					}					
+					}
+					
+					// 파라미터 이름이 동일할 경우 하나만 설정되도록 수정.
+					break;
 				}
 
 			}

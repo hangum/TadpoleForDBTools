@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
 /**
@@ -61,8 +62,12 @@ public class JsonExpoter extends AbstractTDBExporter {
 			JsonObject jsonObj = new JsonObject();
 			for (int j = 1; j < mapLabelName.size(); j++) {
 				String columnName = mapLabelName.get(j);
+				if(!SQLUtil.isTDBSpecialColumn(columnName)) {
+					String strValue = ""+mapColumns.get(j);
+					if(mapColumns.get(j) == null) strValue = "";
 				
-				jsonObj.addProperty(StringUtils.trimToEmpty(columnName), ""+mapColumns.get(j));
+					jsonObj.addProperty(StringUtils.trimToEmpty(columnName), strValue);
+				}
 			}
 			jsonArry.add(jsonObj);
 			if(i == intLimitCnt) break;
@@ -93,21 +98,23 @@ public class JsonExpoter extends AbstractTDBExporter {
 			
 		JsonArray jsonMetaArry = new JsonArray();
 			for (int j = 1; j < mapLabelName.size(); j++) {
-			
-				JsonObject jsonMetaObj = new JsonObject();
-				jsonMetaObj.addProperty("position", j);
-				jsonMetaObj.addProperty("column_name", mapLabelName.get(j));
-//				jsonMetaObj.addProperty("data_type", rsm.getColumnTypeName(j));
-				jsonMetaObj.addProperty("data_type", rsDAO.getColumnType().get(j));
-//				jsonMetaObj.addProperty("column_size", rsm.getColumnDisplaySize(j));
-				
-				if(!RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(j))) {
-					jsonMetaObj.addProperty("column_size", 90);
-				}else{
-					jsonMetaObj.addProperty("column_size", 150);
+				String strLabelName = mapLabelName.get(j);
+				if(!SQLUtil.isTDBSpecialColumn(strLabelName)) {
+					JsonObject jsonMetaObj = new JsonObject();
+					jsonMetaObj.addProperty("position", j);
+					jsonMetaObj.addProperty("column_name", mapLabelName.get(j));
+	//				jsonMetaObj.addProperty("data_type", rsm.getColumnTypeName(j));
+					jsonMetaObj.addProperty("data_type", rsDAO.getColumnType().get(j));
+	//				jsonMetaObj.addProperty("column_size", rsm.getColumnDisplaySize(j));
+					
+					if(!RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(j))) {
+						jsonMetaObj.addProperty("column_size", 90);
+					}else{
+						jsonMetaObj.addProperty("column_size", 150);
+					}
+		
+					jsonMetaArry.add(jsonMetaObj);
 				}
-	
-				jsonMetaArry.add(jsonMetaObj);
 			}
 	
 		return	jsonMetaArry;

@@ -21,6 +21,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.utils.DBLocaleUtils;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Messages;
 
 /**
@@ -190,7 +191,8 @@ public class AltibaseLoginComposite extends MySQLLoginComposite
 		
 		// 처음 등록자는 권한이 어드민입니다.
 		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
-
+		userDB.setIs_resource_download(GetAdminPreference.getIsDefaultDonwload());
+		
 		// set ext value
 		setExtValue();
 		

@@ -25,6 +25,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -138,6 +140,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 										final RequestQuery reqQuery,
 										final TableViewer tableViewer,
 										final ResultSetUtilDTO rsDAO,
+										final SQLResultSorter tableSorter,
 										final boolean isEditable) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
@@ -150,6 +153,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 			
 		try {			
 			for(int i=0; i<rsDAO.getColumnName().size(); i++) {
+				final int index = i;
 				final int columnAlign = RDBTypeToJavaTypeUtils.isNumberType(rsDAO.getColumnType().get(i))?SWT.RIGHT:SWT.LEFT;
 				String strColumnName = rsDAO.getColumnLabelName().get(i);
 		
@@ -176,6 +180,24 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 						}
 					}
 				});
+
+				tc.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						tableSorter.setColumn(index);
+						int dir = tableViewer.getTable().getSortDirection();
+						if (tableViewer.getTable().getSortColumn() == tc) {
+							dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
+						} else {
+							dir = SWT.DOWN;
+						}
+						tableViewer.getTable().setSortDirection(dir);
+						tableViewer.getTable().setSortColumn(tc);
+						tableViewer.refresh();
+					}
+				});
+				
+			
 //				
 //				TODO 디비 스키마 명을 사용할 수있어서, 현재로서는 직접 수정하지 못하도록 코드를 막습니다. - hangum(16.07.26)
 				// if select statement update

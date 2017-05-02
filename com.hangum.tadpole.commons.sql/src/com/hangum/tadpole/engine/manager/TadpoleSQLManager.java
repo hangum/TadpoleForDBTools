@@ -108,10 +108,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				sqlMapClient = dbManager.get(searchKey);
 				if(sqlMapClient != null) return sqlMapClient;
 				
-				// gate way 서버에 연결하려는 디비 정보가 있는지
-				if(isGatewayConnection && userDB.getDBDefine() != DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) {
-					TDBGatewayManager.makeGatewayServer(userDB, isGateWayIDCheck);	
-				}
 				
 //				if(logger.isDebugEnabled()) logger.debug("==[search key]=============================> " + searchKey);
 				// oracle 일 경우 locale 설정 
@@ -126,8 +122,15 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 					logger.error(String.format("set locale error: %s", e.getMessage()));
 				}
 				
-				// connection pool 을 가져옵니다.
-				sqlMapClient = SQLMap.getInstance(userDB);
+				// gate way 서버에 연결하려는 디비 정보가 있는지
+				if(isGatewayConnection && userDB.getDBDefine() != DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) {
+					final UserDBDAO gatawayUserDB = (UserDBDAO)userDB.clone();
+					TDBGatewayManager.makeGatewayServer(gatawayUserDB, isGateWayIDCheck);
+					sqlMapClient = SQLMap.getInstance(gatawayUserDB);
+				} else {
+					sqlMapClient = SQLMap.getInstance(userDB);	
+				}
+			
 				dbManager.put(searchKey, sqlMapClient);
 				List<String> listSearchKey = managerKey.get(userDB.getTdbUserID());
 				if(listSearchKey == null) {
