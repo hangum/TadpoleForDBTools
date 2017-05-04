@@ -342,13 +342,14 @@ public class ObjectEditor extends MainEditor {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 					
 					if(DBGroupDefine.MYSQL_GROUP == getUserDB().getDBGroup()) {
-						mysqlAfterProcess(reqResultDAO, reqQuery);
+						mysqlAfterFailProcess(reqResultDAO, reqQuery);
 					} else if(DBGroupDefine.MSSQL_GROUP == getUserDB().getDBGroup()) {
-						mssqlAfterProcess(reqResultDAO, reqQuery);
+						mssqlAfterFailProcess(reqResultDAO, reqQuery);
 					}
 					
 				} else {
 					String retMsg = ObjectCompileUtil.validateObject(userDB, reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
+
 					if(!"".equals(retMsg)) { //$NON-NLS-1$
 						reqResultDAO.setMesssage(retMsg);
 						
@@ -418,7 +419,7 @@ public class ObjectEditor extends MainEditor {
 	 * @param reqQuery
 	 * @param e
 	 */
-	private void mysqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
+	private void mysqlAfterFailProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
 		if(reqResultDAO.getException() == null) return;
 		
 		String strSQLState = "";
@@ -461,7 +462,7 @@ public class ObjectEditor extends MainEditor {
 	 * @param reqResultDAO
 	 * @param reqQuery
 	 */
-	private void mssqlAfterProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
+	private void mssqlAfterFailProcess(RequestResultDAO reqResultDAO, RequestQuery reqQuery) {
 		if(reqResultDAO.getException() == null) return;
 		String strSQLState = "";
 		int intSQLErrorCode = -1;
@@ -495,5 +496,4 @@ public class ObjectEditor extends MainEditor {
 		}
 		
 	}
-	
 }

@@ -25,6 +25,7 @@ import com.hangum.tadpole.engine.sql.template.PostgreDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.RedShiftDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.TAJODMLTemplate;
+import com.hangum.tadpole.engine.sql.template.TiberoDMLTemplate;
 
 /**
  * 각 DBMS에 맞는 쿼리문을 생성합니다.
@@ -89,7 +90,11 @@ public class PartQueryUtil {
 			resultQuery = MySQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 			
 		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
-			resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			if(DBDefine.ORACLE_DEFAULT == userDB.getDBDefine()) {
+				resultQuery =  OracleDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
+			} else if(DBDefine.TIBERO_DEFAULT == userDB.getDBDefine()) {
+				resultQuery =  String.format(TiberoDMLTemplate.TMP_EXPLAIN_EXTENDED, "%" + query + "%");
+			}
 		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 	      resultQuery =  MSSQLDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
