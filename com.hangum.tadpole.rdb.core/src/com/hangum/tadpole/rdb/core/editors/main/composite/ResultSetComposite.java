@@ -753,14 +753,14 @@ public class ResultSetComposite extends Composite {
 				
 				// execute query
 				execServiceQuery = Executors.newSingleThreadExecutor();
-//				if(intStartCnt == 0) {
-//					resultSet = _runSQLSelect(statement, strSQL);
-//				} else {
+				if(intStartCnt == 0) {
+					resultSet = _runSQLSelect(statement, strSQL);
+				} else {
 					strSQL = PartQueryUtil.makeSelect(getUserDB(), strSQL, intStartCnt, intSelectLimitCnt);
 					
 					if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
 					resultSet = _runSQLSelect(statement, strSQL);
-//				}
+				}
 				
 			} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
 				preparedStatement = javaConn.prepareStatement(strSQL);
