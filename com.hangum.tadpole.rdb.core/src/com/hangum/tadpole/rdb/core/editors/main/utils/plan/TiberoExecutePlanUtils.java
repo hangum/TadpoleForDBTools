@@ -22,7 +22,6 @@ import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.utils.RequestQuery;
-import com.hangum.tadpole.rdb.core.editors.main.composite.ResultMainComposite;
 
 /**
  * tibero execute plan
@@ -41,33 +40,24 @@ public class TiberoExecutePlanUtils {
 	 * @throws Exception
 	 */
 	public static String plan(UserDBDAO userDB, RequestQuery reqQuery, java.sql.Connection javaConn) throws Exception {
-		String sqlId = "";
-		try {
-			// 사용자 쿼리를 날린다.
-			QueryExecuteResultDTO queryResultDTO = QueryUtils.executeQuery(userDB, reqQuery.getSql(), 0, -1);
-			
-			// 사용자 쿼리의 실행 아이디를 얻는다.
-			// 티베로에서 처음의 주석문자이면 해당 문자를 삭제해야한다.
-			String strSQL = StringUtils.replace(StringUtils.trim(reqQuery.getSql()), PublicTadpoleDefine.LINE_SEPARATOR, " ");
-			
-			String query = PartQueryUtil.makeExplainQuery(userDB, strSQL);
-			if(logger.isDebugEnabled()) logger.debug("[plan query] " + query);
+		// 사용자 쿼리를 날린다.
+		QueryExecuteResultDTO queryResultDTO = QueryUtils.executeQuery(userDB, reqQuery.getSql(), 0, 10000);
 		
-			QueryExecuteResultDTO planIDResultDTO = QueryUtils.executeQuery(userDB, query, 0, 1000);
-			
-			List<Map<Integer, Object>> resultData = planIDResultDTO.getDataList().getData();
-			if(resultData.isEmpty()) {
-				throw new Exception("Does not found sql plan.");
-			}
-			Map<Integer, Object> mapResult = resultData.get(0);
-			
-			sqlId = ""+mapResult.get(0);
-			
-		} finally {
+		// 사용자 쿼리의 실행 아이디를 얻는다.
+		// 티베로에서 처음의 주석문자이면 해당 문자를 삭제해야한다.
+		String strSQL = StringUtils.replace(StringUtils.trim(reqQuery.getSql()), PublicTadpoleDefine.LINE_SEPARATOR, " ");
 		
-
+		String query = PartQueryUtil.makeExplainQuery(userDB, strSQL);
+		if(logger.isDebugEnabled()) logger.debug("[plan query] " + query);
+	
+		QueryExecuteResultDTO planIDResultDTO = QueryUtils.executeQuery(userDB, query, 0, 1000);
+		
+		List<Map<Integer, Object>> resultData = planIDResultDTO.getDataList().getData();
+		if(resultData.isEmpty()) {
+			throw new Exception("Does not found sql plan.");
 		}
+		Map<Integer, Object> mapResult = resultData.get(0);
 		
-		return sqlId;
+		return ""+mapResult.get(0);
 	}
 }
