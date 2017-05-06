@@ -653,7 +653,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		
 		boolean isEditable = true;
 		if("".equals(rsDAO.getColumnTableName().get(1))) isEditable = false; //$NON-NLS-1$
-		SQLResultLabelProvider.createTableColumn(this, reqQuery, tvQueryResult, rsDAO, sqlSorter, isEditable);
+		SQLResultLabelProvider.createTableColumn(this, reqQuery, tvQueryResult, rsDAO, sqlSorter, strResultSetHeadClicks, isEditable);
 
 		// 연속 쿼리 실행시 쿼리 스크롤이 최 상위로 가도록 테이블 인덱스를 수정.  이렇게 하지 않으면 쿼리 결과가 많을 경우 제일 하단으로 가서 쿼리를 여러번 호출할 여지가 있습니다.  
 		tvQueryResult.getTable().setTopIndex(0);

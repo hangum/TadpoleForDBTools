@@ -138,6 +138,15 @@ public class GetPreferenceGeneral extends AbstractPreference {
 		return userInfo.getValue0();
 	}
 	
+	/**
+	 * RDB Resultset head click
+	 * @return
+	 */
+	public static String getRDBResultHeadClick() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK, PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK_VALUE);
+		return userInfo.getValue0();
+	}
+	
 	///////////////// sql formatter 설정 ////////////////////////////////////////////////////////////////////////////
 		/** tab size */	
 		public static String getDefaultTabSize() {

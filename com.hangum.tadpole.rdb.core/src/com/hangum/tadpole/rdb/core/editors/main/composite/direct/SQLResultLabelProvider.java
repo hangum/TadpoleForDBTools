@@ -141,6 +141,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 										final TableViewer tableViewer,
 										final ResultSetUtilDTO rsDAO,
 										final SQLResultSorter tableSorter,
+										final String strResultSetHeadClicks,
 										final boolean isEditable) {
 		// 기존 column을 삭제한다.
 		Table table = tableViewer.getTable();
@@ -167,36 +168,39 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				tc.setResizable(true);
 				tc.setMoveable(true);
 				
-				tc.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						String strLabel = tc.getText();
-						if(!StringUtils.isEmpty(strLabel)) {
-							if(GetPreferenceGeneral.getAddComma()) {
-								rtComposite.appendTextAtPosition(String.format("%s, ", tc.getText()));
+				if(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK_VALUE.equals(strResultSetHeadClicks)) {
+					tc.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							tableSorter.setColumn(index);
+							int dir = tableViewer.getTable().getSortDirection();
+							if (tableViewer.getTable().getSortColumn() == tc) {
+								dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
 							} else {
-								rtComposite.appendTextAtPosition(String.format("%s ", tc.getText()));
+								dir = SWT.DOWN;
+							}
+							tableViewer.getTable().setSortDirection(dir);
+							tableViewer.getTable().setSortColumn(tc);
+							tableViewer.refresh();
+						}
+					});
+					
+				} else {
+					tc.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							String strLabel = tc.getText();
+							if(!StringUtils.isEmpty(strLabel)) {
+								if(GetPreferenceGeneral.getAddComma()) {
+									rtComposite.appendTextAtPosition(String.format("%s, ", tc.getText()));
+								} else {
+									rtComposite.appendTextAtPosition(String.format("%s ", tc.getText()));
+								}
 							}
 						}
-					}
-				});
+					});
 
-				tc.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						tableSorter.setColumn(index);
-						int dir = tableViewer.getTable().getSortDirection();
-						if (tableViewer.getTable().getSortColumn() == tc) {
-							dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
-						} else {
-							dir = SWT.DOWN;
-						}
-						tableViewer.getTable().setSortDirection(dir);
-						tableViewer.getTable().setSortColumn(tc);
-						tableViewer.refresh();
-					}
-				});
-				
+				}
 			
 //				
 //				TODO 디비 스키마 명을 사용할 수있어서, 현재로서는 직접 수정하지 못하도록 코드를 막습니다. - hangum(16.07.26)

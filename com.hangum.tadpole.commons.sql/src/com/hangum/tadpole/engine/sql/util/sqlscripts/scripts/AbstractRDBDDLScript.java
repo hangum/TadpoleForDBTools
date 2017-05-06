@@ -32,7 +32,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  */
 public abstract class AbstractRDBDDLScript {
 	/** 사용자 권한이 없을 경우에 나타내는 메시지 */
-	protected final static String strMSG_BlankScript = Messages.get().DoesNotGetDBScript;
+	protected final static String strMSG_BlankScript = "Does not get script";//Messages.get().DoesNotGetDBScript;
 	
 	protected UserDBDAO userDB;
 	protected OBJECT_TYPE actionType;

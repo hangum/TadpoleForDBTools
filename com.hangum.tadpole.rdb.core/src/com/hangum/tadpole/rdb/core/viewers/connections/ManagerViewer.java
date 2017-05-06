@@ -232,14 +232,15 @@ public class ManagerViewer extends ViewPart {
 		
 		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
 		if(_tmpListManager.isEmpty()) {
+
+			// product type filter
+			final String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
+			// product type filter
+			
 			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer add user session................");
 			try {
 				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
-					
-					// product type filter
-					String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
-					// product type filter
 					
 					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {
 						boolean isFilter = false;

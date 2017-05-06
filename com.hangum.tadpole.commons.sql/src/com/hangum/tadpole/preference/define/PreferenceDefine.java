@@ -156,6 +156,10 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN = "RDB_CHARACTER_SHOW_IN_THE_COLUMN";
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "100";
 	
+	public static final String RDB_RESULT_SET_HEAD_CLICK = "RDB_RESULT_SET_HEAD_CLICK";
+	public static final String RDB_RESULT_SET_HEAD_CLICK_VALUE = "Sorting";
+	
+	
 	/** define Amazon key */ 
 	public static final String AMAZON_ACCESS_NAME = "AMAZON_ACCESS_NAME";
 	public static final String AMAZON_ACCESS_VALUE = "";

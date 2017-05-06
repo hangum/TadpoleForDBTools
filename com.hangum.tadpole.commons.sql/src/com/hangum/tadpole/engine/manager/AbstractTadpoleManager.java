@@ -11,12 +11,15 @@
 package com.hangum.tadpole.engine.manager;
 
 import java.sql.Connection;
+import java.sql.Statement;
+
+import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 public class AbstractTadpoleManager {
-//	private static final Logger logger = Logger.getLogger(AbstractTadpoleManager.class);
+	private static final Logger logger = Logger.getLogger(AbstractTadpoleManager.class);
 	
 	/**
 	 * change schema
@@ -24,11 +27,8 @@ public class AbstractTadpoleManager {
 	 * @param conn
 	 * @param strSchema
 	 */
-	protected void changeSchema(UserDBDAO userDB, Connection conn) {
-		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
-//			PreparedStatement ps = conn.prepareStatement("use " + userDB.getSchema());
-//			ps.get
-		}
+	public static void changeSchema(UserDBDAO userDB, Connection conn) {
+		setConnectionInitialize(userDB, conn);
 	}
 	
 	/**
@@ -36,8 +36,23 @@ public class AbstractTadpoleManager {
 	 * @param userDB
 	 * @param conn
 	 */
-	protected static void setConnectionInitialize(final UserDBDAO userDB, final Connection conn) {
-//		String applicationName = SystemDefine.NAME;
+	public static void setConnectionInitialize(final UserDBDAO userDB, final Connection conn) {
+		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			// show variables like 'character_set_database' 에서  값을 가져와서 
+			// set names 의 값을 설정해준다.
+			String strCharacterSetDatabase = InitializeDB.dbCharacterSetDatabase(userDB);
+			
+			Statement statement = null;
+			try {
+				statement = conn.createStatement();
+				statement.execute(String.format("set names `%s`", strCharacterSetDatabase));
+			} catch (Exception e) {
+				logger.error("mysql connection initialize: " + e.getMessage());
+			} finally {
+				try { if(statement != null) statement.close(); } catch(Exception e) {}
+			}
+			
+		}
 
 	}
 }

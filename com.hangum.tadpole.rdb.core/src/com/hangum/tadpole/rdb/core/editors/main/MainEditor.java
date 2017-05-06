@@ -59,6 +59,7 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.AbstractTadpoleManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -315,6 +316,16 @@ public class MainEditor extends EditorExtension {
 					userDB.setTableListSeparator(null);
 					userDB.setViewListSeparator(null);
 					userDB.setFunctionLisstSeparator(null);
+					
+					Connection conn = null;
+					try {
+						conn = TadpoleSQLManager.getConnection(userDB);
+						AbstractTadpoleManager.changeSchema(userDB, conn);
+					} catch(Exception e3) {
+						logger.error("** initialize connection", e3);
+					} finally {
+						try { if(conn != null) conn.close(); } catch(Exception ee) {}
+					}
 					
 					//오브젝트 익스플로어가 같은 스키마 일경우 스키마가 변경되도록.
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
@@ -721,6 +732,19 @@ public class MainEditor extends EditorExtension {
 		
 		// 과거에 실행했던 쿼리 정보 가져오기.
 //		resultMainComposite.initMainComposite();
+		
+		// 초기 연결 커넥션을 초기화 합니다.
+		if (DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+			Connection conn = null;
+			try {
+				conn = TadpoleSQLManager.getConnection(userDB);
+				AbstractTadpoleManager.changeSchema(userDB, conn);
+			} catch(Exception e3) {
+				logger.error("** initialize connection", e3);
+			} finally {
+				try { if(conn != null) conn.close(); } catch(Exception ee) {}
+			}
+		}
 		
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());

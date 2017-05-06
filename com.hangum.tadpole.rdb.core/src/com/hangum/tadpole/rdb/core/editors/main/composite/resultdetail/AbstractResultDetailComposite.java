@@ -45,6 +45,9 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	
 	/** tail composite */
 	protected ResultTailComposite compositeTail;
+	
+	/** result set head click action define */
+	protected String strResultSetHeadClicks = GetPreferenceGeneral.getRDBResultHeadClick();
 
 	/**
 	 * Create the composite.

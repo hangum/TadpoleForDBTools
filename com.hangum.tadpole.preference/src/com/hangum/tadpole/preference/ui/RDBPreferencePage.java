@@ -62,6 +62,8 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 	private Text textCommitCount;
 	private Text textShowInTheColumn;
 	
+	private Combo comboResultHeadClick;
+	
 	private Text textOraclePlan;
 
 	public RDBPreferencePage() {
@@ -169,7 +171,6 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textCommitCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCharacterShownIn = new Label(container, SWT.NONE);
-		lblCharacterShownIn.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblCharacterShownIn.setText(Messages.get().RDBPreferencePage_lblCharacterShownIn_text);
 		
 		textShowInTheColumn = new Text(container, SWT.BORDER);
@@ -180,6 +181,15 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			}
 		});
 		textShowInTheColumn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label labelClickResultHead = new Label(container, SWT.NONE);
+		labelClickResultHead.setText(Messages.get().ResultSetHeadCliking);
+		
+		comboResultHeadClick = new Combo(container, SWT.READ_ONLY);
+		comboResultHeadClick.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboResultHeadClick.add("Sorting");
+		comboResultHeadClick.add("Column name to editor");
+		comboResultHeadClick.select(1);
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -326,11 +336,12 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		String txtFontInfo = lblUserFont.getText();
 		String txtCommitCount = textCommitCount.getText();
 		String txtShownInTheColumn = textShowInTheColumn.getText();
+		String txtResultHeadClick = comboResultHeadClick.getText();
 		
 		// 테이블에 저장 
 		try {
 			TadpoleSystem_UserInfoData.updateRDBUserInfoData(txtQueryProfilling,
-					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn, txtResultType, txtNull);
+					txtSelectLimit, txtResultPage, txtQueryTimtout, txtOraclePlan, txtRDBNumberColumnIsComman, txtFontInfo, txtCommitCount, txtShownInTheColumn, txtResultHeadClick, txtResultType, txtNull);
 			
 			// session 데이터를 수정한다.
 			SessionManager.setUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, ""+txtQueryProfilling);
@@ -345,6 +356,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
 			SessionManager.setUserInfo(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, txtShownInTheColumn);
+			SessionManager.setUserInfo(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK, txtResultHeadClick);
 			
 		} catch(Exception e) {
 			logger.error("RDBPreference saveing", e);
@@ -396,6 +408,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		lblUserFont.setText(strFontInfo);
 		
 		textShowInTheColumn.setText(GetPreferenceGeneral.getRDBShowInTheColumn());
+		comboResultHeadClick.setText(GetPreferenceGeneral.getRDBResultHeadClick());
 	}
 	
 	/** ORACLE PLAN TABLE */
