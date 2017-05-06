@@ -65,7 +65,7 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 	private boolean isWhere = false;
 	private Composite compositeData;
 	private Label labelSummaryText;
-	private Composite compositeWhere;
+//	private Composite compositeWhere;
 	private Button btnAllDataDelete;
 	
 	/**
@@ -116,11 +116,15 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		textQuery.setLayoutData(gd_textQuery);
 
 		// 모든 데이터 수정 컴포짖 ui
-		compositeWhere = new Composite(container, SWT.NONE);
-		compositeWhere.setLayout(new GridLayout(1, false));
-		compositeWhere.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
+//		compositeWhere = new Composite(container, SWT.NONE);
+//		GridLayout gl_compositeWhere = new GridLayout(1, false);
+//		gl_compositeWhere.horizontalSpacing = 1;
+//		gl_compositeWhere.marginHeight = 0;
+//		compositeWhere.setLayout(gl_compositeWhere);
+//		compositeWhere.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+//		compositeWhere.setVisible(false);
 		
-		btnAllDataDelete = new Button(compositeWhere, SWT.CHECK);
+		btnAllDataDelete = new Button(compositeInfo, SWT.CHECK);
 		btnAllDataDelete.setText(Messages.get().AreYouModifyAllData);
 
 		// 수정 예상 데이터 리스트 ui
@@ -188,6 +192,7 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 				
 				isWhere = true;
 			}
+			if(logger.isDebugEnabled()) logger.debug("[change select statement]" + sqlSelect);
 			
 			if(isWhere) {
 				QueryExecuteResultDTO rsDAO = QueryUtils.executeQuery(userDB, sqlSelect, 0, GetPreferenceGeneral.getPageCount());
@@ -212,8 +217,7 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		
 			// 젠처 ui를 초기화 한다.
 			compositeData.setVisible(isWhere);
-			compositeWhere.setVisible(!isWhere);
-			compositeWhere.getParent().layout(true);
+			btnAllDataDelete.setEnabled(!isWhere);
 		
 		} catch(Exception e) {
 			logger.error("initialize sql", e);

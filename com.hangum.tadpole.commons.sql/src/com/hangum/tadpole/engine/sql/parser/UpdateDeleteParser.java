@@ -37,7 +37,7 @@ public class UpdateDeleteParser {
 	 * @return
 	 */
 	public QueryDMLInfoDTO parseQuery(String sql, QueryDMLInfoDTO queryInfoDTO) {
-		sql = StringUtils.upperCase(StringUtils.trim(sql));
+		sql = StringUtils.trim(sql);
 		
 		for (TABLE_PARSER ddl : TABLE_PARSER.values()) {
 //			if(logger.isDebugEnabled()) logger.debug(ddl.getRegExp());
