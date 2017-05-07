@@ -12,5 +12,3 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Export-Package: com.hangum.tadpole.sql,
- com.hangum.tadpole.sql.format

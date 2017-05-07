@@ -85,7 +85,7 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().GrantCheckerUtils_0);
+		newShell.setText(CommonMessages.get().UserRequestQuery);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -107,7 +107,7 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		compositeInfo.setLayout(new GridLayout(1, false));
 		
 		Label label_1 = new Label(compositeInfo, SWT.NONE);
-		label_1.setText(CommonMessages.get().UserRequestQuery);
+		label_1.setText(Messages.get().GrantCheckerUtils_0);
 		
 		textQuery = new Text(compositeInfo, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		GridData gd_textQuery = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -177,7 +177,10 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 			parser.parseQuery(strSQL, dmlInfoDto);
 			
 			String strObjecName = dmlInfoDto.getObjectName();
-			String strWhereAfter = StringUtils.substringAfterLast(strSQL.toLowerCase(), "where");
+			String strWhereAfter = StringUtils.substringAfterLast(strSQL, "where");
+			if("".equals(strWhereAfter)) {
+				strWhereAfter = StringUtils.substringAfterLast(strSQL, "WHERE");
+			}
 			
 			if(logger.isDebugEnabled()) {
 				logger.debug("=============================================================================");
