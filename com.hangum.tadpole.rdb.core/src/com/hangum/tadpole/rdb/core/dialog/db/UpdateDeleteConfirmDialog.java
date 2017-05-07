@@ -31,12 +31,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.libs.core.dao.SQLStatementStruct;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.sql.parser.UpdateDeleteParser;
-import com.hangum.tadpole.engine.sql.parser.dto.QueryDMLInfoDTO;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -47,6 +46,7 @@ import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.direct.SQLResultLabelProvider;
+import com.hangum.tadpole.sql.parse.UpdateDeleteStatementParser;
 
 /**
  * Update delete confirm dialog
@@ -65,7 +65,6 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 	private boolean isWhere = false;
 	private Composite compositeData;
 	private Label labelSummaryText;
-//	private Composite compositeWhere;
 	private Button btnAllDataDelete;
 	
 	/**
@@ -115,14 +114,6 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		gd_textQuery.heightHint = 80;
 		textQuery.setLayoutData(gd_textQuery);
 
-		// 모든 데이터 수정 컴포짖 ui
-//		compositeWhere = new Composite(container, SWT.NONE);
-//		GridLayout gl_compositeWhere = new GridLayout(1, false);
-//		gl_compositeWhere.horizontalSpacing = 1;
-//		gl_compositeWhere.marginHeight = 0;
-//		compositeWhere.setLayout(gl_compositeWhere);
-//		compositeWhere.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-//		compositeWhere.setVisible(false);
 		
 		btnAllDataDelete = new Button(compositeInfo, SWT.CHECK);
 		btnAllDataDelete.setText(Messages.get().AreYouModifyAllData);
@@ -142,7 +133,7 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label lblAaa = new Label(compositeData, SWT.NONE);
-		lblAaa.setText(String.format(Messages.get().UpdateDeleteConfirmDialog_Message, GetPreferenceGeneral.getPageCount()));
+		lblAaa.setText(String.format(Messages.get().UpdateDeleteConfirmDialog_Message, 500));
 		
 		initData();
 
@@ -172,33 +163,17 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		
 		textQuery.setText(strSQL);
 		try {
-			QueryDMLInfoDTO dmlInfoDto = new QueryDMLInfoDTO();
-			UpdateDeleteParser parser = new UpdateDeleteParser();
-			parser.parseQuery(strSQL, dmlInfoDto);
-			
-			String strObjecName = dmlInfoDto.getObjectName();
-			String strWhereAfter = StringUtils.substringAfterLast(strSQL, "where");
-			if("".equals(strWhereAfter)) {
-				strWhereAfter = StringUtils.substringAfterLast(strSQL, "WHERE");
-			}
-			
-			if(logger.isDebugEnabled()) {
-				logger.debug("=============================================================================");
-				logger.debug("object name : " + strObjecName);
-				logger.debug("where after query: " + strWhereAfter);
-				logger.debug("=============================================================================");
-			}
-			
-			String sqlSelect = "select * from " + strObjecName;
-			if(!StringUtils.trimToEmpty(strWhereAfter).equals("")) {
-				sqlSelect += " where " + strWhereAfter;
+			SQLStatementStruct sqlStatement = UpdateDeleteStatementParser.getParse(userDB, strSQL);
+			String sqlSelect = "select * from " + sqlStatement.getObjectName();
+			if(!StringUtils.trimToEmpty(sqlStatement.getWhere()).equals("")) {
+				sqlSelect += " where " + sqlStatement.getWhere();
 				
 				isWhere = true;
 			}
 			if(logger.isDebugEnabled()) logger.debug("[change select statement]" + sqlSelect);
 			
 			if(isWhere) {
-				QueryExecuteResultDTO rsDAO = QueryUtils.executeQuery(userDB, sqlSelect, 0, GetPreferenceGeneral.getPageCount());
+				QueryExecuteResultDTO rsDAO = QueryUtils.executeQuery(userDB, sqlSelect, 0, 500);
 				createTableColumn(reqQuery, tvQueryResult, rsDAO, false);
 				
 				tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
@@ -224,6 +199,8 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 		
 		} catch(Exception e) {
 			logger.error("initialize sql", e);
+			
+			MessageDialog.openError(getShell(), CommonMessages.get().Error, e.getMessage() + "\n" + Messages.get().CheckSQLStatement);
 		}
 	}
 	

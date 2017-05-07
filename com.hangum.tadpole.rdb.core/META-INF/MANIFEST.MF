@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.3.2",
  com.hangum.tadpole.engine;bundle-version="1.0.0",
  com.hangum.tadpole.commons.utils;bundle-version="1.0.0",
  com.hangum.tadpole.rdb.model;bundle-version="1.0.0",
- com.hangum.tadpole.sql.parser;bundle-version="1.0.0",
+ com.hangum.tadpole.sql.parser;bundle-version="1.0.0";resolution:=optional,
  com.hangum.tadpole.mongodb.core;bundle-version="1.0.0",
  com.hangum.tadpole.preference;bundle-version="1.0.0",
  com.hangum.tadpole.mongodb.core.ext;bundle-version="1.0.0",
@@ -30,7 +30,8 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.3.2",
  com.hangum.tadpole.commons.utils.zip;bundle-version="1.0.0",
  com.hangum.tadpole.tajo.core;bundle-version="1.0.0",
  com.hangum.tadpole.rdb.erd.core;bundle-version="2.0.0",
- com.hangum.tadpole.sql.format.core;bundle-version="1.0.0"
+ com.hangum.tadpole.sql.format.core;bundle-version="1.0.0",
+ com.hangum.tadpole.sql.prase.ext.core;bundle-version="1.0.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.rdb.core,

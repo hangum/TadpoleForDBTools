@@ -709,6 +709,8 @@ public class Messages {
 	public String UpdateDeleteConfirmDialog_findDataOver;
 	
 	public String LEDGER_AFTER_LABEL;
+
+	public String CheckSQLStatement;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
