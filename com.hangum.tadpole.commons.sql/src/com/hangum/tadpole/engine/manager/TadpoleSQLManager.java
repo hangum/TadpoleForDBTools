@@ -187,7 +187,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				if(logger.isDebugEnabled()) logger.debug(String.format("**** set define schema %s ", userDB.getSchema()));
 				
 				statement = javaConn.createStatement();
-				statement.executeUpdate("use " + userDB.getSchema());
+				statement.executeUpdate(String.format("use `%s`", userDB.getSchema()));
 			}
 		} catch(Exception e) {
 			logger.error("change scheman ", e);

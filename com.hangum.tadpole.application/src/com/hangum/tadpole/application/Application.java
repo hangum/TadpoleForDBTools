@@ -87,7 +87,7 @@ public class Application implements EntryPoint {
 			}
 			
 			/* define login type */
-			Properties prop = LoadConfigFile.getConfig();
+			Properties prop = LoadConfigFile.getConfigFile();
 			String txtLoginMethod = prop.getProperty("LOGIN_METHOD", AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE);
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, txtLoginMethod);
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, userInfoDao);

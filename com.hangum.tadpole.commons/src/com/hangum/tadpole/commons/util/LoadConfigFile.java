@@ -27,35 +27,47 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class LoadConfigFile {
 	private static final Logger logger = Logger.getLogger(LoadConfigFile.class);
-
+	private static Properties _properties = null;
+	
 	/**
 	 * get configuration files
 	 * 
 	 * @throws Exception
 	 */
 	public static void initializeConfigFile() {
-
-		Properties properties = new Properties();
-		try {
-			properties.load(new FileInputStream(
-					ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
-		} catch (Exception e) {
-			logger.error(String.format("Not found config files. %s",
-					ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
+		if(_properties == null) {
+			Properties properties = new Properties();
+			try {
+				properties.load(new FileInputStream(
+						ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
+			} catch (Exception e) {
+				logger.error(String.format("Not found config files. %s",
+						ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
+			}
+			_properties = properties;
 		}
-
-		ApplicationContext context = RWT.getApplicationContext();
-		context.setAttribute("TDB_CONFIG_FILE", properties);
 	}
-
-	/**
-	 * Get TadpoleDBHub config
+	
+	/** 
+	 * 환경 설정 파일을 로드한다.
 	 * 
 	 * @return
 	 */
-	public static Properties getConfig() {
-		ApplicationContext context = RWT.getApplicationContext();
-		return (Properties) context.getAttribute("TDB_CONFIG_FILE");
+	public static Properties getConfigFile() {
+		if(_properties == null) {
+			Properties properties = new Properties();
+			try {
+				properties.load(new FileInputStream(
+						ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
+			} catch (Exception e) {
+				logger.error(String.format("Not found config files. %s",
+						ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
+			}
+			
+			_properties = properties;
+		}
+		
+		return _properties;
 	}
 
 	/**
@@ -63,7 +75,7 @@ public class LoadConfigFile {
 	 * @return
 	 */
 	public static boolean isUseOPT() {
-		String otpUse = getConfig().getProperty("otp.use");
+		String otpUse = getConfigFile().getProperty("otp.use");
 
 		if (otpUse == null) return true;
 		else if ("YES".equalsIgnoreCase(otpUse)) return true;
@@ -76,7 +88,7 @@ public class LoadConfigFile {
 	 * @return
 	 */
 	public static boolean isEngineGateway() {
-		return "YES".equalsIgnoreCase(getConfig().getProperty("ENGINE.GATEWAY.USE"))?true:false;
+		return "YES".equalsIgnoreCase(getConfigFile().getProperty("ENGINE.GATEWAY.USE"))?true:false;
 	}
 
 	/**
@@ -85,6 +97,6 @@ public class LoadConfigFile {
 	 * @return
 	 */
 	public static boolean isGateWayIDCheck() {
-		return "YES".equalsIgnoreCase(getConfig().getProperty("ENGINE.GATEWAY.ID_CHECK"))?true:false;
+		return "YES".equalsIgnoreCase(getConfigFile().getProperty("ENGINE.GATEWAY.ID_CHECK"))?true:false;
 	}
 }

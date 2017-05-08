@@ -39,7 +39,7 @@ public class LDAPUtil {
 	
 	public static LDAPUtil getInstance() {
 		if(instance == null) {
-			Properties prop = LoadConfigFile.getConfig();
+			Properties prop = LoadConfigFile.getConfigFile();
 			
 			ldapHost	= prop.getProperty("LDAP.HOST.URL");
 			principal	= prop.getProperty("LDAP.PRINCIPAL");

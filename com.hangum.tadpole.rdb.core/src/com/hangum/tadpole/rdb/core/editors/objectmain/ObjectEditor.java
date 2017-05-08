@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.objectmain;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -43,6 +44,8 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.AbstractTadpoleManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
@@ -182,6 +185,21 @@ public class ObjectEditor extends MainEditor {
 					final String strSchema = comboSchema.getText();
 					userDB.setSchema(strSchema);
 					
+					// 기존에 설정되어 있는 테이블 목록등을 삭제한다.
+					userDB.setTableListSeparator(null);
+					userDB.setViewListSeparator(null);
+					userDB.setFunctionLisstSeparator(null);
+					
+					Connection conn = null;
+					try {
+						conn = TadpoleSQLManager.getConnection(userDB);
+						AbstractTadpoleManager.changeSchema(userDB, conn);
+					} catch(Exception e3) {
+						logger.error("** initialize connection", e3);
+					} finally {
+						try { if(conn != null) conn.close(); } catch(Exception ee) {}
+					}
+					
 					//오브젝트 익스플로어가 같은 스키마 일경우 스키마가 변경되도록.
 					getSite().getShell().getDisplay().asyncExec(new Runnable() {
 						@Override
@@ -295,6 +313,19 @@ public class ObjectEditor extends MainEditor {
 	 * initialize editor
 	 */
 	private void initEditor() {
+		// 초기 연결 커넥션을 초기화 합니다.
+		if (DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+			Connection conn = null;
+			try {
+				conn = TadpoleSQLManager.getConnection(userDB);
+				AbstractTadpoleManager.changeSchema(userDB, conn);
+			} catch(Exception e3) {
+				logger.error("** initialize connection", e3);
+			} finally {
+				try { if(conn != null) conn.close(); } catch(Exception ee) {}
+			}
+		}
+				
 		// google analytic
 		AnalyticCaller.track(MainEditor.ID, userDB.getDbms_type());
 	}

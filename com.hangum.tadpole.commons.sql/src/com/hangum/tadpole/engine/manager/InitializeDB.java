@@ -54,4 +54,29 @@ public class InitializeDB {
 		
 		return userDB;
 	}
+	
+	/**
+	 * initialize DB information
+	 * 
+	 * @param userDB
+	 * @return
+	 */
+	public static String dbCharacterSetDatabase(UserDBDAO userDB) {
+		String strCharacterSetDatabase = "";
+		
+		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+			
+			try {
+				QueryExecuteResultDTO endStatus = QueryUtils.executeQuery(userDB, "show variables like 'character_set_database'", 0, 20);
+				List<Map<Integer, Object>> tdbResultSet = endStatus.getDataList().getData();
+				strCharacterSetDatabase = ""+tdbResultSet.get(0).get(1);
+				
+				if(logger.isDebugEnabled()) logger.debug(String.format("**** get database character set %s ", strCharacterSetDatabase));
+			} catch (Exception e) {
+				logger.error("mysql Character " + e.getMessage());
+			}
+		}
+		
+		return strCharacterSetDatabase;
+	}
 }

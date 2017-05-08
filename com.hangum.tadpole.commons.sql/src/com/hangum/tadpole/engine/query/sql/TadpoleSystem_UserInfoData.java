@@ -153,10 +153,13 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtRDBNumberColumnIsComman RDB의 결과테이블이 숫자 컬럼인 경우 ,를 넣을 것인지?
 	 * @param txtFontInfo font information
 	 * @param txtCommitCount commit count
+	 * @param txtResultHeadClick
 	 * @param txtResultType 
+	 * @param txtNull 
 	 */
 	public static void updateRDBUserInfoData(boolean txtQueryProfilling, String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
-			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultType,
+			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultHeadClick, 
+			String txtResultType,
 			String textNull
 	) throws TadpoleSQLManagerException, SQLException {
 		
@@ -169,6 +172,7 @@ public class TadpoleSystem_UserInfoData {
 		updateUserInfoData(PreferenceDefine.RDB_RESULT_FONT, txtFontInfo);
 		updateUserInfoData(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
 		updateUserInfoData(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, txtShownInTheColumn);
+		updateUserInfoData(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK, txtResultHeadClick);
 		updateUserInfoData(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
 		updateUserInfoData(PreferenceDefine.RDB_RESULT_NULL, textNull);
 	}
