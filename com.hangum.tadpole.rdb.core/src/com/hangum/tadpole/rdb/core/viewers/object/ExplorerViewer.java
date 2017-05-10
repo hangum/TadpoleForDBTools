@@ -410,13 +410,20 @@ public class ExplorerViewer extends ViewPart {
 		comboSchema.removeAll();
 		if(userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP) {
 			try {
+				
+				// public schema가 선택되도록 합니다.
 				// 스키마 리스트를 초기화 시킨다.
+				boolean isPublicExist = false;
 				for (Object object : DBSystemSchema.getSchemas(userDB)) {
 					HashMap mapData = (HashMap)object;
 					comboSchema.add(""+mapData.get("schema"));
+					if("public".equals(mapData.get("schema"))) isPublicExist = true;
 				}
-				comboSchema.select(0);
-				userDB.setSchema("public");
+				
+				if(isPublicExist) comboSchema.setText("public");
+				else comboSchema.select(0);
+				
+				userDB.setSchema(comboSchema.getText());
 			} catch(Exception e) {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
@@ -661,6 +668,9 @@ public class ExplorerViewer extends ViewPart {
 						viewComposite.getTableViewer()
 					};
 			} else {
+				createTable();
+				createView();
+				
 				createProcedure();
 				createFunction();
 				createTrigger();

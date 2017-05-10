@@ -188,6 +188,18 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				
 				statement = javaConn.createStatement();
 				statement.executeUpdate(String.format("use `%s`", userDB.getSchema()));
+			} else if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
+				if("".equals(userDB.getSchema())) userDB.setSchema(userDB.getDb());
+				if(logger.isDebugEnabled()) logger.debug(String.format("**** set define schema %s ", userDB.getSchema()));
+				
+				statement = javaConn.createStatement();
+				statement.executeUpdate(String.format("ALTER SESSION SET CURRENT_SCHEMA = %s", userDB.getSchema()));
+			} else if(userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP) {
+				if("".equals(userDB.getSchema())) userDB.setSchema(userDB.getDb());
+				if(logger.isDebugEnabled()) logger.debug(String.format("**** set define schema %s ", userDB.getSchema()));
+				
+				statement = javaConn.createStatement();
+				statement.executeUpdate(String.format("set schema '%s'", userDB.getSchema()));
 			}
 		} catch(Exception e) {
 			logger.error("change scheman ", e);
