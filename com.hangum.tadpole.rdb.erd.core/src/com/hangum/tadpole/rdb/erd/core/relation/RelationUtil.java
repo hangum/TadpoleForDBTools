@@ -260,10 +260,35 @@ public class RelationUtil {
 					for (Column column : tarTabMod.getColumns()) targetColumnMap.put(column.getField(), column);
 					
 					// source 컬럼 정보
-					Column col = sourceColumnsMap.get(refTabDAO.getColumn_name().replaceAll(",", ""));
+					Column col = null;
+					// multi column 
+					if(StringUtils.contains(refTabDAO.getColumn_name(), ",")) {
+						col = tadpoleFactory.createColumn();
+						
+						col.setDefault("");
+						col.setExtra("");
+						col.setField(refTabDAO.getColumn_name());
+						col.setNull("");
+						col.setKey("");
+						col.setType("");
+					} else {
+						col = sourceColumnsMap.get(refTabDAO.getColumn_name());
+					}
 					
 					// target 컬럼 정보
-					Column colR = targetColumnMap.get(refTabDAO.getReferenced_column_name().replaceAll(",", ""));
+					Column colR = null;
+					if(StringUtils.contains(refTabDAO.getReferenced_column_name(), ",")) {
+						colR = tadpoleFactory.createColumn();
+						
+						colR.setDefault("");
+						colR.setExtra("");
+						colR.setField(refTabDAO.getReferenced_column_name());
+						colR.setNull("");
+						colR.setKey("");
+						colR.setType("");
+					} else {
+						colR = targetColumnMap.get(refTabDAO.getReferenced_column_name().replaceAll(",", ""));
+					}
 					if(logger.isDebugEnabled()) {
 						if(col == null || colR == null) {
 							logger.debug("###[table index]###############################################################################");
