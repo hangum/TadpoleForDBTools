@@ -58,6 +58,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.AbstractTadpoleManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -302,7 +303,7 @@ public class MainEditor extends EditorExtension {
 		}
 		
 		// mysql group 이면 스키마 목록이 보이도록 합니다.
-		if(getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
+		if(getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP | userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP | userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP ) {
 			ToolItem sep = new ToolItem(toolBar, SWT.SEPARATOR);
 			
 			comboSchema = new Combo(toolBar, SWT.READ_ONLY);
@@ -355,7 +356,7 @@ public class MainEditor extends EditorExtension {
 					}
 					
 				} catch(Exception e) {
-					logger.error("get mysql schema list " + e.getMessage());
+					logger.error("get schema list " + e.getMessage());
 				}
 			} else {
 			

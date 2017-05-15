@@ -135,6 +135,13 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		String strSQL = "";
 		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
 			strSQL = String.format("use `%s`", userDB.getSchema());
+			
+		} else if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
+			strSQL = String.format("ALTER SESSION SET CURRENT_SCHEMA = %s", userDB.getSchema());
+
+		} else if(userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP) {
+			strSQL = String.format("set schema '%s'", userDB.getSchema());
+			
 		} else {
 			strSQL = userDB.getDBDefine().getValidateQuery(false);
 		}

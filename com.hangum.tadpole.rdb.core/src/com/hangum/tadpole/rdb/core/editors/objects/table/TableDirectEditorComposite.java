@@ -503,7 +503,7 @@ public class TableDirectEditorComposite extends Composite {
 			// 0 번째 컬럼은 데이터 수정 타입 NONE 
 			// 오라클, PGSQL인 경우 1 번째 컬럼은 업데이트를 위해 ROWID, CID를 조회 하여서 보내주지 않도록 하였다. 
 			int intColStartIndex = 1;
-			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT || userDB.getDBDefine() == DBDefine.POSTGRE_DEFAULT) {
+			if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP || userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP) {
 				intColStartIndex++;
 			}
 			

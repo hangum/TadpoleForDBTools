@@ -1,50 +1,44 @@
 package com.hangum.tadpole.sql.format.core;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.ILogListener;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends AbstractUIPlugin {
+import com.hangum.tadpole.commons.libs.core.logs.LogListener;
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.hangum.tadpole.sql.format.core"; //$NON-NLS-1$
+public class Activator implements BundleActivator {
 
-	// The shared instance
-	private static Activator plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	private static BundleContext context;
+	private ILogListener listener;
+
+	static BundleContext getContext() {
+		return context;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	public void start(BundleContext bundleContext) throws Exception {
+		Activator.context = bundleContext;
+		
+		// log level설정
+//		LogConfiguration.getInstance();
+		
+		// eclipse 로그도 log4j에 넣어주도록 수정 ... (해야할지 살짝 의문이고 삭제해야할지도....) -hangum, 11.09
+		listener = new LogListener();
+		Platform.addLogListener(listener);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
+	public void stop(BundleContext bundleContext) throws Exception {
+		Activator.context = null;
+		
+		Platform.removeLogListener(listener);
 	}
 
 }
