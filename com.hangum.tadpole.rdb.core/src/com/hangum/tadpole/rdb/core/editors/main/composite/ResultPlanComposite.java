@@ -27,15 +27,19 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.utils.RequestQuery;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.AbstractPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.GeneralPlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.OraclePlanComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.PlanTailComposite;
+import com.hangum.tadpole.rdb.core.util.QueryResultSaved;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -110,7 +114,14 @@ public class ResultPlanComposite extends Composite {
 		this.resultMainComposite = resultMainComposite;
 	}
 
-	public void setQueryPlanData(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
+	/**
+	 * 쿼리 결과 저장여부
+	 * 
+	 * @param reqQuery
+	 * @param rsDAO
+	 * @param longHistorySeq
+	 */
+	public void setQueryPlanData(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, long longHistorySeq) {
 	
 		if(compositeQueryPlan != null && !compositeQueryPlan.getCompositeTail().getBtnPinSelection()) {
 			compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
@@ -129,6 +140,11 @@ public class ResultPlanComposite extends Composite {
 			compositeQueryPlan.setLayout(gl_compositeResult);
 			
 			compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
+		}
+		
+		/** 쿼리 결과를 저장합니다 */
+		if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
+			QueryResultSaved.queryResult(GetAdminPreference.getQueryResultSaved() + PublicTadpoleDefine.DIR_SEPARATOR + SessionManager.getUserSeq(), ""+longHistorySeq, rsDAO);
 		}
 		
 		resultSashLayout();

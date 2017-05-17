@@ -77,6 +77,8 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.utils.EditorDefine;
 import com.hangum.tadpole.engine.utils.RequestQuery;
+import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -90,6 +92,7 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
+import com.hangum.tadpole.rdb.core.util.QueryResultSaved;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
@@ -220,8 +223,12 @@ public class ResultSetComposite extends Composite {
 	
 	/**
 	 * 결과탭을 새로 생성하거나 합니다.
+	 * 
+	 * @param reqQuery
+	 * @param listRSDao
+	 * @param longHistorySeq
 	 */
-	private void changeResultType(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
+	private void changeResultType(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao, List<Long> listLongHistorySeq) {
 		
 		// 모든 쿼리를 수행 하면 기존 결과 화면을 핀 유무와 상관없이 닫는다.
 		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
@@ -236,17 +243,25 @@ public class ResultSetComposite extends Composite {
 		
 		// 화면 결과를 출력한다.
 		try {
+			int index = 0;
 			for (QueryExecuteResultDTO rsDAO : listRSDao) {
+				long longHistorySeq = listLongHistorySeq.get(index);
+				index++;
 				boolean isMakePing = listRSDao.size()==1?false:true;
 				RequestQuery reqNewQuery = (RequestQuery)reqQuery.clone();
 				reqNewQuery.setSql(rsDAO.getReqQuery());
 				
 				if(compositeResult != null && !compositeResult.getCompositeTail().getBtnPinSelection()) {
-					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing);
+					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing, longHistorySeq);
 				} else {
 					compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
 					compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing);
+					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing, longHistorySeq);
+				}
+				
+				/** 쿼리 결과를 저장합니다 */
+				if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
+					QueryResultSaved.queryResult(GetAdminPreference.getQueryResultSaved() + PublicTadpoleDefine.DIR_SEPARATOR + SessionManager.getUserSeq(), ""+longHistorySeq, rsDAO);
 				}
 			}
 			
@@ -392,6 +407,9 @@ public class ResultSetComposite extends Composite {
 		
 		if(compositeResult != null) compositeResult.initUI();
 		
+		/** 쿼리 */
+		final List<String> listStrSQL = new ArrayList<String>();
+		/** 쿼리 결과 */
 		final List<QueryExecuteResultDTO> listRSDao = new ArrayList<>();
 		
 		final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
@@ -428,7 +446,6 @@ public class ResultSetComposite extends Composite {
 				try {
 					if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
 						List<String> listStrExecuteQuery = new ArrayList<String>();
-						List<String> listStrSQL = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
 							String strExeSQL = SQLUtil.makeExecutableSQL(tmpUserDB, strSQL);
 							
@@ -629,16 +646,24 @@ public class ResultSetComposite extends Composite {
 						// 처리를 위해 결과를 담아 둡니다.
 						reqQuery.setResultDao(reqResultDAO);
 						
+						// 히스토리 화면을 갱신합니다.
+						List<Long> listLongHistorySeq = new ArrayList<>();
+						if(listStrSQL.isEmpty()) {
+							listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO));
+						} else {
+							for (String strSQL : listStrSQL) {
+								reqResultDAO.setStrSQLText(strSQL);
+								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO));
+							}
+						}
+						
 						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
-							executeFinish(reqQuery, listRSDao);
+							executeFinish(reqQuery, listRSDao, listLongHistorySeq);
 						} else {
 							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
 						}
-						
-						// 히스토리 화면을 갱신합니다.
-						getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO);
 						
 						// 모든 쿼리가 종료 되었음을 알린다.
 						finallyEndExecuteCommand(listRSDao);
@@ -1009,9 +1034,13 @@ public class ResultSetComposite extends Composite {
 	}
 
 	/**
-	 * 쿼리 결과를 화면에 출력합니다.
+	 * 쿼리 결과를 화면에 출력하고 로그를 쌓습니다.
+	 * 
+	 * @param reqQuery
+	 * @param listRSDao
+	 * @param listLongHistorySeq
 	 */
-	public void executeFinish(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao) {
+	public void executeFinish(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao, List<Long> listLongHistorySeq) {
 		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 시작.
 		StringBuffer sbMSG = new StringBuffer();
 		for (QueryExecuteResultDTO queryExecuteResultDTO : listRSDao) {
@@ -1023,10 +1052,10 @@ public class ResultSetComposite extends Composite {
 		if(reqQuery.isStatement()) {
 			
 			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-				getRdbResultComposite().setQueryPlanView(reqQuery, listRSDao.get(0));
+				getRdbResultComposite().setQueryPlanView(reqQuery, listRSDao.get(0), listLongHistorySeq.get(0));
 				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.QUERY_PLAN);
 			} else {	// table data를 생성한다.
-				changeResultType(reqQuery, listRSDao);
+				changeResultType(reqQuery, listRSDao, listLongHistorySeq);
 			}
 		} else {
 			

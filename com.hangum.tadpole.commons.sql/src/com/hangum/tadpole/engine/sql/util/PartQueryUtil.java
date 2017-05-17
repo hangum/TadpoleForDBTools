@@ -47,7 +47,7 @@ public class PartQueryUtil {
 	 * @return
 	 */
 	public static String makeSelect(UserDBDAO userDB, String strQuery, int intStartPos, int intRowCnt) throws Exception {
-		String requestQuery = "";
+		String requestQuery = strQuery;
 		
 //		if(logger.isDebugEnabled()) logger.debug("make select : " + intStartPos + ", " + intRowCnt);
 		
@@ -69,8 +69,8 @@ public class PartQueryUtil {
 //		// 정의 되지 않는 dbms는 전체로 동작하게 합니다.
 //		} else {
 //			requestQuery = originalQuery;
-		} else {
-			throw new Exception("Not support Database.");
+//		} else {
+//			throw new Exception("Not support Database.");
 		}
 		
 		return requestQuery;

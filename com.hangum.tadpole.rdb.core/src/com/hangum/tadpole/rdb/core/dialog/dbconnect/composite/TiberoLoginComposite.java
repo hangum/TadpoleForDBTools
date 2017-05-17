@@ -76,12 +76,17 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite compositeBody = new Composite(this, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setEnabled(isReadOnly);
 		

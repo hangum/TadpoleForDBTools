@@ -57,6 +57,7 @@ import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.engine.utils.EditorDefine;
 import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -72,6 +73,7 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQL
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.TableToDataUtils;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
+import com.hangum.tadpole.rdb.core.util.QueryResultSaved;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -585,6 +587,11 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					try {
 						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt * 4, oldTadpoleResultSet.getData().size());
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
+						/** 쿼리 결과를 저장합니다 */
+						if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
+							QueryResultSaved.queryResult(GetAdminPreference.getQueryResultSaved() + PublicTadpoleDefine.DIR_SEPARATOR + SessionManager.getUserSeq(), ""+longHistorySeq, newRsDAO);
+						} 
+						
 						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());
 					
 						tvQueryResult.setInput(oldTadpoleResultSet.getData());
@@ -642,11 +649,11 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 	
 	@Override
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePin) {
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePin, long longHistorySeq) {
 		if(rsDAO == null) return;
 		if(rsDAO.getDataList() == null) return;
 		STATUS_LastReadData = PublicTadpoleDefine.BASIC_STATUS.NONE;		
-		super.printUI(reqQuery, rsDAO, isMakePin);
+		super.printUI(reqQuery, rsDAO, isMakePin, longHistorySeq);
 		
 		final TadpoleResultSet trs = rsDAO.getDataList();
 		sqlSorter = new SQLResultSorter(-999);

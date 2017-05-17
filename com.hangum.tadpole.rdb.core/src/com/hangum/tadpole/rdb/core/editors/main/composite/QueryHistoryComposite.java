@@ -184,11 +184,13 @@ public class QueryHistoryComposite extends Composite {
 	/**
 	 * 쿼리 후 실행결과를 히스토리화면과 프로파일에 저장합니다.
 	 */
-	public void afterQueryInit(RequestResultDAO reqResultDAO) {
+	public long afterQueryInit(RequestResultDAO reqResultDAO) {
+		long longHistorySeq = -1;
+		
 		LicenseDAO licenseDAO = LicenseValidator.getLicense();
 		if(licenseDAO.isEnterprise()) {
 			try {
-				TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
+				longHistorySeq = TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
 								getRdbResultComposite().getUserDB(), 
 								PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
 								reqResultDAO);
@@ -199,6 +201,8 @@ public class QueryHistoryComposite extends Composite {
 		}
 		
 		addRowData(reqResultDAO);
+		
+		return longHistorySeq;
 	}
 	
 	/**

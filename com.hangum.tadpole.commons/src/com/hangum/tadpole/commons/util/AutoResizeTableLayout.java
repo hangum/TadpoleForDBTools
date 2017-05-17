@@ -8,7 +8,7 @@
  * Contributors:
  *     hangum - initial API and implementation
  ******************************************************************************/
-package com.hangum.tadpole.engine.sql.util.tables;
+package com.hangum.tadpole.commons.util;
 
 import java.util.ArrayList;
 import java.util.List;

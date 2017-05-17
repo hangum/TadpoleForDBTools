@@ -20,6 +20,7 @@ import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.ApplicationContext;
 
 import com.hangum.tadpole.commons.libs.core.mails.dto.SMTPDTO;
+import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.manager.TadpoleApplicationContextManager;
 import com.hangum.tadpole.engine.query.dao.system.UserInfoDataDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
@@ -138,6 +139,20 @@ public class GetAdminPreference extends AbstractPreference {
 	public static String getHomePageOpen() {
 		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
 		return getAdminValue(mapUserInfoData, AdminPreferenceDefine.DEFAULT_HOME_OPEN, AdminPreferenceDefine.DEFAULT_HOME_OPEN_VALUE);
+	}
+	
+	/**
+	 * 쿼리 결과 저장 디렉토리
+	 * @return
+	 */
+	public static String getQueryResultSaved() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		String strDir = getAdminValue(mapUserInfoData, AdminPreferenceDefine.DEFAULT_QUERY_RESULT_SAVED, AdminPreferenceDefine.DEFAULT_QUERY_RESULT_SAVED_VALUE);
+		if("".equals(strDir)) {
+			strDir = ApplicationArgumentUtils.getResourcesDir();
+		} 
+		
+		return strDir;
 	}
 	
 	/**
@@ -349,4 +364,5 @@ public class GetAdminPreference extends AbstractPreference {
 		
 		return dto;
 	}
+
 }

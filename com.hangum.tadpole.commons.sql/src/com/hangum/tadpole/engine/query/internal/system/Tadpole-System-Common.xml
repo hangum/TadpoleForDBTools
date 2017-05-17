@@ -360,7 +360,9 @@
  		tadpole_db
  	SET
  		is_visible 	= #is_visible#,
- 		is_lock		= #is_lock#
+ 		is_lock		= #is_lock#,
+ 		is_profile  = #is_profile#,
+ 		is_result_save = #is_result_save#
  	WHERE
  		SEQ = #seq#
  </update>
@@ -984,6 +986,11 @@ SELECT
 	INSERT INTO executed_sql_resource_data(startDateExecute, executed_sql_resource_seq, datas)
 	VALUES(#startDateExecute#, #executed_sql_resource_seq#, #datas#)
 </insert>
+
+<select id="getExecuteQueryObject" resultClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO" parameterClass="java.lang.Long">
+	SELECT * FROM executed_sql_resource
+	WHERE seq = #seq#
+</select>
 
 <!-- 
 	쿼리의 실행 히스토리를 얻습니다.

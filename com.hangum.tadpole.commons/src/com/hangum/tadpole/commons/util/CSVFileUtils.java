@@ -10,11 +10,18 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
@@ -55,6 +62,32 @@ public class CSVFileUtils {
 		}
 		
 		return strReust;
+	}
+	
+	/**
+	 * csv file reader
+	 * 
+	 * @param filename
+	 * @param seprator
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String[]> readFile(String filename, char seprator) {
+		List<String[]> returnMap = new ArrayList<String[]>();
+		String[] nextLine = null;
+		CSVReader csvReader = null;
+		try {
+			 csvReader = new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename), "MS949")), seprator);
+			 while((nextLine = csvReader.readNext()) != null) {
+				returnMap.add(nextLine);
+			 }
+		} catch(Exception e) {
+			logger.error("CSV read error", e);
+		} finally {
+			if(csvReader != null) try { csvReader.close(); } catch(Exception e) {}
+		}
+		
+		return returnMap;
 	}
 	
 }

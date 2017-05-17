@@ -114,6 +114,8 @@ public class CommonMessages {
 	public String DownloadIsComplete;
 
 	public String UserRequestQuery;
+	
+	public String FileNotFound;
 
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

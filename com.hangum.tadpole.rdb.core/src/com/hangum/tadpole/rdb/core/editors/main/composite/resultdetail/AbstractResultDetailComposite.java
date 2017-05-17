@@ -48,6 +48,9 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	
 	/** result set head click action define */
 	protected String strResultSetHeadClicks = GetPreferenceGeneral.getRDBResultHeadClick();
+	
+	/** result set query history id */
+	protected long longHistorySeq = -1;
 
 	/**
 	 * Create the composite.
@@ -72,12 +75,15 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	 * @param rsDAO 
 	 * @param reqQuery 
 	 * @param isMakePing 
+	 * @param longHistorySeq 
 	 */
-	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePing) {
+	public void printUI(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, boolean isMakePing, long longHistorySeq) {
 		this.reqQuery = reqQuery;
 		this.rsDAO = rsDAO;
 		
 		compositeTail.setBtnPint(isMakePing);
+		
+		this.longHistorySeq = longHistorySeq;
 	}
 	
 	public void endQuery() {

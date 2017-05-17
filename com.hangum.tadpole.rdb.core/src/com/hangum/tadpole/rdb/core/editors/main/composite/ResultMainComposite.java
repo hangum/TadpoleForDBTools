@@ -227,9 +227,10 @@ public class ResultMainComposite extends Composite {
 	 * 
 	 * @param reqQuery
 	 * @param rsDAO
+	 * @param longHistorySeq
 	 */
-	public void setQueryPlanView(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO) {
-		compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO);
+	public void setQueryPlanView(RequestQuery reqQuery, QueryExecuteResultDTO rsDAO, long longHistorySeq) {
+		compositeQueryPlan.setQueryPlanData(reqQuery, rsDAO, longHistorySeq);
 	}
 
 	public IWorkbenchPartSite getSite() {

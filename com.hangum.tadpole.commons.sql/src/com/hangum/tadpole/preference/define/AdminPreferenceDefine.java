@@ -135,6 +135,10 @@ public class AdminPreferenceDefine {
 	/** 홈페이지 오픈 여부 */
 	public static final String DEFAULT_HOME_OPEN = _PREFIX + "DEFAULT_HOME_OPEN";
 	public static final String DEFAULT_HOME_OPEN_VALUE = "false";
+	
+	/** 쿼리 결과 저장 여부 */
+	public static final String DEFAULT_QUERY_RESULT_SAVED = _PREFIX + "DEFAULT_QUERY_RESULT_SAVED";
+	public static final String DEFAULT_QUERY_RESULT_SAVED_VALUE = "";
 
 	/** 
 	 * 리소스 다운로드 여부

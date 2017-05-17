@@ -193,6 +193,9 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     /** is db lock? */
     protected String is_lock			= PublicTadpoleDefine.YES_NO.NO.name();
     
+    /** is query result save? */
+    protected String is_result_save		= PublicTadpoleDefine.YES_NO.NO.name();
+    
     /** db access control */
     protected DBAccessControlDAO dbAccessCtl = new DBAccessControlDAO();
     
@@ -710,6 +713,20 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 
 	public void setSelect(boolean select) {
 		this.select = select;
+	}
+
+	/**
+	 * @return the is_result_save
+	 */
+	public String getIs_result_save() {
+		return is_result_save;
+	}
+
+	/**
+	 * @param is_result_save the is_result_save to set
+	 */
+	public void setIs_result_save(String is_result_save) {
+		this.is_result_save = is_result_save;
 	}
 
 }

@@ -77,7 +77,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
