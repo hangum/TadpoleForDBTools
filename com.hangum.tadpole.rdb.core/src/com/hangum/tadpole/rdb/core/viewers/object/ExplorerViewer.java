@@ -349,6 +349,8 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void initObjectHead(Object selectElement) {
 		// 기존 사용자원을 반납합니다. 
+		if(textSearch.isDisposed()) return; 
+			
 		textSearch.setText("");
 		if(null != tableComposite) tableComposite.dispose(); 
 		if(null != viewComposite) viewComposite.dispose(); 

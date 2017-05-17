@@ -351,8 +351,10 @@ public class MainEditor extends EditorExtension {
 					for (Object object : DBSystemSchema.getSchemas(userDB)) {
 						HashMap<String, String> mapData = (HashMap)object;
 						comboSchema.add(mapData.get("SCHEMA"));
-						userDB.addSchema(mapData.get("SCHEMA"));
+						userDB.addSchema(comboSchema.getText());
 					}
+					comboSchema.select(0);
+					userDB.setSchema(comboSchema.getText());
 					
 				} catch(Exception e) {
 					logger.error("get schema list " + e.getMessage());
@@ -361,6 +363,10 @@ public class MainEditor extends EditorExtension {
 			
 				for (String schema : userDB.getSchemas()) {
 					comboSchema.add(schema);
+				}
+				if("".equals(userDB.getSchema())) {
+					comboSchema.select(0);
+					userDB.setSchema(comboSchema.getText());
 				}
 			}
 			comboSchema.setVisibleItemCount(userDB.getSchemas().size());
