@@ -572,8 +572,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		if( (tableResult.getTopIndex() + tableRowCnt + 1) > tableResult.getItemCount()) { 
 			final TadpoleResultSet oldTadpoleResultSet = getRsDAO().getDataList();
 
-			final int intSelectLimitCnt = GetPreferenceGeneral.getSelectLimitCount();
-			if(oldTadpoleResultSet.getData().size() >= intSelectLimitCnt) {
+			final int intPageCnt = GetPreferenceGeneral.getPageCount();
+			
+			if(oldTadpoleResultSet.getData().size() >= intPageCnt) {
 				if(logger.isDebugEnabled()) {
 					logger.debug("####11111###### [tableResult.getItemCount()]" + oldTadpoleResultSet.getData().size() +":"+tableResult.getItemCount() + ":" + GetPreferenceGeneral.getPageCount());
 				}
@@ -585,7 +586,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					final int queryTimeOut 		= GetPreferenceGeneral.getQueryTimeOut();
 					
 					try {
-						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intSelectLimitCnt * 4, oldTadpoleResultSet.getData().size());
+						QueryExecuteResultDTO newRsDAO = getRdbResultComposite().runSelect(reqQuery, queryTimeOut, strUserEmail, intPageCnt * 4, oldTadpoleResultSet.getData().size());
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						/** 쿼리 결과를 저장합니다 */
 						if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
