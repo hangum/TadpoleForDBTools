@@ -20,6 +20,7 @@ import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapSession;
 
@@ -34,7 +35,7 @@ public class TadpoleSystem_ExtensionDB {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_ExtensionDB.class);
-	
+		
 	/**
 	 * get extension info
 	 * 
@@ -56,7 +57,7 @@ public class TadpoleSystem_ExtensionDB {
 	 */
 	public static List<ExtensionDBDAO> getUserDBs(String userId) throws Exception {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		return sqlClient.queryForList("getExtensionUserDBs", userId); //$NON-NLS-1$
+		return sqlClient.queryForList("findUserExtensionDB", userId); //$NON-NLS-1$
 	}
 	
 	/**
@@ -100,4 +101,5 @@ public class TadpoleSystem_ExtensionDB {
 		}
 	
 	}
+
 }

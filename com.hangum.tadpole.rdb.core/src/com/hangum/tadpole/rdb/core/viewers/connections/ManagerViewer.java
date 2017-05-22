@@ -49,16 +49,20 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TDBGatewayManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
+import com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURCE_TYPE;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExtensionDB;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
@@ -84,6 +88,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
 public class ManagerViewer extends ViewPart {
 	private static final Logger logger = Logger.getLogger(ManagerViewer.class);
 	public static String ID = "com.hangum.tadpole.rdb.core.view.connection.manager"; //$NON-NLS-1$
+	private static boolean isGatewayConnection = false;
 	
 	private Composite compositeMainComposite;
 	private List<ManagerListDTO> treeDataList = new ArrayList<ManagerListDTO>();
@@ -93,6 +98,8 @@ public class ManagerViewer extends ViewPart {
 	
 	public ManagerViewer() {
 		super();
+		
+//		isGatewayConnection = LoadConfigFile.isEngineGateway();
 	}
 
 	@Override
@@ -231,26 +238,13 @@ public class ManagerViewer extends ViewPart {
 		
 		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
 		if(_tmpListManager.isEmpty()) {
-
-			// product type filter
-			final String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
-			// product type filter
-			
 			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer add user session................");
+			
 			try {
 				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
-					
 					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {
-						boolean isFilter = false;
-						for (String strProductType : strProductTypeFilters) {
-							if(strProductType.equals(userDBDAO.getOperation_type())) isFilter = true; 
-						}
-						
-						if(!isFilter) managerDTO.addLogin(userDBDAO);
-						else {
-							if(logger.isDebugEnabled()) logger.debug(String.format("Filter db is %s", userDBDAO.getOperation_type()));
-						}
+						managerDTO.addLogin(userDBDAO);
 					}
 					
 					if(!managerDTO.getManagerList().isEmpty()) treeDataList.add(managerDTO);

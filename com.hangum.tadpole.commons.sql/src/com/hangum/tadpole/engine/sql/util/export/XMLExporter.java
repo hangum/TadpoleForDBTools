@@ -73,7 +73,7 @@ public class XMLExporter extends AbstractTDBExporter {
 			Element row = doc.createElement("Row");
 			results.appendChild(row);
 			
-			for(int j=1; j<mapColumns.size(); j++) {
+			for(int j=0; j<mapColumns.size(); j++) {
 				String columnName = mapLabelName.get(j);
 				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
 				
@@ -131,7 +131,7 @@ public class XMLExporter extends AbstractTDBExporter {
 			Element row = doc.createElement("Row");
 			results.appendChild(row);
 			
-			for(int j=1; j<mapColumns.size(); j++) {
+			for(int j=0; j<mapColumns.size(); j++) {
 				String columnName = mapLabelName.get(j);
 				String strValue = mapColumns.get(j)==null?"":""+mapColumns.get(j);
 				

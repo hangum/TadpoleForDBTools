@@ -22,8 +22,11 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.manager.TDBGatewayManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.ExternalBrowserInfoDAO;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
@@ -299,7 +302,9 @@ public class TadpoleSystem_UserDBQuery {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userGroupDB", mapParam);
-
+		
+		listUserDB = filterUserDB(listUserDB);
+		
 		// set db access control
 		for (UserDBDAO userDBDAO : listUserDB) {
 			DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.getDBAccessControl(userDBDAO.getRole_seq());
@@ -337,11 +342,68 @@ public class TadpoleSystem_UserDBQuery {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
+		
+		listUserDB = filterUserDB(listUserDB);
 
 		// set db access control
 		for (UserDBDAO userDBDAO : listUserDB) {
 			DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.getDBAccessControl(userDBDAO.getRole_seq());
 			userDBDAO.setDbAccessCtl(dbAccessCtl);
+		}
+		
+		return listUserDB;
+	}
+	
+	/**
+	 * filter user DB
+	 * 
+	 * @param listUserDB
+	 * @return
+	 */
+	public static List<UserDBDAO> filterUserDB(List<UserDBDAO> listUserDB) {
+
+		// product type filter
+		final String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
+		for (String strProductType : strProductTypeFilters) {
+			List<UserDBDAO> listRemoveUserDB = new ArrayList<UserDBDAO>();
+			for (UserDBDAO userDBDAO : listUserDB) {
+				if(strProductType.equals(userDBDAO.getOperation_type())) {
+					listRemoveUserDB.add(userDBDAO);
+				}
+			}
+			
+			for (UserDBDAO userDBDAO : listRemoveUserDB) {
+				listUserDB.remove(userDBDAO);
+			}
+		}
+		
+		// is gateway
+		if(LoadConfigFile.isEngineGateway()) {
+			List<ExtensionDBDAO> listExtensionInfo = new ArrayList<ExtensionDBDAO>();
+			try {
+				listExtensionInfo = TadpoleSystem_ExtensionDB.getUserDBs(SessionManager.getEMAIL());
+			} catch(Exception e) {
+				logger.error("get gateway list" + e.getMessage());
+			}
+		
+			List<UserDBDAO> listRemoveUserDB = new ArrayList<UserDBDAO>();
+			for (UserDBDAO userDBDAO : listUserDB) {
+				final String strKey = TDBGatewayManager.getExtensionKey(userDBDAO);
+				boolean isFineDB = false;
+				
+				for (ExtensionDBDAO extensionDBDAO : listExtensionInfo) {
+					if(strKey.equals(extensionDBDAO.getSearch_key())) {
+						isFineDB = true;
+						break;
+					}
+				}
+				
+				if(!isFineDB) listRemoveUserDB.add(userDBDAO);
+			}
+			
+			for (UserDBDAO userDBDAO : listRemoveUserDB) {
+				listUserDB.remove(userDBDAO);
+			}
 		}
 		
 		return listUserDB;

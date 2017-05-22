@@ -96,7 +96,7 @@ public class TDBGatewayManager {
 	 * @param userDB
 	 * @return
 	 */
-	private static String getExtensionKey(final UserDBDAO userDB) {
+	public static String getExtensionKey(final UserDBDAO userDB) {
 		return 	userDB.getHost() + userDB.getPort() + userDB.getDb() + userDB.getUsers();
 	}
 }

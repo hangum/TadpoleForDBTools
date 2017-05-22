@@ -57,12 +57,14 @@ import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.AbstractExportComposite;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportExcelComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportHTMLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportJSONComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportSQLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportTextComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.composite.ExportXMLComposite;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.AbstractExportDAO;
+import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportExcelDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportHtmlDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportJsonDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportSqlDAO;
@@ -70,7 +72,6 @@ import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportTextDAO;
 import com.hangum.tadpole.rdb.core.dialog.export.sqlresult.dao.ExportXmlDAO;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * Resultset to download
@@ -104,6 +105,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	
 	private CTabFolder tabFolder;
 	private AbstractExportComposite compositeText;
+	private AbstractExportComposite compositeExcel;
 	private AbstractExportComposite compositeHTML;
 	private AbstractExportComposite compositeJSON;
 	private AbstractExportComposite compositeXML;
@@ -160,6 +162,9 @@ public class ResultSetDownloadDialog extends Dialog {
 		
 		compositeText = new ExportTextComposite(tabFolder, SWT.NONE, defaultTargetName);
 		compositeText.setLayout(new GridLayout(1, false));
+		
+		compositeExcel = new ExportExcelComposite(tabFolder, SWT.NONE, defaultTargetName);
+		compositeExcel.setLayout(new GridLayout(1, false));
 		
 		compositeHTML = new ExportHTMLComposite(tabFolder, SWT.NONE, defaultTargetName);
 		compositeHTML.setLayout(new GridLayout(1, false));
@@ -249,6 +254,9 @@ public class ResultSetDownloadDialog extends Dialog {
 		if("text".equalsIgnoreCase(selectionTab)) {
 			if(!compositeText.isValidate()) return;
 			exportDAO = compositeText.getLastData();
+		} else if("Excel".equalsIgnoreCase(selectionTab)) {
+			if(!compositeText.isValidate()) return;
+			exportDAO = compositeExcel.getLastData();
 		}else if("html".equalsIgnoreCase(selectionTab)) {
 			if(!compositeHTML.isValidate()) return;
 			exportDAO = compositeHTML.getLastData();
@@ -278,6 +286,9 @@ public class ResultSetDownloadDialog extends Dialog {
 					if("text".equalsIgnoreCase(selectionTab)) {			
 						ExportTextDAO dao = (ExportTextDAO)_dao;
 						exportResultCSVType(dao.isIsncludeHeader(), dao.getTargetName(), dao.getSeparatorType(), dao.getComboEncoding());
+					} else if("Excel".equalsIgnoreCase(selectionTab)) {
+						ExportExcelDAO dao = (ExportExcelDAO)_dao;
+						exportResultExcelType(dao.getTargetName());
 					}else if("html".equalsIgnoreCase(selectionTab)) {			
 						ExportHtmlDAO dao = (ExportHtmlDAO)_dao;
 						exportResultHtmlType(dao.getTargetName(), dao.getComboEncoding());
@@ -344,6 +355,18 @@ public class ResultSetDownloadDialog extends Dialog {
 			String strFullPath = AllDataExporter.makeCSVAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), isAddHead, targetName, seprator, encoding, strDefaultNullValue, intMaxDownloadCnt);
 			downloadFile(targetName, strFullPath, encoding);
 		}
+	}
+	
+	protected void exportResultExcelType(String targetName) throws Exception {
+		if (btnStatus == BTN_STATUS.PREVIEW) {
+			previewDataLoad(targetName, "", "UTF-8");
+		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
+//			targetEditor("에디터로 데이터를 보낼수 없습니다.");
+		}else{
+			String strFullPath = AllDataExporter.makeExcelAllResult(queryExecuteResultDTO.getUserDB(), requestQuery.getSql(), targetName, intMaxDownloadCnt);
+			downloadFile(targetName, strFullPath, "UTF-8");
+		}
+		
 	}
 	
 	/**

@@ -1,5 +1,9 @@
 package com.hangum.tadpole.engine.query.dao.gateway;
 
+import java.sql.Timestamp;
+
+import com.hangum.tadpole.commons.util.DateUtil;
+
 /**
  * extension db dao
  * 
@@ -22,6 +26,12 @@ public class ExtensionDBDAO {
 	
 	private String gate_host;
 	private String gate_port;
+	
+	// default value is 00:00
+	private Timestamp terms_of_use_starttime 	= new Timestamp(System.currentTimeMillis());
+
+	// default value is 100 years after
+	private	Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillsMonth(12));
 	
 	public ExtensionDBDAO() {
 	}
@@ -179,6 +189,34 @@ public class ExtensionDBDAO {
 	 */
 	public void setGate_port(String gate_port) {
 		this.gate_port = gate_port;
+	}
+
+	/**
+	 * @return the terms_of_use_starttime
+	 */
+	public Timestamp getTerms_of_use_starttime() {
+		return terms_of_use_starttime;
+	}
+
+	/**
+	 * @param terms_of_use_starttime the terms_of_use_starttime to set
+	 */
+	public void setTerms_of_use_starttime(Timestamp terms_of_use_starttime) {
+		this.terms_of_use_starttime = terms_of_use_starttime;
+	}
+
+	/**
+	 * @return the terms_of_use_endtime
+	 */
+	public Timestamp getTerms_of_use_endtime() {
+		return terms_of_use_endtime;
+	}
+
+	/**
+	 * @param terms_of_use_endtime the terms_of_use_endtime to set
+	 */
+	public void setTerms_of_use_endtime(Timestamp terms_of_use_endtime) {
+		this.terms_of_use_endtime = terms_of_use_endtime;
 	}
 
 }

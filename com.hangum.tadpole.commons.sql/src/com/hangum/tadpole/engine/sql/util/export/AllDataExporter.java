@@ -28,6 +28,34 @@ public class AllDataExporter {
 	private static final Logger logger = Logger.getLogger(AllDataExporter.class);
 	
 	/**
+	 * excel export data
+	 * 
+	 * @param userDB
+	 * @param strSQL
+	 * @param fileName
+	 * @param intMaxCount
+	 * @return
+	 * @throws Exception
+	 */
+	public static String makeExcelAllResult(UserDBDAO userDB, String strSQL, String fileName, int intMaxCount) throws Exception {
+		String strFullPath = AbstractTDBExporter.makeDirName(fileName) + fileName + "." + "xlsx";
+		
+		try {
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			while(sqlUtil.hasNext()) {
+				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
+
+				ExcelExporter.makeContentFile(strFullPath, fileName, rsDAO);
+			}
+			
+			return strFullPath;
+		} catch(Exception e) {
+			logger.error("make all CSV export data", e);
+			throw e;
+		}
+	}
+	
+	/**
 	 * sql의 모든 결과를 csv로 download 하도록 한다.
 	 * @param userDB
 	 * @param strSQL
