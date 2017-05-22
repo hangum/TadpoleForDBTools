@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -43,7 +44,6 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.AbstractTadpoleManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -206,8 +206,16 @@ public class ObjectEditor extends MainEditor {
 						@Override
 						public void run() {
 							try {
-								ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-								ev.changeSchema(userDB, strSchema);
+								// 오브젝트 탐색기가 열려 있으면 탐색기의 스키마 이름을 변경해 줍니다.
+								IViewReference[] iViewReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+								for (IViewReference iViewReference : iViewReferences) {
+									if(ExplorerViewer.ID.equals(iViewReference.getId())) {
+										ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
+										ev.changeSchema(userDB, strSchema);
+										
+										break;
+									}
+								}
 							} catch (PartInitException e) {
 								logger.error("ExplorerView show", e); //$NON-NLS-1$
 							}
@@ -227,6 +235,8 @@ public class ObjectEditor extends MainEditor {
 						comboSchema.add(mapData.get("SCHEMA"));
 						userDB.addSchema(mapData.get("SCHEMA"));
 					}
+					comboSchema.select(0);
+					userDB.setSchema(comboSchema.getText());
 					
 				} catch(Exception e) {
 					logger.error("get schema list " + e.getMessage());
@@ -235,6 +245,10 @@ public class ObjectEditor extends MainEditor {
 			
 				for (String schema : userDB.getSchemas()) {
 					comboSchema.add(schema);
+				}
+				if("".equals(userDB.getSchema())) {
+					comboSchema.select(0);
+					userDB.setSchema(comboSchema.getText());
 				}
 			}
 			comboSchema.setVisibleItemCount(userDB.getSchemas().size());

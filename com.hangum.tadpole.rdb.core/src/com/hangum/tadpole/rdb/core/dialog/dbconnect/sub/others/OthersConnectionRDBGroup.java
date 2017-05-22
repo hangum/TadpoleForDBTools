@@ -10,9 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others;
 
+import java.util.Properties;
+
 import org.eclipse.swt.widgets.Composite;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
@@ -61,6 +64,18 @@ public class OthersConnectionRDBGroup extends OthersConnectionGroup {
 //			btnSendMonitoring.setEnabled(false);
 //			btnIsMonitoring.setEnabled(false);
 //		}
+		Properties propConfig = LoadConfigFile.getConfigFile();
+		
+		String readonley_enabele 	= propConfig.getProperty("TDB.DB.ADD.READONLEY.ENABELE", 	"true");
+		String readonley_value 		= propConfig.getProperty("TDB.DB.ADD.READONLEY.VALUE", 		"false");
+		String autocommit_enabele 	= propConfig.getProperty("TDB.DB.ADD.AUTOCOMMIT.ENABELE");
+		String add_autocommit 		= propConfig.getProperty("TDB.DB.ADD.AUTOCOMMIT.VALUE");
+		
+		btnReadOnlyConnection.setEnabled(Boolean.parseBoolean(readonley_enabele));
+		setBtnReadOnlyConnection(Boolean.parseBoolean(readonley_value));
+		
+		if(autocommit_enabele != null) btnAutoCommit.setEnabled(Boolean.parseBoolean(autocommit_enabele));
+		if(add_autocommit != null) setBtnAutoCommit(Boolean.parseBoolean(add_autocommit));
 	}
 	
 }

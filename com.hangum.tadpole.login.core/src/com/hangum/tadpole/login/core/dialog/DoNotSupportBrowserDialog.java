@@ -12,6 +12,7 @@ package com.hangum.tadpole.login.core.dialog;
 
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.rap.rwt.RWT;
@@ -48,8 +49,8 @@ public class DoNotSupportBrowserDialog extends Dialog {
 		super(parentShell);
 
 		Properties prop = LoadConfigFile.getConfigFile();
-		strDwnContextMac = prop.getProperty("tadpole.browser.download.context.mac", "https://www.mozilla.org/firefox/new/?scene=2");
-		strDwnContextWin = prop.getProperty("tadpole.browser.download.context.win", "https://www.mozilla.org/firefox/new/?scene=2");
+		strDwnContextMac = StringUtils.trim(prop.getProperty("tadpole.browser.download.context.mac", "https://www.mozilla.org/firefox/new/?scene=2"));
+		strDwnContextWin = StringUtils.trim(prop.getProperty("tadpole.browser.download.context.win", "https://www.mozilla.org/firefox/new/?scene=2"));
 	}
 	
 	@Override

@@ -17,6 +17,7 @@ import javax.naming.Context;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.Messages;
@@ -41,8 +42,8 @@ public class LDAPUtil {
 		if(instance == null) {
 			Properties prop = LoadConfigFile.getConfigFile();
 			
-			ldapHost	= prop.getProperty("LDAP.HOST.URL");
-			principal	= prop.getProperty("LDAP.PRINCIPAL");
+			ldapHost	= StringUtils.trim(prop.getProperty("LDAP.HOST.URL"));
+			principal	= StringUtils.trim(prop.getProperty("LDAP.PRINCIPAL"));
 			
 			instance = new LDAPUtil();
 		}

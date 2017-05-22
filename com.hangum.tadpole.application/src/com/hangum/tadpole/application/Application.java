@@ -88,17 +88,17 @@ public class Application implements EntryPoint {
 			
 			/* define login type */
 			Properties prop = LoadConfigFile.getConfigFile();
-			String txtLoginMethod = prop.getProperty("LOGIN_METHOD", AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE);
+			String txtLoginMethod = StringUtils.trim(prop.getProperty("LOGIN_METHOD", AdminPreferenceDefine.SYSTEM_LOGIN_METHOD_VALUE));
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, txtLoginMethod);
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, userInfoDao);
 			
 			/** 뷰에 보여주어야할 필터 값을 가져온다 */
-			String strProductFilter = prop.getProperty("tadpole.db.producttype.remove.filter", "");
+			String strProductFilter = StringUtils.trim(prop.getProperty("tadpole.db.producttype.remove.filter", ""));
 			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, strProductFilter);
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, userInfoDao);
 			
 			/** cert user info */
-			PublicTadpoleDefine.CERT_USER_INFO = prop.getProperty("CERT_USER_INFO", "");
+			PublicTadpoleDefine.CERT_USER_INFO = StringUtils.trim(prop.getProperty("CERT_USER_INFO", ""));
 			
 		} catch(Exception e) {
 			logger.error("Initialization failed.", e); //$NON-NLS-1$
