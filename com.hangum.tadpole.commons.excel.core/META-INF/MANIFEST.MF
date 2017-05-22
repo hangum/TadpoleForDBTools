@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.hangum.tadpole.commons.excel.core
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.hangum.tadpole.commons.excel.core.Activator
 Bundle-Vendor: TadpoleHub
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.rap.ui;bundle-version="3.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: libs/poi-3.16.jar,

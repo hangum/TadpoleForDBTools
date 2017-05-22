@@ -276,11 +276,12 @@ public class ResultSetDownloadDialog extends Dialog {
 		}
 		
 		// job
+		final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
 		final AbstractExportDAO _dao = exportDAO;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(AbstractObjectComposite.MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
+				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
 				
 				try {
 					if("text".equalsIgnoreCase(selectionTab)) {			
