@@ -202,7 +202,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				statement.executeUpdate(String.format("set schema '%s'", userDB.getSchema()));
 			}
 		} catch(Exception e) {
-			logger.error("get connection", e);
+			logger.error("get connection" +  e.getMessage());
 //			throw new SQLException(e);
 		} finally {
 			try { if(statement != null) statement.close(); } catch(Exception e) {}

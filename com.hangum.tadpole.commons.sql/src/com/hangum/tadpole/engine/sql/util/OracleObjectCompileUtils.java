@@ -25,7 +25,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 
 /**
  * oracle object utils
@@ -48,8 +47,8 @@ public class OracleObjectCompileUtils {
 		if (StringUtils.contains(viewName, '.')){
 			//오브젝트명에 스키마 정보가 포함되어 있으면...
 			viewDao.setSchema_name(StringUtils.substringBefore(viewName, "."));
-			viewDao.setTable_name(StringUtils.substringAfter(viewName, "."));
-			viewDao.setSysName(StringUtils.substringAfter(viewName, "."));
+			viewDao.setTable_name(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(viewName, ".")));
+			viewDao.setSysName(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(viewName, ".")));
 		}else{
 			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
 			viewDao.setSchema_name(userDB.getSchema());
@@ -174,8 +173,8 @@ public class OracleObjectCompileUtils {
 		if (StringUtils.contains(strObjectName, '.')){
 			//오브젝트명에 스키마 정보가 포함되어 있으면...
 			packageDao.setSchema_name(StringUtils.substringBefore(strObjectName, "."));
-			packageDao.setPackagename(StringUtils.substringAfter(strObjectName, "."));
-			packageDao.setName(StringUtils.substringAfter(strObjectName, "."));
+			packageDao.setPackagename(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(strObjectName, ".")));
+			packageDao.setName(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(strObjectName, ".")));
 		}else{
 			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
 			packageDao.setSchema_name(userDB.getSchema());
