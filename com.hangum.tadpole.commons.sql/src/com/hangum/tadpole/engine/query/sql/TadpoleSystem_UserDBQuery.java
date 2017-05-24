@@ -295,10 +295,13 @@ public class TadpoleSystem_UserDBQuery {
 	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
 	public static List<UserDBDAO> getUserGroupDB(String strGoupName) throws TadpoleSQLManagerException, SQLException {
+		
+		long longCurrentTime = System.currentTimeMillis();
+		
 		Map<String, Object> mapParam = new HashMap<String, Object>();
 		mapParam.put("group_name", strGoupName);
 		mapParam.put("user_seq", SessionManager.getUserSeq());
-		mapParam.put("thisTime", System.currentTimeMillis());
+		mapParam.put("thisTime", longCurrentTime);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userGroupDB", mapParam);
@@ -307,6 +310,20 @@ public class TadpoleSystem_UserDBQuery {
 		
 		// set db access control
 		for (UserDBDAO userDBDAO : listUserDB) {
+			Timestamp stTime = userDBDAO.getTerms_of_use_starttime();
+			Timestamp edTime = userDBDAO.getTerms_of_use_endtime();
+//			AND b.terms_of_use_starttime <= now() and b.terms_of_use_endtime >= now()
+			
+//			if(logger.isDebugEnabled()) {
+//				logger.debug("==========================> The db period has expired. " + userDBDAO.getDisplay_name());
+//				logger.debug(String.format("######## The db period has expired. stTime : %s, currentTime : %s, edTime : %s", stTime.getTime(), longCurrentTime, edTime.getTime()));
+//			}
+			if(!(stTime.getTime() <= longCurrentTime && edTime.getTime() >= longCurrentTime)) {
+				if(logger.isDebugEnabled()) logger.debug("The db period has expired. " + userDBDAO.getDisplay_name());
+				userDBDAO.set_isUseEnable(false);
+				userDBDAO.set_sysMessage("TermExpired");
+			}
+			
 			DBAccessControlDAO dbAccessCtl = TadpoleSystem_AccessControl.getDBAccessControl(userDBDAO.getRole_seq());
 			userDBDAO.setDbAccessCtl(dbAccessCtl);
 		}
@@ -361,7 +378,6 @@ public class TadpoleSystem_UserDBQuery {
 	 * @return
 	 */
 	public static List<UserDBDAO> filterUserDB(List<UserDBDAO> listUserDB) {
-
 		// product type filter
 		final String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
 		for (String strProductType : strProductTypeFilters) {
@@ -393,16 +409,19 @@ public class TadpoleSystem_UserDBQuery {
 				
 				for (ExtensionDBDAO extensionDBDAO : listExtensionInfo) {
 					if(strKey.equals(extensionDBDAO.getSearch_key())) {
+						
+						userDBDAO.setTerms_of_use_starttime(extensionDBDAO.getTerms_of_use_starttime());
+						userDBDAO.setTerms_of_use_endtime(extensionDBDAO.getTerms_of_use_endtime());
+						
 						isFineDB = true;
 						break;
 					}
 				}
 				
-				if(!isFineDB) listRemoveUserDB.add(userDBDAO);
-			}
-			
-			for (UserDBDAO userDBDAO : listRemoveUserDB) {
-				listUserDB.remove(userDBDAO);
+				if(!isFineDB) {
+					userDBDAO.set_isUseEnable(false);
+					userDBDAO.set_sysMessage("권한이 없습니다.");
+				}
 			}
 		}
 		

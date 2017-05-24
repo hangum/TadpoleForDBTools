@@ -12,11 +12,13 @@ package com.hangum.tadpole.rdb.core.viewers.connections;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
@@ -103,10 +105,13 @@ public class ManagerLabelProvider extends ColumnLabelProvider {
 	 */
 	public static String getDBText(UserDBDAO userDB) {
 		String retText = "";
+		if(!userDB.is_isUseEnable()) {
+			retText = "[" + CommonMessages.get().TermExpired + "]";
+		}
 		
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
 //			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
-			retText = String.format("[%s]", StringUtils.substring(userDB.getOperation_type(), 0, 1));
+			retText += String.format("[%s]", StringUtils.substring(userDB.getOperation_type(), 0, 1));
 //		} else {
 //			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 		}

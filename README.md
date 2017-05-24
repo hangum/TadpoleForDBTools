@@ -2,7 +2,7 @@ Tadpole DB Hub
 ==
 [![Join the chat at https://gitter.im/TadpoleDBHub](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TadpoleDBHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amazon RDS, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amazon RDS, Amazon Redshift, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1460305744502/home/TDB_main.jpg?height=309&width=400)
 
@@ -10,7 +10,7 @@ It enables you to handle typical DB over the World Wide Web
 -
 * Intuitive web interface (Safari, Chrome, Edge, Firefox)
 * User Management (Admin, Manager, User)
-* Support Altibase, Apache Hive, Apache Tajo, Amazon RDS, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
+* Support Altibase, Apache Hive, Apache Tajo, Amazon RDS, Amazon Redshift, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
 * Download query result
 * SQL Syntax Highlighting
@@ -83,7 +83,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.4/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.4r7/
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License

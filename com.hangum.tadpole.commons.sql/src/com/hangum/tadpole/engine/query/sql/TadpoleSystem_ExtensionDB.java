@@ -61,6 +61,18 @@ public class TadpoleSystem_ExtensionDB {
 	}
 	
 	/**
+	 * 접근이 허락된 디비 리스트를 가져온다.
+	 * 
+	 * @param userID
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<ExtensionDBDAO> getUserDBTerm(String userId) throws Exception {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("findUserExtensionDBTerm", userId); //$NON-NLS-1$
+	}
+	
+	/**
 	 * delete extension
 	 * 
 	 * @throws TadpoleSQLManagerException

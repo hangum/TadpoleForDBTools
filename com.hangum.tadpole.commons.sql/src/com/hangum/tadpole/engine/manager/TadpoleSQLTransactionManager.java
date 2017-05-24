@@ -72,9 +72,11 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	 * @throws Exception
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
-		final String searchKey = getKey(userId, userDB);
+		if(!userDB.is_isUseEnable()) {
+			throw new TadpoleSQLManagerException("You do not have DB database permissions.");
+		}
 		
-		if (logger.isDebugEnabled()) logger.debug("[userId]" + searchKey);
+		final String searchKey = getKey(userId, userDB);
 
 		Connection _conn = null;;
 		TransactionDAO transactionDAO = dbManager.get(searchKey);

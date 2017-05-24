@@ -49,24 +49,19 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.util.LoadConfigFile;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
-import com.hangum.tadpole.engine.manager.TDBGatewayManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
-import com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURCE_TYPE;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExtensionDB;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
-import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
@@ -88,7 +83,6 @@ import com.hangum.tadpole.session.manager.SessionManager;
 public class ManagerViewer extends ViewPart {
 	private static final Logger logger = Logger.getLogger(ManagerViewer.class);
 	public static String ID = "com.hangum.tadpole.rdb.core.view.connection.manager"; //$NON-NLS-1$
-	private static boolean isGatewayConnection = false;
 	
 	private Composite compositeMainComposite;
 	private List<ManagerListDTO> treeDataList = new ArrayList<ManagerListDTO>();
@@ -122,16 +116,22 @@ public class ManagerViewer extends ViewPart {
 				Object objSelect = is.getFirstElement();
 				if(objSelect instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)objSelect;
-					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					
+					// 기간이 만료 되었는지 검사한다.
+					if(userDB.is_isUseEnable()) {
+						if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;	
+					}
 					
 					// 리소스 가져온다.
 					addManagerResouceData(userDB, false);
 					
-					// 싱글 클릭일때 에디터에 오픈된 화면이 없으면 에디터 화면이 열리도록 수정.
-//					IEditorPart editor = EditorUtils.findSQLEditor(userDB);
-//					if(editor == null) {
-//						QueryEditorAction qea = new QueryEditorAction();
-//						qea.run(userDB);
+//					if(userDB.is_isUseEnable()) {
+						// 싱글 클릭일때 에디터에 오픈된 화면이 없으면 에디터 화면이 열리도록 수정.
+	//					IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+	//					if(editor == null) {
+	//						QueryEditorAction qea = new QueryEditorAction();
+	//						qea.run(userDB);
+	//					}
 //					}
 					
 					// Rice lock icode change event
@@ -154,8 +154,8 @@ public class ManagerViewer extends ViewPart {
 							logger.error("get manager list", e);
 						}
 					}
-				} else if(objSelect instanceof DBOtherDAO) {
-					DBOtherDAO dao = (DBOtherDAO)objSelect;
+//				} else if(objSelect instanceof DBOtherDAO) {
+//					DBOtherDAO dao = (DBOtherDAO)objSelect;
 					
 				}
 			}	// select change event 
@@ -169,10 +169,12 @@ public class ManagerViewer extends ViewPart {
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if(selElement instanceof UserDBDAO) {
 					final UserDBDAO userDB= (UserDBDAO)selElement;
-					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					if(userDB.is_isUseEnable()) {
+						if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
 					
-					QueryEditorAction qea = new QueryEditorAction();
-					qea.run(userDB);
+						QueryEditorAction qea = new QueryEditorAction();
+						qea.run(userDB);
+					}
 				// erd를 클릭하면 erd가 오픈되도록 수정.
 				} else if(selElement instanceof UserDBResourceDAO) {
 					final UserDBResourceDAO dao = (UserDBResourceDAO)selElement;

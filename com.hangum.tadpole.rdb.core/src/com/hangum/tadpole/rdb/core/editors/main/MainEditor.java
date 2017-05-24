@@ -819,6 +819,11 @@ public class MainEditor extends EditorExtension {
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		if(!userDB.is_isUseEnable()) {
+			MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Information, CommonMessages.get().TermExpiredMsg);
+			return;
+		}
+
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
 		

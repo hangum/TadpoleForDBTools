@@ -24,6 +24,12 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TY
  *
  */
 public class TDBDBDAO extends ManagerListViewDAO {
+	
+	/** 디비 객체의 사영 여부 */
+	protected boolean _isUseEnable = true;
+	/** {@code _isUseEnable} 가 false 일 경우 시스템 메시지에서 보여줄 메시지를 기록한다. */
+	protected String  _sysMessage = "";
+	
 	/** schema list */
 	protected List<String> schemas = new ArrayList<String>();
 	
@@ -161,5 +167,34 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	public void addSchema(String strSchema) {
 		this.schemas.add(strSchema);
 	}
+
+	/**
+	 * @return the _isUseEnable
+	 */
+	public boolean is_isUseEnable() {
+		return _isUseEnable;
+	}
+
+	/**
+	 * @param _isUseEnable the _isUseEnable to set
+	 */
+	public void set_isUseEnable(boolean _isUseEnable) {
+		this._isUseEnable = _isUseEnable;
+	}
+
+	/**
+	 * @return the _sysMessage
+	 */
+	public String get_sysMessage() {
+		return _sysMessage;
+	}
+
+	/**
+	 * @param _sysMessage the _sysMessage to set
+	 */
+	public void set_sysMessage(String _sysMessage) {
+		this._sysMessage = _sysMessage;
+	}
+	
 	
 }

@@ -354,6 +354,11 @@ public class ObjectEditor extends MainEditor {
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
 		
+		if(!userDB.is_isUseEnable()) {
+			MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Information, CommonMessages.get().TermExpiredMsg);
+			return;
+		}
+		
 		// do not execute query
 		if(System.currentTimeMillis() > SessionManager.getServiceEnd().getTime()) {
 			MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().MainEditorServiceEnd);

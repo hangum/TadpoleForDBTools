@@ -512,6 +512,13 @@ public class ExplorerViewer extends ViewPart {
 		// 존재하는 tadfolder를 삭제한다.
 		for (CTabItem tabItem : tabFolderObject.getItems()) tabItem.dispose();
 		
+		// 사용기간이 만료 되었거나 기타 이유로 ... 
+		if(!userDB.is_isUseEnable()) {
+			createTable();
+			comboSchema.removeAll();
+			return;
+		}
+		
 		// 디비 락이 있을 경우에 커넥션 시도를 하지 못하도록 합니다. 
 		if(!TadpoleSecurityManager.getInstance().isLock(selectUserDb)) {
 			userDB = null;

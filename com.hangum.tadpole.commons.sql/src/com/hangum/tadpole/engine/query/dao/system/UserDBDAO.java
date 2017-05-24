@@ -51,6 +51,8 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	protected String role_id;
 	protected String access_ip;
 	protected String is_resource_download;
+	protected Timestamp terms_of_use_starttime;
+	protected Timestamp terms_of_use_endtime;
 	
 	/**
 	 * @return the role_seq
@@ -99,6 +101,34 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	 */
 	public String getIs_resource_download() {
 		return is_resource_download;
+	}
+	
+	/**
+	 * @return the terms_of_use_starttime
+	 */
+	public Timestamp getTerms_of_use_starttime() {
+		return terms_of_use_starttime;
+	}
+
+	/**
+	 * @param terms_of_use_starttime the terms_of_use_starttime to set
+	 */
+	public void setTerms_of_use_starttime(Timestamp terms_of_use_starttime) {
+		this.terms_of_use_starttime = terms_of_use_starttime;
+	}
+
+	/**
+	 * @return the terms_of_use_endtime
+	 */
+	public Timestamp getTerms_of_use_endtime() {
+		return terms_of_use_endtime;
+	}
+
+	/**
+	 * @param terms_of_use_endtime the terms_of_use_endtime to set
+	 */
+	public void setTerms_of_use_endtime(Timestamp terms_of_use_endtime) {
+		this.terms_of_use_endtime = terms_of_use_endtime;
 	}
 
 	/**

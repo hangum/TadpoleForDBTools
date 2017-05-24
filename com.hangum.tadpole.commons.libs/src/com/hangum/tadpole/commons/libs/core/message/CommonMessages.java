@@ -116,6 +116,10 @@ public class CommonMessages {
 	public String UserRequestQuery;
 	
 	public String FileNotFound;
+	
+	public String TermExpired;
+	
+	public String TermExpiredMsg;
 
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
