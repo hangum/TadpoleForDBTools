@@ -86,7 +86,7 @@ public class SQLQueryUtil {
 		}
 		
 		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, GET_DATA_COUNT);
-//		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
+		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		java.sql.Connection javaConn = null;

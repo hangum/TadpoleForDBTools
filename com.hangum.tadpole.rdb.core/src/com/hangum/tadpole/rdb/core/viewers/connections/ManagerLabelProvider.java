@@ -10,8 +10,11 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
+import java.sql.Timestamp;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -106,7 +109,16 @@ public class ManagerLabelProvider extends ColumnLabelProvider {
 	public static String getDBText(UserDBDAO userDB) {
 		String retText = "";
 		if(!userDB.is_isUseEnable()) {
-			retText = "[" + CommonMessages.get().TermExpired + "]";
+			retText = String.format("[%s]", CommonMessages.get().TermExpired);
+		} else {
+			// 사용기간이 1주일이 안남았으면 표시해준다.
+			Timestamp stTime = userDB.getTerms_of_use_starttime();
+			Timestamp endTime = userDB.getTerms_of_use_endtime();
+			
+			if(stTime != null || endTime != null) {
+				long longDiffDay = (endTime.getTime() - stTime.getTime()) / (24 * 60 * 60 * 1000);
+				if(longDiffDay <= 7) retText = String.format(CommonMessages.get().DaysLeft, longDiffDay);
+			}
 		}
 		
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {

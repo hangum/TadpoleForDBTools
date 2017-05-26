@@ -99,7 +99,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
 		if(!userDB.is_isUseEnable()) {
-			throw new TadpoleSQLManagerException("You do not have DB database permissions.");
+			throw new TadpoleSQLManagerException("You do not have DB permissions.");
 		}
 		
 		final String searchKey = getKey(userDB);
