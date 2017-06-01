@@ -57,7 +57,6 @@ import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.engine.utils.EditorDefine;
 import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
-import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
 import com.hangum.tadpole.preference.get.GetPreferenceGeneral;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -590,7 +589,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						/** 쿼리 결과를 저장합니다 */
 						if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
-							QueryResultSaved.queryResult(GetAdminPreference.getQueryResultSaved() + PublicTadpoleDefine.DIR_SEPARATOR + SessionManager.getUserSeq(), ""+longHistorySeq, newRsDAO);
+							QueryResultSaved.saveQueryResult(""+longHistorySeq, newRsDAO);
 						} 
 						
 						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());

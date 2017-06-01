@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.utils.RequestQuery;
@@ -56,7 +58,26 @@ public class ResultTailComposite extends AbstractTailComposite {
 	
 	@Override
 	public String getSQL() {
-		return abstractResultComp.getReqQuery().getSql();
+		if(abstractResultComp.getReqQuery() != null) {
+			RequestQuery requestQuery = abstractResultComp.getReqQuery();
+			
+			// prepared statement 일 경우는 인자도 넣어준다.
+			StringBuffer sbParameter = new StringBuffer();
+			if(requestQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
+				sbParameter.append("/* Parameter is ");
+				for (int i=0; i<requestQuery.getStatementParameter().length; i++) {
+					Object objParam = requestQuery.getStatementParameter()[i];
+					sbParameter.append(String.format("[ %d = %s ]", i, ""+objParam));
+				}
+				sbParameter.append("*/" + PublicTadpoleDefine.LINE_SEPARATOR);
+				sbParameter.append(requestQuery.getSql());
+				
+				return sbParameter.toString();
+			} else {
+				return requestQuery.getSql();
+			}
+		}
+		else return "";
 	}
 
 	@Override
