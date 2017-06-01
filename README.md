@@ -113,7 +113,8 @@ Special thanks
 Customer
 - 
 * Kakao Bank
-* LOEN ENTERTAINMENT
+* LOEN ENTERTAINMENT(http://www.melon.com/)
+* 동아닷컴(http://www.donga.com/)
 
 Donation
 - Paypal(paypal.com) : hangum@gmail.com
