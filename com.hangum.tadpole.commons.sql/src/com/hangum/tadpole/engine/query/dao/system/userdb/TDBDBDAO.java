@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 
 /**
@@ -28,7 +29,7 @@ public class TDBDBDAO extends ManagerListViewDAO {
 	/** 디비 객체의 사영 여부 */
 	protected boolean _isUseEnable = true;
 	/** {@code _isUseEnable} 가 false 일 경우 시스템 메시지에서 보여줄 메시지를 기록한다. */
-	protected String  _sysMessage = "";
+	protected String  _sysMessage = PublicTadpoleDefine.AUTH_CODE_DEFINE.VALID.name();
 	
 	/** schema list */
 	protected List<String> schemas = new ArrayList<String>();

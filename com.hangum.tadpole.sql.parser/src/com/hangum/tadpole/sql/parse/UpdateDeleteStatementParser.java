@@ -53,7 +53,7 @@ public class UpdateDeleteStatementParser {
 				else sqlStatementStruce.setWhere(updateStmt.getWhere().toString());
 			} else if(statement instanceof Delete) {
 				Delete deleteStmt = (Delete) statement;
-				sqlStatementStruce.setObjectName(deleteStmt.getTables().get(0).getFullyQualifiedName());
+				sqlStatementStruce.setObjectName(deleteStmt.getTable().getFullyQualifiedName());
 				
 				if(deleteStmt.getWhere() == null) sqlStatementStruce.setWhere("");
 				else sqlStatementStruce.setWhere(deleteStmt.getWhere().toString());

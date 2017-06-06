@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * csv loader 
  * 
@@ -21,6 +23,16 @@ public class DateUtil {
 	public static long getDateSecond() {
 		Calendar _cal = Calendar.getInstance();
 		return (_cal.getTimeInMillis() % 1000) * 1000;
+	}
+	
+	/**
+	 * 현재 년월을 리턴합니다.
+	 * 
+	 * @return
+	 */
+	public static String getYearMonth() {
+		Calendar _cal = Calendar.getInstance();
+		return _cal.get(Calendar.YEAR) + "" + StringUtils.leftPad(""+_cal.get(Calendar.MONTH), 2, "0"); 
 	}
 	
 	/**

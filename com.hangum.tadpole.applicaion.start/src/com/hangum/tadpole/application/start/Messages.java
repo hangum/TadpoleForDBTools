@@ -74,6 +74,8 @@ public class Messages {
 
 	public String AlreadyLoginConfirm;
 
+	public String ApplicationActionBarAdvisor_Observer;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

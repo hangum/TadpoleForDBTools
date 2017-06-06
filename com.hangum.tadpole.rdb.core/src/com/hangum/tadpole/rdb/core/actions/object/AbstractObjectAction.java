@@ -249,8 +249,10 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 			this.selection = (IStructuredSelection)selection;
 			
 			if(userDB != null) {
-				setEnabled(true);
-				return;
+				if(userDB.is_isUseEnable()) {
+					setEnabled(true);
+					return;
+				}
 			}
 		}
 		

@@ -51,8 +51,11 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	protected String role_id;
 	protected String access_ip;
 	protected String is_resource_download;
-	protected Timestamp terms_of_use_starttime;
-	protected Timestamp terms_of_use_endtime;
+	// default value is 00:00
+	protected Timestamp terms_of_use_starttime 	= new Timestamp(System.currentTimeMillis());
+
+		// default value is 100 years after
+	protected  Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillsMonth(24));
 	
 	/**
 	 * @return the role_seq

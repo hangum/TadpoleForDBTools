@@ -298,7 +298,7 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_summary_report(otherConnectionDAO.isSummaryReport()?PublicTadpoleDefine.YES_NO.YES.name():PublicTadpoleDefine.YES_NO.NO.name());
 		
 		// 처음 등록자는 권한이 어드민입니다.
-		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		userDB.setRole_id(PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.toString());
 		userDB.setIs_resource_download(GetAdminPreference.getIsDefaultDonwload());
 		
 		// set ext value

@@ -21,6 +21,7 @@ import org.eclipse.rap.rwt.RWT;
 public class CommonMessages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.message.messages"; //$NON-NLS-1$
 
+	public String TimeLeft;
 	public String DaysLeft;
 
 	/** 저장 하시겠습니까? */
@@ -122,6 +123,8 @@ public class CommonMessages {
 	public String TermExpired;
 	
 	public String TermExpiredMsg;
+
+	public String UserRole;
 
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

@@ -38,7 +38,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateSequenceAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTaableCreateDialog;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTableColumnDialog;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.TableCreateDAO;
@@ -49,7 +49,7 @@ import com.hangum.tadpole.rdb.core.dialog.table.mysql.TableCreateDAO;
  * @author hangum
  *
  */
-public class ObjectCreatAction extends AbstractObjectAction {
+public class ObjectCreatAction extends AbstractObjectSelectAction {
 	/**
 	 * Logger for this class
 	 */

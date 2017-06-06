@@ -177,11 +177,11 @@ public class AltibaseLoginComposite extends MySQLLoginComposite
 		String dbOpType = PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).name();
 		userDB.setOperation_type(dbOpType);
 		
-		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) 
-		|| dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
-		{
-			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
-		}
+//		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) 
+//		|| dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
+//		{
+//			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
+//		}
 		
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
@@ -190,7 +190,7 @@ public class AltibaseLoginComposite extends MySQLLoginComposite
 		userDB.setLocale(StringUtils.trimToEmpty(comboLocale.getText()));
 		
 		// 처음 등록자는 권한이 어드민입니다.
-		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		userDB.setRole_id(PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.toString());
 		userDB.setIs_resource_download(GetAdminPreference.getIsDefaultDonwload());
 		
 		// set ext value

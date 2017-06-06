@@ -144,7 +144,7 @@ public class ResultPlanComposite extends Composite {
 		
 		/** 쿼리 결과를 저장합니다 */
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
-			QueryResultSaved.queryResult(GetAdminPreference.getQueryResultSaved() + PublicTadpoleDefine.DIR_SEPARATOR + SessionManager.getUserSeq(), ""+longHistorySeq, rsDAO);
+			QueryResultSaved.saveQueryResult(""+longHistorySeq, rsDAO);
 		}
 		
 		resultSashLayout();

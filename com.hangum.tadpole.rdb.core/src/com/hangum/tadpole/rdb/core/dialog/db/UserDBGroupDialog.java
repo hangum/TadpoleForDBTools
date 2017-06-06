@@ -28,9 +28,11 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * 사용자 디비 선택 다이얼로그
@@ -57,7 +59,15 @@ public class UserDBGroupDialog extends Dialog {
 		
 		// get group list ----------------------------------
 		try {
-			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(oriUserDB.getGroup_name());
+			List<UserDBDAO> listUserMongodb = new ArrayList<>();
+			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(oriUserDB.getGroup_name(), SessionManager.getUserSeq());
+			for (UserDBDAO userDBDAO : listUserGroup) {
+				if(DBDefine.MONGODB_DEFAULT == userDBDAO.getDBDefine()) listUserMongodb.add(userDBDAO);
+			}
+			
+			for(UserDBDAO userDBDAO : listUserMongodb) {
+				listUserGroup.remove(userDBDAO);
+			}
 		} catch(Exception e) {
 			logger.error("get group info", e);
 		}

@@ -261,7 +261,7 @@ public class ResultSetComposite extends Composite {
 				
 				/** 쿼리 결과를 저장합니다 */
 				if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
-					QueryResultSaved.queryResult(GetAdminPreference.getQueryResultSaved() + PublicTadpoleDefine.DIR_SEPARATOR + SessionManager.getUserSeq(), ""+longHistorySeq, rsDAO);
+					QueryResultSaved.saveQueryResult(""+longHistorySeq, rsDAO);
 				}
 			}
 			
@@ -301,21 +301,6 @@ public class ResultSetComposite extends Composite {
 		
 		final Shell runShell = btnStopQuery.getShell();
 		
-		// java named parameter (오라클 디비의 경우는 :parameter도 변수 취급합니다.)
-		try {
-			JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
-			int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
-			if(paramCnt > 0) {
-		
-				ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.JAVA_BASIC, reqQuery, getUserDB(), reqQuery.getSql(), paramCnt);
-				epd.open();
-				listParameterDialog.add(epd);
-				return false;
-			}
-		} catch(Exception e) {
-			logger.error("Java style parameter parse", e); //$NON-NLS-1$
-		}
-		
 		// oracle parameter
 		try {
 			OracleStyleSQLNamedParameterUtil oracleNamedParamUtil = new OracleStyleSQLNamedParameterUtil();
@@ -332,6 +317,22 @@ public class ResultSetComposite extends Composite {
 		} catch(Exception e) {
 			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
 		}
+		
+		// java named parameter (오라클 디비의 경우는 :parameter도 변수 취급합니다.)
+		try {
+			JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
+			int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
+			if(paramCnt > 0) {
+		
+				ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.JAVA_BASIC, reqQuery, getUserDB(), reqQuery.getSql(), paramCnt);
+				epd.open();
+				listParameterDialog.add(epd);
+				return false;
+			}
+		} catch(Exception e) {
+			logger.error("Java style parameter parse", e); //$NON-NLS-1$
+		}
+
 
 		// mybatis shap
 		GenericTokenParser mybatisShapeUtil = new GenericTokenParser("#{", "}");

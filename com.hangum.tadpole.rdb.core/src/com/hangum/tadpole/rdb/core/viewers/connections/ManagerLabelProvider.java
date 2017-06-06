@@ -10,12 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
-import java.sql.Timestamp;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -112,20 +108,20 @@ public class ManagerLabelProvider extends ColumnLabelProvider {
 			retText = String.format("[%s]", CommonMessages.get().TermExpired);
 		} else {
 			// 사용기간이 1주일이 안남았으면 표시해준다.
-			Timestamp stTime = userDB.getTerms_of_use_starttime();
-			Timestamp endTime = userDB.getTerms_of_use_endtime();
+			long longStTime = System.currentTimeMillis();
+			long longEndTime = userDB.getTerms_of_use_endtime().getTime();
 			
-			if(stTime != null || endTime != null) {
-				long longDiffDay = (endTime.getTime() - stTime.getTime()) / (24 * 60 * 60 * 1000);
-				if(longDiffDay <= 7) retText = String.format(CommonMessages.get().DaysLeft, longDiffDay);
+			long longDiffDay = (longEndTime - longStTime) / (24 * 60 * 60 * 1000);
+			if(longDiffDay <= 1) {
+				long longDiffHour = (longEndTime - longStTime) / (60 * 60 * 1000);
+				retText = String.format(CommonMessages.get().TimeLeft, longDiffHour);
+			} else if(longDiffDay <= 7) {
+				retText = String.format(CommonMessages.get().DaysLeft, longDiffDay);
 			}
 		}
 		
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
-//			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 			retText += String.format("[%s]", StringUtils.substring(userDB.getOperation_type(), 0, 1));
-//		} else {
-//			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
 		}
 		
 		// master, slave 표시

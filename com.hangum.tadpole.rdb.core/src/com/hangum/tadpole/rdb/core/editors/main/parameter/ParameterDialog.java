@@ -259,7 +259,7 @@ public class ParameterDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(620, 350);
+		return new Point(450, 350);
 	}
 
 	/**

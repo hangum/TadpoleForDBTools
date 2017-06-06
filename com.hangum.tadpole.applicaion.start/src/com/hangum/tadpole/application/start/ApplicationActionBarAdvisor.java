@@ -100,7 +100,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     private IAction jDBCDriverManagerAction;
     private IAction schemaHistoryAction;
-    private IAction openCompareAction;
+//    private IAction openCompareAction;
     private IAction resourceManageAction;
     
     private IAction preferenceAction;
@@ -181,8 +181,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	schemaHistoryAction = new SchemaHistoryAction(window);
     	register(schemaHistoryAction);
     	
-    	openCompareAction = new OpenCompareAction(window);
-    	register(openCompareAction);
+//    	openCompareAction = new OpenCompareAction(window);
+//    	register(openCompareAction);
     	
     	resourceManageAction = new ResourceManagerAction(window);
     	register(resourceManageAction);
@@ -219,11 +219,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	MenuManager fileMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_0, IWorkbenchActionConstants.M_FILE);
     	MenuManager manageMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_1, IWorkbenchActionConstants.M_PROJECT);
     	MenuManager adminMenu = null;
+    	MenuManager observerMenu = null;
     	MenuManager serviceMenu = null;
     	
-    	boolean isAdmin = PermissionChecker.isAdmin(SessionManager.getRepresentRole());
+    	boolean isAdmin = PermissionChecker.isUserAdmin(SessionManager.getRepresentRole());
+    	boolean isObserver = PermissionChecker.isUserObserver(SessionManager.getRepresentRole());
     	if(isAdmin) {
     		adminMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_2, IWorkbenchActionConstants.MENU_PREFIX + Messages.get().ApplicationActionBarAdvisor_3);
+        } else if(isObserver) {
+        	observerMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_Observer, IWorkbenchActionConstants.MENU_PREFIX + Messages.get().ApplicationActionBarAdvisor_Observer);
         }
     	
     	MenuManager preferenceMenu = new MenuManager(Messages.get().ApplicationActionBarAdvisor_4, IWorkbenchActionConstants.M_PROJECT_CONFIGURE);
@@ -235,6 +239,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		if(isAdmin) {
 			menuBar.add(adminMenu);
+			menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		 } else if(isObserver) {
+			menuBar.add(observerMenu);
 			menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		}
 		
@@ -265,7 +272,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		
 		manageMenu.add(executedSQLAction);
 		manageMenu.add(schemaHistoryAction);
-		manageMenu.add(openCompareAction);
+//		manageMenu.add(openCompareAction);
 		
 		if(isAdmin) {
 			adminMenu.add(adminSendMessageAction);
@@ -277,6 +284,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			adminMenu.add(adminTransactionConnectionManagerAction);
 			adminMenu.add(new Separator());
 			adminMenu.add(jDBCDriverManagerAction);
+		} else if(isObserver) {
+			observerMenu.add(adminUserAction);
 		}
 
 		// preference action

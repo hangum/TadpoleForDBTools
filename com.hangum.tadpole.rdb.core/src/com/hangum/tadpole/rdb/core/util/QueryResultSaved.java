@@ -15,8 +15,12 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.util.DateUtil;
+import com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO;
 import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.preference.define.GetAdminPreference;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * 쿼리 결과 저장
@@ -27,6 +31,10 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 public class QueryResultSaved {
 	private static final Logger logger = Logger.getLogger(QueryResultSaved.class);
 	
+	private static String getDownloadPath(int intUserSeq) {
+		return GetAdminPreference.getQueryResultSaved() + PublicTadpoleDefine.DIR_SEPARATOR + intUserSeq +  PublicTadpoleDefine.DIR_SEPARATOR + DateUtil.getYearMonth() + PublicTadpoleDefine.DIR_SEPARATOR;
+	}
+	
 	/**
 	 * query 결과 저장
 	 * 
@@ -34,8 +42,9 @@ public class QueryResultSaved {
 	 * @param fileName
 	 * @param rsDAO
 	 */
-	public static void queryResult(String strDir, String fileName, QueryExecuteResultDTO rsDAO) {
-		String strFullPath = strDir + PublicTadpoleDefine.DIR_SEPARATOR + fileName + ".csv";
+	public static void saveQueryResult(String fileName, QueryExecuteResultDTO rsDAO) {
+		// 리소스 세이브 디렉토리 + / + 년월 +
+		String strFullPath = getDownloadPath(SessionManager.getUserSeq()) + fileName + ".csv";
 		
 		try {
 			if(!new File(strFullPath).exists()) CSVExpoter.makeHeaderFile(strFullPath, true, rsDAO, ',', "UTF-8");
@@ -44,5 +53,16 @@ public class QueryResultSaved {
 			logger.error("queryResultSave", e);
 		}
 	}
-
+	
+	/**
+	 * 쿼리 결과를 가져온다.
+	 * @param dao 
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public static String getQueryResultPath(ExecutedSqlResourceDAO dao, String fileName) {
+		String filefullPath = getDownloadPath(dao.getUser_seq()) + fileName + ".csv";
+		return filefullPath;
+	}
 }
