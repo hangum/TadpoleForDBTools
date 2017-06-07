@@ -54,7 +54,15 @@ public class PartQueryUtil {
 		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
 		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
-			requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
+			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
+				requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
+				
+				// 컬럼 이름이 중복 되어 있다면, 마지막 컬럼 이름에 알리아스를 준다.
+				
+				// rownum, rowid가 포함되어 있다면 삭제하고 다시 만든다.
+			} else {
+				requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
+			}
 		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(SQLiteDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
 		} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {

@@ -75,7 +75,7 @@ public class CSVFileUtils {
 		String[] nextLine = null;
 		CSVReader csvReader = null;
 		try {
-			 csvReader = new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename), "MS949")), seprator);
+			 csvReader = new CSVReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF8")), seprator);
 			 while((nextLine = csvReader.readNext()) != null) {
 				returnMap.add(nextLine);
 			 }
