@@ -134,13 +134,14 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 				
 				// 테이블의 컬럼 목록을 출력합니다.
 				try {
-					IStructuredSelection is = (IStructuredSelection) event.getSelection();
-					Object tableDAO = is.getFirstElement();
+					IStructuredSelection is = (IStructuredSelection) indexTableViewer.getSelection();;//event.getSelection();
+					Object indexDAO = is.getFirstElement();
+					
+					if (indexDAO != null) {
+						InformationSchemaDAO index = (InformationSchemaDAO) indexDAO;
+//						if(logger.isDebugEnabled()) logger.debug("index name selection " + index.getINDEX_NAME());
 
-					if (tableDAO != null) {
-						InformationSchemaDAO index = (InformationSchemaDAO) tableDAO;
-
-						if (selectIndexName.equals(index.getINDEX_NAME())) return;
+						if (index.getINDEX_NAME().equals(selectIndexName)) return;
 						selectIndexName = index.getINDEX_NAME();
 
 						SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -151,6 +152,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 						
 						showIndexColumns = sqlClient.queryForList("indexDetailList", paramMap); //$NON-NLS-1$
 					} else {
+//						if(logger.isDebugEnabled())  logger.debug("=====> not selection");
 						showIndexColumns = new ArrayList<InformationSchemaDAO>();
 					}
 
@@ -310,6 +312,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	public void refreshIndexes(final UserDBDAO userDB, boolean boolRefresh, String strObjectName) {
 		if(!boolRefresh) if(listIndexes != null) return;
 		if(tableDao == null) return;
+		selectIndexName = "";
 		this.userDB = userDB;
 		
 		try {

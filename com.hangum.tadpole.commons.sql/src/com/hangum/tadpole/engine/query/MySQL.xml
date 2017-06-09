@@ -208,8 +208,6 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	    , non_unique
 	    , index_schema
 	    , index_name
-	    , seq_in_index
-	    , column_name
 	    , collation
 	    , cardinality
 	    , sub_part
@@ -222,13 +220,11 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	  AND TABLE_NAME = #table_name#
 	GROUP BY table_catalog
 	    , table_schema
-	    ,  schema_name
+	    , schema_name
 	    , table_name
 	    , non_unique
 	    , index_schema
 	    , index_name
-	    , seq_in_index
-	    , column_name
 	    , collation
 	    , cardinality
 	    , sub_part
