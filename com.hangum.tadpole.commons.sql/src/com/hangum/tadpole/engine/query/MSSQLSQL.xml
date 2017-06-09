@@ -221,8 +221,6 @@ order by v.table_schema, v.table_name
 
 <!-- 
 	index 정보, SHOW INDEX FROM $tableName$
- -->
- <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
 SELECT 
     i.table_schema 
     , i.table_schema + '.' + i.table_name as table_name
@@ -233,13 +231,19 @@ WHERE 1=1
   AND i.table_catalog = #table_schema#
   AND i.table_name = #table_name#    
     order by table_schema, table_name, index_schema, index_name
-    
+ -->
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+select 
+     object_schema_name(i.object_id) as table_schema
+    ,object_schema_name(i.object_id) +'.'+ object_name(i.object_id)  as table_name
+    ,object_schema_name(i.object_id) as index_schema
+    ,i.name as index_name
+from sys.indexes i 
+where i.object_id = object_id(#table_schema#+'.'+#table_name#)      
 </select>
 
 <!-- 
 	index의 디테일 정보
- -->
- <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
     	SELECT 
     	 table_name,
          0 as seq_in_index,
@@ -249,17 +253,47 @@ WHERE 1=1
     FROM information_schema.CONSTRAINT_COLUMN_USAGE
     WHERE table_schema+'.'+table_name = #table_name#
       and constraint_name = #index_name#
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+SELECT 
+    object_name(i.object_id) as table_name
+    ,ic.key_ordinal as seq_in_index
+    ,i.name as index_name
+    ,sc.name as column_name
+    ,object_schema_name(i.object_id) AS table_schema
+  FROM sys.indexes i 
+    inner join sys.index_columns ic on i.object_id = ic.object_id and i.index_id = ic.index_id
+    inner join sys.syscolumns sc on ic.object_id = sc.id and ic.column_id = sc.colid
+  where 1=1
+  and i.object_id = object_id(#table_name#)
+  and i.name = #index_name#
 </select>
 
 <!--
  tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
- 
+
+	select *
+	from information_schema.table_constraints
+	where table_catalog = #table_schema#
+	and table_name = #table_name#
  -->
 <select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
-select *
-from information_schema.table_constraints
-where table_catalog = #table_schema#
-and table_name = #table_name#
+select
+    schema_id
+    ,schema_name(schema_id) as constraint_catalog
+    ,schema_name(schema_id) as constraint_schema
+    ,name as constraint_name
+    ,schema_name(schema_id) as table_catalog
+    ,schema_name(schema_id) as table_schema
+    ,object_name(parent_object_id) as table_name
+    ,type_desc as constraint_type
+    ,null as is_deferrable
+    ,null as initially_deferred
+from sys.objects 
+where 1=1
+  and schema_id = schema_id(#table_schema#)
+  and parent_object_id = object_id(#table_name#)
+  and type in ('C ','PK','UQ','F ', 'D ')
 </select>
 
 <!-- 
