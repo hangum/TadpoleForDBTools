@@ -231,6 +231,7 @@ public class TadpoleSequenceComposite extends AbstractObjectComposite {
 			
 			selectDataOfTable(strObjectName);
 		} else {
+			final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
 			Job job = new Job(Messages.get().MainEditor_45) {
 				@Override
 				public IStatus run(IProgressMonitor monitor) {

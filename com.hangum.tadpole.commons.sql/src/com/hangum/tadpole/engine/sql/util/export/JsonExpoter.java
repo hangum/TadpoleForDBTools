@@ -60,7 +60,7 @@ public class JsonExpoter extends AbstractTDBExporter {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			JsonObject jsonObj = new JsonObject();
-			for (int j = 1; j < mapLabelName.size(); j++) {
+			for (int j = 0; j < mapLabelName.size(); j++) {
 				String columnName = mapLabelName.get(j);
 				if(!SQLUtil.isTDBSpecialColumn(columnName)) {
 					String strValue = ""+mapColumns.get(j);

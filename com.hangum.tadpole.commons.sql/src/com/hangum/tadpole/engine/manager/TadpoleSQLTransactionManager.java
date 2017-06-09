@@ -72,9 +72,11 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 	 * @throws Exception
 	 */
 	public static Connection getInstance(final String userId, final UserDBDAO userDB) throws Exception {
-		final String searchKey = getKey(userId, userDB);
+		if(!userDB.is_isUseEnable()) {
+			throw new TadpoleSQLManagerException("You do not have DB database permissions.");
+		}
 		
-		if (logger.isDebugEnabled()) logger.debug("[userId]" + searchKey);
+		final String searchKey = getKey(userId, userDB);
 
 		Connection _conn = null;;
 		TransactionDAO transactionDAO = dbManager.get(searchKey);
@@ -155,17 +157,17 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 			
 //			Display display = PlatformUI.getWorkbench().getDisplay();
 //			if(MessageDialog.openConfirm(display.getActiveShell(), "error", "디비연결시 오류가 발생했습니다.  기존 연결을 지우고 새롭게 연결하시겠습니까?")) {
-				removeInstance(userId, searchKey);
-				try {
-					javaConn = getInstance(userId, userDB);
-				} catch (Exception e1) {
-					logger.error("user connection disconnect" + e1);
-				}
+//				removeInstance(userId, searchKey);
+//				try {
+//					javaConn = getInstance(userId, userDB);
+//				} catch (Exception e1) {
+//					logger.error("user connection disconnect" + e1);
+//				}
 //			} else {
 //				throw new SQLException(e);
 //			}
 		} finally {
-			if(statement != null) statement.close();
+			try { if(statement != null) statement.close(); } catch(Exception e) {}
 		}
 		
 		return javaConn;

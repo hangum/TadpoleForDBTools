@@ -12,10 +12,10 @@ package com.hangum.tadpole.commons.util;
 
 import java.io.FileInputStream;
 import java.util.Properties;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.service.ApplicationContext;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 
@@ -44,7 +44,7 @@ public class LoadConfigFile {
 				logger.error(String.format("Not found config files. %s",
 						ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
 			}
-			_properties = properties;
+			_trimPropertie(properties);
 		}
 	}
 	
@@ -64,10 +64,26 @@ public class LoadConfigFile {
 						ApplicationArgumentUtils.getResourcesDir() + PublicTadpoleDefine.TDB_CONFIG_FILE));
 			}
 			
-			_properties = properties;
+			_trimPropertie(properties);
 		}
 		
 		return _properties;
+	}
+	
+	/**
+	 * trime properteis 
+	 * 
+	 * @param properties
+	 */
+	private static void _trimPropertie(Properties properties) {
+		_properties = new Properties();
+		
+		Set keys = properties.keySet();
+		for (Object object : keys) {
+			String strKey = (String)object;
+			
+			_properties.put(strKey, StringUtils.trim(properties.getProperty(strKey)));
+		}	
 	}
 
 	/**
@@ -75,7 +91,7 @@ public class LoadConfigFile {
 	 * @return
 	 */
 	public static boolean isUseOPT() {
-		String otpUse = getConfigFile().getProperty("otp.use");
+		String otpUse = StringUtils.trim(getConfigFile().getProperty("otp.use"));
 
 		if (otpUse == null) return true;
 		else if ("YES".equalsIgnoreCase(otpUse)) return true;
@@ -88,7 +104,7 @@ public class LoadConfigFile {
 	 * @return
 	 */
 	public static boolean isEngineGateway() {
-		return "YES".equalsIgnoreCase(getConfigFile().getProperty("ENGINE.GATEWAY.USE"))?true:false;
+		return "YES".equalsIgnoreCase(StringUtils.trim(getConfigFile().getProperty("ENGINE.GATEWAY.USE")))?true:false;
 	}
 
 	/**
@@ -97,6 +113,6 @@ public class LoadConfigFile {
 	 * @return
 	 */
 	public static boolean isGateWayIDCheck() {
-		return "YES".equalsIgnoreCase(getConfigFile().getProperty("ENGINE.GATEWAY.ID_CHECK"))?true:false;
+		return "YES".equalsIgnoreCase(StringUtils.trim(getConfigFile().getProperty("ENGINE.GATEWAY.ID_CHECK")))?true:false;
 	}
 }

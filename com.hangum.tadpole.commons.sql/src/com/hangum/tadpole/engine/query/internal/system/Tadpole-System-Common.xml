@@ -66,6 +66,15 @@
 <!--
 	모든 사용자 리스트 정보. 
  -->
+<select id="getUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.lang.Integer">
+	SELECT * 
+	FROM tadpole_user 
+	where seq = #seq#
+</select>
+
+<!--
+	모든 사용자 리스트 정보. 
+ -->
 <select id="getAllUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	SELECT * 
 	FROM tadpole_user 
@@ -270,8 +279,9 @@
 <update id="updateUserPermission" parameterClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	UPDATE tadpole_user 
 	SET
-		allow_ip = #allow_ip#,
-		delYn = #delYn#,
+		allow_ip 	= #allow_ip#,
+		role_type 	= #role_type#,
+		delYn 		= #delYn#,
 		is_regist_db = #is_regist_db#,
 		
 		is_shared_db = #is_shared_db#, 
@@ -360,7 +370,9 @@
  		tadpole_db
  	SET
  		is_visible 	= #is_visible#,
- 		is_lock		= #is_lock#
+ 		is_lock		= #is_lock#,
+ 		is_profile  = #is_profile#,
+ 		is_result_save = #is_result_save#
  	WHERE
  		SEQ = #seq#
  </update>
@@ -441,7 +453,7 @@
 	ORDER BY group_name
 </select>
 
-<select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
+<!-- <select id="getCreateUserDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
 	SELECT a.*, b.ROLE_ID role_id, b.access_ip, b.is_resource_download,
 			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
 	FROM tadpole_db a, tadpole_user_db_role b, user_db_ext c
@@ -451,7 +463,7 @@
 		AND b.user_seq = a.user_seq 
 	    AND a.delyn = 'NO'
 	    AND b.delyn = 'NO'
-</select>
+</select> -->
 
 <!--  UserDB의 인스턴스 -->
 <select id="userDBInstance" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.lang.Integer">
@@ -984,6 +996,11 @@ SELECT
 	INSERT INTO executed_sql_resource_data(startDateExecute, executed_sql_resource_seq, datas)
 	VALUES(#startDateExecute#, #executed_sql_resource_seq#, #datas#)
 </insert>
+
+<select id="getExecuteQueryObject" resultClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO" parameterClass="java.lang.Long">
+	SELECT * FROM executed_sql_resource
+	WHERE seq = #seq#
+</select>
 
 <!-- 
 	쿼리의 실행 히스토리를 얻습니다.

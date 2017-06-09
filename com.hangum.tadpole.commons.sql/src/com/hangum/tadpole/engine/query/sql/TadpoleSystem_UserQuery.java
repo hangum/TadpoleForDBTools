@@ -49,6 +49,18 @@ public class TadpoleSystem_UserQuery {
 	private static final Logger logger = Logger.getLogger(TadpoleSystem_UserQuery.class);
 	
 	/**
+	 * 
+	 * @param userSeq
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static UserDAO getUser(int userSeq)throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return (UserDAO)sqlClient.queryForObject("getUser", userSeq); //$NON-NLS-1$
+	}
+	
+	/**
 	 * 모든 유효한 유저 목록을 가져옵니다.
 	 * 
 	 * @param delyn

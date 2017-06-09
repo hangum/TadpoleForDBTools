@@ -37,6 +37,9 @@ public class DBTypeActionFilterAdapter implements IActionFilter {
 		
 		if (target instanceof UserDBDAO) {
 			userDB = (UserDBDAO)target;
+			if(!userDB.is_isUseEnable()) {
+				return false;
+			}
 			
 			// db 종류에 따라.
 			if(DB_TYPE.equals(name)) {

@@ -168,6 +168,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 						mapParam.put("table", synonym.getTable_name()); //$NON-NLS-1$
 
 						showSynonymColumns = sqlClient.queryForList("synonymColumnList", mapParam); //$NON-NLS-1$
+						if(logger.isDebugEnabled()) logger.debug(String.format("synonym count is %s", showSynonymColumns.size()));
 
 						for(OracleSynonymColumnDAO dao : showSynonymColumns) {
 							dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getColumn_name() ));
@@ -315,6 +316,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 
 		showSynonyms = (List<OracleSynonymDAO>)selectUserDb.getDBObject(OBJECT_TYPE.SYNONYM, selectUserDb.getDefaultSchemanName());
 		if(!(showSynonyms == null || showSynonyms.isEmpty())) {
+			if(logger.isDebugEnabled()) logger.debug(String.format("synonym count is %s", showSynonyms.size()));
 			synonymListViewer.setInput(showSynonyms);
 			synonymListViewer.refresh();
 			TableUtil.packTable(synonymListViewer.getTable());
@@ -324,6 +326,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 			
 			selectDataOfTable(strObjectName);
 		} else {
+			final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
 			Job job = new Job(Messages.get().MainEditor_45) {
 				@Override
 				public IStatus run(IProgressMonitor monitor) {
@@ -331,7 +334,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	
 					try {
 						showSynonyms = getSynonymList(userDB);
-						
+						if(logger.isDebugEnabled()) logger.debug(String.format("synonym count is %s", showSynonyms.size()));
 						for(OracleSynonymDAO dao : showSynonyms) {
 							dao.setSysName(SQLUtil.makeIdentifierName(userDB, dao.getSynonym_name() ));
 						}

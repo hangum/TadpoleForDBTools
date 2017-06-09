@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
@@ -103,12 +104,24 @@ public class ManagerLabelProvider extends ColumnLabelProvider {
 	 */
 	public static String getDBText(UserDBDAO userDB) {
 		String retText = "";
+		if(!userDB.is_isUseEnable()) {
+			retText = String.format("[%s]", CommonMessages.get().TermExpired);
+		} else {
+			// 사용기간이 1주일이 안남았으면 표시해준다.
+			long longStTime = System.currentTimeMillis();
+			long longEndTime = userDB.getTerms_of_use_endtime().getTime();
+			
+			long longDiffDay = (longEndTime - longStTime) / (24 * 60 * 60 * 1000);
+			if(longDiffDay <= 1) {
+				long longDiffHour = (longEndTime - longStTime) / (60 * 60 * 1000);
+				retText = String.format(CommonMessages.get().TimeLeft, longDiffHour);
+			} else if(longDiffDay <= 7) {
+				retText = String.format(CommonMessages.get().DaysLeft, longDiffDay);
+			}
+		}
 		
 		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
-//			retText = String.format("%s [%s] %s", PRODUCTION_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
-			retText = String.format("[%s]", StringUtils.substring(userDB.getOperation_type(), 0, 1));
-//		} else {
-//			retText = String.format("%s [%s] %s", DEVELOPMENT_SERVER_START_TAG, StringUtils.substring(userDB.getOperation_type(), 0, 1), END_TAG);
+			retText += String.format("[%s]", StringUtils.substring(userDB.getOperation_type(), 0, 1));
 		}
 		
 		// master, slave 표시

@@ -63,7 +63,7 @@ public class AddDefaultSampleDBToUser {
 		userDB.setGroup_name(strDefaultGroup);
 		userDB.setDisplay_name(strDefaultDisplayName);
 		userDB.setOperation_type(PublicTadpoleDefine.DBOperationType.DEVELOP.name());
-		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		userDB.setRole_id(PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.toString());
 		
 		userDB.setPasswd(""); //$NON-NLS-1$
 		userDB.setUsers(""); //$NON-NLS-1$

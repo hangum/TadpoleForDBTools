@@ -36,6 +36,7 @@ import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
+import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * Modify DB Dialog
@@ -69,7 +70,7 @@ public class ModifyDBDialog extends Dialog {
 		
 		this.userDBDAO = userDBDAO;
 		try {
-			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName(SessionManager.getUserSeq());
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
 		}

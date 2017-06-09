@@ -51,6 +51,11 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	protected String role_id;
 	protected String access_ip;
 	protected String is_resource_download;
+	// default value is 00:00
+	protected Timestamp terms_of_use_starttime 	= new Timestamp(System.currentTimeMillis());
+
+		// default value is 100 years after
+	protected  Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillsMonth(24));
 	
 	/**
 	 * @return the role_seq
@@ -99,6 +104,34 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	 */
 	public String getIs_resource_download() {
 		return is_resource_download;
+	}
+	
+	/**
+	 * @return the terms_of_use_starttime
+	 */
+	public Timestamp getTerms_of_use_starttime() {
+		return terms_of_use_starttime;
+	}
+
+	/**
+	 * @param terms_of_use_starttime the terms_of_use_starttime to set
+	 */
+	public void setTerms_of_use_starttime(Timestamp terms_of_use_starttime) {
+		this.terms_of_use_starttime = terms_of_use_starttime;
+	}
+
+	/**
+	 * @return the terms_of_use_endtime
+	 */
+	public Timestamp getTerms_of_use_endtime() {
+		return terms_of_use_endtime;
+	}
+
+	/**
+	 * @param terms_of_use_endtime the terms_of_use_endtime to set
+	 */
+	public void setTerms_of_use_endtime(Timestamp terms_of_use_endtime) {
+		this.terms_of_use_endtime = terms_of_use_endtime;
 	}
 
 	/**
@@ -192,6 +225,9 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
     
     /** is db lock? */
     protected String is_lock			= PublicTadpoleDefine.YES_NO.NO.name();
+    
+    /** is query result save? */
+    protected String is_result_save		= PublicTadpoleDefine.YES_NO.NO.name();
     
     /** db access control */
     protected DBAccessControlDAO dbAccessCtl = new DBAccessControlDAO();
@@ -710,6 +746,20 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 
 	public void setSelect(boolean select) {
 		this.select = select;
+	}
+
+	/**
+	 * @return the is_result_save
+	 */
+	public String getIs_result_save() {
+		return is_result_save;
+	}
+
+	/**
+	 * @param is_result_save the is_result_save to set
+	 */
+	public void setIs_result_save(String is_result_save) {
+		this.is_result_save = is_result_save;
 	}
 
 }

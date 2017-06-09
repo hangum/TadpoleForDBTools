@@ -32,7 +32,28 @@ public class CSVExpoter extends AbstractTDBExporter {
 	public static String makeContent(boolean isAddHead, String targetName, QueryExecuteResultDTO queryExecuteResultDTO, char seprator, String strDefaultNullValue) throws Exception {
 		return makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, -1, strDefaultNullValue);
 	}
-
+	
+	
+	/**
+	 * make file header 
+	 * 
+	 * @param strFullPath
+	 * @param isAddHead
+	 * @param listCsvData
+	 * @param seprator
+	 * @param encoding
+	 * @throws Exception
+	 */
+	public static void makeListFile(String strFullPath, boolean isAddHead, List<String[]> listCsvData, char seprator, String encoding) throws Exception {
+		// make language tag
+		FileUtils.writeByteArrayToFile(new File(strFullPath), 
+						(new byte[] {(byte) 0xEF,
+									  (byte) 0xBB, (byte) 0xBF}), true);
+		
+		// make header
+		FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), encoding, true);
+	}
+	
 	/**
 	 * make file header 
 	 * 

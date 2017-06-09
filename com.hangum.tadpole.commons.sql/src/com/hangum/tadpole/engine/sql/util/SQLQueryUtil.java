@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
-import com.hangum.tadpole.preference.define.GetAdminPreference;
 
 /**
  * sql query util
@@ -86,7 +85,7 @@ public class SQLQueryUtil {
 		}
 		
 		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, GET_DATA_COUNT);
-//		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
+		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		java.sql.Connection javaConn = null;
@@ -117,7 +116,7 @@ public class SQLQueryUtil {
 			if(queryResultDAO.getDataList().getData().isEmpty()) return false;
 			
 			// -1 이면 전체 데이터를 넘겨 받는다.
-			if("-1".equals(MAX_DATA_COUNT)) if(this.isOneTime) return false;
+			if(this.isOneTime) return false;
 		}
 		 
 		return true;

@@ -62,7 +62,6 @@ import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO.DB_RESOURC
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBResource;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
-import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.connections.QueryEditorAction;
@@ -93,6 +92,8 @@ public class ManagerViewer extends ViewPart {
 	
 	public ManagerViewer() {
 		super();
+		
+//		isGatewayConnection = LoadConfigFile.isEngineGateway();
 	}
 
 	@Override
@@ -115,16 +116,22 @@ public class ManagerViewer extends ViewPart {
 				Object objSelect = is.getFirstElement();
 				if(objSelect instanceof UserDBDAO) {
 					final UserDBDAO userDB = (UserDBDAO)objSelect;
-					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					
+					// 기간이 만료 되었는지 검사한다.
+					if(userDB.is_isUseEnable()) {
+						if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;	
+					}
 					
 					// 리소스 가져온다.
 					addManagerResouceData(userDB, false);
 					
-					// 싱글 클릭일때 에디터에 오픈된 화면이 없으면 에디터 화면이 열리도록 수정.
-//					IEditorPart editor = EditorUtils.findSQLEditor(userDB);
-//					if(editor == null) {
-//						QueryEditorAction qea = new QueryEditorAction();
-//						qea.run(userDB);
+//					if(userDB.is_isUseEnable()) {
+						// 싱글 클릭일때 에디터에 오픈된 화면이 없으면 에디터 화면이 열리도록 수정.
+	//					IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+	//					if(editor == null) {
+	//						QueryEditorAction qea = new QueryEditorAction();
+	//						qea.run(userDB);
+	//					}
 //					}
 					
 					// Rice lock icode change event
@@ -136,7 +143,7 @@ public class ManagerViewer extends ViewPart {
 					ManagerListDTO managerDTO = (ManagerListDTO)objSelect;
 					if(managerDTO.getManagerList().isEmpty()) {
 						try {
-							List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName());
+							List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName(), SessionManager.getUserSeq());
 							for (UserDBDAO userDBDAO : userDBS) {
 								managerDTO.addLogin(userDBDAO);
 							}
@@ -147,8 +154,8 @@ public class ManagerViewer extends ViewPart {
 							logger.error("get manager list", e);
 						}
 					}
-				} else if(objSelect instanceof DBOtherDAO) {
-					DBOtherDAO dao = (DBOtherDAO)objSelect;
+//				} else if(objSelect instanceof DBOtherDAO) {
+//					DBOtherDAO dao = (DBOtherDAO)objSelect;
 					
 				}
 			}	// select change event 
@@ -162,10 +169,12 @@ public class ManagerViewer extends ViewPart {
 				// db object를 클릭하면 쿼리 창이 뜨도록하고.
 				if(selElement instanceof UserDBDAO) {
 					final UserDBDAO userDB= (UserDBDAO)selElement;
-					if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
+					if(userDB.is_isUseEnable()) {
+						if(!TadpoleSecurityManager.getInstance().ifLockOpenDialog(userDB)) return;
 					
-					QueryEditorAction qea = new QueryEditorAction();
-					qea.run(userDB);
+						QueryEditorAction qea = new QueryEditorAction();
+						qea.run(userDB);
+					}
 				// erd를 클릭하면 erd가 오픈되도록 수정.
 				} else if(selElement instanceof UserDBResourceDAO) {
 					final UserDBResourceDAO dao = (UserDBResourceDAO)selElement;
@@ -231,26 +240,13 @@ public class ManagerViewer extends ViewPart {
 		
 		List<ManagerListDTO> _tmpListManager = SessionManager.getManagerDBList();
 		if(_tmpListManager.isEmpty()) {
-
-			// product type filter
-			final String []strProductTypeFilters = GetAdminPreference.getViewProductTypeFilter();
-			// product type filter
-			
 			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer add user session................");
+			
 			try {
-				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName()) {
+				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName(SessionManager.getUserSeq())) {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
-					
-					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName())) {
-						boolean isFilter = false;
-						for (String strProductType : strProductTypeFilters) {
-							if(strProductType.equals(userDBDAO.getOperation_type())) isFilter = true; 
-						}
-						
-						if(!isFilter) managerDTO.addLogin(userDBDAO);
-						else {
-							if(logger.isDebugEnabled()) logger.debug(String.format("Filter db is %s", userDBDAO.getOperation_type()));
-						}
+					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName(), SessionManager.getUserSeq())) {
+						managerDTO.addLogin(userDBDAO);
 					}
 					
 					if(!managerDTO.getManagerList().isEmpty()) treeDataList.add(managerDTO);

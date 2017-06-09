@@ -48,7 +48,10 @@ public abstract class AbstractObjectSelectAction extends AbstractObjectAction {
 				setEnabled(false);
 			} else {
 				UserDBDAO userDB = this.userDB;
-				if(userDB != null) setEnabled(true);
+				if(userDB != null){
+					if(userDB.is_isUseEnable()) setEnabled(true);
+					else setEnabled(false);
+				}
 			}
 		}
 	}	// public void selectionChanged

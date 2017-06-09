@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -58,7 +59,6 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
 import com.hangum.tadpole.commons.util.ShortcutPrefixUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.AbstractTadpoleManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -333,8 +333,17 @@ public class MainEditor extends EditorExtension {
 						@Override
 						public void run() {
 							try {
-								ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
-								ev.changeSchema(userDB, strSchema);
+								// 오브젝트 탐색기가 열려 있으면 탐색기의 스키마 이름을 변경해 줍니다.
+								IViewReference[] iViewReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+								for (IViewReference iViewReference : iViewReferences) {
+									if(ExplorerViewer.ID.equals(iViewReference.getId())) {
+										ExplorerViewer ev = (ExplorerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ExplorerViewer.ID);
+										ev.changeSchema(userDB, strSchema);
+										
+										break;
+									}
+								}
+								
 							} catch (PartInitException e) {
 								logger.error("ExplorerView show", e); //$NON-NLS-1$
 							}
@@ -352,8 +361,10 @@ public class MainEditor extends EditorExtension {
 					for (Object object : DBSystemSchema.getSchemas(userDB)) {
 						HashMap<String, String> mapData = (HashMap)object;
 						comboSchema.add(mapData.get("SCHEMA"));
-						userDB.addSchema(mapData.get("SCHEMA"));
+						userDB.addSchema(comboSchema.getText());
 					}
+					comboSchema.select(0);
+					userDB.setSchema(comboSchema.getText());
 					
 				} catch(Exception e) {
 					logger.error("get schema list " + e.getMessage());
@@ -362,6 +373,10 @@ public class MainEditor extends EditorExtension {
 			
 				for (String schema : userDB.getSchemas()) {
 					comboSchema.add(schema);
+				}
+				if("".equals(userDB.getSchema())) {
+					comboSchema.select(0);
+					userDB.setSchema(comboSchema.getText());
 				}
 			}
 			comboSchema.setVisibleItemCount(userDB.getSchemas().size());
@@ -804,6 +819,11 @@ public class MainEditor extends EditorExtension {
 	 * @param reqQuery
 	 */
 	public void executeCommand(final RequestQuery reqQuery) {
+		if(!userDB.is_isUseEnable()) {
+			MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Information, CommonMessages.get().TermExpiredMsg);
+			return;
+		}
+
 		// 요청쿼리가 없다면 무시합니다. 
 		if(StringUtils.isEmpty(reqQuery.getSql())) return;
 		

@@ -203,7 +203,7 @@ public class TadpoleSystemInitializer {
 			tadpoleEngineDB.setDisplay_name("Tadpole Engine DB"); //$NON-NLS-1$
 			tadpoleEngineDB.setPasswd(""); //$NON-NLS-1$
 			tadpoleEngineDB.setUsers(""); //$NON-NLS-1$
-			tadpoleEngineDB.setTdbUserID(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name());
+			tadpoleEngineDB.setTdbUserID(PublicTadpoleDefine.DB_USER_ROLE_TYPE.SYSTEM_ADMIN.name());
 
 		} else {
 			try {
@@ -231,7 +231,7 @@ public class TadpoleSystemInitializer {
 					tadpoleEngineDB.setUsers(user);
 					tadpoleEngineDB.setPasswd(passwd);
 					
-					tadpoleEngineDB.setTdbUserID(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name());
+					tadpoleEngineDB.setTdbUserID(PublicTadpoleDefine.DB_USER_ROLE_TYPE.SYSTEM_ADMIN.name());
 				}
 
 			} catch (Exception ioe) {

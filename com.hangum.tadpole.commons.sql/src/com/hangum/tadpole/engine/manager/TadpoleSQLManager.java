@@ -98,6 +98,9 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 	public static SqlMapClient getInstance(final UserDBDAO userDB) throws TadpoleSQLManagerException {
 		SqlMapClient sqlMapClient = null;
 		Connection conn = null;
+		if(!userDB.is_isUseEnable()) {
+			throw new TadpoleSQLManagerException("You do not have DB permissions.");
+		}
 		
 		final String searchKey = getKey(userDB);
 		final String pwdCacheKey = getDBPasswdKey(userDB);
@@ -202,10 +205,10 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				statement.executeUpdate(String.format("set schema '%s'", userDB.getSchema()));
 			}
 		} catch(Exception e) {
-			logger.error("change scheman ", e);
-			throw new SQLException(e);
+			logger.error("get connection" +  e.getMessage());
+//			throw new SQLException(e);
 		} finally {
-			if(statement != null) statement.close();
+			try { if(statement != null) statement.close(); } catch(Exception e) {}
 		}
 		
 		return javaConn;
@@ -303,7 +306,7 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 			String strArryKey[] = StringUtils.splitByWholeSeparator(stKey, PublicTadpoleDefine.DELIMITER);
 			
 			// 시스템 디비는 보여주지 않습니다.
-			if(StringUtils.equals(PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name(), strArryKey[0])) continue;
+			if(StringUtils.equals(PublicTadpoleDefine.DB_USER_ROLE_TYPE.SYSTEM_ADMIN.name(), strArryKey[0])) continue;
 			
 			// 어드민 만이 모두 호출한다.
 			if(!isAdmin) if(!StringUtils.equals(strLoginEmail, strArryKey[0])) continue;

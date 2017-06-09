@@ -415,7 +415,8 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			TableUtil.packTable(tableListViewer.getTable());
 			return;
 		}
-
+		
+		final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {

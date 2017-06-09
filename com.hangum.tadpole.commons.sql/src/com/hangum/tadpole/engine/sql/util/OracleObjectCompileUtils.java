@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.Messages;
@@ -32,6 +33,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public class OracleObjectCompileUtils {
+	private static final Logger logger = Logger.getLogger(OracleObjectCompileUtils.class);
 	/**
 	 * view compile
 	 * 
@@ -45,8 +47,8 @@ public class OracleObjectCompileUtils {
 		if (StringUtils.contains(viewName, '.')){
 			//오브젝트명에 스키마 정보가 포함되어 있으면...
 			viewDao.setSchema_name(StringUtils.substringBefore(viewName, "."));
-			viewDao.setTable_name(StringUtils.substringAfter(viewName, "."));
-			viewDao.setSysName(StringUtils.substringAfter(viewName, "."));
+			viewDao.setTable_name(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(viewName, ".")));
+			viewDao.setSysName(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(viewName, ".")));
 		}else{
 			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
 			viewDao.setSchema_name(userDB.getSchema());
@@ -102,13 +104,13 @@ public class OracleObjectCompileUtils {
 			//오브젝트명에 스키마 정보가 포함되어 있으면...
 			paramMap.put("schema_name", StringUtils.substringBefore(objName, "."));
 			paramMap.put("object_name", SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(objName, ".")));
-			paramMap.put("full_name", SQLUtil.makeIdentifierName(userDB, objName));
 		}else{
 			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
 			paramMap.put("schema_name", userDB.getSchema());
 			paramMap.put("object_name", SQLUtil.makeIdentifierName(userDB, objName) );
-			paramMap.put("full_name", userDB.getSchema() + "." + SQLUtil.makeIdentifierName(userDB, objName));
 		}
+		paramMap.put("full_name", paramMap.get("schema_name") + "." + paramMap.get("object_name"));
+		
 		if (PublicTadpoleDefine.QUERY_DDL_TYPE.JAVA == actionType){
 			//Java object는 컴파일 옵션이 없다.
 			return otherObjectCompile(actionType, objType, paramMap, userDB, false);
@@ -129,8 +131,9 @@ public class OracleObjectCompileUtils {
 		String withDebugOption = "";
 		if(isDebug) withDebugOption = "DEBUG";
 		
-		String sqlQuery = "ALTER "+objType+" " + paramMap.get("full_name") + " COMPILE " + withDebugOption; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-
+		String sqlQuery = String.format("ALTER %s %s COMPILE %s", objType, paramMap.get("full_name"), withDebugOption); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		if(logger.isDebugEnabled()) logger.debug("****** compile : " + sqlQuery);
+		
 		java.sql.Connection javaConn = null;
 		Statement statement = null;
 		ResultSet rs = null;
@@ -148,6 +151,9 @@ public class OracleObjectCompileUtils {
 			}
 			
 			return result.toString();
+		} catch(Exception e) {
+			logger.error("object compile error", e);
+			throw e;
 		} finally {
 			try { rs.close();} catch(Exception e) {}
 			try { statement.close();} catch(Exception e) {}
@@ -167,8 +173,8 @@ public class OracleObjectCompileUtils {
 		if (StringUtils.contains(strObjectName, '.')){
 			//오브젝트명에 스키마 정보가 포함되어 있으면...
 			packageDao.setSchema_name(StringUtils.substringBefore(strObjectName, "."));
-			packageDao.setPackagename(StringUtils.substringAfter(strObjectName, "."));
-			packageDao.setName(StringUtils.substringAfter(strObjectName, "."));
+			packageDao.setPackagename(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(strObjectName, ".")));
+			packageDao.setName(SQLUtil.makeIdentifierName(userDB, StringUtils.substringAfter(strObjectName, ".")));
 		}else{
 			// 스키마 정보가 없으면 컨넥션에 있는 스키마 정보 사용.
 			packageDao.setSchema_name(userDB.getSchema());

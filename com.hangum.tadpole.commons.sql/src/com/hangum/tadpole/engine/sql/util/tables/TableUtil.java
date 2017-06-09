@@ -24,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import com.hangum.tadpole.commons.util.AutoResizeTableLayout;
 import com.hangum.tadpole.engine.sql.util.tables.DefaultViewerSorter.COLUMN_TYPE;
 
 /**

@@ -76,9 +76,11 @@
 	</select> -->
 	
 	<!--  UserGroup의 DB 리스트 -->
+	<!--  AND b.terms_of_use_starttime <= #thisTime# AND b.terms_of_use_endtime >= #thisTime# -->
 	<select id="userGroupDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.util.Map">
 	<![CDATA[
-		select a.*, b.seq role_seq, b.ROLE_ID role_id, b.access_ip, b.is_resource_download, 
+		select a.*, b.seq role_seq, b.ROLE_ID role_id, b.access_ip, b.is_resource_download,
+			b.terms_of_use_starttime, b.terms_of_use_endtime, 
 			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
 		from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 		where 
@@ -89,16 +91,16 @@
 		    AND a.delyn = 'NO'
 		    AND b.delyn = 'NO'
 		    AND a.is_visible = 'YES'
-		    AND b.terms_of_use_starttime <= #thisTime#
-        	AND b.terms_of_use_endtime >= #thisTime#
         ORDER BY display_name, operation_type, dbms_type
 	]]>	
 	</select>
 	
 	<!--  UserDB의 리스트 -->
+	<!--  AND b.terms_of_use_starttime <= #thisTime# AND b.terms_of_use_endtime >= #thisTime# -->
 	<select id="userDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.util.Map">
 	<![CDATA[
 		select a.*, b.seq role_seq, b.ROLE_ID role_id, 
+			b.terms_of_use_starttime, b.terms_of_use_endtime,
 			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
 		from tadpole_db a, tadpole_user_db_role b, user_db_ext c
 		where 
@@ -108,8 +110,6 @@
 		    AND a.delyn = 'NO'
 		    AND b.delyn = 'NO'
 		    AND a.is_visible = 'YES'
-		    AND b.terms_of_use_starttime <= #thisTime#
-        	AND b.terms_of_use_endtime >= #thisTime#
         ORDER BY group_name
 	]]>	
 	</select>

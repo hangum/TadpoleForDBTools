@@ -38,6 +38,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
@@ -170,7 +171,7 @@ public class DBLoginDialog extends Dialog {
 		
 		// db groupData 
 		try {
-			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName();
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName(SessionManager.getUserSeq());
 			
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
@@ -254,7 +255,9 @@ public class DBLoginDialog extends Dialog {
 		// 사용자가데이터베이스를 추가할 수 있는 한계까지.
 		int limitDBCount = SessionManager.getLimitAddDBCnt();
 		try {
-			if(limitDBCount <= TadpoleSystem_UserDBQuery.getCreateUserDB().size()) {
+			UserDAO userDao = new UserDAO();
+			userDao.setSeq(SessionManager.getUserSeq());
+			if(limitDBCount <= TadpoleSystem_UserDBQuery.getUserDB(userDao, true).size()) {
 				MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().DBLoginDialog_AddDBOverMsg);
 				return false;
 			}

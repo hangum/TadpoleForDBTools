@@ -151,6 +151,21 @@ public class TadpoleSystem_ExecutedSQL {
 	}
 	
 	/**
+	 * execute query
+	 * 
+	 * @param seq
+	 * @return
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static ExecutedSqlResourceDAO getExecuteQuery(long seq) throws TadpoleSQLManagerException, SQLException {
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		ExecutedSqlResourceDAO queryObjectDAO =  (ExecutedSqlResourceDAO)sqlClient.queryForObject("getExecuteQueryObject", seq);
+		
+		return queryObjectDAO;
+	}
+	
+	/**
 	 * 마지막 실행했떤 쿼리 20개를 리턴합니다.
 	 * 
 	 * @param user_seq
@@ -214,7 +229,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @param sqlType
 	 * @param requestResultDAO
 	 */
-	public static void saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE sqlType, RequestResultDAO requestResultDAO) throws TadpoleSQLManagerException, SQLException {
+	public static long saveExecuteSQUeryResource(int user_seq, UserDBDAO userDB, PublicTadpoleDefine.EXECUTE_SQL_TYPE sqlType, RequestResultDAO requestResultDAO) throws TadpoleSQLManagerException, SQLException {
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_profile())) {
 			ExecutedSqlResourceDAO executeSQLResourceDao = new ExecutedSqlResourceDAO();
 			executeSQLResourceDao.setDb_seq(userDB.getSeq());
@@ -238,7 +253,11 @@ public class TadpoleSystem_ExecutedSQL {
 			ExecutedSqlResourceDAO executeSQL =  (ExecutedSqlResourceDAO)sqlClient.insert("userExecuteSQLResourceInsert", executeSQLResourceDao); //$NON-NLS-1$
 			
 			insertResourceData(executeSQL.getSeq(), requestResultDAO.getStartDateExecute(), requestResultDAO.getStrSQLText());
+			
+			return executeSQL.getSeq();
 		}
+		
+		return -1;
 	}
 	
 	/**

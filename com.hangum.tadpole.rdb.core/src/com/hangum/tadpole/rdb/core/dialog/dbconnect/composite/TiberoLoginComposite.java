@@ -76,12 +76,17 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite compositeBody = new Composite(this, SWT.NONE);
-		compositeBody.setLayout(new GridLayout(1, false));
+		GridLayout gl_compositeBody = new GridLayout(1, false);
+		gl_compositeBody.verticalSpacing = 2;
+		gl_compositeBody.horizontalSpacing = 2;
+		gl_compositeBody.marginHeight = 2;
+		gl_compositeBody.marginWidth = 2;
+		compositeBody.setLayout(gl_compositeBody);
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		compositeBody.setEnabled(isReadOnly);
 		
@@ -259,10 +264,10 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 
 		String dbOpType = PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).name();
 		userDB.setOperation_type(dbOpType);
-		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) || dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
-		{
-			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
-		}
+//		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) || dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
+//		{
+//			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
+//		}
 
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
@@ -270,7 +275,7 @@ public class TiberoLoginComposite extends AbstractLoginComposite {
 		userDB.setPasswd(StringUtils.trimToEmpty(textPassword.getText()));
 		
 		// 처음 등록자는 권한이 어드민입니다.
-		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		userDB.setRole_id(PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.toString());
 		
 //		userDB.setLocale(comboLocale.getText().trim());
 		userDB.setIs_resource_download(GetAdminPreference.getIsDefaultDonwload());

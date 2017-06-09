@@ -62,12 +62,6 @@ public class PreConnectionInfoGroup extends Group {
 		gridLayout.marginWidth = 3;
 		setLayout(gridLayout);
 		
-		Label lblGroupName = new Label(this, SWT.NONE);
-		lblGroupName.setText(Messages.get().GroupName);
-		comboGroup = new Combo(this, SWT.NONE);
-		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		for (String strGroup : listGroupName) comboGroup.add(strGroup);
-		
 		Label lblOperationType = new Label(this, SWT.NONE);
 		lblOperationType.setText(Messages.get().OperationType);
 		
@@ -83,6 +77,12 @@ public class PreConnectionInfoGroup extends Group {
 		}
 		comboOperationType.setVisibleItemCount(PublicTadpoleDefine.DBOperationType.values().length);
 		comboOperationType.select(2);
+		
+		Label lblGroupName = new Label(this, SWT.NONE);
+		lblGroupName.setText(Messages.get().GroupName);
+		comboGroup = new Combo(this, SWT.NONE);
+		comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for (String strGroup : listGroupName) comboGroup.add(strGroup);
 		
 		Label lblConnectName = new Label(this, SWT.NONE);
 		lblConnectName.setText(Messages.get().DisplayName);

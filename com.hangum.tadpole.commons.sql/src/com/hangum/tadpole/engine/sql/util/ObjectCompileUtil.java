@@ -41,9 +41,6 @@ public class ObjectCompileUtil {
 			try {
 				String strObjectName = StringUtils.upperCase(objectName);
 				
-				// 스키마 이름을재거한다.
-				strObjectName = StringUtils.substringAfter(strObjectName, ".");
-				
 				if(ddlType == QUERY_DDL_TYPE.PROCEDURE) {
 					retMsg = OracleObjectCompileUtils.otherObjectCompile(QUERY_DDL_TYPE.PROCEDURE, "PROCEDURE", strObjectName, userDB); //$NON-NLS-1$
 				} else if(ddlType == QUERY_DDL_TYPE.PACKAGE) {
@@ -57,6 +54,8 @@ public class ObjectCompileUtil {
 				}
 			} catch(Exception e) {
 				logger.error("object compile", e);
+				
+				retMsg = e.getMessage();
 			}
 		}
 		

@@ -66,6 +66,9 @@ public class PublicTadpoleDefine {
 	
 	/** 사용자 쿼리를 프리페어 스테이트 먼트로 처리하는 파라미터 타입 */
 	public static enum PARAMETER_TYPE {JAVA_BASIC, ORACLE, MYBATIS_SHARP, MYBATIS_DOLLAR};
+	
+	/** 사용자 디비의 권한 메시지 정의 */
+	public static enum AUTH_CODE_DEFINE {VALID, TIME_EXPIRE, AUTH_EXPIRE};
 
 	/** rest api service key */
 	public static final String SERVICE_KEY_NAME = "serviceID";
@@ -162,10 +165,13 @@ public class PublicTadpoleDefine {
 	/** Tadpole support browser list  */
 	public static enum TADPOLE_SUPPORT_BROWSERIP {FIREFOX, CHROME, OPERA};
 	
+	/** 테드폴 사용자 역활 타입을 지정합니다 */
+	public enum USER_ROLE_TYPE {SYSTEM_ADMIN, OBSERVER, ADMIN};
+	
 	/** 
 	 * This variable is user_role_table. 
 	 */
-	public static enum USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER, GUEST};
+	public static enum DB_USER_ROLE_TYPE {SYSTEM_ADMIN, ADMIN, DBA, MANAGER, USER, GUEST};
 	
 	/**
 	 * Setting SQL Client Info

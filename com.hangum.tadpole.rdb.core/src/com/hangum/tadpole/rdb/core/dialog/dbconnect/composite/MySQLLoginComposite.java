@@ -32,12 +32,10 @@ import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.utils.DBLocaleUtils;
-import com.hangum.tadpole.preference.define.AdminPreferenceDefine;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.PreConnectionInfoGroup;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.OthersConnectionRDBGroup;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * mysql login composite
@@ -77,7 +75,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		gridLayout.verticalSpacing = 2;
 		gridLayout.horizontalSpacing = 2;
 		gridLayout.marginHeight = 2;
-		gridLayout.marginWidth = 2;
+		gridLayout.marginWidth = 0;
 		setLayout(gridLayout);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -286,10 +284,10 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		
 		String dbOpType = PublicTadpoleDefine.DBOperationType.getNameToType(preDBInfo.getComboOperationType().getText()).name();
 		userDB.setOperation_type(dbOpType);
-		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) || dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
-		{
-			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
-		}
+//		if(dbOpType.equals(PublicTadpoleDefine.DBOperationType.PRODUCTION.name()) || dbOpType.equals(PublicTadpoleDefine.DBOperationType.BACKUP.name()))
+//		{
+//			userDB.setIs_lock(PublicTadpoleDefine.YES_NO.YES.name());
+//		}
 		
 		userDB.setHost(StringUtils.trimToEmpty(textHost.getText()));
 		userDB.setPort(StringUtils.trimToEmpty(textPort.getText()));
@@ -299,7 +297,7 @@ public class MySQLLoginComposite extends AbstractLoginComposite {
 		userDB.setIs_resource_download(GetAdminPreference.getIsDefaultDonwload());
 		
 		// 처음 등록자는 권한이 어드민입니다.
-		userDB.setRole_id(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString());
+		userDB.setRole_id(PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.toString());
 		
 		// set ext value
 		setExtValue();
