@@ -173,7 +173,12 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 			if(logger.isDebugEnabled()) logger.debug("[change select statement]" + sqlSelect);
 			
 			if(isWhere) {
-				QueryExecuteResultDTO rsDAO = QueryUtils.executeQuery(userDB, sqlSelect, 0, 500);
+				QueryExecuteResultDTO rsDAO = null;
+				if(reqQuery.isAutoCommit()) {
+					rsDAO = QueryUtils.executeQuery(userDB, sqlSelect, 0, 500);
+				} else {
+					rsDAO = QueryUtils.executeQueryIsTransaction(userDB, sqlSelect, 0, 500);
+				}
 				createTableColumn(reqQuery, tvQueryResult, rsDAO, false);
 				
 				tvQueryResult.setLabelProvider(new SQLResultLabelProvider(reqQuery.getMode(), rsDAO));
@@ -196,7 +201,9 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 			// 젠처 ui를 초기화 한다.
 			compositeData.setVisible(isWhere);
 			btnAllDataDelete.setEnabled(!isWhere);
-		
+			
+			tvQueryResult.getTable().setFocus();
+			
 		} catch(Exception e) {
 			logger.error("initialize sql", e);
 			
@@ -206,6 +213,11 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 	
 	/**
 	 * table의 Column을 생성한다.
+	 * 
+	 * @param reqQuery
+	 * @param tableViewer
+	 * @param rsDAO
+	 * @param isEditable
 	 */
 	public static void createTableColumn(final RequestQuery reqQuery,
 										final TableViewer tableViewer,
@@ -218,6 +230,7 @@ public class UpdateDeleteConfirmDialog extends Dialog {
 			table.getColumn(0).dispose();
 		}
 		
+		if(rsDAO == null) return;
 		if(rsDAO.getColumnName() == null) return;
 			
 		try {			

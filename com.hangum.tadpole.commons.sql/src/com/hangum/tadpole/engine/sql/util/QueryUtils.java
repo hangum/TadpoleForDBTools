@@ -42,8 +42,10 @@ import com.hangum.tadpole.commons.util.JSONUtil;
 import com.hangum.tadpole.commons.util.ResultSetToHTMLUtil;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
+import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 import au.com.bytecode.opencsv.CSVWriter;
@@ -128,6 +130,48 @@ public class QueryUtils {
 		}  	// end which db
 		
 		return false;
+	}
+	
+	/**
+	 * execute query
+	 * 
+	 * @param userDB
+	 * @param strQuery
+	 * @param intStartCnt
+	 * @param intSelectLimitCnt
+	 * @return
+	 * @throws Exception
+	 */
+	public static QueryExecuteResultDTO executeQueryIsTransaction(final UserDBDAO userDB, String strSQL, final int intStartCnt, final int intSelectLimitCnt) throws Exception {
+		ResultSet resultSet = null;
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		
+		strSQL = SQLUtil.makeExecutableSQL(userDB, strSQL);
+		try {
+			javaConn = TadpoleSQLTransactionManager.getInstance(SessionManager.getEMAIL(), userDB);
+			statement = javaConn.createStatement();
+			
+			if(intStartCnt == 0) {
+				statement.execute(strSQL);
+				resultSet = statement.getResultSet();
+			} else {
+				strSQL = PartQueryUtil.makeSelect(userDB, strSQL, intStartCnt, intSelectLimitCnt);
+				
+				if(logger.isDebugEnabled()) logger.debug("part sql called : " + strSQL);
+				statement.execute(strSQL);
+				resultSet = statement.getResultSet();
+			}
+			return new QueryExecuteResultDTO(userDB, strSQL, false, resultSet, intSelectLimitCnt, intStartCnt);
+			
+		} catch(Exception e) {
+			logger.error(String.format("execute query %s", e.getMessage()));
+			throw e;
+		} finally {
+			if(statement != null) statement.close();
+			if(resultSet != null) resultSet.close();
+		}
+		
 	}
 	
 	/**
