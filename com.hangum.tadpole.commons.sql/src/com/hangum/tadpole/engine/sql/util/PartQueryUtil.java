@@ -10,6 +10,9 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -26,6 +29,16 @@ import com.hangum.tadpole.engine.sql.template.RedShiftDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.TAJODMLTemplate;
 import com.hangum.tadpole.engine.sql.template.TiberoDMLTemplate;
+
+import net.sf.jsqlparser.expression.Alias;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
 
 /**
  * 각 DBMS에 맞는 쿼리문을 생성합니다.
@@ -52,17 +65,12 @@ public class PartQueryUtil {
 //		if(logger.isDebugEnabled()) logger.debug("make select : " + intStartPos + ", " + intRowCnt);
 		
 		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+			strQuery = dupColumn(strQuery);
 			requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
 		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
-			if(userDB.getDBDefine() == DBDefine.ORACLE_DEFAULT) {
-				requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
-				
-				// 컬럼 이름이 중복 되어 있다면, 마지막 컬럼 이름에 알리아스를 준다.
-				
-				// rownum, rowid가 포함되어 있다면 삭제하고 다시 만든다.
-			} else {
-				requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
-			}
+			strQuery = dupColumn(strQuery);
+			requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
+
 		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(SQLiteDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
 		} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
@@ -82,6 +90,65 @@ public class PartQueryUtil {
 		}
 		
 		return requestQuery;
+	}
+	
+	/**
+	 * 중복 이름의 컬럼이 있는지 검사하여 넘겨준다.
+	 * 
+	 * @param strQuery
+	 * @return
+	 */
+	private static String dupColumn(String strQuery) {
+		
+		try {
+			Statement statement = CCJSqlParserUtil.parse(strQuery);
+			List<String> listColumn = new ArrayList<String>();
+			if(statement instanceof Select) {
+				Select selectStatement = (Select) statement;
+				PlainSelect ps = (PlainSelect)selectStatement.getSelectBody();
+				List<SelectItem> listSelectItems = ps.getSelectItems();
+
+				int intSameNameCnt = 0;
+				for (SelectItem selectItem : listSelectItems) {
+					if(selectItem instanceof SelectExpressionItem) {
+						Expression expression = ((SelectExpressionItem)selectItem).getExpression();
+						
+						try {
+							Column col = (Column)expression;
+							Alias alias = ((SelectExpressionItem)selectItem).getAlias();
+							
+							String strColumn = "";
+				            if(alias == null) strColumn = col.getColumnName();
+				            else strColumn = alias.getName();
+				            
+				            if(listColumn.contains(strColumn)) {
+				            	// 중복 이름이 존재하면 기존 컬럼 이름을 _1 를 붙인다.
+				            	strColumn = strColumn + "_" + intSameNameCnt;
+				            	if(alias == null) {
+				            		col.setColumnName(col.getColumnName() + " " + strColumn);
+				            	}
+					            else alias.setName(strColumn);
+				            	intSameNameCnt++;
+				            }
+				            
+			            	listColumn.add(strColumn);
+						} catch(Exception e) {
+							// ignore exception
+						}
+					}
+				}
+				if(intSameNameCnt >= 1) {
+					String strChangeQuery = statement.toString();
+					if(logger.isDebugEnabled()) logger.debug("-----> column Name change query: " + strChangeQuery);
+					return strChangeQuery;
+				}
+			}
+			
+		} catch(Exception e) {
+			logger.error("SQL JParser exception.", e);
+		}
+		
+		return strQuery;
 	}
 	
 	/**
