@@ -13,6 +13,7 @@ package com.hangum.tadpole.engine.sql.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -65,10 +66,10 @@ public class PartQueryUtil {
 //		if(logger.isDebugEnabled()) logger.debug("make select : " + intStartPos + ", " + intRowCnt);
 		
 		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
-			strQuery = dupColumn(strQuery);
+			strQuery = ifDuplicateColumnToChange(userDB, strQuery);
 			requestQuery = String.format(MySQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intRowCnt);
 		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
-			strQuery = dupColumn(strQuery);
+			strQuery = ifDuplicateColumnToChange(userDB, strQuery);
 			requestQuery = String.format(OracleDMLTemplate.TMP_GET_PARTDATA, strQuery, intStartPos, intStartPos+intRowCnt);
 
 		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
@@ -79,27 +80,21 @@ public class PartQueryUtil {
 			requestQuery = String.format(PostgreDMLTemplate.TMP_GET_PARTDATA, strQuery,  intStartPos, intRowCnt);
 		} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
 			requestQuery = String.format(AltibaseDMLTemplate.TMP_GET_PARTDATA, strQuery,  intStartPos, intRowCnt);
-//		} else if(DBDefine.MSSQL_DEFAULT == userDB.getDBDefine() | DBDefine.MSSQL_8_LE_DEFAULT == userDB.getDBDefine()) {
-//			requestQuery = String.format(MSSQLDMLTemplate.TMP_GET_PARTDATA, strQuery, intRowCnt, intStartPos+intRowCnt);
-//			
-//		// 정의 되지 않는 dbms는 전체로 동작하게 합니다.
-//		} else {
-//			requestQuery = originalQuery;
-//		} else {
-//			throw new Exception("Not support Database.");
+
 		}
 		
 		return requestQuery;
 	}
 	
 	/**
-	 * 중복 이름의 컬럼이 있는지 검사하여 넘겨준다.
+	 * 1) 중복 이름의 컬럼이 있는지 검사하여 넘겨준다.
+	 * 2) oracle 일 경우 rownum, rowid 가 있을 경우 alias 시켜줍니다.
 	 * 
+	 * @param userDB
 	 * @param strQuery
 	 * @return
 	 */
-	private static String dupColumn(String strQuery) {
-		
+	private static String ifDuplicateColumnToChange(UserDBDAO userDB, String strQuery) {
 		try {
 			Statement statement = CCJSqlParserUtil.parse(strQuery);
 			List<String> listColumn = new ArrayList<String>();
@@ -116,6 +111,15 @@ public class PartQueryUtil {
 						try {
 							Column col = (Column)expression;
 							Alias alias = ((SelectExpressionItem)selectItem).getAlias();
+							
+							// 오라클 디비일 경우는 rowid, rownum 일 경우 alias 이름을 붙여줍니다.
+				            if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
+				            	if("ROWID".equals(StringUtils.upperCase(col.getColumnName()))) {
+				            		col.setColumnName(col.getColumnName() + " " + "rowid_as");
+				            	} else if("ROWNUM".equals(StringUtils.upperCase(col.getColumnName()))) {
+				            		col.setColumnName(col.getColumnName() + " " + "rownum_as");
+				            	}
+				            }
 							
 							String strColumn = "";
 				            if(alias == null) strColumn = col.getColumnName();
