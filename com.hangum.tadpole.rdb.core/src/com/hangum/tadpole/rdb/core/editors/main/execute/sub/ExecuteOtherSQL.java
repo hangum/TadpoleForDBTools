@@ -51,7 +51,7 @@ public class ExecuteOtherSQL {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public static void runPermissionSQLExecution(String errMsg, final RequestQuery reqQuery, 
+	public static int runPermissionSQLExecution(String errMsg, final RequestQuery reqQuery, 
 			final UserDBDAO userDB,
 			final String userType,
 			final String userEmail) throws SQLException, Exception
@@ -81,7 +81,7 @@ public class ExecuteOtherSQL {
 			}
 		}
 		
-		runSQLOther(reqQuery, userDB, userType, userEmail);
+		return runSQLOther(reqQuery, userDB, userType, userEmail);
 	}
 	
 	/**
@@ -90,20 +90,23 @@ public class ExecuteOtherSQL {
 	 * @param reqQuery
 	 * @exception
 	 */
-	public static void runSQLOther(
+	public static int runSQLOther(
 			final RequestQuery reqQuery, 
 			final UserDBDAO userDB,
 			final String userType,
 			final String userEmail) throws SQLException, Exception 
 	{
+		// 데이터 변경 수를 지정.
+		int intEChangeCnt = -1;
 		
 		// is tajo
 		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			new TajoConnectionManager().executeUpdate(userDB,reqQuery.getSql());
+			return intEChangeCnt;
 		} else { 
 		
 			// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-			if(TransactionManger.calledCommitOrRollback(reqQuery.getSql(), userEmail, userDB)) return;
+			if(TransactionManger.calledCommitOrRollback(reqQuery.getSql(), userEmail, userDB)) return intEChangeCnt;
 			
 			java.sql.Connection javaConn = null;
 			Statement statement = null;
@@ -130,7 +133,7 @@ public class ExecuteOtherSQL {
 					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
 						statement.execute(reqQuery.getSql());
 					} else {
-						statement.executeUpdate(reqQuery.getSql());
+						intEChangeCnt = statement.executeUpdate(reqQuery.getSql());
 					}
 				} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
 					preparedStatement = javaConn.prepareStatement(reqQuery.getSql());
@@ -143,9 +146,11 @@ public class ExecuteOtherSQL {
 					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
 						preparedStatement.execute();
 					} else {
-						preparedStatement.executeUpdate();
+						intEChangeCnt = preparedStatement.executeUpdate();
 					}
 				}
+				
+				return intEChangeCnt;
 				
 			} finally {
 				try { if(statement != null) statement.close();} catch(Exception e) {}

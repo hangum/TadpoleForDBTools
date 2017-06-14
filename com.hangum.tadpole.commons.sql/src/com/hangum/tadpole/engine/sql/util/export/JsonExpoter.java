@@ -97,7 +97,7 @@ public class JsonExpoter extends AbstractTDBExporter {
 		Map<Integer, String> mapLabelName = rsDAO.getColumnLabelName();
 			
 		JsonArray jsonMetaArry = new JsonArray();
-			for (int j = 1; j < mapLabelName.size(); j++) {
+			for (int j = 0; j < mapLabelName.size(); j++) {
 				String strLabelName = mapLabelName.get(j);
 				if(!SQLUtil.isTDBSpecialColumn(strLabelName)) {
 					JsonObject jsonMetaObj = new JsonObject();

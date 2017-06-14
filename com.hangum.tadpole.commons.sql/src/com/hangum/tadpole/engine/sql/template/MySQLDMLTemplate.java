@@ -42,7 +42,7 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	
 	/** table - mysql */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE {#schema#}.sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 
-						 "	id INT(11) default NULL auto_increment, " + PublicTadpoleDefine.LINE_SEPARATOR +
+						 "	id INT(11) auto_increment, " + PublicTadpoleDefine.LINE_SEPARATOR +
 						 "	name char(60) default NULL, " + PublicTadpoleDefine.LINE_SEPARATOR +
 						 "	PRIMARY KEY (id) " + PublicTadpoleDefine.LINE_SEPARATOR +
 						");";

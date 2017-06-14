@@ -155,6 +155,8 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 		} catch(Exception e) {
 			logger.error("Transaction Connection disconnected. and now connect of newone. user id is " + userId);
 			
+			removeInstance(userId, searchKey);
+			
 //			Display display = PlatformUI.getWorkbench().getDisplay();
 //			if(MessageDialog.openConfirm(display.getActiveShell(), "error", "디비연결시 오류가 발생했습니다.  기존 연결을 지우고 새롭게 연결하시겠습니까?")) {
 //				removeInstance(userId, searchKey);
