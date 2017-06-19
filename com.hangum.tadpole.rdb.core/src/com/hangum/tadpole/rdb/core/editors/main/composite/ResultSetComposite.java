@@ -556,7 +556,8 @@ public class ResultSetComposite extends Composite {
 						} else {
 							int intEfficeCnt = ExecuteOtherSQL.runPermissionSQLExecution(errMsg, reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
 							if(intEfficeCnt != -1) {
-								reqResultDAO.setMesssage(String.format(MSG_ROW_CHAGE, intEfficeCnt));
+								long longUseTime = System.currentTimeMillis() - reqResultDAO.getStartDateExecute().getTime();
+								reqResultDAO.setMesssage(String.format(MSG_ROW_CHAGE, intEfficeCnt, longUseTime));
 							}
 						}
 					}
