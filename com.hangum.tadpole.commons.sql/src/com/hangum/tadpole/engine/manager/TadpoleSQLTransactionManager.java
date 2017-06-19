@@ -87,7 +87,7 @@ public class TadpoleSQLTransactionManager extends AbstractTadpoleManager {
 				// gate way 서버에 연결하려는 디비 정보가 있는지
 				if(isGatewayConnection && userDB.getDBDefine() != DBDefine.TADPOLE_SYSTEM_MYSQL_DEFAULT) {
 					final UserDBDAO gatawayUserDB = (UserDBDAO)userDB.clone();
-					TDBGatewayManager.makeGatewayServer(gatawayUserDB, isGateWayIDCheck);
+					TDBGatewayManager.makeGatewayServer(userId, gatawayUserDB, isGateWayIDCheck);
 					ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, gatawayUserDB);
 				} else {
 					ds = DBCPConnectionManager.getInstance().makeDataSource(searchKey, userDB);
