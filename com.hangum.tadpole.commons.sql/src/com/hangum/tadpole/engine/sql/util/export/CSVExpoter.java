@@ -129,7 +129,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			Map<Integer, Object> mapColumns = dataList.get(i);
 			
 			listLabel.clear();
-			for(int j=1; j<mapColumns.size(); j++) {
+			for(int j=0; j<mapColumns.size(); j++) {
 				// tdb 내부적으로 사용하는 컬럼을 보이지 않도록 합니다.
 				if(!SQLUtil.isTDBSpecialColumn(mapLabelName.get(j))) {
 					listLabel.add(mapColumns.get(j) == null?strDefaultNullValue:""+mapColumns.get(j));
