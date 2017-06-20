@@ -597,6 +597,22 @@
 ]]>
 </select>
 
+<!--  자신의 디비가 아닌 공유 디비 목록을 가져옵니다. -->
+<select id="userSharedDB" resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO" parameterClass="java.util.Map">
+<![CDATA[
+	SELECT a.*, b.email, b.name, c.display_name
+	FROM 
+		tadpole_user_db_role a,
+		tadpole_user b,
+		tadpole_db c
+	WHERE
+			a.user_seq = #user_seq# 
+		AND a.delyn = 'NO'
+		AND a.user_seq = b.seq
+		AND a.db_seq = c.seq
+]]>
+</select>
+
 <insert id="userDBRoleInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 	INSERT INTO tadpole_user_db_role
 		(user_seq,db_seq, role_id, access_ip, is_resource_download,  terms_of_use_starttime, terms_of_use_endtime)

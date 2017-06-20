@@ -30,6 +30,9 @@ public class TadpoleUserDbRoleDAO extends UserDAO {
 	
 	//
 	UserDBDAO parent;
+	
+	// display name
+	String display_name;
 
 	public TadpoleUserDbRoleDAO() {
 	}
@@ -134,6 +137,20 @@ public class TadpoleUserDbRoleDAO extends UserDAO {
 	 */
 	public void setIs_resource_download(String is_resource_download) {
 		this.is_resource_download = is_resource_download;
+	}
+
+	/**
+	 * @return the display_name
+	 */
+	public String getDisplay_name() {
+		return display_name;
+	}
+
+	/**
+	 * @param display_name the display_name to set
+	 */
+	public void setDisplay_name(String display_name) {
+		this.display_name = display_name;
 	}
 	
 }

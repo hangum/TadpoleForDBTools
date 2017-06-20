@@ -427,6 +427,22 @@ public class TadpoleSystem_UserDBQuery {
 	}
 	
 	/**
+	 * 자신이 공유 받은 디비만 복사한다.
+	 * 
+	 * @param userDAO
+	 * @return
+	 */
+	public static List<TadpoleUserDbRoleDAO> getUserSharedDB(UserDAO userDAO) throws TadpoleSQLManagerException, SQLException {
+		Map<String, Object> mapParam = new HashMap<String, Object>();
+		mapParam.put("user_seq", userDAO.getSeq());
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<TadpoleUserDbRoleDAO> listUserDB = sqlClient.queryForList("userSharedDB", mapParam);
+		
+		return listUserDB;
+	}
+	
+	/**
 	 * filter user DB
 	 * 
 	 * @param listUserDB
