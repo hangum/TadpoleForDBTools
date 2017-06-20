@@ -20,7 +20,6 @@ import com.hangum.tadpole.engine.query.dao.gateway.ExtensionDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExtensionDB;
 import com.hangum.tadpole.engine.utils.MakeJDBCConnectionStringUtil;
-import com.hangum.tadpole.session.manager.SessionManager;
 
 /**
  * gateway 
@@ -35,12 +34,13 @@ public class TDBGatewayManager {
 	/**
 	 * make gateway server
 	 * 
+	 * @param strUserID
 	 * @param userDB
 	 * @param isGateWayIDCheck
 	 * @return
 	 * @throws TadpoleSQLManagerException
 	 */
-	public static UserDBDAO makeGatewayServer(final UserDBDAO userDB, boolean isGateWayIDCheck) throws TadpoleSQLManagerException {
+	public static UserDBDAO makeGatewayServer(final String strUserID, final UserDBDAO userDB, boolean isGateWayIDCheck) throws TadpoleSQLManagerException {
 		List<ExtensionDBDAO> listExtensionInfo = new ArrayList<ExtensionDBDAO>();
 		try {
 			listExtensionInfo = TadpoleSystem_ExtensionDB.getExtensionInfo(getExtensionKey(userDB));
@@ -52,7 +52,7 @@ public class TDBGatewayManager {
 
 		// 사용자 id까지 검사하면.
 		if(isGateWayIDCheck) {
-			final String strUserID = SessionManager.getEMAIL();
+//			final String strUserID = SessionManager.getEMAIL();
 			boolean isFindUser = false;
 			for (ExtensionDBDAO extensionDAO : listExtensionInfo) {
 				if(strUserID.equals(extensionDAO.getId())) {

@@ -114,6 +114,9 @@ public class ResultSetComposite extends Composite {
 	/** 명령 완료 메시지 */
 	private static final String CMD_COMPLETE_MSG = CommonMessages.get().CommandCoompleted;
 	
+	/** 몇 행이 변경 되었습니다. 메시지 */
+	private static final String MSG_ROW_CHAGE = Messages.get().RowChangeCount;
+	
 	/** 쿼리를 배치실행했을때 수행 할 수 있는 SQL 수 */
 	private int BATCH_EXECUTE_SQL_LIMIT = 5;
 	
@@ -551,7 +554,11 @@ public class ResultSetComposite extends Composite {
 								TransactionManger.calledCommitOrRollback(reqQuery.getSql(), strUserEmail, getUserDB());
 							}
 						} else {
-							ExecuteOtherSQL.runPermissionSQLExecution(errMsg, reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
+							int intEfficeCnt = ExecuteOtherSQL.runPermissionSQLExecution(errMsg, reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
+							if(intEfficeCnt != -1) {
+								long longUseTime = System.currentTimeMillis() - reqResultDAO.getStartDateExecute().getTime();
+								reqResultDAO.setMesssage(String.format(MSG_ROW_CHAGE, intEfficeCnt, longUseTime));
+							}
 						}
 					}
 					
@@ -1045,7 +1052,8 @@ public class ResultSetComposite extends Composite {
 		for (QueryExecuteResultDTO queryExecuteResultDTO : listRSDao) {
 			sbMSG.append(queryExecuteResultDTO.getQueryMsg()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 		}
-		getRdbResultComposite().refreshErrorMessageView(reqQuery, null, sbMSG.toString());
+		getRdbResultComposite().refreshErrorMessageView(reqQuery, null, sbMSG.toString() + PublicTadpoleDefine.LINE_SEPARATOR + reqQuery.getResultDao().getMesssage());
+		
 		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 종료.
 		
 		if(reqQuery.isStatement()) {
@@ -1071,7 +1079,7 @@ public class ResultSetComposite extends Composite {
 				// explorer viewer를 리프레쉬하여 최신정보가 반영되게한다.
 				refreshExplorerView(getUserDB(), reqQuery);
 			} else {
-				getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText());
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText() + PublicTadpoleDefine.LINE_SEPARATOR + reqQuery.getResultDao().getMesssage());
 				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 			}
 			

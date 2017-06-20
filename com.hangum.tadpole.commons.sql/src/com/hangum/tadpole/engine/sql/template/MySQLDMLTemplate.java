@@ -22,7 +22,7 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	/**  
 	 * mysql 을 수행할때 preference에서 정의한 쿼리가 초과 되었을때 sub query를 수행합니다.
 	 */	
-	public static final String TMP_GET_PARTDATA = "SELECT tdb_a.* FROM (%s) tdb_a LIMIT %s,%s";
+	public static final String TMP_GET_PARTDATA = "SELECT tdb_a.* FROM (" + PublicTadpoleDefine.LINE_SEPARATOR + "%s" + PublicTadpoleDefine.LINE_SEPARATOR + ") tdb_a LIMIT %s,%s";
 	
 	/**
 	 * explain  
@@ -42,7 +42,7 @@ public class MySQLDMLTemplate extends AbstractDMLTemplate {
 	
 	/** table - mysql */
 	public static final String  TMP_CREATE_TABLE_STMT = "CREATE TABLE {#schema#}.sample_table ( " + PublicTadpoleDefine.LINE_SEPARATOR + 
-						 "	id INT(11) default NULL auto_increment, " + PublicTadpoleDefine.LINE_SEPARATOR +
+						 "	id INT(11) auto_increment, " + PublicTadpoleDefine.LINE_SEPARATOR +
 						 "	name char(60) default NULL, " + PublicTadpoleDefine.LINE_SEPARATOR +
 						 "	PRIMARY KEY (id) " + PublicTadpoleDefine.LINE_SEPARATOR +
 						");";

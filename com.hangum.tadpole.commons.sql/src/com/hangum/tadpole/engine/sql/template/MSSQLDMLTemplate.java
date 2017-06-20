@@ -24,8 +24,7 @@ public class MSSQLDMLTemplate extends AbstractDMLTemplate {
 	 * 
 	 * http://elenoa.tistory.com/384
 	 */	
-	public static final String TMP_GET_PARTDATA = "SELECT * FROM ( %s ) WHERE ROWNUM > %s AND ROWNUM <= %s ORDER BY ROWNUM";
-	
+	public static final String TMP_GET_PARTDATA = "SELECT * FROM ( " + PublicTadpoleDefine.LINE_SEPARATOR + "%s" + PublicTadpoleDefine.LINE_SEPARATOR + " ) WHERE ROWNUM > %s AND ROWNUM <= %s ORDER BY ROWNUM";
 	
 	public static final String TMP_EXPLAIN_EXTENDED = "SET SHOWPLAN_TEXT ";
 	

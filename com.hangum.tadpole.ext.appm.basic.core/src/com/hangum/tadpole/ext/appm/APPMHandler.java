@@ -9,7 +9,6 @@ import com.hangum.tadpole.ext.appm.core.IAPPM;
  * 	디비의 패스워드를 받아옵니다.
  *  서버의 정보는 {@code KABangDefine#CONFIG_FILE}의 설정을 따릅니다.
  * 	
- * 	example)	./appm_req UX 0704299270 10.13.40.14 10.12.16.11 STG dbsafer
  * </pre>
  * @author hangum
  *

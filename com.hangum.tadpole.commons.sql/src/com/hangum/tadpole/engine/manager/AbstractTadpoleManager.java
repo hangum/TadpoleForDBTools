@@ -47,7 +47,7 @@ public class AbstractTadpoleManager {
 				statement = conn.createStatement();
 				statement.execute(String.format("set names `%s`", strCharacterSetDatabase));
 			} catch (Exception e) {
-				logger.error("mysql connection initialize: " + e.getMessage());
+				logger.error("mysql connection initialize fail: " + e.getMessage());
 			} finally {
 				try { if(statement != null) statement.close(); } catch(Exception e) {}
 			}
