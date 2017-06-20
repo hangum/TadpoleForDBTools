@@ -19,7 +19,7 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  *
  */
 public class PostgreDMLTemplate extends MySQLDMLTemplate {
-	public static final String TMP_GET_PARTDATA = "SELECT tdb_a.* FROM (%s) tdb_a OFFSET %s LIMIT %s";
+	public static final String TMP_GET_PARTDATA = "SELECT tdb_a.* FROM (" + PublicTadpoleDefine.LINE_SEPARATOR + "%s" + PublicTadpoleDefine.LINE_SEPARATOR + ") tdb_a OFFSET %s LIMIT %s";
 
 	/** plan_table */	
 	public static final String TMP_EXPLAIN_EXTENDED = "EXPLAIN (ANALYZE on, VERBOSE on, COSTS on, BUFFERS on, TIMING on) ";

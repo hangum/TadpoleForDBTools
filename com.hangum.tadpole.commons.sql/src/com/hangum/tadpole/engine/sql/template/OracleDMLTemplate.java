@@ -23,7 +23,7 @@ public class OracleDMLTemplate extends MySQLDMLTemplate {
 	/* 참조 : http://devhome.tistory.com/22 */
 	public static final String TMP_GET_PARTDATA = "SELECT * FROM (	" +
 												 "    SELECT tdb__a.*, ROWNUM AS " + TDB_CUSTOME_COLUMN +
-												 "    FROM ( %s ) tdb__a " +
+												 "    FROM ( " + PublicTadpoleDefine.LINE_SEPARATOR + "%s" + PublicTadpoleDefine.LINE_SEPARATOR + " ) tdb__a " +
 												 " 	) WHERE " + TDB_CUSTOME_COLUMN + " > %s AND " + TDB_CUSTOME_COLUMN + " <= %s";
 	
 	/** table - oracle */
