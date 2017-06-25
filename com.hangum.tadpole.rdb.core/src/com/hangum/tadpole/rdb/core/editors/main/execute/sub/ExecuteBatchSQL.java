@@ -10,6 +10,8 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.execute.sub;
 
+import java.sql.BatchUpdateException;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
@@ -19,12 +21,14 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.utils.RequestQuery;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 
 /**
@@ -116,9 +120,34 @@ public class ExecuteBatchSQL {
 				}
 			}
 			statement.executeBatch();
+			
 		} catch(Exception e) {
+			String strErrMsg = PublicTadpoleDefine.LINE_SEPARATOR;
+			
+			if(e instanceof BatchUpdateException) {
+				BatchUpdateException batchException = (BatchUpdateException)e;
+
+				String[] strQuery = listQuery.toArray(new String[listQuery.size()]);
+				// 업데이트에서 실패한 쿼리를 찾는다.
+				int[] intUpdateCnts = batchException.getUpdateCounts();
+				for(int i=0; i<intUpdateCnts.length; i++) {
+					if(intUpdateCnts[i] < 0) {
+						strErrMsg += strQuery[i] + PublicTadpoleDefine.LINE_SEPARATOR;
+					}
+				}
+				
+				if(!"".equals(strErrMsg)) {
+					strErrMsg += Messages.get().BatchErrorMsg + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR;
+				}
+				
+				strErrMsg += CommonMessages.get().Error + PublicTadpoleDefine.LINE_SEPARATOR + batchException.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR;
+			} else {
+				strErrMsg = e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR;
+			}
+				 
 			logger.error("Execute batch update", e); //$NON-NLS-1$
-			throw e;
+			
+			throw new SQLException(strErrMsg, e);
 		} finally {
 			try { if(statement != null) statement.close();} catch(Exception e) {}
 
