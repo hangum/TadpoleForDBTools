@@ -1096,7 +1096,8 @@ public class ResultSetComposite extends Composite {
 								reqQuery.getQueryStatus().name(), //$NON-NLS-1$
 								reqQuery.getSqlDDLType().name(),
 								reqQuery.getSqlObjectName(),
-								reqQuery.getSql());
+								reqQuery.getOriginalSql()
+							);
 					} catch(Exception e) {
 						logger.error("save schemahistory", e); //$NON-NLS-1$
 					}
