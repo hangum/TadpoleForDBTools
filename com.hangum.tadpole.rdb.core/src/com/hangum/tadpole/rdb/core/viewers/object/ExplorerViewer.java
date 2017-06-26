@@ -49,6 +49,7 @@ import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.InitializeDB;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
@@ -76,6 +77,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * object explorer viewer
@@ -466,6 +468,8 @@ public class ExplorerViewer extends ViewPart {
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
 		}else{
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
 		}

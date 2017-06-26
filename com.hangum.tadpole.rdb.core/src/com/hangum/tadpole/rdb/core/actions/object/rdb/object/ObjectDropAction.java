@@ -359,7 +359,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 			if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_36)) {
 				try {
 					if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
-						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger() + " on " + triggerDAO.getTable_name()); //$NON-NLS-1$
+						executeSQL(userDB, "drop trigger " + triggerDAO.getTrigger()); //$NON-NLS-1$
 					} else {
 						executeSQL(userDB, "drop trigger " + triggerDAO.getFullName()); //$NON-NLS-1$
 					}
