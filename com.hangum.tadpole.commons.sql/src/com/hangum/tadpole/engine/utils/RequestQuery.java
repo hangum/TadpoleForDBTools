@@ -151,7 +151,7 @@ public class RequestQuery implements Cloneable {
 				sqlDMLType = QUERY_DML_TYPE.DELETE;
 			}
 		} catch (Throwable e) {
-			logger.error(String.format("sql parse exception. [ %s ]", sql));
+			logger.error(String.format("sql parse exception. [ %s ][%s]", sql, e.getMessage()));
 		}
 		
 		if(sqlDMLType.equals(QUERY_DML_TYPE.UNKNOWN)) {
