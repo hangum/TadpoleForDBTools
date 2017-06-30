@@ -68,6 +68,7 @@ public class DialogUtil {
 			map = objectSelector.getSelectObject();
 		}else{
 			map.put("OBJECT_TYPE", "TABLE"); 
+			map.put("OBJECT_OWNER", paramMap.get("OBJECT_OWNER")); 
 			map.put("OBJECT_NAME", paramMap.get("OBJECT_NAME")); 
 		}
 
