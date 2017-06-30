@@ -1177,5 +1177,13 @@ public class ExplorerViewer extends ViewPart {
 	@Override
 	public void setFocus() {
 	}
+	
+	/**
+	 * 현재 선택된 탭
+	 * @return
+	 */
+	public CTabFolder getTabFolderObject() {
+		return tabFolderObject;
+	};
 
 }
