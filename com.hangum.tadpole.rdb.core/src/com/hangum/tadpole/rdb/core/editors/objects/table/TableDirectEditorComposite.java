@@ -306,6 +306,9 @@ public class TableDirectEditorComposite extends Composite {
 			}
 		});
 		btnDdlSourceView.setText(Messages.get().TableDirectEditorComposite_btnDdlSourceView_text);
+		if (DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) { 
+			btnDdlSourceView.setEnabled(false);
+		}
 		
 		initBusiness();
 		

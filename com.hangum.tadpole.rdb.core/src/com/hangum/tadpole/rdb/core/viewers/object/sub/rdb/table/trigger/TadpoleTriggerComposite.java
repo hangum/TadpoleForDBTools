@@ -157,8 +157,10 @@ public class TadpoleTriggerComposite extends AbstractObjectComposite {
 			}
 		}
 		menuMgr.add(refreshAction_Trigger);
-		menuMgr.add(new Separator());
-		menuMgr.add(viewDDLAction);
+		if (DBGroupDefine.ALTIBASE_GROUP != userDB.getDBGroup()) { 
+			menuMgr.add(new Separator());
+			menuMgr.add(viewDDLAction);
+		}
 		if (DBGroupDefine.ORACLE_GROUP == getUserDB().getDBGroup()){
 			menuMgr.add(new Separator());
 			menuMgr.add(objectCompileAction);
