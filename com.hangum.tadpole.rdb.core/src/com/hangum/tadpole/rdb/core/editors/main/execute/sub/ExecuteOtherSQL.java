@@ -113,19 +113,20 @@ public class ExecuteOtherSQL {
 			PreparedStatement preparedStatement = null;
 			try {
 				if(reqQuery.isAutoCommit()) {
-//					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 					javaConn = TadpoleSQLManager.getConnection(userDB);
 				} else {
 					javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
 				}
 				
 				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
-				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
-					final String checkSQL = reqQuery.getSql().trim().toUpperCase();
-					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
-						reqQuery.setSql(StringUtils.replaceOnce(reqQuery.getSql(), "(", " (")); //$NON-NLS-1$ //$NON-NLS-2$
-					}
-				}
+//				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+//					final String checkSQL = reqQuery.getSql().trim().toUpperCase();
+//					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
+//						String strTmpCreateStmt = StringUtils.replaceOnce(reqQuery.getSql(), "(", " (");  //$NON-NLS-1$ //$NON-NLS-2$
+//						
+//						reqQuery.setSql(strTmpCreateStmt);
+//					}
+//				}
 				
 				if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
 					statement = javaConn.createStatement();
