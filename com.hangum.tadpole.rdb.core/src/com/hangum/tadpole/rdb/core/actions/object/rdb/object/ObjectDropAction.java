@@ -202,7 +202,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 							executeSQL(userDB, "drop index " + indexDAO.getSysName() + " on " + SQLUtil.makeIdentifierName(userDB, indexDAO.getSchema_name()) + "." + SQLUtil.makeIdentifierName(userDB, indexDAO.getTABLE_NAME()) ); //$NON-NLS-1$ //$NON-NLS-2$
 						} else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
-							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME() + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
+							executeSQL(userDB, "drop index " + indexDAO.getINDEX_NAME());// + " on " + indexDAO.getTABLE_NAME()); //$NON-NLS-1$ //$NON-NLS-2$
 						} else {
 							executeSQL(userDB, "drop index " + indexDAO.getFullName() + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
