@@ -137,10 +137,10 @@ public class ExecuteBatchSQL {
 				}
 				
 				if(!"".equals(strErrMsg)) {
-					strErrMsg += Messages.get().BatchErrorMsg + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR;
+					strErrMsg += " was not carried out. (Data not displayed was performed.) " + PublicTadpoleDefine.DOUBLE_LINE_SEPARATOR;
 				}
 				
-				strErrMsg += CommonMessages.get().Error + PublicTadpoleDefine.LINE_SEPARATOR + batchException.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR;
+				strErrMsg += "[Error]" + PublicTadpoleDefine.LINE_SEPARATOR + batchException.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR;
 			} else {
 				strErrMsg = e.getMessage() + PublicTadpoleDefine.LINE_SEPARATOR;
 			}
