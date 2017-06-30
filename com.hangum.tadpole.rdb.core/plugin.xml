@@ -144,12 +144,6 @@
             </enablement>
          </action>
         
-         <visibility>
-            <objectState
-                  name="user_type"
-                  value="admin,dba,manager">
-            </objectState>
-         </visibility>
       </objectContribution>
             <objectContribution
             adaptable="false"
