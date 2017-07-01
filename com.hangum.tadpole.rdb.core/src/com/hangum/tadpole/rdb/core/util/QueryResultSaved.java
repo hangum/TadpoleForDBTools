@@ -65,7 +65,7 @@ public class QueryResultSaved {
 	 */
 	public static String getQueryResultPath(ExecutedSqlResourceDAO dao, String fileName) {
 		try {
-			UserDAO userDao = TadpoleSystem_UserQuery.getUser(dao.getDb_seq());
+			UserDAO userDao = TadpoleSystem_UserQuery.getUser(dao.getUser_seq());
 			
 			String filefullPath = getDownloadPath(userDao.getEmail()) + fileName + ".csv";
 			return filefullPath;

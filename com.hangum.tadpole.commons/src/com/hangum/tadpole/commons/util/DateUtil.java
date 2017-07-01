@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2017 hangum.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v2.1
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     hangum - initial API and implementation
+ ******************************************************************************/
 package com.hangum.tadpole.commons.util;
 
 import java.text.ParseException;
@@ -32,7 +42,7 @@ public class DateUtil {
 	 */
 	public static String getYearMonth() {
 		Calendar _cal = Calendar.getInstance();
-		return _cal.get(Calendar.YEAR) + "" + StringUtils.leftPad(""+_cal.get(Calendar.MONTH), 2, "0"); 
+		return _cal.get(Calendar.YEAR) + "" + StringUtils.leftPad(""+(_cal.get(Calendar.MONTH) + 1), 2, "0"); 
 	}
 	
 	/**
