@@ -39,9 +39,10 @@ public class AllDataExporter {
 	 */
 	public static String makeExcelAllResult(UserDBDAO userDB, String strSQL, String fileName, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeDirName(fileName) + fileName + "." + "xlsx";
-		
+		/** 한번에 다운로드 받을 것인지 여부 */
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 
@@ -72,9 +73,11 @@ public class AllDataExporter {
 	public static String makeCSVAllResult(UserDBDAO userDB, String strSQL, boolean isAddHead, String fileName, char seprator, String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		boolean isFirst = true;
 		String strFullPath = AbstractTDBExporter.makeFileName(fileName, "csv");
+		/** 한번에 다운로드 받을 것인지 여부 */
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 				if(isFirst) {
@@ -106,9 +109,10 @@ public class AllDataExporter {
 	public static String makeHTMLAllResult(UserDBDAO userDB, String strSQL, String fileName, String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		boolean isFirst = true;
 		String strFullPath = AbstractTDBExporter.makeFileName(fileName, "html");
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 				if(isFirst) {
@@ -175,8 +179,10 @@ public class AllDataExporter {
 	 */
 	private static QueryExecuteResultDTO makeAllResult(UserDBDAO userDB, String strSQL, int intMaxCount) throws Exception {
 		QueryExecuteResultDTO allResultDto = null; 
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
+		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO partResultDto = sqlUtil.nextQuery();
 				if(allResultDto == null) {
@@ -202,9 +208,10 @@ public class AllDataExporter {
 	public static String makeFileBatchInsertStatment(UserDBDAO userDB, String strSQL, String targetName, int commit,
 			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -222,9 +229,10 @@ public class AllDataExporter {
 	public static String makeFileInsertStatment(UserDBDAO userDB, String strSQL, String targetName, int commit,
 			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -242,9 +250,10 @@ public class AllDataExporter {
 	public static String makeFileUpdateStatment(UserDBDAO userDB, String strSQL, String targetName, List<String> listWhere, int commit,
 			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					
@@ -263,9 +272,10 @@ public class AllDataExporter {
 	public static String makeFileMergeStatment(UserDBDAO userDB, String strSQL, String targetName, List<String> listWhere, int commit,
 			String encoding, String strDefaultNullValue, int intMaxCount) throws Exception {
 		String strFullPath = AbstractTDBExporter.makeFileName(targetName, "sql");
+		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, true, intMaxCount);
+			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
 			while(sqlUtil.hasNext()) {
 				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
 					

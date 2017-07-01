@@ -86,10 +86,9 @@ public class ResultSetDownloadDialog extends Dialog {
 	/** 다운로드 실행시에 사용할 쿼리 지정 */
 	private String exeSQL = "";
 
-	// define max download limit
+	/** define max download limit */
 	final int intMaxDownloadCnt = Integer.parseInt(GetAdminPreference.getQueryResultDownloadLimit());
-	
-	
+
 	/** button status */
 	public enum BTN_STATUS {PREVIEW, SENDEDITOR, DOWNLOAD};
 	public BTN_STATUS btnStatus = BTN_STATUS.PREVIEW;
