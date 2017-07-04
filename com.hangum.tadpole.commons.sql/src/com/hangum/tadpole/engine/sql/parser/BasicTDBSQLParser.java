@@ -37,7 +37,7 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	private static final Logger logger = Logger.getLogger(BasicTDBSQLParser.class);
 	
 	/** base statement pattern */
-	protected static final String REGEXP_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*|^DECLARE.*";
+	protected static final String REGEXP_STATEMENT = "^SELECT.*|^EXPLAIN.*|^SHOW.*|^DESCRIBE.*|^DESC.*|^CHECK.*|^PRAGMA.*|^WITH.*|^OPTIMIZE.*|^DECLARE.*|^FETCH.*";
 	
 	private static final String MSSQL_PATTERN_STATEMENT = "|^SP_HELP.*|^EXEC.*";
 	private static final String ORACLE_PATTERN_STATEMENT = "";
