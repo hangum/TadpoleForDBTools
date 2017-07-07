@@ -52,7 +52,17 @@ public class AbstractTadpoleManager {
 				} finally {
 					try { if(statement != null) statement.close(); } catch(Exception e) {}
 				}
-			}	// if("".equals(userDB.getLocale()) {
+			} else if(!"none".equals(userDB.getLocale())) {
+				Statement statement = null;
+				try {
+					statement = conn.createStatement();
+					statement.execute(String.format("set names `%s`", userDB.getLocale()));
+				} catch (Exception e) {
+					logger.error("mysql connection initialize fail: " + e.getMessage());
+				} finally {
+					try { if(statement != null) statement.close(); } catch(Exception e) {}
+				}
+			}
 		}
 
 	}
