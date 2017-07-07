@@ -40,7 +40,7 @@ public class AbstractTadpoleManager {
 		if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
 			// show variables like 'character_set_database' 에서  값을 가져와서 
 			// set names 의 값을 설정해준다.
-			if("".equals(userDB.getLocale())) {
+			if("".equals(userDB.getLocale()) || "none".equals(userDB.getLocale()) || null == userDB.getLocale()) {
 				String strCharacterSetDatabase = InitializeDB.dbCharacterSetDatabase(userDB);
 				
 				Statement statement = null;
