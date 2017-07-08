@@ -46,6 +46,19 @@ public class DateUtil {
 	}
 	
 	/**
+	 * 현재 년월을 리턴합니다.
+	 * 
+	 * @param longTimeMills
+	 * @return
+	 */
+	public static String getYearMonth(long longTimeMills) {
+		Calendar _cal = Calendar.getInstance();
+		_cal.setTimeInMillis(longTimeMills);
+		return _cal.get(Calendar.YEAR) + "" + StringUtils.leftPad(""+(_cal.get(Calendar.MONTH) + 1), 2, "0"); 
+	}
+
+	
+	/**
 	 * 몇개월 후
 	 * 
 	 * @param month

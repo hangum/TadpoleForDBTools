@@ -26,6 +26,7 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
@@ -128,19 +129,24 @@ public class ExecuteOtherSQL {
 //					}
 //				}
 				
+				final String strSQL = SQLConvertCharUtil.toServer(userDB, reqQuery.getSql());
 				if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
 					statement = javaConn.createStatement();
 					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
 					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
-						statement.execute(reqQuery.getSql());
+						statement.execute(strSQL);
 					} else {
-						intEChangeCnt = statement.executeUpdate(reqQuery.getSql());
+						intEChangeCnt = statement.executeUpdate(strSQL);
 					}
 				} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
-					preparedStatement = javaConn.prepareStatement(reqQuery.getSql());
+					preparedStatement = javaConn.prepareStatement(strSQL);
 					final Object[] statementParameter = reqQuery.getStatementParameter();
 					for (int i=1; i<=statementParameter.length; i++) {
-						preparedStatement.setObject(i, statementParameter[i-1]);			
+						if(statementParameter[i-1] instanceof String) {
+							preparedStatement.setObject(i, SQLConvertCharUtil.toServer(userDB, ""+ statementParameter[i-1]));
+						} else {
+							preparedStatement.setObject(i, statementParameter[i-1]);
+						}
 					}
 					
 					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum

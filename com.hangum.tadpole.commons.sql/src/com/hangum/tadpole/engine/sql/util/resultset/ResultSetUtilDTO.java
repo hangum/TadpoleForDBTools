@@ -131,7 +131,7 @@ public class ResultSetUtilDTO {
 			if(isShowRownum && (columnName.size() == 1)) {
 				dataList = new TadpoleResultSet();
 			} else {
-				dataList = ResultSetUtils.getResultToList(isShowRownum, rs, limitCount, intLastIndex);
+				dataList = ResultSetUtils.getResultToList(userDB, isShowRownum, rs, limitCount, intLastIndex);
 			}
 			
 //			columnMetaData = ResultSetUtils.getColumnTableColumnName(userDB, rs.getMetaData());

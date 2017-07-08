@@ -20,10 +20,12 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
+import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 
 /**
  * ResultSet utils
@@ -37,20 +39,20 @@ public class ResultSetUtils {
 	/**
 	 * ResultSet to List
 	 * 
+	 * @param userDB
 	 * @param rs
 	 * @param limitCount
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(final ResultSet rs, final int limitCount) throws SQLException {
-		return getResultToList(false, rs, limitCount, 0);
+	public static TadpoleResultSet getResultToList(final UserDBDAO userDB, final ResultSet rs, final int limitCount) throws SQLException {
+		return getResultToList(userDB, false, rs, limitCount, 0);
 	}
 	
 	/**
 	 * ResultSet to List
 	 * 
-	 * 
-	 * 
+	 * @param userDB
 	 * @param isShowRowNum 첫번째 컬럼의 로우 넘버를 추가할 것인지.
 	 * @param rs ResultSet
 	 * @param limitCount 
@@ -58,7 +60,7 @@ public class ResultSetUtils {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static TadpoleResultSet getResultToList(boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex) throws SQLException {
+	public static TadpoleResultSet getResultToList(final UserDBDAO userDB, final boolean isShowRowNum, final ResultSet rs, final int limitCount, int intLastIndex) throws SQLException {
 		TadpoleResultSet returnRS = new TadpoleResultSet();
 		Map<Integer, Object> tmpRow = null;
 		
@@ -89,11 +91,12 @@ public class ResultSetUtils {
 							char[] cbuf = new char[10];							 
 							while ((cnum = is.read(cbuf)) != -1) sb.append(cbuf, 0 ,cnum);
 						} // if
-						tmpRow.put(intShowColIndex, sb.toString());
+
+						tmpRow.put(intShowColIndex, SQLConvertCharUtil.toClient(userDB, sb.toString()));
 					} else if(java.sql.Types.BLOB == colType || java.sql.Types.STRUCT == colType) {
 						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
 					}else{
-						tmpRow.put(intShowColIndex, rs.getString(intColIndex));
+						tmpRow.put(intShowColIndex, SQLConvertCharUtil.toClient(userDB, rs.getString(intColIndex)));
 					}
 				} catch(Exception e) {
 					logger.error("ResutSet fetch error", e); //$NON-NLS-1$

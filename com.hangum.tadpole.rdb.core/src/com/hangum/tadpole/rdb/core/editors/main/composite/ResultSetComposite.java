@@ -72,6 +72,7 @@ import com.hangum.tadpole.engine.sql.util.ObjectCompileUtil;
 import com.hangum.tadpole.engine.sql.util.OracleDbmsOutputUtil;
 import com.hangum.tadpole.engine.sql.util.PartQueryUtil;
 import com.hangum.tadpole.engine.sql.util.QueryUtils;
+import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
@@ -860,7 +861,12 @@ public class ResultSetComposite extends Composite {
 			@Override
 			public ResultSet call() throws SQLException {
 				for (int i=1; i<=statementParameter.length; i++) {
-					preparedStatement.setObject(i, statementParameter[i-1]);			
+					if(statementParameter[i-1] instanceof String) {
+						preparedStatement.setObject(i, SQLConvertCharUtil.toServer(getUserDB(), ""+statementParameter[i-1]));	
+					} else {
+						preparedStatement.setObject(i, statementParameter[i-1]);
+					}
+								
 				}
 				return preparedStatement.executeQuery();
 			}
@@ -889,14 +895,14 @@ public class ResultSetComposite extends Composite {
 					try {
 						dbmsOutput = new OracleDbmsOutputUtil( statement.getConnection() );
 						dbmsOutput.enable( 1000000 ); 
-						statement.execute(strSQL);
+						statement.execute(SQLConvertCharUtil.toServer(getUserDB(), strSQL));
 						dbmsOutput.show();
 						tadpole_system_message = dbmsOutput.getOutput();
 					}finally {
 						try {if(dbmsOutput!=null)dbmsOutput.close();} catch (SQLException e) {}
 					}
 				} else {
-					statement.execute(strSQL);
+					statement.execute(SQLConvertCharUtil.toServer(getUserDB(), strSQL));
 				}
 				
 				return statement.getResultSet();

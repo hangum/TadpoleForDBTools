@@ -106,14 +106,13 @@ public class ExecuteDDLCommand {
 				if (DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
 					dbmsOutput = new OracleDbmsOutputUtil( javaConn );
 					dbmsOutput.enable( 1000000 ); 
-					resultMap.put("result", stmt.execute(strSQL));
+					resultMap.put("result", stmt.execute(SQLConvertCharUtil.toServer(userDB, strSQL)));
 					dbmsOutput.show();
 					resultMap.put("dbms_output", dbmsOutput.getOutput());
 				}else{
-					resultMap.put("result", stmt.execute(strSQL));
+					resultMap.put("result", stmt.execute(SQLConvertCharUtil.toServer(userDB, strSQL)));
 					resultMap.put("dbms_output", "");
 				}
-				
 				
 			} finally {
 				TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), userDB,

@@ -179,7 +179,7 @@ public class ExecuteQueryPlan {
 					// pstmt를 닫기전에 데이터가 추가로 있으면 기존 자료에 덧붙인다.
 					TadpoleResultSet dataList = rsDAO.getDataList();
 					while (pstmt.getMoreResults()) {
-						dataList.appendList(ResultSetUtils.getResultToList(true, pstmt.getResultSet() , 1000, 0));
+						dataList.appendList(ResultSetUtils.getResultToList(userDB, true, pstmt.getResultSet() , 1000, 0));
 					}
 					rsDAO.setDataList(dataList);
 				}catch(Exception e){

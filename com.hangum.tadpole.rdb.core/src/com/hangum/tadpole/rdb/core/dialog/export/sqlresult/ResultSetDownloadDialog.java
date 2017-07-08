@@ -45,6 +45,7 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
+import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.sql.util.export.AllDataExporter;
 import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
 import com.hangum.tadpole.engine.sql.util.export.HTMLExporter;
@@ -132,6 +133,8 @@ public class ResultSetDownloadDialog extends Dialog {
 		} else {
 			exeSQL = requestQuery.getSql();
 		}
+		
+		exeSQL = SQLConvertCharUtil.toServer(queryExecuteResultDTO.getUserDB(), exeSQL);
 	}
 	
 	@Override
@@ -369,7 +372,6 @@ public class ResultSetDownloadDialog extends Dialog {
 			String strFullPath = AllDataExporter.makeExcelAllResult(queryExecuteResultDTO.getUserDB(), exeSQL, targetName, intMaxDownloadCnt);
 			downloadFile(targetName, strFullPath, "UTF-8");
 		}
-		
 	}
 	
 	/**

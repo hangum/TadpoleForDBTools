@@ -154,14 +154,16 @@ public abstract class ProcedureExecutor {
 	/**
 	 * 프로시저 결과가 cursor일때 결과를 담아줍니다.
 	 * 
+	 * @param @author hangum
+	 * @param reqQuery
 	 * @param rs
 	 * @throws Exception
 	 */
-	protected void setResultCursor(String reqQuery, ResultSet rs) throws Exception {
+	protected void setResultCursor(UserDBDAO userDB, String reqQuery, ResultSet rs) throws Exception {
 		Map<Integer, String> mapColumns = ResultSetUtils.getColumnName(rs);
 		Map<Integer, String> mapTableColum = ResultSetUtils.getColumnTableName(userDB, rs);
 		Map<Integer, Integer> mapColumnType = ResultSetUtils.getColumnType(rs.getMetaData()); 
-		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(rs, 1000);
+		TadpoleResultSet sourceDataList = ResultSetUtils.getResultToList(userDB, rs, 1000);
 
 		ResultSetUtilDTO resultSet = new ResultSetUtilDTO(
 //				PublicTadpoleDefine.SQL_STATEMENTS_TYPE.PROCEDURE, 
