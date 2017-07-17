@@ -60,6 +60,7 @@ public class MessageComposite extends Composite {
 		setLayout(gridLayout);
 		
 		textMessage = new Text(this, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMessage.setFont(SWTResourceManager.getFont("Courier", 12, SWT.NONE));
 		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		compositeTail = new Composite(this, SWT.NONE);
