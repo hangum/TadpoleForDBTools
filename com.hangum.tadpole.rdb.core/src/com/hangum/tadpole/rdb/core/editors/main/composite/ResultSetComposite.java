@@ -412,6 +412,7 @@ public class ResultSetComposite extends Composite {
 		
 		/** 쿼리 */
 		final List<String> listStrSQL = new ArrayList<String>();
+		final List<String> listStrExecuteQuery = new ArrayList<String>();
 		/** 쿼리 결과 */
 		final List<QueryExecuteResultDTO> listRSDao = new ArrayList<>();
 		
@@ -448,7 +449,6 @@ public class ResultSetComposite extends Composite {
 				
 				try {
 					if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
-						List<String> listStrExecuteQuery = new ArrayList<String>();
 						for (String strSQL : reqQuery.getSql().split(PublicTadpoleDefine.SQL_DELIMITER)) {
 							String strExeSQL = SQLUtil.makeExecutableSQL(tmpUserDB, strSQL);
 							
@@ -666,7 +666,7 @@ public class ResultSetComposite extends Composite {
 						
 						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
 						if(jobEvent.getResult().isOK()) {
-							executeFinish(reqQuery, listRSDao, listLongHistorySeq);
+							executeFinish(reqQuery, listRSDao, listLongHistorySeq, listStrExecuteQuery);
 						} else {
 							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
 							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
@@ -1051,65 +1051,107 @@ public class ResultSetComposite extends Composite {
 	 * @param reqQuery
 	 * @param listRSDao
 	 * @param listLongHistorySeq
+	 * @param listStrExecuteQuery
 	 */
-	public void executeFinish(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao, List<Long> listLongHistorySeq) {
-		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 시작.
+	public void executeFinish(final RequestQuery reqQuery, final List<QueryExecuteResultDTO> listRSDao, List<Long> listLongHistorySeq, List<String> listStrExecuteQuery) {
+		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. (오라클 시스템 메시지 등)
 		StringBuffer sbMSG = new StringBuffer();
 		for (QueryExecuteResultDTO queryExecuteResultDTO : listRSDao) {
 			sbMSG.append(queryExecuteResultDTO.getQueryMsg()).append(PublicTadpoleDefine.LINE_SEPARATOR);
 		}
-		getRdbResultComposite().refreshErrorMessageView(reqQuery, null, sbMSG.toString() + PublicTadpoleDefine.LINE_SEPARATOR + reqQuery.getResultDao().getMesssage());
+		String _strBasicMsg = "".equals(sbMSG.toString())?"":sbMSG.toString();
 		
-		// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 종료.
-		
-		if(reqQuery.isStatement()) {
-			
-			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
-				getRdbResultComposite().setQueryPlanView(reqQuery, listRSDao.get(0), listLongHistorySeq.get(0));
-				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.QUERY_PLAN);
-			} else {	// table data를 생성한다.
-				changeResultType(reqQuery, listRSDao, listLongHistorySeq);
-			}
-		} else {
-			
-			if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
-				String strDefaultMsg = Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText();
+		// 모든 쿼리 실행 했을 경우 
+		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
+			if(!listStrExecuteQuery.isEmpty()) {
+				String strDefaultMsg = Messages.get().ResultSetComposite_10 + reqQuery.getOriginalSql();
 				String retMsg = ObjectCompileUtil.validateObject(getUserDB(), reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
 				if(!"".equals(retMsg)) { //$NON-NLS-1$
 					strDefaultMsg = Messages.get().ObjectEditor_7 + retMsg;
 				}
 				
-				getRdbResultComposite().refreshInfoMessageView(reqQuery, strDefaultMsg);
+				getRdbResultComposite().refreshInfoMessageView(reqQuery, _strBasicMsg + strDefaultMsg);
 				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 				
 				// explorer viewer를 리프레쉬하여 최신정보가 반영되게한다.
 				refreshExplorerView(getUserDB(), reqQuery);
-			} else {
-				getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getStrSQLText() + PublicTadpoleDefine.LINE_SEPARATOR + reqQuery.getResultDao().getMesssage());
-				getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
-			}
-			
-			LicenseDAO licenseDAO = LicenseValidator.getLicense();
-			if(licenseDAO.isEnterprise()) {
-				if(reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE ||
-						reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
-						reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
-				) {
-					// working schema_history 에 history 를 남깁니다.
-					try {
-						TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
-								getUserDB(),
-								reqQuery.getQueryStatus().name(), //$NON-NLS-1$
-								reqQuery.getSqlDDLType().name(),
-								reqQuery.getSqlObjectName(),
-								reqQuery.getOriginalSql()
-							);
-					} catch(Exception e) {
-						logger.error("save schemahistory", e); //$NON-NLS-1$
-					}
+				
+				// ddl history 를 기록한다.
+				for (String strQuery : listStrExecuteQuery) {
+					RequestQuery _rq = new RequestQuery(getUserDB(), strQuery, reqQuery.getDbAction(), EditorDefine.QUERY_MODE.QUERY, reqQuery.getExecuteType(), false);
+					saveSchemaHistory(_rq);
 				}
-			}	// 정식 라이선스만 저장.
+			}
+			if(!listRSDao.isEmpty()) changeResultType(reqQuery, listRSDao, listLongHistorySeq);
+			
+//		// 하나의 쿼리만 수행
+		} else {
+			
+			// 결과에 메시지가 있으면 시스템 메시지에 결과 메시지를 출력한다. 종료.
+			if(reqQuery.isStatement()) {
+				getRdbResultComposite().refreshErrorMessageView(reqQuery, null, _strBasicMsg);
+				
+				if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
+					getRdbResultComposite().setQueryPlanView(reqQuery, listRSDao.get(0), listLongHistorySeq.get(0));
+					getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.QUERY_PLAN);
+				} else {	// table data를 생성한다.
+					if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
+						getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getMesssage() + PublicTadpoleDefine.LINE_SEPARATOR + _strBasicMsg  + StringUtils.abbreviate(reqQuery.getOriginalSql(), 200));
+						getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+						refreshExplorerView(getUserDB(), reqQuery);
+					}
+					if(!listRSDao.isEmpty()) changeResultType(reqQuery, listRSDao, listLongHistorySeq);
+				}
+			} else {
+				if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
+					String strDefaultMsg = Messages.get().ResultSetComposite_10 + reqQuery.getOriginalSql();
+					String retMsg = ObjectCompileUtil.validateObject(getUserDB(), reqQuery.getSqlDDLType(), reqQuery.getSqlObjectName());
+					if(!"".equals(retMsg)) { //$NON-NLS-1$
+						strDefaultMsg = Messages.get().ObjectEditor_7 + retMsg;
+					}
+					
+					getRdbResultComposite().refreshInfoMessageView(reqQuery, _strBasicMsg + strDefaultMsg);
+					getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+					
+					// explorer viewer를 리프레쉬하여 최신정보가 반영되게한다.
+					refreshExplorerView(getUserDB(), reqQuery);
+				} else {
+					getRdbResultComposite().refreshInfoMessageView(reqQuery, Messages.get().ResultSetComposite_10 + reqQuery.getResultDao().getMesssage() + PublicTadpoleDefine.LINE_SEPARATOR + _strBasicMsg  +  StringUtils.abbreviate(reqQuery.getOriginalSql(), 200));
+					getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+				}
+				
+				// save schema history
+				saveSchemaHistory(reqQuery);
+			} 	// end if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) {
 		}
+	}
+	
+	/**
+	 * save schema history
+	 * 
+	 * @param reqQuery
+	 */
+	private void saveSchemaHistory(final RequestQuery reqQuery) {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		if(licenseDAO.isValidate()) {
+			if(reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE ||
+					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
+					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER
+			) {
+				// working schema_history 에 history 를 남깁니다.
+				try {
+					TadpoleSystem_SchemaHistory.save(SessionManager.getUserSeq(), 
+							getUserDB(),
+							reqQuery.getQueryStatus().name(), //$NON-NLS-1$
+							reqQuery.getSqlDDLType().name(),
+							reqQuery.getSqlObjectName(),
+							reqQuery.getOriginalSql()
+						);
+				} catch(Exception e) {
+					logger.error("save schemahistory", e); //$NON-NLS-1$
+				}
+			}
+		}	// 정식 라이선스만 저장.
 	}
 		
 	/**

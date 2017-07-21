@@ -173,7 +173,7 @@ public abstract class AbstractLoginDialog extends Dialog {
 	 * @param strReason
 	 */
 	protected void saveLoginHistory(int userSeq, String strIP, String strYesNO, String strReason) {
-		if(LicenseValidator.getLicense().isEnterprise()) {
+		if(LicenseValidator.getLicense().isValidate()) {
 			TadpoleSystem_UserQuery.saveLoginHistory(userSeq, strIP, strYesNO, strReason);
 		}
 	}

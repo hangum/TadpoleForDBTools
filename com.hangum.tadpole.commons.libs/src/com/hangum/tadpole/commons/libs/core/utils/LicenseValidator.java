@@ -37,7 +37,7 @@ public class LicenseValidator {
 		try {
 			LicenseDAO licenseDAO = getLicense();
 			if(!"".equals(licenseDAO.getCustomer())) {
-				return "Enterprise Ver. " + licenseDAO.getCustomer();
+				return "Enterprise Version. " + licenseDAO.getCustomer();
 			}
 		} catch(Exception e) {
 			logger.error("get licenseinfo", e);

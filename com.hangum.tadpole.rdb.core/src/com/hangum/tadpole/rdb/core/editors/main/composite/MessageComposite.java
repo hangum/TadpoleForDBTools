@@ -114,7 +114,7 @@ public class MessageComposite extends Composite {
 			strNewMessage += tadpoleMessageDAO.getStrMessage();
 			strSearchError = tadpoleMessageDAO.getStrMessage();
 			
-			textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
+			textMessage.setBackground(SWTResourceManager.getColor(255, 228, 225));
 		} else {
 			strNewMessage = Messages.get().ErrorMessage;
 			
