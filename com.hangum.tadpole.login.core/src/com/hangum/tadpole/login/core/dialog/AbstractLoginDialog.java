@@ -197,7 +197,6 @@ public abstract class AbstractLoginDialog extends Dialog {
 		
 	}
 
-	
 	/**
 	 * system message
 	 */

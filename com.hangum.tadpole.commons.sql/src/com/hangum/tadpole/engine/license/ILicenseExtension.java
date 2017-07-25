@@ -41,7 +41,7 @@ public interface ILicenseExtension {
 	/*
 	 * license validation
 	 */
-	public String getValidation();
+	public void getValidation();
 	
 	/**
 	 * is valid license
