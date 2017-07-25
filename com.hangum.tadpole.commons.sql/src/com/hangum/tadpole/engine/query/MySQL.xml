@@ -209,10 +209,8 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	    , index_schema
 	    , index_name
 	    , collation
-	    , cardinality
 	    , sub_part
 	    , packed
-	    , nullable
 	    , index_type
 	    , comment
 	FROM information_schema.statistics 
@@ -226,10 +224,8 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	    , index_schema
 	    , index_name
 	    , collation
-	    , cardinality
 	    , sub_part
 	    , packed
-	    , nullable
 	    , index_type
 	    , comment
 </select>
