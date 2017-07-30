@@ -92,9 +92,9 @@ public class OpenQueryEditorAction extends Action implements ISelectionListener,
 	/**
 	 * is select button enable
 	 */
-	private void isSelectEnable() {
+	protected void isSelectEnable() {
 		if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
-			if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {				
+			if(!(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup())) {				
 				setEnabled(true);
 			}
 		}

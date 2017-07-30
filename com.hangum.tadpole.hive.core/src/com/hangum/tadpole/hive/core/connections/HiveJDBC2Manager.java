@@ -15,13 +15,25 @@ import java.sql.DriverManager;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.surface.BasicDBInfo;
-
-public class HiveJDBC2Manager extends BasicDBInfo {
+public class HiveJDBC2Manager  {
 	private static final Logger logger = Logger.getLogger(HiveJDBC2Manager.class);
 	private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 	private static HiveJDBC2Manager instance = null;
+	
+	private HiveJDBC2Manager() {}
+	
+	public static HiveJDBC2Manager getInstance() {
+		if(instance == null) {
+			try {
+				Class.forName(driverName);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			instance = new HiveJDBC2Manager();
+		}
+		return instance;
+	}
 	
 	/**
 	 * java.sql.connection을 생성하고 관리합니다.
@@ -31,19 +43,8 @@ public class HiveJDBC2Manager extends BasicDBInfo {
 	 * @return
 	 * @throws Exception
 	 */
-	public Connection getInstance(final UserDBDAO userDB) throws Exception {
-		if(instance == null) {
-		  try {
-		      Class.forName(driverName);
-		    } catch (ClassNotFoundException e) {
-		      e.printStackTrace();
-		    }
-		  
-		  instance = new HiveJDBC2Manager();
-		}
-		java.sql.Connection javaConn = DriverManager.getConnection(userDB.getUrl(), userDB.getUsers(), userDB.getPasswd());
-			
-		return javaConn;
+	public Connection getConnection(final String strUrl, String strUser, String strPasswd) throws Exception {
+		return DriverManager.getConnection(strUrl, strUser, strPasswd);
 	}
 
 

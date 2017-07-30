@@ -31,6 +31,7 @@ public enum DBDefine {
 	TADPOLE_SYSTEM_MYSQL_DEFAULT,
 	
 	/** USER DB */
+	DYNAMODB_DEFAULT,
 	ORACLE_DEFAULT,
 	TIBERO_DEFAULT,
 	MSSQL_DEFAULT,
@@ -76,6 +77,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT: return prefix_system + "TadpoleSystem-SQLite-Config.xml";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
 			
+			case DYNAMODB_DEFAULT:		return prefix + "DynamoConfig.xml";
 			case ORACLE_DEFAULT:		return prefix + "OracleConfig.xml";
 			case TIBERO_DEFAULT:		return prefix + "TiberoConfig.xml";
 			case MSSQL_DEFAULT:			return prefix + "MSSQLConfig.xml";
@@ -109,6 +111,7 @@ public enum DBDefine {
 		if(type.equalsIgnoreCase("TadpoleSystem")) 		return TADPOLE_SYSTEM_DEFAULT;
 		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
 		
+		else if(type.equalsIgnoreCase("DynamoDB")) 		return DYNAMODB_DEFAULT;
 		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
 		else if(type.equalsIgnoreCase("Tibero")) 		return TIBERO_DEFAULT;
 		
@@ -170,6 +173,8 @@ public enum DBDefine {
 			case ALTIBASE_DEFAULT:   return "com.amazon.redshift.jdbc.Driver";
 			case AMAZON_REDSHIFT_DEFAULT : return "";
 			
+			case DYNAMODB_DEFAULT: return "com.simba.dynamodb.jdbc41.Driver";
+			
 			default:
 				return "undefine class";
 		}
@@ -186,6 +191,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT:		return "jdbc:sqlite:/%s";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
 			
+			case DYNAMODB_DEFAULT:	return "jdbc:dynamodb:Host=dynamodb.%s.amazonaws.com;Region=%s;AccessKey=%s;SecretKey=%s";
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
 			case TIBERO_DEFAULT:	return "jdbc:tibero:thin:@%s:%s:%s";
 			
@@ -229,6 +235,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT:		return "TadpoleSystem";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: 	return "TadpoleSystem_MYSQL";
 		
+			case DYNAMODB_DEFAULT: 		return "DynamoDB";
 			case ORACLE_DEFAULT:		return "Oracle";
 			case TIBERO_DEFAULT:		return "Tibero";
 			
@@ -428,19 +435,21 @@ public enum DBDefine {
 		supportDb.add(TAJO_DEFAULT);
 		
 		supportDb.add(CUBRID_DEFAULT);
-		
-		supportDb.add(MONGODB_DEFAULT);
-		
+		supportDb.add(DYNAMODB_DEFAULT);
+
 		supportDb.add(MARIADB_DEFAULT);
+		supportDb.add(MONGODB_DEFAULT);
+		supportDb.add(MSSQL_DEFAULT);
 		supportDb.add(MYSQL_DEFAULT);		
-		supportDb.add(MSSQL_DEFAULT);		
 		
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(TIBERO_DEFAULT);
+		
+		supportDb.add(AMAZON_REDSHIFT_DEFAULT);
 //		supportDb.add(AGENSGRAPH_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
+
 		supportDb.add(SQLite_DEFAULT);
-		supportDb.add(AMAZON_REDSHIFT_DEFAULT);
 		
 		return supportDb;
 	}

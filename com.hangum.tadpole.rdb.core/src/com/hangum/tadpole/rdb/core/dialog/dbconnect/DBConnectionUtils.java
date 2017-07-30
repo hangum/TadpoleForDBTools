@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSDynamoLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AgensLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AltibaseLoginComposite;
@@ -101,7 +102,9 @@ public class DBConnectionUtils {
 			loginComposite = new AltibaseLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
 			loginComposite = new RedShiftLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
-		}
+		} else if(dbDefine == DBDefine.DYNAMODB_DEFAULT) {
+			loginComposite = new AWSDynamoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
+		} 
 		
 		loginComposite.setDataActionStatus(dataStatus);
 		

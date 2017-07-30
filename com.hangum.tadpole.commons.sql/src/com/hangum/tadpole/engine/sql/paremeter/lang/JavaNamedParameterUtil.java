@@ -36,7 +36,7 @@ public class JavaNamedParameterUtil {
 	 */
 	public int calcParamCount(final UserDBDAO userDB, String executeQuery) throws Exception {
 		int paramCount = 0;
-
+	
 		java.sql.Connection javaConn = null;
 		PreparedStatement stmt = null;
 		try {

@@ -15,6 +15,9 @@ import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -90,7 +93,11 @@ public class SQLQueryUtil {
 		java.sql.Connection javaConn = null;
 		
 		try {
-			javaConn = TadpoleSQLManager.getConnection(userDB);
+			if(userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP) {
+				javaConn = TadpoleSQLExtManager.getInstance().getConnection(userDB);
+			} else {
+				javaConn = TadpoleSQLManager.getConnection(userDB);
+			}
 			
 			stmt = javaConn.prepareStatement(thisTimeQuery); 
 			rs = stmt.executeQuery();//Query( selText );

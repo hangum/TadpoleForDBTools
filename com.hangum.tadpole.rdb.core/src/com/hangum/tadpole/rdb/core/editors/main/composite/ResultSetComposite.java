@@ -58,8 +58,10 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATE
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -320,21 +322,22 @@ public class ResultSetComposite extends Composite {
 			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
 		}
 		
-		// java named parameter (오라클 디비의 경우는 :parameter도 변수 취급합니다.)
-		try {
-			JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
-			int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
-			if(paramCnt > 0) {
-		
-				ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.JAVA_BASIC, reqQuery, getUserDB(), reqQuery.getSql(), paramCnt);
-				epd.open();
-				listParameterDialog.add(epd);
-				return false;
+		if(DBGroupDefine.DYNAMODB_GROUP != getUserDB().getDBGroup()) {
+			// java named parameter (오라클 디비의 경우는 :parameter도 변수 취급합니다.)
+			try {
+				JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
+				int paramCnt = javaNamedParameterUtil.calcParamCount(getUserDB(), reqQuery.getSql());
+				if(paramCnt > 0) {
+			
+					ParameterDialog epd = new ParameterDialog(runShell, this, PublicTadpoleDefine.PARAMETER_TYPE.JAVA_BASIC, reqQuery, getUserDB(), reqQuery.getSql(), paramCnt);
+					epd.open();
+					listParameterDialog.add(epd);
+					return false;
+				}
+			} catch(Exception e) {
+				logger.error("Java style parameter parse", e); //$NON-NLS-1$
 			}
-		} catch(Exception e) {
-			logger.error("Java style parameter parse", e); //$NON-NLS-1$
 		}
-
 
 		// mybatis shap
 		GenericTokenParser mybatisShapeUtil = new GenericTokenParser("#{", "}");
@@ -406,6 +409,7 @@ public class ResultSetComposite extends Composite {
 		}
 		
 		// 프로그래스 상태와 쿼리 상태를 초기화한다.
+		getRdbResultComposite().resultFolderSel(EditorDefine.RESULT_TAB.RESULT_SET);
 		controlProgress(true);
 		
 		if(compositeResult != null) compositeResult.initUI();
@@ -744,6 +748,9 @@ public class ResultSetComposite extends Composite {
 		try {
 			if(DBGroupDefine.TAJO_GROUP == getUserDB().getDBGroup()) {
 				javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
+				
+			} else if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) {
+				javaConn = TadpoleSQLExtManager.getInstance().getConnection(getUserDB());
 			} else {
 				if(reqQuery.isAutoCommit()) {
 					javaConn = TadpoleSQLManager.getConnection(getUserDB());

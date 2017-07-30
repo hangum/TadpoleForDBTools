@@ -39,7 +39,9 @@ public enum DBGroupDefine {
 	/* cubrid */
 	CUBRID_GROUP,
 	/* altibase */
-	ALTIBASE_GROUP
+	ALTIBASE_GROUP, 
+	
+	DYNAMODB_GROUP
 	;
 	
 	private static final Logger logger = Logger.getLogger(DBGroupDefine.class);
@@ -63,6 +65,8 @@ public enum DBGroupDefine {
 			return TAJO_GROUP;
 		} else if(dbDefine == DBDefine.ALTIBASE_DEFAULT) {
 			return ALTIBASE_GROUP;
+		} else if(dbDefine == DBDefine.DYNAMODB_DEFAULT) {
+			return DYNAMODB_GROUP;
 		} else {
 			return MONGODB_GROUP;
 		}

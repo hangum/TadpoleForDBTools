@@ -20,8 +20,10 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
@@ -113,10 +115,14 @@ public class ExecuteOtherSQL {
 			Statement statement = null;
 			PreparedStatement preparedStatement = null;
 			try {
-				if(reqQuery.isAutoCommit()) {
-					javaConn = TadpoleSQLManager.getConnection(userDB);
+				if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+					javaConn = TadpoleSQLExtManager.getInstance().getConnection(userDB);
 				} else {
-					javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
+					if(reqQuery.isAutoCommit()) {
+						javaConn = TadpoleSQLManager.getConnection(userDB);
+					} else {
+						javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
+					}
 				}
 				
 				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.

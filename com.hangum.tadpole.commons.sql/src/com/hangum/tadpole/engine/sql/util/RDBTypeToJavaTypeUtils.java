@@ -68,6 +68,7 @@ public class RDBTypeToJavaTypeUtils {
 		mapTypes.put("BINARY", java.sql.Types.BINARY);
 		mapTypes.put("VARBINARY", java.sql.Types.VARBINARY);
 		mapTypes.put("NUMBER", java.sql.Types.DECIMAL);
+		mapTypes.put("LONG", java.sql.Types.LONGNVARCHAR);
 		mapTypes.put("SYS_REFCURSOR", -10);// OracleTypes.CURSOR);
 
 		// pgsql JSON type

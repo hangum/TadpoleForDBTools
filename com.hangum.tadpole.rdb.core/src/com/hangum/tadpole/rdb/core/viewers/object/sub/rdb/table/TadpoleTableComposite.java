@@ -435,7 +435,9 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				createIndexes();
 				createTrigger();
 			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() ||
-					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()
+			) {
 				// do not show them
 			} else {
 				createIndexes();
@@ -553,7 +555,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		final DBGroupDefine dbGroup = getUserDB().getDBGroup();
-		if(DBGroupDefine.HIVE_GROUP == dbGroup || DBGroupDefine.TAJO_GROUP == dbGroup) {
+		if(DBGroupDefine.HIVE_GROUP == dbGroup || DBGroupDefine.TAJO_GROUP == dbGroup ) {
 			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
 				
 				if(!isDDLLock()) {
@@ -566,6 +568,26 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			menuMgr.add(refreshAction_Table);
 			menuMgr.add(new Separator());
 			menuMgr.add(selectStmtAction);
+			
+		} else if(DBGroupDefine.DYNAMODB_GROUP == dbGroup) {
+			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+				
+				if(!isDDLLock()) {
+					menuMgr.add(creatAction_Table);
+					menuMgr.add(dropAction_Table);
+					menuMgr.add(new Separator());
+				}
+			}	
+			
+			menuMgr.add(refreshAction_Table);
+			menuMgr.add(new Separator());
+			menuMgr.add(selectStmtAction);
+			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+				if(!isInsertLock()) menuMgr.add(insertStmtAction);
+				if(!isUpdateLock()) menuMgr.add(updateStmtAction);
+				if(!isDeleteLock()) menuMgr.add(deleteStmtAction);
+			}
+			
 		// others rdb
 		} else {
 			menuMgr.add(refreshAction_Table);

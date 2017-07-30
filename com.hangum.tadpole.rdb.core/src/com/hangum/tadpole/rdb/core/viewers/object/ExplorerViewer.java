@@ -467,6 +467,9 @@ public class ExplorerViewer extends ViewPart {
 		
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
+		}else if(userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP) {
+			comboSchema.add(userDB.getDb());
+			comboSchema.setText(userDB.getDb());
 		}else{
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			
@@ -653,8 +656,6 @@ public class ExplorerViewer extends ViewPart {
 				createProcedure();
 				createFunction();
 				createTrigger();
-			
-				
 				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					agensGraphPathComposite.getTableviewer(),
@@ -699,8 +700,17 @@ public class ExplorerViewer extends ViewPart {
 					triggerComposite.getTableViewer()
 				};
 			}						
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));			
-		// mysql, postgre, mssql
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
+		} else if(DBDefine.DYNAMODB_DEFAULT == userDB.getDBDefine()) {
+			createTable();
+			arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer(), 
+					tableComposite.getTableColumnViewer()
+			};
+									
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
+			
+		// mysql, mssql
 		} else {
 			createTable();
 			createView();
@@ -721,6 +731,7 @@ public class ExplorerViewer extends ViewPart {
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
+		
 		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
 			refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
 		}else{
