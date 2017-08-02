@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -22,10 +23,11 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
+import com.hangum.tadpole.db.dynamodb.core.manager._KeyValueDAO;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
-import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -171,7 +173,16 @@ public class TadpoleObjectQuery {
 				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
 			}
 		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
-			showTables = TadpoleSQLExtManager.getInstance().tableList(userDB);
+			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
+			
+			showTables = new ArrayList<>();
+			for (Map map : listTables) {
+				TableDAO tableDao = new TableDAO(""+map.get("name"), ""+map.get("comment"));
+				tableDao.setTable_type(""+map.get("table_type"));
+				
+				showTables.add(tableDao);
+			}
+
 		} else {
 			
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
@@ -278,7 +289,19 @@ public class TadpoleObjectQuery {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
-			returnColumns = TadpoleSQLExtManager.getInstance().tableColumnList(userDB, mapParam);
+//			returnColumns = TadpoleSQLExtManager.getInstance().tableColumnList(userDB, mapParam);
+			List<_KeyValueDAO> listTables = DynamoDBManager.getInstance().getTableColumn(userDB.getUsers(), userDB.getPasswd(), userDB.getDb(), tableDao.getName());
+			
+			for(int i=0; i<listTables.size(); i++) {
+				_KeyValueDAO valObj = listTables.get(i);
+				
+	    		TableColumnDAO tcDAO = new TableColumnDAO();
+	    		tcDAO.setName(valObj.getName());
+	    		tcDAO.setType(valObj.getValue());
+	    		
+	    		returnColumns.add(tcDAO);
+	    	}
+			
 		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
 			try{
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

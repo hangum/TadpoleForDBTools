@@ -12,9 +12,11 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.amazonaws.eclipse.explorer.dynamodb.CreateTableWizard;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
@@ -38,7 +40,7 @@ import com.hangum.tadpole.rdb.core.actions.connections.CreateSequenceAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTableAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction;
 import com.hangum.tadpole.rdb.core.actions.connections.CreateViewAction;
-import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
+import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectAction;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTaableCreateDialog;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.MySQLTableColumnDialog;
 import com.hangum.tadpole.rdb.core.dialog.table.mysql.TableCreateDAO;
@@ -49,7 +51,7 @@ import com.hangum.tadpole.rdb.core.dialog.table.mysql.TableCreateDAO;
  * @author hangum
  *
  */
-public class ObjectCreatAction extends AbstractObjectSelectAction {
+public class ObjectCreatAction extends AbstractObjectAction {
 	/**
 	 * Logger for this class
 	 */
@@ -68,7 +70,17 @@ public class ObjectCreatAction extends AbstractObjectSelectAction {
 		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 			
 			// others db
-			if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
+			if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {				
+				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
+				if(Dialog.OK == ncd.open() ) {
+					refreshTable();
+				}
+			} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+				WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), new CreateTableWizard(userDB.getUsers(), userDB.getPasswd(), userDB.getDb()));
+				if(Dialog.OK == dialog.open() ) {
+					refreshTable();
+				}
+			} else {
 				
 				// sqlite db인 경우 해당 테이블의 creation문으로 생성합니다.
 				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
@@ -98,14 +110,7 @@ public class ObjectCreatAction extends AbstractObjectSelectAction {
 					CreateTableAction cta = new CreateTableAction();
 					cta.run(userDB, actionType);
 				}
-				
-			// moongodb
-			} else if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {				
-				NewCollectionDialog ncd = new NewCollectionDialog(Display.getCurrent().getActiveShell(), userDB);
-				if(Dialog.OK == ncd.open() ) {
-					refreshTable();
-				}
-			}
+			} 
 			
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 			CreateViewAction cva = new CreateViewAction();

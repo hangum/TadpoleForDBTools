@@ -576,17 +576,23 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					menuMgr.add(creatAction_Table);
 					menuMgr.add(dropAction_Table);
 					menuMgr.add(new Separator());
+					menuMgr.add(viewDDLAction);
+				}
+				
+				if(!(isInsertLock() || isUpdateLock() || isDeleteLock())) {
+					menuMgr.add(new Separator());
+					menuMgr.add(tableDataEditorAction);
 				}
 			}	
 			
 			menuMgr.add(refreshAction_Table);
 			menuMgr.add(new Separator());
 			menuMgr.add(selectStmtAction);
-			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
-				if(!isInsertLock()) menuMgr.add(insertStmtAction);
-				if(!isUpdateLock()) menuMgr.add(updateStmtAction);
-				if(!isDeleteLock()) menuMgr.add(deleteStmtAction);
-			}
+//			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
+//				if(!isInsertLock()) menuMgr.add(insertStmtAction);
+//				if(!isUpdateLock()) menuMgr.add(updateStmtAction);
+//				if(!isDeleteLock()) menuMgr.add(deleteStmtAction);
+//			}
 			
 		// others rdb
 		} else {

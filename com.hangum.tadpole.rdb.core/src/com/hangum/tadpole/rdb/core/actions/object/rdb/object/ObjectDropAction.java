@@ -22,6 +22,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mongodb.MongoDBIndexDAO;
@@ -79,7 +80,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 		if(actionType == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
 			TableDAO dao = (TableDAO)selection.getFirstElement();
 
-			if(DBGroupDefine.MONGODB_GROUP != userDB.getDBGroup()) {
+			if(!(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup() || DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup())) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_3)) {
 					for(Object selObjec : selection.toList()) {
 						TableDAO selTableDao = (TableDAO)selObjec;
@@ -100,7 +101,16 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 
 					refreshTable();
 				}
-
+			} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+				if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_3)) {
+					try {
+						DynamoDBManager.getInstance().dropTable(userDB.getUsers(), userDB.getPasswd(), userDB.getDb(), dao.getName());
+						refreshTable();
+					} catch(Exception e) {
+						logger.error("Collection Delete", e); //$NON-NLS-1$
+						exeMessage("Collection", e); //$NON-NLS-1$
+					}
+				}
 			} else if(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 				if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_3)) {
 					try {

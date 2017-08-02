@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.preference.define.GetAdminPreference;
@@ -101,37 +103,13 @@ public class AWSDynamoLoginComposite extends AbstractLoginComposite {
 		
 		comboRegionName = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboRegionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboRegionName.add("US East (Ohio)");
-		comboRegionName.add("US East (N. Virginia)");
-		comboRegionName.add("US West (N. California)");
-		comboRegionName.add("US West (Oregon)");
-		comboRegionName.add("Canada (Central)");
-		comboRegionName.add("Asia Pacific (Mumbai)");
-		comboRegionName.add("Asia Pacific (Seoul)");
-		comboRegionName.add("Asia Pacific (Singapore)");
-		comboRegionName.add("Asia Pacific (Sydney)");
-		comboRegionName.add("Asia Pacific (Tokyo)");
-		comboRegionName.add("EU (Frankfurt)");
-		comboRegionName.add("EU (Ireland)");
-		comboRegionName.add("EU (London)");
-		comboRegionName.add("South America (São Paulo)");
-		comboRegionName.setVisibleItemCount(14);
+		Map<String, String> mapRegion = DynamoDBManager.getInstance().getRegionList();
+		for (String strKey : mapRegion.keySet()) {
+			comboRegionName.add(strKey);
+			comboRegionName.setData(strKey, (String)mapRegion.get(strKey));
+		}
+		comboRegionName.setVisibleItemCount(mapRegion.size());
 		comboRegionName.select(0);
-		
-		comboRegionName.setData("US East (Ohio)", 			"us-east-2");
-		comboRegionName.setData("US East (N. Virginia)", 	"us-east-1");
-		comboRegionName.setData("US West (N. California)", 	"us-west-1");
-		comboRegionName.setData("US West (Oregon)",			"us-west-2");
-		comboRegionName.setData("Canada (Central)", 		"ca-central-1");
-		comboRegionName.setData("Asia Pacific (Mumbai)", 	"ap-south-1");
-		comboRegionName.setData("Asia Pacific (Seoul)",		"ap-northeast-2");
-		comboRegionName.setData("Asia Pacific (Singapore)", "ap-northeast-1");
-		comboRegionName.setData("Asia Pacific (Sydney)",	"ap-southeast-2");
-		comboRegionName.setData("Asia Pacific (Tokyo)",		"ap-northeast-1");
-		comboRegionName.setData("EU (Frankfurt)",			"eu-central-1");
-		comboRegionName.setData("EU (Ireland)",				"eu-west-1");
-		comboRegionName.setData("EU (London)",				"eu-west-2");
-		comboRegionName.setData("South America (São Paulo)", "sa-east-1");
 		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);
 		lblJdbcOptions.setText(Messages.get().JDBCOptions);

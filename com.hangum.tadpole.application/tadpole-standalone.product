@@ -58,6 +58,7 @@
       <plugin id="com.hangum.tadpole.commons.utils"/>
       <plugin id="com.hangum.tadpole.commons.utils.zip"/>
       <plugin id="com.hangum.tadpole.compare.core"/>
+      <plugin id="com.hangum.tadpole.db.dynamodb.core"/>
       <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.ext.appm.basic.core"/>
       <plugin id="com.hangum.tadpole.ext.appm.core"/>

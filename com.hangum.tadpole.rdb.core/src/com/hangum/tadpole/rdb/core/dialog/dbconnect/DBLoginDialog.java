@@ -198,7 +198,8 @@ public class DBLoginDialog extends Dialog {
 		
 		if(!ApplicationArgumentUtils.isOnlineServer()) {
 			DBDefine dbDefine = (DBDefine)comboDBList.getData(comboDBList.getText());
-			if(dbDefine == DBDefine.DYNAMODB_DEFAULT |
+			if(
+//					dbDefine == DBDefine.DYNAMODB_DEFAULT |
 					dbDefine == DBDefine.ALTIBASE_DEFAULT |
 					dbDefine == DBDefine.CUBRID_DEFAULT |
 					dbDefine == DBDefine.MYSQL_DEFAULT |
