@@ -173,8 +173,6 @@ public enum DBDefine {
 			case ALTIBASE_DEFAULT:   return "com.amazon.redshift.jdbc.Driver";
 			case AMAZON_REDSHIFT_DEFAULT : return "";
 			
-			case DYNAMODB_DEFAULT: return "com.simba.dynamodb.jdbc41.Driver";
-			
 			default:
 				return "undefine class";
 		}
