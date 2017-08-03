@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
@@ -164,7 +165,10 @@ public class ResultMainComposite extends Composite {
 		
 		// 
 		if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) {
-			if(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN) {
+			if((reqQuery.getSqlDMLType() != QUERY_DML_TYPE.SELECT) ||
+					(reqQuery.getMode() == EditorDefine.QUERY_MODE.EXPLAIN_PLAN)) 
+		{
+				
 				MessageDialog.openInformation(getShell(), CommonMessages.get().Information,  Messages.get().DoNotSupportDynamoDB);
 				setOrionTextFocus();
 				return;
