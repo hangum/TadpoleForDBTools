@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,6 +27,7 @@ import com.hangum.tadpole.db.dynamodb.core.manager._KeyValueDAO;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -289,18 +289,24 @@ public class TadpoleObjectQuery {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
-//			returnColumns = TadpoleSQLExtManager.getInstance().tableColumnList(userDB, mapParam);
-			List<_KeyValueDAO> listTables = DynamoDBManager.getInstance().getTableColumn(userDB.getUsers(), userDB.getPasswd(), userDB.getDb(), tableDao.getName());
-			
-			for(int i=0; i<listTables.size(); i++) {
-				_KeyValueDAO valObj = listTables.get(i);
+			try {
+				returnColumns = TadpoleSQLExtManager.getInstance().tableColumnList(userDB, mapParam);
+			} catch(Exception e) {
+				logger.error("table column error", e);
+			}
+			if(returnColumns.isEmpty()) {
+				List<_KeyValueDAO> listTables = DynamoDBManager.getInstance().getTableColumn(userDB.getUsers(), userDB.getPasswd(), userDB.getDb(), tableDao.getName());
 				
-	    		TableColumnDAO tcDAO = new TableColumnDAO();
-	    		tcDAO.setName(valObj.getName());
-	    		tcDAO.setType(valObj.getValue());
-	    		
-	    		returnColumns.add(tcDAO);
-	    	}
+				for(int i=0; i<listTables.size(); i++) {
+					_KeyValueDAO valObj = listTables.get(i);
+					
+		    		TableColumnDAO tcDAO = new TableColumnDAO();
+		    		tcDAO.setName(valObj.getName());
+		    		tcDAO.setType(valObj.getValue());
+		    		
+		    		returnColumns.add(tcDAO);
+		    	}
+			}
 			
 		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
 			try{

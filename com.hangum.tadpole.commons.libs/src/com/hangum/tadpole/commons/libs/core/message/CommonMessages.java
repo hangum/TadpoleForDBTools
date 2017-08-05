@@ -126,6 +126,14 @@ public class CommonMessages {
 
 	public String UserRole;
 
+	public String Prev;
+	
+	public String Next;
+
+	public String ExportCSV;
+
+	public String ExportExcel;
+
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
 	}
