@@ -80,6 +80,9 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 			if(strCursor.length() == 0) {
 				// 오브젝트의 컬럼 목록을 가져온다.
 				if(prevKeywordType == CONTENT_ASSIST_KEYWORD_TYPE.COLUMN) {
+					// 현재는 dynamodb 지원하지 않습니다.
+					if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) return "";
+					
 					if(logger.isDebugEnabled()) logger.debug("==========[0][CURSOR][COLUMN] content assist : ");
 					listContentAssist = getTableColumnAlias(userDB, strQuery, strCursor);
 				// 오브젝트 목록을 가져온다.
