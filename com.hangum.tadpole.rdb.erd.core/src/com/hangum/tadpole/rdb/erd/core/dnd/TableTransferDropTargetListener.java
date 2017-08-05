@@ -216,7 +216,7 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 				tableModel.setName(tableName);
 				tableModel.setDb(db);
 				
-				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
+				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup() || DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
 					tableModel.setComment("");
 				} else {
 					String tableComment = StringUtils.trimToEmpty(arryTable[2]);
