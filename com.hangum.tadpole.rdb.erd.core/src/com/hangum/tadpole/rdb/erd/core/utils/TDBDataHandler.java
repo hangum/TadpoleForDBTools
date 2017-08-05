@@ -19,7 +19,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
+import com.hangum.tadpole.db.dynamodb.core.manager._KeyValueDAO;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -72,6 +75,25 @@ public class TDBDataHandler {
 			}
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
+		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+			try {
+				returnColumns = TadpoleSQLExtManager.getInstance().tableColumnList(userDB, mapParam);
+			} catch(Exception e) {
+				logger.error("table column error", e);
+			}
+			if(returnColumns.isEmpty()) {
+				List<_KeyValueDAO> listTables = DynamoDBManager.getInstance().getTableColumn(userDB.getUsers(), userDB.getPasswd(), userDB.getDb(), tableDao.getName());
+				
+				for(int i=0; i<listTables.size(); i++) {
+					_KeyValueDAO valObj = listTables.get(i);
+					
+		    		TableColumnDAO tcDAO = new TableColumnDAO();
+		    		tcDAO.setName(valObj.getName());
+		    		tcDAO.setType(valObj.getValue());
+		    		
+		    		returnColumns.add(tcDAO);
+		    	}
+			}
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$

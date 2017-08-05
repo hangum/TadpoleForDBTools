@@ -70,9 +70,10 @@ public class RelationUtil {
 			} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 			
-			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
-				// ignore relation code
-			} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || 
+					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()
+			) {
 				// ignore relation code
 			} else {
 				calRelation(userDB, mapDBTables, db, getReferenceTable(userDB, refTableNames));
@@ -98,9 +99,10 @@ public class RelationUtil {
 				calRelation(userDB, mapDBTables, db, makeSQLiteRelation(userDB));
 			} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
-			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
-				// ignore relation code
-			} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || 
+					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()
+			) {
 				// ignore relation code
 			} else {
 				calRelation(userDB, mapDBTables, db, getReferenceTable(userDB));
