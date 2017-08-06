@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-nl en -standalone -useDB all -defaultDB MySQL
+      <programArgs>-nl en -standalone -defaultDB MySQL -useDB Altibase,Cubrid,MariaDB,MongoDB,MSSQL,MySQL,Oracle,RedShift,PostgreSQL,SQLite,Tibero
       </programArgs>
       <vmArgs>-Dfile.encoding=UTF-8 -Dorg.osgi.service.http.port=10081 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Declipse.registry.MultiLanguage=true -Dorg.eclipse.jetty.server.Request.maxFormKeys=200000 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=-1  -Xverify:none 
 -XX:+UseParallelGC
@@ -58,7 +58,6 @@
       <plugin id="com.hangum.tadpole.commons.utils"/>
       <plugin id="com.hangum.tadpole.commons.utils.zip"/>
       <plugin id="com.hangum.tadpole.compare.core"/>
-      <plugin id="com.hangum.tadpole.db.dynamodb.core"/>
       <plugin id="com.hangum.tadpole.engine"/>
       <plugin id="com.hangum.tadpole.ext.appm.basic.core"/>
       <plugin id="com.hangum.tadpole.ext.appm.core"/>
@@ -92,6 +91,7 @@
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.beans"/>
       <plugin id="org.eclipse.core.databinding.observable"/>
       <plugin id="org.eclipse.core.databinding.property"/>
       <plugin id="org.eclipse.core.expressions"/>
