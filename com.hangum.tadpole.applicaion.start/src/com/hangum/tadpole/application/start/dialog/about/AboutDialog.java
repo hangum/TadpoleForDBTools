@@ -109,6 +109,10 @@ public class AboutDialog extends Dialog {
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabel3.setText(Messages.get().AboutDialog_7);
 		
+		Label lblNewLabelUseLicense = new Label(composite_1, SWT.NONE);
+		lblNewLabelUseLicense.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblNewLabelUseLicense.setText(Messages.get().UseLicense);
+		
 		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
 		lblLicenseLgpl.setText(String.format("License : %s", LicenseValidator.getCustomerInfo()));
 		
