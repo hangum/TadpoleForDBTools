@@ -32,6 +32,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
@@ -311,8 +312,14 @@ public abstract class AbstractLoginComposite extends Composite {
 	private static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		for (ManagerListDTO managerListDTO : SessionManager.getManagerDBList()) {
 			for (UserDBDAO tmpUserDB : managerListDTO.getManagerList()) {
-				if(StringUtils.equals(userDBDao.getHost(), tmpUserDB.getHost()) && StringUtils.equals(userDBDao.getPort(), tmpUserDB.getPort()) && StringUtils.equals(userDBDao.getUsers(), tmpUserDB.getUsers())) {
-					return true;
+				if(DBGroupDefine.DYNAMODB_GROUP == userDBDao.getDBGroup()) {
+					if(StringUtils.equals(userDBDao.getUsers(), tmpUserDB.getUsers()) && StringUtils.equals(userDBDao.getDb(), tmpUserDB.getDb())) {
+						return true;
+					}
+				} else {
+					if(StringUtils.equals(userDBDao.getHost(), tmpUserDB.getHost()) && StringUtils.equals(userDBDao.getPort(), tmpUserDB.getPort()) && StringUtils.equals(userDBDao.getUsers(), tmpUserDB.getUsers())) {
+						return true;
+					}
 				}
 			}
 		}
