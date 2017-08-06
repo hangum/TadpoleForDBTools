@@ -2,7 +2,7 @@ Tadpole DB Hub
 ==
 [![Join the chat at https://gitter.im/TadpoleDBHub](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TadpoleDBHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amazon RDS, Amazon Redshift, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amzaon DynamoDB, Amazon RDS, Amazon Redshift, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1460305744502/home/TDB_main.jpg?height=309&width=400)
 
@@ -58,6 +58,7 @@ Demo Video
 * RDB : http://www.youtube.com/watch?v=cXNthDhxWgs
 * MongoDB : http://www.youtube.com/watch?v=gUsVbin-2FM
 * Apache Hive : http://www.youtube.com/watch?v=ECCS4a_NB_o&feature=youtu.be
+* Amazon DynamoDB : https://www.youtube.com/watch?v=ADAU8McfI-o
 
 Document
 -
@@ -83,7 +84,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.4r7/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.4r13/
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License
@@ -108,11 +109,11 @@ Contributor
 
 Special thanks
 -
-* Kakao Bank InfraTeam.
+* Kakaobank InfraTeam.
 
 Customer
 - 
-* Kakao Bank
+* Kakaobank
 * LOEN ENTERTAINMENT(http://www.melon.com/)
 * 동아닷컴(http://www.donga.com/)
 
