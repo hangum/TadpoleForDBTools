@@ -10,7 +10,7 @@ It enables you to handle typical DB over the World Wide Web
 -
 * Intuitive web interface (Safari, Chrome, Edge, Firefox)
 * User Management (Admin, Manager, User)
-* Support Altibase, Apache Hive, Apache Tajo, Amazon RDS, Amazon Redshift, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
+* Support Altibase, Apache Hive, Apache Tajo, Amazon DynamoDB, Amazon RDS, Amazon Redshift, CUBRID, MySQL, MariaDB, Oracle, SQLite, MSSQL, PostgreSQL Database
 * Select, Insert, Update, Delete
 * Download query result
 * SQL Syntax Highlighting

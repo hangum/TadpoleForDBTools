@@ -137,7 +137,7 @@ public class AWSDynamoLoginComposite extends AbstractLoginComposite {
 			
 			textAccesskey.setText(oldUserDB.getUsers());
 			textSecretKey.setText(oldUserDB.getPasswd());
-			comboRegionName.setText(oldUserDB.getSchema());
+			comboRegionName.setText(oldUserDB.getDb());
 			
 			textJDBCOptions.setText(oldUserDB.getUrl_user_parameter());
 			othersConnectionInfo.setUserData(oldUserDB);
