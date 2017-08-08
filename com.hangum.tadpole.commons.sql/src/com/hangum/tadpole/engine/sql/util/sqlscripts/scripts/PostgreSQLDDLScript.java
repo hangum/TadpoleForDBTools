@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
@@ -146,12 +147,15 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 
 		// table trigger
 		result.append("\n\n");
-		List<String> srcTriggerScripts = client.queryForList("getTableScript.trigger", tableDAO.getName());
-		String scriptSource = "";
-		for (int i = 0; i < srcTriggerScripts.size(); i++) {
-			scriptSource = srcTriggerScripts.get(i);
-			if (!"".equals(scriptSource)){
-				result.append(srcTriggerScripts.get(i) + ";\n");
+		
+		if(userDB.getDBDefine() != DBDefine.AMAZON_REDSHIFT_DEFAULT) {
+			List<String> srcTriggerScripts = client.queryForList("getTableScript.trigger", tableDAO.getName());
+			String scriptSource = "";
+			for (int i = 0; i < srcTriggerScripts.size(); i++) {
+				scriptSource = srcTriggerScripts.get(i);
+				if (!"".equals(scriptSource)){
+					result.append(srcTriggerScripts.get(i) + ";\n");
+				}
 			}
 		}
 

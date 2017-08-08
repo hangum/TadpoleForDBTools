@@ -185,7 +185,8 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			preDBInfo.setTextDisplayName(getDisplayName());
 			
 			textHost.setText("127.0.0.1"); //$NON-NLS-1$
-			textPort.setText("5432"); //$NON-NLS-1$
+			if(DBDefine.AMAZON_REDSHIFT_DEFAULT == getSelectDB()) textPort.setText("5439"); //$NON-NLS-1$
+			else textPort.setText("5432"); //$NON-NLS-1$
 			textDatabase.setText("tadpole"); //$NON-NLS-1$
 			textUser.setText("postgres"); //$NON-NLS-1$
 			textPassword.setText("tadpole"); //$NON-NLS-1$
