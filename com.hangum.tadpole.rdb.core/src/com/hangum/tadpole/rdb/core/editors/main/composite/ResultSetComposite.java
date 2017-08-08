@@ -862,6 +862,7 @@ public class ResultSetComposite extends Composite {
 	 * @return
 	 */
 	private ResultSet _runSQLSelect(final PreparedStatement preparedStatement, final Object[] statementParameter) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("=======  wait for resultset prepared statement .......................................");
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
@@ -891,6 +892,7 @@ public class ResultSetComposite extends Composite {
 	 * @param strSQL
 	 */
 	private ResultSet _runSQLSelect(final Statement statement, final String strSQL) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("=======  wait for resultset of statement .......................................");
 		
 		Future<ResultSet> queryFuture = execServiceQuery.submit(new Callable<ResultSet>() {
 			@Override
@@ -938,7 +940,7 @@ public class ResultSetComposite extends Composite {
 		
 		@Override
 		public void run() {
-			int i = 0;
+			int i = 10;
 			
 			try {
 				while(isCheckRunning) {
@@ -958,16 +960,22 @@ public class ResultSetComposite extends Composite {
 					}
 					
 					if(isCheckRunning) {
-						if(i>100) i = 0;
-						final int progressAdd = i++; 
+						if(logger.isDebugEnabled()) logger.debug("------- thread sleep..4000.....................................................");
+						try { Thread.sleep(4000);} catch(Exception e) {}
+						
+						if(i>100) i = 15;
+						else i += 5;
+						
+						final int progressAdd = i; 
 						btnStopQuery.getDisplay().asyncExec(new Runnable() {
 							@Override
 							public void run() {
 								progressBarQuery.setSelection(progressAdd);
 							}
 						});
-	
-						Thread.sleep(20);
+						
+					} else {
+						if(logger.isDebugEnabled()) logger.debug("############# thread sleep..4000.....................................................");
 					}
 				}   // end while
 			} catch(Exception e) {
@@ -1029,7 +1037,7 @@ public class ResultSetComposite extends Composite {
 			isCheckRunning = true;
 			isUserInterrupt = true;
 			
-			progressBarQuery.setSelection(0);
+			progressBarQuery.setSelection(10);
 			
 			// HIVE는 CANCLE 기능이 없습니다. 
 			if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {
