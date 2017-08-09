@@ -205,8 +205,8 @@ public abstract class AbstractObjectComposite extends Composite {
 	 * @param tv
 	 */
 	protected void createIndexesColumn(final TableViewer tv, final ObjectComparator comparator) {
-		String[] name = {Messages.get().TableName, Messages.get().IndexName,Messages.get().Type,Messages.get().Comment};
-		int[] size = {120, 120, 70, 70};
+		String[] name = {/*Messages.get().TableName,*/ Messages.get().IndexName,Messages.get().Type,Messages.get().Comment};
+		int[] size = {/*120,*/ 120, 70, 70};
 
 		for (int i=0; i<name.length; i++) {
 			TableViewerColumn tableColumn = new TableViewerColumn(tv, SWT.LEFT);

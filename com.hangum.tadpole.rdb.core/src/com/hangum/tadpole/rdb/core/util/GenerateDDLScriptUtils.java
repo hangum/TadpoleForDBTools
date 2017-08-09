@@ -56,17 +56,13 @@ public class GenerateDDLScriptUtils {
 		StringBuffer sbSQL = new StringBuffer();
 		try {
 			sbSQL.append("SELECT "); //$NON-NLS-1$
-			if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
-				sbSQL.append("* ");
-			} else {
-				for (int i=0; i<showTableColumns.size(); i++) {
-					TableColumnDAO dao = showTableColumns.get(i);
-					sbSQL.append(StringUtils.trim(dao.getSysName()));
-					
-					// 마지막 컬럼에는 ,를 않넣어주어야하니까 
-					if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
-					else sbSQL.append(" "); //$NON-NLS-1$
-				}
+			for (int i=0; i<showTableColumns.size(); i++) {
+				TableColumnDAO dao = showTableColumns.get(i);
+				sbSQL.append(StringUtils.trim(dao.getSysName()));
+				
+				// 마지막 컬럼에는 ,를 않넣어주어야하니까 
+				if(i < (showTableColumns.size()-1)) sbSQL.append(", ");  //$NON-NLS-1$
+				else sbSQL.append(" "); //$NON-NLS-1$
 			}
 			
 			sbSQL.append(PublicTadpoleDefine.LINE_SEPARATOR + "FROM "); //$NON-NLS-1$ 

@@ -103,7 +103,7 @@ public class AWSDynamoLoginComposite extends AbstractLoginComposite {
 		
 		comboRegionName = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboRegionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		Map<String, String> mapRegion = DynamoDBManager.getInstance().getRegionList();
+		Map<String, String> mapRegion = DynamoDBManager.getInstance().getJDBCRegionList();
 		for (String strKey : mapRegion.keySet()) {
 			comboRegionName.add(strKey);
 			comboRegionName.setData(strKey, (String)mapRegion.get(strKey));
@@ -184,11 +184,11 @@ public class AWSDynamoLoginComposite extends AbstractLoginComposite {
 	@Override
 	public boolean makeUserDBDao(boolean isTest) {
 		if(!isValidateInput(isTest)) return false;
-//		return "jdbc:dynamodb:Host=dynamodb.%s.amazonaws.com;Region=%s;AccessKey=%s;SecretKey=%s";
+
 		String strRegion = (String)comboRegionName.getData(comboRegionName.getText());
 		String dbUrl = String.format(
 				getSelectDB().getDB_URL_INFO(), 
-				strRegion, strRegion,
+				strRegion,
 				StringUtils.trimToEmpty(textAccesskey.getText()), 
 				StringUtils.trimToEmpty(textSecretKey.getText()) 
 			);

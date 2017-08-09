@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -190,16 +191,27 @@ public abstract class BasicDBInfo implements ConnectionInterfact {
 	public List<TableColumnDAO> tableColumnList(UserDBDAO userDB, Map<String, String> mapParam) throws Exception {
 		List<TableColumnDAO> showTableColumns = new ArrayList<TableColumnDAO>();
 		ResultSet rs = null;
+		ResultSet rsPrimaryKey = null;
+		
+		Map<String, String> mapPrimaryKey = new HashMap<String, String>();
 		
 		Connection javaConn = null;
 		try {
 			javaConn = getConnection(userDB);
 			DatabaseMetaData dbmd = javaConn.getMetaData();
 	    	rs = dbmd.getColumns(null, null, mapParam.get("table"), null);
+	    	
+	    	rsPrimaryKey = dbmd.getPrimaryKeys(null, null, mapParam.get("table"));
+	    	while(rsPrimaryKey.next()) {
+	    		mapPrimaryKey.put(rsPrimaryKey.getString("COLUMN_NAME"), "PRI");
+	    	}
 
 	    	while(rs.next()) {
 	    		TableColumnDAO tcDAO = new TableColumnDAO();
 	    		tcDAO.setName(rs.getString("COLUMN_NAME"));
+	    		if(mapPrimaryKey.containsKey(tcDAO.getName())) {
+	    			tcDAO.setKey("PRI");	
+	    		}
 	    		tcDAO.setType(rs.getString("TYPE_NAME"));
 	    		tcDAO.setNull(rs.getString("IS_NULLABLE"));
 	    		tcDAO.setComment(rs.getString("REMARKS"));

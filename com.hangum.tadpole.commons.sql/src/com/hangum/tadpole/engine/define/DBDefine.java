@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 
 /**
@@ -189,7 +190,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT:		return "jdbc:sqlite:/%s";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
 			
-			case DYNAMODB_DEFAULT:	return "jdbc:dynamodb:Host=dynamodb.%s.amazonaws.com;Region=%s;AccessKey=%s;SecretKey=%s";
+			case DYNAMODB_DEFAULT:	return DynamoDBManager.CONNECTION_URL;//
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
 			case TIBERO_DEFAULT:	return "jdbc:tibero:thin:@%s:%s:%s";
 			

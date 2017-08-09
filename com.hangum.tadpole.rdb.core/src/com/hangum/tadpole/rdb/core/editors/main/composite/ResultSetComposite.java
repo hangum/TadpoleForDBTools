@@ -960,7 +960,6 @@ public class ResultSetComposite extends Composite {
 					}
 					
 					if(isCheckRunning) {
-						if(logger.isDebugEnabled()) logger.debug("------- thread sleep..4000.....................................................");
 						try { Thread.sleep(4000);} catch(Exception e) {}
 						
 						if(i>100) i = 15;
@@ -973,9 +972,6 @@ public class ResultSetComposite extends Composite {
 								progressBarQuery.setSelection(progressAdd);
 							}
 						});
-						
-					} else {
-						if(logger.isDebugEnabled()) logger.debug("############# thread sleep..4000.....................................................");
 					}
 				}   // end while
 			} catch(Exception e) {
