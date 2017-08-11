@@ -960,7 +960,8 @@ public class ResultSetComposite extends Composite {
 					}
 					
 					if(isCheckRunning) {
-						try { Thread.sleep(4000);} catch(Exception e) {}
+//						try { Thread.sleep(4000);} catch(Exception e) {}
+						try { Thread.sleep(1000);} catch(Exception e) {}
 						
 						if(i>100) i = 15;
 						else i += 5;
