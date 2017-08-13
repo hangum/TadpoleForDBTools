@@ -95,6 +95,13 @@ public class AboutDialog extends Dialog {
 		txtRleaseDate.setText(Messages.get().AboutDialog_lblReleaseDate_text + " " + SystemDefine.RELEASE_DATE); //$NON-NLS-1$
 		txtRleaseDate.setEditable(false);
 		
+		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
+		if(LicenseValidator.isEnterprise()) {
+			lblLicenseLgpl.setText(String.format("Enterprise License. %s (%s)", LicenseValidator.getCustomerInfo(), LicenseValidator.getTerm()));
+		} else {
+			lblLicenseLgpl.setText(LicenseValidator.getCustomerInfo());
+		}
+		
 		new Label(composite_1, SWT.NONE);
 		
 		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
@@ -112,9 +119,6 @@ public class AboutDialog extends Dialog {
 		Label lblNewLabelUseLicense = new Label(composite_1, SWT.NONE);
 		lblNewLabelUseLicense.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabelUseLicense.setText(Messages.get().UseLicense);
-		
-		Label lblLicenseLgpl = new Label(composite_1, SWT.NONE);
-		lblLicenseLgpl.setText(String.format("License : %s", LicenseValidator.getCustomerInfo()));
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

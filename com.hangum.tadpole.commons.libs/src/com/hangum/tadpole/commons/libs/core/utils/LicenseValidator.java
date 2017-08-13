@@ -37,13 +37,18 @@ public class LicenseValidator {
 		try {
 			LicenseDAO licenseDAO = getLicense();
 			if(!"".equals(licenseDAO.getCustomer())) {
-				return "Enterprise Version. " + licenseDAO.getCustomer();
+				return licenseDAO.getCustomer();
 			}
 		} catch(Exception e) {
 			logger.error("get licenseinfo", e);
 		}
 		
 		return "License is GNU Lesser General Public License v.3";
+	}
+	
+	public static String getTerm() {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		return licenseDAO.getTerm();
 	}
 	
 	/**
