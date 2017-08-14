@@ -53,12 +53,12 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.ResultSetUtils;
 import com.hangum.tadpole.engine.sql.util.sqlscripts.DDLScriptManager;
@@ -306,6 +306,9 @@ public class TableDirectEditorComposite extends Composite {
 			}
 		});
 		btnDdlSourceView.setText(Messages.get().TableDirectEditorComposite_btnDdlSourceView_text);
+		if (DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) { 
+			btnDdlSourceView.setEnabled(false);
+		}
 		
 		initBusiness();
 		
@@ -396,7 +399,7 @@ public class TableDirectEditorComposite extends Composite {
 		try {
 			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
-			stmt = javaConn.prepareStatement(requestQuery);
+			stmt = javaConn.prepareStatement(SQLConvertCharUtil.toServer(userDB, requestQuery));
 			stmt.setMaxRows(GetPreferenceGeneral.getSelectLimitCount());
 			
 			rs = stmt.executeQuery();
@@ -424,7 +427,7 @@ public class TableDirectEditorComposite extends Composite {
 				
 				for(int i=1;i<columnCount+1; i++) {					
 					try {
-						String strValue = rs.getString(i) == null?"":rs.getString(i);
+						String strValue = rs.getString(i) == null?"":SQLConvertCharUtil.toClient(userDB, rs.getString(i));
 //						System.out.println("ogiginal: "+ strValue);
 //						strValue = StringEscapeUtils.unescapeHtml(strValue);
 //						System.out.println("unescapeHtml: "+ strValue);

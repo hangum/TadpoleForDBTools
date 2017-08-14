@@ -27,6 +27,9 @@ public class PublicTadpoleDefine {
 	/** URL system version information */
 	public static final String URL_SYSTEM_VERION = String.format("?%s%s=%s", SystemDefine.MAJOR_VERSION, SystemDefine.SUB_VERSION, SystemDefine.RELEASE_DATE);
 	
+	/** default search count */
+	public static final int INT_SEARCH_COUNT = 25;
+	
 	/** set user info */
 	public static String CERT_USER_INFO = "";
 	

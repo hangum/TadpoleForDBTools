@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.util;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -188,13 +189,24 @@ public class FindEditorAndWriteQueryUtil {
 	 * @param strAppendText
 	 */
 	public static void runAtPosition(String strAppendText) {
-
+		boolean isAddText = false;
+		
 		IEditorPart iep = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if(iep != null) {
 			if(iep instanceof MainEditor) {
 				MainEditor editor = (MainEditor)iep;
 				editor.appendTextAtPosition(strAppendText);
+				
+				isAddText = true;
 			}
+		}
+		
+		try {
+			if(!isAddText) {
+				MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().WarnEditorIsOpen);
+			}
+		} catch(Exception e) {
+			logger.error("editor open error" + e.getMessage());
 		}
 	}
 	

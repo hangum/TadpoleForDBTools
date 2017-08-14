@@ -205,14 +205,8 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	    , table_schema
 	    , table_schema as schema_name
 	    , table_name
-	    , non_unique
 	    , index_schema
 	    , index_name
-	    , collation
-	    , cardinality
-	    , sub_part
-	    , packed
-	    , nullable
 	    , index_type
 	    , comment
 	FROM information_schema.statistics 
@@ -222,14 +216,8 @@ SELECT constraint_name, table_name, column_name, referenced_table_name, referenc
 	    , table_schema
 	    , schema_name
 	    , table_name
-	    , non_unique
 	    , index_schema
 	    , index_name
-	    , collation
-	    , cardinality
-	    , sub_part
-	    , packed
-	    , nullable
 	    , index_type
 	    , comment
 </select>

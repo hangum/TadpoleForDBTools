@@ -102,7 +102,7 @@ public class Application implements EntryPoint {
 			
 		} catch(Exception e) {
 			logger.error("Initialization failed.", e); //$NON-NLS-1$
-			MessageDialog.openError(null, CommonMessages.get().Error, com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2);
+			MessageDialog.openError(null, CommonMessages.get().Error, com.hangum.tadpole.application.start.Messages.get().ApplicationWorkbenchWindowAdvisor_2 + PublicTadpoleDefine.LINE_SEPARATOR + PublicTadpoleDefine.LINE_SEPARATOR + "[Error message]" + PublicTadpoleDefine.LINE_SEPARATOR + e.getMessage());
 			
 			System.exit(0);
 		}

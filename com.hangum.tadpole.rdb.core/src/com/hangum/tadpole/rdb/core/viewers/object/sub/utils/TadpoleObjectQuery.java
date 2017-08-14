@@ -22,9 +22,12 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
+import com.hangum.tadpole.db.dynamodb.core.manager._KeyValueDAO;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -169,16 +172,28 @@ public class TadpoleObjectQuery {
 			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
 				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
 			}
-		} 
-		
-		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
-			//showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getUsers())); //$NON-NLS-1$
-			// 오라클의 경우 로그인 유저로 하는게 아니라 스키마 변경 선택한걸로 해야함.
-			// changeSchema할때 변경 안됨...
-			showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getDefaultSchemanName())); //$NON-NLS-1$			
+		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
+			
+			showTables = new ArrayList<>();
+			for (Map map : listTables) {
+				TableDAO tableDao = new TableDAO(""+map.get("name"), ""+map.get("comment"));
+				tableDao.setTable_type(""+map.get("table_type"));
+				
+				showTables.add(tableDao);
+			}
+
 		} else {
-			showTables = sqlClient.queryForList("tableList", userDB.getDefaultSchemanName()); //$NON-NLS-1$
+			
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			if(userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP) {
+				//showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getUsers())); //$NON-NLS-1$
+				// 오라클의 경우 로그인 유저로 하는게 아니라 스키마 변경 선택한걸로 해야함.
+				// changeSchema할때 변경 안됨...
+				showTables = sqlClient.queryForList("tableList", StringUtils.upperCase(userDB.getDefaultSchemanName())); //$NON-NLS-1$			
+			} else {
+				showTables = sqlClient.queryForList("tableList", userDB.getDefaultSchemanName()); //$NON-NLS-1$
+			}
 		}
 		
 		/** filter 정보가 있으면 처리합니다. */
@@ -273,12 +288,27 @@ public class TadpoleObjectQuery {
 			}
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
-		}
-		
-		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
+		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+			try {
+				returnColumns = TadpoleSQLExtManager.getInstance().tableColumnList(userDB, mapParam);
+			} catch(Exception e) {
+				logger.error("table column error", e);
+			}
+			if(returnColumns.isEmpty()) {
+				List<_KeyValueDAO> listTables = DynamoDBManager.getInstance().getTableColumn(userDB.getUsers(), userDB.getPasswd(), userDB.getDb(), tableDao.getName());
+				
+				for(int i=0; i<listTables.size(); i++) {
+					_KeyValueDAO valObj = listTables.get(i);
+					
+		    		TableColumnDAO tcDAO = new TableColumnDAO();
+		    		tcDAO.setName(valObj.getName());
+		    		tcDAO.setType(valObj.getValue());
+		    		
+		    		returnColumns.add(tcDAO);
+		    	}
+			}
+			
+		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
 			try{
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
@@ -296,6 +326,9 @@ public class TadpoleObjectQuery {
 			}catch(Exception e){
 				logger.error("not found foreignkey for " + tableDao.getName());
 			}
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		}
 		
 		// if find the keyword is add system quote.

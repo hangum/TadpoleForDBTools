@@ -83,7 +83,7 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.SYSTEM_DEFAULT_USER, 
 						Utils.getUniqueDigit(7), 
 						PublicTadpoleDefine.YES_NO.YES.name(),
-						"1005tadPole1206", 	
+						"", 	
 						PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
 						"Personal Admin", 
 						Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), 

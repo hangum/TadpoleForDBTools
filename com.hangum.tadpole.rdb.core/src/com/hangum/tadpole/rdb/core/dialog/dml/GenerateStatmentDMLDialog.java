@@ -327,7 +327,7 @@ public class GenerateStatmentDMLDialog extends Dialog {
 					dialog.open();
 				} else if (dialog.getObjectCount() <= 0) {
 					//해당 오브젝트를 찾을 수 없습니다.
-					MessageDialog.openInformation(getShell(), CommonMessages.get().Information, Messages.get().NotFountObject);
+					MessageDialog.openInformation(getShell(), CommonMessages.get().Information, String.format(Messages.get().NotFountObject, tableDAO.getFullName()));
 				}
 				Map<String, String> map = dialog.getSelectObject();
 				tableDAO.setSchema_name(map.get("OBJECT_OWNER"));

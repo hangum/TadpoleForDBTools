@@ -11,8 +11,12 @@
 package com.hangum.tadpole.commons.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +53,13 @@ public class CSVFileUtils {
 		
 		StringWriter sw = new StringWriter();
 		CSVWriter writer = null;
+//		// Excel does not recongize the UTF-8, add additional header (BOM) for excel
+//		OutputStream outputStream = new ByteArrayOutputStream();
+//		outputStream.write(0xEF);   
+//		outputStream.write(0xBB);
+//		outputStream.write(0xBF);   
+//		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+		
 		try {
 			writer = new CSVWriter(sw, seprator);
 			writer.writeAll(listContent);

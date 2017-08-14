@@ -233,7 +233,7 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 	 * index column list
 	 */
 	protected void createIndexColumne(final TableViewer tv) {
-		String[] name = {Messages.get().SEQ, Messages.get().Column, Messages.get().Order};
+		String[] name = {Messages.get().SEQ, Messages.get().Column, Messages.get().Comment};
 		int[] size = {60, 300, 50};
 
 		for (int i=0; i<name.length; i++) {

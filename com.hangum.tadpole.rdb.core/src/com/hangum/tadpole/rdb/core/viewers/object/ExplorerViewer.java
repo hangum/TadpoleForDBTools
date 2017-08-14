@@ -49,6 +49,7 @@ import com.hangum.tadpole.commons.viewsupport.SelectionProviderMediator;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.InitializeDB;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.DBOtherDAO;
@@ -76,6 +77,7 @@ import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.sysnonym.TadpoleSynony
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.TadpoleTableComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table.trigger.TadpoleTriggerComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.view.TadpoleViewerComposite;
+import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
  * object explorer viewer
@@ -465,7 +467,12 @@ public class ExplorerViewer extends ViewPart {
 		
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
+		}else if(userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP) {
+			comboSchema.add(userDB.getDb());
+			comboSchema.setText(userDB.getDb());
 		}else{
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
 		}
@@ -649,8 +656,6 @@ public class ExplorerViewer extends ViewPart {
 				createProcedure();
 				createFunction();
 				createTrigger();
-			
-				
 				
 				arrayStructuredViewer = new StructuredViewer[] { 
 					agensGraphPathComposite.getTableviewer(),
@@ -695,8 +700,17 @@ public class ExplorerViewer extends ViewPart {
 					triggerComposite.getTableViewer()
 				};
 			}						
-			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));			
-		// mysql, postgre, mssql
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
+		} else if(DBDefine.DYNAMODB_DEFAULT == userDB.getDBDefine()) {
+			createTable();
+			arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer(), 
+					tableComposite.getTableColumnViewer()
+			};
+									
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
+			
+		// mysql, mssql
 		} else {
 			createTable();
 			createView();
@@ -717,6 +731,7 @@ public class ExplorerViewer extends ViewPart {
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
+		
 		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
 			refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
 		}else{
@@ -1173,5 +1188,13 @@ public class ExplorerViewer extends ViewPart {
 	@Override
 	public void setFocus() {
 	}
+	
+	/**
+	 * 현재 선택된 탭
+	 * @return
+	 */
+	public CTabFolder getTabFolderObject() {
+		return tabFolderObject;
+	};
 
 }

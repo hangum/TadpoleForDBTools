@@ -21,6 +21,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.dialogs.help.RDBShortcutHelpDialog;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.utils.EditorDefine;
@@ -158,14 +159,21 @@ public class MainEditorBrowserFunctionService extends EditorFunctionService {
 			tableDAO.setTable_name(strObject);
 		}
 		*/
-		
 		Map<String,String> paramMap = new HashMap<String, String>();
-		if(StringUtils.contains(strObject, ".")) {
-			paramMap.put("OBJECT_OWNER", StringUtils.substringBefore(strObject, "."));
-			paramMap.put("OBJECT_NAME", StringUtils.substringAfter(strObject, "."));
-		}else{
-			//paramMap.put("OBJECT_OWNER", userDB.getSchema());
-			paramMap.put("OBJECT_NAME", strObject);
+		if(editor.getUserDB().getDBDefine() == DBDefine.ALTIBASE_DEFAULT) {
+			if(StringUtils.indexOf(strObject, ".") >= 1) {
+				paramMap.put("OBJECT_NAME", strObject);	
+			} else {
+				paramMap.put("OBJECT_NAME", getUserDB().getUsers() + "." + strObject);
+			}
+		} else {
+			if(StringUtils.contains(strObject, ".")) {
+				paramMap.put("OBJECT_OWNER", StringUtils.substringBefore(strObject, "."));
+				paramMap.put("OBJECT_NAME", StringUtils.substringAfter(strObject, "."));
+			}else{
+				//paramMap.put("OBJECT_OWNER", userDB.getSchema());
+				paramMap.put("OBJECT_NAME", strObject);
+			}
 		}
 		paramMap.put("_SCHEMA", getUserDB().getSchema());
 

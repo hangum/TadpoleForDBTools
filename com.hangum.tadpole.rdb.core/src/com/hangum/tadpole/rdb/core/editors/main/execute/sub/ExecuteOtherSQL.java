@@ -20,12 +20,15 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.USER_ROLE_TYPE;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
@@ -112,34 +115,44 @@ public class ExecuteOtherSQL {
 			Statement statement = null;
 			PreparedStatement preparedStatement = null;
 			try {
-				if(reqQuery.isAutoCommit()) {
-//					SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
-					javaConn = TadpoleSQLManager.getConnection(userDB);
+				if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+					javaConn = TadpoleSQLExtManager.getInstance().getConnection(userDB);
 				} else {
-					javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
-				}
-				
-				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
-				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
-					final String checkSQL = reqQuery.getSql().trim().toUpperCase();
-					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
-						reqQuery.setSql(StringUtils.replaceOnce(reqQuery.getSql(), "(", " (")); //$NON-NLS-1$ //$NON-NLS-2$
+					if(reqQuery.isAutoCommit()) {
+						javaConn = TadpoleSQLManager.getConnection(userDB);
+					} else {
+						javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
 					}
 				}
 				
+				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
+//				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+//					final String checkSQL = reqQuery.getSql().trim().toUpperCase();
+//					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
+//						String strTmpCreateStmt = StringUtils.replaceOnce(reqQuery.getSql(), "(", " (");  //$NON-NLS-1$ //$NON-NLS-2$
+//						
+//						reqQuery.setSql(strTmpCreateStmt);
+//					}
+//				}
+				
+				final String strSQL = SQLConvertCharUtil.toServer(userDB, reqQuery.getSql());
 				if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
 					statement = javaConn.createStatement();
 					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
 					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
-						statement.execute(reqQuery.getSql());
+						statement.execute(strSQL);
 					} else {
-						intEChangeCnt = statement.executeUpdate(reqQuery.getSql());
+						intEChangeCnt = statement.executeUpdate(strSQL);
 					}
 				} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
-					preparedStatement = javaConn.prepareStatement(reqQuery.getSql());
+					preparedStatement = javaConn.prepareStatement(strSQL);
 					final Object[] statementParameter = reqQuery.getStatementParameter();
 					for (int i=1; i<=statementParameter.length; i++) {
-						preparedStatement.setObject(i, statementParameter[i-1]);			
+						if(statementParameter[i-1] instanceof String) {
+							preparedStatement.setObject(i, SQLConvertCharUtil.toServer(userDB, ""+ statementParameter[i-1]));
+						} else {
+							preparedStatement.setObject(i, statementParameter[i-1]);
+						}
 					}
 					
 					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum

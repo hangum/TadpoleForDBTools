@@ -454,6 +454,7 @@ public class MainEditor extends EditorExtension {
 		});
 		tltmExplainPlanctrl.setToolTipText(String.format(Messages.get().MainEditor_3, STR_SHORT_CUT_PREFIX));
 		new ToolItem(toolBar, SWT.SEPARATOR);
+		if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) tltmExplainPlanctrl.setEnabled(false);
 		
 		ToolItem tltmSort = new ToolItem(toolBar, SWT.NONE);
 		tltmSort.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/query_format.png")); //$NON-NLS-1$
@@ -514,6 +515,7 @@ public class MainEditor extends EditorExtension {
 				initAutoCommitAction(false, true);
 			}
 		});
+		if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) tiAutoCommit.setEnabled(false);
 		
 		tiAutoCommitCommit = new ToolItem(toolBar, SWT.NONE);
 		tiAutoCommitCommit.setSelection(false);

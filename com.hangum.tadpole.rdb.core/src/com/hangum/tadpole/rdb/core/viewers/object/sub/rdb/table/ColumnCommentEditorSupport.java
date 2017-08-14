@@ -52,13 +52,13 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		if(column == 3) return new CommentCellEditor(column, viewer);
+		if(column == 6) return new CommentCellEditor(column, viewer);
 		else return null;
 	}
 
 	@Override
 	protected boolean canEdit(Object element) {
-		if(column == 3) {
+		if(column == 6) {
 			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
 					DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||
 					DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup() ||

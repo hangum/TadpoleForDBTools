@@ -9,6 +9,7 @@ package com.hangum.tadpole.commons.libs.core.dao;
 public class LicenseDAO {
 	boolean isValidate = false;
 	boolean isEnterprise = false;
+	String term = "";
 	String msg = "";
 	
 	String customer_email = "";
@@ -72,7 +73,7 @@ public class LicenseDAO {
 	public void setCustomer_email(String customer_email) {
 		this.customer_email = customer_email;
 	}
-
+	
 	/**
 	 * @return the customer
 	 */
@@ -85,6 +86,20 @@ public class LicenseDAO {
 	 */
 	public void setCustomer(String customer) {
 		this.customer = customer;
+	}
+
+	/**
+	 * @return the term
+	 */
+	public String getTerm() {
+		return term;
+	}
+
+	/**
+	 * @param term the term to set
+	 */
+	public void setTerm(String term) {
+		this.term = term;
 	}
 	
 }

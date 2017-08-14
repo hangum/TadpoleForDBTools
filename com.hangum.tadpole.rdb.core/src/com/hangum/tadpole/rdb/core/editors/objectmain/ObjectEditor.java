@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.objectmain;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -381,14 +382,19 @@ public class ObjectEditor extends MainEditor {
 //			}
 			
 			RequestResultDAO reqResultDAO = new RequestResultDAO();
+			reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
+			reqResultDAO.setIpAddress(reqQuery.getUserIp());
+			
 			try {
+				runPermissionSQLExecution(Messages.get().MainEditor_21, reqQuery, userDB, getUserType(), getUserEMail());
 				ExecuteDDLCommand.executSQL(userDB, reqResultDAO, reqQuery.getOriginalSql()); //$NON-NLS-1$
-
 			} catch(Exception e) {
 				logger.error("execute ddl", e); //$NON-NLS-1$
 				reqResultDAO.setResult(PublicTadpoleDefine.SUCCESS_FAIL.F.name());
 				reqResultDAO.setMesssage(e.getMessage());
 			} finally {
+				reqResultDAO.setEndDateExecute(new Timestamp(System.currentTimeMillis()));
+				
 				if(PublicTadpoleDefine.SUCCESS_FAIL.F.name().equals(reqResultDAO.getResult())) {
 					afterProcess(reqQuery, reqResultDAO, ""); //$NON-NLS-1$
 					

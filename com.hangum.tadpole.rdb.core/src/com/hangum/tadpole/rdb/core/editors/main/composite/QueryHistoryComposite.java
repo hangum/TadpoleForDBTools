@@ -188,7 +188,7 @@ public class QueryHistoryComposite extends Composite {
 		long longHistorySeq = -1;
 		
 		LicenseDAO licenseDAO = LicenseValidator.getLicense();
-		if(licenseDAO.isEnterprise()) {
+		if(licenseDAO.isValidate()) {
 			try {
 				longHistorySeq = TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
 								getRdbResultComposite().getUserDB(), 

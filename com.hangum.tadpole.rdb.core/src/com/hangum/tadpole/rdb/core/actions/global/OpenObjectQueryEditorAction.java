@@ -13,6 +13,8 @@ package com.hangum.tadpole.rdb.core.actions.global;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
@@ -44,5 +46,16 @@ public class OpenObjectQueryEditorAction extends OpenQueryEditorAction {
 		FindEditorAndWriteQueryUtil.run(userDB, 
 				"", 
 				PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
+	}
+	
+	/**
+	 * is select button enable
+	 */
+	protected void isSelectEnable() {
+		if(TadpoleSecurityManager.getInstance().isLock(userDB)) {
+			if(!(DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup() || DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup())) {				
+				setEnabled(true);
+			}
+		}
 	}
 }

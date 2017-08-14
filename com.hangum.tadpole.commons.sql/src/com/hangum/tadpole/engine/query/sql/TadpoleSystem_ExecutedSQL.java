@@ -60,21 +60,27 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @throws TadpoleSQLManagerException
 	 * @throws SQLException
 	 */
-	public static List<RequestResultDAO> getAllExecuteQueryHistoryDetail(String strEmail, String strType, long startTime, long endTime, int duringExecute, String strSearch) throws TadpoleSQLManagerException, SQLException {
-		return getExecuteQueryHistoryDetail(strEmail, strType, "", startTime, endTime, duringExecute, strSearch);
+	public static List<RequestResultDAO> getAllExecuteQueryHistoryDetail(String strEmail, String strType, long startTime, long endTime, int duringExecute, String strSearch, int _indexStart, int _indexEnd) throws TadpoleSQLManagerException, SQLException {
+		return getExecuteQueryHistoryDetail(strEmail, strType, "", startTime, endTime, duringExecute, strSearch, _indexStart, _indexEnd);
 	}
-	
+
 	/**
 	 * 쿼리 실행 히스토리 디테일 창을 얻습니다.
 	 * 
-	 * @param strType 
+	 * @param strEmail
+	 * @param strType
 	 * @param dbSeq
-	 * @param executeTime
-	 * @param durationLimit
+	 * @param startTime
+	 * @param endTime
+	 * @param duringExecute
+	 * @param strSearch
+	 * @param _indexStart
+	 * @param _indexEnd
 	 * @return
-	 * @throws TadpoleSQLManagerException, SQLException
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
 	 */
-	public static List<RequestResultDAO> getExecuteQueryHistoryDetail(String strEmail, String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch) throws TadpoleSQLManagerException, SQLException {
+	public static List<RequestResultDAO> getExecuteQueryHistoryDetail(String strEmail, String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch, int _indexStart, int _indexEnd) throws TadpoleSQLManagerException, SQLException {
 		List<RequestResultDAO> returnSQLHistory = new ArrayList<RequestResultDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -84,7 +90,7 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(TimeZoneUtil.chageTimeZone(startTime));
-			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			queryMap.put("startTime",  formatter.format(date));
 			
 			Date dateendTime = new Date(TimeZoneUtil.chageTimeZone(endTime));
@@ -95,8 +101,9 @@ public class TadpoleSystem_ExecutedSQL {
 		}
 		
 		queryMap.put("duration", duringExecute);
-		queryMap.put("count", 	3000);
 		queryMap.put("strSearch", strSearch);
+		queryMap.put("_indexStart", _indexStart);
+		queryMap.put("_indexEnd", _indexEnd);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  new ArrayList<Map>();

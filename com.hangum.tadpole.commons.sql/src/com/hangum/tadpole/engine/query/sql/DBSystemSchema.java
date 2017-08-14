@@ -270,6 +270,12 @@ public class DBSystemSchema {
 			}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
 				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
 				paramMap.put("table_name", strObjectName); //$NON-NLS-1$
+			}else if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()){
+				
+				String _objName = StringUtils.substringAfterLast(strObjectName, ".");
+				
+				paramMap.put("table_schema", userDB.getSchema()); //$NON-NLS-1$
+				paramMap.put("table_name", _objName); //$NON-NLS-1$
 			}else{
 				paramMap.put("table_schema", userDB.getDb()); //$NON-NLS-1$
 				paramMap.put("table_name", strObjectName); //$NON-NLS-1$

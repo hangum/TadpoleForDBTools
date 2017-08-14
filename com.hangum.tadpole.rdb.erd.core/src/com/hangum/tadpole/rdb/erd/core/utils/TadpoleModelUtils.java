@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -184,6 +185,16 @@ public enum TadpoleModelUtils {
 		
 		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			listAllTables = new TajoConnectionManager().tableList(userDB);
+		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
+			
+			listAllTables = new ArrayList<>();
+			for (Map map : listTables) {
+				TableDAO tableDao = new TableDAO(""+map.get("name"), "");
+				tableDao.setTable_type(""+map.get("table_type"));
+				
+				listAllTables.add(tableDao);
+			}
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			listAllTables = sqlClient.queryForList("tableList", StringUtils.isBlank(userDB.getSchema()) ? userDB.getDb() : userDB.getSchema()); //$NON-NLS-1$
@@ -210,6 +221,16 @@ public enum TadpoleModelUtils {
 		List<TableDAO> listAllTables = null;
 		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
 			listAllTables = new TajoConnectionManager().tableList(userDB);
+		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
+			
+			listAllTables = new ArrayList<>();
+			for (Map map : listTables) {
+				TableDAO tableDao = new TableDAO(""+map.get("name"), "");
+				tableDao.setTable_type(""+map.get("table_type"));
+				
+				listAllTables.add(tableDao);
+			}
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			listAllTables = sqlClient.queryForList("tableList",StringUtils.isBlank(userDB.getSchema()) ? userDB.getDb() : userDB.getSchema()); //$NON-NLS-1$

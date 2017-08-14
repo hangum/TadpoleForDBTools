@@ -13,9 +13,7 @@ package com.hangum.tadpole.rdb.core.dialog.dbconnect.composite;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -32,8 +30,10 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
+import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBDefine;
-import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -312,8 +312,14 @@ public abstract class AbstractLoginComposite extends Composite {
 	private static boolean isNewDBValidate(int user_seq, UserDBDAO userDBDao) throws TadpoleSQLManagerException, SQLException {
 		for (ManagerListDTO managerListDTO : SessionManager.getManagerDBList()) {
 			for (UserDBDAO tmpUserDB : managerListDTO.getManagerList()) {
-				if(StringUtils.equals(userDBDao.getHost(), tmpUserDB.getHost()) && StringUtils.equals(userDBDao.getPort(), tmpUserDB.getPort()) && StringUtils.equals(userDBDao.getUsers(), tmpUserDB.getUsers())) {
-					return true;
+				if(DBGroupDefine.DYNAMODB_GROUP == userDBDao.getDBGroup()) {
+					if(StringUtils.equals(userDBDao.getUsers(), tmpUserDB.getUsers()) && StringUtils.equals(userDBDao.getDb(), tmpUserDB.getDb())) {
+						return true;
+					}
+				} else {
+					if(StringUtils.equals(userDBDao.getHost(), tmpUserDB.getHost()) && StringUtils.equals(userDBDao.getPort(), tmpUserDB.getPort()) && StringUtils.equals(userDBDao.getUsers(), tmpUserDB.getUsers())) {
+						return true;
+					}
 				}
 			}
 		}
@@ -335,9 +341,8 @@ public abstract class AbstractLoginComposite extends Composite {
 				
 			} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
 				new TajoConnectionManager().connectionCheck(userDB);
-			} else if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT) {
-				HiveJDBC2Manager hiveM = new HiveJDBC2Manager();
-				hiveM.connectionCheck(hiveM.getInstance(userDB), userDB);
+			} else if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || userDB.getDBDefine() == DBDefine.DYNAMODB_DEFAULT) {
+				TadpoleSQLExtManager.getInstance().connectionCheck(userDB);
 			} else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {
 				String strFileLoc = StringUtils.difference(StringUtils.remove(userDB.getDBDefine().getDB_URL_INFO(), "%s"), userDB.getUrl());
 				File fileDB = new File(strFileLoc);
@@ -348,7 +353,6 @@ public abstract class AbstractLoginComposite extends Composite {
 						throw new SQLException("Doesn't SQLite files.");
 					}
 				}
-				
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				sqlClient.queryForList("connectionCheck", userDB.getDb()); //$NON-NLS-1$

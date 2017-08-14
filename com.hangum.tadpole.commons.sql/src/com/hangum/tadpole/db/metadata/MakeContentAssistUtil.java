@@ -94,8 +94,12 @@ public abstract class MakeContentAssistUtil {
 	protected String getContentAssist(final UserDBDAO userDB) {
 		final String strSchema = StringUtils.isEmpty(userDB.getSchemaListSeparator())?getAssistSchemaList(userDB):userDB.getSchemaListSeparator();
 		final String strTableList = StringUtils.isEmpty(userDB.getTableListSeparator())?getAssistTableList(userDB):userDB.getTableListSeparator();
-		final String strViewList = StringUtils.isEmpty(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();
-		final String strFunction = StringUtils.isEmpty(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
+		String strViewList = "";
+		String strFunction = "";
+		if(DBGroupDefine.DYNAMODB_GROUP != userDB.getDBGroup()) {
+			strViewList = StringUtils.isEmpty(userDB.getViewListSeparator())?getAssistViewList(userDB):userDB.getViewListSeparator();;
+			strFunction = StringUtils.isEmpty(userDB.getFunctionLisstSeparator())?getFunctionList(userDB):userDB.getFunctionLisstSeparator();
+		}
 		
 		String strContentAssistList = strSchema;
 		if(!StringUtils.isEmpty(strTableList)) {

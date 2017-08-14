@@ -81,7 +81,7 @@ public class SQLToAxisjConvert extends AbstractSQLTo {
 	public static String sqlToString(UserDBDAO userDB, String sql, Map options, List<AxisjHeaderDAO> listAxisjHeader) {
 		String retHtml = "";
 		try {
-			String STR_TEMPLATE = IOUtils.toString(SQLToAxisjConvert.class.getResource("axis.js.template"));
+			String STR_TEMPLATE = IOUtils.toString(SQLToAxisjConvert.class.getResource("axis.js.template"), "UTF-8");
 
 			QueryExecuteResultDTO queryResult = QueryUtils.executeQuery(userDB, sql, 0, 4);
 			Map<Integer, String> columnLabel = queryResult.getColumnLabelName();

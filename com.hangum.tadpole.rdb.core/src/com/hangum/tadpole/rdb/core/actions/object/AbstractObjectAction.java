@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.actions.object;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -229,9 +230,14 @@ public abstract class AbstractObjectAction extends Action implements ISelectionL
 	 */
 	protected void refreshTrigger() {
 		ExplorerViewer ev = getExplorerView();
-		if(ev != null) ev.refreshTrigger(true, "");
-		//TODO:무조건 리프레쉬 하는것이 아니라 전체트리거 탭이 선택되어 있을때만 리프레쉬 해야하나?
-		if(ev != null) ev.refreshAllTrigger(true, "");
+		CTabFolder tabFolder = ev.getTabFolderObject();
+		
+		if(tabFolder.getSelectionIndex() == 0) {
+			if(ev != null) ev.refreshTrigger(true, "");	
+		} else {
+			//TODO:무조건 리프레쉬 하는것이 아니라 전체트리거 탭이 선택되어 있을때만 리프레쉬 해야하나?
+			if(ev != null) ev.refreshAllTrigger(true, "");
+		}
 	}
 	
 	/**

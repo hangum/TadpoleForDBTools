@@ -16,7 +16,9 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0";resolution:=optional,
  com.hangum.tadpole.ext.appm.basic.core;bundle-version="1.0.0";resolution:=optional,
  com.hangum.tadpole.ext.appm.goodmit.core;bundle-version="1.0.0";resolution:=optional,
  com.hangum.tadpole.ext.appm.core;bundle-version="1.0.0",
- com.hangum.tadpole.commons.excel.core;bundle-version="1.0.0"
+ com.hangum.tadpole.commons.excel.core;bundle-version="1.0.0",
+ com.hangum.tadpole.db.dynamodb.core;bundle-version="1.0.0";resolution:=optional;visibility:=reexport,
+ com.hangum.tadpole.hive.core;bundle-version="1.0.0"
 Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/dbutils/commons-dbutils-1.6.jar,
  .,
@@ -31,7 +33,8 @@ Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/driver/mongo/mongodb-driver-3.4.2.jar,
  libs/driver/mongo/mongodb-driver-async-3.4.2.jar,
  libs/driver/mongo/mongodb-driver-core-3.4.2.jar,
- libs/driver/mysql/mysql-connector-java-5.1.41-bin.jar
+ libs/driver/mysql/mysql-connector-java-5.1.41-bin.jar,
+ libs/driver/pgsql/postgresql-9.4-1204.jdbc41.jar
 Export-Package: 
  com.hangum.tadpole.db.metadata,
  com.hangum.tadpole.db.metadata.constants,

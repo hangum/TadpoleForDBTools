@@ -15,9 +15,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.amazonaws.eclipse.explorer.dynamodb.TablePropertiesDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO;
@@ -56,58 +58,65 @@ public class GenerateViewDDLAction extends AbstractObjectSelectAction {
 
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-		try {
-			DDLScriptManager scriptManager;
-			String strObjectName = "";
-			String strScript = "";
-			
-			Object obj = null;
-			if (PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.equals(actionType)) {
-				OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
+		
+		if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+			TableDAO tableDao = (TableDAO)selection.getFirstElement();
+			TablePropertiesDialog dialog = new TablePropertiesDialog(userDB.getUsers(), userDB.getPasswd(), userDB.getDb(), tableDao.getName());
+			dialog.open();
+		} else {
+			try {
+				DDLScriptManager scriptManager;
+				String strObjectName = "";
+				String strScript = "";
 				
-				if (PublicTadpoleDefine.OBJECT_TYPE.TABLES.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
-					TableDAO dao = new TableDAO();
-					dao.setName(synonym.getName());
-					obj = dao;
-				} else if (PublicTadpoleDefine.OBJECT_TYPE.VIEWS.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.VIEWS);
-					obj = synonym.getName();
-				} else if (PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.PACKAGES);
-					ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
-					dao.setName(synonym.getName());
-					dao.setPackagename(synonym.getName());
-					obj = dao;
-				} else if (PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES);
-					ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
-					dao.setName(synonym.getName());
-					obj = dao;
-				} else if (PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.toString().startsWith(synonym.getObject_type())) {
-					scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
-					ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
-					dao.setName(synonym.getName());
-					obj = dao;
+				Object obj = null;
+				if (PublicTadpoleDefine.OBJECT_TYPE.SYNONYM.equals(actionType)) {
+					OracleSynonymDAO synonym = (OracleSynonymDAO) selection.getFirstElement();
+					
+					if (PublicTadpoleDefine.OBJECT_TYPE.TABLES.toString().startsWith(synonym.getObject_type())) {
+						scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+						TableDAO dao = new TableDAO();
+						dao.setName(synonym.getName());
+						obj = dao;
+					} else if (PublicTadpoleDefine.OBJECT_TYPE.VIEWS.toString().startsWith(synonym.getObject_type())) {
+						scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.VIEWS);
+						obj = synonym.getName();
+					} else if (PublicTadpoleDefine.OBJECT_TYPE.PACKAGES.toString().startsWith(synonym.getObject_type())) {
+						scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.PACKAGES);
+						ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
+						dao.setName(synonym.getName());
+						dao.setPackagename(synonym.getName());
+						obj = dao;
+					} else if (PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES.toString().startsWith(synonym.getObject_type())) {
+						scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES);
+						ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
+						dao.setName(synonym.getName());
+						obj = dao;
+					} else if (PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS.toString().startsWith(synonym.getObject_type())) {
+						scriptManager = new DDLScriptManager(userDB, PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS);
+						ProcedureFunctionDAO dao = new ProcedureFunctionDAO();
+						dao.setName(synonym.getName());
+						obj = dao;
+					} else {
+						scriptManager = new DDLScriptManager(userDB, actionType);
+						obj = synonym;
+					}
+					
+					strObjectName = synonym.getName();
+					strScript = scriptManager.getScript(obj);
 				} else {
 					scriptManager = new DDLScriptManager(userDB, actionType);
-					obj = synonym;
+					obj = selection.getFirstElement();
+					
+					strScript = scriptManager.getScript(obj);
+					strObjectName = scriptManager.getObjectName();
 				}
-				
-				strObjectName = synonym.getName();
-				strScript = scriptManager.getScript(obj);
-			} else {
-				scriptManager = new DDLScriptManager(userDB, actionType);
-				obj = selection.getFirstElement();
-				
-				strScript = scriptManager.getScript(obj);
-				strObjectName = scriptManager.getObjectName();
+	
+				FindEditorAndWriteQueryUtil.run(userDB, strObjectName, strScript, true, actionType);
+			} catch (Exception e) {
+				logger.error("view ddl", e);
+				MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage());
 			}
-
-			FindEditorAndWriteQueryUtil.run(userDB, strObjectName, strScript, true, actionType);
-		} catch (Exception e) {
-			logger.error("view ddl", e);
-			MessageDialog.openError(null,CommonMessages.get().Error, e.getMessage());
 		}
 	}
 

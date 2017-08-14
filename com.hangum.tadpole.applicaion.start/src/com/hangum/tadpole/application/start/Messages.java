@@ -76,6 +76,8 @@ public class Messages {
 
 	public String ApplicationActionBarAdvisor_Observer;
 	
+	public String UseLicense;
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}

@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 
+import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
@@ -77,27 +79,34 @@ public class SQLQueryUtil {
 	private QueryExecuteResultDTO runSQLSelect() throws Exception {
 		queryResultDAO = new QueryExecuteResultDTO();
 		// 한번에 데이터 가져오기를 실행하면 가져올수 있는데이터만큼 가져온다.
-		int GET_DATA_COUNT = DATA_COUNT;
-		if(this.isOneTime) {
-			if(MAX_DATA_COUNT != -1) {
-				GET_DATA_COUNT = MAX_DATA_COUNT;
-			}
+		String thisTimeQuery = "";
+		if(!this.isOneTime) {
+			thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, DATA_COUNT);
+		} else {
+			thisTimeQuery = requestQuery;
 		}
 		
-		String thisTimeQuery = PartQueryUtil.makeSelect(userDB, requestQuery, startPoint, GET_DATA_COUNT);
 		if(logger.isDebugEnabled()) logger.debug("[query]" + thisTimeQuery);
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		java.sql.Connection javaConn = null;
 		
 		try {
-			javaConn = TadpoleSQLManager.getConnection(userDB);
+			if(userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP) {
+				javaConn = TadpoleSQLExtManager.getInstance().getConnection(userDB);
+			} else {
+				javaConn = TadpoleSQLManager.getConnection(userDB);
+			}
 			
 			stmt = javaConn.prepareStatement(thisTimeQuery); 
 			rs = stmt.executeQuery();//Query( selText );
 			
 			// table column의 정보
-			queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, false, rs, startPoint, DATA_COUNT);
+			if(!this.isOneTime) {
+				queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, false, rs, startPoint, DATA_COUNT);
+			} else {
+				queryResultDAO = new QueryExecuteResultDTO(userDB, thisTimeQuery, false, rs, startPoint);
+			}
 		} finally {
 			try { if(rs != null) rs.close(); } catch(Exception e) {}
 			try { if(stmt != null) stmt.close();} catch(Exception e) {}
@@ -112,11 +121,11 @@ public class SQLQueryUtil {
 			isFirst = false;
 			return true;
 		} else {
-			startPoint = startPoint + DATA_COUNT;
-			if(queryResultDAO.getDataList().getData().isEmpty()) return false;
-			
-			// -1 이면 전체 데이터를 넘겨 받는다.
 			if(this.isOneTime) return false;
+			
+			startPoint = startPoint + DATA_COUNT;
+			if(this.MAX_DATA_COUNT < startPoint) return false;
+			if(queryResultDAO.getDataList().getData().isEmpty()) return false;
 		}
 		 
 		return true;

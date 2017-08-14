@@ -62,12 +62,13 @@ public class DialogUtil {
 				}
 			} else if (objectSelector.getObjectCount() <= 0) {
 				//해당 오브젝트를 찾을 수 없습니다.
-				MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);
+				MessageDialog.openInformation(null , CommonMessages.get().Information, String.format(Messages.get().NotFountObject, paramMap.get("OBJECT_NAME")));
 				return;
 			}
 			map = objectSelector.getSelectObject();
 		}else{
 			map.put("OBJECT_TYPE", "TABLE"); 
+			map.put("OBJECT_OWNER", paramMap.get("OBJECT_OWNER")); 
 			map.put("OBJECT_NAME", paramMap.get("OBJECT_NAME")); 
 		}
 
@@ -94,7 +95,7 @@ public class DialogUtil {
 			MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().DoNotSupportObject);
 		} else if (StringUtils.isEmpty( map.get("OBJECT_TYPE"))){
 
-			MessageDialog.openInformation(null , CommonMessages.get().Information, Messages.get().NotFountObject);
+			MessageDialog.openInformation(null , CommonMessages.get().Information, String.format(Messages.get().NotFountObject, paramMap.get("OBJECT_NAME")));
 		}
 
 	}

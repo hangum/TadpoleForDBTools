@@ -10,7 +10,6 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.sessionlist;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -62,10 +62,13 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.utils.EditorDefine;
+import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.ColumnHeaderCreator;
 import com.hangum.tadpole.rdb.core.editors.dbinfos.composites.TableViewColumnDefine;
+import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListLabelProvider;
 import com.hangum.tadpole.rdb.core.editors.sessionlist.composite.mysql.MySQLSessionListTableCompare;
 import com.hangum.tadpole.rdb.core.viewers.object.comparator.ObjectComparator;
@@ -306,70 +309,80 @@ public class SessionListEditor extends EditorPart {
 	
 	private void createLocksBlockTableColumn() {
 		TableViewColumnDefine[] tableColumnDef = null;
-		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
-			tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
-				, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("BLOCK_TYPE", "Block Type", 80, SWT.CENTER) //$NON-NLS-1$
-				, new TableViewColumnDefine("STATUS", "Status", 80, SWT.CENTER) //$NON-NLS-1$
-				, new TableViewColumnDefine("SQL_TEXT", "SQL", 300, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("LOCK_TYPE", "Lock Type", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("MODE_HELD", "Mode Held", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("MODE_REQUESTED", "Mode Requested", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
-			};
-		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
-				tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("trx_id", "Transaction ID", 80, SWT.RIGHT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_state", "State", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_started", "Started", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_requested_lock_id", "Requested lock", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_wait_started", "Wait started", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_weight", "Weight", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_mysql_thread_id", "Thread ID", 80, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("SQL_TEXT", "SQL", 100, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_operation_state", "Operation state", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_tables_in_use", "In use", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_tables_locked", "Locked", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_lock_structs", "Structs", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_lock_memory_bytes", "Memory bytes", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_rows_locked", "Rows locked", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_rows_modified", "Rows modified", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_concurrency_tickets", "Concur..Tickets", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_isolation_level", "Isolation Level", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_unique_checks", "Unique check", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_foreign_key_checks", "ForeignKey check", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_last_foreign_key_error", "ForeignKey error", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_adaptive_hash_latched", "Hash latched", 60, SWT.LEFT) //$NON-NLS-1$
-				, new TableViewColumnDefine("trx_adaptive_hash_timeout", "Hash timeout", 60, SWT.LEFT) //$NON-NLS-1$
-			};			
+		
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()){
+				tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("SID", "Session ID", 80, SWT.RIGHT) //$NON-NLS-1$
+					, new TableViewColumnDefine("USERNAME", "User Name", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("BLOCK_TYPE", "Block Type", 80, SWT.CENTER) //$NON-NLS-1$
+					, new TableViewColumnDefine("STATUS", "Status", 80, SWT.CENTER) //$NON-NLS-1$
+					, new TableViewColumnDefine("SQL_TEXT", "SQL", 300, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("LOCK_TYPE", "Lock Type", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("MODE_HELD", "Mode Held", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("MODE_REQUESTED", "Mode Requested", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("OSUSER", "OS User", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("MACHINE", "Machine", 100, SWT.LEFT) //$NON-NLS-1$
+				};
+			}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
+					tableColumnDef = new TableViewColumnDefine[] { new TableViewColumnDefine("trx_id", "Transaction ID", 80, SWT.RIGHT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_state", "State", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_started", "Started", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_requested_lock_id", "Requested lock", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_wait_started", "Wait started", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_weight", "Weight", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_mysql_thread_id", "Thread ID", 80, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("SQL_TEXT", "SQL", 100, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_operation_state", "Operation state", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_tables_in_use", "In use", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_tables_locked", "Locked", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_lock_structs", "Structs", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_lock_memory_bytes", "Memory bytes", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_rows_locked", "Rows locked", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_rows_modified", "Rows modified", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_concurrency_tickets", "Concur..Tickets", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_isolation_level", "Isolation Level", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_unique_checks", "Unique check", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_foreign_key_checks", "ForeignKey check", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_last_foreign_key_error", "ForeignKey error", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_adaptive_hash_latched", "Hash latched", 60, SWT.LEFT) //$NON-NLS-1$
+					, new TableViewColumnDefine("trx_adaptive_hash_timeout", "Hash timeout", 60, SWT.LEFT) //$NON-NLS-1$
+				};			
+			}
+	
+			ColumnHeaderCreator.createColumnHeader(tableViewerBlock, tableColumnDef);
+	
+			tableViewerBlock.setContentProvider(new ArrayContentProvider());
+			tableViewerBlock.setLabelProvider(new SessionLocksLabelProvider(tableViewerBlock));
 		}
-
-		ColumnHeaderCreator.createColumnHeader(tableViewerBlock, tableColumnDef);
-
-		tableViewerBlock.setContentProvider(new ArrayContentProvider());
-		tableViewerBlock.setLabelProvider(new SessionLocksLabelProvider(tableViewerBlock));
 	}
 	
+	/**
+	 * refresh lock list
+	 * 
+	 * @param sid
+	 */
 	public void refreshLocksList(String sid) {
-		try {
-
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			Map<String, String> param = new HashMap<String, String>();
-			param.put("sid", StringUtils.replace(sid, ",", ""));
-			showLocksList = (List<HashMap>) sqlClient.queryForList("getLockList", param); //$NON-NLS-1$
-
-			if (showLocksList!=null && showLocksList.size() > 0){
-				tableViewerLocks.setInput(showLocksList);
-				tableViewerLocks.refresh();
+		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+			try {
+	
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+				Map<String, String> param = new HashMap<String, String>();
+				param.put("sid", StringUtils.replace(sid, ",", ""));
+				showLocksList = (List<HashMap>) sqlClient.queryForList("getLockList", param); //$NON-NLS-1$
+	
+				if (showLocksList!=null && showLocksList.size() > 0){
+					tableViewerLocks.setInput(showLocksList);
+					tableViewerLocks.refresh();
+				}
+				//tableViewerBlock.setInput(new ArrayList<HashMap<String, Object>>());
+				//tableViewerBlock.refresh();
+	
+			} catch (Exception e) {
+				logger.error("refresh list", e); //$NON-NLS-1$
+	
+				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 			}
-			//tableViewerBlock.setInput(new ArrayList<HashMap<String, Object>>());
-			//tableViewerBlock.refresh();
-
-		} catch (Exception e) {
-			logger.error("refresh list", e); //$NON-NLS-1$
-
-			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, e.getMessage(), errStatus); //$NON-NLS-1$
 		}
 	}	
 	
@@ -615,11 +628,15 @@ public class SessionListEditor extends EditorPart {
 			if (DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 				client.queryForObject("killProcess", Integer.parseInt(sl.getId())); //$NON-NLS-1$
 			} else if (DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()){
-				 Map<String, String> parameters = new HashMap<String, String>(2);
-				 parameters.put("dbname", sl.getDb());
-				 parameters.put("session_id", sl.getId());
-				 
-				 client.queryForObject("killProcess", parameters);
+//				 Map<String, String> parameters = new HashMap<String, String>(2);
+//				 parameters.put("dbname", sl.getDb());
+//				 parameters.put("session_id", sl.getId());
+//				 
+//				 client.queryForObject("killProcess", parameters);
+				
+				RequestQuery reqQuery = new RequestQuery(userDB, String.format("ALTER DATABASE %s SESSION CLOSE %s", sl.getDb(), sl.getId()), PublicTadpoleDefine.OBJECT_TYPE.TABLES, 
+						EditorDefine.QUERY_MODE.QUERY, EditorDefine.EXECUTE_TYPE.BLOCK, true);
+				ExecuteOtherSQL.runSQLOther(reqQuery, userDB, SessionManager.getRepresentRole(), SessionManager.getEMAIL());
 			} else {
 				client.queryForObject("killProcess", sl.getId()); //$NON-NLS-1$
 			}
