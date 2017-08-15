@@ -42,6 +42,8 @@ public class RequestResultDAO {
 	int dbSeq;
 	String ipAddress;
 	
+	String description;
+	
 	Exception exception;
 	
 	/** execute_sql_type */
@@ -61,7 +63,7 @@ public class RequestResultDAO {
 
 	// Sql history for executedSqlEditor
 	public RequestResultDAO(int duration, String userName, String dbName, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message,
-			String ipAddress, int dbSeq) {
+			String ipAddress, int dbSeq, String strDescription) {
 		this.duration = duration;
 		this.userName = userName;
 		this.dbName = dbName;
@@ -73,6 +75,7 @@ public class RequestResultDAO {
 		this.rows = rows;
 		this.result = result;
 		this.messsage = message;
+		this.description = strDescription;
 	}
 
 	public RequestResultDAO() {
@@ -249,6 +252,20 @@ public class RequestResultDAO {
 	 */
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

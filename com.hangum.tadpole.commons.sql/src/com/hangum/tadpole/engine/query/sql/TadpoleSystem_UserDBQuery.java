@@ -176,7 +176,8 @@ public class TadpoleSystem_UserDBQuery {
 		// tadpole_user_db_role
 		TadpoleUserDbRoleDAO roleDao = TadpoleSystem_UserRole.insertTadpoleUserDBRole(userSeq, 
 					insertedUserDB.getSeq(), 
-					PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.toString()
+					PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.toString(),
+					""
 				);
 		
 		// to save access control

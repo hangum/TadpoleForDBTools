@@ -54,8 +54,10 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	// default value is 00:00
 	protected Timestamp terms_of_use_starttime 	= new Timestamp(System.currentTimeMillis());
 
-		// default value is 100 years after
+	// default value is 100 years after
 	protected  Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillsMonth(24));
+	// user db role description
+	protected String description = "";
 	
 	/**
 	 * @return the role_seq
@@ -140,6 +142,14 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	public void setIs_resource_download(String is_resource_download) {
 		this.is_resource_download = is_resource_download;
 	}	
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
 	// ====================================== end
 
 	protected int seq = -999;

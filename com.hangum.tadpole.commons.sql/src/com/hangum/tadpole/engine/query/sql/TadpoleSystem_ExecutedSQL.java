@@ -140,9 +140,10 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			String strMessage = (String)resultMap.get("message");
 			int duration = (Integer) resultMap.get("duration");
+			String strDescription = (String)resultMap.get("description");
 
 			RequestResultDAO dao = new RequestResultDAO(duration,userName+"("+ userEmail+")", dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
-					ipAddress, dbSeq2);
+					ipAddress, dbSeq2, strDescription);
 			dao.setSeq(seq);
 			if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
 				dao.setEXECUSTE_SQL_TYPE(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API);

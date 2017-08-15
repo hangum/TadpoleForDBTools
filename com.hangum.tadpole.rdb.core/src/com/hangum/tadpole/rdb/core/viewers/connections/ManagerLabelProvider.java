@@ -155,6 +155,10 @@ public class ManagerLabelProvider extends ColumnLabelProvider {
 			}
 		}
 		
+		if(!"".equals(userDB.getDescription())) {
+			retText += String.format("[%s]", StringUtils.abbreviate(userDB.getDescription(), 15));
+		}
+		
 		return retText;
 	}
 	

@@ -617,8 +617,8 @@
 
 <insert id="userDBRoleInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 	INSERT INTO tadpole_user_db_role
-		(user_seq,db_seq, role_id, access_ip, is_resource_download,  terms_of_use_starttime, terms_of_use_endtime)
-	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #is_resource_download#, #terms_of_use_starttime#, #terms_of_use_endtime#);
+		(user_seq,db_seq, role_id, access_ip, is_resource_download,  terms_of_use_starttime, terms_of_use_endtime, description)
+	VALUES (#user_seq#, #db_seq#, #role_id#, #access_ip#, #is_resource_download#, #terms_of_use_starttime#, #terms_of_use_endtime#, #description#);
 	
 	<selectKey resultClass="com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO">
 		SELECT a.*, b.email, b.name
@@ -628,6 +628,7 @@
 			AND a.db_seq 		= #db_seq# 
 			AND a.access_ip 	= #access_ip# 
 			AND a.is_resource_download = #is_resource_download#
+			AND a.description = #description#
 			AND a.user_seq = b.seq
 			AND a.delYn = 'NO'
 	</selectKey>
@@ -638,7 +639,8 @@
 	SET role_id = #role_id#,
 		is_resource_download = #is_resource_download#,
 		terms_of_use_starttime = #terms_of_use_starttime#, 
-		terms_of_use_endtime = #terms_of_use_endtime#
+		terms_of_use_endtime = #terms_of_use_endtime#,
+		description			= #description#
 	WHERE seq = #seq# 
 </update>
 
@@ -1037,17 +1039,22 @@ SELECT
  			a.result,
  		   	db.display_name, 
  		   	a.ipaddress, 
- 		   	db.seq as dbseq
+ 		   	db.seq as dbseq,
+ 		   	role.description
 	 FROM 
 		 executed_sql_resource a,
 		 executed_sql_resource_data b,
-		 tadpole_db db
+		 tadpole_db db,
+		 tadpole_user_db_role role
 	where 1=1 AND
 	 <isNotNull property="db_seq">
 	  a.db_seq in ($db_seq$) AND 
 	 </isNotNull>
  <![CDATA[
-	  	  a.delyn = 'NO' 
+	  	  a.delyn = 'NO'
+	  	AND a.user_seq  = role.user_seq  
+        and role.delyn = 'NO'
+        and a.db_seq    = role.db_seq 
 	  AND a.seq = b.executed_sql_resource_seq 
 	  AND a.startdateexecute >= #startTime# 
       AND a.enddateexecute <= #endTime# 
@@ -1058,6 +1065,19 @@ SELECT
       <isNotNull property="type">
       	AND a.types = #type#
       </isNotNull>	
+      group by b.executed_sql_resource_seq, 
+ 			a.types,
+ 			a.duration,
+ 			a.startdateexecute, 
+ 			a.enddateexecute,
+ 			a.message, 
+ 			b.datas, 
+ 			a.row, 
+ 			a.result,
+ 		   	db.display_name, 
+ 		   	a.ipaddress, 
+ 		   	dbseq,
+ 		   	role.description
 	order by a.create_time 
 	limit #_indexStart#, #_indexEnd#
 </select>
@@ -1081,17 +1101,23 @@ SELECT
  		   	u.name, 
  		   	db.display_name, 
  		   	a.ipaddress, 
- 		   	db.seq as dbseq
+ 		   	db.seq as dbseq, 
+ 		   	role.description
 	 FROM 
 		 executed_sql_resource a,
 		 executed_sql_resource_data b,
 		 tadpole_user u,
-		 tadpole_db db
+		 tadpole_db db,
+		 tadpole_user_db_role role
 	where 1=1 
 	 <isNotNull property="db_seq">
 	  AND  a.db_seq in ($db_seq$) 
 	 </isNotNull>
  <![CDATA[
+ 		AND a.user_seq  = role.user_seq  
+        and role.delyn = 'NO'
+        and a.db_seq    = role.db_seq 
+        and u.seq = role.user_seq
 	  AND a.delyn = 'NO' 
 	  AND u.email like #email#
 	  AND a.seq = b.executed_sql_resource_seq 
@@ -1106,7 +1132,9 @@ SELECT
        <isNotNull property="type">
       	AND a.types = #type#
       </isNotNull>
-      	
+    group by b.executed_sql_resource_seq,      a.types,     a.duration,     a.startdateexecute,      a.enddateexecute,
+        a.message,      b.datas,      a.row,      a.result,        u.email,        
+        u.name,         db.display_name,         a.ipaddress,        dbseq, role.description  	
 	order by a.create_time 
 	limit #_indexStart#, #_indexEnd#
 
