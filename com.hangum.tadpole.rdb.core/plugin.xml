@@ -255,6 +255,18 @@
                </objectClass>
             </enablement>
          </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.Action1"
+               icon="resources/icons/db_import.png"
+               id="com.hangum.tadpole.rdb.core.action.import.excel"
+               label="Excel file import"
+               menubarPath="com.hangum.tadpole.rdb.core.menu.importAExport/ImportAExport">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
           <action
                 class="com.hangum.tadpole.rdb.core.actions.connections.CreateTriggerAction"
                 enablesFor="1"

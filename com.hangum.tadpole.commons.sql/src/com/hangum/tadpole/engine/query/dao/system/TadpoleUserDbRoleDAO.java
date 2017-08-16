@@ -28,6 +28,9 @@ public class TadpoleUserDbRoleDAO extends UserDAO {
 	// default value is 100 years after
 	Timestamp terms_of_use_endtime  	= new Timestamp(DateUtil.afterMonthToMillsMonth(12));
 	
+	// 설명 (tag) 등으로 사용할수 있음 (UI에 표현될대 보여짐)
+	String description = "";
+	
 	//
 	UserDBDAO parent;
 	
@@ -151,6 +154,20 @@ public class TadpoleUserDbRoleDAO extends UserDAO {
 	 */
 	public void setDisplay_name(String display_name) {
 		this.display_name = display_name;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }
