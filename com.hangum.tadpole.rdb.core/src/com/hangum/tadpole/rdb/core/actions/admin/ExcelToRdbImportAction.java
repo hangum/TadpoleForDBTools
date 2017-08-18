@@ -13,7 +13,7 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.importexport.core.dialogs.CsvToRDBImportDialog;
+import com.hangum.tadpole.importexport.core.dialogs.ExcelToRDBImportDialog;
 import com.hangum.tadpole.rdb.core.Messages;
 
 public class ExcelToRdbImportAction implements IViewActionDelegate {
@@ -38,7 +38,7 @@ public class ExcelToRdbImportAction implements IViewActionDelegate {
 			}
 				
 			if(isPossible) {
-				CsvToRDBImportDialog dialog = new CsvToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
+				ExcelToRDBImportDialog dialog = new ExcelToRDBImportDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), userDB);
 				dialog.open();
 			} else {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), CommonMessages.get().Information, Messages.get().MainEditor_21);

@@ -40,6 +40,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -47,7 +48,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.csv.CSVLoader;
+import com.hangum.tadpole.commons.excel.XLSLoader;
+import com.hangum.tadpole.commons.excel.XLSReader;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
@@ -65,8 +67,8 @@ import com.ibatis.sqlmap.client.SqlMapClient;
  * @author hangum
  *
  */
-public class CsvToRDBImportDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(CsvToRDBImportDialog.class);
+public class ExcelToRDBImportDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(ExcelToRDBImportDialog.class);
 	private int ID_BTN_INSERT		 = IDialogConstants.CLIENT_ID 	+ 1;
 	
 	private UserDBDAO userDB;
@@ -80,7 +82,6 @@ public class CsvToRDBImportDialog extends Dialog {
 	private Text fileNameLabel;
 	private Text textTableName;
 	private Text textSQL;
-	private Text textSeprator;
 	
 	private Composite compositeExistsData;
 	private Button btnCopyNew;
@@ -106,12 +107,15 @@ public class CsvToRDBImportDialog extends Dialog {
 	
 	/** download servcie handler. */
 	private DownloadServiceHandler downloadServiceHandler;
+	private Composite composite;
+	
+	private Combo comboSheet;
 
 	/**
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public CsvToRDBImportDialog(Shell parentShell, UserDBDAO userDB) {
+	public ExcelToRDBImportDialog(Shell parentShell, UserDBDAO userDB) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		this.userDB = userDB;
@@ -120,7 +124,7 @@ public class CsvToRDBImportDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().CsvToRDBImportDialog_3);
+		newShell.setText("Excel 파일 가져오기");
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -153,7 +157,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		
 		textTableName = new Text(compositeHead, SWT.BORDER);
 		textTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+
 		btnCopyNew = new Button(compositeHead, SWT.CHECK);
 		btnCopyNew.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -188,14 +192,15 @@ public class CsvToRDBImportDialog extends Dialog {
 		pushSession = new ServerPushSession();
 	
 		/* Window builder Design View bug */
-		/*
-		Label temp = new Label(compositeHead, SWT.NONE);
-		temp.setText("Temp");
-		temp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		*/	
+		//FileUpload 가 윈도우 빌더에서 오류가 발생하므로 디자인할때는 막아놓고 해야함.
+		//Button fileUpload = new Button(compositeHead, SWT.NONE);
+		//fileUpload.setText("Temp");
+		//fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		
 		fileUpload = new FileUpload(compositeHead, SWT.NONE);
 		fileUpload.setText(Messages.get().CsvToRDBImportDialog_2);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		
 		fileUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -210,25 +215,19 @@ public class CsvToRDBImportDialog extends Dialog {
 			}
 		});
 		
-		Label lblSeprator = new Label(compositeHead, SWT.NONE);
-		lblSeprator.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSeprator.setText(Messages.get().CsvToRDBImportDialog_6);
-		
-		Composite composite_3 = new Composite(compositeHead, SWT.NONE);
-		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		composite_3.setLayout(new GridLayout(3, false));
-		
-		textSeprator = new Text(composite_3, SWT.BORDER);
-		GridData gd_textSeprator = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textSeprator.widthHint = 101;
-		textSeprator.setLayoutData(gd_textSeprator);
-		textSeprator.setText(","); //$NON-NLS-1$
-		
-		Label lblBatchSize = new Label(composite_3, SWT.NONE);
+		Label lblBatchSize = new Label(compositeHead, SWT.NONE);
 		lblBatchSize.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblBatchSize.setText(Messages.get().CsvToRDBImportDialog_lblBatchSize_text);
 		
-		textBatchSize = new Text(composite_3, SWT.BORDER | SWT.RIGHT);
+		composite = new Composite(compositeHead, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_composite = new GridLayout(3, false);
+		gl_composite.marginHeight = 0;
+		gl_composite.marginWidth = 0;
+		composite.setLayout(gl_composite);
+		
+		textBatchSize = new Text(composite, SWT.BORDER | SWT.RIGHT);
+		
 		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 			//SQLite 는 BatchExecute작업이 한번에 200건 이상 처리시 database logic에러가 발생하고 있어서 1건마다 executeBatch 및 commit을 하도록 한다.
 			textBatchSize.setEditable(false);
@@ -237,7 +236,13 @@ public class CsvToRDBImportDialog extends Dialog {
 			textBatchSize.setEditable(true);
 			textBatchSize.setText(Messages.get().CsvToRDBImportDialog_text_1_text_1);
 		}
-		textBatchSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		Label lblNewLabel = new Label(composite, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel.setText("Target Sheet");
+		
+		comboSheet = new Combo(composite, SWT.NONE);
+		comboSheet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(compositeHead, SWT.NONE);
 		
 		Label lblException = new Label(compositeHead, SWT.NONE);
@@ -494,7 +499,7 @@ public class CsvToRDBImportDialog extends Dialog {
 					parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 					parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
-				} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
+				} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ) {
 					parameters.put("schema_name", userDB.getSchema());
 					parameters.put("table_name", StringUtils.upperCase(tableName));
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
@@ -575,7 +580,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		//PreviewSQL Clear!!!
 		textSQL.setText(""); //$NON-NLS-1$
 		
-		CSVLoader loader = new CSVLoader(textSeprator.getText(), textBatchSize.getText(), btnStop.getSelection());
+		XLSLoader loader = new XLSLoader(comboSheet.getText(), textBatchSize.getText(), btnStop.getSelection());
 		String stmtType = "i"; //$NON-NLS-1$
 		try {
 			if (this.btnInsert.getSelection()) {
@@ -648,12 +653,6 @@ public class CsvToRDBImportDialog extends Dialog {
 			return false;
 		}
 		
-		if("".equals(textSeprator.getText())) { //$NON-NLS-1$
-			MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().CsvToRDBImportDialog_24);
-			textSeprator.setFocus();
-			return false;
-		}
-		
 		return true;
 	}
 	
@@ -666,7 +665,7 @@ public class CsvToRDBImportDialog extends Dialog {
 		File[] arryFiles = receiver.getTargetFiles();
 		File userDBFile = arryFiles[arryFiles.length-1];
 		
-		CSVLoader loader = new CSVLoader(textSeprator.getText(), textBatchSize.getText(), btnStop.getSelection());
+		XLSLoader loader = new XLSLoader(comboSheet.getText(), textBatchSize.getText(), btnStop.getSelection());
 		Connection javaConn =  null;
 		HashMap<String,Object> keyColumns = new HashMap<String,Object>();
 		String stmtType = "i"; //$NON-NLS-1$
@@ -699,7 +698,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			keyColumns = loadPrimaryKeyColumns(textTableName.getText().trim());
 			javaConn = TadpoleSQLManager.getConnection(userDB);
 			
-			int count = loader.loadCSV(javaConn, userDBFile, textTableName.getText(), workType, stmtType, keyColumns, disableObjectResults);
+			int count = loader.loadExcel(javaConn, userDBFile, textTableName.getText(), workType, stmtType, keyColumns, disableObjectResults);
 			
 			this.appendPreviewSQL(loader.getImportResultLog().toString());
 			
@@ -751,6 +750,15 @@ public class CsvToRDBImportDialog extends Dialog {
 						text = ""; //$NON-NLS-1$
 					}
 					fileNameLabel.setText(message);
+					
+					File[] arryFiles = receiver.getTargetFiles();
+					File userDBFile = arryFiles[arryFiles.length-1];
+					
+					comboSheet.removeAll();		
+					XLSReader xlsReader = new XLSReader(userDBFile, "");		
+					List<String> sheetNames = xlsReader.getSheetNames();		
+					for (String sheet : sheetNames ) comboSheet.add(sheet);		
+					comboSheet.setText(xlsReader.getActiveSheetName() );
 
 					pushSession.stop();
 				}

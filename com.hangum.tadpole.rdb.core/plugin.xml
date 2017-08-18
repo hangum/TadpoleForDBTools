@@ -256,7 +256,7 @@
             </enablement>
          </action>
          <action
-               class="com.hangum.tadpole.rdb.core.Action1"
+               class="com.hangum.tadpole.rdb.core.actions.admin.ExcelToRdbImportAction"
                icon="resources/icons/db_import.png"
                id="com.hangum.tadpole.rdb.core.action.import.excel"
                label="Excel file import"
