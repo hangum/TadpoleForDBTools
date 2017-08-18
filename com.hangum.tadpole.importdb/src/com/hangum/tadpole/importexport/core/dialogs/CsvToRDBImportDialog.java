@@ -484,7 +484,7 @@ public class CsvToRDBImportDialog extends Dialog {
 			if (btnTrigger.getSelection()){
 				Map<String, String> parameters = new HashMap<String, String>(2);
 				parameters.put("schema_name", userDB.getSchema());
-				parameters.put("table_name", StringUtils.upperCase(tableName));
+				parameters.put("table_name", tableName);
 				disableObjectResults = sqlClient.queryForList("triggerListInTable", parameters); //$NON-NLS-1$
 			}
 
@@ -494,11 +494,7 @@ public class CsvToRDBImportDialog extends Dialog {
 					parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 					parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
-				} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
-					parameters.put("schema_name", userDB.getSchema());
-					parameters.put("table_name", StringUtils.upperCase(tableName));
-					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
-				} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+				} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 					parameters.put("schema_name", userDB.getSchema());
 					parameters.put("table_name", tableName);
 					disableObjectResults = sqlClient.queryForList("primarykeyListInTable", parameters);
@@ -521,31 +517,27 @@ public class CsvToRDBImportDialog extends Dialog {
 		String columns = ""; //$NON-NLS-1$
 		try{
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			Map<String, String> parameters = new HashMap<String, String>(2);
 			if(DBGroupDefine.ALTIBASE_GROUP == userDB.getDBGroup()) {
+				Map<String, String> parameters = new HashMap<String, String>(2);
 				parameters.put("user_name", StringUtils.substringBefore(tableName, "."));
 				parameters.put("table_name", StringUtils.substringAfter(tableName, "."));
 
 				showIndexColumns = sqlClient.queryForList("primarykeyListInTable", parameters);
-			} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
-				parameters.put("schema_name", userDB.getSchema());
-				parameters.put("table_name", StringUtils.upperCase(tableName));
-
-				showIndexColumns = sqlClient.queryForList("primarykeyListInTable", parameters); //$NON-NLS-1$
 			} else {
 				showIndexColumns = sqlClient.queryForList("primarykeyListInTable", tableName); //$NON-NLS-1$
 			}
+			
 			
 			for (HashMap dao: showIndexColumns){
 				if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) {
 					/* cid, name, type, notnull, dflt_value, pk */
 					if ("1".equals(dao.get("pk").toString())) { //$NON-NLS-1$ //$NON-NLS-2$
-						result.put(dao.get("name").toString().toLowerCase(), (Integer) dao.get("cid") + 1);	 //$NON-NLS-1$ //$NON-NLS-2$
-						columns += dao.get("name").toString().toLowerCase() + ","; //$NON-NLS-1$ //$NON-NLS-2$
+						result.put(dao.get("name").toString(), (Integer) dao.get("cid") + 1);	 //$NON-NLS-1$ //$NON-NLS-2$
+						columns += dao.get("name").toString() + ","; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}else{
-					result.put(dao.get("column_name").toString().toLowerCase(), Integer.parseInt( dao.get("column_order").toString()));	 //$NON-NLS-1$ //$NON-NLS-2$
-					columns += dao.get("column_name").toString().toLowerCase() + ","; //$NON-NLS-1$ //$NON-NLS-2$
+					result.put(dao.get("column_name").toString(), Integer.parseInt( dao.get("column_order").toString()));	 //$NON-NLS-1$ //$NON-NLS-2$
+					columns += dao.get("column_name").toString() + ","; //$NON-NLS-1$ //$NON-NLS-2$
 				}				
 			}
 		} catch (Exception e) {
