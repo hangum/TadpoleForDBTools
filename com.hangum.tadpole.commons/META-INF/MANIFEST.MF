@@ -9,8 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.rap.ui;bundle-version="1.4.0",
  com.hangum.tadpole.commons.libs;bundle-version="1.0.0",
  org.apache.commons.io;bundle-version="2.2.0",
- org.eclipse.rap.fileupload;bundle-version="3.0.0",
- com.hangum.tadpole.commons.excel.core;bundle-version="1.0.0"
+ org.eclipse.rap.fileupload;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
@@ -29,7 +28,6 @@ Export-Package: com.google.gson,
  com.hangum.tadpole.commons.dialogs.fileupload,
  com.hangum.tadpole.commons.dialogs.message,
  com.hangum.tadpole.commons.dialogs.message.dao,
- com.hangum.tadpole.commons.excel,
  com.hangum.tadpole.commons.exception,
  com.hangum.tadpole.commons.exception.dialog,
  com.hangum.tadpole.commons.google.analytics,
