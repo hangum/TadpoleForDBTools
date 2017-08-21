@@ -703,7 +703,6 @@ ORDER BY t.table_name, s.object_name
     	INNER JOIN all_triggers t ON s.owner = t.owner and s.object_name = t.trigger_name
    WHERE     1 = 1
          AND t.status = 'ENABLED'
-         AND s.status = 'VALID'
          AND s.object_type = 'TRIGGER'
          AND s.owner = (#schema_name#)
          AND t.table_name = (#table_name#)
