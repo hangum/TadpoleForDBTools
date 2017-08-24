@@ -10,12 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util.sqlscripts.scripts;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.postgresql.jdbc4.Jdbc4Array;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBDefine;
@@ -231,33 +233,47 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		StringBuilder result = new StringBuilder("");
 
-		HashMap<String, String> srcProc = null;
+		ArrayList<HashMap<String, Object>> srcProcList = null;
 //		result.append("/* DROP FUNCTION " + funcName + "; */ \n\n");
-		result.append("CREATE FUNCTION " + funcName);
 		
 		Map<String, String> sqlParam = new HashMap<String, String>();
 		sqlParam.put("schema", schemaName);
 		sqlParam.put("object_name", funcName);
-		srcProc = (HashMap<String, String>) client.queryForObject("getFunctionScript", sqlParam);
-		String parameters[] = String.valueOf(srcProc.get("parameter_types")).split(" ");
-		
-		result.append("(");
-		for (String param : parameters) {
-			if (!"".equals(param)) {
-				result.append((String) client.queryForObject("getProcedureScript.type", Long.valueOf(param)));
+
+		srcProcList = (ArrayList<HashMap<String, Object>>) client.queryForList("getFunctionScript", sqlParam);
+
+		for (HashMap<String, Object> srcProc :srcProcList) {
+
+			result.append("CREATE OR REPLACE FUNCTION " + funcName);
+
+			String parameters[] = String.valueOf(srcProc.get("parameter_types")).split(" ");
+			Jdbc4Array array = (Jdbc4Array) srcProc.get("arg_names");
+			
+			String paramnames[] = null;
+			if (array!=null) paramnames = (String[])array.getArray();
+			
+			result.append("(");
+			for (int a=0;a< parameters.length; a++ ) {
+				if (a>0)result.append(", ");
+				// 파라미터 이름이 없는것도 있으므로...
+				if (paramnames != null){
+					if (a < paramnames.length) result.append(paramnames[a] + " ");
+				}
+				if (!"".equals(parameters[a]))
+				result.append((String) client.queryForObject("getProcedureScript.type", Long.valueOf(parameters[a])));
 			}
+			result.append(")");
+	
+			String return_type = (String) client.queryForObject("getProcedureScript.type", srcProc.get("return_types"));
+	
+			if (!"".equals(return_type)) {
+				result.append(" RETURNS " + return_type);
+			}
+	
+			result.append(" AS $$");
+			result.append(srcProc.get("source_text"));
+			result.append("$$ LANGUAGE 'plpgsql';\n\n");
 		}
-		result.append(")");
-
-		String return_type = (String) client.queryForObject("getProcedureScript.type", srcProc.get("return_types"));
-
-		if (!"".equals(return_type)) {
-			result.append(" RETURNS " + return_type);
-		}
-
-		result.append(" AS $$");
-		result.append(srcProc.get("source_text"));
-		result.append("$$ LANGUAGE 'plpgsql';\n");
 
 		return result.toString();
 	}
@@ -274,35 +290,46 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		if(logger.isDebugEnabled()) logger.debug("\n Procedure DDL Generation...");
 
+		ArrayList<HashMap<String, Object>> srcProcList = null;
 		StringBuilder result = new StringBuilder("");
 
-		HashMap<String, String> srcProc = null;
-//		result.append("/* DROP FUNCTION " + procedureDAO.getName() + "; */ \n\n");
-		result.append("CREATE OR REPLACE FUNCTION " + procedureDAO.getName());
-		
 		Map<String, String> sqlParam = new HashMap<String, String>();
 		sqlParam.put("schema", procedureDAO.getSchema_name());
 		sqlParam.put("object_name", procedureDAO.getName());
-		srcProc = (HashMap<String, String>) client.queryForObject("getProcedureScript", sqlParam);
-		String parameters[] = String.valueOf(srcProc.get("parameter_types")).split(" ");
+		//srcProc = (HashMap<String, String>) client.queryForObject("getProcedureScript", sqlParam);
+		srcProcList = (ArrayList<HashMap<String, Object>>) client.queryForList("getProcedureScript", sqlParam);
+		for (HashMap<String, Object> srcProc :srcProcList) {
 
-		result.append("(");
-		for (String param : parameters) {
-			if (!"".equals(param)) {
-				result.append((String) client.queryForObject("getProcedureScript.type", Long.valueOf(param)));
+			result.append("CREATE OR REPLACE FUNCTION " +  procedureDAO.getName());
+
+			String parameters[] = String.valueOf(srcProc.get("parameter_types")).split(" ");
+			Jdbc4Array array = (Jdbc4Array) srcProc.get("arg_names");
+			
+			String paramnames[] = null;
+			if (array!=null) paramnames = (String[])array.getArray();
+			
+			result.append("(");
+			for (int a=0;a< parameters.length; a++ ) {
+				if (a>0)result.append(", ");
+				// 파라미터 이름이 없는것도 있으므로...
+				if (paramnames != null){
+					if (a < paramnames.length) result.append(paramnames[a] + " ");
+				}
+				if (!"".equals(parameters[a]))
+				result.append((String) client.queryForObject("getProcedureScript.type", Long.valueOf(parameters[a])));
 			}
+			result.append(")");
+	
+			String return_type = (String) client.queryForObject("getProcedureScript.type", srcProc.get("return_types"));
+	
+			if (!"".equals(return_type)) {
+				result.append(" RETURNS " + return_type);
+			}
+	
+			result.append(" AS $$");
+			result.append(srcProc.get("source_text"));
+			result.append("$$ LANGUAGE 'plpgsql';\n\n");
 		}
-		result.append(")");
-
-		String return_type = (String) client.queryForObject("getProcedureScript.type", srcProc.get("return_types"));
-
-		if (!"".equals(return_type)) {
-			result.append(" RETURNS " + return_type);
-		}
-
-		result.append(" AS $$");
-		result.append(srcProc.get("source_text"));
-		result.append("$$ LANGUAGE 'plpgsql';\n");
 
 		return result.toString();
 	}
@@ -342,15 +369,18 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("package_name", procedureDAO.getPackagename());
 		map.put("object_name", procedureDAO.getName());
+		map.put("definer", procedureDAO.getDefiner()); /* definer 컬럼에 담은 아규먼트 타입정보를 이용. */
 
 		if(logger.isDebugEnabled()) {
 			logger.debug("\n package_name=" + map.get("package_name"));
 			logger.debug("\n object_name=" + map.get("object_name"));
+			logger.debug("\n argument_types=" + map.get("definer"));
 		}
 
 		Map<String, String> sqlParam = new HashMap<String, String>();
 		sqlParam.put("schema", procedureDAO.getSchema_name());
 		sqlParam.put("object_name", procedureDAO.getName());
+		sqlParam.put("definer", procedureDAO.getDefiner());
 		
 		return client.queryForList("getProcedureInParamter", sqlParam);
 	}
@@ -361,6 +391,7 @@ public class PostgreSQLDDLScript extends AbstractRDBDDLScript {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("package_name", procedureDAO.getPackagename());
 		map.put("object_name", procedureDAO.getName());
+		map.put("definer", procedureDAO.getDefiner()); /* definer 컬럼에 담은 아규먼트 타입정보를 이용. */
 
 		return client.queryForList("getProcedureOutParamter", map);
 	}

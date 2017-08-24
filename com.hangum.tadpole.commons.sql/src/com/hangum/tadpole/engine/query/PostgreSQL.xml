@@ -312,16 +312,17 @@ FROM
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT  
-			nspname "schema_name",
-			proname "name", 
-			'PROCEDURE' as type 
+			  nspname as "schema_name"
+			, proname as "name"
+			, 'PROCEDURE' as type 
+			, proargtypes as definer
+			, array_cat(COALESCE(proargnames, array['none']), array['RETURNS ' || text(typname)]) as comment 
 	FROM    pg_catalog.pg_namespace n 
-	JOIN    pg_catalog.pg_proc p 
-	ON      pronamespace = n.oid 
+		inner join pg_catalog.pg_proc p ON p.pronamespace = n.oid 
+		left join pg_catalog.pg_type t on t.oid = p.prorettype
 	WHERE    
 			nspname NOT IN ('pg_catalog', 'information_schema')
 		AND nspname = #schema_name#
-		AND pronargs = 0
 		AND prorettype = 2278; 
 </select>
 
@@ -344,15 +345,18 @@ FROM
 	collation				:
  -->
 <select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
-	SELECT  nspname "schema_name",
-			proname "name", 'FUNCTION' as type 
-	FROM    pg_catalog.pg_namespace n 
-	JOIN    pg_catalog.pg_proc p 
-	ON      pronamespace = n.oid 
-	WHERE   
-			nspname NOT IN ('pg_catalog', 'information_schema')
+	SELECT    nspname "schema_name"
+			, proname "name"
+			, 'FUNCTION' as type
+			, proargtypes as definer
+			, array_cat(COALESCE(proargnames, array['none']), array['RETURNS ' || text(typname)]) as comment 
+	FROM pg_catalog.pg_namespace n 
+		inner join pg_catalog.pg_proc p ON pronamespace = n.oid 
+		left join pg_catalog.pg_type t on t.oid = p.prorettype
+	WHERE 1=1  
+		AND	nspname NOT IN ('pg_catalog', 'information_schema')
 		AND nspname = #schema_name#
-		AND pronargs > 0; 
+		AND prorettype != 2278
 </select>
 
 <!-- <select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
@@ -678,6 +682,7 @@ and t.tgisinternal = false
  	, proargtypes as parameter_types
  	, prorettype as return_types
  	, prosrc as source_text
+ 	, proargnames as arg_names
  FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
  WHERE   nspname = #schema#  
  and proname = #object_name#
@@ -696,7 +701,8 @@ and t.tgisinternal = false
 	JOIN    pg_catalog.pg_proc p   ON    pronamespace = n.oid     
 	JOIN    pg_type t ON p.prorettype = t.oid  
 	WHERE   nspname = #schema#  
-		AND proname = #object_name#;
+		AND proname = #object_name#
+		AND proargtypes = oidvector(coalesce(#definer#,''));
 </select>
  
 <!-- 
@@ -709,6 +715,7 @@ and t.tgisinternal = false
  	, proargtypes as parameter_types
  	, prorettype as return_types
  	, prosrc as source_text
+ 	, proargnames as arg_names
  FROM    pg_catalog.pg_namespace n   JOIN    pg_catalog.pg_proc p   ON      pronamespace = n.oid   
  WHERE   nspname = #schema#   
  and proname = #object_name#
