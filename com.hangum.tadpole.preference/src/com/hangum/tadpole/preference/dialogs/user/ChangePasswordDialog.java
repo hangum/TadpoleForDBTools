@@ -59,7 +59,7 @@ public class ChangePasswordDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().PasswordChange);
+		newShell.setText(CommonMessages.get().ChangePassword);
 	}
 
 	/**

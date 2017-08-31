@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.util.CSVFileUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -28,6 +29,7 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
  *
  */
 public class CSVExpoter extends AbstractTDBExporter {
+	private static final Logger logger = Logger.getLogger(CSVExpoter.class);
 	
 	public static String makeContent(boolean isAddHead, String targetName, QueryExecuteResultDTO queryExecuteResultDTO, char seprator, String strDefaultNullValue) throws Exception {
 		return makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, -1, strDefaultNullValue);
@@ -52,6 +54,21 @@ public class CSVExpoter extends AbstractTDBExporter {
 		
 		// make header
 		FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), encoding, true);
+	}
+	
+	
+	/**
+	 * make file header 
+	 * 
+	 * @param strFullPath
+	 * @param isAddHead
+	 * @param listCsvData
+	 * @param seprator
+	 * @param encoding
+	 * @throws Exception
+	 */
+	public static String makeListFileStream( List<String[]> listCsvData, char seprator, String encoding) throws Exception {
+		return CSVFileUtils.makeData(listCsvData, seprator);
 	}
 	
 	/**

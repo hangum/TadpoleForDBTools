@@ -139,6 +139,8 @@ public class SendEmails {
 		propSMTP.put("mail.smtp.host", _smtpInfoDto.getHost());
 		propSMTP.put("mail.smtp.auth", "YES".equals(_smtpInfoDto.getIsAuth())?"true":"false");
 		propSMTP.put("mail.smtp.port", _smtpInfoDto.getPort());
+		propSMTP.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");   
+		propSMTP.put("mail.smtp.socketFactory.fallback", "false");
 		
 		Authenticator auth = new MailAuthentication(_smtpInfoDto.getEmail(), _smtpInfoDto.getPasswd());
 		MimeMessage msg = new MimeMessage(Session.getDefaultInstance(propSMTP, auth));

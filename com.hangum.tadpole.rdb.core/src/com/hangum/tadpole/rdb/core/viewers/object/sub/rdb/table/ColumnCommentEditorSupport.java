@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -59,11 +60,13 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	@Override
 	protected boolean canEdit(Object element) {
 		if(column == 6) {
-			if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
-					DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||
-					DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup() ||
-					DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup() ) {
-				return true;
+			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
+				if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
+						DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||
+						DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup() ||
+						DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup() ) {
+					return true;
+				}
 			}
 		}
 		

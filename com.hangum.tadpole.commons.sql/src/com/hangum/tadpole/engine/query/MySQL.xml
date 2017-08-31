@@ -85,24 +85,20 @@ WHERE 1=1
 	  and TABLE_NAME in (#object_name#, upper(#object_name#))
 	
 </select>	
+
 <!-- 
 	table 이름
-	
-	SELECT 
-		TABLE_SCHEMA schema_name,
-		TABLE_NAME name, 
-		TABLE_COMMENT comment
-	FROM INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = #db# 
-		AND TABLE_TYPE = 'BASE TABLE'
-	ORDER BY name
  -->
 <select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 	SELECT 
 		TABLE_NAME as name, 
 		TABLE_COMMENT as comment,
 		TABLE_SCHEMA as SCHEMA_NAME,
-		CONCAT(`ENGINE`) AS TABLE_TYPE
+		CASE 
+		    WHEN CREATE_OPTIONS = 'partitioned'
+		    THEN 'PARTITIONED'
+		    ELSE CONCAT(`ENGINE`)
+		END AS TABLE_TYPE
 	FROM INFORMATION_SCHEMA.TABLES
 	WHERE TABLE_SCHEMA = #db# 
 		AND TABLE_TYPE = 'BASE TABLE'

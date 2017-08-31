@@ -26,13 +26,6 @@ import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.session.manager.SessionManager;
 
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.update.Update;
-
 /**
  * 에디터에서 사용자가 실행하려는 쿼리 정보를 정의합니다. 
  * 
@@ -136,23 +129,7 @@ public class RequestQuery implements Cloneable {
 		BasicTDBSQLParser parser = new BasicTDBSQLParser();
 		QueryInfoDTO queryInfoDto = parser.parser(sql);
 		setStatement(queryInfoDto.isStatement());
-
-		try {
-			Statement statement = CCJSqlParserUtil.parse(sql);
-			setSqlType(SQL_TYPE.DML);
-		
-			if(statement instanceof Select) {
-				sqlDMLType = QUERY_DML_TYPE.SELECT;
-			} else if(statement instanceof Insert) {
-				sqlDMLType = QUERY_DML_TYPE.INSERT;
-			} else if(statement instanceof Update) {
-				sqlDMLType = QUERY_DML_TYPE.UPDATE;
-			} else if(statement instanceof Delete) {
-				sqlDMLType = QUERY_DML_TYPE.DELETE;
-			}
-		} catch (Throwable e) {
-			logger.error(String.format("sql parse exception. [ %s ][%s]", sql, e.getMessage()));
-		}
+		sqlDMLType = queryInfoDto.getQueryType();
 		
 		if(sqlDMLType.equals(QUERY_DML_TYPE.UNKNOWN)) {
 			if(queryInfoDto.isStatement()) {

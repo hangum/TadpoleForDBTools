@@ -216,6 +216,40 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
+	 * 연속 몇번 로그인을 실패 했을 경우
+	 * 
+	 * @param intLastLoginCnt
+	 * @param intUserSeq
+	 * @param email 
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static void failLoginCheck(int intLastLoginCnt, int intUserSeq, String email) throws TadpoleSQLManagerException, SQLException {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("intUserSeq",			intUserSeq);
+		queryMap.put("intLastLoginCnt", intLastLoginCnt);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserLoginHistoryDAO> listUser = sqlClient.queryForList("lastLoginCntHistory", queryMap); //$NON-NLS-1$
+		
+		int intFailCnt = 0;
+		for (UserLoginHistoryDAO userLoginHistoryDAO : listUser) {
+			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userLoginHistoryDAO.getSucces_yn())) {
+				intFailCnt++;
+			}
+		}
+		
+		// 연속 intLastLoingCnt 틀리면 계정을 잠근다.
+		if(intFailCnt == intLastLoginCnt) {
+			final UserDAO userDAO = new UserDAO();
+			userDAO.setSeq(intUserSeq);
+			
+			if(logger.isInfoEnabled()) logger.info(String.format("##### User account %s is lock", email));
+			updateUserApproval(userDAO, PublicTadpoleDefine.YES_NO.NO.name());
+		}
+	}
+	
+	/**
 	 * 유저를 넘겨 받는다.
 	 * @param email
 	 * @return

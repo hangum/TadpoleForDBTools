@@ -52,6 +52,7 @@ import org.eclipse.ui.PartInitException;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.mongodb.CollectionFieldDAO;
@@ -416,11 +417,11 @@ public class TadpoleMongoDBCollectionComposite extends AbstractObjectComposite {
 			return;
 		}
 		
-		final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
+		final String MSG_LoadingData = InfoMessages.get().LoadingData;;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
+				monitor.beginTask(MSG_LoadingData, IProgressMonitor.UNKNOWN);
 				
 				try {
 					showTables= MongoDBQuery.listCollection(userDB);

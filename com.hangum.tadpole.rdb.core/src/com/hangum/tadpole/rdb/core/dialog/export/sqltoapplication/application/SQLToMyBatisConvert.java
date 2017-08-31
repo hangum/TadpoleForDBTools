@@ -18,13 +18,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.editors.main.utils.SQLTextUtil;
 
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.update.Update;
-
 /**
  * sql to java
  * 
@@ -45,24 +38,19 @@ public class SQLToMyBatisConvert extends AbstractSQLTo {
 	 * @return
 	 */
 	public static String sqlToString(UserDBDAO userDB, String name, String sql) {
-		
 		StringBuffer sbSQL = new StringBuffer();
 		
 		for (String strSQL : sql.split(PublicTadpoleDefine.SQL_DELIMITER)) {
 			strSQL = SQLUtil.makeExecutableSQL(userDB, strSQL);
-			try {
-				Statement statement = CCJSqlParserUtil.parse(sql);
-				if(statement instanceof Select) {
-					sbSQL.append(getSelect(name, strSQL));		
-				} else if(statement instanceof Insert) {
-					sbSQL.append(getInsert(name, strSQL));
-				} else if(statement instanceof Update) {
-					sbSQL.append(getUpdate(name, strSQL));
-				} else if(statement instanceof Delete) {
-					sbSQL.append(getDelete(name, strSQL));
-				}
-			} catch (Throwable e) {
-				logger.error(String.format("sql parse exception. [ %s ]", sql));
+			PublicTadpoleDefine.QUERY_DML_TYPE queryType = SQLUtil.sqlQueryType(sql);
+			if(queryType == PublicTadpoleDefine.QUERY_DML_TYPE.SELECT) {
+				sbSQL.append(getSelect(name, strSQL));
+			} else if(queryType == PublicTadpoleDefine.QUERY_DML_TYPE.INSERT) {
+				sbSQL.append(getInsert(name, strSQL));
+			} else if(queryType == PublicTadpoleDefine.QUERY_DML_TYPE.UPDATE) {
+				sbSQL.append(getUpdate(name, strSQL));
+			} else if(queryType == PublicTadpoleDefine.QUERY_DML_TYPE.DELETE) {
+				sbSQL.append(getDelete(name, strSQL));
 			}
 		}
 

@@ -71,7 +71,7 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 		container.setLayout(new GridLayout(3, false));
 		
 		Label lblUse = new Label(container, SWT.NONE);
-		lblUse.setText(Messages.get().SecurityCredentialPreference_0);
+		lblUse.setText(CommonMessages.get().Enable);
 		
 		comboIsUse = new Combo(container, SWT.READ_ONLY);
 		comboIsUse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -99,13 +99,13 @@ public class SecurityCredentialPreference extends TadpoleDefaulPreferencePage im
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				if(!MessageDialog.openConfirm(getShell(), Messages.get().SecurityCredentialPreference_3, Messages.get().SecurityCredentialPreference_4)) return;
+				if(!MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, Messages.get().InfoCreateANewAPIKey)) return;
 				
 				textSecretKey.setText(Utils.getUniqueID());
 				textHeader.setText(String.format(TEMPLATE_API_KEY, textAccessKey.getText(), textSecretKey.getText()));
 			}
 		});
-		btnGenerateKey.setText(Messages.get().SecurityCredentialPreference_5);
+		btnGenerateKey.setText(Messages.get().CreateAPIKey);
 		
 		Group grpUsage = new Group(container, SWT.NONE);
 		grpUsage.setLayout(new GridLayout(1, false));

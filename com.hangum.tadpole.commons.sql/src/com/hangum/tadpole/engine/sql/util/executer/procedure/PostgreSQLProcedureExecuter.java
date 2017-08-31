@@ -56,7 +56,8 @@ public class PostgreSQLProcedureExecuter extends ProcedureExecutor {
 		
 		List<InOutParameterDAO> inList = getInParameters();
 		InOutParameterDAO inOutParameterDAO = inList.get(0);
-		String[] inParams = StringUtils.split(inOutParameterDAO.getRdbType(), ",");
+		//String[] inParams = StringUtils.split(inOutParameterDAO.getRdbType(), ",");
+		String[] inParams = inOutParameterDAO.getArguments();
 		for(int i=0; i<inParams.length; i++) {
 			String name = StringUtils.trimToEmpty(inParams[i]);
 			

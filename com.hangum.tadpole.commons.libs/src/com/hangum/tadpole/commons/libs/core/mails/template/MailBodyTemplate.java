@@ -75,12 +75,15 @@ public abstract class MailBodyTemplate {
 		strContent.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
 			strContent.append(String.format("<tr><td>%s</td></tr>", Messages.get().Thanks));
 			strContent.append("<br>");
+			
+//			ApplicationContext context = RWT.getApplicationContext();
+//			SMTPDTO _smtpInfoDto = (SMTPDTO)context.getAttribute("smtpinfo");
+//			strContent.append(String.format("<tr><td width='100' valign='top'>%s%s</td></tr>", Messages.get().MailBodyTempAdmin, _smtpInfoDto.getEmail()));
+			
 			if(LicenseValidator.getLicense().isEnterprise()) {
 				LicenseDAO licenseDao = LicenseValidator.getLicense();
-				strContent.append(String.format("<tr><td width='100' valign='top'>%s%s</td></tr>", Messages.get().MailBodyTempAdmin, licenseDao.getCustomer_email()));
 				strContent.append("<tr><td>" + licenseDao.getCustomer() +"</td></tr>");
 			} else {
-				strContent.append(String.format("<tr><td width='100' valign='top'>%s%s</td></tr>", Messages.get().MailBodyTempAdmin, "hangum@tadpolehub.com"));
 				strContent.append("<tr><td>" + Messages.get().HomePage +"https://tadpolehub.com</td></tr>");
 			}
 		strContent.append("</table>");

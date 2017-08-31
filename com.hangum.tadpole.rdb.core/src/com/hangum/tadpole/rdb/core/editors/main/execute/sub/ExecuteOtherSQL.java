@@ -59,9 +59,12 @@ public class ExecuteOtherSQL {
 			final String userType,
 			final String userEmail) throws SQLException, Exception
 	{
-		if(!PermissionChecker.isExecute(userType, userDB, reqQuery.getSql())) {
-			throw new Exception(errMsg);
+		try {
+			PermissionChecker.isExecute(userType, userDB, reqQuery.getSql());
+		} catch(Exception e) {
+			throw e;
 		}
+		
 		if(reqQuery.getSqlType() == SQL_TYPE.DDL) {
 			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
 				throw new Exception(errMsg);

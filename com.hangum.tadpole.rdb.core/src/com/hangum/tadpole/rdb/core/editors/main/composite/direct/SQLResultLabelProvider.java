@@ -168,7 +168,7 @@ public class SQLResultLabelProvider extends LabelProvider implements ITableLabel
 				tc.setResizable(true);
 				tc.setMoveable(true);
 				
-				if(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK_VALUE.equals(strResultSetHeadClicks)) {
+				if(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK_SORTDATA_VALUE.equals(strResultSetHeadClicks)) {
 					tc.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e) {

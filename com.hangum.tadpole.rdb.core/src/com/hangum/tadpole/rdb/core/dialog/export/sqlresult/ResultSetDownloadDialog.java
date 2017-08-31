@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -40,6 +41,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
@@ -281,12 +283,12 @@ public class ResultSetDownloadDialog extends Dialog {
 		}
 		
 		// job
-		final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
+		final String MSG_LoadingData = InfoMessages.get().LoadingData;;
 		final AbstractExportDAO _dao = exportDAO;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
+				monitor.beginTask(MSG_LoadingData, IProgressMonitor.UNKNOWN);
 				
 				try {
 					if("text".equalsIgnoreCase(selectionTab)) {			
@@ -542,16 +544,25 @@ public class ResultSetDownloadDialog extends Dialog {
 			@Override
 			public void run() {
 				try {
-					String strZipFile = ZipUtils.pack(strFileLocation);
-					byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+//					String strZipFile = ZipUtils.pack(strFileLocation);
+//					byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+//					if(logger.isDebugEnabled()) logger.debug("zipFile is " + strZipFile + ", file name is " + fileName +".zip");
 					
-					if(logger.isDebugEnabled()) logger.debug("zipFile is " + strZipFile + ", file name is " + fileName +".zip");
+					File file = new File(strFileLocation);
+					String strExt = StringUtils.substringAfter(strFileLocation, ".");
+					if(logger.isInfoEnabled()) {
+						logger.info("#####[start]#####################[resource download]");
+						logger.info("\tfile ext : " + strExt);
+						logger.info("\tfile size : " + file.length());
+						logger.info("#####[end]#####################[resource download]");
+					}
 					
-					_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
+					byte[] bytesZip = FileUtils.readFileToByteArray(file);
+					_downloadExtFile(fileName + "." + strExt, bytesZip); //$NON-NLS-1$
 					
 					// 사용후 파일을 삭제한다.
-					FileUtils.deleteDirectory(new File(new File(strFileLocation).getParent()));
-					FileUtils.forceDelete(new File(strZipFile));
+					FileUtils.deleteDirectory(new File(file.getParent()));
+//					FileUtils.forceDelete(new File(strZipFile));
 				} catch(Exception e) {
 					logger.error("download file", e);
 				}

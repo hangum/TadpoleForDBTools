@@ -9,6 +9,7 @@
             name="%page.name">
       </page>
       <page
+            category="com.hangum.tadpole.preference.page.general"
             class="com.hangum.tadpole.preference.ui.UserInfoPerference"
             id="com.hangum.db.browser.rap.core.page.userInfo"
             name="%page.name.0">
@@ -19,6 +20,7 @@
             name="%page.name.1">
       </page>
       <page
+            category="com.hangum.tadpole.preference.page.general"
             class="com.hangum.tadpole.preference.ui.SQLFormatterPreferencePage"
             id="com.hangum.tadpole.preference.page.sqlformatter"
             name="%page.name.2">
@@ -36,6 +38,7 @@
       </page>
       -->
       <page
+            category="com.hangum.tadpole.preference.page.general"
             class="com.hangum.tadpole.preference.ui.PerspectivePreferencePage"
             id="com.hangum.tadpole.preference.page.perspective"
             name="%page.name.5">
@@ -46,6 +49,7 @@
             name="%page.name.6">
       </page>
       <page
+            category="com.hangum.tadpole.preference.page.general"
             class="com.hangum.tadpole.preference.ui.EditorPreferencePage"
             id="com.hangum.tadpole.preference.page.editor"
             name="%page.name.7">

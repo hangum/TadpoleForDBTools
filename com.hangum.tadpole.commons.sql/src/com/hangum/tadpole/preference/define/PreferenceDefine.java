@@ -46,11 +46,6 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	/** RDB query profillint 값 */
 	public static final String RDB_QUERY_PROFILLING_VALUE = "false";
 	
-	/** RDB Result type */ 
-	public static final String RDB_RESULT_TYPE = "RDB_RESULT_TYPE";
-	/** RDB Result type 값 */
-	public static final String RDB_RESULT_TYPE_VALUE = "Table";
-	
 	/** RDB Result 값중에 NULL값이 있을 경우 처리 */ 
 	public static final String RDB_RESULT_NULL = "RDB_RESULT_NULL";
 	/** RDB Result type 값 */
@@ -157,8 +152,8 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "100";
 	
 	public static final String RDB_RESULT_SET_HEAD_CLICK = "RDB_RESULT_SET_HEAD_CLICK";
-	public static final String RDB_RESULT_SET_HEAD_CLICK_VALUE = "Sorting";
-	
+	public static final String RDB_RESULT_SET_HEAD_CLICK_SORTDATA_VALUE 		= "Sort Data";
+	public static final String RDB_RESULT_SET_HEAD_CLICK_COPYCOLUMNNAME_VALUE 	= "Copy Column Name to Editor";
 	
 	/** define Amazon key */ 
 	public static final String AMAZON_ACCESS_NAME = "AMAZON_ACCESS_NAME";

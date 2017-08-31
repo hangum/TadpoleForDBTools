@@ -11,11 +11,13 @@
 package com.hangum.tadpole.engine.query.sql;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.system.TadpoleUserDbRoleDAO;
@@ -55,21 +57,33 @@ public class TadpoleSystem_AccessControl {
 	 */
 	public static DBAccessControlDAO getDBAccessControl(TadpoleUserDbRoleDAO roleDao) throws TadpoleSQLManagerException, SQLException {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-		DBAccessControlDAO dbaccessCtl = (DBAccessControlDAO)sqlClient.queryForObject("getAccessControl", roleDao);
+		DBAccessControlDAO _accessCtlDao = (DBAccessControlDAO)sqlClient.queryForObject("getAccessControl", roleDao);
 		
-		if(dbaccessCtl.getIntDetailCnt() == 0) {
-			dbaccessCtl.setMapSelectAccessCtl(new HashMap<String, AccessCtlObjectDAO>());
+		if(_accessCtlDao.getIntDetailCnt() == 0) {
+			_accessCtlDao.setAllAccessCtl(new ArrayList<AccessCtlObjectDAO>());
 		} else {
 			// select 항목이 있다면..
-			List<AccessCtlObjectDAO> listAccessDetail = sqlClient.queryForList("getAccessCtlDetail", dbaccessCtl.getSeq());
-			Map<String, AccessCtlObjectDAO> mapAccessDetail = new HashMap<String, AccessCtlObjectDAO>();
-			for (AccessCtlObjectDAO accessCtlObjectDAO : listAccessDetail) {
-				mapAccessDetail.put(accessCtlObjectDAO.getObj_name(), accessCtlObjectDAO);
+			List<AccessCtlObjectDAO> listAccessDetail = sqlClient.queryForList("getAccessCtlDetail", _accessCtlDao.getSeq());
+			_accessCtlDao.setAllAccessCtl(listAccessDetail);
+			
+			Map<String, AccessCtlObjectDAO> mapSelectTableAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
+			Map<String, AccessCtlObjectDAO> mapSelectFunctionAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
+			Map<String, AccessCtlObjectDAO> mapSelectProcedureAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
+			for (AccessCtlObjectDAO accCtlObj : listAccessDetail) {
+				if(PublicTadpoleDefine.ACCEAS_CTL_DDL_TYPE.TABLEoVIEW.name().equals(accCtlObj.getType())) {
+					mapSelectTableAccessCtl.put(String.format("%s.%s", accCtlObj.getObj_schema(), accCtlObj.getObj_name()), accCtlObj);
+				} else if(PublicTadpoleDefine.ACCEAS_CTL_DDL_TYPE.FUNCTION.name().equals(accCtlObj.getType())) {
+					mapSelectFunctionAccessCtl.put(String.format("%s.%s", accCtlObj.getObj_schema(), accCtlObj.getObj_name()), accCtlObj);
+				} else if(PublicTadpoleDefine.ACCEAS_CTL_DDL_TYPE.PROCEDURE.name().equals(accCtlObj.getType())) {
+					mapSelectProcedureAccessCtl.put(String.format("%s.%s", accCtlObj.getObj_schema(), accCtlObj.getObj_name()), accCtlObj);
+				}
 			}
-			dbaccessCtl.setMapSelectAccessCtl(mapAccessDetail);
+			_accessCtlDao.setMapSelectTableAccessCtl(mapSelectTableAccessCtl);
+			_accessCtlDao.setMapSelectFunctionAccessCtl(mapSelectFunctionAccessCtl);
+			_accessCtlDao.setMapSelectProcedureAccessCtl(mapSelectProcedureAccessCtl);
 		} 
 		
-		return dbaccessCtl;
+		return _accessCtlDao;
 	}
 	
 	/**
@@ -98,7 +112,7 @@ public class TadpoleSystem_AccessControl {
 		// already data remove and add data
 		sqlClient.update("removeAccessControlDetail", dao);
 		
-		for(AccessCtlObjectDAO objecDao : dao.getMapSelectAccessCtl().values()) {
+		for(AccessCtlObjectDAO objecDao : dao.getAllAccessCtl()) {
 			sqlClient.insert("insertAccessControlDetail", objecDao);
 		}
 	}

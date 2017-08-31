@@ -58,6 +58,9 @@ public class PublicTadpoleDefine {
 	/** Default resource name */
 	public static final String DEFAUL_RESOURCE_NAME = "_TDB_DEF_NAME_";
 	
+	/** filter type */
+	public static enum FILTER_TYPE {INCLUDE, EXCLUDE};
+	
 	/** mail type */
 	public static enum MAIL_TYPE {NONE, SEND_GRID, SMTP};
 
@@ -317,7 +320,7 @@ public class PublicTadpoleDefine {
 	/** query ddl type */
 	public static enum QUERY_DDL_STATUS {CREATE, ALTER, DROP, UNKNOWN};
 	public static enum QUERY_DDL_TYPE 	{TABLE, VIEW, SEQUENCE, INDEX, PROCEDURE, FUNCTION, TRIGGER, PACKAGE, SYNONYM, LINK, JOBS, JAVA, UNKNOWN};
-	
+	public static enum ACCEAS_CTL_DDL_TYPE {SCHEMA, TABLEoVIEW, FUNCTION, PROCEDURE};
 	public static String[] DB_PRIMARY_KEY = {
 											"PRI", 
 											"PK", 

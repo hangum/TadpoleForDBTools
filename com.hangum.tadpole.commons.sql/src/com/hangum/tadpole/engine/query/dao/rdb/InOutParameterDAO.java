@@ -10,6 +10,10 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.query.dao.rdb;
 
+import java.sql.SQLException;
+
+import org.postgresql.jdbc4.Jdbc4Array;
+
 /**
  * RDB variable type
  * 
@@ -37,6 +41,9 @@ public class InOutParameterDAO {
 	
 	/** parameter in, out, inout type */
 	String type;
+	
+	/** postgresSQL arguments list */
+	Object arguments;
 
 	public InOutParameterDAO() {
 	}
@@ -123,6 +130,24 @@ public class InOutParameterDAO {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String[] getArguments() {
+		String array[] = new String[]{};
+		try {
+			if (arguments!=null){
+				Jdbc4Array jdbc4Array = (Jdbc4Array) arguments;
+				array = (String[])jdbc4Array.getArray();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return array;
+	}
+
+	public void setArguments(Object arguments) {
+		this.arguments = arguments;
 	}
 
 }
