@@ -150,6 +150,10 @@ public class CommonMessages {
 	
 	public String Password; 
 	public String ChangePassword;
+
+	public String List;
+
+	public String Type;
 	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
