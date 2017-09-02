@@ -31,6 +31,8 @@ public class ExecutedSqlResourceDAO {
      int row;
      String result;
      String message;
+     
+     int accesscontrol_seq;
 
      Timestamp create_time;
      String delYn;

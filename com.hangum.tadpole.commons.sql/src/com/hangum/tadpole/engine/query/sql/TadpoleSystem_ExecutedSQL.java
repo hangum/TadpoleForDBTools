@@ -117,7 +117,7 @@ public class TadpoleSystem_ExecutedSQL {
 			long seq = (Long)resultMap.get("executed_sql_resource_seq");
 
 			Long startdateexecute = 0l;
-			String strSQLText = (String)resultMap.get("datas");
+			String strSQLText = (String)resultMap.get("sql_data");
 			Long enddateexecute = 0l;
 			
 			if(ApplicationArgumentUtils.isDBServer()) {
@@ -283,7 +283,7 @@ public class TadpoleSystem_ExecutedSQL {
 		ExecutedSqlResourceDataDAO dataDao = new ExecutedSqlResourceDataDAO();
 		dataDao.setExecuted_sql_resource_seq(seq);
 		dataDao.setStartDateExecute(startDateExecute);
-		dataDao.setDatas(contents);		
+		dataDao.setSql_data(contents);		
 		sqlClient.insert("userExecuteSQLResourceDataInsert", dataDao); //$NON-NLS-1$				
 	}
 

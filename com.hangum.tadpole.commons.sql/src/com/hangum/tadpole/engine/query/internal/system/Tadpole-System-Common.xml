@@ -1024,8 +1024,8 @@ SELECT
 	execute sql resource data를 저장합니다.
  -->
 <insert id="userExecuteSQLResourceDataInsert" parameterClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDataDAO">
-	INSERT INTO executed_sql_resource_data(startDateExecute, executed_sql_resource_seq, datas)
-	VALUES(#startDateExecute#, #executed_sql_resource_seq#, #datas#)
+	INSERT INTO executed_sql_resource_data(startDateExecute, executed_sql_resource_seq, sql_data)
+	VALUES(#startDateExecute#, #executed_sql_resource_seq#, #sql_data#)
 </insert>
 
 <select id="getExecuteQueryObject" resultClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDAO" parameterClass="java.lang.Long">
@@ -1045,7 +1045,7 @@ SELECT
  			a.startdateexecute, 
  			a.enddateexecute,
  			a.message, 
- 			b.datas, 
+ 			b.sql_data, 
  			a.row, 
  			a.result,
  		   	db.display_name, 
@@ -1105,7 +1105,7 @@ SELECT
  			a.startdateexecute, 
  			a.enddateexecute,
  			a.message, 
- 			b.datas, 
+ 			b.sql_data, 
  			a.row, 
  			a.result,
  		   	u.email,
@@ -1136,7 +1136,7 @@ SELECT
       AND a.enddateexecute <= #endTime# 
       AND a.duration >= #duration# 
       AND a.user_seq = u.seq 
-      AND b.datas like #strSearch#  
+      AND b.sql_data like #strSearch#  
       AND a.db_seq = db.seq 
 ]]>	
       
@@ -1144,7 +1144,7 @@ SELECT
       	AND a.types = #type#
       </isNotNull>
     group by b.executed_sql_resource_seq,      a.types,     a.duration,     a.startdateexecute,      a.enddateexecute,
-        a.message,      b.datas,      a.row,      a.result,        u.email,        
+        a.message,      b.sql_data,      a.row,      a.result,        u.email,        
         u.name,         db.display_name,         a.ipaddress,        dbseq, role.description  	
 	order by a.create_time 
 	limit #_indexStart#, #_indexEnd#
@@ -1156,7 +1156,7 @@ SELECT
 	이것은 현재 메인에디터의 실행 한 쿼리에서 사용합니다.
  -->
 <select id="getExecuteQueryHistory" resultClass="java.util.HashMap" parameterClass="java.util.Map">
-	 SELECT a.duration, b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.datas, a.row, a.result, a.message
+	 SELECT a.duration, b.executed_sql_resource_seq, a.startdateexecute, a.enddateexecute, b.sql_data, a.row, a.result, a.message
 	 FROM 
 	 executed_sql_resource a,
 	 executed_sql_resource_data b
@@ -1164,7 +1164,7 @@ SELECT
 	  a.db_seq = #db_seq# AND 
 	  a.delyn = 'NO' AND
 	  a.seq = b.executed_sql_resource_seq AND
-	  b.datas like #filter#
+	  b.sql_data like #filter#
 	order by a.create_time desc
 	limit #count#	
 </select>
@@ -1173,8 +1173,8 @@ SELECT
 	이메일 배치 처리를 위해 데이터를 저장한다.
  -->
 <insert id="insertEmailBag" parameterClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDataDAO">
-	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, datas)
-	VALUES(#executed_sql_resource_seq#, #datas#)
+	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, sql_data)
+	VALUES(#executed_sql_resource_seq#, #sql_data#)
 </insert>
 
 </sqlMap>

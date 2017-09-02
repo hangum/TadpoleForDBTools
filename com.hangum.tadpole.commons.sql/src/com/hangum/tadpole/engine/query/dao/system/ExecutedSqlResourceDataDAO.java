@@ -22,7 +22,7 @@ public class ExecutedSqlResourceDataDAO {
 	long seq;
 	Timestamp startDateExecute;
 	long executed_sql_resource_seq;
-    String datas;
+    String sql_data;
 	
 	public ExecutedSqlResourceDataDAO() {
 	}
@@ -64,17 +64,17 @@ public class ExecutedSqlResourceDataDAO {
 	}
 
 	/**
-	 * @return the datas
+	 * @return the sql_data
 	 */
-	public String getDatas() {
-		return datas;
+	public String getSql_data() {
+		return sql_data;
 	}
 
 	/**
-	 * @param datas the datas to set
+	 * @param sql_data the sql_data to set
 	 */
-	public void setDatas(String datas) {
-		this.datas = datas;
+	public void setSql_data(String sql_data) {
+		this.sql_data = sql_data;
 	}
 	
 }
