@@ -1070,7 +1070,7 @@ SELECT
 	  AND a.startdateexecute >= #startTime# 
       AND a.enddateexecute <= #endTime# 
       AND a.duration >= #duration# 
-      AND b.datas like #strSearch#  
+      AND b.sql_data like #strSearch#  
       AND a.db_seq = db.seq
  ]]>	       
       <isNotNull property="type">
@@ -1082,7 +1082,7 @@ SELECT
  			a.startdateexecute, 
  			a.enddateexecute,
  			a.message, 
- 			b.datas, 
+ 			b.sql_data, 
  			a.row, 
  			a.result,
  		   	db.display_name, 
