@@ -98,7 +98,7 @@ public class TadpoleSystem_UserQuery {
 	 */
 	public static UserDAO newLDAPUser(String userName, String email, String external_id, String useOPT) throws TadpoleSQLManagerException, SQLException, Exception {
 		return newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(), email, "LDAP", "YES", "TadpoleLDAPLogin", PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
-				userName, "KO", "Asia/Seoul", "YES", useOPT, "", "*", external_id);
+				userName, "KO", "Asia/Seoul", "YES", useOPT, "", "*", external_id, new Timestamp(System.currentTimeMillis()));
 	}
 	
 	/**
@@ -123,12 +123,13 @@ public class TadpoleSystem_UserQuery {
 	 * @param serviceStart
 	 * @param serviceEnd
 	 * @param external_id
+	 * @param timeChangedPasswdTime
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
 								String roleType, String name, String language, String timezone, String approvalYn, String use_otp, String otp_secret,
-								String strAllowIP, String external_id
+								String strAllowIP, String external_id, Timestamp timeChangedPasswdTime
 	) throws TadpoleSQLManagerException, SQLException, Exception {
 		UserDAO loginDAO = new UserDAO();
 		loginDAO.setInput_type(inputType);
@@ -137,7 +138,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setIs_email_certification(is_email_certification);
 		
 		loginDAO.setPasswd(SHA256Utils.getSHA256(passwd));
-		loginDAO.setChanged_passwd_time(new Timestamp(System.currentTimeMillis()));
+		loginDAO.setChanged_passwd_time(timeChangedPasswdTime);//new Timestamp(System.currentTimeMillis()));
 		loginDAO.setRole_type(roleType);
 		
 		loginDAO.setName(name);
@@ -379,7 +380,7 @@ public class TadpoleSystem_UserQuery {
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("email",		strEmail);
-		queryMap.put("succes_yn", 	strYesNo);
+		if(!"All".equals(strYesNo)) queryMap.put("succes_yn", 	strYesNo);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date dateSt = new Date(startTime);

@@ -13,6 +13,7 @@ package com.hangum.tadpole.commons.util;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,8 @@ import com.opencsv.CSVWriter;
  * @since 2015. 5. 31.
  *
  */
-public class CSVFileUtils {
-	private static final Logger logger = Logger.getLogger(CSVFileUtils.class);
+public class CSVUtils {
+	private static final Logger logger = Logger.getLogger(CSVUtils.class);
 	
 	public static String makeData(List<String[]> listContent) throws Exception {
 		return makeData(listContent, CSVWriter.DEFAULT_SEPARATOR);
@@ -87,6 +88,32 @@ public class CSVFileUtils {
 			 while((nextLine = csvReader.readNext()) != null) {
 				returnMap.add(nextLine);
 			 }
+		} catch(Exception e) {
+			logger.error("CSV read error", e);
+		} finally {
+			if(csvReader != null) try { csvReader.close(); } catch(Exception e) {}
+		}
+		
+		return returnMap;
+	}
+	
+	/**
+	 * csv reader
+	 * 
+	 * @param filename
+	 * @param seprator
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String[]> readData(String strData, char seprator) {
+		List<String[]> returnMap = new ArrayList<String[]>();
+		String[] nextLine = null;
+		CSVReader csvReader = null;
+		try {
+			csvReader = new CSVReader(new BufferedReader(new StringReader(strData)), seprator);
+			while((nextLine = csvReader.readNext()) != null) {
+				returnMap.add(nextLine);
+			}
 		} catch(Exception e) {
 			logger.error("CSV read error", e);
 		} finally {

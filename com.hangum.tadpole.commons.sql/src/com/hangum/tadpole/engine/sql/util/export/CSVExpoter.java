@@ -18,7 +18,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.CSVUtils;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 
@@ -31,8 +31,8 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 public class CSVExpoter extends AbstractTDBExporter {
 	private static final Logger logger = Logger.getLogger(CSVExpoter.class);
 	
-	public static String makeContent(boolean isAddHead, String targetName, QueryExecuteResultDTO queryExecuteResultDTO, char seprator, String strDefaultNullValue) throws Exception {
-		return makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, -1, strDefaultNullValue);
+	public static String makeContent(boolean isAddHead, QueryExecuteResultDTO queryExecuteResultDTO, char seprator, String strDefaultNullValue) throws Exception {
+		return makeContent(isAddHead, queryExecuteResultDTO, seprator, -1, strDefaultNullValue);
 	}
 	
 	
@@ -53,7 +53,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 									  (byte) 0xBB, (byte) 0xBF}), true);
 		
 		// make header
-		FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), encoding, true);
+		FileUtils.writeStringToFile(new File(strFullPath), CSVUtils.makeData(listCsvData, seprator), encoding, true);
 	}
 	
 	
@@ -68,7 +68,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeListFileStream( List<String[]> listCsvData, char seprator, String encoding) throws Exception {
-		return CSVFileUtils.makeData(listCsvData, seprator);
+		return CSVUtils.makeData(listCsvData, seprator);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			listCsvData.add(listLabel.toArray(new String[listLabel.size()]));
 		}
 		
-		return CSVFileUtils.makeData(listCsvData, seprator);
+		return CSVUtils.makeData(listCsvData, seprator);
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 	 * @param intLimitCnt
 	 * @return
 	 */
-	public static String makeContent(boolean isAddHead, String tableName, QueryExecuteResultDTO rsDAO, char seprator, int intLimitCnt, String strDefaultNullValue) throws Exception {
+	public static String makeContent(boolean isAddHead, QueryExecuteResultDTO rsDAO, char seprator, int intLimitCnt, String strDefaultNullValue) throws Exception {
 
 		// make header
 		StringBuffer sbReturn = new StringBuffer();
@@ -154,7 +154,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			}
 			listCsvData.add(listLabel.toArray(new String[listLabel.size()]));
 
-			sbReturn.append(CSVFileUtils.makeData(listCsvData, seprator));
+			sbReturn.append(CSVUtils.makeData(listCsvData, seprator));
 			listCsvData.clear();
 			if (intLimitCnt == i) break;
 		}
@@ -197,7 +197,7 @@ public class CSVExpoter extends AbstractTDBExporter {
 			listCsvData.add(listValues.toArray(new String[listValues.size()]));
 		}
 		
-		FileUtils.writeStringToFile(new File(strFullPath), CSVFileUtils.makeData(listCsvData, seprator), encoding, true);
+		FileUtils.writeStringToFile(new File(strFullPath), CSVUtils.makeData(listCsvData, seprator), encoding, true);
 	}
 	
 }

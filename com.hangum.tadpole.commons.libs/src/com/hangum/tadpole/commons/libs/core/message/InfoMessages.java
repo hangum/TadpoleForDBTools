@@ -27,6 +27,7 @@ public class InfoMessages {
 	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.message.InfoMessages"; //$NON-NLS-1$
   
 	public String LoadingData;
+	public String PasswdOldNewIsSame;
 
 	public static InfoMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, InfoMessages.class);

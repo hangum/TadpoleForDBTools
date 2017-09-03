@@ -274,7 +274,7 @@ public class PublicTadpoleDefine {
 	public static enum SQL_STATEMENT_TYPE {NONE, PREPARED_STATEMENT};
 	
 	/** executed sql history type */
-	public static enum EXECUTE_SQL_TYPE {EDITOR, SESSION, API};
+	public static enum EXECUTE_SQL_TYPE {EDITOR, EDITOR_DOWNLOAD, SESSION, API};
 
 	/** 쿼리 실행 결과  */
 	public static enum QUERY_EXECUTE_STATUS {SUCCESS, USER_INTERRUPT, SQL_EXCEPTION, UNKNOW_EXCEPTION};

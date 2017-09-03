@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 hangum.
+ * Copyright (c) 2017 hangum.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser Public License v2.1
  * which accompanies this distribution, and is available at
@@ -13,19 +13,20 @@ package com.hangum.tadpole.engine.query.dao.system;
 import java.sql.Timestamp;
 
 /**
- * 실행쿼리의 쿼리를 담는다.
+ * 쿼리 실행결과 저장 데이터
  * 
  * @author hangum
  *
  */
-public class ExecutedSqlResourceDataDAO {
+public class ExecutedSQLResultDataDAO {
 	long seq;
+	long user_seq;
 	Timestamp startDateExecute;
 	long executed_sql_resource_seq;
-    String sql_data;
+    String result_data = "";
     Timestamp ctreate_time;
     
-	public ExecutedSqlResourceDataDAO() {
+	public ExecutedSQLResultDataDAO() {
 	}
 
 	/**
@@ -41,11 +42,31 @@ public class ExecutedSqlResourceDataDAO {
 	public void setSeq(long seq) {
 		this.seq = seq;
 	}
+	
+	/**
+	 * @return the user_seq
+	 */
+	public long getUser_seq() {
+		return user_seq;
+	}
 
+	/**
+	 * @param user_seq the user_seq to set
+	 */
+	public void setUser_seq(long user_seq) {
+		this.user_seq = user_seq;
+	}
+
+	/**
+	 * @return the startDateExecute
+	 */
 	public Timestamp getStartDateExecute() {
 		return startDateExecute;
 	}
 
+	/**
+	 * @param startDateExecute the startDateExecute to set
+	 */
 	public void setStartDateExecute(Timestamp startDateExecute) {
 		this.startDateExecute = startDateExecute;
 	}
@@ -65,17 +86,17 @@ public class ExecutedSqlResourceDataDAO {
 	}
 
 	/**
-	 * @return the sql_data
+	 * @return the result_data
 	 */
-	public String getSql_data() {
-		return sql_data;
+	public String getResult_data() {
+		return result_data;
 	}
 
 	/**
-	 * @param sql_data the sql_data to set
+	 * @param result_data the result_data to set
 	 */
-	public void setSql_data(String sql_data) {
-		this.sql_data = sql_data;
+	public void setResult_data(String result_data) {
+		this.result_data = result_data;
 	}
 
 	/**
@@ -91,6 +112,7 @@ public class ExecutedSqlResourceDataDAO {
 	public void setCtreate_time(Timestamp ctreate_time) {
 		this.ctreate_time = ctreate_time;
 	}
+
 	
-	
+
 }

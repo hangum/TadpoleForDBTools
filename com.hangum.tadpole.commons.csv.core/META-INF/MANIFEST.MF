@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tadpole DB Hub CSV lib
+Bundle-SymbolicName: com.hangum.tadpole.commons.csv.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.commons.csv.core.Activator
+Bundle-Vendor: TadpoleHub
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: libs/opencsv-4.0.jar,
+ .,
+ libs/dependencies/commons-beanutils-1.9.3.jar,
+ libs/dependencies/commons-lang3-3.6.jar,
+ libs/dependencies/commons-text-1.1.jar
+Export-Package: com.opencsv,
+ com.opencsv.bean,
+ com.opencsv.bean.concurrent,
+ com.opencsv.bean.customconverter,
+ com.opencsv.enums,
+ com.opencsv.exceptions,
+ com.opencsv.stream.reader

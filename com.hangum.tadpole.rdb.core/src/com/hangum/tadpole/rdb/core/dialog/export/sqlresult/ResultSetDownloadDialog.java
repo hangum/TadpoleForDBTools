@@ -356,9 +356,9 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) throws Exception {
 		if (btnStatus == BTN_STATUS.PREVIEW) {
-			previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT, strDefaultNullValue), encoding);
+			previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, queryExecuteResultDTO, seprator, PREVIEW_COUNT, strDefaultNullValue), encoding);
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-			targetEditor(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, strDefaultNullValue));
+			targetEditor(CSVExpoter.makeContent(isAddHead, queryExecuteResultDTO, seprator, strDefaultNullValue));
 		}else{
 			String strFullPath = AllDataExporter.makeCSVAllResult(queryExecuteResultDTO.getUserDB(), exeSQL, isAddHead, targetName, seprator, encoding, strDefaultNullValue, intMaxDownloadCnt);
 			downloadFile(targetName, strFullPath, encoding);

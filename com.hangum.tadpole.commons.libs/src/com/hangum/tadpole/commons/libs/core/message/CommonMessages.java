@@ -156,6 +156,8 @@ public class CommonMessages {
 	public String Type;
 
 	public String Schema;
+
+	public String TotalRowIs;
 	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

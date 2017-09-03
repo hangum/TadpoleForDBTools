@@ -92,7 +92,6 @@ import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteQueryPlan;
 import com.hangum.tadpole.rdb.core.editors.main.parameter.ParameterDialog;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
-import com.hangum.tadpole.rdb.core.util.QueryResultSaved;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
@@ -262,10 +261,10 @@ public class ResultSetComposite extends Composite {
 					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing, longHistorySeq);
 				}
 				
-				/** 쿼리 결과를 저장합니다 */
-				if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
-					QueryResultSaved.saveQueryResult(""+longHistorySeq, rsDAO);
-				}
+//				/** 쿼리 결과를 저장합니다 */
+//				if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
+//					QueryResultSaved.saveQueryResult(""+longHistorySeq, rsDAO);
+//				}
 			}
 			
 			resultSashLayout();
@@ -659,11 +658,13 @@ public class ResultSetComposite extends Composite {
 						// 히스토리 화면을 갱신합니다.
 						List<Long> listLongHistorySeq = new ArrayList<>();
 						if(listStrSQL.isEmpty()) {
-							listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO));
+							listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(0)));
 						} else {
-							for (String strSQL : listStrSQL) {
+//							for (String strSQL : listStrSQL) {
+							for(int i=0; i<listStrSQL.size(); i++) {
+								String strSQL = listStrSQL.get(i);
 								reqResultDAO.setStrSQLText(strSQL);
-								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().afterQueryInit(reqResultDAO));
+								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(i)));
 							}
 						}
 						
@@ -750,7 +751,6 @@ public class ResultSetComposite extends Composite {
 		try {
 			if(DBGroupDefine.TAJO_GROUP == getUserDB().getDBGroup()) {
 				javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
-				
 			} else if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) {
 				javaConn = TadpoleSQLExtManager.getInstance().getConnection(getUserDB());
 			} else {

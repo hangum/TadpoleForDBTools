@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/csv/opencsv-4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/parser/jsqlparser-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/commons/commons-codec-1.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/commons/commons-validator-1.5.0.jar"/>
