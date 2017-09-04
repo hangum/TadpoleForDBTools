@@ -60,6 +60,8 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	@Override
 	protected boolean canEdit(Object element) {
 		if(column == 6) {
+			if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_readOnlyConnect())) return false;
+			
 			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userDB.getDbAccessCtl().getDdl_lock())) {
 				if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() ||
 						DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ||

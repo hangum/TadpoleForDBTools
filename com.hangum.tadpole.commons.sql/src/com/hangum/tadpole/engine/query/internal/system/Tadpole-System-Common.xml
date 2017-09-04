@@ -209,7 +209,7 @@
  -->
 <select id="lastLoginCntHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" parameterClass="java.util.HashMap">
 	SELECT seq, user_seq, login_ip, connet_time, disconnect_time, succes_yn, fail_reason 
-	FROM tadpole20.login_history
+	FROM login_history
 	where user_seq = #intUserSeq#
 	order by connet_time desc
 	limit #intLastLoginCnt#;
