@@ -19,7 +19,7 @@ import org.eclipse.rap.rwt.RWT;
  *
  */
 public class CommonMessages {
-	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.message.Messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "com.hangum.tadpole.commons.libs.core.message.messages"; //$NON-NLS-1$
 
 	public String TimeLeft;
 	public String DaysLeft;

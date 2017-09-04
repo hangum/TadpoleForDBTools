@@ -21,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.commons.sql.core.manager.TableFunctionFinder;
+import com.hangum.tadpole.commons.sql.core.manager.TDBObjectParser;
 import com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
@@ -134,7 +134,7 @@ public class DBAccessCtlManager {
 			}
 		} else {
 
-			final TableFunctionFinder tableFunctionFinder = new TableFunctionFinder();
+			final TDBObjectParser tableFunctionFinder = new TDBObjectParser();
 			final List<String> _listTables = tableFunctionFinder.getTableList(statement);
 			final List<String> _listFunctionProcedure = tableFunctionFinder.getFunctionProcedureList();
 

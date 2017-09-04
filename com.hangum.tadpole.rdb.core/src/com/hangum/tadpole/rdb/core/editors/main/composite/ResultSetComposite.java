@@ -658,9 +658,12 @@ public class ResultSetComposite extends Composite {
 						// 히스토리 화면을 갱신합니다.
 						List<Long> listLongHistorySeq = new ArrayList<>();
 						if(listStrSQL.isEmpty()) {
-							listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(0)));
+							if(listRSDao.isEmpty()) {
+								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, null));
+							} else {
+								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(0)));
+							}
 						} else {
-//							for (String strSQL : listStrSQL) {
 							for(int i=0; i<listStrSQL.size(); i++) {
 								String strSQL = listStrSQL.get(i);
 								reqResultDAO.setStrSQLText(strSQL);
