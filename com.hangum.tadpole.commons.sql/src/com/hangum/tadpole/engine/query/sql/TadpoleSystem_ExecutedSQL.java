@@ -206,7 +206,7 @@ public class TadpoleSystem_ExecutedSQL {
 			} else {
 				startdateexecute = ((Timestamp)resultMap.get("startdateexecute")).getTime();
 			}
-			String strSQLText 		= (String)resultMap.get("datas");
+			String strSQLText 		= (String)resultMap.get("sql_data");
 			Long enddateexecute 	= 0l;
 			// This case sqlite
 			if(resultMap.get("enddateexecute") instanceof Long) {

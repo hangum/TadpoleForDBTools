@@ -39,14 +39,17 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.sql.util.export.AllDataExporter;
 import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
@@ -84,7 +87,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
 	
 	/** null 기본값 */
-	private String strDefaultNullValue = "";//GetPreferenceGeneral.getResultNull();
+	private String strDefaultNullValue = "";
 	
 	/** 다운로드 실행시에 사용할 쿼리 지정 */
 	private String exeSQL = "";
@@ -569,6 +572,40 @@ public class ResultSetDownloadDialog extends Dialog {
 			}
 		});
 	}
+	
+//	/**
+//	 * 쿼리 실행 결과를 저장한다.
+//	 * 
+//	 * @param reqResultDAO
+//	 * @param rsDAO
+//	 * @return
+//	 */
+//	public long saveExecutedSQLData(RequestResultDAO reqResultDAO, QueryExecuteResultDTO rsDAO) {
+//		long longHistorySeq = -1;
+//		
+//		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+//		if(licenseDAO.isValidate()) {
+//			try {
+//				
+//				String strExecuteResultData = "";
+//				if(rsDAO != null) {
+//					if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
+//						strExecuteResultData = CSVExpoter.makeContent(true, rsDAO, ',', "UTF-8");
+//					}
+//				}
+//				
+//				longHistorySeq = TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
+//								getRdbResultComposite().getUserDB(), 
+//								PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
+//								strExecuteResultData,
+//								reqResultDAO);
+//			
+//				
+//			} catch(Exception e) {
+//				logger.error("save the user query", e); //$NON-NLS-1$
+//			}
+//		}
+//	}
 	
 	/** registery service handler */
 	protected void registerServiceHandler() {

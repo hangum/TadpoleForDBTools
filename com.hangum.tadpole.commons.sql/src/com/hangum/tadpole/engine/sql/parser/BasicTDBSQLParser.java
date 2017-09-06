@@ -73,6 +73,7 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 		} else {
 			queryInfoDTO.setStatement(false);
 			queryInfoDTO.setSqlType(SQL_TYPE.DDL);
+			queryInfoDTO.setQueryType(SQLUtil.sqlQueryType(sql));
 			
 			parseDDL(sql, queryInfoDTO);
 		}

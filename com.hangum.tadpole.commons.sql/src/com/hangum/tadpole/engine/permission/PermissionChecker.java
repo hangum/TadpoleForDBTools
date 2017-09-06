@@ -15,6 +15,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
@@ -95,7 +97,7 @@ public class PermissionChecker {
 		
 		// 디비권한이 read only connection 옵션이 선택되었으면 statement문만 권한을 허락합니다.
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_readOnlyConnect())) {
-			if(!SQLUtil.isStatement(strSQL)) throw new Exception("읽기전용 데이터베이스 입니다. ");
+			if(!SQLUtil.isStatement(strSQL)) throw new Exception(InfoMessages.get().ThisIsReadOnlyDatabase);
 		}
 		
 //		//

@@ -159,7 +159,7 @@ public class RequestQuery implements Cloneable {
 	}
 	
 	/**
-	 * @return the sql
+	 * @return the sql 
 	 */
 	public String getSql() {
 		return sql;

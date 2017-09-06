@@ -28,6 +28,7 @@ public class InfoMessages {
   
 	public String LoadingData;
 	public String PasswdOldNewIsSame;
+	public String ThisIsReadOnlyDatabase;
 
 	public static InfoMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, InfoMessages.class);
